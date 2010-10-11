@@ -125,7 +125,13 @@
   <ItemGroup>
     <Compile Include="Bindings\BindingBase.cs" />
     <Compile Include="Bindings\CommandLine.cs" />
+    <Compile Include="Bindings\ContentRights.cs" />
     <Compile Include="Bindings\OrchardSiteFactory.cs" />
+    <Compile Include="ContentRights.feature.cs">
+      <DependentUpon>ContentRights.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Hosting\MessageSink.cs" />
     <Compile Include="Hosting\HostingTraceListener.cs" />
     <Compile Include="Hosting\TraceEnabledDataServicesProviderFactory.cs" />
@@ -189,6 +195,10 @@
     <Content Include="Hosting\Orchard.Web\Config\Sites.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="ContentRights.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ContentRights.feature.cs</LastGenOutput>
+    </None>
     <None Include="Hosting\Orchard.Web\Config\Diagnostics.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

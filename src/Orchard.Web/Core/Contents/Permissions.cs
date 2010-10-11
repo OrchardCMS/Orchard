@@ -4,25 +4,25 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Contents {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission PublishOthersContent = new Permission { Description = "Publish or unpublish content for others", Name = "PublishOthersContent" };
-        public static readonly Permission PublishContent = new Permission { Description = "Publish or unpublish content", Name = "PublishContent", ImpliedBy = new[] { PublishOthersContent } };
-        public static readonly Permission EditOthersContent = new Permission { Description = "Edit content for others", Name = "EditOthersContent", ImpliedBy = new[] { PublishOthersContent } };
-        public static readonly Permission EditContent = new Permission { Description = "Edit content", Name = "EditContent", ImpliedBy = new[] { EditOthersContent, PublishContent } };
-        public static readonly Permission DeleteOthersContent = new Permission { Description = "Delete content for others", Name = "DeleteOthersContent" };
-        public static readonly Permission DeleteContent = new Permission { Description = "Delete content", Name = "DeleteContent", ImpliedBy = new[] { DeleteOthersContent } };
+        public static readonly Permission PublishContent = new Permission { Description = "Publish or unpublish content for others", Name = "PublishContent" };
+        public static readonly Permission PublishOwnContent = new Permission { Description = "Publish or unpublish content", Name = "PublishOwnContent", ImpliedBy = new[] { PublishContent } };
+        public static readonly Permission EditContent = new Permission { Description = "Edit content for others", Name = "EditContent", ImpliedBy = new[] { PublishContent } };
+        public static readonly Permission EditOwnContent = new Permission { Description = "Edit content", Name = "EditOwnContent", ImpliedBy = new[] { EditContent, PublishOwnContent } };
+        public static readonly Permission DeleteContent = new Permission { Description = "Delete content for others", Name = "DeleteContent" };
+        public static readonly Permission DeleteOwnContent = new Permission { Description = "Delete content", Name = "DeleteOwnContent", ImpliedBy = new[] { DeleteContent } };
 
-        public static readonly Permission MetaListContent = new Permission { ImpliedBy = new[] { EditContent, PublishContent, DeleteContent } };
+        public static readonly Permission MetaListContent = new Permission { ImpliedBy = new[] { EditOwnContent, PublishOwnContent, DeleteOwnContent } };
 
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new [] {
+                EditOwnContent,
                 EditContent,
-                EditOthersContent,
+                PublishOwnContent,
                 PublishContent,
-                PublishOthersContent,
+                DeleteOwnContent,
                 DeleteContent,
-                DeleteOthersContent,
             };
         }
 
@@ -30,11 +30,11 @@ namespace Orchard.Core.Contents {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {PublishOthersContent,EditOthersContent,DeleteOthersContent}
+                    Permissions = new[] {PublishContent,EditContent,DeleteContent}
                 },
                 new PermissionStereotype {
                     Name = "Editor",
-                    Permissions = new[] {PublishOthersContent,EditOthersContent,DeleteOthersContent}
+                    Permissions = new[] {PublishContent,EditContent,DeleteContent}
                 },
                 new PermissionStereotype {
                     Name = "Moderator",
@@ -42,11 +42,11 @@ namespace Orchard.Core.Contents {
                 },
                 new PermissionStereotype {
                     Name = "Author",
-                    Permissions = new[] {PublishContent,EditContent,DeleteContent}
+                    Permissions = new[] {PublishOwnContent,EditOwnContent,DeleteOwnContent}
                 },
                 new PermissionStereotype {
                     Name = "Contributor",
-                    Permissions = new[] {EditContent}
+                    Permissions = new[] {EditOwnContent}
                 },
             };
         }

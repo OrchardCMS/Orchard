@@ -72,7 +72,7 @@
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
     <Compile Include="Common\Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
-    <Compile Include="Common\Security\AuthorizationEventHandler.cs" />
+    <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
     <Compile Include="ContentsLocation\ResourceManifest.cs" />
     <Compile Include="ContentsLocation\Models\LocationDefinition.cs" />
@@ -88,6 +88,7 @@
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Drivers\ContentsDriver.cs" />
+    <Compile Include="Contents\DynamicPermissions.cs" />
     <Compile Include="Contents\Extensions\MetaDataExtensions.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
     <Compile Include="Contents\Permissions.cs" />

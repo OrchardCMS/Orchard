@@ -251,7 +251,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return new NotFoundResult();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Cannot edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
 
             var model = _contentManager.BuildEditor(contentItem);
@@ -266,7 +266,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return new NotFoundResult();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Couldn't edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
             var model = _contentManager.UpdateEditor(contentItem, this);
@@ -289,7 +289,7 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult RemovePOST(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
-            if (!Services.Authorizer.Authorize(Permissions.DeleteOthersContent, contentItem, T("Couldn't remove content")))
+            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, contentItem, T("Couldn't remove content")))
                 return new HttpUnauthorizedResult();
 
             if (contentItem != null) {

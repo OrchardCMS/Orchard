@@ -28,6 +28,8 @@
         @Html.ValidationMessageFor(m=>m.ConfirmPassword, "*")
     </fieldset>
 
+    @Display(Model.User)
+
     <fieldset>
         <input class="button primaryAction" type="submit" value="@T("Add")" />
     </fieldset>
