@@ -36,6 +36,7 @@ namespace Orchard.Widgets.Filters {
 
             List<int> activeLayerIds = new List<int>();
             foreach (var activeLayer in activeLayers) {
+                var context = workContext.HttpContext;
                 if (_ruleManager.Matches(activeLayer.Record.LayerRule)) {
                     activeLayerIds.Add(activeLayer.ContentItem.Id);
                 }
