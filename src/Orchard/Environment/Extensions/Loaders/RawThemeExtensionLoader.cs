@@ -50,11 +50,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
-            var assembly = Assembly.Load("Orchard.Themes");
-
             return new ExtensionEntry {
                 Descriptor = descriptor,
-                Assembly = assembly,
+                Assembly = GetType().Assembly,
                 ExportedTypes = new Type[0]
             };
         }
