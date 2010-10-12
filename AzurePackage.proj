@@ -75,7 +75,7 @@
   <Target Name="Package-ForCloud">
     
     <ItemGroup>
-      <Excluded Include="$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;$(SrcFolder)\**\*.cs;$(SrcFolder)\**\*.csproj*;" />
+      <Excluded Include="$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;" />
 
       <Stage-Themes Include="$(SrcFolder)\Orchard.Web\Themes\**\*" Exclude="@(Excluded)" />
       <Stage-Core Include="$(SrcFolder)\Orchard.Web\Core\**\*" Exclude="@(Excluded)" />
@@ -98,14 +98,6 @@
     <XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
-
-    <XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
-      XPath="/configuration/system.web/machineKey/@validationKey"
-      Value="AutoGenerate" />
-
-    <XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
-      XPath="/configuration/system.web/machineKey/@decryptionKey"
-      Value="AutoGenerate" />
     
     <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\Diagnostics.config"
       XPath="/system.diagnostics/trace/@autoflush"
