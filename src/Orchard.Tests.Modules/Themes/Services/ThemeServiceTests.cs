@@ -68,7 +68,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
             var context = new DynamicProxyContext();
             var builder = new ContainerBuilder();
             builder.RegisterModule(new SettingsModule());
-            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>(); // test
+            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<ThemeService>().EnableDynamicProxy(context).As<IThemeService>();
             builder.RegisterType<SettingsModuleInterceptor>().As<ISettingsModuleInterceptor>();
             builder.RegisterType<SiteService>().As<ISiteService>();
@@ -86,7 +86,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
             builder.RegisterType<ThemeSiteSettingsPartHandler>().As<IContentHandler>();
             builder.RegisterType<ModuleService>().As<IModuleService>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
-            builder.RegisterType<StubShellDescriptorManager>().As<IShellDescriptorManager>();
+            builder.RegisterType<StubShellDescriptorManager>().As<IShellDescriptorManager>().InstancePerLifetimeScope();
             builder.RegisterType<TransactionManager>().As<ITransactionManager>();
             builder.RegisterType<Notifier>().As<INotifier>();
             builder.RegisterType<StubAuthorizer>().As<IAuthorizer>();
@@ -135,6 +135,34 @@ namespace Orchard.Tests.Modules.Themes.Services {
             var siteTheme = _themeService.GetSiteTheme();
             Assert.That(siteTheme.ThemeName, Is.EqualTo("ThemeOne"));
         }
+
+        [Test]
+        public void CanEnableAndDisableThemes() {
+            _themeService.EnableTheme("ThemeOne");
+            Assert.IsTrue(_themeService.GetThemeByName("ThemeOne").Enabled);
+            Assert.IsTrue(_container.Resolve<IShellDescriptorManager>().GetShellDescriptor().Features.Any(sf => sf.Name == "ThemeOne"));
+            _themeService.DisableTheme("ThemeOne");
+            Assert.IsFalse(_themeService.GetThemeByName("ThemeOne").Enabled);
+            Assert.IsFalse(_container.Resolve<IShellDescriptorManager>().GetShellDescriptor().Features.Any(sf => sf.Name == "ThemeOne"));
+        }
+
+        [Test]
+        public void ActivatingThemeEnablesIt() {
+            _themeService.SetSiteTheme("ThemeOne");
+            Assert.IsTrue(_themeService.GetThemeByName("ThemeOne").Enabled);
+            Assert.IsTrue(_container.Resolve<IShellDescriptorManager>().GetShellDescriptor().Features.Any(sf => sf.Name == "ThemeOne"));
+        }
+
+        [Test]
+        public void ActivatingThemeDoesNotDisableOldTheme() {
+            _themeService.SetSiteTheme("ThemeOne");
+            _themeService.SetSiteTheme("ThemeTwo");
+            Assert.IsTrue(_themeService.GetThemeByName("ThemeOne").Enabled);
+            Assert.IsTrue(_themeService.GetThemeByName("ThemeTwo").Enabled);
+            Assert.IsTrue(_container.Resolve<IShellDescriptorManager>().GetShellDescriptor().Features.Any(sf => sf.Name == "ThemeOne"));
+            Assert.IsTrue(_container.Resolve<IShellDescriptorManager>().GetShellDescriptor().Features.Any(sf => sf.Name == "ThemeTwo"));
+        }
+        
 
         #region Stubs
 

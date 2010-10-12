@@ -10,6 +10,9 @@ namespace Orchard.Themes {
         void SetSiteTheme(string themeName);
         ITheme GetRequestTheme(RequestContext requestContext);
 
+        void EnableTheme(string themeName);
+        void DisableTheme(string themeName);
+
         IEnumerable<ITheme> GetInstalledThemes();
         void InstallTheme(HttpPostedFileBase file);
         void UninstallTheme(string themeName);

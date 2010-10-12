@@ -3,6 +3,7 @@
     /// Interface provided by the "themes" model. 
     /// </summary>
     public interface ITheme {
+        bool Enabled { get; set; }
         string ThemeName { get; set; }
         string DisplayName { get; set; }
         string Description { get; set; }
