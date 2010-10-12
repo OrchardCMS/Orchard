@@ -85,7 +85,7 @@ namespace Orchard.Modules.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
-            var features = _moduleService.GetAvailableFeatures().ToList();
+            var features = _moduleService.GetAvailableFeatures().Where(f => !f.Descriptor.Extension.ExtensionType.Equals("Theme", StringComparison.OrdinalIgnoreCase)).ToList();
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
             return View(new FeaturesViewModel { Features = features, FeaturesThatNeedUpdate = featuresThatNeedUpdate });
