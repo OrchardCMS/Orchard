@@ -1,4 +1,5 @@
 ﻿@{
+
     Style.Include("site.css");
 
     // cool stuff goes up here
@@ -7,8 +8,7 @@
     // Zone is an alias for Display
     Func<dynamic, dynamic> Zone = x => Display(x);
 
-
-
+    //Add classes to the wrapper div to toggle zones on and off 
     if (Model.Sidebar != null && Model.Sidebar2 == null) {
         Model.Classes.Add("has-sidebar");
     }
@@ -21,7 +21,6 @@
     else {
 
     }
-
 
     //Model.Attributes.Add("onclick", "javscript:alert('woot')"); 
 
@@ -63,28 +62,6 @@
     </div>
     }
 
- @* This code would inject text into the Featured zone.
-    @{WorkContext.Layout.Featured.Add("just some text in featured");}
-*@
-
-  @{
-  WorkContext.Layout.Featured.Add(New.Featured(insertMessage:"This is a featured blog post."));
-  }
-  @if(Model.Featured != null) {
-     <div class="zone-featured group">
-        @Zone(Model.Featured)
-    </div>
-    }
-
-  @{
-  WorkContext.Layout.Recent.Add(New.Recent());
-  }
-  @if(Model.Featured != null) {
-    <div class="group">
-        @Zone(Model.Recent)
-    </div>
-    }
-
     @if(Model.Sidebar2 != null) {
     <aside class="sidebar secondary">
         @Zone(Model.Sidebar2)
@@ -107,17 +84,15 @@
 
 </div>
 
-  @{
-  WorkContext.Layout.Footer.Add(@Display.User());
-  }
+
     @if(Model.Footer != null) {
     <footer id="layout-footer" class="group">
         @Zone(Model.Footer)
     </footer>
     }
     else {
-    <footer id="layout-footer">
-    Powered by Orchard @Display.User()
+    <footer id="layout-footer" class="group">
+    Powered by Orchard &#169; The Theme Machine 2010. @Display.User()
     </footer>
 }
 

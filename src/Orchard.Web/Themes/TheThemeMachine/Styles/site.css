@@ -78,7 +78,7 @@ body {
   font-size: 62.5%;
   color: #333; 
   background: #fff;
-  font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+  font-family: Tahoma, "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
 a {}
@@ -90,7 +90,7 @@ a:visited{}
 
 h1,h2,h3,h4,h5,h6 { font-weight: normal; }
 
-h1 { font-size: 3em;}
+h1 { font-size: 3em; }
 h2 { font-size: 1.3em; }
 h3 { font-size: 1.2em; }
 h4 { font-size: 1.1em; }
@@ -102,7 +102,9 @@ h4 img, h5 img, h6 img {
   margin: 0;
 }
 
-p, .meta {
+article header h1 { font-size: 2em; }
+
+p, aside, footer, .meta {
 	font-size:1.3em;
 	line-height:2em;
 }
@@ -115,68 +117,31 @@ p, .meta {
 }
 
 #layout-header {
-    border:1px solid #ff0000;
     background: #53a4ca;
+    padding: 24px 0;
+    margin-bottom:12px;
 }
 
 #branding a {
     color:#fff;
     text-decoration:none;
-    padding:48px 12px;
+    padding:0 12px;
 }
-
 
 #layout-wrapper {
-	border:1px solid #CCC;
 }
 
-/* Sidebar off - Content Zone 960 */
-#content {
-    /*clear:both;
-    padding:12px;*/
-}
-
-/*One Sidebar on */
-.has-sidebar #content {
-	background-color:#e8e8e8;
-	width: 600px;
-    /*padding:12px 6px 6px 12px;*/
-	float:left;
-    /*clear:both;*/
-}
-
-.has-sidebar .sidebar {
-    background-color:#f6f6f6;
-    width: 360px;
-	float:right;
-}
-
-/*Two Sidebars on */
-.has-sidebars #content {
-	background-color:#e8e8e8;
-	width: 600px;
-}
-
-.has-sidebars .sidebar {
-    background-color:#f6f6f6;
-    width: 180px;
-}
-
-.has-sidebars .primary, .has-sidebars .secondary, .has-sidebars #content {
-    float:left;
-}
-
-#sitemap {
-    clear:both;
+#layout-footer {
+    border-top: 1px solid #999;
+    margin-top:12px;
 }
 
        
 /* Navigation */
 
-
 #navigation {
     width: 960px;
-	margin: 4px auto;
+	margin: 12px auto;
 	display:block;
     border-bottom: 1px solid #999;
 }
@@ -188,13 +153,13 @@ nav ul {
 nav ul li
  {
 	border:1px solid #999;
-	background:#e7e7e7;
+	background:#f6f6f6;
 	display:block;
 	float:left;
 	margin:0 2px -1px 0;
 }
 
-nav ul li.on {
+nav ul li.current {
 	border-bottom: 1px solid #fff;
 	background:#fff;
 }
@@ -208,10 +173,48 @@ nav ul a {
     line-height:24px;
 }
 
-#footer {}
-
 /* Main
 ***************************************************************/
+
+/* Sidebar off - Content Zone 960 */
+#content, .sidebar {
+    padding:6px;
+}
+
+/* One Sidebar on */
+.has-sidebar #content {
+	width: 588px;
+	float:left;
+}
+
+.has-sidebar .sidebar {
+    width: 348px;
+	float:right;
+}
+
+/* Sidebar on the left */
+.has-sidebar-left #content {
+	width: 588px;
+	float:right;
+}
+
+.has-sidebar-left .secondary {
+    width: 348px;
+	float:left;
+}
+
+/* Two Sidebars on */
+.has-sidebars #content {
+	width: 588px;
+}
+
+.has-sidebars .sidebar {
+    width: 168px;
+}
+
+.has-sidebars .primary, .has-sidebars .secondary, .has-sidebars #content {
+    float:left;
+}
 
 /* Secondary
 ***************************************************************/
@@ -268,13 +271,8 @@ form.inline p { margin-bottom:0; }
 ***************************************************************/
 
 /* For testing purposes */
-
-
-
-
-
-.zone {
-    /*padding:6px;*/
+.user-display {
+    display:inline;
 }
 
 
