@@ -165,6 +165,7 @@
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlteration.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlterationBuilder.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacements\ShapePlacementParsingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTable.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTableBuilder.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
