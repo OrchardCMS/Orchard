@@ -68,6 +68,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
             var context = new DynamicProxyContext();
             var builder = new ContainerBuilder();
             builder.RegisterModule(new SettingsModule());
+            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>(); // test
             builder.RegisterType<ThemeService>().EnableDynamicProxy(context).As<IThemeService>();
             builder.RegisterType<SettingsModuleInterceptor>().As<ISettingsModuleInterceptor>();
             builder.RegisterType<SiteService>().As<ISiteService>();

@@ -244,6 +244,7 @@
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
     <Compile Include="Records\BigRecord.cs" />
     <Compile Include="Scripting\ScriptingTests.cs" />
+    <Compile Include="Stubs\StubWorkContextAccessor.cs" />
     <Compile Include="Stubs\StubExtensionManager.cs" />
     <Compile Include="Stubs\StubReportsCoordinator.cs" />
     <Compile Include="Stubs\StubVirtualPathProvider.cs" />
