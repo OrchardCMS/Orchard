@@ -159,6 +159,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentManagement\DefaultContentDisplay.cs" />
     <Compile Include="ContentManagement\Drivers\ContentShapeResult.cs" />
     <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />

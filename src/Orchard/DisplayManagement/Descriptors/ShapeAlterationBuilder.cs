@@ -73,7 +73,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                 descriptor.Created = existing.Concat(new[] { action });
             });
         }
-        
+
         public ShapeAlterationBuilder OnDisplaying(Action<ShapeDisplayingContext> action) {
             return Configure(descriptor => {
                 var existing = descriptor.Displaying ?? Enumerable.Empty<Action<ShapeDisplayingContext>>();
@@ -88,8 +88,28 @@ namespace Orchard.DisplayManagement.Descriptors {
             });
         }
 
+        public ShapeAlterationBuilder Placement(Func<ShapePlacementContext, string> action) {
+            return Configure(descriptor => {
+                var next = descriptor.Placement;
+                descriptor.Placement = ctx => action(ctx) ?? next(ctx);
+            });
+        }
+        
+        public ShapeAlterationBuilder Placement(Func<ShapePlacementContext, bool> predicate, string location) {
+            return Configure(descriptor => {
+                var next = descriptor.Placement;
+                descriptor.Placement = ctx => predicate(ctx) ? location : next(ctx);
+            });
+        }
+
         public ShapeAlteration Build() {
             return new ShapeAlteration(_shapeType, _feature, _configurations.ToArray());
         }
+    }
+
+    public class ShapePlacementContext {
+        public string ContentType { get; set; }
+        public string DisplayType { get; set; }
+
     }
 }

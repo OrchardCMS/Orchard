@@ -4,14 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Autofac;
-using Microsoft.CSharp.RuntimeBinder;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
-using Orchard.DisplayManagement;
 using Orchard.Indexing;
 using Orchard.Logging;
 
@@ -23,7 +21,7 @@ namespace Orchard.ContentManagement {
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
-        private readonly IShapeHelperFactory _shapeHelperFactory;
+        private readonly IContentDisplay _contentDisplay;
 
         public DefaultContentManager(
             IComponentContext context,
@@ -32,14 +30,14 @@ namespace Orchard.ContentManagement {
             IRepository<ContentItemVersionRecord> contentItemVersionRepository,
             IContentDefinitionManager contentDefinitionManager,
             Func<IContentManagerSession> contentManagerSession,
-            IShapeHelperFactory shapeHelperFactory) {
+            IContentDisplay contentDisplay) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;
             _contentItemVersionRepository = contentItemVersionRepository;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManagerSession = contentManagerSession;
-            _shapeHelperFactory = shapeHelperFactory;
+            _contentDisplay = contentDisplay;
             Logger = NullLogger.Instance;
         }
 
@@ -370,59 +368,17 @@ namespace Orchard.ContentManagement {
             return context.Metadata;
         }
 
-        static readonly CallSiteCollection _shapeHelperCalls = new CallSiteCollection(shapeTypeName => Binder.InvokeMember(
-            CSharpBinderFlags.None,
-            shapeTypeName,
-            Enumerable.Empty<Type>(),
-            null,
-            new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) }));
-
 
         public dynamic BuildDisplay(IContent content, string displayType = "") {
-            var contentTypeDefinition = content.ContentItem.TypeDefinition;
-            string stereotype;
-            if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
-                stereotype = "Content";
-
-            var shapeTypeName = "Items_" + stereotype;
-            var shapeDisplayType = string.IsNullOrWhiteSpace(displayType) ? "Detail" : displayType;
-
-            var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = _shapeHelperCalls.Invoke(shapeHelper, shapeTypeName);
-           
-            itemShape.ContentItem = content.ContentItem;            
-            itemShape.Metadata.DisplayType = shapeDisplayType;
-
-            var context = new BuildDisplayContext(itemShape, content, shapeDisplayType, _shapeHelperFactory);
-            Handlers.Invoke(handler => handler.BuildDisplay(context), Logger);
-            return context.Shape;
+            return _contentDisplay.BuildDisplay(content, displayType);
         }
 
-
         public dynamic BuildEditor(IContent content) {
-            var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Items_Content_Edit();
-
-            IContent iContent = content;
-            if (iContent != null)
-                itemShape.ContentItem = iContent.ContentItem;
-
-            var context = new BuildEditorContext(itemShape, content, _shapeHelperFactory);
-            Handlers.Invoke(handler => handler.BuildEditor(context), Logger);
-            return context.Shape;
+            return _contentDisplay.BuildEditor(content);
         }
 
         public dynamic UpdateEditor(IContent content, IUpdateModel updater) {
-            var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Items_Content_Edit();
-
-            IContent iContent = content;
-            if (iContent != null)
-                itemShape.ContentItem = iContent.ContentItem;
-
-            var context = new UpdateEditorContext(itemShape, content, updater, _shapeHelperFactory);
-            Handlers.Invoke(handler => handler.UpdateEditor(context), Logger);
-            return context.Shape;
+            return _contentDisplay.UpdateEditor(content, updater);
         }
 
         public IContentQuery<ContentItem> Query() {

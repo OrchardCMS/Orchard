@@ -31,6 +31,12 @@ namespace Orchard.ContentManagement {
         dynamic UpdateEditor(IContent content, IUpdateModel updater);
     }
 
+    public interface IContentDisplay : IDependency {
+        dynamic BuildDisplay(IContent content, string displayType = "");
+        dynamic BuildEditor(IContent content);
+        dynamic UpdateEditor(IContent content, IUpdateModel updater);
+    }
+
     public class VersionOptions {
         public static VersionOptions Latest { get { return new VersionOptions { IsLatest = true }; } }
         public static VersionOptions Published { get { return new VersionOptions { IsPublished = true }; } }

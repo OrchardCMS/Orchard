@@ -79,5 +79,67 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             Assert.That(foo.Displaying.Single(), Is.SameAs(cb3));
             Assert.That(foo.Displayed.Single(), Is.SameAs(cb4));
         }
+
+        [Test]
+        public void DefaultPlacementIsReturnedByDefault() {
+            var manager = _container.Resolve<IShapeTableManager>();
+
+            var hello = manager.GetShapeTable(null).Descriptors["Hello"];
+            hello.DefaultPlacement = "Header:5";
+            var result = hello.Placement(null);
+            Assert.That(result, Is.EqualTo("Header:5"));
+        }
+
+        [Test]
+        public void DescribedPlacementIsReturnedIfNotNull() {
+
+            _container.Resolve<TestShapeProvider>().Discover =
+                builder => builder.Describe("Hello")
+                    .Placement(ctx => ctx.DisplayType == "Detail" ? "Main" : null)
+                    .Placement(ctx => ctx.DisplayType == "Summary" ? "" : null);
+
+            var manager = _container.Resolve<IShapeTableManager>();
+            var hello = manager.GetShapeTable(null).Descriptors["Hello"];
+            var result1 = hello.Placement(new ShapePlacementContext { DisplayType = "Detail" });
+            var result2 = hello.Placement(new ShapePlacementContext { DisplayType = "Summary" });
+            var result3 = hello.Placement(new ShapePlacementContext { DisplayType = "Tile" });
+            hello.DefaultPlacement = "Header:5";
+            var result4 = hello.Placement(new ShapePlacementContext { DisplayType = "Detail" });
+            var result5 = hello.Placement(new ShapePlacementContext { DisplayType = "Summary" });
+            var result6 = hello.Placement(new ShapePlacementContext { DisplayType = "Tile" });
+            
+            Assert.That(result1, Is.EqualTo("Main"));
+            Assert.That(result2, Is.EqualTo(""));
+            Assert.That(result3, Is.Null);
+            Assert.That(result4, Is.EqualTo("Main"));
+            Assert.That(result5, Is.EqualTo(""));
+            Assert.That(result6, Is.EqualTo("Header:5"));
+        }
+        
+        [Test]
+        public void TwoArgumentVariationDoesSameThing() {
+
+            _container.Resolve<TestShapeProvider>().Discover =
+                builder => builder.Describe("Hello")
+                    .Placement(ctx => ctx.DisplayType == "Detail", "Main")
+                    .Placement(ctx => ctx.DisplayType == "Summary", "");
+
+            var manager = _container.Resolve<IShapeTableManager>();
+            var hello = manager.GetShapeTable(null).Descriptors["Hello"];
+            var result1 = hello.Placement(new ShapePlacementContext { DisplayType = "Detail" });
+            var result2 = hello.Placement(new ShapePlacementContext { DisplayType = "Summary" });
+            var result3 = hello.Placement(new ShapePlacementContext { DisplayType = "Tile" });
+            hello.DefaultPlacement = "Header:5";
+            var result4 = hello.Placement(new ShapePlacementContext { DisplayType = "Detail" });
+            var result5 = hello.Placement(new ShapePlacementContext { DisplayType = "Summary" });
+            var result6 = hello.Placement(new ShapePlacementContext { DisplayType = "Tile" });
+            
+            Assert.That(result1, Is.EqualTo("Main"));
+            Assert.That(result2, Is.EqualTo(""));
+            Assert.That(result3, Is.Null);
+            Assert.That(result4, Is.EqualTo("Main"));
+            Assert.That(result5, Is.EqualTo(""));
+            Assert.That(result6, Is.EqualTo("Header:5"));
+        }
     }
 }
