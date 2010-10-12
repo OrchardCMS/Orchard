@@ -48,16 +48,22 @@ namespace Orchard.Environment.Extensions {
         /// <param name="item"></param>
         /// <param name="subject"></param>
         /// <returns></returns>
-        static bool HasDependency(FeatureDescriptor item, FeatureDescriptor subject) {
-            // Themes implicitly depend on modules to ensure build and override ordering
-            if (item.Extension.ExtensionType == "Theme" && subject.Extension.ExtensionType == "Module")
-                return true;
+        internal static bool HasDependency(FeatureDescriptor item, FeatureDescriptor subject) {
+            if (item.Extension.ExtensionType == "Theme") {
+                // Themes implicitly depend on modules to ensure build and override ordering
+                if (subject.Extension.ExtensionType == "Module") {
+                    return true;
+                }
+                if (subject.Extension.ExtensionType == "Theme") {
+                    // theme depends on another if it is its base theme
+                    return item.Extension.BaseTheme == subject.Name;
+                }
+            }
 
             // Return based on explicit dependencies
             return item.Dependencies != null &&
                    item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, subject.Name));
         }
-
 
         private IEnumerable<ExtensionEntry> LoadedExtensions() {
             foreach ( var descriptor in AvailableExtensions() ) {

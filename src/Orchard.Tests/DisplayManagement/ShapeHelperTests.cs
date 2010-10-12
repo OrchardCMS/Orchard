@@ -8,6 +8,8 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
+using Orchard.Environment.Extensions;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.DisplayManagement {
     [TestFixture]
@@ -20,6 +22,7 @@ namespace Orchard.Tests.DisplayManagement {
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             _container = builder.Build();
 
         }

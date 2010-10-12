@@ -20,6 +20,7 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
+using Orchard.Environment.Extensions;
 using Orchard.Security;
 using Orchard.Tests.Modules;
 using System.Web.Mvc;
@@ -56,6 +57,8 @@ namespace Orchard.Core.Tests.Routable.Services {
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterInstance(new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData()))).As<UrlHelper>();
             builder.RegisterType<RoutePartHandler>().As<IContentHandler>();
+
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
         }
 
         private IRoutableService _routableService;

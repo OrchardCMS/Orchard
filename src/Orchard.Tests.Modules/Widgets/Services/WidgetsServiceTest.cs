@@ -15,7 +15,9 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
+using Orchard.Environment.Extensions;
 using Orchard.Security;
+using Orchard.Tests.Stubs;
 using Orchard.Themes;
 using Orchard.Themes.Models;
 using Orchard.UI.Notify;
@@ -72,7 +74,7 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<WidgetsService>().As<IWidgetsService>();
-
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             Theme theme1 = new Theme { Zones = ThemeZoneName1 };
             Theme theme2 = new Theme { Zones = ThemeZoneName2 };
             Mock<IThemeService> themeServiceMock = new Mock<IThemeService>();

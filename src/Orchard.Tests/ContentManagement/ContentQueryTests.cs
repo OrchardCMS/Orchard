@@ -10,9 +10,11 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Environment.Extensions;
 using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -63,6 +65,8 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
 
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
 
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();

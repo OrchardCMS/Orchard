@@ -20,12 +20,14 @@ using Orchard.Core.Scheduling.Services;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Tasks.Scheduling;
 using Orchard.Tests.Modules;
 using Orchard.Core.Common.ViewModels;
 using System.Web.Mvc;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Core.Tests.Common.Providers {
     [TestFixture]
@@ -46,6 +48,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
 
             _authn = new Mock<IAuthenticationService>();
             _authz = new Mock<IAuthorizationService>();

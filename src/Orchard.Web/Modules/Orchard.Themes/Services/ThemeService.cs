@@ -119,7 +119,7 @@ namespace Orchard.Themes.Services {
             }
 
             while (themes.Count > 0)
-                _moduleService.DisableFeatures(new[] {themes.Pop()});
+                _moduleService.EnableFeatures(new[] {themes.Pop()});
         }
 
         public ITheme GetRequestTheme(RequestContext requestContext) {

@@ -12,9 +12,11 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment.Extensions;
 using Orchard.Tasks;
 using Orchard.Tasks.Scheduling;
 using Orchard.Tests.Modules;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Core.Tests.Scheduling {
     [TestFixture]
@@ -40,6 +42,8 @@ namespace Orchard.Core.Tests.Scheduling {
 
             builder.RegisterType<ScheduledTaskExecutor>().As<IBackgroundTask>().Named("ScheduledTaskExecutor", typeof(IBackgroundTask));
             builder.RegisterInstance(_handler).As<IScheduledTaskHandler>();
+
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
         }
 
         protected override IEnumerable<Type> DatabaseTypes {

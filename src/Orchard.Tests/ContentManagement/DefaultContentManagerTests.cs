@@ -12,12 +12,14 @@ using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
+using Orchard.Environment.Extensions;
 using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement;
 using System.Collections.Generic;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -71,6 +73,8 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
+
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
 
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 

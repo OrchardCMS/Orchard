@@ -13,8 +13,10 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment.Extensions;
 using Orchard.Tasks.Scheduling;
 using Orchard.Tests.Modules;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Core.Tests.Scheduling {
     [TestFixture]
@@ -43,6 +45,8 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
 
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
+
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
         }
 
         protected override IEnumerable<Type> DatabaseTypes {
