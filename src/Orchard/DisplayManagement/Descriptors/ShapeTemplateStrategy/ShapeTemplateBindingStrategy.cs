@@ -82,7 +82,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
         }
 
         private bool FeatureIsEnabled(FeatureDescriptor fd) {
-            return (fd.Extension.ExtensionType == "Theme" && fd.Name == "TheAdmin") ||
+            return (fd.Extension.ExtensionType == "Theme" && (fd.Name == "TheAdmin" || fd.Name == "SafeMode")) ||
                 _shellDescriptor.Features.Any(sf => sf.Name == fd.Name);
         }
 

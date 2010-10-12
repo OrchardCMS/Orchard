@@ -49,7 +49,6 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             };
 
             builder.RegisterType<TestShapeProvider>().As<IShapeTableProvider>()
-                .WithMetadata("Features", TestFeature())
                 .As<TestShapeProvider>()
                 .InstancePerLifetimeScope();
         }
