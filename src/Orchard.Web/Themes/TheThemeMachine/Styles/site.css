@@ -90,7 +90,7 @@ a:visited{}
 
 h1,h2,h3,h4,h5,h6 { font-weight: normal; }
 
-h1 { font-size: 3em; }
+h1 { font-size: 2em; }
 h2 { font-size: 1.3em; }
 h3 { font-size: 1.2em; }
 h4 { font-size: 1.1em; }
@@ -102,9 +102,10 @@ h4 img, h5 img, h6 img {
   margin: 0;
 }
 
-article header h1 { font-size: 2em; }
 
-p, aside, footer, .meta {
+/* TODO: We wrap all widgets with consistent html so we get predictable font sizing */
+
+p, footer, .meta {
 	font-size:1.3em;
 	line-height:2em;
 }
@@ -176,8 +177,7 @@ nav ul a {
 /* Main
 ***************************************************************/
 
-/* Sidebar off - Content Zone 960 */
-#content, .sidebar {
+#content, .aside, .about {
     padding:6px;
 }
 
@@ -187,7 +187,7 @@ nav ul a {
 	float:left;
 }
 
-.has-sidebar .sidebar {
+.has-sidebar .aside.first {
     width: 348px;
 	float:right;
 }
@@ -198,7 +198,7 @@ nav ul a {
 	float:right;
 }
 
-.has-sidebar-left .secondary {
+.has-sidebar-left .aside.second {
     width: 348px;
 	float:left;
 }
@@ -208,11 +208,11 @@ nav ul a {
 	width: 588px;
 }
 
-.has-sidebars .sidebar {
+.has-sidebars .aside.first, .has-sidebars .aside.second {
     width: 168px;
 }
 
-.has-sidebars .primary, .has-sidebars .secondary, .has-sidebars #content {
+.has-sidebars .aside.first, .has-sidebars .aside.second, .has-sidebars #content {
     float:left;
 }
 
@@ -275,6 +275,16 @@ form.inline p { margin-bottom:0; }
     display:inline;
 }
 
+.aside.third {
+    border-top:1px solid #999999;
+    clear:both;
+}
+
+.aside.third div > div {
+     float:left;
+     width:304px;
+     padding:12px 6px 0 6px;
+}
 
 /* Featured Zone - switch to an image */
 

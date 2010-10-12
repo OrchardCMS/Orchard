@@ -140,11 +140,10 @@
     <Content Include="Themes\TheThemeMachine\Theme.png" />
     <Content Include="Themes\TheThemeMachine\Theme.txt" />
     <None Include="Themes\Classic\App_Data\Localization\fr-FR\orchard.theme.po" />
-    <None Include="Themes\TheThemeMachine\Views\Layout-homePage.cshtml" />
+    <None Include="Themes\TheThemeMachine\Views\AsideThird.cshtml" />
     <None Include="Themes\TheThemeMachine\Views\Recent.cshtml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Themes\TheThemeMachine\Views\Layout-Blog.cshtml" />
     <None Include="Themes\TheThemeMachine\Views\Featured.cshtml">
       <SubType>Designer</SubType>
     </None>

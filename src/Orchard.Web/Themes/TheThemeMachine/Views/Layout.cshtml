@@ -8,19 +8,24 @@
     // Zone is an alias for Display
     Func<dynamic, dynamic> Zone = x => Display(x);
 
-    //Add classes to the wrapper div to toggle zones on and off 
-    if (Model.Sidebar != null && Model.Sidebar2 == null) {
+//Use the two lines below to test the sidebar zones.
+//WorkContext.Layout.AsideFirst.Add("This test text will render in Sidebar1.");
+//WorkContext.Layout.AsideSecond.Add("This test text will render in Sidebar2.");
+
+     //Add classes to the wrapper div to toggle zones on and off 
+    if (Model.AsideFirst != null && Model.AsideSecond == null) {
         Model.Classes.Add("has-sidebar");
     }
-    else if (Model.Sidebar == null && Model.Sidebar2 != null) {
+    else if (Model.AsideFirst == null && Model.AsideSecond != null) {
         Model.Classes.Add("has-sidebar-left");
     }
-    else if (Model.Sidebar != null && Model.Sidebar2 != null) {
+    else if (Model.AsideFirst != null && Model.AsideSecond != null) {
         Model.Classes.Add("has-sidebars");
     }
     else {
 
     }
+
 
     //Model.Attributes.Add("onclick", "javscript:alert('woot')"); 
 
@@ -61,19 +66,10 @@
         @Zone(Model.Messages)
     </div>
     }
-    @if(Model.Featured != null) {
-    <div class="zone-featured">
-        @Zone(Model.Featured)
-    </div>
-    }
-    @if(Model.Recent != null) {
-    <div class="zone-recent">
-        @Zone(Model.Recent)
-    </div>
-    }
-    @if(Model.Sidebar2 != null) {
-    <aside class="sidebar secondary">
-        @Zone(Model.Sidebar2)
+
+    @if(Model.AsideSecond != null) {
+    <aside class="aside second">
+        @Zone(Model.AsideSecond)
     </aside>
     }
 
@@ -83,16 +79,26 @@
         @Zone(Model.Content)
     </div>
     }
- 
 
-    @if(Model.Sidebar != null) {
-    <aside class="sidebar primary">
-        @Zone(Model.Sidebar)
+
+    @if(Model.AsideFirst != null) {
+    <aside class="aside first">
+        @Zone(Model.AsideFirst)
+    </aside>
+    }
+
+@* Create a zone and only show it on the home page. *@
+
+@if (Request.Path == "/OrchardLocal") {
+WorkContext.Layout.AsideThird.Add(New.AsideThird());
+  }
+    @if(Model.AsideThird != null) {
+    <aside class="aside third group">
+        @Zone(Model.AsideThird)
     </aside>
     }
 
 </div>
-
 
     @if(Model.Footer != null) {
     <footer id="layout-footer" class="group">
