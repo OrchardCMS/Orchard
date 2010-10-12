@@ -61,7 +61,16 @@
         @Zone(Model.Messages)
     </div>
     }
-
+    @if(Model.Featured != null) {
+    <div class="zone-featured">
+        @Zone(Model.Featured)
+    </div>
+    }
+    @if(Model.Recent != null) {
+    <div class="zone-recent">
+        @Zone(Model.Recent)
+    </div>
+    }
     @if(Model.Sidebar2 != null) {
     <aside class="sidebar secondary">
         @Zone(Model.Sidebar2)
