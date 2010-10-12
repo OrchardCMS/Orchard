@@ -26,9 +26,9 @@ namespace Orchard.ContentManagement {
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
 
-        dynamic BuildDisplay(dynamic content, string displayType = "");
-        dynamic BuildEditor(dynamic content);
-        dynamic UpdateEditor(dynamic content, IUpdateModel updater);
+        dynamic BuildDisplay(IContent content, string displayType = "");
+        dynamic BuildEditor(IContent content);
+        dynamic UpdateEditor(IContent content, IUpdateModel updater);
     }
 
     public class VersionOptions {
