@@ -181,6 +181,7 @@
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
+    <Compile Include="UI\FlatPositionComparer.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
     <Compile Include="UI\Resources\ResourceManifestBuilder.cs" />
     <Compile Include="UI\Widgets\IRuleManager.cs" />
