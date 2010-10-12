@@ -88,10 +88,10 @@ a:visited{}
 
 /* Headings */
 
-h1,h2,h3,h4,h5,h6 { font-weight: normal; }
+h1,h2,h3,h4,h5,h6 { font-weight: normal; margin:.6em 0;}
 
 h1 { font-size: 2em; }
-h2 { font-size: 1.3em; }
+h2 { font-size: 1.4em; }
 h3 { font-size: 1.2em; }
 h4 { font-size: 1.1em; }
 h5 { font-size: 1em;   }
@@ -119,7 +119,7 @@ p, footer, .meta {
 
 #layout-header {
     background: #53a4ca;
-    padding: 24px 0;
+    padding: 12px 0;
     margin-bottom:12px;
 }
 
@@ -169,6 +169,7 @@ nav ul a {
 	padding:0 18px;
     display:block;
 	float:left;
+    color: #333;
     font-size:1.4em;
     text-decoration:none;
     line-height:24px;
@@ -221,51 +222,59 @@ nav ul a {
 
 /* Forms
 ***************************************************************/
+label             { font-weight: normal; display:block; }
+label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #ccc; }
+legend            { font-weight: 600; font-size:1.2em; }
 
-input[type=text],
-input.text, input.title, 
-textarea, select { 
-  background-color:#fff; 
-  border:1px solid #bbb; 
-}
-input[type=text]:focus, 
-input.text:focus, input.title:focus, 
-textarea:focus, select:focus { 
-  border-color:#a5cc7a;
-  background-color: #fbfff7;
-}
 
-input[type=text], 
-input.text, input.title,
-textarea, select {
-  margin:0.5em 0;
+input[type="text"], #CommentText, #password, #confirmPassword {
+    border:1px solid #999;
+    display: block;
+    padding:3px;
+    width:50%;
 }
 
-input.text, 
-input.title   { width: 300px; padding:5px; }
-input.title   { font-size:1.5em; }
-textarea      { padding:5px; }
-
-input[type=checkbox], input[type=radio], 
-input.checkbox, input.radio { 
-  position:relative; top:.25em; 
+form.search {
+    margin-bottom:2em;
 }
 
-/* TODO: Causes form rendering issues with theme preview, had to add line-height: normal */
-form.inline { line-height: normal; }
-form.inline p { margin-bottom:0; }
+.search input[type=text] {
+    display:inline;
+    width:17em;
+}
 
+fieldset div {margin:1.6em 0 0 0}
+    
+legend {
+	font-size: 1.4em;
+	border:none;
+}
 
-/*- Login Control -*/
+label {
+    font-size: 1.3em;
+    margin:0 0 .6em 0;
+    }
 
-.login-form { border: solid 1px #e2e2e2; padding: 20px; font-size: 1.2em; font-weight: normal; }
-.login-form div { padding: 5px 0px 5px 0px; }
-.login-form input[type=submit] { margin: 5px 0px 5px 0px; }
-.validation-summary-errors { padding: 20px 20px 0px 20px; border: solid 1px #fff54f; background-color: #fffcca; margin-bottom: 20px; }
+input[type="checkbox"] {
+    margin:.2em 0 1.2em 0;
+}
 
-.edit-form { display: none; }
-.static_text_div { border: dashed 1px #CCCCCC; display:block; color: inherit; }
-.static_text_div:hover { border: dashed 1px red; color: inherit; }
+input[type="submit"], input[type="button"], button, .button, .button:link, .button:visited {
+	color:#333;
+    background:#F5F5F5;
+	background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#cbcbcb));
+	background:-moz-linear-gradient(top , #F5F5F5, #cbcbcb);
+	border:1px solid #999;
+	cursor:pointer;
+    margin:.2em 0 2em 0;
+	padding:.3em 1.8em;
+	text-align:center;
+	-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
+	-webkit-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
+	-moz-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
+
+}
 
 /* Misc
 ***************************************************************/
