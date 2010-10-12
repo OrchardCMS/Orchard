@@ -32,6 +32,10 @@ namespace Orchard.MultiTenancy.Controllers {
         public ActionResult Add() {
             if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Cannot create tenant")))
                 return new HttpUnauthorizedResult();
+
+            if ( !EnsureDefaultTenant() )
+                return new HttpUnauthorizedResult();
+
             return View(new TenantAddViewModel());
         }
 
@@ -40,7 +44,10 @@ namespace Orchard.MultiTenancy.Controllers {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't create tenant")))
                     return new HttpUnauthorizedResult();
-                
+
+                if ( !EnsureDefaultTenant() )
+                    return new HttpUnauthorizedResult();
+
                 _tenantService.CreateTenant(
                     new ShellSettings {
                         Name = viewModel.Name,
@@ -64,6 +71,9 @@ namespace Orchard.MultiTenancy.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Cannot edit tenant")))
                 return new HttpUnauthorizedResult();
 
+            if ( !EnsureDefaultTenant() )
+                return new HttpUnauthorizedResult();
+
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
             if (tenant == null)
                 return new NotFoundResult();
@@ -83,6 +93,9 @@ namespace Orchard.MultiTenancy.Controllers {
         public ActionResult EditPost(TenantEditViewModel viewModel) {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't edit tenant")))
+                    return new HttpUnauthorizedResult();
+
+                if ( !EnsureDefaultTenant() )
                     return new HttpUnauthorizedResult();
 
                 var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
@@ -113,6 +126,9 @@ namespace Orchard.MultiTenancy.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't disable tenant")))
                 return new HttpUnauthorizedResult();
 
+            if ( !EnsureDefaultTenant() )
+                return new HttpUnauthorizedResult();
+
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
 
             if (tenant != null && tenant.Name != _thisShellSettings.Name) {
@@ -120,12 +136,15 @@ namespace Orchard.MultiTenancy.Controllers {
                 _tenantService.UpdateTenant(tenant);
             }
 
-            return RedirectToAction("index");
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
         public ActionResult Enable(string name) {
             if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't enable tenant")))
+                return new HttpUnauthorizedResult();
+
+            if ( !EnsureDefaultTenant() )
                 return new HttpUnauthorizedResult();
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
@@ -135,7 +154,11 @@ namespace Orchard.MultiTenancy.Controllers {
                 _tenantService.UpdateTenant(tenant);
             }
 
-            return RedirectToAction("index");
+            return RedirectToAction("Index");
+        }
+
+        private bool EnsureDefaultTenant() {
+            return _thisShellSettings.Name == "Default";
         }
     }
 }
