@@ -10,9 +10,9 @@
 
 	<div class="manage">@Html.ActionLink(T("Add a layer").ToString(), "AddLayer", new { }, new { @class = "button primaryAction" })</div>
 
-	<div id="widgets" class="widgets">
+	<div id="widgets">
 		
-		<div class="availableWidgets">
+		<div class="widgets-availableWidgets">
 			<h2>Available Widgets</h2>
 
 			<fieldset>
@@ -38,18 +38,18 @@
 			</fieldset>
 		</div>
 
-		<div class="availableLayers">
+		<div class="widgets-availableLayers">
 				<h2>Widget Layers</h2>
 
 			<fieldset>
-				<div class="layerZonesWidgets">
-					<ul class="layerZones">
+				<div>
+					<ul class="widgets-layerZones">
 						@foreach (string zone in Model.Zones) {
 							<li>
-								<div class="zone">@zone</div>
+								<div class="widgets-zone">@zone</div>
 								<ul>
 									@foreach (WidgetPart widget in Model.CurrentLayerWidgets.Where(widgetPart => widgetPart.Zone == zone).OrderBy(widgetPart => widgetPart.Position)) {
-										<li class="zoneWidget">
+										<li class="widgets-zoneWidget">
 											@if (widget.Position != "1") {
 												<input type="image" name="submit.MoveUp.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/moveup.gif")" alt="Move up" value="@widget.Id" />
 											}
@@ -65,18 +65,18 @@
 					</ul>
 				</div>
 
-				<div class="layers">
+				<div class="widgets-layers">
 					<ul>
 						@foreach (var layer in Model.Layers) {
 							if (layer.Id == Model.CurrentLayer.Id) {
-								<li class="currentLayer editLayer">
+								<li class="widgets-currentLayer widgets-editLayer">
 									@Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
 									<a href="@Url.Action("EditLayer", new { @layer.Id })">
 										<img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.gif")" />
 									</a>
 								</li>
 							} else {
-								<li class="editLayer">
+								<li class="widgets-editLayer">
 									@Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
 									<a href="@Url.Action("EditLayer", new { @layer.Id })">
 										<img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.gif")" />

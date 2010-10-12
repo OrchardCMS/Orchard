@@ -132,29 +132,38 @@ p, .meta {
 
 /* Sidebar off - Content Zone 960 */
 #content {
-    clear:both;
-    /*padding:12px;*/
+    /*clear:both;
+    padding:12px;*/
 }
 
-/*Right Sidebar on - Content Zone 600 */
+/*One Sidebar on */
 .has-sidebar #content {
 	background-color:#e8e8e8;
 	width: 600px;
     /*padding:12px 6px 6px 12px;*/
 	float:left;
-    clear:both;
+    /*clear:both;*/
 }
 
-/*Left Sidebar on - Content Zone 600 
-
-.has-sidebar #content {
-	float:right;
-}*/
-
-.sidebar {
+.has-sidebar .sidebar {
     background-color:#f6f6f6;
     width: 360px;
 	float:right;
+}
+
+/*Two Sidebars on */
+.has-sidebars #content {
+	background-color:#e8e8e8;
+	width: 600px;
+}
+
+.has-sidebars .sidebar {
+    background-color:#f6f6f6;
+    width: 180px;
+}
+
+.has-sidebars .primary, .has-sidebars .secondary, .has-sidebars #content {
+    float:left;
 }
 
 #sitemap {

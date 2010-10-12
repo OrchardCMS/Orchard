@@ -51,7 +51,7 @@ namespace Orchard.Blogs.Drivers {
                                           .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin.BlogPost")));
                 var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
                 blogPostList.Metadata.Type = "Parts_Blogs_BlogPost.List.Admin";
-                var contentShape = ContentShape(blogPostList).Location("primary");
+                var contentShape = ContentShape(blogPostList).Location("Primary");
                 driverResults.Add(contentShape);
             }
             else if (!displayType.Contains("Summary")) {
@@ -60,7 +60,7 @@ namespace Orchard.Blogs.Drivers {
                                           .Select(bp => _contentManager.BuildDisplay(bp, "Summary.BlogPost")));
                 var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
                 blogPostList.Metadata.Type = "Parts_Blogs_BlogPost.List";
-                var contentShape = ContentShape(blogPostList).Location("primary");
+                var contentShape = ContentShape(blogPostList).Location("Primary");
                 driverResults.Add(contentShape);
 
                 _feedManager.Register(part);

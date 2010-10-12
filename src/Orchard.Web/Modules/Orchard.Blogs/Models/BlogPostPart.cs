@@ -8,11 +8,6 @@ using Orchard.Security;
 
 namespace Orchard.Blogs.Models {
     public class BlogPostPart : ContentPart {
-        [HiddenInput(DisplayValue = false)]
-        public int Id {
-            get { return ContentItem.Id; }
-        }
-
         public string Title {
             get { return this.As<RoutePart>().Title; }
             set { this.As<RoutePart>().Title = value; }

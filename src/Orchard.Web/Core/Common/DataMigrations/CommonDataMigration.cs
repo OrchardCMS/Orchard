@@ -41,7 +41,7 @@ namespace Orchard.Core.Common.DataMigrations {
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterPartDefinition(typeof(BodyPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
-                    {"Default", new ContentLocation { Zone = "primary", Position = "5" }},
+                    {"Default", new ContentLocation { Zone = "Primary", Position = "5" }},
                 }));
             return 2;
         }
@@ -50,7 +50,7 @@ namespace Orchard.Core.Common.DataMigrations {
             ContentDefinitionManager.AlterPartDefinition(typeof(CommonPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
                     {"Default", new ContentLocation { Zone = "metadata", Position = "5" }},
-                    {"Editor", new ContentLocation { Zone = "primary", Position = "20" }},
+                    {"Editor", new ContentLocation { Zone = "Primary", Position = "20" }},
                 }));
             return 3;
         }

@@ -23,7 +23,7 @@ namespace Orchard.Widgets.Services {
 
         public IEnumerable<string> GetWidgetTypes() {
             return _contentManager.GetContentTypeDefinitions()
-                .Where(contentTypeDefinition => contentTypeDefinition.Settings.ContainsKey("stereotype") && contentTypeDefinition.Settings["stereotype"] == "widget")
+                .Where(contentTypeDefinition => contentTypeDefinition.Settings.ContainsKey("Stereotype") && contentTypeDefinition.Settings["Stereotype"] == "Widget")
                 .Select(contentTypeDefinition => contentTypeDefinition.Name);
         }
 

@@ -17,7 +17,6 @@ namespace Orchard.Roles.Models {
         }
 
         class SimulatedUser : ContentPart, IUser {
-            public int Id { get { return ContentItem.Id; } }
             public string UserName { get { return null; } }
             public string Email { get { return null; } }
         }
