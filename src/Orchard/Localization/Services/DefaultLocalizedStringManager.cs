@@ -17,6 +17,7 @@ namespace Orchard.Localization.Services {
         private readonly ISignals _signals;
         const string CoreLocalizationFilePathFormat = "~/Core/App_Data/Localization/{0}/orchard.core.po";
         const string ModulesLocalizationFilePathFormat = "~/Modules/{0}/App_Data/Localization/{1}/orchard.module.po";
+        const string ThemesLocalizationFilePathFormat = "~/Themes/{0}/App_Data/Localization/{1}/orchard.theme.po";
         const string RootLocalizationFilePathFormat = "~/App_Data/Localization/{0}/orchard.root.po";
         const string TenantLocalizationFilePathFormat = "~/App_Data/Sites/{0}/Localization/{1}/orchard.po";
 
@@ -46,12 +47,13 @@ namespace Orchard.Localization.Services {
 
             foreach (var culture in cultures) {
                 if (String.Equals(cultureName, culture.CultureName, StringComparison.OrdinalIgnoreCase)) {
-                    string scopedKey = scope + "|" + text;
-                    string genericKey = "|" + text;
+                    string scopedKey = (scope + "|" + text).ToLowerInvariant();
                     if (culture.Translations.ContainsKey(scopedKey)) {
                         return culture.Translations[scopedKey];
                     }
-                    if (culture.Translations.ContainsKey(genericKey)) {
+
+                    string genericKey = ("|" + text).ToLowerInvariant();
+                    if ( culture.Translations.ContainsKey(genericKey) ) {
                         return culture.Translations[genericKey];
                     }
 
@@ -63,8 +65,8 @@ namespace Orchard.Localization.Services {
         }
 
         private static string GetParentTranslation(string scope, string text, string cultureName, IEnumerable<CultureDictionary> cultures) {
-            string scopedKey = scope + "|" + text;
-            string genericKey = "|" + text;
+            string scopedKey = (scope + "|" + text).ToLowerInvariant();
+            string genericKey = ("|" + text).ToLowerInvariant();
             try {
                 CultureInfo cultureInfo = CultureInfo.GetCultureInfo(cultureName);
                 CultureInfo parentCultureInfo = cultureInfo.Parent;
@@ -109,6 +111,7 @@ namespace Orchard.Localization.Services {
         // In reverse priority order: 
         // "~/Core/App_Data/Localization/<culture_name>/orchard.core.po";
         // "~/Modules/<module_name>/App_Data/Localization/<culture_name>/orchard.module.po";
+        // "~/Themes/<theme_name>/App_Data/Localization/<culture_name>/orchard.theme.po";
         // "~/App_Data/Localization/<culture_name>/orchard.root.po";
         // "~/App_Data/Sites/<tenant_name>/Localization/<culture_name>/orchard.po";
         // The dictionary entries from po files that live in higher priority locations will
@@ -124,13 +127,24 @@ namespace Orchard.Localization.Services {
                 context.Monitor(_webSiteFolder.WhenPathChanges(corePath));
             }
 
-            foreach (var module in _extensionManager.AvailableExtensions()) {
-                if (String.Equals(module.ExtensionType, "Module")) {
+            foreach ( var module in _extensionManager.AvailableExtensions() ) {
+                if ( String.Equals(module.ExtensionType, "Module") ) {
                     string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Name, culture);
                     text = _webSiteFolder.ReadFile(modulePath);
-                    if (text != null) {
+                    if ( text != null ) {
                         ParseLocalizationStream(text, translations, true);
                         context.Monitor(_webSiteFolder.WhenPathChanges(modulePath));
+                    }
+                }
+            }
+
+            foreach ( var theme in _extensionManager.AvailableExtensions() ) {
+                if ( String.Equals(theme.ExtensionType, "Theme") ) {
+                    string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Name, culture);
+                    text = _webSiteFolder.ReadFile(themePath);
+                    if ( text != null ) {
+                        ParseLocalizationStream(text, translations, true);
+                        context.Monitor(_webSiteFolder.WhenPathChanges(themePath));
                     }
                 }
             }
@@ -170,24 +184,13 @@ namespace Orchard.Localization.Services {
                 if (poLine.StartsWith("msgstr")) {
                     string translation = ParseTranslation(poLine);
                     if (!String.IsNullOrEmpty(id)) {
-                        if (!String.IsNullOrEmpty(scope)) {
-                            string scopedKey = scope + "|" + id;
-                            if (!translations.ContainsKey(scopedKey)) {
-                                translations.Add(scopedKey, translation);
-                            }
-                            else {
-                                if (merge) {
-                                    translations[scopedKey] = translation;
-                                }
-                            }
-                        }
-                        string genericKey = "|" + id;
-                        if (!translations.ContainsKey(genericKey)) {
-                            translations.Add(genericKey, translation);
+                        string scopedKey = (scope + "|" + id).ToLowerInvariant();
+                        if (!translations.ContainsKey(scopedKey)) {
+                            translations.Add(scopedKey, translation);
                         }
                         else {
                             if (merge) {
-                                translations[genericKey] = translation;
+                                translations[scopedKey] = translation;
                             }
                         }
                     }
