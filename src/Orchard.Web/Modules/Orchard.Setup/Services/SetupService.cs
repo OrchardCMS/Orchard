@@ -215,7 +215,6 @@ namespace Orchard.Setup.Services {
                     contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg
                         .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
 
-
                     // add a layer for the homepage
                     var layer = contentManager.Create("Layer");
                     layer.As<LayerPart>().Name = "TheHomepage";
@@ -233,9 +232,10 @@ namespace Orchard.Setup.Services {
                     // create the home page as a WidgetPage
                     var page = contentManager.Create("WidgetPage", VersionOptions.Draft);
                     page.As<RoutePart>().Title = T("Home").ToString();
+                    page.As<CommonPart>().Owner = user;
                     contentManager.Publish(page);
                     siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
-
+ 
                     // add a menu item for the shiny new home page
                     var menuItem = contentManager.Create("MenuItem");
                     menuItem.As<MenuPart>().MenuPosition = "1";
