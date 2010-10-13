@@ -228,30 +228,36 @@ namespace Orchard.Setup.Services {
                     htmlWidget.As<WidgetPart>().Title = T("Welcome to Orchard!").Text;
                     htmlWidget.As<WidgetPart>().Zone = "Content";
                     htmlWidget.As<WidgetPart>().Position = "5";
-                    htmlWidget.As<BodyPart>().Text = "<p>Congratulations, you've successfully set-up your Orchard site.</p><p>This is the home page of your new site. We've taken the liberty to write here about a few things you could look at next in order to get familiar with the application. Once you feel confident you don't need this anymore, just click <a href=\"Admin/Pages/Edit/3\">Edit</a> to go into edit mode and replace this with whatever you want on your home page to make it your own.</p><p>One thing you could do (but you don't have to) is go into <a href=\"Admin/Settings\">Manage Settings</a> (follow the <a href=\"Admin\">Admin</a> link and then look for it under \"Settings\" in the menu on the left) and check that everything is configured the way you want.</p><p>You probably want to make the site your own. One of the ways you can do that is by clicking <a href=\"Admin/Themes\">Manage Themes</a> in the admin menu. A theme is a packaged look and feel that affects the whole site.</p><p>Next, you can start playing with the content types that we installed. For example, go ahead and click <a href=\"Admin/Pages/Create\">Add New Page</a> in the admin menu and create an \"about\" page. Then, add it to the navigation menu by going to <a href=\"Admin/Navigation\">Manage Menu</a>. You can also click <a href=\"Admin/Blogs/Create\">Add New Blog</a> and start posting by clicking \"Add New Post\".</p><p>Finally, Orchard has been designed to be extended. It comes with a few built-in modules such as pages and blogs or themes. You can install new themes by going to <a href=\"Admin/Themes\">Manage Themes</a> and clicking <a href=\"Admin/Themes/Install\">Install a new Theme</a>. Like for themes, modules are created by other users of Orchard just like you so if you feel up to it, please <a href=\"http://www.orchardproject.net/\">consider participating</a>.</p><p>--The Orchard Crew</p>";
+                    htmlWidget.As<BodyPart>().Text = "<p>Congratulations, you've successfully set-up your Orchard site.</p><p>This is the home page of your new site. We've taken the liberty to write here about a few things you could look at next in order to get familiar with the application. Once you feel confident you don't need this anymore, just click <a href=\"Admin/Pages/Edit/7\">Edit</a> to go into edit mode and replace this with whatever you want on your home page to make it your own.</p><p>One thing you could do (but you don't have to) is go into <a href=\"Admin/Settings\">Manage Settings</a> (follow the <a href=\"Admin\">Admin</a> link and then look for it under \"Settings\" in the menu on the left) and check that everything is configured the way you want.</p><p>You probably want to make the site your own. One of the ways you can do that is by clicking <a href=\"Admin/Themes\">Manage Themes</a> in the admin menu. A theme is a packaged look and feel that affects the whole site.</p><p>Next, you can start playing with the content types that we installed. For example, go ahead and click <a href=\"Admin/Pages/Create\">Add New Page</a> in the admin menu and create an \"about\" page. Then, add it to the navigation menu by going to <a href=\"Admin/Navigation\">Manage Menu</a>. You can also click <a href=\"Admin/Blogs/Create\">Add New Blog</a> and start posting by clicking \"Add New Post\".</p><p>Finally, Orchard has been designed to be extended. It comes with a few built-in modules such as pages and blogs or themes. You can install new themes by going to <a href=\"Admin/Themes\">Manage Themes</a> and clicking <a href=\"Admin/Themes/Install\">Install a new Theme</a>. Like for themes, modules are created by other users of Orchard just like you so if you feel up to it, please <a href=\"http://www.orchardproject.net/\">consider participating</a>.</p><p>--The Orchard Crew</p>";
                     contentManager.Publish(htmlWidget);
+                    
                     // and three more for the third aside...really need this elsewhere...
-                    var asideHtmlWidget = contentManager.Create("HtmlWidget");
-                    asideHtmlWidget.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
-                    asideHtmlWidget.As<WidgetPart>().Title = T("First Leader Aside").Text;
-                    asideHtmlWidget.As<WidgetPart>().Zone = "AsideThird";
-                    asideHtmlWidget.As<WidgetPart>().Position = "4";
-                    asideHtmlWidget.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
-                    contentManager.Publish(asideHtmlWidget);
                     var asideHtmlWidget1 = contentManager.Create("HtmlWidget");
                     asideHtmlWidget1.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
-                    asideHtmlWidget1.As<WidgetPart>().Title = T("Second Leader Aside").Text;
+                    asideHtmlWidget1.As<WidgetPart>().Title = T("First Leader Aside").Text;
                     asideHtmlWidget1.As<WidgetPart>().Zone = "AsideThird";
-                    asideHtmlWidget1.As<WidgetPart>().Position = "5";
+                    asideHtmlWidget1.As<WidgetPart>().Position = "4";
                     asideHtmlWidget1.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
+                    asideHtmlWidget1.As<CommonPart>().Owner = user; 
                     contentManager.Publish(asideHtmlWidget1);
+                    
                     var asideHtmlWidget2 = contentManager.Create("HtmlWidget");
                     asideHtmlWidget2.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
-                    asideHtmlWidget2.As<WidgetPart>().Title = T("Third Leader Aside").Text;
+                    asideHtmlWidget2.As<WidgetPart>().Title = T("Second Leader Aside").Text;
                     asideHtmlWidget2.As<WidgetPart>().Zone = "AsideThird";
-                    asideHtmlWidget2.As<WidgetPart>().Position = "6";
+                    asideHtmlWidget2.As<WidgetPart>().Position = "5";
                     asideHtmlWidget2.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
+                    asideHtmlWidget2.As<CommonPart>().Owner = user; 
                     contentManager.Publish(asideHtmlWidget2);
+                    
+                    var asideHtmlWidget3 = contentManager.Create("HtmlWidget");
+                    asideHtmlWidget3.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
+                    asideHtmlWidget3.As<WidgetPart>().Title = T("Third Leader Aside").Text;
+                    asideHtmlWidget3.As<WidgetPart>().Zone = "AsideThird";
+                    asideHtmlWidget3.As<WidgetPart>().Position = "6";
+                    asideHtmlWidget3.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
+                    asideHtmlWidget3.As<CommonPart>().Owner = user;
+                    contentManager.Publish(asideHtmlWidget3);
 
                     // create the home page as a WidgetPage
                     var page = contentManager.Create("WidgetPage", VersionOptions.Draft);
