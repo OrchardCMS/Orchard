@@ -4,8 +4,24 @@ using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets {
     public class Shapes : IShapeTableProvider {
+        private readonly IOrchardServices _orchardServices;
+
+        public Shapes(IOrchardServices orchardServices) {
+            _orchardServices = orchardServices;
+        }
+
         public void Discover(ShapeTableBuilder builder) {
             builder.Describe("Items_Widget")
+                .Configure(descriptor => {
+                    if (_orchardServices.Authorizer.Authorize(Permissions.ManageWidgets))
+                        descriptor.Wrappers.Add("Widget_Manage");
+                    else
+                        descriptor.Wrappers.Add("Widget");
+                })
+                .OnCreated(created => {
+                    var widget = created.Shape;
+                    widget.Main.Add(created.New.PlaceChildContent(Source: widget));
+                })
                 .OnDisplaying(displaying => {
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {

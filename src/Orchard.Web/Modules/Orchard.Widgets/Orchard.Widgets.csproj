@@ -115,11 +115,13 @@
     <None Include="Views\Admin\EditLayer.cshtml" />
     <None Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Items_Widget.Editor.cshtml" />
+    <None Include="Views\Widget.Manage.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.WidgetPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.LayerPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.WidgetBagPart.cshtml" />
     <Content Include="Views\Items_Widget.cshtml" />
     <Content Include="Views\Items\Content-WidgetPage.cshtml" />
+    <None Include="Views\Widget.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -260,7 +260,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST(int id) {
+        public ActionResult EditPOST(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
             if (contentItem == null)
@@ -282,6 +282,10 @@ namespace Orchard.Core.Contents.Controllers {
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been saved.")
                 : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
+
+            if (!String.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }
 
