@@ -2,7 +2,7 @@
 
 namespace Orchard.Search.Models {
     /// <summary>
-    /// Cotnent part for the search form widget
+    /// Content part for the search form widget
     /// </summary>
     public class SearchFormPart : ContentPart {
     }

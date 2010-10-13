@@ -106,7 +106,7 @@ namespace Orchard.Widgets.Controllers {
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Creating widget failed: {0}", exception.Message));
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Admin", new { id = layerId });
             }
         }
 
@@ -128,12 +128,12 @@ namespace Orchard.Widgets.Controllers {
                 }
 
                 Services.Notifier.Information(T("Your {0} has been created.", widgetPart.TypeDefinition.DisplayName));
-                return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Creating widget failed: {0}", exception.Message));
-                return RedirectToAction("Index");
             }
+
+            return RedirectToAction("Index", "Admin", new { id = layerId });
         }
 
         public ActionResult AddLayer() {
@@ -171,7 +171,7 @@ namespace Orchard.Widgets.Controllers {
                 }
 
                 Services.Notifier.Information(T("Your {0} has been created.", layerPart.TypeDefinition.DisplayName));
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Admin", new { id = layerPart.Id });
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Creating layer failed: {0}", exception.Message));
@@ -194,7 +194,7 @@ namespace Orchard.Widgets.Controllers {
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Editing layer failed: {0}", exception.Message));
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Admin", new { id });
             }
         }
 
@@ -216,12 +216,12 @@ namespace Orchard.Widgets.Controllers {
                 }
 
                 Services.Notifier.Information(T("Your {0} has been saved.", layerPart.TypeDefinition.DisplayName));
-                return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Editing layer failed: {0}", exception.Message));
-                return RedirectToAction("Index");
             }
+
+            return RedirectToAction("Index", "Admin", new { id });
         }
 
         [HttpPost, ActionName("EditLayer")]
@@ -238,15 +238,16 @@ namespace Orchard.Widgets.Controllers {
                 Services.Notifier.Error(T("Removing Layer failed: {0}", exception.Message));
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Admin", new { id });
         }
 
         public ActionResult EditWidget(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
+            WidgetPart widgetPart = null;
             try {
-                WidgetPart widgetPart = _widgetsService.GetWidget(id);
+                widgetPart = _widgetsService.GetWidget(id);
                 if (widgetPart == null) {
                     Services.Notifier.Error(T("Widget not found: {1}", id));
                     return RedirectToAction("Index");
@@ -257,6 +258,10 @@ namespace Orchard.Widgets.Controllers {
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));
+
+                if (widgetPart != null)
+                    return RedirectToAction("Index", "Admin", new { id = widgetPart.LayerPart.Id });
+
                 return RedirectToAction("Index");
             }
         }
@@ -267,11 +272,12 @@ namespace Orchard.Widgets.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
+            WidgetPart widgetPart = null;
             try {
-                WidgetPart widgetPart = _widgetsService.GetWidget(id);
+                widgetPart = _widgetsService.GetWidget(id);
                 if (widgetPart == null)
                     return new NotFoundResult();
-            
+
                 var model = Services.ContentManager.UpdateEditor(widgetPart, this);
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
@@ -279,12 +285,14 @@ namespace Orchard.Widgets.Controllers {
                 }
 
                 Services.Notifier.Information(T("Your {0} has been saved.", widgetPart.TypeDefinition.DisplayName));
-                return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));
-                return RedirectToAction("Index");
             }
+
+            return widgetPart != null ?
+                RedirectToAction("Index", "Admin", new { id = widgetPart.LayerPart.Id }) :
+                RedirectToAction("Index");
         }
 
         [HttpPost, ActionName("EditWidget")]
@@ -293,15 +301,22 @@ namespace Orchard.Widgets.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
+            WidgetPart widgetPart = null;
             try {
-                _widgetsService.DeleteWidget(id);
+                widgetPart = _widgetsService.GetWidget(id);
+                if (widgetPart == null)
+                    return new NotFoundResult();
+
+                _widgetsService.DeleteWidget(widgetPart.Id);
                 Services.Notifier.Information(T("Widget was successfully deleted"));
             } 
             catch (Exception exception) {
                 Services.Notifier.Error(T("Removing Widget failed: {0}", exception.Message));
             }
 
-            return RedirectToAction("Index");
+            return widgetPart != null ?
+                RedirectToAction("Index", "Admin", new { id = widgetPart.LayerPart.Id }) : 
+                RedirectToAction("Index");
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
