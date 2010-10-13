@@ -36,11 +36,14 @@ namespace Orchard.Core.Common.Drivers {
         public IOrchardServices Services { get; set; }
 
         protected override DriverResult Display(CommonPart part, string displayType, dynamic shapeHelper) {
-            var metadata = shapeHelper.Parts_Common_Metadata(ContentPart: part);
-            if (!string.IsNullOrWhiteSpace(displayType))
-                metadata.Metadata.Type = string.Format("{0}.{1}", metadata.Metadata.Type, displayType);
-            var location = part.GetLocation(displayType);
-            return ContentShape(metadata).Location(location);
+            return Combined(
+                ContentShape("Parts_Common_Metadata",
+                             () => shapeHelper.Parts_Common_Metadata(ContentPart: part)),
+                ContentShape("Parts_Common_Metadata_Summary",
+                             () => shapeHelper.Parts_Common_Metadata_Summary(ContentPart: part)),
+                ContentShape("Parts_Common_Metadata_SummaryAdmin",
+                             () => shapeHelper.Parts_Common_Metadata_SummaryAdmin(ContentPart: part))
+                );
         }
 
         protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) {

@@ -35,7 +35,6 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Display(BodyPart part, string displayType, dynamic shapeHelper) {
-
             return Combined(
                 ContentShape("Parts_Common_Body",
                              () => {

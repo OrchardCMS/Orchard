@@ -393,6 +393,9 @@
     <Content Include="Shapes\Views\Web.config" />
     <Content Include="Dashboard\Views\Helper\Index.cshtml" />
     <None Include="Common\Placement.info" />
+    <None Include="Contents\Placement.info" />
+    <None Include="Localization\Placement.info" />
+    <None Include="PublishLater\Placement.info" />
     <None Include="Routable\Views\Parts\RoutableTitle.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

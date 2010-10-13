@@ -1,0 +1,14 @@
+﻿<Placement>
+    <Place Parts_Localization_ContentTranslations="-"/>
+    <Place Parts_Localization_ContentTranslations_Summary="-"/>
+    <Place Parts_Localization_ContentTranslations_SummaryAdmin="-"/>
+    <Match DisplayType="Detail">
+        <Place Parts_Localization_ContentTranslations="Primary:5"/>
+    </Match>
+    <Match DisplayType="Summary">
+        <Place Parts_Localization_ContentTranslations_Summary="Primary:5"/>
+    </Match>
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_Localization_ContentTranslations_SummaryAdmin="Primary:5"/>
+    </Match>
+</Placement>

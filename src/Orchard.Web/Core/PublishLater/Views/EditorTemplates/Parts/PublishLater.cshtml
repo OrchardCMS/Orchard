@@ -27,7 +27,10 @@
         @Html.EditorFor(m => m.ScheduledPublishUtcTime)
     </div>
 </fieldset>
-<script type="text/javascript">    $(function () {
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    $(function () {
         @* todo: (heskew) make a plugin *@
         $("label.forpicker").each(function () {
             var $this = $(this);
@@ -42,4 +45,7 @@
         });
         $(@(new HtmlString(string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishUtcDate"))))).datepicker({ showAnim: "" }).focus(function () { $(@(new HtmlString(string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater"))))).attr("checked", "checked") });
         $(@(new HtmlString(string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishUtcTime"))))).timepickr().focus(function () { $(@(new HtmlString(string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater"))))).attr("checked", "checked") });
-    })</script>
+    })
+//]]>
+</script>
+}

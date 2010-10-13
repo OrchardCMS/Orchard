@@ -10,6 +10,7 @@ namespace Orchard.Core.Contents {
                     if (contentItem != null) {
                         displaying.ShapeMetadata.Alternates.Add("Items_Content__" + contentItem.ContentType);
                         displaying.ShapeMetadata.Alternates.Add("Items_Content__" + contentItem.Id);
+                        displaying.ShapeMetadata.Alternates.Add("Items_Content_" + displaying.ShapeMetadata.DisplayType);
                     }
                 });
 

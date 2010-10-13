@@ -205,10 +205,21 @@ namespace Orchard.ContentManagement {
             return content == null ? default(T) : (T)content.ContentItem.Get(typeof(T));
         }
 
-
         public static IEnumerable<T> AsPart<T>(this IEnumerable<ContentItem> items) where T : IContent {
             return items == null ? null : items.Where(item => item.Is<T>()).Select(item => item.As<T>());
         }
 
+        public static bool IsPublished(this IContent content) {
+            return content.ContentItem.VersionRecord != null && content.ContentItem.VersionRecord.Published;
+        }
+        public static bool HasDraft(this IContent content) {
+            return (
+                       (content.ContentItem.VersionRecord != null)
+                       && ((content.ContentItem.VersionRecord.Published == false)
+                           || (content.ContentItem.VersionRecord.Published && content.ContentItem.VersionRecord.Latest == false)));
+        }
+        public static bool HasPublished(this IContent content) {
+            return content.IsPublished() || content.ContentItem.ContentManager.Get(content.ContentItem.Id, VersionOptions.Published) != null;
+        }
     }
 }

@@ -1,11 +1,12 @@
-﻿@model Orchard.Core.Localization.ViewModels.ContentLocalizationsViewModel
+﻿@using Orchard.Core.Localization.Models;
 @{
     Style.Require("LocalizationAdmin");
+    IEnumerable<LocalizationPart> localizations  = Model.Localizations;
+    var localizationLinks = Html.UnorderedList(localizations, (c, i) => Html.ItemEditLink(c.Culture.Culture, c), "localizations");
 }
 <div class="content-localization">
-    @if (Model.Localizations.Count() > 0) {
-    //todo: need this info in the view model
-    <div class="content-localizations"><h4>@T("Translations:")</h4>@Html.UnorderedList(Model.Localizations, (c, i) => Html.ItemEditLink(c.Culture.Culture, c), "localizations")</div>
+    @if (localizations.Count() > 0) {
+    <div class="content-localizations"><h4>@T("Translations:")</h4>@localizationLinks</div>
     }
     <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "translate", "admin", new { area = "Localization", id = Model.MasterId }, null)</div>
 </div>

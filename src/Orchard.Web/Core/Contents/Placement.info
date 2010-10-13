@@ -1,0 +1,11 @@
+﻿<Placement>
+    <Place Parts_Contents_Publish="-"/>
+    <Place Parts_Contents_Publish_Summary="-"/>
+    <Place Parts_Contents_Publish_SummaryAdmin="-"/>
+    <Match DisplayType="Detail">
+        <Place Parts_Contents_Publish="Primary:5"/>
+    </Match>
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_Contents_Publish_SummaryAdmin="Secondary:5"/>
+    </Match>
+</Placement>

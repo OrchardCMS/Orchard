@@ -1,0 +1,15 @@
+﻿<Placement>
+    <Place Parts_PublishLater_Metadata="-"/>
+    <Place Parts_PublishLater_Metadata_Summary="-"/>
+    <Place Parts_PublishLater_Metadata_SummaryAdmin="-"/>
+    <Place Parts_PublishLater_Editor="Secondary:1"/>
+    <Match DisplayType="Detail">
+        <Place Parts_PublishLater_Metadata="Meta:1"/>
+    </Match>
+    <Match DisplayType="Summary">
+        <Place Parts_PublishLater_Metadata_Summary="Meta:1"/>
+    </Match>
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_PublishLater_Metadata_SummaryAdmin="Meta:1"/>
+    </Match>
+</Placement>

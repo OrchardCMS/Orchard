@@ -22,11 +22,14 @@ namespace Orchard.Core.Localization.Drivers {
         }
 
         protected override DriverResult Display(LocalizationPart part, string displayType, dynamic shapeHelper) {
-            var contentTranslations = shapeHelper.Parts_Localization_ContentTranslations(ContentPart: part, Localizations: GetDisplayLocalizations(part));
-            if (!string.IsNullOrWhiteSpace(displayType))
-                contentTranslations.Metadata.Type = string.Format("{0}.{1}", contentTranslations.Metadata.Type, displayType);
-            var location = part.GetLocation(displayType);
-            return ContentShape(contentTranslations).Location(location);
+            return Combined(
+                ContentShape("Parts_Localization_ContentTranslations",
+                             () => shapeHelper.Parts_Localization_ContentTranslations(ContentPart: part, Localizations: GetDisplayLocalizations(part))),
+                ContentShape("Parts_Localization_ContentTranslations_Summary",
+                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(ContentPart: part, Localizations: GetDisplayLocalizations(part))),
+                ContentShape("Parts_Localization_ContentTranslations_SummaryAdmin",
+                             () => shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(ContentPart: part, Localizations: GetDisplayLocalizations(part)))
+                );
         }
 
         protected override DriverResult Editor(LocalizationPart part, dynamic shapeHelper) {
