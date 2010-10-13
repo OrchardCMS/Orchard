@@ -67,6 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Drivers\RecentBlogPostsPartDriver.cs" />
+    <Compile Include="Handlers\RecentBlogPostsPartHandler.cs" />
+    <Compile Include="Models\RecentBlogPostsPart.cs" />
+    <Compile Include="Models\RecentBlogPostsPartRecord.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Commands\BlogCommands.cs" />
     <Compile Include="Controllers\BlogAdminController.cs" />
@@ -183,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\Localization\fr-FR\orchard.module.po" />
+    <None Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

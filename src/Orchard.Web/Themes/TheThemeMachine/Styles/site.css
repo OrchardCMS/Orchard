@@ -78,7 +78,7 @@ body {
   font-size: 62.5%;
   color: #333; 
   background: #fff;
-  font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+  font-family: Tahoma, "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
 a {}
@@ -88,10 +88,10 @@ a:visited{}
 
 /* Headings */
 
-h1,h2,h3,h4,h5,h6 { font-weight: normal; }
+h1,h2,h3,h4,h5,h6 { font-weight: normal; margin:.6em 0;}
 
-h1 { font-size: 3em;}
-h2 { font-size: 1.3em; }
+h1 { font-size: 2em; }
+h2 { font-size: 1.4em; }
 h3 { font-size: 1.2em; }
 h4 { font-size: 1.1em; }
 h5 { font-size: 1em;   }
@@ -102,9 +102,16 @@ h4 img, h5 img, h6 img {
   margin: 0;
 }
 
-p, .meta {
+
+/* TODO: We wrap all widgets with consistent html so we get predictable font sizing */
+
+p, footer, .meta {
 	font-size:1.3em;
-	line-height:2em;
+	line-height:1.8em;
+}
+
+p {
+    margin-bottom: 1em;
 }
 
 /* Structure
@@ -115,40 +122,23 @@ p, .meta {
 }
 
 #layout-header {
-    border:1px solid #ff0000;
     background: #53a4ca;
+    padding: 12px 0;
+    margin-bottom:12px;
 }
 
 #branding a {
     color:#fff;
     text-decoration:none;
-    padding:48px 12px;
+    padding:0 12px;
 }
-
 
 #layout-wrapper {
-	border:1px solid #CCC;
 }
 
-/* Sidebar off - Content Zone 960 */
-#content {
-    /*clear:both;
-    padding:12px;*/
-}
-
-/*One Sidebar on */
-.has-sidebar #content {
-	background-color:#e8e8e8;
-	width: 600px;
-    /*padding:12px 6px 6px 12px;*/
-	float:left;
-    /*clear:both;*/
-}
-
-.has-sidebar .sidebar {
-    background-color:#f6f6f6;
-    width: 360px;
-	float:right;
+#layout-footer {
+    border-top: 1px solid #999;
+    margin-top:12px;
 }
 
 /*Two Sidebars on */
@@ -166,17 +156,12 @@ p, .meta {
     float:left;
 }
 
-#sitemap {
-    clear:both;
-}
-
        
 /* Navigation */
 
-
 #navigation {
     width: 960px;
-	margin: 4px auto;
+	margin: 12px auto;
 	display:block;
     border-bottom: 1px solid #999;
 }
@@ -188,13 +173,13 @@ nav ul {
 nav ul li
  {
 	border:1px solid #999;
-	background:#e7e7e7;
+	background:#f6f6f6;
 	display:block;
 	float:left;
 	margin:0 2px -1px 0;
 }
 
-nav ul li.on {
+nav ul li.current {
 	border-bottom: 1px solid #fff;
 	background:#fff;
 }
@@ -203,80 +188,159 @@ nav ul a {
 	padding:0 18px;
     display:block;
 	float:left;
+    color: #333;
     font-size:1.4em;
     text-decoration:none;
     line-height:24px;
 }
 
-#footer {}
-
 /* Main
 ***************************************************************/
+
+#content, .aside, .about {
+    padding:6px;
+}
+
+/* One Sidebar on */
+.has-sidebar #content {
+	width: 588px;
+	float:left;
+}
+
+.has-sidebar .aside.first {
+    width: 348px;
+	float:right;
+}
+
+/* Sidebar on the left */
+.has-sidebar-left #content {
+	width: 588px;
+	float:right;
+}
+
+.has-sidebar-left .aside.second {
+    width: 348px;
+	float:left;
+}
+
+/* Two Sidebars on */
+.has-sidebars #content {
+	width: 588px;
+}
+
+.has-sidebars .aside.first, .has-sidebars .aside.second {
+    width: 168px;
+}
+
+.has-sidebars .aside.first, .has-sidebars .aside.second, .has-sidebars #content {
+    float:left;
+}
 
 /* Secondary
 ***************************************************************/
 
 /* Forms
 ***************************************************************/
+label             { font-weight: normal; display:block; }
+label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #ccc; }
+legend            { font-weight: 600; font-size:1.2em; }
 
-input[type=text],
-input.text, input.title, 
-textarea, select { 
-  background-color:#fff; 
-  border:1px solid #bbb; 
-}
-input[type=text]:focus, 
-input.text:focus, input.title:focus, 
-textarea:focus, select:focus { 
-  border-color:#a5cc7a;
-  background-color: #fbfff7;
-}
 
-input[type=text], 
-input.text, input.title,
-textarea, select {
-  margin:0.5em 0;
+input[type="text"], #CommentText, #password, #confirmPassword {
+    border:1px solid #999;
+    display: block;
+    padding:6px;
+    width:50%;
 }
 
-input.text, 
-input.title   { width: 300px; padding:5px; }
-input.title   { font-size:1.5em; }
-textarea      { padding:5px; }
-
-input[type=checkbox], input[type=radio], 
-input.checkbox, input.radio { 
-  position:relative; top:.25em; 
+form.search {
+    margin-bottom:2em;
 }
 
-/* TODO: Causes form rendering issues with theme preview, had to add line-height: normal */
-form.inline { line-height: normal; }
-form.inline p { margin-bottom:0; }
+.search input[type=text] {
+    display:inline;
+    width:17em;
+}
 
+fieldset div {margin:1.6em 0 0 0}
+    
+legend {
+	font-size: 1.4em;
+	border:none;
+}
 
-/*- Login Control -*/
+label {
+    font-size: 1.3em;
+    margin:0 0 .3em 0;
+    }
 
-.login-form { border: solid 1px #e2e2e2; padding: 20px; font-size: 1.2em; font-weight: normal; }
-.login-form div { padding: 5px 0px 5px 0px; }
-.login-form input[type=submit] { margin: 5px 0px 5px 0px; }
-.validation-summary-errors { padding: 20px 20px 0px 20px; border: solid 1px #fff54f; background-color: #fffcca; margin-bottom: 20px; }
+input[type="checkbox"] {
+    margin:.2em 0 1.2em 0;
+}
 
-.edit-form { display: none; }
-.static_text_div { border: dashed 1px #CCCCCC; display:block; color: inherit; }
-.static_text_div:hover { border: dashed 1px red; color: inherit; }
+input[type="submit"], input[type="button"], button, .button, .button:link, .button:visited {
+	color:#333;
+    background:#F5F5F5;
+	background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#cbcbcb));
+	background:-moz-linear-gradient(top , #F5F5F5, #cbcbcb);
+	border:1px solid #999;
+	cursor:pointer;
+    margin:.2em 0 2em 0;
+	padding:.3em 1.8em;
+	text-align:center;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover,
+input[type="submit"]:active, input[type="button"]:active,
+input[type="submit"]:focus, input[type="button"]:focus,
+button:hover, .button:hover,
+button:active, .button:active,
+button:focus, .button:focus {
+    text-decoration:none; 
+    background: #ffac40;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffac40), to(#f06015));
+	background: -moz-linear-gradient(top,  #ffac40,  #f9760d);
+    background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
+	background:-moz-linear-gradient(top , #e1e1e1, #ebebeb);
+}
+
 
 /* Misc
 ***************************************************************/
 
 /* For testing purposes */
-
-
-
-
-
-.zone {
-    /*padding:6px;*/
+#comments {
+    font-weight:600;
+    margin:1.2em 0 1.2em 1.2em;
 }
 
+ul.comments, form.comment {
+    margin:1.2em 0 1.2em 1.2em;
+}
+
+div.comment span {
+    font-size:1.3em;
+}
+
+ul.comments li div.text {
+    margin:.6em 0;
+}
+
+.user-display {
+    display:inline;
+}
+
+.aside.third {
+    border-top:1px solid #999999;
+    clear:both;
+}
+
+.aside.third div > div {
+     float:left;
+     width:304px;
+     padding:12px 6px 0 6px;
+}
 
 /* Featured Zone - switch to an image */
 

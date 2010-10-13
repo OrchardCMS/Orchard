@@ -46,6 +46,7 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         public class Theme : ITheme {
+            public bool Enabled { get; set; }
             public string ThemeName { get; set; }
             public string DisplayName { get; set; }
             public string Description { get; set; }

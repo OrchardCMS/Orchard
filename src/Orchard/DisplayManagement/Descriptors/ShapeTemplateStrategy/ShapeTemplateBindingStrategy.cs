@@ -38,7 +38,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             var harvesterInfos = _harvesters.Select(harvester => new { harvester, subPaths = harvester.SubPaths() });
 
             var availableFeatures = _extensionManager.AvailableFeatures();
-            var activeFeatures = availableFeatures.Where(fd => FeatureIsTheme(fd) || FeatureIsEnabled(fd));
+            var activeFeatures = availableFeatures.Where(FeatureIsEnabled);
             var activeExtensions = Once(activeFeatures);
 
             var hits = activeExtensions.SelectMany(extensionDescriptor => {
@@ -81,12 +81,9 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             }
         }
 
-        private bool FeatureIsTheme(FeatureDescriptor fd) {
-            return fd.Extension.ExtensionType == "Theme";
-        }
-
         private bool FeatureIsEnabled(FeatureDescriptor fd) {
-            return _shellDescriptor.Features.Any(sf => sf.Name == fd.Name);
+            return (fd.Extension.ExtensionType == "Theme" && (fd.Name == "TheAdmin" || fd.Name == "SafeMode")) ||
+                _shellDescriptor.Features.Any(sf => sf.Name == fd.Name);
         }
 
         private IHtmlString Render(ShapeDescriptor shapeDescriptor, DisplayContext displayContext, HarvestShapeInfo harvestShapeInfo, HarvestShapeHit harvestShapeHit) {

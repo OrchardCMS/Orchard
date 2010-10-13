@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
 using Autofac;
+using JetBrains.Annotations;
 using Orchard.Commands;
 using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
@@ -91,6 +92,7 @@ namespace Orchard.Setup {
         }
 
 
+        [UsedImplicitly]
         class SafeModeText : IText {
             public LocalizedString Get(string textHint, params object[] args) {
                 if (args == null || args.Length == 0) {
@@ -100,9 +102,11 @@ namespace Orchard.Setup {
             }
         }
 
+        [UsedImplicitly]
         class SafeModeThemeService : IThemeService {
             class SafeModeTheme : ITheme {
                 public ContentItem ContentItem { get; set; }
+                public bool Enabled { get; set; }
                 public string ThemeName { get; set; }
                 public string DisplayName { get; set; }
                 public string Description { get; set; }
@@ -115,6 +119,7 @@ namespace Orchard.Setup {
             }
 
             private readonly SafeModeTheme _theme = new SafeModeTheme {
+                Enabled = true,
                 ThemeName = "SafeMode",
                 DisplayName = "SafeMode",
             };
@@ -126,8 +131,11 @@ namespace Orchard.Setup {
             public IEnumerable<ITheme> GetInstalledThemes() { return new[] { _theme }; }
             public void InstallTheme(HttpPostedFileBase file) { }
             public void UninstallTheme(string themeName) { }
+            public void EnableTheme(string themeName) { }
+            public void DisableTheme(string themeName) { }
         }
 
+        [UsedImplicitly]
         class SafeModeSiteWorkContextProvider : IWorkContextStateProvider {
             public T Get<T>(string name) {
                 if (name == "CurrentSite")
@@ -136,6 +144,7 @@ namespace Orchard.Setup {
             }
         }
 
+        [UsedImplicitly]
         class SafeModeSiteService : ISiteService {
             public ISite GetSiteSettings() {
                 var siteType = new ContentTypeDefinitionBuilder().Named("Site").Build();

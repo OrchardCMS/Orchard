@@ -17,8 +17,10 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
+using Orchard.Environment.Extensions;
 using Orchard.Security;
 using Orchard.Tests.Modules;
+using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Tests.Body {
@@ -41,6 +43,7 @@ namespace Orchard.Core.Tests.Body {
 
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<BodyPartHandler>().As<IContentHandler>();
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
         }
 
         [Test]

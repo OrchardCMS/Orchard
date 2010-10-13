@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using JetBrains.Annotations;
+using Orchard.Environment.Descriptor;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
@@ -19,13 +20,16 @@ namespace Orchard.Themes.Services {
         private readonly IExtensionManager _extensionManager;
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
         private readonly IModuleService _moduleService;
-        private IWorkContextAccessor _workContextAccessor;
+        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IShellDescriptorManager _shellDescriptorManager;
 
         public ThemeService(
+            IShellDescriptorManager shellDescriptorManager,
             IExtensionManager extensionManager,
             IEnumerable<IThemeSelector> themeSelectors,
             IModuleService moduleService,
             IWorkContextAccessor workContextAccessor) {
+            _shellDescriptorManager = shellDescriptorManager;
             _extensionManager = extensionManager;
             _themeSelectors = themeSelectors;
             _moduleService = moduleService;
@@ -49,26 +53,17 @@ namespace Orchard.Themes.Services {
         }
 
         public void SetSiteTheme(string themeName) {
-            if (string.IsNullOrWhiteSpace(themeName))
-                return;
+            if (DoEnableTheme(themeName)) {
+                CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeName;
+            }
+        }
 
-            //todo: (heskew) need messages given in addition to all of these early returns so something meaningful can be presented to the user
-            var themeToSet = GetThemeByName(themeName);
-            if (themeToSet == null)
-                return;
+        public void EnableTheme(string themeName) {
+            DoEnableTheme(themeName);
+        }
 
-            // ensure all base themes down the line are present and accounted for
-            //todo: (heskew) dito on the need of a meaningful message
-            if (!AllBaseThemesAreInstalled(themeToSet.BaseTheme))
-                return;
-
-            // disable all theme features
-            DisableThemeFeatures(CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName);
-
-            // enable all theme features
-            EnableThemeFeatures(themeToSet.ThemeName);
-
-            CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeToSet.ThemeName;
+        public void DisableTheme(string themeName) {
+            DisableThemeFeatures(themeName);
         }
 
         private bool AllBaseThemesAreInstalled(string baseThemeName) {
@@ -93,12 +88,15 @@ namespace Orchard.Themes.Services {
             while (themeName != null) {
                 if (themes.Contains(themeName))
                     throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features disabled.", themeName).Text);
+                var theme = GetThemeByName(themeName);
+                if (theme == null)
+                    break;
                 themes.Enqueue(themeName);
 
-                var theme = GetThemeByName(themeName);
                 themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
                     ? theme.BaseTheme
                     : null;
+
             }
 
             while (themes.Count > 0)
@@ -119,7 +117,26 @@ namespace Orchard.Themes.Services {
             }
 
             while (themes.Count > 0)
-                _moduleService.DisableFeatures(new[] {themes.Pop()});
+                _moduleService.EnableFeatures(new[] {themes.Pop()});
+        }
+
+        private bool DoEnableTheme(string themeName) {
+            if (string.IsNullOrWhiteSpace(themeName))
+                return false;
+
+            //todo: (heskew) need messages given in addition to all of these early returns so something meaningful can be presented to the user
+            var themeToEnable = GetThemeByName(themeName);
+            if (themeToEnable == null)
+                return false;
+
+            // ensure all base themes down the line are present and accounted for
+            //todo: (heskew) dito on the need of a meaningful message
+            if (!AllBaseThemesAreInstalled(themeToEnable.BaseTheme))
+                return false;
+
+            // enable all theme features
+            EnableThemeFeatures(themeToEnable.ThemeName);
+            return true;
         }
 
         public ITheme GetRequestTheme(RequestContext requestContext) {
@@ -188,6 +205,10 @@ namespace Orchard.Themes.Services {
             return localized;
         }
 
+        private bool IsThemeEnabled(ExtensionDescriptor descriptor) {
+            return _shellDescriptorManager.GetShellDescriptor().Features.Any(sf => sf.Name == descriptor.Name);
+        }
+
         private ITheme CreateTheme(ExtensionDescriptor descriptor) {
 
             var localizer = LocalizationUtilities.Resolve(_workContextAccessor.GetContext(), String.Concat(descriptor.Location, "/", descriptor.Name, "/Theme.txt"));
@@ -202,6 +223,7 @@ namespace Orchard.Themes.Services {
                 Tags = TryLocalize("Tags", descriptor.Tags, localizer) ?? "",
                 Zones = descriptor.Zones ?? "",
                 BaseTheme = descriptor.BaseTheme ?? "",
+                Enabled = IsThemeEnabled(descriptor)
             };
         }
     }

@@ -1,4 +1,5 @@
 ﻿@{
+
     Style.Include("site.css");
 
     // cool stuff goes up here
@@ -7,15 +8,18 @@
     // Zone is an alias for Display
     Func<dynamic, dynamic> Zone = x => Display(x);
 
+//Use the two lines below to test the sidebar zones.
+//WorkContext.Layout.AsideFirst.Add("This test text will render in Sidebar1.");
+//WorkContext.Layout.AsideSecond.Add("This test text will render in Sidebar2.");
 
-
-    if (Model.Sidebar != null && Model.Sidebar2 == null) {
+     //Add classes to the wrapper div to toggle zones on and off 
+    if (Model.AsideFirst != null && Model.AsideSecond == null) {
         Model.Classes.Add("has-sidebar");
     }
-    else if (Model.Sidebar == null && Model.Sidebar2 != null) {
+    else if (Model.AsideFirst == null && Model.AsideSecond != null) {
         Model.Classes.Add("has-sidebar-left");
     }
-    else if (Model.Sidebar != null && Model.Sidebar2 != null) {
+    else if (Model.AsideFirst != null && Model.AsideSecond != null) {
         Model.Classes.Add("has-sidebars");
     }
     else {
@@ -63,31 +67,9 @@
     </div>
     }
 
- @* This code would inject text into the Featured zone.
-    @{WorkContext.Layout.Featured.Add("just some text in featured");}
-*@
-
-  @{
-  WorkContext.Layout.Featured.Add(New.Featured(insertMessage:"This is a featured blog post."));
-  }
-  @if(Model.Featured != null) {
-     <div class="zone-featured group">
-        @Zone(Model.Featured)
-    </div>
-    }
-
-  @{
-  WorkContext.Layout.Recent.Add(New.Recent());
-  }
-  @if(Model.Featured != null) {
-    <div class="group">
-        @Zone(Model.Recent)
-    </div>
-    }
-
-    @if(Model.Sidebar2 != null) {
-    <aside class="sidebar secondary">
-        @Zone(Model.Sidebar2)
+    @if(Model.AsideSecond != null) {
+    <aside class="aside second">
+        @Zone(Model.AsideSecond)
     </aside>
     }
 
@@ -97,27 +79,34 @@
         @Zone(Model.Content)
     </div>
     }
- 
 
-    @if(Model.Sidebar != null) {
-    <aside class="sidebar primary">
-        @Zone(Model.Sidebar)
+
+    @if(Model.AsideFirst != null) {
+    <aside class="aside first">
+        @Zone(Model.AsideFirst)
+    </aside>
+
+@* Create a zone and only show it on the home page. *@
+
+@if (Request.Path == "/OrchardLocal") {
+WorkContext.Layout.AsideThird.Add(New.AsideThird());
+  }
+    @if(Model.AsideThird != null) {
+    <aside class="aside third group">
+        @Zone(Model.AsideThird)
     </aside>
     }
 
 </div>
 
-  @{
-  WorkContext.Layout.Footer.Add(@Display.User());
-  }
     @if(Model.Footer != null) {
     <footer id="layout-footer" class="group">
         @Zone(Model.Footer)
     </footer>
     }
     else {
-    <footer id="layout-footer">
-    Powered by Orchard @Display.User()
+    <footer id="layout-footer" class="group">
+    Powered by Orchard &#169; The Theme Machine 2010. @Display.User()
     </footer>
 }
 

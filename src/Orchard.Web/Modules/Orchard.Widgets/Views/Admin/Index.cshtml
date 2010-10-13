@@ -1,4 +1,4 @@
-﻿@model WidgetsIndexViewModel;
+﻿@model WidgetsIndexViewModel
 @using Orchard.Widgets.Models;
 @using Orchard.Widgets.ViewModels;
 @{ Style.Require("WidgetsAdmin"); }
@@ -48,7 +48,7 @@
 							<li>
 								<div class="widgets-zone">@zone</div>
 								<ul>
-									@foreach (WidgetPart widget in Model.CurrentLayerWidgets.Where(widgetPart => widgetPart.Zone == zone).OrderBy(widgetPart => widgetPart.Position)) {
+									@foreach (WidgetPart widget in Model.CurrentLayerWidgets.Where(widgetPart => widgetPart.Zone == zone).OrderBy(widgetPart => widgetPart.Position, new Orchard.UI.FlatPositionComparer())) {
 										<li class="widgets-zoneWidget">
 											@if (widget.Position != "1") {
 												<input type="image" name="submit.MoveUp.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/moveup.gif")" alt="Move up" value="@widget.Id" />

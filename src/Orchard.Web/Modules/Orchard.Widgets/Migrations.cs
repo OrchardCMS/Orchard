@@ -101,6 +101,7 @@ namespace Orchard.Widgets {
                 );
             ContentDefinitionManager.AlterTypeDefinition("WidgetPage",
                 cfg => cfg
+                    .WithPart("CommonPart")
                     .WithPart("RoutePart")
                     .WithPart("WidgetBagPart")
                     .Creatable()
