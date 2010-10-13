@@ -4,12 +4,18 @@
 	RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});
     //todo: (heskew) get conditions (as in conditional comments) hooked up for script tags too
     Script.Include("html5.js").AtLocation(ResourceLocation.Head);
+
+    //a bit opinionated - only the site name on the homepage
+    var title = (Request.Path != Request.ApplicationPath && !string.IsNullOrWhiteSpace((string)Model.Title)
+                    ? Model.Title + WorkContext.CurrentSite.PageTitleSeparator
+                    : "") +
+        WorkContext.CurrentSite.SiteName;
 }
 <!DOCTYPE html> 
 <html lang="en" class="static @Html.ClassForPage()"> 
 <head> 
     <meta charset="utf-8" />
-    <title>@Model.Title</title> 
+    <title>@title</title> 
     @Display(Model.Head)
     <script>(function(d){d.className="dyn"+d.className.substring(6,d.className.length);})(document.documentElement);</script> 
 </head> 

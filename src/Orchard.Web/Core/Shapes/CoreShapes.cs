@@ -8,7 +8,6 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
-using Orchard.DisplayManagement.Implementation;
 using Orchard.Settings;
 using Orchard.UI;
 using Orchard.UI.Resources;
