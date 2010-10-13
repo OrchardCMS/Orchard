@@ -33,14 +33,15 @@ namespace Orchard.Blogs {
                     item =>
                     item.Action("Item", "BlogAdmin", new {area = "Orchard.Blogs", blogSlug = singleBlog.Slug}).Permission(Permissions.MetaListBlogs));
 
-            menu.Add(T("Create New Blog"), "1.1",
-                     item =>
-                     item.Action("Create", "BlogAdmin", new {area = "Orchard.Blogs"}).Permission(Permissions.ManageBlogs));
-
-            if (singleBlog != null)
-                menu.Add(T("Create New Post"), "1.2",
+            if ( singleBlog != null )
+                menu.Add(T("Create New Post"), "1.1",
                          item =>
-                         item.Action("Create", "BlogPostAdmin", new {area = "Orchard.Blogs", blogSlug = singleBlog.Slug}).Permission(Permissions.PublishBlogPost));
+                         item.Action("Create", "BlogPostAdmin", new { area = "Orchard.Blogs", blogSlug = singleBlog.Slug }).Permission(Permissions.PublishBlogPost));
+
+            menu.Add(T("Create New Blog"), "1.2",
+                     item =>
+                     item.Action("Create", "BlogAdmin", new { area = "Orchard.Blogs" }).Permission(Permissions.ManageBlogs));
+
         }
     }
 }
