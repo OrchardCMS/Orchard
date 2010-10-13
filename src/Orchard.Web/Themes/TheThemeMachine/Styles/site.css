@@ -107,7 +107,11 @@ h4 img, h5 img, h6 img {
 
 p, footer, .meta {
 	font-size:1.3em;
-	line-height:2em;
+	line-height:1.8em;
+}
+
+p {
+    margin-bottom: 1em;
 }
 
 /* Structure
@@ -231,7 +235,7 @@ legend            { font-weight: 600; font-size:1.2em; }
 input[type="text"], #CommentText, #password, #confirmPassword {
     border:1px solid #999;
     display: block;
-    padding:3px;
+    padding:6px;
     width:50%;
 }
 
@@ -253,7 +257,7 @@ legend {
 
 label {
     font-size: 1.3em;
-    margin:0 0 .6em 0;
+    margin:0 0 .3em 0;
     }
 
 input[type="checkbox"] {
@@ -270,16 +274,44 @@ input[type="submit"], input[type="button"], button, .button, .button:link, .butt
     margin:.2em 0 2em 0;
 	padding:.3em 1.8em;
 	text-align:center;
-	-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
-	-webkit-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
-	-moz-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
-
 }
+
+input[type="submit"]:hover, input[type="button"]:hover,
+input[type="submit"]:active, input[type="button"]:active,
+input[type="submit"]:focus, input[type="button"]:focus,
+button:hover, .button:hover,
+button:active, .button:active,
+button:focus, .button:focus {
+    text-decoration:none; 
+    background: #ffac40;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffac40), to(#f06015));
+	background: -moz-linear-gradient(top,  #ffac40,  #f9760d);
+    background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
+	background:-moz-linear-gradient(top , #e1e1e1, #ebebeb);
+}
+
 
 /* Misc
 ***************************************************************/
 
 /* For testing purposes */
+#comments {
+    font-weight:600;
+    margin:1.2em 0 1.2em 1.2em;
+}
+
+ul.comments, form.comment {
+    margin:1.2em 0 1.2em 1.2em;
+}
+
+div.comment span {
+    font-size:1.3em;
+}
+
+ul.comments li div.text {
+    margin:.6em 0;
+}
+
 .user-display {
     display:inline;
 }
