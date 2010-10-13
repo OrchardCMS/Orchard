@@ -1,37 +1,57 @@
-﻿using Orchard.ContentManagement.Handlers;
+﻿using System;
+using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.ContentManagement.Drivers {
     public class ContentShapeResult : DriverResult {
-        public dynamic Shape { get; set; }
-        public string Prefix { get; set; }
-        public string Zone { get; set; }
-        public string Position { get; set; }
+        private string _defaultLocation;
+        private readonly string _shapeType;
+        private readonly string _prefix;
+        private readonly Func<dynamic> _shapeBuilder;
 
-        public ContentShapeResult(dynamic shape, string prefix) {
-            Shape = shape;
-            Prefix = prefix;
+        public ContentShapeResult(string shapeType, string prefix, Func<dynamic> shapeBuilder) {
+            _shapeType = shapeType;
+            _prefix = prefix;
+            _shapeBuilder = shapeBuilder;
         }
 
         public override void Apply(BuildDisplayContext context) {
-            context.Shape.Zones[Zone].Add(Shape, Position);
+            ApplyImplementation(context, context.DisplayType);
         }
 
         public override void Apply(BuildEditorContext context) {
-            IShape iShape = Shape;
-            if (iShape != null )
-                Shape.Metadata.Prefix = Prefix;
-            context.Shape.Zones[Zone].Add(Shape, Position);
+            ApplyImplementation(context, null);
+        }
+
+        private void ApplyImplementation(BuildShapeContext context, string displayType) {
+            var location = context.FindPlacement(_shapeType, _defaultLocation);
+            if (string.IsNullOrEmpty(location) || location == "-")
+                return;
+
+            dynamic parentShape = context.Shape;
+            IShape contentShape = _shapeBuilder();
+            contentShape.Metadata.Prefix = _prefix;
+            contentShape.Metadata.DisplayType = displayType;
+
+            var delimiterIndex = location.IndexOf(':');
+            if (delimiterIndex < 0) {
+                parentShape.Zones[location].Add(contentShape);
+            }
+            else {
+                var zoneName = location.Substring(0, delimiterIndex);
+                var position = location.Substring(delimiterIndex + 1);
+                parentShape.Zones[zoneName].Add(contentShape, position);
+            }
         }
 
         public ContentShapeResult Location(string zone) {
-            Zone = zone;
+            _defaultLocation = zone;
             return this;
         }
 
         public ContentShapeResult Location(string zone, string position) {
-            Zone = zone;
-            Position = position;
+            _defaultLocation = zone + ":" + position;
             return this;
         }
 

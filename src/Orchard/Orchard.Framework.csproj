@@ -159,11 +159,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentManagement\DefaultContentDisplay.cs" />
     <Compile Include="ContentManagement\Drivers\ContentShapeResult.cs" />
     <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlteration.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlterationBuilder.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\PlacementFileParser.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\ShapePlacementParsingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTable.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTableBuilder.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />

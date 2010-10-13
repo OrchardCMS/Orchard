@@ -34,19 +34,17 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Display(BodyPart part, string displayType, dynamic shapeHelper) {
-            var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
-            var body = shapeHelper.Parts_Common_Body(ContentPart: part, Html: new HtmlString(bodyText));
-            if (!string.IsNullOrWhiteSpace(displayType))
-                body.Metadata.Type = string.Format("{0}.{1}", body.Metadata.Type, displayType);
-            var location = part.GetLocation(displayType);
 
-            //return Combined(
-            //    Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPre").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
-            //    Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.Manage").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
-            //    ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location),
-            //    Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").LongestMatch(displayType, "SummaryAdmin").Location(location) : null);
-
-            return ContentShape(body).Location(location);
+            return Combined(
+                ContentShape("Parts_Common_Body", displayType == "Detail" ? "Content" : null, () => {
+                    var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
+                    return shapeHelper.Parts_Common_Body(ContentPart: part, Html: new HtmlString(bodyText));
+                }),
+                ContentShape("Parts_Common_Body_Summary", displayType == "Summary" ? "Content" : null, () => {
+                    var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
+                    return shapeHelper.Parts_Common_Body_Summary(ContentPart: part, Html: new HtmlString(bodyText));
+                })
+            );
         }
 
         protected override DriverResult Editor(BodyPart part, dynamic shapeHelper) {
