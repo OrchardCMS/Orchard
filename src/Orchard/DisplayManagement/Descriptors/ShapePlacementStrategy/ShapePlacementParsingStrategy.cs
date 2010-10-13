@@ -38,9 +38,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         }
 
         private void ProcessFeatureDescriptor(ShapeTableBuilder builder, FeatureDescriptor featureDescriptor) {
-            // The App_Data subfolder is used because it is not served.
-            // But it's still considered a site-deployable content file, which is why the IWebSiteFolder (not the IAppDataFolder) is appropriate
-            var virtualPath = featureDescriptor.Extension.Location + "/" + featureDescriptor.Extension.Name + "/App_Data/Placement.xml";
+            var virtualPath = featureDescriptor.Extension.Location + "/" + featureDescriptor.Extension.Name + "/Placement.info";
             var placementFile = _placementFileParser.Parse(virtualPath);
             if (placementFile != null) {
                 ProcessPlacementFile(builder, featureDescriptor, placementFile);
