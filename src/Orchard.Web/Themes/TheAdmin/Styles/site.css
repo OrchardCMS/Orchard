@@ -715,10 +715,8 @@ table .button {
 /* Content item lists
 ----------------------------------------------------------*/
 .contentItems {
+    border:1px solid #eaeaea;
     background:#FFF;
-    box-shadow:inset 0 1px 2px #878686;
-    -moz-box-shadow:inset 0 1px 3px #878686;
-    -webkit-box-shadow:inset 0 1px 2px #878686;
     clear:both;
     margin:1em 0;
     padding:0;
@@ -728,6 +726,9 @@ table .button {
     margin:0;
     overflow:hidden;
     padding:0 1.4em .8em;
+}
+.contentItems li.last {
+    border-bottom:none;
 }
 .contentItems.bulk-items li {
     padding-bottom:.6em;
