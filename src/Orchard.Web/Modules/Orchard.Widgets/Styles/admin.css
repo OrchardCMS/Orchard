@@ -1,4 +1,4 @@
-﻿﻿.widgetsbag-editor h5 {
+﻿.widgetsbag-editor h5 {
     color:#4c4c4c;
     font-weight:bold;
 }
@@ -15,12 +15,14 @@
 }
 
 .widgets-layerZones {
+    font-size: 1.4em;
     float: left;
     width: 75%;
+    border: 1px solid #eaeaea;
+    background: #fff;
 }
 
 .widgets-layerZones .widgets-zone {
-    font-weight:700;
 	background:#f5f5f5;
 	border: 1px solid #f1f1f1;
 	padding: 1em 2em 1em 2em;
@@ -36,6 +38,7 @@
 }
 
 .widgets-layers {
+    font-size: 1.4em;
     margin: 1em 0 0 0;
     float: left;
 }
@@ -43,6 +46,11 @@
 .widgets-layers ul {
 	background: #f5f5f5;
 	border: 1px solid #f1f1f1;
+}
+
+.widgets-layers ul li {
+    padding: .6em .4em;
+    border:1px solid #F1F1F1;
 }
 
 .widgets-layers .widgets-currentLayer {
