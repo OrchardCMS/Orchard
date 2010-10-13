@@ -215,6 +215,7 @@ namespace Orchard.Setup.Services {
                     contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg
                         .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
 
+
                     // add a layer for the homepage
                     var layer = contentManager.Create("Layer");
                     layer.As<LayerPart>().Name = "TheHomepage";

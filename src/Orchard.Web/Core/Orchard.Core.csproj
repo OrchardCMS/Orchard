@@ -392,7 +392,7 @@
     <Content Include="Shapes\Views\MenuItem.cshtml" />
     <Content Include="Shapes\Views\Web.config" />
     <Content Include="Dashboard\Views\Helper\Index.cshtml" />
-    <Content Include="Routable\Views\Parts\Routable.RoutePart.cshtml" />
+    <None Include="Routable\Views\Parts\RoutableTitle.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
+using Orchard.DisplayManagement;
 
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
@@ -27,8 +28,21 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual DriverResult Editor(TContent part, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater, dynamic shapeHelper) { return null; }
 
-        public ContentShapeResult ContentShape(dynamic shape) {
-            return new ContentShapeResult(shape, Prefix).Location(Zone);
+        [Obsolete("Provided while transitioning to factory variations")]
+        public ContentShapeResult ContentShape(IShape shape) {
+            return ContentShapeImplementation(shape.Metadata.Type, Zone, () => shape);
+        }
+
+        public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
+            return ContentShapeImplementation(shapeType, null, factory);
+        }
+
+        public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic> factory) {
+            return ContentShapeImplementation(shapeType, defaultLocation, factory);
+        }
+
+        private ContentShapeResult ContentShapeImplementation(string shapeType, string defaultLocation, Func<object> factory) {
+            return new ContentShapeResult(shapeType, Prefix, factory).Location(defaultLocation);
         }
 
         [Obsolete]

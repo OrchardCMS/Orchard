@@ -1,0 +1,21 @@
+﻿<Placement>
+  <!--
+    note - commas, and wildcards, do NOT work, but would be very nice
+  <Match ContentType="Page">
+  
+    <Match DisplayType="Detail,Summary*" >
+      <Place
+        Parts_RoutableTitle="Header"
+        Parts_BodyText="Content:8"
+        />      
+    </Match>
+  </Match>
+  -->
+
+  <Match ContentType="Page" DisplayType="Detail">
+    <Place
+        Parts_RoutableTitle="Content:5.b"
+        Parts_Common_Body="Header:after" />
+  </Match>
+
+</Placement>

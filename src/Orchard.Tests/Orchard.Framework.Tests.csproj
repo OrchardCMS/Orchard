@@ -216,6 +216,8 @@
     <Compile Include="ContainerTestBase.cs" />
     <Compile Include="DisplayManagement\Descriptors\BasicShapeTemplateHarvesterTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableManagerTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\InMemoryWebSiteFolder.cs" />
+    <Compile Include="DisplayManagement\Descriptors\PlacementFileParserTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAttributeBindingStrategyTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTemplateBindingStrategyTests.cs" />
     <Compile Include="DisplayManagement\ShapeFactoryTests.cs" />
