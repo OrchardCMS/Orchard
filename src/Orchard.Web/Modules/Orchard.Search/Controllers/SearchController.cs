@@ -54,7 +54,7 @@ namespace Orchard.Search.Controllers {
 
             var searchViewModel = new SearchViewModel {
                 Query = q,
-                DefaultPageSize = 10, // <- yeah, I know :|
+                DefaultPageSize = 10, // TODO: sebastien <- yeah, I know :|
                 PageOfResults = pageOfItems
             };
 
