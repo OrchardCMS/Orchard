@@ -86,8 +86,6 @@ namespace Orchard.Core.Tests.Body {
         }
 
         public class Thing : ContentPart {
-            public int Id { get { return ContentItem.Id; } }
-
             public string Text {
                 get { return this.As<BodyPart>().Text; }
                 set { this.As<BodyPart>().Text = value; }
