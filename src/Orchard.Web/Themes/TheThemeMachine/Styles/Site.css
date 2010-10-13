@@ -1,0 +1,443 @@
+﻿/*
+Theme: Theme Machine
+Author: Orchard Team – http://www.orchardproject.net
+Copyright: 2010, Orchard. All Rights Reserved
+*/
+
+
+/*  Color Palette
+**************************************************************
+Background: #fff
+Borders: #dbdbdb
+Text: #434343
+Secondary Text: #999999
+Main Accent: #999
+Links: #5f97af
+Hovers: #85b35c
+*/
+
+
+
+/* Reset
+***************************************************************/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+
+/* Remember focus styles! */
+:focus { outline: 0; }
+
+body { line-height: 1; color: black; background: white; }
+ol, ul { list-style: none; }
+
+/* Tables still need 'cellspacing="0"' in the markup */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+
+blockquote:before, blockquote:after,
+q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+/* HTML 5 elements as block */  
+header, footer, aside, nav, article { display: block; }
+
+
+
+/* Clearing Floats
+***************************************************************/
+.group:after 
+{
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.zone-asidethird:after 
+{
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+
+/* General
+***************************************************************/
+/* Default font settings. 
+The font-size 62.5% sets the base font to 10px */
+body { 
+  font-size: 62.5%;
+  color: #434343; 
+  background: #fff;
+  font-family: Tahoma, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+/* Headings */
+h1,h2,h3,h4,h5,h6 { font-weight: normal; margin:.6em 0;}
+
+h1 { font-size: 1.8em; }
+h2 { font-size: 1.4em; }
+h3 { font-size: 1.2em; }
+h4 { font-size: 1.1em; }
+h5 { font-size: 1em; }
+h6 { font-size: 1em; }
+
+h1 img, h2 img, h3 img, 
+h4 img, h5 img, h6 img {
+  margin: 0;
+}
+
+/* Aside Headings */
+aside h1 { font-size: 1.6em; }
+aside h2 { font-size: 1.2em; }
+aside h3 { font-size: 1.1em; }
+aside h4 { font-size: 1em; }
+aside h5 { font-size: 1em; }
+aside h6 { font-size: 1em; }
+
+/* Lists */
+li ul, 
+li ol       { margin:0 1.5em; }
+ul, ol      { margin: 0 1.5em 1.5em 1.5em; }
+
+ul          { list-style-type: disc; }
+ol          { list-style-type: decimal; }
+
+dl          { margin: 0 0 1.5em 0; }
+dl dt       { font-weight: bold; }
+dd          { margin-left: 1.5em;}
+
+/* Text elements */
+p           { margin: 0 0 1em; line-height: 1.5em; font-size: 1.3em; }
+p img.left  { float: left; margin: 1.5em 1.5em 1.5em 0; padding: 0; }
+p img.right { float: right; margin: 1.5em 0 1.5em 1.5em; }
+
+a:focus, 
+a:hover     { color: #85b35c; }
+a           { color: #5f97af; text-decoration: none; }
+
+blockquote  { margin: 1.5em; color: #666; font-style: italic; }
+strong      { font-weight: bold; }
+em,dfn      { font-style: italic; }
+dfn         { font-weight: bold; }
+sup, sub    { line-height: 0; }
+
+abbr, 
+acronym     { border-bottom: 1px dotted #666; }
+address     { margin: 0 0 1.5em; font-style: italic; }
+del         { color:#666; }
+
+pre 		{ margin: 1.5em 0; white-space: pre; }
+pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
+
+
+
+/* Structure
+***************************************************************/
+#layout-wrapper 
+{
+    
+}
+
+#layout-header, #layout-content, #layout-footer {
+	width:960px;
+	margin:0 auto;
+}
+
+#layout-header 
+{
+    border-top: 1px solid #dbdbdb;
+    margin: 36px auto;
+}
+    #branding 
+    {
+        font-size: 2.4em;
+    }
+
+    #branding a 
+    {
+        text-decoration:none;
+    }
+
+/* Navigation */
+#navigation 
+{
+    width: 960px;
+	margin: 0 auto;
+	display: block;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+nav ul 
+{
+	padding: 0px;
+	margin: 0px;
+}
+    nav ul li
+     {
+	    border:1px solid #dbdbdb;
+	    background:#f6f6f6;
+	    display:block;
+	    float:left;
+	    margin:0 2px -1px 0;
+    }
+    nav ul li.current 
+    {
+	    border-bottom: 1px solid #fff;
+	    background:#fff;
+    }
+    nav ul a 
+    {
+	    padding:0 18px;
+        display:block;
+	    float:left;
+        color: #333;
+        font-size:1.4em;
+        text-decoration:none;
+        line-height:24px;
+    }
+
+/* Zones */
+/*.zone { background-color: yellow; }  Used for visualizing zones */
+.zone-header {}
+.zone-footer { padding: 24px 0 12px 0px; float: left; font-size: 1.3em; color: #999999; }
+.zone-content { padding: 12px 0 12px 0px; }
+.zone-asidethird {}
+
+
+/* Main
+***************************************************************/
+
+/* Has Aside */
+.has-sidebar #content 
+{
+	width: 588px;
+	float:left;
+}
+.has-sidebar .aside.first 
+{
+    width: 348px;
+	float:right;
+}
+
+/* Has Aside Left*/
+.has-sidebar-left #content {
+	width: 588px;
+	float:right;
+}
+.has-sidebar-left .aside.second 
+{
+    width: 348px;
+	float:left;
+}
+
+/* Has Aside Left & Right */
+.has-sidebars #content 
+{
+	width: 588px;
+}
+.has-sidebars .aside.first, .has-sidebars .aside.second 
+{
+    width: 168px;
+}
+.has-sidebars .aside.first, .has-sidebars .aside.second, .has-sidebars #content 
+{
+    float:left;
+}
+
+
+
+/* Secondary
+***************************************************************/
+
+
+
+/* Forms
+***************************************************************/
+label             { font-weight: normal; display:block; }
+label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
+legend            { font-weight: 600; font-size:1.2em; }
+
+
+input[type="text"], #CommentText, #password, #confirmPassword {
+    border:1px solid #999;
+    display: block;
+    padding:6px;
+    width:50%;
+}
+
+form.search {
+    margin-bottom:2em;
+}
+
+.search input[type=text] {
+    display:inline;
+    width:17em;
+}
+
+fieldset div {margin:1.6em 0 0 0}
+    
+legend {
+	font-size: 1.4em;
+	border:none;
+}
+
+label {
+    font-size: 1.3em;
+    margin:0 0 .3em 0;
+    }
+
+input[type="checkbox"] {
+    margin:.2em 0 1.2em 0;
+}
+
+input[type="submit"], input[type="button"], button, .button, .button:link, .button:visited {
+	color:#333;
+    background:#F5F5F5;
+	background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#cbcbcb));
+	background:-moz-linear-gradient(top , #F5F5F5, #cbcbcb);
+	border:1px solid #999;
+	cursor:pointer;
+    margin:.2em 0 2em 0;
+	padding:.3em 1.8em;
+	text-align:center;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover,
+input[type="submit"]:active, input[type="button"]:active,
+input[type="submit"]:focus, input[type="button"]:focus,
+button:hover, .button:hover,
+button:active, .button:active,
+button:focus, .button:focus {
+    text-decoration:none; 
+    background: #ebebeb;
+    background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
+	background:-moz-linear-gradient(top , #e1e1e1, #ebebeb);
+}
+
+
+
+/* Widgets
+***************************************************************/
+.widgets {}
+
+
+
+/* Misc
+***************************************************************/
+
+.small      { font-size: .8em; margin-bottom: 1.875em; line-height: 1.875em; }
+.large      { font-size: 1.2em; line-height: 2.5em; margin-bottom: 1.25em; }
+.hide       { display: none; }
+
+.quiet      { color: #666; }
+.loud       { color: #000; }
+.highlight  { background:#ff0; }
+.added      { background:#060; color: #fff; }
+.removed    { background:#900; color: #fff; }
+
+.first      { margin-left:0; padding-left:0; }
+.last       { margin-right:0; padding-right:0; }
+.top        { margin-top:0; padding-top:0; }
+.bottom     { margin-bottom:0; padding-bottom:0; }
+
+.user-display { float: left; padding: 24px 12px 12px 12px; font-size: 1.3em; }
+
+
+
+/* CSS 3 Enhancements 
+***************************************************************/
+
+
+
+
+/* For testing purposes */
+#comments {
+    font-size:1.6em;
+    font-weight:600;
+    margin:1.2em 0 1.8em 1.2em;
+}
+
+ul.comments, form.comment {
+    margin:1.2em 0 1.2em 1.8em;
+}
+
+div.comment {
+    font-size:1.3em;
+    font-style:italic;
+    color:#484848;
+}
+
+div.comment a {
+    color:#484848;
+    text-decoration:none;
+}
+
+div.comment span.who {
+    font-weight:600;
+    font-style:normal;
+    text-transform:capitalize;
+    color:#333;
+}
+
+ul.comments li div.text {
+    margin:.6em 0 2.4em 0;
+}
+
+.user-display {
+    display:inline;
+}
+
+.aside.third {
+    border-top:1px solid #dbdbdb;
+    clear:both;
+}
+
+.aside.third div > div {
+     float:left;
+     width:304px;
+     padding:12px 6px 0 6px;
+}
+
+/* Featured Zone - switch to an image */
+
+.featuredimage {
+    float:left;
+    border: 1px solid #dbdbdb;
+    width: 462px;
+    height: 240px;
+    margin: 6px;
+}
+
+/* Recent Zone */
+
+#zone-recent ul li {
+    float:left;
+    width: 462px;
+    margin: 6px;
+}
+
+
+.clearfix {
+	clear:both;
+}
