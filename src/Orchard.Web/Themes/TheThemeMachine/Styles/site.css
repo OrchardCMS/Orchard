@@ -298,9 +298,7 @@ button:hover, .button:hover,
 button:active, .button:active,
 button:focus, .button:focus {
     text-decoration:none; 
-    background: #ffac40;
-	background: -webkit-gradient(linear, left top, left bottom, from(#ffac40), to(#f06015));
-	background: -moz-linear-gradient(top,  #ffac40,  #f9760d);
+    background: #ebebeb;
     background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
 	background:-moz-linear-gradient(top , #e1e1e1, #ebebeb);
 }
@@ -311,20 +309,35 @@ button:focus, .button:focus {
 
 /* For testing purposes */
 #comments {
+    font-size:1.6em;
     font-weight:600;
-    margin:1.2em 0 1.2em 1.2em;
+    margin:1.2em 0 1.8em 1.2em;
 }
 
 ul.comments, form.comment {
-    margin:1.2em 0 1.2em 1.2em;
+    margin:1.2em 0 1.2em 1.8em;
 }
 
-div.comment span {
+div.comment {
     font-size:1.3em;
+    font-style:italic;
+    color:#484848;
+}
+
+div.comment a {
+    color:#484848;
+    text-decoration:none;
+}
+
+div.comment span.who {
+    font-weight:600;
+    font-style:normal;
+    text-transform:capitalize;
+    color:#333;
 }
 
 ul.comments li div.text {
-    margin:.6em 0;
+    margin:.6em 0 2.4em 0;
 }
 
 .user-display {
