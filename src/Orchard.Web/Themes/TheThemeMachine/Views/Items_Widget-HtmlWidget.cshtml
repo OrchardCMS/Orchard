@@ -1,0 +1,11 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Widgets.Models;
+@{
+    var title = ((IContent)Model.ContentItem).As<WidgetPart>().Title;
+}
+<div>
+    <h1>@title</h1>
+    @Display(Model.Header)
+    @Display(Model.Content)
+    @Display(Model.Footer)
+</div>

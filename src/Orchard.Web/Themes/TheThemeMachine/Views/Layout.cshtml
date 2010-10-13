@@ -43,71 +43,54 @@
 @using(Capture(branding => WorkContext.Layout.Header.Add(branding) )) {
  <h1 id="branding"><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
 }
-
-    <header id="layout-header">
-        @if(Model.Header != null) {
-        <div id="header">
-            @Zone(Model.Header)
-        </div>
-        }
-    </header>
-
-
-        @if(Model.Navigation != null) {
-        <div id="navigation" class="group">
-            @Zone(Model.Navigation)
-        </div>
-        }
-
-
+@if(Model.Header != null) {
+<header id="layout-header">
+    <div id="header">
+        @Zone(Model.Header)
+    </div>
+</header>
+}
+@if(Model.Navigation != null) {
+<div id="navigation" class="group">
+    @Zone(Model.Navigation)
+</div>
+}
 <div id="layout-content" class="group">
     @if(Model.Messages != null) {
     <div id="messages">
         @Zone(Model.Messages)
     </div>
     }
-
     @if(Model.AsideSecond != null) {
     <aside class="aside second">
         @Zone(Model.AsideSecond)
     </aside>
     }
-
     @* the model content for the page is in the Content zone @ the default position (nothing, zero, zilch) *@
     @if(Model.Content != null) {
     <div id="content" class="group">
         @Zone(Model.Content)
     </div>
     }
-
-
     @if(Model.AsideFirst != null) {
     <aside class="aside first">
         @Zone(Model.AsideFirst)
     </aside>
-
-@* Create a zone and only show it on the home page. *@
-
-@if (Request.Path == "/OrchardLocal") {
-WorkContext.Layout.AsideThird.Add(New.AsideThird());
-  }
+    }
     @if(Model.AsideThird != null) {
     <aside class="aside third group">
         @Zone(Model.AsideThird)
     </aside>
     }
-
 </div>
-
-    @if(Model.Footer != null) {
-    <footer id="layout-footer" class="group">
-        @Zone(Model.Footer)
-    </footer>
-    }
-    else {
-    <footer id="layout-footer" class="group">
-    Powered by Orchard &#169; The Theme Machine 2010. @Display.User()
-    </footer>
+@* span -> p (?) *@
+@using(Capture(pbo => WorkContext.Layout.Footer.Add(pbo) )) {
+    <span>Powered by Orchard &#169; The Theme Machine 2010.</span>
 }
-
+@if(Model.Footer != null) {
+<footer id="layout-footer" class="group">
+    @Zone(Model.Footer)
+ @Display.User()
+</footer>
+}
 @tag.EndElement

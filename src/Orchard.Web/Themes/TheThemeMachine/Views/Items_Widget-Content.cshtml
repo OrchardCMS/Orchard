@@ -1,0 +1,17 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Widgets.Models;
+@{
+    var title = ((IContent)Model.ContentItem).As<WidgetPart>().Title;
+}
+<article>
+    <header>
+        <h1>@title</h1>
+        @Display(Model.Header)
+    </header>
+    @Display(Model.Content)
+    @if(Model.Footer != null) {
+    <footer>
+        @Display(Model.Footer)
+    </footer>
+    }
+</article>

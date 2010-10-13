@@ -85,6 +85,7 @@
     <Compile Include="RuleEngine\UrlRuleProvider.cs" />
     <Compile Include="Services\IWidgetsService.cs" />
     <Compile Include="Services\WidgetsService.cs" />
+    <Compile Include="Shapes.cs" />
     <Compile Include="ViewModels\WidgetsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +119,7 @@
     <None Include="Views\EditorTemplates\Parts\Widgets.LayerPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.WidgetBagPart.cshtml" />
     <Content Include="Views\Items_Widget.cshtml" />
+    <Content Include="Views\Items\Content-WidgetPage.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

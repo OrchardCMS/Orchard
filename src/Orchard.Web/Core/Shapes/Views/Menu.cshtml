@@ -1,10 +1,10 @@
 ﻿@{
-	// these should move somewhere else
-	Model.Id = "menu-" + Model.MenuName.ToLower();
-	Model.Classes.Add(Model.Id);
-	Model.Classes.Add("menu");
-	var tag = Html.Resolve<Orchard.DisplayManagement.Shapes.ITagBuilderFactory>().Create(Model, "ul");
+    // Model is Model.Menu from the layout (Layout.Menu)
+	var tag = Tag(Model, "ul");
 }
-@tag.StartElement
-@DisplayChildren(Model)
-@tag.EndElement <!-- /@Model.Id -->
+<nav>
+    @tag.StartElement
+        @* see MenuItem shape template *@
+        @DisplayChildren(Model)
+    @tag.EndElement
+</nav>

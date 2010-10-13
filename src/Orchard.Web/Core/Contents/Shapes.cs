@@ -1,8 +1,5 @@
-﻿using System;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
-using Orchard.DisplayManagement.Implementation;
-using Orchard.UI.Zones;
 
 namespace Orchard.Core.Contents {
     public class Shapes : IShapeTableProvider {
