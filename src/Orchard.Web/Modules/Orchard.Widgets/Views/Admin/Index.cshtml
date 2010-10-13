@@ -1,14 +1,15 @@
 ﻿@model WidgetsIndexViewModel
 @using Orchard.Widgets.Models;
 @using Orchard.Widgets.ViewModels;
-@{ Style.Require("WidgetsAdmin"); }
-
+@{
+    Style.Require("WidgetsAdmin");
+}
 <h1>@Html.TitleForPage(T("Manage Widgets").ToString())</h1>
+<div class="manage">@Html.ActionLink(T("Add a layer").ToString(), "AddLayer", new { }, new { @class = "button primaryAction" })</div>
 
 @using(Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
 
-	<div class="manage">@Html.ActionLink(T("Add a layer").ToString(), "AddLayer", new { }, new { @class = "button primaryAction" })</div>
 
 	<div id="widgets">
 		
@@ -39,7 +40,7 @@
 		</div>
 
 		<div class="widgets-availableLayers">
-				<h2>Widget Layers</h2>
+				<h2>Widget Zones</h2>
 
 			<fieldset>
 				<div>

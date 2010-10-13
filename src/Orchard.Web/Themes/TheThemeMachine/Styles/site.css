@@ -140,22 +140,6 @@ p {
     border-top: 1px solid #999;
     margin-top:12px;
 }
-
-/*Two Sidebars on */
-.has-sidebars #content {
-	background-color:#e8e8e8;
-	width: 600px;
-}
-
-.has-sidebars .sidebar {
-    background-color:#f6f6f6;
-    width: 180px;
-}
-
-.has-sidebars .primary, .has-sidebars .secondary, .has-sidebars #content {
-    float:left;
-}
-
        
 /* Navigation */
 

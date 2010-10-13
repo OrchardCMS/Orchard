@@ -136,13 +136,13 @@
     <Content Include="Views\Parts\Blogs.BlogPost.List.Admin.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Items\Content.Admin.Blog.cshtml" />
+    <Content Include="Views\Items\Content.Blog.Admin.cshtml" />
     <Content Include="Views\Items\Content.Blog.cshtml" />
     <Content Include="Views\Items\Content.Detail.BlogPost.cshtml" />
     <Content Include="Views\Items\Content.Edit.Blog.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Items\Content.Edit.BlogPost.cshtml" />
+    <Content Include="Views\Items\Content.Editor-BlogPost.cshtml" />
     <Content Include="Views\Items\Content.Summary.Blog.cshtml" />
     <Content Include="Views\Items\Content.Summary.BlogPost.cshtml" />
     <Content Include="Views\Items\Content.SummaryAdmin.Blog.cshtml" />

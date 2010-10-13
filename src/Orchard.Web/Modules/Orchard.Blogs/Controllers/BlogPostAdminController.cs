@@ -36,9 +36,6 @@ namespace Orchard.Blogs.Controllers {
 
             var model = Services.ContentManager.BuildEditor(blogPost);
 
-            //todo: (heskew) unhack
-            model.Metadata.Type += ".BlogPost";
-
             return View(model);
         }
 
@@ -81,9 +78,6 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = Services.ContentManager.BuildEditor(post);
-
-            //todo: (heskew) unhack
-            model.Metadata.Type += ".BlogPost";
 
             return View(model);
         }
