@@ -13,6 +13,7 @@ namespace Orchard.Widgets {
         public void Discover(ShapeTableBuilder builder) {
             builder.Describe("Items_Widget")
                 .Configure(descriptor => {
+                    // todo: have "alternates" for chrome
                     if (_orchardServices.Authorizer.Authorize(Permissions.ManageWidgets))
                         descriptor.Wrappers.Add("Widget_Manage");
                     else

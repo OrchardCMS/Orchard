@@ -151,7 +151,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
-            var model = Services.ContentManager.BuildDisplay(blogPart, "Admin.Blog");
+            var model = Services.ContentManager.BuildDisplay(blogPart, "Blog_Admin");
             return View(model);
         }
 

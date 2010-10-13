@@ -38,28 +38,24 @@ namespace Orchard.Blogs.Drivers {
             var driverResults = new List<DriverResult>();
 
             var metadata = shapeHelper.Parts_Blogs_Blog_Manage(ContentPart: part);
-            metadata.Metadata.Type = "Parts_Blogs_Blog.Manage";
             driverResults.Add(ContentShape(metadata).Location("manage"));
 
             var description = shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part);
-            description.Metadata.Type = "Parts_Blogs_Blog.Description";
             driverResults.Add(ContentShape(description).Location("manage", "after"));
 
             if (displayType.StartsWith("Admin")) {
                 var list = shapeHelper.List();
                 list.AddRange(_blogPostService.Get(part, VersionOptions.Latest)
-                                          .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin.BlogPost")));
-                var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
-                blogPostList.Metadata.Type = "Parts_Blogs_BlogPost.List.Admin";
+                                          .Select(bp => _contentManager.BuildDisplay(bp, "BlogPost_SummaryAdmin")));
+                var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List_Admin(ContentPart: part, BlogPosts: list);
                 var contentShape = ContentShape(blogPostList).Location("Primary");
                 driverResults.Add(contentShape);
             }
             else if (!displayType.Contains("Summary")) {
                 var list = shapeHelper.List();
                 list.AddRange(_blogPostService.Get(part)
-                                          .Select(bp => _contentManager.BuildDisplay(bp, "Summary.BlogPost")));
+                                          .Select(bp => _contentManager.BuildDisplay(bp, "BlogPost_Summary")));
                 var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
-                blogPostList.Metadata.Type = "Parts_Blogs_BlogPost.List";
                 var contentShape = ContentShape(blogPostList).Location("Primary");
                 driverResults.Add(contentShape);
 
