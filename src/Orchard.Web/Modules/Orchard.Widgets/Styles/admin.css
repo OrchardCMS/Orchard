@@ -5,7 +5,7 @@
 
 .widgets-availableWidgets {
     float: left;
-    width: 35%;
+    width: 30%;
 }
 
 .widgets-availableLayers {
@@ -17,7 +17,7 @@
 .widgets-layerZones {
     font-size: 1.4em;
     float: left;
-    width: 75%;
+    width: 70%;
     border: 1px solid #eaeaea;
     background: #fff;
 }

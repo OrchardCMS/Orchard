@@ -142,11 +142,9 @@
     <Content Include="Views\Items\Content.Edit.Blog.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Items\Content.Editor-BlogPost.cshtml" />
     <Content Include="Views\Items\Content.Summary.Blog.cshtml" />
     <Content Include="Views\Items\Content.Summary.BlogPost.cshtml" />
     <Content Include="Views\Items\Content.SummaryAdmin.Blog.cshtml" />
-    <Content Include="Views\Items\Content.SummaryAdmin.BlogPost.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
