@@ -27,6 +27,7 @@ using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.Environment.State;
 using Orchard.Data.Migration;
+using Orchard.Widgets.Models;
 
 namespace Orchard.Setup.Services {
     public class SetupService : ISetupService {
@@ -224,7 +225,22 @@ namespace Orchard.Setup.Services {
                     //contentManager.Publish(page);
                     //siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
                     //scratch that
-                    //create the home page as a WidgetPage
+
+                    // add a layer for the homepage
+                    var layer = contentManager.Create("Layer");
+                    layer.As<LayerPart>().Name = "TheHomepage";
+                    layer.As<LayerPart>().LayerRule = "url \"~/\"";
+                    contentManager.Publish(layer);
+                    
+                    // create an html widget with the homepage layer as its container
+                    var htmlWidget = contentManager.Create("HtmlWidget");
+                    htmlWidget.As<WidgetPart>().LayerPart = layer.As<LayerPart>();
+                    htmlWidget.As<WidgetPart>().Title = T("Welcome to Orchard!").Text;
+                    htmlWidget.As<WidgetPart>().Zone = "Content";
+                    htmlWidget.As<BodyPart>().Text = "<p>Welcome to Orchard!</p><p>Congratulations, you've successfully set-up your Orchard site.</p><p>This is the home page of your new site. We've taken the liberty to write here about a few things you could look at next in order to get familiar with the application. Once you feel confident you don't need this anymore, just click <a href=\"Admin/Pages/Edit/3\">Edit</a> to go into edit mode and replace this with whatever you want on your home page to make it your own.</p><p>One thing you could do (but you don't have to) is go into <a href=\"Admin/Settings\">Manage Settings</a> (follow the <a href=\"Admin\">Admin</a> link and then look for it under \"Settings\" in the menu on the left) and check that everything is configured the way you want.</p><p>You probably want to make the site your own. One of the ways you can do that is by clicking <a href=\"Admin/Themes\">Manage Themes</a> in the admin menu. A theme is a packaged look and feel that affects the whole site.</p><p>Next, you can start playing with the content types that we installed. For example, go ahead and click <a href=\"Admin/Pages/Create\">Add New Page</a> in the admin menu and create an \"about\" page. Then, add it to the navigation menu by going to <a href=\"Admin/Navigation\">Manage Menu</a>. You can also click <a href=\"Admin/Blogs/Create\">Add New Blog</a> and start posting by clicking \"Add New Post\".</p><p>Finally, Orchard has been designed to be extended. It comes with a few built-in modules such as pages and blogs or themes. You can install new themes by going to <a href=\"Admin/Themes\">Manage Themes</a> and clicking <a href=\"Admin/Themes/Install\">Install a new Theme</a>. Like for themes, modules are created by other users of Orchard just like you so if you feel up to it, please <a href=\"http://www.orchardproject.net/\">consider participating</a>.</p><p>--The Orchard Crew</p>";
+                    contentManager.Publish(htmlWidget);
+
+                    // create the home page as a WidgetPage
                     var page = contentManager.Create("WidgetPage", VersionOptions.Draft);
                     page.As<RoutePart>().Title = T("Home").ToString();
                     contentManager.Publish(page);
