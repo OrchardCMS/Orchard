@@ -15,7 +15,7 @@ namespace Orchard.Widgets.RuleEngine {
 
         public bool Matches(string expression) {
             _scriptingManager.SetVariable("callbacks", new CallbackApi(this));
-            dynamic execContext = _scriptingManager.Eval(@"
+            dynamic execContext = _scriptingManager.ExecuteExpression(@"
                                         class ExecContext
 	                                        def initialize(callbacks)
 		                                        @callbacks = callbacks;
