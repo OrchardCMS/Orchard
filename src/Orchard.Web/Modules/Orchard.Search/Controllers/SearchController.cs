@@ -5,8 +5,6 @@ using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
 using Orchard.Settings;
 using Orchard.Search.Models;
-using System.Linq;
-using System;
 using System.Collections.Generic;
 using Orchard.Collections;
 using Orchard.Themes;

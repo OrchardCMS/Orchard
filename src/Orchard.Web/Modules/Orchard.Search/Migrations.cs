@@ -1,4 +1,5 @@
-﻿using Orchard.Data.Migration;
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Data.Migration;
 
 namespace Orchard.Search {
     public class SearchDataMigration : DataMigrationImpl {
@@ -12,6 +13,18 @@ namespace Orchard.Search {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("SearchForm",
+                cfg => cfg
+                    .WithPart("SearchFormPart")
+                    .WithPart("CommonPart")
+                    .WithPart("WidgetPart")
+                    .WithSetting("Stereotype", "Widget")
+                );
+
+            return 5;
         }
     }
 }
