@@ -24,7 +24,8 @@ namespace Orchard.DisplayManagement.Descriptors {
         /// </summary>
         public string BindingSource {
             get {
-                return Bindings[ShapeType].BindingSource;
+                ShapeBinding binding;
+                return Bindings.TryGetValue(ShapeType, out binding) ? binding.BindingSource : null;
             }
         }
 

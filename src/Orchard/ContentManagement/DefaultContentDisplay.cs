@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Routing;
+using ClaySharp;
+using ClaySharp.Implementation;
 using Microsoft.CSharp.RuntimeBinder;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement;
@@ -10,11 +12,13 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Themes;
+using Orchard.UI.Zones;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentDisplay : IContentDisplay {
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly IShapeHelperFactory _shapeHelperFactory;
+        private readonly IShapeFactory _shapeFactory;
         private readonly IShapeTableManager _shapeTableManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -24,6 +28,7 @@ namespace Orchard.ContentManagement {
         public DefaultContentDisplay(
             Lazy<IEnumerable<IContentHandler>> handlers,
             IShapeHelperFactory shapeHelperFactory,
+            IShapeFactory shapeFactory,
             IShapeTableManager shapeTableManager,
             IWorkContextAccessor workContextAccessor,
             IHttpContextAccessor httpContextAccessor,
@@ -31,6 +36,7 @@ namespace Orchard.ContentManagement {
             RequestContext requestContext) {
             _handlers = handlers;
             _shapeHelperFactory = shapeHelperFactory;
+            _shapeFactory = shapeFactory;
             _shapeTableManager = shapeTableManager;
             _workContextAccessor = workContextAccessor;
             _httpContextAccessor = httpContextAccessor;
@@ -55,29 +61,30 @@ namespace Orchard.ContentManagement {
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
                 stereotype = "Content";
 
-            var shapeTypeName = "Items_" + stereotype;
-            var shapeDisplayType = string.IsNullOrWhiteSpace(displayType) ? "Detail" : displayType;
+            var actualShapeType = "Items_" + stereotype;
+            var actualDisplayType = string.IsNullOrWhiteSpace(displayType) ? "Detail" : displayType;
 
-            var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = _shapeHelperCalls.Invoke(shapeHelper, shapeTypeName);
-
+            dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
-            itemShape.Metadata.DisplayType = shapeDisplayType;
+            itemShape.Metadata.DisplayType = actualDisplayType;
 
-            var context = new BuildDisplayContext(itemShape, content, shapeDisplayType, _shapeHelperFactory);
-            BindPlacement(context, displayType);
+            var context = new BuildDisplayContext(itemShape, content, actualDisplayType, _shapeHelperFactory);
+            BindPlacement(context, actualDisplayType);
 
             _handlers.Value.Invoke(handler => handler.BuildDisplay(context), Logger);
             return context.Shape;
         }
 
         public dynamic BuildEditor(IContent content) {
-            var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Items_Content_Edit();
+            var contentTypeDefinition = content.ContentItem.TypeDefinition;
+            string stereotype;
+            if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
+                stereotype = "Content";
 
-            IContent iContent = content;
-            if (iContent != null)
-                itemShape.ContentItem = iContent.ContentItem;
+            var actualShapeType = "Items_" + stereotype + "_Editor";
+
+            dynamic itemShape = CreateItemShape(actualShapeType);
+            itemShape.ContentItem = content.ContentItem;
 
             var context = new BuildEditorContext(itemShape, content, _shapeHelperFactory);
             BindPlacement(context, null);
@@ -87,18 +94,26 @@ namespace Orchard.ContentManagement {
         }
 
         public dynamic UpdateEditor(IContent content, IUpdateModel updater) {
-            var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Items_Content_Edit();
+            var contentTypeDefinition = content.ContentItem.TypeDefinition;
+            string stereotype;
+            if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
+                stereotype = "Content";
 
-            IContent iContent = content;
-            if (iContent != null)
-                itemShape.ContentItem = iContent.ContentItem;
+            var actualShapeType = "Items_" + stereotype + "_Editor";
+
+            dynamic itemShape = CreateItemShape(actualShapeType);
+            itemShape.ContentItem = content.ContentItem;
 
             var context = new UpdateEditorContext(itemShape, content, updater, _shapeHelperFactory);
             BindPlacement(context, null);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);
             return context.Shape;
+        }
+
+        private dynamic CreateItemShape(string actualShapeType) {
+            var zoneHoldingBehavior = new ZoneHoldingBehavior(() => _shapeFactory.Create("ContentZone", Arguments.Empty()));
+            return _shapeFactory.Create(actualShapeType, Arguments.Empty(), new[] { zoneHoldingBehavior });
         }
 
         private void BindPlacement(BuildShapeContext context, string displayType) {
@@ -109,9 +124,9 @@ namespace Orchard.ContentManagement {
                 var shapeTable = _shapeTableManager.GetShapeTable(theme.ThemeName);
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
-                    var placementContext = new ShapePlacementContext { 
-                        ContentType = context.ContentItem.ContentType, 
-                        DisplayType = displayType 
+                    var placementContext = new ShapePlacementContext {
+                        ContentType = context.ContentItem.ContentType,
+                        DisplayType = displayType
                     };
                     var location = descriptor.Placement(placementContext);
                     return location ?? defaultLocation;

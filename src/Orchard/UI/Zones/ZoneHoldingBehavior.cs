@@ -20,9 +20,9 @@ namespace Orchard.UI.Zones {
     /// 
     /// </summary>
     public class ZoneHoldingBehavior : ClayBehavior {
-        private readonly Func<string, dynamic> _zoneFactory;
+        private readonly Func<dynamic> _zoneFactory;
 
-        public ZoneHoldingBehavior(Func<string, dynamic> zoneFactory) {
+        public ZoneHoldingBehavior(Func<dynamic> zoneFactory) {
             _zoneFactory = zoneFactory;
         }
 
@@ -50,10 +50,10 @@ namespace Orchard.UI.Zones {
         }
 
         public class ZonesBehavior : ClayBehavior {
-            private readonly Func<string, dynamic> _zoneFactory;
+            private readonly Func<dynamic> _zoneFactory;
             private readonly object _parent;
 
-            public ZonesBehavior(Func<string, dynamic> zoneFactory, object parent) {
+            public ZonesBehavior(Func<dynamic> zoneFactory, object parent) {
                 _zoneFactory = zoneFactory;
                 _parent = parent;
             }
@@ -78,11 +78,11 @@ namespace Orchard.UI.Zones {
         }
 
         public class ZoneOnDemandBehavior : ClayBehavior {
-            private readonly Func<string, dynamic> _zoneFactory;
+            private readonly Func<dynamic> _zoneFactory;
             private readonly object _parent;
             private readonly string _potentialZoneName;
 
-            public ZoneOnDemandBehavior(Func<string, dynamic> zoneFactory, object parent, string potentialZoneName) {
+            public ZoneOnDemandBehavior(Func<dynamic> zoneFactory, object parent, string potentialZoneName) {
                 _zoneFactory = zoneFactory;
                 _parent = parent;
                 _potentialZoneName = potentialZoneName;
@@ -93,7 +93,7 @@ namespace Orchard.UI.Zones {
                 if (name == "Add" && (argsCount == 1 || argsCount == 2)) {
                     dynamic parent = _parent;
 
-                    dynamic zone = _zoneFactory(_potentialZoneName);
+                    dynamic zone = _zoneFactory();
                     zone.Parent = _parent;
                     zone.ZoneName = _potentialZoneName;
                     parent[_potentialZoneName] = zone;

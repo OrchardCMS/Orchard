@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using JetBrains.Annotations;
@@ -36,33 +37,35 @@ namespace Orchard.Core.Common.Drivers {
         protected override DriverResult Display(BodyPart part, string displayType, dynamic shapeHelper) {
 
             return Combined(
-                ContentShape("Parts_Common_Body", displayType == "Detail" ? "Content" : null, () => {
-                    var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
-                    return shapeHelper.Parts_Common_Body(ContentPart: part, Html: new HtmlString(bodyText));
-                }),
-                ContentShape("Parts_Common_Body_Summary", displayType == "Summary" ? "Content" : null, () => {
-                    var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
-                    return shapeHelper.Parts_Common_Body_Summary(ContentPart: part, Html: new HtmlString(bodyText));
-                })
-            );
+                ContentShape("Parts_Common_Body",
+                             () => {
+                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
+                                 return shapeHelper.Parts_Common_Body(ContentPart: part, Html: new HtmlString(bodyText));
+                             }),
+                ContentShape("Parts_Common_Body_Summary",
+                             () => {
+                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
+                                 return shapeHelper.Parts_Common_Body_Summary(ContentPart: part, Html: new HtmlString(bodyText));
+                             })
+                );
+        }
+
+        private string IfThen(bool predicate, string value) {
+            return predicate ? value : null;
         }
 
         protected override DriverResult Editor(BodyPart part, dynamic shapeHelper) {
             var model = BuildEditorViewModel(part);
-            var location = part.GetLocation("Editor");
-            return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
+            return ContentShape("Parts_Common_Body_Editor",
+                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BodyPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = BuildEditorViewModel(part);
             updater.TryUpdateModel(model, Prefix, null, null);
 
-            // only set the format if it has not yet been set to preserve the initial format type - might want to change this later to support changing body formats but...later
-            if (string.IsNullOrWhiteSpace(model.Format))
-                model.Format = GetFlavor(part);
-
-            var location = part.GetLocation("Editor");
-            return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
+            return ContentShape("Parts_Common_Body_Editor", 
+                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         private static BodyEditorViewModel BuildEditorViewModel(BodyPart part) {

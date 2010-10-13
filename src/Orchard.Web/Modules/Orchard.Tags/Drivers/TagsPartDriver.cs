@@ -24,11 +24,8 @@ namespace Orchard.Tags.Drivers {
         public virtual IUser CurrentUser { get; set; }
 
         protected override DriverResult Display(TagsPart part, string displayType, dynamic shapeHelper) {
-            var showTags = shapeHelper.Parts_Tags_ShowTags(ContentPart: part, Tags: part.CurrentTags);
-            if (!string.IsNullOrWhiteSpace(displayType))
-                showTags.Metadata.Type = string.Format("{0}.{1}", showTags.Metadata.Type, displayType);
-            var location = part.GetLocation(displayType);
-            return ContentShape(showTags).Location(location);
+            return ContentShape("Parts_Tags_ShowTags",
+                            () => shapeHelper.Parts_Tags_ShowTags(ContentPart: part, Tags: part.CurrentTags));
         }
 
         protected override DriverResult Editor(TagsPart part, dynamic shapeHelper) {

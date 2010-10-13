@@ -1,0 +1,13 @@
+﻿<Placement>
+  <Place Parts_Common_Body_Editor="Primary:2"/>
+
+  <!-- show summary for all DisplayType by default -->
+  <Place Parts_Common_Body_Summary="Content:5"/>
+
+  <Match DisplayType="Detail">
+    <!-- hide summary, show full content, for Detail -->
+    <Place Parts_Common_Body_Summary="-"
+           Parts_Common_Body="Content:5" />
+  </Match>
+  
+</Placement>

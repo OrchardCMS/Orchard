@@ -16,8 +16,8 @@ namespace Orchard.DisplayManagement.Implementation {
         private readonly Lazy<IShapeHelperFactory> _shapeHelperFactory;
 
         public DefaultShapeFactory(
-            IEnumerable<Lazy<IShapeFactoryEvents>> events, 
-            IShapeTableManager shapeTableManager, 
+            IEnumerable<Lazy<IShapeFactoryEvents>> events,
+            IShapeTableManager shapeTableManager,
             Lazy<IShapeHelperFactory> shapeHelperFactory) {
             _events = events;
             _shapeTableManager = shapeTableManager;
@@ -25,13 +25,17 @@ namespace Orchard.DisplayManagement.Implementation {
         }
 
         public IShape Create(string shapeType, INamedEnumerable<object> parameters) {
+            return Create(shapeType, parameters, Enumerable.Empty<IClayBehavior>());
+        }
+
+        public IShape Create(string shapeType, INamedEnumerable<object> parameters, IEnumerable<IClayBehavior> behaviors) {
             var defaultShapeTable = _shapeTableManager.GetShapeTable(null);
-            ShapeDescriptor shapeDescriptor; 
+            ShapeDescriptor shapeDescriptor;
             defaultShapeTable.Descriptors.TryGetValue(shapeType, out shapeDescriptor);
 
             var creatingContext = new ShapeCreatingContext {
                 New = _shapeHelperFactory.Value.CreateHelper(),
-                ShapeFactory=this,
+                ShapeFactory = this,
                 ShapeType = shapeType,
                 OnCreated = new List<Action<ShapeCreatedContext>>()
             };
@@ -64,8 +68,13 @@ namespace Orchard.DisplayManagement.Implementation {
                     new ClaySharp.Behaviors.NilResultBehavior()
                 };
             }
+            
+            if (behaviors != null && behaviors.Any()) {
+                // include behaviors passed in by caller, if any
+                creatingContext.Behaviors = creatingContext.Behaviors.Concat(behaviors).ToList();
+            }
 
-            // "creating" events may add behaviors and alter base type
+            // "creating" events may add behaviors and alter base type)
             foreach (var ev in _events) {
                 ev.Value.Creating(creatingContext);
             }
@@ -102,7 +111,7 @@ namespace Orchard.DisplayManagement.Implementation {
 
 
             // other properties passed with call overlay any defaults, so are after the created events
-            
+
             // only one non-Type, non-named argument is allowed
             var initializer = positional.SingleOrDefault();
             if (initializer != null) {
@@ -117,6 +126,8 @@ namespace Orchard.DisplayManagement.Implementation {
 
             return createdContext.Shape;
         }
+
+
     }
 
 

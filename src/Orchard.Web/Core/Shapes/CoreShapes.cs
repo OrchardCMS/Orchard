@@ -31,7 +31,7 @@ namespace Orchard.Core.Shapes {
             // and has an automatic zone creating behavior
             builder.Describe("Layout")
                 .Configure(descriptor => descriptor.Wrappers.Add("Document"))
-                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(name => CreateZone(creating))))
+                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(() => creating.New.Zone())))
                 .OnCreated(created => {
                     var layout = created.Shape;
                     layout.Head = created.New.DocumentZone(ZoneName: "Head");
@@ -81,9 +81,6 @@ namespace Orchard.Core.Shapes {
                 });
         }
 
-        static object CreateZone(ShapeCreatingContext context) {
-            return context.New.Zone();
-        }
 
         static TagBuilder GetTagBuilder(string tagName, string id, IEnumerable<string> classes, IDictionary<string, string> attributes) {
             var tagBuilder = new TagBuilder(tagName);
@@ -271,8 +268,8 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public void Partial(HtmlHelper Html, TextWriter Output, string TemplateName, object Model) {
-            RenderInternal(Html, Output, TemplateName, Model, null);
+        public void Partial(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
+            RenderInternal(Html, Output, TemplateName, Model, Prefix);
         }
 
         [Shape]

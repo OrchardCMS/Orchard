@@ -12,10 +12,5 @@
   </Match>
   -->
 
-  <Match ContentType="Page" DisplayType="Detail">
-    <Place
-        Parts_RoutableTitle="Content:5.b"
-        Parts_Common_Body="Header:after" />
-  </Match>
 
 </Placement>

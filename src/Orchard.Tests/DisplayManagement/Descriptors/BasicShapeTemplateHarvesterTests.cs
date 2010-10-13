@@ -54,7 +54,6 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             VerifyShapeType("Views/Items", "Content.Edit", "Items_Content_Edit");
         }
 
-
         [Test]
         public void ExplicitSpecializationMixedWithDisplayTypes() {
             VerifyShapeType("Views/Items", "Content-MyType", "Items_Content__MyType");
@@ -62,12 +61,18 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             VerifyShapeType("Views/Items", "Content-MyType.Edit", "Items_Content_Edit__MyType");
         }
 
-
         [Test]
         public void ImplicitSpecializationMixedWithDisplayTypes() {
             VerifyShapeType("Views/Items", "MyType", "Items_Content__MyType");
             VerifyShapeType("Views/Items", "MyType.Summary", "Items_Content_Summary__MyType");
             VerifyShapeType("Views/Items", "MyType.Edit", "Items_Content_Edit__MyType");
+        }
+
+        [Test]
+        public void MultipleDotsAreNormalizedToUnderscore() {
+            VerifyShapeType("Views/Parts", "Common.Body", "Parts_Common_Body");
+            VerifyShapeType("Views/Parts", "Common.Body.Summary", "Parts_Common_Body_Summary");
+            VerifyShapeType("Views/Parts", "Localization.ContentTranslations.Summary", "Parts_Localization_ContentTranslations_Summary");
         }
     }
 }
