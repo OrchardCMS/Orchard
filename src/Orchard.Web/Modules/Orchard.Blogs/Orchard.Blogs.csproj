@@ -67,8 +67,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Drivers\BlogArchivesPartDriver.cs" />
     <Compile Include="Drivers\RecentBlogPostsPartDriver.cs" />
+    <Compile Include="Handlers\BlogArchivesPartHandler.cs" />
     <Compile Include="Handlers\RecentBlogPostsPartHandler.cs" />
+    <Compile Include="Models\BlogArchivesPart.cs" />
+    <Compile Include="Models\BlogArchivesPartRecord.cs" />
     <Compile Include="Models\RecentBlogPostsPart.cs" />
     <Compile Include="Models\RecentBlogPostsPartRecord.cs" />
     <Compile Include="ResourceManifest.cs" />
@@ -81,7 +85,6 @@
     <Compile Include="Drivers\BlogPostPartDriver.cs" />
     <Compile Include="Extensions\FeedManagerExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
-    <Compile Include="Filters\ArchivesFilter.cs" />
     <Compile Include="Models\ArchiveData.cs" />
     <Compile Include="Handlers\BlogPartArchiveHandler.cs" />
     <Compile Include="Models\BlogPartArchiveRecord.cs" />
@@ -115,7 +118,6 @@
     <Content Include="Scripts\archives.js" />
     <Content Include="Styles\admin.css" />
     <Content Include="Styles\archives.css" />
-    <Content Include="Views\BlogArchives.cshtml" />
     <Content Include="Views\BlogAdmin\Create.cshtml" />
     <Content Include="Views\BlogAdmin\Edit.cshtml" />
     <Content Include="Views\BlogAdmin\Item.cshtml" />
@@ -187,7 +189,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\Localization\fr-FR\orchard.module.po" />
+    <None Include="Views\DisplayTemplates\Parts\Blogs.BlogArchives.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\Blogs.BlogArchives.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -72,5 +72,22 @@ namespace Orchard.Blogs {
                 );
             return 4;
         }
+
+        public int UpdateFrom4() {
+            SchemaBuilder.CreateTable("BlogArchivesPartRecord", table => table
+                .ContentPartRecord()
+                .Column<string>("BlogSlug", c => c.WithLength(255))
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("BlogArchives",
+                cfg => cfg
+                    .WithPart("BlogArchivesPart")
+                    .WithPart("CommonPart")
+                    .WithPart("WidgetPart")
+                    .WithSetting("Stereotype", "Widget")
+                );
+            
+            return 5;
+        }
     }
 }
