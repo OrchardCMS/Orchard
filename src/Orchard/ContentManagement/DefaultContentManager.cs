@@ -21,7 +21,7 @@ namespace Orchard.ContentManagement {
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
-        private readonly IContentDisplay _contentDisplay;
+        private readonly Lazy<IContentDisplay> _contentDisplay;
 
         public DefaultContentManager(
             IComponentContext context,
@@ -30,7 +30,7 @@ namespace Orchard.ContentManagement {
             IRepository<ContentItemVersionRecord> contentItemVersionRepository,
             IContentDefinitionManager contentDefinitionManager,
             Func<IContentManagerSession> contentManagerSession,
-            IContentDisplay contentDisplay) {
+            Lazy<IContentDisplay> contentDisplay) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;
@@ -370,15 +370,15 @@ namespace Orchard.ContentManagement {
 
 
         public dynamic BuildDisplay(IContent content, string displayType = "") {
-            return _contentDisplay.BuildDisplay(content, displayType);
+            return _contentDisplay.Value.BuildDisplay(content, displayType);
         }
 
         public dynamic BuildEditor(IContent content) {
-            return _contentDisplay.BuildEditor(content);
+            return _contentDisplay.Value.BuildEditor(content);
         }
 
         public dynamic UpdateEditor(IContent content, IUpdateModel updater) {
-            return _contentDisplay.UpdateEditor(content, updater);
+            return _contentDisplay.Value.UpdateEditor(content, updater);
         }
 
         public IContentQuery<ContentItem> Query() {
