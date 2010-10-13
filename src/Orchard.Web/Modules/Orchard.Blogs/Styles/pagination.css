@@ -1,0 +1,19 @@
+﻿ul.pagination
+{
+    list-style-type:none;
+}
+
+ul.pagination li a
+{
+    font-size:13px;
+}
+
+ul.pagination li.newer 
+{
+    float:left;
+}
+
+ul.pagination li.older
+{
+    float:right;
+}
