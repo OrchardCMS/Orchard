@@ -11,9 +11,6 @@ namespace Orchard.Core.Localization.Models {
         public LazyField<CultureRecord> CultureField { get { return _culture; } }
         public LazyField<IContent> MasterContentItemField { get { return _masterContentItem; } }
 
-        [HiddenInput(DisplayValue = false)]
-        public int Id { get { return ContentItem.Id; } }
-
         public CultureRecord Culture {
             get { return _culture.Value; }
             set { _culture.Value = value; }

@@ -1,38 +1,31 @@
-﻿using Microsoft.Scripting.Hosting;
+﻿using System;
+using Microsoft.Scripting.Hosting;
 
 namespace Orchard.Scripting {
     public class ScriptingManager : IScriptingManager {
         private readonly IScriptingRuntime _scriptingRuntime;
-        private ScriptScope _scriptingScope;
+        private Lazy<ScriptScope> _scope;
 
         public ScriptingManager(IScriptingRuntime scriptingRuntime) {
             _scriptingRuntime = scriptingRuntime;
-            _scriptingScope = _scriptingRuntime.GetRubyEngine().CreateScope();
+            _scope = new Lazy<ScriptScope>(()=>_scriptingRuntime.CreateScope());
         }
 
-        #region IScriptingContext Members
-
         public dynamic GetVariable(string name) {
-            return _scriptingScope.GetVariable(name);
+            return _scope.Value.GetVariable(name);
         }
 
         public void SetVariable(string name, object value) {
-            _scriptingScope.SetVariable(name, value);
+            _scope.Value.SetVariable(name, value);
         }
 
-        public dynamic Eval(string expression) {
-            var script = _scriptingRuntime.GetRubyEngine().CreateScriptSourceFromString(expression);
-            return script.Execute(_scriptingScope);
+        public dynamic ExecuteExpression(string expression) {
+            return _scriptingRuntime.ExecuteExpression(expression, _scope.Value);
         }
 
         public void ExecuteFile(string fileName) {
-            _scriptingRuntime.GetRubyEngine().ExecuteFile(fileName, _scriptingScope);
+            _scriptingRuntime.ExecuteFile(fileName, _scope.Value);
         }
 
-        public void SetScriptingScope(ScriptScope scriptScope) {
-            _scriptingScope = scriptScope;
-        }
-
-        #endregion
     }
 }

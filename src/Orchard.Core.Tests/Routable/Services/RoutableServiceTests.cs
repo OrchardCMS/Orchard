@@ -208,8 +208,6 @@ namespace Orchard.Core.Tests.Routable.Services {
         }
 
         public class Thing : ContentPart {
-            public int Id { get { return ContentItem.Id; } }
-
             public string Title {
                 get { return this.As<RoutePart>().Title; }
                 set { this.As<RoutePart>().Title = value; }
@@ -232,8 +230,6 @@ namespace Orchard.Core.Tests.Routable.Services {
         }
 
         public class Stuff : ContentPart {
-            public int Id { get { return ContentItem.Id; } }
-
             public string Title {
                 get { return this.As<RoutePart>().Title; }
                 set { this.As<RoutePart>().Title = value; }
