@@ -84,7 +84,7 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         class TestUser : ContentPart, IUser {
-            public int Id { get { return 6655321; } }
+            public new int Id { get { return 6655321; } }
             public string UserName {get { return "x"; }}
             public string Email { get { return "y"; } }
         }
