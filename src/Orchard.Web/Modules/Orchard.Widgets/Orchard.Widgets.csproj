@@ -80,6 +80,7 @@
     <Compile Include="Filters\WidgetFilter.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="RuleEngine\AuthenticatedRuleProvider.cs" />
+    <Compile Include="RuleEngine\BuiltinRuleProvider.cs" />
     <Compile Include="RuleEngine\RuleManager.cs" />
     <Compile Include="RuleEngine\UrlRuleProvider.cs" />
     <Compile Include="Services\IWidgetsService.cs" />
@@ -112,6 +113,7 @@
     <None Include="Views\Admin\EditWidget.cshtml" />
     <None Include="Views\Admin\EditLayer.cshtml" />
     <None Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Items_Widget.Editor.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.WidgetPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.LayerPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.WidgetBagPart.cshtml" />

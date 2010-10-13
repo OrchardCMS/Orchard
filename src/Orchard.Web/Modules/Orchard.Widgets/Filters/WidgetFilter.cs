@@ -20,6 +20,11 @@ namespace Orchard.Widgets.Filters {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+            // layers and widgets should only run on a full view rendering result
+            var viewResult = filterContext.Result as ViewResult;
+            if (viewResult == null)
+                return;
+
             var workContext = _workContextAccessor.GetContext(filterContext);
 
             if (workContext == null ||
