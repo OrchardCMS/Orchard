@@ -81,7 +81,7 @@ namespace Orchard.Setup.Controllers {
                 ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").ToString());
             }
 
-            if(!String.IsNullOrWhiteSpace(model.DatabaseTablePrefix)) {
+            if(!model.DatabaseOptions && !String.IsNullOrWhiteSpace(model.DatabaseTablePrefix)) {
                 model.DatabaseTablePrefix = model.DatabaseTablePrefix.Trim();
                 if(!Char.IsLetter(model.DatabaseTablePrefix[0])) {
                     ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter").Text);
