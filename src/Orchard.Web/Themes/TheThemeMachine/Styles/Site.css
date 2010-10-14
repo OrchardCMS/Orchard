@@ -159,23 +159,28 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
     
 }
 
-#layout-header, #layout-content, #layout-footer {
+#layout-header, #layout-main, #layout-footer {
 	width:960px;
 	margin:0 auto;
 }
 
 #layout-header 
 {
-    margin: 36px auto;
+    margin: 30px auto;
 }
     #branding 
-    {
-        font-size: 2.4em;
+    {   
+        font-family: 'Lobster', Tahoma, Arial, Helvetica, sans-serif;
+        font-size: 3.4em;
+        padding: 0;
+        margin: 0;
+       
     }
 
     #branding a 
     {
         text-decoration:none;
+        color: #434343;
     }
 
 #layout-footer 
@@ -184,7 +189,7 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
 }
 
 /* Navigation */
-#navigation 
+#layout-navigation 
 {
     width: 960px;
 	margin: 0 auto;
@@ -222,15 +227,15 @@ nav ul
     }
 
 /* Zones */
-.zone {
+/*.zone {
     background-color: yellow;
     box-shadow:inset 0 0 1px red;
     -moz-box-shadow:inset 0 0 1px red;
     -webkit-box-shadow:inset 0 0 1px red;
-}  /*  Used for visualizing zones */
+}    Used for visualizing zones */
 .zone-header { }
 .zone-footer { padding: 24px 0 12px 0px; float: left; font-size: 1.3em; color: #999999; }
-.zone-content { padding: 12px 0 12px 0px; }
+.zone-content { }
 .zone-asidethird { padding: 0 0 6px 0; }
 
 
@@ -238,38 +243,32 @@ nav ul
 ***************************************************************/
 
 /* Has Aside */
-.has-sidebar #content 
+.has-aside #layout-content
 {
-	width: 588px;
-	float:left;
-}
-.has-sidebar .aside.first 
-{
-    width: 348px;
-	float:right;
+	width: 600px;
+	float: left;
 }
 
-/* Has Aside Left*/
-.has-sidebar-left #content {
-	width: 588px;
-	float:right;
-}
-.has-sidebar-left .aside.second 
+.has-aside .aside-second 
 {
-    width: 348px;
-	float:left;
+    width: 360px;
+	float: right;
 }
 
-/* Has Aside Left & Right */
-.has-sidebars #content 
-{
-	width: 588px;
+.has-aside-one #layout-content {
+	width: 600px;
+	float: right;
 }
-.has-sidebars .aside.first, .has-sidebars .aside.second 
+
+.has-asides #layout-content
 {
-    width: 168px;
+	width: 600px;
 }
-.has-sidebars .aside.first, .has-sidebars .aside.second, .has-sidebars #content 
+.has-asides .aside-first, .has-asides .aside-second 
+{
+    width: 180px;
+}
+.has-asides .aside-first, .has-asides .aside-second, .has-asides #layout-content 
 {
     float:left;
 }
@@ -371,7 +370,8 @@ button:focus, .button:focus {
 .top        { margin-top:0; padding-top:0; }
 .bottom     { margin-bottom:0; padding-bottom:0; }
 
-.user-display { float: left; padding: 24px 12px 12px 12px; font-size: 1.3em; }
+.credits { float: left; }
+.user-display { float: left; padding: 0 12px; }
 .user-display .welcome {}
 .user-display .user-actions {}
 

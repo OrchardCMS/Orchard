@@ -1,5 +1,5 @@
 ﻿@{
-
+    Style.Include("http://fonts.googleapis.com/css?family=Lobster&subset=latin");
     Style.Include("site.css");
 
     // cool stuff goes up here
@@ -10,13 +10,13 @@
 
      //Add classes to the wrapper div to toggle zones on and off 
     if (Model.AsideFirst != null && Model.AsideSecond == null) {
-        Model.Classes.Add("has-sidebar");
+        Model.Classes.Add("has-aside-one");
     }
     else if (Model.AsideFirst == null && Model.AsideSecond != null) {
-        Model.Classes.Add("has-sidebar-left");
+        Model.Classes.Add("has-aside-two");
     }
     else if (Model.AsideFirst != null && Model.AsideSecond != null) {
-        Model.Classes.Add("has-sidebars");
+        Model.Classes.Add("has-asides");
     }
     else {
 
@@ -31,8 +31,9 @@
      <h1 id="branding"><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
     }
     using(Capture(pbo => WorkContext.Layout.Footer.Add(pbo) )) {
-        <span class="poweredby">Powered by Orchard</span> <span class="copyright">&#169; The Theme Machine 2010.</span>
+        <div class="credits"><span class="poweredby">Powered by Orchard</span> <span class="copyright">&#169; The Theme Machine 2010.</span></div>
     }
+
     WorkContext.Layout.Footer.Add(New.User());
 }
 
@@ -61,7 +62,7 @@
 }
 <div id="layout-main" class="group">
     @if (Model.AsideFirst != null) {
-    <aside  id="aside-first" class="aside first">
+    <aside id="aside-first" class="aside-first">
         @Zone(Model.AsideFirst)
     </aside>
     }
@@ -89,7 +90,7 @@
         }
     </div>
     @if (Model.AsideSecond != null) {
-    <aside id="aside-second" class="aside second">
+    <aside id="aside-second" class="aside-second">
         @Zone(Model.AsideSecond)
     </aside>
     }
