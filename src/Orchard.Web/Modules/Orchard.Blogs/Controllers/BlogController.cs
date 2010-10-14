@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -6,6 +7,7 @@ using System.Xml.Linq;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
+using Orchard.Blogs.ViewModels;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
 using Orchard.Mvc.Results;
@@ -16,12 +18,14 @@ namespace Orchard.Blogs.Controllers {
     public class BlogController : Controller {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
+        private readonly IBlogPostService _blogPostService;
         private readonly IBlogSlugConstraint _blogSlugConstraint;
         private readonly RouteCollection _routeCollection;
 
-        public BlogController(IOrchardServices services, IBlogService blogService, IBlogSlugConstraint blogSlugConstraint, RouteCollection routeCollection, IShapeHelperFactory shapeHelperFactory) {
+        public BlogController(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService, IBlogSlugConstraint blogSlugConstraint, RouteCollection routeCollection, IShapeHelperFactory shapeHelperFactory) {
             _services = services;
             _blogService = blogService;
+            _blogPostService = blogPostService;
             _blogSlugConstraint = blogSlugConstraint;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
@@ -44,18 +48,31 @@ namespace Orchard.Blogs.Controllers {
         }
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
-        public ActionResult Item(string blogSlug) {
+        public ActionResult Item(string blogSlug, int page) {
+            const int pageSize = 10;
+
             var correctedSlug = _blogSlugConstraint.FindSlug(blogSlug);
             if (correctedSlug == null)
                 return new NotFoundResult();
 
-            var blog = _blogService.Get(correctedSlug);
+            BlogPart blog = _blogService.Get(correctedSlug);
             if (blog == null)
                 return new NotFoundResult();
 
-            //todo: (heskew) "Blog" should be an alternative instead of a display type
-            var model = _services.ContentManager.BuildDisplay(blog, "Blog");
+            var blogPosts = _blogPostService.Get(blog, (page - 1)*pageSize, pageSize).Select(b => _services.ContentManager.BuildDisplay(b, "Summary.BlogPost"));
+
+            var list = Shape.List();
+            list.AddRange(blogPosts);
+
+            var model = new DisplayBlogViewModel {
+                BlogPostList = list,
+                BlogPart = blog,
+                Page = page,
+                PageSize = pageSize
+            };
+
             return View(model);
+
         }
 
         public ActionResult LiveWriterManifest(string blogSlug) {

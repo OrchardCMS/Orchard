@@ -24,7 +24,7 @@ namespace Orchard.Search {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 5;
+            return 2;
         }
     }
 }
