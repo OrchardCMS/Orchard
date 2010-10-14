@@ -222,7 +222,12 @@ nav ul
     }
 
 /* Zones */
-/* .zone { background-color: yellow; }   Used for visualizing zones */
+.zone {
+    background-color: yellow;
+    box-shadow:inset 0 0 1px red;
+    -moz-box-shadow:inset 0 0 1px red;
+    -webkit-box-shadow:inset 0 0 1px red;
+}  /*  Used for visualizing zones */
 .zone-header { }
 .zone-footer { padding: 24px 0 12px 0px; float: left; font-size: 1.3em; color: #999999; }
 .zone-content { padding: 12px 0 12px 0px; }
