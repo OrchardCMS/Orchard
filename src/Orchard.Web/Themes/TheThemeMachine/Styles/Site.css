@@ -80,6 +80,7 @@ header, footer, aside, nav, article { display: block; }
 }
 
 
+
 /* General
 ***************************************************************/
 /* Default font settings. 
@@ -165,7 +166,6 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
 
 #layout-header 
 {
-    border-top: 1px solid #dbdbdb;
     margin: 36px auto;
 }
     #branding 
@@ -177,6 +177,11 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
     {
         text-decoration:none;
     }
+
+#layout-footer 
+{
+   border-top: 1px solid #dbdbdb; 
+}
 
 /* Navigation */
 #navigation 
@@ -217,11 +222,11 @@ nav ul
     }
 
 /* Zones */
-/*.zone { background-color: yellow; }  Used for visualizing zones */
-.zone-header {}
+/* .zone { background-color: yellow; }   Used for visualizing zones */
+.zone-header { }
 .zone-footer { padding: 24px 0 12px 0px; float: left; font-size: 1.3em; color: #999999; }
 .zone-content { padding: 12px 0 12px 0px; }
-.zone-asidethird {}
+.zone-asidethird { padding: 0 0 6px 0; }
 
 
 /* Main
@@ -362,6 +367,8 @@ button:focus, .button:focus {
 .bottom     { margin-bottom:0; padding-bottom:0; }
 
 .user-display { float: left; padding: 24px 12px 12px 12px; font-size: 1.3em; }
+.user-display .welcome {}
+.user-display .user-actions {}
 
 
 

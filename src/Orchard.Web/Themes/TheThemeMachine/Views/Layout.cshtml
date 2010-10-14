@@ -82,14 +82,17 @@
     </aside>
     }
 </div>
+
 @* span -> p (?) *@
 @using(Capture(pbo => WorkContext.Layout.Footer.Add(pbo) )) {
-    <span>Powered by Orchard &#169; The Theme Machine 2010.</span>
+    <span class="poweredby">Powered by Orchard</span> <span class="copyright">&#169; The Theme Machine 2010.</span>
 }
+
 @if(Model.Footer != null) {
 <footer id="layout-footer" class="group">
     @Zone(Model.Footer)
  @Display.User()
 </footer>
 }
+
 @tag.EndElement

@@ -1,1 +1,28 @@
-@Display(Model)
+@model Orchard.Blogs.ViewModels.DisplayBlogViewModel
+@using Orchard.Blogs.Extensions;
+
+@{
+    Style.Include("pagination.css");
+}
+
+@if (Model.BlogPostList.Items.Count > 0) {
+    @Display(Model.BlogPostList)
+
+    <ul class="pagination">
+    @if(Model.BlogPostList.Items.Count == Model.PageSize) {
+        <li class="older">
+        @Html.ActionLink(T("Older Posts").Text, "Item", new { Area = "Orchard.Blogs", blogSlug = Model.BlogPart.Slug, page = Model.Page + 1 })
+        </li>
+    }
+
+    @if(Model.Page > 1) {
+        <li class="newer">
+        @Html.ActionLink(T("Newer Posts").Text, "Item", new { Area = "Orchard.Blogs", blogSlug = Model.BlogPart.Slug, page = Model.Page - 1 })
+        </li>
+    }
+    </ul>
+}
+else {
+    <p>@T("There are no posts for this blog.")</p>
+}
+
