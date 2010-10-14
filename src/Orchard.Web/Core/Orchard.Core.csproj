@@ -297,7 +297,6 @@
     <Content Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Localization\Module.txt" />
     <Content Include="Localization\Views\Admin\Translate.cshtml" />
-    <Content Include="Localization\Views\Parts\Localization.ContentTranslations.SummaryAdmin.cshtml" />
     <Content Include="Localization\Views\CultureSelection.cshtml" />
     <Content Include="Routable\Module.txt" />
     <Content Include="Routable\Scripts\jquery.slugify.js" />

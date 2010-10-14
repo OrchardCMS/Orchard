@@ -6,17 +6,16 @@
 	ContentItem contentItem = Model.ContentItem;
 	var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
-
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
         <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
         <h3>@Html.Link((string)Model.Title, Url.BlogPost((BlogPostPart)Model.ContentItem.Get(typeof(BlogPostPart))))</h3>
-        <div class="metadata">@Display(Model.metadata)</div>
+        <div class="metadata">@Display(Model.Meta)</div> <!-- was: metadata -->
     </div>
-    <div class="related">@Display(Model.secondary)
+    <div class="related">@Display(Model.Related) <!-- was: secondary -->
         @Html.Link(T("Edit").Text, Url.BlogPost((BlogPostPart)Model.ContentItem.Get(typeof(BlogPostPart)))) @T(" | ")
         @Html.Link(T("Remove").Text, Url.Action("Remove", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
-        <br />@Display(Model.meta)
+        <br />@Display(Model.Secondary) <!-- was: meta -->
     </div>
-    <div class="primary">@Display(Model.Primary)</div>
+    <div class="primary">@Display(Model.Content)</div>
 </div>

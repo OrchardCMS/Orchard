@@ -8,9 +8,14 @@ namespace Orchard.Core.Contents {
                 .OnDisplaying(displaying => {
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
+                        //Content-BlogPost
                         displaying.ShapeMetadata.Alternates.Add("Items_Content__" + contentItem.ContentType);
+                        //Content-42
                         displaying.ShapeMetadata.Alternates.Add("Items_Content__" + contentItem.Id);
+                        //Content.Summary
                         displaying.ShapeMetadata.Alternates.Add("Items_Content_" + displaying.ShapeMetadata.DisplayType);
+                        //Content.Summary-Page
+                        displaying.ShapeMetadata.Alternates.Add("Items_Content_" + displaying.ShapeMetadata.DisplayType + "__" + contentItem.ContentType);
                     }
                 });
 
@@ -18,6 +23,7 @@ namespace Orchard.Core.Contents {
                .OnDisplaying(displaying => {
                    ContentItem contentItem = displaying.Shape.ContentItem;
                    if (contentItem != null) {
+                       //Content.Editor-Page
                        displaying.ShapeMetadata.Alternates.Add("Items_Content_Editor__" + contentItem.ContentType);
                    }
                });

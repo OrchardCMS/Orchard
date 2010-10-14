@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Feeds;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -35,40 +33,32 @@ namespace Orchard.Blogs.Drivers {
         protected override string Prefix { get { return ""; } }
 
         protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper) {
-            var driverResults = new List<DriverResult>();
-
-            var metadata = shapeHelper.Parts_Blogs_Blog_Manage(ContentPart: part);
-            driverResults.Add(ContentShape(metadata).Location("manage"));
-
-            var description = shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part);
-            driverResults.Add(ContentShape(description).Location("manage", "after"));
-
-            if (displayType.StartsWith("Admin")) {
-                var list = shapeHelper.List();
-                list.AddRange(_blogPostService.Get(part, VersionOptions.Latest)
-                                          .Select(bp => _contentManager.BuildDisplay(bp, "BlogPost_SummaryAdmin")));
-                var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List_Admin(ContentPart: part, BlogPosts: list);
-                var contentShape = ContentShape(blogPostList).Location("Primary");
-                driverResults.Add(contentShape);
-            }
-            else if (!displayType.Contains("Summary")) {
-                var list = shapeHelper.List();
-                list.AddRange(_blogPostService.Get(part)
-                                          .Select(bp => _contentManager.BuildDisplay(bp, "BlogPost_Summary")));
-                var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
-                var contentShape = ContentShape(blogPostList).Location("Primary");
-                driverResults.Add(contentShape);
-
-                _feedManager.Register(part);
-            }
-
-            return Combined(driverResults.ToArray());
+            return Combined(
+                ContentShape("Parts_Blogs_Blog_Manage",
+                             () => shapeHelper.Parts_Blogs_Blog_Manage(ContentPart: part)),
+                ContentShape("Parts_Blogs_Blog_Description",
+                             () => shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part, Description: part.Description)),
+                ContentShape("Parts_Blogs_BlogPost_List",
+                             () => {
+                                 _feedManager.Register(part);
+                                 var list = shapeHelper.List();
+                                 list.AddRange(_blogPostService.Get(part)
+                                                           .Select(bp => _contentManager.BuildDisplay(bp, "Summary")));
+                                 return shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, ContentItems: list);
+                             }),
+                ContentShape("Parts_Blogs_BlogPost_List_Admin",
+                             () => {
+                                 var list = shapeHelper.List();
+                                 list.AddRange(_blogPostService.Get(part, VersionOptions.Latest)
+                                                           .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin")));
+                                 return shapeHelper.Parts_Blogs_BlogPost_List_Admin(ContentPart: part, ContentItems: list);
+                             })
+                );
         }
 
         protected override DriverResult Editor(BlogPart blogPart, dynamic shapeHelper) {
-            var location = blogPart.GetLocation("Editor");
-            return Combined(
-                ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Fields").Location(location));
+            return ContentShape("Parts_Blogs_Blog_Fields",
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Blogs.Blog.Fields", Model: blogPart, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BlogPart blogPart, IUpdateModel updater, dynamic shapeHelper) {

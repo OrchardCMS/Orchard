@@ -1,5 +1,0 @@
-﻿@using Orchard.Core.Common.Extensions;
-@if (Model.Creator != null) {
-<div class="metadata">
-    <div class="posted">@T("Published by {0} {1}", (string)Model.ContentPart.Creator.UserName, Html.PublishedWhen((DateTime?)Model.ContentPart.VersionPublishedUtc, T))</div>
-</div>}

@@ -1,1 +1,10 @@
-﻿@model Orchard.Core.PublishLater.ViewModels.PublishLaterViewModel
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@using Orchard.Core.PublishLater.Models;
+@{
+    PublishLaterPart publishLaterPart = Model.ContentPart;
+    DateTime? versionPublishedUtc = publishLaterPart.As<CommonPart>() == null ? null : publishLaterPart.As<CommonPart>().VersionPublishedUtc;
+}
+@if (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue) {
+    @T("Published: {0}", Html.DateTimeRelative(versionPublishedUtc.Value, T))
+}

@@ -36,7 +36,7 @@ namespace Orchard.Blogs.Controllers {
         protected ILogger Logger { get; set; }
 
         public ActionResult List() {
-            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplay(b, "Summary.Blog"));
+            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
 
             var list = Shape.List();
             list.AddRange(blogs);
@@ -59,7 +59,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var blogPosts = _blogPostService.Get(blog, (page - 1)*pageSize, pageSize).Select(b => _services.ContentManager.BuildDisplay(b, "Summary.BlogPost"));
+            var blogPosts = _blogPostService.Get(blog, (page - 1)*pageSize, pageSize).Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
 
             var list = Shape.List();
             list.AddRange(blogPosts);

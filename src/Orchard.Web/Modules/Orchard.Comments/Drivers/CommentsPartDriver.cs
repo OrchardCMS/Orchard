@@ -12,7 +12,7 @@ namespace Orchard.Comments.Drivers {
                 return null;
 
             if (displayType.StartsWith("Detail"))
-                return ContentShape(shapeHelper.Parts_Comments_Comments(ContentPart: part)).Location(part.GetLocation("Detail"));
+                return ContentShape(shapeHelper.Parts_Comments_Comments(ContentPart: part)).Location("Content:10");
 
             if (displayType == "SummaryAdmin")
                 return ContentShape(shapeHelper.Parts_Comments_CountAdmin(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
