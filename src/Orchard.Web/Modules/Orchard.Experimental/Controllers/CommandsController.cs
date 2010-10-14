@@ -22,7 +22,7 @@ namespace Orchard.Experimental.Controllers {
         }
 
         public ActionResult Execute() {
-            return View("Execute", new CommandsExecuteViewModel());
+            return View(new CommandsExecuteViewModel());
         }
 
         [HttpPost]
@@ -37,7 +37,7 @@ namespace Orchard.Experimental.Controllers {
                 .Distinct()
                 .ToArray();
             model.Results = writer.ToString();
-            return View("Execute", model);
+            return View(model);
         }
 
         private static CommandParameters GetCommandParameters(string commandLine, StringWriter writer) {

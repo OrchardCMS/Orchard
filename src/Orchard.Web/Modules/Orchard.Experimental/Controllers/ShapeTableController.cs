@@ -13,7 +13,7 @@ namespace Orchard.Experimental.Controllers {
         }
 
         public ActionResult ShapeTable(string themeName) {
-            return View("ShapeTable", _shapeTableManager.GetShapeTable(themeName));
+            return View(_shapeTableManager.GetShapeTable(themeName));
         }
     }
 }

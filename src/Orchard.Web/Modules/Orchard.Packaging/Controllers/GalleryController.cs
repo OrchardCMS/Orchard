@@ -43,7 +43,7 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult Sources() {
-            return View("Sources", new PackagingSourcesViewModel {
+            return View(new PackagingSourcesViewModel {
                 Sources = _packagingSourceManager.GetSources(),
             });
         }
@@ -107,7 +107,7 @@ namespace Orchard.Packaging.Controllers {
         public ActionResult Modules(Guid? sourceId) {
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-            return View("Modules", new PackagingModulesViewModel {
+            return View(new PackagingModulesViewModel {
                 Modules = _packagingSourceManager.GetModuleList(selectedSource).Where(p => p.SyndicationItem.Categories.All(c => c.Name == "Orchard Module" || c.Name != "Orchard Theme")),
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 SelectedSource = selectedSource
@@ -117,7 +117,7 @@ namespace Orchard.Packaging.Controllers {
         public ActionResult Themes(Guid? sourceId) {
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-            return View("Themes", new PackagingModulesViewModel {
+            return View(new PackagingModulesViewModel {
                 Modules = _packagingSourceManager.GetModuleList(selectedSource).Where(p => p.SyndicationItem.Categories.Any(c => c.Name == "Orchard Theme")),
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 SelectedSource = selectedSource
@@ -131,7 +131,7 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult Harvest(string extensionName, string feedUrl) {
-            return View("Harvest", new PackagingHarvestViewModel {
+            return View(new PackagingHarvestViewModel {
                 ExtensionName = extensionName,
                 FeedUrl = feedUrl,
                 Sources = _packagingSourceManager.GetSources(),
@@ -155,7 +155,7 @@ namespace Orchard.Packaging.Controllers {
 
             if (!model.Sources.Any(src => src.FeedUrl == model.FeedUrl)) {
                 ModelState.AddModelError("FeedUrl", T("May only push directly to one of the configured sources.").ToString());
-                return View("Harvest", model);
+                return View(model);
             }
 
             _packageManager.Push(packageData, model.FeedUrl, model.User, model.Password);

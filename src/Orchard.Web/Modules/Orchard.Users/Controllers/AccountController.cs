@@ -56,7 +56,7 @@ namespace Orchard.Users.Controllers {
             if (_authenticationService.GetAuthenticatedUser() != null)
                 return Redirect("~/");
 
-            return View("LogOn", new LogOnViewModel {Title = "Log On"});
+            return View(new LogOnViewModel {Title = "Log On"});
         }
 
         [HttpPost]
@@ -65,7 +65,7 @@ namespace Orchard.Users.Controllers {
         public ActionResult LogOn(string userNameOrEmail, string password, bool rememberMe, string returnUrl) {
             var user = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
-                return View("LogOn", new LogOnViewModel {Title = "Log On"});
+                return View(new LogOnViewModel {Title = "Log On"});
             }
 
             _authenticationService.SignIn(user, rememberMe);
