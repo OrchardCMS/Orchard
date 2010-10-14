@@ -4,14 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Settings;
-using Orchard.Themes;
 using Orchard.Utility;
 using Orchard.Utility.Extensions;
 
@@ -36,10 +35,28 @@ namespace Orchard.Environment.Extensions {
             return _folders.SelectMany(folder => folder.AvailableExtensions());
         }
 
+        public IEnumerable<ExtensionDescriptor> EnabledExtensions(ShellDescriptor descriptor) {
+            var enabledFeatures = EnabledFeatures(descriptor);
+            return _folders.SelectMany(folder => folder.AvailableExtensions())
+                .Where(extensionDescriptor => 
+                    extensionDescriptor.Features.Any(featureDescriptor =>
+                        enabledFeatures.Any(availableFeature => featureDescriptor.Name == availableFeature.Name)));
+        }
+
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
             var featureDescriptors = AvailableExtensions().SelectMany(ext => ext.Features);
             var featureDescriptorsOrdered = featureDescriptors.OrderByDependencies(HasDependency);
             return featureDescriptorsOrdered.ToReadOnlyCollection();
+        }
+
+        public IEnumerable<FeatureDescriptor> EnabledFeatures(ShellDescriptor descriptor) {
+            return AvailableExtensions()
+                .SelectMany(extensionDescriptor => extensionDescriptor.Features)
+                .Where(featureDescriptor => IsFeatureEnabledInDescriptor(featureDescriptor, descriptor));
+        }
+
+        private static bool IsFeatureEnabledInDescriptor(FeatureDescriptor featureDescriptor, ShellDescriptor shellDescriptor) {
+            return shellDescriptor.Features.Any(shellDescriptorFeature => shellDescriptorFeature.Name == featureDescriptor.Name);
         }
 
         /// <summary>
