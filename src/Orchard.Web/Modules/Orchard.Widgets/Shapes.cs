@@ -8,17 +8,16 @@ namespace Orchard.Widgets {
             builder.Describe("Items_Widget")
                 .Configure(descriptor => {
                     // todo: have "alternates" for chrome
-                    descriptor.Wrappers.Add("Widget_Wrapper");
+                    //todo: (heskew) something...this still doesn't feel right
                     descriptor.Wrappers.Add("Widget_ControlWrapper");
+                    descriptor.Wrappers.Add("Widget_Wrapper");
                 })
                 .OnCreated(created => {
                     var widget = created.Shape;
                     widget.Main.Add(created.New.PlaceChildContent(Source: widget));
                 })
                 .OnDisplaying(displaying => {
-                    var widget = displaying.Shape;
-                    widget.Classes.Add("widget");
-                    ContentItem contentItem = widget.ContentItem;
+                    ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
                         var zoneName = contentItem.As<WidgetPart>().Zone;
                         displaying.ShapeMetadata.Alternates.Add("Items_Widget__" + contentItem.ContentType);
