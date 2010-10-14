@@ -137,7 +137,7 @@
     <Content Include="Themes\TheAdmin\Styles\images\menuOpen.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\menuOpenHover.gif" />
     <Content Include="Themes\TheThemeMachine\draft.html" />
-    <Content Include="Themes\TheThemeMachine\Styles\site.css" />
+    <Content Include="Themes\TheThemeMachine\Styles\Site.css" />
     <Content Include="Themes\TheThemeMachine\Theme.png" />
     <Content Include="Themes\TheThemeMachine\Theme.txt" />
     <None Include="Themes\Classic\App_Data\Localization\fr-FR\orchard.theme.po" />
@@ -145,6 +145,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Themes\TheThemeMachine\Views\User.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">

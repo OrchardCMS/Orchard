@@ -1,0 +1,13 @@
+﻿@using System.Web.Mvc;
+
+<div class="user-display">
+    @if (Request.IsAuthenticated) {
+            <span class="welcome">@T("Welcome, <strong>{0}</strong>!", WorkContext.CurrentUser.UserName)</span>
+            <span class="user-actions">
+                @Html.ActionLink(T("Log Off").ToString(), "LogOff", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl })
+                @Html.ActionLink("Dashboard", "Index", new { Area = "Dashboard", Controller = "Admin" })
+            </span>
+    } else {
+            <span class="user-actions">@Html.ActionLink(T("Login").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl })</span>
+    }
+</div>
