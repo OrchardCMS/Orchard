@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
@@ -21,6 +22,7 @@ namespace Orchard.Themes.Services {
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
         private readonly IModuleService _moduleService;
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly ShellDescriptor _shellDescriptor;
         private readonly IShellDescriptorManager _shellDescriptorManager;
 
         public ThemeService(
@@ -28,12 +30,14 @@ namespace Orchard.Themes.Services {
             IExtensionManager extensionManager,
             IEnumerable<IThemeSelector> themeSelectors,
             IModuleService moduleService,
-            IWorkContextAccessor workContextAccessor) {
+            IWorkContextAccessor workContextAccessor,
+            ShellDescriptor shellDescriptor) {
             _shellDescriptorManager = shellDescriptorManager;
             _extensionManager = extensionManager;
             _themeSelectors = themeSelectors;
             _moduleService = moduleService;
             _workContextAccessor = workContextAccessor;
+            _shellDescriptor = shellDescriptor;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -167,11 +171,22 @@ namespace Orchard.Themes.Services {
         }
 
         /// <summary>
-        /// Loads only enabled themes
+        /// Loads only installed themes
         /// </summary>
         public IEnumerable<ITheme> GetInstalledThemes() {
+            return GetThemes(_extensionManager.AvailableExtensions());
+        }
+
+        /// <summary>
+        /// Loads only enabled themes
+        /// </summary>
+        public IEnumerable<ITheme> GetEnabledThemes() {
+            return GetThemes(_extensionManager.EnabledExtensions(_shellDescriptor));
+        }
+
+        private IEnumerable<ITheme> GetThemes(IEnumerable<ExtensionDescriptor> extensions) {
             var themes = new List<ITheme>();
-            foreach (var descriptor in _extensionManager.AvailableExtensions()) {
+            foreach (var descriptor in extensions) {
 
                 if (!string.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
                     continue;

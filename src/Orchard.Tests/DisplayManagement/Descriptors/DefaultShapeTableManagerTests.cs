@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
@@ -86,8 +87,16 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                 throw new NotSupportedException();
             }
 
+            public IEnumerable<ExtensionDescriptor> EnabledExtensions(ShellDescriptor descriptor) {
+                throw new NotSupportedException();
+            }
+
             public IEnumerable<FeatureDescriptor> AvailableFeatures() {
                 return _availableFeautures;
+            }
+
+            public IEnumerable<FeatureDescriptor> EnabledFeatures(ShellDescriptor descriptor) {
+                throw new NotSupportedException();
             }
 
             public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {

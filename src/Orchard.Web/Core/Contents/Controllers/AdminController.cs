@@ -203,7 +203,7 @@ namespace Orchard.Core.Contents.Controllers {
             var viewModel = Shape.ViewModel()
                 .ContentTypes(list);
 
-            return View("CreatableTypeList", viewModel);
+            return View(viewModel);
         }
 
         public ActionResult Create(string id) {
