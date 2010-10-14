@@ -110,26 +110,43 @@ namespace Orchard.Widgets.Services {
             _contentManager.Remove(GetWidget(widgetId).ContentItem);
         }
 
-        public void MoveWidgetUp(int widgetId) {
+        public bool MoveWidgetUp(int widgetId) {
             WidgetPart widgetPart = GetWidget(widgetId);
             
             int currentPosition = int.Parse(widgetPart.Record.Position);
-            if (currentPosition > 0) {
-                WidgetPart widgetBefore = GetWidgets(widgetPart.LayerPart.Id).FirstOrDefault(widgetPartBefore => widgetPartBefore.Record.Position == (currentPosition - 1).ToString());
+            WidgetPart widgetBefore = GetWidgets(widgetPart.LayerPart.Id)
+                .Where(widget => widget.Zone == widgetPart.Zone)
+                .OrderByDescending(widget => widget.Position, new UI.FlatPositionComparer())
+                .FirstOrDefault(widget => int.Parse(widget.Record.Position) < currentPosition);
+            if (widgetBefore != null) {
+                string tempPosition = widgetBefore.Record.Position;
                 widgetBefore.Record.Position = currentPosition.ToString();
-                widgetPart.Record.Position = (currentPosition - 1).ToString();
+                widgetPart.Record.Position = tempPosition;
+
+                return true;
             }
+
+            return false;
         }
 
-        public void MoveWidgetDown(int widgetId) {
+        public bool MoveWidgetDown(int widgetId) {
             WidgetPart widgetPart = GetWidget(widgetId);
 
             int currentPosition = int.Parse(widgetPart.Record.Position);
-            if (currentPosition < GetWidgets(widgetPart.LayerPart.Id).Count()) {
-                WidgetPart widgetAfter = GetWidgets(widgetPart.LayerPart.Id).FirstOrDefault(widgetPartAfter => widgetPartAfter.Record.Position == (currentPosition + 1).ToString());
+
+            WidgetPart widgetAfter = GetWidgets(widgetPart.LayerPart.Id)
+                .Where(widget => widget.Zone == widgetPart.Zone)
+                .OrderBy(widget => widget.Position, new UI.FlatPositionComparer())
+                .FirstOrDefault(widget => int.Parse(widget.Record.Position) > currentPosition);
+            if (widgetAfter != null) {
+                string tempPosition = widgetAfter.Record.Position;
                 widgetAfter.Record.Position = currentPosition.ToString();
-                widgetPart.Record.Position = (currentPosition + 1).ToString();
-            }            
+                widgetPart.Record.Position = tempPosition;
+                
+                return true;
+            }
+
+            return false;
         }
     }
 }

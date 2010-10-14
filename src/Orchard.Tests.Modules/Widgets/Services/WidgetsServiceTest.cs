@@ -211,6 +211,54 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             Assert.That(zones.FirstOrDefault(zone => zone == ThemeZoneName2), Is.Not.Null);
         }
 
+        [Test]
+        public void MoveWidgetTest() {
+            const string layerName = "Test layer 1";
+            const string layerDescription = "Test layer 1";
+            const string widgetTitle1 = "Test widget 1";
+            const string widgetTitle2 = "Test widget 2";
+            const string widgetTitle3 = "Test widget 3";
+            const string zone1 = "Zone1";
+            const string zone2 = "Zone2";
+            const string position1 = "1";
+            const string position2 = "3";
+            const string position3 = "4";
+
+            LayerPart layerPart = _widgetService.CreateLayer(layerName, layerDescription, "");
+
+            // same zone widgets
+            WidgetPart widgetPart1 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", widgetTitle1, position1, zone1);
+            WidgetPart widgetPart2 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", widgetTitle2, position2, zone1);
+
+            // different zone widget
+            WidgetPart widgetPart3 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", widgetTitle3, position3, zone2);
+            _contentManager.Flush();
+
+            // test 1 - moving first widget up will have no effect
+            Assert.That(_widgetService.MoveWidgetUp(widgetPart1.Id), Is.False);
+
+            // test 2 - moving first widget down will be successfull
+            Assert.That(_widgetService.MoveWidgetDown(widgetPart1.Id), Is.True);
+
+            widgetPart1 = _widgetService.GetWidget(widgetPart1.Id);
+            Assert.That(widgetPart1.Position, Is.EqualTo(position2), "First widget moved to second widget position");
+            
+            widgetPart2 = _widgetService.GetWidget(widgetPart2.Id);
+            Assert.That(widgetPart2.Position, Is.EqualTo(position1), "Second widget moved to first widget position");
+
+            // test 3 - moving last widget down will have no effect even though there is a widget in another zone with a higher position
+            Assert.That(_widgetService.MoveWidgetDown(widgetPart1.Id), Is.False);
+
+            widgetPart1 = _widgetService.GetWidget(widgetPart1.Id);
+            Assert.That(widgetPart1.Position, Is.EqualTo(position2), "Widget remained in the same position");
+
+            widgetPart2 = _widgetService.GetWidget(widgetPart2.Id);
+            Assert.That(widgetPart2.Position, Is.EqualTo(position1), "Widget remained in the same position");
+
+            widgetPart3 = _widgetService.GetWidget(widgetPart3.Id);
+            Assert.That(widgetPart3.Position, Is.EqualTo(position3), "Widget remained in the same position");
+        }
+
         public class StubLayerPartHandler : ContentHandler {
             public StubLayerPartHandler(IRepository<LayerPartRecord> layersRepository) {
                 Filters.Add(new ActivatingFilter<LayerPart>("Layer"));
