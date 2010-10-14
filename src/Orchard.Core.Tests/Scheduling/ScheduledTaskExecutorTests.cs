@@ -44,6 +44,7 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterInstance(_handler).As<IScheduledTaskHandler>();
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 
         protected override IEnumerable<Type> DatabaseTypes {

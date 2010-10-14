@@ -44,6 +44,7 @@ namespace Orchard.Core.Tests.Body {
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<BodyPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 
         [Test]

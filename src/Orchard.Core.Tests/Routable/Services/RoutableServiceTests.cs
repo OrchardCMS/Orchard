@@ -59,6 +59,7 @@ namespace Orchard.Core.Tests.Routable.Services {
             builder.RegisterType<RoutePartHandler>().As<IContentHandler>();
 
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 
         private IRoutableService _routableService;

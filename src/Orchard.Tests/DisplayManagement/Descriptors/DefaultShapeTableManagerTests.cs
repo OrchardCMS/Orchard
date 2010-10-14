@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Autofac;
 using NUnit.Framework;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions;
@@ -51,6 +52,8 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             builder.RegisterType<TestShapeProvider>().As<IShapeTableProvider>()
                 .As<TestShapeProvider>()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 
         static Feature Feature(FeatureDescriptor descriptor) {
