@@ -49,13 +49,20 @@
                             <li>
                                 <div class="widgets-zone">@zone</div>
                                 <ul>
+                                    @{
+                                        int count = Model.CurrentLayerWidgets.Where(widgetPart => widgetPart.Zone == zone).Count() - 1;
+                                        int i = 0;
+                                    }
                                     @foreach (WidgetPart widget in Model.CurrentLayerWidgets.Where(widgetPart => widgetPart.Zone == zone).OrderBy(widgetPart => widgetPart.Position, new Orchard.UI.FlatPositionComparer())) {
                                         <li class="widgets-zoneWidget">
-                                            @if (widget.Position != "1") {
+                                            @if (i > 0) {
                                                 <input type="image" name="submit.MoveUp.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/moveup.gif")" alt="Move up" value="@widget.Id" />
                                             }
-                                            @if (int.Parse(widget.Position) < Model.CurrentLayerWidgets.Where(widgetPart => widgetPart.Zone == zone).Count()) {
+                                            @if (i < count) {
                                                 <input type="image" name="submit.MoveDown.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/movedown.gif")" alt="Move down" value="@widget.Id" />
+                                            }
+                                            @{
+                                                i++;
                                             }
                                             @Html.ActionLink(@widget.Title, "EditWidget", new { @widget.Id })
                                         </li>

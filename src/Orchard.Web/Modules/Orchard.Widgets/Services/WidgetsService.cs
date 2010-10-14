@@ -110,26 +110,52 @@ namespace Orchard.Widgets.Services {
             _contentManager.Remove(GetWidget(widgetId).ContentItem);
         }
 
-        public void MoveWidgetUp(int widgetId) {
-            WidgetPart widgetPart = GetWidget(widgetId);
-            
+        public bool MoveWidgetUp(WidgetPart widgetPart) {
             int currentPosition = int.Parse(widgetPart.Record.Position);
-            if (currentPosition > 0) {
-                WidgetPart widgetBefore = GetWidgets(widgetPart.LayerPart.Id).FirstOrDefault(widgetPartBefore => widgetPartBefore.Record.Position == (currentPosition - 1).ToString());
-                widgetBefore.Record.Position = currentPosition.ToString();
-                widgetPart.Record.Position = (currentPosition - 1).ToString();
+
+            WidgetPart widgetBefore = GetWidgets(widgetPart.LayerPart.Id)
+                .Where(widget => widget.Zone == widgetPart.Zone)
+                .OrderByDescending(widget => widget.Position, new UI.FlatPositionComparer())
+                .FirstOrDefault(widget => int.Parse(widget.Record.Position) < currentPosition);
+
+            if (widgetBefore != null) {
+                SwitchWidgetPositions(widgetBefore, widgetPart);
+
+                return true;
             }
+
+            return false;
         }
 
-        public void MoveWidgetDown(int widgetId) {
-            WidgetPart widgetPart = GetWidget(widgetId);
+        public bool MoveWidgetUp(int widgetId) {
+            return MoveWidgetUp(GetWidget(widgetId));
+        }
 
+        public bool MoveWidgetDown(WidgetPart widgetPart) {
             int currentPosition = int.Parse(widgetPart.Record.Position);
-            if (currentPosition < GetWidgets(widgetPart.LayerPart.Id).Count()) {
-                WidgetPart widgetAfter = GetWidgets(widgetPart.LayerPart.Id).FirstOrDefault(widgetPartAfter => widgetPartAfter.Record.Position == (currentPosition + 1).ToString());
-                widgetAfter.Record.Position = currentPosition.ToString();
-                widgetPart.Record.Position = (currentPosition + 1).ToString();
-            }            
+
+            WidgetPart widgetAfter = GetWidgets(widgetPart.LayerPart.Id)
+                .Where(widget => widget.Zone == widgetPart.Zone)
+                .OrderBy(widget => widget.Position, new UI.FlatPositionComparer())
+                .FirstOrDefault(widget => int.Parse(widget.Record.Position) > currentPosition);
+
+            if (widgetAfter != null) {
+                SwitchWidgetPositions(widgetAfter, widgetPart);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool MoveWidgetDown(int widgetId) {
+            return MoveWidgetDown(GetWidget(widgetId));
+        }
+
+        private static void SwitchWidgetPositions(WidgetPart sourceWidget, WidgetPart targetWidget) {
+            string tempPosition = sourceWidget.Record.Position;
+            sourceWidget.Record.Position = targetWidget.ToString();
+            targetWidget.Record.Position = tempPosition;
         }
     }
 }

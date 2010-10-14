@@ -22,7 +22,9 @@ namespace Orchard.Widgets.Services {
         void UpdateLayer(int layerId, string name, string description, string layerRule);
         void DeleteLayer(int layerId);
 
-        void MoveWidgetUp(int widgetId);
-        void MoveWidgetDown(int widgetId);
+        bool MoveWidgetUp(int widgetId);
+        bool MoveWidgetUp(WidgetPart widgetPart);
+        bool MoveWidgetDown(int widgetId);
+        bool MoveWidgetDown(WidgetPart widgetPart);
     }
 }

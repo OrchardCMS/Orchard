@@ -32,6 +32,19 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         private const string ThemeZoneName1 = "sidebar";
         private const string ThemeZoneName2 = "alternative";
 
+        private const string LayerName1 = "Test layer 1";
+        private const string LayerDescription1 = "Test layer 1";
+        private const string LayerName2 = "Test layer 2";
+        private const string LayerDescription2 = "Test layer 2";
+        private const string WidgetTitle1 = "Test widget 1";
+        private const string WidgetTitle2 = "Test widget 2";
+        private const string WidgetTitle3 = "Test widget 3";
+        private const string Zone1 = "Zone1";
+        private const string Zone2 = "Zone2";
+        private const string Position1 = "1";
+        private const string Position2 = "3";
+        private const string Position3 = "4";
+
         private IWidgetsService _widgetService;
         private IContentManager _contentManager;
 
@@ -85,26 +98,22 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             builder.RegisterType<StubWidgetPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubLayerPartHandler>().As<IContentHandler>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 
         [Test]
         public void GetLayersTest() {
-            const string layerName1 = "Test layer 1";
-            const string layerDescription1 = "Test layer 1";
-            const string layerName2 = "Test layer 2";
-            const string layerDescription2 = "Test layer 2";
-
             IEnumerable<LayerPart> layers = _widgetService.GetLayers();
             Assert.That(layers.Count(), Is.EqualTo(0));
 
-            LayerPart layerPartFirst = _widgetService.CreateLayer(layerName1, layerDescription1, "");
+            LayerPart layerPartFirst = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
             _contentManager.Flush();
 
             layers = _widgetService.GetLayers();
             Assert.That(layers.Count(), Is.EqualTo(1));
             Assert.That(layers.First().Id, Is.EqualTo(layerPartFirst.Id));
 
-            _widgetService.CreateLayer(layerName2, layerDescription2, "");
+            _widgetService.CreateLayer(LayerName2, LayerDescription2, "");
             _contentManager.Flush();
             Assert.That(layers.Count(), Is.EqualTo(1));
         }
@@ -123,34 +132,27 @@ namespace Orchard.Tests.Modules.Widgets.Services {
 
         [Test]
         public void CreateLayerTest() {
-            const string layerName = "Test layer 1";
-            const string layerDescription = "Test layer 1";
-
             IEnumerable<LayerPart> layers = _widgetService.GetLayers();
             Assert.That(layers.Count(), Is.EqualTo(0), "No layers yet");
 
-            _widgetService.CreateLayer(layerName, layerDescription, "");
+            _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
             _contentManager.Flush();
 
             layers = _widgetService.GetLayers();
             LayerPart layer = layers.First();
-            Assert.That(layer.Record.Name, Is.EqualTo(layerName));
-            Assert.That(layer.Record.Description, Is.EqualTo(layerDescription));
+            Assert.That(layer.Record.Name, Is.EqualTo(LayerName1));
+            Assert.That(layer.Record.Description, Is.EqualTo(LayerDescription1));
         }
 
         [Test]
         public void GetWidgetTest() {
-            const string layerName = "Test layer 1";
-            const string layerDescription = "Test layer 1";
-            const string widgetTitle = "Test widget 1";
-
-            LayerPart layerPart = _widgetService.CreateLayer(layerName, layerDescription, "");
+            LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
             _contentManager.Flush();
 
             WidgetPart widgetResult = _widgetService.GetWidget(0);
             Assert.That(widgetResult, Is.Null);
 
-            WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", widgetTitle, "1", "");
+            WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, "1", "");
             Assert.That(widgetPart, Is.Not.Null);
             
             widgetResult = _widgetService.GetWidget(0);
@@ -163,18 +165,13 @@ namespace Orchard.Tests.Modules.Widgets.Services {
 
         [Test]
         public void GetWidgetsTest() {
-            const string layerName = "Test layer 1";
-            const string layerDescription = "Test layer 1";
-            const string widgetTitle1 = "Test widget 1";
-            const string widgetTitle2 = "Test widget 2";
-
-            LayerPart layerPart = _widgetService.CreateLayer(layerName, layerDescription, "");
+            LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
             _contentManager.Flush();
 
             IEnumerable<WidgetPart> widgetResults = _widgetService.GetWidgets();
             Assert.That(widgetResults.Count(), Is.EqualTo(0));
 
-            WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", widgetTitle1, "1", "");
+            WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, "1", "");
             Assert.That(widgetPart, Is.Not.Null);
             _contentManager.Flush();
 
@@ -182,7 +179,7 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             Assert.That(widgetResults.Count(), Is.EqualTo(1));
             Assert.That(widgetResults.First().Id, Is.EqualTo(widgetPart.Id));
 
-            _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", widgetTitle2, "2", "");
+            _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle2, "2", "");
             _contentManager.Flush();
 
             widgetResults = _widgetService.GetWidgets();
@@ -191,14 +188,10 @@ namespace Orchard.Tests.Modules.Widgets.Services {
 
         [Test]
         public void CreateWidgetTest() {
-            const string layerName = "Test layer 1";
-            const string layerDescription = "Test layer 1";
-            const string widgetTitle = "Test widget 1";
-
-            LayerPart layerPart = _widgetService.CreateLayer(layerName, layerDescription, "");
+            LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
             _contentManager.Flush();
 
-            WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", widgetTitle, "1", "");
+            WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, "1", "");
             Assert.That(widgetPart, Is.Not.Null);
             Assert.That(widgetPart.LayerPart.Id, Is.EqualTo(layerPart.Id));
         }
@@ -209,6 +202,44 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             Assert.That(zones.Count(), Is.EqualTo(2), "One zone on the mock list");
             Assert.That(zones.FirstOrDefault(zone => zone == ThemeZoneName1), Is.Not.Null);
             Assert.That(zones.FirstOrDefault(zone => zone == ThemeZoneName2), Is.Not.Null);
+        }
+
+        [Test, Ignore("Fix when possible")]
+        public void MoveWidgetTest() {
+            LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");
+            _contentManager.Flush();
+
+            // same zone widgets
+            WidgetPart widgetPart1 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, Position1, Zone1);
+            WidgetPart widgetPart2 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle2, Position2, Zone1);
+
+            // different zone widget
+            WidgetPart widgetPart3 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle3, Position3, Zone2);
+            _contentManager.Flush();
+
+            // test 1 - moving first widget up will have no effect
+            Assert.That(_widgetService.MoveWidgetUp(widgetPart1), Is.False);
+
+            // test 2 - moving first widget down will be successfull
+            Assert.That(_widgetService.MoveWidgetDown(widgetPart1), Is.True);
+
+            widgetPart1 = _widgetService.GetWidget(widgetPart1.Id);
+            Assert.That(widgetPart1.Position, Is.EqualTo(Position2), "First widget moved to second widget position");
+            
+            widgetPart2 = _widgetService.GetWidget(widgetPart2.Id);
+            Assert.That(widgetPart2.Position, Is.EqualTo(Position1), "Second widget moved to first widget position");
+
+            // test 3 - moving last widget down will have no effect even though there is a widget in another zone with a higher position
+            Assert.That(_widgetService.MoveWidgetDown(widgetPart1), Is.False);
+
+            widgetPart1 = _widgetService.GetWidget(widgetPart1.Id);
+            Assert.That(widgetPart1.Position, Is.EqualTo(Position2), "Widget remained in the same position");
+
+            widgetPart2 = _widgetService.GetWidget(widgetPart2.Id);
+            Assert.That(widgetPart2.Position, Is.EqualTo(Position1), "Widget remained in the same position");
+
+            widgetPart3 = _widgetService.GetWidget(widgetPart3.Id);
+            Assert.That(widgetPart3.Position, Is.EqualTo(Position3), "Widget remained in the same position");
         }
 
         public class StubLayerPartHandler : ContentHandler {

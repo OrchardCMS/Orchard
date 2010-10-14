@@ -83,6 +83,8 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
+
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
             _container = builder.Build();
