@@ -31,7 +31,7 @@
      <h1 id="branding"><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
     }
     using(Capture(pbo => WorkContext.Layout.Footer.Add(pbo) )) {
-        <div class="credits"><span class="poweredby">Powered by Orchard</span> <span class="copyright">&#169; The Theme Machine 2010.</span></div>
+        <div class="credits"><span class="poweredby">Powered by <a href="http://www.orchardproject.net" title="Welcome to the New World Order" target="_blank">Orchard</a></span> <span class="copyright">&#169; The Theme Machine 2010.</span></div>
     }
 
     WorkContext.Layout.Footer.Add(New.User());
@@ -121,7 +121,7 @@
 }
 <div id="layout-footer" class="group">
     <footer id="footer">
-        <div id="footer-quad">
+        <div id="footer-quad" class="group">
             @if (Model.FooterQuadFirst != null) {
             <div id="footer-quad-first">
                 @Zone(Model.FooterQuadFirst)

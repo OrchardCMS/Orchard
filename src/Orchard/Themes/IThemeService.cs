@@ -14,6 +14,7 @@ namespace Orchard.Themes {
         void DisableTheme(string themeName);
 
         IEnumerable<ITheme> GetInstalledThemes();
+        IEnumerable<ITheme> GetEnabledThemes();
         void InstallTheme(HttpPostedFileBase file);
         void UninstallTheme(string themeName);
     }

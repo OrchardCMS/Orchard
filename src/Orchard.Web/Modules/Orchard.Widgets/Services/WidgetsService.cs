@@ -42,7 +42,7 @@ namespace Orchard.Widgets.Services {
         public IEnumerable<string> GetZones() {
             HashSet<string> zones = new HashSet<string>();
 
-            foreach (var theme in _themeService.GetInstalledThemes().Where(theme => theme.Zones != null && !theme.Zones.Trim().Equals(string.Empty))) {
+            foreach (var theme in _themeService.GetEnabledThemes().Where(theme => theme.Zones != null && !theme.Zones.Trim().Equals(string.Empty))) {
                 foreach (string zone in theme.Zones.Split(',').Where(zone => !zones.Contains(zone))) {
                     zones.Add(zone.Trim());
                 }

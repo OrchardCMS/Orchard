@@ -129,6 +129,8 @@ namespace Orchard.Setup {
             public void SetSiteTheme(string themeName) { }
             public ITheme GetRequestTheme(RequestContext requestContext) { return _theme; }
             public IEnumerable<ITheme> GetInstalledThemes() { return new[] { _theme }; }
+            public IEnumerable<ITheme> GetEnabledThemes() { return new[] { _theme }; }
+
             public void InstallTheme(HttpPostedFileBase file) { }
             public void UninstallTheme(string themeName) { }
             public void EnableTheme(string themeName) { }
