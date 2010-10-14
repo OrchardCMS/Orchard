@@ -22,6 +22,17 @@
 
     }
 
+    //Add classes to the wrapper div to toggle quad widget zones on and off
+        if (Model.FooterQuadFirst == null && Model.FooterQuadSecond == null) {
+        Model.Classes.Add("split-left");
+    }
+    else if (Model.FooterQuadThird == null && Model.FooterQuadFourth == null) {
+        Model.Classes.Add("split-right");
+    }
+        else {
+
+    }
+
     Model.Id = "layout-wrapper";
     var tag = Tag (Model, "div");
 
@@ -133,12 +144,12 @@
             </div>
             }
             @if (Model.FooterQuadThird != null) {
-            <div id="footer-quad-second">
+            <div id="footer-quad-third">
                 @Zone(Model.FooterQuadThird)
             </div>
             }
             @if (Model.FooterQuadFourth != null) {
-            <div id="footer-quad-second">
+            <div id="footer-quad-fourth">
                 @Zone(Model.FooterQuadFourth)
             </div>
             }

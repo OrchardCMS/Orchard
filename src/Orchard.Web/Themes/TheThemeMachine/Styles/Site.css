@@ -474,3 +474,27 @@ ul.comments li div.text {
 .clearfix {
 	clear:both;
 }
+
+#footer div {
+    /*border:1px solid #ff0000;*/
+}
+
+/* If zones 1 and 2 are empty in the quad */
+
+.split-left #footer-quad-third div.zone {
+    width:600px;
+}
+
+.split-left #footer-quad-fourth div.zone {
+    width:360px;
+}
+
+/* If zones 3 and 4 are empty in the quad */
+
+.split-right #footer-quad-first div.zone {
+    width:600px;
+}
+
+.split-right #footer-quad-second div.zone {
+    width:360px;
+}
