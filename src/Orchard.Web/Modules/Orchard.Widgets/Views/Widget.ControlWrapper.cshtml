@@ -1,0 +1,14 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Widgets;
+@{
+    if (AuthorizedFor(Permissions.ManageWidgets)) {
+        Model.Classes.Add("widget-manage");
+    }
+    var tag = Tag(Model, "div");
+}
+@tag.StartElement
+    @if (AuthorizedFor(Permissions.ManageWidgets)) {
+    <div class="manage-actions">@Html.ItemEditLinkWithReturnUrl(T("Edit").Text, (ContentItem)Model.ContentItem)</div>
+    }
+    @Display(Model.Main)
+@tag.EndElement

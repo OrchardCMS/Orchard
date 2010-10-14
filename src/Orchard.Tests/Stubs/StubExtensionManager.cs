@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Web;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
@@ -10,7 +11,15 @@ namespace Orchard.Tests.Stubs {
             throw new NotSupportedException();
         }
 
+        public IEnumerable<ExtensionDescriptor> EnabledExtensions(ShellDescriptor descriptor) {
+            throw new NotSupportedException();
+        }
+
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
+            throw new NotSupportedException();
+        }
+
+        public IEnumerable<FeatureDescriptor> EnabledFeatures(ShellDescriptor descriptor) {
             throw new NotSupportedException();
         }
 

@@ -159,7 +159,7 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
     
 }
 
-#layout-header, #layout-main, #layout-footer {
+#layout-header, #layout-before-main, #layout-main, #layout-footer, #layout-after-main, #layout-tripel {
 	width:960px;
 	margin:0 auto;
 }
@@ -183,10 +183,21 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
         color: #434343;
     }
 
-#layout-footer 
+#layout-tripel 
 {
-   border-top: 1px solid #dbdbdb; 
+   border-top: 1px solid #dbdbdb;    
 }
+
+#layout-main 
+{
+    border-top: 1px solid #dbdbdb;
+}
+
+#layout-after-main 
+{
+    border-top: 1px solid #dbdbdb;    
+}
+
 
 /* Navigation */
 #layout-navigation 
@@ -225,6 +236,11 @@ nav ul
         text-decoration:none;
         line-height:24px;
     }
+
+#layout-footer 
+{
+    border-top: 1px solid #dbdbdb;    
+}
 
 /* Zones */
 /*.zone {
@@ -425,10 +441,16 @@ ul.comments li div.text {
     clear:both;
 }
 
-.aside.third div > div {
+#layout-tripel div > div {
      float:left;
-     width:304px;
-     padding:12px 6px 0 6px;
+     width:316px;
+     /*padding:12px 6px 0 6px;*/
+}
+
+#footer-quad div.zone {
+     float:left;
+     width:240px;
+     /*padding:12px 6px 0 6px;*/
 }
 
 /* Featured Zone - switch to an image */
@@ -449,7 +471,30 @@ ul.comments li div.text {
     margin: 6px;
 }
 
-
 .clearfix {
 	clear:both;
+}
+
+#footer div {
+    /*border:1px solid #ff0000;*/
+}
+
+/* If zones 1 and 2 are empty in the quad */
+
+.split-left #footer-quad-third div.zone {
+    width:600px;
+}
+
+.split-left #footer-quad-fourth div.zone {
+    width:360px;
+}
+
+/* If zones 3 and 4 are empty in the quad */
+
+.split-right #footer-quad-first div.zone {
+    width:600px;
+}
+
+.split-right #footer-quad-second div.zone {
+    width:360px;
 }

@@ -21,7 +21,8 @@ namespace Orchard.UI.Navigation {
         protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
-            return FinishMenu(Crop(Reduce(Merge(AllSources(menuName)))).ToArray());
+            var sources = GetSources(menuName);
+            return FinishMenu(Crop(Reduce(Merge(sources))).ToArray());
         }
 
         private IEnumerable<MenuItem> FinishMenu(IEnumerable<MenuItem> menuItems) {
@@ -79,7 +80,7 @@ namespace Orchard.UI.Navigation {
             }
         }
 
-        private IEnumerable<IEnumerable<MenuItem>> AllSources(string menuName) {
+        private IEnumerable<IEnumerable<MenuItem>> GetSources(string menuName) {
             foreach (var provider in _providers) {
                 if (provider.MenuName == menuName) {
                     var builder = new NavigationBuilder();
