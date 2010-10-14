@@ -43,7 +43,7 @@ namespace Orchard.Core.Navigation.Controllers {
             if (model.MenuItemEntries == null || model.MenuItemEntries.Count() < 1)
                 model.MenuItemEntries = _menuService.Get().Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.MenuItem.Position, new PositionComparer()).ToList();
 
-            return View("Index", model);
+            return View(model);
         }
 
         [HttpPost, ActionName("Index")]

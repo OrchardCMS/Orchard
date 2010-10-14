@@ -107,6 +107,7 @@
     <Compile Include="Messaging\Models\MessageSettingsPartRecord.cs" />
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
     <Compile Include="Messaging\ViewModels\MessageSettingsPartViewModel.cs" />
+    <Compile Include="Navigation\Services\MainMenuNavigationProvider.cs" />
     <Compile Include="PublishLater\ResourceManifest.cs" />
     <Compile Include="PublishLater\DataMigrations\PublishLaterDataMigration.cs" />
     <Compile Include="PublishLater\Drivers\PublishLaterPartDriver.cs" />
