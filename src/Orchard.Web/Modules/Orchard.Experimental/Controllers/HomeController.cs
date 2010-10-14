@@ -101,7 +101,7 @@ namespace Orchard.Experimental.Controllers {
             ViewModel.Page.Messages.Add(new HtmlString("<hr/>abuse<hr/>"));
             ViewModel.Page.Messages.Add("<hr/>encoded<hr/>");
 
-            return View("UsingShapes", model);
+            return View(model);
         }
 
         public static string Break(dynamic view) {

@@ -27,7 +27,7 @@ namespace Orchard.ContentTypes.Controllers {
         #region Types
 
         public ActionResult List() {
-            return View("List", new ListContentTypesViewModel {
+            return View(new ListContentTypesViewModel {
                 Types = _contentDefinitionService.GetTypes()
             });
         }
