@@ -83,7 +83,8 @@ namespace Orchard.Core.Routable.Drivers {
             part.Slug = model.Slug;
 
             if ( !_routableService.IsSlugValid(part.Slug) ) {
-                if ( ( part.Slug ?? String.Empty ).Trim().EndsWith(".") ) {
+                var slug = (part.Slug ?? String.Empty);
+                if ( slug.StartsWith(".") || slug.EndsWith(".") ) {
                     updater.AddModelError("Routable.Slug", T("The \".\" can't be used around routes."));
                 }
                 else {
