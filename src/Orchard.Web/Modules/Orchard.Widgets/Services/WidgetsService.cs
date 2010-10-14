@@ -3,6 +3,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Common.Models;
 using Orchard.Themes;
 using Orchard.Widgets.Models;
 
@@ -78,11 +79,21 @@ namespace Orchard.Widgets.Services {
         }
 
         public void DeleteLayer(int layerId) {
+            // Delete widgets in the layer
+            foreach (WidgetPart widgetPart in GetWidgets(layerId)) {
+                DeleteWidget(widgetPart.Id);
+            }
+
+            // Delete actual layer
             _contentManager.Remove(GetLayer(layerId).ContentItem);
         }
 
         public WidgetPart GetWidget(int widgetId) {
-            return GetWidgets().FirstOrDefault(widgetPart => widgetPart.Id == widgetId);
+            return _contentManager
+                .Query<WidgetPart, WidgetPartRecord>()
+                .Where(widget => widget.Id == widgetId)
+                .List()
+                .FirstOrDefault();
         }
 
         public WidgetPart CreateWidget(int layerId, string widgetType, string title, string position, string zone) {

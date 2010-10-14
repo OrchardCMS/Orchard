@@ -44,6 +44,12 @@ namespace Orchard.Widgets.Controllers {
                                layers.First() :
                                layers.FirstOrDefault(layer => layer.Id == id);
 
+                if (currentLayer == null) {
+                    // Incorrect layer id passed
+                    Services.Notifier.Error(T("Layer not found: {1}", id));
+                    return RedirectToAction("Index");
+                }
+
                 currentLayerWidgets = _widgetsService.GetWidgets().Where(widgetPart => widgetPart.LayerPart.Id == currentLayer.Id);
             }
             else {
@@ -237,7 +243,7 @@ namespace Orchard.Widgets.Controllers {
                 Services.Notifier.Error(T("Removing Layer failed: {0}", exception.Message));
             }
 
-            return RedirectToAction("Index", "Admin", new { id });
+            return RedirectToAction("Index");
         }
 
         public ActionResult EditWidget(int id) {
