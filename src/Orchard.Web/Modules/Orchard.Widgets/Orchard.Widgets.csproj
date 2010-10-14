@@ -112,7 +112,9 @@
     <None Include="Views\Admin\AddLayer.cshtml" />
     <None Include="Views\Admin\AddWidget.cshtml" />
     <None Include="Views\Admin\EditWidget.cshtml" />
-    <None Include="Views\Admin\EditLayer.cshtml" />
+    <None Include="Views\Admin\EditLayer.cshtml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Items_Widget.Editor.cshtml" />
     <None Include="Views\Widget.Manage.cshtml" />

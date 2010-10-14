@@ -8,10 +8,6 @@
     // Zone is an alias for Display
     Func<dynamic, dynamic> Zone = x => Display(x);
 
-//Use the two lines below to test the sidebar zones.
-//WorkContext.Layout.AsideFirst.Add("This test text will render in Sidebar1.");
-//WorkContext.Layout.AsideSecond.Add("This test text will render in Sidebar2.");
-
      //Add classes to the wrapper div to toggle zones on and off 
     if (Model.AsideFirst != null && Model.AsideSecond == null) {
         Model.Classes.Add("has-sidebar");
@@ -26,15 +22,9 @@
 
     }
 
-    //Model.Attributes.Add("onclick", "javscript:alert('woot')"); 
-
-    Model.Id = "layout-wrapper";
-    var tag = Tag (Model, "div");
-
 }
 
-@* Add a wrapping div around everything *@
-@tag.StartElement
+<div id="layout-wrapper">
 
 @* needs to be the page title, not page (head) title... *@
 @* Adds text and html to the header zone *@
@@ -88,11 +78,11 @@
     <span class="poweredby">Powered by Orchard</span> <span class="copyright">&#169; The Theme Machine 2010.</span>
 }
 
-@if(Model.Footer != null) {
+ @if(Model.Footer != null) {
 <footer id="layout-footer" class="group">
     @Zone(Model.Footer)
  @Display.User()
 </footer>
 }
 
-@tag.EndElement
+</div>
