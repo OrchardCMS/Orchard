@@ -1,0 +1,9 @@
+﻿<h1>@Html.TitleForPage((string)Model.Title)</h1>
+@if (Model.Meta != null) {
+<div class="metadata">
+    @Display(Model.Meta)
+</div>
+}
+<div class="content">
+    @Display(Model.Content)
+</div>

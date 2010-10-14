@@ -10,7 +10,7 @@ namespace Orchard.Core.Contents.Drivers {
                 ContentShape("Parts_Contents_Publish_Summary",
                              () => shapeHelper.Parts_Contents_Publish_Summary(ContentPart: part)),
                 ContentShape("Parts_Contents_Publish_SummaryAdmin",
-                () => shapeHelper.Parts_Contents_Publish_SummaryAdmin(ContentPart: part))
+                             () => shapeHelper.Parts_Contents_Publish_SummaryAdmin(ContentPart: part))
                 );
         }
     }

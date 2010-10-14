@@ -132,20 +132,15 @@
     <Content Include="Views\Blog\List.cshtml" />
     <Content Include="Views\Parts\Blogs.Blog.Manage.cshtml" />
     <Content Include="Views\Parts\Blogs.Blog.Description.cshtml" />
-    <Content Include="Views\Parts\Common.Metadata.Admin.Blog.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.Blog.Fields.cshtml" />
     <Content Include="Views\Parts\Blogs.BlogPost.List.Admin.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Items\Content.Blog.Admin.cshtml" />
-    <Content Include="Views\Items\Content.Blog.cshtml" />
-    <Content Include="Views\Items\Content.Detail.BlogPost.cshtml" />
-    <Content Include="Views\Items\Content.Edit.Blog.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-    <Content Include="Views\Items\Content.Summary.Blog.cshtml" />
-    <Content Include="Views\Items\Content.Summary.BlogPost.cshtml" />
-    <Content Include="Views\Items\Content.SummaryAdmin.Blog.cshtml" />
+    <Content Include="Views\Items\Blog.cshtml" />
+    <Content Include="Views\Items\BlogPost.cshtml" />
+    <Content Include="Views\Items\Blog.Summary.cshtml" />
+    <Content Include="Views\Items\BlogPost.Summary.cshtml" />
+    <Content Include="Views\Items\Blog.SummaryAdmin.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
@@ -160,37 +155,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\Common.Metadata.Blog.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\Localization.ContentTranslations.Summary.BlogPost.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\Common.Body.Summary.BlogPost.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\Tags.ShowTags.Summary.BlogPost.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\PublishLater.Metadata.Detail.BlogPost.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\Common.Metadata.Detail.BlogPost.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\Localization.ContentTranslations.Detail.BlogPost.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\Common.Body.Detail.BlogPost.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Parts\Tags.ShowTags.Detail.BlogPost.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App_Data\Localization\fr-FR\orchard.module.po" />
+    <None Include="Placement.info">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Views\DisplayTemplates\Parts\Blogs.BlogArchives.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Blogs.BlogArchives.cshtml" />
+    <None Include="Views\Items\Blog.DetailAdmin.cshtml" />
+    <None Include="Views\Items\Blog.Editor.cshtml" />
+    <None Include="Views\Items\BlogPost.Editor.cshtml" />
+    <None Include="Views\Items\BlogPost.SummaryAdmin.cshtml" />
     <None Include="Views\Parts\Blogs.BlogPost.List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

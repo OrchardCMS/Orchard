@@ -34,6 +34,7 @@ namespace Orchard.Core.Tests.Body {
             builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterInstance(new Mock<INotifier>().Object);
+            builder.RegisterInstance(new Mock<IContentDisplay>().Object);
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();

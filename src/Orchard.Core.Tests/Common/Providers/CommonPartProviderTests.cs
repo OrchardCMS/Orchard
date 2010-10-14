@@ -49,7 +49,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
+            builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 
             _authn = new Mock<IAuthenticationService>();
             _authz = new Mock<IAuthorizationService>();

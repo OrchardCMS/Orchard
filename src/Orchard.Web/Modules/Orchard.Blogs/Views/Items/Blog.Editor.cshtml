@@ -1,0 +1,6 @@
+@using Orchard.Mvc.Html;
+@{
+    Html.AddTitleParts((string)Model.Title);
+}
+@Display(Model.Primary)
+<fieldset><input class="button primaryAction" type="submit" value="@T("Add")" /></fieldset>

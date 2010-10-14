@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,7 +9,6 @@ using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
-using Orchard.Mvc.Results;
 using Orchard.Themes;
 
 namespace Orchard.Blogs.Controllers {
@@ -36,7 +34,7 @@ namespace Orchard.Blogs.Controllers {
         protected ILogger Logger { get; set; }
 
         public ActionResult List() {
-            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplay(b, "Summary.Blog"));
+            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
 
             var list = Shape.List();
             list.AddRange(blogs);
@@ -53,13 +51,13 @@ namespace Orchard.Blogs.Controllers {
 
             var correctedSlug = _blogSlugConstraint.FindSlug(blogSlug);
             if (correctedSlug == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             BlogPart blog = _blogService.Get(correctedSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
-            var blogPosts = _blogPostService.Get(blog, (page - 1)*pageSize, pageSize).Select(b => _services.ContentManager.BuildDisplay(b, "Summary.BlogPost"));
+            var blogPosts = _blogPostService.Get(blog, (page - 1)*pageSize, pageSize).Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
 
             var list = Shape.List();
             list.AddRange(blogPosts);
@@ -81,7 +79,7 @@ namespace Orchard.Blogs.Controllers {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
 
@@ -106,7 +104,7 @@ namespace Orchard.Blogs.Controllers {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             const string manifestUri = "http://archipelago.phrasewise.com/rsd";
 

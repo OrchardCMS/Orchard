@@ -29,7 +29,7 @@ namespace Orchard.Widgets {
                         var zoneName = contentItem.As<WidgetPart>().Zone;
                         displaying.ShapeMetadata.Alternates.Add("Items_Widget__" + contentItem.ContentType);
                         displaying.ShapeMetadata.Alternates.Add("Items_Widget__" + zoneName);
-                        //...would like...
+                        //...would like...if '__' was collapsible
                         //displaying.ShapeMetadata.Alternates.Add("Items_Widget__" + zoneName + "__" + contentItem.ContentType);
                     }
                 });

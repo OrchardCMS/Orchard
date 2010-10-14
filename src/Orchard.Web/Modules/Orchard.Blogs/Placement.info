@@ -1,0 +1,23 @@
+﻿<Placement>
+    <Place Parts_Blogs_Blog_Manage="-"/>
+    <Place Parts_Blogs_Blog_Description="-"/>
+    <Place Parts_Blogs_BlogPost_List="-"/>
+    <Place Parts_Blogs_BlogPost_List_Admin="-"/>
+    <Place Parts_Blogs_Blog_Fields="Primary:2"/>
+    <Match ContentType="Blog">
+        <Match DisplayType="Detail">
+            <Place Parts_Blogs_BlogPost_List="Content:5" />
+        </Match>
+        <Match DisplayType="DetailAdmin">
+            <Place Parts_Blogs_BlogPost_List_Admin="Content:5"
+                   Parts_Blogs_Blog_Manage="Manage"
+                   Parts_Blogs_Blog_Description="Manage:after"/>
+        </Match>
+        <Match DisplayType="Summary">
+            <Place Parts_Blogs_Blog_Description="Content:before"/>
+        </Match>
+        <Match DisplayType="SummaryAdmin">
+            <Place Parts_Blogs_Blog_Description="Content:before"/>
+        </Match>
+    </Match>
+</Placement>

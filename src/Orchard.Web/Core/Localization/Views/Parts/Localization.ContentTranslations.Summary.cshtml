@@ -1,1 +1,17 @@
-﻿@model Orchard.Core.Localization.ViewModels.ContentLocalizationsViewModel
+﻿@using Orchard.Core.Contents;
+@using Orchard.Core.Localization.Models;
+@{
+    Style.Require("LocalizationAdmin");
+    IEnumerable<LocalizationPart> localizations  = Model.Localizations;
+    var localizationLinks = Html.UnorderedList(localizations, (c, i) => Html.ItemEditLink(c.Culture.Culture, c), "localizations");
+}
+@if (localizations.Count() > 0 || AuthorizedFor(Permissions.PublishContent)) {
+<div class="content-localization">
+    @if (localizations.Count() > 0) {
+    <div class="content-localizations"><h4>@T("Translations:")</h4>@localizationLinks</div>
+    }
+    @if (AuthorizedFor(Permissions.PublishContent)) {
+    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Localization", id = Model.MasterId }, null)</div>
+    }
+</div>
+}

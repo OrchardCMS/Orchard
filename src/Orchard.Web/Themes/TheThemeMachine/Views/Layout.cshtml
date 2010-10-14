@@ -22,9 +22,12 @@
 
     }
 
+    Model.Id = "layout-wrapper";
+    var tag = Tag (Model, "div");
+
 }
 
-<div id="layout-wrapper">
+@tag.StartElement
 
 @* needs to be the page title, not page (head) title... *@
 @* Adds text and html to the header zone *@
@@ -85,4 +88,4 @@
 </footer>
 }
 
-</div>
+@tag.EndElement

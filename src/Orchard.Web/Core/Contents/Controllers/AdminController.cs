@@ -15,7 +15,6 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Mvc.Results;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Contents.Controllers {
@@ -47,7 +46,7 @@ namespace Orchard.Core.Contents.Controllers {
 
         public ActionResult List(ListContentsViewModel model) {
             if (model.ContainerId != null && _contentManager.GetLatest((int)model.ContainerId) == null)
-                    return new NotFoundResult();
+                return HttpNotFound();
 
             const int pageSize = 20;
             var skip = (Math.Max(model.Page ?? 0, 1) - 1) * pageSize;
@@ -57,7 +56,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
                 if (contentTypeDefinition == null)
-                    return new NotFoundResult();
+                    return HttpNotFound();
 
                 model.TypeDisplayName = !string.IsNullOrWhiteSpace(contentTypeDefinition.DisplayName)
                                             ? contentTypeDefinition.DisplayName
@@ -249,7 +248,7 @@ namespace Orchard.Core.Contents.Controllers {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             if (contentItem == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
@@ -264,7 +263,7 @@ namespace Orchard.Core.Contents.Controllers {
             var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
             if (contentItem == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
@@ -313,7 +312,7 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Publish(int id, string returnUrl) {
             var contentItem = _contentManager.GetLatest(id);
             if (contentItem == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't publish content")))
                 return new HttpUnauthorizedResult();
@@ -332,7 +331,7 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Unpublish(int id, string returnUrl) {
             var contentItem = _contentManager.GetLatest(id);
             if (contentItem == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't unpublish content")))
                 return new HttpUnauthorizedResult();

@@ -6,7 +6,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
-using Orchard.Mvc.Results;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
@@ -32,7 +31,7 @@ namespace Orchard.Blogs.Controllers {
 
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             if (blogPost.BlogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = Services.ContentManager.BuildEditor(blogPost);
 
@@ -46,7 +45,7 @@ namespace Orchard.Blogs.Controllers {
 
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             if (blogPost.BlogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
             var model = Services.ContentManager.UpdateEditor(blogPost, this);
@@ -71,11 +70,11 @@ namespace Orchard.Blogs.Controllers {
 
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var post = _blogPostService.Get(postId, VersionOptions.Latest);
             if (post == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = Services.ContentManager.BuildEditor(post);
 
@@ -89,12 +88,12 @@ namespace Orchard.Blogs.Controllers {
 
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             // Get draft (create a new version if needed)
             var blogPost = _blogPostService.Get(postId, VersionOptions.DraftRequired);
             if (blogPost == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             // Validate form input
             var model = Services.ContentManager.UpdateEditor(blogPost, this);
@@ -142,7 +141,7 @@ namespace Orchard.Blogs.Controllers {
 
         ActionResult RedirectToEdit(IContent item) {
             if (item == null || item.As<BlogPostPart>() == null)
-                return new NotFoundResult();
+                return HttpNotFound();
             return RedirectToAction("Edit", new { BlogSlug = item.As<BlogPostPart>().BlogPart.Slug, PostId = item.ContentItem.Id });
         }
 
@@ -154,11 +153,11 @@ namespace Orchard.Blogs.Controllers {
 
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var post = _blogPostService.Get(postId, VersionOptions.Latest);
             if (post == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             _blogPostService.Delete(post);
             Services.Notifier.Information(T("Blog post was successfully deleted"));
@@ -173,11 +172,11 @@ namespace Orchard.Blogs.Controllers {
 
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var post = _blogPostService.Get(postId, VersionOptions.Latest);
             if (post == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             _blogPostService.Publish(post);
             Services.Notifier.Information(T("Blog post successfully published."));
@@ -192,11 +191,11 @@ namespace Orchard.Blogs.Controllers {
 
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var post = _blogPostService.Get(postId, VersionOptions.Latest);
             if (post == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             _blogPostService.Unpublish(post);
             Services.Notifier.Information(T("Blog post successfully unpublished."));

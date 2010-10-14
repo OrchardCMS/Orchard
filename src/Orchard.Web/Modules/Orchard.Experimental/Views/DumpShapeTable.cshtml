@@ -1,9 +1,10 @@
 ﻿@using Orchard;
 @using Orchard.DisplayManagement.Descriptors;
+@Display(Model.Metadata.ChildContent)
 @{
 	var workContext = ViewContext.GetWorkContext();
 	var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.ThemeName);
-    
+<!--    
 	<ul>
 		@foreach(var descriptor in shapeTable.Descriptors) {
 			<li>@descriptor.Key : @descriptor.Value.BindingSource 
@@ -15,4 +16,5 @@
 			</li>
 		}
 	</ul>
+-->
 }

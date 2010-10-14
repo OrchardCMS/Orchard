@@ -52,6 +52,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>().SingleInstance();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
+            builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 
             builder.RegisterType<AlphaHandler>().As<IContentHandler>();
             builder.RegisterType<BetaHandler>().As<IContentHandler>();

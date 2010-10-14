@@ -39,6 +39,7 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
+            builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 
             builder.RegisterType<ScheduledTaskExecutor>().As<IBackgroundTask>().Named("ScheduledTaskExecutor", typeof(IBackgroundTask));
             builder.RegisterInstance(_handler).As<IScheduledTaskHandler>();

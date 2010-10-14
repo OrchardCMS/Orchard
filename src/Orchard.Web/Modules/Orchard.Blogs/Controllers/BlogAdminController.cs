@@ -9,7 +9,6 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.Results;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
@@ -50,7 +49,7 @@ namespace Orchard.Blogs.Controllers {
 
             var blog = Services.ContentManager.New<BlogPart>("Blog");
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = Services.ContentManager.BuildEditor(blog);
             return View(model);
@@ -58,10 +57,11 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST() {
-            var blog = Services.ContentManager.New<BlogPart>("Blog");
-
+            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
+
+            var blog = Services.ContentManager.New<BlogPart>("Blog");
 
             _contentManager.Create(blog, VersionOptions.Draft);
             var model = _contentManager.UpdateEditor(blog, this);
@@ -83,10 +83,9 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to edit blog")))
                 return new HttpUnauthorizedResult();
 
-            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = Services.ContentManager.BuildEditor(blog);
             return View(model);
@@ -94,13 +93,13 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(string blogSlug) {
+            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
-            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = Services.ContentManager.UpdateEditor(blog, this);
             if (!ModelState.IsValid)
@@ -113,14 +112,14 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Remove(string blogSlug) {
+            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't delete blog")))
                 return new HttpUnauthorizedResult();
 
-            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             _blogService.Delete(blogPart);
 
@@ -132,7 +131,7 @@ namespace Orchard.Blogs.Controllers {
             var list = Shape.List();
             list.AddRange(_blogService.Get()
                               .Select(b => {
-                                          var blog = Services.ContentManager.BuildDisplay(b, "SummaryAdmin.Blog");
+                                          var blog = Services.ContentManager.BuildDisplay(b, "SummaryAdmin");
                                           blog.TotalPostCount = _blogPostService.Get(b, VersionOptions.Latest).Count();
                                           return blog;
                                       }));
@@ -143,15 +142,13 @@ namespace Orchard.Blogs.Controllers {
             return View(viewModel);
         }
 
-        //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
         public ActionResult Item(string blogSlug) {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
-            //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
-            var model = Services.ContentManager.BuildDisplay(blogPart, "Blog_Admin");
+            var model = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
             return View(model);
         }
 

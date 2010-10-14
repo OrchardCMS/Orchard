@@ -1,0 +1,10 @@
+﻿@using Orchard.Blogs.Extensions;
+@using Orchard.Blogs.Models;
+<h2>@Html.Link((string)Model.Title, Url.Blog((string)Model.Slug))</h2>
+<div class="blog metadata">
+    @T.Plural("1 post", "{0} posts", (int)Model.PostCount)
+    @if (Model.Meta != null) {
+    @T(" | ")@Display(Model.Meta)
+    }
+</div>
+@Display(Model.Content)
