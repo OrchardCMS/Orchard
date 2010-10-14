@@ -14,7 +14,6 @@ using Orchard.Settings;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
-using Orchard.Mvc.Results;
 
 namespace Orchard.Users.Controllers {
     [HandleError, Themed]
@@ -96,7 +95,7 @@ namespace Orchard.Users.Controllers {
             // ensure users can register
             var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
             if ( !registrationSettings.UsersCanRegister ) {
-                return new NotFoundResult();
+                return HttpNotFound();
             }
 
             ViewData["PasswordLength"] = MinPasswordLength;
@@ -109,7 +108,7 @@ namespace Orchard.Users.Controllers {
             // ensure users can register
             var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
             if ( !registrationSettings.UsersCanRegister ) {
-                return new NotFoundResult();
+                return HttpNotFound();
             }
 
             ViewData["PasswordLength"] = MinPasswordLength;

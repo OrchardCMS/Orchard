@@ -5,7 +5,6 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Localization;
-using Orchard.Mvc.Results;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Orchard.Widgets.Models;
@@ -99,7 +98,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 WidgetPart widgetPart = Services.ContentManager.New<WidgetPart>(widgetType);
                 if (widgetPart == null)
-                    return new NotFoundResult();
+                    return HttpNotFound();
 
                 dynamic model = Services.ContentManager.BuildEditor(widgetPart);
                 return View(model);
@@ -119,7 +118,7 @@ namespace Orchard.Widgets.Controllers {
                 int widgetPosition = _widgetsService.GetWidgets(layerId).Count() + 1;
                 WidgetPart widgetPart = _widgetsService.CreateWidget(layerId, widgetType, "", widgetPosition.ToString(), "");
                 if (widgetPart == null)
-                    return new NotFoundResult();
+                    return HttpNotFound();
 
                 var model = Services.ContentManager.UpdateEditor(widgetPart, this);
                 if (!ModelState.IsValid) {
@@ -143,7 +142,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 LayerPart layerPart = Services.ContentManager.New<LayerPart>("Layer");
                 if (layerPart == null)
-                    return new NotFoundResult();
+                    return HttpNotFound();
 
                 dynamic model = Services.ContentManager.BuildEditor(layerPart);
                 return View(model);
@@ -162,7 +161,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 LayerPart layerPart = _widgetsService.CreateLayer("", "", "");
                 if (layerPart == null)
-                    return new NotFoundResult();
+                    return HttpNotFound();
 
                 var model = Services.ContentManager.UpdateEditor(layerPart, this);
                 if (!ModelState.IsValid) {
@@ -186,7 +185,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 LayerPart layerPart = _widgetsService.GetLayer(id);
                 if (layerPart == null) {
-                    return new NotFoundResult();
+                    return HttpNotFound();
                 }
 
                 dynamic model = Services.ContentManager.BuildEditor(layerPart);
@@ -207,7 +206,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 LayerPart layerPart = _widgetsService.GetLayer(id);
                 if (layerPart == null)
-                    return new NotFoundResult();
+                    return HttpNotFound();
 
                 var model = Services.ContentManager.UpdateEditor(layerPart, this);
                 if (!ModelState.IsValid) {
@@ -276,7 +275,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 widgetPart = _widgetsService.GetWidget(id);
                 if (widgetPart == null)
-                    return new NotFoundResult();
+                    return HttpNotFound();
 
                 var model = Services.ContentManager.UpdateEditor(widgetPart, this);
                 if (!ModelState.IsValid) {
@@ -305,7 +304,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 widgetPart = _widgetsService.GetWidget(id);
                 if (widgetPart == null)
-                    return new NotFoundResult();
+                    return HttpNotFound();
 
                 _widgetsService.DeleteWidget(widgetPart.Id);
                 Services.Notifier.Information(T("Widget was successfully deleted"));

@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using Orchard.Data.Migration;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.Results;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Themes.Preview;
@@ -176,7 +175,7 @@ namespace Orchard.Themes.Controllers {
                 return new HttpUnauthorizedResult();
 
             if (string.IsNullOrEmpty(themeName))
-                return new NotFoundResult();
+                return HttpNotFound();
 
             try {
                 _reportsCoordinator.Register("Data Migration", "Upgrade " + themeName, "Orchard installation");

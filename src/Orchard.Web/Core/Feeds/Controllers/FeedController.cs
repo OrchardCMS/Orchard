@@ -3,8 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Core.Feeds.Models;
 using Orchard.Logging;
-using Orchard.Mvc.Results;
-using Orchard.Themes;
 
 namespace Orchard.Core.Feeds.Controllers {
     public class FeedController : Controller {
@@ -34,7 +32,7 @@ namespace Orchard.Core.Feeds.Controllers {
                 .FirstOrDefault();
 
             if (bestFormatterMatch == null || bestFormatterMatch.FeedBuilder == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             context.Builder = bestFormatterMatch.FeedBuilder;
 
@@ -45,7 +43,7 @@ namespace Orchard.Core.Feeds.Controllers {
                 .FirstOrDefault();
 
             if (bestQueryMatch == null || bestQueryMatch.FeedQuery == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             return context.Builder.Process(context, () => {
                 bestQueryMatch.FeedQuery.Execute(context);

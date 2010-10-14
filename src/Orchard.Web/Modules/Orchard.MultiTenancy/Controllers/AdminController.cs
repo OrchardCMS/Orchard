@@ -5,7 +5,6 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.MultiTenancy.Services;
 using Orchard.MultiTenancy.ViewModels;
-using Orchard.Mvc.Results;
 using Orchard.UI.Notify;
 
 namespace Orchard.MultiTenancy.Controllers {
@@ -76,7 +75,7 @@ namespace Orchard.MultiTenancy.Controllers {
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
             if (tenant == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             return View(new TenantEditViewModel {
                                                     Name = tenant.Name,
@@ -100,7 +99,7 @@ namespace Orchard.MultiTenancy.Controllers {
 
                 var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
                 if (tenant == null)
-                    return new NotFoundResult();
+                    return HttpNotFound();
                 
                 _tenantService.UpdateTenant(
                     new ShellSettings {

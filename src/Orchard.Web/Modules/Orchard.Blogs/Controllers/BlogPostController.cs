@@ -7,7 +7,6 @@ using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.Results;
 using Orchard.Security;
 using Orchard.Themes;
 
@@ -44,12 +43,12 @@ namespace Orchard.Blogs.Controllers {
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             var blogPart = _blogService.Get(blogSlug);
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             //TODO: (erikpo) Look up the current user and their permissions to this blog post and determine if they should be able to view it or not.
             var postPart = _blogPostService.Get(blogPart, postSlug, VersionOptions.Published);
             if (postPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = _services.ContentManager.BuildDisplay(postPart);
 
@@ -61,7 +60,7 @@ namespace Orchard.Blogs.Controllers {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var archive = new ArchiveData(archiveData);
 

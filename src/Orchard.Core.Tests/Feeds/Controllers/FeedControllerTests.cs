@@ -17,7 +17,6 @@ using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.Rss;
 using Orchard.Core.Feeds.StandardBuilders;
 using Orchard.Core.Routable.Models;
-using Orchard.Mvc.Results;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 
@@ -36,7 +35,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
 
             var result = controller.Index("no-such-format");
             Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.TypeOf<NotFoundResult>());
+            Assert.That(result, Is.TypeOf<HttpNotFoundResult>());
         }
 
         [Test]

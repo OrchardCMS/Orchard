@@ -10,7 +10,6 @@ using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Localization.Services;
-using Orchard.Mvc.Results;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Localization.Controllers {
@@ -43,7 +42,7 @@ namespace Orchard.Core.Localization.Controllers {
 
             // only support translations from the site culture, at the moment at least
             if (contentItem == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             if (!contentItem.Is<LocalizationPart>() || contentItem.As<LocalizationPart>().MasterContentItem != null) {
                 var metadata = _contentManager.GetItemMetadata(contentItem);
@@ -79,7 +78,7 @@ namespace Orchard.Core.Localization.Controllers {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             if (contentItem == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = new AddLocalizationViewModel();
             TryUpdateModel(model);

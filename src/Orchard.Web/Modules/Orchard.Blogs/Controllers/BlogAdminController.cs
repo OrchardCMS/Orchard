@@ -9,7 +9,6 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.Results;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
@@ -50,7 +49,7 @@ namespace Orchard.Blogs.Controllers {
 
             var blog = Services.ContentManager.New<BlogPart>("Blog");
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = Services.ContentManager.BuildEditor(blog);
             return View(model);
@@ -86,7 +85,7 @@ namespace Orchard.Blogs.Controllers {
 
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = Services.ContentManager.BuildEditor(blog);
             return View(model);
@@ -100,7 +99,7 @@ namespace Orchard.Blogs.Controllers {
 
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = Services.ContentManager.UpdateEditor(blog, this);
             if (!ModelState.IsValid)
@@ -120,7 +119,7 @@ namespace Orchard.Blogs.Controllers {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             _blogService.Delete(blogPart);
 
@@ -147,7 +146,7 @@ namespace Orchard.Blogs.Controllers {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var model = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
             return View(model);
