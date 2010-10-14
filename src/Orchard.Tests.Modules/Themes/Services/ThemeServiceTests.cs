@@ -90,6 +90,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
             builder.RegisterType<TransactionManager>().As<ITransactionManager>();
             builder.RegisterType<Notifier>().As<INotifier>();
             builder.RegisterType<StubAuthorizer>().As<IAuthorizer>();
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
             builder.RegisterType(typeof(SettingsFormatter))
                 .As(typeof(IMapper<XElement, SettingsDictionary>))
                 .As(typeof(IMapper<SettingsDictionary, XElement>));
