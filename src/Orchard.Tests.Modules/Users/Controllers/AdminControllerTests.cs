@@ -61,6 +61,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterInstance(new Mock<INotifier>().Object);
+            builder.RegisterInstance(new Mock<IContentDisplay>().Object);
             _authorizer = new Mock<IAuthorizer>();
             builder.RegisterInstance(_authorizer.Object);
         }
