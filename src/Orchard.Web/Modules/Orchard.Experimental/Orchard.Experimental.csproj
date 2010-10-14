@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\DisplayTemplates\Parts\Experimental.ShowDebugLink.ascx" />
+    <Content Include="Views\DumpShapeTable.cshtml" />
     <None Include="Views\HackScript.cshtml" />
     <None Include="Views\HackStyle.cshtml" />
     <None Include="Views\ThinBorder.cshtml" />
