@@ -9,7 +9,7 @@
 				<h4>
 					<span class="who">@Html.LinkOrDefault(comment.Record.UserName, comment.Record.SiteName, new { rel = "nofollow" })
 					</span>
-					<span>said <time datetime="@comment.Record.CommentDateUtc.GetValueOrDefault()">@Html.Link(Html.DateTimeRelative(comment.Record.CommentDateUtc.GetValueOrDefault(), T).ToString(), "#")</time>
+					<span class="when">said <time datetime="@comment.Record.CommentDateUtc.GetValueOrDefault()">@Html.Link(Html.DateTimeRelative(comment.Record.CommentDateUtc.GetValueOrDefault(), T).ToString(), "#")</time>
 					</span>
 				</h4>
 			</header>

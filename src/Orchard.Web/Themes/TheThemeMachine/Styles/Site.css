@@ -303,7 +303,6 @@ label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
 legend            { font-weight: 600; font-size:1.2em; }
 
-
 input[type="text"], #CommentText, #password, #confirmPassword {
     border:1px solid #999;
     display: block;
@@ -320,11 +319,14 @@ form.search {
     width:17em;
 }
 
-fieldset div {margin:1.6em 0 0 0}
+fieldset ol {list-style-type:none;}
+
+fieldset ol li {margin:1.6em 0 0 0}
     
 legend {
 	font-size: 1.4em;
 	border:none;
+	border:1px solid #ff0000;
 }
 
 label {
