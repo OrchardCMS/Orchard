@@ -408,27 +408,26 @@ button:focus, .button:focus {
 
 ul.comments, form.comment {
     margin:1.2em 0 1.2em 1.8em;
+    list-style: none;
 }
 
-div.comment {
-    font-size:1.3em;
-    font-style:italic;
-    color:#484848;
+article.comment h4 {
+    font-size:1.4em;
 }
 
-div.comment a {
+article.comment a {
     color:#484848;
     text-decoration:none;
 }
 
-div.comment span.who {
+article.comment span.who {
     font-weight:600;
     font-style:normal;
     text-transform:capitalize;
     color:#333;
 }
 
-ul.comments li div.text {
+article.comment p.text {
     margin:.6em 0 2.4em 0;
 }
 
