@@ -80,6 +80,10 @@
     <Compile Include="Services\IContentDefinitionService.cs" />
     <Compile Include="ViewModels\AddFieldViewModel.cs" />
     <Compile Include="ViewModels\CreatePartViewModel.cs" />
+    <Compile Include="ViewModels\EditFieldViewModel.cs" />
+    <Compile Include="ViewModels\EditPartFieldViewModel.cs" />
+    <Compile Include="ViewModels\EditPartViewModel.cs" />
+    <Compile Include="ViewModels\EditTypePartViewModel.cs" />
     <Compile Include="ViewModels\ListContentPartsViewModel.cs" />
     <Compile Include="ViewModels\RemoveFieldViewModel.cs" />
     <Compile Include="ViewModels\RemovePartViewModel.cs" />

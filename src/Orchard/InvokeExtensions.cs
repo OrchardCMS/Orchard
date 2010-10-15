@@ -42,7 +42,6 @@ namespace Orchard {
                 ex is StackOverflowException ||
                 ex is AccessViolationException ||
                 ex is AppDomainUnloadedException ||
-                ex is ExecutionEngineException ||
                 ex is ThreadAbortException ||
                 ex is SecurityException ||
                 ex is SEHException;
