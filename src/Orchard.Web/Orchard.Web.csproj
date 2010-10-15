@@ -315,7 +315,6 @@
     <Content Include="Themes\TheAdmin\Theme.png" />
     <Content Include="Themes\TheAdmin\Views\User.cshtml" />
     <Content Include="Themes\TheAdmin\Views\Header.cshtml" />
-    <Content Include="Themes\TheThemeMachine\Web.config" />
     <Content Include="Themes\TheThemeMachine\Views\Items\Content.Blog.cshtml" />
     <Content Include="Themes\TheThemeMachine\Views\Items\Widget-Content.cshtml" />
     <None Include="Themes\TheThemeMachine\Views\Layout.cshtml" />
