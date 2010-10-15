@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
-using Orchard.Blogs.ViewModels;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
 using Orchard.Themes;
@@ -53,25 +53,27 @@ namespace Orchard.Blogs.Controllers {
             if (correctedSlug == null)
                 return HttpNotFound();
 
-            BlogPart blog = _blogService.Get(correctedSlug);
-            if (blog == null)
+            var blogPart = _blogService.Get(correctedSlug);
+            if (blogPart == null)
                 return HttpNotFound();
 
-            var blogPosts = _blogPostService.Get(blog, (page - 1)*pageSize, pageSize).Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
+            var blogPosts = _blogPostService.Get(blogPart, (page - 1) * pageSize, pageSize)
+                .Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
+
+            blogPart.As<BlogPagerPart>().Page = page;
+            blogPart.As<BlogPagerPart>().PageSize = pageSize;
+            blogPart.As<BlogPagerPart>().BlogSlug = correctedSlug;
+            blogPart.As<BlogPagerPart>().ThereIsANextPage = _blogPostService.Get(blogPart, (page) * pageSize, pageSize).Any();
+
+            var blog = _services.ContentManager.BuildDisplay(blogPart);
 
             var list = Shape.List();
             list.AddRange(blogPosts);
 
-            var blogShape = _services.ContentManager.BuildDisplay(blog);
-            var model = new DisplayBlogViewModel {
-                Blog = blogShape,
-                BlogPostList = list,
-                Page = page,
-                PageSize = pageSize
-            };
+            blog.ContentItem = blogPart;
+            blog.Content.Add(Shape.Parts_Blogs_BlogPost_List(ContentItems: list), "5");
 
-            return View(model);
-
+            return View("Display", blog);
         }
 
         public ActionResult LiveWriterManifest(string blogSlug) {

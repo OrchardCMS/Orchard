@@ -1,6 +1,5 @@
 ﻿using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
-using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.ContentsLocation.Models;
@@ -16,16 +15,17 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Display(BlogArchivesPart part, string displayType, dynamic shapeHelper) {
-            BlogPart blog = null;
-            if (!string.IsNullOrWhiteSpace(part.ForBlog))
-                blog = _blogService.Get(part.ForBlog);
+            return ContentShape("Parts_Blogs_BlogArchives",
+                                () => {
+                                    BlogPart blog = null;
+                                    if (!string.IsNullOrWhiteSpace(part.ForBlog))
+                                        blog = _blogService.Get(part.ForBlog);
 
-            if ( blog != null ) {
-                var model = new BlogPostArchiveViewModel {BlogPart = blog, Archives = _blogPostService.GetArchives(blog)};
-                return ContentPartTemplate(model, "Parts/Blogs.BlogArchives");
-            }
+                                    if (blog == null)
+                                        return null;
 
-            return null;
+                                    return shapeHelper.Parts_Blogs_BlogArchives(ContentItem: part, Blog: blog, Archives: _blogPostService.GetArchives(blog));
+                                }).Location("Content");
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {

@@ -18,7 +18,7 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Display(RecentBlogPostsPart part, string displayType, dynamic shapeHelper) {
-            IEnumerable<BlogPostPart> blogPosts = null;
+            IEnumerable<BlogPostPart> blogPosts;
 
             BlogPart blog = null;
             if (!string.IsNullOrWhiteSpace(part.ForBlog))
@@ -32,7 +32,6 @@ namespace Orchard.Blogs.Drivers {
                     .Select(ci => ci.As<BlogPostPart>());
             }
             else {
-                var blogs = _blogService.Get().ToList();
                 blogPosts = _contentManager.Query(VersionOptions.Published, "BlogPost")
                     .Join<CommonPartRecord>()
                     .OrderByDescending(cr => cr.CreatedUtc)
@@ -41,12 +40,11 @@ namespace Orchard.Blogs.Drivers {
             }
 
             var list = shapeHelper.List();
-            list.AddRange(blogPosts.Select(bp => _contentManager.BuildDisplay(bp, "Summary.BlogPost")));
+            list.AddRange(blogPosts.Select(bp => _contentManager.BuildDisplay(bp, "Summary")));
 
-            var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
-            blogPostList.Metadata.Type = "Parts_Blogs_BlogPost.List";
+            var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, ContentItems: list);
 
-            return ContentShape(blogPostList).Location("Primary");
+            return ContentShape(shapeHelper.Parts_Blogs_RecentBlogPosts(ContentItem: part, ContentItems: blogPostList));
         }
 
         protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper) {

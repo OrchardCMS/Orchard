@@ -2,7 +2,7 @@
     <Place Parts_PublishLater_Metadata="-"/>
     <Place Parts_PublishLater_Metadata_Summary="-"/>
     <Place Parts_PublishLater_Metadata_SummaryAdmin="-"/>
-    <Place Parts_PublishLater_Editor="Secondary:1"/>
+    <Place Parts_PublishLater_Edit="Secondary:1"/>
     <Match DisplayType="Detail">
         <Place Parts_PublishLater_Metadata="Meta:1"/>
     </Match>
