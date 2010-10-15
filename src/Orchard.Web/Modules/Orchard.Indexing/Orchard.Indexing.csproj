@@ -59,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Commands\IndexingCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Migrations.cs" />
@@ -100,6 +99,7 @@
     <Content Include="Views\DefinitionTemplates\FieldIndexing.cshtml" />
     <Content Include="Views\DefinitionTemplates\TypeIndexing.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>
