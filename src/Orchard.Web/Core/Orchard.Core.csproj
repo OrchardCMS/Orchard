@@ -381,7 +381,7 @@
     <Content Include="ContentsLocation\Views\Web.config" />
     <Content Include="Messaging\Views\Web.config" />
     <Content Include="Contents\Views\Items\Content.cshtml" />
-    <Content Include="Contents\Views\Items\Content.Editor.cshtml" />
+    <Content Include="Contents\Views\Items\Content.Edit.cshtml" />
     <Content Include="Contents\Views\Items\Content.Summary.cshtml" />
     <Content Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
     <Content Include="Shapes\Views\Document.cshtml" />

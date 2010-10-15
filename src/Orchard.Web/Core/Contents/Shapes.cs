@@ -19,12 +19,12 @@ namespace Orchard.Core.Contents {
                     }
                 });
 
-            builder.Describe("Items_Content_Editor")
+            builder.Describe("Items_Content_Edit")
                .OnDisplaying(displaying => {
                    ContentItem contentItem = displaying.Shape.ContentItem;
                    if (contentItem != null) {
                        //Content.Editor-Page
-                       displaying.ShapeMetadata.Alternates.Add("Items_Content_Editor__" + contentItem.ContentType);
+                       displaying.ShapeMetadata.Alternates.Add("Items_Content_Edit__" + contentItem.ContentType);
                    }
                });
         }
