@@ -62,9 +62,10 @@ namespace Orchard.Blogs.Controllers {
             var list = Shape.List();
             list.AddRange(blogPosts);
 
+            var blogShape = _services.ContentManager.BuildDisplay(blog);
             var model = new DisplayBlogViewModel {
+                Blog = blogShape,
                 BlogPostList = list,
-                BlogPart = blog,
                 Page = page,
                 PageSize = pageSize
             };

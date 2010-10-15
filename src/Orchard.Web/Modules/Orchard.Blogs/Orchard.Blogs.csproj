@@ -106,6 +106,7 @@
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
+    <Compile Include="RemoteBlogPublishingShapes.cs" />
     <Compile Include="ViewModels\BlogPostArchiveViewModel.cs" />
     <Compile Include="ViewModels\DisplayBlogViewModel.cs" />
   </ItemGroup>
@@ -159,6 +160,7 @@
     <None Include="Placement.info">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Views\RemoteBlogPublishing.cshtml" />
     <None Include="Views\DisplayTemplates\Parts\Blogs.BlogArchives.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Blogs.BlogArchives.cshtml" />

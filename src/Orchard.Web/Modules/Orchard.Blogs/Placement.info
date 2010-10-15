@@ -6,7 +6,8 @@
     <Place Parts_Blogs_Blog_Fields="Primary:2"/>
     <Match ContentType="Blog">
         <Match DisplayType="Detail">
-            <Place Parts_Blogs_BlogPost_List="Content:5" />
+            <!-- current paging solution makes this redundant
+                <Place Parts_Blogs_BlogPost_List="Content:5" /> -->
         </Match>
         <Match DisplayType="DetailAdmin">
             <Place Parts_Blogs_BlogPost_List_Admin="Content:5"
