@@ -21,10 +21,6 @@ namespace Orchard.Core.XmlRpc.Controllers {
 
         public ILogger Logger { get; set; }
 
-        public ActionResult Index() {
-            return View();
-        }
-
         [HttpPost, ActionName("Index")]
         public ActionResult ServiceEndpoint(XRpcMethodCall methodCall) {
             Logger.Debug("XmlRpc methodName {0}", methodCall.MethodName);

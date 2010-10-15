@@ -329,7 +329,6 @@
     <Content Include="XmlRpc\Module.txt" />
     <Content Include="Settings\Views\EditorTemplates\Parts\Settings.SiteSettingsPart.cshtml" />
     <Content Include="Shapes\Views\Display.cshtml" />
-    <Content Include="XmlRpc\Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
@@ -339,9 +338,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Settings\Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="XmlRpc\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Web.config" />
