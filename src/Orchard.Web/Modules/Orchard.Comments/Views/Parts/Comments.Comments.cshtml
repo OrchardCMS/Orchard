@@ -20,8 +20,9 @@ else if(!Request.IsAuthenticated && !AuthorizedFor(Permissions.AddComment)) {
 using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { 
     @Html.ValidationSummary() 
     if (!Request.IsAuthenticated) {
-    <h2 id="addacomment">@T("Add a Comment")</h2> 
+
     <fieldset class="who">
+        <legend id="addacomment">@T("Add a Comment")</legend> 
     <ol>
         <li>
             <label for="Name">@T("Name")</label>
