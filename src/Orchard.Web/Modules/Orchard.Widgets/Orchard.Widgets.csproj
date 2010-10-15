@@ -116,8 +116,8 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Views\Admin\Index.cshtml" />
-    <None Include="Views\Items\Widget.cshtml" />
     <None Include="Views\Items\Widget.Edit.cshtml" />
+    <None Include="Views\Items\Widget.cshtml" />
     <None Include="Views\Widget.ControlWrapper.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.WidgetPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.LayerPart.cshtml" />

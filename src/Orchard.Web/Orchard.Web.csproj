@@ -125,7 +125,9 @@
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Refresh.html" />
-    <None Include="Themes\Classic\Placement.info" />
+    <None Include="Themes\Classic\Placement.info">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Themes\Contoso\Styles\search.css" />
     <Content Include="Themes\Contoso\Zones\Footer.html" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
