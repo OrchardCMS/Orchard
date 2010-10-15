@@ -195,7 +195,6 @@ namespace Orchard.Mvc.Html {
             return value.HasValue ? htmlHelper.DateTimeRelative(value.Value, T) : defaultIfNull;
         }
 
-        //TODO: (erikpo) This method needs localized
         public static LocalizedString DateTimeRelative(this HtmlHelper htmlHelper, DateTime value, Localizer T) {
             var time = htmlHelper.Resolve<IClock>().UtcNow - value;
 

@@ -43,7 +43,6 @@ namespace Orchard.Blogs.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult Create() {
-            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
@@ -57,7 +56,6 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST() {
-            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
@@ -79,7 +77,6 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Edit(string blogSlug) {
-            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to edit blog")))
                 return new HttpUnauthorizedResult();
 
@@ -93,7 +90,6 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(string blogSlug) {
-            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
@@ -112,7 +108,6 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Remove(string blogSlug) {
-            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't delete blog")))
                 return new HttpUnauthorizedResult();
 

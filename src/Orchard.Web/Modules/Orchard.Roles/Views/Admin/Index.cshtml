@@ -9,24 +9,24 @@
         <select id="Select1" name="roleActions">
             <option value="1">@T("Remove")</option>
         </select>
-		<input class="button" type="submit" value="@T("Apply")" />
-	</fieldset>
+        <input class="button" type="submit" value="@T("Apply")" />
+    </fieldset>
     <div class="manage">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
     <fieldset>
         <table class="items" summary="@T("This is a table of the roles currently available for use in your application.")">
             <colgroup>
                 <col id="Col1" />
-		        <col id="Col2" />
-			    <col id="Col3" />
-		    </colgroup>
-		    <thead>
-		        <tr>
-			        <th scope="col">&nbsp;&darr;</th>
-				    <th scope="col">@T("Name")</th>
-				    <th scope="col"></th>
-			    </tr>
-		    </thead>
-		    @foreach (var row in Model.Rows) {
+                <col id="Col2" />
+                <col id="Col3" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col">&nbsp;&darr;</th>
+                    <th scope="col">@T("Name")</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            @foreach (var row in Model.Rows) {
                 <tr>
                     <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)"/></td>
                     <td>@row.Name</td>
@@ -34,7 +34,5 @@
                 </tr>
             }
         </table>
-
     </fieldset>
-
 }

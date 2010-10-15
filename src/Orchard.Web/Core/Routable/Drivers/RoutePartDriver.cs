@@ -82,8 +82,14 @@ namespace Orchard.Core.Routable.Drivers {
             part.Title = model.Title;
             part.Slug = model.Slug;
 
-            if (!_routableService.IsSlugValid(part.Slug)) {
-                updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."));
+            if ( !_routableService.IsSlugValid(part.Slug) ) {
+                var slug = (part.Slug ?? String.Empty);
+                if ( slug.StartsWith(".") || slug.EndsWith(".") ) {
+                    updater.AddModelError("Routable.Slug", T("The \".\" can't be used around routes."));
+                }
+                else {
+                    updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."));
+                }
             }
 
             string originalSlug = part.Slug;

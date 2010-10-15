@@ -21,13 +21,25 @@
     else {
 
     }
+    
+   // Debug Quad
+   // {WorkContext.Layout.FooterQuadSecond.Add("2 This is some test text to see if zones are working. This is some test text to see if zones are working.");}
+   // {WorkContext.Layout.FooterQuadFirst.Add("1 This is some test text to see if zones are working. This is some test text to see if zones are working.");}
+   // {WorkContext.Layout.FooterQuadThird.Add("3 This is some test text to see if zones are working. This is some test text to see if zones are working.");}
 
     //Add classes to the wrapper div to toggle quad widget zones on and off
-        if (Model.FooterQuadFirst == null && Model.FooterQuadSecond == null) {
-        Model.Classes.Add("split-left");
+
+        if (Model.FooterQuadFirst == null && Model.FooterQuadSecond != null && Model.FooterQuadThird != null && Model.FooterQuadFourth != null) {
+        Model.Classes.Add("split-234");
     }
-    else if (Model.FooterQuadThird == null && Model.FooterQuadFourth == null) {
-        Model.Classes.Add("split-right");
+    else if (Model.FooterQuadFirst != null && Model.FooterQuadSecond == null && Model.FooterQuadThird != null && Model.FooterQuadFourth != null) {
+        Model.Classes.Add("split-134");
+    }
+        else if (Model.FooterQuadFirst != null && Model.FooterQuadSecond != null && Model.FooterQuadThird == null && Model.FooterQuadFourth != null) {
+        Model.Classes.Add("split-124");
+    }
+        else if (Model.FooterQuadFirst != null && Model.FooterQuadSecond != null && Model.FooterQuadThird != null && Model.FooterQuadFourth == null) {
+        Model.Classes.Add("split-123");
     }
         else {
 
