@@ -36,6 +36,21 @@ namespace Orchard.Mvc.Html {
             return id.Replace('[', '_').Replace(']', '_');
         }
 
+        public static IHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, LocalizedString labelText) {
+            return LabelFor(html, expression, labelText.ToString());
+        }
+
+        public static IHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText) {
+            if (String.IsNullOrEmpty(labelText)) {
+                return MvcHtmlString.Empty;
+            }
+            var htmlFieldName = ExpressionHelper.GetExpressionText(expression);
+            var tag = new TagBuilder("label");
+            tag.Attributes.Add("for", html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
+            tag.SetInnerText(labelText);
+            return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
+        }
+
         public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text) {
             return SelectOption(html, optionValue, object.Equals(optionValue, currentValue), text);
         }

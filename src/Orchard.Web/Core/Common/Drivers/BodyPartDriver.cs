@@ -55,7 +55,7 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override DriverResult Editor(BodyPart part, dynamic shapeHelper) {
             var model = BuildEditorViewModel(part);
-            return ContentShape("Parts_Common_Body_Editor",
+            return ContentShape("Parts_Common_Body_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
@@ -63,7 +63,7 @@ namespace Orchard.Core.Common.Drivers {
             var model = BuildEditorViewModel(part);
             updater.TryUpdateModel(model, Prefix, null, null);
 
-            return ContentShape("Parts_Common_Body_Editor", 
+            return ContentShape("Parts_Common_Body_Edit", 
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 

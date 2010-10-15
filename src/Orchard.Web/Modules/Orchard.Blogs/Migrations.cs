@@ -89,5 +89,11 @@ namespace Orchard.Blogs {
             
             return 5;
         }
+
+        public int UpdateFrom5() {
+            ContentDefinitionManager.AlterTypeDefinition("Blog",
+                cfg => cfg.WithPart("BlogPagerPart"));
+            return 6;
+        }
     }
 }

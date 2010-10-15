@@ -43,7 +43,7 @@ namespace Orchard.Core.PublishLater.Drivers {
 
         protected override DriverResult Editor(PublishLaterPart part, dynamic shapeHelper) {
             var model = BuildEditorViewModel(part);
-            return ContentShape("Parts_PublishLater_Editor",
+            return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
         protected override DriverResult Editor(PublishLaterPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -65,7 +65,7 @@ namespace Orchard.Core.PublishLater.Drivers {
                     //Services.Notifier.Information(T("{0} draft has been saved!", model.ContentItem.TypeDefinition.DisplayName));
                     break;
             }
-            return ContentShape("Parts_PublishLater_Editor",
+            return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 

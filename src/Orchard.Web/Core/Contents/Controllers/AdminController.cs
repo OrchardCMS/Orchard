@@ -288,8 +288,7 @@ namespace Orchard.Core.Contents.Controllers {
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }
 
-        [HttpPost, ActionName("Remove")]
-        public ActionResult RemovePOST(int id, string returnUrl) {
+        public ActionResult Remove(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             if (!Services.Authorizer.Authorize(Permissions.DeleteContent, contentItem, T("Couldn't remove content")))

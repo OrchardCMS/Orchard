@@ -5,7 +5,7 @@ using Orchard.Widgets.Models;
 namespace Orchard.Widgets {
     public class Shapes : IShapeTableProvider {
         public void Discover(ShapeTableBuilder builder) {
-            builder.Describe("Items_Widget")
+            builder.Describe("Widget")
                 .Configure(descriptor => {
                     // todo: have "alternates" for chrome
                     //todo: (heskew) something...this still doesn't feel right
@@ -20,8 +20,8 @@ namespace Orchard.Widgets {
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
                         var zoneName = contentItem.As<WidgetPart>().Zone;
-                        displaying.ShapeMetadata.Alternates.Add("Items_Widget__" + contentItem.ContentType);
-                        displaying.ShapeMetadata.Alternates.Add("Items_Widget__" + zoneName);
+                        displaying.ShapeMetadata.Alternates.Add("Widget__" + contentItem.ContentType);
+                        displaying.ShapeMetadata.Alternates.Add("Widget__" + zoneName);
                     }
                 });
         }

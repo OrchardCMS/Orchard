@@ -98,7 +98,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\Search.cshtml" />
     <Content Include="Views\Parts\Tags.ShowTags.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Tags.EditTags.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Tags.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Search.cshtml" />
   </ItemGroup>
@@ -113,7 +113,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Placement.info" />
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

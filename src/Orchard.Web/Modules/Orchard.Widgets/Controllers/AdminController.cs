@@ -51,7 +51,7 @@ namespace Orchard.Widgets.Controllers {
                     return RedirectToAction("Index");
                 }
 
-                currentLayerWidgets = _widgetsService.GetWidgets().Where(widgetPart => widgetPart.LayerPart.Id == currentLayer.Id);
+                currentLayerWidgets = _widgetsService.GetWidgets(currentLayer.Id);
             }
             else {
                 currentLayer = null;

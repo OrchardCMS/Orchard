@@ -9,6 +9,8 @@ namespace Orchard.Email.Drivers {
     // Thus the encryption/decryption will be done when accessing the part's property
 
     public class SmtpSettingsPartDriver : ContentPartDriver<SmtpSettingsPart> {
+        private const string TemplateName = "Parts/SmtpSettings";
+
         public SmtpSettingsPartDriver() {
             T = NullLocalizer.Instance;
         }
@@ -18,12 +20,14 @@ namespace Orchard.Email.Drivers {
         protected override string Prefix { get { return "SmtpSettings"; } }
 
         protected override DriverResult Editor(SmtpSettingsPart part, dynamic shapeHelper) {
-            return ContentPartTemplate(part, "Parts/Smtp.SiteSettings");
+            return ContentShape("Parts_SmtpSettings_Editor",
+                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(SmtpSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
-            return Editor(part, shapeHelper);
+            return ContentShape("Parts_SmtpSettings_Editor",
+                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
         }
     }
 }
