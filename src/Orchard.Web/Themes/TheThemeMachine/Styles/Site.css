@@ -259,13 +259,13 @@ nav ul
 ***************************************************************/
 
 /* Has Aside */
-.has-aside #layout-content
+.has-aside-two #layout-content
 {
 	width: 600px;
 	float: left;
 }
 
-.has-aside .aside-second 
+.has-aside-two .aside-second 
 {
     width: 360px;
 	float: right;
@@ -274,6 +274,11 @@ nav ul
 .has-aside-one #layout-content {
 	width: 600px;
 	float: right;
+}
+
+.has-aside-one .aside-first {
+	width: 360px;
+	float: left;
 }
 
 .has-asides #layout-content
@@ -412,7 +417,6 @@ button:focus, .button:focus {
 }
 
 ul.comments, form.comment {
-    margin:1.2em 0 1.2em 1.8em;
     list-style: none;
 }
 
