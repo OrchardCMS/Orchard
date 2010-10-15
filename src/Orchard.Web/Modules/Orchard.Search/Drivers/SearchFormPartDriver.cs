@@ -7,7 +7,13 @@ namespace Orchard.Search.Drivers {
 
         protected override DriverResult Display(SearchFormPart part, string displayType, dynamic shapeHelper) {
             var model = new SearchViewModel();
-            return ContentPartTemplate(model, "Parts/Search.SearchForm");
+            return ContentShape("Parts_Search_SearchForm", "Content:1",
+                                () => {
+                                    var shape = shapeHelper.Parts_Search_SearchForm();
+                                    shape.ContentPart = part;
+                                    shape.ViewModel = model;
+                                    return shape;
+                                });
         }
     }
 }
