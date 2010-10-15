@@ -207,26 +207,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
                 }
             }
 
-            public IEnumerable<ExtensionDescriptor> EnabledExtensions(ShellDescriptor descriptor) {
-                var extensions = new[] {
-                    new ExtensionDescriptor {Name = "ThemeOne", ExtensionType = "Theme"},
-                    new ExtensionDescriptor {Name = "ThemeTwo", BaseTheme = "ThemeOne", ExtensionType = "Theme"},
-                    new ExtensionDescriptor {Name = "ThemeThree", BaseTheme = "TheThemeThatIsntThere", ExtensionType = "Theme"},
-                    new ExtensionDescriptor {Name = "ThemeFourBasedOnFive", BaseTheme = "ThemeFiveBasedOnFour", ExtensionType = "Theme"},
-                    new ExtensionDescriptor {Name = "ThemeFiveBasedOnFour", BaseTheme = "ThemeFourBasedOnFive", ExtensionType = "Theme"},
-                };
-
-                foreach (var extension in extensions) {
-                    extension.Features = new[] { new FeatureDescriptor { Extension = extension, Name = extension.Name } };
-                    yield return extension;
-                }
-            }
-
             public IEnumerable<FeatureDescriptor> AvailableFeatures() {
-                return AvailableExtensions().SelectMany(ed => ed.Features);
-            }
-
-            public IEnumerable<FeatureDescriptor> EnabledFeatures(ShellDescriptor descriptor) {
                 return AvailableExtensions().SelectMany(ed => ed.Features);
             }
 

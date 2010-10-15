@@ -87,16 +87,8 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                 throw new NotSupportedException();
             }
 
-            public IEnumerable<ExtensionDescriptor> EnabledExtensions(ShellDescriptor descriptor) {
-                throw new NotSupportedException();
-            }
-
             public IEnumerable<FeatureDescriptor> AvailableFeatures() {
                 return _availableFeautures;
-            }
-
-            public IEnumerable<FeatureDescriptor> EnabledFeatures(ShellDescriptor descriptor) {
-                throw new NotSupportedException();
             }
 
             public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {

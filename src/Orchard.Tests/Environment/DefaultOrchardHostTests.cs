@@ -90,17 +90,9 @@ namespace Orchard.Tests.Environment {
                 yield return ext;
             }
 
-            public IEnumerable<ExtensionDescriptor> EnabledExtensions(ShellDescriptor descriptor) {
-                throw new NotSupportedException();
-            }
-
             public IEnumerable<FeatureDescriptor> AvailableFeatures() {
                 // note - doesn't order properly
                 return AvailableExtensions().SelectMany(ed => ed.Features);
-            }
-
-            public IEnumerable<FeatureDescriptor> EnabledFeatures(ShellDescriptor descriptor) {
-                throw new NotSupportedException();
             }
 
             public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
