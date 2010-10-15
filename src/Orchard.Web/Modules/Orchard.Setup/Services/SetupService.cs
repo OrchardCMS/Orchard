@@ -170,6 +170,10 @@ namespace Orchard.Setup.Services {
                                                                           String.Empty, String.Empty, String.Empty,
                                                                           true));
 
+
+                    var authenticationService = environment.Resolve<IAuthenticationService>();
+                    authenticationService.SetAuthenticatedUserForRequest(user);
+
                     // set site name and settings
                     var siteService = environment.Resolve<ISiteService>();
                     var siteSettings = siteService.GetSiteSettings().As<SiteSettingsPart>();
@@ -265,9 +269,8 @@ namespace Orchard.Setup.Services {
                     menuItem.As<MenuPart>().OnMainMenu = true;
                     menuItem.As<MenuItemPart>().Url = "";
 
-                    //Temporary fix for running setup on command line
+                    //null check: temporary fix for running setup in command line
                     if (HttpContext.Current != null) {
-                        var authenticationService = environment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);
                     }
                 }
