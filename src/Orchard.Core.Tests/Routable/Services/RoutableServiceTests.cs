@@ -85,6 +85,13 @@ namespace Orchard.Core.Tests.Routable.Services {
         }
 
         [Test]
+        public void DotsAroundSlugAreAllowed() {
+            Assert.That(_routableService.IsSlugValid(".slug"), Is.False);
+            Assert.That(_routableService.IsSlugValid("slug."), Is.False);
+            Assert.That(_routableService.IsSlugValid("slug.slug"), Is.True);
+        }
+
+        [Test]
         public void EmptySlugsShouldBeConsideredValid() {
             // so that automatic generation on Publish occurs
             Assert.That(_routableService.IsSlugValid(null), Is.True);

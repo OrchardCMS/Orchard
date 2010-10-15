@@ -9,7 +9,6 @@ namespace Orchard.Blogs.Models {
             set { this.As<RoutePart>().Title = value; }
         }
 
-        //TODO: (erikpo) Need a data type for slug
         public string Slug {
             get { return this.As<RoutePart>().Slug; }
             set { this.As<RoutePart>().Slug = value; }

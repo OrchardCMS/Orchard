@@ -26,6 +26,9 @@ namespace Orchard.Core.Routable.Services {
             if (slug.Length > 1000)
                 slug = slug.Substring(0, 1000);
 
+            // dots are not allowed at the begin and the end of routes
+            slug = slug.Trim('.');
+
             model.Slug = slug.ToLowerInvariant();
         }
 
@@ -63,8 +66,7 @@ namespace Orchard.Core.Routable.Services {
         }
 
         public bool IsSlugValid(string slug) {
-            // see http://tools.ietf.org/html/rfc3987 for prohibited chars
-            return slug == null || String.IsNullOrEmpty(slug.Trim()) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s]+$");
+            return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s]+$") && !(slug.StartsWith(".") || slug.EndsWith("."));
         }
 
         public bool ProcessSlug(RoutePart part) {
@@ -80,7 +82,6 @@ namespace Orchard.Core.Routable.Services {
             // of slugs to consider for conflict detection
             pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id);
 
-            //todo: (heskew) need better messages
             if (pathsLikeThis.Count() > 0) {
                 var originalSlug = part.Slug;
                 //todo: (heskew) make auto-uniqueness optional
