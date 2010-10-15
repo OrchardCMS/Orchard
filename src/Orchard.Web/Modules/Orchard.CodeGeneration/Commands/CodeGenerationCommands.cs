@@ -19,12 +19,6 @@ namespace Orchard.CodeGeneration.Commands {
         private readonly IExtensionManager _extensionManager;
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
-        private static readonly string[] _ignoredExtensions = new [] {
-            "obj", "pdb", "exclude"
-        };
-        private static readonly string[] _ignoredPaths = new [] {
-            "/obj/"
-        };
         private static readonly string[] _themeDirectories = new [] {
             "", "Content", "Styles", "Scripts", "Views", "Zones"
         };
@@ -35,6 +29,7 @@ namespace Orchard.CodeGeneration.Commands {
         private const string ModuleName = "CodeGeneration";
         private static readonly string _codeGenTemplatePath = HostingEnvironment.MapPath("~/Modules/Orchard." + ModuleName + "/CodeGenerationTemplates/");
         private static readonly string _orchardWebProj = HostingEnvironment.MapPath("~/Orchard.Web.csproj");
+        private static readonly string _orchardThemesProj = HostingEnvironment.MapPath("~/Themes/Orchard.Themes.csproj");
 
         public CodeGenerationCommands(
             IExtensionManager extensionManager,
@@ -131,23 +126,23 @@ namespace Orchard.CodeGeneration.Commands {
         }
 
         [CommandName("generate create theme")]
-        [CommandHelp("generate create theme <theme-name> [/IncludeInSolution:true|false][/BasedOn:<theme-name>][]\r\n\tCreate a new Orchard theme")]
+        [CommandHelp("generate create theme <theme-name> [/CreateProject:true|false][/IncludeInSolution:true|false][/BasedOn:<theme-name>]\r\n\tCreate a new Orchard theme")]
         [OrchardSwitches("IncludeInSolution,BasedOn,CreateProject")]
         public void CreateTheme(string themeName) {
             Context.Output.WriteLine(T("Creating Theme {0}", themeName));
-            if (_extensionManager.AvailableExtensions().Any(extension => String.Equals(themeName, extension.DisplayName, StringComparison.OrdinalIgnoreCase))) {
+            if (_extensionManager.AvailableExtensions().Any(extension => String.Equals(themeName, extension.Name, StringComparison.OrdinalIgnoreCase))) {
                 Context.Output.WriteLine(T("Creating Theme {0} failed: an extention of the same name already exists", themeName));
             }
             else {
-                string baseThemePath = null;
                 if (!string.IsNullOrEmpty(BasedOn)) {
-                    baseThemePath = HostingEnvironment.MapPath("~/Themes/" + BasedOn + "/");
-                    if (string.IsNullOrEmpty(baseThemePath) || !Directory.Exists(baseThemePath)) {
-                        Context.Output.WriteLine(T("Creating Theme {0} failed: could not find base theme '{1}'", themeName, baseThemePath));
+                    if (!_extensionManager.AvailableExtensions().Any(extension =>
+                        string.Equals(extension.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(BasedOn, extension.Name, StringComparison.OrdinalIgnoreCase))) {
+                        Context.Output.WriteLine(T("Creating Theme {0} failed: base theme named {1} was not found.", themeName, BasedOn));
                         return;
                     }
                 }
-                IntegrateTheme(themeName, baseThemePath);
+                IntegrateTheme(themeName, BasedOn);
                 Context.Output.WriteLine(T("Theme {0} created successfully", themeName));
             }
         }
@@ -209,10 +204,10 @@ namespace Orchard.CodeGeneration.Commands {
             }
         }
 
-        private void IntegrateTheme(string themeName, string baseThemePath) {
+        private void IntegrateTheme(string themeName, string baseTheme) {
             CreateThemeFromTemplates(Context.Output, T,
                 themeName,
-                baseThemePath,
+                baseTheme,
                 CreateProject ? Guid.NewGuid().ToString().ToUpper() : null,
                 IncludeInSolution);
         }
@@ -258,13 +253,7 @@ namespace Orchard.CodeGeneration.Commands {
             return text;
         }
 
-        private static bool IgnoreFile(string filePath) {
-            return String.IsNullOrEmpty(filePath) ||
-                _ignoredPaths.Any(filePath.Contains) ||
-                _ignoredExtensions.Contains(Path.GetExtension(filePath) ?? "");
-        }
-
-        private static void CreateThemeFromTemplates(TextWriter output, Localizer T, string themeName, string baseThemePath, string projectGuid, bool includeInSolution) {
+        private static void CreateThemeFromTemplates(TextWriter output, Localizer T, string themeName, string baseTheme, string projectGuid, bool includeInSolution) {
             var themePath = HostingEnvironment.MapPath("~/Themes/" + themeName + "/");
             var createdFiles = new HashSet<string>();
             var createdFolders = new HashSet<string>();
@@ -277,44 +266,34 @@ namespace Orchard.CodeGeneration.Commands {
                     createdFolders.Add(folder);
                 }
             }
-            if (baseThemePath != null) {
-                // copy BasedOn theme file by file
-                foreach (var file in Directory.GetFiles(baseThemePath, "*", SearchOption.AllDirectories)) {
-                    // ignore dlls, etc
-                    if (IgnoreFile(file)) {
-                        continue;
-                    }
-                    var destPath = file.Replace(baseThemePath, themePath);
-                    Directory.CreateDirectory(Path.GetDirectoryName(destPath));
-                    File.Copy(file, destPath);
-                    createdFiles.Add(destPath);
-                }
+
+            var webConfig = themePath + "Views\\Web.config";
+            File.WriteAllText(webConfig, File.ReadAllText(_codeGenTemplatePath + "\\ViewsWebConfig.txt"));
+            createdFiles.Add(webConfig);
+
+            var templateText = File.ReadAllText(_codeGenTemplatePath + "\\ThemeManifest.txt").Replace("$$ThemeName$$", themeName);
+            if (string.IsNullOrEmpty(baseTheme)) {
+                templateText = templateText.Replace("BaseTheme: $$BaseTheme$$\r\n", "");
             }
             else {
-                // non-BasedOn theme default files
-                var webConfig = themePath + "Views\\Web.config";
-                File.WriteAllText(webConfig, File.ReadAllText(_codeGenTemplatePath + "\\ViewsWebConfig.txt"));
-                createdFiles.Add(webConfig);
+                templateText = templateText.Replace("$$BaseTheme$$", baseTheme);
             }
-            var templateText = File.ReadAllText(_codeGenTemplatePath + "\\ThemeManifest.txt").Replace("$$ThemeName$$", themeName);
+
             File.WriteAllText(themePath + "Theme.txt", templateText);
             createdFiles.Add(themePath + "Theme.txt");
 
-            string itemGroup = null;
-            if (projectGuid != null || includeInSolution) {
-                itemGroup = CreateProjectItemGroup(themePath, createdFiles, createdFolders);
-            }
-
             // create new csproj for the theme
             if (projectGuid != null) {
+                var itemGroup = CreateProjectItemGroup(themePath, createdFiles, createdFolders);
                 string projectText = CreateCsProject(themeName, projectGuid, itemGroup);
                 File.WriteAllText(themePath + "\\" + themeName + ".csproj", projectText);
             }
 
             if (includeInSolution) {
                 if (projectGuid == null) {
-                    // include in solution but dont create a project: just add the references to Orchard.Web
-                    AddFilesToOrchardWeb(output, T, itemGroup);
+                    // include in solution but dont create a project: just add the references to Orchard.Themes project
+                    var itemGroup = CreateProjectItemGroup(HostingEnvironment.MapPath("~/Themes/"), createdFiles, createdFolders);
+                    AddFilesToOrchardThemesProject(output, T, itemGroup);
                 }
                 else {
                     // create a project (already done) and add it to the solution
@@ -363,12 +342,12 @@ namespace Orchard.CodeGeneration.Commands {
             return string.Format(CultureInfo.InvariantCulture, "<ItemGroup>\r\n{0}\r\n  </ItemGroup>\r\n  ", contentInclude);
         }
 
-        private static void AddFilesToOrchardWeb(TextWriter output, Localizer T, string itemGroup) {
-            if (!File.Exists(_orchardWebProj)) {
-                output.WriteLine(T("Warning: Orchard.Web project file could not be found at {0}", _orchardWebProj));
+        private static void AddFilesToOrchardThemesProject(TextWriter output, Localizer T, string itemGroup) {
+            if (!File.Exists(_orchardThemesProj)) {
+                output.WriteLine(T("Warning: Orchard.Themes project file could not be found at {0}", _orchardThemesProj));
             }
             else {
-                var projectText = File.ReadAllText(_orchardWebProj);
+                var projectText = File.ReadAllText(_orchardThemesProj);
 
                 // find where the first ItemGroup is after any References
                 var refIndex = projectText.LastIndexOf("<Reference Include");
@@ -376,11 +355,11 @@ namespace Orchard.CodeGeneration.Commands {
                     var firstItemGroupIndex = projectText.IndexOf("<ItemGroup>", refIndex);
                     if (firstItemGroupIndex != -1) {
                         projectText = projectText.Insert(firstItemGroupIndex, itemGroup);
-                        File.WriteAllText(_orchardWebProj, projectText);
+                        File.WriteAllText(_orchardThemesProj, projectText);
                         return;
                     }
                 }
-                output.WriteLine(T("Warning: Unable to modify Orchard.Web project file at {0}", _orchardWebProj));
+                output.WriteLine(T("Warning: Unable to modify Orchard.Themes project file at {0}", _orchardThemesProj));
             }
         }
 
