@@ -42,10 +42,12 @@ using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, Fo
         @Html.Hidden("Name", WorkContext.CurrentUser.UserName ?? "")
         @Html.Hidden("Email", WorkContext.CurrentUser.Email ?? "")
     }
+
+    <h2 id="commenter">@if (Request.IsAuthenticated) { @T("Hi, {0}!", Html.Encode(WorkContext.CurrentUser.UserName))}</h2>
     <fieldset class="what">
     <ol>
         <li>
-            <label for="CommentText">@if (Request.IsAuthenticated) { @T("Hi, {0}!", Html.Encode(WorkContext.CurrentUser.UserName))<br /> } @T("Comment")</label>
+            <label for="CommentText">@T("Comment")</label>
             <textarea id="CommentText" rows="10" cols="30" name="CommentText"></textarea>
         </li>
         <li>
