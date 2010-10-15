@@ -79,7 +79,7 @@ namespace Orchard.Modules.Commands {
         [CommandName("feature disable")]
         public void Disable(params string[] featureNames) {
             Context.Output.WriteLine(T("Disabling features {0}", string.Join(",", featureNames)));
-            _moduleService.DisableFeatures(featureNames);
+            _moduleService.DisableFeatures(featureNames, true);
             Context.Output.WriteLine(T("Disabled features  {0}", string.Join(",", featureNames)));
         }
     }
