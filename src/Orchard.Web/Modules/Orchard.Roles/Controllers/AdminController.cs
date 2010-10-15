@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.Core.Contents.Controllers;
 using Orchard.Localization;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
@@ -98,9 +99,9 @@ namespace Orchard.Roles.Controllers {
 
             var role = _roleService.GetRole(id);
             if (role == null) {
-                //TODO: Error message
-                throw new HttpException(404, "page with id " + id + " was not found");
+                return HttpNotFound();
             }
+
             var model = new RoleEditViewModel { Name = role.Name, Id = role.Id, 
                                                 RoleCategoryPermissions = _roleService.GetInstalledPermissions(),
                                                 CurrentPermissions = _roleService.GetPermissionsForRole(id)};
@@ -117,7 +118,8 @@ namespace Orchard.Roles.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST() {
+        [FormValueRequired("submit.Save")]
+        public ActionResult EditSavePOST(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
@@ -125,24 +127,38 @@ namespace Orchard.Roles.Controllers {
             try {
                 UpdateModel(viewModel);
                 // Save
-                if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Save"])) {
-                    List<string> rolePermissions = new List<string>();
-                    foreach (string key in Request.Form.Keys) {
-                        if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
-                            string permissionName = key.Substring("Checkbox.".Length);
-                            rolePermissions.Add(permissionName);
-                        }
+                List<string> rolePermissions = new List<string>();
+                foreach (string key in Request.Form.Keys) {
+                    if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
+                        string permissionName = key.Substring("Checkbox.".Length);
+                        rolePermissions.Add(permissionName);
                     }
-                    _roleService.UpdateRole(viewModel.Id, viewModel.Name, rolePermissions);
                 }
-                else if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Delete"])) {
-                    _roleService.DeleteRole(viewModel.Id);
-                }
-                return RedirectToAction("Edit", new { viewModel.Id });
+                _roleService.UpdateRole(viewModel.Id, viewModel.Name, rolePermissions);
+
+                Services.Notifier.Information(T("Your Role has been saved."));
+                return RedirectToAction("Edit", new { id });
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Editing Role failed: {0}", exception.Message));
-                return RedirectToAction("Edit", viewModel.Id);
+                return RedirectToAction("Edit", id);
+            }
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Delete")]
+        public ActionResult EditDeletePOST(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
+                return new HttpUnauthorizedResult();
+
+            try {
+                _roleService.DeleteRole(id);
+
+                Services.Notifier.Information(T("Role was successfully deleted."));
+                return RedirectToAction("Index");
+            } catch (Exception exception) {
+                Services.Notifier.Error(T("Editing Role failed: {0}", exception.Message));
+                return RedirectToAction("Edit", id);
             }
         }
     }
