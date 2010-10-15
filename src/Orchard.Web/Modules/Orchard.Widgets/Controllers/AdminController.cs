@@ -44,9 +44,10 @@ namespace Orchard.Widgets.Controllers {
                                layers.First() :
                                layers.FirstOrDefault(layer => layer.Id == id);
 
-                if (currentLayer == null) {
+                if (currentLayer == null &&
+                    id != null) {
                     // Incorrect layer id passed
-                    Services.Notifier.Error(T("Layer not found: {1}", id));
+                    Services.Notifier.Error(T("Layer not found: {0}", id));
                     return RedirectToAction("Index");
                 }
 
@@ -254,7 +255,7 @@ namespace Orchard.Widgets.Controllers {
             try {
                 widgetPart = _widgetsService.GetWidget(id);
                 if (widgetPart == null) {
-                    Services.Notifier.Error(T("Widget not found: {1}", id));
+                    Services.Notifier.Error(T("Widget not found: {0}", id));
                     return RedirectToAction("Index");
                 }
 
