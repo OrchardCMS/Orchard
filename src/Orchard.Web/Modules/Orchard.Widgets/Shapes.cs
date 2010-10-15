@@ -8,9 +8,9 @@ namespace Orchard.Widgets {
             builder.Describe("Widget")
                 .Configure(descriptor => {
                     // todo: have "alternates" for chrome
-                    //todo: (heskew) something...this still doesn't feel right
-                    descriptor.Wrappers.Add("Widget_ControlWrapper");
+                    // todo: (heskew) something...this still doesn't feel right
                     descriptor.Wrappers.Add("Widget_Wrapper");
+                    descriptor.Wrappers.Add("Widget_ControlWrapper");
                 })
                 .OnCreated(created => {
                     var widget = created.Shape;
