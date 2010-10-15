@@ -36,12 +36,8 @@ namespace Orchard.Tags.Drivers {
             if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, CurrentUser, part))
                 return null;
 
-            var model = new EditTagsViewModel {
-                                                  Tags = string.Join(", ", part.CurrentTags.Select((t, i) => t.TagName).ToArray())
-                                              };
-
             return ContentShape("Parts_Tags_Editor",
-                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: BuildEditorViewModel(part), Prefix: Prefix));
         }
 
         protected override DriverResult Editor(TagsPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -58,6 +54,12 @@ namespace Orchard.Tags.Drivers {
 
             return ContentShape("Parts_Tags_Editor",
                     () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+        }
+
+        private static EditTagsViewModel BuildEditorViewModel(TagsPart part) {
+            return new EditTagsViewModel {
+                Tags = string.Join(", ", part.CurrentTags.Select((t, i) => t.TagName).ToArray())
+            };
         }
     }
 }
