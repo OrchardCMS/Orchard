@@ -38,13 +38,15 @@ namespace Orchard.Blogs.Drivers {
                              () => shapeHelper.Parts_Blogs_Blog_Manage(ContentPart: part)),
                 ContentShape("Parts_Blogs_Blog_Description",
                              () => shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part, Description: part.Description)),
+                // todo: (heskew) implement a paging solution that doesn't require blog posts to be tied to the blog within the controller
                 ContentShape("Parts_Blogs_BlogPost_List",
                              () => {
                                  _feedManager.Register(part);
-                                 var list = shapeHelper.List();
-                                 list.AddRange(_blogPostService.Get(part)
-                                                           .Select(bp => _contentManager.BuildDisplay(bp, "Summary")));
-                                 return shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, ContentItems: list);
+                                 return null;
+                //                 var list = shapeHelper.List();
+                //                 list.AddRange(_blogPostService.Get(part)
+                //                                           .Select(bp => _contentManager.BuildDisplay(bp, "Summary")));
+                //                 return shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, ContentItems: list);
                              }),
                 ContentShape("Parts_Blogs_BlogPost_List_Admin",
                              () => {

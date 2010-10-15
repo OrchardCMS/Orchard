@@ -95,9 +95,10 @@ namespace Orchard.Modules.Services {
         public void DisableFeatures(IEnumerable<string> features, bool force) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
             var enabledFeatures = shellDescriptor.Features.ToList();
+            var availableFeatures = GetAvailableFeatures().ToList();
 
             var featuresToDisable =
-                features.Select(s => DisableFeature(s, GetAvailableFeatures(), force)).SelectMany(
+                features.Select(s => DisableFeature(s, availableFeatures, force)).SelectMany(
                     ies => ies.Select(s => s));
 
             if (featuresToDisable.Count() == 0)

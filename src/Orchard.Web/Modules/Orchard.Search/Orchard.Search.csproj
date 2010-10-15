@@ -101,11 +101,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Search.SiteSettings.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Search.SearchForm.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DisplayTemplates\Parts\Search.SearchForm.cshtml" />
+    <Content Include="Views\Parts\Search.SearchForm.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

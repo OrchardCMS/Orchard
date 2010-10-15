@@ -190,7 +190,7 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
 
 #layout-main 
 {
-    border-top: 1px solid #dbdbdb;
+    border-top: 1px solid #fff;
 }
 
 #layout-after-main 
@@ -303,7 +303,6 @@ label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
 legend            { font-weight: 600; font-size:1.2em; }
 
-
 input[type="text"], #CommentText, #password, #confirmPassword {
     border:1px solid #999;
     display: block;
@@ -320,7 +319,9 @@ form.search {
     width:17em;
 }
 
-fieldset div {margin:1.6em 0 0 0}
+fieldset ol {list-style-type:none;}
+
+fieldset ol li {margin:1.6em 0 0 0}
     
 legend {
 	font-size: 1.4em;
@@ -400,35 +401,38 @@ button:focus, .button:focus {
 
 
 /* For testing purposes */
-#comments {
+#comments, #commenter {
     font-size:1.6em;
     font-weight:600;
     margin:1.2em 0 1.8em 1.2em;
 }
 
+#commenter {
+    margin:1.2em 0 0 1em;
+}
+
 ul.comments, form.comment {
     margin:1.2em 0 1.2em 1.8em;
+    list-style: none;
 }
 
-div.comment {
-    font-size:1.3em;
-    font-style:italic;
-    color:#484848;
+article.comment h4 {
+    font-size:1.4em;
 }
 
-div.comment a {
+article.comment a {
     color:#484848;
     text-decoration:none;
 }
 
-div.comment span.who {
+article.comment span.who {
     font-weight:600;
     font-style:normal;
     text-transform:capitalize;
     color:#333;
 }
 
-ul.comments li div.text {
+article.comment p.text {
     margin:.6em 0 2.4em 0;
 }
 

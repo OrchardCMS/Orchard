@@ -19,37 +19,44 @@ else if(!Request.IsAuthenticated && !AuthorizedFor(Permissions.AddComment)) {
 } else {
 using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { 
     @Html.ValidationSummary() 
-    <h2 id="addacomment">@T("Add a Comment")</h2>
-    if (!Request.IsAuthenticated) { 
+    if (!Request.IsAuthenticated) {
+
     <fieldset class="who">
-        <div>
+        <legend id="addacomment">@T("Add a Comment")</legend> 
+    <ol>
+        <li>
             <label for="Name">@T("Name")</label>
             <input id="Name" class="text" name="Name" type="text" />
-        </div>
-        <div>
+        </li>
+        <li>
             <label for="Email">@T("Email")</label>
             <input id="Email" class="text" name="Email" type="text" />
-        </div>
-        <div>
+        </li>
+        <li>
             <label for="SiteName">@T("Url")</label>
             <input id="SiteName" class="text" name="SiteName" type="text" />
-        </div>
+        </li>
+     </ol>
     </fieldset>
     } else {
         @Html.Hidden("Name", WorkContext.CurrentUser.UserName ?? "")
         @Html.Hidden("Email", WorkContext.CurrentUser.Email ?? "")
     }
+
+    <h2 id="commenter">@if (Request.IsAuthenticated) { @T("Hi, {0}!", Html.Encode(WorkContext.CurrentUser.UserName))}</h2>
     <fieldset class="what">
-        <div>
-            <label for="CommentText">@if (Request.IsAuthenticated) { @T("Hi, {0}!", Html.Encode(WorkContext.CurrentUser.UserName))<br /> } @T("Comment")</label>
+    <ol>
+        <li>
+            <label for="CommentText">@T("Comment")</label>
             <textarea id="CommentText" rows="10" cols="30" name="CommentText"></textarea>
-        </div>
-        <div>
+        </li>
+        <li>
             <input type="submit" class="button" value="@T("Submit Comment")" />
             @Html.Hidden("CommentedOn", (int)Model.ContentPart.ContentItem.Id) 
             @Html.Hidden("ReturnUrl", Context.Request.ToUrlString()) 
             @Html.AntiForgeryTokenOrchard() 
-        </div>
+        </li>
+    </ol>
     </fieldset>
     }
 } 
