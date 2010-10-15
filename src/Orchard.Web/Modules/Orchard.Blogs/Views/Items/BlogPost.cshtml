@@ -1,9 +1,11 @@
-﻿<h1>@Html.TitleForPage((string)Model.Title)</h1>
-@if (Model.Meta != null) {
-<div class="metadata">
-    @Display(Model.Meta)
-</div>
-}
-<div class="content">
+﻿<article>
+  <header>
+    @Display(Model.Header)
+    <p class="metadata">
+      @Display(Model.Meta)
+    </p>
+  </header>
+  <section>
     @Display(Model.Content)
-</div>
+  </section>
+</article>
