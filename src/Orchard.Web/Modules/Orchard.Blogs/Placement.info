@@ -1,13 +1,23 @@
 ﻿<Placement>
-    <Place Parts_Blogs_Blog_Manage="-"/>
-    <Place Parts_Blogs_Blog_Description="-"/>
-    <Place Parts_Blogs_BlogPost_List="-"/>
-    <Place Parts_Blogs_BlogPost_List_Admin="-"/>
+    <!-- available display shapes -->
+    <!--
+        Parts_Blogs_Blog_Manage
+        Parts_Blogs_Blog_Description
+        Parts_Blogs_Blog_Pager
+        Parts_Blogs_BlogPost_List -> when in the blog detail display the blog post list is currently hard-coded to Content:5 to enable the current state of blog paging
+        Parts_Blogs_BlogPost_List_Admin
+    -->
+    <!-- widget and edit shapes just get default placement -->
+    <!-- edit "shapes" -->
     <Place Parts_Blogs_Blog_Fields="Primary:2"/>
+    <!-- widgets -->
+    <Place Parts_Blogs_BlogArchives="Content"/>
+    <Place Parts_Blogs_RecentBlogPosts="Content"/>
     <Match ContentType="Blog">
         <Match DisplayType="Detail">
-            <!-- current paging solution makes this redundant
-                <Place Parts_Blogs_BlogPost_List="Content:5" /> -->
+            <!-- blog posts currently added to the blog within the controller into Content:5 <Place Parts_Blogs_BlogPost_List="Content:5" />-->
+            <Place Parts_Blogs_Blog_Pager="Content:after"
+                   Parts_Blogs_Blog_Description="Content:before" />
         </Match>
         <Match DisplayType="DetailAdmin">
             <Place Parts_Blogs_BlogPost_List_Admin="Content:5"
