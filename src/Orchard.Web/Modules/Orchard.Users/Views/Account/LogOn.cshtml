@@ -5,21 +5,23 @@
 @Html.ValidationSummary(T("Login was unsuccessful. Please correct the errors and try again.").ToString())
 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", new {ReturnUrl = Request.QueryString["ReturnUrl"]}))) {
-<fieldset class="login-form">
+<fieldset class="login-form group">
     <legend>@T("Account Information")</legend>
-    <div class="group">
+    <ol>
+    <li>
         <label for="userNameOrEmail">@T("Username:")</label>
         @Html.TextBox("userNameOrEmail", "", new { autofocus = "autofocus" })
         @Html.ValidationMessage("userNameOrEmail")
-    </div>
-    <div class="group">
+    </li>
+    <li>
         <label for="password">@T("Password:")</label>
         @Html.Password("password")
         @Html.ValidationMessage("password")
-    </div>
-    <div class="group">
+    </li>
+    <li>
         @Html.CheckBox("rememberMe")<label class="forcheckbox" for="rememberMe">@T("Remember me?")</label>
-    </div>
+    </li>
     <input type="submit" value="@T("Log On")" />
+    </ol>
 </fieldset>
 }
