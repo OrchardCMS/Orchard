@@ -22,7 +22,7 @@ namespace Orchard.Experimental.Controllers {
         }
 
         public ActionResult Execute() {
-            return View(new CommandsExecuteViewModel());
+            return View("Execute", new CommandsExecuteViewModel());
         }
 
         [HttpPost]

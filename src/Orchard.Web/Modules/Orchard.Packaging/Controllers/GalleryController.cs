@@ -107,7 +107,7 @@ namespace Orchard.Packaging.Controllers {
         public ActionResult Modules(Guid? sourceId) {
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-            return View(new PackagingModulesViewModel {
+            return View("Modules", new PackagingModulesViewModel {
                 Modules = _packagingSourceManager.GetModuleList(selectedSource).Where(p => p.SyndicationItem.Categories.All(c => c.Name == "Orchard Module" || c.Name != "Orchard Theme")),
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 SelectedSource = selectedSource
@@ -117,7 +117,7 @@ namespace Orchard.Packaging.Controllers {
         public ActionResult Themes(Guid? sourceId) {
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-            return View(new PackagingModulesViewModel {
+            return View("Themes", new PackagingModulesViewModel {
                 Modules = _packagingSourceManager.GetModuleList(selectedSource).Where(p => p.SyndicationItem.Categories.Any(c => c.Name == "Orchard Theme")),
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 SelectedSource = selectedSource
