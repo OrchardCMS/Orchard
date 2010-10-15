@@ -15,11 +15,6 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
     }
 
     public class BasicShapeTemplateHarvester : IShapeTemplateHarvester {
-        private readonly IEnumerable<IShapeTemplateViewEngine> _shapeTemplateViewEngines;
-
-        public BasicShapeTemplateHarvester(IEnumerable<IShapeTemplateViewEngine> shapeTemplateViewEngines) {
-            _shapeTemplateViewEngines = shapeTemplateViewEngines;
-        }
 
         public IEnumerable<string> SubPaths() {
             return new[] { "Views", "Views/Items", "Views/Parts", "Views/Fields" };
@@ -43,12 +38,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
 
         static string Adjust(string subPath, string fileName, string displayType) {
             var leader = "";
-            if (subPath.StartsWith("Views/")) {
+            if (subPath.StartsWith("Views/") && subPath != "Views/Items") {
                 leader = subPath.Substring("Views/".Length) + "_";
-            }
-
-            if (leader == "Items_" && !fileName.StartsWith("Content")) {
-                leader = "Items_Content__";
             }
 
             // canonical shape type names must not have - or . to be compatible 

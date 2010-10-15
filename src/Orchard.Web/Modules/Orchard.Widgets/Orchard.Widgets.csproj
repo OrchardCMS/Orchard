@@ -116,12 +116,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Items\Widget.Editor.cshtml" />
-    <None Include="Views\Widget.Manage.cshtml" />
+    <None Include="Views\Items\Widget.cshtml" />
+    <None Include="Views\Items\Widget.Edit.cshtml" />
+    <None Include="Views\Widget.ControlWrapper.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.WidgetPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.LayerPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.WidgetBagPart.cshtml" />
-    <Content Include="Views\Items\Widget.cshtml" />
     <Content Include="Views\Items\Content-WidgetPage.cshtml" />
     <None Include="Views\Widget.Wrapper.cshtml" />
   </ItemGroup>
