@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.Data.Migration;
@@ -11,27 +12,29 @@ namespace Orchard.Migrations.Commands {
     [OrchardFeature("Orchard.Migrations")]
     public class DataMigrationCommands : DefaultOrchardCommandHandler {
         private readonly IDataMigrationManager _dataMigrationManager;
-        private readonly IDataMigrationInterpreter _dataMigrationInterpreter;
-        private readonly ISchemaCommandGenerator _schemaCommandGenerator;
+        private readonly IExtensionManager _extensionManager;
 
         public DataMigrationCommands(
             IDataMigrationManager dataMigrationManager,
-            IDataMigrationInterpreter dataMigrationInterpreter,
-            ISchemaCommandGenerator schemaCommandGenerator
+            IExtensionManager extensionManager
             ) {
             _dataMigrationManager = dataMigrationManager;
-            _dataMigrationInterpreter = dataMigrationInterpreter;
-            _schemaCommandGenerator = schemaCommandGenerator;
+            _extensionManager = extensionManager;
         }
 
-        [OrchardSwitch]
-        public bool Drop { get; set; }
-
         [CommandName("upgrade database")]
-        [CommandHelp("upgrade database <feature-name> \r\n\t" + "Upgrades or create the database tables for the <feature-name>")]
-        public string UpgradeDatabase(string featureName) {
+        [CommandHelp("upgrade database <feature-name-1> ... <feature-name-n> \r\n\t" + "Upgrades or create the database tables for the <feature-name> or all features if not available")]
+        public string UpgradeDatabase(params string[] featureNames) {
             try {
-                _dataMigrationManager.Update(featureName);
+                IEnumerable<string> features = featureNames.Any()
+                                                   ? featureNames
+                                                   : _extensionManager.AvailableExtensions()
+                                                         .SelectMany(ext => ext.Features)
+                                                         .Select(f => f.Name);
+
+                foreach(var feature in features) {
+                    _dataMigrationManager.Update(feature);    
+                }
             }
             catch ( Exception ex ) {
                 Context.Output.WriteLine(T("An error occured while upgrading the database: " + ex.Message));
@@ -39,6 +42,22 @@ namespace Orchard.Migrations.Commands {
             }
 
             return "Database upgraded";
+        }
+    }
+    [OrchardFeature("DatabaseUpdate")]
+    public class DatabaseUpdateCommands : DefaultOrchardCommandHandler {
+        private readonly IDataMigrationInterpreter _dataMigrationInterpreter;
+        private readonly ISchemaCommandGenerator _schemaCommandGenerator;
+
+        [OrchardSwitch]
+        public bool Drop { get; set; }
+
+        public DatabaseUpdateCommands(
+            IDataMigrationInterpreter dataMigrationInterpreter,
+            ISchemaCommandGenerator schemaCommandGenerator
+            ) {
+            _dataMigrationInterpreter = dataMigrationInterpreter;
+            _schemaCommandGenerator = schemaCommandGenerator;
         }
 
         [CommandName("update database")]

@@ -1,8 +1,8 @@
-﻿@model Orchard.Search.ViewModels.SearchViewModel
+﻿@using Orchard.Search.ViewModels;
 
 @using(Html.BeginForm("index", "search", new { area = "Orchard.Search" }, FormMethod.Get, new { @class = "search" })) { 
     <fieldset>
-        @Html.TextBox("q", Model.Query)
+        @Html.TextBox("q", (SearchViewModel)Model.ViewModel.Query)
         <button type="submit">@T("Search")</button>
     </fieldset>
-} 
+}

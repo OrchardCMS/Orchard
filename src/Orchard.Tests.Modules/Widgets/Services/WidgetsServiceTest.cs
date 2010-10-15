@@ -242,6 +242,9 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             Assert.That(widgetPart3.Position, Is.EqualTo(Position3), "Widget remained in the same position");
         }
 
+        [Test, Ignore("Fix when possible")]        public void GetLayerWidgetsTest() {            LayerPart layerPart = _widgetService.CreateLayer(LayerName1, LayerDescription1, "");            _contentManager.Flush();            // same zone widgets            WidgetPart widgetPart1 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, Position1, Zone1);            WidgetPart widgetPart2 = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle2, Position2, Zone1);            // different zone widget            _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle3, Position3, Zone2);
+            // test 1 - moving first widget up will have no effect            IEnumerable<WidgetPart> layerWidgets = _widgetService.GetWidgets(layerPart.Id);            Assert.That(layerWidgets.Count(), Is.EqualTo(2));            Assert.That(layerWidgets.Contains(widgetPart1));            Assert.That(layerWidgets.Contains(widgetPart2));        }
+
         public class StubLayerPartHandler : ContentHandler {
             public StubLayerPartHandler(IRepository<LayerPartRecord> layersRepository) {
                 Filters.Add(new ActivatingFilter<LayerPart>("Layer"));
