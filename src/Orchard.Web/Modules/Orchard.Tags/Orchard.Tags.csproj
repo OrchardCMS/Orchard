@@ -98,7 +98,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\Search.cshtml" />
     <Content Include="Views\Parts\Tags.ShowTags.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Tags.EditTags.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Tags.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Search.cshtml" />
   </ItemGroup>
