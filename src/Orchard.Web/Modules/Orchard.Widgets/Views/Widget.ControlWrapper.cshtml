@@ -3,9 +3,9 @@
 @if (AuthorizedFor(Permissions.ManageWidgets)) {
     <div class="widget-control">
         <div class="manage-actions">@Html.ItemEditLinkWithReturnUrl(T("Edit").Text, (ContentItem)Model.ContentItem)</div>
-    @Display(Model.Main)
+    @Display(Model.Child)
     </div>
 }
 else {
-    @Display(Model.Main)
+    @Display(Model.Child)
 }
