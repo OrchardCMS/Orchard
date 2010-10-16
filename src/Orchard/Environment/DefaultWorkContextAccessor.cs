@@ -163,6 +163,4 @@ namespace Orchard.Environment {
             }
         }
     }
-
-
 }

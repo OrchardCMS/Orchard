@@ -1,4 +1,12 @@
-﻿@{
+﻿@functions {
+   string CalcuClassify(string[] zoneNames, string classNamePrefix)
+   {
+        var zoneCounter = 0;
+        var zoneNumsFilled = string.Join("", zoneNames.Select(zoneName => { ++zoneCounter; return Model[zoneName] != null ? zoneCounter.ToString() : "";}).ToArray());
+        return HasText(zoneNumsFilled) ? classNamePrefix + zoneNumsFilled : "";
+   }
+}
+@{
     Style.Include("http://fonts.googleapis.com/css?family=Lobster&subset=latin");
     Style.Include("site.css");
 
@@ -28,22 +36,20 @@
    // {WorkContext.Layout.FooterQuadThird.Add("3 This is some test text to see if zones are working. This is some test text to see if zones are working.");}
 
     //Add classes to the wrapper div to toggle quad widget zones on and off
+    var tripelClass = CalcuClassify(new [] {"TripelFirst", "TripelSecond", "TripelThird"}, "tripel-");
+    if (HasText(tripelClass)) {
+        Model.Classes.Add(tripelClass);
+    }
 
-        if (Model.FooterQuadFirst == null && Model.FooterQuadSecond != null && Model.FooterQuadThird != null && Model.FooterQuadFourth != null) {
-        Model.Classes.Add("split-234");
+    //Add classes to the wrapper div to toggle quad widget zones on and off
+    var footerQuadClass = CalcuClassify(new [] {"FooterQuadFirst", "FooterQuadSecond", "FooterQuadThird", "FooterQuadFourth"}, "split-");
+    if (HasText(footerQuadClass)) {
+        Model.Classes.Add(footerQuadClass);
     }
-    else if (Model.FooterQuadFirst != null && Model.FooterQuadSecond == null && Model.FooterQuadThird != null && Model.FooterQuadFourth != null) {
-        Model.Classes.Add("split-134");
-    }
-        else if (Model.FooterQuadFirst != null && Model.FooterQuadSecond != null && Model.FooterQuadThird == null && Model.FooterQuadFourth != null) {
-        Model.Classes.Add("split-124");
-    }
-        else if (Model.FooterQuadFirst != null && Model.FooterQuadSecond != null && Model.FooterQuadThird != null && Model.FooterQuadFourth == null) {
-        Model.Classes.Add("split-123");
-    }
-        else {
 
-    }
+    <span>debug: </span>
+<span>tripelClass:@tripelClass</span><br />
+<span>footerQuadClass:@footerQuadClass</span>
 
     Model.Id = "layout-wrapper";
     var tag = Tag (Model, "div");

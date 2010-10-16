@@ -259,13 +259,13 @@ nav ul
 ***************************************************************/
 
 /* Has Aside */
-.has-aside #layout-content
+.has-aside-two #layout-content
 {
 	width: 600px;
 	float: left;
 }
 
-.has-aside .aside-second 
+.has-aside-two .aside-second 
 {
     width: 360px;
 	float: right;
@@ -274,6 +274,11 @@ nav ul
 .has-aside-one #layout-content {
 	width: 600px;
 	float: right;
+}
+
+.has-aside-one .aside-first {
+	width: 360px;
+	float: left;
 }
 
 .has-asides #layout-content
@@ -412,7 +417,6 @@ button:focus, .button:focus {
 }
 
 ul.comments, form.comment {
-    margin:1.2em 0 1.2em 1.8em;
     list-style: none;
 }
 
@@ -440,16 +444,12 @@ article.comment p.text {
     display:inline;
 }
 
-.aside.third {
+/*.aside.third {
     border-top:1px solid #dbdbdb;
     clear:both;
-}
+}*/
 
-#layout-tripel div > div {
-     float:left;
-     width:316px;
-     /*padding:12px 6px 0 6px;*/
-}
+
 
 #footer-quad div.zone {
      float:left;
@@ -483,14 +483,86 @@ article.comment p.text {
     /*border:1px solid #ff0000;*/
 }
 
-/* If zone 1 is empty and 2, 3, 4 are not */
+/* Tripel */
+
+#layout-tripel div {
+     float:left;
+     /*padding:12px 6px 0 6px;*/
+}
+
+/*1 zone on */
+.tripel-1 #tripel-first { width:960px; }
+
+/*2 zone on */
+.tripel-2 #tripel-second { width:960px; }
+
+/*3 zone on */
+.tripel-3 #tripel-third { width:960px; }
+
+/*2 zones on */
+
+/* If zones 1, 2 are on */
+.tripel-12 #tripel-first, .tripel-12 #tripel-second { width:480px; }
+
+/* If zones 2, 3 are on */
+.tripel-23 #tripel-second, .tripel-23 #tripel-third { width:480px; }
+
+/* If zones 1, 3 are on */
+.tripel-13 #tripel-first, .tripel-13 #tripel-third { width:480px; }
+
+/*3 zones on */
+
+/* If zones 1, 2, 3 are on */
+.tripel-123 #tripel-first, .tripel-123 #tripel-second, .tripel-123 #tripel-third { width:320px; }
+
+
+
+/* Quad */
+/*1 zone on */
+
+/* If zone 1 is on */
+.split-1 #footer-quad-first div.zone { width:960px; }
+
+/* If zone 2 is on */
+.split-2 #footer-quad-second div.zone { width:960px; }
+
+/* If zone 3 is on */
+.split-3 #footer-quad-third div.zone { width:960px; }
+
+/* If zone 4 is on */
+.split-4 #footer-quad-fourth div.zone { width:960px; }
+
+
+/*2 zones on */
+
+/* If zones 1, 2 are on */
+.split-12 #footer-quad-first div.zone, .split-12 #footer-quad-second div.zone { width:480px; }
+
+/* If zones 1, 3 are on */
+.split-13 #footer-quad-first div.zone, .split-13 #footer-quad-third div.zone { width:480px; }
+
+/* If zones 1, 4 are on */
+.split-14 #footer-quad-first div.zone, .split-14 #footer-quad-fourth div.zone { width:480px; }
+
+/* If zones 2, 3 are on */
+.split-23 #footer-quad-second div.zone, .split-23 #footer-quad-third div.zone { width:480px; }
+
+/* If zones 2, 4 are on */
+.split-24 #footer-quad-second div.zone, .split-24 #footer-quad-fourth div.zone { width:480px; }
+
+/* If zones 3, 4 are on */
+.split-34 #footer-quad-third div.zone, .split-34 #footer-quad-fourth div.zone { width:480px; }
+
+/*3 zones on */
+
+/* If zones 2, 3, 4 are on */
 .split-234 #footer-quad-second div.zone { width:480px; }
 
-/* If zone 2 is empty and 1, 3, 4 are not */
+/* If zones 1, 3, 4 are on */
 .split-134 #footer-quad-first div.zone { width:480px; }
 
-/* If zone 3 is empty and 1, 2, 4 are not */
+/* If zones 1, 2, 4 are on */
 .split-124 #footer-quad-fourth div.zone { width:480px; }
 
-/* If zone 4 is empty and 1, 2, 3 are not */
+/* If zones 1, 2, 3 are on */
 .split-123 #footer-quad-third div.zone { width:480px; }

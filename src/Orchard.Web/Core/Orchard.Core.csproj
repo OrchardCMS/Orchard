@@ -394,6 +394,7 @@
     <Content Include="Dashboard\Views\Helper\Index.cshtml" />
     <None Include="Common\Placement.info" />
     <None Include="Contents\Placement.info" />
+    <None Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <None Include="Localization\Placement.info" />
     <None Include="PublishLater\Placement.info" />
     <None Include="Routable\Views\Parts\RoutableTitle.cshtml" />

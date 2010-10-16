@@ -11,6 +11,7 @@ namespace Orchard.Security.Providers {
         private readonly IClock _clock;
         private readonly IContentManager _contentManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private IUser _signedInUser;
 
         public FormsAuthenticationService(IClock clock, IContentManager contentManager, IHttpContextAccessor httpContextAccessor) {
             _clock = clock;
@@ -52,13 +53,22 @@ namespace Orchard.Security.Providers {
             
             var httpContext = _httpContextAccessor.Current();
             httpContext.Response.Cookies.Add(cookie);
+            _signedInUser = user;
         }
 
         public void SignOut() {
+            _signedInUser = null;
             FormsAuthentication.SignOut();
         }
 
+        public void SetAuthenticatedUserForRequest(IUser user) {
+            _signedInUser = user;
+        }
+
         public IUser GetAuthenticatedUser() {
+            if (_signedInUser != null)
+                return _signedInUser;
+
             var httpContext = _httpContextAccessor.Current();
             if (!httpContext.Request.IsAuthenticated || !(httpContext.User.Identity is FormsIdentity)) {
                 return null;

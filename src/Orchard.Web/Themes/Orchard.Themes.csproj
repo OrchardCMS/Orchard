@@ -64,7 +64,6 @@
     <Content Include="TheThemeMachine\Styles\Site.css" />
     <Content Include="TheThemeMachine\Theme.png" />
     <Content Include="TheThemeMachine\Theme.txt" />
-    <Content Include="TheThemeMachine\Views\Items_Widget-HtmlWidget.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -218,8 +217,6 @@
     <Content Include="TheAdmin\Theme.png" />
     <Content Include="TheAdmin\Views\User.cshtml" />
     <Content Include="TheAdmin\Views\Header.cshtml" />
-    <Content Include="TheThemeMachine\Views\Items\Content.Blog.cshtml" />
-    <Content Include="TheThemeMachine\Views\Items_Widget-Content.cshtml" />
     <None Include="TheThemeMachine\Views\Layout.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

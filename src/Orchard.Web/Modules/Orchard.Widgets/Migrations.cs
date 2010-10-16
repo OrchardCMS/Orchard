@@ -5,14 +5,11 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
-using Orchard.Environment.Configuration;
-using Orchard.Environment.Descriptor.Models;
-using Orchard.Environment.State;
 using Orchard.Events;
 using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets {
-    public interface IDefaultLayersInitializer : IEventHandler {
+    public interface IDefaultLayersInitializer : IDependency {
         void CreateDefaultLayers();
     }
 
@@ -34,16 +31,6 @@ namespace Orchard.Widgets {
     }
 
     public class WidgetsDataMigration : DataMigrationImpl {
-        private readonly IProcessingEngine _processingEngine;
-        private readonly ShellSettings _shellSettings;
-        private readonly ShellDescriptor _shellDescriptor;
-
-        public WidgetsDataMigration(IProcessingEngine processingEngine, ShellSettings shellSettings, ShellDescriptor shellDescriptor) {
-            _processingEngine = processingEngine;
-            _shellSettings = shellSettings;
-            _shellDescriptor = shellDescriptor;
-        }
-
         public int Create() {
             SchemaBuilder.CreateTable("LayerPartRecord", table => table
                 .ContentPartRecord()
@@ -72,8 +59,6 @@ namespace Orchard.Widgets {
                     .WithPart("CommonPart")
                     .WithSetting("Stereotype", "Widget")
                 );
-
-            CreateDefaultLayers();
 
             return 1;
         }
@@ -107,14 +92,6 @@ namespace Orchard.Widgets {
                     .Creatable()
                 );
             return 2;
-        }
-
-        private void CreateDefaultLayers() {
-            _processingEngine.AddTask(
-                    _shellSettings,
-                    _shellDescriptor,
-                    "IDefaultLayersInitializer.CreateDefaultLayers",
-                    new Dictionary<string, object>());
         }
     }
 }
