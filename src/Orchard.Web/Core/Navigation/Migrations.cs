@@ -6,8 +6,8 @@ using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Navigation.Models;
 using Orchard.Data.Migration;
 
-namespace Orchard.Core.Navigation.DataMigrations {
-    public class NavigationDataMigration : DataMigrationImpl {
+namespace Orchard.Core.Navigation {
+    public class Migrations : DataMigrationImpl {
 
         public int Create() {
             //CREATE TABLE Navigation_MenuItemRecord (Id INTEGER not null, Url TEXT, primary key (Id));

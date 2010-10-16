@@ -6,8 +6,8 @@ using Orchard.Core.Contents.Extensions;
 using Orchard.Core.PublishLater.Models;
 using Orchard.Data.Migration;
 
-namespace Orchard.Core.PublishLater.DataMigrations {
-    public class PublishLaterDataMigration : DataMigrationImpl {
+namespace Orchard.Core.PublishLater {
+    public class Migrations : DataMigrationImpl {
         public int Create() {
             ContentDefinitionManager.AlterPartDefinition(typeof(PublishLaterPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
