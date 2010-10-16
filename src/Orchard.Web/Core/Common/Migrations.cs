@@ -7,8 +7,8 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.Core.Common.DataMigrations {
-    public class CommonDataMigration : DataMigrationImpl {
+namespace Orchard.Core.Common {
+    public class Migrations : DataMigrationImpl {
         public int Create() {
             //CREATE TABLE Common_BodyPartRecord (Id INTEGER not null, Text TEXT, Format TEXT, ContentItemRecord_id INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("BodyPartRecord", table => table

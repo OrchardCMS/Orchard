@@ -1,7 +1,7 @@
 ﻿using Orchard.Data.Migration;
 
-namespace Orchard.Core.Messaging.DataMigrations {
-    public class MessagingDataMigration : DataMigrationImpl {
+namespace Orchard.Core.Messaging {
+    public class Migrations : DataMigrationImpl {
 
         public int Create() {
             SchemaBuilder.CreateTable("MessageSettingsPartRecord", table => table

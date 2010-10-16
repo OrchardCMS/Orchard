@@ -6,8 +6,8 @@ using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Localization.Models;
 using Orchard.Data.Migration;
 
-namespace Orchard.Core.Localization.DataMigrations {
-    public class LocalizationDataMigration : DataMigrationImpl {
+namespace Orchard.Core.Localization {
+    public class Migrations : DataMigrationImpl {
 
         public int Create() {
             //CREATE TABLE Localization_LocalizedRecord (Id INTEGER not null, CultureId INTEGER, MasterContentItemId INTEGER, primary key (Id));
