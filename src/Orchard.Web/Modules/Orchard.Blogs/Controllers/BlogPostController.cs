@@ -23,13 +23,13 @@ namespace Orchard.Blogs.Controllers {
             IBlogService blogService, 
             IBlogPostService blogPostService,
             IFeedManager feedManager,
-            IShapeHelperFactory shapeHelperFactory) {
+            IShapeFactory shapeFactory) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
             _feedManager = feedManager;
             T = NullLocalizer.Instance;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }

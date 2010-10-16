@@ -21,13 +21,13 @@ namespace Orchard.Blogs.Controllers {
         private readonly ITransactionManager _transactionManager;
         private readonly IBlogSlugConstraint _blogSlugConstraint;
 
-        public BlogAdminController(IOrchardServices services,
+        public BlogAdminController(
+            IOrchardServices services,
             IBlogService blogService,
             IBlogPostService blogPostService,
             IContentManager contentManager,
             ITransactionManager transactionManager,
-            IBlogSlugConstraint blogSlugConstraint,
-            IShapeHelperFactory shapeHelperFactory) {
+            IBlogSlugConstraint blogSlugConstraint) {
             Services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
@@ -35,10 +35,8 @@ namespace Orchard.Blogs.Controllers {
             _transactionManager = transactionManager;
             _blogSlugConstraint = blogSlugConstraint;
             T = NullLocalizer.Instance;
-            Shape = shapeHelperFactory.CreateHelper();
         }
 
-        dynamic Shape { get; set; }
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
@@ -123,7 +121,7 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult List() {
-            var list = Shape.List();
+            var list = Services.New.List();
             list.AddRange(_blogService.Get()
                               .Select(b => {
                                           var blog = Services.ContentManager.BuildDisplay(b, "SummaryAdmin");
@@ -131,7 +129,7 @@ namespace Orchard.Blogs.Controllers {
                                           return blog;
                                       }));
 
-            var viewModel = Shape.ViewModel()
+            var viewModel = Services.New.ViewModel()
                 .ContentItems(list);
 
             return View(viewModel);

@@ -8,11 +8,10 @@ namespace Orchard.Core.Reports.Controllers {
     public class AdminController : Controller {
         private readonly IReportsManager _reportsManager;
 
-        public AdminController(IReportsManager reportsManager, IShapeHelperFactory shapeHelperFactory) {
+        public AdminController(IReportsManager reportsManager) {
             _reportsManager = reportsManager;
         }
 
-        dynamic Shape { get; set; }
 
         public ActionResult Index() {
             var model = new ReportsAdminIndexViewModel { Reports = _reportsManager.GetReports().ToList() };

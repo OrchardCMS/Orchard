@@ -3,10 +3,10 @@ using Orchard.DisplayManagement;
 
 namespace Orchard.ContentManagement.Handlers {
     public class BuildShapeContext {
-        protected BuildShapeContext(IShape shape, IContent content, IShapeHelperFactory shapeHelperFactory) {
+        protected BuildShapeContext(IShape shape, IContent content, IShapeFactory shapeFactory) {
             Shape = shape;
             ContentItem = content.ContentItem;
-            New = shapeHelperFactory.CreateHelper();
+            New = shapeFactory;
             FindPlacement = (partType, defaultLocation) => defaultLocation;
         }
 

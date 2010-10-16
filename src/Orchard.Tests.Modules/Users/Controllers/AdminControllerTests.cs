@@ -58,7 +58,6 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<TransactionManager>().As<ITransactionManager>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
-            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
