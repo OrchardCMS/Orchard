@@ -30,23 +30,24 @@ namespace Orchard.UI.Navigation {
             var menuItems = _navigationManager.BuildMenu(menuName);
 
             var menuShape = _shapeFactory.Menu().MenuName(menuName);
-            PopulateMenu(_shapeFactory, menuShape, menuItems);
+            PopulateMenu(_shapeFactory, menuShape, menuShape, menuItems);
 
             workContext.Layout.Navigation.Add(menuShape);
         }
 
-        private void PopulateMenu(dynamic shapeFactory, dynamic parentShape, IEnumerable<MenuItem> menuItems) {
+        private void PopulateMenu(dynamic shapeFactory, dynamic parentShape, dynamic menu, IEnumerable<MenuItem> menuItems) {
+
             foreach (var menuItem in menuItems) {
                 var menuItemShape = shapeFactory.MenuItem()
                     .Text(menuItem.Text)
                     .Href(menuItem.Href)
                     .RouteValues(menuItem.RouteValues)
                     .Item(menuItem)
-                    .Menu(shapeFactory)
+                    .Menu(menu)
                     .Parent(parentShape);
                 
                 if (menuItem.Items != null && menuItem.Items.Any()) {
-                    PopulateMenu(shapeFactory, menuItemShape, menuItem.Items);
+                    PopulateMenu(shapeFactory, menuItemShape, menu, menuItem.Items);
                 }
 
                 parentShape.Add(menuItemShape, menuItem.Position);
