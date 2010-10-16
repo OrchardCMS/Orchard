@@ -219,8 +219,8 @@ namespace Orchard.Modules.Services {
                 Features = extensionDescriptor.Features.Select(f => new FeatureDescriptor {
                     Category = TryLocalize(f.Name + " Category", f.Category, localizer),
                     Dependencies = f.Dependencies,
-                    Description = TryLocalize(f.Description + " Description", f.Description, localizer),
-                    DisplayName = string.IsNullOrEmpty(f.DisplayName) ? "" : TryLocalize(f.DisplayName + " Name", f.Description, localizer),
+                    Description = TryLocalize(f.Name + " Description", f.Description, localizer),
+                    DisplayName = TryLocalize(f.Name + " Name", f.Description, localizer),
                     Extension = f.Extension,
                     Name = f.Name,
                 })
