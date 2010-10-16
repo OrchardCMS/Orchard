@@ -8,9 +8,9 @@ namespace Orchard.ContentManagement.Drivers {
         private string _defaultLocation;
         private readonly string _shapeType;
         private readonly string _prefix;
-        private readonly Func<dynamic> _shapeBuilder;
+        private readonly Func<BuildShapeContext, dynamic> _shapeBuilder;
 
-        public ContentShapeResult(string shapeType, string prefix, Func<dynamic> shapeBuilder) {
+        public ContentShapeResult(string shapeType, string prefix, Func<BuildShapeContext, dynamic> shapeBuilder) {
             _shapeType = shapeType;
             _prefix = prefix;
             _shapeBuilder = shapeBuilder;
@@ -30,18 +30,19 @@ namespace Orchard.ContentManagement.Drivers {
                 return;
 
             dynamic parentShape = context.Shape;
-            IShape contentShape = _shapeBuilder();
-            contentShape.Metadata.Prefix = _prefix;
-            contentShape.Metadata.DisplayType = displayType;
+            var newShape = _shapeBuilder(context);
+            ShapeMetadata newShapeMetadata = newShape.Metadata;
+            newShapeMetadata.Prefix = _prefix;
+            newShapeMetadata.DisplayType = displayType;
 
             var delimiterIndex = location.IndexOf(':');
             if (delimiterIndex < 0) {
-                parentShape.Zones[location].Add(contentShape);
+                parentShape.Zones[location].Add(newShape);
             }
             else {
                 var zoneName = location.Substring(0, delimiterIndex);
                 var position = location.Substring(delimiterIndex + 1);
-                parentShape.Zones[zoneName].Add(contentShape, position);
+                parentShape.Zones[zoneName].Add(newShape, position);
             }
         }
 

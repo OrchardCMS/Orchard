@@ -5,8 +5,8 @@ using Orchard.DisplayManagement;
 
 namespace Orchard.ContentManagement.Handlers {
     public class BuildDisplayContext : BuildShapeContext {
-        public BuildDisplayContext(IShape model, IContent content, string displayType, IShapeHelperFactory shapeHelperFactory)
-            : base(model, content, shapeHelperFactory) {
+        public BuildDisplayContext(IShape model, IContent content, string displayType, IShapeFactory shapeFactory)
+            : base(model, content, shapeFactory) {
             DisplayType = displayType;
         }
 

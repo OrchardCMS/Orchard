@@ -17,12 +17,15 @@ namespace Orchard.Tags.Controllers {
     public class HomeController : Controller {
         private readonly ITagService _tagService;
         private readonly IContentManager _contentManager;
-        private readonly IShapeHelperFactory _shapeHelperFactory;
+        private readonly dynamic _shapeFactory;
 
-        public HomeController(ITagService tagService, IContentManager contentManager, IShapeHelperFactory shapeHelperFactory) {
+        public HomeController(
+            ITagService tagService, 
+            IContentManager contentManager, 
+            IShapeFactory shapeFactory) {
             _tagService = tagService;
             _contentManager = contentManager;
-            _shapeHelperFactory = shapeHelperFactory;
+            _shapeFactory = shapeFactory;
             T = NullLocalizer.Instance;
         }
 
@@ -44,8 +47,7 @@ namespace Orchard.Tags.Controllers {
                 return RedirectToAction("Index");
             }
 
-            var shape = _shapeHelperFactory.CreateHelper();
-            var list = shape.List();
+            var list = _shapeFactory.List();
             foreach (var taggedContentItem in _tagService.GetTaggedContentItems(tag.Id)) {
                 list.Add(_contentManager.BuildDisplay(taggedContentItem, "Summary"));
             }

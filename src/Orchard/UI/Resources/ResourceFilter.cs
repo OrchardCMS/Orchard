@@ -7,24 +7,27 @@ namespace Orchard.UI.Resources {
     public class ResourceFilter : FilterProvider, IResultFilter {
         private readonly IResourceManager _resourceManager;
         private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly dynamic _shapeFactory;
 
-        public ResourceFilter(IResourceManager resourceManager, IWorkContextAccessor workContextAccessor, IShapeHelperFactory shapeHelperFactory) {
+        public ResourceFilter(
+            IResourceManager resourceManager, 
+            IWorkContextAccessor workContextAccessor, 
+            IShapeFactory shapeFactory) {
             _resourceManager = resourceManager;
             _workContextAccessor = workContextAccessor;
-            Shape = shapeHelperFactory.CreateHelper();
+            _shapeFactory = shapeFactory;
         }
 
-        private dynamic Shape { get; set; }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
             var ctx = _workContextAccessor.GetContext();
             var head = ctx.Layout.Head;
             var tail = ctx.Layout.Tail;
-            head.Add(Shape.Metas().ResourceManager(_resourceManager));
-            head.Add(Shape.HeadLinks().ResourceManager(_resourceManager));
-            head.Add(Shape.StylesheetLinks().ResourceManager(_resourceManager));
-            head.Add(Shape.HeadScripts().ResourceManager(_resourceManager));
-            tail.Add(Shape.FootScripts().ResourceManager(_resourceManager));
+            head.Add(_shapeFactory.Metas().ResourceManager(_resourceManager));
+            head.Add(_shapeFactory.HeadLinks().ResourceManager(_resourceManager));
+            head.Add(_shapeFactory.StylesheetLinks().ResourceManager(_resourceManager));
+            head.Add(_shapeFactory.HeadScripts().ResourceManager(_resourceManager));
+            tail.Add(_shapeFactory.FootScripts().ResourceManager(_resourceManager));
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

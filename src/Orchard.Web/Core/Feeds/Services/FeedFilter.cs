@@ -9,10 +9,13 @@ namespace Orchard.Core.Feeds.Services {
         private readonly IFeedManager _feedManager;
         private readonly IWorkContextAccessor _workContextAccessor;
 
-        public FeedFilter(IFeedManager feedManager, IWorkContextAccessor workContextAccessor, IShapeHelperFactory shapeHelperFactory) {
+        public FeedFilter(
+            IFeedManager feedManager, 
+            IWorkContextAccessor workContextAccessor, 
+            IShapeFactory shapeFactory) {
             _feedManager = feedManager;
             _workContextAccessor = workContextAccessor;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }

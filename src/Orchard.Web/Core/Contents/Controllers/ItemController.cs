@@ -8,9 +8,9 @@ namespace Orchard.Core.Contents.Controllers {
     public class ItemController : Controller {
         private readonly IContentManager _contentManager;
 
-        public ItemController(IContentManager contentManager, IShapeHelperFactory shapeHelperFactory) {
+        public ItemController(IContentManager contentManager, IShapeFactory shapeFactory) {
             _contentManager = contentManager;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }

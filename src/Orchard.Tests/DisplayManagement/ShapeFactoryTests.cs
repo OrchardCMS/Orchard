@@ -21,7 +21,6 @@ namespace Orchard.Tests.DisplayManagement {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
-            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             _container = builder.Build();
         }

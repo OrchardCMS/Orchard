@@ -21,15 +21,13 @@ namespace Orchard.Core.Settings.Controllers {
         public AdminController(
             ISiteService siteService,
             IOrchardServices services,
-            ICultureManager cultureManager,
-            IShapeHelperFactory shapeHelperFactory) {
+            ICultureManager cultureManager) {
             _siteService = siteService;
             _cultureManager = cultureManager;
             Services = services;
             T = NullLocalizer.Instance;
         }
 
-        dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
         public ActionResult Index(string tabName) {

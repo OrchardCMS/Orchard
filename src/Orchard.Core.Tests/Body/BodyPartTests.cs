@@ -38,7 +38,6 @@ namespace Orchard.Core.Tests.Body {
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
-            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
 
             builder.RegisterType<ThingHandler>().As<IContentHandler>();
 

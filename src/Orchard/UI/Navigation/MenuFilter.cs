@@ -9,17 +9,19 @@ namespace Orchard.UI.Navigation {
     public class MenuFilter : FilterProvider, IResultFilter {
         private readonly INavigationManager _navigationManager;
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IShapeHelperFactory _shapeHelperFactory;
+        private readonly dynamic _shapeFactory;
 
-        public MenuFilter(INavigationManager navigationManager, IWorkContextAccessor workContextAccessor, IShapeHelperFactory shapeHelperFactory) {
+        public MenuFilter(
+            INavigationManager navigationManager, 
+            IWorkContextAccessor workContextAccessor, 
+            IShapeFactory shapeFactory) {
             _navigationManager = navigationManager;
             _workContextAccessor = workContextAccessor;
-            _shapeHelperFactory = shapeHelperFactory;
+            _shapeFactory = shapeFactory;
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
             var workContext = _workContextAccessor.GetContext(filterContext);
-            var shape = _shapeHelperFactory.CreateHelper();
 
             var menuName = "main";
             if (AdminFilter.IsApplied(filterContext.RequestContext))
@@ -27,24 +29,24 @@ namespace Orchard.UI.Navigation {
 
             var menuItems = _navigationManager.BuildMenu(menuName);
 
-            var menuShape = shape.Menu().MenuName(menuName);
-            PopulateMenu(shape, menuShape, menuItems);
+            var menuShape = _shapeFactory.Menu().MenuName(menuName);
+            PopulateMenu(_shapeFactory, menuShape, menuItems);
 
             workContext.Layout.Navigation.Add(menuShape);
         }
 
-        private void PopulateMenu(dynamic shape, dynamic parentShape, IEnumerable<MenuItem> menuItems) {
+        private void PopulateMenu(dynamic shapeFactory, dynamic parentShape, IEnumerable<MenuItem> menuItems) {
             foreach (var menuItem in menuItems) {
-                var menuItemShape = shape.MenuItem()
+                var menuItemShape = shapeFactory.MenuItem()
                     .Text(menuItem.Text)
                     .Href(menuItem.Href)
                     .RouteValues(menuItem.RouteValues)
                     .Item(menuItem)
-                    .Menu(shape)
+                    .Menu(shapeFactory)
                     .Parent(parentShape);
                 
                 if (menuItem.Items != null && menuItem.Items.Any()) {
-                    PopulateMenu(shape, menuItemShape, menuItem.Items);
+                    PopulateMenu(shapeFactory, menuItemShape, menuItem.Items);
                 }
 
                 parentShape.Add(menuItemShape, menuItem.Position);

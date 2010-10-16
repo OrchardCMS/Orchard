@@ -10,8 +10,8 @@ using Orchard.DisplayManagement;
 
 namespace Orchard.Mvc.Html {
     public class Shapes : IDependency {
-        public Shapes(IShapeHelperFactory shapeHelperFactory) {
-            New = shapeHelperFactory.CreateHelper();
+        public Shapes(IShapeFactory shapeFactory) {
+            New = shapeFactory;
         }
 
         dynamic New { get; set; }

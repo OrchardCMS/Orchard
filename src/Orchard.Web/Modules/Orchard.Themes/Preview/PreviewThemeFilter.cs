@@ -9,13 +9,17 @@ namespace Orchard.Themes.Preview {
         private readonly IThemeService _themeService;
         private readonly IPreviewTheme _previewTheme;
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IShapeHelperFactory _shapeHelperFactory;
+        private readonly dynamic _shapeFactory;
 
-        public PreviewThemeFilter(IThemeService themeService, IPreviewTheme previewTheme, IWorkContextAccessor workContextAccessor, IShapeHelperFactory shapeHelperFactory) {
+        public PreviewThemeFilter(
+            IThemeService themeService, 
+            IPreviewTheme previewTheme, 
+            IWorkContextAccessor workContextAccessor, 
+            IShapeFactory shapeFactory) {
             _themeService = themeService;
             _previewTheme = previewTheme;
             _workContextAccessor = workContextAccessor;
-            _shapeHelperFactory = shapeHelperFactory;
+            _shapeFactory = shapeFactory;
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
@@ -33,8 +37,8 @@ namespace Orchard.Themes.Preview {
                 .ToList();
 
 
-            var shape = _shapeHelperFactory.CreateHelper();
-            _workContextAccessor.GetContext(filterContext).Layout.Zones["Body"].Add(shape.ThemePreview(Themes: themeListItems), ":before");
+            
+            _workContextAccessor.GetContext(filterContext).Layout.Zones["Body"].Add(_shapeFactory.ThemePreview(Themes: themeListItems), ":before");
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) { }

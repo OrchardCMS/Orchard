@@ -22,12 +22,12 @@ namespace Orchard.Users.Controllers {
             IOrchardServices services,
             IMembershipService membershipService,
             IUserService userService,
-            IShapeHelperFactory shapeHelperFactory) {
+            IShapeFactory shapeFactory) {
             Services = services;
             _membershipService = membershipService;
             _userService = userService;
             T = NullLocalizer.Instance;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }
