@@ -14,7 +14,7 @@ namespace Orchard.Widgets {
                 })
                 .OnCreated(created => {
                     var widget = created.Shape;
-                    widget.Main.Add(created.New.PlaceChildContent(Source: widget));
+                    widget.Child.Add(created.New.PlaceChildContent(Source: widget));
                 })
                 .OnDisplaying(displaying => {
                     ContentItem contentItem = displaying.Shape.ContentItem;

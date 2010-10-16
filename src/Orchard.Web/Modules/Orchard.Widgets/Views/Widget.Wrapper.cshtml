@@ -8,7 +8,7 @@
         <h1>@title</h1>
         @Display(Model.Header)
     </header>
-    @Display.PlaceChildContent(Source: Model)
+    @Display(Model.Child)
     @if(Model.Footer != null) {
     <footer>
         @Display(Model.Footer)
