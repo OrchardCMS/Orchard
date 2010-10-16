@@ -217,6 +217,10 @@
     <Content Include="TheAdmin\Theme.png" />
     <Content Include="TheAdmin\Views\User.cshtml" />
     <Content Include="TheAdmin\Views\Header.cshtml" />
+    <Content Include="TheThemeMachine\Views\Items\BlogPost.Summary.cshtml" />
+    <Content Include="TheThemeMachine\Views\Items\BlogPost.cshtml">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="TheThemeMachine\Views\Layout.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
