@@ -88,7 +88,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Migrations", "Orcha
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Themes", "Themes", "{74492CBC-7201-417E-BC29-28B4C25A58B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Themes", "Orchard.Web\Themes\Orchard.Themes.csproj", "{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Themes", "Orchard.Web\Themes\Themes.csproj", "{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
