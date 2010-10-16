@@ -1,7 +1,7 @@
 ﻿@using Orchard.ContentManagement;
-@using Orchard.Widgets;
-@if (AuthorizedFor(Permissions.ManageWidgets)) {
-    <div class="widget-control">
+@using Orchard.Core.Contents;
+@if (AuthorizedFor(Permissions.EditContent)) {
+    <div class="content-control">
         <div class="manage-actions">@Html.ItemEditLinkWithReturnUrl(T("Edit").Text, (ContentItem)Model.ContentItem)</div>
     @Display(Model.Child)
     </div>

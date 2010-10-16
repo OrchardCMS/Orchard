@@ -6,7 +6,7 @@ namespace Orchard.ContentManagement.Handlers {
     public class ContentItemTemplates<TContent> : TemplateFilterBase<TContent> where TContent : class, IContent {
         private readonly string _templateName;
         // todo: (heskew) use _prefix?
-        private readonly string _prefix;
+        //private readonly string _prefix;
         private readonly string[] _displayTypes;
         private Action<UpdateEditorContext, IContent> _updater;
 

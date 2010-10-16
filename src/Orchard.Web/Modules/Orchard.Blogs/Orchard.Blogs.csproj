@@ -138,11 +138,11 @@
     <Content Include="Views\Parts\Blogs.BlogPost.List.Admin.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Items\Blog.cshtml" />
-    <Content Include="Views\Items\BlogPost.cshtml" />
-    <Content Include="Views\Items\Blog.Summary.cshtml" />
-    <Content Include="Views\Items\BlogPost.Summary.cshtml" />
-    <Content Include="Views\Items\Blog.SummaryAdmin.cshtml" />
+    <Content Include="Views\Items\Content-Blog.cshtml" />
+    <Content Include="Views\Items\Content-BlogPost.cshtml" />
+    <Content Include="Views\Items\Content-Blog.Summary.cshtml" />
+    <Content Include="Views\Items\Content-BlogPost.Summary.cshtml" />
+    <Content Include="Views\Items\Content-Blog.SummaryAdmin.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
@@ -165,10 +165,10 @@
     <None Include="Views\Parts\Blogs.BlogArchives.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Blogs.BlogArchives.cshtml" />
-    <None Include="Views\Items\Blog.DetailAdmin.cshtml" />
-    <None Include="Views\Items\Blog.Editor.cshtml" />
-    <None Include="Views\Items\BlogPost.Editor.cshtml" />
-    <None Include="Views\Items\BlogPost.SummaryAdmin.cshtml" />
+    <None Include="Views\Items\Content-Blog.DetailAdmin.cshtml" />
+    <None Include="Views\Items\Content-Blog.Editor.cshtml" />
+    <None Include="Views\Items\Content-BlogPost.Editor.cshtml" />
+    <None Include="Views\Items\Content-BlogPost.SummaryAdmin.cshtml" />
     <None Include="Views\Parts\Blogs.BlogPost.List.cshtml" />
     <None Include="Views\Parts\Blogs.Blog.Pager.cshtml" />
     <None Include="Views\Parts\Blogs.RecentBlogPosts.cshtml" />
