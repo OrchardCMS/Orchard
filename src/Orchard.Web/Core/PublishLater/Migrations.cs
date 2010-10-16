@@ -9,16 +9,9 @@ using Orchard.Data.Migration;
 namespace Orchard.Core.PublishLater {
     public class Migrations : DataMigrationImpl {
         public int Create() {
-            ContentDefinitionManager.AlterPartDefinition(typeof(PublishLaterPart).Name, cfg => cfg
-                .WithLocation(new Dictionary<string, ContentLocation> {
-                    {"Default", new ContentLocation { Zone = "metadata", Position = "1" }},
-                    {"Editor", new ContentLocation { Zone = "secondary", Position = "1" }}
-                }));
-            return 1;
-        }
-        public int UpdateFrom1() {
             ContentDefinitionManager.AlterPartDefinition("PublishLaterPart", builder => builder.Attachable());
-            return 2;
+
+            return 1;
         }
     }
 }
