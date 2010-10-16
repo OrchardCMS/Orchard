@@ -487,33 +487,25 @@ article.comment p.text {
 
 #layout-tripel div {
      float:left;
+     width:960px;
      /*padding:12px 6px 0 6px;*/
 }
-
-/*1 zone on */
-.tripel-1 #tripel-first { width:960px; }
-
-/*2 zone on */
-.tripel-2 #tripel-second { width:960px; }
-
-/*3 zone on */
-.tripel-3 #tripel-third { width:960px; }
 
 /*2 zones on */
 
 /* If zones 1, 2 are on */
-.tripel-12 #tripel-first, .tripel-12 #tripel-second { width:480px; }
+.tripel-12 #layout-tripel div { width:480px; }
 
 /* If zones 2, 3 are on */
-.tripel-23 #tripel-second, .tripel-23 #tripel-third { width:480px; }
+.tripel-23 #layout-tripel div { width:480px; }
 
 /* If zones 1, 3 are on */
-.tripel-13 #tripel-first, .tripel-13 #tripel-third { width:480px; }
+.tripel-13 #layout-tripel div { width:480px; }
 
 /*3 zones on */
 
 /* If zones 1, 2, 3 are on */
-.tripel-123 #tripel-first, .tripel-123 #tripel-second, .tripel-123 #tripel-third { width:320px; }
+.tripel-123 #layout-tripel div { width:320px; }
 
 
 
