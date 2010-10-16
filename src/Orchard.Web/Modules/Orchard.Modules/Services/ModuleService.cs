@@ -220,8 +220,9 @@ namespace Orchard.Modules.Services {
                     Category = TryLocalize(f.Name + " Category", f.Category, localizer),
                     Dependencies = f.Dependencies,
                     Description = TryLocalize(f.Description + " Description", f.Description, localizer),
+                    DisplayName = string.IsNullOrEmpty(f.DisplayName) ? "" : TryLocalize(f.DisplayName + " Name", f.Description, localizer),
                     Extension = f.Extension,
-                    Name = f.Name
+                    Name = f.Name,
                 })
             };
         }

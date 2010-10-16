@@ -143,6 +143,11 @@ namespace Orchard.Environment.Extensions.Folders {
                         Extension = extensionDescriptor,
                         Name = entity.Key.ToString(),
                     };
+
+                    if (featureDescriptor.Name == extensionDescriptor.Name) {
+                        featureDescriptor.DisplayName = extensionDescriptor.DisplayName;
+                    }
+
                     var featureMapping = (Mapping)entity.Value;
                     foreach (var featureEntity in featureMapping.Entities) {
                         if (featureEntity.Key.ToString() == "Description") {
@@ -150,6 +155,9 @@ namespace Orchard.Environment.Extensions.Folders {
                         }
                         else if (featureEntity.Key.ToString() == "Category") {
                             featureDescriptor.Category = featureEntity.Value.ToString();
+                        }
+                        else if (featureEntity.Key.ToString() == "Name") {
+                            featureDescriptor.DisplayName = featureEntity.Value.ToString();
                         }
                         else if (featureEntity.Key.ToString() == "Dependencies") {
                             featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureEntity.Value.ToString());
@@ -161,6 +169,7 @@ namespace Orchard.Environment.Extensions.Folders {
             if (!featureDescriptors.Any(fd => fd.Name == extensionDescriptor.Name)) {
                 featureDescriptors.Add(new FeatureDescriptor {
                     Name = extensionDescriptor.Name,
+                    DisplayName = extensionDescriptor.DisplayName,
                     Dependencies = new string[0],
                     Extension = extensionDescriptor
                 });

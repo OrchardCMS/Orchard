@@ -7,10 +7,12 @@ OrchardVersion: 0.8.0
 Description: The Orchard Blogs module is implementing basic blogging features. 
 Features:
     Orchard.Blogs:
+        Name: Blogs
         Description: A simple web log.
         Dependencies: Feeds
         Category: Content
-    Remote Blog Publishing:
+    Orchard.Blogs.RemotePublishing:
+        Name: Remote Blog Publishing
         Description: Blog easier using a dedicated MetaWeblogAPI-compatible publishing tool.
         Dependencies: XmlRpc
         Category: Content Publishing

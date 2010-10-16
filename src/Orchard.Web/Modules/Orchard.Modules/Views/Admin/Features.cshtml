@@ -32,6 +32,7 @@
             foreach (var feature in features) {
                 //hmmm...I feel like I've done this before...
                 var featureId = feature.Descriptor.Name.AsFeatureId(n => T(n));
+                var featureName = string.IsNullOrEmpty(feature.Descriptor.DisplayName) ? feature.Descriptor.Name : feature.Descriptor.DisplayName;
                 var featureState = feature.IsEnabled ? "enabled" : "disabled";
                 var featureClassName = string.Format("feature {0}", featureState + (Model.FeaturesThatNeedUpdate.Contains(feature.Descriptor.Name) ? " update" : String.Empty));
                 if (feature == features.First()) {
@@ -40,10 +41,10 @@
                 if (feature == features.Last()) {
                     featureClassName += " last";
                 }
-            <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(feature.Descriptor.Name), featureState)">
+            <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
                 <div class="summary">
                     <div class="properties">
-                        <h3>@feature.Descriptor.Name</h3>
+                        <h3>@featureName</h3>
                         <p class="description">@feature.Descriptor.Description</p>@if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) {
                         <div class="dependencies">
                             <h4>@T("Depends on:")</h4>
