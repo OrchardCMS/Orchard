@@ -7,6 +7,7 @@ Copyright: 2010, Orchard. All Rights Reserved
 
 /*  Color Palette
 **************************************************************
+
 Background: #fff
 Borders: #dbdbdb
 Text: #434343
@@ -61,6 +62,7 @@ header, footer, aside, nav, article { display: block; }
 
 /* Clearing Floats
 ***************************************************************/
+
 .group:after 
 {
     content: ".";
@@ -83,6 +85,7 @@ header, footer, aside, nav, article { display: block; }
 
 /* General
 ***************************************************************/
+
 /* Default font settings. 
 The font-size 62.5% sets the base font to 10px */
 body { 
@@ -154,6 +157,7 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
 
 /* Structure
 ***************************************************************/
+
 #layout-wrapper 
 {
     
@@ -255,6 +259,7 @@ nav ul
 .zone-asidethird { padding: 0 0 6px 0; }
 
 
+
 /* Main
 ***************************************************************/
 
@@ -294,49 +299,39 @@ nav ul
 /* Secondary
 ***************************************************************/
 
+/* Comments */
+.comment {}
+.comment .who {}
+.comment .what {}
+.comment #add-comment {}
+
+.comment #comment-by { font-size: 1.6em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
+.comment #comment-text { width: 33.2em; }
+.comment input[type="text"] { width: 32em; }
+
 
 
 /* Forms
 ***************************************************************/
-label             { font-weight: normal; display:block; }
-label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+form              { margin: 0; padding: 0; }
+legend            { font-size: 1.6em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
 fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
-legend            { font-weight: 600; font-size:1.2em; }
+label             { font-size: 1.3em; font-weight: normal; display:block; padding: 0 0 0.3em 0; }
+label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 
-input[type="text"], #CommentText, #password, #confirmPassword {
-    border:1px solid #999;
+input[type="text"], input[type="password"] {
     display: block;
-    padding:6px;
-    width:50%;
+    padding: 0.3em;
 }
-
-form.search {
-    margin-bottom:2em;
-}
-
-.search input[type=text] {
-    display:inline;
-    width:17em;
-}
-
-fieldset ol {list-style-type:none;}
-
-fieldset ol li {margin:1.6em 0 0 0}
-    
-legend {
-	font-size: 1.4em;
-	border:none;
-}
-
-label {
-    font-size: 1.3em;
-    margin:0 0 .3em 0;
-    }
 
 input[type="checkbox"] {
     margin:.2em 0 1.2em 0;
 }
 
+fieldset ol     { list-style-type:none; padding: 0; margin: 0; }
+fieldset ol li  { margin: 0 0 6px 0; }
+   
+/*
 input[type="submit"], input[type="button"], button, .button, .button:link, .button:visited {
 	color:#333;
     background:#F5F5F5;
@@ -360,6 +355,7 @@ button:focus, .button:focus {
     background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
 	background:-moz-linear-gradient(top , #e1e1e1, #ebebeb);
 }
+*/
 
 
 
@@ -397,24 +393,8 @@ button:focus, .button:focus {
 /* CSS 3 Enhancements 
 ***************************************************************/
 
-
-
-
 /* For testing purposes */
-#comments, #commenter {
-    font-size:1.6em;
-    font-weight:600;
-    margin:1.2em 0 1.8em 1.2em;
-}
 
-#commenter {
-    margin:1.2em 0 0 1em;
-}
-
-ul.comments, form.comment {
-    margin:1.2em 0 1.2em 1.8em;
-    list-style: none;
-}
 
 article.comment h4 {
     font-size:1.4em;
