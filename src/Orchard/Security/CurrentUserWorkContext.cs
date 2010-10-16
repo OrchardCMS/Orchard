@@ -1,4 +1,6 @@
-﻿namespace Orchard.Security {
+﻿using System;
+
+namespace Orchard.Security {
     public class CurrentUserWorkContext : IWorkContextStateProvider {
         private readonly IAuthenticationService _authenticationService;
 
@@ -6,10 +8,10 @@
             _authenticationService = authenticationService;
         }
 
-        public T Get<T>(string name) {
-            if (name == "CurrentUser")
-                return (T)_authenticationService.GetAuthenticatedUser();
-            return default(T);
+        public Func<T> Get<T>(string name) {
+            if (name == "CurrentUser") 
+                return () => (T)_authenticationService.GetAuthenticatedUser();
+            return null;
         }
     }
 }
