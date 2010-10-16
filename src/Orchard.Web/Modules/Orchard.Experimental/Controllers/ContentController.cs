@@ -16,9 +16,10 @@ namespace Orchard.Experimental.Controllers {
         public ContentController(
             IRepository<ContentTypeRecord> contentTypeRepository,
             IContentManager contentManager,
-            IShapeHelperFactory shapeHelperFactory) {
+            IShapeFactory shapeFactory) {
             _contentTypeRepository = contentTypeRepository;
             _contentManager = contentManager;
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }

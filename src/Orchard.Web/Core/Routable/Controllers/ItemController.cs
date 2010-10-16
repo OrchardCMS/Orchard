@@ -16,11 +16,15 @@ namespace Orchard.Core.Routable.Controllers {
         private readonly ITransactionManager _transactionManager;
         private readonly IRoutablePathConstraint _routablePathConstraint;
 
-        public ItemController(IContentManager contentManager, ITransactionManager transactionManager, IRoutablePathConstraint routablePathConstraint, IShapeHelperFactory shapeHelperFactory) {
+        public ItemController(
+            IContentManager contentManager, 
+            ITransactionManager transactionManager, 
+            IRoutablePathConstraint routablePathConstraint, 
+            IShapeFactory shapeFactory) {
             _contentManager = contentManager;
             _transactionManager = transactionManager;
             _routablePathConstraint = routablePathConstraint;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }

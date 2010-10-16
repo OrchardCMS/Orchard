@@ -24,13 +24,13 @@ namespace Orchard.Core.Localization.Controllers {
             IContentManager contentManager,
             ICultureManager cultureManager,
             ILocalizationService localizationService,
-            IShapeHelperFactory shapeHelperFactory) {
+            IShapeFactory shapeFactory) {
             _contentManager = contentManager;
             _cultureManager = cultureManager;
             _localizationService = localizationService;
             T = NullLocalizer.Instance;
             Services = orchardServices;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }

@@ -7,12 +7,15 @@ namespace Orchard.UI.Admin.Notification {
     public class AdminNotificationFilter : FilterProvider, IResultFilter {
         private readonly INotificationManager _notificationManager;
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IShapeHelperFactory _shapeHelperFactory;
+        private readonly dynamic _shapeFactory;
 
-        public AdminNotificationFilter(INotificationManager notificationManager, IWorkContextAccessor workContextAccessor, IShapeHelperFactory shapeHelperFactory) {
+        public AdminNotificationFilter(
+            INotificationManager notificationManager, 
+            IWorkContextAccessor workContextAccessor, 
+            IShapeFactory shapeFactory) {
             _notificationManager = notificationManager;
             _workContextAccessor = workContextAccessor;
-            _shapeHelperFactory = shapeHelperFactory;
+            _shapeFactory = shapeFactory;
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
@@ -27,10 +30,9 @@ namespace Orchard.UI.Admin.Notification {
             if (!messageEntries.Any())
                 return;
 
-            var shape = _shapeHelperFactory.CreateHelper();
             var messagesZone = _workContextAccessor.GetContext(filterContext).Layout.Zones["Messages"];
             foreach(var messageEntry in messageEntries)
-                messagesZone = messagesZone.Add(shape.Message(messageEntry));
+                messagesZone = messagesZone.Add(_shapeFactory.Message(messageEntry));
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}

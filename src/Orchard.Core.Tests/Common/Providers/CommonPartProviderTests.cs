@@ -47,7 +47,6 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
-            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 

@@ -429,7 +429,6 @@
     <Compile Include="DisplayManagement\Descriptors\ShapeAttributeStrategy\ShapeAttributeBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Implementation\DefaultDisplayManager.cs" />
     <Compile Include="DisplayManagement\Implementation\DefaultShapeFactory.cs" />
-    <Compile Include="DisplayManagement\IShapeHelperFactory.cs" />
     <Compile Include="DisplayManagement\IDisplayHelperFactory.cs" />
     <Compile Include="DisplayManagement\IShape.cs" />
     <Compile Include="DisplayManagement\Shapes\Shape.cs" />
@@ -441,8 +440,6 @@
     <Compile Include="DisplayManagement\Implementation\IDisplayManager.cs" />
     <Compile Include="DisplayManagement\IShapeFactory.cs" />
     <Compile Include="DisplayManagement\Descriptors\Interfaces.cs" />
-    <Compile Include="DisplayManagement\Implementation\ShapeHelper.cs" />
-    <Compile Include="DisplayManagement\Implementation\ShapeHelperFactory.cs" />
     <Compile Include="Environment\DefaultWorkContextAccessor.cs" />
     <Compile Include="Environment\IHostLocalRestart.cs" />
     <Compile Include="Environment\IShellContainerRegistrations.cs" />

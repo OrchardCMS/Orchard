@@ -11,7 +11,7 @@ namespace Orchard {
     }
     
     public interface IWorkContextStateProvider : IDependency {
-        T Get<T>(string name);
+        Func<T> Get<T>(string name);
     }
 
     public interface IWorkContextScope : IDisposable {

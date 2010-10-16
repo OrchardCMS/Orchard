@@ -29,14 +29,14 @@ namespace Orchard.Core.Contents.Controllers {
             IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
             ITransactionManager transactionManager,
-            IShapeHelperFactory shapeHelperFactory) {
+            IShapeFactory shapeFactory) {
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _transactionManager = transactionManager;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }

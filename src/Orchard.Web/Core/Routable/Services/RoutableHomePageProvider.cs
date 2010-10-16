@@ -12,11 +12,14 @@ namespace Orchard.Core.Routable.Services {
         private readonly IContentManager _contentManager;
         public const string Name = "RoutableHomePageProvider";
 
-        public RoutableHomePageProvider(IOrchardServices services, IContentManager contentManager, IShapeHelperFactory shapeHelperFactory) {
+        public RoutableHomePageProvider(
+            IOrchardServices services, 
+            IContentManager contentManager,
+            IShapeFactory shapeFactory) {
             _contentManager = contentManager;
             Services = services;
             T = NullLocalizer.Instance;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }
