@@ -2,7 +2,6 @@
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.ContentsLocation.Models;
 
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
@@ -11,28 +10,24 @@ namespace Orchard.Comments.Drivers {
             if (part.CommentsShown == false)
                 return null;
 
-            if (displayType.StartsWith("Detail"))
-                return ContentShape(shapeHelper.Parts_Comments_Comments(ContentPart: part)).Location("Content:10");
-
-            if (displayType == "SummaryAdmin")
-                return ContentShape(shapeHelper.Parts_Comments_CountAdmin(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
-                    .Location(part.GetLocation("SummaryAdmin"));
-
-            var location = displayType.Contains("Summary")
-                               ? part.GetLocation("Summary")
-                               : part.GetLocation(displayType);
-
-            return ContentShape(shapeHelper.Parts_Comments_Count(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
-                .Location(location);
+            return Combined(
+                ContentShape("Parts_Comments",
+                    () => shapeHelper.Parts_Comments(ContentPart: part)),
+                ContentShape("Parts_Comments_Count",
+                    () => shapeHelper.Parts_Comments_Count(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count)),
+                ContentShape("Parts_Comments_Count_SummaryAdmin",
+                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
+                );
         }
 
         protected override DriverResult Editor(CommentsPart part, dynamic shapeHelper) {
-            return ContentPartTemplate(part, "Parts/Comments.Comments").Location(part.GetLocation("Editor"));
+            return ContentShape("Parts_Comments_Enable",
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Comments.Comments", Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(CommentsPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
-            return ContentPartTemplate(part, "Parts/Comments.Comments").Location(part.GetLocation("Editor"));
+            return Editor(part, shapeHelper);
         }
     }
 }
