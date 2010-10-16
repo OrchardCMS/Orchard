@@ -1,8 +1,8 @@
 ﻿using System;
 using Orchard.Data.Migration;
 
-namespace Orchard.Core.Scheduling.DataMigrations {
-    public class SchedulingDataMigration : DataMigrationImpl {
+namespace Orchard.Core.Scheduling {
+    public class Migrations : DataMigrationImpl {
 
         public int Create() {
             //CREATE TABLE Scheduling_ScheduledTaskRecord (Id  integer, TaskType TEXT, ScheduledUtc DATETIME, ContentItemVersionRecord_id INTEGER, primary key (Id));

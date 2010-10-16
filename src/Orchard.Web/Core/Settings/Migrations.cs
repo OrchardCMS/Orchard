@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using Orchard.Data.Migration;
 
-namespace Orchard.Core.Settings.DataMigrations {
-    public class SettingsDataMigration : DataMigrationImpl {
+namespace Orchard.Core.Settings {
+    public class Migrations : DataMigrationImpl {
 
         public int Create() {
             //CREATE TABLE Settings_ContentFieldDefinitionRecord (Id  integer, Name TEXT, primary key (Id));
