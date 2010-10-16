@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.5.0
-OrchardVersion: 0.5.0
+Version: 0.8.0
+OrchardVersion: 0.8.0
 Description: The navigation module creates and manages a simple navigation menu for the front-end of the application.
 Features:
     Navigation:
