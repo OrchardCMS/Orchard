@@ -1,4 +1,5 @@
-﻿using ClaySharp.Implementation;
+﻿using System;
+using ClaySharp.Implementation;
 using Orchard.DisplayManagement;
 
 namespace Orchard.UI.Zones {
@@ -9,11 +10,12 @@ namespace Orchard.UI.Zones {
             _shapeFactory = shapeFactory;
         }
 
-        public T Get<T>(string name) {
+        public Func<T> Get<T>(string name) {
             if (name == "Layout") {
-                return (dynamic)_shapeFactory.Create("Layout", Arguments.Empty());
+                var layout = _shapeFactory.Create("Layout", Arguments.Empty());
+                return () => (T)layout;
             }
-            return default(T);
+            return null;
         }
     }
 }

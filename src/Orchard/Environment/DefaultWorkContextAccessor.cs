@@ -97,10 +97,10 @@ namespace Orchard.Environment {
             }
 
             public override T GetState<T>(string name) {
-                return (T)_state.GetOrAdd(name, x => GetStateInternal<T>(x));
+                return (T)_state.GetOrAdd(name, s => GetStateInternal<T>(s) == null ? default(T) : GetStateInternal<T>(s).Invoke());
             }
 
-            private T GetStateInternal<T>(string name) {
+            private Func<T> GetStateInternal<T>(string name) {
                 return _workContextStateProviders.Select(wcsp => wcsp.Get<T>(name))
                     .FirstOrDefault(value => !Equals(value, default(T)));
             }
