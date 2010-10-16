@@ -21,6 +21,7 @@
         <a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" title="@T("New Post")">@T("New Post")</a>@T(" | ")
         <a href="@Url.BlogEdit((string)Model.Slug)" title="@T("Edit")">@T("Edit")</a>@T(" | ")
         <a href="Url.BlogRemove((string)Model.Slug)" title="@T("Remove")" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
+        <br />@Display(Model.Secondary)
     </div>
     @if (Model.Content != null) {
     <div class="primary">@Display(Model.Content)</div>

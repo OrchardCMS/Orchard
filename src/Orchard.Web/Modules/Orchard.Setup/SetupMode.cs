@@ -76,7 +76,6 @@ namespace Orchard.Setup {
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
-            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
 
             builder.RegisterType<ThemeAwareViewEngine>().As<IThemeAwareViewEngine>();
@@ -139,10 +138,12 @@ namespace Orchard.Setup {
 
         [UsedImplicitly]
         class SafeModeSiteWorkContextProvider : IWorkContextStateProvider {
-            public T Get<T>(string name) {
-                if (name == "CurrentSite")
-                    return (T)(ISite) new SafeModeSite();
-                return default(T);
+            public Func<T> Get<T>(string name) {
+                if (name == "CurrentSite") {
+                    ISite safeModeSite = new SafeModeSite();
+                    return () => (T)safeModeSite;
+                }
+                return null;
             }
         }
 

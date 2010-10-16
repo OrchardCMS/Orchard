@@ -19,7 +19,6 @@ namespace Orchard.Tests.DisplayManagement {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
@@ -29,7 +28,7 @@ namespace Orchard.Tests.DisplayManagement {
 
         [Test]
         public void CreatingNewShapeTypeByName() {
-            dynamic shape = _container.Resolve<IShapeHelperFactory>().CreateHelper();
+            dynamic shape = _container.Resolve<IShapeFactory>();
 
             var alpha = shape.Alpha();
 
@@ -38,7 +37,7 @@ namespace Orchard.Tests.DisplayManagement {
 
         [Test]
         public void CreatingShapeWithAdditionalNamedParameters() {
-            dynamic shape = _container.Resolve<IShapeHelperFactory>().CreateHelper();
+            dynamic shape = _container.Resolve<IShapeFactory>();
 
             var alpha = shape.Alpha(one: 1, two: "dos");
 
@@ -49,7 +48,7 @@ namespace Orchard.Tests.DisplayManagement {
 
         [Test]
         public void WithPropertyBearingObjectInsteadOfNamedParameters() {
-            dynamic shape = _container.Resolve<IShapeHelperFactory>().CreateHelper();
+            dynamic shape = _container.Resolve<IShapeFactory>();
 
             var alpha = shape.Alpha(new { one = 1, two = "dos" });
 

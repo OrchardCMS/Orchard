@@ -7,21 +7,21 @@ using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement.Implementation {
 
-
-
-
-    public class DefaultShapeFactory : IShapeFactory {
+    public class DefaultShapeFactory : Clay, IShapeFactory {
         private readonly IEnumerable<Lazy<IShapeFactoryEvents>> _events;
         private readonly IShapeTableManager _shapeTableManager;
-        private readonly Lazy<IShapeHelperFactory> _shapeHelperFactory;
 
         public DefaultShapeFactory(
             IEnumerable<Lazy<IShapeFactoryEvents>> events,
-            IShapeTableManager shapeTableManager,
-            Lazy<IShapeHelperFactory> shapeHelperFactory) {
+            IShapeTableManager shapeTableManager) : base(new ShapeFactoryBehavior()) {
             _events = events;
             _shapeTableManager = shapeTableManager;
-            _shapeHelperFactory = shapeHelperFactory;
+        }
+        
+        class ShapeFactoryBehavior : ClayBehavior {
+            public override object InvokeMember(Func<object> proceed, object target, string name, INamedEnumerable<object> args) {
+                return ((DefaultShapeFactory)target).Create(name, args);
+            }
         }
 
         public IShape Create(string shapeType, INamedEnumerable<object> parameters) {
@@ -34,7 +34,7 @@ namespace Orchard.DisplayManagement.Implementation {
             defaultShapeTable.Descriptors.TryGetValue(shapeType, out shapeDescriptor);
 
             var creatingContext = new ShapeCreatingContext {
-                New = _shapeHelperFactory.Value.CreateHelper(),
+                New = this,
                 ShapeFactory = this,
                 ShapeType = shapeType,
                 OnCreated = new List<Action<ShapeCreatedContext>>()

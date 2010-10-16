@@ -30,19 +30,33 @@ namespace Orchard.ContentManagement.Drivers {
 
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {
-            return ContentShapeImplementation(shape.Metadata.Type, Zone, () => shape);
+            return ContentShapeImplementation(shape.Metadata.Type, Zone, ctx => shape);
         }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
-            return ContentShapeImplementation(shapeType, null, factory);
+            return ContentShapeImplementation(shapeType, null, ctx => factory());
         }
 
         public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic> factory) {
+            return ContentShapeImplementation(shapeType, defaultLocation, ctx => factory());
+        }
+
+        public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory) {
+            return ContentShapeImplementation(shapeType, null, ctx=>factory(CreateShape(ctx, shapeType)));
+        }
+
+
+        public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic, dynamic> factory) {
             return ContentShapeImplementation(shapeType, defaultLocation, factory);
         }
 
-        private ContentShapeResult ContentShapeImplementation(string shapeType, string defaultLocation, Func<object> factory) {
-            return new ContentShapeResult(shapeType, Prefix, factory).Location(defaultLocation);
+        private ContentShapeResult ContentShapeImplementation(string shapeType, string defaultLocation, Func<BuildShapeContext, object> shapeBuilder) {
+            return new ContentShapeResult(shapeType, Prefix, shapeBuilder).Location(defaultLocation);
+        }
+
+        private object CreateShape(BuildShapeContext context, string shapeType) {
+            IShapeFactory shapeFactory = context.New;
+            return shapeFactory.Create(shapeType);
         }
 
         [Obsolete]

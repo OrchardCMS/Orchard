@@ -7,7 +7,8 @@ namespace Orchard {
     public interface IOrchardServices : IDependency {
         IContentManager ContentManager { get; }
         ITransactionManager TransactionManager { get; }
-        IAuthorizer Authorizer { get; set; }
+        IAuthorizer Authorizer { get; }
         INotifier Notifier { get; }
+        dynamic New { get; }
     }
 }

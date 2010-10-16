@@ -53,7 +53,6 @@ namespace Orchard.Core.Tests.Routable.Services {
             builder.RegisterType<RoutablePathConstraint>().As<IRoutablePathConstraint>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
-            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
 
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterInstance(new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData()))).As<UrlHelper>();

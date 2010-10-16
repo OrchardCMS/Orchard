@@ -29,9 +29,9 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         public new dynamic Layout { get { return _layout; } }
         public WorkContext WorkContext { get { return _workContext; } }
 
-        public dynamic New { get { return _new; } }
+        public dynamic New { get { return ShapeFactory; } }
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
-        public IShapeHelperFactory ShapeHelperFactory { get; set; }
+        public IShapeFactory ShapeFactory { get; set; }
 
         public IAuthorizer Authorizer { get; set; }
 
@@ -78,7 +78,6 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             _localizer = LocalizationUtilities.Resolve(ViewContext, VirtualPath);
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
             _layout = _workContext.Layout;
-            _new = ShapeHelperFactory.CreateHelper();
         }
 
         public bool AuthorizedFor(Permission permission) {

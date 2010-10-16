@@ -44,7 +44,6 @@ namespace Orchard.Tests.DisplayManagement {
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
-            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterInstance(new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext)).As<IWorkContextAccessor>();
             builder.RegisterInstance(new SimpleShapes()).WithMetadata("Feature", testFeature);
@@ -72,7 +71,7 @@ namespace Orchard.Tests.DisplayManagement {
         [Test]
         public void RenderingSomething() {
             dynamic displayHelperFactory = _container.Resolve<IDisplayHelperFactory>().CreateHelper(new ViewContext(), null);
-            dynamic shapeHelperFactory = _container.Resolve<IShapeHelperFactory>().CreateHelper();
+            dynamic shapeHelperFactory = _container.Resolve<IShapeFactory>();
 
             var result1 = displayHelperFactory.Something();
             var result2 = ((DisplayHelper)displayHelperFactory).ShapeExecute((Shape)shapeHelperFactory.Pager());

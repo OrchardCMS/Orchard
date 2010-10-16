@@ -17,7 +17,6 @@ using Orchard.UI.Zones;
 namespace Orchard.ContentManagement {
     public class DefaultContentDisplay : IContentDisplay {
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
-        private readonly IShapeHelperFactory _shapeHelperFactory;
         private readonly IShapeFactory _shapeFactory;
         private readonly IShapeTableManager _shapeTableManager;
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -27,7 +26,6 @@ namespace Orchard.ContentManagement {
 
         public DefaultContentDisplay(
             Lazy<IEnumerable<IContentHandler>> handlers,
-            IShapeHelperFactory shapeHelperFactory,
             IShapeFactory shapeFactory,
             IShapeTableManager shapeTableManager,
             IWorkContextAccessor workContextAccessor,
@@ -35,7 +33,6 @@ namespace Orchard.ContentManagement {
             Lazy<IThemeService> themeService,
             RequestContext requestContext) {
             _handlers = handlers;
-            _shapeHelperFactory = shapeHelperFactory;
             _shapeFactory = shapeFactory;
             _shapeTableManager = shapeTableManager;
             _workContextAccessor = workContextAccessor;
@@ -68,7 +65,7 @@ namespace Orchard.ContentManagement {
             itemShape.ContentItem = content.ContentItem;
             itemShape.Metadata.DisplayType = actualDisplayType;
 
-            var context = new BuildDisplayContext(itemShape, content, actualDisplayType, _shapeHelperFactory);
+            var context = new BuildDisplayContext(itemShape, content, actualDisplayType, _shapeFactory);
             BindPlacement(context, actualDisplayType);
 
             _handlers.Value.Invoke(handler => handler.BuildDisplay(context), Logger);
@@ -86,7 +83,7 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
-            var context = new BuildEditorContext(itemShape, content, _shapeHelperFactory);
+            var context = new BuildEditorContext(itemShape, content, _shapeFactory);
             BindPlacement(context, null);
 
             _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
@@ -104,7 +101,7 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
-            var context = new UpdateEditorContext(itemShape, content, updater, _shapeHelperFactory);
+            var context = new UpdateEditorContext(itemShape, content, updater, _shapeFactory);
             BindPlacement(context, null);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);

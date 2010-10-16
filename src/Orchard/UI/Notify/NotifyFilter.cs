@@ -12,12 +12,15 @@ namespace Orchard.UI.Notify {
         private const string TempDataMessages = "messages";
         private readonly INotifier _notifier;
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IShapeHelperFactory _shapeHelperFactory;
+        private readonly dynamic _shapeFactory;
 
-        public NotifyFilter(INotifier notifier, IWorkContextAccessor workContextAccessor, IShapeHelperFactory shapeHelperFactory) {
+        public NotifyFilter(
+            INotifier notifier, 
+            IWorkContextAccessor workContextAccessor, 
+            IShapeFactory shapeFactory) {
             _notifier = notifier;
             _workContextAccessor = workContextAccessor;
-            _shapeHelperFactory = shapeHelperFactory;
+            _shapeFactory = shapeFactory;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
@@ -82,10 +85,9 @@ namespace Orchard.UI.Notify {
             if (!messageEntries.Any())
                 return;
 
-            var shape = _shapeHelperFactory.CreateHelper();
             var messagesZone = _workContextAccessor.GetContext(filterContext).Layout.Zones["Messages"];
             foreach(var messageEntry in messageEntries)
-                messagesZone = messagesZone.Add(shape.Message(messageEntry));
+                messagesZone = messagesZone.Add(_shapeFactory.Message(messageEntry));
 
             //todo: (heskew) probably need to keep duplicate messages from being pushed into the zone like the previous behavior
             //baseViewModel.Messages = baseViewModel.Messages == null ? messageEntries .Messages.Union(messageEntries).ToList();

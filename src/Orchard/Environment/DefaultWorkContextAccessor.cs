@@ -81,10 +81,9 @@ namespace Orchard.Environment {
             return _lifetimeScope.BeginLifetimeScope("work", configurationAction);
         }
 
-
         class WorkContextImplementation : WorkContext {
             readonly IComponentContext _componentContext;
-            readonly ConcurrentDictionary<string, object> _state = new ConcurrentDictionary<string, object>();
+            readonly ConcurrentDictionary<string, Func<object>> _stateResolvers = new ConcurrentDictionary<string, Func<object>>();
             readonly IEnumerable<IWorkContextStateProvider> _workContextStateProviders;
 
             public WorkContextImplementation(IComponentContext componentContext) {
@@ -97,18 +96,26 @@ namespace Orchard.Environment {
             }
 
             public override T GetState<T>(string name) {
-                return (T)_state.GetOrAdd(name, x => GetStateInternal<T>(x));
+                var resolver = _stateResolvers.GetOrAdd(name, FindResolverForState<T>);
+                return (T)resolver();
             }
 
-            private T GetStateInternal<T>(string name) {
-                return _workContextStateProviders.Select(wcsp => wcsp.Get<T>(name))
+            Func<object> FindResolverForState<T>(string name) {
+                var resolver = _workContextStateProviders.Select(wcsp => wcsp.Get<T>(name))
                     .FirstOrDefault(value => !Equals(value, default(T)));
+
+                if (resolver == null) {
+                    return () => default(T);
+                }
+                return () => resolver();
             }
+
 
             public override void SetState<T>(string name, T value) {
-                _state[name] = value;
+                _stateResolvers[name] = () => value;
             }
         }
+
 
         class HttpContextScopeImplementation : IWorkContextScope {
             readonly WorkContext _workContext;

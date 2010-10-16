@@ -77,7 +77,6 @@ namespace Orchard.Tests.Modules.Themes.Services {
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
-            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();

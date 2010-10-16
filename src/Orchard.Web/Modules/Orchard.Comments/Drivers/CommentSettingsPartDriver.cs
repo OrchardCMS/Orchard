@@ -14,7 +14,8 @@ namespace Orchard.Comments.Drivers {
         protected override string Prefix { get { return "CommentSettings"; } }
 
         protected override DriverResult Editor(CommentSettingsPart part, dynamic shapeHelper) {
-            return ContentPartTemplate(part.Record, "Parts/Comments.SiteSettings");
+            return ContentShape("Parts_Comments_SiteSettings",
+                               () => shapeHelper.EditorTemplate(TemplateName: "Parts/Comments.SiteSettings", Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(CommentSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {

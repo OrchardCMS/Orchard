@@ -14,10 +14,10 @@ namespace Orchard.Experimental.Controllers {
     public class HomeController : Controller {
         private readonly INotifier _notifier;
 
-        public HomeController(INotifier notifier, IShapeHelperFactory shapeHelperFactory) {
+        public HomeController(INotifier notifier, IShapeFactory shapeFactory) {
             _notifier = notifier;
             T = NullLocalizer.Instance;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }

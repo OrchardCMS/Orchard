@@ -25,12 +25,12 @@ namespace Orchard.Mvc {
 
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
-        public dynamic New { get { return _new; } }
+        public dynamic New { get { return ShapeFactory; } }
         public dynamic Layout { get { return _layout; } }
         public WorkContext WorkContext { get { return _workContext; } }
         
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
-        public IShapeHelperFactory ShapeHelperFactory { get; set; }
+        public IShapeFactory ShapeFactory { get; set; }
 
         public IAuthorizer Authorizer { get; set; }
 
@@ -75,7 +75,6 @@ namespace Orchard.Mvc {
             _localizer = LocalizationUtilities.Resolve(viewContext, AppRelativeVirtualPath);
             _display = DisplayHelperFactory.CreateHelper(viewContext, this);
             _layout = _workContext.Layout;
-            _new = ShapeHelperFactory.CreateHelper();
 
             base.RenderView(viewContext);
         }

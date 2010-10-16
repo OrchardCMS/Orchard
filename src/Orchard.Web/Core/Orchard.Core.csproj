@@ -66,7 +66,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\DataMigrations\CommonDataMigration.cs" />
+    <Compile Include="Common\Migrations.cs" />
     <Compile Include="Common\Drivers\BodyPartDriver.cs" />
     <Compile Include="Common\Drivers\CommonPartDriver.cs" />
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
@@ -100,7 +100,7 @@
     <Compile Include="Dashboard\Controllers\HelperController.cs" />
     <Compile Include="Localization\ResourceManifest.cs" />
     <Compile Include="Localization\ViewModels\EditLocalizationViewModel.cs" />
-    <Compile Include="Messaging\DataMigrations\MessagingDataMigration.cs" />
+    <Compile Include="Messaging\Migrations.cs" />
     <Compile Include="Messaging\Drivers\MessageSettingsPartDriver.cs" />
     <Compile Include="Messaging\Handlers\MessageSettingsPartHandler.cs" />
     <Compile Include="Messaging\Models\MessageSettingsPart.cs" />
@@ -109,7 +109,7 @@
     <Compile Include="Messaging\ViewModels\MessageSettingsPartViewModel.cs" />
     <Compile Include="Navigation\Services\MainMenuNavigationProvider.cs" />
     <Compile Include="PublishLater\ResourceManifest.cs" />
-    <Compile Include="PublishLater\DataMigrations\PublishLaterDataMigration.cs" />
+    <Compile Include="PublishLater\Migrations.cs" />
     <Compile Include="PublishLater\Drivers\PublishLaterPartDriver.cs" />
     <Compile Include="PublishLater\Models\PublishLaterPart.cs" />
     <Compile Include="PublishLater\Handlers\PublishLaterPartHandler.cs" />
@@ -127,10 +127,10 @@
     <Compile Include="Reports\Controllers\AdminController.cs" />
     <Compile Include="Reports\Routes.cs" />
     <Compile Include="Localization\Controllers\AdminController.cs" />
-    <Compile Include="Localization\DataMigrations\LocalizationDataMigration.cs" />
+    <Compile Include="Localization\Migrations.cs" />
     <Compile Include="Localization\ViewModels\AddLocalizationViewModel.cs" />
     <Compile Include="Localization\Drivers\LocalizationPartDriver.cs" />
-    <Compile Include="Navigation\DataMigrations\NavigationDataMigration.cs" />
+    <Compile Include="Navigation\Migrations.cs" />
     <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
     <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
     <Compile Include="Routable\Controllers\ItemController.cs" />
@@ -204,7 +204,7 @@
     <Compile Include="Routable\Services\RoutableService.cs" />
     <Compile Include="Routable\ViewModels\RoutableEditorViewModel.cs" />
     <Compile Include="Routable\ViewModels\RoutableDisplayViewModel.cs" />
-    <Compile Include="Scheduling\DataMigrations\SchedulingDataMigration.cs" />
+    <Compile Include="Scheduling\Migrations.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
     <Compile Include="PublishLater\Handlers\PublishingTaskHandler.cs" />
     <Compile Include="PublishLater\Services\PublishingTaskManager.cs" />
@@ -212,7 +212,7 @@
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\ResourceManifest.cs" />
-    <Compile Include="Settings\DataMigrations\SettingsDataMigration.cs" />
+    <Compile Include="Settings\Migrations.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
     <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
     <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
@@ -390,6 +390,7 @@
     <Content Include="Dashboard\Views\Helper\Index.cshtml" />
     <None Include="Common\Placement.info" />
     <None Include="Contents\Placement.info" />
+    <None Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <None Include="Localization\Placement.info" />
     <None Include="PublishLater\Placement.info" />
     <None Include="Routable\Views\Parts\RoutableTitle.cshtml" />

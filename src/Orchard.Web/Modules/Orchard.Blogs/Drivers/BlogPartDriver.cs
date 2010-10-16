@@ -18,16 +18,19 @@ namespace Orchard.Blogs.Drivers {
         private readonly IBlogPostService _blogPostService;
         private readonly IFeedManager _feedManager;
 
-        public BlogPartDriver(IOrchardServices services, IContentManager contentManager, IBlogPostService blogPostService, IFeedManager feedManager, IShapeHelperFactory shapeHelperFactory) {
+        public BlogPartDriver(
+            IOrchardServices services,
+            IContentManager contentManager, 
+            IBlogPostService blogPostService, 
+            IFeedManager feedManager) {
             Services = services;
             _contentManager = contentManager;
             _blogPostService = blogPostService;
             _feedManager = feedManager;
             T = NullLocalizer.Instance;
-            Shape = shapeHelperFactory.CreateHelper();
         }
 
-        dynamic Shape { get; set; }
+
         public Localizer T { get; set; }
 
         protected override string Prefix { get { return ""; } }

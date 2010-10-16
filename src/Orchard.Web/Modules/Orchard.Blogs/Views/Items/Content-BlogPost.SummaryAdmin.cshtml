@@ -10,12 +10,12 @@
     <div class="properties">
         <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
         <h3>@Html.Link((string)Model.Title, Url.BlogPostEdit((BlogPostPart)Model.ContentItem.Get(typeof(BlogPostPart))))</h3>
-        <div class="metadata">@Display(Model.Meta)</div> <!-- was: metadata -->
+        <div class="metadata">@Display(Model.Meta)</div>
     </div>
-    <div class="related">@Display(Model.Related) <!-- was: secondary -->
+    <div class="related">@Display(Model.Related)
         @Html.Link(T("Edit").Text, Url.BlogPostEdit((BlogPostPart)Model.ContentItem.Get(typeof(BlogPostPart)))) @T(" | ")
         @Html.Link(T("Remove").Text, Url.Action("Remove", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
-        <br />@Display(Model.Secondary) <!-- was: meta -->
+        <br />@Display(Model.Secondary)
     </div>
     <div class="primary">@Display(Model.Content)</div>
 </div>

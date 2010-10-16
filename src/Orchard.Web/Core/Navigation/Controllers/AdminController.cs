@@ -22,12 +22,12 @@ namespace Orchard.Core.Navigation.Controllers {
             IMenuService menuService,
             IOrchardServices services,
             INavigationManager navigationManager,
-            IShapeHelperFactory shapeHelperFactory) {
+            IShapeFactory shapeFactory) {
             _menuService = menuService;
             _services = services;
             _navigationManager = navigationManager;
             T = NullLocalizer.Instance;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }

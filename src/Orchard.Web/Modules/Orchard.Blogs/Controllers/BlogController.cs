@@ -20,14 +20,20 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogSlugConstraint _blogSlugConstraint;
         private readonly RouteCollection _routeCollection;
 
-        public BlogController(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService, IBlogSlugConstraint blogSlugConstraint, RouteCollection routeCollection, IShapeHelperFactory shapeHelperFactory) {
+        public BlogController(
+            IOrchardServices services, 
+            IBlogService blogService,
+            IBlogPostService blogPostService,
+            IBlogSlugConstraint blogSlugConstraint,
+            RouteCollection routeCollection, 
+            IShapeFactory shapeFactory) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
             _blogSlugConstraint = blogSlugConstraint;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
-            Shape = shapeHelperFactory.CreateHelper();
+            Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }

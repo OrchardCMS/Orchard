@@ -26,8 +26,7 @@ namespace Orchard.Themes.Controllers {
             IThemeService themeService,
             IPreviewTheme previewTheme,
             IAuthorizer authorizer,
-            INotifier notifier,
-            IShapeHelperFactory shapeHelperFactory) {
+            INotifier notifier) {
             Services = services;
             _dataMigrationManager = dataMigraitonManager;
             _reportsCoordinator = reportsCoordinator;
@@ -36,7 +35,6 @@ namespace Orchard.Themes.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        dynamic Shape { get; set; }
         public IOrchardServices Services{ get; set; }
         public Localizer T { get; set; }
 

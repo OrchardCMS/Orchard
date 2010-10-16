@@ -298,7 +298,8 @@
                 return match && match[0].toLowerCase() || typeof(i);
             },
             //+ Jonas Raoni Soares Silva
-            //@ http://jsfromhell.com/string/pad [v1.0]
+            // the @ sign next to "//" is interpreted by IE when using cc<underscore>on! Inserted a space.
+            //  @ http://jsfromhell.com/string/pad [v1.0]
             __pad: function(str, l, s, t){
                 var p = s || ' ';
                 var o = str;

@@ -22,7 +22,6 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<ContentPartDriverCoordinator>().As<IContentHandler>();
-            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
             _container = builder.Build();
@@ -45,7 +44,7 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var contentHandler = _container.Resolve<IContentHandler>();
 
             var contentItem = new ContentItem();
-            var context = new BuildDisplayContext(null, contentItem, "", new ShapeHelperFactory(null));
+            var context = new BuildDisplayContext(null, contentItem, "", new Mock<IShapeFactory>().Object);
 
             driver1.Verify(x => x.BuildDisplay(context), Times.Never());
             driver2.Verify(x => x.BuildDisplay(context), Times.Never());
@@ -61,13 +60,13 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             builder.RegisterInstance(driver).As<IContentPartDriver>();
             builder.Update(_container);
             var contentHandler = _container.Resolve<IContentHandler>();
-            var shapeHelperFactory = _container.Resolve<IShapeHelperFactory>();
+            dynamic shapeFactory = _container.Resolve<IShapeFactory>();
 
             var contentItem = new ContentItem();
             contentItem.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
 
             var ctx = new BuildDisplayContext(null, null, "", null);
-            var context = shapeHelperFactory.CreateHelper().Context(ctx);
+            var context = shapeFactory.Context(ctx);
             Assert.That(context.TopMeta, Is.Null);
             contentHandler.BuildDisplay(ctx);
             Assert.That(context.TopMeta, Is.Not.Null);

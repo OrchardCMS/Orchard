@@ -7,6 +7,7 @@ Copyright: 2010, Orchard. All Rights Reserved
 
 /*  Color Palette
 **************************************************************
+
 Background: #fff
 Borders: #dbdbdb
 Text: #434343
@@ -61,28 +62,30 @@ header, footer, aside, nav, article { display: block; }
 
 /* Clearing Floats
 ***************************************************************/
+
 .group:after 
 {
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
 }
 
 .zone-asidethird:after 
 {
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
 }
 
 
 
 /* General
 ***************************************************************/
+
 /* Default font settings. 
 The font-size 62.5% sets the base font to 10px */
 body { 
@@ -154,9 +157,10 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
 
 /* Structure
 ***************************************************************/
+
 #layout-wrapper 
 {
-    
+	
 }
 
 #layout-header, #layout-before-main, #layout-main, #layout-footer, #layout-after-main, #layout-tripel {
@@ -166,26 +170,31 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
 
 #layout-header 
 {
-    margin: 30px auto;
+	margin: 30px auto;
 }
-    #branding 
-    {   
-        font-family: 'Lobster', Tahoma, Arial, Helvetica, sans-serif;
-        font-size: 3.4em;
-        padding: 0;
-        margin: 0;
-       
-    }
+	#branding 
+	{   
+		font-family: 'Lobster', Tahoma, Arial, Helvetica, sans-serif;
+		font-size: 3.4em;
+		padding: 0;
+		margin: 0;
+	   
+	}
 
-    #branding a 
-    {
-        text-decoration:none;
-        color: #434343;
-    }
+	#branding a 
+	{
+		text-decoration:none;
+		color: #434343;
+	}
 
 #layout-tripel 
 {
    border-top: 1px solid #dbdbdb;    
+}
+
+#layout-before-main 
+{
+	border-bottom: 1px solid #dbdbdb;
 }
 
 #layout-main 
@@ -195,17 +204,17 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
 
 #layout-after-main 
 {
-    border-top: 1px solid #dbdbdb;    
+	 
 }
 
 
 /* Navigation */
 #layout-navigation 
 {
-    width: 960px;
+	width: 960px;
 	margin: 0 auto;
 	display: block;
-    border-bottom: 1px solid #dbdbdb;
+	border-bottom: 1px solid #dbdbdb;
 }
 
 nav ul 
@@ -213,46 +222,51 @@ nav ul
 	padding: 0px;
 	margin: 0px;
 }
-    nav ul li
-     {
-	    border:1px solid #dbdbdb;
-	    background:#f6f6f6;
-	    display:block;
-	    float:left;
-	    margin:0 2px -1px 0;
-    }
-    nav ul li.current 
-    {
-	    border-bottom: 1px solid #fff;
-	    background:#fff;
-    }
-    nav ul a 
-    {
-	    padding:0 18px;
-        display:block;
-	    float:left;
-        color: #333;
-        font-size:1.4em;
-        text-decoration:none;
-        line-height:24px;
-    }
+	nav ul li
+	 {
+		border:1px solid #dbdbdb;
+		background:#f6f6f6;
+		display:block;
+		float:left;
+		margin:0 2px -1px 0;
+	}
+	nav ul li.current 
+	{
+		border-bottom: 1px solid #fff;
+		background:#fff;
+	}
+	nav ul a 
+	{
+		padding:0 18px;
+		display:block;
+		float:left;
+		color: #333;
+		font-size:1.4em;
+		text-decoration:none;
+		line-height:24px;
+	}
 
 #layout-footer 
 {
-    border-top: 1px solid #dbdbdb;    
+	border-top: 1px solid #dbdbdb;              
 }
+	#footer-sig 
+	{
+		
+	}
 
 /* Zones */
 /*.zone {
-    background-color: yellow;
-    box-shadow:inset 0 0 1px red;
-    -moz-box-shadow:inset 0 0 1px red;
-    -webkit-box-shadow:inset 0 0 1px red;
+	background-color: yellow;
+	box-shadow:inset 0 0 1px red;
+	-moz-box-shadow:inset 0 0 1px red;
+	-webkit-box-shadow:inset 0 0 1px red;
 }    Used for visualizing zones */
 .zone-header { }
 .zone-footer { padding: 24px 0 12px 0px; float: left; font-size: 1.3em; color: #999999; }
 .zone-content { }
 .zone-asidethird { padding: 0 0 6px 0; }
+
 
 
 /* Main
@@ -267,7 +281,7 @@ nav ul
 
 .has-aside-two .aside-second 
 {
-    width: 360px;
+	width: 360px;
 	float: right;
 }
 
@@ -287,69 +301,64 @@ nav ul
 }
 .has-asides .aside-first, .has-asides .aside-second 
 {
-    width: 180px;
+	width: 180px;
 }
 .has-asides .aside-first, .has-asides .aside-second, .has-asides #layout-content 
 {
-    float:left;
+	float:left;
 }
 
+/* Blogs */
+
+.blog-post {}
+.blog-post-title {}
+.meta {}
 
 
 /* Secondary
 ***************************************************************/
 
+/* Comments */
+.comment {}
+.comment .who {}
+.comment .what {}
+.comment #add-comment {}
+
+.comment #comment-by { font-size: 1.6em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
+.comment #comment-text { width: 33.2em; }
+.comment input[type="text"] { width: 32em; }
+
 
 
 /* Forms
 ***************************************************************/
-label             { font-weight: normal; display:block; }
-label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+form              { margin: 0; padding: 0; }
+legend            { font-size: 1.6em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
 fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
-legend            { font-weight: 600; font-size:1.2em; }
+label             { font-size: 1.3em; font-weight: normal; display:block; padding: 0 0 0.3em 0; }
+label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 
-input[type="text"], #CommentText, #password, #confirmPassword {
-    border:1px solid #999;
-    display: block;
-    padding:6px;
-    width:50%;
+input[type="text"], input[type="password"] {
+	display: block;
+    padding: 0.3em;
 }
-
-form.search {
-    margin-bottom:2em;
-}
-
-.search input[type=text] {
-    display:inline;
-    width:17em;
-}
-
-fieldset ol {list-style-type:none;}
-
-fieldset ol li {margin:1.6em 0 0 0}
-    
-legend {
-	font-size: 1.4em;
-	border:none;
-}
-
-label {
-    font-size: 1.3em;
-    margin:0 0 .3em 0;
-    }
 
 input[type="checkbox"] {
-    margin:.2em 0 1.2em 0;
+	margin:.2em 0 1.2em 0;
 }
 
+fieldset ol     { list-style-type:none; padding: 0; margin: 0; }
+fieldset ol li  { margin: 0 0 6px 0; }
+   
+/*
 input[type="submit"], input[type="button"], button, .button, .button:link, .button:visited {
 	color:#333;
-    background:#F5F5F5;
+	background:#F5F5F5;
 	background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#cbcbcb));
 	background:-moz-linear-gradient(top , #F5F5F5, #cbcbcb);
 	border:1px solid #999;
 	cursor:pointer;
-    margin:.2em 0 2em 0;
+	margin:.2em 0 2em 0;
 	padding:.3em 1.8em;
 	text-align:center;
 }
@@ -360,11 +369,12 @@ input[type="submit"]:focus, input[type="button"]:focus,
 button:hover, .button:hover,
 button:active, .button:active,
 button:focus, .button:focus {
-    text-decoration:none; 
-    background: #ebebeb;
-    background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
+	text-decoration:none; 
+	background: #ebebeb;
+	background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
 	background:-moz-linear-gradient(top , #e1e1e1, #ebebeb);
 }
+*/
 
 
 
@@ -402,81 +412,62 @@ button:focus, .button:focus {
 /* CSS 3 Enhancements 
 ***************************************************************/
 
-
-
-
 /* For testing purposes */
-#comments, #commenter {
-    font-size:1.6em;
-    font-weight:600;
-    margin:1.2em 0 1.8em 1.2em;
-}
 
-#commenter {
-    margin:1.2em 0 0 1em;
-}
-
-ul.comments, form.comment {
-    list-style: none;
-}
 
 article.comment h4 {
     font-size:1.4em;
 }
 
 article.comment a {
-    color:#484848;
-    text-decoration:none;
+	color:#484848;
+	text-decoration:none;
 }
 
 article.comment span.who {
-    font-weight:600;
-    font-style:normal;
-    text-transform:capitalize;
-    color:#333;
+	font-weight:600;
+	font-style:normal;
+	text-transform:capitalize;
+	color:#333;
 }
 
 article.comment p.text {
-    margin:.6em 0 2.4em 0;
+	margin:.6em 0 2.4em 0;
 }
 
 .user-display {
-    display:inline;
+	display:inline;
 }
 
-.aside.third {
-    border-top:1px solid #dbdbdb;
-    clear:both;
-}
+/*.aside.third {
+	border-top:1px solid #dbdbdb;
+	clear:both;
+}*/
 
-#layout-tripel div > div {
-     float:left;
-     width:316px;
-     /*padding:12px 6px 0 6px;*/
-}
+
 
 #footer-quad div.zone {
-     float:left;
-     width:240px;
-     /*padding:12px 6px 0 6px;*/
+	 float:left;
+	 width:240px;
+	 /*padding:12px 6px 0 6px;*/
 }
 
 /* Featured Zone - switch to an image */
 
 .featuredimage {
-    float:left;
-    border: 1px solid #dbdbdb;
-    width: 462px;
-    height: 240px;
-    margin: 6px;
+	float:left;
+	border: 1px solid #dbdbdb;
+	width: 462px;
+	height: 240px;
+	margin: 6px;
 }
 
 /* Recent Zone */
 
 #zone-recent ul li {
-    float:left;
-    width: 462px;
-    margin: 6px;
+	float:left;
+	width: 462px;
+	margin: 6px;
 }
 
 .clearfix {
@@ -484,17 +475,81 @@ article.comment p.text {
 }
 
 #footer div {
-    /*border:1px solid #ff0000;*/
+	/*border:1px solid #ff0000;*/
 }
 
-/* If zone 1 is empty and 2, 3, 4 are not */
+/* Tripel */
+
+#layout-tripel div {
+     float:left;
+     width:960px;
+     /*padding:12px 6px 0 6px;*/
+}
+
+/*2 zones on */
+
+/* If zones 1, 2 are on */
+.tripel-12 #layout-tripel div { width:480px; }
+
+/* If zones 2, 3 are on */
+.tripel-23 #layout-tripel div { width:480px; }
+
+/* If zones 1, 3 are on */
+.tripel-13 #layout-tripel div { width:480px; }
+
+/*3 zones on */
+
+/* If zones 1, 2, 3 are on */
+.tripel-123 #layout-tripel div { width:320px; }
+
+
+
+/* Quad */
+/*1 zone on */
+
+/* If zone 1 is on */
+.split-1 #footer-quad-first div.zone { width:960px; }
+
+/* If zone 2 is on */
+.split-2 #footer-quad-second div.zone { width:960px; }
+
+/* If zone 3 is on */
+.split-3 #footer-quad-third div.zone { width:960px; }
+
+/* If zone 4 is on */
+.split-4 #footer-quad-fourth div.zone { width:960px; }
+
+
+/*2 zones on */
+
+/* If zones 1, 2 are on */
+.split-12 #footer-quad-first div.zone, .split-12 #footer-quad-second div.zone { width:480px; }
+
+/* If zones 1, 3 are on */
+.split-13 #footer-quad-first div.zone, .split-13 #footer-quad-third div.zone { width:480px; }
+
+/* If zones 1, 4 are on */
+.split-14 #footer-quad-first div.zone, .split-14 #footer-quad-fourth div.zone { width:480px; }
+
+/* If zones 2, 3 are on */
+.split-23 #footer-quad-second div.zone, .split-23 #footer-quad-third div.zone { width:480px; }
+
+/* If zones 2, 4 are on */
+.split-24 #footer-quad-second div.zone, .split-24 #footer-quad-fourth div.zone { width:480px; }
+
+/* If zones 3, 4 are on */
+.split-34 #footer-quad-third div.zone, .split-34 #footer-quad-fourth div.zone { width:480px; }
+
+/*3 zones on */
+
+/* If zones 2, 3, 4 are on */
 .split-234 #footer-quad-second div.zone { width:480px; }
 
-/* If zone 2 is empty and 1, 3, 4 are not */
+/* If zones 1, 3, 4 are on */
 .split-134 #footer-quad-first div.zone { width:480px; }
 
-/* If zone 3 is empty and 1, 2, 4 are not */
+/* If zones 1, 2, 4 are on */
 .split-124 #footer-quad-fourth div.zone { width:480px; }
 
-/* If zone 4 is empty and 1, 2, 3 are not */
+/* If zones 1, 2, 3 are on */
 .split-123 #footer-quad-third div.zone { width:480px; }

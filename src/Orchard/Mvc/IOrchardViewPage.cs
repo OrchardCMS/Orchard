@@ -14,6 +14,7 @@ namespace Orchard.Mvc {
         ScriptRegister Script { get;  }
         ResourceRegister Style { get; }
         dynamic Display { get; }
+        dynamic Layout { get; }
         IHtmlString DisplayChildren(object shape);
         WorkContext WorkContext { get; }
         IDisposable Capture(Action<IHtmlString> callback);
