@@ -1,4 +1,6 @@
-﻿namespace Orchard.Settings {
+﻿using System;
+
+namespace Orchard.Settings {
     public class CurrentSiteWorkContext : IWorkContextStateProvider {
         private readonly ISiteService _siteService;
 
@@ -6,10 +8,12 @@
             _siteService = siteService;
         }
 
-        public T Get<T>(string name) {
-            if (name == "CurrentSite")
-                return (T)_siteService.GetSiteSettings();
-            return default(T);
+        public Func<T> Get<T>(string name) {
+            if (name == "CurrentSite") {
+                var siteSettings = _siteService.GetSiteSettings();
+                return () => (T)siteSettings;
+            }
+            return null;
         }
     }
 }
