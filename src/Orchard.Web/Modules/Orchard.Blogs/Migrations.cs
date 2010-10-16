@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
@@ -94,6 +95,14 @@ namespace Orchard.Blogs {
             ContentDefinitionManager.AlterTypeDefinition("Blog",
                 cfg => cfg.WithPart("BlogPagerPart"));
             return 6;
+        }
+
+        public int UpdateFrom6() {
+            SchemaBuilder.AlterTable("BlogPartRecord", table => table
+                .AlterColumn("Description", c => c.WithType(DbType.String).Unlimited())
+                );
+
+            return 7;
         }
     }
 }
