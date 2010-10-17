@@ -221,7 +221,7 @@
     <Content Include="TheThemeMachine\Views\Items\BlogPost.cshtml">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="TheThemeMachine\Views\Layout.cshtml" />
+    <Content Include="TheThemeMachine\Views\Layout.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
