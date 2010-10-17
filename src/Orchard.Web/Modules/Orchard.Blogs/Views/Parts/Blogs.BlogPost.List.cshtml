@@ -1,5 +1,6 @@
 ﻿@{
     IEnumerable<object> blogPosts = Model.ContentItems;
+    Model.ContentItems.Classes.Add("content-items");
 }
 @Display(Model.ContentItems)
 @if (blogPosts == null || blogPosts.Count() < 1) {
