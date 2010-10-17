@@ -41,7 +41,7 @@ Scenario: Calling setup on a brand new install
             | extension | names |
             | module | Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce |
             | core | Common, Contents, ContentsLocation, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater, Scheduling, Settings, Shapes, XmlRpc  |
-            | theme | SafeMode, Classic |
+            | theme | SafeMode, TheThemeMachine |
         And I am on "/Setup"
     When I fill in 
             | name | value |

@@ -184,7 +184,7 @@ this.ScenarioSetup(scenarioInfo);
                             "ble, PublishLater, Scheduling, Settings, Shapes, XmlRpc"});
             table4.AddRow(new string[] {
                         "theme",
-                        "SafeMode, Classic"});
+                        "SafeMode, TheThemeMachine"});
 #line 40
 testRunner.Given("I have a clean site with", ((string)(null)), table4);
 #line 45
