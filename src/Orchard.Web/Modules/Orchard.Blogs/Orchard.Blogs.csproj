@@ -109,7 +109,6 @@
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="RemoteBlogPublishingShapes.cs" />
-    <Compile Include="Shapes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Admin\images\draft.gif" />
