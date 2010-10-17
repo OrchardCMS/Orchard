@@ -1,3 +1,181 @@
+Version 3.3.9.2 (2010-09-29)
+	Fixed bug where placing the caret in IE 9 beta 1 would not work correctly if you clicked out side the document body element.
+	Fixed bug where IE 9 beta 1 wouldn't resize the editor correctly since the events didn't fire as previous versions did.
+	Fixed bug where FF would produce an error message when being rendered inside a hidden div element.
+	Fixed bug where resize logic could produce a cookie with a width/height less than the size of the container.
+	Fixed bug where content_css wouldn't populate the styles dropdown correctly.
+Version 3.3.9.1 (2010-09-23)
+	Fixed bug where WebKit browsers wouldn't activate the image button when images where selected.
+	Fixed bug where Opera Presto 10.60 deletes elements when restoring bookmarks.
+	Fixed bug where IE9 beta1 doesn't handle regexp replacement values correctly.
+	Fixed bug where IE9 beta1 didn't render the inline dialogs correctly due to a bug with CSS clip.
+	Fixed bug where IE9 beta1 would produce error messages on load since they removed the document.recalc method.
+	Fixed bug where IE9 beta1 would produce <html xmlns=""> since they haven't implemented document.implementation.createDocument correctly.
+	Fixed bug where IE9 beta1 would searchreplace doesn't work since their native DOM Range doesn't have a find method.
+	Fixed bug where IE9 beta1 would render the source view incorrectly due to incorrect viewport size measurements.
+	Fixed bug where IE9 beta1 would crash when running the basic functionality unit tests.
+	Fixed bug where IE9 beta1 would wrap elements in blocks correctly due to changes to the selection object.
+	Fixed bug where IE9 beta1 would fail to insert contents since they havn't implemented the createContextualFragment method in their DOM Range.
+	Fixed bug where IE9 beta1 would fail to handle image selection since they currently doesn't support control selections in their DOM Range.
+	Fixed bug where IE9 beta1 would fail to load scripts since they fire the onload event before the scripts are parsed and executed.
+Version 3.3.9 (2010-09-08)
+	Fixed bug where inserting table rows into a table with subtable would produce an incorrect column count.
+	Fixed bug where the selection of cells in a table with subtables could produce invalid selections.
+	Fixed bug where the table plugin would produce a script error if you tried to move the caret before a first child table.
+	Fixed bug where the keep_styles feature on IE would move the caret to an incorrect location at the end of list blocks.
+	Fixed so attributes from legacy elements such as font gets retained when they get converted to spans.
+	Fixed minor issue where the select boxes wouldn't be set the not set by default in the table dialog.
+Version 3.3.8 (2010-06-30)
+	Fixed bug where WebKit would not move the caret to a correct position after a paste operation.
+	Fixed bug where WebKit would produce a div wrapper element when pasting some contents.
+	Fixed bug where the visual chars and nonbreaking plugin wouldn't show nbsp elements correctly.
+	Fixed bug where the format states would be enabled even after the format was removed.
+	Fixed bug where the delete key would move the caret to an incorrect position.
+	Fixed bug where it wasn't possible to toggle of the current font size/family/style by clicking the title item.
+	Fixed bug where the abbr element wouldn't get serialized correctly on IE6.
+	Fixed so that the examples checks if they are executed from the local file system since that might not work properly.
+Version 3.3.7 (2010-06-10)
+	Fixed bug where context menu would produce an error on IE if you right clicked twice and left clicked once.
+	Fixed bug where resizing of the window on WebKit browsers in fullscreen mode wouldn't position the statusbar correctly.
+	Fixed bug where IE would produce an error if the editor was empty and you where undoing to that initial level.
+	Fixed bug where setting the table background on gecko would produce \" entities inside the url style property.
+	Fixed bug where the button states wouldn't be updated correctly on IE if you placed the caret inside the new element.
+	Fixed bug where undo levels wasn't properly added after applying styles or font sizes.
+	Fixed bug where IE would throw an error if you used "select all" on empty elements and applied formatting to that.
+	Fixed bug where IE could select one extra character when you did a bookmark call on a caret location.
+	Fixed bug where IE could produce a script error on delete since it would sometimes produce an invalid DOM.
+	Fixed bug where IE would return the wrong start element if the whole element was selected.
+	Fixed bug where formatting states wasn't updated on IE if you pressed enter at the end of a block with formatting.
+	Fixed bug where submenus for the context menu wasn't removed correctly when the editor was destroyed.
+	Fixed bug where Gecko could select the wrong element after applying format to multiple elements.
+	Fixed bug where Gecko would delete parts of the previous element if the selection range was a element selection.
+	Fixed bug where Gecko would not merge paragraph elements correctly if they contained br elements.
+	Fixed bug where the cleanup button could produce span artifacts if you pressed it twice in a row.
+	Fixed bug where the fullpage plugin header/footer would be have it's header reseted to it's initial state on undo.
+	Fixed bug where an empty paragraph would be collapsed if you performed a cleanup while having the caret inside it.
+	Fixed a few memory leaks on IE especially with drop menus in listboxes and the spellchecker.
+	Fixed so formats applied to the current caret gets merged to reduce the number of output elements.
+	Added the latest version of Sizzle for the CSS selector logic to fix a compatibility issue with prototype.
+Version 3.3.6 (2010-05-20)
+	Fixed bug where a editor.focus call could produce errors on IE in very specific scenarios.
+	Fixed bug where Gecko would produce an error if you unformatted text inside an empty element.
+	Fixed bug where IE would produce an error if the caret was placed before a table and you used the align buttons.
+	Fixed bug where the font size drop down didn't display the a preview correctly.
+	Fixed bug where the paste plugin wouldn't include all contents some times on WebKit browsers.
+	Fixed bug where the plain text mode toggle wouldn't work properly on WebKit.
+	Fixed bug where the editors statusbar would become invisible when you resized the window in fullscreen mode.
+Version 3.3.5.1 (2010-05-07)
+	Fixed a critical bug with the fullscreen plugin. Produced error messages when the state was toggled on/off.
+Version 3.3.5 (2010-05-06)
+	Added new merge_with_parents option to formats, enables the control of removal of elements with similar parents.
+	Fixed so the default behavior for applying classes isn't a toggle state but the old behavior from before the 3.3 release.
+	Fixed bug where selecting contents using double click on Gecko would produce errors when using removing format.
+	Fixed bug where the IE DOM could get messed up when non valid contents was pasted into the editor.
+	Fixed bug where merging selected table cells using the context menu didn't work as expected.
+	Fixed bug where some nestled formatting would be applied incorrectly.
+	Fixed bug with enter in list items when using the force_br_newlines mode on WebKit patch contributed by Ryan Koopmans.
+	Fixed bug where undo/redo could produce js errors on some specific operations.
+	Fixed bug where the theme_advanced_font_sizes didn't work as before 3.3 when complex settings where used.
+	Fixed bug where the table plugin would copy cell/row id attributes when making new rows/cells.
+Version 3.3.4 (2010-04-27)
+	Fixed bug where fullscreen plugin would add two editor instances to EditorManager collection.
+	Fixed bug where it was difficult to enter text on non western languages such as Japanese on IE.
+	Fixed bug where removing contents from nodes could result in an exception when using undo/redo.
+	Fixed bug with selection of images inside layers or other resizable containers on IE.
+	Fixed so editors isn't initialized on iPhone/iPad devices since they don't have caret support.
+Version 3.3.3 (2010-04-19)
+	Added new script_loaded callback function setting for the jQuery plugin.
+	Added various fixes and new rpc methods for the spellchecker plugin. Patch contributed by Michael Peters.
+	Removed some unnecessary inline style information from some of the dialogs.
+	Fixed some issues with the chaining for the TinyMCE jQuery plugin.
+	Fixed so any extra arguments passed to patched jQuery functions gets passed through. Patch contributed by Lee Henson.
+	Fixed so spellchecking/contextmenu can be toggled on/off if the browser has native spellchecker support.
+	Fixed bug where some texts in the new paste plugin wasn't placed in language pack.
+	Fixed bug where IE would produce an incorrect information message when cutting.
+	Fixed bug where removing items using the xhtmlxtras plugin wouldn't work correctly.
+	Fixed bug where setting table background images would add extra quotes on Gecko.
+	Fixed bug where shortcut for bold/italic/underline wouldn't work properly on WebKit.
+	Fixed bug where IE would produce an error message if only contents was an image tag and bold was used.
+	Fixed bug where the caret would move if alignment was applied to empty block elements.
+	Fixed bug where some shortcut key commands wouldn't apply formatting correctly.
+Version 3.3.2 (2010-03-25)
+	Fixed bug where it was possible to scale the editor iframe smaller than the editor UI.
+	Fixed bug where some of the resizing option didn't work with the new live resize.
+	Fixed bug where the format listbox didn't show nestled formats correctly.
+	Fixed bug where the native listboxes didn't work correctly.
+	Fixed bug where font size selection in using the legacyoutput plugin would produce errors.
+	Fixed so block and blockquote formats remove their matching element regardless of it's attributes.
+Version 3.3.1 (2010-03-18)
+	Added new live resize feature, the editor contents is now visible while resizing.
+	Fixed bug where some valid_element patterns would produce an unknown property error.
+	Fixed bug where it wasn't possible to toggle off blockquotes.
+	Fixed bug where an undo level wasn't produced when applying formatting using the styles dropdown.
+	Fixed bug where IE 6/7 wouldn't perform caret formatting due to a focus/event bug in IE.
+	Fixed bug where undo/redo wasn't restoring the previous selection correctly.
+	Fixed bug where the caret would become invisible if you resized the editor in latest Gecko.
+	Fixed bug where the class attribute wasn't completely removed in IE 6/7 when the removeClass function was used.
+	Fixed so the matchNode method of the Formatter class returns the matched format rule.
+	Fixed so it's possible to apply formatting to both blocks and as inline elements.
+Version 3.3 (2010-03-10)
+	Fixed bug where backspace on a table on IE would produce an empty tbody and some JS exceptions.
+	Fixed bug where some redundant children wasn't removed properly when applying inline styles to them.
+	Fixed bug where Chrome would produce incorect dialog sizes if the inlinepopups plugin wasn't used.
+	Fixed bug where spans with different classes would get merged if they where siblings to each other.
+	Fixed bug where IE 8 would crash if you used the spellchecker.
+	Fixed bug where Input Method for non western languages didn't work correctly.
+	Fixed bug where the UI would render incorrectly in FF 3.6 on Mac due to a bug n their rendering engine.
+	Fixed bug where WebKit wouldn't scroll down correctly if Shift+Enter was used. Patch contributed by Thomas Andersen.
+Version 3.3rc1 (2010-02-23)
+	Fixed bug with new legacyoutput plugin not working correctly on it's own.
+	Fixed bug some performance issues with removing text formats.
+	Fixed bug where TinyMCE specific attributes wasn't removed properly by remove format.
+	Fixed bug where it wasn't possible to align images within inline elements.
+	Fixed bug where Ctrl+Delete/Backspace would produce an invalid argument exception on IE.
+	Fixed bug where the search/replace logic could produce an infinite loop on IE for reverse searches.
+	Fixed bug where cloning formats in cells didn't work properly on IE.
+	Fixed bug where IE6 would produce a horizontal scroll bar.
+	Fixed so remove jQuery method removes the TinyMCE instance as well as the specified textarea.
+	Fixed so selected rows and cells gets updated using the row/cell properties dialogs.
+Version 3.3b2 (2010-02-04)
+	Fixed bug where sometimes img elements would be removed by split method in DOMUtils.
+	Fixed bug where merging of span elements could occur on bookmark nodes.
+	Fixed bug where classes wasn't properly removed when removeformat was used on IE 6.
+	Fixed bug where multiple calls to an tinyMCE.init with mode set to exact could produce the same unique ID.
+	Fixed bug with the IE selection implementation when it was feeded an document range.
+	Fixed bug where block elements formatting wasn't properly removed by removeformat on all browsers.
+	Fixed bug where selection location was lost if you performed a manual cleanup.
+	Fixed bug where removeformat wouldn't remove span elements within styled block elements.
+	Fixed bug where an error would be thrown if you clicked on the separator lines in menus.
+	Fixed bug with the jQuery plugin adding always adding a querystring value to other resources.
+	Fixed bug where IE would produce an error message if you had an empty editor instance.
+	Fixed bug where Shift+Enter didn't produce br elements on WebKit browsers.
+	Fixed bug where a temporary marker element wasn't removed by the paste plugin.
+	Fixed bug where inserting a table would produce two undo levels instead of one.
+Version 3.3b1 (2010-01-25)
+	Added new text formatting engine. Fixes a lot of browser quirks and adds new possibilities.
+	Added new advlist plugin that enables you to set the formats of list elements.
+	Added new paste plugin logic that enables you to retain style information from Office.
+	Added new autosave plugin logic that automatically saves contents in local storage.
+	Added new valid_styles option. Adds the possibility to restrict styles and their order.
+	Added new theme_advanced_runtime_fontsize option to display the runtime font size in font size select box.
+	Added new jquery plugin version that handles the gzip compressor amongst other things. Contributed by Speednet.
+	Added new $ function to tinymce namespace and editor instances for the jQuery build.
+	Added the possibility to get editors by index as well as name in the tinyMCE.editors collection.
+	Fixed so the contents inside the editor renders in standards mode by default.
+	Fixed bug where it wasn't possible to move the caret on short documents running in standards mode on IE.
+	Fixed bug where the decode method of the DOMUtils class could end up in an endless loop.
+	Fixed bug where it was possible to bypass the paste cleanup on non IE browsers if you clicked while pasting.
+	Fixed bug where some attributes wasn't serialized correctly on IE if wildcard attribute patters where used.
+	Fixed bug where entity decoding was performed on strings that didn't have any valid entities in them.
+	Fixed bugs with the insertNode method of the IE DOMRange implementation. Patch contributed by Scott McNaught.
+	Rewrote the getBookmark/moveToBookmark selection logic to boost performance on larger documents.
+	Rewrote the table plugin to include new cell selection logic and fixed various bugs and issues.
+	Merged the tinyMCE, tinymce and tinymce.EditorManager into the same instance makes more sense.
+	Removed browser setting since the browser support for TinyMCE is not far better than it was when that setting was introduced.
+	Changed the mce_ attribute prefix to the more standard _mce_ prefix. This is similar to browser vendors prefixes.
+	Optimized performance with named entities on Gecko. Regexp replace was executing very slowly probably due to a Gecko bug.
+	Optimized performance of the IE specific selection/range implementation.
+	Removed the safari plugin since we now replaced all text formatting logic to custom code.
 Version 3.2.7 (2009-09-22)
 	Fixed bug where uppercase paragraphs could still produce an invalid DOM tree on IE.
 	Fixed bug where split command didn't work on WebKit since the node serializer needs a real document to work with.
