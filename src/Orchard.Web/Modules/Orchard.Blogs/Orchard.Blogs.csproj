@@ -69,6 +69,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Drivers\BlogArchivesPartDriver.cs" />
     <Compile Include="Drivers\BlogPagerPartDriver.cs" />
+    <Compile Include="Drivers\RemoteBlogPublishingDriver.cs" />
     <Compile Include="Drivers\RecentBlogPostsPartDriver.cs" />
     <Compile Include="Handlers\BlogArchivesPartHandler.cs" />
     <Compile Include="Handlers\RecentBlogPostsPartHandler.cs" />
@@ -108,7 +109,6 @@
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
-    <Compile Include="RemoteBlogPublishingShapes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Admin\images\draft.gif" />
@@ -156,7 +156,7 @@
     <None Include="Placement.info">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Views\RemoteBlogPublishing.cshtml" />
+    <Content Include="Views\Parts\Blogs.RemotePublishing.cshtml" />
     <Content Include="Views\Parts\Blogs.BlogArchives.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.BlogArchives.cshtml" />

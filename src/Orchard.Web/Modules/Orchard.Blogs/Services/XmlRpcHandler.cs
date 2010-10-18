@@ -19,7 +19,7 @@ using Orchard.Blogs.Extensions;
 
 namespace Orchard.Blogs.Services {
     [UsedImplicitly]
-    [OrchardFeature("Remote Blog Publishing")]
+    [OrchardFeature("Orchard.Blogs.RemotePublishing")]
     public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
