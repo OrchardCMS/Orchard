@@ -390,6 +390,7 @@
     <None Include="Contents\Placement.info" />
     <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <Content Include="Contents\Views\Item\Display.cshtml" />
+    <None Include="Contents\Views\Items\Content.Edit.cshtml" />
     <None Include="Localization\Placement.info" />
     <None Include="PublishLater\Placement.info" />
     <Content Include="Routable\Views\Parts\RoutableTitle.cshtml" />
