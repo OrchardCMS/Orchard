@@ -9,10 +9,8 @@ namespace Orchard.Widgets.Drivers {
     public class LayerPartDriver : ContentPartDriver<LayerPart> {
 
         protected override DriverResult Editor(LayerPart layerPart, dynamic shapeHelper) {
-
-            // TODO: andrerod convert to new shape API. Location code kept for reference.
-            // ContentLocation location = layerPart.GetLocation("Editor");
-            return ContentPartTemplate(layerPart, "Parts/Widgets.LayerPart"); //.Location(location);
+            return ContentShape("Parts_Widgets_LayerPart",
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Widgets.LayerPart", Model: layerPart));
         }
 
         protected override DriverResult Editor(LayerPart layerPart, IUpdateModel updater, dynamic shapeHelper) {
