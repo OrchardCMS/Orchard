@@ -7,7 +7,7 @@ using Orchard.DisplayManagement;
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
         protected virtual string Prefix { get { return ""; } }
-        protected virtual string Zone { get { return "Primary"; } }
+        protected virtual string Zone { get { return "Content"; } }
 
         DriverResult IContentPartDriver.BuildDisplay(BuildDisplayContext context) {
             var part = context.ContentItem.As<TContent>();
@@ -44,7 +44,6 @@ namespace Orchard.ContentManagement.Drivers {
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory) {
             return ContentShapeImplementation(shapeType, null, ctx=>factory(CreateShape(ctx, shapeType)));
         }
-
 
         public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic, dynamic> factory) {
             return ContentShapeImplementation(shapeType, defaultLocation, factory);
