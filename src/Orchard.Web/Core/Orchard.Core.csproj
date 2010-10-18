@@ -390,10 +390,10 @@
     <Content Include="Dashboard\Views\Helper\Index.cshtml" />
     <None Include="Common\Placement.info" />
     <None Include="Contents\Placement.info" />
-    <None Include="Contents\Views\Content.ControlWrapper.cshtml" />
+    <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <None Include="Localization\Placement.info" />
     <None Include="PublishLater\Placement.info" />
-    <None Include="Routable\Views\Parts\RoutableTitle.cshtml" />
+    <Content Include="Routable\Views\Parts\RoutableTitle.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

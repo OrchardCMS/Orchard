@@ -76,7 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <None Include="Views\DatabaseUpdate\Index.cshtml" />
+    <Content Include="Views\DatabaseUpdate\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

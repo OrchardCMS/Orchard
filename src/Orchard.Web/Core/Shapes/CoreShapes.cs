@@ -12,6 +12,7 @@ using Orchard.Settings;
 using Orchard.UI;
 using Orchard.UI.Resources;
 using Orchard.UI.Zones;
+using Orchard.Utility.Extensions;
 
 // ReSharper disable InconsistentNaming
 
@@ -237,27 +238,29 @@ namespace Orchard.Core.Shapes {
             IEnumerable<string> ItemClasses,
             IDictionary<string, string> ItemAttributes) {
 
+            if (Items == null)
+                return;
+
             var listTagName = string.IsNullOrEmpty(Tag) ? "ul" : Tag;
             const string itemTagName = "li";
 
             var listTag = GetTagBuilder(listTagName, Id, Classes, Attributes);
             Output.Write(listTag.ToString(TagRenderMode.StartTag));
 
-            if (Items != null) {
-                var count = Items.Count();
-                var index = 0;
-                foreach (var item in Items) {
-                    var itemTag = GetTagBuilder(itemTagName, null, ItemClasses, ItemAttributes);
-                    if (index == 0)
-                        itemTag.AddCssClass("first");
-                    if (index == count - 1)
-                        itemTag.AddCssClass("last");
-                    Output.Write(itemTag.ToString(TagRenderMode.StartTag));
-                    Output.Write(Display(item));
-                    Output.Write(itemTag.ToString(TagRenderMode.EndTag));
-                    ++index;
-                }
+            var count = Items.Count();
+            var index = 0;
+            foreach (var item in Items) {
+                var itemTag = GetTagBuilder(itemTagName, null, ItemClasses, ItemAttributes);
+                if (index == 0)
+                    itemTag.AddCssClass("first");
+                if (index == count - 1)
+                    itemTag.AddCssClass("last");
+                Output.Write(itemTag.ToString(TagRenderMode.StartTag));
+                Output.Write(Display(item));
+                Output.Write(itemTag.ToString(TagRenderMode.EndTag));
+                ++index;
             }
+
             Output.Write(listTag.ToString(TagRenderMode.EndTag));
         }
 

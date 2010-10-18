@@ -451,7 +451,6 @@
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
     <Compile Include="WorkContextExtensions.cs" />
-    <Compile Include="Mvc\Html\Shapes.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\WebViewPage.cs" />

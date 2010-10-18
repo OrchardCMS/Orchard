@@ -21,7 +21,7 @@
 
 	<p>
 		This page shows you the simple theme and it's core functionality you can extend it by changing the code use the advanced theme if you need to configure/add more buttons etc.
-		There are more examples on how to use TinyMCE in the <a href="http://wiki.moxiecode.com/examples/tinymce/">Wiki</a>.
+		There are more examples on how to use TinyMCE in the <a href="http://tinymce.moxiecode.com/examples/">Wiki</a>.
 	</p>
 
 	<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
@@ -38,6 +38,10 @@
 	<input type="submit" name="save" value="Submit" />
 	<input type="reset" name="reset" value="Reset" />
 </form>
-
+<script type="text/javascript">
+if (document.location.protocol == 'file:') {
+	alert("The examples might not work properly on the local file system due to security settings in your browser. Please use a real webserver.");
+}
+</script>
 </body>
 </html>

@@ -108,9 +108,9 @@
   <ItemGroup>
     <Content Include="Views\DisplayTemplates\Parts\Experimental.ShowDebugLink.ascx" />
     <Content Include="Views\DumpShapeTable.cshtml" />
-    <None Include="Views\HackScript.cshtml" />
-    <None Include="Views\HackStyle.cshtml" />
-    <None Include="Views\ThinBorder.cshtml" />
+    <Content Include="Views\HackScript.cshtml" />
+    <Content Include="Views\HackStyle.cshtml" />
+    <Content Include="Views\ThinBorder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

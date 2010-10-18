@@ -109,7 +109,6 @@
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="RemoteBlogPublishingShapes.cs" />
-    <Compile Include="Shapes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Admin\images\draft.gif" />
@@ -162,16 +161,16 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="Views\RemoteBlogPublishing.cshtml" />
-    <None Include="Views\Parts\Blogs.BlogArchives.cshtml" />
-    <None Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />
-    <None Include="Views\EditorTemplates\Parts\Blogs.BlogArchives.cshtml" />
-    <None Include="Views\Items\Content-Blog.DetailAdmin.cshtml" />
-    <None Include="Views\Items\Content-Blog.Editor.cshtml" />
-    <None Include="Views\Items\Content-BlogPost.Editor.cshtml" />
-    <None Include="Views\Items\Content-BlogPost.SummaryAdmin.cshtml" />
-    <None Include="Views\Parts\Blogs.BlogPost.List.cshtml" />
-    <None Include="Views\Parts\Blogs.Blog.Pager.cshtml" />
-    <None Include="Views\Parts\Blogs.RecentBlogPosts.cshtml" />
+    <Content Include="Views\Parts\Blogs.BlogArchives.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Blogs.BlogArchives.cshtml" />
+    <Content Include="Views\Items\Content-Blog.DetailAdmin.cshtml" />
+    <Content Include="Views\Items\Content-Blog.Editor.cshtml" />
+    <Content Include="Views\Items\Content-BlogPost.Editor.cshtml" />
+    <Content Include="Views\Items\Content-BlogPost.SummaryAdmin.cshtml" />
+    <Content Include="Views\Parts\Blogs.BlogPost.List.cshtml" />
+    <Content Include="Views\Parts\Blogs.Blog.Pager.cshtml" />
+    <Content Include="Views\Parts\Blogs.RecentBlogPosts.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
