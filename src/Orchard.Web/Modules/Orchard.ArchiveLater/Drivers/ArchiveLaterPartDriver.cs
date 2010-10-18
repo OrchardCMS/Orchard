@@ -1,24 +1,19 @@
 ﻿using System;
-using Orchard;
 using Orchard.ArchiveLater.Models;
 using Orchard.ArchiveLater.Services;
 using Orchard.ArchiveLater.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.Common.Services;
 using Orchard.Localization;
 
-namespace ArchiveLater.Drivers {
+namespace Orchard.ArchiveLater.Drivers {
     public class ArchiveLaterPartDriver : ContentPartDriver<ArchiveLaterPart> {
-        private const string TemplatePrefix = "ArchiveLater";
-        private readonly ICommonService _commonService;
+        private const string TemplateName = "Parts/ArchiveLater";
         private readonly IArchiveLaterService _archiveLaterService;
 
         public ArchiveLaterPartDriver(
             IOrchardServices services,
-            ICommonService commonService,
             IArchiveLaterService archiveLaterService) {
-            _commonService = commonService;
             _archiveLaterService = archiveLaterService;
             T = NullLocalizer.Instance;
             Services = services;
@@ -26,6 +21,8 @@ namespace ArchiveLater.Drivers {
 
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
+
+        protected override string Prefix { get { return "ArchiveLater"; } }
 
         protected override DriverResult Display(ArchiveLaterPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_ArchiveLater_Metadata_SummaryAdmin",
@@ -40,20 +37,24 @@ namespace ArchiveLater.Drivers {
         }
 
         protected override DriverResult Editor(ArchiveLaterPart part, dynamic shapeHelper) {
-            return ArchiveEditor(part, null, shapeHelper);
-        }
-
-        protected override DriverResult Editor(ArchiveLaterPart instance, IUpdateModel updater, dynamic shapeHelper) {
-            return ArchiveEditor(instance, updater, shapeHelper);
-        }
-
-        DriverResult ArchiveEditor(ArchiveLaterPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new ArchiveLaterViewModel(part);
 
-            if ( updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null) ) {
-                if (model.ArchiveLater) {
+            model.ScheduledArchiveUtc = part.ScheduledArchiveUtc.Value;
+            model.ArchiveLater = model.ScheduledArchiveUtc.HasValue;
+            model.ScheduledArchiveDate = model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value.ToLocalTime().ToShortDateString() : String.Empty;
+            model.ScheduledArchiveTime = model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value.ToLocalTime().ToShortTimeString() : String.Empty;
+
+            return ContentShape("Parts_ArchiveLater_Edit",
+                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+        }
+
+        protected override DriverResult Editor(ArchiveLaterPart part, IUpdateModel updater, dynamic shapeHelper) {
+            var model = new ArchiveLaterViewModel(part);
+
+            if (updater.TryUpdateModel(model, Prefix, null, null) ) {
+                if ( model.ArchiveLater ) {
                     DateTime scheduled;
-                    if (DateTime.TryParse(string.Format("{0} {1}", model.ScheduledArchiveDate, model.ScheduledArchiveTime), out scheduled))
+                    if ( DateTime.TryParse(string.Format("{0} {1}", model.ScheduledArchiveDate, model.ScheduledArchiveTime), out scheduled) )
                         model.ScheduledArchiveUtc = scheduled.ToUniversalTime();
                     _archiveLaterService.ArchiveLater(model.ContentItem, model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value : DateTime.MaxValue);
                 }
@@ -63,7 +64,7 @@ namespace ArchiveLater.Drivers {
             }
 
             return ContentShape("Parts_ArchiveLater_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/ArchiveLater", Model: model, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
     }
 }

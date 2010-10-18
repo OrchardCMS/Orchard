@@ -10,7 +10,7 @@
         <select id="sourceId" name="sourceId">
             @Html.SelectOption("", Model.SelectedSource == null, T("Any (show all feeds)").ToString())
             @foreach (var source in Model.Sources) {
-                Html.SelectOption(source.Id, Model.SelectedSource != null && Model.SelectedSource.Id == source.Id, source.FeedTitle);
+                @Html.SelectOption(source.Id, Model.SelectedSource != null && Model.SelectedSource.Id == source.Id, source.FeedTitle)
             }
         </select>
         <button type="submit">@T("Apply")</button>

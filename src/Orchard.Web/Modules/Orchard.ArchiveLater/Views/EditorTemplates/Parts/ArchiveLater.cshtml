@@ -21,7 +21,10 @@
         @Html.EditorFor(m => m.ScheduledArchiveTime)
     </div>
 </fieldset>
-<script type="text/javascript">    $(function () {
+@using(Script.Foot()) {
+<script type="text/javascript">    
+//<![CDATA[
+    $(function () {
         //todo: (heskew) make a plugin
         $("label.forpicker").each(function () {
             var $this = $(this);
@@ -34,6 +37,9 @@
             .blur(function () { var $this = $(this); setTimeout(function () { if (!$this.val()) { $this.addClass("hinted").val($this.data("hint")) } }, 300) });
             }
         });
-        $(@string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledArchiveDate"))).datepicker({ showAnim: "" }).focus(function () { $(@string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("Command_ArchiveLater"))).attr("checked", "checked") });
-        $(@string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledArchiveTime"))).timepickr().focus(function () { $(@string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("Command_ArchiveLater"))).attr("checked", "checked") });
-    })</script>
+        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledArchiveDate")').datepicker({ showAnim: "" }).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_ArchiveLater")').attr("checked", "checked") });
+        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledArchiveTime")').timepickr().focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_ArchiveLater")').attr("checked", "checked") });
+    })
+//]]>
+</script>
+}

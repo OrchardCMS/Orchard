@@ -42,11 +42,11 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory) {
-            return ContentShapeImplementation(shapeType, null, ctx=>factory(CreateShape(ctx, shapeType)));
+            return ContentShapeImplementation(shapeType, null, ctx => factory(CreateShape(ctx, shapeType)));
         }
 
         public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic, dynamic> factory) {
-            return ContentShapeImplementation(shapeType, defaultLocation, factory);
+            return ContentShapeImplementation(shapeType, defaultLocation, ctx => factory(CreateShape(ctx, shapeType)));
         }
 
         private ContentShapeResult ContentShapeImplementation(string shapeType, string defaultLocation, Func<BuildShapeContext, object> shapeBuilder) {
