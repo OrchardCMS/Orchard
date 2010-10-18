@@ -769,16 +769,6 @@
     <Compile Include="UI\Resources\LinkEntry.cs" />
     <Compile Include="UI\Resources\ResourceFilter.cs" />
     <Compile Include="UI\Resources\ResourceManager.cs" />
-    <Compile Include="UI\Zones\Obsolete\DelegateZoneItem.cs" />
-    <Compile Include="UI\Zones\Obsolete\IZoneManager.cs" />
-    <Compile Include="UI\Zones\Obsolete\ContentPartDisplayZoneItem.cs" />
-    <Compile Include="UI\Zones\Obsolete\ContentPartEditorZoneItem.cs" />
-    <Compile Include="UI\Zones\Obsolete\IZoneManagerEvents.cs" />
-    <Compile Include="UI\Zones\Obsolete\RenderActionZoneItem.cs" />
-    <Compile Include="UI\Zones\Obsolete\RenderPartialZoneItem.cs" />
-    <Compile Include="UI\Zones\Obsolete\RenderStaticZoneItem.cs" />
-    <Compile Include="UI\Zones\Obsolete\ZoneEntry.cs" />
-    <Compile Include="UI\Zones\Obsolete\ZoneItem.cs" />
     <Compile Include="Mvc\ViewPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -820,7 +810,6 @@
     <Compile Include="FileSystems\Media\IStorageFile.cs" />
     <Compile Include="FileSystems\Media\IStorageFolder.cs" />
     <Compile Include="FileSystems\Media\IStorageProvider.cs" />
-    <Compile Include="UI\Zones\Obsolete\ZoneManager.cs" />
     <Compile Include="Utility\Extensions\ReadOnlyCollectionExtensions.cs" />
     <Compile Include="Utility\Extensions\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Utility\Extensions\StringExtensions.cs" />

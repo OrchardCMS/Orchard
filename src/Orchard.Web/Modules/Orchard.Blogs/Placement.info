@@ -20,8 +20,10 @@
     <Match ContentType="Blog">
         <Match DisplayType="Detail">
             <!-- blog posts currently added to the blog within the controller into Content:5 <Place Parts_Blogs_BlogPost_List="Content:5" />-->
+            <!-- Parts_Blogs_RemotePublishing is made available with the "Remote Blog Publishing" feature -->
             <Place Parts_Blogs_Blog_Pager="Content:after"
-                   Parts_Blogs_Blog_Description="Content:before" />
+                   Parts_Blogs_Blog_Description="Content:before"
+                   Parts_Blogs_RemotePublishing="Content"/>
         </Match>
         <Match DisplayType="DetailAdmin">
             <Place Parts_Blogs_BlogPost_List_Admin="Content:5"
