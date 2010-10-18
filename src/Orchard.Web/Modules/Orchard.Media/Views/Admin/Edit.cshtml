@@ -8,8 +8,7 @@
 <div class="breadCrumbs">
 <p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
     @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {
-        @Html.ActionLink(navigation.FolderName, "Edit",
-            new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) 
+        @Html.ActionLink(navigation.FolderName, "Edit", new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) <text>&#62;</text>
     }
     @T("Manage Folder")</p>
 </div>
@@ -68,7 +67,7 @@
                                                                               folderName = mediaFile.FolderName,
                                                                               mediaPath = Model.MediaPath })
                     </td>
-                    <td>@T("Orchard User")</td>
+                    <td>@mediaFile.User</td>
                     <td>@mediaFile.LastUpdated</td>
                     <td>@mediaFile.Type</td>
                     <td>@mediaFile.Size</td>
@@ -85,7 +84,7 @@
                         <img src="<%=ResolveUrl("~/Modules/Orchard.Media/Content/Admin/images/folder.gif")%>" height="16" width="16" class="mediaTypeIcon" alt="@T("Folder")" />
                         @Html.ActionLink(mediaFolder.Name, "Edit", new { name = mediaFolder.Name, mediaPath = mediaFolder.MediaPath})
                     </td>
-                    <td>@T("Orchard User")</td>
+                    <td>@mediaFolder.User</td>
                     <td>@mediaFolder.LastUpdated</td>
                     <td>@T("Folder")</td>
                     <td>@mediaFolder.Size</td>
