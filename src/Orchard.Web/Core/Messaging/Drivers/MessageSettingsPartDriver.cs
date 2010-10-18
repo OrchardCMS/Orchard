@@ -9,6 +9,7 @@ using Orchard.Messaging.Services;
 namespace Orchard.Core.Messaging.Drivers {
     [UsedImplicitly]
     public class MessageSettingsPartDriver : ContentPartDriver<MessageSettingsPart> {
+        private const string TemplateName = "Parts/MessageSettings";
         private readonly IMessageManager _messageQueueManager;
         public IOrchardServices Services { get; set; }
 
@@ -29,7 +30,7 @@ namespace Orchard.Core.Messaging.Drivers {
                 MessageSettings = part
             };
 
-            return ContentPartTemplate(model, "Parts/Messaging.MessageSettings");
+            return ContentShape("Parts_MessageSettings_Edit", () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(MessageSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -37,10 +38,9 @@ namespace Orchard.Core.Messaging.Drivers {
                 MessageSettings = part
             };
 
-            if (updater.TryUpdateModel(model, Prefix, null, null)) {
-            }
+            updater.TryUpdateModel(model, Prefix, null, null);
 
-            return ContentPartTemplate(model, "Parts/Messaging.MessageSettings");
+            return ContentShape("Parts_MessageSettings_Edit", () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
     }
 }
