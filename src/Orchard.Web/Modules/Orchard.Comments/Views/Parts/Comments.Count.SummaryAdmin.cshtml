@@ -2,4 +2,4 @@
 @using Orchard.Comments.Extensions;
 @using Orchard.Comments.ViewModels;
 @using Orchard.ContentManagement;
-<span class="commentcount">@Html.CommentSummaryLinks(T, (ContentItem)Model.ContentPart.ContentItem, (int)Model.CommentCount, (int)Model.PendingCount)</span>
+<span class="commentcount">@Display.CommentSummaryLinks(item: Model.ContentPart.ContentItem, count: Model.CommentCount, pendingCount: Model.PendingCount)</span>

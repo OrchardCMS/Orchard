@@ -1,42 +1,50 @@
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.ContentManagement;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Comments.Extensions {
-    public static class HtmlHelperExtensions {
-        public static MvcHtmlString CommentSummaryLinks(this HtmlHelper html, Localizer T, ContentItem item, int commentCount, int pendingCount) {
+    public class CommentsSummary : IDependency {
+        public CommentsSummary() {
+            T = NullLocalizer.Instance;
+        }
+
+        public Localizer T { get; set; }
+
+        [Shape]
+        public MvcHtmlString CommentSummaryLinks(dynamic Display, HtmlHelper Html, ContentItem item, int count, int pendingCount) {
             var commentText = "";
 
             if (item.Id != 0) {
-                var totalCommentCount = commentCount + pendingCount;
+                var totalCommentCount = count + pendingCount;
                 var totalCommentText = T.Plural("1 comment", "{0} comments", totalCommentCount);
                 if (totalCommentCount == 0) {
                     commentText += totalCommentText.ToString();
                 }
                 else {
                     commentText +=
-                        html.ActionLink(
+                        Html.ActionLink(
                             totalCommentText.ToString(),
                             "Details",
                             new {
                                 Area = "Orchard.Comments",
                                 Controller = "Admin",
                                 id = item.Id,
-                                returnUrl = html.ViewContext.HttpContext.Request.ToUrlString()
+                                returnUrl = Html.ViewContext.HttpContext.Request.ToUrlString()
                             });
                 }
 
                 if (pendingCount > 0) {
-                    commentText += " " + html.ActionLink(T("({0} pending)", pendingCount).ToString(),
+                    commentText += " " + Html.ActionLink(T("({0} pending)", pendingCount).ToString(),
                                                    "Details",
                                                    new {
                                                        Area = "Orchard.Comments",
                                                        Controller = "Admin",
                                                        id = item.Id,
-                                                       returnUrl = html.ViewContext.HttpContext.Request.Url
+                                                       returnUrl = Html.ViewContext.HttpContext.Request.Url
                                                    });
                 }
             }

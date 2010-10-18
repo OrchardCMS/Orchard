@@ -6,7 +6,7 @@
 <fieldset>
     <legend>@T("Comments") 
     @if (Model.Comments.Count > 0) { 
-        <span>&#150; @Html.CommentSummaryLinks(T, Model.ContentItem, Model.Comments.Count, Model.PendingComments.Count)</span> 
+        <span>&#150; @Display.CommentSummaryLinks(item: Model.ContentItem, count: Model.Comments.Count, pendingCount: Model.PendingComments.Count)</span> 
      }
      </legend>
     @Html.EditorFor(m => m.CommentsActive)
