@@ -4,4 +4,4 @@ Description: It's a *really* good theme, yo.
 Version: 0.1
 Tags: Awesome
 Website: http://orchardproject.net
-Zones: Header, Navigation, Featured, BeforeMain, Messages, BeforeContent, Content, AfterContent, AfterMain, TripelFirst, TripelSecond, TripelThird, FooterQuadFirst, FooterQuadSecond, FooterQuadThird, FooterQuadFourth, Footer, AsideFirst, AsideSecond
+Zones: Header, Navigation, Featured, BeforeMain, AsideFirst, Messages, BeforeContent, Content, AfterContent, AsideSecond, AfterMain, TripelFirst, TripelSecond, TripelThird, FooterQuadFirst, FooterQuadSecond, FooterQuadThird, FooterQuadFourth, Footer

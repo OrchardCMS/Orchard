@@ -103,7 +103,7 @@
   <ItemGroup>
     <Content Include="Content\Admin\images\disabled.gif" />
     <Content Include="Content\Admin\images\enabled.gif" />
-    <Content Include="styles\admin.css" />
+    <Content Include="Styles\admin.css" />
     <Content Include="Views\Admin\Features.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
