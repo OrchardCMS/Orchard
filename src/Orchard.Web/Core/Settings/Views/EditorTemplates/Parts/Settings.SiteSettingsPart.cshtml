@@ -1,11 +1,11 @@
 ﻿@model Orchard.Core.Settings.ViewModels.SiteSettingsPartViewModel
 @using Orchard.Settings;
 @{
-	var resourceDebugMode = new SelectList(new object[] {
-		new { Id = (int)ResourceDebugMode.FromAppSetting, Text = "Use web.config setting" },
-		new { Id = (int)ResourceDebugMode.Enabled, Text = "Enabled" },
-		new { Id = (int)ResourceDebugMode.Disabled, Text = "Disabled" },
-	}, "Id", "Text", (int)Model.ResourceDebugMode);
+    var resourceDebugMode = new SelectList(new object[] {
+        new { Id = (int)ResourceDebugMode.FromAppSetting, Text = "Use web.config setting" },
+        new { Id = (int)ResourceDebugMode.Enabled, Text = "Enabled" },
+        new { Id = (int)ResourceDebugMode.Disabled, Text = "Disabled" },
+    }, "Id", "Text", (int)Model.ResourceDebugMode);
 }
 <fieldset>
     <legend>@T("Global Settings")</legend>
@@ -30,9 +30,9 @@
         @Html.EditorFor(x=>x.SuperUser)
         @Html.ValidationMessage("SuperUser", "*")
     </div>
-	<div>
-		<label for="SiteDebugMode">@T("Resource Debug Mode")</label>
-		@Html.DropDownList("ResourceDebugMode", resourceDebugMode)
-		<p>@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</p>
-	</div>
+    <div>
+        <label for="SiteDebugMode">@T("Resource Debug Mode")</label>
+        @Html.DropDownList("ResourceDebugMode", resourceDebugMode)
+        <p>@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</p>
+    </div>
 </fieldset>

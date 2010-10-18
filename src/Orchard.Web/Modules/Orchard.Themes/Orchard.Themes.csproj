@@ -74,7 +74,6 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="DesignerNotes\ZoneManagerEvents.cs" />
     <Compile Include="Handlers\ThemeSiteSettingsPartHandler.cs" />
     <Compile Include="Models\Theme.cs" />
     <Compile Include="Models\ThemeSiteSettingsPart.cs" />
@@ -88,7 +87,6 @@
     <Compile Include="Services\SafeModeThemeSelector.cs" />
     <Compile Include="Services\SiteThemeSelector.cs" />
     <Compile Include="Services\ThemeService.cs" />
-    <Compile Include="Services\ThemeZoneManagerEvents.cs" />
     <Compile Include="ViewModels\ThemesIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

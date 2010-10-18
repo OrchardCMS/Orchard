@@ -21,7 +21,6 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         private object _display;
         private object _layout;
         private WorkContext _workContext;
-        private object _new;
 
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }

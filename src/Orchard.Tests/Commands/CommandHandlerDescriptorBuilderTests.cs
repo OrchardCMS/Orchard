@@ -49,10 +49,11 @@ namespace Orchard.Tests.Commands {
             Assert.That(descriptor.Commands.Single(d => d.Name == "Method"), Is.Not.Null);
         }
 
+#pragma warning disable 660,661
         public class PublicMethodsOnly {
+#pragma warning restore 660,661
             public bool Bar { get; set; }   // no accessors
             public bool Field = true;       // no field
-            public event Action<int> Event; // no event adder, remover, etc.
 
             // no private method
             private void Blah() {
@@ -66,6 +67,7 @@ namespace Orchard.Tests.Commands {
             public static bool operator ==(PublicMethodsOnly a, PublicMethodsOnly b) {
                 return false;
             }
+
             public static bool operator !=(PublicMethodsOnly a, PublicMethodsOnly b) {
                 return false;
             }

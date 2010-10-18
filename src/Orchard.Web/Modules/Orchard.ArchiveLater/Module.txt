@@ -9,4 +9,4 @@ Features:
     Orchard.ArchiveLater:
         Description: Scheduled archiving.
         Category: Content
-        Dependencies: Common, Settings
+        Dependencies: Common, Settings, Orchard.jQuery

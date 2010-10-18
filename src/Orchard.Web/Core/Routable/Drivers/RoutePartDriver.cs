@@ -44,7 +44,8 @@ namespace Orchard.Core.Routable.Drivers {
         }
 
         protected override DriverResult Display(RoutePart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_RoutableTitle", "Header:5", () => shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title, Path: part.Path));
+            return ContentShape("Parts_RoutableTitle", 
+                () => shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title, Path: part.Path));
         }
 
         protected override DriverResult Editor(RoutePart part, dynamic shapeHelper) {
@@ -69,10 +70,9 @@ namespace Orchard.Core.Routable.Drivers {
                     : "";
             }
 
-            // TODO: andrerod convert to new shape API. Location code kept for reference.
-            //var location = part.GetLocation("Editor");
             model.PromoteToHomePage = model.Id != 0 && part.Path != null && _routableHomePageProvider != null && CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
-            return ContentPartTemplate(model, TemplateName, Prefix); //.Location(location);
+            return ContentShape("Parts_Routable_Edit",
+                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(RoutePart part, IUpdateModel updater, dynamic shapeHelper) {

@@ -18,7 +18,6 @@ namespace Orchard.Mvc {
         private ResourceRegister _stylesheetRegister;
         
         private object _display;
-        private object _new;
         private Localizer _localizer = NullLocalizer.Instance;
         private object _layout;
         private WorkContext _workContext;

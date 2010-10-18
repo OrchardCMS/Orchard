@@ -12,8 +12,6 @@ namespace Orchard.Security {
 
         public ILogger Logger { get; set; }
 
-#if REFACTORING
-#endif
         public void OnException(ExceptionContext filterContext) {
             if (!(filterContext.Exception is OrchardSecurityException))
                 return;

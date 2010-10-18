@@ -815,6 +815,9 @@ table .button {
     border-color:#666d51;
     border-style:solid;
 }
+.permalink .checkbox-and-label {
+    white-space:nowrap;
+}
 /* Settings */
 .settings fieldset {
     margin:.5em 0;

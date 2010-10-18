@@ -27,17 +27,18 @@ namespace Orchard.Core.Settings.Drivers {
                 SiteCultures = _cultureManager.ListCultures()
             };
 
-            return ContentPartTemplate(model, "Parts/Settings.SiteSettingsPart");
+            return ContentShape("Parts_Settings_SiteSettingsPart",
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Settings.SiteSettingsPart", Model: model));
         }
 
         protected override DriverResult Editor(SiteSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var site = _siteService.GetSiteSettings().As<SiteSettingsPart>();
             var model = new SiteSettingsPartViewModel { Site = site };
 
-            if (updater.TryUpdateModel(model, Prefix, null, null)) {
-            }
+            updater.TryUpdateModel(model, Prefix, null, null);
 
-            return ContentPartTemplate(model, "Parts/Settings.SiteSettingsPart");
+            return ContentShape("Parts_Settings_SiteSettingsPart",
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Settings.SiteSettingsPart", Model: model));
         }
     }
 }

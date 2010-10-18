@@ -71,7 +71,6 @@ namespace Orchard.Setup.Services {
                     "Shapes",
                     "PublishLater",
                     "Contents",
-                    "ContentsLocation",
                     "Dashboard",
                     "Reports",
                     "Feeds",
