@@ -45,7 +45,7 @@ namespace Orchard.Tests.Commands {
             var builder = new CommandHandlerDescriptorBuilder();
             var descriptor = builder.Build(typeof(PublicMethodsOnly));
             Assert.That(descriptor, Is.Not.Null);
-            Assert.That(descriptor.Commands.Count(), Is.EqualTo(1));
+            Assert.That(descriptor.Commands.Count(), Is.EqualTo(3));
             Assert.That(descriptor.Commands.Single(d => d.Name == "Method"), Is.Not.Null);
         }
 
