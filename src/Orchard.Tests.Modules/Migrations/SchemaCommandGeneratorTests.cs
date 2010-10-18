@@ -1,6 +1,4 @@
-﻿#if REFACTORING
-#error This must move to the Modules tests to accomodate Orchard.Experimental assembly reference
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -12,13 +10,13 @@ using Autofac.Features.Metadata;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.CodeGeneration.Services;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Data.Conventions;
 using Orchard.Data.Migration.Generator;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Schema;
-using Orchard.DevTools.Services;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
@@ -30,10 +28,10 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.ContentManagement;
 using Orchard.Data.Providers;
-using Orchard.Tests.DataMigration.Orchard.Tests.DataMigration.Records;
 using Orchard.Tests.FileSystems.AppData;
+using Orchard.Tests.Modules.Migrations.Orchard.Tests.DataMigration.Records;
 
-namespace Orchard.Tests.DataMigration {
+namespace Orchard.Tests.Modules.Migrations {
     [TestFixture]
     public class SchemaCommandGeneratorTests {
         private IContainer _container;
@@ -217,7 +215,7 @@ Features:
             Assert.That(commands.Count(), Is.EqualTo(3));
 
             var sw = new StringWriter();
-            var interpreter = new ScaffoldingCommandInterpreter(sw);
+            var interpreter = new CodeGenerationCommandInterpreter(sw);
 
             var blogRecord = commands.Where(c => c.Name == "TEST_Feature1_BlogRecord").First();
             var blogArchiveRecord = commands.Where(c => c.Name == "TEST_Feature1_BlogArchiveRecord").First();
@@ -273,4 +271,3 @@ Features:
         }
     }
 }
-#endif

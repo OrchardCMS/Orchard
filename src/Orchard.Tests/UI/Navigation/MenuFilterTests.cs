@@ -43,46 +43,6 @@ namespace Orchard.Tests.UI.Navigation {
             var main = GetNavigationManager().Object.BuildMenu("main");
             Assert.That(main.Count(), Is.EqualTo(1));
         }
-
-#if REFACTORING
-        [Test]
-        public void MainMenuShouldBeCalledNormally() {
-            Mock<INavigationManager> navigationManager = GetNavigationManager();
-
-            var authorizationContext = GetAuthorizationContext<NormalController>();
-            var adminFilter = new AdminFilter(GetAuthorizer(true));
-            adminFilter.OnAuthorization(authorizationContext);
-
-            var viewModel = new BaseViewModel();
-            var resultExecutingContext = new ResultExecutingContext(
-                authorizationContext,
-                new ViewResult { ViewData = new ViewDataDictionary<BaseViewModel>(viewModel) });
-            var menuFilter = new MenuFilter(navigationManager.Object);
-            menuFilter.OnResultExecuting(resultExecutingContext);
-
-            Assert.That(viewModel.Menu, Is.Not.Null);
-            Assert.That(viewModel.Menu.Single().Text, Is.SameAs("The Main Menu"));
-        }
-
-        [Test]
-        public void AdminMenuShouldHaveDifferentNavigation() {
-            Mock<INavigationManager> navigationManager = GetNavigationManager();
-
-            var authorizationContext = GetAuthorizationContext<AdminController>();
-            var adminFilter = new AdminFilter(GetAuthorizer(true));
-            adminFilter.OnAuthorization(authorizationContext);
-
-            var viewModel = new BaseViewModel();
-            var resultExecutingContext = new ResultExecutingContext(
-                authorizationContext,
-                new ViewResult { ViewData = new ViewDataDictionary<BaseViewModel>(viewModel) });
-            var menuFilter = new MenuFilter(navigationManager.Object);
-            menuFilter.OnResultExecuting(resultExecutingContext);
-
-            Assert.That(viewModel.Menu, Is.Not.Null);
-            Assert.That(viewModel.Menu.Single().Text, Is.SameAs("The Admin Menu"));
-        }
-#endif
     }
 
 

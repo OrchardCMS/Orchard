@@ -16,20 +16,7 @@ namespace Orchard.Experimental.ViewModels {
 
         public IEnumerable<TemplateViewModel> Editors {
             get {
-#if REFACTORING                
-                return EditorModel.Zones
-                    .SelectMany(z => z.Value.Items
-                        .OfType<ContentPartEditorZoneItem>()
-                        .Select(x => new { ZoneName = z.Key, Item = x }))
-                    .Select(x => new TemplateViewModel(x.Item.Model, x.Item.Prefix) {
-                        Model = x.Item.Model,
-                        TemplateName = x.Item.TemplateName,
-                        WasUsed = x.Item.WasExecuted,
-                        ZoneName = x.ZoneName,
-                    });
-#else
                 return new List<TemplateViewModel>();
-#endif
             }
         }
 
