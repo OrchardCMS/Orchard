@@ -2,7 +2,6 @@
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Localization;
 using Orchard.Security;
@@ -28,7 +27,8 @@ namespace Orchard.Core.Navigation.Drivers {
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part))
                 return null;
 
-            return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart").Location(part.GetLocation("Editor"));
+            // TODO: andrerod convert to new shape API. Location code kept for reference.
+            return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart"); //.Location(part.GetLocation("Editor"));
         }
 
         protected override DriverResult Editor(MenuPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -46,7 +46,8 @@ namespace Orchard.Core.Navigation.Drivers {
                 updater.AddModelError("MenuText", T("The MenuText field is required"));
             }
 
-            return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart").Location(part.GetLocation("Editor"));
+            // TODO: andrerod convert to new shape API. Location code kept for reference.
+            return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart"); //.Location(part.GetLocation("Editor"));
         }
     }
 }

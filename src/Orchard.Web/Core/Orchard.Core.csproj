@@ -74,14 +74,9 @@
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
-    <Compile Include="ContentsLocation\ResourceManifest.cs" />
-    <Compile Include="ContentsLocation\Models\LocationDefinition.cs" />
     <Compile Include="Common\Services\ICommonService.cs" />
     <Compile Include="Common\Services\CommonService.cs" />
     <Compile Include="Common\Settings\BodySettings.cs" />
-    <Compile Include="ContentsLocation\Models\LocationSettings.cs" />
-    <Compile Include="ContentsLocation\Settings\LocationSettingsEditorEvents.cs" />
-    <Compile Include="ContentsLocation\ViewModels\LocationSettingsViewModel.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
@@ -257,9 +252,6 @@
     <Content Include="Common\Views\Parts\Common.Body.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\Parts\Common.Metadata.cshtml" />
     <Content Include="Common\Views\Parts\Common.Metadata.SummaryAdmin.cshtml" />
-    <Content Include="ContentsLocation\Module.txt" />
-    <Content Include="ContentsLocation\Styles\admin.css" />
-    <Content Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.cshtml" />
     <Content Include="Contents\Views\Admin\Create.cshtml" />
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\List.cshtml" />
@@ -365,7 +357,6 @@
     <Content Include="Localization\Views\Web.config" />
     <Content Include="Reports\Views\Web.config" />
     <Content Include="PublishLater\Views\Web.config" />
-    <Content Include="ContentsLocation\Views\Web.config" />
     <Content Include="Messaging\Views\Web.config" />
     <Content Include="Contents\Views\Items\Content.cshtml" />
     <Content Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />

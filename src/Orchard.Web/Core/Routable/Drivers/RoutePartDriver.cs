@@ -5,7 +5,6 @@ using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
@@ -70,9 +69,10 @@ namespace Orchard.Core.Routable.Drivers {
                     : "";
             }
 
-            var location = part.GetLocation("Editor");
+            // TODO: andrerod convert to new shape API. Location code kept for reference.
+            //var location = part.GetLocation("Editor");
             model.PromoteToHomePage = model.Id != 0 && part.Path != null && _routableHomePageProvider != null && CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
-            return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
+            return ContentPartTemplate(model, TemplateName, Prefix); //.Location(location);
         }
 
         protected override DriverResult Editor(RoutePart part, IUpdateModel updater, dynamic shapeHelper) {

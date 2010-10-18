@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets.Drivers {
@@ -9,8 +8,9 @@ namespace Orchard.Widgets.Drivers {
         private const string TemplateName = "Parts/Widgets.WidgetBagPart";
 
         protected override DriverResult Editor(WidgetBagPart part, dynamic shapeHelper) {
-            var location = part.GetLocation("Editor");
-            return ContentPartTemplate("", TemplateName, Prefix).Location(location);
+            //var location = part.GetLocation("Editor");
+            // TODO: andrerod convert to new shape API. Location code kept for reference.
+            return ContentPartTemplate("", TemplateName, Prefix); //.Location(location);
         }
     }
 }
