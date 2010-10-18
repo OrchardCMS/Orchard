@@ -1,3 +1,7 @@
+@{
+    Model.ContentItems.Classes.Add("content-items");
+    Model.ContentItems.Classes.Add("blogs");
+}
 @Display(Model.ContentItems)
 @if (Model.ContentItems.Items.Count < 1) {
 <p>@T("No blogs found.")</p>
