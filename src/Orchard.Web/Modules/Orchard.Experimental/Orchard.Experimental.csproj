@@ -93,20 +93,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\Commands\Execute.ascx" />
-    <Content Include="Views\Content\Details.aspx" />
-    <Content Include="Views\Content\Index.aspx" />
-    <Content Include="Views\DefinitionTemplates\ExperimentalSettings.aspx" />
-    <Content Include="Views\EditorTemplates\Parts\Experimental.ShowDebugLink.ascx" />
-    <Content Include="Views\Home\Index.aspx" />
-    <Content Include="Views\Home\Simple.aspx" />
-    <Content Include="Views\Home\_RenderableAction.ascx" />
-    <Content Include="Views\Metadata\Index.aspx" />
+    <None Include="Views\Commands\Execute.cshtml" />
+    <None Include="Views\Content\Details.cshtml" />
+    <None Include="Views\Content\Index.cshtml" />
+    <None Include="Views\DefinitionTemplates\ExperimentalSettings.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\Experimental.ShowDebugLink.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Simple.cshtml" />
+    <None Include="Views\Home\_RenderableAction.cshtml" />
+    <None Include="Views\Metadata\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\DisplayTemplates\Parts\Experimental.ShowDebugLink.ascx" />
+    <None Include="Views\Parts\Experimental.ShowDebugLink.cshtml" />
     <Content Include="Views\DumpShapeTable.cshtml" />
     <Content Include="Views\HackScript.cshtml" />
     <Content Include="Views\HackStyle.cshtml" />
@@ -133,6 +133,7 @@
   <ItemGroup>
     <Content Include="Views\ShapeTable\ShapeTable.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

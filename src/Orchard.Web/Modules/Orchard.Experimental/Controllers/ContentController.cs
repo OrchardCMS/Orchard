@@ -7,8 +7,12 @@ using Orchard.Experimental.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.DisplayManagement;
+using Orchard.Themes;
+using Orchard.UI.Admin;
 
 namespace Orchard.Experimental.Controllers {
+
+    [Themed, Admin]
     public class ContentController : Controller {
         private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
         private readonly IContentManager _contentManager;
@@ -43,7 +47,7 @@ namespace Orchard.Experimental.Controllers {
             model.DisplayShape = _contentManager.BuildDisplay(model.Item, "Detail");
             model.EditorShape = _contentManager.BuildEditor(model.Item);
 
-            return View(Shape.Model(model));
+            return View(model);
         }
 
         static IEnumerable<Type> AllTypes(Type type) {

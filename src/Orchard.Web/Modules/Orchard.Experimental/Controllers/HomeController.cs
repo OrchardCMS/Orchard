@@ -9,8 +9,8 @@ using Orchard.UI.Notify;
 using Orchard.UI.Admin;
 
 namespace Orchard.Experimental.Controllers {
-    [Themed]
-    [Admin]
+
+    [Themed, Admin]
     public class HomeController : Controller {
         private readonly INotifier _notifier;
 
