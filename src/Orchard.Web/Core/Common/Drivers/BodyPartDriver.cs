@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using JetBrains.Annotations;
@@ -9,7 +8,6 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Services;
 
@@ -47,10 +45,6 @@ namespace Orchard.Core.Common.Drivers {
                                  return shapeHelper.Parts_Common_Body_Summary(ContentPart: part, Html: new HtmlString(bodyText));
                              })
                 );
-        }
-
-        private string IfThen(bool predicate, string value) {
-            return predicate ? value : null;
         }
 
         protected override DriverResult Editor(BodyPart part, dynamic shapeHelper) {

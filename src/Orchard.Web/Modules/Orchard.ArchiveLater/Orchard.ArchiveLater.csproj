@@ -98,9 +98,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\ArchiveLater.Metadata.cshtml" />
     <Content Include="Views\Parts\ArchiveLater.Metadata.SummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ArchiveLater.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Placement.info">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -20,13 +20,13 @@ namespace Orchard.Email.Drivers {
         protected override string Prefix { get { return "SmtpSettings"; } }
 
         protected override DriverResult Editor(SmtpSettingsPart part, dynamic shapeHelper) {
-            return ContentShape("Parts_SmtpSettings_Editor",
+            return ContentShape("Parts_SmtpSettings_Edit",
                     () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(SmtpSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
-            return ContentShape("Parts_SmtpSettings_Editor",
+            return ContentShape("Parts_SmtpSettings_Edit",
                     () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
         }
     }
