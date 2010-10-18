@@ -5,7 +5,6 @@ using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
-using Orchard.Core.ContentsLocation.Models;
 
 namespace Orchard.Blogs.Drivers {
     public class RecentBlogPostsPartDriver : ContentPartDriver<RecentBlogPostsPart> {
@@ -44,12 +43,12 @@ namespace Orchard.Blogs.Drivers {
 
             var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, ContentItems: list);
 
-            return ContentShape(shapeHelper.Parts_Blogs_RecentBlogPosts(ContentItem: part, ContentItems: blogPostList));
+            return ContentShape(shapeHelper.Parts_Blogs_RecentBlogPosts(ContentItem: part.ContentItem, ContentItems: blogPostList));
         }
 
         protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper) {
-            var location = part.GetLocation("Editor", "Primary", "5");
-            return ContentPartTemplate(part, "Parts/Blogs.RecentBlogPosts").Location(location);
+            return ContentShape("Parts_Blogs_RecentBlogPosts_Editor",
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Blogs.RecentBlogPosts", Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(RecentBlogPostsPart part, IUpdateModel updater, dynamic shapeHelper) {

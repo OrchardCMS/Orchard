@@ -76,10 +76,9 @@ namespace Orchard.Blogs.Controllers {
             var list = Shape.List();
             list.AddRange(blogPosts);
 
-            blog.ContentItem = blogPart;
             blog.Content.Add(Shape.Parts_Blogs_BlogPost_List(ContentItems: list), "5");
 
-            return View("Display", blog);
+            return View(blog);
         }
 
         public ActionResult LiveWriterManifest(string blogSlug) {

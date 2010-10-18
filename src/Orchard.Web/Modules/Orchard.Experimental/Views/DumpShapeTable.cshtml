@@ -6,14 +6,8 @@
 	var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.ThemeName);
 <!--    
 	<ul>
-		@foreach(var descriptor in shapeTable.Descriptors) {
-			<li>@descriptor.Key : @descriptor.Value.BindingSource 
-				@if(descriptor.Value.Wrappers.Any()){
-					foreach(var wrapper in descriptor.Value.Wrappers) {
-						@(" +"+wrapper)
-					}
-				}
-			</li>
+		@foreach(var binding in shapeTable.Bindings) {
+			<li>@binding.Key : @binding.Value.BindingSource</li>
 		}
 	</ul>
 -->

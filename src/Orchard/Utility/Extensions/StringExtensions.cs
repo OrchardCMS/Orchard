@@ -29,6 +29,8 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static string HtmlClassify(this string text) {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
             var friendlier = text.CamelFriendly();
             return Regex.Replace(friendlier, @"[^a-zA-Z]+", m => m.Index == 0 ? "" : "-").ToLowerInvariant();
         }

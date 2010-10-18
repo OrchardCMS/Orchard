@@ -377,8 +377,6 @@
     <Content Include="ContentsLocation\Views\Web.config" />
     <Content Include="Messaging\Views\Web.config" />
     <Content Include="Contents\Views\Items\Content.cshtml" />
-    <Content Include="Contents\Views\Items\Content.Edit.cshtml" />
-    <Content Include="Contents\Views\Items\Content.Summary.cshtml" />
     <Content Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
     <Content Include="Shapes\Views\Document.cshtml" />
     <Content Include="Shapes\Views\User.cshtml" />
@@ -389,11 +387,13 @@
     <Content Include="Shapes\Views\Web.config" />
     <Content Include="Dashboard\Views\Helper\Index.cshtml" />
     <None Include="Common\Placement.info" />
+    <Content Include="Common\Views\Parts\Common.Metadata.Summary.cshtml" />
     <None Include="Contents\Placement.info" />
     <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <None Include="Localization\Placement.info" />
     <None Include="PublishLater\Placement.info" />
     <Content Include="Routable\Views\Parts\RoutableTitle.cshtml" />
+    <None Include="PublishLater\Views\Parts\PublishLater.Metadata.Summary.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
