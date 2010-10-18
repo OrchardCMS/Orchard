@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
@@ -18,8 +17,8 @@ namespace Orchard.Widgets.Drivers {
         protected override DriverResult Editor(WidgetPart widgetPart, dynamic shapeHelper) {
             widgetPart.AvailableZones = _widgetsService.GetZones();
 
-            ContentLocation location = widgetPart.GetLocation("Editor");
-            return ContentPartTemplate(widgetPart, "Parts/Widgets.WidgetPart").Location(location);
+            return ContentShape("Parts_Widgets_WidgetPart",
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Widgets.WidgetPart", Model: widgetPart));
         }
 
         protected override DriverResult Editor(WidgetPart widgetPart, IUpdateModel updater, dynamic shapeHelper) {

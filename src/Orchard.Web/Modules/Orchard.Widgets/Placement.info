@@ -1,0 +1,5 @@
+﻿<Placement>
+    <Place Parts_Widgets_LayerPart="Primary:1"/>
+    <Place Parts_Widgets_WidgetPart="Primary:1"/>
+    <Place Parts_Widgets_WidegetBagPart="Primary:5"/>
+</Placement>

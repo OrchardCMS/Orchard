@@ -74,14 +74,9 @@
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
-    <Compile Include="ContentsLocation\ResourceManifest.cs" />
-    <Compile Include="ContentsLocation\Models\LocationDefinition.cs" />
     <Compile Include="Common\Services\ICommonService.cs" />
     <Compile Include="Common\Services\CommonService.cs" />
     <Compile Include="Common\Settings\BodySettings.cs" />
-    <Compile Include="ContentsLocation\Models\LocationSettings.cs" />
-    <Compile Include="ContentsLocation\Settings\LocationSettingsEditorEvents.cs" />
-    <Compile Include="ContentsLocation\ViewModels\LocationSettingsViewModel.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
@@ -257,9 +252,6 @@
     <Content Include="Common\Views\Parts\Common.Body.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\Parts\Common.Metadata.cshtml" />
     <Content Include="Common\Views\Parts\Common.Metadata.SummaryAdmin.cshtml" />
-    <Content Include="ContentsLocation\Module.txt" />
-    <Content Include="ContentsLocation\Styles\admin.css" />
-    <Content Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.cshtml" />
     <Content Include="Contents\Views\Admin\Create.cshtml" />
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\List.cshtml" />
@@ -349,7 +341,7 @@
     <Content Include="Dashboard\Views\Admin\Index.cshtml" />
     <Content Include="HomePage\Module.txt" />
     <Content Include="Navigation\Views\Admin\Index.cshtml" />
-    <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.EditMenuPart.cshtml" />
+    <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.Menu.Edit.cshtml" />
     <Content Include="Navigation\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -365,7 +357,6 @@
     <Content Include="Localization\Views\Web.config" />
     <Content Include="Reports\Views\Web.config" />
     <Content Include="PublishLater\Views\Web.config" />
-    <Content Include="ContentsLocation\Views\Web.config" />
     <Content Include="Messaging\Views\Web.config" />
     <Content Include="Contents\Views\Items\Content.cshtml" />
     <Content Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
@@ -382,11 +373,13 @@
     <None Include="Contents\Placement.info" />
     <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <Content Include="Contents\Views\Item\Display.cshtml" />
-    <None Include="Contents\Views\Items\Content.Edit.cshtml" />
     <None Include="Localization\Placement.info" />
     <Content Include="Messaging\Placement.info">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Navigation\Placement.info">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="PublishLater\Placement.info">
       <SubType>Designer</SubType>
     </None>

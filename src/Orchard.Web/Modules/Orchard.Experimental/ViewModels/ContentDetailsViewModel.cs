@@ -28,9 +28,13 @@ namespace Orchard.Experimental.ViewModels {
                         ZoneName = x.ZoneName,
                     });
 #else
-                return null;
+                return new List<TemplateViewModel>();
 #endif
             }
+        }
+
+        public IEnumerable<TemplateViewModel> Displays {
+            get { return new List<TemplateViewModel>(); }
         }
 
         public object Locate(Type type) {

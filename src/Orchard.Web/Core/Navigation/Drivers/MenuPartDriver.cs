@@ -1,8 +1,6 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Localization;
 using Orchard.Security;
@@ -28,25 +26,23 @@ namespace Orchard.Core.Navigation.Drivers {
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part))
                 return null;
 
-            return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart").Location(part.GetLocation("Editor"));
+            return ContentShape("Parts_Navigation_Menu_Edit",
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Navigation.Menu.Edit", Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(MenuPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part)) {
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part))
                 return null;
-            }
 
-            if (string.IsNullOrEmpty(part.MenuPosition)) {
+            if (string.IsNullOrEmpty(part.MenuPosition))
                 part.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
-            }
 
             updater.TryUpdateModel(part, Prefix, null, null);
 
-            if (part.OnMainMenu && string.IsNullOrEmpty(part.MenuText)) {
+            if (part.OnMainMenu && string.IsNullOrEmpty(part.MenuText))
                 updater.AddModelError("MenuText", T("The MenuText field is required"));
-            }
 
-            return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart").Location(part.GetLocation("Editor"));
+            return Editor(part, shapeHelper);
         }
     }
 }

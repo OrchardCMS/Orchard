@@ -4,9 +4,11 @@ using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Experimental.ViewModels;
+using Orchard.Themes;
+using Orchard.UI.Admin;
 
 namespace Orchard.Experimental.Controllers {
-    [ValidateInput(false)]
+    [ValidateInput(false), Themed, Admin]
     public class MetadataController : Controller {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IContentDefinitionWriter _contentDefinitionWriter;

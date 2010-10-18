@@ -64,26 +64,6 @@ namespace Orchard.Widgets {
         }
 
         public int UpdateFrom1() {
-            ContentDefinitionManager.AlterPartDefinition(typeof(LayerPart).Name, 
-                cfg => cfg
-                    .WithLocation(new Dictionary<string, ContentLocation> {
-                        {"Editor", new ContentLocation { Zone = "Primary", Position = "1" }}
-                    })
-                );
-
-            ContentDefinitionManager.AlterPartDefinition(typeof(WidgetPart).Name, 
-                cfg => cfg
-                    .WithLocation(new Dictionary<string, ContentLocation> {
-                        {"Editor", new ContentLocation { Zone = "Primary", Position = "1" }}
-                   })
-                );
-
-            ContentDefinitionManager.AlterPartDefinition(typeof(WidgetBagPart).Name,
-                cfg => cfg
-                    .WithLocation(new Dictionary<string, ContentLocation> {
-                        {"Editor", new ContentLocation {Zone = "Primary", Position = "5"}}
-                    })
-                );
             ContentDefinitionManager.AlterTypeDefinition("WidgetPage",
                 cfg => cfg
                     .WithPart("CommonPart")

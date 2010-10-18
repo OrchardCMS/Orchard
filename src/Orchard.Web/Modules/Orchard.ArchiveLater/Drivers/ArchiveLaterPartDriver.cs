@@ -6,7 +6,6 @@ using Orchard.ArchiveLater.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Services;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Localization;
 
 namespace ArchiveLater.Drivers {
