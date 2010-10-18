@@ -293,8 +293,11 @@
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Views\Admin\Culture.cshtml" />
-    <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.ascx" />
-    <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.ascx" />
+    <None Include="Settings\Placement.info">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Settings\Views\DisplayTemplates\CurrentCulture.cshtml" />
+    <None Include="Settings\Views\DisplayTemplates\RemovableCulture.cshtml" />
     <Content Include="Shapes\Module.txt" />
     <Content Include="Shapes\Scripts\base.js" />
     <Content Include="Shapes\Scripts\html5.js" />
