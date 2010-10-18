@@ -15,7 +15,7 @@ namespace Orchard.UI {
             var xParts = x.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             var yParts = y.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             for (var i = 0; i < xParts.Count(); i++) {
-                if (yParts.Length < i - 1) // x is further defined meaning it comes after y (e.g. x == 1.2.3 and y == 1.2)
+                if (yParts.Length < i+1) // x is further defined meaning it comes after y (e.g. x == 1.2.3 and y == 1.2)
                     return 1;
 
                 int xPos;
