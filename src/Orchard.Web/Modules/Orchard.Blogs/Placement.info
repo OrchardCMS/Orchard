@@ -3,6 +3,7 @@
     <!--
         Parts_Blogs_Blog_Manage
         Parts_Blogs_Blog_Description
+        Parts_Blogs_Blog_BlogPostCount
         Parts_Blogs_Blog_Pager
         Parts_Blogs_BlogPost_List -> when in the blog detail display the blog post list is currently hard-coded to Content:5 to enable the current state of blog paging
         Parts_Blogs_BlogPost_List_Admin
@@ -10,9 +11,12 @@
     <!-- widget and edit shapes just get default placement -->
     <!-- edit "shapes" -->
     <Place Parts_Blogs_Blog_Fields="Primary:2"/>
+    <Place Parts_Blogs_BlogArchives_Editor="Primary:5"/>
+    <Place Parts_Blogs_RecentBlogPosts_Editor="Primary:5"/>
     <!-- widgets -->
     <Place Parts_Blogs_BlogArchives="Content"/>
     <Place Parts_Blogs_RecentBlogPosts="Content"/>
+    <!-- default positioning -->
     <Match ContentType="Blog">
         <Match DisplayType="Detail">
             <!-- blog posts currently added to the blog within the controller into Content:5 <Place Parts_Blogs_BlogPost_List="Content:5" />-->
@@ -25,7 +29,8 @@
                    Parts_Blogs_Blog_Description="Manage:after"/>
         </Match>
         <Match DisplayType="Summary">
-            <Place Parts_Blogs_Blog_Description="Content:before"/>
+            <Place Parts_Blogs_Blog_Description="Content:before"
+                   Parts_Blogs_Blog_BlogPostCount="Meta:3"/>
         </Match>
         <Match DisplayType="SummaryAdmin">
             <Place Parts_Blogs_Blog_Description="Content:before"/>

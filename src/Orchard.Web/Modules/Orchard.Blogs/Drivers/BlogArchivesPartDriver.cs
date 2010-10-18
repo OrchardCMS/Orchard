@@ -2,7 +2,6 @@
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.ContentsLocation.Models;
 
 namespace Orchard.Blogs.Drivers {
     public class BlogArchivesPartDriver : ContentPartDriver<BlogArchivesPart> {
@@ -24,13 +23,13 @@ namespace Orchard.Blogs.Drivers {
                                     if (blog == null)
                                         return null;
 
-                                    return shapeHelper.Parts_Blogs_BlogArchives(ContentItem: part, Blog: blog, Archives: _blogPostService.GetArchives(blog));
+                                    return shapeHelper.Parts_Blogs_BlogArchives(ContentItem: part.ContentItem, Blog: blog, Archives: _blogPostService.GetArchives(blog));
                                 }).Location("Content");
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
-            var location = part.GetLocation("Editor", "Primary", "5");
-            return ContentPartTemplate(part, "Parts/Blogs.BlogArchives").Location(location);
+            return ContentShape("Parts_Blogs_BlogArchives_Editor",
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Blogs.BlogArchives", Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, IUpdateModel updater, dynamic shapeHelper) {

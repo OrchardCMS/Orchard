@@ -45,7 +45,7 @@ namespace Orchard.Core.Routable.Drivers {
         }
 
         protected override DriverResult Display(RoutePart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_RoutableTitle", "Header:5", () => shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title));
+            return ContentShape("Parts_RoutableTitle", "Header:5", () => shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title, Path: part.Path));
         }
 
         protected override DriverResult Editor(RoutePart part, dynamic shapeHelper) {

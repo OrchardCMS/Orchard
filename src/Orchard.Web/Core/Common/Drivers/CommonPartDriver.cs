@@ -2,7 +2,6 @@
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.ViewModels;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Services;
@@ -48,8 +47,8 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) {
             return Combined(
-                OwnerEditor(part, null),
-                ContainerEditor(part, null));
+                OwnerEditor(part, null, shapeHelper),
+                ContainerEditor(part, null, shapeHelper));
         }
 
         protected override DriverResult Editor(CommonPart instance, IUpdateModel updater, dynamic shapeHelper) {
@@ -58,11 +57,11 @@ namespace Orchard.Core.Common.Drivers {
             instance.VersionModifiedUtc = _clock.UtcNow;
 
             return Combined(
-                OwnerEditor(instance, updater),
-                ContainerEditor(instance, updater));
+                OwnerEditor(instance, updater, shapeHelper),
+                ContainerEditor(instance, updater, shapeHelper));
         }
 
-        DriverResult OwnerEditor(CommonPart part, IUpdateModel updater) {
+        DriverResult OwnerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
             if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, part)) {
                 return null;
@@ -87,10 +86,11 @@ namespace Orchard.Core.Common.Drivers {
                 }
             }
 
-            return ContentPartTemplate(model, "Parts/Common.Owner", TemplatePrefix).Location(part.GetLocation("Editor"));
+            return ContentShape("Parts_Common_Owner_Edit",
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Common.Owner", Model: model, Prefix: Prefix));
         }
 
-        DriverResult ContainerEditor(CommonPart part, IUpdateModel updater) {
+        DriverResult ContainerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
             if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, part)) {
                 return null;
@@ -115,7 +115,8 @@ namespace Orchard.Core.Common.Drivers {
                 }
             }
 
-            return ContentPartTemplate(model, "Parts/Common.Container", TemplatePrefix).Location(part.GetLocation("Editor"));
+            return ContentShape("Parts_Common_Container_Edit",
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Common.Container", Model: model, Prefix: Prefix));
         }
     }
 }

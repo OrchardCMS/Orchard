@@ -6,7 +6,6 @@ using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Feeds;
-using Orchard.DisplayManagement;
 using Orchard.Localization;
 
 namespace Orchard.Blogs.Drivers {
@@ -41,6 +40,8 @@ namespace Orchard.Blogs.Drivers {
                              () => shapeHelper.Parts_Blogs_Blog_Manage(ContentPart: part)),
                 ContentShape("Parts_Blogs_Blog_Description",
                              () => shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part, Description: part.Description)),
+                ContentShape("Parts_Blogs_Blog_BlogPostCount",
+                             () => shapeHelper.Parts_Blogs_Blog_BlogPostCount(ContentPart: part, PostCount: part.PostCount)),
                 // todo: (heskew) implement a paging solution that doesn't require blog posts to be tied to the blog within the controller
                 ContentShape("Parts_Blogs_BlogPost_List",
                              () => {
