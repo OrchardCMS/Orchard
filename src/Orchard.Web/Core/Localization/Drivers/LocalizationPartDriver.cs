@@ -42,8 +42,9 @@ namespace Orchard.Core.Localization.Drivers {
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
 
-            // TODO: andrerod convert to new shape API. Location code kept for reference.
-            return ContentPartTemplate(model, "Parts/Localization.Translation", TemplatePrefix); //.Location(part.GetLocation("Editor"));
+            return ContentShape("Parts_Localization_ContentTranslations_Edit", () => {
+                return shapeHelper.EditorTemplate(TemplateName: "Parts/Localization.ContentTranslations.Edit", Model: model, Prefix: TemplatePrefix);
+            });
         }
 
         protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater, dynamic shapeHelper) {
