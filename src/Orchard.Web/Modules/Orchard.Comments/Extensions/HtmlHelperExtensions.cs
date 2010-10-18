@@ -1,3 +1,4 @@
+using System.IO;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.ContentManagement;
@@ -15,7 +16,7 @@ namespace Orchard.Comments.Extensions {
         public Localizer T { get; set; }
 
         [Shape]
-        public MvcHtmlString CommentSummaryLinks(dynamic Display, HtmlHelper Html, ContentItem item, int count, int pendingCount) {
+        public void CommentSummaryLinks(dynamic Display, TextWriter Output, HtmlHelper Html, ContentItem item, int count, int pendingCount) {
             var commentText = "";
 
             if (item.Id != 0) {
@@ -49,7 +50,7 @@ namespace Orchard.Comments.Extensions {
                 }
             }
 
-            return MvcHtmlString.Create(commentText);
+            Output.Write(commentText);
         }
     }
 }
