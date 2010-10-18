@@ -36,7 +36,7 @@ namespace Orchard.Tags.Drivers {
             if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, CurrentUser, part))
                 return null;
 
-            return ContentShape("Parts_Tags_Editor",
+            return ContentShape("Parts_Tags_Edit",
                     () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: BuildEditorViewModel(part), Prefix: Prefix));
         }
 
@@ -52,7 +52,7 @@ namespace Orchard.Tags.Drivers {
                 _tagService.UpdateTagsForContentItem(part.ContentItem.Id, tagNames);
             }
 
-            return ContentShape("Parts_Tags_Editor",
+            return ContentShape("Parts_Tags_Edit",
                     () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
