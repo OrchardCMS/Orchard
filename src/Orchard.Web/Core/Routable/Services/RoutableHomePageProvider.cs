@@ -42,7 +42,7 @@ namespace Orchard.Core.Routable.Services {
             var model = _contentManager.BuildDisplay(contentItem);
 
             return new ViewResult {
-                ViewName = "Display",
+                ViewName = "Routable.HomePage",
                 ViewData = new ViewDataDictionary<dynamic>(model)
             };
         }
