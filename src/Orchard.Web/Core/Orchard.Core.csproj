@@ -341,7 +341,7 @@
     <Content Include="Dashboard\Views\Admin\Index.cshtml" />
     <Content Include="HomePage\Module.txt" />
     <Content Include="Navigation\Views\Admin\Index.cshtml" />
-    <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.EditMenuPart.cshtml" />
+    <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.Menu.Edit.cshtml" />
     <Content Include="Navigation\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -373,11 +373,13 @@
     <None Include="Contents\Placement.info" />
     <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <Content Include="Contents\Views\Item\Display.cshtml" />
-    <None Include="Contents\Views\Items\Content.Edit.cshtml" />
     <None Include="Localization\Placement.info" />
     <Content Include="Messaging\Placement.info">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Navigation\Placement.info">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="PublishLater\Placement.info">
       <SubType>Designer</SubType>
     </None>

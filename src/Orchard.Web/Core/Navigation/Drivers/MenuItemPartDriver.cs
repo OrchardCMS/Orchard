@@ -16,14 +16,11 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override DriverResult Editor(MenuItemPart itemPart, IUpdateModel updater, dynamic shapeHelper) {
-            //todo: (heskew) need context
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
-
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, itemPart))
                 return null;
 
             updater.TryUpdateModel(itemPart, Prefix, null, null);
-
             return null;
         }
     }
