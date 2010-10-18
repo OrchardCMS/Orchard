@@ -45,11 +45,13 @@ namespace Orchard.Tests.Commands {
             var builder = new CommandHandlerDescriptorBuilder();
             var descriptor = builder.Build(typeof(PublicMethodsOnly));
             Assert.That(descriptor, Is.Not.Null);
-            Assert.That(descriptor.Commands.Count(), Is.EqualTo(3));
+            Assert.That(descriptor.Commands.Count(), Is.EqualTo(1));
             Assert.That(descriptor.Commands.Single(d => d.Name == "Method"), Is.Not.Null);
         }
 
+#pragma warning disable 660,661
         public class PublicMethodsOnly {
+#pragma warning restore 660,661
             public bool Bar { get; set; }   // no accessors
             public bool Field = true;       // no field
 
@@ -68,14 +70,6 @@ namespace Orchard.Tests.Commands {
 
             public static bool operator !=(PublicMethodsOnly a, PublicMethodsOnly b) {
                 return false;
-            }
-
-            public override int GetHashCode() {
-                throw new NotImplementedException();
-            }
-
-            public override bool Equals(Object obj) {
-                throw new NotImplementedException();
             }
 
             public void Method() {
