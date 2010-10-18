@@ -1,16 +1,24 @@
 ﻿<Placement>
     <!-- available display shapes -->
     <!--
+    Parts_Common_Body
+    Parts_Common_Body_Summary
     Parts_Common_Metadata
     Parts_Common_Metadata_Summary
     Parts_Common_Metadata_SummaryAdmin
+    Fields_Common_Text
     -->
-    <!-- edit shape just get default placement -->
+    <!-- edit shapes getting default placements -->
     <!-- edit "shape" -->
     <Place Parts_Common_Body_Edit="Primary:2"/>
+    <Place Parts_Common_Owner_Edit="Primary:20"/>
+    <Place Parts_Common_Container_Edit="Primary:20"/>
+    <Place Fields_Common_Text_Edit="Primary:2.5"/>
     <!-- default positioning -->
     <!-- show summary for all DisplayType by default -->
     <Place Parts_Common_Body_Summary="Content:5"/>
+    <!-- with text fields a little before -->
+    <Place Fields_Common_Text="Content:2.5"/>
     <Match DisplayType="Detail">
         <!-- hide summary, show full content, for Detail -->
         <Place Parts_Common_Body_Summary="-"

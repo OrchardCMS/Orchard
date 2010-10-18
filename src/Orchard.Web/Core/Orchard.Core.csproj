@@ -82,7 +82,6 @@
     <Compile Include="ContentsLocation\Models\LocationSettings.cs" />
     <Compile Include="ContentsLocation\Settings\LocationSettingsEditorEvents.cs" />
     <Compile Include="ContentsLocation\ViewModels\LocationSettingsViewModel.cs" />
-    <Compile Include="Common\ViewModels\CommonMetadataViewModel.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
@@ -148,7 +147,6 @@
     <Compile Include="Common\Models\BodyPart.cs" />
     <Compile Include="Common\Models\BodyPartRecord.cs" />
     <Compile Include="Common\Models\CommonPartRecord.cs" />
-    <Compile Include="Common\ViewModels\BodyDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\BodyEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
     <Compile Include="Contents\AdminMenu.cs" />
@@ -255,11 +253,8 @@
     <Content Include="Common\Module.txt" />
     <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.cshtml" />
     <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.cshtml" />
-    <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextField.cshtml" />
+    <Content Include="Common\Views\Fields\Common.Text.cshtml" />
     <Content Include="Common\Views\Parts\Common.Body.SummaryAdmin.cshtml" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.SummaryAdmin.cshtml" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.SummaryAdmin.cshtml" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\Parts\Common.Metadata.cshtml" />
     <Content Include="Common\Views\Parts\Common.Metadata.SummaryAdmin.cshtml" />
     <Content Include="ContentsLocation\Module.txt" />
@@ -281,7 +276,7 @@
     <Content Include="PublishLater\Content\Admin\images\scheduled.gif" />
     <Content Include="PublishLater\Views\Parts\PublishLater.Metadata.cshtml" />
     <Content Include="PublishLater\Views\Parts\PublishLater.Metadata.SummaryAdmin.cshtml" />
-    <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Fields\Common.Text.Edit.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
     <Content Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
     <Content Include="Contents\Module.txt" />
@@ -359,9 +354,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Parts\Common.Body.Summary.cshtml" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.cshtml" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.cshtml" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.cshtml" />
     <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
   <ItemGroup />
