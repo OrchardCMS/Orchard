@@ -75,7 +75,7 @@ namespace Orchard.Themes.Services {
             while (!string.IsNullOrWhiteSpace(baseThemeName)) {
                 //todo: (heskew) need a better way to protect from recursive references
                 if (themesSeen.Contains(baseThemeName))
-                    throw new InvalidOperationException(T("The theme \"{0}\" was already seen - looks like we're going aruond in circles.", baseThemeName).Text);
+                    throw new InvalidOperationException(T("The theme \"{0}\" was already seen - looks like we're going around in circles.", baseThemeName).Text);
                 themesSeen.Add(baseThemeName);
 
                 var baseTheme = GetThemeByName(baseThemeName);
