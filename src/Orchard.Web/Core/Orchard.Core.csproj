@@ -70,7 +70,7 @@
     <Compile Include="Common\Drivers\BodyPartDriver.cs" />
     <Compile Include="Common\Drivers\CommonPartDriver.cs" />
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
-    <Compile Include="Common\Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="Common\Shapes.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
@@ -231,6 +231,7 @@
     <Compile Include="Settings\ViewModels\SiteSettingsPartViewModel.cs" />
     <Compile Include="Shapes\ResourceManifest.cs" />
     <Compile Include="Shapes\CoreShapes.cs" />
+    <Compile Include="Shapes\DateTimeShapes.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterController.cs" />
     <Compile Include="XmlRpc\IXmlRpcHandler.cs" />

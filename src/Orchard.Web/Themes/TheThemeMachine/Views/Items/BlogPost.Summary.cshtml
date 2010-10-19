@@ -1,6 +1,5 @@
 ﻿@using Orchard.Blogs.Extensions;
 @using Orchard.Blogs.Models;
-@using Orchard.Core.Common.Extensions;
 @using Orchard.Core.Common.Models;
 @using Orchard.Core.Common.ViewModels;
 
@@ -8,7 +7,7 @@
 
 <!-- TODO: Meta should be it's own shape and not part of the blog summary view. Theme authors will need access to it. -->
 <div class="meta">
-    @Display.PublishedState(versionPublishedUtc: new CommonMetadataViewModel((CommonPart)Model.ContentItem.Get(typeof(CommonPart))))
+    @Display.PublishedState(dateTimeUtc: new CommonMetadataViewModel((CommonPart)Model.ContentItem.Get(typeof(CommonPart))))
     @Display(Model.meta)
 </div>
 

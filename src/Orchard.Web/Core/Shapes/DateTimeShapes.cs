@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 using Orchard.Services;
 
-namespace Orchard.Mvc {
-    public class Shapes {
+namespace Orchard.Core.Shapes {
+    public class DateTimeShapes : IDependency {
         private readonly IClock _clock;
 
-        public Shapes(IClock clock) {
+        public DateTimeShapes(IClock clock) {
             _clock = clock;
             T = NullLocalizer.Instance;
         }
@@ -17,16 +18,11 @@ namespace Orchard.Mvc {
         public Localizer T { get; set; }
 
         [Shape]
-        public LocalizedString DateTimeRelative(HtmlHelper Html, DateTime? dateTime, LocalizedString defaultIfNull) {
-            return dateTime.HasValue ? DateTimeRelative(Html, dateTime.Value) : defaultIfNull;
-        }
-
-        [Shape]
-        public LocalizedString DateTimeRelative(HtmlHelper Html, DateTime dateTime) {
-            var time = _clock.UtcNow - dateTime;
+        public IHtmlString DateTimeRelative(HtmlHelper Html, DateTime dateTimeUtc) {
+            var time = _clock.UtcNow - dateTimeUtc;
 
             if (time.TotalDays > 7)
-                return Html.DateTime(dateTime, T("'on' MMM d yyyy 'at' h:mm tt"));
+                return Html.DateTime(dateTimeUtc, T("'on' MMM d yyyy 'at' h:mm tt"));
             if (time.TotalHours > 24)
                 return T.Plural("1 day ago", "{0} days ago", time.Days);
             if (time.TotalMinutes > 60)

@@ -26,7 +26,7 @@
     @if ((((DateTime?)Model.ScheduledPublishUtc).HasValue && ((DateTime?)Model.ScheduledPublishUtc).Value > DateTime.UtcNow) || (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue)) {
         <li>
         @if (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue) {
-            @T("Published: {0}", Display.DateTimeRelative(versionPublishedUtc.Value))
+            @T("Published: {0}", Display.DateTimeRelative(dateTimeUtc: versionPublishedUtc.Value))
         }
         else {
             <img class="icon" src="@Href("~/Core/PublishLater/Content/Admin/images/scheduled.gif")" alt="@T("Scheduled")" title="@T("The page is scheduled for publishing")" /><text>  @T("Scheduled") </text>
