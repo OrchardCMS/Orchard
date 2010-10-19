@@ -28,7 +28,7 @@ namespace Orchard.Core.Localization.Drivers {
                 ContentShape("Parts_Localization_ContentTranslations",
                              () => shapeHelper.Parts_Localization_ContentTranslations(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part))),
                 ContentShape("Parts_Localization_ContentTranslations_Summary",
-                () => shapeHelper.Parts_Localization_ContentTranslations_Summary(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part)))
+                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part)))
                 );
         }
 
@@ -42,9 +42,8 @@ namespace Orchard.Core.Localization.Drivers {
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
 
-            return ContentShape("Parts_Localization_ContentTranslations_Edit", () => {
-                return shapeHelper.EditorTemplate(TemplateName: "Parts/Localization.ContentTranslations.Edit", Model: model, Prefix: TemplatePrefix);
-            });
+            return ContentShape("Parts_Localization_ContentTranslations_Edit",
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Localization.ContentTranslations.Edit", Model: model, Prefix: TemplatePrefix));
         }
 
         protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater, dynamic shapeHelper) {

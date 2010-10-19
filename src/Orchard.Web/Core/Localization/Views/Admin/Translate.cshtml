@@ -2,7 +2,7 @@
 @using Orchard.Core.Localization.ViewModels;
 @{
     dynamic content = Model.Content;
-    content.Zones.primary.Add(New.Partial(TemplateName: "CultureSelection", Model: Model), "0");
+    content.Zones.Primary.Add(New.Partial(TemplateName: "CultureSelection", Model: Model), "0");
 }
 <h1>@Html.TitleForPage(T("Translate Content").ToString())</h1>
 @using (Html.BeginFormAntiForgeryPost()) {

@@ -774,7 +774,6 @@ table .button {
 }
 .contentItems.bulk-items .primary {
     clear:both;
-    float:left;
     margin-top:0;
 }
 .contentItems .properties li {
