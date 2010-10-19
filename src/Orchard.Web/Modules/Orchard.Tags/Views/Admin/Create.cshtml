@@ -5,7 +5,7 @@
     @Html.ValidationSummary() 
     
     <fieldset>
-        @Html.LabelFor(m=>m.TagName)
+        @Html.LabelFor(m => m.TagName, T("Tag Name"))
         @Html.TextBoxFor(m=>m.TagName, new { @class = "text" })
     </fieldset>
 

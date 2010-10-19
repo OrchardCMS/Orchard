@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Mvc.Filters;
 using Orchard.UI.Admin;
 using Orchard.UI.Widgets;
@@ -17,7 +20,12 @@ namespace Orchard.Widgets.Filters {
             _contentManager = contentManager;
             _workContextAccessor = workContextAccessor;
             _ruleManager = ruleManager;
+            Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
+
+        public ILogger Logger { get; set; }
+        public Localizer T { get; private set; }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
             // layers and widgets should only run on a full view rendering result
@@ -42,8 +50,14 @@ namespace Orchard.Widgets.Filters {
             List<int> activeLayerIds = new List<int>();
             foreach (var activeLayer in activeLayers) {
                 var context = workContext.HttpContext;
-                if (_ruleManager.Matches(activeLayer.Record.LayerRule)) {
-                    activeLayerIds.Add(activeLayer.ContentItem.Id);
+                // ignore the rule if it fails to execute
+                try {
+                    if (_ruleManager.Matches(activeLayer.Record.LayerRule)) {
+                        activeLayerIds.Add(activeLayer.ContentItem.Id);
+                    }
+                }
+                catch(Exception e) {
+                    Logger.Debug(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
                 }
             }
 

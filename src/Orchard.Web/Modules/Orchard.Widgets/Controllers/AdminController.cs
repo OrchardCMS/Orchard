@@ -7,6 +7,7 @@ using Orchard.Core.Contents.Controllers;
 using Orchard.Localization;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
+using Orchard.UI.Widgets;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 using Orchard.Widgets.ViewModels;
@@ -19,13 +20,16 @@ namespace Orchard.Widgets.Controllers {
         private const string NotAuthorizedManageWidgetsLabel = "Not authorized to manage widgets";
 
         private readonly IWidgetsService _widgetsService;
+        private readonly IRuleManager _ruleManager;
 
         public AdminController(
             IOrchardServices services,
-            IWidgetsService widgetsService) {
+            IWidgetsService widgetsService,
+            IRuleManager ruleManager) {
 
             Services = services;
             _widgetsService = widgetsService;
+            _ruleManager = ruleManager;
 
             T = NullLocalizer.Instance;
         }
@@ -171,6 +175,9 @@ namespace Orchard.Widgets.Controllers {
                     return HttpNotFound();
 
                 var model = Services.ContentManager.UpdateEditor(layerPart, this);
+
+                ValidateLayer(layerPart);
+
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
                     return View(model);
@@ -216,6 +223,9 @@ namespace Orchard.Widgets.Controllers {
                     return HttpNotFound();
 
                 var model = Services.ContentManager.UpdateEditor(layerPart, this);
+
+                ValidateLayer(layerPart);
+
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
                     return View(model);
@@ -323,6 +333,27 @@ namespace Orchard.Widgets.Controllers {
             return widgetPart != null ?
                 RedirectToAction("Index", "Admin", new { id = widgetPart.LayerPart.Id }) : 
                 RedirectToAction("Index");
+        }
+
+        public bool ValidateLayer(LayerPart layer) {
+            if ( String.IsNullOrWhiteSpace(layer.LayerRule) ) {
+                layer.LayerRule = "true";
+            }
+
+            if(_widgetsService.GetLayers().Any(l => String.CompareOrdinal(l.Name, layer.Name) == 0)) {
+                ModelState.AddModelError("Name", T("A Layer with the same name already exists").Text);
+                return false;
+            }
+
+            try {
+                _ruleManager.Matches(layer.LayerRule);
+            }
+            catch ( Exception e ) {
+                ModelState.AddModelError("Description", T("The rule is not valid: {0}", e.Message).Text);
+                return false;
+            }
+
+            return true;
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

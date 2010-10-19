@@ -154,11 +154,11 @@ namespace Orchard.Themes.Services {
 
             foreach (var theme in requestTheme) {
                 var t = GetThemeByName(theme.ThemeName);
-                if (t != null)
+                if (t != null && t.Enabled)
                     return t;
             }
 
-            return null;
+            return GetThemeByName("SafeMode");
         }
 
         public ITheme GetThemeByName(string name) {
@@ -221,7 +221,8 @@ namespace Orchard.Themes.Services {
         }
 
         private bool IsThemeEnabled(ExtensionDescriptor descriptor) {
-            return _shellDescriptorManager.GetShellDescriptor().Features.Any(sf => sf.Name == descriptor.Name);
+            return (descriptor.Name == "TheAdmin" || descriptor.Name == "SafeMode") ||
+                _shellDescriptorManager.GetShellDescriptor().Features.Any(sf => sf.Name == descriptor.Name);
         }
 
         private ITheme CreateTheme(ExtensionDescriptor descriptor) {
