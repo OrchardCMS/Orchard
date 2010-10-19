@@ -23,6 +23,8 @@ namespace Orchard.Widgets {
             _contentManager.Publish(authenticatedLayer.ContentItem);
             IContent anonymousLayer = _contentManager.Create<LayerPart>("Layer", t => { t.Record.Name = "Anonymous"; t.Record.LayerRule = "not authenticated"; });
             _contentManager.Publish(anonymousLayer.ContentItem);
+            IContent disabledLayer = _contentManager.Create<LayerPart>("Layer", t => { t.Record.Name = "Disabled"; t.Record.LayerRule = "false"; });
+            _contentManager.Publish(disabledLayer.ContentItem);
         }
     }
 

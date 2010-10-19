@@ -97,7 +97,6 @@
     <Content Include="TheThemeMachine\Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="TheThemeMachine\Views\Fields\" />
     <Folder Include="TheThemeMachine\Views\Parts\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
