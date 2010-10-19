@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Orchard.Caching;
+using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.State;
@@ -48,6 +49,8 @@ namespace Orchard.Commands {
                 tenant = tenant ?? "Default";
 
                 using (var env = CreateStandaloneEnvironment(tenant)) {
+                    var commandManager = env.Resolve<ICommandManager>();
+                    var transactionManager = env.Resolve<ITransactionManager>();
 
                     var parameters = new CommandParameters {
                         Arguments = args,
@@ -56,7 +59,16 @@ namespace Orchard.Commands {
                         Output = output
                     };
 
-                    env.Resolve<ICommandManager>().Execute(parameters);
+                    try {
+                        commandManager.Execute(parameters);
+                    }
+                    catch {
+                        // any database changes in this using(env) scope are invalidated
+                        transactionManager.Cancel();
+
+                        // exception handling performed below
+                        throw;
+                    }
                 }
 
                 // in effect "pump messages" see PostMessage circa 1980

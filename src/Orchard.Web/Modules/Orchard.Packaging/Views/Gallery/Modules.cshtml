@@ -1,4 +1,6 @@
 ﻿@model Orchard.Packaging.ViewModels.PackagingModulesViewModel
+@using System.Linq;
+
 @{ Style.Require("PackagingAdmin"); }
 
 <h1>@Html.TitleForPage(T("Browse Gallery - Modules").ToString())</h1>
@@ -10,7 +12,7 @@
         <select id="sourceId" name="sourceId">
             @Html.SelectOption("", Model.SelectedSource == null, T("Any (show all feeds)").ToString())
             @foreach (var source in Model.Sources) {
-                Html.SelectOption(source.Id, Model.SelectedSource != null && Model.SelectedSource.Id == source.Id, source.FeedTitle);
+                @Html.SelectOption(source.Id, Model.SelectedSource != null && Model.SelectedSource.Id == source.Id, source.FeedTitle)
             }
         </select>
         <button type="submit">@T("Apply")</button>
@@ -23,7 +25,7 @@
     @foreach (var item in Model.Modules) {
         <li> 
             <div class="moduleName">
-                <h2>@(item.SyndicationItem.Title == null ? T("(No title)").Text : item.SyndicationItem.Title.Text)<span> - @T("Version: {0}", "1.0")</span></h2>
+                <h2>@(item.SyndicationItem.Title == null ? T("(No title)").Text : item.SyndicationItem.Title.Text)<span> - @T("Version: {0}", item.SyndicationItem.ElementExtensions.ReadElementExtensions<string>("Version", "http://orchardproject.net").FirstOrDefault() ?? T("N/A").Text)</span></h2>
             </div>
 
             <div class="related">
