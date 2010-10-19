@@ -44,9 +44,22 @@ namespace Orchard.Widgets.Models {
         }
 
         /// <summary>
+        /// The layerPart identifier.
+        /// </summary>
+        public int LayerId {
+            get { return this.As<ICommonPart>().Container.As<LayerPart>().Id; }
+        }
+
+        /// <summary>
         /// The available page zones.
         /// </summary>
         [HiddenInput(DisplayValue = false)]
         public IEnumerable<string> AvailableZones { get; set; }
+
+        /// <summary>
+        /// The available layers.
+        /// </summary>
+        [HiddenInput(DisplayValue = false)]
+        public IEnumerable<LayerPart> AvailableLayers { get; set; }
     }
 }

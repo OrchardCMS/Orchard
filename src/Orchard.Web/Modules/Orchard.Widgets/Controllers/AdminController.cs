@@ -111,6 +111,7 @@ namespace Orchard.Widgets.Controllers {
                 if (widgetPart == null)
                     return HttpNotFound();
 
+                widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 dynamic model = Services.ContentManager.BuildEditor(widgetPart);
                 return View(model);
             }
@@ -126,8 +127,7 @@ namespace Orchard.Widgets.Controllers {
                 return new HttpUnauthorizedResult();
 
             try {
-                int widgetPosition = _widgetsService.GetWidgets(layerId).Count() + 1;
-                WidgetPart widgetPart = _widgetsService.CreateWidget(layerId, widgetType, "", widgetPosition.ToString(), "");
+                WidgetPart widgetPart = _widgetsService.CreateWidget(layerId, widgetType, "", "", "");
                 if (widgetPart == null)
                     return HttpNotFound();
 
@@ -284,7 +284,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditWidgetSavePOST(int id) {
+        public ActionResult EditWidgetSavePOST(int id, int layerId) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -294,6 +294,7 @@ namespace Orchard.Widgets.Controllers {
                 if (widgetPart == null)
                     return HttpNotFound();
 
+                widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 var model = Services.ContentManager.UpdateEditor(widgetPart, this);
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
