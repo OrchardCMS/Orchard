@@ -10,7 +10,7 @@
     <ol>
     <li>
         <label for="username-email">@T("Username")</label>
-        @Html.TextBox("username-email", "", new { autofocus = "autofocus" })
+        @Html.TextBox("userNameOrEmail", "", new { id = "username-email", autofocus = "autofocus" })
         @Html.ValidationMessage("userNameOrEmail")
     </li>
     <li>
@@ -19,7 +19,7 @@
         @Html.ValidationMessage("password")
     </li>
     <li>
-        @Html.CheckBox("remember-me")<label class="forcheckbox" for="remember-me">@T("Remember me?")</label>
+        @Html.CheckBox("rememberMe", new { id = "remember-me" })<label class="forcheckbox" for="remember-me">@T("Remember me?")</label>
     </li>
     <input type="submit" value="@T("Sign In")" />
     </ol>
