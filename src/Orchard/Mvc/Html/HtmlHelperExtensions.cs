@@ -206,27 +206,6 @@ namespace Orchard.Mvc.Html {
 
         #region Format Date/Time
 
-        public static LocalizedString DateTimeRelative(this HtmlHelper htmlHelper, DateTime? value, LocalizedString defaultIfNull, Localizer T) {
-            return value.HasValue ? htmlHelper.DateTimeRelative(value.Value, T) : defaultIfNull;
-        }
-
-        public static LocalizedString DateTimeRelative(this HtmlHelper htmlHelper, DateTime value, Localizer T) {
-            var time = htmlHelper.Resolve<IClock>().UtcNow - value;
-
-            if (time.TotalDays > 7)
-                return htmlHelper.DateTime(value, T("'on' MMM d yyyy 'at' h:mm tt"));
-            if (time.TotalHours > 24)
-                return T.Plural("1 day ago", "{0} days ago", time.Days);
-            if (time.TotalMinutes > 60)
-                return T.Plural("1 hour ago", "{0} hours ago", time.Hours);
-            if (time.TotalSeconds > 60)
-                return T.Plural("1 minute ago", "{0} minutes ago", time.Minutes);
-            if (time.TotalSeconds > 10)
-                return T.Plural("1 second ago", "{0} seconds ago", time.Seconds); //aware that the singular won't be used
-
-            return T("a moment ago");
-        }
-
         public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime? value, LocalizedString defaultIfNull) {
             return value.HasValue ? htmlHelper.DateTime(value.Value) : defaultIfNull;
         }

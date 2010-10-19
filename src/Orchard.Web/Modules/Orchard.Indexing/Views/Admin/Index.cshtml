@@ -20,7 +20,7 @@
                 <p>@T("The search index contains the following fields: {0}.", string.Join(T(", ").Text, Model.IndexEntry.Fields))</p>
             } 
 
-            <p>@T("The search index was last updated {0}.", Html.DateTimeRelative(Model.IndexEntry.LastUpdateUtc.Value, T))</p>
+            <p>@T("The search index was last updated {0}.", Display.DateTimeRelative(dateTime: Model.IndexEntry.LastUpdateUtc.Value))</p>
         } 
         <p>@T("Update the search index now: ")<button type="submit" title="@T("Update the search index.")" class="primaryAction">@T("Update")</button></p>
         @Html.AntiForgeryTokenOrchard() 
