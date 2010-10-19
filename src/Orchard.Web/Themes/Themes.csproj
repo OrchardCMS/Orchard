@@ -67,7 +67,6 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="TheThemeMachine\Views\User.cshtml" />
     <None Include="TheAdmin\Views\Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +222,10 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="TheThemeMachine\Views\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TheThemeMachine\Views\Fields\" />
+    <Folder Include="TheThemeMachine\Views\Parts\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

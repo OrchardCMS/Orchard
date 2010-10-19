@@ -9,19 +9,19 @@
     <legend>@T("Account Information")</legend>
     <ol>
     <li>
-        <label for="userNameOrEmail">@T("Username:")</label>
-        @Html.TextBox("userNameOrEmail", "", new { autofocus = "autofocus" })
+        <label for="username-email">@T("Username")</label>
+        @Html.TextBox("username-email", "", new { autofocus = "autofocus" })
         @Html.ValidationMessage("userNameOrEmail")
     </li>
     <li>
-        <label for="password">@T("Password:")</label>
+        <label for="password">@T("Password")</label>
         @Html.Password("password")
         @Html.ValidationMessage("password")
     </li>
     <li>
-        @Html.CheckBox("rememberMe")<label class="forcheckbox" for="rememberMe">@T("Remember me?")</label>
+        @Html.CheckBox("remember-me")<label class="forcheckbox" for="remember-me">@T("Remember me?")</label>
     </li>
-    <input type="submit" value="@T("Log On")" />
+    <input type="submit" value="@T("Sign In")" />
     </ol>
 </fieldset>
 }
