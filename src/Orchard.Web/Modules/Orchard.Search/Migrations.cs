@@ -8,14 +8,10 @@ namespace Orchard.Search {
 
             SchemaBuilder.CreateTable("SearchSettingsPartRecord", table => table
                 .ContentPartRecord()
-                .Column<bool>("FilterCulture")
-                .Column<string>("SearchedFields")
+                    .Column<bool>("FilterCulture")
+                    .Column<string>("SearchedFields", c => c.Unlimited())
                 );
 
-            return 1;
-        }
-
-        public int UpdateFrom1() {
             ContentDefinitionManager.AlterTypeDefinition("SearchForm",
                 cfg => cfg
                     .WithPart("SearchFormPart")
@@ -24,7 +20,7 @@ namespace Orchard.Search {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 2;
+            return 1;
         }
     }
 }
