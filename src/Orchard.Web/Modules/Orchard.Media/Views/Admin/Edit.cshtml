@@ -81,7 +81,7 @@
                         <input type="hidden" value="@mediaFolder.MediaPath" name="@mediaFolder.Name" />
                     </td>
                     <td>
-                        <img src="<%=ResolveUrl("~/Modules/Orchard.Media/Content/Admin/images/folder.gif")%>" height="16" width="16" class="mediaTypeIcon" alt="@T("Folder")" />
+                        <img src="@Href("~/Modules/Orchard.Media/Content/Admin/images/folder.gif")" height="16" width="16" class="mediaTypeIcon" alt="@T("Folder")" />
                         @Html.ActionLink(mediaFolder.Name, "Edit", new { name = mediaFolder.Name, mediaPath = mediaFolder.MediaPath})
                     </td>
                     <td>@mediaFolder.User</td>
