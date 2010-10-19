@@ -68,6 +68,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="TheThemeMachine\Views\User.cshtml" />
+    <None Include="TheAdmin\Views\Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TheAdmin\Styles\images\icons.png" />
