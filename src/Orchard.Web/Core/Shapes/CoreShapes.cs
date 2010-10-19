@@ -51,7 +51,7 @@ namespace Orchard.Core.Shapes {
                 .OnCreating(creating => creating.BaseType = typeof(Zone))
                 .OnDisplaying(displaying => {
                     var zone = displaying.Shape;
-                    zone.Classes.Add("zone-" + zone.ZoneName.ToLower());
+                    zone.Classes.Add("zone-" + zone.ZoneName.HtmlClassify());
                     zone.Classes.Add("zone");
                     zone.Metadata.Alternates.Add("Zone__" + zone.ZoneName);
                 });
@@ -59,7 +59,7 @@ namespace Orchard.Core.Shapes {
             builder.Describe("Menu")
                 .OnDisplaying(displaying => {
                     var menu = displaying.Shape;
-                    menu.Classes.Add("menu-" + menu.MenuName.ToLower());
+                    menu.Classes.Add("menu-" + menu.MenuName.HtmlClassify());
                     menu.Classes.Add("menu");
                     menu.Metadata.Alternates.Add("Menu__" + menu.MenuName);
                 });
