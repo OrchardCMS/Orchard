@@ -57,7 +57,7 @@ namespace Orchard.Widgets.Filters {
                     }
                 }
                 catch(Exception e) {
-                    Logger.Debug(e, T("An error occured during layer evaluation").Text);
+                    Logger.Debug(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
                 }
             }
 
