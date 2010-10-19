@@ -3,7 +3,7 @@
 <h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
 
 @using (Html.BeginFormAntiForgeryPost()) {
-Html.ValidationSummary();
+@Html.ValidationSummary()
 <h2>@T("Please answer a few questions to configure your site.")</h2>
 <fieldset class="site">
     <div>
