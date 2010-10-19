@@ -1,11 +1,11 @@
 ﻿@model Orchard.Widgets.Models.WidgetPart
 
 <fieldset>
-    @Html.LabelFor(widget => widget.Zone)
+    @Html.LabelFor(widget => widget.Zone, T("Zone"))
     @Html.DropDownListFor(widget => widget.Zone, new SelectList(Model.AvailableZones))
 </fieldset>
 
 <fieldset>
-    @Html.LabelFor(widget => widget.Title)
+    @Html.LabelFor(widget => widget.Title, T("Title"))
     @Html.TextBoxFor(widget => widget.Title)
 </fieldset>
