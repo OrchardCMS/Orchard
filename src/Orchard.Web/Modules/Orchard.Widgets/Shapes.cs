@@ -1,5 +1,6 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets {
@@ -16,8 +17,13 @@ namespace Orchard.Widgets {
                     widget.Child.Add(created.New.PlaceChildContent(Source: widget));
                 })
                 .OnDisplaying(displaying => {
+                    var widget = displaying.Shape;
+                    widget.Classes.Add("widget");
+
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
+                        widget.Classes.Add("widget-" + contentItem.ContentType.HtmlClassify());
+
                         var zoneName = contentItem.As<WidgetPart>().Zone;
                         displaying.ShapeMetadata.Alternates.Add("Widget__" + contentItem.ContentType);
                         displaying.ShapeMetadata.Alternates.Add("Widget__" + zoneName);

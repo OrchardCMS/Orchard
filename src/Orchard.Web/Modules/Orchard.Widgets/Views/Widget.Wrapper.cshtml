@@ -2,8 +2,9 @@
 @using Orchard.Widgets.Models;
 @{
     var title = ((IContent)Model.ContentItem).As<WidgetPart>().Title;
+    var tag = Tag(Model, "article");
 }
-<article class="widget">
+@tag.StartElement
     <header>
         <h1>@title</h1>
         @Display(Model.Header)
@@ -14,4 +15,4 @@
         @Display(Model.Footer)
     </footer>
     }
-</article>
+@tag.EndElement
