@@ -103,6 +103,10 @@ namespace PackageIndexReferenceImplementation.Controllers {
                 item.Summary = new TextSyndicationContent(packageProperties.Description);
             }
 
+            if ( !string.IsNullOrEmpty(packageProperties.Version) ) {
+                item.ElementExtensions.Add("Version", "http://orchardproject.net", packageProperties.Version);
+            }
+
             var mediaIdentifier = packageProperties.Identifier + "-" + packageProperties.Version + ".zip";
 
             var mediaUrl = Url.Action("Resource", "Media", new RouteValueDictionary { { "Id", mediaIdentifier }, { "ContentType", "application/x-package" } });

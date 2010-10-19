@@ -256,7 +256,7 @@
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\List.cshtml" />
     <Content Include="Feeds\Views\Feed.cshtml" />
-    <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.cshtml" />
+    <Content Include="Localization\Views\EditorTemplates\Parts\Localization.ContentTranslations.Edit.cshtml" />
     <Content Include="Contents\Views\Parts\Contents.Publish.cshtml" />
     <Content Include="Contents\Views\Parts\Contents.Publish.SummaryAdmin.cshtml" />
     <Content Include="Messaging\Module.txt" />
