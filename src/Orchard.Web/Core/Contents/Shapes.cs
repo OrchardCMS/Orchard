@@ -18,7 +18,7 @@ namespace Orchard.Core.Contents {
                         displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.Id);
                         //Content.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType);
-                        //Content.Summary-Page
+                        //Content-Page.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType + "__" + contentItem.ContentType);
 
                         if (!displaying.ShapeMetadata.DisplayType.Contains("Admin"))
@@ -30,7 +30,7 @@ namespace Orchard.Core.Contents {
                .OnDisplaying(displaying => {
                    ContentItem contentItem = displaying.Shape.ContentItem;
                    if (contentItem != null) {
-                       //Content.Editor-Page
+                       //Content-Page.Edit
                        displaying.ShapeMetadata.Alternates.Add("Content_Edit__" + contentItem.ContentType);
                    }
                });

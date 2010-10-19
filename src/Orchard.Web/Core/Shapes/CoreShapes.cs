@@ -12,7 +12,6 @@ using Orchard.Settings;
 using Orchard.UI;
 using Orchard.UI.Resources;
 using Orchard.UI.Zones;
-using Orchard.Utility.Extensions;
 
 // ReSharper disable InconsistentNaming
 
@@ -75,9 +74,10 @@ namespace Orchard.Core.Shapes {
             // 'List' shapes start with several empty collections
             builder.Describe("List")
                 .OnCreated(created => {
-                    created.Shape.Tag = "ul";
-                    created.Shape.ItemClasses = new List<string>();
-                    created.Shape.ItemAttributes = new Dictionary<string, string>();
+                    var list = created.Shape;
+                    list.Tag = "ul";
+                    list.ItemClasses = new List<string>();
+                    list.ItemAttributes = new Dictionary<string, string>();
                 });
         }
 
