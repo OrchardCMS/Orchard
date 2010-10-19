@@ -3,7 +3,7 @@
 @{ Script.Require("Slugify"); }
 
 <fieldset>
-    @Html.LabelFor(m => m.Title)
+    @Html.LabelFor(m => m.Title, T("Title"))
     @Html.TextBoxFor(m => m.Title, new { @class = "large text" })
 </fieldset>
 <fieldset class="permalink">

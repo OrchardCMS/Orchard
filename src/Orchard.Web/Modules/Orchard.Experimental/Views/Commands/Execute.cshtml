@@ -12,7 +12,7 @@
             </li>
             }
         </ul>
-        @Html.LabelFor(m => m.CommandLine)
+        @Html.LabelFor(m => m.CommandLine, T("Command Line"))
         @Html.TextBoxFor(m => m.CommandLine, new { style = "width:100%;" })
         @Html.ValidationMessageFor(m => m.CommandLine)
         <pre>@Model.Results</pre>

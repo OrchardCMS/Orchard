@@ -22,7 +22,7 @@
     </fieldset>
     }
     <fieldset>
-        @Html.LabelFor(m=>m.FeedUrl)
+        @Html.LabelFor(m => m.FeedUrl, T("Feed Url"))
         @Html.DropDownListFor(m => m.FeedUrl, new[]{new SelectListItem{Text=T("Download").ToString(),Value="Download"}}.Concat( Model.Sources.Select(x => new SelectListItem { Text = T("Push to {0}", x.FeedUrl).ToString(), Value = x.FeedUrl })))
         @Html.ValidationMessageFor(m=>m.FeedUrl)
     </fieldset>
