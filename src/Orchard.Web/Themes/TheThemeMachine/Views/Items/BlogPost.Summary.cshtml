@@ -8,7 +8,7 @@
 
 <!-- TODO: Meta should be it's own shape and not part of the blog summary view. Theme authors will need access to it. -->
 <div class="meta">
-    @Html.PublishedState(new CommonMetadataViewModel((CommonPart)Model.ContentItem.Get(typeof(CommonPart))), T)
+    @Display.PublishedState(versionPublishedUtc: new CommonMetadataViewModel((CommonPart)Model.ContentItem.Get(typeof(CommonPart))))
     @Display(Model.meta)
 </div>
 

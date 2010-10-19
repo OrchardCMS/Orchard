@@ -1,2 +1,2 @@
 ﻿@using Orchard.Core.Common.Extensions;
-<div class="published">@Html.PublishedState((DateTime?)Model.ContentPart.VersionPublishedUtc, T)</div>
+<div class="published">@Display.PublishedState(versionPublishedUtc: (DateTime?)Model.ContentPart.VersionPublishedUtc)</div>
