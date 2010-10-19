@@ -28,7 +28,9 @@ namespace Orchard.Core.Localization.Drivers {
                 ContentShape("Parts_Localization_ContentTranslations",
                              () => shapeHelper.Parts_Localization_ContentTranslations(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part))),
                 ContentShape("Parts_Localization_ContentTranslations_Summary",
-                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part)))
+                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part))),
+                ContentShape("Parts_Localization_ContentTranslations_SummaryAdmin",
+                             () => shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part)))
                 );
         }
 
