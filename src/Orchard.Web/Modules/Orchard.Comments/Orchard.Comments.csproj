@@ -78,7 +78,7 @@
     <Compile Include="Drivers\CommentsContainerPartDriver.cs" />
     <Compile Include="Drivers\CommentSettingsPartDriver.cs" />
     <Compile Include="Drivers\CommentsPartDriver.cs" />
-    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="Shapes.cs" />
     <Compile Include="Models\ClosedCommentsRecord.cs" />
     <Compile Include="Models\CommentPart.cs" />
     <Compile Include="Handlers\CommentPartHandler.cs" />

@@ -7,9 +7,9 @@ using Orchard.Localization;
 using Orchard.Mvc.Html;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Comments.Extensions {
-    public class CommentsSummary : IDependency {
-        public CommentsSummary() {
+namespace Orchard.Comments {
+    public class Shapes : IDependency {
+        public Shapes() {
             T = NullLocalizer.Instance;
         }
 
