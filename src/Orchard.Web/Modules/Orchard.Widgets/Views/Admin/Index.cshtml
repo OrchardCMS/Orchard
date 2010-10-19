@@ -5,7 +5,7 @@
     Style.Require("WidgetsAdmin");
 }
 <h1>@Html.TitleForPage(T("Manage Widgets").ToString())</h1>
-<div class="manage">@Html.ActionLink(T("Add a layer").ToString(), "AddLayer", new { }, new { @class = "button primaryAction" })</div>
+
 
 @using(Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
@@ -13,31 +13,7 @@
 
     <div id="widgets">
 
-        <div class="widgets-availableWidgets">
-            <h2>Available Widgets</h2>
 
-            <fieldset>
-                <table class="items" summary="@T("This is a table of the widgets currently available for use in your application.")">
-                    <colgroup>
-                        <col id="Col1" />
-                        <col id="Col2" />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th scope="col">@T("Name")</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    @foreach (string widget in Model.WidgetTypes) {
-                        <tr>
-                            <td>@widget</td>
-                            <td>@Html.ActionLink(T("Add").ToString(), "AddWidget", new { layerId = Model.CurrentLayer.Id, widgetType = widget })</td>
-                        </tr>
-                    }
-                </table>
-
-            </fieldset>
-        </div>
 
         <div class="widgets-availableLayers">
             <h2>Widget Zones</h2>
@@ -92,8 +68,38 @@
                                 </li>
                             }
                         }
-                    <ul>
+                    </ul>
+                    <div class="new-layer">
+                    @Html.ActionLink(T("+ Add a layer").ToString(), "AddLayer", new { })
+                   </div>
                 </div>
+            </fieldset>
+        </div>
+
+
+                <div class="widgets-availableWidgets">
+            <h2>Available Widgets</h2>
+
+            <fieldset>
+                <table class="items" summary="@T("This is a table of the widgets currently available for use in your application.")">
+                    <colgroup>
+                        <col id="Col1" />
+                        <col id="Col2" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th scope="col">@T("Name")</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    @foreach (string widget in Model.WidgetTypes) {
+                        <tr>
+                            <td>@widget</td>
+                            <td>@Html.ActionLink(T("Add").ToString(), "AddWidget", new { layerId = Model.CurrentLayer.Id, widgetType = widget })</td>
+                        </tr>
+                    }
+                </table>
+
             </fieldset>
         </div>
     </div>
