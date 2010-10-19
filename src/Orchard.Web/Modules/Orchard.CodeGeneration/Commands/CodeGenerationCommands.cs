@@ -29,7 +29,7 @@ namespace Orchard.CodeGeneration.Commands {
         private const string ModuleName = "CodeGeneration";
         private static readonly string _codeGenTemplatePath = HostingEnvironment.MapPath("~/Modules/Orchard." + ModuleName + "/CodeGenerationTemplates/");
         private static readonly string _orchardWebProj = HostingEnvironment.MapPath("~/Orchard.Web.csproj");
-        private static readonly string _orchardThemesProj = HostingEnvironment.MapPath("~/Themes/Orchard.Themes.csproj");
+        private static readonly string _orchardThemesProj = HostingEnvironment.MapPath("~/Themes/Themes.csproj");
 
         public CodeGenerationCommands(
             IExtensionManager extensionManager,
