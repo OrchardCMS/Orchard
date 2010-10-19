@@ -119,7 +119,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Items\User.Edit.cshtml">
+    <Content Include="Views\Items\Content-User.Edit.cshtml">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
