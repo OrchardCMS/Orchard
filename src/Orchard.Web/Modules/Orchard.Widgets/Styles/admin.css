@@ -4,20 +4,23 @@
 }
 
 .widgets-availableWidgets {
+    float: right;
     float: left;
     width: 30%;
+    margin: 0 0 0 2em;
 }
 
 .widgets-availableLayers {
     float: left;
     margin: 0 0 0 2em;
-    width: 45%;
+    width: 60%;
+    min-width: 40%;
 }
 
 .widgets-layerZones {
     font-size: 1.4em;
     float: left;
-    width: 70%;
+    width: 60%;
     border: 1px solid #eaeaea;
     background: #fff;
 }
@@ -65,4 +68,13 @@
 .widgets-layerZones ul li ul {
 	margin: 0;
 	padding: 0;
+}
+
+.new-layer {
+    padding: .6em;
+}
+
+.new-layer a {
+    text-decoration: none;
+    font-weight: 600;
 }
