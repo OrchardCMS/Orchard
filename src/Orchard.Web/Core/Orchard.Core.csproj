@@ -294,6 +294,7 @@
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Views\Admin\Culture.cshtml" />
+    <None Include="Contents\Views\Items\Content.Edit.cshtml" />
     <None Include="Routable\Placement.info">
       <SubType>Designer</SubType>
     </None>

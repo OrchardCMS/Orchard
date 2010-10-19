@@ -3,8 +3,18 @@
 
 WorkContext.Layout == Layout shape
 
-
 ==shapes==
+
+(IShape)
+.Metadata (ShapeMetadata)
+ .Type
+ .DisplayType
+ .Position
+ .Prefix
+ .Wrappers
+ .Alternates
+ .WasExecuted
+ .ChildContent
 
 Document [:Layout]
 
@@ -24,7 +34,6 @@ MenuItem
 -RouteValues
 -Item (clr object)
 
-
 List: ul|ol + li*
 .Items (meta-property, bound to shape children or passed in)
 .Id
@@ -33,7 +42,7 @@ List: ul|ol + li*
 .ItemClasses
 .ItemAttributes
 
-Items_Content (a single content item)
+Content (a single content item)
 .Zones (meta-property)
 .ContentItem (clr object)
 .Path (from Orchard.Core.Routable(.Handlers.RoutePartHandler))
@@ -58,12 +67,15 @@ EditorTemplate
 .Model (optional - default use current)
 .Prefix (optional - default use current)
 
+
+(todo: find usage)
 Pager
 -CurrentPage
 -RouteValues
 -Count
 ?PageSize ?? 1
 
+(todo: update)
 Parts/Content
 
 Fields/Content
