@@ -39,7 +39,7 @@
                 <a class="button" href="@item.PackageStreamUri">@T("Download")</a>
 				<h5>@T("By") @author</h5>
 				<p>
-				    @T("Version: {0}", "1.0")<br />
+				    @T("Version: {0}", item.SyndicationItem.ElementExtensions.ReadElementExtensions<string>("Version", "http://orchardproject.net").FirstOrDefault() ?? T("N/A").Text)<br />
 					@(item.SyndicationItem.Summary == null ? T("(No description").Text : item.SyndicationItem.Summary.Text)<br />
 				</p>
 			</div>   
