@@ -1,43 +1,49 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using Orchard.Blogs.Models;
-using Orchard.ContentManagement.Drivers;
+﻿using System.Data;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Data.Migration;
 
 namespace Orchard.Blogs {
     public class Migrations : DataMigrationImpl {
 
         public int Create() {
-            //CREATE TABLE Orchard_Blogs_BlogPartArchiveRecord (Id  integer, Year INTEGER, Month INTEGER, PostCount INTEGER, Blog_id INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("BlogPartArchiveRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<int>("Year")
-                .Column<int>("Month")
-                .Column<int>("PostCount")
-                .Column<int>("BlogPart_id")
+            SchemaBuilder.CreateTable("BlogPartArchiveRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<int>("Year")
+                    .Column<int>("Month")
+                    .Column<int>("PostCount")
+                    .Column<int>("BlogPart_id")
                 );
 
-            //CREATE TABLE Orchard_Blogs_BlogPartRecord (Id INTEGER not null, Description TEXT, PostCount INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("BlogPartRecord", table => table
-                .ContentPartRecord()
-                .Column<string>("Description")
-                .Column<int>("PostCount")
+            SchemaBuilder.CreateTable("BlogPartRecord", 
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("Description", c => c.Unlimited())
+                    .Column<int>("PostCount")
                 );
 
-            return 1;
-        }
+            SchemaBuilder.CreateTable("RecentBlogPostsPartRecord", 
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("BlogSlug")
+                    .Column<int>("Count")
+                );
 
-        public int UpdateFrom1() {
+            SchemaBuilder.CreateTable("BlogArchivesPartRecord", 
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("BlogSlug", c => c.WithLength(255))
+                );
+
             ContentDefinitionManager.AlterTypeDefinition("Blog",
                 cfg => cfg
                     .WithPart("BlogPart")
                     .WithPart("CommonPart")
                     .WithPart("RoutePart")
+                    .WithPart("BlogPagerPart")
                 );
 
-            ContentDefinitionManager.AlterTypeDefinition("BlogPost", 
+            ContentDefinitionManager.AlterTypeDefinition("BlogPost",
                 cfg => cfg
                     .WithPart("BlogPostPart")
                     .WithPart("CommonPart")
@@ -45,39 +51,13 @@ namespace Orchard.Blogs {
                     .WithPart("RoutePart")
                     .WithPart("BodyPart")
                 );
-
-            return 2;
-        }
-        
-        public int UpdateFrom2() {
-            ContentDefinitionManager.AlterPartDefinition(typeof(BlogPart).Name, cfg => cfg
-                .WithLocation(new Dictionary<string, ContentLocation> {
-                    {"Editor", new ContentLocation { Zone = "Primary", Position = "1" }}
-                }));
-            return 3;
-        }
-
-        public int UpdateFrom3() {
-            SchemaBuilder.CreateTable("RecentBlogPostsPartRecord", table => table
-                .ContentPartRecord()
-                .Column<string>("BlogSlug")
-                .Column<int>("Count")
-                );
-
+            
             ContentDefinitionManager.AlterTypeDefinition("RecentBlogPosts",
                 cfg => cfg
                     .WithPart("RecentBlogPostsPart")
                     .WithPart("CommonPart")
                     .WithPart("WidgetPart")
                     .WithSetting("Stereotype", "Widget")
-                );
-            return 4;
-        }
-
-        public int UpdateFrom4() {
-            SchemaBuilder.CreateTable("BlogArchivesPartRecord", table => table
-                .ContentPartRecord()
-                .Column<string>("BlogSlug", c => c.WithLength(255))
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("BlogArchives",
@@ -87,22 +67,8 @@ namespace Orchard.Blogs {
                     .WithPart("WidgetPart")
                     .WithSetting("Stereotype", "Widget")
                 );
-            
-            return 5;
-        }
 
-        public int UpdateFrom5() {
-            ContentDefinitionManager.AlterTypeDefinition("Blog",
-                cfg => cfg.WithPart("BlogPagerPart"));
-            return 6;
-        }
-
-        public int UpdateFrom6() {
-            SchemaBuilder.AlterTable("BlogPartRecord", table => table
-                .AlterColumn("Description", c => c.WithType(DbType.String).Unlimited())
-                );
-
-            return 7;
+            return 1;
         }
     }
 }

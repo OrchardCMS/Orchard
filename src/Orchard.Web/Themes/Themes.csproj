@@ -49,11 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Classic\Placement.info" />
-    <Content Include="Contoso\Styles\search.css" />
-    <Content Include="Contoso\Zones\Footer.html" />
-    <Content Include="Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
-    <Content Include="Green\Views\Orchard.Search\Search\Index.ascx" />
     <Content Include="TheAdmin\Scripts\admin.js" />
     <Content Include="TheAdmin\Styles\ie.css" />
     <Content Include="TheAdmin\Styles\images\menuClosed.gif" />
@@ -67,7 +62,6 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="TheThemeMachine\Views\User.cshtml" />
     <None Include="TheAdmin\Views\Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -79,129 +73,7 @@
     <Content Include="TheAdmin\Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ClassicDark\Views\Footer.cshtml" />
-    <Content Include="ClassicDark\Views\Layout.cshtml" />
     <None Include="TheAdmin\Styles\images\icons.psd" />
-    <Content Include="ClassicDark\Content\Images\bodyBackgroundgrey.gif" />
-    <Content Include="ClassicDark\Content\Images\sidebarBackground.gif" />
-    <Content Include="ClassicDark\Styles\blog.css" />
-    <Content Include="ClassicDark\Styles\site.css" />
-    <Content Include="ClassicDark\Theme.png" />
-    <Content Include="ClassicDark\Theme.txt" />
-    <Content Include="ClassicDark\Zones\Sidebar.html" />
-    <Content Include="Classic\Content\Images\sidebarBackground.gif" />
-    <Content Include="Classic\Zones\Sidebar.html" />
-    <Content Include="Classic\Styles\blog.css" />
-    <Content Include="Classic\Styles\site.css" />
-    <Content Include="Classic\Theme.png" />
-    <Content Include="Classic\Theme.txt" />
-    <Content Include="Classic\Views\Footer.cshtml" />
-    <Content Include="Classic\Views\Layout.cshtml" />
-    <Content Include="Contoso\Content\Images\bkg.jpg" />
-    <Content Include="Contoso\Content\Images\comment-arrow.png" />
-    <Content Include="Contoso\Content\Images\content-bkg.png" />
-    <Content Include="Contoso\Content\Images\content-bottom.png" />
-    <Content Include="Contoso\Content\Images\content-top.png" />
-    <Content Include="Contoso\Content\Images\feature-bkg-bottom.png" />
-    <Content Include="Contoso\Content\Images\feature-bkg-top.png" />
-    <Content Include="Contoso\Content\Images\Gallery\feature01.jpg" />
-    <Content Include="Contoso\Content\Images\Gallery\feature02.jpg" />
-    <Content Include="Contoso\Content\Images\Gallery\feature03.jpg" />
-    <Content Include="Contoso\Content\Images\icon-location.png" />
-    <Content Include="Contoso\Content\Images\menu-divider.png" />
-    <Content Include="Contoso\Content\Images\menu-hover-left.png" />
-    <Content Include="Contoso\Content\Images\menu-hover.png" />
-    <Content Include="Contoso\Content\Images\menu-left.png" />
-    <Content Include="Contoso\Content\Images\menu-right.png" />
-    <Content Include="Contoso\Content\Images\nav-arrow-left.png" />
-    <Content Include="Contoso\Content\Images\nav-arrow-right.png" />
-    <Content Include="Contoso\Content\Images\sub-header.png" />
-    <Content Include="Contoso\Zones\Sidebar-w2.html" />
-    <Content Include="Contoso\Zones\Sidebar-w3.html" />
-    <Content Include="Contoso\Zones\Highlights.html" />
-    <Content Include="Contoso\Zones\Home-Headline.html" />
-    <Content Include="Contoso\Zones\Home-Hero-Gallery.html" />
-    <Content Include="Contoso\Zones\Home-Hero.html" />
-    <Content Include="Contoso\Zones\Sidebar-w1.html" />
-    <Content Include="Contoso\Scripts\easySlider.js" />
-    <Content Include="Contoso\Styles\site.css" />
-    <Content Include="Contoso\Theme.png" />
-    <Content Include="Contoso\Theme.txt" />
-    <Content Include="Corporate\Content\Images\bkg.jpg" />
-    <Content Include="Corporate\Content\Images\consult-bkg.png" />
-    <Content Include="Corporate\Content\Images\content-bkg.png" />
-    <Content Include="Corporate\Content\Images\content-bottom.png" />
-    <Content Include="Corporate\Content\Images\content-top.png" />
-    <Content Include="Corporate\Content\Images\footer-bkg.jpg" />
-    <Content Include="Corporate\Content\Images\footer-bkg.png" />
-    <Content Include="Corporate\Content\Images\hm-divider.png" />
-    <Content Include="Corporate\Content\Images\hm-header.png" />
-    <Content Include="Corporate\Content\Images\icons\icon-5.png" />
-    <Content Include="Corporate\Content\Images\icons\icon-4.png" />
-    <Content Include="Corporate\Content\Images\icons\icon-3.png" />
-    <Content Include="Corporate\Content\Images\icons\icon-2.png" />
-    <Content Include="Corporate\Content\Images\icons\icon-1.png" />
-    <Content Include="Corporate\Content\Images\jumping-people.jpg" />
-    <Content Include="Corporate\Content\Images\logo.png" />
-    <Content Include="Corporate\Content\Images\menu-left-over.png" />
-    <Content Include="Corporate\Content\Images\menu-left.png" />
-    <Content Include="Corporate\Content\Images\menu-right-over.png" />
-    <Content Include="Corporate\Content\Images\menu-right.png" />
-    <Content Include="Corporate\Content\Images\menu_bkg.jpg" />
-    <Content Include="Corporate\Content\Images\notepad.png" />
-    <Content Include="Corporate\Scripts\easySlider.js" />
-    <Content Include="Corporate\Styles\site.css" />
-    <Content Include="Corporate\Theme.png" />
-    <Content Include="Corporate\Theme.txt" />
-    <Content Include="Corporate\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
-    <Content Include="Corporate\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
-    <Content Include="Corporate\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
-    <Content Include="Corporate\Views\DisplayTemplates\Items\Contents.Item.ascx" />
-    <Content Include="Corporate\Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
-    <Content Include="Corporate\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
-    <Content Include="Corporate\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
-    <Content Include="Corporate\Views\Footer.ascx" />
-    <Content Include="Corporate\Views\Header.ascx" />
-    <Content Include="Corporate\Views\Layout.ascx" />
-    <Content Include="Corporate\Views\Layout.HomePage.ascx" />
-    <Content Include="Corporate\Views\ListOfComments.ascx" />
-    <Content Include="Corporate\Views\LogOn.ascx" />
-    <Content Include="Corporate\Views\User.ascx" />
-    <Content Include="Corporate\Zones\Home-Headline.html" />
-    <Content Include="Corporate\Zones\Home-Hero.html" />
-    <Content Include="Corporate\Zones\Sidebar-w1.html" />
-    <Content Include="Corporate\Zones\Sidebar-w2.html" />
-    <Content Include="Corporate\Zones\Sidebar-w3.html" />
-    <Content Include="Green\Content\Images\bodyBackground.gif" />
-    <Content Include="Green\Content\Images\bodyBackground.png" />
-    <Content Include="Green\Content\Images\commentpointer.gif" />
-    <Content Include="Green\Content\Images\logo.gif" />
-    <Content Include="Green\Content\Images\logo.png" />
-    <Content Include="Green\Content\Images\tabLeftOff.gif" />
-    <Content Include="Green\Content\Images\tabLeftOn.gif" />
-    <Content Include="Green\Content\Images\tabRightOff.gif" />
-    <Content Include="Green\Content\Images\tabRightOn.gif" />
-    <Content Include="Green\Views\Archives.ascx" />
-    <Content Include="Green\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
-    <Content Include="Green\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
-    <Content Include="Green\Zones\sideBarZone1.html" />
-    <Content Include="Green\Zones\sideBarZone2.html" />
-    <Content Include="Green\Zones\User2.html" />
-    <Content Include="Green\Zones\User3.html" />
-    <Content Include="Green\Zones\User1.html" />
-    <Content Include="Green\Styles\blog.css" />
-    <Content Include="Green\Styles\site.css" />
-    <Content Include="Green\Styles\yui.css" />
-    <Content Include="Green\Theme.png" />
-    <Content Include="Green\Theme.txt" />
-    <Content Include="Green\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
-    <Content Include="Green\Views\Layout.HomePage.ascx" />
-    <Content Include="Green\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
-    <Content Include="Green\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
-    <Content Include="Green\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
-    <Content Include="Green\Views\Footer.ascx" />
-    <Content Include="Green\Views\Layout.ascx" />
-    <Content Include="Green\Views\ListOfComments.ascx" />
     <Content Include="SafeMode\Content\orchard.ico" />
     <Content Include="SafeMode\Styles\ie6.css" />
     <Content Include="SafeMode\Styles\images\backgroundHeader.gif" />
@@ -223,6 +95,10 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="TheThemeMachine\Views\Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TheThemeMachine\Views\Fields\" />
+    <Folder Include="TheThemeMachine\Views\Parts\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

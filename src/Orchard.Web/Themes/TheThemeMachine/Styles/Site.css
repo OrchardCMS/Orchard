@@ -207,7 +207,6 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
 	 
 }
 
-
 /* Navigation */
 #layout-navigation 
 {
@@ -308,10 +307,18 @@ nav ul
 	float:left;
 }
 
+
+
+/* Secondary
+***************************************************************/
 /* Blogs */
 .blog-description { font-size: 1.3em; }
 
-/* Posts Summary List */
+.blog-post .tags { margin-top: 12px; }
+.blog-post .tags a { background-color: #dbdbdb; padding: 3px; color: #434343; }
+.blog-post .tags a:hover { background-color: #434343; padding: 3px; color: #fff; }
+
+/* Blogs Posts Summary List */
 .blog-posts { padding: 0; margin: 0; list-style: none; }
 .blog-posts li { padding: 0; margin: 0; }
 .blog-posts .blog-post { border-top: 1px solid #dbdbdb; padding: 6px 0 6px 0; }
@@ -326,24 +333,46 @@ nav ul
 .blog-posts .blog-post .metadata .published { display: inline; margin: 0 6px 0 0; }
 .blog-posts .blog-post .metadata .commentcount { display: inline; }
 
-/* Post Detail */
+/* Blogs Post Detail */
 .blog-post {}
 .blog-post-title {}
 .meta {}
 
-
-/* Secondary
-***************************************************************/
-
 /* Comments */
-.comment {}
+#comments { margin: 24px 0 0 0; padding: 0; }
+.comment-form { margin: 24px 0 0 0; padding: 0; }
+.comments { margin: 0; padding: 0; list-style: none; }
+.comments li { margin: 12px 0 0 0; padding: 12px; border: 1px solid #dbdbdb; }
+.comment { margin: 0; padding: 0; }
+.comment h4 { font-size: 1.4em; }
 .comment .who {}
 .comment .what {}
 .comment #add-comment {}
 
-.comment #comment-by { font-size: 1.6em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
-.comment #comment-text { width: 33.2em; }
-.comment input[type="text"] { width: 32em; }
+.comment-form #comment-by { font-size: 1.6em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
+.comment-form #comment-text { width: 33.2em; }
+.comment-form input[type="text"] { width: 32em; }
+
+.comment-disabled {}
+.comment-count { font-size: 1.6em; }
+
+/* Tag Search */
+
+.tagged-posts {}
+.tagged-posts { padding: 0; margin: 0; list-style: none; }
+.tagged-posts li { padding: 0; margin: 0; }
+.tagged-posts .blog-post { border-top: 1px solid #dbdbdb; padding: 6px 0 6px 0; }
+.tagged-posts .blog-post header {}
+.tagged-posts .blog-post header h1 { font-size: 1.7em; }
+.tagged-posts .blog-post header h1 a { color: #434343; }
+.tagged-posts .blog-post header h1 a:hover {}
+.tagged-posts .blog-post .tags { margin-top: 12px; }
+.tagged-posts .blog-post .tags a { background-color: #dbdbdb; padding: 3px; color: #434343; }
+.tagged-posts .blog-post .tags a:hover { background-color: #434343; padding: 3px; color: #fff; }
+.tagged-posts .blog-post .metadata { margin: 0 0 12px 0; color: #999; font-size: 1.1em; }
+.tagged-posts .blog-post .metadata .published { display: inline; margin: 0 6px 0 0; }
+.tagged-posts .blog-post .metadata .commentcount { display: inline; }
+
 
 
 
@@ -424,6 +453,7 @@ button:focus, .button:focus {
 .user-display .welcome {}
 .user-display .user-actions {}
 
+.login-form { margin: 24px 0 0 0; }
 
 
 /* CSS 3 Enhancements 
@@ -431,30 +461,6 @@ button:focus, .button:focus {
 
 /* For testing purposes */
 
-
-article.comment h4 {
-    font-size:1.4em;
-}
-
-article.comment a {
-	color:#484848;
-	text-decoration:none;
-}
-
-article.comment span.who {
-	font-weight:600;
-	font-style:normal;
-	text-transform:capitalize;
-	color:#333;
-}
-
-article.comment p.text {
-	margin:.6em 0 2.4em 0;
-}
-
-.user-display {
-	display:inline;
-}
 
 /*.aside.third {
 	border-top:1px solid #dbdbdb;

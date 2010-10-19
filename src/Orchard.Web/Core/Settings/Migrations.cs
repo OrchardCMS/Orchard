@@ -1,105 +1,98 @@
-﻿using System.Data;
-using Orchard.Data.Migration;
+﻿using Orchard.Data.Migration;
 
 namespace Orchard.Core.Settings {
     public class Migrations : DataMigrationImpl {
 
         public int Create() {
-            //CREATE TABLE Settings_ContentFieldDefinitionRecord (Id  integer, Name TEXT, primary key (Id));
-            SchemaBuilder.CreateTable("ContentFieldDefinitionRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Name")
+            SchemaBuilder.CreateTable("ContentFieldDefinitionRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Name")
                 );
 
-            //CREATE TABLE Settings_ContentPartDefinitionRecord (Id  integer, Name TEXT, Hidden INTEGER, Settings TEXT, primary key (Id));
-            SchemaBuilder.CreateTable("ContentPartDefinitionRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Name")
-                .Column<bool>("Hidden")
-                .Column<string>("Settings", column => column.Unlimited())
+            SchemaBuilder.CreateTable("ContentPartDefinitionRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Name")
+                    .Column<bool>("Hidden")
+                    .Column<string>("Settings", column => column.Unlimited())
                 );
 
-            //CREATE TABLE Settings_ContentPartFieldDefinitionRecord (Id  integer, Name TEXT, Settings TEXT, ContentFieldDefinitionRecord_id INTEGER,  INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("ContentPartFieldDefinitionRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Name")
-                .Column<string>("Settings", column => column.Unlimited())
-                .Column<int>("ContentFieldDefinitionRecord_id")
-                .Column<int>("ContentPartDefinitionRecord_Id")
+            SchemaBuilder.CreateTable("ContentPartFieldDefinitionRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Name")
+                    .Column<string>("Settings", column => column.Unlimited())
+                    .Column<int>("ContentFieldDefinitionRecord_id")
+                    .Column<int>("ContentPartDefinitionRecord_Id")
                 );
 
-            //CREATE TABLE Settings_ContentTypeDefinitionRecord (Id  integer, Name TEXT, DisplayName TEXT, Hidden INTEGER, Settings TEXT, primary key (Id));
-            SchemaBuilder.CreateTable("ContentTypeDefinitionRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Name")
-                .Column<string>("DisplayName")
-                .Column<bool>("Hidden")
-                .Column<string>("Settings", column => column.Unlimited())
+            SchemaBuilder.CreateTable("ContentTypeDefinitionRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Name")
+                    .Column<string>("DisplayName")
+                    .Column<bool>("Hidden")
+                    .Column<string>("Settings", column => column.Unlimited())
                 );
 
-            //CREATE TABLE Settings_ContentTypePartDefinitionRecord (Id  integer, Settings TEXT, ContentPartDefinitionRecord_id INTEGER, ContentTypeDefinitionRecord_Id INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("ContentTypePartDefinitionRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Settings", column => column.Unlimited())
-                .Column<int>("ContentPartDefinitionRecord_id")
-                .Column<int>("ContentTypeDefinitionRecord_Id")
+            SchemaBuilder.CreateTable("ContentTypePartDefinitionRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Settings", column => column.Unlimited())
+                    .Column<int>("ContentPartDefinitionRecord_id")
+                    .Column<int>("ContentTypeDefinitionRecord_Id")
                 );
 
-            //CREATE TABLE Settings_ShellDescriptorRecord (Id  integer, SerialNumber INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("ShellDescriptorRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<int>("SerialNumber")
+            SchemaBuilder.CreateTable("ShellDescriptorRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<int>("SerialNumber")
                 );
 
-            //CREATE TABLE Settings_ShellFeatureRecord (Id  integer, Name TEXT, ShellDescriptorRecord_id INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("ShellFeatureRecord", table => table
+            SchemaBuilder.CreateTable("ShellFeatureRecord", 
+                table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("Name")
                     .Column<int>("ShellDescriptorRecord_id"));
 
-            //CREATE TABLE Settings_ShellFeatureStateRecord (Id  integer, Name TEXT, InstallState TEXT, EnableState TEXT, ShellStateRecord_Id INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("ShellFeatureStateRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Name")
-                .Column<string>("InstallState")
-                .Column<string>("EnableState")
-                .Column<int>("ShellStateRecord_Id")
+            SchemaBuilder.CreateTable("ShellFeatureStateRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Name")
+                    .Column<string>("InstallState")
+                    .Column<string>("EnableState")
+                    .Column<int>("ShellStateRecord_Id")
                 );
 
-            //CREATE TABLE Settings_ShellParameterRecord (Id  integer, Component TEXT, Name TEXT, Value TEXT, ShellDescriptorRecord_id INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("ShellParameterRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Component")
-                .Column<string>("Name")
-                .Column<string>("Value")
-                .Column<int>("ShellDescriptorRecord_id")
+            SchemaBuilder.CreateTable("ShellParameterRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Component")
+                    .Column<string>("Name")
+                    .Column<string>("Value")
+                    .Column<int>("ShellDescriptorRecord_id")
                 );
 
-            //CREATE TABLE Settings_ShellStateRecord (Id  integer, primary key (Id));
-            SchemaBuilder.CreateTable("ShellStateRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Unused")
+            SchemaBuilder.CreateTable("ShellStateRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("Unused")
                 );
 
-            //CREATE TABLE Settings_SiteSettingsRecord (Id INTEGER not null, SiteSalt TEXT, SiteName TEXT, SuperUser TEXT, PageTitleSeparator TEXT, HomePage TEXT, SiteCulture TEXT, primary key (Id));
-            SchemaBuilder.CreateTable("SiteSettingsPartRecord", table => table
-                .ContentPartRecord()
-                .Column<string>("SiteSalt")
-                .Column<string>("SiteName")
-                .Column<string>("SuperUser")
-                .Column<string>("PageTitleSeparator")
-                .Column<string>("HomePage")
-                .Column<string>("SiteCulture")
+            SchemaBuilder.CreateTable("SiteSettingsPartRecord", 
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("SiteSalt")
+                    .Column<string>("SiteName")
+                    .Column<string>("SuperUser")
+                    .Column<string>("PageTitleSeparator")
+                    .Column<string>("HomePage")
+                    .Column<string>("SiteCulture")
+                    .Column<string>("ResourceDebugMode", c => c.WithDefault("FromAppSetting"))
                 );
 
             return 1;
-        }
-
-        public int UpdateFrom1() {
-            SchemaBuilder.AlterTable("SiteSettingsPartRecord", table => table
-                .AddColumn("ResourceDebugMode", DbType.String, column => column.WithDefault("FromAppSetting"))
-                );
-            return 2;
         }
     }
 }
