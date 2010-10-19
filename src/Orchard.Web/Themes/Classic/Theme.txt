@@ -1,7 +1,0 @@
-﻿Name: Classic
-Author: Jonathan Wall
-Description: Theme using serif.
-Version: 1.0
-Tags: Classic, Serif 
-Website: http://www.orchardproject.net
-Zones: Sidebar
