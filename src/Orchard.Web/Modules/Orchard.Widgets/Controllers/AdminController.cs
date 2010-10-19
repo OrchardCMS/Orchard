@@ -340,7 +340,7 @@ namespace Orchard.Widgets.Controllers {
                 layer.LayerRule = "true";
             }
 
-            if(_widgetsService.GetLayers().Any(l => String.CompareOrdinal(l.Name, layer.Name) == 0)) {
+            if(_widgetsService.GetLayers().Count(l => String.Equals(l.Name, layer.Name, StringComparison.InvariantCultureIgnoreCase)) > 1) { // the current layer counts for 1
                 ModelState.AddModelError("Name", T("A Layer with the same name already exists").Text);
                 return false;
             }

@@ -46,8 +46,10 @@
 	vertical-align: middle;
 }
 
-.widgets-availableLayers fieldset {
-    background: #F1F1F1;
+.widgets-availableLayers fieldset 
+{
+    border: 1px solid #eaeaea;
+    background: -moz-linear-gradient(center top, #f1f1f1, #fcfcfc);
     padding: .6em;
 }
 
