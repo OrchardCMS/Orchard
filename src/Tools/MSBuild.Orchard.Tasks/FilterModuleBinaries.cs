@@ -14,6 +14,8 @@ namespace MSBuild.Orchard.Tasks {
         public ITaskItem[] ExcludedBinaries { get; set; }
 
         public override bool Execute() {
+            if (OrchardWebBinaries == null)
+                return true;
 
             var orchardWebAssemblies = new HashSet<string>(
                 OrchardWebBinaries.Select(item => Path.GetFileName(item.ItemSpec)),
