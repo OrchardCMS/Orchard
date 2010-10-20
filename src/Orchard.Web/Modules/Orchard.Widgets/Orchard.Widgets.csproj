@@ -89,7 +89,7 @@
     <Compile Include="ViewModels\WidgetsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Admin\images\edit.gif" />
+    <Content Include="Content\Admin\images\edit.png" />
     <Content Include="Content\Admin\images\moveup.gif" />
     <Content Include="Content\Admin\images\movedown.gif" />
     <Content Include="Module.txt" />
