@@ -13,12 +13,12 @@
 
     <div id="widgets">
 
-
-
         <div class="widgets-availableLayers">
-            <h2>Widget Zones</h2>
+            <h2>Widgets</h2>
 
             <fieldset>
+            <h4 class="widgets-layer-header">Layers</h4>
+            <h4 class="widgets-zone-header">Zones</h4>
                 <div>
                     <ul class="widgets-layerZones">
                         @foreach (string zone in Model.Zones) {
@@ -55,14 +55,14 @@
                             if (layer.Id == Model.CurrentLayer.Id) {
                                 <li class="widgets-currentLayer widgets-editLayer">
                                  <a href="@Url.Action("EditLayer", new { @layer.Id })">
-                                        <img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.gif")" />
+                                        <img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.png")" />
                                     </a>
                                     @Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
                                 </li>
                             } else {
                                 <li class="widgets-editLayer">
                                 <a href="@Url.Action("EditLayer", new { @layer.Id })">
-                                        <img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.gif")" />
+                                        <img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.png")" />
                                     </a>
                                     @Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
                                 </li>
@@ -95,7 +95,7 @@
                     @foreach (string widget in Model.WidgetTypes) {
                         <tr>
                             <td>@widget</td>
-                            <td>@Html.ActionLink(T("Add").ToString(), "AddWidget", new { layerId = Model.CurrentLayer.Id, widgetType = widget })</td>
+                            <td>@Html.ActionLink(T("Add to zone").ToString(), "AddWidget", new { layerId = Model.CurrentLayer.Id, widgetType = widget })</td>
                         </tr>
                     }
                 </table>
