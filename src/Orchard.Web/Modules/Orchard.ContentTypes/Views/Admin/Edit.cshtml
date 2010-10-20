@@ -1,5 +1,9 @@
 @model Orchard.ContentTypes.ViewModels.EditTypeViewModel
-@{ Style.Require("ContentTypesAdmin"); }
+@{
+    Style.Require("ContentTypesAdmin");
+	Script.Require("jQuery");
+    Script.Include("admin.js");
+}
 <h1>@Html.TitleForPage(T("Edit Content Type").ToString())</h1>
 <p class="breadcrumb">@Html.ActionLink(T("Content Types").Text, "index")@T(" &#62; ")@T("Edit Content Type")</p>
 @using (Html.BeginFormAntiForgeryPost()) {
