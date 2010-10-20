@@ -50,7 +50,10 @@ namespace Orchard.Commands {
 
                 using (var env = CreateStandaloneEnvironment(tenant)) {
                     var commandManager = env.Resolve<ICommandManager>();
-                    var transactionManager = env.Resolve<ITransactionManager>();
+
+                    ITransactionManager transactionManager;
+                    if (!env.TryResolve(out transactionManager))
+                        transactionManager = null;
 
                     var parameters = new CommandParameters {
                         Arguments = args,
@@ -64,7 +67,8 @@ namespace Orchard.Commands {
                     }
                     catch {
                         // any database changes in this using(env) scope are invalidated
-                        transactionManager.Cancel();
+                        if (transactionManager != null)
+                            transactionManager.Cancel();
 
                         // exception handling performed below
                         throw;
