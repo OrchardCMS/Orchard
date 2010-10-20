@@ -35,11 +35,5 @@ namespace Orchard.Utility.Extensions {
         public static string ToUrlString(this HttpRequest request) {
             return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Headers["Host"], request.RawUrl);
         }
-
-        public static string AbsoluteAction(this UrlHelper url, string action, string controller, object routeValues) {
-            Uri requestUrl = url.RequestContext.HttpContext.Request.Url;
-            return string.Concat(requestUrl.GetLeftPart(UriPartial.Authority),url.Action(action, controller, routeValues));
-        }
-
     }
 }
