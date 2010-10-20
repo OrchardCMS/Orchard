@@ -7,7 +7,7 @@ namespace Orchard.Widgets.Drivers {
     public class WidgetBagPartDriver : ContentPartDriver<WidgetBagPart> {
         protected override DriverResult Editor(WidgetBagPart part, dynamic shapeHelper) {
             return ContentShape("Parts_Widgets_WidegetBagPart",
-                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Widgets.WidgetBagPart", Model: part));
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Widgets.WidgetBagPart", Model: part, Prefix: Prefix));
         }
     }
 }

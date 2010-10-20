@@ -20,7 +20,7 @@ namespace Orchard.Widgets.Drivers {
             widgetPart.AvailableLayers = _widgetsService.GetLayers();
 
             return ContentShape("Parts_Widgets_WidgetPart",
-                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Widgets.WidgetPart", Model: widgetPart));
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(WidgetPart widgetPart, IUpdateModel updater, dynamic shapeHelper) {
