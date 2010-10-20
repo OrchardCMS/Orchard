@@ -10,7 +10,6 @@ namespace Orchard.Widgets.Models {
         /// <summary>
         /// The widget's title.
         /// </summary>
-        [Required]
         public string Title {
             get { return Record.Title; }
             set { Record.Title = value; }

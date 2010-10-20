@@ -40,7 +40,7 @@
                                             @{
                                                 i++;
                                             }
-                                            @Html.ActionLink(@widget.Title, "EditWidget", new { @widget.Id })
+                                            @Html.ActionLink(@widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id })
                                         </li>
                                     }
                                 </ul>
