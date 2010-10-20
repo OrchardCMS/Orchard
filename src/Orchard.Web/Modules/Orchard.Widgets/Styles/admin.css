@@ -1,11 +1,20 @@
-﻿#main #widgets h2 
-{
+﻿#main #widgets h2 {
     border-bottom:none;
 }
 
+h4.widgets-layer-header, h4.widgets-zone-header {
+    font-weight:600;
+}
+
+h4.widgets-layer-header {
+    float:left;
+    width:40%;
+}
+
+
 .widgetsbag-editor h5 {
     color:#4c4c4c;
-    font-weight:bold;
+    font-weight:600;
 }
 
 .widgets-availableWidgets {
@@ -13,6 +22,13 @@
     float: left;
     width: 30%;
     margin: 0 0 0 2em;
+}
+
+.widgets-availableWidgets table.items th
+{
+    background: #f1f1f1;
+    font-size:1.6em;
+    padding:.5em 0 .3em .2em;
 }
 
 .widgets-availableLayers {
@@ -50,6 +66,7 @@
 .widgets-availableLayers fieldset 
 {
     border: 1px solid #eaeaea;
+    background: #f1f1f1;
     background: -moz-linear-gradient(center top, #f1f1f1, #fcfcfc);
     padding: .6em;
 }
