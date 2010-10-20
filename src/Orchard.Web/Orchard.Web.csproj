@@ -121,7 +121,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Advisory.html" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Refresh.html" />

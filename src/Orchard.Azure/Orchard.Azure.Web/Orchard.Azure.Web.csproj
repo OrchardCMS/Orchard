@@ -154,7 +154,6 @@
     <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Advisory.html" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
   </ItemGroup>
