@@ -55,7 +55,6 @@
     <Content Include="TheAdmin\Styles\images\menuClosedHover.gif" />
     <Content Include="TheAdmin\Styles\images\menuOpen.gif" />
     <Content Include="TheAdmin\Styles\images\menuOpenHover.gif" />
-    <Content Include="TheThemeMachine\draft.html" />
     <Content Include="TheThemeMachine\Styles\Site.css" />
     <Content Include="TheThemeMachine\Theme.png" />
     <Content Include="TheThemeMachine\Theme.txt" />
