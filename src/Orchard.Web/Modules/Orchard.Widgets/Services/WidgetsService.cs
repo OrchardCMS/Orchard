@@ -122,12 +122,12 @@ namespace Orchard.Widgets.Services {
         }
 
         public bool MoveWidgetUp(WidgetPart widgetPart) {
-            int currentPosition = int.Parse(widgetPart.Record.Position);
+            int currentPosition = ParsePosition(widgetPart);
 
             WidgetPart widgetBefore = GetWidgets(widgetPart.LayerPart.Id)
                 .Where(widget => widget.Zone == widgetPart.Zone)
                 .OrderByDescending(widget => widget.Position, new UI.FlatPositionComparer())
-                .FirstOrDefault(widget => int.Parse(widget.Record.Position) < currentPosition);
+                .FirstOrDefault(widget => ParsePosition(widget) < currentPosition);
 
             if (widgetBefore != null) {
                 SwitchWidgetPositions(widgetBefore, widgetPart);
@@ -138,17 +138,24 @@ namespace Orchard.Widgets.Services {
             return false;
         }
 
+        private int ParsePosition(WidgetPart widgetPart) {
+            int value;
+            if (!int.TryParse(widgetPart.Record.Position, out value))
+                return 0;
+            return value;
+        }
+
         public bool MoveWidgetUp(int widgetId) {
             return MoveWidgetUp(GetWidget(widgetId));
         }
 
         public bool MoveWidgetDown(WidgetPart widgetPart) {
-            int currentPosition = int.Parse(widgetPart.Record.Position);
+            int currentPosition = ParsePosition(widgetPart);
 
             WidgetPart widgetAfter = GetWidgets(widgetPart.LayerPart.Id)
                 .Where(widget => widget.Zone == widgetPart.Zone)
                 .OrderBy(widget => widget.Position, new UI.FlatPositionComparer())
-                .FirstOrDefault(widget => int.Parse(widget.Record.Position) > currentPosition);
+                .FirstOrDefault(widget => ParsePosition(widget) > currentPosition);
 
             if (widgetAfter != null) {
                 SwitchWidgetPositions(widgetAfter, widgetPart);
