@@ -75,7 +75,7 @@
     @Zone(Model.Navigation)
 </div>
 }
-@if (Model.Featered != null) {
+@if (Model.Featured != null) {
 <div id="layout-featured" class="group">
     @Zone(Model.Featured)
 </div>
@@ -87,7 +87,7 @@
 }
 <div id="layout-main" class="group">
     @if (Model.AsideFirst != null) {
-    <aside id="aside-first" class="aside-first">
+    <aside id="aside-first" class="aside-first group">
         @Zone(Model.AsideFirst)
     </aside>
     }
