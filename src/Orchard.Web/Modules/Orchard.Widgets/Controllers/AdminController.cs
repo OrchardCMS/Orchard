@@ -111,6 +111,9 @@ namespace Orchard.Widgets.Controllers {
                 if (widgetPart == null)
                     return HttpNotFound();
 
+                int widgetPosition = _widgetsService.GetWidgets(layerId).Count() + 1;
+                widgetPart.Position = widgetPosition.ToString();
+
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 dynamic model = Services.ContentManager.BuildEditor(widgetPart);
                 return View(model);

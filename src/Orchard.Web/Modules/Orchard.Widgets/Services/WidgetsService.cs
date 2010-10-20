@@ -172,7 +172,7 @@ namespace Orchard.Widgets.Services {
 
         private static void SwitchWidgetPositions(WidgetPart sourceWidget, WidgetPart targetWidget) {
             string tempPosition = sourceWidget.Record.Position;
-            sourceWidget.Record.Position = targetWidget.ToString();
+            sourceWidget.Record.Position = targetWidget.Record.Position;
             targetWidget.Record.Position = tempPosition;
         }
     }

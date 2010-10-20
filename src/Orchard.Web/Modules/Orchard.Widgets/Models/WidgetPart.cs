@@ -28,7 +28,7 @@ namespace Orchard.Widgets.Models {
         /// <summary>
         /// The widget's position within the zone.
         /// </summary>
-        [HiddenInput(DisplayValue = false)]
+        [Required]
         public string Position
         {
             get { return Record.Position; }
