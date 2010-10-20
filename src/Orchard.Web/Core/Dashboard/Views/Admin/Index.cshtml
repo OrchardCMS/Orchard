@@ -1,4 +1,5 @@
 ﻿@model dynamic
+@using Orchard.Utility.Extensions;
 
 <script type="text/javascript">    
     // Resize iframe to full height
@@ -11,7 +12,7 @@
     }
 </script>
 
-<iframe id="advisory" src="http://www.orchardproject.net/advisory" frameborder="0" height="0" width="100%"  >
+<iframe id="advisory" src="http://www.orchardproject.net/advisory?url=@Server.UrlEncode(Url.AbsoluteAction("Index", "Helper", new { area = "Dashboard" }))" frameborder="0" height="0" width="100%"  >
  <p>Your browser does not support iframes.</p>
 </iframe>
 

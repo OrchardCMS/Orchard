@@ -5,15 +5,16 @@ namespace Orchard.Email {
 
         public int Create() {
 
-            SchemaBuilder.CreateTable("SmtpSettingsPartRecord", table => table
-                .ContentPartRecord()
-                .Column<string>("Address")
-                .Column<string>("Host")
-                .Column<int>("Port")
-                .Column<bool>("EnableSsl")
-                .Column<bool>("RequireCredentials")
-                .Column<string>("UserName")
-                .Column<string>("Password")
+            SchemaBuilder.CreateTable("SmtpSettingsPartRecord", 
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("Address")
+                    .Column<string>("Host")
+                    .Column<int>("Port")
+                    .Column<bool>("EnableSsl")
+                    .Column<bool>("RequireCredentials")
+                    .Column<string>("UserName")
+                    .Column<string>("Password")
                 );
 
             return 1;

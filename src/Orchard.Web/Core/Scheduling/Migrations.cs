@@ -5,12 +5,13 @@ namespace Orchard.Core.Scheduling {
     public class Migrations : DataMigrationImpl {
 
         public int Create() {
-            //CREATE TABLE Scheduling_ScheduledTaskRecord (Id  integer, TaskType TEXT, ScheduledUtc DATETIME, ContentItemVersionRecord_id INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("ScheduledTaskRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("TaskType")
-                .Column<DateTime>("ScheduledUtc")
-                .Column<int>("ContentItemVersionRecord_id")
+            
+            SchemaBuilder.CreateTable("ScheduledTaskRecord", 
+                table => table
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
+                    .Column<string>("TaskType")
+                    .Column<DateTime>("ScheduledUtc")
+                    .Column<int>("ContentItemVersionRecord_id")
                 );
 
             return 1;

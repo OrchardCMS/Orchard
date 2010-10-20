@@ -93,14 +93,14 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
 
             protected override DriverResult Editor(StubPart part, dynamic shapeHelper) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
-                return ContentPartTemplate(viewModel).Location("last", "10");
+                return new ContentTemplateResult(viewModel, null, Prefix).Location("last", "10");
             }
 
             protected override DriverResult Editor(StubPart part, IUpdateModel updater, dynamic shapeHelper) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
                 updater.TryUpdateModel(viewModel, Prefix, null, null);
                 part.Foo = viewModel.Foo.Split(new[] { ',' }).Select(x => x.Trim()).ToArray();
-                return ContentPartTemplate(viewModel).Location("last", "10");
+                return new ContentTemplateResult(viewModel, null, Prefix).Location("last", "10");
             }
         }
 

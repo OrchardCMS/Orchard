@@ -235,9 +235,6 @@
     <Compile Include="ContentManagement\DefaultContentQuery.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Drivers\AutomaticContentPartDriver.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\Drivers\CombinedResult.cs">
       <SubType>Code</SubType>
     </Compile>

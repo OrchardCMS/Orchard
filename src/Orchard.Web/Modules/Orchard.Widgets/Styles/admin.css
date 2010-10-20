@@ -25,6 +25,7 @@
 .widgets-layerZones {
     font-size: 1.4em;
     float: left;
+    float: right;
     width: 60%;
     border: 1px solid #eaeaea;
     border:1px solid #ccc;
@@ -46,8 +47,10 @@
 	vertical-align: middle;
 }
 
-.widgets-availableLayers fieldset {
-    background: #F1F1F1;
+.widgets-availableLayers fieldset 
+{
+    border: 1px solid #eaeaea;
+    background: -moz-linear-gradient(center top, #f1f1f1, #fcfcfc);
     padding: .6em;
 }
 
@@ -58,8 +61,7 @@
 .widgets-layers {
     font-size: 1.4em;
     border:1px solid #ccc;
-    border-left:none;
-    float: left;
+    border-right:none;
 }
 
 .widgets-layers ul {
@@ -67,7 +69,8 @@
 	border: 1px solid #f1f1f1;
 }
 
-.widgets-layers ul li {
+.widgets-layers ul li 
+{
     padding: .6em .4em;
     border:1px solid #F1F1F1;
 }
@@ -76,9 +79,9 @@
 	background: #c3d9ff;
 }
 
-.widgets-layers .widgets-editLayer img {
-    float: right;
-    margin: 0 0 0 1em;
+.widgets-layers .widgets-currentLayer a {
+	color: #333;
+	font-weight: 600;
 }
 
 .widgets-layerZones ul li ul {
@@ -88,6 +91,7 @@
 
 .new-layer {
     padding: .6em;
+    background: #F5F5F5;
 }
 
 .new-layer a {

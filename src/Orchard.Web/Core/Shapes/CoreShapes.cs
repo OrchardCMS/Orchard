@@ -12,6 +12,7 @@ using Orchard.Settings;
 using Orchard.UI;
 using Orchard.UI.Resources;
 using Orchard.UI.Zones;
+using Orchard.Utility.Extensions;
 
 // ReSharper disable InconsistentNaming
 
@@ -51,17 +52,19 @@ namespace Orchard.Core.Shapes {
                 .OnCreating(creating => creating.BaseType = typeof(Zone))
                 .OnDisplaying(displaying => {
                     var zone = displaying.Shape;
-                    zone.Classes.Add("zone-" + zone.ZoneName.ToLower());
+                    string zoneName = zone.ZoneName;
+                    zone.Classes.Add("zone-" + zoneName.HtmlClassify());
                     zone.Classes.Add("zone");
-                    zone.Metadata.Alternates.Add("Zone__" + zone.ZoneName);
+                    zone.Metadata.Alternates.Add("Zone__" + zoneName);
                 });
 
             builder.Describe("Menu")
                 .OnDisplaying(displaying => {
                     var menu = displaying.Shape;
-                    menu.Classes.Add("menu-" + menu.MenuName.ToLower());
+                    string menuName = menu.MenuName;
+                    menu.Classes.Add("menu-" + menuName.HtmlClassify());
                     menu.Classes.Add("menu");
-                    menu.Metadata.Alternates.Add("Menu__" + menu.MenuName);
+                    menu.Metadata.Alternates.Add("Menu__" + menuName);
                 });
 
             builder.Describe("MenuItem")

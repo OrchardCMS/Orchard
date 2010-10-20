@@ -6,6 +6,16 @@
 </fieldset>
 
 <fieldset>
+    @Html.LabelFor(widget => widget.LayerId, T("Layer"))
+    @Html.DropDownListFor(widget => widget.LayerId, new SelectList(Model.AvailableLayers, "Id", "Name"))
+</fieldset>
+
+<fieldset>
     @Html.LabelFor(widget => widget.Title, T("Title"))
     @Html.TextBoxFor(widget => widget.Title)
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(widget => widget.Position, T("Position"))
+    @Html.TextBoxFor(widget => widget.Position)
 </fieldset>

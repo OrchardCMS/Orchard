@@ -54,17 +54,17 @@
                         @foreach (var layer in Model.Layers) {
                             if (layer.Id == Model.CurrentLayer.Id) {
                                 <li class="widgets-currentLayer widgets-editLayer">
-                                    @Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
-                                    <a href="@Url.Action("EditLayer", new { @layer.Id })">
+                                 <a href="@Url.Action("EditLayer", new { @layer.Id })">
                                         <img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.gif")" />
                                     </a>
+                                    @Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
                                 </li>
                             } else {
                                 <li class="widgets-editLayer">
-                                    @Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
-                                    <a href="@Url.Action("EditLayer", new { @layer.Id })">
+                                <a href="@Url.Action("EditLayer", new { @layer.Id })">
                                         <img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.gif")" />
                                     </a>
+                                    @Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
                                 </li>
                             }
                         }

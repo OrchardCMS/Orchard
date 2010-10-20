@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Drivers;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
-using Orchard.Events;
 using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets {
@@ -27,23 +23,27 @@ namespace Orchard.Widgets {
             _contentManager.Publish(authenticatedLayer.ContentItem);
             IContent anonymousLayer = _contentManager.Create<LayerPart>("Layer", t => { t.Record.Name = "Anonymous"; t.Record.LayerRule = "not authenticated"; });
             _contentManager.Publish(anonymousLayer.ContentItem);
+            IContent disabledLayer = _contentManager.Create<LayerPart>("Layer", t => { t.Record.Name = "Disabled"; t.Record.LayerRule = "false"; });
+            _contentManager.Publish(disabledLayer.ContentItem);
         }
     }
 
     public class WidgetsDataMigration : DataMigrationImpl {
         public int Create() {
-            SchemaBuilder.CreateTable("LayerPartRecord", table => table
-                .ContentPartRecord()
-                .Column<string>("Name")
-                .Column<string>("Description")
-                .Column<string>("LayerRule")
+            SchemaBuilder.CreateTable("LayerPartRecord", 
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("Name")
+                    .Column<string>("Description", c => c.Unlimited())
+                    .Column<string>("LayerRule", c => c.Unlimited())
                 );
 
-            SchemaBuilder.CreateTable("WidgetPartRecord", table => table
-                .ContentPartRecord()
-                .Column<string>("Title")
-                .Column<string>("Position")
-                .Column<string>("Zone")
+            SchemaBuilder.CreateTable("WidgetPartRecord", 
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("Title")
+                    .Column<string>("Position")
+                    .Column<string>("Zone")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("Layer",
@@ -60,10 +60,6 @@ namespace Orchard.Widgets {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 1;
-        }
-
-        public int UpdateFrom1() {
             ContentDefinitionManager.AlterTypeDefinition("WidgetPage",
                 cfg => cfg
                     .WithPart("CommonPart")
@@ -71,7 +67,8 @@ namespace Orchard.Widgets {
                     .WithPart("WidgetBagPart")
                     .Creatable()
                 );
-            return 2;
+
+            return 1;
         }
     }
 }
