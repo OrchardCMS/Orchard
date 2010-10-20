@@ -1,23 +1,10 @@
 ﻿@model dynamic
-@using Orchard.Utility.Extensions;
-
-<script type="text/javascript">    
-    // Resize iframe to full height
-    function resizeIframe(height) {
-        // resize if there is content
-        if (10 < parseInt(height)) {
-            var advisory = document.getElementById('advisory') || frames['advisory'];
-            advisory.height = 60 + parseInt(height) ; // add a small gap to handle browsers differences
-        }
-    }
-</script>
-
-<iframe id="advisory" src="http://www.orchardproject.net/advisory?url=@Server.UrlEncode(Url.AbsoluteAction("Index", "Helper", new { area = "Dashboard" }))" frameborder="0" height="0" width="100%"  >
- <p>Your browser does not support iframes.</p>
-</iframe>
 
 <h1>@Html.TitleForPage(T("Welcome to Orchard").ToString())</h1>
 <p>@T("This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”.")</p>
 <p>@T("Have fun!")<br />@T("The Orchard Team")</p>
 
+<iframe id="advisory" src="http://www.orchardproject.net/advisory" frameborder="0" height="64" width="100%"  >
+ <p>@T("Your browser does not support iframes. You can't see advisory messages.")</p>
+</iframe>
 
