@@ -244,13 +244,16 @@ namespace Orchard.Core.Shapes {
             if (Items == null)
                 return;
 
+            var count = Items.Count();
+            if (count < 1)
+                return;
+
             var listTagName = string.IsNullOrEmpty(Tag) ? "ul" : Tag;
             const string itemTagName = "li";
 
             var listTag = GetTagBuilder(listTagName, Id, Classes, Attributes);
             Output.Write(listTag.ToString(TagRenderMode.StartTag));
 
-            var count = Items.Count();
             var index = 0;
             foreach (var item in Items) {
                 var itemTag = GetTagBuilder(itemTagName, null, ItemClasses, ItemAttributes);

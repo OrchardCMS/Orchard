@@ -28,7 +28,7 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
-            return ContentShape("Parts_Blogs_BlogArchives_Editor",
+            return ContentShape("Parts_Blogs_BlogArchives_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts/Blogs.BlogArchives", Model: part, Prefix: Prefix));
         }
 

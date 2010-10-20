@@ -18,7 +18,7 @@
 
                 glyph.data("controllees", getControllees(controller));
 
-                if (glyph.data("controllees").length === 0) {
+                if (glyph.data("controllees").length === 0 || glyph.data("controllees").height() < 1) {
                     return;
                 }
 

@@ -11,8 +11,8 @@
     <!-- widget and edit shapes just get default placement -->
     <!-- edit "shapes" -->
     <Place Parts_Blogs_Blog_Fields="Primary:2"/>
-    <Place Parts_Blogs_BlogArchives_Editor="Primary:5"/>
-    <Place Parts_Blogs_RecentBlogPosts_Editor="Primary:5"/>
+    <Place Parts_Blogs_BlogArchives_Edit="Primary:5"/>
+    <Place Parts_Blogs_RecentBlogPosts_Edit="Primary:5"/>
     <!-- widgets -->
     <Place Parts_Blogs_BlogArchives="Content"/>
     <Place Parts_Blogs_RecentBlogPosts="Content"/>
