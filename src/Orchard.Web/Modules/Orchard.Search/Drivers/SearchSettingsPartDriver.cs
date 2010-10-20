@@ -35,7 +35,7 @@ namespace Orchard.Search.Drivers {
             }
 
             return ContentShape("Parts_Search_SiteSettings",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Search.SiteSettings", Model: model));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Search.SiteSettings", Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(SearchSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
