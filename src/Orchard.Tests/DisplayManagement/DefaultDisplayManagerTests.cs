@@ -106,6 +106,10 @@ namespace Orchard.Tests.DisplayManagement {
                 throw new NotImplementedException();
             }
 
+            public override bool TryResolve<T>(out T service) {
+                throw new NotImplementedException();
+            }
+
             public override T GetState<T>(string name) {
                 object value;
                 return _state.TryGetValue(name, out value) ? (T)value : default(T);

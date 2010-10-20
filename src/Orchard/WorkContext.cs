@@ -6,6 +6,7 @@ using Orchard.Themes;
 namespace Orchard {
     public abstract class WorkContext {
         public abstract T Resolve<T>();
+        public abstract bool TryResolve<T>(out T service);
 
         public abstract T GetState<T>(string name);
         public abstract void SetState<T>(string name, T value);

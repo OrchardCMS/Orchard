@@ -95,6 +95,10 @@ namespace Orchard.Environment {
                 return _componentContext.Resolve<T>();
             }
 
+            public override bool TryResolve<T>(out T service) {
+                return _componentContext.TryResolve(out service);
+            }
+
             public override T GetState<T>(string name) {
                 var resolver = _stateResolvers.GetOrAdd(name, FindResolverForState<T>);
                 return (T)resolver();
@@ -141,6 +145,10 @@ namespace Orchard.Environment {
             public TService Resolve<TService>() {
                 return WorkContext.Resolve<TService>();
             }
+
+            public bool TryResolve<TService>(out TService service) {
+                return WorkContext.TryResolve(out service);
+            }
         }
 
         class ThreadStaticScopeImplementation : IWorkContextScope {
@@ -167,6 +175,10 @@ namespace Orchard.Environment {
 
             public TService Resolve<TService>() {
                 return WorkContext.Resolve<TService>();
+            }
+
+            public bool TryResolve<TService>(out TService service) {
+                return WorkContext.TryResolve(out service);
             }
         }
     }
