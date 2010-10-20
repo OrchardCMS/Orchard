@@ -65,6 +65,7 @@ namespace Orchard.Widgets {
                     .WithPart("CommonPart")
                     .WithPart("RoutePart")
                     .WithPart("WidgetBagPart")
+                    .WithPart("MenuPart")
                     .Creatable()
                 );
 
