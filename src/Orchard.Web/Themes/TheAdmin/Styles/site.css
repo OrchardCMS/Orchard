@@ -756,7 +756,7 @@ table .button {
 #main .contentItems li:hover .ibutton.blog { background-position:-120px 0; }
 
 .contentItems .summary {
-    overflow:auto;
+    clear:both;
     padding:1.2em .4em .5em;
 }
 .contentItems .properties {
@@ -786,9 +786,9 @@ table .button {
     margin:0 .2em -.2em;
 }
 .contentItems .related {
-    float:right;
-    font-size:1.4em;
+
     text-align:right;
+    font-size:1.4em;
 }
 .contentItems .commentcount {
     line-height:2em;
