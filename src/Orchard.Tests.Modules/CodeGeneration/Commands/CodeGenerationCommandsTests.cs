@@ -53,7 +53,7 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
         }
 
         [Test]
-        public void CreateDataMigrationTestUnexistentFeature() {
+        public void CreateDataMigrationTestNonExistentFeature() {
             CodeGenerationCommands codeGenerationCommands = new CodeGenerationCommands(_extensionManager, 
                 _schemaCommandGenerator);
 
