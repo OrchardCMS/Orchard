@@ -183,7 +183,8 @@ namespace Orchard.Localization.Services {
 
                 if (poLine.StartsWith("msgstr")) {
                     string translation = ParseTranslation(poLine);
-                    if (!String.IsNullOrEmpty(id)) {
+                    // ignore incomplete localizations (empty msgid or msgstr)
+                    if ( !String.IsNullOrWhiteSpace(id) && !String.IsNullOrWhiteSpace(translation) ) {
                         string scopedKey = (scope + "|" + id).ToLowerInvariant();
                         if (!translations.ContainsKey(scopedKey)) {
                             translations.Add(scopedKey, translation);
