@@ -20,7 +20,7 @@ namespace Orchard.Packaging {
         public Localizer T { get; set; }
 
         public void Install(Feature feature) {
-            _packagingSourceManager.AddSource(new PackagingSource { Id = Guid.NewGuid(), FeedTitle = "Orchard Module Gallery", FeedUrl = "http://orchardproject.net/gallery/feed" });
+            _packagingSourceManager.AddSource(new PackagingSource { Id = Guid.NewGuid(), FeedTitle = "Orchard Module Gallery", FeedUrl = "http://orchardproject.net/gallery08/feed" });
         }
 
         public void Enable(Feature feature) {
