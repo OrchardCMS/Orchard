@@ -8,7 +8,10 @@ using Microsoft.WindowsAzure.StorageClient;
 using Orchard.FileSystems.Media;
 
 namespace Orchard.Azure {
-    public class AzureFileSystem {
+    public class AzureFileSystem
+    {
+        private const string FolderEntry = "$$$ORCHARD$$$.$$$";
+
         public string ContainerName { get; protected set; }
 
         private readonly CloudStorageAccount _storageAccount;
@@ -79,6 +82,10 @@ namespace Orchard.Azure {
             {
                 foreach (var blobItem in BlobClient.ListBlobsWithPrefix(prefix).OfType<CloudBlockBlob>())
                 {
+                    // ignore directory entries
+                    if(blobItem.Uri.AbsoluteUri.EndsWith(FolderEntry))
+                        continue;
+
                     yield return new AzureBlobFileStorage(blobItem);
                 }
             }
@@ -117,7 +124,9 @@ namespace Orchard.Azure {
             using (new HttpContextWeaver())
             {
                 Container.EnsureDirectoryDoesNotExist(path);
-                Container.GetDirectoryReference(path);
+
+                // Creating a virtually hidden file to make the directory an existing concept
+                CreateFile(path + "/" + FolderEntry);
             }
         }
 

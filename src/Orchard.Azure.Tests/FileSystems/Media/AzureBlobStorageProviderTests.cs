@@ -88,7 +88,6 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         [Test]
         [ExpectedException(typeof(ArgumentException))]
         public void CreateFolderThatExistsShouldThrow() {
-            // sebros: In Azure, the folder concept is just about checking files prefix. So until a file exists, a folder is nothing
             _azureBlobStorageProvider.CreateFile("folder/foo.txt");
             _azureBlobStorageProvider.CreateFolder("folder");
         }
