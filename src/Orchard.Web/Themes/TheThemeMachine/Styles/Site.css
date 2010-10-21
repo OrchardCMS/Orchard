@@ -86,9 +86,32 @@ header, footer, aside, nav, article { display: block; }
 ***************************************************************/
 
 /* Default font settings. 
-The font-size 62.5% sets the base font to 10px */
+The font-size 81.3% sets the base font to 13px 
+
+Pixels 	EMs 	    Percent Points
+6px 	0.462em 	46.2% 	5pt
+7px 	0.538em 	53.8% 	5pt
+8px 	0.615em 	61.5% 	6pt
+9px 	0.692em 	69.2% 	7pt
+10px 	0.769em 	76.9% 	8pt
+11px 	0.846em 	84.6% 	8pt
+12px 	0.923em 	92.3% 	9pt
+13px 	1em 	    100% 	10pt
+14px 	1.077em 	107.7% 	11pt
+15px 	1.154em 	115.4% 	11pt
+16px 	1.231em 	123.1% 	12pt
+17px 	1.308em 	130.8% 	13pt
+18px 	1.385em 	138.5% 	14pt
+19px 	1.462em 	146.2% 	14pt
+20px 	1.538em 	153.8% 	15pt
+21px 	1.615em 	161.5% 	16pt
+22px 	1.692em 	169.2% 	17pt
+23px 	1.769em 	176.9% 	17pt
+24px 	1.846em 	184.6% 	18pt
+*/
+
 body { 
-  font-size: 62.5%;
+  font-size: 81.3%;
   color: #434343; 
   background: #fff;
   font-family: Tahoma, "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -97,10 +120,10 @@ body {
 /* Headings */
 h1,h2,h3,h4,h5,h6 { font-weight: normal; margin:.6em 0;}
 
-h1 { font-size: 1.8em; }
-h2 { font-size: 1.4em; }
-h3 { font-size: 1.2em; }
-h4 { font-size: 1.1em; }
+h1 { font-size: 1.231em; }
+h2 { font-size: 1.154em; }
+h3 { font-size: 1.077em; }
+h4 { font-size: 1em; }
 h5 { font-size: 1em; }
 h6 { font-size: 1em; }
 
@@ -110,9 +133,9 @@ h4 img, h5 img, h6 img {
 }
 
 /* Aside Headings */
-aside h1 { font-size: 1.6em; }
-aside h2 { font-size: 1.2em; }
-aside h3 { font-size: 1.1em; }
+aside h1 { font-size: 1.154em; }
+aside h2 { font-size: 1.077em; }
+aside h3 { font-size: 1em; }
 aside h4 { font-size: 1em; }
 aside h5 { font-size: 1em; }
 aside h6 { font-size: 1em; }
@@ -130,15 +153,15 @@ dl dt       { font-weight: bold; }
 dd          { margin-left: 1.5em;}
 
 /* Text elements */
-p           { margin: 0 0 1em; line-height: 1.5em; font-size: 1.3em; }
-p img.left  { float: left; margin: 1.5em 1.5em 1.5em 0; padding: 0; }
-p img.right { float: right; margin: 1.5em 0 1.5em 1.5em; }
+p           { margin: 0 0 1em; line-height: 1.538em; }
+p img.left  { float: left; margin: 0.923em 0.923em 0.923em 0; padding: 0; }
+p img.right { float: right; margin: 0.923em 0 0.923em 0.923em; }
 
 a:focus, 
 a:hover     { text-decoration: underline; }
 a           { color: #5f97af; text-decoration: none; }
 
-blockquote  { margin: 1.5em; color: #666; font-style: italic; }
+blockquote  { margin: 0.923em; color: #666; font-style: italic; }
 strong      { font-weight: bold; }
 em,dfn      { font-style: italic; }
 dfn         { font-weight: bold; }
@@ -146,11 +169,11 @@ sup, sub    { line-height: 0; }
 
 abbr, 
 acronym     { border-bottom: 1px dotted #666; }
-address     { margin: 0 0 1.5em; font-style: italic; }
+address     { margin: 0 0 0.923em; font-style: italic; }
 del         { color:#666; }
 
-pre 		{ margin: 1.5em 0; white-space: pre; }
-pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
+pre 		{ margin: 0.923em 0; white-space: pre; }
+pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.462em; }
 
 
 
@@ -158,9 +181,9 @@ pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height:
 ***************************************************************/
 
 form              { margin: 0; padding: 0; }
-legend            { font-size: 1.6em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
+legend            { font-size: 1.231em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
 fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
-label             { font-size: 1.3em; font-weight: normal; display:block; padding: 0 0 0.3em 0; }
+label             { font-weight: normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 
 input[type="text"], input[type="password"] {
@@ -179,6 +202,7 @@ fieldset ol li  { margin: 0 0 6px 0; }
 
 /* Structure
 ***************************************************************/
+#layout-wrapper { }
 
 #layout-header, #layout-featured, #layout-before-main, #layout-main, #layout-footer, #layout-after-main, #layout-tripel {
 	width:960px;
@@ -218,17 +242,16 @@ nav ul
 		display:block;
 		float:left;
 		color: #333;
-		font-size:1.4em;
+		font-size: 1.077em;
 		text-decoration:none;
 		line-height:24px;
 	}
 
-#layout-wrapper {}
 #layout-header {}
 	#branding 
 	{   
 		font-family: 'Lobster', Tahoma, Arial, Helvetica, sans-serif;
-		font-size: 3.8em;
+		font-size: 2.9em;
 		padding: 0;
 		margin: 0;
 	}
@@ -291,7 +314,7 @@ nav ul
 .zone-footerquadsecond {}
 .zone-footerquadthird {}
 .zone-footerquadfourth {}
-.zone-footer { font-size: 1.3em; color: #999999; }
+.zone-footer { color: #999999; }
 
 
 
@@ -299,7 +322,7 @@ nav ul
 ***************************************************************/
 
 /* Blogs */
-.blog-description { font-size: 1.3em; }
+.blog-description { font-size: 1.231em; }
 .blog-post .tags { margin-top: 12px; }
 .blog-post .tags a { background-color: #dbdbdb; padding: 3px; color: #434343; }
 .blog-post .tags a:hover { background-color: #434343; padding: 3px; color: #fff; }
@@ -307,13 +330,13 @@ nav ul
 .blog-posts li { padding: 0; margin: 0; }
 .blog-posts .blog-post { border-top: 1px solid #dbdbdb; padding: 6px 0 6px 0; }
 .blog-posts .blog-post header {}
-.blog-posts .blog-post header h1 { font-size: 1.7em; }
+.blog-posts .blog-post header h1 { font-size: 1.308em; }
 .blog-posts .blog-post header h1 a { color: #434343; }
 .blog-posts .blog-post header h1 a:hover {}
 .blog-posts .blog-post .tags { margin-top: 12px; }
 .blog-posts .blog-post .tags a { background-color: #dbdbdb; padding: 3px; color: #434343; }
 .blog-posts .blog-post .tags a:hover { background-color: #434343; padding: 3px; color: #fff; text-decoration: none; }
-.blog-posts .blog-post .metadata { margin: 0 0 12px 0; color: #999; font-size: 1.1em; }
+.blog-posts .blog-post .metadata { margin: 0 0 12px 0; color: #999; font-size: 0.846em; }
 .blog-posts .blog-post .metadata .published { display: inline; margin: 0 6px 0 0; }
 .blog-posts .blog-post .metadata .commentcount { display: inline; }
 .blog-post {}
@@ -322,7 +345,7 @@ nav ul
 
 .blog-pagination { list-style: none; padding: 0; margin: 12px 0 0 0; }
 .blog-pagination li { float: left; padding: 0 12px 0 0; margin: 0; }
-.blog-pagination a { font-size: 1.4em; display: block; background-color: #dbdbdb; padding: 6px 6px; color: #434343;}
+.blog-pagination a { font-size: 1.077em; display: block; background-color: #dbdbdb; padding: 6px 6px; color: #434343;}
 .blog-pagination a:hover { background-color: #434343; color: #fff; }
 
 /* Comments */
@@ -331,15 +354,15 @@ nav ul
 .comments { margin: 0; padding: 0; list-style: none; }
 .comments li { margin: 12px 0 0 0; padding: 12px; border: 1px solid #dbdbdb; }
 .comment { margin: 0; padding: 0; }
-.comment h4 { font-size: 1.4em; }
+.comment h4 { font-size: 1.077em; }
 .comment .who {}
 .comment .what {}
 .comment #add-comment {}
-.comment-form #comment-by { font-size: 1.6em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
+.comment-form #comment-by { font-size: 1.231em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
 .comment-form #comment-text { width: 33.2em; }
 .comment-form input[type="text"] { width: 32em; }
 .comment-disabled {}
-.comment-count { font-size: 1.6em; }
+.comment-count { font-size: 1.231em; }
 
 /* Tag Search */
 .tagged-posts {}
@@ -347,7 +370,7 @@ nav ul
 .tagged-posts li { padding: 0; margin: 0; }
 .tagged-posts .blog-post { border-top: 1px solid #dbdbdb; padding: 6px 0 6px 0; }
 .tagged-posts .blog-post header {}
-.tagged-posts .blog-post header h1 { font-size: 1.7em; }
+.tagged-posts .blog-post header h1 { font-size: 1.308em; }
 .tagged-posts .blog-post header h1 a { color: #434343; }
 .tagged-posts .blog-post header h1 a:hover {}
 .tagged-posts .blog-post .tags { margin-top: 12px; }
@@ -363,13 +386,13 @@ nav ul
 .search-results li { padding: 0; margin: 0; }
 .search-results .blog-post { border-top: 1px solid #dbdbdb; padding: 6px 0 6px 0; }
 .search-results .blog-post header {}
-.search-results .blog-post header h1 { font-size: 1.7em; }
+.search-results .blog-post header h1 { font-size: 1.308em; }
 .search-results .blog-post header h1 a { color: #434343; }
 .search-results .blog-post header h1 a:hover {}
 .search-results .blog-post .tags { margin-top: 12px; }
 .search-results .blog-post .tags a { background-color: #dbdbdb; padding: 3px; color: #434343; }
 .search-results .blog-post .tags a:hover { background-color: #434343; padding: 3px; color: #fff; text-decoration: none; }
-.search-results .blog-post .metadata { margin: 0 0 12px 0; color: #999; font-size: 1.1em; }
+.search-results .blog-post .metadata { margin: 0 0 12px 0; color: #999; font-size: 0.846em; }
 .search-results .blog-post .metadata .published { display: inline; margin: 0 6px 0 0; }
 .search-results .blog-post .metadata .commentcount { display: inline; }
 
@@ -441,7 +464,7 @@ nav ul
     top: 30px;
     right: 12px;
 }
-.widget-search-form h1 { font-size: 1.4em; }
+.widget-search-form h1 { font-size: 1.077em; }
 
 .search-form {}
 .search-form input[type="text"] { float: left; }
@@ -451,7 +474,7 @@ nav ul
 /* These are the edit controls that appear when you're logged-in */
 .widget-control { position: relative; border: 1px dotted #5f97af; }
 .widget-control .manage-actions { position:absolute; top: 0px; right: 0px; }
-.widget-control .manage-actions a { display: block; background-color: #dbdbdb; font-size: 1.3em; color: #434343; padding: 3px 6px;  }
+.widget-control .manage-actions a { display: block; background-color: #dbdbdb; color: #434343; padding: 3px 6px;  }
 .widget-control .manage-actions a:hover { background-color: #434343; color: #fff; text-decoration: none; }
 .widget-control .widget-search-form /* TODO: (mibach) Remove special case for Search Widget */
 {
@@ -463,7 +486,7 @@ nav ul
 /* Content Mode */
 .content-control { position: relative; border: 1px dotted #5f97af; }
 .content-control .manage-actions { position:absolute; top: 0px; right: 0px; }
-.content-control .manage-actions a { display: block; background-color: #dbdbdb; font-size: 1.3em; color: #434343; padding: 3px 6px;  }
+.content-control .manage-actions a { display: block; background-color: #dbdbdb; color: #434343; padding: 3px 6px;  }
 .content-control .manage-actions a:hover { background-color: #434343; color: #fff; text-decoration: none; }
 
 
@@ -471,8 +494,8 @@ nav ul
 /* Misc
 ***************************************************************/
 
-.small      { font-size: .8em; margin-bottom: 1.875em; line-height: 1.875em; }
-.large      { font-size: 1.2em; line-height: 2.5em; margin-bottom: 1.25em; }
+.small      { font-size: 0.615em; margin-bottom: 1.875em; line-height: 1.875em; }
+.large      { font-size: 1.231em; line-height: 2.231em; margin-bottom: 1.25em; }
 .hide       { display: none; }
 
 .quiet      { color: #666; }
