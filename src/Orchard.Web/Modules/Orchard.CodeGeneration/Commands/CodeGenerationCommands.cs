@@ -47,8 +47,8 @@ namespace Orchard.CodeGeneration.Commands {
         [OrchardSwitch]
         public string BasedOn { get; set; }
 
-        [CommandHelp("generate create datamigration <feature-name> \r\n\t" + "Create a new Data Migration class")]
-        [CommandName("generate create datamigration")]
+        [CommandHelp("codegen datamigration <feature-name> \r\n\t" + "Create a new Data Migration class")]
+        [CommandName("codegen datamigration")]
         public bool CreateDataMigration(string featureName) {
             Context.Output.WriteLine(T("Creating Data Migration for {0}", featureName));
 
@@ -108,8 +108,8 @@ namespace Orchard.CodeGeneration.Commands {
             return true;
         }
 
-        [CommandHelp("generate create module <module-name> [/IncludeInSolution:true|false]\r\n\t" + "Create a new Orchard module")]
-        [CommandName("generate create module")]
+        [CommandHelp("codegen module <module-name> [/IncludeInSolution:true|false]\r\n\t" + "Create a new Orchard module")]
+        [CommandName("codegen module")]
         [OrchardSwitches("IncludeInSolution")]
         public bool CreateModule(string moduleName) {
             Context.Output.WriteLine(T("Creating Module {0}", moduleName));
@@ -125,8 +125,8 @@ namespace Orchard.CodeGeneration.Commands {
             return true;
         }
 
-        [CommandName("generate create theme")]
-        [CommandHelp("generate create theme <theme-name> [/CreateProject:true|false][/IncludeInSolution:true|false][/BasedOn:<theme-name>]\r\n\tCreate a new Orchard theme")]
+        [CommandName("codegen theme")]
+        [CommandHelp("codegen theme <theme-name> [/CreateProject:true|false][/IncludeInSolution:true|false][/BasedOn:<theme-name>]\r\n\tCreate a new Orchard theme")]
         [OrchardSwitches("IncludeInSolution,BasedOn,CreateProject")]
         public void CreateTheme(string themeName) {
             Context.Output.WriteLine(T("Creating Theme {0}", themeName));
@@ -147,8 +147,8 @@ namespace Orchard.CodeGeneration.Commands {
             }
         }
 
-        [CommandHelp("generate create controller <module-name> <controller-name>\r\n\t" + "Create a new Orchard controller in a module")]
-        [CommandName("generate create controller")]
+        [CommandHelp("codegen controller <module-name> <controller-name>\r\n\t" + "Create a new Orchard controller in a module")]
+        [CommandName("codegen controller")]
         public void CreateController(string moduleName, string controllerName) {
             Context.Output.WriteLine(T("Creating Controller {0} in Module {1}", controllerName, moduleName));
 
