@@ -1,67 +1,57 @@
 ﻿@functions {
-   string CalcuClassify(string[] zoneNames, string classNamePrefix)
-   {
+    // To support the layout classifaction below. Implementing as a razor function because we can, could otherwise be a Func<string[], string, string> in the code block following.
+    string CalcuClassify(string[] zoneNames, string classNamePrefix) {
         var zoneCounter = 0;
         var zoneNumsFilled = string.Join("", zoneNames.Select(zoneName => { ++zoneCounter; return Model[zoneName] != null ? zoneCounter.ToString() : "";}).ToArray());
         return HasText(zoneNumsFilled) ? classNamePrefix + zoneNumsFilled : "";
-   }
+    }
 }
 @{
+    /* Global includes for the theme
+    ***************************************************************/
+
     Style.Include("http://fonts.googleapis.com/css?family=Lobster&subset=latin");
     Style.Include("site.css");
 
-    // cool stuff goes up here
-    var homeUrl = Href("~/");
+    /* Some useful shortcuts or settings
+    ***************************************************************/
 
-    // Zone is an alias for Display
-    Func<dynamic, dynamic> Zone = x => Display(x);
+    Func<dynamic, dynamic> Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones
 
-     //Add classes to the wrapper div to toggle zones on and off 
-    if (Model.AsideFirst != null && Model.AsideSecond == null) {
-        Model.Classes.Add("has-aside-one");
-    }
-    else if (Model.AsideFirst == null && Model.AsideSecond != null) {
-        Model.Classes.Add("has-aside-two");
-    }
-    else if (Model.AsideFirst != null && Model.AsideSecond != null) {
-        Model.Classes.Add("has-asides");
-    }
-    else {
+    /* Layout classification based on filled zones
+    ***************************************************************/
 
+    //Add classes to the wrapper div to toggle aside widget zones on and off
+    var asideClass = CalcuClassify(new [] {"AsideFirst", "AsideSecond"}, "aside-"); // for aside-1, aside-2 or aside-12 if any of the aside zones are filled
+    if (HasText(asideClass)) {
+        Model.Classes.Add(asideClass);
     }
-    
-   // Debug Quad
-   // {WorkContext.Layout.FooterQuadSecond.Add("2 This is some test text to see if zones are working. This is some test text to see if zones are working.");}
-   // {WorkContext.Layout.FooterQuadFirst.Add("1 This is some test text to see if zones are working. This is some test text to see if zones are working.");}
-   // {WorkContext.Layout.FooterQuadThird.Add("3 This is some test text to see if zones are working. This is some test text to see if zones are working.");}
 
-    //Add classes to the wrapper div to toggle quad widget zones on and off
-    var tripelClass = CalcuClassify(new [] {"TripelFirst", "TripelSecond", "TripelThird"}, "tripel-");
+    //Add classes to the wrapper div to toggle tripel widget zones on and off
+    var tripelClass = CalcuClassify(new [] {"TripelFirst", "TripelSecond", "TripelThird"}, "tripel-"); // for tripel-1, triple-2, etc. if any of the tripel zones are filled
     if (HasText(tripelClass)) {
         Model.Classes.Add(tripelClass);
     }
 
     //Add classes to the wrapper div to toggle quad widget zones on and off
-    var footerQuadClass = CalcuClassify(new [] {"FooterQuadFirst", "FooterQuadSecond", "FooterQuadThird", "FooterQuadFourth"}, "split-");
+    var footerQuadClass = CalcuClassify(new [] {"FooterQuadFirst", "FooterQuadSecond", "FooterQuadThird", "FooterQuadFourth"}, "split-"); // for quad-1, quad-2, etc. if any of the quad zones are filled
     if (HasText(footerQuadClass)) {
         Model.Classes.Add(footerQuadClass);
     }
 
+    /* Inserting some ad hoc shapes
+    ***************************************************************/
+
+    WorkContext.Layout.Header.Add(New.Branding(), "5"); // Site name and link to the home page
+    WorkContext.Layout.Footer.Add(New.BadgeOfHonor(), "5"); // Powered by Orchard
+    WorkContext.Layout.Footer.Add(New.User(), "10"); // Login and dashboard links
+
+    /* Last bit of code to prep the layout wrapper
+    ***************************************************************/
+    
     Model.Id = "layout-wrapper";
-    var tag = Tag (Model, "div");
-
-    // needs to be the page title, not page (head) title... 
-    // Adds text and html to the header zone 
-    using(Capture(branding => WorkContext.Layout.Header.Add(branding) )) {
-     <h1 id="branding"><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
-    }
-    using(Capture(pbo => WorkContext.Layout.Footer.Add(pbo) )) {
-        <div class="credits"><span class="poweredby">Powered by <a href="http://www.orchardproject.net" title="Welcome to the New World Order" target="_blank">Orchard</a></span> <span class="copyright">&#169; The Theme Machine 2010.</span></div>
-    }
-
-    WorkContext.Layout.Footer.Add(New.User());
+    var tag = Tag(Model, "div"); // using Tag so the layout div gets the classes, id and other attributes added to the Model
 }
-
 @tag.StartElement
 @if (Model.Header != null) {
 <header id="layout-header" class="group">

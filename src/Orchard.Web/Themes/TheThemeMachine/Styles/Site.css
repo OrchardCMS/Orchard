@@ -378,41 +378,19 @@ nav ul
 /* Secondary
 ***************************************************************/
 
-/* Has Aside */
-.has-aside-two #layout-content
-{
-	width: 600px;
-	float: left;
-}
+/* Aside Zones */
+/* If zone 1 is on */
+.aside-1 #layout-content { float: right; width: 600px; }
+.aside-1 .aside-first { float: left; width: 360px; }
 
-.has-aside-two .aside-second 
-{
-	width: 360px;
-	float: right;
-}
+/* If zone 2 is on */
+.aside-2 #layout-content { float: left; width: 600px; }
+.aside-2 .aside-second { float: right; width: 360px; }
 
-.has-aside-one #layout-content {
-	width: 600px;
-	float: right;
-}
-
-.has-aside-one .aside-first {
-	width: 360px;
-	float: left;
-}
-
-.has-asides #layout-content
-{
-	width: 600px;
-}
-.has-asides .aside-first, .has-asides .aside-second 
-{
-	width: 180px;
-}
-.has-asides .aside-first, .has-asides .aside-second, .has-asides #layout-content 
-{
-	float:left;
-}
+/* If zones 1, 2 are on */
+.aside-12 #layout-content { width: 600px; }
+.aside-12 .aside-first, .aside-12 .aside-second { width: 180px; }
+.aside-12 .aside-first, .aside-12 .aside-second, .aside-12 #layout-content { float:left; }
 
 /* Tripel Zones*/
 #layout-tripel > div { float:left; width:960px; }
