@@ -20,8 +20,5 @@ namespace Orchard.Data {
         IEnumerable<T> Fetch(Expression<Func<T, bool>> predicate);
         IEnumerable<T> Fetch(Expression<Func<T, bool>> predicate, Action<Orderable<T>> order);
         IEnumerable<T> Fetch(Expression<Func<T, bool>> predicate, Action<Orderable<T>> order, int skip, int count);
-
-        [Obsolete]
-        void Transaction(Action action);
     }
 }
