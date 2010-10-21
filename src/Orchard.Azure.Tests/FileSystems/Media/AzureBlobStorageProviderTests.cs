@@ -50,7 +50,7 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
 
             Assert.AreEqual(".txt", storageFile.GetFileType());
             Assert.AreEqual("foo.txt", storageFile.GetName());
-            Assert.That(storageFile.GetPath().EndsWith("/default/foo.txt"), Is.True);
+            Assert.AreEqual("foo.txt", storageFile.GetPath());
             Assert.AreEqual(0, storageFile.GetSize());
         }
 
@@ -71,7 +71,8 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
             var files = _azureBlobStorageProvider.ListFiles("");
 
             Assert.AreEqual(1, files.Count());
-            Assert.That(files.First().GetPath().EndsWith("foo2.txt"), Is.True);
+            Assert.That(files.First().GetPath().Equals("foo2.txt"), Is.True);
+            Assert.That(files.First().GetName().Equals("foo2.txt"), Is.True);
         }
 
         [Test]
@@ -82,7 +83,11 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
 
             Assert.AreEqual(1, _azureBlobStorageProvider.ListFiles("").Count());
             Assert.AreEqual(1, _azureBlobStorageProvider.ListFiles("folder").Count());
+            Assert.AreEqual("folder/foo.txt", _azureBlobStorageProvider.ListFiles("folder").First().GetPath());
+            Assert.AreEqual("foo.txt", _azureBlobStorageProvider.ListFiles("folder").First().GetName());
             Assert.AreEqual(1, _azureBlobStorageProvider.ListFiles("folder/folder").Count());
+            Assert.AreEqual("folder/folder/foo.txt", _azureBlobStorageProvider.ListFiles("folder/folder").First().GetPath());
+            Assert.AreEqual("foo.txt", _azureBlobStorageProvider.ListFiles("folder/folder").First().GetName());
         }
 
         [Test]
@@ -90,6 +95,14 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         public void CreateFolderThatExistsShouldThrow() {
             _azureBlobStorageProvider.CreateFile("folder/foo.txt");
             _azureBlobStorageProvider.CreateFolder("folder");
+        }
+
+        [Test]
+        public void ListFolderShouldAcceptNullPath() {
+            _azureBlobStorageProvider.CreateFolder("folder");
+            Assert.AreEqual(1, _azureBlobStorageProvider.ListFolders(null).Count());
+            Assert.AreEqual("folder", _azureBlobStorageProvider.ListFolders(null).First().GetName());
+            Assert.AreEqual("folder", _azureBlobStorageProvider.ListFolders(null).First().GetPath());
         }
 
         [Test]

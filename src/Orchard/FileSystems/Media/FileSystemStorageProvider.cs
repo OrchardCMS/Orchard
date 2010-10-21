@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !AZURE
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -249,3 +250,4 @@ namespace Orchard.FileSystems.Media {
 
     }
 }
+#endif
