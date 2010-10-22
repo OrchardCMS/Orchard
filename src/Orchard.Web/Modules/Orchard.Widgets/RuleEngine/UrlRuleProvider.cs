@@ -23,10 +23,10 @@ namespace Orchard.Widgets.RuleEngine {
                     appPath = "";
                 url = string.Format("{0}/{1}", appPath, url);
             }
-            if (!url.Contains("?") && url.EndsWith("/"))
+            if (url != "/" && !url.Contains("?") && url.EndsWith("/"))
                 url = url.TrimEnd('/');
             ruleContext.Result = url.EndsWith("*")
-                                     ? context.Request.RawUrl.ToUpperInvariant().StartsWith(url.ToUpperInvariant())
+                                     ? context.Request.Path.ToUpperInvariant().StartsWith(url.ToUpperInvariant())
                                      : context.Request.Path.ToUpperInvariant() == url.ToUpperInvariant();
         }
     }
