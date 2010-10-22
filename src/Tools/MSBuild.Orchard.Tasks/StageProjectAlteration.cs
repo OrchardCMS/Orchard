@@ -18,8 +18,6 @@ namespace MSBuild.Orchard.Tasks {
 
 
         public override bool Execute() {
-            //System.Diagnostics.Debugger.Break();
-
             Log.LogMessage("Altering \"{0}\"", ProjectFileName);
 
             var context = new Context(this);
