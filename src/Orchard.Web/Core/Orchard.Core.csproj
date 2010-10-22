@@ -293,15 +293,15 @@
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Views\Admin\Culture.cshtml" />
-    <None Include="Contents\Views\Items\Content.Edit.cshtml" />
-    <None Include="Routable\Placement.info">
+    <Content Include="Contents\Views\Items\Content.Edit.cshtml" />
+    <Content Include="Routable\Placement.info">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Settings\Placement.info">
+    </Content>
+    <Content Include="Settings\Placement.info">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Settings\Views\DisplayTemplates\CurrentCulture.cshtml" />
-    <None Include="Settings\Views\DisplayTemplates\RemovableCulture.cshtml" />
+    </Content>
+    <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.cshtml" />
+    <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.cshtml" />
     <Content Include="Shapes\Module.txt" />
     <Content Include="Shapes\Scripts\base.js" />
     <Content Include="Shapes\Scripts\html5.js" />
@@ -374,25 +374,26 @@
     <Content Include="Shapes\Views\Menu.cshtml" />
     <Content Include="Shapes\Views\MenuItem.cshtml" />
     <Content Include="Shapes\Views\Web.config" />
-    <None Include="Common\Placement.info" />
+    <Content Include="Common\Placement.info" />
     <Content Include="Common\Views\Parts\Common.Metadata.Summary.cshtml" />
-    <None Include="Contents\Placement.info" />
+    <Content Include="Contents\Placement.info" />
     <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <Content Include="Contents\Views\Item\Display.cshtml" />
-    <None Include="Localization\Placement.info" />
+    <Content Include="Localization\Placement.info" />
     <Content Include="Messaging\Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Navigation\Placement.info">
+    <Content Include="Navigation\Placement.info">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="PublishLater\Placement.info">
+    </Content>
+    <Content Include="PublishLater\Placement.info">
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <Content Include="Routable\Views\Parts\RoutableTitle.cshtml" />
-    <None Include="PublishLater\Views\Parts\PublishLater.Metadata.Summary.cshtml" />
+    <Content Include="PublishLater\Views\Parts\PublishLater.Metadata.Summary.cshtml" />
     <Content Include="Routable\Views\Item\Display.cshtml" />
     <Content Include="Routable\Views\Routable.HomePage.cshtml" />
+    <Content Include="Localization\Views\Parts\Localization.ContentTranslations.SummaryAdmin.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

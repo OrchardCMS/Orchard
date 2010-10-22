@@ -153,9 +153,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\Localization\fr-FR\orchard.module.po" />
-    <None Include="Placement.info">
+    <Content Include="Placement.info">
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <Content Include="Views\Parts\Blogs.RemotePublishing.cshtml" />
     <Content Include="Views\Parts\Blogs.BlogArchives.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />

@@ -93,20 +93,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <None Include="Views\Commands\Execute.cshtml" />
-    <None Include="Views\Content\Details.cshtml" />
-    <None Include="Views\Content\Index.cshtml" />
-    <None Include="Views\DefinitionTemplates\ExperimentalSettings.cshtml" />
-    <None Include="Views\EditorTemplates\Parts\Experimental.ShowDebugLink.cshtml" />
-    <None Include="Views\Home\Index.cshtml" />
-    <None Include="Views\Home\Simple.cshtml" />
-    <None Include="Views\Home\_RenderableAction.cshtml" />
-    <None Include="Views\Metadata\Index.cshtml" />
+    <Content Include="Views\Commands\Execute.cshtml" />
+    <Content Include="Views\Content\Details.cshtml" />
+    <Content Include="Views\Content\Index.cshtml" />
+    <Content Include="Views\DefinitionTemplates\ExperimentalSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Experimental.ShowDebugLink.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Simple.cshtml" />
+    <Content Include="Views\Home\_RenderableAction.cshtml" />
+    <Content Include="Views\Metadata\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Parts\Experimental.ShowDebugLink.cshtml" />
+    <Content Include="Views\Parts\Experimental.ShowDebugLink.cshtml" />
     <Content Include="Views\DumpShapeTable.cshtml" />
     <Content Include="Views\HackScript.cshtml" />
     <Content Include="Views\HackStyle.cshtml" />
