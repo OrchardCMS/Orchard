@@ -39,7 +39,10 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                         provider.AssemblyBuilder.AddAssemblyReference(Assembly.Load(entry.descriptor.Name));
                     }
                     else if (entry.directive.StartsWith("<%@ Assembly Src=\"")) {
-                        provider.AssemblyBuilder.AddAssemblyReference(BuildManager.GetCompiledAssembly(entry.descriptor.VirtualPath));
+                        // Returned assembly may be null if the .csproj file doesn't containt any .cs file, for example
+                        Assembly assembly = BuildManager.GetCompiledAssembly(entry.descriptor.VirtualPath);
+                        if (assembly != null)
+                            provider.AssemblyBuilder.AddAssemblyReference(assembly);
                     }
                 }
                 foreach (var virtualDependency in entry.dependencies) {
