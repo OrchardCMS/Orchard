@@ -92,8 +92,14 @@ namespace Orchard.Environment.Extensions {
                 throw new ArgumentException(T("Feature {0} was not found in any of the installed extensions", featureName).ToString());
 
             var extension = LoadedExtensions().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
-            if (extension == null)
-                throw new InvalidOperationException(T("Extension {0} is not active", extensionName).ToString());
+            if (extension == null) {
+                // If the feature could not be compiled for some reason,
+                // return a "null" feature, i.e. a feature with no exported types.
+                return new Feature {
+                    Descriptor = featureDescriptor,
+                    ExportedTypes = Enumerable.Empty<Type>()
+                };
+            }
 
             var extensionTypes = extension.ExportedTypes.Where(t => t.IsClass && !t.IsAbstract);
             var featureTypes = new List<Type>();
