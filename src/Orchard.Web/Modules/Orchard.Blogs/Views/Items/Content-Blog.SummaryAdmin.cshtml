@@ -1,0 +1,29 @@
+﻿@using Orchard.Blogs.Extensions;
+@using Orchard.Blogs.Models;
+@using Orchard.ContentManagement;
+@using Orchard.Utility.Extensions;
+@{
+	ContentItem contentItem = Model.ContentItem;
+	var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+<div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
+    <div class="properties">
+        <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
+        <h3>@Html.Link((string)Model.Title, Url.BlogForAdmin((string)Model.Slug))</h3>
+        @if (Model.Meta != null) {
+        <div class="metadata">@Display(Model.Meta)</div>
+        }
+        @* <p>[list of authors] [modify blog access]</p> *@
+    </div>
+    <div class="related">
+        <a href="@Url.Blog((string)Model.Slug)" title="@T("View")">@T("View")</a>@T(" | ")
+        <a href="@Url.BlogForAdmin((string)Model.Slug)" title="@T("List Posts")">@T("List Posts")</a>@T(" | ")
+        <a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" title="@T("New Post")">@T("New Post")</a>@T(" | ")
+        <a href="@Url.BlogEdit((string)Model.Slug)" title="@T("Edit")">@T("Edit")</a>@T(" | ")
+        <a href="Url.BlogRemove((string)Model.Slug)" title="@T("Remove")" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
+        <br />@Display(Model.Secondary)
+    </div>
+    @if (Model.Content != null) {
+    <div class="primary">@Display(Model.Content)</div>
+    }
+</div>

@@ -53,7 +53,7 @@ namespace Orchard.Packaging.Services {
         }
 
         public IEnumerable<PackagingEntry> GetModuleList(PackagingSource packagingSource = null) {
-            IEnumerable<PackagingEntry> packageInfos = ( packagingSource == null ? GetSources() : new[] { packagingSource } )
+            return (packagingSource == null ? GetSources() : new[] {packagingSource})
                 .SelectMany(
                     source =>
                     Bind(ParseFeed(GetModuleListForSource(source)),
@@ -64,11 +64,8 @@ namespace Orchard.Packaging.Services {
                                  Source = source,
                                  SyndicationFeed = feed,
                                  SyndicationItem = item,
-                                 PackageStreamUri = item.Links.Single().GetAbsoluteUri().AbsoluteUri,
-                             }))));
-
-
-            return packageInfos.ToArray();
+                                 PackageStreamUri = item.Links.Where(l => String.IsNullOrEmpty(l.RelationshipType)).FirstOrDefault().GetAbsoluteUri().AbsoluteUri,
+                             })))).ToArray();
         }
 
         private string GetModuleListForSource(PackagingSource source) {

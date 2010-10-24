@@ -7,13 +7,13 @@ body {font-family:Arial,Verdana; font-size: 12px;}
 </style>
 
 <!-- TinyMCE -->
-<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce_dev.js"></script>
+<script type="text/javascript" src="../jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 	tinyMCE.init({
 		// General options
 		mode : "textareas",
 		theme : "advanced",
-		plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+		plugins : "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
 
 		// Theme options
 		theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
@@ -75,6 +75,10 @@ body {font-family:Arial,Verdana; font-size: 12px;}
 		&lt;/p&gt;
 	</textarea>
 </form>
-
+<script type="text/javascript">
+if (document.location.protocol == 'file:') {
+	alert("The examples might not work properly on the local file system due to security settings in your browser. Please use a real webserver.");
+}
+</script>
 </body>
 </html>

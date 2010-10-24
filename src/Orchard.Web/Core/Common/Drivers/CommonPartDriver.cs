@@ -2,7 +2,6 @@
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.ViewModels;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Services;
@@ -35,29 +34,34 @@ namespace Orchard.Core.Common.Drivers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        protected override DriverResult Display(CommonPart part, string displayType) {
-            return ContentPartTemplate(new CommonMetadataViewModel(part), "Parts/Common.Metadata")
-                .LongestMatch(displayType, "Summary", "SummaryAdmin")
-                .Location(part.GetLocation(displayType));
-        }
-
-        protected override DriverResult Editor(CommonPart part) {
+        protected override DriverResult Display(CommonPart part, string displayType, dynamic shapeHelper) {
             return Combined(
-                OwnerEditor(part, null),
-                ContainerEditor(part, null));
+                ContentShape("Parts_Common_Metadata",
+                             () => shapeHelper.Parts_Common_Metadata(ContentPart: part)),
+                ContentShape("Parts_Common_Metadata_Summary",
+                             () => shapeHelper.Parts_Common_Metadata_Summary(ContentPart: part)),
+                ContentShape("Parts_Common_Metadata_SummaryAdmin",
+                             () => shapeHelper.Parts_Common_Metadata_SummaryAdmin(ContentPart: part))
+                );
         }
 
-        protected override DriverResult Editor(CommonPart instance, ContentManagement.IUpdateModel updater) {
+        protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) {
+            return Combined(
+                OwnerEditor(part, null, shapeHelper),
+                ContainerEditor(part, null, shapeHelper));
+        }
+
+        protected override DriverResult Editor(CommonPart instance, IUpdateModel updater, dynamic shapeHelper) {
             // this event is hooked so the modified timestamp is changed when an edit-post occurs.            
             instance.ModifiedUtc = _clock.UtcNow;
             instance.VersionModifiedUtc = _clock.UtcNow;
 
             return Combined(
-                OwnerEditor(instance, updater),
-                ContainerEditor(instance, updater));
+                OwnerEditor(instance, updater, shapeHelper),
+                ContainerEditor(instance, updater, shapeHelper));
         }
 
-        DriverResult OwnerEditor(CommonPart part, IUpdateModel updater) {
+        DriverResult OwnerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
             if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, part)) {
                 return null;
@@ -82,10 +86,11 @@ namespace Orchard.Core.Common.Drivers {
                 }
             }
 
-            return ContentPartTemplate(model, "Parts/Common.Owner", TemplatePrefix).Location(part.GetLocation("Editor"));
+            return ContentShape("Parts_Common_Owner_Edit",
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Common.Owner", Model: model, Prefix: Prefix));
         }
 
-        DriverResult ContainerEditor(CommonPart part, IUpdateModel updater) {
+        DriverResult ContainerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
             if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, part)) {
                 return null;
@@ -110,7 +115,8 @@ namespace Orchard.Core.Common.Drivers {
                 }
             }
 
-            return ContentPartTemplate(model, "Parts/Common.Container", TemplatePrefix).Location(part.GetLocation("Editor"));
+            return ContentShape("Parts_Common_Container_Edit",
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Common.Container", Model: model, Prefix: Prefix));
         }
     }
 }

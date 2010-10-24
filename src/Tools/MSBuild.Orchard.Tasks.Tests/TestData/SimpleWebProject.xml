@@ -54,7 +54,7 @@
     <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
@@ -107,9 +107,9 @@
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
       <Name>Orchard.Comments</Name>
     </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.DevTools\Orchard.DevTools.csproj">
+    <ProjectReference Include="Modules\Orchard.Experimetnal\Orchard.Experimental.csproj">
       <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
-      <Name>Orchard.DevTools</Name>
+      <Name>Orchard.Experimental</Name>
     </ProjectReference>
     <ProjectReference Include="Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
@@ -255,10 +255,6 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target> -->
-  <!-- To enable MVC area subproject support, uncomment the following two lines:
-  <UsingTask TaskName="Microsoft.Web.Mvc.Build.CreateAreaManifest" AssemblyName="Microsoft.Web.Mvc.Build, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-  <UsingTask TaskName="Microsoft.Web.Mvc.Build.CopyAreaManifests" AssemblyName="Microsoft.Web.Mvc.Build, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-  -->
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
     <PropertyGroup>
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>

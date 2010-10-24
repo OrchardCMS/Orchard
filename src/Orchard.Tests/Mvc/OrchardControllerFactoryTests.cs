@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Mvc;
+using Orchard.Tests.DisplayManagement;
 using Orchard.Tests.Stubs;
 using Autofac;
 
@@ -12,6 +13,7 @@ namespace Orchard.Tests.Mvc {
     [TestFixture]
     public class OrchardControllerFactoryTests {
         private OrchardControllerFactory _controllerFactory;
+        private IWorkContextAccessor _workContextAccessor;
         private StubContainerProvider _containerProvider;
 
         [SetUp]
@@ -24,15 +26,20 @@ namespace Orchard.Tests.Mvc {
             var container = builder.Build();
             _containerProvider = new StubContainerProvider(container, container.BeginLifetimeScope());
 
+            var workContext = new DefaultDisplayManagerTests.TestWorkContext
+            {
+                CurrentTheme = new DefaultDisplayManagerTests.Theme { ThemeName = "Hello" },
+                ContainerProvider = _containerProvider
+            };
+            _workContextAccessor = new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext);
 
             _controllerFactory = new OrchardControllerFactory();
-            InjectKnownControllerTypes(_controllerFactory, typeof (FooController), typeof (BarController));
+            InjectKnownControllerTypes(_controllerFactory, typeof(ReplacementFooController), typeof (FooController), typeof (BarController));
         }
-
 
         [Test]
         public void IContainerProvidersRequestContainerFromRouteDataShouldUseTokenWhenPresent() {
-            var requestContext = GetRequestContext(_containerProvider);
+            var requestContext = GetRequestContext(_workContextAccessor);
             var controller = _controllerFactory.CreateController(requestContext, "foo");
 
             Assert.That(controller, Is.TypeOf<ReplacementFooController>());
@@ -47,9 +54,8 @@ namespace Orchard.Tests.Mvc {
         }
 
         [Test]
-        public void
-            WhenContainerIsPresentButNamedControllerIsNotResolvedNormalControllerFactoryRulesShouldBeUsedAsFallback() {
-            var requestContext = GetRequestContext(_containerProvider);
+        public void WhenContainerIsPresentButNamedControllerIsNotResolvedNormalControllerFactoryRulesShouldBeUsedAsFallback() {
+            var requestContext = GetRequestContext(_workContextAccessor);
             var controller = _controllerFactory.CreateController(requestContext, "bar");
 
             Assert.That(controller, Is.TypeOf<BarController>());
@@ -57,7 +63,7 @@ namespace Orchard.Tests.Mvc {
 
         [Test]
         public void DisposingControllerThatCameFromContainerShouldNotCauseProblemWhenContainerIsDisposed() {
-            var requestContext = GetRequestContext(_containerProvider);
+            var requestContext = GetRequestContext(_workContextAccessor);
             var controller = _controllerFactory.CreateController(requestContext, "foo");
 
             Assert.That(controller, Is.TypeOf<ReplacementFooController>());
@@ -72,12 +78,12 @@ namespace Orchard.Tests.Mvc {
             Assert.That(((ReplacementFooController) controller).Disposals, Is.EqualTo(4));
         }
 
-        private static RequestContext GetRequestContext(StubContainerProvider containerProvider) {
+        private static RequestContext GetRequestContext(IWorkContextAccessor workContextAccessor)
+        {
             var handler = new MvcRouteHandler();
             var route = new Route("yadda", handler) {
                                                         DataTokens =
-                                                            new RouteValueDictionary
-                                                            {{"IContainerProvider", containerProvider}}
+                                                            new RouteValueDictionary { { "IWorkContextAccessor", workContextAccessor } }
                                                     };
 
             var httpContext = new StubHttpContext();

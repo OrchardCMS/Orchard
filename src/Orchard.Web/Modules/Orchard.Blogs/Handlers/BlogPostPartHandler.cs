@@ -28,6 +28,10 @@ namespace Orchard.Blogs.Handlers {
                      blog.PostCount = postsCount;
                  });
 
+            OnGetDisplayShape<BlogPostPart>(SetModelProperties);
+            OnGetEditorShape<BlogPostPart>(SetModelProperties);
+            OnUpdateEditorShape<BlogPostPart>(SetModelProperties);
+
             OnInitializing<BlogPostPart>((context, bp) => {
                 var blogSlug = requestContext.RouteData.Values.ContainsKey("blogSlug") ? requestContext.RouteData.Values["blogSlug"] as string : null;
                 if (!string.IsNullOrEmpty(blogSlug)) {
@@ -55,6 +59,10 @@ namespace Orchard.Blogs.Handlers {
                 (context, b) =>
                 blogPostService.Get(context.ContentItem.As<BlogPart>()).ToList().ForEach(
                     blogPost => context.ContentManager.Remove(blogPost.ContentItem)));
+        }
+
+        private static void SetModelProperties(BuildShapeContext context, BlogPostPart blogPost) {
+            context.Shape.Blog = blogPost.BlogPart;
         }
 
         Localizer T { get; set; }

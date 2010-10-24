@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Autofac;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Indexing;
-using Orchard.Mvc.ViewModels;
+using Orchard.Logging;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentManager : IContentManager {
@@ -18,6 +21,7 @@ namespace Orchard.ContentManagement {
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
+        private readonly Lazy<IContentDisplay> _contentDisplay;
 
         public DefaultContentManager(
             IComponentContext context,
@@ -25,14 +29,19 @@ namespace Orchard.ContentManagement {
             IRepository<ContentItemRecord> contentItemRepository,
             IRepository<ContentItemVersionRecord> contentItemVersionRepository,
             IContentDefinitionManager contentDefinitionManager,
-            Func<IContentManagerSession> contentManagerSession) {
+            Func<IContentManagerSession> contentManagerSession,
+            Lazy<IContentDisplay> contentDisplay) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;
             _contentItemVersionRepository = contentItemVersionRepository;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManagerSession = contentManagerSession;
+            _contentDisplay = contentDisplay;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         private IEnumerable<IContentHandler> _handlers;
         public IEnumerable<IContentHandler> Handlers {
@@ -43,10 +52,8 @@ namespace Orchard.ContentManagement {
             }
         }
 
-        public IEnumerable<ContentType> GetContentTypes() {
-            return Handlers.Aggregate(
-                Enumerable.Empty<ContentType>(),
-                (types, handler) => types.Concat(handler.GetContentTypes()));
+        public IEnumerable<ContentTypeDefinition> GetContentTypeDefinitions() {
+            return _contentDefinitionManager.ListTypeDefinitions();
         }
 
         public virtual ContentItem New(string contentType) {
@@ -63,9 +70,8 @@ namespace Orchard.ContentManagement {
             };
 
             // invoke handlers to weld aspects onto kernel
-            foreach (var handler in Handlers) {
-                handler.Activating(context);
-            }
+            Handlers.Invoke(handler => handler.Activating(context), Logger);
+
             var context2 = new ActivatedContentContext {
                 ContentType = contentType,
                 ContentItem = context.Builder.Build()
@@ -74,18 +80,14 @@ namespace Orchard.ContentManagement {
             // back-reference for convenience (e.g. getting metadata when in a view)
             context2.ContentItem.ContentManager = this;
 
-            foreach (var handler in Handlers) {
-                handler.Activated(context2);
-            }
+            Handlers.Invoke(handler => handler.Activated(context2), Logger);
 
             var context3 = new InitializingContentContext {
                 ContentType = context2.ContentType,
                 ContentItem = context2.ContentItem,
             };
 
-            foreach (var handler in Handlers) {
-                handler.Initializing(context3);
-            }
+            Handlers.Invoke(handler => handler.Initializing(context3), Logger);
 
             // composite result is returned
             return context3.ContentItem;
@@ -138,12 +140,8 @@ namespace Orchard.ContentManagement {
             var context = new LoadContentContext(contentItem);
 
             // invoke handlers to acquire state, or at least establish lazy loading callbacks
-            foreach (var handler in Handlers) {
-                handler.Loading(context);
-            }
-            foreach (var handler in Handlers) {
-                handler.Loaded(context);
-            }
+            Handlers.Invoke(handler => handler.Loading(context), Logger);
+            Handlers.Invoke(handler => handler.Loaded(context), Logger);
 
             // when draft is required and latest is published a new version is appended 
             if (options.IsDraftRequired && versionRecord.Published) {
@@ -197,18 +195,14 @@ namespace Orchard.ContentManagement {
             var context = new PublishContentContext(contentItem, previous);
 
             // invoke handlers to acquire state, or at least establish lazy loading callbacks
-            foreach (var handler in Handlers) {
-                handler.Publishing(context);
-            }
+            Handlers.Invoke(handler => handler.Publishing(context), Logger);
 
             if (previous != null) {
                 previous.Published = false;
             }
             contentItem.VersionRecord.Published = true;
 
-            foreach (var handler in Handlers) {
-                handler.Published(context);
-            }
+            Handlers.Invoke(handler => handler.Published(context), Logger);
         }
 
         public virtual void Unpublish(ContentItem contentItem) {
@@ -234,24 +228,18 @@ namespace Orchard.ContentManagement {
                 PublishingItemVersionRecord = null
             };
 
-            foreach (var handler in Handlers) {
-                handler.Publishing(context);
-            }
+            Handlers.Invoke(handler => handler.Publishing(context), Logger);
 
             publishedItem.VersionRecord.Published = false;
 
-            foreach (var handler in Handlers) {
-                handler.Published(context);
-            }
+            Handlers.Invoke(handler => handler.Published(context), Logger);
         }
 
         public virtual void Remove(ContentItem contentItem) {
             var activeVersions = _contentItemVersionRepository.Fetch(x => x.ContentItemRecord == contentItem.Record && (x.Published || x.Latest));
             var context = new RemoveContentContext(contentItem);
 
-            foreach (var handler in Handlers) {
-                handler.Removing(context);
-            }
+            Handlers.Invoke(handler => handler.Removing(context), Logger);
 
             foreach (var version in activeVersions) {
                 if (version.Published) {
@@ -262,9 +250,7 @@ namespace Orchard.ContentManagement {
                 }
             }
 
-            foreach (var handler in Handlers) {
-                handler.Removed(context);
-            }
+            Handlers.Invoke(handler => handler.Removed(context), Logger);
         }
 
         protected virtual ContentItem BuildNewVersion(ContentItem existingContentItem) {
@@ -305,12 +291,8 @@ namespace Orchard.ContentManagement {
                 ExistingItemVersionRecord = existingItemVersionRecord,
                 BuildingItemVersionRecord = buildingItemVersionRecord,
             };
-            foreach (var handler in Handlers) {
-                handler.Versioning(context);
-            }
-            foreach (var handler in Handlers) {
-                handler.Versioned(context);
-            }
+            Handlers.Invoke(handler => handler.Versioning(context), Logger);
+            Handlers.Invoke(handler => handler.Versioned(context), Logger);
 
             return context.BuildingContentItem;
         }
@@ -351,25 +333,17 @@ namespace Orchard.ContentManagement {
 
 
             // invoke handlers to add information to persistent stores
-            foreach (var handler in Handlers) {
-                handler.Creating(context);
-            }
-            foreach (var handler in Handlers) {
-                handler.Created(context);
-            }
+            Handlers.Invoke(handler => handler.Creating(context), Logger);
+            Handlers.Invoke(handler => handler.Created(context), Logger);
 
             if (options.IsPublished) {
                 var publishContext = new PublishContentContext(contentItem, null);
 
                 // invoke handlers to acquire state, or at least establish lazy loading callbacks
-                foreach (var handler in Handlers) {
-                    handler.Publishing(publishContext);
-                }
+                Handlers.Invoke(handler => handler.Publishing(publishContext), Logger);
 
                 // invoke handlers to acquire state, or at least establish lazy loading callbacks
-                foreach (var handler in Handlers) {
-                    handler.Published(publishContext);
-                }
+                Handlers.Invoke(handler => handler.Published(publishContext), Logger);
             }
         }
 
@@ -378,41 +352,33 @@ namespace Orchard.ContentManagement {
                 ContentItem = content.ContentItem,
                 Metadata = new ContentItemMetadata(content)
             };
-            foreach (var handler in Handlers) {
-                handler.GetContentItemMetadata(context);
-            }
+
+            Handlers.Invoke(handler => handler.GetContentItemMetadata(context), Logger);
+            //-- was - from ContentItemDriver --
+            //void IContentItemDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
+            //  var item = context.ContentItem.As<TContent>();
+            //  if (item != null) {
+            //    context.Metadata.DisplayText = GetDisplayText(item) ?? context.Metadata.DisplayText;
+            //    context.Metadata.DisplayRouteValues = GetDisplayRouteValues(item) ?? context.Metadata.DisplayRouteValues;
+            //    context.Metadata.EditorRouteValues = GetEditorRouteValues(item) ?? context.Metadata.EditorRouteValues;
+            //    context.Metadata.CreateRouteValues = GetCreateRouteValues(item) ?? context.Metadata.CreateRouteValues;
+            //  }
+            //}
+
             return context.Metadata;
         }
 
-        public ContentItemViewModel<TContentPart> BuildDisplayModel<TContentPart>(TContentPart content, string displayType) where TContentPart : IContent {
-            if (content == null)
-                return null;
 
-            var displayModel = new ContentItemViewModel<TContentPart>(content);
-            var context = new BuildDisplayModelContext(displayModel, displayType);
-            foreach (var handler in Handlers) {
-                handler.BuildDisplayModel(context);
-            }
-            return displayModel;
+        public dynamic BuildDisplay(IContent content, string displayType = "") {
+            return _contentDisplay.Value.BuildDisplay(content, displayType);
         }
 
-        public ContentItemViewModel<TContentPart> BuildEditorModel<TContentPart>(TContentPart content) where TContentPart : IContent {
-            var editorModel = new ContentItemViewModel<TContentPart>(content);
-            var context = new BuildEditorModelContext(editorModel);
-            foreach (var handler in Handlers) {
-                handler.BuildEditorModel(context);
-            }
-            return editorModel;
+        public dynamic BuildEditor(IContent content) {
+            return _contentDisplay.Value.BuildEditor(content);
         }
 
-        public ContentItemViewModel<TContentPart> UpdateEditorModel<TContentPart>(TContentPart content, IUpdateModel updater) where TContentPart : IContent {
-            var editorModel = new ContentItemViewModel<TContentPart>(content);
-
-            var context = new UpdateEditorModelContext(editorModel, updater);
-            foreach (var handler in Handlers) {
-                handler.UpdateEditorModel(context);
-            }
-            return editorModel;
+        public dynamic UpdateEditor(IContent content, IUpdateModel updater) {
+            return _contentDisplay.Value.UpdateEditor(content, updater);
         }
 
         public IContentQuery<ContentItem> Query() {
@@ -438,13 +404,9 @@ namespace Orchard.ContentManagement {
             var indexContentContext = new IndexContentContext(contentItem, documentIndex);
 
             // dispatch to handlers to retrieve index information
-            foreach (var handler in Handlers) {
-                handler.Indexing(indexContentContext);
-            }
+            Handlers.Invoke(handler => handler.Indexing(indexContentContext), Logger);
 
-            foreach (var handler in Handlers) {
-                handler.Indexed(indexContentContext);
-            }
+            Handlers.Invoke(handler => handler.Indexed(indexContentContext), Logger);
         }
 
         //public ISearchBuilder Search() {
@@ -452,5 +414,21 @@ namespace Orchard.ContentManagement {
         //        ? _indexManager.GetSearchIndexProvider().CreateSearchBuilder("Search") 
         //        : new NullSearchBuilder();
         //}
+    }
+    class CallSiteCollection : ConcurrentDictionary<string, CallSite<Func<CallSite, object, object>>> {
+        readonly Func<string, CallSite<Func<CallSite, object, object>>> _valueFactory;
+
+        public CallSiteCollection(Func<string, CallSite<Func<CallSite, object, object>>> callSiteFactory) {
+            _valueFactory = callSiteFactory;
+        }
+
+        public CallSiteCollection(Func<string, CallSiteBinder> callSiteBinderFactory) {
+            _valueFactory = key => CallSite<Func<CallSite, object, object>>.Create(callSiteBinderFactory(key));
+        }
+
+        public object Invoke(object callee, string key) {
+            var callSite = GetOrAdd(key, _valueFactory);
+            return callSite.Target(callSite, callee);
+        }
     }
 }

@@ -43,16 +43,23 @@ namespace Orchard.Mvc {
         }
 
         static RequestContext RequestContextFactory(IComponentContext context) {
-            var httpContext = context.Resolve<HttpContextBase>();
-            var mvcHandler = httpContext.Handler as MvcHandler;
-            if (mvcHandler != null) {
-                return mvcHandler.RequestContext;
-            }
+            var httpContextAccessor = context.Resolve<IHttpContextAccessor>();
+            var httpContext = httpContextAccessor.Current();
+            if (httpContext != null) {
 
-            var hasRequestContext = httpContext.Handler as IHasRequestContext;
-            if (hasRequestContext != null) {
-                if (hasRequestContext.RequestContext != null)
-                    return hasRequestContext.RequestContext;
+                var mvcHandler = httpContext.Handler as MvcHandler;
+                if (mvcHandler != null) {
+                    return mvcHandler.RequestContext;
+                }
+
+                var hasRequestContext = httpContext.Handler as IHasRequestContext;
+                if (hasRequestContext != null) {
+                    if (hasRequestContext.RequestContext != null)
+                        return hasRequestContext.RequestContext;
+                }
+            }
+            else {
+                httpContext = new HttpContextPlaceholder();
             }
 
             return new RequestContext(httpContext, new RouteData());

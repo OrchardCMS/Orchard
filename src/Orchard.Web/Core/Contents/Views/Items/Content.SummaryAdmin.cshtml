@@ -1,0 +1,18 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Utility.Extensions;
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+}
+<div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
+    <div class="properties">
+        <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
+        <h3>@Html.ItemEditLink(contentItem)</h3>
+        <div class="metadata">@Display(Model.Meta)</div>
+    </div>
+    <div class="related">@Display(Model.Secondary)
+        @Html.ItemEditLink(T("Edit").Text, contentItem) @T(" | ")
+        @Html.Link(T("Remove").Text, Url.Action("Remove", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+    </div>
+    <div class="primary">@Display(Model.Primary)</div>
+</div>

@@ -30,8 +30,14 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         public class StubFolders : IExtensionFolders {
-            public StubFolders() {
+            private readonly string _extensionType;
+
+            public StubFolders(string extensionType) {
                 Manifests = new Dictionary<string, string>();
+                _extensionType = extensionType;
+            }
+
+            public StubFolders() : this("Module") {
             }
 
             public IDictionary<string, string> Manifests { get; set; }
@@ -40,7 +46,7 @@ namespace Orchard.Tests.Environment.Extensions {
                 foreach (var e in Manifests) {
                     string name = e.Key;
                     var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
+                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, _extensionType, parseResult);
                 }
             }
         }
@@ -118,10 +124,10 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void AvailableExtensionsShouldFollowCatalogLocations() {
-            _folders.Manifests.Add("foo", "name: Foo");
-            _folders.Manifests.Add("bar", "name: Bar");
-            _folders.Manifests.Add("frap", "name: Frap");
-            _folders.Manifests.Add("quad", "name: Quad");
+            _folders.Manifests.Add("foo", "Name: Foo");
+            _folders.Manifests.Add("bar", "Name: Bar");
+            _folders.Manifests.Add("frap", "Name: Frap");
+            _folders.Manifests.Add("quad", "Name: Quad");
 
             var available = _manager.AvailableExtensions();
 
@@ -133,8 +139,8 @@ namespace Orchard.Tests.Environment.Extensions {
         public void ExtensionDescriptorsShouldHaveNameAndVersion() {
 
             _folders.Manifests.Add("Sample", @"
-name: Sample Extension
-version: 2.x
+Name: Sample Extension
+Version: 2.x
 ");
 
             var descriptor = _manager.AvailableExtensions().Single();
@@ -147,10 +153,10 @@ version: 2.x
         public void ExtensionDescriptorsShouldBeParsedForMinimalModuleTxt() {
 
             _folders.Manifests.Add("SuperWiki", @"
-name: SuperWiki
-version: 1.0.3
-orchardversion: 1
-features:
+Name: SuperWiki
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   SuperWiki: 
     Description: My super wiki module for Orchard.
 ");
@@ -169,12 +175,12 @@ features:
         public void ExtensionDescriptorsShouldBeParsedForCompleteModuleTxt() {
 
             _folders.Manifests.Add("MyCompany.AnotherWiki", @"
-name: AnotherWiki
-author: Coder Notaprogrammer
-website: http://anotherwiki.codeplex.com
-version: 1.2.3
-orchardversion: 1
-features:
+Name: AnotherWiki
+Author: Coder Notaprogrammer
+Website: http://anotherwiki.codeplex.com
+Version: 1.2.3
+OrchardVersion: 1
+Features:
   AnotherWiki: 
     Description: My super wiki module for Orchard.
     Dependencies: Versioning, Search
@@ -252,10 +258,10 @@ features:
             var extensionFolder = new StubFolders();
 
             extensionFolder.Manifests.Add("TestModule", @"
-name: TestModule
-version: 1.0.3
-orchardversion: 1
-features:
+Name: TestModule
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   TestModule: 
     Description: My test module for Orchard.
   TestFeature:
@@ -278,10 +284,10 @@ features:
             var extensionFolder = new StubFolders();
 
             extensionFolder.Manifests.Add("TestModule", @"
-name: TestModule
-version: 1.0.3
-orchardversion: 1
-features:
+Name: TestModule
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   TestModule: 
     Description: My test module for Orchard.
   TestFeature:
@@ -313,10 +319,10 @@ features:
             var extensionFolder = new StubFolders();
 
             extensionFolder.Manifests.Add("TestModule", @"
-name: TestModule
-version: 1.0.3
-orchardversion: 1
-features:
+Name: TestModule
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   TestModule: 
     Description: My test module for Orchard.
   TestFeature:
@@ -343,10 +349,10 @@ features:
             var extensionFolder = new StubFolders();
 
             extensionFolder.Manifests.Add("TestModule", @"
-name: TestModule
-version: 1.0.3
-orchardversion: 1
-features:
+Name: TestModule
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   TestModule: 
     Description: My test module for Orchard.
   TestFeature:
@@ -371,10 +377,10 @@ features:
             var extensionFolder = new StubFolders();
 
             extensionFolder.Manifests.Add("TestModule", @"
-name: TestModule
-version: 1.0.3
-orchardversion: 1
-features:
+Name: TestModule
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   TestModule: 
     Description: My test module for Orchard.
   TestFeature:
@@ -400,9 +406,9 @@ features:
             var extensionFolder = new StubFolders();
 
             extensionFolder.Manifests.Add("Minimalistic", @"
-name: Minimalistic
-version: 1.0.3
-orchardversion: 1
+Name: Minimalistic
+Version: 1.0.3
+OrchardVersion: 1
 ");
 
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
@@ -410,6 +416,123 @@ orchardversion: 1
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
             Assert.That(minimalisticModule.Features.Single().Name, Is.EqualTo("Minimalistic"));
+        }
+
+
+        [Test]
+        public void FeatureDescriptorsAreInDependencyOrder() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            extensionFolder.Manifests.Add("Alpha", @"
+Name: Alpha
+Version: 1.0.3
+OrchardVersion: 1
+Features:
+  Alpha:
+    Dependencies: Gamma
+");
+
+            extensionFolder.Manifests.Add("Beta", @"
+Name: Beta
+Version: 1.0.3
+OrchardVersion: 1
+");
+            extensionFolder.Manifests.Add("Gamma", @"
+Name: Gamma
+Version: 1.0.3
+OrchardVersion: 1
+Features:
+  Gamma:
+    Dependencies: Beta
+");
+
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            var features = extensionManager.AvailableFeatures();
+            Assert.That(features.Aggregate("<", (a,b)=>a+b.Name+"<"), Is.EqualTo("<Beta<Gamma<Alpha<"));
+        }
+
+        [Test]
+        public void FeatureDescriptorsShouldBeLoadedInThemes() {
+            var extensionLoader = new StubLoaders();
+            var moduleExtensionFolder = new StubFolders();
+            var themeExtensionFolder = new StubFolders("Theme");
+
+            moduleExtensionFolder.Manifests.Add("Alpha", @"
+Name: Alpha
+Version: 1.0.3
+OrchardVersion: 1
+Features:
+  Alpha:
+    Dependencies: Gamma
+");
+
+            moduleExtensionFolder.Manifests.Add("Beta", @"
+Name: Beta
+Version: 1.0.3
+OrchardVersion: 1
+");
+            moduleExtensionFolder.Manifests.Add("Gamma", @"
+Name: Gamma
+Version: 1.0.3
+OrchardVersion: 1
+Features:
+  Gamma:
+    Dependencies: Beta
+");
+
+            moduleExtensionFolder.Manifests.Add("Classic", @"
+Name: Classic
+Version: 1.0.3
+OrchardVersion: 1
+");
+
+            IExtensionManager extensionManager = new ExtensionManager(new[] { moduleExtensionFolder, themeExtensionFolder }, new[] { extensionLoader });
+            var features = extensionManager.AvailableFeatures();
+            Assert.That(features.Count(), Is.EqualTo(4));
+        }
+
+        [Test]
+        public void ThemeFeatureDescriptorsShouldBeAbleToDependOnModules() {
+            var extensionLoader = new StubLoaders();
+            var moduleExtensionFolder = new StubFolders();
+            var themeExtensionFolder = new StubFolders("Theme");
+
+            moduleExtensionFolder.Manifests.Add("Alpha", @"
+Name: Alpha
+Version: 1.0.3
+OrchardVersion: 1
+Features:
+  Alpha:
+    Dependencies: Gamma
+");
+
+            moduleExtensionFolder.Manifests.Add("Beta", @"
+Name: Beta
+Version: 1.0.3
+OrchardVersion: 1
+");
+            moduleExtensionFolder.Manifests.Add("Gamma", @"
+Name: Gamma
+Version: 1.0.3
+OrchardVersion: 1
+Features:
+  Gamma:
+    Dependencies: Beta
+");
+
+            moduleExtensionFolder.Manifests.Add("Classic", @"
+Name: Classic
+Version: 1.0.3
+OrchardVersion: 1
+Features:
+  Classic:
+    Dependencies: Alpha
+");
+
+            IExtensionManager extensionManager = new ExtensionManager(new[] { moduleExtensionFolder, themeExtensionFolder }, new[] { extensionLoader });
+            var features = extensionManager.AvailableFeatures();
+            Assert.That(features.Aggregate("<", (a, b) => a + b.Name + "<"), Is.EqualTo("<Beta<Gamma<Alpha<Classic<"));
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.ViewModels;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Localization.Services;
@@ -16,7 +18,10 @@ namespace Orchard.Core.Settings.Controllers {
         private readonly ICultureManager _cultureManager;
         public IOrchardServices Services { get; private set; }
 
-        public AdminController(ISiteService siteService, IOrchardServices services, ICultureManager cultureManager) {
+        public AdminController(
+            ISiteService siteService,
+            IOrchardServices services,
+            ICultureManager cultureManager) {
             _siteService = siteService;
             _cultureManager = cultureManager;
             Services = services;
@@ -29,11 +34,8 @@ namespace Orchard.Core.Settings.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            var model = new SettingsIndexViewModel {
-                Site = _siteService.GetSiteSettings().As<SiteSettingsPart>(),
-                SiteCultures = _cultureManager.ListCultures()
-            };
-            model.ViewModel = Services.ContentManager.BuildEditorModel(model.Site);
+            var model = Services.ContentManager.BuildEditor(_siteService.GetSiteSettings());
+
             return View(model);
         }
 
@@ -42,11 +44,12 @@ namespace Orchard.Core.Settings.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            var viewModel = new SettingsIndexViewModel { Site = _siteService.GetSiteSettings().As<SiteSettingsPart>() };
-            viewModel.ViewModel = Services.ContentManager.UpdateEditorModel(viewModel.Site.ContentItem, this);
+            var site = _siteService.GetSiteSettings();
+            var model = Services.ContentManager.UpdateEditor(site, this);
 
-            if (!TryUpdateModel(viewModel)) {
-                return View(viewModel);
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                return View(model);
             }
 
             Services.Notifier.Information(T("Settings updated"));
@@ -58,23 +61,27 @@ namespace Orchard.Core.Settings.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            var viewModel = new SiteCulturesViewModel {
+            var model = new SiteCulturesViewModel {
                 CurrentCulture = _cultureManager.GetCurrentCulture(HttpContext),
                 SiteCultures = _cultureManager.ListCultures(),
             };
-            viewModel.AvailableSystemCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+            model.AvailableSystemCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures)
                 .Select(ci => ci.Name)
-                .Where(s => !viewModel.SiteCultures.Contains(s));
+                .Where(s => !model.SiteCultures.Contains(s));
 
-            return View(viewModel);
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult AddCulture(string cultureName) {
+        public ActionResult AddCulture(string systemCultureName, string cultureName) {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            _cultureManager.AddCulture(cultureName);
+            cultureName = string.IsNullOrWhiteSpace(cultureName) ? systemCultureName : cultureName;
+
+            if (!string.IsNullOrWhiteSpace(cultureName)) {
+                _cultureManager.AddCulture(cultureName);
+            }
             return RedirectToAction("Culture");
         }
 

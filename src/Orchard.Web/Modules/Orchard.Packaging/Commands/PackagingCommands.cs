@@ -38,7 +38,7 @@ namespace Orchard.Packaging.Commands {
         }
 
         [CommandHelp("package install <filename>\r\n\t" + "Install a module from a package <filename>.")]
-        [CommandName("package install ")]
+        [CommandName("package install")]
         public void InstallPackage(string filename) {
             if (!File.Exists(filename)) {
                 Context.Output.WriteLine(T("File \"{0}\" does not exist.", filename));

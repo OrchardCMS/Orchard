@@ -14,6 +14,10 @@ namespace Orchard.Events {
             _proxyBuilder = new DefaultProxyBuilder();
         }
 
+        public bool IsAdapterForIndividualComponents {
+            get { return false; }
+        }
+
         public IEnumerable<IComponentRegistration> RegistrationsFor(Service service, Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor) {
             var serviceWithType = service as IServiceWithType;
             if (serviceWithType == null)
@@ -40,4 +44,4 @@ namespace Orchard.Events {
             yield return rb.CreateRegistration();
         }
     }
-} 
+}

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
@@ -16,6 +15,7 @@ using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
@@ -28,6 +28,8 @@ using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.Environment.State;
 using Orchard.Data.Migration;
+using Orchard.Widgets.Models;
+using Orchard.Widgets;
 
 namespace Orchard.Setup.Services {
     public class SetupService : ISetupService {
@@ -66,9 +68,9 @@ namespace Orchard.Setup.Services {
                 string[] hardcoded = {
                     "Orchard.Framework",
                     "Common",
+                    "Shapes",
                     "PublishLater",
                     "Contents",
-                    "ContentsLocation",
                     "Dashboard",
                     "Reports",
                     "Feeds",
@@ -80,6 +82,7 @@ namespace Orchard.Setup.Services {
                     "Routable",
                     "Settings",
                     "XmlRpc",
+                    "Messaging",
                     "Orchard.Users",
                     "Orchard.Roles",
                     "TinyMce",
@@ -90,7 +93,9 @@ namespace Orchard.Setup.Services {
                     "Orchard.Comments",
                     "Orchard.Tags",
                     "Orchard.Media",
-                    "Futures.Widgets"};
+                    "Orchard.Widgets",
+                    "Orchard.jQuery"
+                };
 
                 context.EnabledFeatures = hardcoded;
             }
@@ -112,7 +117,8 @@ namespace Orchard.Setup.Services {
 
             // initialize database explicitly, and store shell descriptor
             var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellBlueprint);
-            using ( var environment = new StandaloneEnvironment(bootstrapLifetimeScope) ) {
+
+            using (var environment = bootstrapLifetimeScope.CreateWorkContextScope()) {
 
                 // check if the database is already created (in case an exception occured in the second phase)
                 var shellDescriptorRepository = environment.Resolve<IRepository<ShellDescriptorRecord>>();
@@ -158,82 +164,7 @@ namespace Orchard.Setup.Services {
             shellSettings.State = new TenantState("Running");
             using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                 try {
-                    // create superuser
-                    var membershipService = environment.Resolve<IMembershipService>();
-                    var user =
-                        membershipService.CreateUser(new CreateUserParams(context.AdminUsername, context.AdminPassword,
-                                                                          String.Empty, String.Empty, String.Empty,
-                                                                          true));
-
-                    // set site name and settings
-                    var siteService = environment.Resolve<ISiteService>();
-                    var siteSettings = siteService.GetSiteSettings().As<SiteSettingsPart>();
-                    siteSettings.Record.SiteSalt = Guid.NewGuid().ToString("N");
-                    siteSettings.Record.SiteName = context.SiteName;
-                    siteSettings.Record.SuperUser = context.AdminUsername;
-                    siteSettings.Record.PageTitleSeparator = " - ";
-                    siteSettings.Record.SiteCulture = "en-US";
-
-                    // set site theme
-                    var themeService = environment.Resolve<IThemeService>();
-                    themeService.SetSiteTheme("Contoso");
-
-                    // add default culture
-                    var cultureManager = environment.Resolve<ICultureManager>();
-                    cultureManager.AddCulture("en-US");
-                    cultureManager.AddCulture("fr");
-
-                    var contentManager = environment.Resolve<IContentManager>();
-
-                    // this needs to exit the standalone environment? rework this process entirely?
-                    // simulate installation-time module activation events
-                    //var hackInstallationGenerator = environment.Resolve<IHackInstallationGenerator>();
-                    //hackInstallationGenerator.GenerateInstallEvents();
-
-                    var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-                    contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
-                        .WithPart("CommentsPart")
-                        .WithPart("TagsPart")
-                        .WithPart("LocalizationPart")
-                        .Indexed());
-                    contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
-                        .WithPart("CommonPart")
-                        .WithPart("PublishLaterPart")
-                        .WithPart("RoutePart")
-                        .WithPart("BodyPart")
-                        .WithPart("CommentsPart")
-                        .WithPart("TagsPart")
-                        .WithPart("LocalizationPart")
-                        .Creatable()
-                        .Indexed());
-                    contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg
-                        .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
-
-                    // create home page as a CMS page
-                    var page = contentManager.Create("Page", VersionOptions.Draft);
-                    page.As<BodyPart>().Text = "<p>Welcome to Orchard!</p><p>Congratulations, you've successfully set-up your Orchard site.</p><p>This is the home page of your new site. We've taken the liberty to write here about a few things you could look at next in order to get familiar with the application. Once you feel confident you don't need this anymore, just click <a href=\"Admin/Pages/Edit/3\">Edit</a> to go into edit mode and replace this with whatever you want on your home page to make it your own.</p><p>One thing you could do (but you don't have to) is go into <a href=\"Admin/Settings\">Manage Settings</a> (follow the <a href=\"Admin\">Admin</a> link and then look for it under \"Settings\" in the menu on the left) and check that everything is configured the way you want.</p><p>You probably want to make the site your own. One of the ways you can do that is by clicking <a href=\"Admin/Themes\">Manage Themes</a> in the admin menu. A theme is a packaged look and feel that affects the whole site.</p><p>Next, you can start playing with the content types that we installed. For example, go ahead and click <a href=\"Admin/Pages/Create\">Add New Page</a> in the admin menu and create an \"about\" page. Then, add it to the navigation menu by going to <a href=\"Admin/Navigation\">Manage Menu</a>. You can also click <a href=\"Admin/Blogs/Create\">Add New Blog</a> and start posting by clicking \"Add New Post\".</p><p>Finally, Orchard has been designed to be extended. It comes with a few built-in modules such as pages and blogs or themes. You can install new themes by going to <a href=\"Admin/Themes\">Manage Themes</a> and clicking <a href=\"Admin/Themes/Install\">Install a new Theme</a>. Like for themes, modules are created by other users of Orchard just like you so if you feel up to it, please <a href=\"http://www.orchardproject.net/\">consider participating</a>.</p><p>--The Orchard Crew</p>";
-                    page.As<RoutePart>().Slug = "home";
-                    page.As<RoutePart>().Path = "home"; 
-                    page.As<RoutePart>().Title = T("Home").ToString();
-                    page.As<CommonPart>().Owner = user;
-                    if (page.Has<CommentsPart>()) {
-                        page.As<CommentsPart>().CommentsShown = false;
-                    }
-                    contentManager.Publish(page);
-                    siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
-
-                    // add a menu item for the shiny new home page
-                    var menuItem = contentManager.Create("MenuItem");
-                    menuItem.As<MenuPart>().MenuPosition = "1";
-                    menuItem.As<MenuPart>().MenuText = T("Home").ToString();
-                    menuItem.As<MenuPart>().OnMainMenu = true;
-                    menuItem.As<MenuItemPart>().Url = "";
-
-                    //Temporary fix for running setup on command line
-                    if (HttpContext.Current != null) {
-                        var authenticationService = environment.Resolve<IAuthenticationService>();
-                        authenticationService.SignIn(user, true);
-                    }
+                    CreateTenantData(context, environment);
                 }
                 catch {
                     environment.Resolve<ITransactionManager>().Cancel();
@@ -242,6 +173,124 @@ namespace Orchard.Setup.Services {
             }
 
             _shellSettingsManager.SaveSettings(shellSettings);
+        }
+
+        private void CreateTenantData(SetupContext context, IWorkContextScope environment) {
+            // create superuser
+            var membershipService = environment.Resolve<IMembershipService>();
+            var user =
+                membershipService.CreateUser(new CreateUserParams(context.AdminUsername, context.AdminPassword,
+                                                                  String.Empty, String.Empty, String.Empty,
+                                                                  true));
+
+            // set superuser as current user for request (it will be set as the owner of all content items)
+            var authenticationService = environment.Resolve<IAuthenticationService>();
+            authenticationService.SetAuthenticatedUserForRequest(user);
+
+            // set site name and settings
+            var siteService = environment.Resolve<ISiteService>();
+            var siteSettings = siteService.GetSiteSettings().As<SiteSettingsPart>();
+            siteSettings.Record.SiteSalt = Guid.NewGuid().ToString("N");
+            siteSettings.Record.SiteName = context.SiteName;
+            siteSettings.Record.SuperUser = context.AdminUsername;
+            siteSettings.Record.PageTitleSeparator = " - ";
+            siteSettings.Record.SiteCulture = "en-US";
+
+            // set site theme
+            var themeService = environment.Resolve<IThemeService>();
+            themeService.SetSiteTheme("TheThemeMachine");
+
+            // add default culture
+            var cultureManager = environment.Resolve<ICultureManager>();
+            cultureManager.AddCulture("en-US");
+
+            var contentManager = environment.Resolve<IContentManager>();
+
+            // this needs to exit the standalone environment? rework this process entirely?
+            // simulate installation-time module activation events
+            //var hackInstallationGenerator = environment.Resolve<IHackInstallationGenerator>();
+            //hackInstallationGenerator.GenerateInstallEvents();
+
+            var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
+            //todo: (heskew) pull these definitions (and initial content creation) out into more appropriate modules
+            contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
+                .WithPart("CommentsPart")
+                .WithPart("TagsPart")
+                .WithPart("LocalizationPart")
+                .Indexed()
+                );
+            contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
+                .WithPart("CommonPart")
+                .WithPart("PublishLaterPart")
+                .WithPart("RoutePart")
+                .WithPart("BodyPart")
+                .WithPart("TagsPart")
+                .WithPart("LocalizationPart")
+                .Creatable()
+                .Indexed()
+                );
+            contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg
+                .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
+
+            // If "Orchard.Widgets" is enabled, setup default layers and widgets
+            var extensionManager = environment.Resolve<IExtensionManager>();
+            var shellDescriptor = environment.Resolve<ShellDescriptor>();
+            if (extensionManager.EnabledFeatures(shellDescriptor).Where(d => d.Name == "Orchard.Widgets").Any()) {
+                // Create default layers
+                var layerInitializer = environment.Resolve<IDefaultLayersInitializer>();
+                layerInitializer.CreateDefaultLayers();
+
+                // add a layer for the homepage
+                var homepageLayer = contentManager.Create("Layer");
+                homepageLayer.As<LayerPart>().Name = "TheHomepage";
+                homepageLayer.As<LayerPart>().LayerRule = "url \"~/\"";
+                contentManager.Publish(homepageLayer);
+
+                // and three more for the tripel...really need this elsewhere...
+                var tripelFirst = contentManager.Create("HtmlWidget");
+                tripelFirst.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
+                tripelFirst.As<WidgetPart>().Title = T("First Leader Aside").Text;
+                tripelFirst.As<WidgetPart>().Zone = "TripelFirst";
+                tripelFirst.As<WidgetPart>().Position = "5";
+                tripelFirst.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
+                contentManager.Publish(tripelFirst);
+
+                var tripelSecond = contentManager.Create("HtmlWidget");
+                tripelSecond.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
+                tripelSecond.As<WidgetPart>().Title = T("Second Leader Aside").Text;
+                tripelSecond.As<WidgetPart>().Zone = "TripelSecond";
+                tripelSecond.As<WidgetPart>().Position = "5";
+                tripelSecond.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
+                contentManager.Publish(tripelSecond);
+
+                var tripelThird = contentManager.Create("HtmlWidget");
+                tripelThird.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
+                tripelThird.As<WidgetPart>().Title = T("Third Leader Aside").Text;
+                tripelThird.As<WidgetPart>().Zone = "TripelThird";
+                tripelThird.As<WidgetPart>().Position = "5";
+                tripelThird.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
+                contentManager.Publish(tripelThird);
+            }
+
+            // create a welcome page that's promoted to the home page
+            var page = contentManager.Create("Page");
+            page.As<RoutePart>().Title = T("Welcome to Orchard!").Text;
+            page.As<BodyPart>().Text = "<p>You’ve successfully setup your Orchard Site and this is the homepage of your new site. Here are a few things you can look at to get familiar with the application. Once you feel confident you don’t need this anymore, you can <a href=\"/Admin/Contents/Edit/7\">remove this by going into editing mode</a> and replacing it with whatever you want.</p><p>First things first - You’ll probably want to <a href=\"Admin/Settings\">manage your settings</a> and configure Orchard to your liking. After that, you can head over to <a href=\"Admin/Themes\">manage themes to change or install new themes</a> and really make it your own. Once you’re happy with a look and feel, it’s time for some content. You can start creating new custom content types or start with some built-in ones by <a href=\"Admin/Pages/Create\">adding a page</a>, <a href=\"Admin/Blogs/Create\">creating a blog</a> or <a href=\"Admin/Navigation\">managing your menus.</a></p><p>Finally, Orchard has been designed to be extended. It comes with a few built-in modules such as pages and blogs or themes. If you’re looking to add additional functionality, you can do so by creating your own module or installing a new one that someone has made. Modules are created by other users of Orchard just like you so if you feel up to it, <a href=\"http://www.orchardproject.net/\">please consider participating</a>. XOXO – The Orchard Team </p>";
+
+            contentManager.Publish(page);
+            siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
+
+            // add a menu item for the shiny new home page
+            var menuItem = contentManager.Create("MenuItem");
+            menuItem.As<MenuPart>().MenuPosition = "1";
+            menuItem.As<MenuPart>().MenuText = T("Home").ToString();
+            menuItem.As<MenuPart>().OnMainMenu = true;
+            menuItem.As<MenuItemPart>().Url = "";
+
+            //null check: temporary fix for running setup in command line
+            if (HttpContext.Current != null) {
+                authenticationService.SignIn(user, true);
+            }
         }
     }
 }

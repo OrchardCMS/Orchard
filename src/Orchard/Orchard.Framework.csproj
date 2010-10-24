@@ -77,6 +77,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
+    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\claysharp\ClaySharp.dll</HintPath>
+    </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.593, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\FluentNHibernate.dll</HintPath>
@@ -84,6 +88,22 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\sharpziplib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby">
+      <HintPath>..\..\lib\dlr\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries">
+      <HintPath>..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Dynamic">
+      <HintPath>..\..\lib\dlr\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\..\lib\dlr\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\..\lib\aspnetmvc\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -111,13 +131,22 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Routing">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Yaml, Version=1.0.3370.39839, Culture=neutral, PublicKeyToken=187a3d240e44a135, processorArchitecture=MSIL">
@@ -130,6 +159,45 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentManagement\DefaultContentDisplay.cs" />
+    <Compile Include="ContentManagement\Drivers\ContentShapeResult.cs" />
+    <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeAlteration.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeAlterationBuilder.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\PlacementFile.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\PlacementFileParser.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\ShapePlacementParsingStrategy.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeTable.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeTableBuilder.cs" />
+    <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
+    <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
+    <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Environment\Extensions\Loaders\RawThemeExtensionLoader.cs" />
+    <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
+    <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
+    <Compile Include="Mvc\IOrchardViewPage.cs" />
+    <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
+    <Compile Include="Scripting\IScriptingManager.cs" />
+    <Compile Include="Scripting\IScriptingRuntime.cs" />
+    <Compile Include="Scripting\ScriptingManager.cs" />
+    <Compile Include="Scripting\ScriptingRuntime.cs" />
+    <Compile Include="Security\CurrentUserWorkContext.cs" />
+    <Compile Include="Settings\CurrentSiteWorkContext.cs" />
+    <Compile Include="Settings\ResourceDebugMode.cs" />
+    <Compile Include="UI\FlatPositionComparer.cs" />
+    <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
+    <Compile Include="UI\Resources\ResourceManifestBuilder.cs" />
+    <Compile Include="UI\Widgets\IRuleManager.cs" />
+    <Compile Include="UI\Widgets\IRuleProvider.cs" />
+    <Compile Include="UI\Widgets\RuleContext.cs" />
+    <Compile Include="UI\Zones\LayoutWorkContext.cs" />
+    <Compile Include="UI\Zones\ZoneHoldingBehavior.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeAwareness\ConfiguredEnginesCache.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeAwareness\LayoutAwareViewEngine.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemeAwareViewEngine.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemeAwareViewEngineShim.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeAwareness\ViewEngineCollectionWrapper.cs" />
     <Compile Include="Caching\Signals.cs" />
     <Compile Include="Collections\IPageOfItems.cs" />
     <Compile Include="Collections\PageOfItems.cs" />
@@ -158,9 +226,6 @@
     <Compile Include="ContentManagement\ContentPart.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\ContentType.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\DefaultContentManager.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -170,20 +235,11 @@
     <Compile Include="ContentManagement\DefaultContentQuery.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Drivers\AutomaticContentPartDriver.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\Drivers\CombinedResult.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Drivers\ContentFieldDriver.cs" />
     <Compile Include="ContentManagement\Drivers\Coordinators\ContentFieldDriverCoordinator.cs" />
-    <Compile Include="ContentManagement\Drivers\ContentItemDriver.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ContentManagement\Drivers\Coordinators\ContentItemDriverCoordinator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\Drivers\ContentItemTemplateResult.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -200,17 +256,11 @@
     <Compile Include="ContentManagement\Drivers\ContentLocation.cs" />
     <Compile Include="ContentManagement\FieldStorage\FieldStorageProviderSelector.cs" />
     <Compile Include="ContentManagement\Drivers\IContentFieldDriver.cs" />
-    <Compile Include="ContentManagement\Drivers\IContentItemDriver.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\Drivers\IContentPartDriver.cs" />
     <Compile Include="ContentManagement\FieldStorage\IFieldStorage.cs" />
     <Compile Include="ContentManagement\FieldStorage\IFieldStorageProvider.cs" />
     <Compile Include="ContentManagement\FieldStorage\IFieldStorageProviderSelector.cs" />
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetStorageProvider.cs" />
-    <Compile Include="ContentManagement\Extenstions\UrlHelperExtensions.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetHandler.cs" />
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetPart.cs" />
     <Compile Include="ContentManagement\FieldStorage\SimpleFieldStorage.cs" />
@@ -223,10 +273,10 @@
     <Compile Include="ContentManagement\Handlers\ActivatingFilter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\BuildDisplayModelContext.cs">
+    <Compile Include="ContentManagement\Handlers\BuildDisplayContext.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\BuildEditorModelContext.cs">
+    <Compile Include="ContentManagement\Handlers\BuildEditorContext.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Handlers\ContentContextBase.cs">
@@ -290,7 +340,7 @@
     <Compile Include="ContentManagement\Handlers\TemplateFilterForRecord.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\UpdateEditorModelContext.cs">
+    <Compile Include="ContentManagement\Handlers\UpdateEditorContext.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Handlers\VersionContentContext.cs">
@@ -368,10 +418,49 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\DataMigrations\FrameworkDataMigration.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeAttributeStrategy\ShapeAttributeBindingModule.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeAttributeStrategy\ShapeAttributeOccurrence.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeTemplateStrategy\IShapeTemplateHarvester.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeTemplateStrategy\ShapeTemplateBindingStrategy.cs" />
+    <Compile Include="DisplayManagement\ShapeAttribute.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeAttributeStrategy\ShapeAttributeBindingStrategy.cs" />
+    <Compile Include="DisplayManagement\Implementation\DefaultDisplayManager.cs" />
+    <Compile Include="DisplayManagement\Implementation\DefaultShapeFactory.cs" />
+    <Compile Include="DisplayManagement\IDisplayHelperFactory.cs" />
+    <Compile Include="DisplayManagement\IShape.cs" />
+    <Compile Include="DisplayManagement\Shapes\Shape.cs" />
+    <Compile Include="DisplayManagement\Shapes\ShapeMetadata.cs" />
+    <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableManager.cs" />
+    <Compile Include="DisplayManagement\Implementation\DisplayContext.cs" />
+    <Compile Include="DisplayManagement\Implementation\DisplayHelper.cs" />
+    <Compile Include="DisplayManagement\Implementation\DisplayHelperFactory.cs" />
+    <Compile Include="DisplayManagement\Implementation\IDisplayManager.cs" />
+    <Compile Include="DisplayManagement\IShapeFactory.cs" />
+    <Compile Include="DisplayManagement\Descriptors\Interfaces.cs" />
+    <Compile Include="Environment\DefaultWorkContextAccessor.cs" />
     <Compile Include="Environment\IHostLocalRestart.cs" />
     <Compile Include="Environment\IShellContainerRegistrations.cs" />
     <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />
+    <Compile Include="Mvc\IHttpContextAccessor.cs" />
+    <Compile Include="Messaging\Events\IMessageEventHandler.cs" />
+    <Compile Include="Messaging\Models\MessageContext.cs" />
+    <Compile Include="Messaging\Services\IMessageManager.cs" />
+    <Compile Include="Messaging\Services\IMessagingChannel.cs" />
+    <Compile Include="IWorkContextAccessor.cs" />
+    <Compile Include="WorkContextExtensions.cs" />
+    <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
+    <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />
+    <Compile Include="Mvc\ViewEngines\Razor\WebViewPage.cs" />
     <Compile Include="Services\IHtmlFilter.cs" />
+    <Compile Include="UI\IPage.cs" />
+    <Compile Include="UI\Resources\ResourceRegister.cs" />
+    <Compile Include="UI\Resources\IResourceManifest.cs" />
+    <Compile Include="UI\Resources\MetaEntry.cs" />
+    <Compile Include="UI\Resources\RequireSettings.cs" />
+    <Compile Include="UI\Resources\ResourceDefinition.cs" />
+    <Compile Include="UI\Resources\ResourceLocation.cs" />
+    <Compile Include="UI\Resources\ResourceManifest.cs" />
+    <Compile Include="UI\Resources\ResourceRequiredContext.cs" />
     <Compile Include="Utility\Hash.cs" />
     <Compile Include="Data\ISessionConfigurationCache.cs" />
     <Compile Include="Data\Migration\Generator\ISchemaCommandGenerator.cs" />
@@ -379,11 +468,10 @@
     <Compile Include="Data\Migration\Interpreters\ICommandInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\DefaultDataMigrationInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\IDataMigrationInterpreter.cs" />
-    <Compile Include="Data\Migration\Interpreters\SqlCeCommandInterpreter.cs" />
+    <Compile Include="Data\Migration\Interpreters\SQLiteCommandInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\StringCommandInterpreter.cs" />
     <Compile Include="Data\Migration\Schema\AddColumnCommand.cs" />
     <Compile Include="Data\Migration\Schema\ISchemaBuilderCommand.cs" />
-    <Compile Include="Data\Migration\Schema\IShellSettings.cs" />
     <Compile Include="Data\Migration\Generator\SchemaCommandGenerator.cs" />
     <Compile Include="Data\Migration\Schema\SchemaUtils.cs" />
     <Compile Include="Data\Migration\Schema\SqlStatementCommand.cs" />
@@ -396,7 +484,6 @@
     <Compile Include="Data\Migration\Schema\AlterColumnCommand.cs" />
     <Compile Include="Data\Migration\Schema\DropTableCommand.cs" />
     <Compile Include="Data\Migration\Schema\AlterTableCommand.cs" />
-    <Compile Include="Data\Migration\Commands\DataMigrationCommands.cs" />
     <Compile Include="Data\Migration\Schema\SchemaBuilder.cs" />
     <Compile Include="Data\Migration\DataMigrationCoordinator.cs" />
     <Compile Include="Data\Migration\DataMigration.cs" />
@@ -460,7 +547,6 @@
     <Compile Include="Environment\IHostEnvironment.cs" />
     <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\Dependencies\IDependenciesFolder.cs" />
-    <Compile Include="Environment\Extensions\Loaders\ProbingExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Compilers\IExtensionCompiler.cs" />
     <Compile Include="Environment\Extensions\Compilers\CSharpExtensionDirectoryCompiler.cs" />
     <Compile Include="Environment\Extensions\Compilers\DefaultExtensionCompiler.cs" />
@@ -480,12 +566,10 @@
     <Compile Include="Indexing\NullSearchBuilder.cs" />
     <Compile Include="Indexing\IIndexNotifierHandler.cs" />
     <Compile Include="Localization\Services\DefaultCultureManager.cs" />
-    <Compile Include="Localization\Services\DefaultResourceManager.cs" />
     <Compile Include="Indexing\DefaultIndexManager.cs" />
     <Compile Include="Indexing\IIndexManager.cs" />
     <Compile Include="Localization\Services\ICultureManager.cs" />
     <Compile Include="Localization\Services\ICultureSelector.cs" />
-    <Compile Include="Localization\Services\IResourceManager.cs" />
     <Compile Include="Localization\Records\CultureRecord.cs" />
     <Compile Include="Localization\Services\SiteCultureSelector.cs" />
     <Compile Include="Mvc\Html\TemplateViewModelExtensions.cs" />
@@ -501,7 +585,6 @@
     <Compile Include="Environment\DefaultOrchardHost.cs" />
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
-    <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineForAspNet4.cs" />
     <Compile Include="OrchardCoreException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Indexing\IIndexDocument.cs" />
@@ -511,6 +594,7 @@
     <Compile Include="Tasks\Indexing\IIndexingTask.cs" />
     <Compile Include="Tasks\Indexing\IIndexingTaskManager.cs" />
     <Compile Include="Validation\Argument.cs" />
+    <Compile Include="WorkContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Caching\AcquireContext.cs" />
@@ -559,7 +643,6 @@
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\ConstructorFinderWrapper.cs" />
     <Compile Include="FileSystems\AppData\AppDataFolder.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsManager.cs" />
-    <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContextFactory.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContext.cs" />
     <Compile Include="Environment\Descriptor\ShellDescriptorCache.cs" />
@@ -568,7 +651,6 @@
     <Compile Include="Environment\Descriptor\Models\ShellDescriptor.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContainerFactory.cs" />
     <Compile Include="Environment\Configuration\ShellSettings.cs" />
-    <Compile Include="Environment\StandaloneEnvironment.cs" />
     <Compile Include="Events\DefaultOrchardEventBus.cs" />
     <Compile Include="Events\EventsInterceptor.cs" />
     <Compile Include="Events\EventsModule.cs" />
@@ -596,7 +678,6 @@
     <Compile Include="Mvc\Routes\UrlPrefixAdjustedHttpContext.cs" />
     <Compile Include="Mvc\Routes\ShellRoute.cs" />
     <Compile Include="Mvc\ViewEngines\WebForms\ThemeViewLocationCache.cs" />
-    <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -612,7 +693,6 @@
     <Compile Include="Tasks\Scheduling\IPublishingTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTask.cs" />
     <Compile Include="Localization\Text.cs" />
-    <Compile Include="Mvc\ViewModels\ContentItemViewModel.cs" />
     <Compile Include="Data\Conventions\AttributeCollectionConvention.cs" />
     <Compile Include="Data\Conventions\CascadeAllDeleteOrphanAttribute.cs" />
     <Compile Include="Data\TransactionManager.cs" />
@@ -628,8 +708,6 @@
     <Compile Include="Mvc\AntiForgery\AntiForgeryAuthorizationFilter.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
     <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
-    <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />
-    <Compile Include="Environment\FiniteContainerProvider.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTaskHandler.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\ScheduledTaskContext.cs" />
@@ -645,7 +723,7 @@
     <Compile Include="Environment\Extensions\Loaders\PrecompiledExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Loaders\ReferencedExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Folders\ThemeFolders.cs" />
-    <Compile Include="IEvents.cs" />
+    <Compile Include="InvokeExtensions.cs" />
     <Compile Include="Localization\IText.cs" />
     <Compile Include="Localization\LocalizationModule.cs" />
     <Compile Include="Localization\LocalizationUtilities.cs" />
@@ -662,8 +740,6 @@
     <Compile Include="Logging\NullLoggerFactory.cs" />
     <Compile Include="Mvc\Html\ContainerExtensions.cs" />
     <Compile Include="Mvc\Html\ContentItemExtensions.cs" />
-    <Compile Include="Mvc\Html\ContentItemDisplayExtensions.cs" />
-    <Compile Include="Mvc\Html\ContentItemEditorExtensions.cs" />
     <Compile Include="Mvc\Html\LayoutExtensions.cs" />
     <Compile Include="Mvc\MvcModule.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensions.cs" />
@@ -674,16 +750,11 @@
     <Compile Include="Mvc\ModelBinders\IModelBinderPublisher.cs" />
     <Compile Include="Mvc\ModelBinders\KeyedListModelBinder.cs" />
     <Compile Include="Mvc\ModelBinders\ModelBinderDescriptor.cs" />
-    <Compile Include="Mvc\Results\NotFoundResult.cs" />
-    <Compile Include="Mvc\OrchardControllerIdentificationStrategy.cs" />
     <Compile Include="Mvc\Routes\RouteExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\IViewEngineProvider.cs" />
-    <Compile Include="Mvc\ViewEngines\LayoutView.cs" />
-    <Compile Include="Mvc\ViewEngines\LayoutViewEngine.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
-    <Compile Include="Mvc\ViewEngines\ViewEngineFilter.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemedViewResultFilter.cs" />
     <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineProvider.cs" />
-    <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
     <Compile Include="UI\Admin\AdminThemeSelector.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />
     <Compile Include="UI\Navigation\NavigationItemBuilder.cs" />
@@ -695,18 +766,6 @@
     <Compile Include="UI\Resources\LinkEntry.cs" />
     <Compile Include="UI\Resources\ResourceFilter.cs" />
     <Compile Include="UI\Resources\ResourceManager.cs" />
-    <Compile Include="UI\Zones\DelegateZoneItem.cs" />
-    <Compile Include="UI\Zones\ContentItemDisplayZoneItem.cs" />
-    <Compile Include="UI\Zones\IZoneManager.cs" />
-    <Compile Include="UI\Zones\ContentPartDisplayZoneItem.cs" />
-    <Compile Include="UI\Zones\ContentPartEditorZoneItem.cs" />
-    <Compile Include="UI\Zones\IZoneManagerEvents.cs" />
-    <Compile Include="UI\Zones\RenderActionZoneItem.cs" />
-    <Compile Include="UI\Zones\RenderPartialZoneItem.cs" />
-    <Compile Include="UI\Zones\RenderStaticZoneItem.cs" />
-    <Compile Include="UI\Zones\ZoneCollection.cs" />
-    <Compile Include="UI\Zones\ZoneEntry.cs" />
-    <Compile Include="UI\Zones\ZoneItem.cs" />
     <Compile Include="Mvc\ViewPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -742,14 +801,12 @@
     <Compile Include="Security\IUser.cs" />
     <Compile Include="Security\Permissions\IPermissionProvider.cs" />
     <Compile Include="Security\Permissions\Permission.cs" />
-    <Compile Include="Security\Providers\OrchardMembershipProvider.cs" />
     <Compile Include="Security\Providers\OrchardRoleProvider.cs" />
     <Compile Include="Services\Clock.cs" />
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
     <Compile Include="FileSystems\Media\IStorageFile.cs" />
     <Compile Include="FileSystems\Media\IStorageFolder.cs" />
     <Compile Include="FileSystems\Media\IStorageProvider.cs" />
-    <Compile Include="UI\Zones\ZoneManager.cs" />
     <Compile Include="Utility\Extensions\ReadOnlyCollectionExtensions.cs" />
     <Compile Include="Utility\Extensions\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Utility\Extensions\StringExtensions.cs" />

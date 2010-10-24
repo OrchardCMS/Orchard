@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using JetBrains.Annotations;
-using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -20,7 +19,7 @@ using Orchard.Blogs.Extensions;
 
 namespace Orchard.Blogs.Services {
     [UsedImplicitly]
-    [OrchardFeature("Remote Blog Publishing")]
+    [OrchardFeature("Orchard.Blogs.RemotePublishing")]
     public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
@@ -165,7 +164,7 @@ namespace Orchard.Blogs.Services {
             var description = content.Optional<string>("description");
             var slug = content.Optional<string>("wp_slug");
 
-            var blogPost = _contentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
+            var blogPost = _contentManager.New<BlogPostPart>("BlogPost");
             
             // BodyPart
             if (blogPost.Is<BodyPart>()) {
@@ -182,8 +181,8 @@ namespace Orchard.Blogs.Services {
             if (blogPost.Is<RoutePart>()) {
                 blogPost.As<RoutePart>().Title = title;
                 blogPost.As<RoutePart>().Slug = slug;
-                _routableService.FillSlug(blogPost.As<RoutePart>());
-                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathFromSlug(blogPost.As<RoutePart>().Slug);
+                _routableService.FillSlugFromTitle(blogPost.As<RoutePart>());
+                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathWithSlug(blogPost.As<RoutePart>().Slug);
             }
 
             _contentManager.Create(blogPost.ContentItem, VersionOptions.Draft);

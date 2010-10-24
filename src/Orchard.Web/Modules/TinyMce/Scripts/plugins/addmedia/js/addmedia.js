@@ -27,7 +27,12 @@ var AddMediaDialog = {
                 var result = window.frames[iframeName].result, close = 0;
 
                 if (result && result.url) {
-                    window.parent.AddMediaDialog.insertMedia(result.url);
+            	    if (window.parent && window.parent.AddMediaDialog) {
+                        window.parent.AddMediaDialog.insertMedia(result.url);
+                    } else {
+                        AddMediaDialog.insertMedia(result.url);
+                    }
+
                     close = 1;
                 } else if (result && result.error) {
                     alert(tinyMCEPopup.getLang("addmedia_dlg.msg_error") + "\n\r\n\r" + result.error);
@@ -48,7 +53,14 @@ var AddMediaDialog = {
                     tinymce.dom.Event.remove(iframe, 'load', iframeLoadHandler);
                     tinymce.DOM.remove(iframe);
                     iframe = null;
-                    if (close) window.parent.tinyMCEPopup.close();
+
+                    if (close) {
+                        if (window.parent && window.parent.tinyMCEPopup) {
+                            window.parent.tinyMCEPopup.close();
+                        } else {
+                            tinyMCEPopup.close();
+                        }
+                    }
                 },
                 123);
             } catch (ex) {

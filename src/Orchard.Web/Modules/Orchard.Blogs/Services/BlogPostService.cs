@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Models;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
@@ -29,7 +28,7 @@ namespace Orchard.Blogs.Services {
 
         public BlogPostPart Get(BlogPart blogPart, string slug, VersionOptions versionOptions) {
             return
-                _contentManager.Query(versionOptions, BlogPostPartDriver.ContentType.Name).Join<RoutePartRecord>().Where(rr => rr.Slug == slug).
+                _contentManager.Query(versionOptions, "BlogPost").Join<RoutePartRecord>().Where(rr => rr.Slug == slug).
                     Join<CommonPartRecord>().Where(cr => cr.Container == blogPart.Record.ContentItemRecord).List().
                     SingleOrDefault().As<BlogPostPart>();
         }
@@ -48,6 +47,11 @@ namespace Orchard.Blogs.Services {
 
         public IEnumerable<BlogPostPart> Get(BlogPart blogPart, VersionOptions versionOptions) {
             return GetBlogQuery(blogPart, versionOptions).List().Select(ci => ci.As<BlogPostPart>());
+        }
+
+
+        public IEnumerable<BlogPostPart> Get(BlogPart blogPart, int skip, int count) {
+            return GetBlogQuery(blogPart, VersionOptions.Published).Slice(skip, count).ToList().Select(ci => ci.As<BlogPostPart>());
         }
 
         public IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData) {
@@ -112,7 +116,7 @@ namespace Orchard.Blogs.Services {
 
         private IContentQuery<ContentItem, CommonPartRecord> GetBlogQuery(ContentPart<BlogPartRecord> blog, VersionOptions versionOptions) {
             return
-                _contentManager.Query(versionOptions, BlogPostPartDriver.ContentType.Name).Join<CommonPartRecord>().Where(
+                _contentManager.Query(versionOptions, "BlogPost").Join<CommonPartRecord>().Where(
                     cr => cr.Container == blog.Record.ContentItemRecord).OrderByDescending(cr => cr.CreatedUtc);
         }
     }

@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Configuration;
+using System.Security.Cryptography;
+using System.Web.Configuration;
 using System.Web.Mvc;
+using System.Linq;
 using Orchard.FileSystems.AppData;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
+using Orchard.Themes;
 using Orchard.UI.Notify;
 
 namespace Orchard.Setup.Controllers {
-    [ValidateInput(false)]
+    [ValidateInput(false), Themed]
     public class SetupController : Controller {
         private readonly IAppDataFolder _appDataFolder;
         private readonly INotifier _notifier;
@@ -34,7 +39,34 @@ namespace Orchard.Setup.Controllers {
             return View(model);
         }
 
+        private bool ValidateMachineKey() {
+            // Get the machineKey section.
+            var section = ConfigurationManager.GetSection("system.web/machineKey") as MachineKeySection;
+
+            if (section == null
+                || section.DecryptionKey.Contains("AutoGenerate")
+                || section.ValidationKey.Contains("AutoGenerate")) {
+
+                var rng = new RNGCryptoServiceProvider();
+                var decryptionData = new byte[32];
+                var validationData = new byte[64];
+                
+                rng.GetBytes(decryptionData);
+                rng.GetBytes(validationData);
+
+                string decryptionKey = BitConverter.ToString(decryptionData).Replace("-", "");
+                string validationKey = BitConverter.ToString(validationData).Replace("-", "");
+
+                ModelState.AddModelError("MachineKey", T("You need to define a MachineKey value in your web.config file. Here is one for you:\n <machineKey validationKey=\"{0}\" decryptionKey=\"{1}\" validation=\"SHA1\" decryption=\"AES\" />", validationKey, decryptionKey).ToString());
+                return false;
+            }
+
+            return true;
+        }
+
         public ActionResult Index() {
+            ValidateMachineKey();
+
             var initialSettings = _setupService.Prime();
             return IndexViewResult(new SetupViewModel { AdminUsername = "admin", DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider)});
         }
@@ -48,6 +80,15 @@ namespace Orchard.Setup.Controllers {
             if (!String.IsNullOrWhiteSpace(model.ConfirmPassword) && model.AdminPassword != model.ConfirmPassword ) {
                 ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").ToString());
             }
+
+            if(!model.DatabaseOptions && !String.IsNullOrWhiteSpace(model.DatabaseTablePrefix)) {
+                model.DatabaseTablePrefix = model.DatabaseTablePrefix.Trim();
+                if(!Char.IsLetter(model.DatabaseTablePrefix[0])) {
+                    ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter").Text);
+                }
+            }
+
+            ValidateMachineKey();
 
             if (!ModelState.IsValid) {
                 return IndexViewResult(model);

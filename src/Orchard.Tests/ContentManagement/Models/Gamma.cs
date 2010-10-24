@@ -9,10 +9,6 @@ namespace Orchard.Tests.ContentManagement.Models {
 
 
     public class GammaHandler : ContentHandler {
-        public override System.Collections.Generic.IEnumerable<ContentType> GetContentTypes() {
-            return new[] { new ContentType { Name = "gamma" } };
-        }
-
         public GammaHandler(IRepository<GammaRecord> repository) {
             Filters.Add(new ActivatingFilter<Gamma>(x => x == "gamma"));
             Filters.Add(StorageFilter.For(repository));

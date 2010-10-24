@@ -72,7 +72,7 @@ namespace Orchard.Comments.Services {
         }
 
         public CommentPart CreateComment(CreateCommentContext context, bool moderateComments) {
-            var comment = _contentManager.Create<CommentPart>(CommentPartDriver.ContentType.Name);
+            var comment = _contentManager.Create<CommentPart>("Comment");
 
             comment.Record.Author = context.Author;
             comment.Record.CommentDateUtc = _clock.UtcNow;

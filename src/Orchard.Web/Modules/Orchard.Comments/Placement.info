@@ -1,0 +1,20 @@
+﻿<Placement>
+    <!-- available display shapes -->
+    <!--
+        Parts_Comments
+        Parts_Comments_Count
+        Parts_Comments_Count_SummaryAdmin
+    -->
+    <!-- widget and edit shapes just get default placement -->
+    <!-- edit "shapes" -->
+    <Place Parts_Comments_Enable="Primary:10"/>
+    <Match DisplayType="Detail">
+        <Place Parts_Comments="Content:10" />
+    </Match>
+    <Match DisplayType="Summary">
+        <Place Parts_Comments_Count="Meta:5"/>
+    </Match>
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_Comments_Count_SummaryAdmin="Secondary"/>
+    </Match>
+</Placement>

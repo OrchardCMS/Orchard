@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using NHibernate;
 using NHibernate.Dialect;
 using NHibernate.SqlTypes;
 using Orchard.Data.Migration.Schema;
-using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -39,7 +39,7 @@ namespace Orchard.Data.Migration.Interpreters {
             _reportsCoordinator = reportsCoordinator;
 
             Logger = NullLogger.Instance;
-
+            T = NullLocalizer.Instance;
             var configuration = _sessionFactoryHolder.GetConfiguration();
             _dialect = Dialect.GetDialect(configuration.Properties);
         }
@@ -162,7 +162,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 return;
             }
 
-            builder.AppendFormat("alter table {0} add column ", _dialect.QuoteForTableName(PrefixTableName(command.TableName)));
+            builder.AppendFormat("alter table {0} add ", _dialect.QuoteForTableName(PrefixTableName(command.TableName)));
 
             Visit(builder, (CreateColumnCommand)command);
             _sqlStatements.Add(builder.ToString());
@@ -186,16 +186,21 @@ namespace Orchard.Data.Migration.Interpreters {
 
             builder.AppendFormat("alter table {0} alter column {1} ",
                 _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(command.TableName));
+                _dialect.QuoteForColumnName(command.ColumnName));
 
             // type
             if (command.DbType != DbType.Object) {
                 builder.Append(GetTypeName(command.DbType, command.Length, command.Precision, command.Scale));
             }
+            else {
+                if(command.Length > 0 || command.Precision > 0 || command.Scale > 0) {
+                    throw new OrchardException(T("Error while executing data migration: you need to specify the field's type in order to change its properties"));
+                }
+            }
 
             // [default value]
-            if (!string.IsNullOrEmpty(command.Default)) {
-                builder.Append(" default ").Append(command.Default).Append(Space);
+            if (command.Default != null) {
+                builder.Append(" set default ").Append(ConvertToSqlValue(command.Default)).Append(Space);
             }
             _sqlStatements.Add(builder.ToString());
         }
@@ -250,7 +255,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             builder.Append(_dialect.GetAddForeignKeyConstraintString(command.Name,
                 command.SrcColumns,
-                command.DestTable,
+                _dialect.QuoteForTableName(PrefixTableName(command.DestTable)),
                 command.DestColumns,
                 false));
 
@@ -266,7 +271,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.AppendFormat("alter table {0} drop constraint {1}", command.SrcTable, command.Name);
+            builder.AppendFormat("alter table {0} drop constraint {1}", _dialect.QuoteForTableName(PrefixTableName(command.SrcTable)), command.Name);
             _sqlStatements.Add(builder.ToString());
 
             RunPendingStatements();
@@ -298,8 +303,8 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             // [default value]
-            if (!string.IsNullOrEmpty(command.Default)) {
-                builder.Append(" default ").Append(command.Default).Append(Space);
+            if (command.Default != null) {
+                builder.Append(" default ").Append(ConvertToSqlValue(command.Default)).Append(Space);
             }
 
             // nullable
@@ -346,6 +351,39 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             return false;
+        }
+
+        private static string ConvertToSqlValue(object value) {
+            if ( value == null ) {
+                return "null";
+            }
+            
+            TypeCode typeCode = Type.GetTypeCode(value.GetType());
+            switch (typeCode) {
+                case TypeCode.Empty:
+                case TypeCode.Object:
+                case TypeCode.DBNull:
+                case TypeCode.String:
+                case TypeCode.Char:
+                    return String.Concat("'", Convert.ToString(value).Replace("'", "''"), "'");
+                case TypeCode.Boolean:
+                    return (bool) value ? "1" : "0";
+                case TypeCode.SByte:
+                case TypeCode.Int16:
+                case TypeCode.UInt16:
+                case TypeCode.Int32:
+                case TypeCode.UInt32:
+                case TypeCode.Int64:
+                case TypeCode.UInt64:
+                case TypeCode.Single:
+                case TypeCode.Double:
+                case TypeCode.Decimal:
+                    return Convert.ToString(value, CultureInfo.InvariantCulture);
+                case TypeCode.DateTime:
+                    return String.Concat("'", Convert.ToString(value, CultureInfo.InvariantCulture), "'");
+            }
+
+            return "null";
         }
     }
 }

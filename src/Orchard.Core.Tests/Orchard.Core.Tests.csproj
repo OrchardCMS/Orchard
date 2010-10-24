@@ -59,6 +59,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Moq, Version=4.0.812.4, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\moq\Moq.dll</HintPath>
@@ -87,7 +88,7 @@
     <Reference Include="System.Web.Abstractions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
@@ -101,7 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Providers\CommonPartProviderTests.cs" />
-    <Compile Include="Common\Services\RoutableServiceTests.cs" />
+    <Compile Include="Body\BodyPartTests.cs" />
+    <Compile Include="Routable\Services\RoutableServiceTests.cs" />
     <Compile Include="Feeds\Controllers\FeedControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\ScheduledTaskManagerTests.cs" />

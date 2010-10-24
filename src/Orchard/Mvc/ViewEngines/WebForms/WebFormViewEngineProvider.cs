@@ -1,12 +1,21 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Web.Mvc;
+using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.Mvc.ViewEngines.WebForms {
-    public class WebFormViewEngineProvider : IViewEngineProvider {
-        public WebFormViewEngineProvider() {
+    public class WebFormViewEngineProvider : IViewEngineProvider, IShapeTemplateViewEngine {
+        private readonly IVirtualPathProvider _virtualPathProvider;
+
+        public WebFormViewEngineProvider(IVirtualPathProvider virtualPathProvider) {
+            _virtualPathProvider = virtualPathProvider;
             Logger = NullLogger.Instance;
         }
+
         static string[] DisabledFormats = new[] { "~/Disabled" };
 
         public ILogger Logger { get; set; }
@@ -42,7 +51,7 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
 
             //Logger.Debug("AreaPartialViewLocationFormats (theme): \r\n\t-{0}", string.Join("\r\n\t-", areaPartialViewLocationFormats));
 
-            var viewEngine = new WebFormViewEngineForAspNet4 {
+            var viewEngine = new WebFormViewEngine {
                 MasterLocationFormats = DisabledFormats,
                 ViewLocationFormats = DisabledFormats,
                 PartialViewLocationFormats = partialViewLocationFormats,
@@ -61,6 +70,8 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
                                         "~/Core/{2}/Views/{1}/{0}.aspx",
                                         "~/Modules/{2}/Views/{1}/{0}.ascx",
                                         "~/Modules/{2}/Views/{1}/{0}.aspx",
+                                        "~/Themes/{2}/Views/{1}/{0}.ascx",
+                                        "~/Themes/{2}/Views/{1}/{0}.aspx",
                                     };
 
             //Logger.Debug("AreaFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", areaFormats));
@@ -74,7 +85,7 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
 
             //Logger.Debug("UniversalFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", universalFormats));
 
-            var viewEngine = new WebFormViewEngineForAspNet4 {
+            var viewEngine = new WebFormViewEngine {
                 MasterLocationFormats = DisabledFormats,
                 ViewLocationFormats = universalFormats,
                 PartialViewLocationFormats = universalFormats,
@@ -85,5 +96,27 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
 
             return viewEngine;
         }
+
+
+        public IViewEngine CreateBareViewEngine() {
+            return new WebFormViewEngine {
+                MasterLocationFormats = DisabledFormats,
+                ViewLocationFormats = DisabledFormats,
+                PartialViewLocationFormats = DisabledFormats,
+                AreaMasterLocationFormats = DisabledFormats,
+                AreaViewLocationFormats = DisabledFormats,
+                AreaPartialViewLocationFormats = DisabledFormats,
+            };
+        }
+
+        public IEnumerable<string> DetectTemplateFileNames(string virtualPath) {
+            var fileNames = _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
+            foreach (var fileName in fileNames) {
+                if (fileName.EndsWith(".aspx", StringComparison.OrdinalIgnoreCase) ||
+                    fileName.EndsWith(".ascx", StringComparison.OrdinalIgnoreCase)) {
+                    yield return fileName;
+                }
+            }
+        }    
     }
 }

@@ -156,7 +156,7 @@ namespace Orchard.Environment.Extensions {
         private ExtensionLoadingContext CreateLoadingContext() {
             var availableExtensions = _extensionManager
                 .AvailableExtensions()
-                .Where(d => d.ExtensionType == "Module")
+                .Where(d => d.ExtensionType == "Module" || d.ExtensionType == "Theme")
                 .OrderBy(d => d.Name)
                 .ToList();
 
@@ -293,11 +293,12 @@ namespace Orchard.Environment.Extensions {
         }
 
         public void MonitorExtensions(Action<IVolatileToken> monitor) {
-            // Monitor add/remove of any module
+            // Monitor add/remove of any module/theme
             monitor(_virtualPathMonitor.WhenPathChanges("~/Modules"));
+            monitor(_virtualPathMonitor.WhenPathChanges("~/Themes"));
 
             // Give loaders a chance to monitor any additional changes
-            var extensions = _extensionManager.AvailableExtensions().Where(d => d.ExtensionType == "Module").ToList();
+            var extensions = _extensionManager.AvailableExtensions().Where(d => d.ExtensionType == "Module" || d.ExtensionType == "Theme").ToList();
             foreach (var extension in extensions) {
                 foreach (var loader in _loaders) {
                     loader.Monitor(extension, monitor);

@@ -6,7 +6,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{72457126-E118-4171-A08F-9A709EE4B7FC}</ProjectGuid>
-    <ProjectTypeGuids>{F85E285D-A4E0-4152-9332-AB1D724D3325};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.MultiTenancy</RootNamespace>
@@ -49,12 +49,12 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Annotations\SqlDatabaseConnectionStringAttribute.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Commands\TenantCommand.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
@@ -83,13 +84,13 @@
     <Content Include="Content\Admin\images\enabled.gif" />
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
-    <Content Include="Views\Admin\Add.ascx" />
-    <Content Include="Views\Admin\Edit.ascx" />
-    <Content Include="Views\Admin\DisplayTemplates\ActionsForUninitialized.ascx" />
-    <Content Include="Views\Admin\DisplayTemplates\ActionsForDisabled.ascx" />
-    <Content Include="Views\Admin\DisplayTemplates\ActionsForInvalid.ascx" />
-    <Content Include="Views\Admin\DisplayTemplates\ActionsForRunning.ascx" />
-    <Content Include="Views\Admin\Index.ascx" />
+    <Content Include="Views\Admin\Add.cshtml" />
+    <Content Include="Views\Admin\Edit.cshtml" />
+    <Content Include="Views\Admin\DisplayTemplates\ActionsForUninitialized.cshtml" />
+    <Content Include="Views\Admin\DisplayTemplates\ActionsForDisabled.cshtml" />
+    <Content Include="Views\Admin\DisplayTemplates\ActionsForInvalid.cshtml" />
+    <Content Include="Views\Admin\DisplayTemplates\ActionsForRunning.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

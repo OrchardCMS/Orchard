@@ -1,17 +1,14 @@
 using System.Linq;
 using System.Web.Mvc;
-using JetBrains.Annotations;
-using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
-using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Data;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.Results;
-using Orchard.Settings;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
@@ -24,7 +21,8 @@ namespace Orchard.Blogs.Controllers {
         private readonly ITransactionManager _transactionManager;
         private readonly IBlogSlugConstraint _blogSlugConstraint;
 
-        public BlogAdminController(IOrchardServices services,
+        public BlogAdminController(
+            IOrchardServices services,
             IBlogService blogService,
             IBlogPostService blogPostService,
             IContentManager contentManager,
@@ -43,56 +41,48 @@ namespace Orchard.Blogs.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult Create() {
-            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
-            var blog = Services.ContentManager.New<BlogPart>(BlogPartDriver.ContentType.Name);
+            var blog = Services.ContentManager.New<BlogPart>("Blog");
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
-            var model = new CreateBlogViewModel {
-                Blog = Services.ContentManager.BuildEditorModel(blog)
-            };
-
+            var model = Services.ContentManager.BuildEditor(blog);
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Create(CreateBlogViewModel model) {
-            var blog = Services.ContentManager.New<BlogPart>(BlogPartDriver.ContentType.Name);
-
+        [HttpPost, ActionName("Create")]
+        public ActionResult CreatePOST() {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
-            _blogService.Create(blog);
-            model.Blog = _contentManager.UpdateEditorModel(blog, this);
+            var blog = Services.ContentManager.New<BlogPart>("Blog");
+
+            _contentManager.Create(blog, VersionOptions.Draft);
+            var model = _contentManager.UpdateEditor(blog, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 return View(model);
             }
 
-            _blogSlugConstraint.AddSlug(model.Blog.Item.Slug);
+            if (!blog.Has<IPublishingControlAspect>())
+                _contentManager.Publish(blog.ContentItem);
 
-            return Redirect(Url.BlogForAdmin(model.Blog.Item.Slug));
+            _blogSlugConstraint.AddSlug((string)model.Slug);
+            return Redirect(Url.BlogForAdmin((string)model.Slug));
         }
 
         public ActionResult Edit(string blogSlug) {
-            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to edit blog")))
                 return new HttpUnauthorizedResult();
 
-            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
-            var model = new BlogEditViewModel {
-                Blog = Services.ContentManager.BuildEditorModel(blog),
-                //PromoteToHomePage = CurrentSite.HomePage == "BlogHomePageProvider;" + blog.Id
-            };
-
+            var model = Services.ContentManager.BuildEditor(blog);
             return View(model);
         }
 
@@ -101,25 +91,16 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
-            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             var blog = _blogService.Get(blogSlug);
             if (blog == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
-            var model = new BlogEditViewModel {
-                Blog = Services.ContentManager.UpdateEditorModel(blog, this),
-            };
-
+            var model = Services.ContentManager.UpdateEditor(blog, this);
             if (!ModelState.IsValid)
                 return View(model);
 
-            //if (PromoteToHomePage)
-            //    CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
-
-            _blogService.Edit(model.Blog.Item);
-
+            _blogSlugConstraint.AddSlug(blog.Slug);
             Services.Notifier.Information(T("Blog information updated"));
-
             return Redirect(Url.BlogsForAdmin());
         }
 
@@ -128,42 +109,39 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't delete blog")))
                 return new HttpUnauthorizedResult();
 
-            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             _blogService.Delete(blogPart);
 
             Services.Notifier.Information(T("Blog was successfully deleted"));
-
             return Redirect(Url.BlogsForAdmin());
         }
 
         public ActionResult List() {
-            //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
-            var model = new AdminBlogsViewModel {
-                Entries = _blogService.Get()
-                    .Select(b => Services.ContentManager.BuildDisplayModel(b, "SummaryAdmin"))
-                    .Select(vm => new AdminBlogEntry { ContentItemViewModel = vm, TotalPostCount = _blogPostService.Get(vm.Item, VersionOptions.Latest).Count()})
-            };
+            var list = Services.New.List();
+            list.AddRange(_blogService.Get()
+                              .Select(b => {
+                                          var blog = Services.ContentManager.BuildDisplay(b, "SummaryAdmin");
+                                          blog.TotalPostCount = _blogPostService.Get(b, VersionOptions.Latest).Count();
+                                          return blog;
+                                      }));
 
-            return View(model);
+            var viewModel = Services.New.ViewModel()
+                .ContentItems(list);
+
+            return View(viewModel);
         }
 
-        //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
         public ActionResult Item(string blogSlug) {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
-            //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
-            var model = new BlogForAdminViewModel {
-                Blog = Services.ContentManager.BuildDisplayModel(blogPart, "DetailAdmin")
-            };
-
+            var model = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
             return View(model);
         }
 

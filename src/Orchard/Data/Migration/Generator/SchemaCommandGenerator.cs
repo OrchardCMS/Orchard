@@ -13,9 +13,7 @@ using NHibernate.Dialect;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Environment.State;
 
 namespace Orchard.Data.Migration.Generator {
@@ -93,13 +91,15 @@ namespace Orchard.Data.Migration.Generator {
 
                 var command = new CreateTableCommand(tableName);
                 
-                foreach(var column in table.ColumnIterator) {
-                    var table1 = table;
-                    var column1 = column;
-                    var sqlType = column1.GetSqlTypeCode(mapping);
+                foreach (var column in table.ColumnIterator) {
+                    // create copies for local variables to be evaluated at the time the loop is called, and not lately when the la;bda is executed
+                    var tableCopy = table;
+                    var columnCopy = column;
+
+                    var sqlType = columnCopy.GetSqlTypeCode(mapping);
                     command.Column(column.Name, sqlType.DbType,
                         action => {
-                            if (table1.PrimaryKey.Columns.Any(c => c.Name == column1.Name)) {
+                            if (tableCopy.PrimaryKey.Columns.Any(c => c.Name == columnCopy.Name)) {
                                 action.PrimaryKey();
 
                                 if ( !isContentPart ) {
@@ -108,26 +108,26 @@ namespace Orchard.Data.Migration.Generator {
                             }
 
                             
-                            if ( column1.IsLengthDefined() 
-                                && new DbType[] { DbType.StringFixedLength, DbType.String, DbType.AnsiString, DbType.AnsiStringFixedLength }.Contains(sqlType.DbType) 
-                                && column1.Length != 255 ) {
-                                action.WithLength(column1.Length);
+                            if ( columnCopy.IsLengthDefined() 
+                                && new DbType[] { DbType.StringFixedLength, DbType.String, DbType.AnsiString, DbType.AnsiStringFixedLength }.Contains(sqlType.DbType)
+                                && columnCopy.Length != Column.DefaultLength) {
+                                action.WithLength(columnCopy.Length);
                             }
 
-                            if (column1.IsPrecisionDefined()) {
-                                action.WithPrecision((byte) column1.Precision);
-                                action.WithScale((byte) column1.Scale);
+                            if (columnCopy.IsPrecisionDefined()) {
+                                action.WithPrecision((byte) columnCopy.Precision);
+                                action.WithScale((byte) columnCopy.Scale);
                             }
-                            if (column1.IsNullable) {
+                            if (columnCopy.IsNullable) {
                                 action.Nullable();
                             }
 
-                            if ( column1.IsUnique ) {
+                            if ( columnCopy.IsUnique ) {
                                 action.Unique();
                             }
 
-                            if(column1.DefaultValue != null) {
-                                action.WithDefault(column1.DefaultValue);
+                            if(columnCopy.DefaultValue != null) {
+                                action.WithDefault(columnCopy.DefaultValue);
                             }
                         });
                 }

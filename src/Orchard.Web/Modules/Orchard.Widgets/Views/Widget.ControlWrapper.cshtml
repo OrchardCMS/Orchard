@@ -1,0 +1,11 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Widgets;
+@if (AuthorizedFor(Permissions.ManageWidgets)) {
+    <div class="widget-control">
+        <div class="manage-actions">@Html.ItemEditLinkWithReturnUrl(T("Edit").Text, (ContentItem)Model.ContentItem)</div>
+    @Display(Model.Child)
+    </div>
+}
+else {
+    @Display(Model.Child)
+}

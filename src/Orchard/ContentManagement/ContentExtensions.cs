@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.Records;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
     public static class ContentCreateExtensions {
@@ -165,26 +164,26 @@ namespace Orchard.ContentManagement {
 
         /* Display and editor convenience extension methods */
 
-        public static ContentItemViewModel<T> BuildDisplayModel<T>(this IContentManager manager, int id, string displayType) where T : class, IContent {
-            var content = manager.Get<T>(id);
+        public static TContent BuildDisplayShape<TContent>(this IContentManager manager, int id, string displayType) where TContent : class, IContent {
+            var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
-            return manager.BuildDisplayModel(content, displayType);
+            return manager.BuildDisplay(content, displayType);
         }
 
-        public static ContentItemViewModel<T> BuildEditorModel<T>(this IContentManager manager, int id) where T : class, IContent {
-            var content = manager.Get<T>(id);
+        public static TContent BuildEditorShape<TContent>(this IContentManager manager, int id) where TContent : class, IContent {
+            var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
-            return manager.BuildEditorModel(content);
+            return manager.BuildEditor(content);
 
         }
 
-        public static ContentItemViewModel<T> UpdateEditorModel<T>(this IContentManager manager, int id, IUpdateModel updater) where T : class, IContent {
-            var content = manager.Get<T>(id);
+        public static TContent UpdateEditorShape<TContent>(this IContentManager manager, int id, IUpdateModel updater) where TContent : class, IContent {
+            var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
-            return manager.UpdateEditorModel(content, updater);
+            return manager.UpdateEditor(content, updater);
         }
 
 
@@ -206,10 +205,21 @@ namespace Orchard.ContentManagement {
             return content == null ? default(T) : (T)content.ContentItem.Get(typeof(T));
         }
 
-
         public static IEnumerable<T> AsPart<T>(this IEnumerable<ContentItem> items) where T : IContent {
             return items == null ? null : items.Where(item => item.Is<T>()).Select(item => item.As<T>());
         }
 
+        public static bool IsPublished(this IContent content) {
+            return content.ContentItem.VersionRecord != null && content.ContentItem.VersionRecord.Published;
+        }
+        public static bool HasDraft(this IContent content) {
+            return (
+                       (content.ContentItem.VersionRecord != null)
+                       && ((content.ContentItem.VersionRecord.Published == false)
+                           || (content.ContentItem.VersionRecord.Published && content.ContentItem.VersionRecord.Latest == false)));
+        }
+        public static bool HasPublished(this IContent content) {
+            return content.IsPublished() || content.ContentItem.ContentManager.Get(content.ContentItem.Id, VersionOptions.Published) != null;
+        }
     }
 }

@@ -1,11 +1,11 @@
-﻿name: Roles
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.5.0
-orchardversion: 0.5.0
-description: The roles module is adding the ability to assign roles to users. It's also providing a set of default roles for which other modules can define default permissions.
-features:
+﻿Name: Roles
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.8.0
+OrchardVersion: 0.8.0
+Description: The roles module is adding the ability to assign roles to users. It's also providing a set of default roles for which other modules can define default permissions.
+Features:
     Orchard.Roles:
         Description: Standard user roles.
         Category: Core

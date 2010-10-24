@@ -37,23 +37,31 @@ namespace Orchard.Blogs.Commands {
         public string Slug { get; set; }
 
         [OrchardSwitch]
+        public string Owner { get; set; }
+
+        [OrchardSwitch]
         public string Title { get; set; }
 
         [OrchardSwitch]
         public string MenuText { get; set; }
 
         [CommandName("blog create")]
-        [CommandHelp("blog create /Slug:<slug> /Title:<title> [/MenuText:<menu text>]\r\n\t" + "Creates a new Blog")]
-        [OrchardSwitches("Slug,Title,MenuText")]
+        [CommandHelp("blog create /Slug:<slug> /Title:<title> /Owner:<username> [/MenuText:<menu text>]\r\n\t" + "Creates a new Blog")]
+        [OrchardSwitches("Slug,Title,Owner,MenuText")]
         public string Create() {
-            var admin = _membershipService.GetUser("admin");
+            var owner = _membershipService.GetUser(Owner);
+
+            if ( owner == null ) {
+                Context.Output.WriteLine();
+                return T("Invalid username: {0}", Owner).Text;
+            }
 
             if(!IsSlugValid(Slug)) {
                 return "Invalid Slug provided. Blog creation failed.";    
             }
 
             var blog = _contentManager.New("Blog");
-            blog.As<ICommonPart>().Owner = admin;
+            blog.As<ICommonPart>().Owner = owner;
             blog.As<RoutePart>().Slug = Slug;
             blog.As<RoutePart>().Path = Slug;
             blog.As<RoutePart>().Title = Title;
@@ -68,10 +76,15 @@ namespace Orchard.Blogs.Commands {
         }
 
         [CommandName("blog import")]
-        [CommandHelp("blog import /Slug:<slug> /FeedUrl:<feed url>\r\n\t" + "Import all items from <feed url> into the blog at the specified <slug>")]
-        [OrchardSwitches("FeedUrl,Slug")]
+        [CommandHelp("blog import /Slug:<slug> /FeedUrl:<feed url> /Owner:<username>\r\n\t" + "Import all items from <feed url> into the blog at the specified <slug>")]
+        [OrchardSwitches("FeedUrl,Slug,Owner")]
         public string Import() {
-            var admin = _membershipService.GetUser("admin");
+            var owner = _membershipService.GetUser(Owner);
+
+            if(owner == null) {
+                Context.Output.WriteLine();
+                return T("Invalid username: {0}", Owner).Text;
+            }
 
             XDocument doc;
 
@@ -96,11 +109,11 @@ namespace Orchard.Blogs.Commands {
 
                 Context.Output.WriteLine("Adding post: {0}...", postName.Substring(0, Math.Min(postName.Length, 40)));
                 var post = _contentManager.New("BlogPost");
-                post.As<ICommonPart>().Owner = admin;
+                post.As<ICommonPart>().Owner = owner;
                 post.As<ICommonPart>().Container = blog;
                 var slug = Slugify(postName);
                 post.As<RoutePart>().Slug = slug;
-                post.As<RoutePart>().Path = post.As<RoutePart>().GetPathFromSlug(slug);
+                post.As<RoutePart>().Path = post.As<RoutePart>().GetPathWithSlug(slug);
                 post.As<RoutePart>().Title = postName;
                 post.As<BodyPart>().Text = item.Element("description").Value;
                 _contentManager.Create(post);

@@ -1,0 +1,6 @@
+﻿@model Orchard.Tags.ViewModels.EditTagsViewModel
+
+<fieldset>
+    @Html.LabelFor(m => m.Tags, T("Tags"))
+    @Html.TextBoxFor(m => m.Tags, new { @class = "large text" })
+</fieldset>

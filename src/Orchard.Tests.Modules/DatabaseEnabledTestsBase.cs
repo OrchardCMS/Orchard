@@ -48,8 +48,11 @@ namespace Orchard.Tests.Modules {
 
         [TearDown]
         public void Cleanup() {
-            _container.Dispose();
-            _session.Close();
+            if(_container != null)
+                _container.Dispose();
+
+            if(_session != null)
+                _session.Close();
         }
 
         public abstract void Register(ContainerBuilder builder);

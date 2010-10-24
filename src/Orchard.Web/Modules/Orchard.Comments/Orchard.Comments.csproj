@@ -43,6 +43,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\joel.net.akismet\Joel.Net.Akismet.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -53,13 +54,13 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -72,11 +73,12 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
-    <Compile Include="DataMigrations\CommentsDataMigration.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\CommentPartDriver.cs" />
     <Compile Include="Drivers\CommentsContainerPartDriver.cs" />
+    <Compile Include="Drivers\CommentSettingsPartDriver.cs" />
     <Compile Include="Drivers\CommentsPartDriver.cs" />
-    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="Shapes.cs" />
     <Compile Include="Models\ClosedCommentsRecord.cs" />
     <Compile Include="Models\CommentPart.cs" />
     <Compile Include="Handlers\CommentPartHandler.cs" />
@@ -108,15 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\Admin\Details.aspx" />
-    <Content Include="Views\Admin\Edit.aspx" />
-    <Content Include="Views\Admin\Index.aspx" />
-    <Content Include="Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
-    <Content Include="Views\DisplayTemplates\Parts\Comments.Count.ascx" />
-    <Content Include="Views\DisplayTemplates\Parts\Comments.CountAdmin.ascx" />
-    <Content Include="Views\EditorTemplates\Parts\Comments.SiteSettings.ascx" />
-    <Content Include="Views\EditorTemplates\Parts\Comments.Comments.ascx" />
-    <Content Include="Views\ListOfComments.ascx" />
+    <Content Include="Views\Admin\Details.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
@@ -130,16 +124,27 @@
       <Name>Orchard.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Admin\Edit.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Parts\Comments.cshtml" />
+    <Content Include="Views\Parts\Comments.Count.cshtml" />
+    <Content Include="Views\Parts\Comments.Count.SummaryAdmin.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Comments.Comments.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Comments.SiteSettings.cshtml" />
+    <Content Include="Views\ListOfComments.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target> -->
-  <!-- To enable MVC area subproject support, uncomment the following two lines:
-  <UsingTask TaskName="Microsoft.Web.Mvc.Build.CreateAreaManifest" AssemblyName="Microsoft.Web.Mvc.Build, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-  <UsingTask TaskName="Microsoft.Web.Mvc.Build.CopyAreaManifests" AssemblyName="Microsoft.Web.Mvc.Build, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-  -->
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
     <PropertyGroup>
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Orchard.Mvc.ViewModels;
 using Orchard.Tags.Models;
 
 namespace Orchard.Tags.ViewModels {
-    public class TagsIndexViewModel : BaseViewModel {
+    public class TagsIndexViewModel {
         public IList<Tag> Tags { get; set; }
     }
 }

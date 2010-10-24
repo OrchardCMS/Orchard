@@ -1,8 +1,8 @@
-﻿using Orchard.ContentManagement.Aspects;
-using Orchard.Mvc.ViewModels;
+﻿using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Routable.ViewModels {
-   public class RoutableDisplayViewModel : BaseViewModel {
-        public ContentItemViewModel<IRoutableAspect> Routable {get;set;}
-    }
+   public class RoutableDisplayViewModel  {
+       public string Title { get { return RoutePart.Title; } }
+       public RoutePart RoutePart { get; set; }
+   }
 }

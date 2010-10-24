@@ -8,7 +8,7 @@ using Orchard.FileSystems.Dependencies;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public abstract class ExtensionLoaderBase : IExtensionLoader {
-        protected readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IDependenciesFolder _dependenciesFolder;
 
         protected ExtensionLoaderBase(IDependenciesFolder dependenciesFolder) {
             _dependenciesFolder = dependenciesFolder;

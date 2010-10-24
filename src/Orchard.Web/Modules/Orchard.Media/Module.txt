@@ -1,11 +1,11 @@
-﻿name: Media
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.5.0
-orchardversion: 0.5.0
-description: The media module offer basic media management features. It currently only supports image files. Storage goes into the current Orchard file system, which can be the server's physical file system or Azure blob storage.
-features:
+﻿Name: Media
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.8.0
+OrchardVersion: 0.8.0
+Description: The media module offer basic media management features. It currently only supports image files. Storage goes into the current Orchard file system, which can be the server's physical file system or Azure blob storage.
+Features:
     Orchard.Media:
         Description: File system based media upload, storage and management.
         Category: Media

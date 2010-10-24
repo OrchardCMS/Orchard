@@ -2,8 +2,10 @@
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.Data.Migration;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.ViewModels;
+using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Themes.Preview;
 using Orchard.Themes.ViewModels;
@@ -14,9 +16,20 @@ namespace Orchard.Themes.Controllers {
     public class AdminController : Controller {
         private readonly IThemeService _themeService;
         private readonly IPreviewTheme _previewTheme;
+        private readonly IDataMigrationManager _dataMigrationManager;
+        private readonly IReportsCoordinator _reportsCoordinator;
 
-        public AdminController(IOrchardServices services, IThemeService themeService, IPreviewTheme previewTheme, IAuthorizer authorizer, INotifier notifier) {
+        public AdminController(
+            IDataMigrationManager dataMigraitonManager,
+            IReportsCoordinator reportsCoordinator,
+            IOrchardServices services,
+            IThemeService themeService,
+            IPreviewTheme previewTheme,
+            IAuthorizer authorizer,
+            INotifier notifier) {
             Services = services;
+            _dataMigrationManager = dataMigraitonManager;
+            _reportsCoordinator = reportsCoordinator;
             _themeService = themeService;
             _previewTheme = previewTheme;
             T = NullLocalizer.Instance;
@@ -29,7 +42,8 @@ namespace Orchard.Themes.Controllers {
             try {
                 var themes = _themeService.GetInstalledThemes();
                 var currentTheme = _themeService.GetSiteTheme();
-                var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes };
+                var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
+                var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes, FeaturesThatNeedUpdate = featuresThatNeedUpdate };
                 return View(model);
             }
             catch (Exception exception) {
@@ -59,12 +73,11 @@ namespace Orchard.Themes.Controllers {
                     return new HttpUnauthorizedResult();
                 _previewTheme.SetPreviewTheme(null); 
                 _themeService.SetSiteTheme(themeName);
-                return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Previewing theme failed: " + exception.Message));
-                return RedirectToAction("Index");
             }
+            return RedirectToAction("Index");
         }
 
         [HttpPost, ActionName("Preview"), FormValueRequired("submit.Cancel")]
@@ -73,12 +86,37 @@ namespace Orchard.Themes.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
                     return new HttpUnauthorizedResult();
                 _previewTheme.SetPreviewTheme(null);
-                return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Previewing theme failed: " + exception.Message));
-                return RedirectToAction("Index");
             }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Enable(string themeName) {
+            try {
+                if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't enable the theme")))
+                    return new HttpUnauthorizedResult();
+                _themeService.EnableTheme(themeName);
+            }
+            catch (Exception exception) {
+                Services.Notifier.Error(T("Enabling theme failed: " + exception.Message));
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Disable(string themeName) {
+            try {
+                if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't disable the current theme")))
+                    return new HttpUnauthorizedResult();
+                _themeService.DisableTheme(themeName);
+            }
+            catch (Exception exception) {
+                Services.Notifier.Error(T("Disabling theme failed: " + exception.Message));
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -87,16 +125,15 @@ namespace Orchard.Themes.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't set the current theme")))
                     return new HttpUnauthorizedResult();
                 _themeService.SetSiteTheme(themeName);
-                return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Activating theme failed: " + exception.Message));
-                return RedirectToAction("Index");
             }
+            return RedirectToAction("Index");
         }
 
         public ActionResult Install() {
-            return View(new BaseViewModel());
+            return View();
         }
 
         [HttpPost]
@@ -128,6 +165,26 @@ namespace Orchard.Themes.Controllers {
                 Services.Notifier.Error(T("Uninstalling theme failed: " + exception.Message));
                 return RedirectToAction("Index");
             }
+        }
+
+        [HttpPost]
+        public ActionResult Update(string themeName) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageThemes, T("Couldn't update theme")))
+                return new HttpUnauthorizedResult();
+
+            if (string.IsNullOrEmpty(themeName))
+                return HttpNotFound();
+
+            try {
+                _reportsCoordinator.Register("Data Migration", "Upgrade " + themeName, "Orchard installation");
+                _dataMigrationManager.Update(themeName);
+                Services.Notifier.Information(T("The theme {0} was updated succesfuly", themeName));
+            }
+            catch (Exception ex) {
+                Services.Notifier.Error(T("An error occured while updating the theme {0}: {1}", themeName, ex.Message));
+            }
+
+            return RedirectToAction("Index");
         }
 
         class FormValueRequiredAttribute : ActionMethodSelectorAttribute {

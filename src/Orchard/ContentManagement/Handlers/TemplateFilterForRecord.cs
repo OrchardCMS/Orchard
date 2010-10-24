@@ -3,13 +3,15 @@
 namespace Orchard.ContentManagement.Handlers {
     public class TemplateFilterForRecord<TRecord> : TemplateFilterBase<ContentPart<TRecord>> where TRecord : ContentPartRecord, new() {
         private readonly string _prefix;
-        private readonly string _templateName;
         private string _location;
+        private string _position;
+        private readonly string _templateName;
 
         public TemplateFilterForRecord(string prefix, string templateName) {
             _prefix = prefix;
             _templateName = templateName;
-            _location = "primary";
+            _location = "Primary";
+            _position = "5";
         }
 
         public TemplateFilterForRecord<TRecord> Location(string location) {
@@ -17,13 +19,19 @@ namespace Orchard.ContentManagement.Handlers {
             return this;
         }
 
-        protected override void BuildEditorModel(BuildEditorModelContext context, ContentPart<TRecord> part) {
-            context.ViewModel.Zones.AddEditorPart(_location, part.Record, _templateName, _prefix);
+        public TemplateFilterForRecord<TRecord> Position(string position) {
+            _position = position;
+            return this;
         }
 
-        protected override void UpdateEditorModel(UpdateEditorModelContext context, ContentPart<TRecord> part) {
+        protected override void BuildEditorShape(BuildEditorContext context, ContentPart<TRecord> part) {
+            var templateShape = context.New.EditorTemplate(TemplateName: _templateName, Model: part.Record, Prefix: _prefix);
+            context.Shape.Zones[_location].Add(templateShape, _position);
+        }
+
+        protected override void UpdateEditorShape(UpdateEditorContext context, ContentPart<TRecord> part) {
             context.Updater.TryUpdateModel(part.Record, _prefix, null, null);
-            context.ViewModel.Zones.AddEditorPart(_location, part.Record, _templateName, _prefix);
+            BuildEditorShape(context, part);
         }
     }
 }

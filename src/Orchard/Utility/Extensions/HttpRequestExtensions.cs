@@ -1,4 +1,6 @@
+using System;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Orchard.Utility.Extensions {
     public static class HttpRequestExtensions {

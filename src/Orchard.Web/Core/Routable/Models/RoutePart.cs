@@ -18,24 +18,24 @@ namespace Orchard.Core.Routable.Models {
             set { Record.Path = value; }
         }
 
-        public string GetContainerSlug() {
+        public string GetContainerPath() {
             var commonAspect = this.As<ICommonPart>();
             if (commonAspect != null && commonAspect.Container != null) {
                 var routable = commonAspect.Container.As<IRoutableAspect>();
                 if (routable != null) {
-                    return routable.Slug;
+                    return routable.Path;
                 }
             }
             return null;
         }
 
-        public string GetPathFromSlug(string slug) {
+        public string GetPathWithSlug(string slug) {
             // TEMP: path format patterns replaces this logic
-            var containerSlug = GetContainerSlug();
-            if (string.IsNullOrEmpty(containerSlug)) {
+            var containerPath = GetContainerPath();
+            if (string.IsNullOrEmpty(containerPath)) {
                 return slug;
             }
-            return containerSlug + "/" + slug;
+            return containerPath + "/" + slug;
         }
     }
 }

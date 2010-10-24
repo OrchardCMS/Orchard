@@ -1,11 +1,11 @@
-﻿name: Packaging
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.5.0
-orchardversion: 0.5.0
-description: The packaging module enables packaging modules using the OPC format.
-features:
+﻿Name: Packaging
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.8.0
+OrchardVersion: 0.8.0
+Description: The packaging module enables packaging modules using the OPC format.
+Features:
     PackagingServices:
         Description: Core services for packaging using the OPC format.
         Category: Core

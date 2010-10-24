@@ -1,10 +1,10 @@
-﻿name: ContentTypes
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.5.0
-orchardversion: 0.5.0
-features:
+﻿Name: ContentTypes
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.8.0
+OrchardVersion: 0.8.0
+Features:
     Orchard.ContentTypes:
         Description: ContentTypes modules enables the creation and alteration of content types not based on code.
         Dependencies: Contents

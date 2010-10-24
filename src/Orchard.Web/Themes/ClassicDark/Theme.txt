@@ -1,6 +1,0 @@
-﻿name: Classic Dark
-author: Jonathan Wall
-description: Dark version of the Classic theme.
-version: 1.0
-tags: Classic, Dark, Serif 
-website: http://www.orchardproject.net

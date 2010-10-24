@@ -1,0 +1,6 @@
+﻿<Placement>
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_ArchiveLater_Metadata_SummaryAdmin="Meta:2"/>
+    </Match>
+    <Place Parts_ArchiveLater_Edit="Secondary:2"/>
+</Placement>

@@ -18,6 +18,7 @@ namespace Orchard.Roles.Drivers {
         private readonly INotifier _notifier;
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
+        private const string TemplateName = "Parts/Roles.UserRoles";
 
         public UserRolesPartDriver(
             IRepository<UserRolesPartRecord> userRolesRepository, 
@@ -41,55 +42,51 @@ namespace Orchard.Roles.Drivers {
 
         public Localizer T { get; set; }
 
-        protected override DriverResult Editor(UserRolesPart userRolesPart) {
+        protected override DriverResult Editor(UserRolesPart userRolesPart, dynamic shapeHelper) {
             // don't show editor without apply roles permission
             if (!_authorizationService.TryCheckAccess(Permissions.ApplyRoles, _authenticationService.GetAuthenticatedUser(), userRolesPart))
                 return null;
 
-            var roles =
-                _roleService.GetRoles().Select(
-                    x => new UserRoleEntry {
-                                               RoleId = x.Id,
-                                               Name = x.Name,
-                                               Granted = userRolesPart.Roles.Contains(x.Name)
-                                           });
-
-            var model = new UserRolesViewModel {
-                                                   User = userRolesPart.As<IUser>(),
-                                                   UserRoles = userRolesPart,
-                                                   Roles = roles.ToList(),
-                                               };
-            return ContentPartTemplate(model, "Parts/Roles.UserRoles");
+            return ContentShape("Parts_Roles_UserRoles_Edit",
+                    () => {
+                       var roles =_roleService.GetRoles().Select(x => new UserRoleEntry {
+                                                                          RoleId = x.Id,
+                                                                          Name = x.Name,
+                                                                          Granted = userRolesPart.Roles.Contains(x.Name)});
+                       var model = new UserRolesViewModel {
+                           User = userRolesPart.As<IUser>(),
+                           UserRoles = userRolesPart,
+                           Roles = roles.ToList(),
+                       };
+                       return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix);
+                    });
         }
 
-        protected override DriverResult Editor(UserRolesPart userRolesPart, IUpdateModel updater) {
+        protected override DriverResult Editor(UserRolesPart userRolesPart, IUpdateModel updater, dynamic shapeHelper) {
             // don't apply editor without apply roles permission
             if (!_authorizationService.TryCheckAccess(Permissions.ApplyRoles, _authenticationService.GetAuthenticatedUser(), userRolesPart))
                 return null;
 
-            var model = new UserRolesViewModel {
-                                                   User = userRolesPart.As<IUser>(),
-                                                   UserRoles = userRolesPart,
-                                               };
-
+            var model = BuildEditorViewModel(userRolesPart);
             if (updater.TryUpdateModel(model, Prefix, null, null)) {
-
                 var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == model.User.Id);
                 var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role);
                 var targetRoleRecords = model.Roles.Where(x => x.Granted).Select(x => _roleService.GetRole(x.RoleId));
-
                 foreach (var addingRole in targetRoleRecords.Where(x => !currentRoleRecords.Contains(x))) {
                     _notifier.Warning(T("Adding role {0} to user {1}", addingRole.Name, userRolesPart.As<IUser>().UserName));
                     _userRolesRepository.Create(new UserRolesPartRecord { UserId = model.User.Id, Role = addingRole });
                 }
-
                 foreach (var removingRole in currentUserRoleRecords.Where(x => !targetRoleRecords.Contains(x.Role))) {
                     _notifier.Warning(T("Removing role {0} from user {1}", removingRole.Role.Name, userRolesPart.As<IUser>().UserName));
                     _userRolesRepository.Delete(removingRole);
                 }
-
             }
-            return ContentPartTemplate(model, "Parts/Roles.UserRoles");
+            return ContentShape("Parts_Roles_UserRoles_Edit",
+                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+        }
+
+        private static UserRolesViewModel BuildEditorViewModel(UserRolesPart userRolesPart) {
+            return new UserRolesViewModel { User = userRolesPart.As<IUser>(), UserRoles = userRolesPart };
         }
     }
 }

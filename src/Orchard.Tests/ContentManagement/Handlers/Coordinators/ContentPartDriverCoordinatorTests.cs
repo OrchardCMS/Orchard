@@ -7,10 +7,10 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Drivers.Coordinators;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.AutofacUtil;
-using Orchard.Mvc.ViewModels;
-using Orchard.Tests.Utility;
-using Orchard.UI.Zones;
 
 namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
     [TestFixture]
@@ -22,52 +22,55 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<ContentPartDriverCoordinator>().As<IContentHandler>();
-            builder.RegisterAutoMocking();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
             _container = builder.Build();
         }
 
         [Test]
         public void DriverHandlerShouldNotThrowException() {
             var contentHandler = _container.Resolve<IContentHandler>();
-            contentHandler.BuildDisplayModel(null);
+            contentHandler.BuildDisplay(null);
         }
 
         [Test]
         public void AllDriversShouldBeCalled() {
             var driver1 = new Mock<IContentPartDriver>();
             var driver2 = new Mock<IContentPartDriver>();
-            var builder = new ContainerUpdater();
+            var builder = new ContainerBuilder();
             builder.RegisterInstance(driver1.Object);
             builder.RegisterInstance(driver2.Object);
             builder.Update(_container);
             var contentHandler = _container.Resolve<IContentHandler>();
 
-            var ctx = new BuildDisplayModelContext(new ContentItemViewModel(new ContentItem()), null);
+            var contentItem = new ContentItem();
+            var context = new BuildDisplayContext(null, contentItem, "", new Mock<IShapeFactory>().Object);
 
-            driver1.Verify(x => x.BuildDisplayModel(ctx), Times.Never());
-            contentHandler.BuildDisplayModel(ctx);
-            driver1.Verify(x => x.BuildDisplayModel(ctx));
+            driver1.Verify(x => x.BuildDisplay(context), Times.Never());
+            driver2.Verify(x => x.BuildDisplay(context), Times.Never());
+            contentHandler.BuildDisplay(context);
+            driver1.Verify(x => x.BuildDisplay(context));
+            driver2.Verify(x => x.BuildDisplay(context));
         }
 
-        [Test]
+        [Test, Ignore("no implementation for IZoneCollection")]
         public void TestDriverCanAddDisplay() {
             var driver = new StubPartDriver();
-            var builder = new ContainerUpdater();
+            var builder = new ContainerBuilder();
             builder.RegisterInstance(driver).As<IContentPartDriver>();
             builder.Update(_container);
-
             var contentHandler = _container.Resolve<IContentHandler>();
+            dynamic shapeFactory = _container.Resolve<IShapeFactory>();
 
-            var item = new ContentItem();
-            item.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
+            var contentItem = new ContentItem();
+            contentItem.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
 
-            var ctx = new BuildDisplayModelContext(new ContentItemViewModel(item), "");
-            Assert.That(ctx.ViewModel.Zones.Count(), Is.EqualTo(0));
-            contentHandler.BuildDisplayModel(ctx);
-            Assert.That(ctx.ViewModel.Zones.Count(), Is.EqualTo(1));
-            Assert.That(ctx.ViewModel.Zones.Single().Key, Is.EqualTo("topmeta"));
-            Assert.That(ctx.ViewModel.Zones.Single().Value.Items.OfType<ContentPartDisplayZoneItem>().Single().Prefix, Is.EqualTo("Stub"));
-
+            var ctx = new BuildDisplayContext(null, null, "", null);
+            var context = shapeFactory.Context(ctx);
+            Assert.That(context.TopMeta, Is.Null);
+            contentHandler.BuildDisplay(ctx);
+            Assert.That(context.TopMeta, Is.Not.Null);
+            Assert.That(context.TopMeta.Count == 1);
         }
 
         public class StubPartDriver : ContentPartDriver<StubPart> {
@@ -75,24 +78,29 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
                 get { return "Stub"; }
             }
 
-            protected override DriverResult Display(StubPart part, string displayType) {
-                var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
-                if (displayType.StartsWith("Summary"))
-                    return ContentPartTemplate(viewModel, "StubViewModelTerse").Location("topmeta");
+            protected override DriverResult Display(StubPart part, string displayType, dynamic shapeHelper) {
+                var stub = shapeHelper.Stub(ContentPart: part, Foo: string.Join(",", part.Foo));
+                if (!string.IsNullOrWhiteSpace(displayType))
+                    stub.Metadata.Type = string.Format("{0}.{1}", stub.Metadata.Type, displayType);
+                return ContentShape(stub).Location("TopMeta");
+                
+                //var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
+                //if (displayType.StartsWith("Summary"))
+                //    return ContentPartTemplate(viewModel, "StubViewModelTerse").Location("TopMeta");
 
-                return ContentPartTemplate(viewModel).Location("topmeta");
+                //return ContentPartTemplate(viewModel).Location("TopMeta");
             }
 
-            protected override DriverResult Editor(StubPart part) {
+            protected override DriverResult Editor(StubPart part, dynamic shapeHelper) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
-                return ContentPartTemplate(viewModel).Location("last", "10");
+                return new ContentTemplateResult(viewModel, null, Prefix).Location("last", "10");
             }
 
-            protected override DriverResult Editor(StubPart part, IUpdateModel updater) {
+            protected override DriverResult Editor(StubPart part, IUpdateModel updater, dynamic shapeHelper) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
                 updater.TryUpdateModel(viewModel, Prefix, null, null);
                 part.Foo = viewModel.Foo.Split(new[] { ',' }).Select(x => x.Trim()).ToArray();
-                return ContentPartTemplate(viewModel).Location("last", "10");
+                return new ContentTemplateResult(viewModel, null, Prefix).Location("last", "10");
             }
         }
 

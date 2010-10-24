@@ -38,6 +38,10 @@ namespace Orchard.Packaging.Services {
                     ExtractProjectFiles(context, "Compile", "Content", "None", "EmbeddedResource");
                     ExtractReferenceFiles(context);
                 }
+                else if (context.ExtensionType == "Theme") {
+                    // this is a simple theme with no csproj
+                    ExtractThemeFiles(context);
+                }
             }
             finally {
                 EndPackage(context);
@@ -105,6 +109,14 @@ namespace Orchard.Packaging.Services {
                     ExtractFile(context, virtualPath);
                 }
                 else if (hintPath != null) {}
+            }
+        }
+
+        private void ExtractThemeFiles(ExpandContext context) {
+            foreach (var relativePath in from p in context.Package.GetParts()
+                                         where p.Uri.ToString().StartsWith("/" + context.ExtensionName + "/", StringComparison.OrdinalIgnoreCase)
+                                         select p.Uri.ToString().Substring(("/" + context.ExtensionName + "/").Length)) {
+                ExtractFile(context, relativePath);
             }
         }
 

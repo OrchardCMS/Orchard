@@ -9,7 +9,7 @@ Scenario: Default site is listed
     When I go to "Admin/MultiTenancy"
     Then I should see "List of Site&#39;s Tenants"
         And I should see "<h3>Default</h3>"
-        And the status should be 200 OK
+        And the status should be 200 "OK"
 
 Scenario: New tenant fields are required
     Given I have installed Orchard
@@ -28,7 +28,7 @@ Scenario: A new tenant is created
         And I hit "Save"
         And I am redirected
     Then I should see "<h3>Scott</h3>"
-        And the status should be 200 OK
+        And the status should be 200 "OK"
         
 Scenario: A new tenant is created with uninitialized state
     Given I have installed Orchard
@@ -40,7 +40,7 @@ Scenario: A new tenant is created with uninitialized state
         And I hit "Save"
         And I am redirected
     Then I should see "<li class="tenant Uninitialized">"
-        And the status should be 200 OK
+        And the status should be 200 "OK"
 
 Scenario: A new tenant goes to the setup screen
     Given I have installed Orchard
@@ -54,7 +54,7 @@ Scenario: A new tenant goes to the setup screen
         And I go to "/Setup" on host scott.example.org
     Then I should see "Welcome to Orchard"
         And I should see "Finish Setup"
-        And the status should be 200 OK
+        And the status should be 200 "OK"
         
 Scenario: A new tenant with preconfigured database goes to the setup screen
     Given I have installed Orchard
@@ -71,7 +71,7 @@ Scenario: A new tenant with preconfigured database goes to the setup screen
     Then I should see "Welcome to Orchard"
         And I should see "Finish Setup"
         And I should not see "SQL Server Compact"
-        And the status should be 200 OK
+        And the status should be 200 "OK"
 
 Scenario: A new tenant runs the setup
     Given I have installed Orchard

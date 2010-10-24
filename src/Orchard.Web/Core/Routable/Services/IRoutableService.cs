@@ -4,14 +4,13 @@ using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Routable.Services {
     public interface IRoutableService : IDependency {
-        void FillSlug<TModel>(TModel model) where TModel : RoutePart;
-        void FillSlug<TModel>(TModel model, Func<string, string> generateSlug) where TModel : RoutePart;
-        string GenerateUniqueSlug(string slugCandidate, IEnumerable<string> existingSlugs);
+        void FillSlugFromTitle<TModel>(TModel model) where TModel : RoutePart;
+        string GenerateUniqueSlug(RoutePart part, IEnumerable<string> existingPaths);
 
         /// <summary>
-        /// Returns any content item of the specified content type with similar slugs
+        /// Returns any content item with similar path
         /// </summary>
-        IEnumerable<RoutePart> GetSimilarSlugs(string contentType, string slug);
+        IEnumerable<RoutePart> GetSimilarPaths(string path);
 
         /// <summary>
         /// Validates the given slug

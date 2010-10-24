@@ -1,0 +1,104 @@
+==document==
+
+[[ZoneName]] == zone
+
+<html>
+    <head>
+        [[Head]]
+    </head>
+    <body>
+        [[Body]] (layout)
+        [[Tail]]
+    </body>
+<html>
+
+==layout==
+
+(TheThemeMachine)
+----------------------------------
+|             Header             |
+----------------------------------
+|           Navigation           |
+----------------------------------
+|            Featured            |
+----------------------------------
+|           BeforeMain           |
+----------------------------------
+|  A  |      Messages      |  A  |
+|  s  |--------------------|  s  |
+|  i  |    BeforeContent   |  i  |
+|  d  |--------------------|  d  |
+|  e  |                    |  e  |
+|  F  |                    |  S  |
+|  i  |      Content       |  e  |
+|  r  |                    |  c  |
+|  s  |                    |  o  |
+|  t  |--------------------|  n  |
+|     |    AfterContent    |  d  |
+----------------------------------
+|           AfterMain            |
+----------------------------------
+|  Tripel  |  Tripel  |  Tripel  |
+|  First   |  Second  |  Third   |
+----------------------------------
+| Footer| Footer| Footer| Footer |
+| Quad  | Quad  | Quad  | Quad   |
+| First | Second| Third | Fourth |
+----------------------------------
+|            Footer              |
+----------------------------------
+
+==content==
+
+Generally display templates have Header, Meta, Manage, Content and Footer zones (in the admin anything other than Content is special-case per template)
+while edit templates having Meta (less frequently), Primary and Secondary (i.e. sidebar) zones.
+
+[[ZoneName]] == zone
+
+(Content - base content shape)
+<article>
+    <header>
+        [[Header]]
+        <div class="metadata">
+            [[Meta]]
+        </div>
+    </header>
+    [[Content]]
+    <footer>
+        [[Footer]]
+    </footer>
+</article>
+
+//admin display template example//
+(Content.SummaryAdmin - content summary in an admin list view)
+<div class="summary">
+    <div class="properties">
+        <checkbox/>
+        <h3 />
+        <div class="metadata"
+            [[Meta]]
+        </div>
+    </div>
+    <div class="related">
+        [[Secondary]]
+        <a>edit</a>
+        <a>remove</a>
+    </div>
+    <div class="primary">
+        [[Primary]]
+    </div>
+</div>
+
+//edit template example//
+(Content.Edit)
+<div class="sections">
+    <div class="primary">
+        [[Primary]]
+    </div>
+    <div class="secondary">
+        [[Secondary]]
+        <fieldset>
+            <button /submit />
+        </fieldset>
+    </div>
+</div>

@@ -9,7 +9,6 @@ namespace Orchard.Comments.Handlers {
         public CommentSettingsPartHandler(IRepository<CommentSettingsPartRecord> repository) {
             Filters.Add(new ActivatingFilter<CommentSettingsPart>("Site"));
             Filters.Add(StorageFilter.For(repository));
-            Filters.Add(new TemplateFilterForRecord<CommentSettingsPartRecord>("CommentSettingsPart", "Parts/Comments.SiteSettings"));
         }
     }
 }

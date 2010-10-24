@@ -1,0 +1,13 @@
+﻿@model MenuPart
+@using Orchard.Core.Navigation.Models;
+@{
+    Script.Require("ShapesBase");
+}
+<fieldset>
+    @Html.EditorFor(m => m.OnMainMenu)
+    <label for="OnMainMenu" class="forcheckbox">@T("Show on main menu")</label>
+    <div data-controllerid="OnMainMenu" class="">
+        <label for="MenuText">@T("Menu text")</label>
+        @Html.TextBoxFor(m => m.MenuText, new { @class = "large text" })
+    </div>
+</fieldset>

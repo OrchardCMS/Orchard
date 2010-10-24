@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Routable.Services {
@@ -14,7 +13,7 @@ namespace Orchard.Core.Routable.Services {
             _contentManager = contentManager;
         }
 
-        public void FillSlug<TModel>(TModel model) where TModel : RoutePart {
+        public void FillSlugFromTitle<TModel>(TModel model) where TModel : RoutePart {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
                 return;
 
@@ -27,21 +26,18 @@ namespace Orchard.Core.Routable.Services {
             if (slug.Length > 1000)
                 slug = slug.Substring(0, 1000);
 
+            // dots are not allowed at the begin and the end of routes
+            slug = slug.Trim('.');
+
             model.Slug = slug.ToLowerInvariant();
         }
 
-        public void FillSlug<TModel>(TModel model, Func<string, string> generateSlug) where TModel : RoutePart {
-            if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
-                return;
-
-            model.Slug = generateSlug(model.Title).ToLowerInvariant();
-        }
-
-        public string GenerateUniqueSlug(string slugCandidate, IEnumerable<string> existingSlugs) {
-            if (existingSlugs == null || !existingSlugs.Contains(slugCandidate))
+        public string GenerateUniqueSlug(RoutePart part, IEnumerable<string> existingPaths) {
+            var slugCandidate = part.Slug;
+            if (existingPaths == null || !existingPaths.Contains(part.Path))
                 return slugCandidate;
 
-            int? version = existingSlugs.Select(s => GetSlugVersion(slugCandidate, s)).OrderBy(i => i).LastOrDefault();
+            int? version = existingPaths.Select(s => GetSlugVersion(slugCandidate, s)).OrderBy(i => i).LastOrDefault();
 
             return version != null
                        ? string.Format("{0}-{1}", slugCandidate, version)
@@ -60,43 +56,36 @@ namespace Orchard.Core.Routable.Services {
                        : null;
         }
 
-        public IEnumerable<RoutePart> GetSimilarSlugs(string contentType, string slug)
-        {
+        public IEnumerable<RoutePart> GetSimilarPaths(string path) {
             return
                 _contentManager.Query().Join<RoutePartRecord>()
                     .List()
                     .Select(i => i.As<RoutePart>())
-                    .Where(routable => routable.Path != null && routable.Path.Equals(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
+                    .Where(routable => routable.Path != null && routable.Path.StartsWith(path, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
                     .ToArray();
         }
 
         public bool IsSlugValid(string slug) {
-            // see http://tools.ietf.org/html/rfc3987 for prohibited chars
-            return slug == null || String.IsNullOrEmpty(slug.Trim()) || Regex.IsMatch(slug, @"^[^/:?#\[\]@!$&'()*+,;=\s]+$");
+            return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s]+$") && !(slug.StartsWith(".") || slug.EndsWith("."));
         }
 
-        public bool ProcessSlug(RoutePart part)
-        {
-            FillSlug(part);
+        public bool ProcessSlug(RoutePart part) {
+            FillSlugFromTitle(part);
 
             if (string.IsNullOrEmpty(part.Slug))
-            {
                 return true;
-            }
 
-            var slugsLikeThis = GetSimilarSlugs(part.ContentItem.ContentType, part.Path);
+            part.Path = part.GetPathWithSlug(part.Slug);
+            var pathsLikeThis = GetSimilarPaths(part.Path);
 
-            // If the part is already a valid content item, don't include it in the list
-            // of slug to consider for conflict detection
-            if (part.ContentItem.Id != 0)
-                slugsLikeThis = slugsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id);
+            // Don't include *this* part in the list
+            // of slugs to consider for conflict detection
+            pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id);
 
-            //todo: (heskew) need better messages
-            if (slugsLikeThis.Count() > 0)
-            {
+            if (pathsLikeThis.Count() > 0) {
                 var originalSlug = part.Slug;
                 //todo: (heskew) make auto-uniqueness optional
-                part.Slug = GenerateUniqueSlug(part.Slug, slugsLikeThis.Select(p => p.Slug));
+                part.Slug = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Path));
 
                 if (originalSlug != part.Slug) {
                     return false;

@@ -1,0 +1,16 @@
+﻿@model Orchard.Widgets.Models.LayerPart
+
+<fieldset>
+    @Html.LabelFor(layer => layer.Name, T("Name"))
+    @Html.TextBoxFor(layer => layer.Name)
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(layer => layer.Description, T("Description"))
+    @Html.TextAreaFor(layer => layer.Description)
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(layer => layer.LayerRule, T("Layer Rule"))
+    @Html.TextAreaFor(layer => layer.LayerRule)
+</fieldset>

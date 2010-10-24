@@ -15,12 +15,17 @@ namespace Orchard.Modules.Services {
         private const string ModuleExtensionType = "module";
         private readonly IExtensionManager _extensionManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public ModuleService(IOrchardServices orchardServices, IExtensionManager extensionManager,
-                             IShellDescriptorManager shellDescriptorManager) {
+        public ModuleService(
+                IOrchardServices orchardServices, 
+                IExtensionManager extensionManager,
+                IShellDescriptorManager shellDescriptorManager,
+                IWorkContextAccessor workContextAccessor) {
             Services = orchardServices;
             _extensionManager = extensionManager;
             _shellDescriptorManager = shellDescriptorManager;
+            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
 
@@ -53,7 +58,7 @@ namespace Orchard.Modules.Services {
 
         public IEnumerable<IModuleFeature> GetAvailableFeatures() {
             var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().Features;
-            return GetInstalledModules()
+            return _extensionManager.AvailableExtensions()
                 .SelectMany(m => _extensionManager.LoadFeatures(m.Features))
                 .Select(f => AssembleModuleFromDescriptor(f, enabledFeatures
                     .FirstOrDefault(sf => string.Equals(sf.Name, f.Descriptor.Name, StringComparison.OrdinalIgnoreCase)) != null));
@@ -90,9 +95,10 @@ namespace Orchard.Modules.Services {
         public void DisableFeatures(IEnumerable<string> features, bool force) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
             var enabledFeatures = shellDescriptor.Features.ToList();
+            var availableFeatures = GetAvailableFeatures().ToList();
 
             var featuresToDisable =
-                features.Select(s => DisableFeature(s, GetAvailableFeatures(), force)).SelectMany(
+                features.Select(s => DisableFeature(s, availableFeatures, force)).SelectMany(
                     ies => ies.Select(s => s));
 
             if (featuresToDisable.Count() == 0)
@@ -187,17 +193,38 @@ namespace Orchard.Modules.Services {
                     : featuresInQuestion.First()));
         }
 
-        private static IModule AssembleModuleFromDescriptor(ExtensionDescriptor extensionDescriptor) {
+        private static string TryLocalize(string key, string original, Localizer localizer) {
+            var localized = localizer(key).Text;
+
+            if(key == localized) {
+                // no specific localization available
+                return original;
+            }
+
+            return localized;
+        }
+
+        private IModule AssembleModuleFromDescriptor(ExtensionDescriptor extensionDescriptor) {
+
+            var localizer = LocalizationUtilities.Resolve(_workContextAccessor.GetContext(), String.Concat(extensionDescriptor.Location, "/", extensionDescriptor.Name, "/Module.txt"));
+
             return new Module {
-                                  ModuleName = extensionDescriptor.Name,
-                                  DisplayName = extensionDescriptor.DisplayName,
-                                  Description = extensionDescriptor.Description,
-                                  Version = extensionDescriptor.Version,
-                                  Author = extensionDescriptor.Author,
-                                  HomePage = extensionDescriptor.WebSite,
-                                  Tags = extensionDescriptor.Tags,
-                                  Features = extensionDescriptor.Features
-                              };
+                ModuleName = extensionDescriptor.Name,
+                DisplayName = TryLocalize("Name", extensionDescriptor.DisplayName, localizer),
+                Description = TryLocalize("Description", extensionDescriptor.Description, localizer),
+                Version = extensionDescriptor.Version,
+                Author = TryLocalize("Author", extensionDescriptor.Author, localizer),
+                HomePage = TryLocalize("Website", extensionDescriptor.WebSite, localizer),
+                Tags = TryLocalize("Tags", extensionDescriptor.Tags, localizer),
+                Features = extensionDescriptor.Features.Select(f => new FeatureDescriptor {
+                    Category = TryLocalize(f.Name + " Category", f.Category, localizer),
+                    Dependencies = f.Dependencies,
+                    Description = TryLocalize(f.Name + " Description", f.Description, localizer),
+                    DisplayName = TryLocalize(f.Name + " Name", f.DisplayName, localizer),
+                    Extension = f.Extension,
+                    Name = f.Name,
+                })
+            };
         }
 
         private static IModuleFeature AssembleModuleFromDescriptor(Feature feature, bool isEnabled) {

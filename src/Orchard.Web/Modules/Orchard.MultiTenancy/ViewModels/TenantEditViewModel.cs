@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Orchard.Environment.Configuration;
 using Orchard.MultiTenancy.Annotations;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.MultiTenancy.ViewModels {
-    public class TenantEditViewModel : BaseViewModel {
+    public class TenantEditViewModel  {
         [Required]
         public string Name { get; set; }
         public string RequestUrlHost { get; set; }

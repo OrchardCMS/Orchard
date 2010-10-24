@@ -356,23 +356,15 @@ form.link button:hover {
 	margin:10px 0 4px 0;
     padding:4px;
 }
-div.message {
+messages div.message {
     clear:both;
 }
 span.message {
     display:block;
 	margin:4px 0 4px 4px;
 }
-.message a {
+.messages a {
     font-weight:bold;
-}
-.confirmation.message {
-	background:#D1F2A5; /* green */
-	border:1px solid #BCD994;
-}
-.warning.message {
-	background:#fdf5bc; /* yellow */
-	border:1px solid #ffea9b;
 }
 /* todo: (heskew) what else (other inputs) needs this? */
 .critical.message, .validation-summary-errors,
@@ -383,12 +375,20 @@ span.message {
 	background:#e68585; /* red */
 	color:#fff;
 }
-.info.message {
+.message-Information {
     background:#e6f1c9; /* green */
 	border:1px solid #cfe493;
 	color:#062232;
 }
-.debug.message {
+.message-Warning {
+	background:#fdf5bc; /* yellow */
+	border:1px solid #ffea9b;
+}
+.message-Error {
+	background:#e68585; /* green */
+	border:1px solid #990808;
+	color:#fff;
+}.debug.message {
     background:#eee;
 	border:1px dashed #D2D6C6;
 	color:#7a7a7a;
@@ -715,10 +715,8 @@ table .button {
 /* Content item lists
 ----------------------------------------------------------*/
 .contentItems {
+    border:1px solid #eaeaea;
     background:#FFF;
-    box-shadow:inset 0 1px 2px #878686;
-    -moz-box-shadow:inset 0 1px 3px #878686;
-    -webkit-box-shadow:inset 0 1px 2px #878686;
     clear:both;
     margin:1em 0;
     padding:0;
@@ -728,6 +726,9 @@ table .button {
     margin:0;
     overflow:hidden;
     padding:0 1.4em .8em;
+}
+.contentItems li.last {
+    border-bottom:none;
 }
 .contentItems.bulk-items li {
     padding-bottom:.6em;
@@ -755,7 +756,7 @@ table .button {
 #main .contentItems li:hover .ibutton.blog { background-position:-120px 0; }
 
 .contentItems .summary {
-    overflow:auto;
+    clear:both;
     padding:1.2em .4em .5em;
 }
 .contentItems .properties {
@@ -773,7 +774,6 @@ table .button {
 }
 .contentItems.bulk-items .primary {
     clear:both;
-    float:left;
     margin-top:0;
 }
 .contentItems .properties li {
@@ -786,9 +786,9 @@ table .button {
     margin:0 .2em -.2em;
 }
 .contentItems .related {
-    float:right;
-    font-size:1.4em;
+
     text-align:right;
+    font-size:1.4em;
 }
 .contentItems .commentcount {
     line-height:2em;
@@ -814,6 +814,9 @@ table .button {
     border-color:#666d51;
     border-style:solid;
 }
+.permalink .checkbox-and-label {
+    white-space:nowrap;
+}
 /* Settings */
 .settings fieldset {
     margin:.5em 0;
@@ -825,11 +828,6 @@ table .button {
 .settings legend {
     margin:0 0 -.4em 0;
 }
-/* todo: This style is the same as textMedium. Consolidate if possible */
-.settings input.text, .settings input.text-box {
-    width:26em;
-}
-
 
 /* Fields
 ----------------------------------------------------------*/

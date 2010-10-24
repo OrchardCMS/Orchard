@@ -1,35 +1,56 @@
 ﻿using System.Web.Mvc;
+using System.Web.Query.Dynamic;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.Indexing;
+using Orchard.Localization;
 using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
 using Orchard.Settings;
 using Orchard.Search.Models;
-using System.Linq;
-using System;
+using Orchard.UI.Notify;
 using System.Collections.Generic;
 using Orchard.Collections;
+using Orchard.Themes;
 
 namespace Orchard.Search.Controllers {
-    [ValidateInput(false)]
+    [ValidateInput(false), Themed]
     public class SearchController : Controller {
         private readonly ISearchService _searchService;
         private readonly IContentManager _contentManager;
 
-        public SearchController(ISearchService searchService, IContentManager contentManager) {
+        public SearchController(
+            IOrchardServices services,
+            ISearchService searchService, 
+            IContentManager contentManager) {
+
+             Services = services;
             _searchService = searchService;
             _contentManager = contentManager;
+
+            T = NullLocalizer.Instance;
         }
+
+        private IOrchardServices Services { get; set; }
+        public Localizer T { get; set; }
 
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ActionResult Index(string q, int page = 1, int pageSize = 10) {
-            var searchFields = CurrentSite.As<SearchSettingsPart>().Record.SearchedFields.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);
+            var searchFields = CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
-            var searchHits = _searchService.Query(q, page, pageSize, 
-                    CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
-                    searchFields, 
-                    searchHit => searchHit);
+            IPageOfItems<ISearchHit> searchHits;
+            
+            if (q.Trim().StartsWith("?") || q.Trim().StartsWith("*")) {
+                searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
+                Services.Notifier.Error(T("'*' or '?' not allowed as first character in WildcardQuery"));
+            } 
+            else {
+                searchHits = _searchService.Query(q, page, pageSize,
+                                                      CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
+                                                      searchFields,
+                                                      searchHit => searchHit);
+            }
 
             var searchResultViewModels = new List<SearchResultViewModel>();
 
@@ -42,7 +63,7 @@ namespace Orchard.Search.Controllers {
                 }
 
                 searchResultViewModels.Add(new SearchResultViewModel {
-                        Content = _contentManager.BuildDisplayModel(contentItem, "SummaryForSearch"),
+                        Content = _contentManager.BuildDisplay(contentItem, "SummaryForSearch"),
                         SearchHit = searchHit
                     });
             }
@@ -55,7 +76,7 @@ namespace Orchard.Search.Controllers {
 
             var searchViewModel = new SearchViewModel {
                 Query = q,
-                DefaultPageSize = 10, // <- yeah, I know :|
+                DefaultPageSize = 10, // TODO: sebastien <- yeah, I know :|
                 PageOfResults = pageOfItems
             };
 

@@ -4,8 +4,6 @@ using System.Web.Mvc;
 using Orchard.Data.Migration;
 using Orchard.Localization;
 using Orchard.Modules.ViewModels;
-using Orchard.Mvc.Results;
-using Orchard.Packaging;
 using Orchard.Packaging.Services;
 using Orchard.Reports.Services;
 using Orchard.UI.Notify;
@@ -85,7 +83,7 @@ namespace Orchard.Modules.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
-            var features = _moduleService.GetAvailableFeatures().ToList();
+            var features = _moduleService.GetAvailableFeatures().Where(f => !f.Descriptor.Extension.ExtensionType.Equals("Theme", StringComparison.OrdinalIgnoreCase)).ToList();
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
             return View(new FeaturesViewModel { Features = features, FeaturesThatNeedUpdate = featuresThatNeedUpdate });
@@ -97,7 +95,7 @@ namespace Orchard.Modules.Controllers {
                 return new HttpUnauthorizedResult();
 
             if (string.IsNullOrEmpty(id))
-                return new NotFoundResult();
+                return HttpNotFound();
 
             _moduleService.EnableFeatures(new[] { id }, force != null && (bool)force);
 
@@ -110,7 +108,7 @@ namespace Orchard.Modules.Controllers {
                 return new HttpUnauthorizedResult();
 
             if (string.IsNullOrEmpty(id))
-                return new NotFoundResult();
+                return HttpNotFound();
 
             _moduleService.DisableFeatures(new[] { id }, force != null && (bool)force);
 
@@ -123,7 +121,7 @@ namespace Orchard.Modules.Controllers {
                 return new HttpUnauthorizedResult();
 
             if (string.IsNullOrEmpty(id))
-                return new NotFoundResult();
+                return HttpNotFound();
 
             try {
                 _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");

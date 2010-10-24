@@ -1,0 +1,44 @@
+﻿@using System.Web.Routing;
+@{
+	Script.Require("jQuery");
+    Script.Include("admin.js");
+    IEnumerable<dynamic> firstLevelMenuItems = Model;
+}
+﻿<ul id="navigation" role="navigation">
+	@foreach(var firstLevelMenuItem in Model) {
+        IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
+
+        var firstOfTheSecond = secondLevelMenuItems.FirstOrDefault();
+        var sectionHeaderMarkup = firstOfTheSecond != null
+            ? Html.ActionLink((string)firstLevelMenuItem.Text, (string)firstOfTheSecond.RouteValues["action"], (RouteValueDictionary)firstOfTheSecond.RouteValues)
+            : new HtmlString(string.Format("<span>{0}</span>", Html.Encode(firstLevelMenuItem.Text)));
+
+        if (firstLevelMenuItem == firstLevelMenuItems.First()) {
+            firstLevelMenuItem.Classes.Add("first");
+        }
+        if (firstLevelMenuItem == firstLevelMenuItems.Last()) {
+            firstLevelMenuItem.Classes.Add("last");
+        }
+
+        var firstLevelTag = Tag(firstLevelMenuItem, "li");
+        @firstLevelTag.StartElement
+            <h3>@sectionHeaderMarkup</h3>
+            <ul class="menuItems">
+        	@foreach(var secondLevelMenuItem in secondLevelMenuItems) {
+                <li>
+                    <a href="@secondLevelMenuItem.Href">@secondLevelMenuItem.Text</a>
+                </li>
+            }
+            </ul>
+       @firstLevelTag.EndElement
+    }
+</ul>
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    (function ($) {
+        $("#navigation h3").expandoControl(function(controller) { return controller.next(); }, { key: "N42", path: "@Url.Content("~/")" });
+    })(jQuery);
+//]]>
+</script>
+}

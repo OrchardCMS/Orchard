@@ -12,10 +12,9 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Mvc.Results;
-using Orchard.Mvc.ViewModels;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Contents.Controllers {
@@ -29,22 +28,25 @@ namespace Orchard.Core.Contents.Controllers {
             IOrchardServices orchardServices,
             IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
-            ITransactionManager transactionManager) {
+            ITransactionManager transactionManager,
+            IShapeFactory shapeFactory) {
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _transactionManager = transactionManager;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
+            Shape = shapeFactory;
         }
 
+        dynamic Shape { get; set; }
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         public ActionResult List(ListContentsViewModel model) {
             if (model.ContainerId != null && _contentManager.GetLatest((int)model.ContainerId) == null)
-                    return new NotFoundResult();
+                return HttpNotFound();
 
             const int pageSize = 20;
             var skip = (Math.Max(model.Page ?? 0, 1) - 1) * pageSize;
@@ -54,7 +56,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
                 if (contentTypeDefinition == null)
-                    return new NotFoundResult();
+                    return HttpNotFound();
 
                 model.TypeDisplayName = !string.IsNullOrWhiteSpace(contentTypeDefinition.DisplayName)
                                             ? contentTypeDefinition.DisplayName
@@ -81,7 +83,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             //-- but resorting to
 
-            IEnumerable<ContentItem> contentItems = query.List();
+            var contentItems = query.List();
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
                     contentItems = contentItems.OrderByDescending(ci => ci.VersionRecord.Id);
@@ -102,15 +104,23 @@ namespace Orchard.Core.Contents.Controllers {
 
             //-- instead of this (having the ordering and skip/take after the query)
 
-            contentItems = contentItems.Skip(skip).Take(pageSize);
+            contentItems = contentItems.Skip(skip).Take(pageSize).ToList();
 
-            model.Entries = contentItems.Select(BuildEntry).ToList();
             model.Options.SelectedFilter = model.TypeName;
             model.Options.FilterOptions = GetCreatableTypes()
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Key);
 
-            return View("List", model);
+
+            var list = Shape.List();
+            list.AddRange(contentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+
+            var viewModel = Shape.ViewModel()
+                .ContentItems(list)
+                .Options(model.Options)
+                .TypeDisplayName(model.TypeDisplayName ?? "");
+
+            return View(viewModel);
         }
 
         private IEnumerable<ContentTypeDefinition> GetCreatableTypes() {
@@ -186,32 +196,10 @@ namespace Orchard.Core.Contents.Controllers {
             return RedirectToAction("List");
         }
 
-        private ListContentsViewModel.Entry BuildEntry(ContentItem contentItem) {
-            var entry = new ListContentsViewModel.Entry {
-                ContentItem = contentItem,
-                ContentItemMetadata = _contentManager.GetItemMetadata(contentItem),
-                ViewModel = _contentManager.BuildDisplayModel(contentItem, "SummaryAdmin"),
-            };
-            if (string.IsNullOrEmpty(entry.ContentItemMetadata.DisplayText)) {
-                entry.ContentItemMetadata.DisplayText = string.Format("[{0}#{1}]", contentItem.ContentType, contentItem.Id);
-            }
-            if (entry.ContentItemMetadata.EditorRouteValues == null) {
-                entry.ContentItemMetadata.EditorRouteValues = new RouteValueDictionary {
-                    {"Area", "Contents"},
-                    {"Controller", "Admin"},
-                    {"Action", "Edit"},
-                    {"Id", contentItem.Id}
-                };
-            }
-            return entry;
-        }
-
         ActionResult CreatableTypeList() {
-            var model = new ListContentTypesViewModel {
-                Types = GetCreatableTypes()
-            };
+            var viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes());
 
-            return View("CreatableTypeList", model);
+            return View("CreatableTypeList", viewModel);
         }
 
         public ActionResult Create(string id) {
@@ -223,35 +211,32 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
-            var model = new CreateItemViewModel {
-                Id = id,
-                Content = _contentManager.BuildEditorModel(contentItem)
-            };
-            PrepareEditorViewModel(model.Content);
-            return View("Create", model);
+            var model = _contentManager.BuildEditor(contentItem);
+            return View(model);
         }
 
 
-        [HttpPost]
-        public ActionResult Create(CreateItemViewModel model) {
-            var contentItem = _contentManager.New(model.Id);
+        [HttpPost, ActionName("Create")]
+        public ActionResult CreatePOST(string id) {
+            var contentItem = _contentManager.New(id);
 
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
             _contentManager.Create(contentItem, VersionOptions.Draft);
-            model.Content = _contentManager.UpdateEditorModel(contentItem, this);
+            var model = _contentManager.UpdateEditor(contentItem, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
-                PrepareEditorViewModel(model.Content);
-                return View("Create", model);
+                return View(model);
             }
 
             if (!contentItem.Has<IPublishingControlAspect>())
                 _contentManager.Publish(contentItem);
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(model.Content.Item.TypeDefinition.DisplayName) ? T("Your content has been created.") : T("Your {0} has been created.", model.Content.Item.TypeDefinition.DisplayName));
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                ? T("Your content has been created.")
+                : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }
 
@@ -259,35 +244,29 @@ namespace Orchard.Core.Contents.Controllers {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             if (contentItem == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Cannot edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
 
-            var model = new EditItemViewModel {
-                Id = id,
-                Content = _contentManager.BuildEditorModel(contentItem)
-            };
+            var model = _contentManager.BuildEditor(contentItem);
 
-            PrepareEditorViewModel(model.Content);
-
-            return View("Edit", model);
+            return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Edit(EditItemViewModel model) {
-            var contentItem = _contentManager.Get(model.Id, VersionOptions.DraftRequired);
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditPOST(int id, string returnUrl) {
+            var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
             if (contentItem == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Couldn't edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
-            model.Content = _contentManager.UpdateEditorModel(contentItem, this);
+            var model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
-                PrepareEditorViewModel(model.Content);
                 return View("Edit", model);
             }
 
@@ -295,20 +274,27 @@ namespace Orchard.Core.Contents.Controllers {
             if (!contentItem.Has<IPublishingControlAspect>())
                 _contentManager.Publish(contentItem);
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(model.Content.Item.TypeDefinition.DisplayName) ? T("Your content has been saved.") : T("Your {0} has been saved.", model.Content.Item.TypeDefinition.DisplayName));
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                ? T("Your content has been saved.")
+                : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
+
+            if (!String.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }
 
-        [HttpPost, ActionName("Remove")]
-        public ActionResult RemovePOST(int id, string returnUrl) {
+        public ActionResult Remove(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
-            if (!Services.Authorizer.Authorize(Permissions.DeleteOthersContent, contentItem, T("Couldn't remove content")))
+            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, contentItem, T("Couldn't remove content")))
                 return new HttpUnauthorizedResult();
 
             if (contentItem != null) {
                 _contentManager.Remove(contentItem);
-                Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been removed.") : T("That {0} has been removed.", contentItem.TypeDefinition.DisplayName));
+                Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
+                    ? T("That content has been removed.")
+                    : T("That {0} has been removed.", contentItem.TypeDefinition.DisplayName));
             }
 
             if (!String.IsNullOrEmpty(returnUrl))
@@ -321,7 +307,7 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Publish(int id, string returnUrl) {
             var contentItem = _contentManager.GetLatest(id);
             if (contentItem == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't publish content")))
                 return new HttpUnauthorizedResult();
@@ -340,7 +326,7 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Unpublish(int id, string returnUrl) {
             var contentItem = _contentManager.GetLatest(id);
             if (contentItem == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't unpublish content")))
                 return new HttpUnauthorizedResult();
@@ -353,12 +339,6 @@ namespace Orchard.Core.Contents.Controllers {
                 return Redirect(returnUrl);
 
             return RedirectToAction("List");
-        }
-
-        private static void PrepareEditorViewModel(ContentItemViewModel itemViewModel) {
-            if (string.IsNullOrEmpty(itemViewModel.TemplateName)) {
-                itemViewModel.TemplateName = "Items/Contents.Item";
-            }
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

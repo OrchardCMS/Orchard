@@ -10,8 +10,13 @@ namespace Orchard.Mvc.ViewEngines {
         public IEnumerable<string> VirtualPaths { get; set; }
     }
 
-    public interface IViewEngineProvider : IDependency {
+    public interface IViewEngineProvider : ISingletonDependency {
         IViewEngine CreateThemeViewEngine(CreateThemeViewEngineParams parameters);
         IViewEngine CreateModulesViewEngine(CreateModulesViewEngineParams parameters);
+
+        /// <summary>
+        /// Produce a view engine configured to resolve only fully qualified {viewName} parameters
+        /// </summary>
+        IViewEngine CreateBareViewEngine();
     }
 }

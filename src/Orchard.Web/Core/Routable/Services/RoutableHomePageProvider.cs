@@ -1,10 +1,8 @@
 ﻿using System.Web.Mvc;
 using JetBrains.Annotations;
-using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Routable.Models;
-using Orchard.Core.Routable.ViewModels;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.Results;
 using Orchard.Services;
 using Orchard.ContentManagement;
 
@@ -14,12 +12,17 @@ namespace Orchard.Core.Routable.Services {
         private readonly IContentManager _contentManager;
         public const string Name = "RoutableHomePageProvider";
 
-        public RoutableHomePageProvider(IOrchardServices services, IContentManager contentManager) {
+        public RoutableHomePageProvider(
+            IOrchardServices services, 
+            IContentManager contentManager,
+            IShapeFactory shapeFactory) {
             _contentManager = contentManager;
             Services = services;
             T = NullLocalizer.Instance;
+            Shape = shapeFactory;
         }
 
+        dynamic Shape { get; set; }
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
 
@@ -34,15 +37,13 @@ namespace Orchard.Core.Routable.Services {
         public ActionResult GetHomePage(int itemId) {
             var contentItem = _contentManager.Get(itemId, VersionOptions.Published);
             if (contentItem == null || !contentItem.Is<RoutePart>())
-                return new NotFoundResult();
+                return new HttpNotFoundResult();
 
-            var model = new RoutableDisplayViewModel {
-                Routable = _contentManager.BuildDisplayModel<IRoutableAspect>(contentItem.As<RoutePart>(), "Detail")
-            };
+            var model = _contentManager.BuildDisplay(contentItem);
 
             return new ViewResult {
-                ViewName = "~/Core/Routable/Views/Item/Display.ascx",
-                ViewData = new ViewDataDictionary<RoutableDisplayViewModel>(model)
+                ViewName = "Routable.HomePage",
+                ViewData = new ViewDataDictionary<dynamic>(model)
             };
         }
     }

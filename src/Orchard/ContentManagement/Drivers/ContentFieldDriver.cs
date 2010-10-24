@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
+using Orchard.DisplayManagement;
 
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new() {
         protected virtual string Prefix { get { return ""; } }
-        protected virtual string Zone { get { return "body"; } }
+        protected virtual string Zone { get { return "Content"; } }
 
-        DriverResult IContentFieldDriver.BuildDisplayModel(BuildDisplayModelContext context) {
-            return Process(context.ContentItem, (part, field) => Display(part, field, context.DisplayType));
+        DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context) {
+            return Process(context.ContentItem, (part, field) => Display(part, field, context.DisplayType, context.New));
         }
 
-        DriverResult IContentFieldDriver.BuildEditorModel(BuildEditorModelContext context) {
-            return Process(context.ContentItem, Editor);
+        DriverResult IContentFieldDriver.BuildEditorShape(BuildEditorContext context) {
+            return Process(context.ContentItem, (part, field) => Editor(part, field, context.New));
         }
 
-        DriverResult IContentFieldDriver.UpdateEditorModel(UpdateEditorModelContext context) {
-            return Process(context.ContentItem, (part, field) => Editor(part, field, context.Updater));
+        DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
+            return Process(context.ContentItem, (part, field) => Editor(part, field, context.Updater, context.New));
         }
 
         DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort) {
@@ -43,19 +44,44 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
 
-        protected virtual DriverResult Display(ContentPart part, TField field, string displayType) { return null; }
-        protected virtual DriverResult Editor(ContentPart part, TField field) { return null; }
-        protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater) { return null; }
+        protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return null; }
+        protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) { return null; }
+        protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) { return null; }
 
+        public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
+            return ContentShapeImplementation(shapeType, null, ctx => factory());
+        }
 
+        public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic> factory) {
+            return ContentShapeImplementation(shapeType, defaultLocation, ctx => factory());
+        }
+
+        public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory) {
+            return ContentShapeImplementation(shapeType, null, ctx=>factory(CreateShape(ctx, shapeType)));
+        }
+
+        public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic, dynamic> factory) {
+            return ContentShapeImplementation(shapeType, defaultLocation, factory);
+        }
+
+        private ContentShapeResult ContentShapeImplementation(string shapeType, string defaultLocation, Func<BuildShapeContext, object> shapeBuilder) {
+            return new ContentShapeResult(shapeType, Prefix, shapeBuilder).Location(defaultLocation);
+        }
+
+        private object CreateShape(BuildShapeContext context, string shapeType) {
+            IShapeFactory shapeFactory = context.New;
+            return shapeFactory.Create(shapeType);
+        }
+
+        [Obsolete]
         public ContentTemplateResult ContentFieldTemplate(object model) {
             return new ContentTemplateResult(model, null, Prefix).Location(Zone);
         }
-
+        [Obsolete]
         public ContentTemplateResult ContentFieldTemplate(object model, string template) {
             return new ContentTemplateResult(model, template, Prefix).Location(Zone);
         }
-
+        [Obsolete]
         public ContentTemplateResult ContentFieldTemplate(object model, string template, string prefix) {
             return new ContentTemplateResult(model, template, prefix).Location(Zone);
         }
@@ -64,4 +90,4 @@ namespace Orchard.ContentManagement.Drivers {
             return new CombinedResult(results);
         }
     }
-}
+} 

@@ -11,6 +11,7 @@ using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Mvc;
 using Orchard.Mvc.Routes;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
@@ -35,19 +36,23 @@ namespace Orchard.Tests.Mvc.Routes {
             rootBuilder.Register(ctx => _routes);
             rootBuilder.RegisterType<ShellRoute>().InstancePerDependency();
             rootBuilder.RegisterType<RunningShellTable>().As<IRunningShellTable>().SingleInstance();
+            rootBuilder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
+            rootBuilder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>();
 
             _rootContainer = rootBuilder.Build();
 
             _containerA = _rootContainer.BeginLifetimeScope(
+                "shell",
                 builder => {
                     builder.Register(ctx => _settingsA);
-                    builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
+                    builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerMatchingLifetimeScope("shell");
                 });
 
             _containerB = _rootContainer.BeginLifetimeScope(
+                "shell",
                 builder => {
                     builder.Register(ctx => _settingsB);
-                    builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
+                    builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerMatchingLifetimeScope("shell");
                 });
         }
 
@@ -118,7 +123,7 @@ namespace Orchard.Tests.Mvc.Routes {
             _containerA.Resolve<IRoutePublisher>().Publish(
                 new[] { new RouteDescriptor { Priority = 0, Route = routeFoo } });
             _rootContainer.Resolve<IRunningShellTable>().Add(_settingsA);
-
+            
             _settingsB.RequestUrlHost = "b.example.com";
             _containerB.Resolve<IRoutePublisher>().Publish(
                 new[] { new RouteDescriptor { Priority = 0, Route = routeFoo } });
@@ -131,18 +136,23 @@ namespace Orchard.Tests.Mvc.Routes {
             var httpContextA = new StubHttpContext("~/foo", "a.example.com");
             var routeDataA = _routes.GetRouteData(httpContextA);
             Assert.That(routeDataA, Is.Not.Null);
-            Assert.That(routeDataA.DataTokens.ContainsKey("IContainerProvider"), Is.True);
-            var routeContainerProviderA = (IContainerProvider)routeDataA.DataTokens["IContainerProvider"];
-            Assert.That(routeContainerProviderA.ApplicationContainer.Resolve<IRoutePublisher>(), Is.SameAs(_containerA.Resolve<IRoutePublisher>()));
-            Assert.That(routeContainerProviderA.ApplicationContainer.Resolve<IRoutePublisher>(), Is.Not.SameAs(_containerB.Resolve<IRoutePublisher>()));
+            Assert.That(routeDataA.DataTokens.ContainsKey("IWorkContextAccessor"), Is.True);
+            var workContextAccessorA = (IWorkContextAccessor)routeDataA.DataTokens["IWorkContextAccessor"];
+            var workContextScopeA = workContextAccessorA.CreateWorkContextScope(httpContextA);
+
+            Assert.That(workContextScopeA.Resolve<IRoutePublisher>(), Is.SameAs(_containerA.Resolve<IRoutePublisher>()));
+            Assert.That(workContextScopeA.Resolve<IRoutePublisher>(), Is.Not.SameAs(_containerB.Resolve<IRoutePublisher>()));
 
             var httpContextB = new StubHttpContext("~/foo", "b.example.com");
             var routeDataB = _routes.GetRouteData(httpContextB);
             Assert.That(routeDataB, Is.Not.Null);
-            Assert.That(routeDataB.DataTokens.ContainsKey("IContainerProvider"), Is.True);
-            var routeContainerProviderB = (IContainerProvider)routeDataB.DataTokens["IContainerProvider"];
-            Assert.That(routeContainerProviderB.ApplicationContainer.Resolve<IRoutePublisher>(), Is.SameAs(_containerB.Resolve<IRoutePublisher>()));
-            Assert.That(routeContainerProviderB.ApplicationContainer.Resolve<IRoutePublisher>(), Is.Not.SameAs(_containerA.Resolve<IRoutePublisher>()));
+            Assert.That(routeDataB.DataTokens.ContainsKey("IWorkContextAccessor"), Is.True);
+            var workContextAccessorB = (IWorkContextAccessor)routeDataB.DataTokens["IWorkContextAccessor"];
+            var workContextScopeB = workContextAccessorB.CreateWorkContextScope(httpContextB);
+
+            Assert.That(workContextScopeB.Resolve<IRoutePublisher>(), Is.SameAs(_containerB.Resolve<IRoutePublisher>()));
+            Assert.That(workContextScopeB.Resolve<IRoutePublisher>(), Is.Not.SameAs(_containerA.Resolve<IRoutePublisher>()));
+
         }
 
         [Test]

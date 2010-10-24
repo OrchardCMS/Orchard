@@ -1,11 +1,11 @@
-﻿name: Dashboard
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.5.0
-orchardversion: 0.5.0
-description: The dashboard module is providing the dashboard screen of the admininstration UI of the application.
-features:
+﻿Name: Dashboard
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.8.0
+OrchardVersion: 0.8.0
+Description: The dashboard module is providing the dashboard screen of the admininstration UI of the application.
+Features:
     Dashboard:
         Description: Standard admin dashboard.
         Category: Core

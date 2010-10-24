@@ -6,7 +6,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0DF8F426-9F30-4918-8F64-A5B40BA12D10}</ProjectGuid>
-    <ProjectTypeGuids>{F85E285D-A4E0-4152-9332-AB1D724D3325};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Azure.Web</RootNamespace>
@@ -44,7 +44,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Configuration, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+    <Reference Include="Autofac.Configuration, Version=2.2.4.900, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\autofac\Autofac.Configuration.dll</HintPath>
     </Reference>
@@ -53,17 +53,6 @@
     </Reference>
     <Reference Include="Autofac.Integration.Web.Mvc">
       <HintPath>..\..\..\lib\autofac\Autofac.Integration.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp">
-      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -102,9 +91,12 @@
     <Reference Include="System.Web.Extensions">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\..\..\lib\aspnetmvc\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 2\\Assemblies\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Drawing">
@@ -116,8 +108,17 @@
     <Reference Include="System.Web.Abstractions">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\..\..\lib\aspnetmvc\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages">
+      <HintPath>..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor">
+      <HintPath>..\..\..\lib\aspnetmvc\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml">
       <Private>False</Private>
@@ -137,8 +138,15 @@
     <Reference Include="System.Xml.Linq">
       <Private>False</Private>
     </Reference>
+    <Reference Include="WebMatrix.Data">
+      <HintPath>..\..\..\lib\aspnetmvc\WebMatrix.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -146,7 +154,7 @@
     <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Error.aspx" />
+    <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
   </ItemGroup>
   <ItemGroup>
@@ -167,17 +175,21 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Futures.Widgets\Futures.Widgets.csproj">
-      <Project>{E65E5633-C0FF-453C-A906-481C14F969D6}</Project>
-      <Name>Futures.Widgets</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Lucene\Lucene.csproj">
       <Project>{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}</Project>
       <Name>Lucene</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.ArchiveLater\Orchard.ArchiveLater.csproj">
+      <Project>{1C981BB3-26F7-494C-9005-CC27A5144233}</Project>
+      <Name>Orchard.ArchiveLater</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Blogs\Orchard.Blogs.csproj">
       <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
       <Name>Orchard.Blogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.CodeGeneration\Orchard.CodeGeneration.csproj">
+      <Project>{C0C45321-B51D-4D8D-9B7B-AA4C2E0B2962}</Project>
+      <Name>Orchard.CodeGeneration</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj">
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
@@ -187,17 +199,29 @@
       <Project>{0E7646E8-FE8F-43C1-8799-D97860925EC4}</Project>
       <Name>Orchard.ContentTypes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.DevTools\Orchard.DevTools.csproj">
-      <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
-      <Name>Orchard.DevTools</Name>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Email\Orchard.Email.csproj">
+      <Project>{05660F47-D649-48BD-9DED-DF4E01E7CFF9}</Project>
+      <Name>Orchard.Email</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Experimental\Orchard.Experimental.csproj">
+      <Project>{AB3C207C-0126-4143-8D62-1119DF80D366}</Project>
+      <Name>Orchard.Experimental</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Indexing\Orchard.Indexing.csproj">
       <Project>{EA2B9121-EF54-40A6-A53E-6593C86EE696}</Project>
       <Name>Orchard.Indexing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.jQuery\Orchard.jQuery.csproj">
+      <Project>{8F116B06-1C0E-4E4C-9A0A-D2FAB851E768}</Project>
+      <Name>Orchard.jQuery</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Migrations\Orchard.Migrations.csproj">
+      <Project>{EA4F1DA7-F2AB-4384-9AA4-9B756E2026B1}</Project>
+      <Name>Orchard.Migrations</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Modules\Orchard.Modules.csproj">
       <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>
@@ -214,10 +238,6 @@
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Sandbox\Orchard.Sandbox.csproj">
-      <Project>{17C44253-65A2-4597-98C7-16EE576824B6}</Project>
-      <Name>Orchard.Sandbox</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Search\Orchard.Search.csproj">
       <Project>{4BE4EB01-AC56-4048-924E-2CA77F509ABA}</Project>
@@ -239,6 +259,10 @@
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Widgets\Orchard.Widgets.csproj">
+      <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>
+      <Name>Orchard.Widgets</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\TinyMce\TinyMce.csproj">
       <Project>{954CA994-D204-468B-9D69-51F6AD3E1C29}</Project>
       <Name>TinyMce</Name>
@@ -248,12 +272,17 @@
       <Name>Orchard.Framework</Name>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
+    <ProjectReference Include="..\..\Tools\Orchard\Orchard.csproj">
+      <Project>{33B1BC8D-E292-4972-A363-22056B207156}</Project>
+      <Name>Orchard</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Azure.csproj">
       <Project>{2505AA84-65A6-43D0-9C27-4F44FD576284}</Project>
       <Name>Orchard.Azure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Refresh.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

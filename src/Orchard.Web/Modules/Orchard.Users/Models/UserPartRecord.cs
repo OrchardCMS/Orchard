@@ -11,5 +11,9 @@ namespace Orchard.Users.Models {
         public virtual MembershipPasswordFormat PasswordFormat { get; set; }
         public virtual string HashAlgorithm { get; set; }
         public virtual string PasswordSalt { get; set; }
+
+        public virtual UserStatus RegistrationStatus { get; set; }
+        public virtual UserStatus EmailStatus { get; set; }
+        public virtual string EmailChallengeToken { get; set; }
     }
 }

@@ -149,7 +149,7 @@ namespace Orchard.Core.Common.Handlers {
         }
 
 
-        //private void GetEditor(BuildEditorModelContext context, CommonPart instance) {
+        //private void GetEditor(BuildEditorContext context, CommonPart instance) {
         //    var currentUser = _authenticationService.GetAuthenticatedUser();
         //    if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, instance)) {
         //        return;
@@ -162,7 +162,7 @@ namespace Orchard.Core.Common.Handlers {
         //}
 
 
-        //private void UpdateEditor(UpdateEditorModelContext context, CommonPart instance) {
+        //private void UpdateEditor(UpdateEditorContext context, CommonPart instance) {
         //    // this event is hooked so the modified timestamp is changed when an edit-post occurs.
         //    // kind of a loose rule of thumb. may not be sufficient
         //    instance.ModifiedUtc = _clock.UtcNow;

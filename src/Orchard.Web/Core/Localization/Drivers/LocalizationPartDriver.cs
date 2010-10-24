@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Localization.Models;
 using Orchard.Core.Localization.Services;
 using Orchard.Core.Localization.ViewModels;
@@ -22,15 +20,21 @@ namespace Orchard.Core.Localization.Drivers {
             _localizationService = localizationService;
         }
 
-        protected override DriverResult Display(LocalizationPart part, string displayType) {
-            var model = new ContentLocalizationsViewModel(part) {
-                Localizations = GetDisplayLocalizations(part)
-            };
-
-            return ContentPartTemplate(model, "Parts/Localization.ContentTranslations", TemplatePrefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(part.GetLocation(displayType));
+        protected override DriverResult Display(LocalizationPart part, string displayType, dynamic shapeHelper) {
+            var masterId = part.MasterContentItem != null
+                               ? part.MasterContentItem.Id
+                               : part.Id;
+            return Combined(
+                ContentShape("Parts_Localization_ContentTranslations",
+                             () => shapeHelper.Parts_Localization_ContentTranslations(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part))),
+                ContentShape("Parts_Localization_ContentTranslations_Summary",
+                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part))),
+                ContentShape("Parts_Localization_ContentTranslations_SummaryAdmin",
+                             () => shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part)))
+                );
         }
 
-        protected override DriverResult Editor(LocalizationPart part) {
+        protected override DriverResult Editor(LocalizationPart part, dynamic shapeHelper) {
             var localizations = GetEditorLocalizations(part).ToList();
             var model = new EditLocalizationViewModel {
                 SelectedCulture = part.Culture != null ? part.Culture.Culture : null,
@@ -40,16 +44,17 @@ namespace Orchard.Core.Localization.Drivers {
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
 
-            return ContentPartTemplate(model, "Parts/Localization.Translation", TemplatePrefix).Location(part.GetLocation("Editor"));
+            return ContentShape("Parts_Localization_ContentTranslations_Edit",
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Localization.ContentTranslations.Edit", Model: model, Prefix: TemplatePrefix));
         }
 
-        protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new EditLocalizationViewModel();
             if (updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null)) {
                 _localizationService.SetContentCulture(part, model.SelectedCulture);
             }
 
-            return Editor(part);
+            return Editor(part, shapeHelper);
         }
 
         private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part) {

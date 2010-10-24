@@ -1,0 +1,16 @@
+@using Orchard.UI.Resources;
+@{
+    Script.Require("jQuery");
+    Script.Require("ShapesBase");
+    Style.Include("site.css");
+    RegisterLink(new LinkEntry { Condition = "lte IE 6", Rel = "stylesheet", Type="text/css", Href = Href("../Styles/ie6.css")}.AddAttribute("media", "screen, projection"));
+}
+<div id="header">
+    <div id="branding">
+        <h1>@T("Welcome to Orchard")</h1>
+    </div>
+</div>
+@Display(Model.Messages)
+<div id="main">
+@Display(Model.Content)
+</div>

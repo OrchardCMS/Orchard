@@ -35,7 +35,7 @@ namespace Orchard.Media.Services {
                     Name = folder.GetName(),
                     Size = folder.GetSize(),
                     LastUpdated = folder.GetLastUpdated(),
-                    MediaPath = folder.GetPath(),
+                    MediaPath = folder.GetPath()
                 };
                 mediaFolders.Add(mediaFolder);
             }

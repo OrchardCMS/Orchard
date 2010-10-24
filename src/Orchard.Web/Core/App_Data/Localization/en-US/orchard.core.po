@@ -93,16 +93,6 @@ msgstr "Invalid serial number for shell descriptor"
 msgid "Manage Settings"
 msgstr "Manage Settings"
 
-#: ~/Modules/Futures.Widgets/Controllers/AdminController.cs
-#| msgid : "Designer notes not found."
-msgid "Designer notes not found."
-msgstr "Designer notes not found."
-
-#: ~/Modules/Futures.Widgets/Views/Admin/Edit.ascx
-#| msgid : "Edit Widget"
-msgid "Edit Widget"
-msgstr "Edit Widget"
-
 #: ~/Modules/Orchard.Blogs/Controllers/BlogAdminController.cs
 #| msgid : "Not allowed to create blogs"
 msgid "Not allowed to create blogs"
@@ -508,77 +498,77 @@ msgstr "Allow new comments"
 msgid "Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue."
 msgstr "Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue."
 
-#: ~/Modules/Orchard.DevTools/Controllers/HomeController.cs
+#: ~/Modules/Orchard.Experimental/Controllers/HomeController.cs
 #| msgid : "Notifier works without BaseViewModel"
 msgid "Notifier works without BaseViewModel"
 msgstr "Notifier works without BaseViewModel"
 
-#: ~/Modules/Orchard.DevTools/Views/Content/Details.aspx
+#: ~/Modules/Orchard.Experimental/Views/Content/Details.aspx
 #| msgid : "{0} Content Type"
 msgid "{0} Content Type"
 msgstr "{0} Content Type"
 
-#: ~/Modules/Orchard.DevTools/Views/Content/Details.aspx
+#: ~/Modules/Orchard.Experimental/Views/Content/Details.aspx
 #| msgid : "Content"
 msgid "Content"
 msgstr "Content"
 
-#: ~/Modules/Orchard.DevTools/Views/Content/Details.aspx
+#: ~/Modules/Orchard.Experimental/Views/Content/Details.aspx
 #| msgid : "view"
 msgid "view"
 msgstr "view"
 
-#: ~/Modules/Orchard.DevTools/Views/Content/Details.aspx
+#: ~/Modules/Orchard.Experimental/Views/Content/Details.aspx
 #| msgid : "edit"
 msgid "edit"
 msgstr "edit"
 
-#: ~/Modules/Orchard.DevTools/Views/Content/Details.aspx
+#: ~/Modules/Orchard.Experimental/Views/Content/Details.aspx
 #| msgid : "{0} #{1} v{2}"
 msgid "{0} #{1} v{2}"
 msgstr "{0} #{1} v{2}"
 
-#: ~/Modules/Orchard.DevTools/Views/Content/Index.aspx
+#: ~/Modules/Orchard.Experimental/Views/Content/Index.aspx
 #| msgid : "Content"
 msgid "Content"
 msgstr "Content"
 
-#: ~/Modules/Orchard.DevTools/Views/Content/Index.aspx
+#: ~/Modules/Orchard.Experimental/Views/Content/Index.aspx
 #| msgid : "{0}: {1}"
 msgid "{0}: {1}"
 msgstr "{0}: {1}"
 
-#: ~/Modules/Orchard.DevTools/Views/Content/Index.aspx
+#: ~/Modules/Orchard.Experimental/Views/Content/Index.aspx
 #| msgid : "view"
 msgid "view"
 msgstr "view"
 
-#: ~/Modules/Orchard.DevTools/Views/Content/Index.aspx
+#: ~/Modules/Orchard.Experimental/Views/Content/Index.aspx
 #| msgid : "edit"
 msgid "edit"
 msgstr "edit"
 
-#: ~/Modules/Orchard.DevTools/Views/DisplayTemplates/Parts/DevTools.ShowDebugLink.ascx
+#: ~/Modules/Orchard.Experimental/Views/DisplayTemplates/Parts/Experimental.ShowDebugLink.ascx
 #| msgid : "{0} #{1} v{2}"
 msgid "{0} #{1} v{2}"
 msgstr "{0} #{1} v{2}"
 
-#: ~/Modules/Orchard.DevTools/Views/EditorTemplates/Parts/DevTools.ShowDebugLink.ascx
+#: ~/Modules/Orchard.Experimental/Views/EditorTemplates/Parts/Experimental.ShowDebugLink.ascx
 #| msgid : "{0} #{1} v{2}"
 msgid "{0} #{1} v{2}"
 msgstr "{0} #{1} v{2}"
 
-#: ~/Modules/Orchard.DevTools/Views/Home/Index.aspx
+#: ~/Modules/Orchard.Experimental/Views/Home/Index.aspx
 #| msgid : "Dev Tools"
 msgid "Dev Tools"
 msgstr "Dev Tools"
 
-#: ~/Modules/Orchard.DevTools/Views/Home/Index.aspx
+#: ~/Modules/Orchard.Experimental/Views/Home/Index.aspx
 #| msgid : "Contents"
 msgid "Contents"
 msgstr "Contents"
 
-#: ~/Modules/Orchard.DevTools/Views/Home/Index.aspx
+#: ~/Modules/Orchard.Experimental/Views/Home/Index.aspx
 #| msgid : "Test Unauthorized Request"
 msgid "Test Unauthorized Request"
 msgstr "Test Unauthorized Request"
@@ -1952,6 +1942,26 @@ msgstr "Edit"
 #| msgid : "Remove"
 msgid "Remove"
 msgstr "Remove"
+
+#: ~/Modules/Orchard.Widgets/Views/Admin/Index.cshtml
+#| msgid : "Manage Layers"
+msgid "Manage Layers"
+msgstr "Manage Layers"
+
+#: ~/Modules/Orchard.Widgets/Views/Admin/Index.cshtml
+#| msgid : "Add a new layer"
+msgid "Add a new layer"
+msgstr "Add a new layer"
+
+#: ~/Modules/Orchard.Widgets/AdminMenu.cs
+#| msgid : "Manage Widgets"
+msgid "Manage Widgets"
+msgstr "Manage Widgets"
+
+#: ~/Modules/Orchard.Widgets/AdminMenu.cs
+#| msgid : "Widgets"
+msgid "Widgets"
+msgstr "Widgets"
 
 #: ~/Themes/Classic/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
 #| msgid : "nobody(?)"

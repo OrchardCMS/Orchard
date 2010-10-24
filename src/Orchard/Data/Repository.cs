@@ -80,22 +80,6 @@ namespace Orchard.Data {
                                             int count) {
             return Fetch(predicate, order, skip, count).ToReadOnlyCollection();
         }
-        void IRepository<T>.Transaction(Action action) {
-            Transaction(action);
-        }
-
-        public virtual void Transaction(Action action) {
-            using (var transaction = Session.BeginTransaction()) {
-                try {
-                    action();
-                    transaction.Commit();
-                }
-                catch {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-        }
 
         #endregion
 

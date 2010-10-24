@@ -61,7 +61,7 @@ namespace Orchard.Environment.ShellBuilders {
             var shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
 
             ShellDescriptor currentDescriptor;
-            using (var standaloneEnvironment = new StandaloneEnvironment(shellScope)) {
+            using (var standaloneEnvironment = shellScope.CreateWorkContextScope()) {
                 var shellDescriptorManager = standaloneEnvironment.Resolve<IShellDescriptorManager>();
                 currentDescriptor = shellDescriptorManager.GetShellDescriptor();
             }
@@ -99,7 +99,11 @@ namespace Orchard.Environment.ShellBuilders {
 
             var descriptor = new ShellDescriptor {
                 SerialNumber = -1,
-                Features = new[] { new ShellFeature { Name = "Orchard.Setup" } },
+                Features = new[] {
+                    new ShellFeature { Name = "Orchard.Setup" },
+                    new ShellFeature { Name = "Shapes" },
+                    new ShellFeature { Name = "Orchard.jQuery" },
+                },
             };
 
             var blueprint = _compositionStrategy.Compose(settings, descriptor);

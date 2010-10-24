@@ -45,7 +45,7 @@ namespace PackageIndexReferenceImplementation.Controllers {
             var password = Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Request.Headers["Password"]));
 
             if ( !FormsAuthentication.Authenticate(user, password) ) {
-                throw new AuthenticationException("This credentials are not valid fo this action.");
+                throw new AuthenticationException("This credentials are not valid for this action.");
             }
 
             var utcNowDateString = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd");
@@ -74,7 +74,8 @@ namespace PackageIndexReferenceImplementation.Controllers {
         }
 
         private string UpdateSyndicationItem(PackageProperties packageProperties, SyndicationItem item) {
-            if (!string.IsNullOrEmpty(packageProperties.Category)) {
+
+            if (!string.IsNullOrEmpty(packageProperties.Creator)) {
                 item.Authors.Clear();
                 //parse package.PackageProperties.Creator into email-style authors
                 item.Authors.Add(new SyndicationPerson { Name = packageProperties.Creator });
@@ -83,6 +84,11 @@ namespace PackageIndexReferenceImplementation.Controllers {
             if (!string.IsNullOrEmpty(packageProperties.Category)) {
                 item.Categories.Clear();
                 item.Categories.Add(new SyndicationCategory(packageProperties.Category));
+            }
+
+            var contentType = packageProperties.ContentType;
+            if (!item.Categories.Any(c => c.Name == contentType)) {
+                item.Categories.Add(new SyndicationCategory(contentType));
             }
 
             if (packageProperties.Modified.HasValue) {
@@ -97,8 +103,8 @@ namespace PackageIndexReferenceImplementation.Controllers {
                 item.Summary = new TextSyndicationContent(packageProperties.Description);
             }
 
-            if (!string.IsNullOrEmpty(packageProperties.Title)) {
-                item.Title = new TextSyndicationContent(packageProperties.Title);
+            if ( !string.IsNullOrEmpty(packageProperties.Version) ) {
+                item.ElementExtensions.Add("Version", "http://orchardproject.net", packageProperties.Version);
             }
 
             var mediaIdentifier = packageProperties.Identifier + "-" + packageProperties.Version + ".zip";
@@ -106,6 +112,11 @@ namespace PackageIndexReferenceImplementation.Controllers {
             var mediaUrl = Url.Action("Resource", "Media", new RouteValueDictionary { { "Id", mediaIdentifier }, { "ContentType", "application/x-package" } });
             item.Links.Clear();
             item.Links.Add(new SyndicationLink(new Uri(HostBaseUri(), new Uri(mediaUrl, UriKind.Relative))));
+
+            if (contentType == "Orchard Theme") {
+                var previewUrl = Url.Action("PreviewTheme", "Media", new RouteValueDictionary { { "Id", mediaIdentifier }, { "ContentType", "application/x-package" } });
+                item.Links.Add(new SyndicationLink(new Uri(HostBaseUri(), new Uri(previewUrl, UriKind.Relative)), "thumbnail", null, null, 0));
+            }
             return mediaIdentifier;
         }
 

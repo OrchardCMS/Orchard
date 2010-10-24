@@ -8,7 +8,7 @@
 .content-localization .culture-selected {
     margin-bottom:.5em;
 }
-.content-localization .content-localizations {
+.culture-selection .content-localizations li {
     font-size:.9em;
 }
 .content-localization .content-localizations>* {

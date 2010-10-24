@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -22,6 +23,7 @@ namespace MSBuild.Orchard.Tasks {
             var context = new Context(this);
             if (context.LoadProject() &&
                 context.ChangeProjectReferencesToFileReferences() &&
+                context.ChangeLibraryReferencesToFileReferences() &&
                 context.FindExtraFiles() &&
                 context.AddContentFiles() &&
                 context.SaveProject()) {
@@ -88,16 +90,69 @@ namespace MSBuild.Orchard.Tasks {
                 }
 
                 foreach (var projectReferenceName in projectReferences.Elements(Name)) {
+                    string oldHintPath = (projectReferenceName.Parent.Element(HintPath) ?? new XElement(HintPath)).Value;
+                    string newHintPath = string.Format("bin\\{0}.dll", (string)projectReferenceName);
                     var reference = new XElement(
                         Reference,
                         new XAttribute(Include, (string)projectReferenceName),
                         new XElement(SpecificVersion, "False"),
-                        new XElement(HintPath, string.Format("bin\\{0}.dll", (string)projectReferenceName)));
+                        new XElement(HintPath, newHintPath));
                     referenceItemGroup.Add(reference);
+
+                    _task.Log.LogMessage("Project reference \"{0}\": HintPath changed from \"{1}\" to \"{2}\"",
+                        (string)projectReferenceName, oldHintPath, newHintPath);
                 }
 
                 foreach (var projectReference in projectReferences.ToArray()) {
                     projectReference.Remove();
+                }
+
+                return true;
+            }
+
+            public bool ChangeLibraryReferencesToFileReferences() {
+                var libraryReferences = _document
+                    .Elements(Project)
+                    .Elements(ItemGroup)
+                    .Elements(Reference);
+
+                var referenceItemGroup = _document
+                    .Elements(Project)
+                    .Elements(ItemGroup)
+                    .FirstOrDefault(elt => elt.Elements(Reference).Any());
+
+                if (referenceItemGroup == null) {
+                    referenceItemGroup = new XElement(ItemGroup);
+                    _document.Root.Add(referenceItemGroup);
+                }
+
+                List<XElement> elementsToRemove = new List<XElement>();
+                foreach (var hintPathElement in libraryReferences.Elements(HintPath)) {
+                    string oldHintPath = hintPathElement.Value;
+
+                    if (!oldHintPath.StartsWith("..\\..\\lib\\"))
+                        continue;
+
+                    elementsToRemove.Add(hintPathElement.Parent);
+                    // Need to change the hint path from
+                    // ..\\..\\lib\\<libraryfolder>\\<AssemblyName>.dll
+                    // to
+                    // bin\\<AssemblyName>.dll
+                    string assemblyFileName = Path.GetFileName(oldHintPath);
+                    string newHintPath = Path.Combine("bin", assemblyFileName);
+                    var reference = new XElement(
+                        Reference,
+                        new XAttribute(Include, hintPathElement.Parent.Attribute(Include).Value),
+                        new XElement(SpecificVersion, "False"),
+                        new XElement(HintPath, newHintPath));
+                    referenceItemGroup.Add(reference);
+
+                    _task.Log.LogMessage("Assembly (library) Reference \"{0}\": HintPath changed from \"{1}\" to \"{2}\"",
+                        hintPathElement.Parent.Attribute(Include).Value, oldHintPath, newHintPath);
+                }
+
+                foreach (var reference in elementsToRemove) {
+                    reference.Remove();
                 }
 
                 return true;

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using Orchard.Core.Reports.ViewModels;
-using Orchard.Mvc.ViewModels;
+using Orchard.DisplayManagement;
 using Orchard.Reports.Services;
 
 namespace Orchard.Core.Reports.Controllers {
@@ -11,6 +11,7 @@ namespace Orchard.Core.Reports.Controllers {
         public AdminController(IReportsManager reportsManager) {
             _reportsManager = reportsManager;
         }
+
 
         public ActionResult Index() {
             var model = new ReportsAdminIndexViewModel { Reports = _reportsManager.GetReports().ToList() };

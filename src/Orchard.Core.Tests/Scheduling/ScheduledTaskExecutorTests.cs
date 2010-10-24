@@ -9,9 +9,14 @@ using Orchard.ContentManagement.Records;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
 using Orchard.Data;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment.Extensions;
 using Orchard.Tasks;
 using Orchard.Tasks.Scheduling;
 using Orchard.Tests.Modules;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Core.Tests.Scheduling {
     [TestFixture]
@@ -30,10 +35,16 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
+            builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 
             builder.RegisterType<ScheduledTaskExecutor>().As<IBackgroundTask>().Named("ScheduledTaskExecutor", typeof(IBackgroundTask));
             builder.RegisterInstance(_handler).As<IScheduledTaskHandler>();
+
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
         }
 
         protected override IEnumerable<Type> DatabaseTypes {

@@ -13,6 +13,7 @@
     <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
     <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
     <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
+    <ThemesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Themes</ThemesSrcFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
     <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
@@ -118,12 +119,15 @@
       <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\*"/>
       <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
-      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj" />
+      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj;" />
+      <Stage-Web-Config Include="$(SrcFolder)\Orchard.Web\**\*.config" />
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
+	  <Stage-Themes Include="$(ThemesSrcFolder)\**\*" Exclude="@(Stage-Bin-Exclude);$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\bin\**;$(ThemesSrcFolder)\obj\**;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\Properties\**" />
+	  <Stage-Themes-Binaries Include="$(ThemesSrcFolder)\*\**\bin\*" />
 
-      <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
+      <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);@(Stage-Themes);$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
 
       <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Bin-Exclude);@(Stage-Module-Exclude)" />
       <Stage-Modules-Binaries Include="$(WebSitesFolder)\**\bin\**\*"  Exclude="@(Stage-Module-Exclude)"/>
@@ -139,12 +143,18 @@
       OrchardWebBinaries="@(Stage-Orchard-Web-Bins)">
       <Output TaskParameter="ExcludedBinaries" ItemName="FilterModuleBinaries-ExcludedBinaries"/>
     </FilterModuleBinaries>
+    <FilterModuleBinaries
+      ModulesBinaries="@(Stage-Themes-Binaries)"
+      OrchardWebBinaries="@(Stage-Orchard-Web-Bins)">
+      <Output TaskParameter="ExcludedBinaries" ItemName="FilterModuleBinaries-ExcludedBinariesFromThemes"/>
+    </FilterModuleBinaries>
 
     <ItemGroup>
       <Stage-Modules-Binaries-Unique Include="@(Stage-Modules-Binaries)"  Exclude="@(FilterModuleBinaries-ExcludedBinaries)"/>
+      <Stage-Themes-Binaries-Unique Include="@(Stage-Themes-Binaries)"  Exclude="@(FilterThemeBinaries-ExcludedBinariesFromThemes)"/>
     </ItemGroup>
 
-    <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Web);@(Stage-Web-Config);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Media)" DestinationFolder="$(StageFolder)\Media"/>
     <Copy SourceFiles="@(Stage-PoFiles)" DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
     <Copy SourceFiles="@(SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86"/>
@@ -153,6 +163,8 @@
     <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Modules-Sources)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Themes)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(Stage-Themes-Binaries-Unique)" DestinationFolder="$(StageFolder)\Themes\%(RecursiveDir)"/>
     <MakeDir Directories="$(StageFolder)\App_Data"/>
     <WriteLinesToFile File="$(StageFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>
 
@@ -170,6 +182,14 @@
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
 
+    <XmlUpdate XmlFileName="$(StageFolder)\web.config"
+      XPath="/configuration/system.web/machineKey/@validationKey"
+      Value="AutoGenerate" />
+    
+    <XmlUpdate XmlFileName="$(StageFolder)\web.config"
+      XPath="/configuration/system.web/machineKey/@decryptionKey"
+      Value="AutoGenerate" />
+    
     <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
       XPath="/system.diagnostics/trace/@autoflush"
       Value="false" />
@@ -259,9 +279,15 @@
     <ItemGroup>
       <Version-AssemblyInfos Include="$(SrcFolder)\**\AssemblyInfo.cs" />
       <Version-Modules Include="$(SrcFolder)\**\Module.txt" />
+      <Version-Themes Include="$(SrcFolder)\**\Theme.txt" />
     </ItemGroup>
 
     <FileUpdateLines Files="@(Version-Modules)"
+        Regex="^(orchardversion|version)(\s*):(\s*)(.*)"
+        ReplacementText="${1}${2}:${3}$(Version)"
+        IgnoreCase="True"/>
+
+	<FileUpdateLines Files="@(Version-Themes)"
         Regex="^(orchardversion|version)(\s*):(\s*)(.*)"
         ReplacementText="${1}${2}:${3}$(Version)"
         IgnoreCase="True"/>

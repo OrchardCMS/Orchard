@@ -3,18 +3,21 @@ using System.Web;
 using System.Web.Security;
 using Orchard.Logging;
 using Orchard.ContentManagement;
+using Orchard.Mvc;
 using Orchard.Services;
 
 namespace Orchard.Security.Providers {
     public class FormsAuthenticationService : IAuthenticationService {
         private readonly IClock _clock;
         private readonly IContentManager _contentManager;
-        private readonly HttpContextBase _httpContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private IUser _signedInUser;
 
-        public FormsAuthenticationService(IClock clock, IContentManager contentManager, HttpContextBase httpContext) {
+        public FormsAuthenticationService(IClock clock, IContentManager contentManager, IHttpContextAccessor httpContextAccessor) {
             _clock = clock;
             _contentManager = contentManager;
-            _httpContext = httpContext;
+            _httpContextAccessor = httpContextAccessor;
+
             Logger = NullLogger.Instance;
             
             // TEMP: who can say...
@@ -47,20 +50,31 @@ namespace Orchard.Security.Providers {
             if (FormsAuthentication.CookieDomain != null) {
                 cookie.Domain = FormsAuthentication.CookieDomain;
             }
-
-            _httpContext.Response.Cookies.Add(cookie);
+            
+            var httpContext = _httpContextAccessor.Current();
+            httpContext.Response.Cookies.Add(cookie);
+            _signedInUser = user;
         }
 
         public void SignOut() {
+            _signedInUser = null;
             FormsAuthentication.SignOut();
         }
 
+        public void SetAuthenticatedUserForRequest(IUser user) {
+            _signedInUser = user;
+        }
+
         public IUser GetAuthenticatedUser() {
-            if (!_httpContext.Request.IsAuthenticated || !(_httpContext.User.Identity is FormsIdentity)) {
+            if (_signedInUser != null)
+                return _signedInUser;
+
+            var httpContext = _httpContextAccessor.Current();
+            if (!httpContext.Request.IsAuthenticated || !(httpContext.User.Identity is FormsIdentity)) {
                 return null;
             }
 
-            var formsIdentity = (FormsIdentity)_httpContext.User.Identity;
+            var formsIdentity = (FormsIdentity)httpContext.User.Identity;
             var userData = formsIdentity.Ticket.UserData;
             int userId;
             if (!int.TryParse(userData, out userId)) {

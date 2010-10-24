@@ -1,10 +1,12 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.StandardBuilders;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Feeds.StandardQueries {
     [UsedImplicitly]
@@ -45,7 +47,8 @@ namespace Orchard.Core.Feeds.StandardQueries {
 
                 context.Response.Contextualize(requestContext => {
                     var urlHelper = new UrlHelper(requestContext);
-                    link.Add(urlHelper.RouteUrl(inspector.Link));
+                    var uriBuilder = new UriBuilder(urlHelper.RequestContext.HttpContext.Request.ToRootUrlString()) { Path = urlHelper.RouteUrl(inspector.Link) };
+                    link.Add(uriBuilder.Uri.OriginalString);
                 });
             }
             else {

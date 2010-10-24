@@ -3,56 +3,82 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
-using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
-using Orchard.Blogs.ViewModels;
-using Orchard.Core.Feeds;
+using Orchard.ContentManagement;
+using Orchard.DisplayManagement;
 using Orchard.Logging;
-using Orchard.Mvc.Results;
+using Orchard.Themes;
 
 namespace Orchard.Blogs.Controllers {
+    [Themed]
     public class BlogController : Controller {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
+        private readonly IBlogPostService _blogPostService;
         private readonly IBlogSlugConstraint _blogSlugConstraint;
         private readonly RouteCollection _routeCollection;
 
-        public BlogController(IOrchardServices services, IBlogService blogService, IBlogSlugConstraint blogSlugConstraint, RouteCollection routeCollection) {
+        public BlogController(
+            IOrchardServices services, 
+            IBlogService blogService,
+            IBlogPostService blogPostService,
+            IBlogSlugConstraint blogSlugConstraint,
+            RouteCollection routeCollection, 
+            IShapeFactory shapeFactory) {
             _services = services;
             _blogService = blogService;
+            _blogPostService = blogPostService;
             _blogSlugConstraint = blogSlugConstraint;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
+            Shape = shapeFactory;
         }
 
+        dynamic Shape { get; set; }
         protected ILogger Logger { get; set; }
 
         public ActionResult List() {
-            var model = new BlogsViewModel {
-                Blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplayModel(b, "Summary"))
-            };
+            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
 
-            return View(model);
+            var list = Shape.List();
+            list.AddRange(blogs);
+
+            var viewModel = Shape.ViewModel()
+                .ContentItems(list);
+
+            return View(viewModel);
         }
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
-        public ActionResult Item(string blogSlug) {
+        public ActionResult Item(string blogSlug, int page) {
+            const int pageSize = 10;
+
             var correctedSlug = _blogSlugConstraint.FindSlug(blogSlug);
             if (correctedSlug == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
-            var blog = _blogService.Get(correctedSlug);
-            if (blog == null)
-                return new NotFoundResult();
+            var blogPart = _blogService.Get(correctedSlug);
+            if (blogPart == null)
+                return HttpNotFound();
 
-            var model = new BlogViewModel {
-                Blog = _services.ContentManager.BuildDisplayModel(blog, "Detail")
-            };
+            var blogPosts = _blogPostService.Get(blogPart, (page - 1) * pageSize, pageSize)
+                .Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
 
+            blogPart.As<BlogPagerPart>().Page = page;
+            blogPart.As<BlogPagerPart>().PageSize = pageSize;
+            blogPart.As<BlogPagerPart>().BlogSlug = correctedSlug;
+            blogPart.As<BlogPagerPart>().ThereIsANextPage = _blogPostService.Get(blogPart, (page) * pageSize, pageSize).Any();
 
-            return View(model);
+            var blog = _services.ContentManager.BuildDisplay(blogPart);
+
+            var list = Shape.List();
+            list.AddRange(blogPosts);
+
+            blog.Content.Add(Shape.Parts_Blogs_BlogPost_List(ContentItems: list), "5");
+
+            return View(blog);
         }
 
         public ActionResult LiveWriterManifest(string blogSlug) {
@@ -61,7 +87,7 @@ namespace Orchard.Blogs.Controllers {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
 
@@ -86,7 +112,7 @@ namespace Orchard.Blogs.Controllers {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             const string manifestUri = "http://archipelago.phrasewise.com/rsd";
 

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Orchard.Caching;
-using Orchard.Environment;
 using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.FileSystems.WebSite {
@@ -18,18 +17,26 @@ namespace Orchard.FileSystems.WebSite {
         }
 
         public IEnumerable<string> ListDirectories(string virtualPath) {
-            if (!HostingEnvironment.VirtualPathProvider.DirectoryExists(virtualPath))
+            if (!_virtualPathProvider.DirectoryExists(virtualPath)) {
                 return Enumerable.Empty<string>();
+            }
 
-            return HostingEnvironment.VirtualPathProvider
-                .GetDirectory(virtualPath)
-                .Directories.OfType<VirtualDirectory>()
-                .Select(d => d.VirtualPath)
-                .ToArray();
+            return _virtualPathProvider.ListDirectories(virtualPath);
+        }
+
+        private IEnumerable<string> ListFiles(IEnumerable<string> directories) {
+            return directories.SelectMany(d => ListFiles(d, true));
+        }
+
+        public IEnumerable<string> ListFiles(string virtualPath, bool recursive) {
+            if (!recursive) {
+                return _virtualPathProvider.ListFiles(virtualPath);
+            }
+            return _virtualPathProvider.ListFiles(virtualPath).Concat(ListFiles(ListDirectories(virtualPath)));
         }
         
         public bool FileExists(string virtualPath) {
-            return HostingEnvironment.VirtualPathProvider.FileExists(virtualPath);
+            return _virtualPathProvider.FileExists(virtualPath);
         }
 
         public string ReadFile(string virtualPath) {
@@ -37,8 +44,9 @@ namespace Orchard.FileSystems.WebSite {
         }
 
         public string ReadFile(string virtualPath, bool actualContent) {
-            if (!HostingEnvironment.VirtualPathProvider.FileExists(virtualPath))
+            if (!_virtualPathProvider.FileExists(virtualPath)) {
                 return null;
+            }
 
             if (actualContent) {
                 var physicalPath = _virtualPathProvider.MapPath(virtualPath);
@@ -49,7 +57,7 @@ namespace Orchard.FileSystems.WebSite {
                 }
             }
             else {
-                using (var stream = VirtualPathProvider.OpenFile(Normalize(virtualPath))) {
+                using (var stream = _virtualPathProvider.OpenFile(Normalize(virtualPath))) {
                     using (var reader = new StreamReader(stream)) {
                         return reader.ReadToEnd();
                     }
@@ -74,7 +82,7 @@ namespace Orchard.FileSystems.WebSite {
                 }
             }
             else {
-                using (var stream = VirtualPathProvider.OpenFile(Normalize(virtualPath))) {
+                using (var stream = _virtualPathProvider.OpenFile(Normalize(virtualPath))) {
                     stream.CopyTo(destination);
                 }
             }
@@ -85,6 +93,8 @@ namespace Orchard.FileSystems.WebSite {
         }
 
         static string Normalize(string virtualPath) {
+            // todo: use IVirtualPathProvider instance instead of static.
+            // Currently IVirtualPathProvider has no way of doing normalization like this
             return HostingEnvironment.VirtualPathProvider.GetFile(virtualPath).VirtualPath;
         }
     }

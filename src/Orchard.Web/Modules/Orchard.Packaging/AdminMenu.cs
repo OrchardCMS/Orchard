@@ -11,9 +11,11 @@ namespace Orchard.Packaging {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Gallery"), "5", menu => menu
-                        .Add(T("Browse Gallery"), "1.0", item => item
-                             .Action("Index", "Gallery", new { area = "Orchard.Packaging" }))
-                        .Add(T("Gallery Feeds"), "2.0", item => item
+                        .Add(T("Browse Modules"), "1.0", item => item
+                             .Action("ModulesIndex", "Gallery", new { area = "Orchard.Packaging" }))
+                        .Add(T("Browse Themes"), "2.0", item => item
+                             .Action("ThemesIndex", "Gallery", new { area = "Orchard.Packaging" }))
+                        .Add(T("Gallery Feeds"), "3.0", item => item
                              .Action("Sources", "Gallery", new { area = "Orchard.Packaging" })));
         }
     }

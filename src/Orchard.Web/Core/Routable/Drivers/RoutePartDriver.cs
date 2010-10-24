@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
@@ -35,7 +35,7 @@ namespace Orchard.Core.Routable.Drivers {
             get { return "Routable"; }
         }
 
-        int? GetContainerId(IContent item) {
+        static int? GetContainerId(IContent item) {
             var commonPart = item.As<ICommonPart>();
             if (commonPart != null && commonPart.Container != null) {
                 return commonPart.Container.ContentItem.Id;
@@ -43,7 +43,12 @@ namespace Orchard.Core.Routable.Drivers {
             return null;
         }
 
-        protected override DriverResult Editor(RoutePart part) {
+        protected override DriverResult Display(RoutePart part, string displayType, dynamic shapeHelper) {
+            return ContentShape("Parts_RoutableTitle", 
+                () => shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title, Path: part.Path));
+        }
+
+        protected override DriverResult Editor(RoutePart part, dynamic shapeHelper) {
             var model = new RoutableEditorViewModel {
                 ContentType = part.ContentItem.ContentType,
                 Id = part.ContentItem.Id,
@@ -59,27 +64,32 @@ namespace Orchard.Core.Routable.Drivers {
                 model.DisplayLeadingPath = path.Substring(0, path.Length - slug.Length);
             }
             else {
-                var containerSlug = part.GetContainerSlug();
-                model.DisplayLeadingPath = !string.IsNullOrWhiteSpace(containerSlug)
-                    ? string.Format("{0}/", containerSlug)
+                var containerPath = part.GetContainerPath();
+                model.DisplayLeadingPath = !string.IsNullOrWhiteSpace(containerPath)
+                    ? string.Format("{0}/", containerPath)
                     : "";
             }
 
-            var location = part.GetLocation("Editor");
             model.PromoteToHomePage = model.Id != 0 && part.Path != null && _routableHomePageProvider != null && CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
-            return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
+            return ContentShape("Parts_Routable_Edit",
+                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
-        protected override DriverResult Editor(RoutePart part, IUpdateModel updater) {
+        protected override DriverResult Editor(RoutePart part, IUpdateModel updater, dynamic shapeHelper) {
 
             var model = new RoutableEditorViewModel();
             updater.TryUpdateModel(model, Prefix, null, null);
             part.Title = model.Title;
             part.Slug = model.Slug;
-            part.Path = part.GetPathFromSlug(model.Slug);
 
-            if (!_routableService.IsSlugValid(part.Slug)) {
-                updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."));
+            if ( !_routableService.IsSlugValid(part.Slug) ) {
+                var slug = (part.Slug ?? String.Empty);
+                if ( slug.StartsWith(".") || slug.EndsWith(".") ) {
+                    updater.AddModelError("Routable.Slug", T("The \".\" can't be used around routes."));
+                }
+                else {
+                    updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."));
+                }
             }
 
             string originalSlug = part.Slug;
@@ -89,13 +99,13 @@ namespace Orchard.Core.Routable.Drivers {
             }
 
             // TEMP: path format patterns replaces this logic
-            part.Path = part.GetPathFromSlug(part.Slug);
+            part.Path = part.GetPathWithSlug(part.Slug);
 
             if (part.ContentItem.Id != 0 && model.PromoteToHomePage && _routableHomePageProvider != null) {
                 CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
             }
 
-            return Editor(part);
+            return Editor(part, shapeHelper);
         }
     }
 }

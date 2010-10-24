@@ -1,28 +1,27 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.Mvc.ViewModels;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
-    public class UserEditViewModel : BaseViewModel {
+    public class UserEditViewModel  {
         [HiddenInput(DisplayValue = false)]
         public int Id {
-            get { return User.Item.Id; }
+            get { return User.ContentItem.Id; }
         }
 
         [Required]
         public string UserName {
-            get { return User.Item.Record.UserName; }
-            set { User.Item.Record.UserName = value; }
+            get { return User.As<UserPart>().Record.UserName; }
+            set { User.As<UserPart>().Record.UserName = value; }
         }
 
         [Required]
         public string Email {
-            get { return User.Item.Record.Email; }
-            set { User.Item.Record.Email = value; }
+            get { return User.As<UserPart>().Record.Email; }
+            set { User.As<UserPart>().Record.Email = value; }
         }
 
-        public ContentItemViewModel<UserPart> User { get; set; }
+        public IContent User { get; set; }
     }
 }

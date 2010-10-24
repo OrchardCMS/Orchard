@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Orchard.Mvc.ViewModels;
 using Orchard.Tags.Models;
 
 namespace Orchard.Tags.ViewModels {
-    public class TagsAdminIndexViewModel : BaseViewModel {
+    public class TagsAdminIndexViewModel {
         public IList<TagEntry> Tags { get; set; }
         public TagAdminIndexBulkAction BulkAction { get; set; }
     }

@@ -6,7 +6,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</ProjectGuid>
-    <ProjectTypeGuids>{F85E285D-A4E0-4152-9332-AB1D724D3325};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Modules</RootNamespace>
@@ -39,6 +39,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=2.2.4.900, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -49,13 +53,13 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -66,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Commands\FeatureCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -81,8 +86,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\Admin\Add.ascx" />
-    <Content Include="Views\Admin\Index.ascx" />
+    <Content Include="Views\Admin\Add.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -98,8 +103,8 @@
   <ItemGroup>
     <Content Include="Content\Admin\images\disabled.gif" />
     <Content Include="Content\Admin\images\enabled.gif" />
-    <Content Include="styles\admin.css" />
-    <Content Include="Views\Admin\Features.ascx" />
+    <Content Include="Styles\admin.css" />
+    <Content Include="Views\Admin\Features.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup />

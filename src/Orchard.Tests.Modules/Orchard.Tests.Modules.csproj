@@ -59,9 +59,26 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL" />
+    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="FluentNHibernate, Version=1.0.0.593, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\dlr\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries">
+      <HintPath>..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\dlr\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\dlr\Microsoft.Scripting.dll</HintPath>
     </Reference>
     <Reference Include="Moq, Version=4.0.812.4, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -80,6 +97,7 @@
       <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -92,7 +110,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
@@ -106,16 +124,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
-    <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
-    <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles\Controllers\AdminControllerTests.cs" />
     <Compile Include="Roles\Services\RoleServiceTests.cs" />
+    <Compile Include="Migrations\SchemaCommandGeneratorTests.cs" />
     <Compile Include="Settings\Blueprint\ShellDescriptorManagerTests.cs" />
+    <Compile Include="Themes\Services\ThemeServiceTests.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="Users\Controllers\AdminControllerTests.cs" />
     <Compile Include="Users\Services\MembershipServiceTests.cs" />
+    <Compile Include="Widgets\Services\WidgetsServiceTest.cs" />
+    <Compile Include="Widgets\WidgetsTests.cs" />
     <Compile Include="XmlRpc\Controllers\HomeControllerTests.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcReaderTests.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcWriterTests.cs" />
@@ -129,13 +150,13 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Lucene\Lucene.csproj">
-      <Project>{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}</Project>
-      <Name>Lucene</Name>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.CodeGeneration\Orchard.CodeGeneration.csproj">
+      <Project>{C0C45321-B51D-4D8D-9B7B-AA4C2E0B2962}</Project>
+      <Name>Orchard.CodeGeneration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Indexing\Orchard.Indexing.csproj">
-      <Project>{EA2B9121-EF54-40A6-A53E-6593C86EE696}</Project>
-      <Name>Orchard.Indexing</Name>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Modules\Orchard.Modules.csproj">
+      <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>
+      <Name>Orchard.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
@@ -145,9 +166,17 @@
       <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
       <Name>Orchard.Setup</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
+      <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
+      <Name>Orchard.Themes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Widgets\Orchard.Widgets.csproj">
+      <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>
+      <Name>Orchard.Widgets</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
@@ -171,6 +200,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

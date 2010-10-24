@@ -26,6 +26,7 @@ using Orchard.Mvc.Routes;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
+using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
@@ -50,7 +51,6 @@ namespace Orchard.Tests.Environment {
             _container = OrchardStarter.CreateHostContainer(
                 builder => {
                     builder.RegisterInstance(new StubShellSettingsLoader()).As<IShellSettingsManager>();
-                    builder.RegisterType<StubContainerProvider>().As<IContainerProvider>().InstancePerLifetimeScope();
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>();
                     builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>();
                     builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
@@ -81,9 +81,6 @@ namespace Orchard.Tests.Environment {
             _container.Mock<IOrchardShellEvents>()
                 .Setup(e => e.Activated());
 
-            var updater = new ContainerUpdater();
-            updater.RegisterInstance(_container).SingleInstance();
-            updater.Update(_lifetime);
         }
 
         public class StubExtensionManager : IExtensionManager {
@@ -91,6 +88,11 @@ namespace Orchard.Tests.Environment {
                 var ext = new ExtensionDescriptor { Name = "Orchard.Framework" };
                 ext.Features = new[] { new FeatureDescriptor { Extension = ext, Name = ext.Name } };
                 yield return ext;
+            }
+
+            public IEnumerable<FeatureDescriptor> AvailableFeatures() {
+                // note - doesn't order properly
+                return AvailableExtensions().SelectMany(ed => ed.Features);
             }
 
             public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
@@ -137,14 +139,6 @@ namespace Orchard.Tests.Environment {
             }
         }
 
-        [Test]
-        public void HostShouldSetControllerFactory() {
-            var host = _lifetime.Resolve<IOrchardHost>();
-
-            Assert.That(_controllerBuilder.GetControllerFactory(), Is.TypeOf<DefaultControllerFactory>());
-            host.Initialize();
-            Assert.That(_controllerBuilder.GetControllerFactory(), Is.TypeOf<OrchardControllerFactory>());
-        }
 
 
         [Test]

@@ -5,9 +5,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Localization;
 using Orchard.Mvc.Filters;
-using Orchard.Mvc.ViewModels;
 using Orchard.Security;
-using Orchard.UI.Notify;
 
 namespace Orchard.UI.Admin {
     public class AdminFilter : FilterProvider, IAuthorizationFilter {

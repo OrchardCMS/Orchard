@@ -14,14 +14,20 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Services;
+using Orchard.Core.PublishLater.Services;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Tasks.Scheduling;
 using Orchard.Tests.Modules;
 using Orchard.Core.Common.ViewModels;
 using System.Web.Mvc;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Core.Tests.Common.Providers {
     [TestFixture]
@@ -39,6 +45,10 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<CommonService>().As<ICommonService>();
             builder.RegisterType<PublishingTaskManager>().As<IPublishingTaskManager>();
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 
             _authn = new Mock<IAuthenticationService>();
             _authz = new Mock<IAuthorizationService>();
@@ -74,7 +84,7 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         class TestUser : ContentPart, IUser {
-            public int Id { get { return 6655321; } }
+            public new int Id { get { return 6655321; } }
             public string UserName {get { return "x"; }}
             public string Email { get { return "y"; } }
         }
@@ -102,7 +112,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
             var viewModel = new OwnerEditorViewModel() { Owner = "User" };
             updateModel.Setup(x => x.TryUpdateModel(viewModel, "", null, null)).Returns(true);
-            contentManager.UpdateEditorModel(item.ContentItem, updateModel.Object);
+            contentManager.UpdateEditor(item.ContentItem, updateModel.Object);
         }
 
         class UpdatModelStub : IUpdateModel {
@@ -141,7 +151,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             var updater = new UpdatModelStub() { Owner = null };
 
-            contentManager.UpdateEditorModel(item.ContentItem, updater);
+            contentManager.UpdateEditor(item.ContentItem, updater);
         }
 
         [Test, Ignore("Fix pending")]
@@ -159,7 +169,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             var updater = new UpdatModelStub() {Owner = ""};
 
-            contentManager.UpdateEditorModel(item.ContentItem, updater);
+            contentManager.UpdateEditor(item.ContentItem, updater);
 
             Assert.That(updater.ModelErrors.ContainsKey("CommonPart.Owner"), Is.True);
         }

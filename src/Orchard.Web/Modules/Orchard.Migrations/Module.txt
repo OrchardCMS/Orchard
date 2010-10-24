@@ -1,0 +1,15 @@
+﻿Name: Migrations
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.8.0
+OrchardVersion: 0.8.0
+Description: 
+Features:
+    Orchard.Migrations:
+        Description: Data migration commands.
+        Category: Developer
+    DatabaseUpdate:
+        Description: Automatically updates database schema.
+        Dependencies: Orchard.Migrations
+        Category: Developer

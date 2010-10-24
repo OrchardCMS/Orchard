@@ -11,11 +11,15 @@ namespace Orchard.Mvc.Html {
         /// <see cref="http://en.wikipedia.org/wiki/Harry_Houdini"/>
         /// <returns>himself</returns>
         public static TService Resolve<TService>(this HtmlHelper html) {
-            var containerProvider = html.ViewContext.RouteData.DataTokens["IContainerProvider"] as IContainerProvider;
-            if (containerProvider == null)
+            var workContextAccessor = html.ViewContext.RouteData.DataTokens["IWorkContextAccessor"] as IWorkContextAccessor;
+            if (workContextAccessor == null)
                 throw new ApplicationException("Unable to resolve");
 
-            return (containerProvider.RequestLifetime).Resolve<TService>();
+            var workContext = workContextAccessor.GetContext(html.ViewContext.HttpContext);
+            if (workContext == null)
+                throw new ApplicationException("Unable to resolve");
+
+            return workContext.Resolve<TService>();
         }
     }
 }

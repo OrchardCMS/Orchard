@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
@@ -46,6 +47,9 @@ namespace Orchard.Tags.Handlers {
                 }
 
             });
+
+            OnIndexing<TagsPart>((context, tagsPart) => context.DocumentIndex
+                                                    .Add("tags", String.Join(", ", tagsPart.CurrentTags.Select(t => t.TagName))).Analyze());
         }
     }
 }

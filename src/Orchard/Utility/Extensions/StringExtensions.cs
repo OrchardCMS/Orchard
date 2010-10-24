@@ -4,7 +4,7 @@ using Orchard.Localization;
 
 namespace Orchard.Utility.Extensions {
     public static class StringExtensions {
-        private static readonly Regex humps = new Regex("[A-Z][^A-Z]*");
+        private static readonly Regex humps = new Regex("(?:^[a-zA-Z][^A-Z]*|[A-Z][^A-Z]*)");
         public static string CamelFriendly(this string camel) {
             if (camel == null)
                 return null;
@@ -29,7 +29,10 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static string HtmlClassify(this string text) {
-            return Regex.Replace(text, @"[^a-zA-Z]+", m => m.Index == 0 ? "" : "-").ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
+            var friendlier = text.CamelFriendly();
+            return Regex.Replace(friendlier, @"[^a-zA-Z]+", m => m.Index == 0 ? "" : "-").ToLowerInvariant();
         }
 
         public static bool IsNullOrEmptyTrimmed(this string text) {

@@ -5,6 +5,7 @@ using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
+using Orchard.Localization;
 using Orchard.Logging;
 using Yaml.Grammar;
 
@@ -36,8 +37,10 @@ namespace Orchard.Environment.Extensions.Folders {
             _cacheManager = cacheManager;
             _webSiteFolder = webSiteFolder;
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
+        Localizer T { get; set; }
         ILogger Logger { get; set; }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
@@ -78,7 +81,7 @@ namespace Orchard.Environment.Extensions.Folders {
                 var manifestText = _webSiteFolder.ReadFile(manifestPath);
                 if (manifestText == null) {
                     if (_manifestIsOptional) {
-                        manifestText = string.Format("name: {0}", extensionName);
+                        manifestText = string.Format("Name: {0}", extensionName);
                     }
                     else {
                         return null;
@@ -115,16 +118,20 @@ namespace Orchard.Environment.Extensions.Folders {
                 Location = locationPath,
                 Name = extensionName,
                 ExtensionType = extensionType,
-                DisplayName = GetValue(fields, "name") ?? extensionName,
-                Description = GetValue(fields, "description"),
-                Version = GetValue(fields, "version"),
-                OrchardVersion = GetValue(fields, "orchardversion"),
-                Author = GetValue(fields, "author"),
-                WebSite = GetValue(fields, "website"),
-                Tags = GetValue(fields, "tags"),
-                AntiForgery = GetValue(fields, "antiforgery"),
+                DisplayName = GetValue(fields, "Name") ?? extensionName,
+                Description = GetValue(fields, "Description"),
+                Version = GetValue(fields, "Version"),
+                OrchardVersion = GetValue(fields, "OrchardVersion"),
+                Author = GetValue(fields, "Author"),
+                WebSite = GetValue(fields, "Website"),
+                Tags = GetValue(fields, "Tags"),
+                AntiForgery = GetValue(fields, "AntiForgery"),
+                Zones = GetValue(fields, "Zones"),
+                BaseTheme = GetValue(fields, "BaseTheme"),
             };
-            extensionDescriptor.Features = GetFeaturesForExtension(GetMapping(fields, "features"), extensionDescriptor);
+
+            extensionDescriptor.Features = GetFeaturesForExtension(GetMapping(fields, "Features"), extensionDescriptor);
+
             return extensionDescriptor;
         }
 
@@ -136,15 +143,23 @@ namespace Orchard.Environment.Extensions.Folders {
                         Extension = extensionDescriptor,
                         Name = entity.Key.ToString(),
                     };
+
+                    if (featureDescriptor.Name == extensionDescriptor.Name) {
+                        featureDescriptor.DisplayName = extensionDescriptor.DisplayName;
+                    }
+
                     var featureMapping = (Mapping)entity.Value;
                     foreach (var featureEntity in featureMapping.Entities) {
-                        if (String.Equals(featureEntity.Key.ToString(), "description", StringComparison.OrdinalIgnoreCase)) {
+                        if (featureEntity.Key.ToString() == "Description") {
                             featureDescriptor.Description = featureEntity.Value.ToString();
                         }
-                        else if (String.Equals(featureEntity.Key.ToString(), "category", StringComparison.OrdinalIgnoreCase)) {
+                        else if (featureEntity.Key.ToString() == "Category") {
                             featureDescriptor.Category = featureEntity.Value.ToString();
                         }
-                        else if (String.Equals(featureEntity.Key.ToString(), "dependencies", StringComparison.OrdinalIgnoreCase)) {
+                        else if (featureEntity.Key.ToString() == "Name") {
+                            featureDescriptor.DisplayName = featureEntity.Value.ToString();
+                        }
+                        else if (featureEntity.Key.ToString() == "Dependencies") {
                             featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureEntity.Value.ToString());
                         }
                     }
@@ -154,8 +169,9 @@ namespace Orchard.Environment.Extensions.Folders {
             if (!featureDescriptors.Any(fd => fd.Name == extensionDescriptor.Name)) {
                 featureDescriptors.Add(new FeatureDescriptor {
                     Name = extensionDescriptor.Name,
+                    DisplayName = extensionDescriptor.DisplayName,
                     Dependencies = new string[0],
-                    Extension = extensionDescriptor,
+                    Extension = extensionDescriptor
                 });
             }
             return featureDescriptors;

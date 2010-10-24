@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Drivers {
     public class ContentItemTemplateResult<TContent> : DriverResult where TContent : class, IContent {
@@ -11,33 +10,10 @@ namespace Orchard.ContentManagement.Drivers {
 
         public string TemplateName { get; set; }
 
-        public override void Apply(BuildDisplayModelContext context) {
-            //todo: (heskew)evaluate - for lack of having access to the full context in a driver to conditionally return results (e.g. BlogDriver item display is otherwise being overriden by the ContentPartDriver)
-            if (!string.IsNullOrWhiteSpace(context.ViewModel.TemplateName)
-                && context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>))
-                return;
-
-            context.ViewModel.TemplateName = TemplateName;
-            if (context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>)) {
-                context.ViewModel.Adaptor = (html, viewModel) => {
-                    return new HtmlHelper<ContentItemViewModel<TContent>>(
-                        html.ViewContext,
-                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ContentItemViewModel<TContent>(viewModel)) },
-                        html.RouteCollection);
-                };
-            }
+        public override void Apply(BuildDisplayContext context) {
         }
 
-        public override void Apply(BuildEditorModelContext context) {
-            context.ViewModel.TemplateName = TemplateName;
-            if (context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>)) {
-                context.ViewModel.Adaptor = (html, viewModel) => {
-                    return new HtmlHelper<ContentItemViewModel<TContent>>(
-                        html.ViewContext,
-                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ContentItemViewModel<TContent>(viewModel)) },
-                        html.RouteCollection);
-                };
-            }
+        public override void Apply(BuildEditorContext context) {
         }
 
         class ViewDataContainer : IViewDataContainer {

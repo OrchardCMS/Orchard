@@ -2,17 +2,26 @@
 using System.Web.Security;
 using System.Xml.Linq;
 using Autofac;
+using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
+using Orchard.Core.Messaging.Services;
 using Orchard.Core.Settings.Metadata;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment.Extensions;
+using Orchard.Messaging.Events;
+using Orchard.Messaging.Services;
 using Orchard.Security;
+using Orchard.Tests.Stubs;
 using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
@@ -59,6 +68,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<MembershipService>().As<IMembershipService>();
+            builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType(typeof(SettingsFormatter))
                 .As(typeof(IMapper<XElement, SettingsDictionary>))
@@ -67,6 +77,13 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+            builder.RegisterInstance(new Mock<IMessageEventHandler>().Object);
+            builder.RegisterType<DefaultMessageManager>().As<IMessageManager>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
+
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
             _container = builder.Build();

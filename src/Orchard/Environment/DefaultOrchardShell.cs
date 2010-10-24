@@ -8,6 +8,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
+using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
 
 namespace Orchard.Environment {
     public class DefaultOrchardShell : IOrchardShell {
@@ -62,6 +63,8 @@ namespace Orchard.Environment {
             IEnumerable<string> orchardMasterLocationFormats = new[] {
                     "~/Modules/{2}/Views/{1}/{0}.master",
                     "~/Modules/{2}/Views/Shared/{0}.master",
+                    "~/Themes/{2}/Views/{1}/{0}.master",
+                    "~/Themes/{2}/Views/Shared/{0}.master",
                     "~/Core/{2}/Views/{1}/{0}.master",
                     "~/Core/{2}/Views/Shared/{0}.master",
                     "~/Areas/{2}/Views/{1}/{0}.master",
@@ -73,6 +76,10 @@ namespace Orchard.Environment {
                     "~/Modules/{2}/Views/{1}/{0}.ascx",
                     "~/Modules/{2}/Views/Shared/{0}.aspx",
                     "~/Modules/{2}/Views/Shared/{0}.ascx",
+                    "~/Themes/{2}/Views/{1}/{0}.aspx",
+                    "~/Themes/{2}/Views/{1}/{0}.ascx",
+                    "~/Themes/{2}/Views/Shared/{0}.aspx",
+                    "~/Themes/{2}/Views/Shared/{0}.ascx",
                     "~/Core/{2}/Views/{1}/{0}.aspx",
                     "~/Core/{2}/Views/{1}/{0}.ascx",
                     "~/Core/{2}/Views/Shared/{0}.aspx",

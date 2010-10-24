@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Linq;
 using Autofac;
 using NHibernate;
@@ -37,8 +38,6 @@ namespace Orchard.Tests.DataMigration {
 
             var builder = new ContainerBuilder();
 
-            builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_", DataProvider = "SqlCe" });
-
             var session = _sessionFactory.OpenSession();
             builder.RegisterInstance(appDataFolder).As<IAppDataFolder>();
             builder.RegisterType<SqlCeDataServicesProvider>().As<IDataServicesProvider>();
@@ -49,8 +48,7 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<SessionFactoryHolder>().As<ISessionFactoryHolder>();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(session)).As<ISessionLocator>();
             builder.RegisterInstance(new ShellBlueprint { Records = Enumerable.Empty<RecordBlueprint>() }).As<ShellBlueprint>();
-            builder.RegisterInstance(new ShellSettings { Name = "temp", DataProvider = "SqlCe", DataTablePrefix = "TEST_" }).As<ShellSettings>();
-            builder.RegisterType<SqlCeCommandInterpreter>().As<ICommandInterpreter>();
+            builder.RegisterInstance(new ShellSettings { Name = "temp", DataProvider = "SqlCe", DataTablePrefix = "TEST" }).As<ShellSettings>();
             builder.RegisterModule(new DataModule());
             _container = builder.Build();
 
@@ -98,7 +96,7 @@ namespace Orchard.Tests.DataMigration {
                     .Column("Lastname", DbType.String, column => column.WithLength(100).NotNull())
                     .Column("SN", DbType.AnsiString, column => column.WithLength(40).Unique())
                     .Column("Salary", DbType.Decimal, column => column.WithPrecision(9).WithScale(2))
-                    .Column("Gender", DbType.Decimal, column => column.WithDefault("''"))
+                    .Column("Gender", DbType.Decimal, column => column.WithDefault(""))
                     );
         }
 
@@ -111,7 +109,7 @@ namespace Orchard.Tests.DataMigration {
                     .Column("Lastname", DbType.String, column => column.WithLength(100).NotNull())
                     .Column("SN", DbType.AnsiString, column => column.WithLength(40).Unique())
                     .Column("Salary", DbType.Decimal, column => column.WithPrecision(9).WithScale(2))
-                    .Column("Gender", DbType.Decimal, column => column.WithDefault("''"))
+                    .Column("Gender", DbType.Decimal, column => column.WithDefault(""))
                     );
 
             _schemaBuilder
@@ -135,7 +133,7 @@ namespace Orchard.Tests.DataMigration {
                 .AlterTable("User", table => table
                     .AddColumn("Age", DbType.Int32))
                 .AlterTable("User", table => table
-                    .AlterColumn("Lastname", column => column.WithDefault("'John'")))
+                    .AlterColumn("Lastname", column => column.WithDefault("John")))
                 .AlterTable("User", table => table
                     .DropColumn("Firstname")
                 );
@@ -153,8 +151,63 @@ namespace Orchard.Tests.DataMigration {
                     .Column("City", DbType.String)
                     .Column("ZIP", DbType.Int32, column => column.Unique())
                     .Column("UserId", DbType.Int32, column => column.NotNull()))
-                .CreateForeignKey("User_Address", "User", new[] { "UserId" }, "User", new[] { "Id" })
-                .DropForeignKey("User", "User_Address");
+                .CreateForeignKey("FK_User", "Address", new[] { "UserId" }, "User", new[] { "Id" })
+                .DropForeignKey("Address", "FK_User");
+        }
+
+        [Test, ExpectedException]
+        public void BiggerDataShouldNotFit() {
+            _schemaBuilder
+                .CreateTable("ContentItemRecord", table => table
+                    .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+                    .Column("Data", DbType.String, column => column.WithLength(255)));
+
+            // should write successfully less than 255 chars
+            _schemaBuilder
+                .ExecuteSql("insert into TEST_ContentItemRecord (Data) values('Hello World')");
+
+            // should throw an exception if trying to write more data
+            _schemaBuilder
+                .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 256)));
+
+            _schemaBuilder
+                .AlterTable("ContentItemRecord", table => table
+                    .AlterColumn("Data", column => column.WithType(DbType.String).WithLength(257)));
+
+            _schemaBuilder
+                .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 256)));
+        }
+
+        [Test]
+        public void ShouldAllowFieldSizeAlteration() {
+            _schemaBuilder
+                .CreateTable("ContentItemRecord", table => table
+                    .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+                    .Column("Data", DbType.String, column => column.WithLength(255)));
+
+            // should write successfully less than 255 chars
+            _schemaBuilder
+                .ExecuteSql("insert into TEST_ContentItemRecord (Data) values('Hello World')");
+
+            _schemaBuilder
+                .AlterTable("ContentItemRecord", table => table
+                    .AlterColumn("Data", column => column.WithType(DbType.String).WithLength(2048)));
+
+            // should write successfully a bigger value now
+            _schemaBuilder
+                .ExecuteSql(String.Format("insert into TEST_ContentItemRecord (Data) values('{0}')", new String('x', 2048)));
+        }
+
+        [Test, ExpectedException(typeof(OrchardException))]
+        public void ChangingSizeWithoutTypeShouldNotBeAllowed() {
+            _schemaBuilder
+                .CreateTable("ContentItemRecord", table => table
+                    .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
+                    .Column("Data", DbType.String, column => column.WithLength(255)));
+
+            _schemaBuilder
+                .AlterTable("ContentItemRecord", table => table
+                    .AlterColumn("Data", column => column.WithLength(2048)));
 
         }
     }

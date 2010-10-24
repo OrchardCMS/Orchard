@@ -3,17 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Filters;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.UI.Notify {
     public class NotifyFilter : FilterProvider, IActionFilter, IResultFilter {
         private const string TempDataMessages = "messages";
         private readonly INotifier _notifier;
+        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly dynamic _shapeFactory;
 
-        public NotifyFilter(INotifier notifier) {
+        public NotifyFilter(
+            INotifier notifier, 
+            IWorkContextAccessor workContextAccessor, 
+            IShapeFactory shapeFactory) {
             _notifier = notifier;
+            _workContextAccessor = workContextAccessor;
+            _shapeFactory = shapeFactory;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
@@ -53,11 +60,6 @@ namespace Orchard.UI.Notify {
             if (viewResult == null)
                 return;
 
-            var baseViewModel = BaseViewModel.From(viewResult);
-            // if it's not a view model that holds messages, don't touch temp data either
-            if (baseViewModel == null)
-                return;
-
             var messages = Convert.ToString(viewResult.TempData[TempDataMessages]);
             if (string.IsNullOrEmpty(messages))
                 return;// nothing to do, really
@@ -80,12 +82,18 @@ namespace Orchard.UI.Notify {
                 }
             }
 
-            baseViewModel.Messages = baseViewModel.Messages == null ? messageEntries : baseViewModel.Messages.Union(messageEntries).ToList();
-            baseViewModel.Zones.AddRenderPartial("content:before", "Messages", baseViewModel.Messages);
+            if (!messageEntries.Any())
+                return;
+
+            var messagesZone = _workContextAccessor.GetContext(filterContext).Layout.Zones["Messages"];
+            foreach(var messageEntry in messageEntries)
+                messagesZone = messagesZone.Add(_shapeFactory.Message(messageEntry));
+
+            //todo: (heskew) probably need to keep duplicate messages from being pushed into the zone like the previous behavior
+            //baseViewModel.Messages = baseViewModel.Messages == null ? messageEntries .Messages.Union(messageEntries).ToList();
+            //baseViewModel.Zones.AddRenderPartial("content:before", "Messages", baseViewModel.Messages);
         }
 
-        public void OnResultExecuted(ResultExecutedContext filterContext) {
-
-        }
+        public void OnResultExecuted(ResultExecutedContext filterContext) {}
     }
 }

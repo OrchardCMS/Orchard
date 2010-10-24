@@ -2,11 +2,10 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Core;
-using Autofac.Integration.Web;
 
 namespace Orchard.Mvc {
     public class OrchardControllerFactory : DefaultControllerFactory {
-         
+
         public override IController CreateController(RequestContext requestContext, string controllerName) {
             var routeData = requestContext.RouteData;
 
@@ -19,12 +18,11 @@ namespace Orchard.Mvc {
             // Now that the request container is known - try to resolve the controller            
             object controller;
             var service = new KeyedService(serviceKey, typeof(IController));
-            
-            // Locate the container this route is bound against
-            var container = GetRequestContainer(routeData);
 
-            if (container != null &&
-                container.TryResolve(service, out controller)) {
+            var workContext = requestContext.GetWorkContext();
+
+            if (workContext != null &&
+                workContext.Resolve<ILifetimeScope>().TryResolve(service, out controller)) {
                 return (IController)controller;
             }
 
@@ -52,18 +50,6 @@ namespace Orchard.Mvc {
             }
 
             return GetAreaName(routeData.Route);
-        }
-
-        public static ILifetimeScope GetRequestContainer(RouteData routeData) {
-            object dataTokenValue;
-            if (routeData != null &&
-                routeData.DataTokens != null &&
-                routeData.DataTokens.TryGetValue("IContainerProvider", out dataTokenValue) &&
-                dataTokenValue is IContainerProvider) {
-                var containerProvider = (IContainerProvider) dataTokenValue;
-                return containerProvider.RequestLifetime;
-            }
-            return null;
         }
     }
 }

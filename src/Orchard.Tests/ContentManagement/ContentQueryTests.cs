@@ -8,8 +8,13 @@ using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.Environment.Extensions;
 using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
+using Orchard.DisplayManagement.Implementation;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -47,6 +52,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>().SingleInstance();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
+            builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 
             builder.RegisterType<AlphaHandler>().As<IContentHandler>();
             builder.RegisterType<BetaHandler>().As<IContentHandler>();
@@ -54,9 +60,14 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<DeltaHandler>().As<IContentHandler>();
             builder.RegisterType<EpsilonHandler>().As<IContentHandler>();
             builder.RegisterType<FlavoredHandler>().As<IContentHandler>();
-            builder.RegisterType<StyledHandler>().As<IContentHandler>();
+            builder.RegisterType<StyledHandler>().As<IContentHandler>();           
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
 
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+
+            builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Orchard.Caching;
+using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.State;
@@ -48,6 +49,11 @@ namespace Orchard.Commands {
                 tenant = tenant ?? "Default";
 
                 using (var env = CreateStandaloneEnvironment(tenant)) {
+                    var commandManager = env.Resolve<ICommandManager>();
+
+                    ITransactionManager transactionManager;
+                    if (!env.TryResolve(out transactionManager))
+                        transactionManager = null;
 
                     var parameters = new CommandParameters {
                         Arguments = args,
@@ -56,7 +62,17 @@ namespace Orchard.Commands {
                         Output = output
                     };
 
-                    env.Resolve<ICommandManager>().Execute(parameters);
+                    try {
+                        commandManager.Execute(parameters);
+                    }
+                    catch {
+                        // any database changes in this using(env) scope are invalidated
+                        if (transactionManager != null)
+                            transactionManager.Cancel();
+
+                        // exception handling performed below
+                        throw;
+                    }
                 }
 
                 // in effect "pump messages" see PostMessage circa 1980
@@ -128,7 +144,7 @@ namespace Orchard.Commands {
         }
 
 
-        private IStandaloneEnvironment CreateStandaloneEnvironment(string tenant) {
+        private IWorkContextScope CreateStandaloneEnvironment(string tenant) {
             var host = _hostContainer.Resolve<IOrchardHost>();
             var tenantManager = _hostContainer.Resolve<IShellSettingsManager>();
 
@@ -173,12 +189,10 @@ namespace Orchard.Commands {
             };
         }
 
-        protected void MvcSingletons(ContainerBuilder builder) {
-            builder.RegisterInstance(ControllerBuilder.Current);
-            builder.RegisterInstance(RouteTable.Routes);
-            builder.RegisterInstance(ModelBinders.Binders);
-            builder.RegisterInstance(ModelMetadataProviders.Current);
-            builder.RegisterInstance(ViewEngines.Engines);
+        static void MvcSingletons(ContainerBuilder builder) {
+            builder.Register(ctx => RouteTable.Routes).SingleInstance();
+            builder.Register(ctx => ModelBinders.Binders).SingleInstance();
+            builder.Register(ctx => ViewEngines.Engines).SingleInstance();
         }
 
         private class CommandHostShellContainerRegistrations : IShellContainerRegistrations {

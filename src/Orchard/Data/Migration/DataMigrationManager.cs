@@ -11,7 +11,6 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Reports.Services;
 
 namespace Orchard.Data.Migration {
     /// <summary>

@@ -43,6 +43,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -53,13 +54,14 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -82,7 +84,9 @@
     <Compile Include="ViewModels\SetupViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Setup\Index.ascx" />
+    <Content Include="Views\Setup\Index.cshtml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -94,13 +98,9 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Comments\Orchard.Comments.csproj">
-      <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
-      <Name>Orchard.Comments</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Packaging\Orchard.Packaging.csproj">
-      <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
-      <Name>Orchard.Packaging</Name>
+    <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
+      <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>
+      <Name>Orchard.Widgets</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -113,10 +113,6 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target> -->
-  <!-- To enable MVC area subproject support, uncomment the following two lines:
-  <UsingTask TaskName="Microsoft.Web.Mvc.Build.CreateAreaManifest" AssemblyName="Microsoft.Web.Mvc.Build, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-  <UsingTask TaskName="Microsoft.Web.Mvc.Build.CopyAreaManifests" AssemblyName="Microsoft.Web.Mvc.Build, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-  -->
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
     <PropertyGroup>
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>

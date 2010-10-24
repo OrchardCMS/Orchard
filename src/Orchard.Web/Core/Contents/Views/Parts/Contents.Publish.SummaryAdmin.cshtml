@@ -1,0 +1,19 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Utility.Extensions;
+@{
+    Script.Require("ShapesBase");
+    ContentPart contentPart = Model.ContentPart;
+}
+@if (contentPart.HasPublished()) {
+@Html.ItemDisplayLink(T("View").Text, (ContentItem)Model.ContentPart.ContentItem)
+@T(" | ")
+    if (contentPart.HasDraft()) {
+@Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "PublishUrl UnsafeUrl" })
+@T(" | ")
+    }
+@Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnpublishUrl UnsafeUrl" })
+@T(" | ")
+} else {
+@Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "PublishUrl UnsafeUrl" })
+@T(" | ")
+}

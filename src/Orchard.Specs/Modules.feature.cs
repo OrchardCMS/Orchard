@@ -69,7 +69,7 @@ testRunner.Then("I should see \"<h1>Installed Modules</h1>\"");
 #line 10
 testRunner.And("I should see \"<h2>Themes\"");
 #line 11
-testRunner.And("the status should be 200 OK");
+testRunner.And("the status should be 200 \"OK\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
@@ -90,7 +90,7 @@ testRunner.Then("I should see \"<h1>Manage Features</h1>\"");
 #line 17
 testRunner.And("I should see \"<h3>Common</h3>\"");
 #line 18
-testRunner.And("the status should be 200 OK");
+testRunner.And("the status should be 200 \"OK\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }

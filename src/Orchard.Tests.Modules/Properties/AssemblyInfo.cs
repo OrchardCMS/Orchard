@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("Orchard")]
-[assembly: AssemblyCopyright("Copyright © CodePlex Foundation 2009")]
+[assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.5.0")]
-[assembly: AssemblyFileVersion("0.5.0")]
+[assembly: AssemblyVersion("0.8.0")]
+[assembly: AssemblyFileVersion("0.8.0")]

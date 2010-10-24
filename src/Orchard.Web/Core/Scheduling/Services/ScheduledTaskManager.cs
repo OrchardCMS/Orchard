@@ -44,16 +44,28 @@ namespace Orchard.Core.Scheduling.Services {
                 .ToReadOnlyCollection();
         }
 
-        public void DeleteTasks(ContentItem contentItem, Func<IScheduledTask, bool> predicate) {
-            //TEMP: Is this thread safe? Does it matter?
+        public IEnumerable<IScheduledTask> GetTasks(string taskType, DateTime? scheduledBeforeUtc = null) {
+            var query = scheduledBeforeUtc == null 
+                ? _repository.Fetch(t => t.TaskType == taskType && t.ScheduledUtc <= scheduledBeforeUtc)
+                : _repository.Fetch(t => t.TaskType == taskType);
+
+            return 
+                query.Select(x => new Task(_contentManager, x))
+                .Cast<IScheduledTask>()
+                .ToReadOnlyCollection();
+        }
+
+        public void DeleteTasks(ContentItem contentItem, Func<IScheduledTask, bool> predicate = null ) {
             var tasks = _repository
                 .Fetch(x => x.ContentItemVersionRecord.ContentItemRecord == contentItem.Record);
 
             foreach (var task in tasks) {
-                if (predicate(new Task(_contentManager, task))) {
+                if (predicate == null || predicate(new Task(_contentManager, task))) {
                     _repository.Delete(task);
                 }
             }
+            
+            _repository.Flush();
         }
     }
 }

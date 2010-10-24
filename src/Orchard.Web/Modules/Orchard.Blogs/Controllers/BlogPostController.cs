@@ -3,14 +3,15 @@ using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
-using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.Results;
 using Orchard.Security;
+using Orchard.Themes;
 
 namespace Orchard.Blogs.Controllers {
+    [Themed]
     public class BlogPostController : Controller {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
@@ -21,14 +22,17 @@ namespace Orchard.Blogs.Controllers {
             IOrchardServices services, 
             IBlogService blogService, 
             IBlogPostService blogPostService,
-            IFeedManager feedManager) {
+            IFeedManager feedManager,
+            IShapeFactory shapeFactory) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
             _feedManager = feedManager;
             T = NullLocalizer.Instance;
+            Shape = shapeFactory;
         }
 
+        dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
         //TODO: (erikpo) Should think about moving the slug parameters and get calls and null checks up into a model binder or action filter
@@ -37,22 +41,16 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
-            BlogPart blogPart = _blogService.Get(blogSlug);
-
+            var blogPart = _blogService.Get(blogSlug);
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             //TODO: (erikpo) Look up the current user and their permissions to this blog post and determine if they should be able to view it or not.
-            VersionOptions versionOptions = VersionOptions.Published;
-            BlogPostPart postPart = _blogPostService.Get(blogPart, postSlug, versionOptions);
-
+            var postPart = _blogPostService.Get(blogPart, postSlug, VersionOptions.Published);
             if (postPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
-            var model = new BlogPostViewModel {
-                BlogPart = blogPart,
-                BlogPost = _services.ContentManager.BuildDisplayModel(postPart, "Detail")
-            };
+            var model = _services.ContentManager.BuildDisplay(postPart);
 
             return View(model);
         }
@@ -62,18 +60,24 @@ namespace Orchard.Blogs.Controllers {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var archive = new ArchiveData(archiveData);
-            var model = new BlogPostArchiveViewModel {
-                BlogPart = blogPart,
-                ArchiveData = archive,
-                BlogPosts = _blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplayModel(b, "Summary"))
-            };
+
+            var list = Shape.List();
+            list.AddRange(_blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplay(b, "Summary")));
 
             _feedManager.Register(blogPart);
 
-            return View(model);
+            var viewModel = Shape.ViewModel()
+                .ContentItems(list)
+                .Blog(blogPart)
+                .ArchiveData(archive);
+
+            //todo: (heskew) add back
+            //.ArchiveData(archive) <-- ??
+
+            return View(viewModel);
         }
     }
 }

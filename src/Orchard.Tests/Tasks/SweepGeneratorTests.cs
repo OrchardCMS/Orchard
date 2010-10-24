@@ -2,42 +2,43 @@
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Environment;
+using Orchard.Mvc;
 using Orchard.Tasks;
+using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Tasks {
     [TestFixture]
-    public class SweepGeneratorTests {
+    public class SweepGeneratorTests : ContainerTestBase {
+        protected override void Register(ContainerBuilder builder) {
+            builder.RegisterAutoMocking(MockBehavior.Loose);
+            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<SweepGenerator>();
+        }
 
         [Test]
         public void DoWorkShouldSendHeartbeatToTaskManager() {
-            var taskManager = new Mock<IBackgroundService>();
-
-            var builder = new ContainerBuilder();
-            builder.RegisterInstance(taskManager.Object);
-            var container = builder.Build();
-
-            var heartbeatSource = new SweepGenerator(container);
+            var heartbeatSource = _container.Resolve<SweepGenerator>();
             heartbeatSource.DoWork();
-            taskManager.Verify(x => x.Sweep(), Times.Once());
+            _container.Resolve<Mock<IBackgroundService>>()
+                .Verify(x => x.Sweep(), Times.Once());
         }
 
         [Test]
         public void ActivatedEventShouldStartTimer() {
-            var taskManager = new Mock<IBackgroundService>();
 
-            var builder = new ContainerBuilder();
-            builder.RegisterInstance(taskManager.Object);
-            var container = builder.Build();
+            var heartbeatSource = _container.Resolve<SweepGenerator>();
+            heartbeatSource.Interval = TimeSpan.FromMilliseconds(25);
 
-            var heartbeatSource = new SweepGenerator(container) {
-                Interval = TimeSpan.FromMilliseconds(25)
-            };
+            _container.Resolve<Mock<IBackgroundService>>()
+                .Verify(x => x.Sweep(), Times.Never());
 
-            taskManager.Verify(x => x.Sweep(), Times.Never());
             heartbeatSource.Activated();
             System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(80));
             heartbeatSource.Terminating();
-            taskManager.Verify(x => x.Sweep(), Times.AtLeastOnce());
+
+            _container.Resolve<Mock<IBackgroundService>>()
+                .Verify(x => x.Sweep(), Times.AtLeastOnce());
         }
     }
 }

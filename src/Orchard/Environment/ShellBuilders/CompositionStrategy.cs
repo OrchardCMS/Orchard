@@ -32,10 +32,7 @@ namespace Orchard.Environment.ShellBuilders {
         }
 
         public ShellBlueprint Compose(ShellSettings settings, ShellDescriptor descriptor) {
-            var enabledFeatures = _extensionManager.AvailableExtensions()
-                .SelectMany(extensionDescriptor => extensionDescriptor.Features)
-                .Where(featureDescriptor => IsFeatureEnabledInDescriptor(featureDescriptor, descriptor));
-
+            var enabledFeatures = _extensionManager.EnabledFeatures(descriptor);
             var features = _extensionManager.LoadFeatures(enabledFeatures);
 
             if (descriptor.Features.Any(feature => feature.Name == "Orchard.Framework"))
@@ -47,14 +44,12 @@ namespace Orchard.Environment.ShellBuilders {
             var records = BuildBlueprint(features, IsRecord, (t, f) => BuildRecord(t, f, settings));
 
             return new ShellBlueprint {
+                Settings = settings,
+                Descriptor = descriptor,
                 Dependencies = dependencies.Concat(modules).ToArray(),
                 Controllers = controllers,
                 Records = records,
             };
-        }
-
-        private static bool IsFeatureEnabledInDescriptor(FeatureDescriptor featureDescriptor, ShellDescriptor shellDescriptor) {
-            return shellDescriptor.Features.Any(shellDescriptorFeature => shellDescriptorFeature.Name == featureDescriptor.Name);
         }
 
         private static IEnumerable<Feature> BuiltinFeatures() {

@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Web;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Services;
 using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
-using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Services;
 
@@ -19,6 +17,7 @@ namespace Orchard.Core.Common.Drivers {
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
         private const string TemplateName = "Parts/Common.Body";
+        //todo: change back - or to something better
         private const string DefaultTextEditorTemplate = "TinyMceTextEditor";
         private const string PlainTextEditorTemplate = "PlainTextEditor";
 
@@ -33,35 +32,33 @@ namespace Orchard.Core.Common.Drivers {
             get { return "Body"; }
         }
 
-        // \/\/ Hackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
-        protected override DriverResult Display(BodyPart part, string displayType) {
-            var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
-            var model = new BodyDisplayViewModel { BodyPart = part, Text = bodyText };
-            var location = part.GetLocation(displayType);
-
+        protected override DriverResult Display(BodyPart part, string displayType, dynamic shapeHelper) {
             return Combined(
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPre").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.Manage").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
-                ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location),
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").LongestMatch(displayType, "SummaryAdmin").Location(location) : null);
+                ContentShape("Parts_Common_Body",
+                             () => {
+                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
+                                 return shapeHelper.Parts_Common_Body(ContentPart: part, Html: new HtmlString(bodyText));
+                             }),
+                ContentShape("Parts_Common_Body_Summary",
+                             () => {
+                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
+                                 return shapeHelper.Parts_Common_Body_Summary(ContentPart: part, Html: new HtmlString(bodyText));
+                             })
+                );
         }
 
-        protected override DriverResult Editor(BodyPart part) {
+        protected override DriverResult Editor(BodyPart part, dynamic shapeHelper) {
             var model = BuildEditorViewModel(part);
-            var location = part.GetLocation("Editor");
-            return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
+            return ContentShape("Parts_Common_Body_Edit",
+                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
-        protected override DriverResult Editor(BodyPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(BodyPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = BuildEditorViewModel(part);
             updater.TryUpdateModel(model, Prefix, null, null);
 
-            // only set the format if it has not yet been set to preserve the initial format type - might want to change this later to support changing body formats but...later
-            if (string.IsNullOrWhiteSpace(model.Format))
-                model.Format = GetFlavor(part);
-
-            var location = part.GetLocation("Editor");
-            return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
+            return ContentShape("Parts_Common_Body_Edit", 
+                                () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         private static BodyEditorViewModel BuildEditorViewModel(BodyPart part) {

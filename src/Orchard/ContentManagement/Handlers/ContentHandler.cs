@@ -80,16 +80,16 @@ namespace Orchard.ContentManagement.Handlers {
         protected void OnGetContentItemMetadata<TPart>(Action<GetContentItemMetadataContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetItemMetadata = handler });
         }
-        protected void OnGetDisplayViewModel<TPart>(Action<BuildDisplayModelContext, TPart> handler) where TPart : class, IContent {
-            Filters.Add(new InlineTemplateFilter<TPart> { OnGetDisplayViewModel = handler });
+        protected void OnGetDisplayShape<TPart>(Action<BuildDisplayContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineTemplateFilter<TPart> { OnGetDisplayShape = handler });
         }
 
-        protected void OnGetEditorViewModel<TPart>(Action<BuildEditorModelContext, TPart> handler) where TPart : class, IContent {
-            Filters.Add(new InlineTemplateFilter<TPart> { OnGetEditorViewModel = handler });
+        protected void OnGetEditorShape<TPart>(Action<BuildEditorContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineTemplateFilter<TPart> { OnGetEditorShape = handler });
         }
 
-        protected void OnUpdateEditorViewModel<TPart>(Action<UpdateEditorModelContext, TPart> handler) where TPart : class, IContent {
-            Filters.Add(new InlineTemplateFilter<TPart> { OnUpdateEditorViewModel = handler });
+        protected void OnUpdateEditorShape<TPart>(Action<UpdateEditorContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineTemplateFilter<TPart> { OnUpdateEditorShape = handler });
         }
 
         class InlineStorageFilter<TPart> : StorageFilterBase<TPart> where TPart : class, IContent {
@@ -164,25 +164,21 @@ namespace Orchard.ContentManagement.Handlers {
 
         class InlineTemplateFilter<TPart> : TemplateFilterBase<TPart> where TPart : class, IContent {
             public Action<GetContentItemMetadataContext, TPart> OnGetItemMetadata { get; set; }
-            public Action<BuildDisplayModelContext, TPart> OnGetDisplayViewModel { get; set; }
-            public Action<BuildEditorModelContext, TPart> OnGetEditorViewModel { get; set; }
-            public Action<UpdateEditorModelContext, TPart> OnUpdateEditorViewModel { get; set; }
+            public Action<BuildDisplayContext, TPart> OnGetDisplayShape { get; set; }
+            public Action<BuildEditorContext, TPart> OnGetEditorShape { get; set; }
+            public Action<UpdateEditorContext, TPart> OnUpdateEditorShape { get; set; }
             protected override void GetContentItemMetadata(GetContentItemMetadataContext context, TPart instance) {
                 if (OnGetItemMetadata != null) OnGetItemMetadata(context, instance);
             }
-            protected override void BuildDisplayModel(BuildDisplayModelContext context, TPart instance) {
-                if (OnGetDisplayViewModel != null) OnGetDisplayViewModel(context, instance);
+            protected override void BuildDisplayShape(BuildDisplayContext context, TPart instance) {
+                if (OnGetDisplayShape != null) OnGetDisplayShape(context, instance);
             }
-            protected override void BuildEditorModel(BuildEditorModelContext context, TPart instance) {
-                if (OnGetEditorViewModel != null) OnGetEditorViewModel(context, instance);
+            protected override void BuildEditorShape(BuildEditorContext context, TPart instance) {
+                if (OnGetEditorShape != null) OnGetEditorShape(context, instance);
             }
-            protected override void UpdateEditorModel(UpdateEditorModelContext context, TPart instance) {
-                if (OnUpdateEditorViewModel != null) OnUpdateEditorViewModel(context, instance);
+            protected override void UpdateEditorShape(UpdateEditorContext context, TPart instance) {
+                if (OnUpdateEditorShape != null) OnUpdateEditorShape(context, instance);
             }
-        }
-
-        public virtual IEnumerable<ContentType> GetContentTypes() {
-            return Enumerable.Empty<ContentType>();
         }
 
         void IContentHandler.Activating(ActivatingContentContext context) {
@@ -292,20 +288,20 @@ namespace Orchard.ContentManagement.Handlers {
                 filter.GetContentItemMetadata(context);
             GetItemMetadata(context);
         }
-        void IContentHandler.BuildDisplayModel(BuildDisplayModelContext context) {
+        void IContentHandler.BuildDisplay(BuildDisplayContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
-                filter.BuildDisplayModel(context);
-            BuildDisplayModel(context);
+                filter.BuildDisplayShape(context);
+            BuildDisplayShape(context);
         }
-        void IContentHandler.BuildEditorModel(BuildEditorModelContext context) {
+        void IContentHandler.BuildEditor(BuildEditorContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
-                filter.BuildEditorModel(context);
-            BuildEditorModel(context);
+                filter.BuildEditorShape(context);
+            BuildEditorShape(context);
         }
-        void IContentHandler.UpdateEditorModel(UpdateEditorModelContext context) {
+        void IContentHandler.UpdateEditor(UpdateEditorContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
-                filter.UpdateEditorModel(context);
-            UpdateEditorModel(context);
+                filter.UpdateEditorShape(context);
+            UpdateEditorShape(context);
         }
 
         protected virtual void Activating(ActivatingContentContext context) { }
@@ -335,8 +331,8 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Indexed(IndexContentContext context) { }
 
         protected virtual void GetItemMetadata(GetContentItemMetadataContext context) { }
-        protected virtual void BuildDisplayModel(BuildDisplayModelContext context) { }
-        protected virtual void BuildEditorModel(BuildEditorModelContext context) { }
-        protected virtual void UpdateEditorModel(UpdateEditorModelContext context) { }
+        protected virtual void BuildDisplayShape(BuildDisplayContext context) { }
+        protected virtual void BuildEditorShape(BuildEditorContext context) { }
+        protected virtual void UpdateEditorShape(UpdateEditorContext context) { }
     }
 }

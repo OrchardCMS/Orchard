@@ -11,5 +11,6 @@ namespace Orchard.Settings {
         string SuperUser { get; }
         string HomePage { get; set; }
         string SiteCulture { get; set; }
+        ResourceDebugMode ResourceDebugMode { get; set; }
     }
 }

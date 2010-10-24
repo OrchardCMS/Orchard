@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.Core.Navigation.Drivers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
 using Orchard.UI.Navigation;
@@ -18,13 +18,19 @@ namespace Orchard.Core.Navigation.Controllers {
         private readonly IOrchardServices _services;
         private readonly INavigationManager _navigationManager;
 
-        public AdminController(IMenuService menuService, IOrchardServices services, INavigationManager navigationManager) {
+        public AdminController(
+            IMenuService menuService,
+            IOrchardServices services,
+            INavigationManager navigationManager,
+            IShapeFactory shapeFactory) {
             _menuService = menuService;
             _services = services;
             _navigationManager = navigationManager;
             T = NullLocalizer.Instance;
+            Shape = shapeFactory;
         }
 
+        dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
         public ActionResult Index(NavigationManagementViewModel model) {
@@ -35,8 +41,9 @@ namespace Orchard.Core.Navigation.Controllers {
                 model = new NavigationManagementViewModel();
 
             if (model.MenuItemEntries == null || model.MenuItemEntries.Count() < 1)
-                model.MenuItemEntries = _menuService.Get().Select(menuPart => CreateMenuItemEntries(menuPart)).OrderBy(menuPartEntry => menuPartEntry.MenuItem.Position, new PositionComparer()).ToList();
+                model.MenuItemEntries = _menuService.Get().Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.MenuItem.Position, new PositionComparer()).ToList();
 
+            // need action name as this action is referenced from another action
             return View("Index", model);
         }
 
@@ -59,7 +66,7 @@ namespace Orchard.Core.Navigation.Controllers {
 
         private MenuItemEntry CreateMenuItemEntries(MenuPart menuPart) {
             return new MenuItemEntry {
-                                         MenuItem = new UI.Navigation.MenuItem {
+                                         MenuItem = new MenuItem {
                                                                                    Text = menuPart.MenuText,
                                                                                    Position = menuPart.MenuPosition,
                                                                                    Url = menuPart.Is<MenuItemPart>()
@@ -80,8 +87,8 @@ namespace Orchard.Core.Navigation.Controllers {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            var menuPart = _services.ContentManager.New<MenuPart>(MenuItemPartDriver.ContentType.Name);
-            model.MenuItem = _services.ContentManager.UpdateEditorModel(menuPart, this);
+            var menuPart = _services.ContentManager.New<MenuPart>("MenuItem");
+            model.MenuItem = _services.ContentManager.UpdateEditor(menuPart, this);
 
             if (!ModelState.IsValid) {
                 _services.TransactionManager.Cancel();
@@ -92,7 +99,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
             menuPart.OnMainMenu = true;
 
-            _services.ContentManager.Create(model.MenuItem.Item.ContentItem);
+            _services.ContentManager.Create(model.MenuItem);
 
             return RedirectToAction("Index");
         }

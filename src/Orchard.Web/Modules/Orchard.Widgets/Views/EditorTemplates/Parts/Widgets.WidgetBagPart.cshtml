@@ -1,0 +1,8 @@
+﻿@{
+    Style.Require("WidgetsAdmin");
+}
+<div class="widgetsbag-editor">
+    <h5>@T("Widgets")</h5>
+    @* todo: (heskew) either embed some widget management here or link to a more specific widget management URL that's a little more specific to managing widgets for the Content zone for this item *@
+    <p>@T("Manage content widgets with the {0}.", @Html.ActionLink(T("widget manager").Text, "Index", "Admin", new {area = "Orchard.Widgets"}, null))</p>
+</div>

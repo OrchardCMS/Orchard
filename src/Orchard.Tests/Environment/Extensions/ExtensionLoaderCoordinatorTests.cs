@@ -22,7 +22,7 @@ namespace Orchard.Tests.Environment.Extensions {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            _folders = new StubFolders();
+            _folders = new StubFolders("Module");
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             _container = builder.Build();
@@ -30,7 +30,10 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         public class StubFolders : IExtensionFolders {
-            public StubFolders() {
+            private readonly string _extensionType;
+
+            public StubFolders(string extensionType) {
+                _extensionType = extensionType;
                 Manifests = new Dictionary<string, string>();
             }
 
@@ -40,7 +43,7 @@ namespace Orchard.Tests.Environment.Extensions {
                 foreach (var e in Manifests) {
                     string name = e.Key;
                     var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
+                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, _extensionType, parseResult);
                 }
             }
         }
@@ -118,10 +121,10 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void AvailableExtensionsShouldFollowCatalogLocations() {
-            _folders.Manifests.Add("foo", "name: Foo");
-            _folders.Manifests.Add("bar", "name: Bar");
-            _folders.Manifests.Add("frap", "name: Frap");
-            _folders.Manifests.Add("quad", "name: Quad");
+            _folders.Manifests.Add("foo", "Name: Foo");
+            _folders.Manifests.Add("bar", "Name: Bar");
+            _folders.Manifests.Add("frap", "Name: Frap");
+            _folders.Manifests.Add("quad", "Name: Quad");
 
             var available = _manager.AvailableExtensions();
 
@@ -133,8 +136,8 @@ namespace Orchard.Tests.Environment.Extensions {
         public void ExtensionDescriptorsShouldHaveNameAndVersion() {
 
             _folders.Manifests.Add("Sample", @"
-name: Sample Extension
-version: 2.x
+Name: Sample Extension
+Version: 2.x
 ");
 
             var descriptor = _manager.AvailableExtensions().Single();
@@ -147,10 +150,10 @@ version: 2.x
         public void ExtensionDescriptorsShouldBeParsedForMinimalModuleTxt() {
 
             _folders.Manifests.Add("SuperWiki", @"
-name: SuperWiki
-version: 1.0.3
-orchardversion: 1
-features:
+Name: SuperWiki
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   SuperWiki: 
     Description: My super wiki module for Orchard.
 ");
@@ -169,12 +172,12 @@ features:
         public void ExtensionDescriptorsShouldBeParsedForCompleteModuleTxt() {
 
             _folders.Manifests.Add("MyCompany.AnotherWiki", @"
-name: AnotherWiki
-author: Coder Notaprogrammer
-website: http://anotherwiki.codeplex.com
-version: 1.2.3
-orchardversion: 1
-features:
+Name: AnotherWiki
+Author: Coder Notaprogrammer
+Website: http://anotherwiki.codeplex.com
+Version: 1.2.3
+OrchardVersion: 1
+Features:
   AnotherWiki: 
     Description: My super wiki module for Orchard.
     Dependencies: Versioning, Search
@@ -249,13 +252,13 @@ features:
         [Test]
         public void ExtensionManagerShouldLoadFeatures() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("TestModule", @"
-name: TestModule
-version: 1.0.3
-orchardversion: 1
-features:
+Name: TestModule
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   TestModule: 
     Description: My test module for Orchard.
   TestFeature:
@@ -275,13 +278,13 @@ features:
         [Test]
         public void ExtensionManagerFeaturesContainNonAbstractClasses() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("TestModule", @"
-name: TestModule
-version: 1.0.3
-orchardversion: 1
-features:
+Name: TestModule
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   TestModule: 
     Description: My test module for Orchard.
   TestFeature:
@@ -310,13 +313,13 @@ features:
         [Test]
         public void ExtensionManagerTestFeatureAttribute() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("TestModule", @"
-name: TestModule
-version: 1.0.3
-orchardversion: 1
-features:
+Name: TestModule
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   TestModule: 
     Description: My test module for Orchard.
   TestFeature:
@@ -340,13 +343,13 @@ features:
         [Test]
         public void ExtensionManagerLoadFeatureReturnsTypesFromSpecificFeaturesWithFeatureAttribute() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("TestModule", @"
-name: TestModule
-version: 1.0.3
-orchardversion: 1
-features:
+Name: TestModule
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   TestModule: 
     Description: My test module for Orchard.
   TestFeature:
@@ -368,13 +371,13 @@ features:
         [Test]
         public void ExtensionManagerLoadFeatureDoesNotReturnTypesFromNonMatchingFeatures() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("TestModule", @"
-name: TestModule
-version: 1.0.3
-orchardversion: 1
-features:
+Name: TestModule
+Version: 1.0.3
+OrchardVersion: 1
+Features:
   TestModule: 
     Description: My test module for Orchard.
   TestFeature:
@@ -397,12 +400,31 @@ features:
         [Test]
         public void ModuleNameIsIntroducedAsFeatureImplicitly() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("Minimalistic", @"
-name: Minimalistic
-version: 1.0.3
-orchardversion: 1
+Name: Minimalistic
+Version: 1.0.3
+OrchardVersion: 1
+");
+
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Name == "Minimalistic");
+
+            Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
+            Assert.That(minimalisticModule.Features.Single().Name, Is.EqualTo("Minimalistic"));
+        }
+
+
+        [Test]
+        public void ThemeNameIsIntroducedAsFeatureImplicitly() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders("Theme");
+
+            extensionFolder.Manifests.Add("Minimalistic", @"
+Name: Minimalistic
+Version: 1.0.3
+OrchardVersion: 1
 ");
 
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });

@@ -7,7 +7,6 @@ using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
-using Orchard.Mvc.Results;
 using Orchard.UI.Notify;
 
 namespace Orchard.ContentTypes.Controllers {
@@ -72,7 +71,7 @@ namespace Orchard.ContentTypes.Controllers {
             var typeViewModel = _contentDefinitionService.GetType(id);
 
             if (typeViewModel == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             return View(typeViewModel);
         }
@@ -85,7 +84,7 @@ namespace Orchard.ContentTypes.Controllers {
             var typeViewModel = _contentDefinitionService.GetType(id);
 
             if (typeViewModel == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             if (!TryUpdateModel(typeViewModel))
                 return View(typeViewModel);
@@ -109,7 +108,7 @@ namespace Orchard.ContentTypes.Controllers {
             var typeViewModel = _contentDefinitionService.GetType(id);
 
             if (typeViewModel == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var viewModel = new AddPartsViewModel {
                 Type = typeViewModel,
@@ -129,7 +128,7 @@ namespace Orchard.ContentTypes.Controllers {
             var typeViewModel = _contentDefinitionService.GetType(id);
 
             if (typeViewModel == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             var viewModel = new AddPartsViewModel();
             if (!TryUpdateModel(viewModel))
@@ -159,7 +158,7 @@ namespace Orchard.ContentTypes.Controllers {
             if (typeViewModel == null
                 || !TryUpdateModel(viewModel)
                 || !typeViewModel.Parts.Any(p => p.PartDefinition.Name == viewModel.Name))
-                return new NotFoundResult();
+                return HttpNotFound();
 
             viewModel.Type = typeViewModel;
             return View(viewModel);
@@ -176,7 +175,7 @@ namespace Orchard.ContentTypes.Controllers {
             if (typeViewModel == null
                 || !TryUpdateModel(viewModel)
                 || !typeViewModel.Parts.Any(p => p.PartDefinition.Name == viewModel.Name))
-                return new NotFoundResult();
+                return HttpNotFound();
 
             _contentDefinitionService.RemovePartFromType(viewModel.Name, typeViewModel.Name);
 
@@ -230,7 +229,7 @@ namespace Orchard.ContentTypes.Controllers {
             var partViewModel = _contentDefinitionService.GetPart(id);
 
             if (partViewModel == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             return View(partViewModel);
         }
@@ -243,7 +242,7 @@ namespace Orchard.ContentTypes.Controllers {
             var partViewModel = _contentDefinitionService.GetPart(id);
 
             if (partViewModel == null)
-                return new NotFoundResult();
+                return HttpNotFound();
 
             if (!TryUpdateModel(partViewModel))
                 return View(partViewModel);
@@ -272,7 +271,7 @@ namespace Orchard.ContentTypes.Controllers {
                 if (typeViewModel != null)
                     partViewModel = new EditPartViewModel(new ContentPartDefinition(id));
                 else
-                    return new NotFoundResult();
+                    return HttpNotFound();
             }
 
             var viewModel = new AddFieldViewModel {
@@ -298,7 +297,7 @@ namespace Orchard.ContentTypes.Controllers {
                     _contentDefinitionService.AddPartToType(partViewModel.Name, typeViewModel.Name);
                 }
                 else {
-                    return new NotFoundResult();
+                    return HttpNotFound();
                 }
             }
 
@@ -334,7 +333,7 @@ namespace Orchard.ContentTypes.Controllers {
             if (partViewModel == null
                 || !TryUpdateModel(viewModel)
                 || !partViewModel.Fields.Any(p => p.Name == viewModel.Name))
-                return new NotFoundResult();
+                return HttpNotFound();
 
             viewModel.Part = partViewModel;
             return View(viewModel);
@@ -351,7 +350,7 @@ namespace Orchard.ContentTypes.Controllers {
             if (partViewModel == null
                 || !TryUpdateModel(viewModel)
                 || !partViewModel.Fields.Any(p => p.Name == viewModel.Name))
-                return new NotFoundResult();
+                return HttpNotFound();
 
             _contentDefinitionService.RemoveFieldFromPart(viewModel.Name, partViewModel.Name);
 

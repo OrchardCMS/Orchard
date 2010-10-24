@@ -73,7 +73,7 @@ namespace Orchard.Data.Migration.Schema {
             return this;
         }
 
-        public new CreateColumnCommand WithDefault(string @default) {
+        public new CreateColumnCommand WithDefault(object @default) {
             base.WithDefault(@default);
             return this;
         }

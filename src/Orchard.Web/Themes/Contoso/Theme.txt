@@ -1,6 +1,0 @@
-name: Contoso Business
-author: Michael Dorian Bach
-description: A simple CMS theme perfect for any modern product or service business website. 
-version: 1.0
-tags: business, cms, modern
-website: http://www.orchardproject.net

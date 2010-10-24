@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds.Models;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Feeds.StandardBuilders {
     [UsedImplicitly]
@@ -35,16 +36,26 @@ namespace Orchard.Core.Feeds.StandardBuilders {
                     var guid = new XElement("guid", new XAttribute("isPermaLink", "true"));
 
                     context.Response.Contextualize(requestContext => {
-                                                       var urlHelper = new UrlHelper(requestContext, _routes);
-                                                       link.Add(urlHelper.RouteUrl(inspector.Link));
-                                                       guid.Add(urlHelper.RouteUrl(inspector.Link));
+                                                        var urlHelper = new UrlHelper(requestContext, _routes);
+                                                        var uriBuilder = new UriBuilder(urlHelper.RequestContext.HttpContext.Request.ToRootUrlString()) { Path = urlHelper.RouteUrl(inspector.Link) };
+                                                        link.Add(uriBuilder.Uri.OriginalString);
+                                                        guid.Add(uriBuilder.Uri.OriginalString);
                                                    });
 
                     feedItem.Element.SetElementValue("title", inspector.Title);
                     feedItem.Element.Add(link);
                     feedItem.Element.SetElementValue("description", inspector.Description);
-                    if (inspector.PublishedUtc != null)
-                        feedItem.Element.SetElementValue("pubDate", inspector.PublishedUtc);//TODO: format
+
+                    if ( inspector.PublishedUtc != null ) {
+                        // RFC833 
+                        // The "R" or "r" standard format specifier represents a custom date and time format string that is defined by 
+                        // the DateTimeFormatInfo.RFC1123Pattern property. The pattern reflects a defined standard, and the property  
+                        // is read-only. Therefore, it is always the same, regardless of the culture used or the format provider supplied.  
+                        // The custom format string is "ddd, dd MMM yyyy HH':'mm':'ss 'GMT'". When this standard format specifier is used,  
+                        // the formatting or parsing operation always uses the invariant culture. 
+                        feedItem.Element.SetElementValue("pubDate", inspector.PublishedUtc.Value.ToString("r"));
+                    }
+
                     feedItem.Element.Add(guid);
                 }
                 else {

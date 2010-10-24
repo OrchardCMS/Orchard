@@ -1,0 +1,68 @@
+﻿@model NavigationManagementViewModel
+@using Orchard.ContentManagement;
+@using Orchard.Core.Navigation.Models;
+@using Orchard.Core.Navigation.ViewModels;
+
+<h1>@Html.TitleForPage(T("Manage Main Menu").ToString())</h1>
+@using (Html.BeginFormAntiForgeryPost()) {
+<table class="items">
+    <colgroup>
+        <col id="Text" />
+        <col id="Position" />
+        <col id="Url" />
+        <col id="Actions" />
+    </colgroup>
+    <thead>
+        <tr>
+            <td scope="col">@T("Text")</td>
+            <td scope="col">@T("Position")</td>
+            <td scope="col">@T("Url")</td>
+            <td scope="col"></td>
+        </tr>
+    </thead>
+    <tbody>@{ 
+        var menuPartEntryIndex = 0;
+        foreach (var menuPartEntry in Model.MenuItemEntries) {
+            var i = menuPartEntryIndex;
+            <tr>
+                <td><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Text)" value="@menuPartEntry.MenuItem.Text" /></td>
+                <td><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Position)" value="@menuPartEntry.MenuItem.Position" /></td>
+                <td>@if (!menuPartEntry.IsMenuItem) {<input type="text" class="text-box disabled" disabled="disabled" value="@menuPartEntry.MenuItem.Url" /> } else {<input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Url)" value="@menuPartEntry.MenuItem.Url" />}</td>
+                <td><input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" /><a href="@Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = menuPartEntry.MenuItemId}))" class="remove">@T("Remove")</a></td>
+            </tr>
+            ++menuPartEntryIndex;
+        }
+    }
+    </tbody>
+</table>
+<fieldset class="actions"><button type="submit" class="button primaryAction">@T("Update All")</button></fieldset>
+}
+
+<h2>@T("Add New Item")</h2>
+@using (Html.BeginFormAntiForgeryPost(Url.Action("create"), FormMethod.Post)) {
+<table class="menu items">
+    <colgroup>
+        <col id="AddText" />
+        <col id="AddPosition" />
+        <col id="AddUrl" />
+        <col id="AddActions" />
+    </colgroup>
+    <tbody>
+        <tr>
+            <td>
+                <label for="MenuText">@T("Text")</label>
+                @Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.As<MenuPart>().MenuText)
+            </td>
+            <td>
+                <label for="MenuPosition">@T("Position")</label>
+                @Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.As<MenuPart>().MenuPosition)
+            </td>
+            <td>
+                <label for="Url">@T("Url")</label>
+                @Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.As<MenuItemPart>().Url)
+            </td>
+            <td><button class="add" type="submit">@T("Add")</button></td>
+        </tr>
+    </tbody>
+</table>
+}

@@ -9,12 +9,12 @@ namespace Orchard.Localization {
     public class Text : IText {
         private readonly string _scope;
         private readonly ICultureManager _cultureManager;
-        private readonly IResourceManager _resourceManager;
+        private readonly ILocalizedStringManager _localizedStringManager;
 
-        public Text(string scope, ICultureManager cultureManager, IResourceManager resourceManager) {
+        public Text(string scope, ICultureManager cultureManager, ILocalizedStringManager localizedStringManager) {
             _scope = scope;
             _cultureManager = cultureManager;
-            _resourceManager = resourceManager;
+            _localizedStringManager = localizedStringManager;
             Logger = NullLogger.Instance;
         }
 
@@ -24,7 +24,7 @@ namespace Orchard.Localization {
             Logger.Debug("{0} localizing '{1}'", _scope, textHint);
 
             string currentCulture = HttpContext.Current == null ? _cultureManager.GetSiteCulture() : _cultureManager.GetCurrentCulture(new HttpContextWrapper(HttpContext.Current));
-            var localizedFormat = _resourceManager.GetLocalizedString(_scope, textHint, currentCulture);
+            var localizedFormat = _localizedStringManager.GetLocalizedString(_scope, textHint, currentCulture);
 
             return args.Length == 0 
                 ? new LocalizedString(localizedFormat, _scope, textHint, args)

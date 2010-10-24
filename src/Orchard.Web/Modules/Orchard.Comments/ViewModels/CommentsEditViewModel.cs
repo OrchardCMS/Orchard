@@ -1,8 +1,7 @@
-﻿using Orchard.Mvc.ViewModels;
-using Orchard.Comments.Models;
+﻿using Orchard.Comments.Models;
 
 namespace Orchard.Comments.ViewModels {
-    public class CommentsEditViewModel : BaseViewModel {
+    public class CommentsEditViewModel {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }

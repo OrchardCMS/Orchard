@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -8,7 +9,6 @@ using System.Web.Mvc.Html;
 using System.Web.Routing;
 using Orchard.Collections;
 using Orchard.Localization;
-using Orchard.Mvc.ViewModels;
 using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
@@ -17,6 +17,7 @@ using System.Web;
 
 namespace Orchard.Mvc.Html {
     public static class HtmlHelperExtensions {
+
         public static string NameOf<T>(this HtmlHelper<T> html, Expression<Action<T>> expression) {
             return Reflect.NameOf(html.ViewData.Model, expression);
         }
@@ -33,6 +34,21 @@ namespace Orchard.Mvc.Html {
             var id = html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
             // because "[" and "]" aren't replaced with "_" in GetFullHtmlFieldId
             return id.Replace('[', '_').Replace(']', '_');
+        }
+
+        public static IHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, LocalizedString labelText) {
+            return LabelFor(html, expression, labelText.ToString());
+        }
+
+        public static IHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, string labelText) {
+            if (String.IsNullOrEmpty(labelText)) {
+                return MvcHtmlString.Empty;
+            }
+            var htmlFieldName = ExpressionHelper.GetExpressionText(expression);
+            var tag = new TagBuilder("label");
+            tag.Attributes.Add("for", html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
+            tag.SetInnerText(labelText);
+            return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }
 
         public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text) {
@@ -190,28 +206,6 @@ namespace Orchard.Mvc.Html {
 
         #region Format Date/Time
 
-        public static LocalizedString DateTimeRelative(this HtmlHelper htmlHelper, DateTime? value, LocalizedString defaultIfNull, Localizer T) {
-            return value.HasValue ? htmlHelper.DateTimeRelative(value.Value, T) : defaultIfNull;
-        }
-
-        //TODO: (erikpo) This method needs localized
-        public static LocalizedString DateTimeRelative(this HtmlHelper htmlHelper, DateTime value, Localizer T) {
-            var time = htmlHelper.Resolve<IClock>().UtcNow - value;
-
-            if (time.TotalDays > 7)
-                return htmlHelper.DateTime(value, T("'on' MMM d yyyy 'at' h:mm tt"));
-            if (time.TotalHours > 24)
-                return T.Plural("1 day ago", "{0} days ago", time.Days);
-            if (time.TotalMinutes > 60)
-                return T.Plural("1 hour ago", "{0} hours ago", time.Hours);
-            if (time.TotalSeconds > 60)
-                return T.Plural("1 minute ago", "{0} minutes ago", time.Minutes);
-            if (time.TotalSeconds > 10)
-                return T.Plural("1 second ago", "{0} seconds ago", time.Seconds); //aware that the singular won't be used
-
-            return T("a moment ago");
-        }
-
         public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime? value, LocalizedString defaultIfNull) {
             return value.HasValue ? htmlHelper.DateTime(value.Value) : defaultIfNull;
         }
@@ -350,7 +344,38 @@ namespace Orchard.Mvc.Html {
         public static MvcHtmlString AntiForgeryTokenOrchard(this HtmlHelper htmlHelper) {
             var siteSalt = htmlHelper.Resolve<ISiteService>().GetSiteSettings().SiteSalt;
 
-            return htmlHelper.AntiForgeryToken(siteSalt);
+            try {
+                return htmlHelper.AntiForgeryToken(siteSalt);
+            }
+            catch(System.Web.Mvc.HttpAntiForgeryException) {
+                // Work-around an issue in MVC 2:  If the browser sends a cookie that is not
+                // coming from this server (this can happen if the user didn't close their browser
+                // while the application server configuration changed), clear it up
+                // so that a new one is generated and sent to the browser. This is harmless
+                // from a security point of view, since we are _issuing_ an anti-forgery token,
+                // not validating input.
+
+                // Remove the token so that MVC will create a new one.
+                var antiForgeryTokenName = htmlHelper.GetAntiForgeryTokenName();
+                htmlHelper.ViewContext.HttpContext.Request.Cookies.Remove(antiForgeryTokenName);
+
+                // Try again
+                return htmlHelper.AntiForgeryToken(siteSalt);
+            }
+        }
+
+        private static string GetAntiForgeryTokenName(this HtmlHelper htmlHelper) {
+            // Generate the same cookie name as MVC
+            var appPath = htmlHelper.ViewContext.HttpContext.Request.ApplicationPath;
+            const string antiForgeryTokenName = "__RequestVerificationToken";
+            if (string.IsNullOrEmpty(appPath)) {
+                return antiForgeryTokenName;
+            }
+            return antiForgeryTokenName + '_' + Base64EncodeForCookieName(appPath);
+        }
+
+        private static string Base64EncodeForCookieName(string s) {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(s)).Replace('+', '.').Replace('/', '-').Replace('=', '_');
         }
 
         #endregion
@@ -391,38 +416,5 @@ namespace Orchard.Mvc.Html {
         }
 
         #endregion
-
-        #region AddRenderAction
-
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName) {
-            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, null);
-        }
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, object routeValues) {
-            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, new RouteValueDictionary(routeValues));
-        }
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, RouteValueDictionary routeValues) {
-            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, routeValues);
-        }
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName) {
-            AddRenderActionHelper(html, location, actionName, controllerName, null/*RouteValueDictionary*/);
-        }
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName, object routeValues) {
-            AddRenderActionHelper(html, location, actionName, controllerName, new RouteValueDictionary(routeValues));
-        }
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName, RouteValueDictionary routeValues) {
-            AddRenderActionHelper(html, location, actionName, controllerName, routeValues);
-        }
-
-        private static void AddRenderActionHelper(this HtmlHelper html, string location, string actionName, string controllerName, RouteValueDictionary routeValues) {
-            // Retrieve the "BaseViewModel" for zones if we have one
-            var baseViewModel = BaseViewModel.From(html.ViewData);
-            if (baseViewModel == null)
-                return;
-
-            baseViewModel.Zones.AddRenderAction(location, actionName, controllerName, routeValues);
-        }
-
-        #endregion
-
     }
 }

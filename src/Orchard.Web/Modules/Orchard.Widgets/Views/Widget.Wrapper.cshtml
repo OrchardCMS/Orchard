@@ -1,0 +1,22 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Widgets.Models;
+@{
+    var title = ((IContent)Model.ContentItem).As<WidgetPart>().Title;
+    var tag = Tag(Model, "article");
+}
+@tag.StartElement
+    @if (HasText(title) || Model.Header != null) {
+    <header>
+        @if (HasText(title)) {
+        <h1>@title</h1>
+        }
+        @Display(Model.Header)
+    </header>
+    }
+    @Display(Model.Child)
+    @if(Model.Footer != null) {
+    <footer>
+        @Display(Model.Footer)
+    </footer>
+    }
+@tag.EndElement
