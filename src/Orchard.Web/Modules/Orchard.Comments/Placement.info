@@ -8,6 +8,7 @@
     <!-- widget and edit shapes just get default placement -->
     <!-- edit "shapes" -->
     <Place Parts_Comments_Enable="Primary:10"/>
+    <Place Parts_Comments_SiteSettings="Primary:10"/>
     <Match DisplayType="Detail">
         <Place Parts_Comments="Content:10" />
     </Match>
