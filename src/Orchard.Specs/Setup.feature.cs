@@ -67,10 +67,10 @@ this.ScenarioSetup(scenarioInfo);
             table1.AddRow(new string[] {
                         "module",
                         "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Or" +
-                            "chard.jQuery, TinyMce"});
+                            "chard.jQuery, TinyMce, Orchard.PublishLater"});
             table1.AddRow(new string[] {
                         "core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater," +
+                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable," +
                             " Scheduling, Settings, Shapes, XmlRpc"});
             table1.AddRow(new string[] {
                         "theme",
@@ -103,10 +103,10 @@ this.ScenarioSetup(scenarioInfo);
             table2.AddRow(new string[] {
                         "module",
                         "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Or" +
-                            "chard.jQuery, TinyMce"});
+                            "chard.jQuery, TinyMce, Orchard.PublishLater"});
             table2.AddRow(new string[] {
                         "core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater," +
+                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable," +
                             " Scheduling, Settings, Shapes, XmlRpc"});
             table2.AddRow(new string[] {
                         "theme",
@@ -139,10 +139,10 @@ this.ScenarioSetup(scenarioInfo);
             table3.AddRow(new string[] {
                         "module",
                         "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Or" +
-                            "chard.jQuery, TinyMce"});
+                            "chard.jQuery, TinyMce, Orchard.PublishLater"});
             table3.AddRow(new string[] {
                         "core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater," +
+                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable," +
                             " Scheduling, Settings, Shapes, XmlRpc"});
             table3.AddRow(new string[] {
                         "theme",
@@ -177,10 +177,10 @@ this.ScenarioSetup(scenarioInfo);
             table4.AddRow(new string[] {
                         "module",
                         "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Or" +
-                            "chard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce"});
+                            "chard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce, Orchard.PublishLater"});
             table4.AddRow(new string[] {
                         "core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater," +
+                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable," +
                             " Scheduling, Settings, Shapes, XmlRpc"});
             table4.AddRow(new string[] {
                         "theme",
