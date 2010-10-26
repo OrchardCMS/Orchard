@@ -26,14 +26,11 @@ namespace Orchard.ArchiveLater.Drivers {
 
         protected override DriverResult Display(ArchiveLaterPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_ArchiveLater_Metadata_SummaryAdmin",
-                                shape => {
-                                    part.ScheduledArchiveUtc.Value = DateTime.UtcNow.AddDays(5);
-
-                                    return shape
-                                        .ContentPart(part)
-                                        .ScheduledArchiveUtc(part.ScheduledArchiveUtc.Value)
-                                        .IsPublished(part.ContentItem.VersionRecord != null && part.ContentItem.VersionRecord.Published);
-                                });
+                                shape => shape
+                                             .ContentPart(part)
+                                             .ScheduledArchiveUtc(part.ScheduledArchiveUtc.Value)
+                                             .IsPublished(part.ContentItem.VersionRecord != null && part.ContentItem.VersionRecord.Published)
+                                             );
         }
 
         protected override DriverResult Editor(ArchiveLaterPart part, dynamic shapeHelper) {
