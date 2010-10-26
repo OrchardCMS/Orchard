@@ -5,11 +5,14 @@ using Orchard.ArchiveLater.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
+using System.Globalization;
 
 namespace Orchard.ArchiveLater.Drivers {
     public class ArchiveLaterPartDriver : ContentPartDriver<ArchiveLaterPart> {
         private const string TemplateName = "Parts/ArchiveLater";
         private readonly IArchiveLaterService _archiveLaterService;
+        private const string DatePattern = "M/d/yyyy";
+        private const string TimePattern = "h:mm tt";
 
         public ArchiveLaterPartDriver(
             IOrchardServices services,
@@ -38,8 +41,8 @@ namespace Orchard.ArchiveLater.Drivers {
 
             model.ScheduledArchiveUtc = part.ScheduledArchiveUtc.Value;
             model.ArchiveLater = model.ScheduledArchiveUtc.HasValue;
-            model.ScheduledArchiveDate = model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value.ToLocalTime().ToShortDateString() : String.Empty;
-            model.ScheduledArchiveTime = model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value.ToLocalTime().ToShortTimeString() : String.Empty;
+            model.ScheduledArchiveDate = model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value.ToLocalTime().ToString(DatePattern, CultureInfo.InvariantCulture) : String.Empty;
+            model.ScheduledArchiveTime = model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value.ToLocalTime().ToString(TimePattern, CultureInfo.InvariantCulture) : String.Empty;
 
             return ContentShape("Parts_ArchiveLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
@@ -51,9 +54,16 @@ namespace Orchard.ArchiveLater.Drivers {
             if (updater.TryUpdateModel(model, Prefix, null, null) ) {
                 if ( model.ArchiveLater ) {
                     DateTime scheduled;
-                    if ( DateTime.TryParse(string.Format("{0} {1}", model.ScheduledArchiveDate, model.ScheduledArchiveTime), out scheduled) )
+                    string parseDateTime = String.Concat(model.ScheduledArchiveDate, " ", model.ScheduledArchiveTime);
+
+                    // use an english culture as it is the one used by jQuery.datepicker by default
+                    if (DateTime.TryParse(parseDateTime, CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AssumeLocal, out scheduled)) {
                         model.ScheduledArchiveUtc = scheduled.ToUniversalTime();
-                    _archiveLaterService.ArchiveLater(model.ContentItem, model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value : DateTime.MaxValue);
+                        _archiveLaterService.ArchiveLater(model.ContentItem, model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value : DateTime.MaxValue);
+                    }
+                    else {
+                        updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));
+                    }
                 }
                 else {
                     _archiveLaterService.RemoveArchiveLaterTasks(model.ContentItem);

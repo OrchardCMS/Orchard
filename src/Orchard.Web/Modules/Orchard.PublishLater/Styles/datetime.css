@@ -6,9 +6,9 @@ html.dyn input.hinted {
     color:#ccc;
     font-style:italic;
 }
-input#PublishLater_ScheduledPublishUtcDate {
+input#PublishLater_ScheduledPublishDate {
     width:50%;
 }
-input#PublishLater_ScheduledPublishUtcTime {
+input#PublishLater_ScheduledPublishTime {
     width:36%;
 }
