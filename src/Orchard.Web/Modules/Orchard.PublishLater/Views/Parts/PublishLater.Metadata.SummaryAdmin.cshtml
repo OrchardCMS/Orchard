@@ -1,6 +1,6 @@
 ﻿@using Orchard.ContentManagement;
 @using Orchard.Core.Common.Models;
-@using Orchard.Core.PublishLater.Models;
+@using Orchard.PublishLater.Models;
 @{
     PublishLaterPart publishLaterPart = Model.ContentPart;
     DateTime? versionPublishedUtc = publishLaterPart.As<CommonPart>() == null ? null : publishLaterPart.As<CommonPart>().VersionPublishedUtc;

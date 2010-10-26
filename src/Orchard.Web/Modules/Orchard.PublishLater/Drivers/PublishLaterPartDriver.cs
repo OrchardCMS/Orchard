@@ -2,12 +2,12 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Services;
-using Orchard.Core.PublishLater.Models;
-using Orchard.Core.PublishLater.Services;
-using Orchard.Core.PublishLater.ViewModels;
+using Orchard.PublishLater.Models;
+using Orchard.PublishLater.Services;
+using Orchard.PublishLater.ViewModels;
 using Orchard.Localization;
 
-namespace Orchard.Core.PublishLater.Drivers {
+namespace Orchard.PublishLater.Drivers {
     public class PublishLaterPartDriver : ContentPartDriver<PublishLaterPart> {
         private const string TemplateName = "Parts/PublishLater";
         private readonly ICommonService _commonService;

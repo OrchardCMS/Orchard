@@ -1,9 +1,9 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.PublishLater.Models;
-using Orchard.Core.PublishLater.Services;
+using Orchard.PublishLater.Models;
+using Orchard.PublishLater.Services;
 
-namespace Orchard.Core.PublishLater.Handlers {
+namespace Orchard.PublishLater.Handlers {
     public class PublishLaterPartHandler : ContentHandler {
         private readonly IPublishLaterService _publishLaterService;
 

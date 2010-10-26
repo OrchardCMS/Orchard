@@ -1,9 +1,9 @@
 ﻿using System;
 using Orchard.ContentManagement;
-using Orchard.Core.PublishLater.Models;
+using Orchard.PublishLater.Models;
 using Orchard.Tasks.Scheduling;
 
-namespace Orchard.Core.PublishLater.Services {
+namespace Orchard.PublishLater.Services {
     public class PublishLaterService : IPublishLaterService {
         private readonly IPublishingTaskManager _publishingTaskManager;
 

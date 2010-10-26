@@ -101,14 +101,6 @@
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
     <Compile Include="Messaging\ViewModels\MessageSettingsPartViewModel.cs" />
     <Compile Include="Navigation\Services\MainMenuNavigationProvider.cs" />
-    <Compile Include="PublishLater\ResourceManifest.cs" />
-    <Compile Include="PublishLater\Migrations.cs" />
-    <Compile Include="PublishLater\Drivers\PublishLaterPartDriver.cs" />
-    <Compile Include="PublishLater\Models\PublishLaterPart.cs" />
-    <Compile Include="PublishLater\Handlers\PublishLaterPartHandler.cs" />
-    <Compile Include="PublishLater\Services\PublishLaterService.cs" />
-    <Compile Include="PublishLater\Services\IPublishLaterService.cs" />
-    <Compile Include="PublishLater\ViewModels\PublishLaterViewModel.cs" />
     <Compile Include="Routable\ResourceManifest.cs" />
     <Compile Include="Routable\Services\RoutableHomePageProvider.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
@@ -198,8 +190,6 @@
     <Compile Include="Routable\ViewModels\RoutableDisplayViewModel.cs" />
     <Compile Include="Scheduling\Migrations.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
-    <Compile Include="PublishLater\Handlers\PublishingTaskHandler.cs" />
-    <Compile Include="PublishLater\Services\PublishingTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
@@ -261,13 +251,6 @@
     <Content Include="Contents\Views\Parts\Contents.Publish.SummaryAdmin.cshtml" />
     <Content Include="Messaging\Module.txt" />
     <Content Include="Messaging\Views\EditorTemplates\Parts\MessageSettings.cshtml" />
-    <Content Include="PublishLater\Content\Admin\images\draft.gif" />
-    <Content Include="PublishLater\Content\Admin\images\offline.gif" />
-    <Content Include="PublishLater\Content\Admin\images\online.gif" />
-    <Content Include="PublishLater\Content\Admin\images\published.gif" />
-    <Content Include="PublishLater\Content\Admin\images\scheduled.gif" />
-    <Content Include="PublishLater\Views\Parts\PublishLater.Metadata.cshtml" />
-    <Content Include="PublishLater\Views\Parts\PublishLater.Metadata.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Fields\Common.Text.Edit.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
     <Content Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
@@ -277,9 +260,6 @@
     <Content Include="Localization\Styles\base.css" />
     <Content Include="Localization\Views\Parts\Localization.ContentTranslations.Summary.cshtml" />
     <Content Include="Localization\Views\Parts\Localization.ContentTranslations.cshtml" />
-    <Content Include="PublishLater\Module.txt" />
-    <Content Include="PublishLater\Styles\datetime.css" />
-    <Content Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.cshtml" />
     <Content Include="Reports\Module.txt" />
     <Content Include="Reports\Views\Admin\Display.cshtml" />
     <Content Include="Reports\Views\Admin\Index.cshtml" />
@@ -363,7 +343,6 @@
     <Content Include="Routable\Views\Web.config" />
     <Content Include="Localization\Views\Web.config" />
     <Content Include="Reports\Views\Web.config" />
-    <Content Include="PublishLater\Views\Web.config" />
     <Content Include="Messaging\Views\Web.config" />
     <Content Include="Contents\Views\Items\Content.cshtml" />
     <Content Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
@@ -386,11 +365,7 @@
     <Content Include="Navigation\Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="PublishLater\Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Routable\Views\Parts\RoutableTitle.cshtml" />
-    <Content Include="PublishLater\Views\Parts\PublishLater.Metadata.Summary.cshtml" />
     <Content Include="Routable\Views\Item\Display.cshtml" />
     <Content Include="Routable\Views\Routable.HomePage.cshtml" />
     <Content Include="Localization\Views\Parts\Localization.ContentTranslations.SummaryAdmin.cshtml" />

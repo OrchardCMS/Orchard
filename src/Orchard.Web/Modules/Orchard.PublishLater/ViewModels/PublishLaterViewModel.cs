@@ -1,9 +1,9 @@
 ﻿using System;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
-using Orchard.Core.PublishLater.Models;
+using Orchard.PublishLater.Models;
 
-namespace Orchard.Core.PublishLater.ViewModels {
+namespace Orchard.PublishLater.ViewModels {
     public class PublishLaterViewModel {
         private readonly PublishLaterPart _publishLaterPart;
         private string _scheduledPublishUtcTime;

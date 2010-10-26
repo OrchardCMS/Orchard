@@ -6,7 +6,7 @@ Version: 0.8.0
 OrchardVersion: 0.8.0
 Description: The PublishLater module introduces draft creation and scheduled publishing functionality.
 Features:
-    PublishLater:
+    Orchard.PublishLater:
         Description: Draft creation and scheduled publishing.
         Category: Content
         Dependencies: Common, Settings, Scheduling
