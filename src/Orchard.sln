@@ -93,6 +93,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Themes", "Orchard.Web\Theme
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.PublishLater", "Orchard.Web\Modules\Orchard.PublishLater\Orchard.PublishLater.csproj", "{C889167C-E52C-4A65-A419-224B3D1B957D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{104288A3-382E-4032-AF50-FBB5FDAB9EBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuPack.Core", "..\external\nupack\NuPack.Core\NuPack.Core.csproj", "{F879F274-EFA0-4157-8404-33A19B4E6AEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -492,6 +496,16 @@ Global
 		{C889167C-E52C-4A65-A419-224B3D1B957D}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{C889167C-E52C-4A65-A419-224B3D1B957D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C889167C-E52C-4A65-A419-224B3D1B957D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC}.CodeCoverage|Any CPU.ActiveCfg = Coverage|Any CPU
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC}.CodeCoverage|Any CPU.Build.0 = Coverage|Any CPU
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC}.Coverage|Any CPU.ActiveCfg = Coverage|Any CPU
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC}.Coverage|Any CPU.Build.0 = Coverage|Any CPU
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC}.FxCop|Any CPU.ActiveCfg = Coverage|Any CPU
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC}.FxCop|Any CPU.Build.0 = Coverage|Any CPU
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -533,5 +547,6 @@ Global
 		{8A4E42CE-79F8-4BE2-8B1E-A6B83432123B} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{0DFA2E10-96C8-4E05-BC10-B710B97ECCDE} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+		{F879F274-EFA0-4157-8404-33A19B4E6AEC} = {104288A3-382E-4032-AF50-FBB5FDAB9EBB}
 	EndGlobalSection
 EndGlobal

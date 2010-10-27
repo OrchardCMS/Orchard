@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Packaging;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
@@ -23,7 +22,6 @@ namespace Orchard.Packaging.Services {
 
         public Localizer T { get; set; }
 
-        #region IPackageExpander Members
 
         public PackageInfo ExpandPackage(Stream packageStream) {
             var context = new ExpandContext();
@@ -55,9 +53,8 @@ namespace Orchard.Packaging.Services {
             };
         }
 
-        #endregion
-
         private void ExtractFile(ExpandContext context, string relativePath) {
+#if REFACTORING
             Uri partUri = PackUriHelper.CreatePartUri(new Uri(context.SourcePath + relativePath, UriKind.Relative));
             PackagePart packagePart = context.Package.GetPart(partUri);
             using (Stream packageStream = packagePart.GetStream(FileMode.Open, FileAccess.Read)) {
@@ -71,6 +68,7 @@ namespace Orchard.Packaging.Services {
                     packageStream.CopyTo(fileStream);
                 }
             }
+#endif
         }
 
         private void ExtractProjectFiles(ExpandContext context, params string[] itemGroupTypes) {
@@ -113,16 +111,22 @@ namespace Orchard.Packaging.Services {
         }
 
         private void ExtractThemeFiles(ExpandContext context) {
+#if REFACTORING
             foreach (var relativePath in from p in context.Package.GetParts()
                                          where p.Uri.ToString().StartsWith("/" + context.ExtensionName + "/", StringComparison.OrdinalIgnoreCase)
                                          select p.Uri.ToString().Substring(("/" + context.ExtensionName + "/").Length)) {
                 ExtractFile(context, relativePath);
             }
+#endif
         }
 
         private bool PartExists(ExpandContext context, string relativePath) {
+#if REFACTORING
             Uri projectUri = PackUriHelper.CreatePartUri(new Uri(context.SourcePath + relativePath, UriKind.Relative));
             return context.Package.PartExists(projectUri);
+#else
+            return false;
+#endif
         }
 
 
@@ -131,6 +135,7 @@ namespace Orchard.Packaging.Services {
         }
 
         private static bool LoadProject(ExpandContext context, string relativePath) {
+#if REFACTORING
             Uri projectUri = PackUriHelper.CreatePartUri(new Uri(context.SourcePath + relativePath, UriKind.Relative));
             if (!context.Package.PartExists(projectUri)) {
                 return false;
@@ -139,6 +144,7 @@ namespace Orchard.Packaging.Services {
             using (Stream stream = part.GetStream(FileMode.Open, FileAccess.Read)) {
                 context.Project = XDocument.Load(stream);
             }
+#endif
             return true;
         }
 
@@ -150,14 +156,19 @@ namespace Orchard.Packaging.Services {
                 context.Stream = new MemoryStream();
                 packageStream.CopyTo(context.Stream);
             }
+#if REFACTORING
             context.Package = Package.Open(context.Stream, FileMode.Open, FileAccess.Read);
+#endif
         }
 
         private void EndPackage(ExpandContext context) {
+#if REFACTORING
             context.Package.Close();
+#endif
         }
 
         private void GetCoreProperties(ExpandContext context) {
+#if REFACTORING
             context.ExtensionName = context.Package.PackageProperties.Identifier;
             context.ExtensionVersion = context.Package.PackageProperties.Version;
 
@@ -165,6 +176,7 @@ namespace Orchard.Packaging.Services {
             if (contentType.StartsWith(ContentTypePrefix)) {
                 context.ExtensionType = contentType.Substring(ContentTypePrefix.Length);
             }
+#endif
         }
 
         private void EstablishPaths(ExpandContext context, IVirtualPathProvider virtualPathProvider) {
@@ -185,7 +197,7 @@ namespace Orchard.Packaging.Services {
 
         private class ExpandContext {
             public Stream Stream { get; set; }
-            public Package Package { get; set; }
+            //public Package Package { get; set; }
 
             public string ExtensionName { get; set; }
             public string ExtensionVersion { get; set; }

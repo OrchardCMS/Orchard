@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.IO.Packaging;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -57,6 +56,7 @@ namespace Orchard.Packaging.Services {
         }
 
         public PackageData Download(string feedItemId) {
+#if REFACTORING
             PackagingEntry entry = _packagingSourceManager.GetModuleList().Single(x => x.SyndicationItem.Id == feedItemId);
             WebRequest request = WebRequest.Create(entry.PackageStreamUri);
             using (WebResponse response = request.GetResponse()) {
@@ -76,6 +76,9 @@ namespace Orchard.Packaging.Services {
                     }
                 }
             }
+#else
+            throw new NotImplementedException();
+#endif
         }
 
         public PackageInfo Install(Stream packageStream) {
