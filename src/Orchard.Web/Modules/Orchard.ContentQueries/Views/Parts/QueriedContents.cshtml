@@ -1,0 +1,14 @@
+﻿@{
+    IEnumerable<object> queriedContents = Model.ContentItems;
+    Model.ContentItems.Classes.Add("content-items");
+    Model.ContentItems.Classes.Add("queried-contents");
+}
+@if (queriedContents != null && queriedContents.Count() > 0) {
+    @Display(Model.ContentItems)
+    if (Model.Pager != null) {
+        @Display(Model.Pager)
+    }
+}
+else {
+    <p>@T("There are no contents.")</p>
+}
