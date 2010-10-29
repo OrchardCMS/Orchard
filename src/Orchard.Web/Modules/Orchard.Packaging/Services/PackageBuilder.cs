@@ -4,21 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Net.Mime;
 using System.Reflection;
-using System.Web;
-using System.Web.Hosting;
 using System.Xml.Linq;
-using NuPack;
+using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 
-using NuPack_PackageBuilder = NuPack.PackageBuilder;
-using NuPack_IPackageBuilder = NuPack.IPackageBuilder;
+using NuGetPackageBuilder = NuGet.PackageBuilder;
 
 namespace Orchard.Packaging.Services {
     [OrchardFeature("PackagingServices")]
     public class PackageBuilder : IPackageBuilder {
-        private readonly IExtensionManager _extensionManager;
         private readonly IWebSiteFolder _webSiteFolder;
 
         private static readonly string[] _ignoredThemeExtensions = new[] {
@@ -34,8 +30,7 @@ namespace Orchard.Packaging.Services {
                 _ignoredThemeExtensions.Contains(Path.GetExtension(filePath) ?? "");
         }
 
-        public PackageBuilder(IExtensionManager extensionManager, IWebSiteFolder webSiteFolder) {
-            _extensionManager = extensionManager;
+        public PackageBuilder(IWebSiteFolder webSiteFolder) {
             _webSiteFolder = webSiteFolder;
         }
 
@@ -72,7 +67,7 @@ namespace Orchard.Packaging.Services {
 
 
         private void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
-            context.Builder.Id = extensionDescriptor.Name;
+            context.Builder.Id = "Orchard." + extensionDescriptor.ExtensionType + "." + extensionDescriptor.Name;
             context.Builder.Version = new Version(extensionDescriptor.Version);
             context.Builder.Title = extensionDescriptor.DisplayName ?? extensionDescriptor.Name;
             context.Builder.Description = extensionDescriptor.Description;
@@ -140,7 +135,8 @@ namespace Orchard.Packaging.Services {
 
 
         private static void BeginPackage(CreateContext context) {
-            context.Builder = new NuPack_PackageBuilder();
+            context.Stream = new MemoryStream();
+            context.Builder = new NuGetPackageBuilder();
         }
 
         private static void EstablishPaths(CreateContext context, IWebSiteFolder webSiteFolder, string locationPath, string moduleName, string moduleType) {
@@ -151,7 +147,7 @@ namespace Orchard.Packaging.Services {
             else {
                 context.SourcePath = "~/Modules/" + moduleName + "/";
             }
-            context.TargetPath = "\\" + moduleName + "\\";
+            context.TargetPath = "\\Content\\Modules\\" + moduleName + "\\";
         }
 
         private static bool LoadProject(CreateContext context, string relativePath) {
@@ -164,13 +160,15 @@ namespace Orchard.Packaging.Services {
         }
 
         private static void EmbedVirtualFile(CreateContext context, string relativePath, string contentType) {
-            var file = new VirtualPackageFile(context.SourceFolder, context.SourcePath + relativePath);
+            var file = new VirtualPackageFile(
+                context.SourceFolder,
+                context.SourcePath + relativePath, 
+                context.TargetPath + relativePath);
             context.Builder.Files.Add(file);
         }
 
 
         private static void EndPackage(CreateContext context) {
-            context.Stream = new MemoryStream();
             context.Builder.Save(context.Stream);
         }
 
@@ -178,9 +176,7 @@ namespace Orchard.Packaging.Services {
 
         private class CreateContext {
             public Stream Stream { get; set; }
-            //public Package Package { get; set; }
-            //public Manifest Manifest { get; set; }
-            public NuPack_PackageBuilder Builder { get; set; }
+            public NuGetPackageBuilder Builder { get; set; }
 
             public IWebSiteFolder SourceFolder { get; set; }
             public string SourcePath { get; set; }
@@ -191,28 +187,31 @@ namespace Orchard.Packaging.Services {
 
         #endregion
 
-        
+
         #region Nested type: CreateContext
 
         private class VirtualPackageFile : IPackageFile {
-            private readonly IWebSiteFolder _sourceFolder;
+            private readonly IWebSiteFolder _webSiteFolder;
+            private readonly string _virtualPath;
+            private readonly string _packagePath;
 
-            public VirtualPackageFile(IWebSiteFolder sourceFolder, string path) {
-                Path = path;
-                _sourceFolder = sourceFolder;
+            public VirtualPackageFile(IWebSiteFolder webSiteFolder, string virtualPath, string packagePath) {
+                _webSiteFolder = webSiteFolder;
+                _virtualPath = virtualPath;
+                _packagePath = packagePath;
             }
 
-            public string Path { get; private set; }
+            public string Path { get { return _packagePath; } }
 
             public Stream GetStream() {
                 var stream = new MemoryStream();
-                _sourceFolder.CopyFileTo(Path, stream);
+                _webSiteFolder.CopyFileTo(_virtualPath, stream);
                 stream.Seek(0, SeekOrigin.Begin);
                 return stream;
             }
         }
 
-        #endregion 
+        #endregion
 
     }
 }
