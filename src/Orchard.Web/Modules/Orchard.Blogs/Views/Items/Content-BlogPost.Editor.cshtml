@@ -1,3 +1,5 @@
+@* todo: (heskew) remove - not being used but keeping around for the "remove draft" reminder *@
+
 @using Orchard.Blogs.Models;
 @{
     Html.AddTitleParts((string)Model.Title);
@@ -5,10 +7,11 @@
 }
 <div class="sections">
     <div class="primary">
-@Display(Model.Primary)
+        @Display(Model.Content)
     </div>
     <div class="secondary">
-@Display(Model.Secondary)
+        @Display(Model.Sidebar)
+        @* todo: (heskew) remove when the CommonPart is adding the save button - also move the remove draft functionality to the CommonPart at that time *@
         <fieldset>
             <button class="primaryAction" type="submit" name="submit.Save">@T("Save")</button>
             @* TODO: (erikpo) In the future, remove the HasPublished check so the user can delete the content item from here if the choose to *@
@@ -17,4 +20,4 @@
             }
         </fieldset>
     </div>
-</div>
+</div>asdfsdaf

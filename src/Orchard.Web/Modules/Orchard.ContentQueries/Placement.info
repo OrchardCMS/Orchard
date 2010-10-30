@@ -4,7 +4,7 @@
         Parts_QueriedContents
     -->
     <!-- edit "shape" -->
-    <Place Parts_ContentQueries_Configuration="Primary:2"/>
+    <Place Parts_ContentQueries_Configuration="Content:2"/>
     <!-- default positioning -->
     <Match ContentType="ContentQuery">
         <Match DisplayType="Detail">

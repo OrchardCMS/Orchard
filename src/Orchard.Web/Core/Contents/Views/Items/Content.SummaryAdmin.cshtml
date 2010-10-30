@@ -8,11 +8,19 @@
     <div class="properties">
         <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
         <h3>@Html.ItemEditLink(contentItem)</h3>
+        @if (Model.Header != null) {
+        <div class="header">@Display(Model.Header)</div>
+        }
+        @if (Model.Meta != null) {
         <div class="metadata">@Display(Model.Meta)</div>
+        }
     </div>
-    <div class="related">@Display(Model.Secondary)
+    <div class="related">
+        @Display(Model.Actions)
         @Html.ItemEditLink(T("Edit").Text, contentItem) @T(" | ")
         @Html.Link(T("Remove").Text, Url.Action("Remove", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
     </div>
-    <div class="primary">@Display(Model.Primary)</div>
+    @if (Model.Content != null) {
+    <div class="primary">@Display(Model.Content)</div>
+    }
 </div>
