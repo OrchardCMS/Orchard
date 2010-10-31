@@ -95,7 +95,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.PublishLater", "Orc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{104288A3-382E-4032-AF50-FBB5FDAB9EBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuPack.Core", "..\external\nupack\NuPack.Core\NuPack.Core.csproj", "{F879F274-EFA0-4157-8404-33A19B4E6AEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuPack.Core", "..\external\nuget\NuPack.Core\NuPack.Core.csproj", "{F879F274-EFA0-4157-8404-33A19B4E6AEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

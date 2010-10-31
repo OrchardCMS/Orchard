@@ -110,7 +110,7 @@
     <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\external\nupack\NuPack.Core\NuPack.Core.csproj">
+    <ProjectReference Include="..\..\..\..\external\nuget\NuPack.Core\NuPack.Core.csproj">
       <Project>{F879F274-EFA0-4157-8404-33A19B4E6AEC}</Project>
       <Name>NuPack.Core</Name>
     </ProjectReference>
