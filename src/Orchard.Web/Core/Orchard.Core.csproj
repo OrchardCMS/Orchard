@@ -369,6 +369,7 @@
     <Content Include="Routable\Views\Item\Display.cshtml" />
     <Content Include="Routable\Views\Routable.HomePage.cshtml" />
     <Content Include="Localization\Views\Parts\Localization.ContentTranslations.SummaryAdmin.cshtml" />
+    <Content Include="Contents\Views\Items\Content.Summary.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

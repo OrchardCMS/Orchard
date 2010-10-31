@@ -158,7 +158,7 @@ namespace Orchard.Core.Common.Handlers {
         //    if (instance.Owner != null)
         //        viewModel.Owner = instance.Owner.UserName;
 
-        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonPart") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
+        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonPart") { TemplateName = "Parts/Common.Owner", ZoneName = "Content", Position = "999" });
         //}
 
 
@@ -190,7 +190,7 @@ namespace Orchard.Core.Common.Handlers {
         //        }
         //    }
 
-        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonPart") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
+        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonPart") { TemplateName = "Parts/Common.Owner", ZoneName = "Content", Position = "999" });
         //}
     }
 }

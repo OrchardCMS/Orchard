@@ -163,7 +163,6 @@
     <Content Include="Views\Items\Content-Blog.DetailAdmin.cshtml" />
     <Content Include="Views\Items\Content-Blog.Edit.cshtml" />
     <Content Include="Views\Items\Content-BlogPost.Editor.cshtml" />
-    <Content Include="Views\Items\Content-BlogPost.SummaryAdmin.cshtml" />
     <Content Include="Views\Parts\Blogs.BlogPost.List.cshtml" />
     <Content Include="Views\Parts\Blogs.Blog.Pager.cshtml" />
     <Content Include="Views\Parts\Blogs.RecentBlogPosts.cshtml" />

@@ -94,7 +94,8 @@ namespace Orchard.Setup.Services {
                     "Orchard.Tags",
                     "Orchard.Media",
                     "Orchard.Widgets",
-                    "Orchard.jQuery"
+                    "Orchard.jQuery",
+                    "Orchard.ContentQueries"
                 };
 
                 context.EnabledFeatures = hardcoded;

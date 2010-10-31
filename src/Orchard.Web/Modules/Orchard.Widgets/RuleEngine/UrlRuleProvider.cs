@@ -26,7 +26,7 @@ namespace Orchard.Widgets.RuleEngine {
             if (url != "/" && !url.Contains("?") && url.EndsWith("/"))
                 url = url.TrimEnd('/');
             ruleContext.Result = url.EndsWith("*")
-                                     ? context.Request.Path.ToUpperInvariant().StartsWith(url.ToUpperInvariant())
+                                     ? context.Request.Path.ToUpperInvariant().StartsWith(url.TrimEnd('*').ToUpperInvariant())
                                      : context.Request.Path.ToUpperInvariant() == url.ToUpperInvariant();
         }
     }

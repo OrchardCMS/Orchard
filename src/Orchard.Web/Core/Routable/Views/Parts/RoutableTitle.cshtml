@@ -1,1 +1,6 @@
-<h1><a href="@Model.Path">@Model.Title</a></h1>
+@{
+    Orchard.ContentManagement.ContentItem contentItem = Model.ContentPart.ContentItem;
+    string title = Model.Title.ToString();
+}
+
+<h1>@Html.ItemDisplayLink(title, contentItem)</h1>

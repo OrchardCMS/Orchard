@@ -6,8 +6,6 @@ using Orchard.PublishLater.Models;
 namespace Orchard.PublishLater.ViewModels {
     public class PublishLaterViewModel {
         private readonly PublishLaterPart _publishLaterPart;
-        private string _scheduledPublishUtcTime;
-        private string _scheduledPublishUtcDate;
 
         public PublishLaterViewModel(PublishLaterPart publishLaterPart) {
             _publishLaterPart = publishLaterPart;
@@ -37,23 +35,8 @@ namespace Orchard.PublishLater.ViewModels {
 
         public DateTime? ScheduledPublishUtc { get; set; }
 
-        public string ScheduledPublishUtcDate {
-            get {
-                return !HasPublished && !string.IsNullOrEmpty(_scheduledPublishUtcDate) || !ScheduledPublishUtc.HasValue
-                           ? _scheduledPublishUtcDate
-                           : ScheduledPublishUtc.Value.ToShortDateString();
-            }
-            set { _scheduledPublishUtcDate = value; }
-        }
+        public string ScheduledPublishDate { get; set; }
 
-
-        public string ScheduledPublishUtcTime {
-            get {
-                return !HasPublished && !string.IsNullOrEmpty(_scheduledPublishUtcTime) || !ScheduledPublishUtc.HasValue
-                           ? _scheduledPublishUtcTime
-                           : ScheduledPublishUtc.Value.ToShortTimeString();
-            }
-            set { _scheduledPublishUtcTime = value; }
-        }
+        public string ScheduledPublishTime { get; set; }
     }
 }

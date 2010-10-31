@@ -6,7 +6,7 @@
         Parts_Localization_ContentTranslations_SummaryAdmin
     -->
     <!-- edit shape just gets default placement -->
-    <Place Parts_Localization_ContentTranslations_Edit="Primary:before.1"/>
+    <Place Parts_Localization_ContentTranslations_Edit="Content:before.1"/>
     <Match DisplayType="Detail">
         <Place Parts_Localization_ContentTranslations="Content:2"/>
     </Match>
@@ -14,6 +14,6 @@
         <Place Parts_Localization_ContentTranslations_Summary="Content:2"/>
     </Match>
     <Match DisplayType="SummaryAdmin">
-        <Place Parts_Localization_ContentTranslations_SummaryAdmin="Primary:5"/>
+        <Place Parts_Localization_ContentTranslations_SummaryAdmin="Content:5"/>
     </Match>
 </Placement>

@@ -2,14 +2,14 @@
 
 // async media file uploads brought to you with a little insight from reading: http://www.bennadel.com/blog/1244-ColdFusion-jQuery-And-AJAX-File-Upload-Demo.htm
 var AddMediaDialog = {
-    init: function() {
+    init: function () {
         var form = document.forms[0];
         form.action = tinyMCE.activeEditor.getParam('addmedia_action');
         form.MediaPath.value = tinyMCE.activeEditor.getParam('addmedia_path');
         form.__RequestVerificationToken.value = tinyMCE.activeEditor.getParam('request_verification_token');
     },
 
-    addMedia: function(form) {
+    addMedia: function (form) {
         var iframeName = "addmedia__" + (new Date()).getTime();
 
         var iframe;
@@ -22,12 +22,18 @@ var AddMediaDialog = {
         iframe.src = "about:blank";
         tinymce.DOM.setStyles(iframe, { display: "none" });
 
-        var iframeLoadHandler = tinymce.dom.Event.add(iframe, 'load', function(ev) {
+        var iframeLoadHandler = tinymce.dom.Event.add(iframe, 'load', function (ev) {
             try {
-                var result = window.frames[iframeName].result, close = 0;
+                var frameWindow = window.frames[iframeName];
+
+                if (frameWindow.document.URL == "about:blank") {
+                    return true;
+                }
+
+                var result = frameWindow.result, close = 0;
 
                 if (result && result.url) {
-            	    if (window.parent && window.parent.AddMediaDialog) {
+                    if (window.parent && window.parent.AddMediaDialog) {
                         window.parent.AddMediaDialog.insertMedia(result.url);
                     } else {
                         AddMediaDialog.insertMedia(result.url);
@@ -49,7 +55,7 @@ var AddMediaDialog = {
                 }
 
                 //cleanup
-                setTimeout(function() {
+                setTimeout(function () {
                     tinymce.dom.Event.remove(iframe, 'load', iframeLoadHandler);
                     tinymce.DOM.remove(iframe);
                     iframe = null;
@@ -72,7 +78,7 @@ var AddMediaDialog = {
         form.target = iframe.name;
     },
 
-    insertMedia: function(url) {
+    insertMedia: function (url) {
         if (!url) return;
 
         var markup = /\.(jpe?g|png|gif)$/i.test(url)

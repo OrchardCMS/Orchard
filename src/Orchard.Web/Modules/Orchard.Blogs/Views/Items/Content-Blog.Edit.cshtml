@@ -2,6 +2,13 @@
 @{
     Html.AddTitleParts((string)Model.Title);
 }
-@Display(Model.Primary)
-@Display(Model.Secondary)
-<fieldset><button class="primaryAction" type="submit">@T("Save")</button></fieldset>
+<div class="sections">
+    <div class="primary">
+        @Display(Model.Content)
+    </div>
+    <div class="secondary">
+        @Display(Model.Sidebar)
+        @* todo: (heskew) remove when the CommonPart is adding the save button *@
+        <fieldset><button class="primaryAction" type="submit">@T("Save")</button></fieldset>
+    </div>
+</div>

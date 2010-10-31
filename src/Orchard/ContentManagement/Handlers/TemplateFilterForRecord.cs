@@ -10,7 +10,7 @@ namespace Orchard.ContentManagement.Handlers {
         public TemplateFilterForRecord(string prefix, string templateName) {
             _prefix = prefix;
             _templateName = templateName;
-            _location = "Primary";
+            _location = "Content";
             _position = "5";
         }
 

@@ -21,10 +21,10 @@
         <label class="forcheckbox" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")">@T("Publish Later")</label>
     </div>
     <div>
-        <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishUtcDate")">@T("Date")</label>
-        @Html.EditorFor(m => m.ScheduledPublishUtcDate)
-        <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishUtcTime")">@T("Time")</label>
-        @Html.EditorFor(m => m.ScheduledPublishUtcTime)
+        <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishDate")">@T("Date")</label>
+        @Html.EditorFor(m => m.ScheduledPublishDate)
+        <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishTime")">@T("Time")</label>
+        @Html.EditorFor(m => m.ScheduledPublishTime)
     </div>
 </fieldset>
 @using(Script.Foot()) {
@@ -43,8 +43,9 @@
             .blur(function () { var $this = $(this); setTimeout(function () { if (!$this.val()) { $this.addClass("hinted").val($this.data("hint")) } }, 300) });
             }
         });
-        $(@(new HtmlString(string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishUtcDate"))))).datepicker({ showAnim: "" }).focus(function () { $(@(new HtmlString(string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater"))))).attr("checked", "checked") });
-        $(@(new HtmlString(string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishUtcTime"))))).timepickr().focus(function () { $(@(new HtmlString(string.Format("\"#{0}\"", ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater"))))).attr("checked", "checked") });
+        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishDate")').datepicker({ showAnim: "" }).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
+        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishTime")').timepickr().focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
+
     })
 //]]>
 </script>

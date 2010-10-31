@@ -1,0 +1,19 @@
+﻿<Placement>
+    <!-- available display shapes -->
+    <!--
+        Parts_QueriedContents
+    -->
+    <!-- edit "shape" -->
+    <Place Parts_ContentQueries_Configuration="Content:2"/>
+    <!-- default positioning -->
+    <Match ContentType="ContentQuery">
+        <Match DisplayType="Detail">
+            <Place Parts_QueriedContents="Content"/>
+        </Match>
+    </Match>
+    <Match ContentType="ContentQueryWidget">
+        <Match DisplayType="Detail">
+            <Place Parts_QueriedContents="Content"/>
+        </Match>
+    </Match>
+</Placement>
