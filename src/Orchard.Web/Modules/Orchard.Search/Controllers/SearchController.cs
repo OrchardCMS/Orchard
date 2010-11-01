@@ -40,11 +40,10 @@ namespace Orchard.Search.Controllers {
 
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
-        public ActionResult Index(string q, Pager pager) {
+        public ActionResult Index(Pager pager, string q = "") {
             var searchFields = CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
             IPageOfItems<ISearchHit> searchHits;
-            
             if (q.Trim().StartsWith("?") || q.Trim().StartsWith("*")) {
                 searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
                 Services.Notifier.Error(T("'*' or '?' not allowed as first character in WildcardQuery"));
