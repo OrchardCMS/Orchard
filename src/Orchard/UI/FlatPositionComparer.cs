@@ -8,27 +8,33 @@ namespace Orchard.UI {
             if (x == y)
                 return 0;
 
-            // "" == "5"
-            x = string.IsNullOrWhiteSpace(x) ? "5" : x.TrimStart(':'); // ':' is _sometimes_ used as a partition identifier
-            y = string.IsNullOrWhiteSpace(y) ? "5" : y.TrimStart(':');
+            // null == "before; "" == "0"
+            x = x == null
+                ? "before"
+                : x.Trim() == "" ? "0" : x.Trim(':').TrimEnd('.'); // ':' is _sometimes_ used as a partition identifier
+            y = y == null
+                ? "before"
+                : y.Trim() == "" ? "0" : y.Trim(':').TrimEnd('.');
 
-            var xParts = x.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-            var yParts = y.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            var xParts = x.Split(new[] { '.', ':' });
+            var yParts = y.Split(new[] { '.', ':' });
             for (var i = 0; i < xParts.Count(); i++) {
                 if (yParts.Length < i+1) // x is further defined meaning it comes after y (e.g. x == 1.2.3 and y == 1.2)
                     return 1;
 
                 int xPos;
                 int yPos;
+                var xPart = string.IsNullOrWhiteSpace(xParts[i]) ? "before" : xParts[i];
+                var yPart = string.IsNullOrWhiteSpace(yParts[i]) ? "before" : yParts[i];
 
-                xParts[i] = NormalizeKnownPartitions(xParts[i]);
-                yParts[i] = NormalizeKnownPartitions(yParts[i]);
+                xPart = NormalizeKnownPartitions(xPart);
+                yPart = NormalizeKnownPartitions(yPart);
 
-                var xIsInt = int.TryParse(xParts[i], out xPos);
-                var yIsInt = int.TryParse(yParts[i], out yPos);
+                var xIsInt = int.TryParse(xPart, out xPos);
+                var yIsInt = int.TryParse(yPart, out yPos);
 
                 if (!xIsInt && !yIsInt)
-                    return string.Compare(x, y, StringComparison.OrdinalIgnoreCase);
+                    return string.Compare(string.Join(".", xParts), string.Join(".", yParts), StringComparison.OrdinalIgnoreCase);
                 if (!xIsInt || (yIsInt && xPos > yPos)) // non-int after int or greater x pos than y pos (which is an int)
                     return 1;
                 if (!yIsInt || xPos < yPos)

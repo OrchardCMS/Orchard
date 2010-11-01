@@ -7,9 +7,8 @@ namespace Orchard.Migrations {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Developer"), "10",
-                        menu => menu
-                                    .Add(T("Migration"), "1.0", item => item.Action("Index", "DatabaseUpdate", new { area = "Orchard.Migrations" })));
+            builder.Add(T("Developer"), "1",
+                menu => menu.Add(T("Migration"), "1.0", item => item.Action("Index", "DatabaseUpdate", new { area = "Orchard.Migrations" })));
         }
     }
 }
