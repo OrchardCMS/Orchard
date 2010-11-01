@@ -5,10 +5,11 @@ using System.Reflection;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Services;
 using Orchard.Settings;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Security;
 using Orchard.Comments.ViewModels;
@@ -19,11 +20,12 @@ namespace Orchard.Comments.Controllers {
     public class AdminController : Controller {
         private readonly ICommentService _commentService;
 
-        public AdminController(IOrchardServices services, ICommentService commentService) {
+        public AdminController(IOrchardServices services, ICommentService commentService, IShapeFactory shapeFactory) {
             _commentService = commentService;
             Services = services;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
+            Shape = shapeFactory;
         }
 
         protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
@@ -32,8 +34,9 @@ namespace Orchard.Comments.Controllers {
         public IOrchardServices Services { get; set; }
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        dynamic Shape { get; set; }
 
-        public ActionResult Index(CommentIndexOptions options) {
+        public ActionResult Index(CommentIndexOptions options, Pager pager) {
             // Default options
             if (options == null)
                 options = new CommentIndexOptions();
@@ -57,8 +60,16 @@ namespace Orchard.Comments.Controllers {
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                var entries = comments.Select(comment => CreateCommentEntry(comment.Record)).ToList();
-                var model = new CommentsIndexViewModel {Comments = entries, Options = options};
+                var entries = comments.Skip(pager.GetStartIndex()).Take(pager.PageSize).Select(comment => CreateCommentEntry(comment.Record)).ToList();
+
+                var hasNextPage = comments.Skip(pager.GetStartIndex(pager.Page + 1)).Any();
+                var pagerShape = Shape.Pager(pager).HasNextPage(hasNextPage);
+
+                var model = new CommentsIndexViewModel {
+                    Comments = entries,
+                    Options = options,
+                    Pager = pagerShape
+                };
                 return View(model);
             }
             catch (Exception exception) {

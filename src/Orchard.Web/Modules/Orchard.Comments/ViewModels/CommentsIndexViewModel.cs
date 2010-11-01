@@ -5,6 +5,7 @@ namespace Orchard.Comments.ViewModels {
     public class CommentsIndexViewModel {
         public IList<CommentEntry> Comments { get; set; }
         public CommentIndexOptions Options { get; set; }
+        public dynamic Pager { get; set; }
     }
 
     public class CommentEntry {
