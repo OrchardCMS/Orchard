@@ -65,44 +65,20 @@ namespace Orchard.Core.Contents.Controllers {
             if (model.ContainerId != null)
                 query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
 
-            // Ordering
-            //-- want something like 
-            //switch (model.Options.OrderBy) {
-            //    case ContentsOrder.Modified:
-            //        query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
-            //        break;
-            //    case ContentsOrder.Published:
-            //        query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
-            //        break;
-            //    case ContentsOrder.Created:
-            //        query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
-            //        break;
-            //}
-
-            //-- but resorting to
-
             var contentItems = query.List();
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
-                    contentItems = contentItems.OrderByDescending(ci => ci.VersionRecord.Id);
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
                     break;
-                //case ContentsOrder.Published:
-                // would be lying w/out a published date instead of a bool but that only comes with the common aspect
-                //    contentItems = contentItems.OrderByDescending(ci => ci.VersionRecord.Published/*Date*/);
-                //    break;
+                case ContentsOrder.Published:
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
+                    break;
                 case ContentsOrder.Created:
-                    contentItems = contentItems.OrderByDescending(ci => ci.Id);
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
                     break;
             }
 
-            //-- for the moment
-            //-- because I'd rather do this
-
-            //var contentItems = query.Slice(skip, pageSize);
-
-            //-- instead of this (having the ordering and skip/take after the query)
-
-            var pageOfContentItems = contentItems.Skip(pager.GetStartIndex()).Take(pager.PageSize).ToList();
+            var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
             model.Options.SelectedFilter = model.TypeName;
             model.Options.FilterOptions = GetCreatableTypes()
