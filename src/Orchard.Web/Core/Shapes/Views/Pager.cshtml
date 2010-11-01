@@ -1,0 +1,39 @@
+﻿@{
+    var nextText = HasText(Model.NextText) ? Model.NextText : T("Older").Text;
+    var previousText = HasText(Model.PreviousText) ? Model.PreviousText : T("Newer").Text;
+
+    var routeData = new RouteValueDictionary(ViewContext.RouteData.Values);
+    var queryString = ViewContext.HttpContext.Request.QueryString;
+    if (queryString != null) {
+        foreach (string key in queryString.Keys) {
+            if (!routeData.ContainsKey(key)) {
+                var value = queryString[key];
+                routeData[key] = queryString[key];
+            }
+        }
+    }
+
+    if (routeData.ContainsKey("id") && !HasText(routeData["id"])) {
+        routeData.Remove("id");
+    }
+
+    Model.Classes.Add("pager");
+    Model.Classes.Add("group");
+    var tag = Tag(Model, "ul");
+}
+@if (Model.HasNextPage || Model.Page > 1) {
+    @tag.StartElement
+    if(Model.HasNextPage) {
+        routeData["page"] = Model.Page + 1;
+        <li class="older">
+        @Html.ActionLink((string)nextText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+        </li>
+    }
+    if(Model.Page > 1) {
+        routeData["page"] = Model.Page - 1;
+        <li class="newer">
+        @Html.ActionLink((string)previousText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+        </li>
+    }
+    @tag.EndElement
+}

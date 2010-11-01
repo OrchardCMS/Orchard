@@ -1,13 +1,15 @@
-﻿using System.Web.Mvc;
-using System.Web.Query.Dynamic;
+﻿using System.Linq;
+using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.DisplayManagement;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
 using Orchard.Settings;
 using Orchard.Search.Models;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using System.Collections.Generic;
 using Orchard.Collections;
@@ -22,21 +24,23 @@ namespace Orchard.Search.Controllers {
         public SearchController(
             IOrchardServices services,
             ISearchService searchService, 
-            IContentManager contentManager) {
-
+            IContentManager contentManager, 
+            IShapeFactory shapeFactory) {
              Services = services;
             _searchService = searchService;
             _contentManager = contentManager;
 
             T = NullLocalizer.Instance;
+            Shape = shapeFactory;
         }
 
         private IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
+        dynamic Shape { get; set; }
 
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
-        public ActionResult Index(string q, int page = 1, int pageSize = 10) {
+        public ActionResult Index(string q, Pager pager) {
             var searchFields = CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
             IPageOfItems<ISearchHit> searchHits;
@@ -46,38 +50,33 @@ namespace Orchard.Search.Controllers {
                 Services.Notifier.Error(T("'*' or '?' not allowed as first character in WildcardQuery"));
             } 
             else {
-                searchHits = _searchService.Query(q, page, pageSize,
+                searchHits = _searchService.Query(q, pager.Page, pager.PageSize,
                                                       CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
                                                       searchFields,
                                                       searchHit => searchHit);
             }
 
-            var searchResultViewModels = new List<SearchResultViewModel>();
-
-            foreach(var searchHit in searchHits) {
-                var contentItem = _contentManager.Get(searchHit.ContentItemId);
+            var list = Shape.List();
+            foreach (var contentItem in searchHits.Select(searchHit => _contentManager.Get(searchHit.ContentItemId))) {
                 // ignore search results which content item has been removed or unpublished
                 if(contentItem == null){
                     searchHits.TotalItemCount--;
                     continue;
                 }
 
-                searchResultViewModels.Add(new SearchResultViewModel {
-                        Content = _contentManager.BuildDisplay(contentItem, "SummaryForSearch"),
-                        SearchHit = searchHit
-                    });
+                list.Add(_contentManager.BuildDisplay(contentItem, "Summary"));
             }
 
-            var pageOfItems = new PageOfItems<SearchResultViewModel>(searchResultViewModels) {
-                PageNumber = page,
-                PageSize = searchHits.PageSize,
-                TotalItemCount = searchHits.TotalItemCount
-            };
+            var hasNextPage = searchHits.TotalPageCount > pager.Page;
+            var pagerShape = Shape.Pager(pager).HasNextPage(hasNextPage);
 
             var searchViewModel = new SearchViewModel {
                 Query = q,
-                DefaultPageSize = 10, // TODO: sebastien <- yeah, I know :|
-                PageOfResults = pageOfItems
+                TotalItemCount = searchHits.TotalItemCount,
+                StartPosition = (pager.Page - 1) * pager.PageSize + 1,
+                EndPosition = pager.Page * pager.PageSize > searchHits.TotalItemCount ? searchHits.TotalItemCount : pager.Page * pager.PageSize,
+                ContentItems = list,
+                Pager = pagerShape
             };
 
             //todo: deal with page requests beyond result count

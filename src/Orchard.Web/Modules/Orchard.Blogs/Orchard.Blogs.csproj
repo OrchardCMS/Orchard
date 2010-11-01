@@ -68,14 +68,12 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Drivers\BlogArchivesPartDriver.cs" />
-    <Compile Include="Drivers\BlogPagerPartDriver.cs" />
     <Compile Include="Drivers\RemoteBlogPublishingDriver.cs" />
     <Compile Include="Drivers\RecentBlogPostsPartDriver.cs" />
     <Compile Include="Handlers\BlogArchivesPartHandler.cs" />
     <Compile Include="Handlers\RecentBlogPostsPartHandler.cs" />
     <Compile Include="Models\BlogArchivesPart.cs" />
     <Compile Include="Models\BlogArchivesPartRecord.cs" />
-    <Compile Include="Models\BlogPagerPart.cs" />
     <Compile Include="Models\RecentBlogPostsPart.cs" />
     <Compile Include="Models\RecentBlogPostsPartRecord.cs" />
     <Compile Include="ResourceManifest.cs" />
@@ -120,7 +118,6 @@
     <Content Include="Scripts\archives.js" />
     <Content Include="Styles\admin.css" />
     <Content Include="Styles\archives.css" />
-    <Content Include="Styles\pagination.css" />
     <Content Include="Views\BlogAdmin\Create.cshtml" />
     <Content Include="Views\BlogAdmin\Edit.cshtml" />
     <Content Include="Views\BlogAdmin\Item.cshtml" />
@@ -164,7 +161,6 @@
     <Content Include="Views\Items\Content-Blog.Edit.cshtml" />
     <Content Include="Views\Items\Content-BlogPost.Editor.cshtml" />
     <Content Include="Views\Parts\Blogs.BlogPost.List.cshtml" />
-    <Content Include="Views\Parts\Blogs.Blog.Pager.cshtml" />
     <Content Include="Views\Parts\Blogs.RecentBlogPosts.cshtml" />
     <Content Include="Views\Parts\Blogs.Blog.BlogPostCount.cshtml" />
   </ItemGroup>

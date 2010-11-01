@@ -140,6 +140,12 @@ namespace Orchard.Blogs.Controllers {
 
             if (blogPart == null)
                 return HttpNotFound();
+                             //() => {
+                             //    var list = shapeHelper.List();
+                             //    list.AddRange(_blogPostService.Get(part, VersionOptions.Latest)
+                             //                              .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin")));
+                             //    return shapeHelper.Parts_Blogs_BlogPost_List_Admin(ContentPart: part, ContentItems: list);
+                             //})
 
             var model = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
             return View(model);

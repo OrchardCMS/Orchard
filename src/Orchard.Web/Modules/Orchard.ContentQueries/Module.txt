@@ -8,5 +8,5 @@ Features:
     Orchard.ContentQueries:
         Name: Queried Content Lists
         Description: Use simple queries to create orderd lists of content items with optional paging support.
-        Dependencies: Contents
+        Dependencies: Contents, Common
         Category: Content
