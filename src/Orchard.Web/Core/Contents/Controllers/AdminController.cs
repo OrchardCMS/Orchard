@@ -65,7 +65,6 @@ namespace Orchard.Core.Contents.Controllers {
             if (model.ContainerId != null)
                 query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
 
-            var contentItems = query.List();
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
                     query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
@@ -89,7 +88,7 @@ namespace Orchard.Core.Contents.Controllers {
             var list = Shape.List();
             list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
 
-            var hasNextPage = contentItems.Skip(pager.GetStartIndex(pager.Page + 1)).Any();
+            var hasNextPage = query.Slice(pager.GetStartIndex(pager.Page + 1), 1).Any();
             var pagerShape = Shape.Pager(pager).HasNextPage(hasNextPage);
 
             var viewModel = Shape.ViewModel()
