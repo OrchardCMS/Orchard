@@ -15,6 +15,7 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Contents.Controllers {
@@ -44,12 +45,9 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult List(ListContentsViewModel model) {
+        public ActionResult List(ListContentsViewModel model, Pager pager) {
             if (model.ContainerId != null && _contentManager.GetLatest((int)model.ContainerId) == null)
                 return HttpNotFound();
-
-            const int pageSize = 20;
-            var skip = (Math.Max(model.Page ?? 0, 1) - 1) * pageSize;
 
             var query = _contentManager.Query(VersionOptions.Latest, GetCreatableTypes().Select(ctd => ctd.Name).ToArray());
 
@@ -104,7 +102,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             //-- instead of this (having the ordering and skip/take after the query)
 
-            contentItems = contentItems.Skip(skip).Take(pageSize).ToList();
+            var pageOfContentItems = contentItems.Skip(pager.GetStartIndex()).Take(pager.PageSize).ToList();
 
             model.Options.SelectedFilter = model.TypeName;
             model.Options.FilterOptions = GetCreatableTypes()
@@ -113,10 +111,14 @@ namespace Orchard.Core.Contents.Controllers {
 
 
             var list = Shape.List();
-            list.AddRange(contentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+
+            var hasNextPage = contentItems.Skip(pager.GetStartIndex(pager.Page + 1)).Any();
+            var pagerShape = Shape.Pager(pager).HasNextPage(hasNextPage);
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
+                .Pager(pagerShape)
                 .Options(model.Options)
                 .TypeDisplayName(model.TypeDisplayName ?? "");
 
