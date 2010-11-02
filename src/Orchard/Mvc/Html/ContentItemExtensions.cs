@@ -43,7 +43,7 @@ namespace Orchard.Mvc.Html {
                 return null;
 
             return html.ActionLink(
-                NonNullOrEmpty(linkText, metadata.DisplayText, "edit"),
+                NonNullOrEmpty(linkText, metadata.DisplayText, content.ContentItem.TypeDefinition.DisplayName),
                 Convert.ToString(metadata.EditorRouteValues["action"]),
                 metadata.EditorRouteValues.Merge(additionalRouteValues));
         }
