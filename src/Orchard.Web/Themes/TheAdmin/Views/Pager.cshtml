@@ -1,0 +1,65 @@
+﻿@{
+    var nextText = HasText(Model.NextText) ? Model.NextText : T(">").Text;
+    var previousText = HasText(Model.PreviousText) ? Model.PreviousText : T("<").Text;
+
+    var routeData = new RouteValueDictionary(ViewContext.RouteData.Values);
+    var queryString = ViewContext.HttpContext.Request.QueryString;
+    if (queryString != null) {
+        foreach (string key in queryString.Keys) {
+            if (key != null && !routeData.ContainsKey(key)) {
+                var value = queryString[key];
+                routeData[key] = queryString[key];
+            }
+        }
+    }
+
+    if (routeData.ContainsKey("id") && !HasText(routeData["id"])) {
+        routeData.Remove("id");
+    }
+
+    var totalPageCount = (int) Math.Ceiling((double) Model.TotalItemCount / Model.PageSize);
+
+    Model.Classes.Add("pager");
+    Model.Classes.Add("group");
+    var tag = Tag(Model, "ul");
+}
+@if (totalPageCount > 1) {
+    @tag.StartElement
+    // previous page
+    if(Model.Page > 1) {
+        if (Model.Page == 2 && routeData.ContainsKey("page")) {
+            routeData.Remove("page");
+        }
+        else {
+            routeData["page"] = Model.Page - 1;
+        }
+        <li class="page-previous">
+        @Html.ActionLink((string)previousText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+        </li>
+    }
+    // page numbers
+    for (var p = 1; p <= totalPageCount; p++) {
+        <li class="page-@p">
+        @if (p == Model.Page) {
+            <span>@p</span>
+        }
+        else {
+            if (p == 1) {
+                routeData.Remove("page");
+            }
+            else {
+                routeData["page"] = p;
+            }
+            @Html.ActionLink(p.ToString(), (string)routeData["action"], (string)routeData["controller"], routeData, null)
+        }
+        </li>
+    }
+    // next page
+    if(Model.Page < totalPageCount) {
+        routeData["page"] = Model.Page + 1;
+        <li class="page-next">
+        @Html.ActionLink((string)nextText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+        </li>
+    }
+    @tag.EndElement
+}

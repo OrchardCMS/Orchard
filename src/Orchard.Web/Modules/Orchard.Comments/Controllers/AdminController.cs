@@ -63,9 +63,8 @@ namespace Orchard.Comments.Controllers {
                         throw new ArgumentOutOfRangeException();
                 }
 
-                var entries = comments.Slice(pager.GetStartIndex(), pager.PageSize).ToList().Select(comment => CreateCommentEntry(comment.Record));
-
                 var pagerShape = Shape.Pager(pager).TotalItemCount(comments.Count());
+                var entries = comments.Slice(pager.GetStartIndex(), pager.PageSize).ToList().Select(comment => CreateCommentEntry(comment.Record));
 
                 var model = new CommentsIndexViewModel {
                     Comments = entries.ToList(),

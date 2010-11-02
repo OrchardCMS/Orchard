@@ -803,8 +803,9 @@ table .button {
 
 .pager { list-style: none; padding: 0; margin: 12px 0 0 0; }
 .pager li { float: left; padding: 0 12px 0 0; margin: 0; }
-.pager a { font-size: 1.077em; display: block; background-color: whiteSmoke; padding: 6px 6px; color: #333;}
+.pager a, .pager span { font-size: 1.077em; display: block; background-color: whiteSmoke; padding: 6px 6px; color: #333;}
 .pager a:hover { background-color: #eaeaea; color: #333; }
+.pager span { background-color:inherit; }
 
 
 /* Core Modules

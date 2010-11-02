@@ -196,7 +196,8 @@ namespace Orchard.ContentManagement {
             }
 
             int IContentQuery<T>.Count() {
-                var criteria = _query.BindItemVersionCriteria();
+                var criteria = (ICriteria)_query.BindItemVersionCriteria().Clone();
+                criteria.ClearOrders();
                 return criteria.SetProjection( Projections.RowCount() ).UniqueResult<Int32>();  
             }
 

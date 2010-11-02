@@ -6,7 +6,7 @@
     var queryString = ViewContext.HttpContext.Request.QueryString;
     if (queryString != null) {
         foreach (string key in queryString.Keys) {
-            if (!routeData.ContainsKey(key)) {
+            if (key != null && !routeData.ContainsKey(key)) {
                 var value = queryString[key];
                 routeData[key] = queryString[key];
             }
@@ -27,13 +27,13 @@
     @tag.StartElement
     if(hasNextPage) {
         routeData["page"] = Model.Page + 1;
-        <li class="older">
+        <li class="page-next">
         @Html.ActionLink((string)nextText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
         </li>
     }
     if(Model.Page > 1) {
         routeData["page"] = Model.Page - 1;
-        <li class="newer">
+        <li class="page-previous">
         @Html.ActionLink((string)previousText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
         </li>
     }
