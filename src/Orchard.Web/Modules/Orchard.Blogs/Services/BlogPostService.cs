@@ -49,9 +49,16 @@ namespace Orchard.Blogs.Services {
             return GetBlogQuery(blogPart, versionOptions).List().Select(ci => ci.As<BlogPostPart>());
         }
 
+        public int PostCount(BlogPart blogPart, VersionOptions versionOptions) {
+            return GetBlogQuery(blogPart, versionOptions).Count();
+        }
 
         public IEnumerable<BlogPostPart> Get(BlogPart blogPart, int skip, int count) {
             return GetBlogQuery(blogPart, VersionOptions.Published).Slice(skip, count).ToList().Select(ci => ci.As<BlogPostPart>());
+        }
+
+        public int PostCount(BlogPart blogPart) {
+            return PostCount(blogPart, VersionOptions.Published);
         }
 
         public IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData) {

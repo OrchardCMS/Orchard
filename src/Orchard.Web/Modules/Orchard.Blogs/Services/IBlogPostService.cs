@@ -13,6 +13,8 @@ namespace Orchard.Blogs.Services {
         IEnumerable<BlogPostPart> Get(BlogPart blogPart, VersionOptions versionOptions);
         IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData);
         IEnumerable<BlogPostPart> Get(BlogPart blogPart, int skip, int count);
+        int PostCount(BlogPart blogPart);
+        int PostCount(BlogPart blogPart, VersionOptions versionOptions);
         IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(BlogPart blogPart);
         void Delete(BlogPostPart blogPostPart);
         void Publish(BlogPostPart blogPostPart);

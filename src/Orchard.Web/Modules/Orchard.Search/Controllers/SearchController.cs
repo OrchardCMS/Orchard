@@ -66,8 +66,7 @@ namespace Orchard.Search.Controllers {
                 list.Add(_contentManager.BuildDisplay(contentItem, "Summary"));
             }
 
-            var hasNextPage = searchHits.TotalPageCount > pager.Page;
-            var pagerShape = Shape.Pager(pager).HasNextPage(hasNextPage);
+            var pagerShape = Shape.Pager(pager).TotalItemCount(searchHits.TotalItemCount);
 
             var searchViewModel = new SearchViewModel {
                 Query = q,

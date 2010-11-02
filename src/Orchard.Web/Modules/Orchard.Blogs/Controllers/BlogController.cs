@@ -74,8 +74,8 @@ namespace Orchard.Blogs.Controllers {
             list.AddRange(blogPosts);
             blog.Content.Add(Shape.Parts_Blogs_BlogPost_List(ContentItems: list), "5");
 
-            var hasNextPage = _blogPostService.Get(blogPart, pager.GetStartIndex(pager.Page + 1), 1).Any();
-            blog.Content.Add(Shape.Pager(pager).HasNextPage(hasNextPage), "Content:after");
+            var totalItemCount = _blogPostService.PostCount(blogPart);
+            blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
 
             return View(blog);
         }

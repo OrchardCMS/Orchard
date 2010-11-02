@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -42,7 +44,7 @@ namespace Orchard.Comments.Controllers {
                 options = new CommentIndexOptions();
 
             // Filtering
-            IEnumerable<CommentPart> comments;
+            IContentQuery<CommentPart, CommentPartRecord> comments;
             try {
                 switch (options.Filter) {
                     case CommentIndexFilter.All:
@@ -60,13 +62,13 @@ namespace Orchard.Comments.Controllers {
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                var entries = comments.Skip(pager.GetStartIndex()).Take(pager.PageSize).Select(comment => CreateCommentEntry(comment.Record)).ToList();
 
-                var hasNextPage = comments.Skip(pager.GetStartIndex(pager.Page + 1)).Any();
-                var pagerShape = Shape.Pager(pager).HasNextPage(hasNextPage);
+                var entries = comments.Slice(pager.GetStartIndex(), pager.PageSize).ToList().Select(comment => CreateCommentEntry(comment.Record));
+
+                var pagerShape = Shape.Pager(pager).TotalItemCount(comments.Count());
 
                 var model = new CommentsIndexViewModel {
-                    Comments = entries,
+                    Comments = entries.ToList(),
                     Options = options,
                     Pager = pagerShape
                 };
@@ -140,7 +142,7 @@ namespace Orchard.Comments.Controllers {
                 options = new CommentDetailsOptions();
 
             // Filtering
-            IEnumerable<CommentPart> comments;
+            IContentQuery<CommentPart, CommentPartRecord> comments;
             try {
                 switch (options.Filter) {
                     case CommentDetailsFilter.All:
@@ -158,7 +160,7 @@ namespace Orchard.Comments.Controllers {
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                var entries = comments.Select(comment => CreateCommentEntry(comment.Record)).ToList();
+                var entries = comments.List().Select(comment => CreateCommentEntry(comment.Record)).ToList();
                 var model = new CommentsDetailsViewModel {
                     Comments = entries,
                     Options = options,

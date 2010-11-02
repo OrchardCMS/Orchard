@@ -88,8 +88,7 @@ namespace Orchard.Core.Contents.Controllers {
             var list = Shape.List();
             list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
 
-            var hasNextPage = query.Slice(pager.GetStartIndex(pager.Page + 1), 1).Any();
-            var pagerShape = Shape.Pager(pager).HasNextPage(hasNextPage);
+            var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)

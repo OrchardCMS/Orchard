@@ -17,13 +17,15 @@
         routeData.Remove("id");
     }
 
+    var hasNextPage = (Model.Page * Model.PageSize) < Model.TotalItemCount;
+
     Model.Classes.Add("pager");
     Model.Classes.Add("group");
     var tag = Tag(Model, "ul");
 }
-@if (Model.HasNextPage || Model.Page > 1) {
+@if (hasNextPage || Model.Page > 1) {
     @tag.StartElement
-    if(Model.HasNextPage) {
+    if(hasNextPage) {
         routeData["page"] = Model.Page + 1;
         <li class="older">
         @Html.ActionLink((string)nextText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
