@@ -7,10 +7,9 @@ namespace Orchard.Tags {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Tags"), "3",
-                        menu => menu
-                                    .Add(T("Manage Tags"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Tags" }).Permission(Permissions.ManageTags))
-                                    );
+            builder.Add(T("Tags"), "20",
+                menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.Tags" })
+                    .Permission(Permissions.ManageTags)));
         }
     }
 }

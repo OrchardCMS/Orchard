@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.UI;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Utility {
@@ -9,7 +10,7 @@ namespace Orchard.Utility {
             var topMenuItem = menuItems.FirstOrDefault();
 
             if (topMenuItem != null) {
-                var maxMenuItem = topMenuItem.Items.Where(PositionHasMojorNumber).OrderByDescending(mi => mi.Position, new PositionComparer()).FirstOrDefault();
+                var maxMenuItem = topMenuItem.Items.Where(PositionHasMojorNumber).OrderByDescending(mi => mi.Position, new FlatPositionComparer()).FirstOrDefault();
                 var positionParts = maxMenuItem.Position.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim() != "");
                 if (positionParts.Count() > 0) {
                     int result;
