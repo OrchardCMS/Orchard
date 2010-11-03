@@ -135,7 +135,6 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="Views\Items\Content-Blog.SummaryAdmin.cshtml" />
-    <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

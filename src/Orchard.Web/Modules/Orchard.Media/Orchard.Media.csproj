@@ -92,7 +92,6 @@
     <Content Include="Content\Admin\images\folder.gif" />
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
-    <Content Include="Web.config" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
