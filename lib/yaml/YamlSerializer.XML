@@ -4,1222 +4,6 @@
         <name>YamlSerializer</name>
     </assembly>
     <members>
-        <member name="T:System.Yaml.Serialization.EasyTypeConverter">
-            <summary>
-            Converts various types to / from string.<br/>
-            I don't remember why this class was needed....
-            </summary>
-            <example>
-            <code>
-            object obj = GetObjectToConvert();
-            
-            // Check if the type has [TypeConverter] attribute.
-            if( EasyTypeConverter.IsTypeConverterSpecified(type) ) {
-            
-              // Convert the object to string.
-              string s = EasyTypeConverter.ConvertToString(obj);
-            
-              // Convert the string to an object of the spific type.
-              object restored = EasyTypeConverter.ConvertFromString(s, type);
-              
-              Assert.AreEqual(obj, restored);
-            
-            }
-            </code>
-            </example>
-        </member>
-        <member name="T:System.Yaml.Serialization.YamlRepresenter">
-            <summary>
-            Converts C# object to YamlNode
-            </summary>
-            <example>
-            <code>
-            object obj;
-            YamlNode node = YamlRepresenter.ObjectToNode(obj);
-            </code>
-            </example>
-        </member>
-        <member name="T:System.Yaml.YamlNodeManipulator">
-            <summary>
-            Implements utility functions to instantiating YamlNode's
-            </summary>
-            <example>
-            <code>
-            var node_tree = seq(
-                str("abc"),
-                str("def"),
-                map(
-                    str("key"), str("value"),
-                    str("key2"), seq( str("value2a"), str("value2b") )
-                ),
-                str("2"), // !!str
-                str("!!int", "2")
-            );
-            
-            string yaml = node_tree.ToYaml();
-            
-            // %YAML 1.2
-            // ---
-            // - abc
-            // - def
-            // - key: value
-            //   key2: [ value2a, value2b ]
-            // - "2"         # !!str
-            // - 2           # !!int
-            // ...
-            </code>                                                   
-            </example>
-        </member>
-        <member name="M:System.Yaml.YamlNodeManipulator.str(System.String)">
-            <summary>
-            Create a scalar node. Tag is set to be "!!str".
-            </summary>
-            <example>
-            <code>
-            var node_tree = seq(
-                str("abc"),
-                str("def"),
-                map(
-                    str("key"), str("value"),
-                    str("key2"), seq( str("value2a"), str("value2b") )
-                ),
-                str("2"), // !!str
-                str("!!int", "2")
-            );
-            
-            string yaml = node_tree.ToYaml();
-            
-            // %YAML 1.2
-            // ---
-            // - abc
-            // - def
-            // - key: value
-            //   key2: [ value2a, value2b ]
-            // - "2"         # !!str
-            // - 2           # !!int
-            // ...
-            </code>                                                   
-            </example>
-            <param name="value">Value for the scalar node.</param>
-            <returns>Created scalar node.</returns>
-        </member>
-        <member name="M:System.Yaml.YamlNodeManipulator.str(System.String,System.String)">
-            <summary>
-            Create a scalar node.
-            </summary>
-            <param name="tag">Tag for the scalar node.</param>
-            <param name="value">Value for the scalar node.</param>
-            <returns>Created scalar node.</returns>
-        </member>
-        <member name="M:System.Yaml.YamlNodeManipulator.seq(System.Yaml.YamlNode[])">
-            <summary>
-            Create a sequence node. Tag is set to be "!!seq".
-            </summary>
-            <param name="nodes">Child nodes.</param>
-            <returns>Created sequence node.</returns>
-        </member>
-        <member name="M:System.Yaml.YamlNodeManipulator.seq_tag(System.String,System.Yaml.YamlNode[])">
-            <summary>
-            Create a sequence node. 
-            </summary>
-            <param name="nodes">Child nodes.</param>
-            <param name="tag">Tag for the seuqnce.</param>
-            <returns>Created sequence node.</returns>
-        </member>
-        <member name="M:System.Yaml.YamlNodeManipulator.map(System.Yaml.YamlNode[])">
-            <summary>
-            Create a mapping node. Tag is set to be "!!map".
-            </summary>
-            <param name="nodes">Sequential list of key/value pairs.</param>
-            <returns>Created mapping node.</returns>
-        </member>
-        <member name="M:System.Yaml.YamlNodeManipulator.map_tag(System.String,System.Yaml.YamlNode[])">
-            <summary>
-            Create a mapping node. 
-            </summary>
-            <param name="nodes">Sequential list of key/value pairs.</param>
-            <param name="tag">Tag for the mapping.</param>
-            <returns>Created mapping node.</returns>
-        </member>
-        <member name="T:System.Yaml.ParseErrorException">
-            <summary>
-            <para>When <see cref="T:System.Yaml.Parser`1"/> reports syntax error by exception, this class is thrown.</para>
-            
-            <para>Sytax errors can also be reported by simply returing false with giving some warnings.</para>
-            </summary>
-        </member>
-        <member name="M:System.Yaml.ParseErrorException.#ctor(System.String)">
-            <summary>
-            Initialize an instance of <see cref="T:System.Yaml.ParseErrorException"/>
-            </summary>
-            <param name="message">Error message.</param>
-        </member>
-        <member name="T:System.Yaml.Parser`1">
-            <summary>
-            <para>Base class to implement a parser class.</para>
-            
-            <para>It allows not very efficient but easy implementation of a text parser along 
-            with a parameterized BNF productions.</para>
-            </summary>
-            <typeparam name="State">Parser specific state structure.</typeparam>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Parse(System.Func{System.Boolean},System.String)">
-            <summary>
-            Parse the <paramref name="text"/> using the <paramref name="start_rule"/> 
-            as the starting rule.
-            </summary>
-            <param name="start_rule">Starting rule.</param>
-            <param name="text">Text to be parsed.</param>
-            <returns></returns>
-        </member>
-        <member name="F:System.Yaml.Parser`1.text">
-            <summary>
-            <para>Gets / sets source text to be parsed.</para>
-            <para>While parsing, this variable will not be changed.</para>
-            <para>The current position to be read by parser is represented by the field <see cref="F:System.Yaml.Parser`1.p"/>.</para>
-            <para>Namely, the next character to be read is <c>text[p]</c>.</para>
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Parser`1.p">
-            <summary>
-            <para>The current reading position.</para>
-            
-            <para>The next character to be read by the parser is <c>text[p]</c>.</para>
-            
-            <para>Increase <see cref="F:System.Yaml.Parser`1.p"/> to reduce some part of source text <see cref="F:System.Yaml.Parser`1.text"/>.</para>
-            
-            <para>The current position <see cref="F:System.Yaml.Parser`1.p"/> is automatically reverted at rewinding.</para>
-            </summary>
-            <example>
-            Example to show how to reduce BNF reduction rule of ( "t" "e" "x" "t" ).
-            <code>
-              return RewindUnless(()=&gt;
-                  text[p++] == 't' &amp;&amp;
-                  text[p++] == 'e' &amp;&amp;
-                  text[p++] == 'x' &amp;&amp;
-                  text[p++] == 't'
-              );
-            </code>
-            </example>
-        </member>
-        <member name="F:System.Yaml.Parser`1.stringValue">
-            <summary>
-            <para>Use this variable to build some string data from source text.</para>
-            
-            <para>It will be automatically reverted at rewinding.</para>
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Parser`1.state">
-            <summary>
-            <para>Individual-parser-specific state object.</para>
-            
-            <para>It will be automatically reverted at rewinding.</para>
-            
-            <para>If some action, in addition to simply restore the value of the state object,
-            is needed to recover the previous state, override <see cref="M:System.Yaml.Parser`1.Rewind"/>
-            method.</para>
-            </summary>
-        </member>
-        <member name="M:System.Yaml.Parser`1.InitializeLines">
-            <summary>
-            Initialize <see cref="F:System.Yaml.Parser`1.Lines"/>, which represents line number to 
-            start position of each line list.
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Parser`1.Lines">
-            <summary>
-            Line number to start position list.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Error(System.String,System.Object[])">
-            <summary>
-            Reporting syntax error by throwing <see cref="T:System.Yaml.ParseErrorException"/>.
-            </summary>
-            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the error message.</param>
-            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
-            <returns>Because it throw exception, nothing will be returned in reality.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.WarningIf(System.Boolean,System.String,System.Object[])">
-            <summary>
-            <para>Give warning if <paramref name="condition"/> is true.</para>
-            
-            <para>By default, the warning will not be shown / stored to anywhere.
-            To show or log the warning, override <see cref="M:System.Yaml.Parser`1.StoreWarning(System.String)"/>.</para>
-            </summary>
-            <example>
-            <code>
-              return 
-                  SomeObsoleteReductionRule() &amp;&amp;
-                  WarningIf(
-                      context != Context.IndeedObsolete,
-                      "Obsolete");
-            </code>
-            </example>
-            <param name="condition">If true, warning is given; otherwize do nothing.</param>
-            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the warning message.</param>
-            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
-            <returns>Always true.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.WarningUnless(System.Boolean,System.String,System.Object[])">
-            <summary>
-            <para>Give warning if <paramref name="condition"/> is false.</para>
-            
-            <para>By default, the warning will not be shown / stored to anywhere.
-            To show or log the warning, override <see cref="M:System.Yaml.Parser`1.StoreWarning(System.String)"/>.</para>
-            </summary>
-            <example>
-            <code>
-              return 
-                  SomeObsoleteReductionRule() &amp;&amp;
-                  WarningUnless(
-                      context != Context.NotObsolete,
-                      "Obsolete");
-            </code>
-            </example>
-            <param name="condition">If false, warning is given; otherwize do nothing.</param>
-            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the warning message.</param>
-            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
-            <returns>Always true.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Warning(System.String,System.Object[])">
-            <summary>
-            <para>Give warning.</para>
-            
-            <para>By default, the warning will not be shown / stored to anywhere.
-            To show or log the warning, override <see cref="M:System.Yaml.Parser`1.StoreWarning(System.String)"/>.</para>
-            </summary>
-            <example>
-            <code>
-              return 
-                  SomeObsoleteReductionRule() &amp;&amp;
-                  Warning("Obsolete");
-            </code>
-            </example>
-            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the warning message.</param>
-            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
-            <returns>Always true.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.StoreWarning(System.String)">
-            <summary>
-            <para>Invoked when warning was given while parsing.</para>
-            
-            <para>Override this method to display / store the warning.</para>
-            </summary>
-            <param name="message">Warning message.</param>
-        </member>
-        <member name="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})">
-            <summary>
-            <para>Represents EBNF operator of "join", i.e. serial appearence of several rules.</para>
-            </summary>
-            <remarks>
-            <para>This recoveres <see cref="F:System.Yaml.Parser`1.p"/>, <see cref="F:System.Yaml.Parser`1.stringValue"/>, <see cref="F:System.Yaml.Parser`1.state"/>
-            when <paramref name="condition"/> does not return <code>true</code>.</para>
-            
-            <para>If any specific operation is needed for rewinding, in addition to simply
-            recover the value of <see cref="F:System.Yaml.Parser`1.state"/>, override <see cref="M:System.Yaml.Parser`1.Rewind"/>.</para>
-            </remarks>
-            <param name="rule">If false is returned, the parser status is rewound.</param>
-            <returns>true if <paramref name="rule"/> returned true; otherwise false.</returns>
-            <example>
-            name ::= first-name middle-name? last-name
-            <code>
-            bool Name()
-            {
-                return RewindUnless(()=&gt;
-                    FirstName() &amp;&amp;
-                    Optional(MiddleName) &amp;&amp;
-                    LastName()
-                );
-            }
-            </code>
-            </example>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Rewind">
-            <summary>
-            This method is called just after <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> recovers <see cref="F:System.Yaml.Parser`1.state"/>.
-            Override it to do any additional operation for rewinding.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Boolean})">
-             <summary>
-             Represents EBNF operator of "*".
-             </summary>
-             <param name="rule">Reduction rule to be repeated.</param>
-             <returns>Always true.</returns>
-             <example>
-             lines-or-empty ::= line*
-             <code>
-             bool LinesOrEmpty()
-             {
-                 return
-                     Repeat(Line);
-             }
-             </code>
-            
-             <para>lines-or-empty ::= (text line-break)*</para>
-             <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
-             rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Repeat(System.Func{System.Boolean})"/> operator.</para>
-             <code>
-             bool LinesOrEmpty()
-             {
-                 return
-                     Repeat(()=&gt;
-                         RewindUnless(()=&gt;
-                             Text() &amp;&amp;
-                             LineBreak()
-                         )
-                     );
-             }
-             </code>
-             </example>
-        </member>
-        <member name="M:System.Yaml.Parser`1.OneAndRepeat(System.Func{System.Boolean})">
-            <summary>
-            Represents EBNF operator of "+".
-            </summary>
-            <param name="rule">Reduction rule to be repeated.</param>
-            <returns>true if the rule matches; otherwise false.</returns>
-            <example>
-            lines ::= line+
-            <code>
-            bool Lines()
-            {
-                return
-                    Repeat(Line);
-            }
-            </code>
-            </example>
-            <example>
-            lines ::= (text line-break)+
-            
-            Note: Do not forget RewindUnless in Repeat operator.
-            <code>
-            bool Lines()
-            {
-                return
-                    Repeat(()=>
-                        RewindUnless(()=>
-                            Text() &amp;&amp;
-                            LineBreak()
-                        )
-                    );
-            }
-            </code>
-            </example>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Func{System.Boolean})">
-             <summary>
-             Represents <code>n</code> times repeatition.
-             </summary>
-             <example>
-             <para>four-lines ::= (text line-break){4}</para>
-            
-             <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
-             rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Func{System.Boolean})"/> operator.</para>
-             <code>
-             bool FourLines()
-             {
-                 return
-                     Repeat(4, ()=&gt;
-                         RewindUnless(()=&gt;
-                             Text() &amp;&amp;
-                             LineBreak()
-                         )
-                     );
-             }
-             </code>
-             </example>
-             <param name="n">Repetition count.</param>
-             <param name="rule">Reduction rule to be repeated.</param>
-             <returns>true if the rule matches; otherwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Int32,System.Func{System.Boolean})">
-            <summary>
-            Represents at least <paramref name="min"/>, at most <paramref name="max"/> times repeatition.
-            </summary>
-            <example>
-            <para>google ::= "g" "o"{2,100} "g" "l" "e"</para>
-            <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
-            rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Int32,System.Func{System.Boolean})"/> operator.</para>
-            <code>
-            bool Google()
-            {
-                return
-                    RewindUnless(()=&gt;
-                        text[p++] == 'g' &amp;&amp;
-                            Repeat(2, 100,
-                                RewindUnless(()=&gt;
-                                    text[p++] == 'o'
-                                )
-                            )
-                        text[p++] == 'g' &amp;&amp;
-                        text[p++] == 'l' &amp;&amp;
-                        text[p++] == 'e'
-                    );
-            }
-            </code>
-            </example>
-            <param name="min">Minimum repetition count. Negative value is treated as 0.</param>
-            <param name="max">Maximum repetition count. Negative value is treated as positive infinity.</param>
-            <param name="rule">Reduction rule to be repeated.</param>
-            <returns>true if the rule matches; otherwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Optional(System.Boolean)">
-            <summary>
-            Represents BNF operator "?".
-            </summary>
-            <example>
-            <para>file ::= header? body footer?</para>
-            
-            <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
-            rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Optional(System.Boolean)"/> operator.</para>
-            <code>
-            bool File()
-            {
-                return
-                    Optional(Header()) &amp;&amp;
-                    Body() &amp;&amp;
-                    Optional(Footer());
-            }
-            </code>
-            </example>
-            <param name="rule">Reduction rule that is optional.</param>
-            <returns>Always true.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Optional(System.Func{System.Boolean})">
-            <summary>
-            Represents BNF operator "?" (WITH rewinding wrap).
-            </summary>
-            <example>
-            file = header? body footer?
-            
-            <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
-            rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Optional(System.Func{System.Boolean})"/> operator.</para>
-            <code>
-            bool File()
-            {
-                return
-                    Optional(Header) &amp;&amp;
-                    Body() &amp;&amp;
-                    Optional(Footer);
-            }
-            </code>
-            </example>
-            <param name="rule">Reduction rule that is optional.</param>
-            <returns>Always true.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Accept(System.Func{System.Char,System.Boolean})">
-            <summary>
-            Reduce one character if it is a member of the specified character set.
-            </summary>
-            <param name="charset">Acceptable character set.</param>
-            <returns>true if the rule matches; otherwise false.</returns>
-            <example>
-            alpha ::= [A-Z][a-z]<br/>
-            num ::= [0-9]<br/>
-            alpha-num :: alpha | num<br/>
-            word ::= alpha ( alpha-num )*<br/>
-            <code>
-            Func&lt;char,bool&gt; Alpha = Charset( c =>
-                ( 'A' &lt;= c &amp;&amp; c &lt;= 'Z' ) ||
-                ( 'a' &lt;= c &amp;&amp; c &lt;= 'z' ) 
-            );
-            Func&lt;char,bool&gt; Num = Charset( c =>
-                  '0' &lt;= c &amp;&amp; c &lt;= '9' 
-            );
-            Func&lt;char,bool&gt; AlphaNum = Charset( c =>
-                Alpha(c) || Num(c)
-            );
-            bool Word()
-            {
-                return 
-                    Accept(Alpha) &amp;&amp;
-                    Repeat(AlphaNum);
-                    // No need for RewindUnless
-            }
-            </code>
-            </example>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Accept(System.Char)">
-            <summary>
-            <para>Accepts a character 'c'.</para>
-            
-            <para>It can be also represented by <c>text[p++] == c</c> wrapped by <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/>.</para>
-            </summary>
-            <param name="c">The character to be accepted.</param>
-            <returns>true if the rule matches; otherwise false.</returns>
-            <example>
-            YMCA ::= "Y" "M" "C" "A"
-            <code>
-            bool YMCA()
-            {
-                return
-                    RewindUnless(()=&gt;
-                        Accept('Y') &amp;&amp;
-                        Accept('M') &amp;&amp;
-                        Accept('C') &amp;&amp;
-                        Accept('A') 
-                    );
-            }
-            </code>
-            -or-
-            <code>
-            bool YMCA()
-            {
-                return
-                    RewindUnless(()=&gt;
-                        text[p++] == 'Y' &amp;&amp;
-                        text[p++] == 'M' &amp;&amp;
-                        text[p++] == 'C' &amp;&amp;
-                        text[p++] == 'A' 
-                    );
-            }
-            </code>
-            </example>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Accept(System.String)">
-            <summary>
-            Accepts a sequence of characters.
-            </summary>
-            <param name="s">Sequence of characters to be accepted.</param>
-            <returns>true if the rule matches; otherwise false.</returns>
-            <example>
-            YMCA ::= "Y" "M" "C" "A"
-            <code>
-            bool YMCA()
-            {
-                return
-                    Accept("YMCA");
-            }
-            </code>
-            </example>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Accept(System.Text.RegularExpressions.Regex)">
-            <summary>
-            Represents sequence of characters.
-            </summary>
-            <param name="r">Sequence of characters to be accepted.</param>
-            <returns>true if the rule matches; otherwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Char,System.Boolean})">
-            <summary>
-            Represents BNF operator of "*".
-            </summary>
-            <param name="charset">Character set to be accepted.</param>
-            <returns>Always true.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.OneAndRepeat(System.Func{System.Char,System.Boolean})">
-            <summary>
-            Represents BNF operator of "+".
-            </summary>
-            <param name="charset">Character set to be accepted.</param>
-            <returns>true if the rule matches; otherwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Char,System.Boolean},System.Int32)">
-            <summary>
-            Represents <code>n</code> times repetition of characters.
-            </summary>
-            <param name="charset">Character set to be accepted.</param>
-            <param name="n">Repetition count.</param>
-            <returns>true if the rule matches; otherwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Char,System.Boolean},System.Int32,System.Int32)">
-            <summary>
-            Represents at least <code>min</code> times, at most <code>max</code> times 
-            repetition of characters.
-            </summary>
-            <param name="charset">Character set to be accepted.</param>
-            <param name="min">Minimum repetition count. Negative value is treated as 0.</param>
-            <param name="max">Maximum repetition count. Negative value is treated as positive infinity.</param>
-            <returns>true if the rule matches; otherwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Optional(System.Func{System.Char,System.Boolean})">
-            <summary>
-            Represents BNF operator "?".
-            </summary>
-            <param name="charset">Character set to be accepted.</param>
-            <returns>Always true.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Charset(System.Func{System.Char,System.Boolean})">
-            <summary>
-            <para>Builds a performance-optimized table-based character set definition from a simple 
-            but slow comparison-based definition.</para>
-            
-            <para>By default, the character table size is 0x100, namely only the characters of [\0-\xff] are
-            judged by using a character table and others are by the as-given slow comparisn-based definitions.</para>
-            
-            <para>To have maximized performance, locate the comparison for non-table based judgement first
-            in the definition as the example below.</para>
-            
-            <para>Use <see cref="M:System.Yaml.Parser`1.Charset(System.Int32,System.Func{System.Char,System.Boolean})"/> form to explicitly 
-            specify the table size.</para>
-            </summary>
-            <example>This sample shows how to build a character set delegate.
-            <code>
-            static class YamlCharsets: Charsets
-            {
-                Func&lt;char, bool&gt; cPrintable;
-                Func&lt;char, bool&gt; sWhite;
-            
-                static YamlCharsets()
-                {
-                    cPrintable = CacheResult(c =&gt;
-                    /*  ( 0x10000 &lt; c &amp;&amp; c &lt; 0x110000 ) || */
-                        ( 0xe000 &lt;= c &amp;&amp; c &lt;= 0xfffd ) ||
-                        ( 0xa0 &lt;= c &amp;&amp; c &lt;= 0xd7ff ) ||
-                        ( c &lt; 0x100 &amp;&amp; ( // to improve performance
-                            c == 0x85 ||
-                            ( 0x20 &lt;= c &amp;&amp; c &lt;= 0x7e ) ||
-                            c == 0x0d ||
-                            c == 0x0a ||
-                            c == 0x09
-                        ) )
-                    );
-                    sWhite = CacheResult(c =&gt;
-                        c &lt; 0x100 &amp;&amp; ( // to improve performance
-                            c == '\t' ||
-                            c == ' '
-                        )
-                    );
-                }
-            }
-            </code></example>
-            <param name="definition">A simple but slow comparison-based definition of the charsert.</param>
-            <returns>A performance-optimized table-based delegate built from the given <paramref name="definition"/>.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Charset(System.Int32,System.Func{System.Char,System.Boolean})">
-            <summary>
-            <para>Builds a performance-optimized table-based character set definition from a simple 
-            but slow comparison-based definition.</para>
-            
-            <para>Characters out of the table are judged by the as-given slow comparisn-based 
-            definitions.</para>
-            
-            <para>So, to have maximized performance, locate the comparison for non-table based 
-            judgement first in the definition as the example below.</para>
-            </summary>
-            <example>This sample shows how to build a character set delegate.
-            <code>
-            static class YamlCharsets: Charsets
-            {
-                Func&lt;char, bool&gt; cPrintable;
-                Func&lt;char, bool&gt; sWhite;
-            
-                static YamlCharsets()
-                {
-                    cPrintable = CacheResult(c =&gt;
-                    /*  ( 0x10000 &lt; c &amp;&amp; c &lt; 0x110000 ) || */
-                        ( 0xe000 &lt;= c &amp;&amp; c &lt;= 0xfffd ) ||
-                        ( 0xa0 &lt;= c &amp;&amp; c &lt;= 0xd7ff ) ||
-                        ( c &lt; 0x100 &amp;&amp; ( // to improve performance
-                            c == 0x85 ||
-                            ( 0x20 &lt;= c &amp;&amp; c &lt;= 0x7e ) ||
-                            c == 0x0d ||
-                            c == 0x0a ||
-                            c == 0x09
-                        ) )
-                    );
-                    sWhite = CacheResult(c =&gt;
-                        c &lt; 0x100 &amp;&amp; ( // to improve performance
-                            c == '\t' ||
-                            c == ' '
-                        )
-                    );
-                }
-            }
-            </code></example>
-            <param name="table_size">Character table size.</param>
-            <param name="definition">A simple but slow comparison-based definition of the charsert.</param>
-            <returns>A performance-optimized table-based delegate built from the given <paramref name="definition"/>.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Save(System.Func{System.Boolean},System.String@)">
-            <summary>
-            <para>Saves a part of the source text that is reduced in the <paramref name="rule"/>.</para>
-            <para>If the rule does not match, nothing happends.</para>
-            </summary>
-            <param name="rule">Reduction rule to match.</param>
-            <param name="value">If the <paramref name="rule"/> matches, 
-            the part of the source text reduced in the <paramref name="rule"/> is set; 
-            otherwise String.Empty is set.</param>
-            <returns>true if <paramref name="rule"/> matches; otherwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Save(System.Func{System.Boolean})">
-            <summary>
-            <para>Saves a part of the source text that is reduced in the <paramref name="rule"/>
-            and append it to <see cref="F:System.Yaml.Parser`1.stringValue"/>.</para>
-            <para>If the rule does not match, nothing happends.</para>
-            </summary>
-            <param name="rule">Reduction rule to match.</param>
-            <returns>true if <paramref name="rule"/> matches; otherwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Save(System.Func{System.Boolean},System.Action{System.String})">
-            <summary>
-            <para>Saves a part of the source text that is reduced in the <paramref name="rule"/>.</para>
-            <para>If the rule does not match, nothing happends.</para>
-            </summary>
-            <param name="rule">Reduction rule to match.</param>
-            <param name="save">If <paramref name="rule"/> matches, this delegate is invoked
-            with the part of the source text that is reduced in the <paramref name="rule"/>
-            as the parameter. Do any action in the delegate.</param>
-            <returns>true if <paramref name="rule"/> matches; otherwise false.</returns>
-            <example>
-            <code>
-            bool SomeRule()
-            {
-                return 
-                    Save(()=> SubRule(), s => MessageBox.Show(s));
-            }
-            </code></example>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Action(System.Action)">
-            <summary>
-            Execute some action.
-            </summary>
-            <param name="action">Action to be done.</param>
-            <returns>Always true.</returns>
-            <example>
-            <code>
-            bool SomeRule()
-            {
-                return 
-                    SubRule() &amp;&amp;
-                    Action(()=> do_some_action());
-            }
-            </code></example>
-        </member>
-        <member name="M:System.Yaml.Parser`1.ErrorUnless(System.Boolean,System.String,System.Object[])">
-            <summary>
-            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when the <paramref name="rule"/> does not match.
-            </summary>
-            <param name="rule">Some reduction rule that must match.</param>
-            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
-            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
-            <returns>Always true; otherwise an exception thrown.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.ErrorUnless(System.Func{System.Boolean},System.String,System.Object[])">
-            <summary>
-            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when the <paramref name="rule"/> does not match.
-            </summary>
-            <param name="rule">Some reduction rule that must match.</param>
-            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
-            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
-            <returns>Always true; otherwise an exception is thrown.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.ErrorUnlessWithAdditionalCondition(System.Func{System.Boolean},System.Boolean,System.String,System.Object[])">
-            <summary>
-            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when the <paramref name="rule"/> does not match
-            and an additional condition <paramref name="to_be_error"/> is true.
-            </summary>
-            <param name="rule">Some reduction rule that must match.</param>
-            <param name="to_be_error">Additional condition: if this parameter is false, 
-            rewinding occurs, instead of throwing exception.</param>
-            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
-            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
-            <returns>true if the reduction rule matches; otherwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.ErrorIf(System.Boolean,System.String,System.Object[])">
-            <summary>
-            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when <paramref name="condition"/> is true.
-            </summary>
-            <param name="condition">True to throw exception.</param>
-            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
-            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
-            <returns>Always true.</returns>
-        </member>
-        <member name="M:System.Yaml.Parser`1.Assign``1(``0@,``0)">
-            <summary>
-            Assign <c>var = value</c> and return true;
-            </summary>
-            <typeparam name="T">Type of the variable and value.</typeparam>
-            <param name="var">Variable to be assigned.</param>
-            <param name="value">Value to be assigned.</param>
-            <returns>Always true.</returns>
-        </member>
-        <member name="P:System.Yaml.Parser`1.CurrentPosition">
-            <summary>
-            Get current position represented by raw and column.
-            </summary>
-        </member>
-        <member name="T:System.Yaml.Parser`1.Position">
-            <summary>
-            Represents a position in a multiline text.
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Parser`1.Position.Raw">
-            <summary>
-            Raw in a text.
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Parser`1.Position.Column">
-            <summary>
-            Column in a text.
-            </summary>
-        </member>
-        <member name="T:System.Yaml.YamlTagValidator">
-            <summary>
-            Validates a text as a global tag in YAML.
-            
-            <a href="http://www.faqs.org/rfcs/rfc4151.html">RFC4151 - The 'tag' URI Scheme</a>>
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlTagValidator.IsValid(System.String)">
-            <summary>
-            Validates a text as a global tag in YAML.
-            </summary>
-            <param name="tag">A candidate for a global tag in YAML.</param>
-            <returns>True if <paramref name="tag"/> is  a valid global tag.</returns>
-        </member>
-        <member name="T:System.Yaml.YamlTagValidator.Status">
-            <summary>
-            Not used in this parser
-            </summary>
-        </member>
-        <member name="T:System.Yaml.RehashableDictionary`2">
-            <summary>
-            <para>Dictionary that automatically rehash when the content of a key is changed.
-            Keys of this dictionary must implement <see cref="T:System.Yaml.IRehashableKey"/>.</para>
-            <para>It also call back item addition and removal by <see cref="E:System.Yaml.RehashableDictionary`2.Added"/> and
-            <see cref="E:System.Yaml.RehashableDictionary`2.Removed"/> events.</para>
-            </summary>
-            <typeparam name="K">Type of key. Must implements <see cref="T:System.Yaml.IRehashableKey"/>.</typeparam>
-            <typeparam name="V">Type of value.</typeparam>
-        </member>
-        <member name="F:System.Yaml.RehashableDictionary`2.items">
-            <summary>
-            <para>A dictionary that returns <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> or <see cref="T:System.Collections.Generic.List`1"/> 
-            from hash code. This is the main repository that stores the <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> pairs.</para>
-            <para>If there are several entries that have same hash code for thir keys, 
-            a <see cref="T:System.Collections.Generic.List`1"/> is stored to hold all those entries.
-            Otherwise, a <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> is stored.</para>
-            </summary>
-        </member>
-        <member name="F:System.Yaml.RehashableDictionary`2.hashes">
-            <summary>
-            <para>A dictionary that returns hash code from the key reference.
-            The key must be the instance that <see cref="M:System.Object.ReferenceEquals(System.Object,System.Object)"/>
-            to one exsisting in the dictionary.</para>
-            </summary>
-            <remarks>
-            <para>We store the hashes correspoinding to each key. So that when rehash,
-            we can find old hash code to quickly find the entry for the key.</para>
-            <para>It is also used to remember the number of keys exists in the dictionary.</para>
-            </remarks>
-        </member>
-        <member name="M:System.Yaml.RehashableDictionary`2.Rehash(`0)">
-            <summary>
-            Recalc hash key of the <paramref name="key"/>.
-            </summary>
-            <param name="key">The key to be rehash. The key must be the instance that 
-            <see cref="M:System.Object.ReferenceEquals(System.Object,System.Object)"/> to one exsisting in the dictionary.</param>
-        </member>
-        <member name="M:System.Yaml.RehashableDictionary`2.FindItem(`0,System.Boolean,`1,System.Action{System.Int32},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Int32})">
-            <summary>
-            Try to find entry for key (and value).
-            </summary>
-            <param name="key">key to find</param>
-            <param name="compareValue">if true, value matters</param>
-            <param name="value">value to find</param>
-            <param name="NotFound">key not found</param>
-            <param name="FoundOne">hash hit one entry and key found</param>
-            <param name="FoundList">hash hit several entries and key found</param>
-        </member>
-        <member name="M:System.Yaml.RehashableDictionary`2.FindItem(`0,System.Boolean,`1,System.Action{System.Int32},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue}},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Int32})">
-            <summary>
-            Try to find entry for key (and value).
-            </summary>
-            <param name="key">key to find</param>
-            <param name="compareValue">if true, value matters</param>
-            <param name="value">value to find</param>
-            <param name="NotFoundHash">hash not found</param>
-            <param name="NotFoundKeyOne">hash hit one entry but key not found</param>
-            <param name="FoundOne">hash hit one entry and key found</param>
-            <param name="NotFoundKeyList">hash hit several entries but key not found</param>
-            <param name="FoundList">hash hit several entries and key found</param>
-        </member>
-        <member name="T:System.Yaml.RehashableDictionary`2.KeysValuesBase`1">
-            <summary>
-            Collection that is readonly and invalidated when an item is 
-            added to or removed from the dictionary.
-            </summary>
-        </member>
-        <member name="T:System.Yaml.YamlParser">
-            <summary>
-            <para>A text parser for<br/>
-            YAML Ain’t Markup Language (YAML™) Version 1.2<br/>
-            3rd Edition (2009-07-21)<br/>
-            http://yaml.org/spec/1.2/spec.html </para>
-            
-            <para>This class parse a YAML document and compose representing <see cref="T:System.Yaml.YamlNode"/> graph.</para>
-            </summary>
-            <example>
-            <code>
-            string yaml = LoadYamlSource();
-            YamlParser parser = new YamlParser();
-            Node[] result = null;
-            try {
-                result = parser.Parse(yaml);
-                ...
-                // you can reuse parser as many times you want
-                ...
-                
-            } catch( ParseErrorException e ) {
-                MessageBox.Show(e.Message);
-            }
-            if(result != null) {
-                ...
-            
-            }
-            </code>
-            </example>
-            <remarks>
-            <para>Currently, this parser violates the YAML 1.2 specification in the following points.</para>
-            <para>- line breaks are not normalized.</para>
-            <para>- omission of the final line break is allowed in plain / literal / folded text.</para>
-            <para>- ':' followed by ns-indicator is excluded from ns-plain-char.</para>
-            </remarks>
-        </member>
-        <member name="M:System.Yaml.YamlParser.#ctor">
-            <summary>
-            Initialize a YAML parser.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlParser.Parse(System.String)">
-            <summary>
-            Parse YAML text and returns a list of <see cref="T:System.Yaml.YamlNode"/>.
-            </summary>
-            <param name="yaml">YAML text to be parsed.</param>
-            <returns>A list of <see cref="T:System.Yaml.YamlNode"/> parsed from the given text</returns>
-        </member>
-        <member name="M:System.Yaml.YamlParser.Parse(System.String,System.Yaml.YamlConfig)">
-            <summary>
-            Parse YAML text and returns a list of <see cref="T:System.Yaml.YamlNode"/>.
-            </summary>
-            <param name="yaml">YAML text to be parsed.</param>
-            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML Configuration</see> to be used in parsing.</param>
-            <returns>A list of <see cref="T:System.Yaml.YamlNode"/> parsed from the given text</returns>
-        </member>
-        <member name="M:System.Yaml.YamlParser.StoreWarning(System.String)">
-            <summary>
-            Add message in <see cref="P:System.Yaml.YamlParser.Warnings"/> property.
-            </summary>
-            <param name="message"></param>
-        </member>
-        <member name="M:System.Yaml.YamlParser.ReservedDirective(System.String,System.String[])">
-            <summary>
-            Invoked when unknown directive is found in YAML document.
-            </summary>
-            <param name="name">Name of the directive</param>
-            <param name="args">Parameters for the directive</param>
-        </member>
-        <member name="M:System.Yaml.YamlParser.YamlDirective(System.String)">
-            <summary>
-            Invoked when YAML directive is found in YAML document.
-            </summary>
-            <param name="version">Given version</param>
-        </member>
-        <member name="M:System.Yaml.YamlParser.Rewind">
-            <summary>
-            rewinding action
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlParser.SetTag(System.String,System.String)">
-            <summary>
-            set status.tag with tag resolution
-            </summary>
-            <param name="tag_handle"></param>
-            <param name="tag_suffix"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.YamlParser.SetTag(System.String)">
-            <summary>
-            set status.tag with verbatim tag value
-            </summary>
-            <param name="verbatim_tag">verbatim tag</param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.YamlParser.AutoDetectTag(System.String)">
-            <summary>
-            Used when the parser resolves a tag for a scalar node from its value.
-            
-            New resolution rules can be add before calling <see cref="M:System.Yaml.YamlParser.Parse(System.String)"/> method.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlParser.eScalar">
-            <summary>
-            [105]
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlParser.eNode">
-            <summary>
-            [106]
-            </summary>
-        </member>
-        <member name="P:System.Yaml.YamlParser.Warnings">
-            <summary>
-            Warnings that are made while parsing a YAML text.
-            This property is cleared by new call for <see cref="M:System.Yaml.YamlParser.Parse(System.String)"/> method.
-            </summary>
-        </member>
-        <member name="T:System.Yaml.YamlParser.State">
-            <summary>
-            additional fields to be rewound
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.State.tag">
-            <summary>
-            tag for the next value (will be cleared when the next value is created)
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.State.anchor">
-            <summary>
-            anchor for the next value (will be cleared when the next value is created)
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.State.value">
-            <summary>
-            current value
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.State.anchor_depth">
-            <summary>
-            anchor rewinding position
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.Charsets.cIndicator">
-            <summary>
-            [22]
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.Charsets.cFlowIndicator">
-            <summary>
-            [23]
-            </summary>
-        </member>
-        <member name="T:System.Yaml.Serialization.YamlConstructor">
-            <summary>
-            Construct YAML node tree that represents a given C# object.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlConstructor.NodeToObject(System.Yaml.YamlNode,System.Yaml.YamlConfig)">
-            <summary>
-            Construct YAML node tree that represents a given C# object.
-            </summary>
-            <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
-            <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlConstructor.NodeToObject(System.Yaml.YamlNode,System.Type,System.Yaml.YamlConfig)">
-            <summary>
-            Construct YAML node tree that represents a given C# object.
-            </summary>
-            <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
-            <param name="expected">Expected type for the root object.</param>
-            <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
-            <returns></returns>
-        </member>
-        <member name="T:System.Yaml.StringUriEncodingExtention">
-            <summary>
-            Add string class two methods: .UriEscape(), .UriUnescape()
-            
-            Charset that is not escaped is represented NonUriChar member.
-            
-            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
-            </summary>
-        </member>
-        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscape(System.String)">
-            <summary>
-            Escape the string in URI encoding format.
-            </summary>
-            <param name="s">String to be escaped.</param>
-            <returns>Escaped string.</returns>
-        </member>
-        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscapeForTag(System.String)">
-            <summary>
-            Escape the string in URI encoding format.
-            </summary>
-            <param name="s">String to be escaped.</param>
-            <returns>Escaped string.</returns>
-        </member>
-        <member name="M:System.Yaml.StringUriEncodingExtention.UriUnescape(System.String)">
-            <summary>
-            Unescape the string escaped in URI encoding format.
-            </summary>
-            <param name="s">String to be unescape.</param>
-            <returns>Unescaped string.</returns>
-        </member>
-        <member name="T:System.Yaml.UriEncoding">
-            <summary>
-            Escape / Unescape string in URI encoding format
-            
-            Charset that is not escaped is represented NonUriChar member.
-            
-            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
-            </summary>
-        </member>
-        <member name="T:System.Yaml.YamlTagPrefixes">
-            <summary>
-            Reset();
-            SetupDefaultTagPrefixes();
-            Add(tag_handle, tag_prefix);
-            verbatim_tag = Resolve(tag_handle, tag_name);
-            </summary>
-        </member>
-        <member name="T:System.Yaml.YamlPresenter">
-            <summary>
-            Converts YamlNode tree into yaml text.
-            </summary>
-            <example>
-            <code>
-            YamlNode node;
-            YamlPresenter.ToYaml(node);
-            
-            YamlNode node1;
-            YamlNode node2;
-            YamlNode node3;
-            YamlPresenter.ToYaml(node1, node2, node3);
-            </code>
-            </example>
-        </member>
-        <member name="T:System.Yaml.Serialization.ObjectMemberAccessor">
-            <summary>
-            
-            object に代入されたクラスや構造体のメンバーに、リフレクションを
-            解して簡単にアクセスできるようにしたクラス
-            
-            アクセス方法をキャッシュするので、繰り返し使用する場合に高速化が
-            期待できる
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Serialization.ObjectMemberAccessor.MemberAccessors">
-            <summary>
-            Caches ObjectMemberAccessor instances for reuse.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.FindFor(System.Type)">
-            <summary>
-            
-            指定した型へのアクセス方法を表すインスタンスを返す
-            キャッシュに存在すればそれを返す
-            キャッシュに存在しなければ新しく作って返す
-            作った物はキャッシュされる
-            </summary>
-            <param name="type">クラスまたは構造体を表す型情報</param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.GetEnumerator">
-            <summary>
-            メンバ名と Accessor のペアを巡回する
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:System.Yaml.Serialization.ObjectMemberAccessor.Item(System.Object,System.String)">
-            <summary>
-            メンバへの読み書きを行うことができる
-            </summary>
-            <param name="obj">オブジェクト</param>
-            <param name="name">メンバの名前</param>
-            <returns></returns>
-        </member>
         <member name="T:System.Yaml.YamlConfig">
             <summary>
             <para>Configuration to customize YAML serialization.</para>
@@ -2720,6 +1504,876 @@
             </summary>
             <value>The number of child nodes of the sequence.</value>
         </member>
+        <member name="T:System.Yaml.YamlNodeManipulator">
+            <summary>
+            Implements utility functions to instantiating YamlNode's
+            </summary>
+            <example>
+            <code>
+            var node_tree = seq(
+                str("abc"),
+                str("def"),
+                map(
+                    str("key"), str("value"),
+                    str("key2"), seq( str("value2a"), str("value2b") )
+                ),
+                str("2"), // !!str
+                str("!!int", "2")
+            );
+            
+            string yaml = node_tree.ToYaml();
+            
+            // %YAML 1.2
+            // ---
+            // - abc
+            // - def
+            // - key: value
+            //   key2: [ value2a, value2b ]
+            // - "2"         # !!str
+            // - 2           # !!int
+            // ...
+            </code>                                                   
+            </example>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.str(System.String)">
+            <summary>
+            Create a scalar node. Tag is set to be "!!str".
+            </summary>
+            <example>
+            <code>
+            var node_tree = seq(
+                str("abc"),
+                str("def"),
+                map(
+                    str("key"), str("value"),
+                    str("key2"), seq( str("value2a"), str("value2b") )
+                ),
+                str("2"), // !!str
+                str("!!int", "2")
+            );
+            
+            string yaml = node_tree.ToYaml();
+            
+            // %YAML 1.2
+            // ---
+            // - abc
+            // - def
+            // - key: value
+            //   key2: [ value2a, value2b ]
+            // - "2"         # !!str
+            // - 2           # !!int
+            // ...
+            </code>                                                   
+            </example>
+            <param name="value">Value for the scalar node.</param>
+            <returns>Created scalar node.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.str(System.String,System.String)">
+            <summary>
+            Create a scalar node.
+            </summary>
+            <param name="tag">Tag for the scalar node.</param>
+            <param name="value">Value for the scalar node.</param>
+            <returns>Created scalar node.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.seq(System.Yaml.YamlNode[])">
+            <summary>
+            Create a sequence node. Tag is set to be "!!seq".
+            </summary>
+            <param name="nodes">Child nodes.</param>
+            <returns>Created sequence node.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.seq_tag(System.String,System.Yaml.YamlNode[])">
+            <summary>
+            Create a sequence node. 
+            </summary>
+            <param name="nodes">Child nodes.</param>
+            <param name="tag">Tag for the seuqnce.</param>
+            <returns>Created sequence node.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.map(System.Yaml.YamlNode[])">
+            <summary>
+            Create a mapping node. Tag is set to be "!!map".
+            </summary>
+            <param name="nodes">Sequential list of key/value pairs.</param>
+            <returns>Created mapping node.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.map_tag(System.String,System.Yaml.YamlNode[])">
+            <summary>
+            Create a mapping node. 
+            </summary>
+            <param name="nodes">Sequential list of key/value pairs.</param>
+            <param name="tag">Tag for the mapping.</param>
+            <returns>Created mapping node.</returns>
+        </member>
+        <member name="T:System.Yaml.Serialization.ObjectMemberAccessor">
+            <summary>
+            
+            object に代入されたクラスや構造体のメンバーに、リフレクションを
+            解して簡単にアクセスできるようにしたクラス
+            
+            アクセス方法をキャッシュするので、繰り返し使用する場合に高速化が
+            期待できる
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Serialization.ObjectMemberAccessor.MemberAccessors">
+            <summary>
+            Caches ObjectMemberAccessor instances for reuse.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.FindFor(System.Type)">
+            <summary>
+            
+            指定した型へのアクセス方法を表すインスタンスを返す
+            キャッシュに存在すればそれを返す
+            キャッシュに存在しなければ新しく作って返す
+            作った物はキャッシュされる
+            </summary>
+            <param name="type">クラスまたは構造体を表す型情報</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.GetEnumerator">
+            <summary>
+            メンバ名と Accessor のペアを巡回する
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:System.Yaml.Serialization.ObjectMemberAccessor.Item(System.Object,System.String)">
+            <summary>
+            メンバへの読み書きを行うことができる
+            </summary>
+            <param name="obj">オブジェクト</param>
+            <param name="name">メンバの名前</param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.YamlTagValidator">
+            <summary>
+            Validates a text as a global tag in YAML.
+            
+            <a href="http://www.faqs.org/rfcs/rfc4151.html">RFC4151 - The 'tag' URI Scheme</a>>
+            </summary>
+        </member>
+        <member name="T:System.Yaml.Parser`1">
+            <summary>
+            <para>Base class to implement a parser class.</para>
+            
+            <para>It allows not very efficient but easy implementation of a text parser along 
+            with a parameterized BNF productions.</para>
+            </summary>
+            <typeparam name="State">Parser specific state structure.</typeparam>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Parse(System.Func{System.Boolean},System.String)">
+            <summary>
+            Parse the <paramref name="text"/> using the <paramref name="start_rule"/> 
+            as the starting rule.
+            </summary>
+            <param name="start_rule">Starting rule.</param>
+            <param name="text">Text to be parsed.</param>
+            <returns></returns>
+        </member>
+        <member name="F:System.Yaml.Parser`1.text">
+            <summary>
+            <para>Gets / sets source text to be parsed.</para>
+            <para>While parsing, this variable will not be changed.</para>
+            <para>The current position to be read by parser is represented by the field <see cref="F:System.Yaml.Parser`1.p"/>.</para>
+            <para>Namely, the next character to be read is <c>text[p]</c>.</para>
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Parser`1.p">
+            <summary>
+            <para>The current reading position.</para>
+            
+            <para>The next character to be read by the parser is <c>text[p]</c>.</para>
+            
+            <para>Increase <see cref="F:System.Yaml.Parser`1.p"/> to reduce some part of source text <see cref="F:System.Yaml.Parser`1.text"/>.</para>
+            
+            <para>The current position <see cref="F:System.Yaml.Parser`1.p"/> is automatically reverted at rewinding.</para>
+            </summary>
+            <example>
+            Example to show how to reduce BNF reduction rule of ( "t" "e" "x" "t" ).
+            <code>
+              return RewindUnless(()=&gt;
+                  text[p++] == 't' &amp;&amp;
+                  text[p++] == 'e' &amp;&amp;
+                  text[p++] == 'x' &amp;&amp;
+                  text[p++] == 't'
+              );
+            </code>
+            </example>
+        </member>
+        <member name="F:System.Yaml.Parser`1.stringValue">
+            <summary>
+            <para>Use this variable to build some string data from source text.</para>
+            
+            <para>It will be automatically reverted at rewinding.</para>
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Parser`1.state">
+            <summary>
+            <para>Individual-parser-specific state object.</para>
+            
+            <para>It will be automatically reverted at rewinding.</para>
+            
+            <para>If some action, in addition to simply restore the value of the state object,
+            is needed to recover the previous state, override <see cref="M:System.Yaml.Parser`1.Rewind"/>
+            method.</para>
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Parser`1.InitializeLines">
+            <summary>
+            Initialize <see cref="F:System.Yaml.Parser`1.Lines"/>, which represents line number to 
+            start position of each line list.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Parser`1.Lines">
+            <summary>
+            Line number to start position list.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Error(System.String,System.Object[])">
+            <summary>
+            Reporting syntax error by throwing <see cref="T:System.Yaml.ParseErrorException"/>.
+            </summary>
+            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the error message.</param>
+            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
+            <returns>Because it throw exception, nothing will be returned in reality.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.WarningIf(System.Boolean,System.String,System.Object[])">
+            <summary>
+            <para>Give warning if <paramref name="condition"/> is true.</para>
+            
+            <para>By default, the warning will not be shown / stored to anywhere.
+            To show or log the warning, override <see cref="M:System.Yaml.Parser`1.StoreWarning(System.String)"/>.</para>
+            </summary>
+            <example>
+            <code>
+              return 
+                  SomeObsoleteReductionRule() &amp;&amp;
+                  WarningIf(
+                      context != Context.IndeedObsolete,
+                      "Obsolete");
+            </code>
+            </example>
+            <param name="condition">If true, warning is given; otherwize do nothing.</param>
+            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the warning message.</param>
+            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.WarningUnless(System.Boolean,System.String,System.Object[])">
+            <summary>
+            <para>Give warning if <paramref name="condition"/> is false.</para>
+            
+            <para>By default, the warning will not be shown / stored to anywhere.
+            To show or log the warning, override <see cref="M:System.Yaml.Parser`1.StoreWarning(System.String)"/>.</para>
+            </summary>
+            <example>
+            <code>
+              return 
+                  SomeObsoleteReductionRule() &amp;&amp;
+                  WarningUnless(
+                      context != Context.NotObsolete,
+                      "Obsolete");
+            </code>
+            </example>
+            <param name="condition">If false, warning is given; otherwize do nothing.</param>
+            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the warning message.</param>
+            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Warning(System.String,System.Object[])">
+            <summary>
+            <para>Give warning.</para>
+            
+            <para>By default, the warning will not be shown / stored to anywhere.
+            To show or log the warning, override <see cref="M:System.Yaml.Parser`1.StoreWarning(System.String)"/>.</para>
+            </summary>
+            <example>
+            <code>
+              return 
+                  SomeObsoleteReductionRule() &amp;&amp;
+                  Warning("Obsolete");
+            </code>
+            </example>
+            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the warning message.</param>
+            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.StoreWarning(System.String)">
+            <summary>
+            <para>Invoked when warning was given while parsing.</para>
+            
+            <para>Override this method to display / store the warning.</para>
+            </summary>
+            <param name="message">Warning message.</param>
+        </member>
+        <member name="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})">
+            <summary>
+            <para>Represents EBNF operator of "join", i.e. serial appearence of several rules.</para>
+            </summary>
+            <remarks>
+            <para>This recoveres <see cref="F:System.Yaml.Parser`1.p"/>, <see cref="F:System.Yaml.Parser`1.stringValue"/>, <see cref="F:System.Yaml.Parser`1.state"/>
+            when <paramref name="condition"/> does not return <code>true</code>.</para>
+            
+            <para>If any specific operation is needed for rewinding, in addition to simply
+            recover the value of <see cref="F:System.Yaml.Parser`1.state"/>, override <see cref="M:System.Yaml.Parser`1.Rewind"/>.</para>
+            </remarks>
+            <param name="rule">If false is returned, the parser status is rewound.</param>
+            <returns>true if <paramref name="rule"/> returned true; otherwise false.</returns>
+            <example>
+            name ::= first-name middle-name? last-name
+            <code>
+            bool Name()
+            {
+                return RewindUnless(()=&gt;
+                    FirstName() &amp;&amp;
+                    Optional(MiddleName) &amp;&amp;
+                    LastName()
+                );
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Rewind">
+            <summary>
+            This method is called just after <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> recovers <see cref="F:System.Yaml.Parser`1.state"/>.
+            Override it to do any additional operation for rewinding.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Boolean})">
+             <summary>
+             Represents EBNF operator of "*".
+             </summary>
+             <param name="rule">Reduction rule to be repeated.</param>
+             <returns>Always true.</returns>
+             <example>
+             lines-or-empty ::= line*
+             <code>
+             bool LinesOrEmpty()
+             {
+                 return
+                     Repeat(Line);
+             }
+             </code>
+            
+             <para>lines-or-empty ::= (text line-break)*</para>
+             <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
+             rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Repeat(System.Func{System.Boolean})"/> operator.</para>
+             <code>
+             bool LinesOrEmpty()
+             {
+                 return
+                     Repeat(()=&gt;
+                         RewindUnless(()=&gt;
+                             Text() &amp;&amp;
+                             LineBreak()
+                         )
+                     );
+             }
+             </code>
+             </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.OneAndRepeat(System.Func{System.Boolean})">
+            <summary>
+            Represents EBNF operator of "+".
+            </summary>
+            <param name="rule">Reduction rule to be repeated.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+            <example>
+            lines ::= line+
+            <code>
+            bool Lines()
+            {
+                return
+                    Repeat(Line);
+            }
+            </code>
+            </example>
+            <example>
+            lines ::= (text line-break)+
+            
+            Note: Do not forget RewindUnless in Repeat operator.
+            <code>
+            bool Lines()
+            {
+                return
+                    Repeat(()=>
+                        RewindUnless(()=>
+                            Text() &amp;&amp;
+                            LineBreak()
+                        )
+                    );
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Func{System.Boolean})">
+             <summary>
+             Represents <code>n</code> times repeatition.
+             </summary>
+             <example>
+             <para>four-lines ::= (text line-break){4}</para>
+            
+             <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
+             rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Func{System.Boolean})"/> operator.</para>
+             <code>
+             bool FourLines()
+             {
+                 return
+                     Repeat(4, ()=&gt;
+                         RewindUnless(()=&gt;
+                             Text() &amp;&amp;
+                             LineBreak()
+                         )
+                     );
+             }
+             </code>
+             </example>
+             <param name="n">Repetition count.</param>
+             <param name="rule">Reduction rule to be repeated.</param>
+             <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Int32,System.Func{System.Boolean})">
+            <summary>
+            Represents at least <paramref name="min"/>, at most <paramref name="max"/> times repeatition.
+            </summary>
+            <example>
+            <para>google ::= "g" "o"{2,100} "g" "l" "e"</para>
+            <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
+            rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Int32,System.Func{System.Boolean})"/> operator.</para>
+            <code>
+            bool Google()
+            {
+                return
+                    RewindUnless(()=&gt;
+                        text[p++] == 'g' &amp;&amp;
+                            Repeat(2, 100,
+                                RewindUnless(()=&gt;
+                                    text[p++] == 'o'
+                                )
+                            )
+                        text[p++] == 'g' &amp;&amp;
+                        text[p++] == 'l' &amp;&amp;
+                        text[p++] == 'e'
+                    );
+            }
+            </code>
+            </example>
+            <param name="min">Minimum repetition count. Negative value is treated as 0.</param>
+            <param name="max">Maximum repetition count. Negative value is treated as positive infinity.</param>
+            <param name="rule">Reduction rule to be repeated.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Optional(System.Boolean)">
+            <summary>
+            Represents BNF operator "?".
+            </summary>
+            <example>
+            <para>file ::= header? body footer?</para>
+            
+            <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
+            rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Optional(System.Boolean)"/> operator.</para>
+            <code>
+            bool File()
+            {
+                return
+                    Optional(Header()) &amp;&amp;
+                    Body() &amp;&amp;
+                    Optional(Footer());
+            }
+            </code>
+            </example>
+            <param name="rule">Reduction rule that is optional.</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Optional(System.Func{System.Boolean})">
+            <summary>
+            Represents BNF operator "?" (WITH rewinding wrap).
+            </summary>
+            <example>
+            file = header? body footer?
+            
+            <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
+            rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Optional(System.Func{System.Boolean})"/> operator.</para>
+            <code>
+            bool File()
+            {
+                return
+                    Optional(Header) &amp;&amp;
+                    Body() &amp;&amp;
+                    Optional(Footer);
+            }
+            </code>
+            </example>
+            <param name="rule">Reduction rule that is optional.</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Accept(System.Func{System.Char,System.Boolean})">
+            <summary>
+            Reduce one character if it is a member of the specified character set.
+            </summary>
+            <param name="charset">Acceptable character set.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+            <example>
+            alpha ::= [A-Z][a-z]<br/>
+            num ::= [0-9]<br/>
+            alpha-num :: alpha | num<br/>
+            word ::= alpha ( alpha-num )*<br/>
+            <code>
+            Func&lt;char,bool&gt; Alpha = Charset( c =>
+                ( 'A' &lt;= c &amp;&amp; c &lt;= 'Z' ) ||
+                ( 'a' &lt;= c &amp;&amp; c &lt;= 'z' ) 
+            );
+            Func&lt;char,bool&gt; Num = Charset( c =>
+                  '0' &lt;= c &amp;&amp; c &lt;= '9' 
+            );
+            Func&lt;char,bool&gt; AlphaNum = Charset( c =>
+                Alpha(c) || Num(c)
+            );
+            bool Word()
+            {
+                return 
+                    Accept(Alpha) &amp;&amp;
+                    Repeat(AlphaNum);
+                    // No need for RewindUnless
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Accept(System.Char)">
+            <summary>
+            <para>Accepts a character 'c'.</para>
+            
+            <para>It can be also represented by <c>text[p++] == c</c> wrapped by <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/>.</para>
+            </summary>
+            <param name="c">The character to be accepted.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+            <example>
+            YMCA ::= "Y" "M" "C" "A"
+            <code>
+            bool YMCA()
+            {
+                return
+                    RewindUnless(()=&gt;
+                        Accept('Y') &amp;&amp;
+                        Accept('M') &amp;&amp;
+                        Accept('C') &amp;&amp;
+                        Accept('A') 
+                    );
+            }
+            </code>
+            -or-
+            <code>
+            bool YMCA()
+            {
+                return
+                    RewindUnless(()=&gt;
+                        text[p++] == 'Y' &amp;&amp;
+                        text[p++] == 'M' &amp;&amp;
+                        text[p++] == 'C' &amp;&amp;
+                        text[p++] == 'A' 
+                    );
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Accept(System.String)">
+            <summary>
+            Accepts a sequence of characters.
+            </summary>
+            <param name="s">Sequence of characters to be accepted.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+            <example>
+            YMCA ::= "Y" "M" "C" "A"
+            <code>
+            bool YMCA()
+            {
+                return
+                    Accept("YMCA");
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Accept(System.Text.RegularExpressions.Regex)">
+            <summary>
+            Represents sequence of characters.
+            </summary>
+            <param name="r">Sequence of characters to be accepted.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Char,System.Boolean})">
+            <summary>
+            Represents BNF operator of "*".
+            </summary>
+            <param name="charset">Character set to be accepted.</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.OneAndRepeat(System.Func{System.Char,System.Boolean})">
+            <summary>
+            Represents BNF operator of "+".
+            </summary>
+            <param name="charset">Character set to be accepted.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Char,System.Boolean},System.Int32)">
+            <summary>
+            Represents <code>n</code> times repetition of characters.
+            </summary>
+            <param name="charset">Character set to be accepted.</param>
+            <param name="n">Repetition count.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Char,System.Boolean},System.Int32,System.Int32)">
+            <summary>
+            Represents at least <code>min</code> times, at most <code>max</code> times 
+            repetition of characters.
+            </summary>
+            <param name="charset">Character set to be accepted.</param>
+            <param name="min">Minimum repetition count. Negative value is treated as 0.</param>
+            <param name="max">Maximum repetition count. Negative value is treated as positive infinity.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Optional(System.Func{System.Char,System.Boolean})">
+            <summary>
+            Represents BNF operator "?".
+            </summary>
+            <param name="charset">Character set to be accepted.</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Charset(System.Func{System.Char,System.Boolean})">
+            <summary>
+            <para>Builds a performance-optimized table-based character set definition from a simple 
+            but slow comparison-based definition.</para>
+            
+            <para>By default, the character table size is 0x100, namely only the characters of [\0-\xff] are
+            judged by using a character table and others are by the as-given slow comparisn-based definitions.</para>
+            
+            <para>To have maximized performance, locate the comparison for non-table based judgement first
+            in the definition as the example below.</para>
+            
+            <para>Use <see cref="M:System.Yaml.Parser`1.Charset(System.Int32,System.Func{System.Char,System.Boolean})"/> form to explicitly 
+            specify the table size.</para>
+            </summary>
+            <example>This sample shows how to build a character set delegate.
+            <code>
+            static class YamlCharsets: Charsets
+            {
+                Func&lt;char, bool&gt; cPrintable;
+                Func&lt;char, bool&gt; sWhite;
+            
+                static YamlCharsets()
+                {
+                    cPrintable = CacheResult(c =&gt;
+                    /*  ( 0x10000 &lt; c &amp;&amp; c &lt; 0x110000 ) || */
+                        ( 0xe000 &lt;= c &amp;&amp; c &lt;= 0xfffd ) ||
+                        ( 0xa0 &lt;= c &amp;&amp; c &lt;= 0xd7ff ) ||
+                        ( c &lt; 0x100 &amp;&amp; ( // to improve performance
+                            c == 0x85 ||
+                            ( 0x20 &lt;= c &amp;&amp; c &lt;= 0x7e ) ||
+                            c == 0x0d ||
+                            c == 0x0a ||
+                            c == 0x09
+                        ) )
+                    );
+                    sWhite = CacheResult(c =&gt;
+                        c &lt; 0x100 &amp;&amp; ( // to improve performance
+                            c == '\t' ||
+                            c == ' '
+                        )
+                    );
+                }
+            }
+            </code></example>
+            <param name="definition">A simple but slow comparison-based definition of the charsert.</param>
+            <returns>A performance-optimized table-based delegate built from the given <paramref name="definition"/>.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Charset(System.Int32,System.Func{System.Char,System.Boolean})">
+            <summary>
+            <para>Builds a performance-optimized table-based character set definition from a simple 
+            but slow comparison-based definition.</para>
+            
+            <para>Characters out of the table are judged by the as-given slow comparisn-based 
+            definitions.</para>
+            
+            <para>So, to have maximized performance, locate the comparison for non-table based 
+            judgement first in the definition as the example below.</para>
+            </summary>
+            <example>This sample shows how to build a character set delegate.
+            <code>
+            static class YamlCharsets: Charsets
+            {
+                Func&lt;char, bool&gt; cPrintable;
+                Func&lt;char, bool&gt; sWhite;
+            
+                static YamlCharsets()
+                {
+                    cPrintable = CacheResult(c =&gt;
+                    /*  ( 0x10000 &lt; c &amp;&amp; c &lt; 0x110000 ) || */
+                        ( 0xe000 &lt;= c &amp;&amp; c &lt;= 0xfffd ) ||
+                        ( 0xa0 &lt;= c &amp;&amp; c &lt;= 0xd7ff ) ||
+                        ( c &lt; 0x100 &amp;&amp; ( // to improve performance
+                            c == 0x85 ||
+                            ( 0x20 &lt;= c &amp;&amp; c &lt;= 0x7e ) ||
+                            c == 0x0d ||
+                            c == 0x0a ||
+                            c == 0x09
+                        ) )
+                    );
+                    sWhite = CacheResult(c =&gt;
+                        c &lt; 0x100 &amp;&amp; ( // to improve performance
+                            c == '\t' ||
+                            c == ' '
+                        )
+                    );
+                }
+            }
+            </code></example>
+            <param name="table_size">Character table size.</param>
+            <param name="definition">A simple but slow comparison-based definition of the charsert.</param>
+            <returns>A performance-optimized table-based delegate built from the given <paramref name="definition"/>.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Save(System.Func{System.Boolean},System.String@)">
+            <summary>
+            <para>Saves a part of the source text that is reduced in the <paramref name="rule"/>.</para>
+            <para>If the rule does not match, nothing happends.</para>
+            </summary>
+            <param name="rule">Reduction rule to match.</param>
+            <param name="value">If the <paramref name="rule"/> matches, 
+            the part of the source text reduced in the <paramref name="rule"/> is set; 
+            otherwise String.Empty is set.</param>
+            <returns>true if <paramref name="rule"/> matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Save(System.Func{System.Boolean})">
+            <summary>
+            <para>Saves a part of the source text that is reduced in the <paramref name="rule"/>
+            and append it to <see cref="F:System.Yaml.Parser`1.stringValue"/>.</para>
+            <para>If the rule does not match, nothing happends.</para>
+            </summary>
+            <param name="rule">Reduction rule to match.</param>
+            <returns>true if <paramref name="rule"/> matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Save(System.Func{System.Boolean},System.Action{System.String})">
+            <summary>
+            <para>Saves a part of the source text that is reduced in the <paramref name="rule"/>.</para>
+            <para>If the rule does not match, nothing happends.</para>
+            </summary>
+            <param name="rule">Reduction rule to match.</param>
+            <param name="save">If <paramref name="rule"/> matches, this delegate is invoked
+            with the part of the source text that is reduced in the <paramref name="rule"/>
+            as the parameter. Do any action in the delegate.</param>
+            <returns>true if <paramref name="rule"/> matches; otherwise false.</returns>
+            <example>
+            <code>
+            bool SomeRule()
+            {
+                return 
+                    Save(()=> SubRule(), s => MessageBox.Show(s));
+            }
+            </code></example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Action(System.Action)">
+            <summary>
+            Execute some action.
+            </summary>
+            <param name="action">Action to be done.</param>
+            <returns>Always true.</returns>
+            <example>
+            <code>
+            bool SomeRule()
+            {
+                return 
+                    SubRule() &amp;&amp;
+                    Action(()=> do_some_action());
+            }
+            </code></example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.ErrorUnless(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when the <paramref name="rule"/> does not match.
+            </summary>
+            <param name="rule">Some reduction rule that must match.</param>
+            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <returns>Always true; otherwise an exception thrown.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.ErrorUnless(System.Func{System.Boolean},System.String,System.Object[])">
+            <summary>
+            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when the <paramref name="rule"/> does not match.
+            </summary>
+            <param name="rule">Some reduction rule that must match.</param>
+            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <returns>Always true; otherwise an exception is thrown.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.ErrorUnlessWithAdditionalCondition(System.Func{System.Boolean},System.Boolean,System.String,System.Object[])">
+            <summary>
+            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when the <paramref name="rule"/> does not match
+            and an additional condition <paramref name="to_be_error"/> is true.
+            </summary>
+            <param name="rule">Some reduction rule that must match.</param>
+            <param name="to_be_error">Additional condition: if this parameter is false, 
+            rewinding occurs, instead of throwing exception.</param>
+            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <returns>true if the reduction rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.ErrorIf(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when <paramref name="condition"/> is true.
+            </summary>
+            <param name="condition">True to throw exception.</param>
+            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Assign``1(``0@,``0)">
+            <summary>
+            Assign <c>var = value</c> and return true;
+            </summary>
+            <typeparam name="T">Type of the variable and value.</typeparam>
+            <param name="var">Variable to be assigned.</param>
+            <param name="value">Value to be assigned.</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="P:System.Yaml.Parser`1.CurrentPosition">
+            <summary>
+            Get current position represented by raw and column.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.Parser`1.Position">
+            <summary>
+            Represents a position in a multiline text.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Parser`1.Position.Raw">
+            <summary>
+            Raw in a text.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Parser`1.Position.Column">
+            <summary>
+            Column in a text.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagValidator.IsValid(System.String)">
+            <summary>
+            Validates a text as a global tag in YAML.
+            </summary>
+            <param name="tag">A candidate for a global tag in YAML.</param>
+            <returns>True if <paramref name="tag"/> is  a valid global tag.</returns>
+        </member>
+        <member name="T:System.Yaml.YamlTagValidator.Status">
+            <summary>
+            Not used in this parser
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlTagPrefixes">
+            <summary>
+            Reset();
+            SetupDefaultTagPrefixes();
+            Add(tag_handle, tag_prefix);
+            verbatim_tag = Resolve(tag_handle, tag_name);
+            </summary>
+        </member>
         <member name="T:System.Yaml.Serialization.YamlSerializer">
              <summary>
              <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> class has instance methods <see cref="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.Object)"/> and <see cref="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])"/>, 
@@ -3518,6 +3172,121 @@
             
             </param>
         </member>
+        <member name="T:System.Yaml.YamlTagResolver">
+            <summary>
+            Represents the way to automatically resolve Tag from the Value of a YamlScalar.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.#ctor">
+            <summary>
+            Create TagResolver with default resolution rules.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.AddDefaultRules">
+            <summary>
+            Add default tag resolution rules to the rule list.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlTagResolver.Rules">
+            <summary>
+            List of tag resolution rules.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.AddRule``1(System.String,System.String,System.Func{System.Text.RegularExpressions.Match,``0},System.Func{``0,System.String})">
+            <summary>
+            Add a tag resolution rule that is invoked when <paramref name="regex"/> matches 
+            the <see cref="P:System.Yaml.YamlScalar.Value">Value of</see> a <see cref="T:System.Yaml.YamlScalar"/> node.
+            
+            The tag is resolved to <paramref name="tag"/> and <paramref name="decode"/> is
+            invoked when actual value of type <typeparamref name="T"/> is extracted from 
+            the node text.
+            </summary>
+            <remarks>
+            Surround sequential calls of this function by <see cref="M:System.Yaml.YamlTagResolver.BeginUpdate"/> / <see cref="M:System.Yaml.YamlTagResolver.EndUpdate"/>
+            pair to avoid invoking slow internal calculation method many times.
+            </remarks>
+            <example>
+            <code>
+            BeginUpdate(); // to avoid invoking slow internal calculation method many times.
+            Add( ... );
+            Add( ... );
+            Add( ... );
+            Add( ... );
+            EndUpdate();   // automaticall invoke internal calculation method 
+            </code></example>
+            <param name="tag"></param>
+            <param name="regex"></param>
+            <param name="decode"></param>
+            <param name="encode"></param>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.BeginUpdate">
+            <summary>
+            Supress invoking slow internal calculation method when 
+            <see cref="M:System.Yaml.YamlTagResolver.AddRule``1(System.String,System.String,System.Func{System.Text.RegularExpressions.Match,``0},System.Func{``0,System.String})"/> called.
+            
+            BeginUpdate / <see cref="M:System.Yaml.YamlTagResolver.EndUpdate"/> can be called nestedly.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.EndUpdate">
+            <summary>
+            Quit to supress invoking slow internal calculation method when 
+            <see cref="M:System.Yaml.YamlTagResolver.AddRule``1(System.String,System.String,System.Func{System.Text.RegularExpressions.Match,``0},System.Func{``0,System.String})"/> called.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.Resolve(System.String)">
+            <summary>
+            Execute tag resolution and returns automatically determined tag value from <paramref name="text"/>.
+            </summary>
+            <param name="text">Node text with which automatic tag resolution is done.</param>
+            <returns>Automatically determined tag value .</returns>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.Decode(System.Yaml.YamlScalar,System.Object@)">
+            <summary>
+            Decode <paramref name="text"/> and returns actual value in C# object.
+            </summary>
+            <param name="node">Node to be decoded.</param>
+            <param name="obj">Decoded value.</param>
+            <returns>True if decoded successfully.</returns>
+        </member>
+        <member name="T:System.Yaml.StringYamlDoubleQuoteEscapeExtention">
+            <summary>
+            Extend string object to have .DoubleQuoteEscape() / .DoubleQuoteUnescape().
+            </summary>
+        </member>
+        <member name="M:System.Yaml.StringYamlDoubleQuoteEscapeExtention.YamlDoubleQuoteEscape(System.String)">
+            <summary>
+            Escape control codes with YAML double quoted string format.
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.StringYamlDoubleQuoteEscapeExtention.YamlDoubleQuoteUnescape(System.String)">
+            <summary>
+            Unescape control codes escaped with YAML double quoted string format.
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.YamlDoubleQuoteEscaping">
+            <summary>
+            YAML style double quoted string escape / unescape.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlDoubleQuoteEscaping.#cctor">
+            <summary>
+            Initialize tables
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlDoubleQuoteEscaping.Escape(System.String)">
+            <summary>
+            Escape control codes, double quotations, backslashes in the YAML double quoted string format
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlDoubleQuoteEscaping.Unescape(System.String)">
+            <summary>
+            Unescape control codes, double quotations, backslashes escape in the YAML double quoted string format
+            </summary>
+        </member>
         <member name="T:System.Yaml.TypeUtils">
             <summary>
             Type 関連のユーティリティメソッド
@@ -3651,120 +3420,351 @@
             Calculate hash code by reference.
             </summary>
         </member>
-        <member name="T:System.Yaml.YamlTagResolver">
+        <member name="T:System.Yaml.YamlParser">
             <summary>
-            Represents the way to automatically resolve Tag from the Value of a YamlScalar.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlTagResolver.#ctor">
-            <summary>
-            Create TagResolver with default resolution rules.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlTagResolver.AddDefaultRules">
-            <summary>
-            Add default tag resolution rules to the rule list.
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlTagResolver.Rules">
-            <summary>
-            List of tag resolution rules.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlTagResolver.AddRule``1(System.String,System.String,System.Func{System.Text.RegularExpressions.Match,``0},System.Func{``0,System.String})">
-            <summary>
-            Add a tag resolution rule that is invoked when <paramref name="regex"/> matches 
-            the <see cref="P:System.Yaml.YamlScalar.Value">Value of</see> a <see cref="T:System.Yaml.YamlScalar"/> node.
+            <para>A text parser for<br/>
+            YAML Ain’t Markup Language (YAML™) Version 1.2<br/>
+            3rd Edition (2009-07-21)<br/>
+            http://yaml.org/spec/1.2/spec.html </para>
             
-            The tag is resolved to <paramref name="tag"/> and <paramref name="decode"/> is
-            invoked when actual value of type <typeparamref name="T"/> is extracted from 
-            the node text.
+            <para>This class parse a YAML document and compose representing <see cref="T:System.Yaml.YamlNode"/> graph.</para>
             </summary>
-            <remarks>
-            Surround sequential calls of this function by <see cref="M:System.Yaml.YamlTagResolver.BeginUpdate"/> / <see cref="M:System.Yaml.YamlTagResolver.EndUpdate"/>
-            pair to avoid invoking slow internal calculation method many times.
-            </remarks>
             <example>
             <code>
-            BeginUpdate(); // to avoid invoking slow internal calculation method many times.
-            Add( ... );
-            Add( ... );
-            Add( ... );
-            Add( ... );
-            EndUpdate();   // automaticall invoke internal calculation method 
-            </code></example>
-            <param name="tag"></param>
-            <param name="regex"></param>
-            <param name="decode"></param>
-            <param name="encode"></param>
-        </member>
-        <member name="M:System.Yaml.YamlTagResolver.BeginUpdate">
-            <summary>
-            Supress invoking slow internal calculation method when 
-            <see cref="M:System.Yaml.YamlTagResolver.AddRule``1(System.String,System.String,System.Func{System.Text.RegularExpressions.Match,``0},System.Func{``0,System.String})"/> called.
+            string yaml = LoadYamlSource();
+            YamlParser parser = new YamlParser();
+            Node[] result = null;
+            try {
+                result = parser.Parse(yaml);
+                ...
+                // you can reuse parser as many times you want
+                ...
+                
+            } catch( ParseErrorException e ) {
+                MessageBox.Show(e.Message);
+            }
+            if(result != null) {
+                ...
             
-            BeginUpdate / <see cref="M:System.Yaml.YamlTagResolver.EndUpdate"/> can be called nestedly.
+            }
+            </code>
+            </example>
+            <remarks>
+            <para>Currently, this parser violates the YAML 1.2 specification in the following points.</para>
+            <para>- line breaks are not normalized.</para>
+            <para>- omission of the final line break is allowed in plain / literal / folded text.</para>
+            <para>- ':' followed by ns-indicator is excluded from ns-plain-char.</para>
+            </remarks>
+        </member>
+        <member name="M:System.Yaml.YamlParser.#ctor">
+            <summary>
+            Initialize a YAML parser.
             </summary>
         </member>
-        <member name="M:System.Yaml.YamlTagResolver.EndUpdate">
+        <member name="M:System.Yaml.YamlParser.Parse(System.String)">
             <summary>
-            Quit to supress invoking slow internal calculation method when 
-            <see cref="M:System.Yaml.YamlTagResolver.AddRule``1(System.String,System.String,System.Func{System.Text.RegularExpressions.Match,``0},System.Func{``0,System.String})"/> called.
+            Parse YAML text and returns a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="yaml">YAML text to be parsed.</param>
+            <returns>A list of <see cref="T:System.Yaml.YamlNode"/> parsed from the given text</returns>
+        </member>
+        <member name="M:System.Yaml.YamlParser.Parse(System.String,System.Yaml.YamlConfig)">
+            <summary>
+            Parse YAML text and returns a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="yaml">YAML text to be parsed.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML Configuration</see> to be used in parsing.</param>
+            <returns>A list of <see cref="T:System.Yaml.YamlNode"/> parsed from the given text</returns>
+        </member>
+        <member name="M:System.Yaml.YamlParser.StoreWarning(System.String)">
+            <summary>
+            Add message in <see cref="P:System.Yaml.YamlParser.Warnings"/> property.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:System.Yaml.YamlParser.ReservedDirective(System.String,System.String[])">
+            <summary>
+            Invoked when unknown directive is found in YAML document.
+            </summary>
+            <param name="name">Name of the directive</param>
+            <param name="args">Parameters for the directive</param>
+        </member>
+        <member name="M:System.Yaml.YamlParser.YamlDirective(System.String)">
+            <summary>
+            Invoked when YAML directive is found in YAML document.
+            </summary>
+            <param name="version">Given version</param>
+        </member>
+        <member name="M:System.Yaml.YamlParser.Rewind">
+            <summary>
+            rewinding action
             </summary>
         </member>
-        <member name="M:System.Yaml.YamlTagResolver.Resolve(System.String)">
+        <member name="M:System.Yaml.YamlParser.SetTag(System.String,System.String)">
             <summary>
-            Execute tag resolution and returns automatically determined tag value from <paramref name="text"/>.
+            set status.tag with tag resolution
             </summary>
-            <param name="text">Node text with which automatic tag resolution is done.</param>
-            <returns>Automatically determined tag value .</returns>
-        </member>
-        <member name="M:System.Yaml.YamlTagResolver.Decode(System.Yaml.YamlScalar,System.Object@)">
-            <summary>
-            Decode <paramref name="text"/> and returns actual value in C# object.
-            </summary>
-            <param name="node">Node to be decoded.</param>
-            <param name="obj">Decoded value.</param>
-            <returns>True if decoded successfully.</returns>
-        </member>
-        <member name="T:System.Yaml.StringYamlDoubleQuoteEscapeExtention">
-            <summary>
-            Extend string object to have .DoubleQuoteEscape() / .DoubleQuoteUnescape().
-            </summary>
-        </member>
-        <member name="M:System.Yaml.StringYamlDoubleQuoteEscapeExtention.YamlDoubleQuoteEscape(System.String)">
-            <summary>
-            Escape control codes with YAML double quoted string format.
-            </summary>
-            <param name="s"></param>
+            <param name="tag_handle"></param>
+            <param name="tag_suffix"></param>
             <returns></returns>
         </member>
-        <member name="M:System.Yaml.StringYamlDoubleQuoteEscapeExtention.YamlDoubleQuoteUnescape(System.String)">
+        <member name="M:System.Yaml.YamlParser.SetTag(System.String)">
             <summary>
-            Unescape control codes escaped with YAML double quoted string format.
+            set status.tag with verbatim tag value
             </summary>
-            <param name="s"></param>
+            <param name="verbatim_tag">verbatim tag</param>
             <returns></returns>
         </member>
-        <member name="T:System.Yaml.YamlDoubleQuoteEscaping">
+        <member name="M:System.Yaml.YamlParser.AutoDetectTag(System.String)">
             <summary>
-            YAML style double quoted string escape / unescape.
+            Used when the parser resolves a tag for a scalar node from its value.
+            
+            New resolution rules can be add before calling <see cref="M:System.Yaml.YamlParser.Parse(System.String)"/> method.
             </summary>
         </member>
-        <member name="M:System.Yaml.YamlDoubleQuoteEscaping.#cctor">
+        <member name="M:System.Yaml.YamlParser.eScalar">
             <summary>
-            Initialize tables
+            [105]
             </summary>
         </member>
-        <member name="M:System.Yaml.YamlDoubleQuoteEscaping.Escape(System.String)">
+        <member name="M:System.Yaml.YamlParser.eNode">
             <summary>
-            Escape control codes, double quotations, backslashes in the YAML double quoted string format
+            [106]
             </summary>
         </member>
-        <member name="M:System.Yaml.YamlDoubleQuoteEscaping.Unescape(System.String)">
+        <member name="P:System.Yaml.YamlParser.Warnings">
             <summary>
-            Unescape control codes, double quotations, backslashes escape in the YAML double quoted string format
+            Warnings that are made while parsing a YAML text.
+            This property is cleared by new call for <see cref="M:System.Yaml.YamlParser.Parse(System.String)"/> method.
             </summary>
+        </member>
+        <member name="T:System.Yaml.YamlParser.State">
+            <summary>
+            additional fields to be rewound
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.tag">
+            <summary>
+            tag for the next value (will be cleared when the next value is created)
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.anchor">
+            <summary>
+            anchor for the next value (will be cleared when the next value is created)
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.value">
+            <summary>
+            current value
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.anchor_depth">
+            <summary>
+            anchor rewinding position
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.Charsets.cIndicator">
+            <summary>
+            [22]
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.Charsets.cFlowIndicator">
+            <summary>
+            [23]
+            </summary>
+        </member>
+        <member name="T:System.Yaml.StringUriEncodingExtention">
+            <summary>
+            Add string class two methods: .UriEscape(), .UriUnescape()
+            
+            Charset that is not escaped is represented NonUriChar member.
+            
+            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
+            </summary>
+        </member>
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscape(System.String)">
+            <summary>
+            Escape the string in URI encoding format.
+            </summary>
+            <param name="s">String to be escaped.</param>
+            <returns>Escaped string.</returns>
+        </member>
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscapeForTag(System.String)">
+            <summary>
+            Escape the string in URI encoding format.
+            </summary>
+            <param name="s">String to be escaped.</param>
+            <returns>Escaped string.</returns>
+        </member>
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriUnescape(System.String)">
+            <summary>
+            Unescape the string escaped in URI encoding format.
+            </summary>
+            <param name="s">String to be unescape.</param>
+            <returns>Unescaped string.</returns>
+        </member>
+        <member name="T:System.Yaml.UriEncoding">
+            <summary>
+            Escape / Unescape string in URI encoding format
+            
+            Charset that is not escaped is represented NonUriChar member.
+            
+            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
+            </summary>
+        </member>
+        <member name="T:System.Yaml.ParseErrorException">
+            <summary>
+            <para>When <see cref="T:System.Yaml.Parser`1"/> reports syntax error by exception, this class is thrown.</para>
+            
+            <para>Sytax errors can also be reported by simply returing false with giving some warnings.</para>
+            </summary>
+        </member>
+        <member name="M:System.Yaml.ParseErrorException.#ctor(System.String)">
+            <summary>
+            Initialize an instance of <see cref="T:System.Yaml.ParseErrorException"/>
+            </summary>
+            <param name="message">Error message.</param>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlRepresenter">
+            <summary>
+            Converts C# object to YamlNode
+            </summary>
+            <example>
+            <code>
+            object obj;
+            YamlNode node = YamlRepresenter.ObjectToNode(obj);
+            </code>
+            </example>
+        </member>
+        <member name="T:System.Yaml.RehashableDictionary`2">
+            <summary>
+            <para>Dictionary that automatically rehash when the content of a key is changed.
+            Keys of this dictionary must implement <see cref="T:System.Yaml.IRehashableKey"/>.</para>
+            <para>It also call back item addition and removal by <see cref="E:System.Yaml.RehashableDictionary`2.Added"/> and
+            <see cref="E:System.Yaml.RehashableDictionary`2.Removed"/> events.</para>
+            </summary>
+            <typeparam name="K">Type of key. Must implements <see cref="T:System.Yaml.IRehashableKey"/>.</typeparam>
+            <typeparam name="V">Type of value.</typeparam>
+        </member>
+        <member name="F:System.Yaml.RehashableDictionary`2.items">
+            <summary>
+            <para>A dictionary that returns <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> or <see cref="T:System.Collections.Generic.List`1"/> 
+            from hash code. This is the main repository that stores the <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> pairs.</para>
+            <para>If there are several entries that have same hash code for thir keys, 
+            a <see cref="T:System.Collections.Generic.List`1"/> is stored to hold all those entries.
+            Otherwise, a <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> is stored.</para>
+            </summary>
+        </member>
+        <member name="F:System.Yaml.RehashableDictionary`2.hashes">
+            <summary>
+            <para>A dictionary that returns hash code from the key reference.
+            The key must be the instance that <see cref="M:System.Object.ReferenceEquals(System.Object,System.Object)"/>
+            to one exsisting in the dictionary.</para>
+            </summary>
+            <remarks>
+            <para>We store the hashes correspoinding to each key. So that when rehash,
+            we can find old hash code to quickly find the entry for the key.</para>
+            <para>It is also used to remember the number of keys exists in the dictionary.</para>
+            </remarks>
+        </member>
+        <member name="M:System.Yaml.RehashableDictionary`2.Rehash(`0)">
+            <summary>
+            Recalc hash key of the <paramref name="key"/>.
+            </summary>
+            <param name="key">The key to be rehash. The key must be the instance that 
+            <see cref="M:System.Object.ReferenceEquals(System.Object,System.Object)"/> to one exsisting in the dictionary.</param>
+        </member>
+        <member name="M:System.Yaml.RehashableDictionary`2.FindItem(`0,System.Boolean,`1,System.Action{System.Int32},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Int32})">
+            <summary>
+            Try to find entry for key (and value).
+            </summary>
+            <param name="key">key to find</param>
+            <param name="compareValue">if true, value matters</param>
+            <param name="value">value to find</param>
+            <param name="NotFound">key not found</param>
+            <param name="FoundOne">hash hit one entry and key found</param>
+            <param name="FoundList">hash hit several entries and key found</param>
+        </member>
+        <member name="M:System.Yaml.RehashableDictionary`2.FindItem(`0,System.Boolean,`1,System.Action{System.Int32},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue}},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Int32})">
+            <summary>
+            Try to find entry for key (and value).
+            </summary>
+            <param name="key">key to find</param>
+            <param name="compareValue">if true, value matters</param>
+            <param name="value">value to find</param>
+            <param name="NotFoundHash">hash not found</param>
+            <param name="NotFoundKeyOne">hash hit one entry but key not found</param>
+            <param name="FoundOne">hash hit one entry and key found</param>
+            <param name="NotFoundKeyList">hash hit several entries but key not found</param>
+            <param name="FoundList">hash hit several entries and key found</param>
+        </member>
+        <member name="T:System.Yaml.RehashableDictionary`2.KeysValuesBase`1">
+            <summary>
+            Collection that is readonly and invalidated when an item is 
+            added to or removed from the dictionary.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlPresenter">
+            <summary>
+            Converts YamlNode tree into yaml text.
+            </summary>
+            <example>
+            <code>
+            YamlNode node;
+            YamlPresenter.ToYaml(node);
+            
+            YamlNode node1;
+            YamlNode node2;
+            YamlNode node3;
+            YamlPresenter.ToYaml(node1, node2, node3);
+            </code>
+            </example>
+        </member>
+        <member name="T:System.Yaml.Serialization.EasyTypeConverter">
+            <summary>
+            Converts various types to / from string.<br/>
+            I don't remember why this class was needed....
+            </summary>
+            <example>
+            <code>
+            object obj = GetObjectToConvert();
+            
+            // Check if the type has [TypeConverter] attribute.
+            if( EasyTypeConverter.IsTypeConverterSpecified(type) ) {
+            
+              // Convert the object to string.
+              string s = EasyTypeConverter.ConvertToString(obj);
+            
+              // Convert the string to an object of the spific type.
+              object restored = EasyTypeConverter.ConvertFromString(s, type);
+              
+              Assert.AreEqual(obj, restored);
+            
+            }
+            </code>
+            </example>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlConstructor">
+            <summary>
+            Construct YAML node tree that represents a given C# object.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlConstructor.NodeToObject(System.Yaml.YamlNode,System.Yaml.YamlConfig)">
+            <summary>
+            Construct YAML node tree that represents a given C# object.
+            </summary>
+            <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlConstructor.NodeToObject(System.Yaml.YamlNode,System.Type,System.Yaml.YamlConfig)">
+            <summary>
+            Construct YAML node tree that represents a given C# object.
+            </summary>
+            <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
+            <param name="expected">Expected type for the root object.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
+            <returns></returns>
         </member>
     </members>
 </doc>

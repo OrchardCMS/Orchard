@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Records;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -64,7 +63,11 @@ namespace Orchard.Comments.Controllers {
                 }
 
                 var pagerShape = Shape.Pager(pager).TotalItemCount(comments.Count());
-                var entries = comments.Slice(pager.GetStartIndex(), pager.PageSize).ToList().Select(comment => CreateCommentEntry(comment.Record));
+                var entries = comments
+                    .OrderByDescending<CommentPartRecord, DateTime?>(cpr => cpr.CommentDateUtc)
+                    .Slice(pager.GetStartIndex(), pager.PageSize)
+                    .ToList()
+                    .Select(comment => CreateCommentEntry(comment.Record));
 
                 var model = new CommentsIndexViewModel {
                     Comments = entries.ToList(),
@@ -98,12 +101,12 @@ namespace Orchard.Comments.Controllers {
                             _commentService.MarkCommentAsSpam(entry.Comment.Id);
                         }
                         break;
-                    case CommentIndexBulkAction.Pend:
+                    case CommentIndexBulkAction.Unapprove:
                         if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
-                            _commentService.PendComment(entry.Comment.Id);
+                            _commentService.UnapproveComment(entry.Comment.Id);
                         }
                         break;
                     case CommentIndexBulkAction.Approve:
@@ -194,12 +197,12 @@ namespace Orchard.Comments.Controllers {
                             _commentService.MarkCommentAsSpam(entry.Comment.Id);
                         }
                         break;
-                    case CommentDetailsBulkAction.Pend:
+                    case CommentDetailsBulkAction.Unapprove:
                         if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
 
                         foreach (CommentEntry entry in checkedEntries) {
-                            _commentService.PendComment(entry.Comment.Id);
+                            _commentService.UnapproveComment(entry.Comment.Id);
                         }
                         break;
                     case CommentDetailsBulkAction.Approve:
@@ -309,6 +312,75 @@ namespace Orchard.Comments.Controllers {
         }
 
         [HttpPost]
+        public ActionResult Approve(int id, string returnUrl) {
+            try {
+                if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't approve comment")))
+                    return new HttpUnauthorizedResult();
+
+                int commentedOn = _commentService.GetComment(id).Record.CommentedOn;
+                _commentService.ApproveComment(id);
+
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Details", new { id = commentedOn });
+            }
+            catch (Exception exception) {
+                Services.Notifier.Error(T("Approving comment failed: " + exception.Message));
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Unapprove(int id, string returnUrl) {
+            try {
+                if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't unapprove comment")))
+                    return new HttpUnauthorizedResult();
+
+                int commentedOn = _commentService.GetComment(id).Record.CommentedOn;
+                _commentService.UnapproveComment(id);
+
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Details", new { id = commentedOn });
+            }
+            catch (Exception exception) {
+                Services.Notifier.Error(T("Unapproving comment failed: " + exception.Message));
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult MarkAsSpam(int id, string returnUrl) {
+            try {
+                if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't mark comment as spam")))
+                    return new HttpUnauthorizedResult();
+
+                int commentedOn = _commentService.GetComment(id).Record.CommentedOn;
+                _commentService.MarkCommentAsSpam(id);
+
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Details", new { id = commentedOn });
+            }
+            catch (Exception exception) {
+                Services.Notifier.Error(T("Marking comment as spam failed: " + exception.Message));
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
         public ActionResult Delete(int id, string returnUrl) {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
@@ -334,7 +406,7 @@ namespace Orchard.Comments.Controllers {
         private CommentEntry CreateCommentEntry(CommentPartRecord commentPart) {
             return new CommentEntry {
                 Comment = commentPart,
-                CommentedOn = _commentService.GetDisplayForCommentedContent(commentPart.CommentedOn).DisplayText,
+                CommentedOn = _commentService.GetCommentedContent(commentPart.CommentedOn),
                 IsChecked = false,
             };
         }

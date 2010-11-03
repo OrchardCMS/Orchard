@@ -689,6 +689,7 @@ table.items thead, table.items th {
 	font-weight:700;
 	overflow:hidden;
 	text-align:left;
+	white-space:nowrap;
 }
 /* todo: (heskew) hook back up */
 table.items tr.hover {
@@ -703,6 +704,10 @@ table.items th, table.items td {
 	padding:8px 12px;
 	vertical-align:middle;
 }
+table.items td 
+{
+    vertical-align:top;
+}
 /* todo: Find a better way to do this. These are a fix for buttons and label fonts becomming too large in a table.*/
 table label {
     font-size:1em;
@@ -710,7 +715,6 @@ table label {
 table .button {
     font-size:1em;
 }
-
 
 /* Content item lists
 ----------------------------------------------------------*/

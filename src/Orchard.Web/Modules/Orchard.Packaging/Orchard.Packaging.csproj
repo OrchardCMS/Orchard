@@ -117,9 +117,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Gallery\Themes.cshtml" />
   </ItemGroup>
   <ItemGroup>

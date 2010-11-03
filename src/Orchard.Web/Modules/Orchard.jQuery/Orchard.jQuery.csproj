@@ -93,7 +93,6 @@
     <Content Include="Styles\jquery-ui-1.7.2.custom.css" />
     <Content Include="Styles\ui.datepicker.css" />
     <Content Include="Styles\ui.timepickr.css" />
-    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

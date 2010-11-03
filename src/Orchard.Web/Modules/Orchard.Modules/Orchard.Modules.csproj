@@ -88,7 +88,6 @@
     <Content Include="Module.txt" />
     <Content Include="Views\Admin\Add.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

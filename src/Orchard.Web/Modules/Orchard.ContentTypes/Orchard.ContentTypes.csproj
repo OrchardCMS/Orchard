@@ -117,13 +117,6 @@
     <Content Include="Views\EditorTemplates\TypePart.cshtml" />
     <Content Include="Views\EditorTemplates\TypeParts.cshtml" />
     <Content Include="Views\EditorTemplates\Settings.cshtml" />
-    <Content Include="Web.config" />
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
