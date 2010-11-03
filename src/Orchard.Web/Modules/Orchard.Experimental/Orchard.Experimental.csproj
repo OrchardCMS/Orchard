@@ -102,7 +102,6 @@
     <Content Include="Views\Home\Simple.cshtml" />
     <Content Include="Views\Home\_RenderableAction.cshtml" />
     <Content Include="Views\Metadata\Index.cshtml" />
-    <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

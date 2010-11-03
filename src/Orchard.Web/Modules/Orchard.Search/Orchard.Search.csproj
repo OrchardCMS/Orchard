@@ -97,9 +97,6 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\Search.SiteSettings.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
   </ItemGroup>
