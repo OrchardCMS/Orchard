@@ -302,6 +302,7 @@ namespace Orchard.CodeGeneration.Commands {
                     // include in solution but dont create a project: just add the references to Orchard.Themes project
                     var itemGroup = CreateProjectItemGroup(HostingEnvironment.MapPath("~/Themes/"), createdFiles, createdFolders);
                     AddFilesToOrchardThemesProject(output, itemGroup);
+                    TouchSolution(output);
                 }
                 else {
                     // create a project (already done) and add it to the solution
