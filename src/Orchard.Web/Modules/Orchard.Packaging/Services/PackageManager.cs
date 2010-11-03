@@ -33,6 +33,7 @@ namespace Orchard.Packaging.Services {
                 return null;
             }
             return new PackageData {
+                ExtensionType = extensionDescriptor.ExtensionType,
                 ExtensionName = extensionDescriptor.Name,
                 ExtensionVersion = extensionDescriptor.Version,
                 PackageStream = _packageBuilder.BuildPackage(extensionDescriptor),

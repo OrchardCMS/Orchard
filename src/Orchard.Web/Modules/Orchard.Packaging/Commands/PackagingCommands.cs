@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Web.Hosting;
 using Orchard.Commands;
 using Orchard.Environment.Extensions;
 using Orchard.Packaging.Services;
@@ -7,18 +9,17 @@ using Orchard.UI.Notify;
 namespace Orchard.Packaging.Commands {
     [OrchardFeature("Orchard.Packaging")]
     public class PackagingCommands : DefaultOrchardCommandHandler {
+        private static readonly string OrchardWebProj = HostingEnvironment.MapPath("~/Orchard.Web.csproj");
+        private const string PackagePath = "Packages";
+
         private readonly IPackageManager _packageManager;
 
         public PackagingCommands(IPackageManager packageManager) {
             _packageManager = packageManager;
         }
 
-        [OrchardSwitch]
-        public string Filename { get; set; }
-
-        [CommandHelp("package create <moduleName>\r\n\t" + "Create a package for the module <moduleName>. The default filename is <moduleName>-<moduleVersion>.zip.")]
+        [CommandHelp("package create <moduleName>\r\n\t" + "Create a package for the module <moduleName>. The default filename is Orchard.<extension>.<moduleName>.<moduleVersion>.nupkg.")]
         [CommandName("package create")]
-        [OrchardSwitches("Filename")]
         public void CreatePackage(string moduleName) {
             var packageData = _packageManager.Harvest(moduleName);
             if (packageData == null) {
@@ -26,9 +27,18 @@ namespace Orchard.Packaging.Commands {
                 return;
             }
 
-            var filename = string.Format("{0}-{1}.zip", packageData.ExtensionName, packageData.ExtensionVersion);
+            // append "Orchard.[ExtensionType]" to prevent conflicts with other packages (e.g, TinyMce, jQuery, ...)
+            var filename = string.Format("Orchard.{0}.{1}.{2}.nupkg", packageData.ExtensionType, packageData.ExtensionName, packageData.ExtensionVersion);
+            var packagePath = Path.Combine(Directory.GetParent(OrchardWebProj).FullName, PackagePath);
 
-            using(var stream = File.Create(filename)) {
+            if(!Directory.Exists(packagePath)) {
+                Directory.CreateDirectory(packagePath);
+            }
+
+            // packages are created in a specific folder otherwise they are in /bin, which crashed the current shell
+            filename = Path.Combine(packagePath, filename);
+
+            using ( var stream = File.Create(filename) ) {
                 packageData.PackageStream.CopyTo(stream);
                 stream.Close();
             }
