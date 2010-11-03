@@ -65,6 +65,10 @@ namespace Orchard.Comments.Services {
             return _contentManager.GetItemMetadata(content);
         }
 
+        public ContentItem GetCommentedContent(int id) {
+            return _contentManager.Get(id);
+        }
+
         public CommentPart CreateComment(CreateCommentContext context, bool moderateComments) {
             var comment = _contentManager.Create<CommentPart>("Comment");
 
@@ -104,7 +108,7 @@ namespace Orchard.Comments.Services {
             commentPart.Record.Status = CommentStatus.Approved;
         }
 
-        public void PendComment(int commentId) {
+        public void UnapproveComment(int commentId) {
             CommentPart commentPart = GetComment(commentId);
             commentPart.Record.Status = CommentStatus.Pending;
         }

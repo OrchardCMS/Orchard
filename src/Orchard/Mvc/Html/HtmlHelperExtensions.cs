@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -9,7 +8,6 @@ using System.Web.Mvc.Html;
 using System.Web.Routing;
 using Orchard.Collections;
 using Orchard.Localization;
-using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
 using Orchard.Utility.Extensions;
@@ -191,6 +189,18 @@ namespace Orchard.Mvc.Html {
             sb.Append("</ul>");
 
             return new HtmlString(sb.ToString());
+        }
+
+        #endregion
+
+        #region Ellipsize
+
+        public static IHtmlString Ellipsize(this HtmlHelper htmlHelper, string text, int characterCount) {
+            return new HtmlString(htmlHelper.Encode(text).Ellipsize(characterCount));
+        }
+
+        public static IHtmlString Ellipsize(this HtmlHelper htmlHelper, string text, int characterCount, string ellipsis) {
+            return new HtmlString(htmlHelper.Encode(text).Ellipsize(characterCount, ellipsis));
         }
 
         #endregion
