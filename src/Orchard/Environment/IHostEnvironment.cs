@@ -36,7 +36,7 @@ namespace Orchard.Environment {
         }
 
         public bool IsAssemblyLoaded(string name) {
-            return AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == name);
+            return AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.Contains(name));
         }
 
         public void RestartAppDomain() {
