@@ -63,5 +63,16 @@ namespace Orchard.Experimental.Commands {
 
             return "AddProfilingData completed";
         }
+
+        [CommandName("add users")]
+        public string AddUsers() {
+            for (int i = 0; i < 1000; i++) {
+                var user = _membershipService.CreateUser(new CreateUserParams("user" + i, "1234567", "user" + i + "@orchardproject.net", null, null, true));
+                if (user == null)
+                    return "The authentication provider returned an error";
+
+            }
+            return "Success";
+        }
     }
 }
