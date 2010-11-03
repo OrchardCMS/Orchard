@@ -14,23 +14,21 @@ namespace Orchard.Widgets.RuleEngine {
         }
 
         public bool Matches(string expression) {
-            _scriptingManager.SetVariable("callbacks", new CallbackApi(this));
             dynamic execContext = _scriptingManager.ExecuteExpression(@"
                                         class ExecContext
-	                                        def initialize(callbacks)
+	                                        def execute(callbacks, text)
 		                                        @callbacks = callbacks;
-	                                        end
-	
-	                                        def execute(text)
-		                                        instance_eval(text.to_s);
+		                                        temp = instance_eval(text.to_s);
+		                                        @callbacks = 0;
+                                                return temp;
 	                                        end
 
 	                                        def method_missing(name, *args, &block)
 		                                        @callbacks.send(name, args, &block);
                                             end
                                         end
-                                        ExecContext.new(callbacks)");
-            return execContext.execute(expression);
+                                        ExecContext.new()");
+            return execContext.execute(new CallbackApi(this), expression);
         }
 
         public class CallbackApi {
