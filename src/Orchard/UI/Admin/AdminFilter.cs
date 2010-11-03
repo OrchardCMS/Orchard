@@ -51,7 +51,7 @@ namespace Orchard.UI.Admin {
 
         private static bool IsNameAdmin(AuthorizationContext filterContext) {
             return string.Equals(filterContext.ActionDescriptor.ControllerDescriptor.ControllerName, "Admin",
-                                 StringComparison.InvariantCultureIgnoreCase);
+                                 StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool IsNameAdminProxy(AuthorizationContext filterContext) {
