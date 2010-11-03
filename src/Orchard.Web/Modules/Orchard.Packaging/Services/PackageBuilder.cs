@@ -72,6 +72,7 @@ namespace Orchard.Packaging.Services {
             context.Builder.Title = extensionDescriptor.DisplayName ?? extensionDescriptor.Name;
             context.Builder.Description = extensionDescriptor.Description;
             context.Builder.Authors.Add(extensionDescriptor.Author);
+            context.Builder.ProjectUrl = new Uri(extensionDescriptor.WebSite);
         }
 
 
