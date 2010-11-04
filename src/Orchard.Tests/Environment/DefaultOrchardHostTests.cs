@@ -81,6 +81,8 @@ namespace Orchard.Tests.Environment {
             _container.Mock<IOrchardShellEvents>()
                 .Setup(e => e.Activated());
 
+            _container.Mock<IOrchardShellEvents>()
+                .Setup(e => e.Terminating()).Callback(() => new object());
         }
 
         public class StubExtensionManager : IExtensionManager {
