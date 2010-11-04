@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Loaders;
@@ -18,6 +17,7 @@ namespace Orchard.Environment.Extensions {
     public class ExtensionManager : IExtensionManager {
         private readonly IEnumerable<IExtensionFolders> _folders;
         private readonly IEnumerable<IExtensionLoader> _loaders;
+        private IEnumerable<FeatureDescriptor> _featureDescriptors;
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
@@ -36,9 +36,11 @@ namespace Orchard.Environment.Extensions {
         }
 
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
-            var featureDescriptors = AvailableExtensions().SelectMany(ext => ext.Features);
-            var featureDescriptorsOrdered = featureDescriptors.OrderByDependencies(HasDependency);
-            return featureDescriptorsOrdered.ToReadOnlyCollection();
+            if (_featureDescriptors == null || _featureDescriptors.Count() == 0) {
+                _featureDescriptors = AvailableExtensions().SelectMany(ext => ext.Features).OrderByDependencies(HasDependency).ToReadOnlyCollection();
+                return _featureDescriptors;
+            }
+            return _featureDescriptors;
         }
 
         /// <summary>

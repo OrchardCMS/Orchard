@@ -7,7 +7,6 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.State.Models;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
-using Orchard.Utility;
 
 namespace Orchard.Environment.State {
     public class ShellStateCoordinator : IShellStateManagerEventHandler, IShellDescriptorManagerEventHandler {
@@ -102,7 +101,7 @@ namespace Orchard.Environment.State {
             var shellState = _stateManager.GetShellState();
 
             // start with description of all declared features in order - order preserved with all merging
-            var orderedFeatureDescriptors = AllFeaturesInOrder();
+            var orderedFeatureDescriptors = _extensionManager.AvailableFeatures();
 
             // merge feature state into ordered list
             var orderedFeatureDescriptorsAndStates = orderedFeatureDescriptors
@@ -176,19 +175,9 @@ namespace Orchard.Environment.State {
             FireApplyChangesIfNeeded();
         }
 
-        private IEnumerable<FeatureDescriptor> AllFeaturesInOrder() {
-            return OrderByDependencies(_extensionManager.AvailableExtensions().SelectMany(ext => ext.Features));
-        }
-
         static bool IsRising(ShellFeatureState state) {
             return state.InstallState == ShellFeatureState.State.Rising ||
                    state.EnableState == ShellFeatureState.State.Rising;
-        }
-
-        public static IEnumerable<FeatureDescriptor> OrderByDependencies(IEnumerable<FeatureDescriptor> descriptors) {
-            return descriptors.OrderByDependencies((item, dep) =>
-                item.Dependencies != null &&
-                item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, dep.Name)));
         }
     }
 }
