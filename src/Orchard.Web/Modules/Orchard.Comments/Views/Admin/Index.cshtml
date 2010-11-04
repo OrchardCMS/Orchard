@@ -19,7 +19,7 @@
             @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.MarkAsSpam, T("Mark as Spam").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, T("Remove").ToString())
         </select>
-        <input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
+        <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
     <fieldset class="bulk-actions">
         <label for="filterResults">@T("Filter:")</label>
@@ -29,7 +29,7 @@
             @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Pending, T("Pending Comments").ToString())
             @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Spam, T("Spam").ToString())
         </select>
-        <input class="button" type="submit" name="submit.Filter" value="@T("Apply")"/>
+        <button type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
     <fieldset>
 	    <table class="items" summary="@T("This is a table of the comments in your application")">
@@ -78,7 +78,20 @@
                 </td>
                 <td>@Html.ItemDisplayLink(commentEntry.CommentedOn)</td>
                 <td>
-                    <div class="actions">                        @if (commentEntry.Comment.Status != CommentStatus.Spam) {                            <a href="@Url.Action("MarkAsSpam", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Spam")</a>@T(" | ")                        }                        @if (commentEntry.Comment.Status != CommentStatus.Approved) {                            <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>@T(" | ")                        }                        else {                            <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@("Unapprove")</a>@T(" | ")                        }                        <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>@T(" | ")                        <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>                    </div>                </td>
+                    <div class="actions">
+                        @if (commentEntry.Comment.Status != CommentStatus.Spam) {
+                            <a href="@Url.Action("MarkAsSpam", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Spam")</a>@T(" | ")
+                        }
+                        @if (commentEntry.Comment.Status != CommentStatus.Approved) {
+                            <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>@T(" | ")
+                        }
+                        else {
+                            <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@("Unapprove")</a>@T(" | ")
+                        }
+                        <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>@T(" | ")
+                        <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
+                    </div>
+                </td>
             </tr>
             commentIndex = commentIndex + 1;
             } 

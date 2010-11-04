@@ -12,7 +12,7 @@
             @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, T("Remove").ToString())
         </select>
-        <input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
+        <button type="submit"name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
 
     <div class="manage">@Html.ActionLink(T("Add a tag").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>

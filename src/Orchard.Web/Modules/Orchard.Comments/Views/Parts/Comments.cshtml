@@ -55,7 +55,7 @@ using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, Fo
             <textarea id="comment-text" rows="10" cols="30" name="CommentText"></textarea>
         </li>
         <li>
-            <input type="submit" class="button" value="@T("Submit Comment")" />
+            <button class="primaryAction" type="submit">@T("Submit Comment")</button>
             @Html.Hidden("CommentedOn", (int)Model.ContentPart.ContentItem.Id) 
             @Html.Hidden("ReturnUrl", Context.Request.ToUrlString()) 
             @Html.AntiForgeryTokenOrchard() 
