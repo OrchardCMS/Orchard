@@ -34,7 +34,6 @@ namespace Orchard.Packaging.Services {
             _webSiteFolder = webSiteFolder;
         }
 
-
         public Stream BuildPackage(ExtensionDescriptor extensionDescriptor) {
             var context = new CreateContext();
             BeginPackage(context);
@@ -63,19 +62,19 @@ namespace Orchard.Packaging.Services {
 
             return context.Stream;
         }
-
-
-
+        
         private void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
             context.Builder.Id = "Orchard." + extensionDescriptor.ExtensionType + "." + extensionDescriptor.Name;
             context.Builder.Version = new Version(extensionDescriptor.Version);
             context.Builder.Title = extensionDescriptor.DisplayName ?? extensionDescriptor.Name;
             context.Builder.Description = extensionDescriptor.Description;
             context.Builder.Authors.Add(extensionDescriptor.Author);
-            context.Builder.ProjectUrl = new Uri(extensionDescriptor.WebSite);
+
+            if(Uri.IsWellFormedUriString(extensionDescriptor.WebSite, UriKind.Absolute)) {
+                context.Builder.ProjectUrl = new Uri(extensionDescriptor.WebSite);
+            }
         }
-
-
+        
         private void EmbedProjectFiles(CreateContext context, params string[] itemGroupTypes) {
             IEnumerable<XElement> itemGroups = context.Project
                 .Elements(Ns("Project"))
