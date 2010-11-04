@@ -23,7 +23,7 @@ namespace Orchard.CodeGeneration.Commands {
             "", "Content", "Styles", "Scripts", "Views", "Zones"
         };
         private static readonly string[] _moduleDirectories = new [] {
-            "", "Properties", "Controllers", "Views", "Models", "Scripts"
+            "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles"
         };
 
         private const string ModuleName = "CodeGeneration";
@@ -227,6 +227,10 @@ namespace Orchard.CodeGeneration.Commands {
 
             File.WriteAllText(modulePath + "Views\\Web.config", File.ReadAllText(_codeGenTemplatePath + "ViewsWebConfig.txt"));
             content.Add(modulePath + "Views\\Web.config");
+            File.WriteAllText(modulePath + "Scripts\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
+            content.Add(modulePath + "Scripts\\Web.config");
+            File.WriteAllText(modulePath + "Styles\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
+            content.Add(modulePath + "Styles\\Web.config");
 
             string templateText = File.ReadAllText(_codeGenTemplatePath + "ModuleAssemblyInfo.txt");
             templateText = templateText.Replace("$$ModuleName$$", moduleName);
@@ -270,6 +274,10 @@ namespace Orchard.CodeGeneration.Commands {
             var webConfig = themePath + "Views\\Web.config";
             File.WriteAllText(webConfig, File.ReadAllText(_codeGenTemplatePath + "\\ViewsWebConfig.txt"));
             createdFiles.Add(webConfig);
+            File.WriteAllText(themePath + "Scripts\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
+            createdFiles.Add(themePath + "Scripts\\Web.config");
+            File.WriteAllText(themePath + "Styles\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
+            createdFiles.Add(themePath + "Styles\\Web.config");
 
             var templateText = File.ReadAllText(_codeGenTemplatePath + "\\ThemeManifest.txt").Replace("$$ThemeName$$", themeName);
             if (string.IsNullOrEmpty(baseTheme)) {

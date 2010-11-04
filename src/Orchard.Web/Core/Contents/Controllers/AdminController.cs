@@ -8,6 +8,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
@@ -67,12 +68,14 @@ namespace Orchard.Core.Contents.Controllers {
 
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
+                    //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.ContentItemRecord.Versions.Single(civr => civr.Latest).Id);
                     query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
                     break;
                 case ContentsOrder.Published:
                     query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
                     break;
                 case ContentsOrder.Created:
+                    //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.Id);
                     query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
                     break;
             }
@@ -189,24 +192,39 @@ namespace Orchard.Core.Contents.Controllers {
             return View(model);
         }
 
+        [HttpPost, ActionName("Create")]
+        [FormValueRequired("submit.Save")]
+        public ActionResult CreatePOST(string id) {
+            return CreatePOST(id, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    _contentManager.Publish(contentItem);
+            });
+        }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePOST(string id) {
+        [FormValueRequired("submit.Publish")]
+        public ActionResult CreateAndPublishPOST(string id) {
+            return CreatePOST(id, contentItem => _contentManager.Publish(contentItem));
+        }
+
+        private ActionResult CreatePOST(string id, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.New(id);
 
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            _contentManager.Create(contentItem, VersionOptions.Draft);
-            var model = _contentManager.UpdateEditor(contentItem, this);
+            var isDraftable = contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable;
+            _contentManager.Create(
+                contentItem,
+                isDraftable ? VersionOptions.Draft : VersionOptions.Published);
 
+            var model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 return View(model);
             }
 
-            if (!contentItem.Has<IPublishingControlAspect>())
-                _contentManager.Publish(contentItem);
+            conditionallyPublish(contentItem);
 
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been created.")
@@ -229,7 +247,21 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int id, string returnUrl) {
+            return EditPOST(id, returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    _contentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Publish")]
+        public ActionResult EditAndPublishPOST(int id, string returnUrl) {
+            return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
+        }
+
+        private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
             if (contentItem == null)
@@ -244,9 +276,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return View("Edit", model);
             }
 
-            //need to go about this differently - to know when to publish (IPlublishableAspect ?)
-            if (!contentItem.Has<IPublishingControlAspect>())
-                _contentManager.Publish(contentItem);
+            conditionallyPublish(contentItem);
 
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been saved.")
