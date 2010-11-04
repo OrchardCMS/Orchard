@@ -157,7 +157,6 @@
     <Content Include="Scripts\plugins\searchreplace\js\searchreplace.js" />
     <Content Include="Scripts\plugins\searchreplace\langs\en_dlg.js" />
     <Content Include="Scripts\plugins\searchreplace\searchreplace.htm" />
-    <Content Include="Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -10,6 +10,7 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.UI.Admin;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
@@ -27,7 +28,8 @@ namespace Orchard.Blogs.Controllers {
             IBlogPostService blogPostService,
             IContentManager contentManager,
             ITransactionManager transactionManager,
-            IBlogSlugConstraint blogSlugConstraint) {
+            IBlogSlugConstraint blogSlugConstraint,
+            IShapeFactory shapeFactory) {
             Services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
@@ -35,8 +37,10 @@ namespace Orchard.Blogs.Controllers {
             _transactionManager = transactionManager;
             _blogSlugConstraint = blogSlugConstraint;
             T = NullLocalizer.Instance;
+            Shape = shapeFactory;
         }
 
+        dynamic Shape { get; set; }
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
@@ -135,20 +139,25 @@ namespace Orchard.Blogs.Controllers {
             return View(viewModel);
         }
 
-        public ActionResult Item(string blogSlug) {
+        public ActionResult Item(string blogSlug, Pager pager) {
             BlogPart blogPart = _blogService.Get(blogSlug);
 
             if (blogPart == null)
                 return HttpNotFound();
-                             //() => {
-                             //    var list = shapeHelper.List();
-                             //    list.AddRange(_blogPostService.Get(part, VersionOptions.Latest)
-                             //                              .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin")));
-                             //    return shapeHelper.Parts_Blogs_BlogPost_List_Admin(ContentPart: part, ContentItems: list);
-                             //})
 
-            var model = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
-            return View(model);
+            var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest)
+                .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin"));
+
+            var blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
+
+            var list = Shape.List();
+            list.AddRange(blogPosts);
+            blog.Content.Add(Shape.Parts_Blogs_BlogPost_ListAdmin(ContentItems: list), "5");
+
+            var totalItemCount = _blogPostService.PostCount(blogPart, VersionOptions.Latest);
+            blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
+            
+            return View(blog);
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

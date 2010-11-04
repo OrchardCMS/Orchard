@@ -85,7 +85,6 @@
     <Content Include="CodeGenerationTemplates\ModuleManifest.txt" />
     <Content Include="CodeGenerationTemplates\ModuleWebConfig.txt" />
     <Content Include="CodeGenerationTemplates\ViewsWebConfig.txt" />
-    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

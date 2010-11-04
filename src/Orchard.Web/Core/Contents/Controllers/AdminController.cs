@@ -77,19 +77,16 @@ namespace Orchard.Core.Contents.Controllers {
                     break;
             }
 
-            var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
-
             model.Options.SelectedFilter = model.TypeName;
             model.Options.FilterOptions = GetCreatableTypes()
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Key);
 
+            var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
+            var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
             var list = Shape.List();
             list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
-
-            var hasNextPage = query.Slice(pager.GetStartIndex(pager.Page + 1), 1).Any();
-            var pagerShape = Shape.Pager(pager).HasNextPage(hasNextPage);
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)

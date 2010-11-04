@@ -131,11 +131,10 @@
     <Content Include="Views\Parts\Blogs.Blog.Manage.cshtml" />
     <Content Include="Views\Parts\Blogs.Blog.Description.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.Blog.Fields.cshtml" />
-    <Content Include="Views\Parts\Blogs.BlogPost.List.Admin.cshtml">
+    <Content Include="Views\Parts\Blogs.BlogPost.ListAdmin.cshtml">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Views\Items\Content-Blog.SummaryAdmin.cshtml" />
-    <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

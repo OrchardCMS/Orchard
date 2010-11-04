@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Orchard.UI.Navigation;
+using Orchard.UI;
 
 namespace Orchard.Tests.UI.Navigation {
     [TestFixture]
@@ -10,7 +10,7 @@ namespace Orchard.Tests.UI.Navigation {
 
         [SetUp]
         public void Init() {
-            _comparer = new PositionComparer();
+            _comparer = new FlatPositionComparer();
         }
 
 
@@ -45,6 +45,22 @@ namespace Orchard.Tests.UI.Navigation {
             AssertSame("5", "5");
             AssertMore("100", "5");
             AssertSame("007", "7");
+        }
+
+        [Test]
+        public void NegativeNumericValuesAreLessThanPositive() {
+            AssertLess("-5", "5");
+            AssertSame("-5", "-5");
+            AssertMore("42", "-42");
+        }
+
+        [Test]
+        public void NegativeNumericValuesShouldCompareNumerically() {
+            AssertMore("-3", "-5");
+            AssertLess("-8", "-5");
+            AssertSame("-5", "-5");
+            AssertLess("-100", "-5");
+            AssertSame("-007", "-7");
         }
 
         [Test]

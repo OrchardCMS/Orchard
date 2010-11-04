@@ -195,6 +195,12 @@ namespace Orchard.ContentManagement {
                 return _query.Slice(0, 0).AsPart<T>();
             }
 
+            int IContentQuery<T>.Count() {
+                var criteria = (ICriteria)_query.BindItemVersionCriteria().Clone();
+                criteria.ClearOrders();
+                return criteria.SetProjection( Projections.RowCount() ).UniqueResult<Int32>();  
+            }
+
             IEnumerable<T> IContentQuery<T>.Slice(int skip, int count) {
                 return _query.Slice(skip, count).AsPart<T>();
             }
