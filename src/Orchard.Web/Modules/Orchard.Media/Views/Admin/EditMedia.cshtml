@@ -32,7 +32,7 @@
 			    </div>
 			    <div>
 			        <label for="embedPath">@T("Embed:")</label>
-			        <input id="embedPath" class="textMedium" name="embedPath" type="text" readonly="readonly" value="&lt;img src=&quot;@Href("~/Media/" + Model.RelativePath + "/" + Model.Name)&quot; @* width=&quot;500&quot; height=&quot;375&quot; *@ /&gt;" />
+			        <input id="embedPath" class="textMedium" name="embedPath" type="text" readonly="readonly" value="&lt;img src=&quot;@Model.PublicUrl&quot; @* width=&quot;500&quot; height=&quot;375&quot; *@ /&gt;" />
 			        <span class="hint">@T("Copy this html to add this image to your site.")</span>
 			      </div>
 			  
