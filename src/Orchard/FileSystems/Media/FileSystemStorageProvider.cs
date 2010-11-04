@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !AZURE
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace Orchard.FileSystems.Media {
 
         public string GetPublicUrl(string path) {
 
-            return _publicPath + path.Replace(Path.DirectorySeparatorChar, '/');
+            return Map(_publicPath + path.Replace(Path.DirectorySeparatorChar, '/'));
         }
 
         public IStorageFile GetFile(string path) {
@@ -249,3 +250,4 @@ namespace Orchard.FileSystems.Media {
 
     }
 }
+#endif

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
 using Orchard.Services;
@@ -36,7 +37,7 @@ namespace Orchard.Environment {
         }
 
         public bool IsAssemblyLoaded(string name) {
-            return AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.Contains(name));
+            return AppDomain.CurrentDomain.GetAssemblies().Any(assembly => new AssemblyName(assembly.FullName).Name == name);
         }
 
         public void RestartAppDomain() {
