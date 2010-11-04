@@ -195,10 +195,11 @@ namespace Orchard.Media.Controllers {
             }
         }
 
-        public ActionResult EditMedia(string name, string caption, DateTime lastUpdated, long size, string folderName, string mediaPath) {
+        public ActionResult EditMedia(string name, DateTime lastUpdated, long size, string folderName, string mediaPath) {
             var model = new MediaItemEditViewModel();
             model.Name = name;
-            model.Caption = caption ?? String.Empty;
+            // todo: reimplement
+            //model.Caption = caption ?? String.Empty;
             model.LastUpdated = lastUpdated;
             model.Size = size;
             model.FolderName = folderName;
