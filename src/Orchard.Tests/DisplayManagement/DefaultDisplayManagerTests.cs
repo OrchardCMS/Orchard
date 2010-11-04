@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Themes;
 
 namespace Orchard.Tests.DisplayManagement {
@@ -22,7 +23,7 @@ namespace Orchard.Tests.DisplayManagement {
                 Bindings = new Dictionary<string, ShapeBinding>(StringComparer.OrdinalIgnoreCase)
             };
             _workContext = new TestWorkContext {
-                CurrentTheme = new Theme { ThemeName = "Hello" }
+                CurrentTheme = new FeatureDescriptor { Name = "Hello" }
             };
 
 
@@ -45,18 +46,6 @@ namespace Orchard.Tests.DisplayManagement {
             void IShapeDisplayEvents.Displayed(ShapeDisplayedContext context) { Displayed(context); }
         }
 
-        public class Theme : ITheme {
-            public bool Enabled { get; set; }
-            public string ThemeName { get; set; }
-            public string DisplayName { get; set; }
-            public string Description { get; set; }
-            public string Version { get; set; }
-            public string Author { get; set; }
-            public string HomePage { get; set; }
-            public string Tags { get; set; }
-            public string Zones { get; set; }
-            public string BaseTheme { get; set; }
-        }
 
 
         public class TestShapeTableManager : IShapeTableManager {

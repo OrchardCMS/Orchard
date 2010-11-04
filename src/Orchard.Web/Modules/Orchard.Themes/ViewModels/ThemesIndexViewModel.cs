@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Themes.ViewModels {
     public class ThemesIndexViewModel  {
-        public ITheme CurrentTheme { get; set; }
-        public IEnumerable<ITheme> Themes { get; set; }
+        public FeatureDescriptor CurrentTheme { get; set; }
+        public IEnumerable<FeatureDescriptor> Themes { get; set; }
         public IEnumerable<string> FeaturesThatNeedUpdate { get; set; }
     }
 }

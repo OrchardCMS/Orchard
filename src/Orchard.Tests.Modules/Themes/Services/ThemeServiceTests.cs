@@ -105,15 +105,15 @@ namespace Orchard.Tests.Modules.Themes.Services {
         public void ThemeWithNoBaseThemeCanBeSetAsSiteTheme() {
             _themeService.SetSiteTheme("ThemeOne");
             var siteTheme = _themeService.GetSiteTheme();
-            Assert.That(siteTheme.ThemeName, Is.EqualTo("ThemeOne"));
+            Assert.That(siteTheme.Name, Is.EqualTo("ThemeOne"));
         }
 
         [Test]
         public void ThemeWithAvailableBaseThemeCanBeSetAsSiteTheme() {
             _themeService.SetSiteTheme("ThemeTwo");
             var siteTheme = _themeService.GetSiteTheme();
-            Assert.That(siteTheme.ThemeName, Is.EqualTo("ThemeTwo"));
-            Assert.That(siteTheme.BaseTheme, Is.EqualTo("ThemeOne"));
+            Assert.That(siteTheme.Name, Is.EqualTo("ThemeTwo"));
+            Assert.That(siteTheme.Extension.BaseTheme, Is.EqualTo("ThemeOne"));
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
             _themeService.SetSiteTheme("ThemeOne");
             _themeService.SetSiteTheme("ThemeThree");
             var siteTheme = _themeService.GetSiteTheme();
-            Assert.That(siteTheme.ThemeName, Is.EqualTo("ThemeOne"));
+            Assert.That(siteTheme.Name, Is.EqualTo("ThemeOne"));
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
                 Assert.That(ex.Message, Is.StringMatching("ThemeFiveBasedOnFour"));
             }
             var siteTheme = _themeService.GetSiteTheme();
-            Assert.That(siteTheme.ThemeName, Is.EqualTo("ThemeOne"));
+            Assert.That(siteTheme.Name, Is.EqualTo("ThemeOne"));
         }
 
         [Test]

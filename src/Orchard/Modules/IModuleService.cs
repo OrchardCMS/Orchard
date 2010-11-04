@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Web;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Orchard.Modules {
+    [Obsolete]
     public interface IModuleService : IDependency {
-        IModule GetModuleByName(string moduleName);
+        [Obsolete]
         IEnumerable<IModule> GetInstalledModules();
-        void InstallModule(HttpPostedFileBase file);
-        void UninstallModule(string moduleName);
+        [Obsolete]
         IEnumerable<IModuleFeature> GetAvailableFeatures();
+        [Obsolete]
         void EnableFeatures(IEnumerable<string> featureNames);
+        [Obsolete]
         void EnableFeatures(IEnumerable<string> featureNames, bool force);
+        [Obsolete]
         void DisableFeatures(IEnumerable<string> featureNames);
+        [Obsolete]
         void DisableFeatures(IEnumerable<string> featureNames, bool force);
     }
 }

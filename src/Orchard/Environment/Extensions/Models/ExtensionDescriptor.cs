@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Orchard.Environment.Extensions.Models {
     public class ExtensionDescriptor {
@@ -26,7 +27,7 @@ namespace Orchard.Environment.Extensions.Models {
         public string WebSite { get; set; }
         public string Tags { get; set; }
         public string AntiForgery { get; set; }
-        public string Zones { get; set; }
+        public string Zones { get; set; }        
         public string BaseTheme { get; set; }
 
         public IEnumerable<FeatureDescriptor> Features { get; set; }

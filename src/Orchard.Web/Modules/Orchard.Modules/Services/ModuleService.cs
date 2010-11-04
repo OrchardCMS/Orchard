@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Descriptor;
@@ -46,14 +45,6 @@ namespace Orchard.Modules.Services {
                 .AvailableExtensions()
                 .Where(e => String.Equals(e.ExtensionType, ModuleExtensionType, StringComparison.OrdinalIgnoreCase))
                 .Select(descriptor => AssembleModuleFromDescriptor(descriptor));
-        }
-
-        public void InstallModule(HttpPostedFileBase file) {
-            _extensionManager.InstallExtension(ModuleExtensionType, file);
-        }
-
-        public void UninstallModule(string moduleName) {
-            _extensionManager.UninstallExtension(ModuleExtensionType, moduleName);
         }
 
         public IEnumerable<IModuleFeature> GetAvailableFeatures() {
@@ -112,15 +103,6 @@ namespace Orchard.Modules.Services {
 
             _shellDescriptorManager.UpdateShellDescriptor(shellDescriptor.SerialNumber, enabledFeatures,
                                                           shellDescriptor.Parameters);
-        }
-
-        public IModule GetModuleByFeatureName(string featureName) {
-            return GetInstalledModules()
-                .Where(
-                    m =>
-                    m.Features.FirstOrDefault(
-                        f => string.Equals(f.Name, featureName, StringComparison.OrdinalIgnoreCase)) !=
-                    null).FirstOrDefault();
         }
 
         private IEnumerable<string> EnableFeature(string featureName, IEnumerable<IModuleFeature> features, bool force) {
@@ -209,21 +191,21 @@ namespace Orchard.Modules.Services {
             var localizer = LocalizationUtilities.Resolve(_workContextAccessor.GetContext(), String.Concat(extensionDescriptor.Location, "/", extensionDescriptor.Name, "/Module.txt"));
 
             return new Module {
-                ModuleName = extensionDescriptor.Name,
-                DisplayName = TryLocalize("Name", extensionDescriptor.DisplayName, localizer),
-                Description = TryLocalize("Description", extensionDescriptor.Description, localizer),
-                Version = extensionDescriptor.Version,
-                Author = TryLocalize("Author", extensionDescriptor.Author, localizer),
-                HomePage = TryLocalize("Website", extensionDescriptor.WebSite, localizer),
-                Tags = TryLocalize("Tags", extensionDescriptor.Tags, localizer),
-                Features = extensionDescriptor.Features.Select(f => new FeatureDescriptor {
-                    Category = TryLocalize(f.Name + " Category", f.Category, localizer),
-                    Dependencies = f.Dependencies,
-                    Description = TryLocalize(f.Name + " Description", f.Description, localizer),
-                    DisplayName = TryLocalize(f.Name + " Name", f.DisplayName, localizer),
-                    Extension = f.Extension,
-                    Name = f.Name,
-                })
+                //ModuleName = extensionDescriptor.Name,
+                //DisplayName = TryLocalize("Name", extensionDescriptor.DisplayName, localizer),
+                //Description = TryLocalize("Description", extensionDescriptor.Description, localizer),
+                //Version = extensionDescriptor.Version,
+                //Author = TryLocalize("Author", extensionDescriptor.Author, localizer),
+                //HomePage = TryLocalize("Website", extensionDescriptor.WebSite, localizer),
+                //Tags = TryLocalize("Tags", extensionDescriptor.Tags, localizer),
+                //Features = extensionDescriptor.Features.Select(f => new FeatureDescriptor {
+                //    Category = TryLocalize(f.Name + " Category", f.Category, localizer),
+                //    Dependencies = f.Dependencies,
+                //    Description = TryLocalize(f.Name + " Description", f.Description, localizer),
+                //    DisplayName = TryLocalize(f.Name + " Name", f.DisplayName, localizer),
+                //    Extension = f.Extension,
+                //    Name = f.Name,
+                //})
             };
         }
 

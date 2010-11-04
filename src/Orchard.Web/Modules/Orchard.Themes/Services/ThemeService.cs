@@ -46,7 +46,7 @@ namespace Orchard.Themes.Services {
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
-        public ITheme GetSiteTheme() {
+        public FeatureDescriptor GetSiteTheme() {
             string currentThemeName = CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName;
 
             if (string.IsNullOrEmpty(currentThemeName)) {
@@ -81,7 +81,7 @@ namespace Orchard.Themes.Services {
                 var baseTheme = GetThemeByName(baseThemeName);
                 if (baseTheme == null)
                     return false;
-                baseThemeName = baseTheme.BaseTheme;
+                baseThemeName = baseTheme.Extension.BaseTheme;
             }
 
             return true;
@@ -97,8 +97,8 @@ namespace Orchard.Themes.Services {
                     break;
                 themes.Enqueue(themeName);
 
-                themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
-                    ? theme.BaseTheme
+                themeName = !string.IsNullOrWhiteSpace(theme.Extension.BaseTheme)
+                    ? theme.Extension.BaseTheme
                     : null;
 
             }
@@ -115,8 +115,8 @@ namespace Orchard.Themes.Services {
                 themes.Push(themeName);
 
                 var theme = GetThemeByName(themeName);
-                themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
-                    ? theme.BaseTheme
+                themeName = !string.IsNullOrWhiteSpace(theme.Extension.BaseTheme)
+                    ? theme.Extension.BaseTheme
                     : null;
             }
 
@@ -135,15 +135,15 @@ namespace Orchard.Themes.Services {
 
             // ensure all base themes down the line are present and accounted for
             //todo: (heskew) dito on the need of a meaningful message
-            if (!AllBaseThemesAreInstalled(themeToEnable.BaseTheme))
+            if (!AllBaseThemesAreInstalled(themeToEnable.Extension.BaseTheme))
                 return false;
 
             // enable all theme features
-            EnableThemeFeatures(themeToEnable.ThemeName);
+            EnableThemeFeatures(themeToEnable.Name);
             return true;
         }
 
-        public ITheme GetRequestTheme(RequestContext requestContext) {
+        public FeatureDescriptor GetRequestTheme(RequestContext requestContext) {
             var requestTheme = _themeSelectors
                 .Select(x => x.GetTheme(requestContext))
                 .Where(x => x != null)
@@ -154,17 +154,17 @@ namespace Orchard.Themes.Services {
 
             foreach (var theme in requestTheme) {
                 var t = GetThemeByName(theme.ThemeName);
-                if (t != null && t.Enabled)
+                if (t != null)
                     return t;
             }
 
             return GetThemeByName("SafeMode");
         }
 
-        public ITheme GetThemeByName(string name) {
-            foreach (var descriptor in _extensionManager.AvailableExtensions()) {
+        public FeatureDescriptor GetThemeByName(string name) {
+            foreach (var descriptor in _extensionManager.AvailableFeatures()) {
                 if (string.Equals(descriptor.Name, name, StringComparison.OrdinalIgnoreCase)) {
-                    return CreateTheme(descriptor);
+                    return descriptor;
                 }
             }
             return null;
@@ -173,28 +173,28 @@ namespace Orchard.Themes.Services {
         /// <summary>
         /// Loads only installed themes
         /// </summary>
-        public IEnumerable<ITheme> GetInstalledThemes() {
+        public IEnumerable<FeatureDescriptor> GetInstalledThemes() {
             return GetThemes(_extensionManager.AvailableExtensions());
         }
 
         /// <summary>
         /// Loads only enabled themes
         /// </summary>
-        public IEnumerable<ITheme> GetEnabledThemes() {
+        public IEnumerable<FeatureDescriptor> GetEnabledThemes() {
             return GetThemes(_extensionManager.EnabledExtensions(_shellDescriptor));
         }
 
-        private IEnumerable<ITheme> GetThemes(IEnumerable<ExtensionDescriptor> extensions) {
-            var themes = new List<ITheme>();
-            foreach (var descriptor in extensions) {
+        private IEnumerable<FeatureDescriptor> GetThemes(IEnumerable<ExtensionDescriptor> extensions) {
+            var themes = new List<FeatureDescriptor>();
+            foreach (var descriptor in extensions.SelectMany(x=>x.Features)) {
 
-                if (!string.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
+                if (!string.Equals(descriptor.Extension.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 
-                ITheme theme = CreateTheme(descriptor);
+                FeatureDescriptor theme = descriptor;
 
-                if (!theme.Tags.Contains("hidden")) {
+                if (!theme.Extension.Tags.Contains("hidden")) {
                     themes.Add(theme);
                 }
             }
@@ -225,22 +225,22 @@ namespace Orchard.Themes.Services {
                 _shellDescriptorManager.GetShellDescriptor().Features.Any(sf => sf.Name == descriptor.Name);
         }
 
-        private ITheme CreateTheme(ExtensionDescriptor descriptor) {
+        //private ITheme CreateTheme(ExtensionDescriptor descriptor) {
 
-            var localizer = LocalizationUtilities.Resolve(_workContextAccessor.GetContext(), String.Concat(descriptor.Location, "/", descriptor.Name, "/Theme.txt"));
+        //    var localizer = LocalizationUtilities.Resolve(_workContextAccessor.GetContext(), String.Concat(descriptor.Location, "/", descriptor.Name, "/Theme.txt"));
 
-            return new Theme {
-                Author = TryLocalize("Author", descriptor.Author, localizer) ?? "",
-                Description = TryLocalize("Description", descriptor.Description, localizer) ?? "",
-                DisplayName = TryLocalize("Name", descriptor.DisplayName, localizer) ?? "",
-                HomePage = TryLocalize("Website", descriptor.WebSite, localizer) ?? "",
-                ThemeName = descriptor.Name,
-                Version = descriptor.Version ?? "",
-                Tags = TryLocalize("Tags", descriptor.Tags, localizer) ?? "",
-                Zones = descriptor.Zones ?? "",
-                BaseTheme = descriptor.BaseTheme ?? "",
-                Enabled = IsThemeEnabled(descriptor)
-            };
-        }
+        //    return new Theme {
+        //        //Author = TryLocalize("Author", descriptor.Author, localizer) ?? "",
+        //        //Description = TryLocalize("Description", descriptor.Description, localizer) ?? "",
+        //        DisplayName = TryLocalize("Name", descriptor.DisplayName, localizer) ?? "",
+        //        //HomePage = TryLocalize("Website", descriptor.WebSite, localizer) ?? "",
+        //        ThemeName = descriptor.Name,
+        //        //Version = descriptor.Version ?? "",
+        //        Tags = TryLocalize("Tags", descriptor.Tags, localizer) ?? "",
+        //        Zones = descriptor.Zones ?? "",
+        //        BaseTheme = descriptor.BaseTheme ?? "",
+        //        Enabled = IsThemeEnabled(descriptor)
+        //    };
+        //}
     }
 }

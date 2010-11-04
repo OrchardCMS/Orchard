@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Orchard.Environment.Extensions.Models {
@@ -14,5 +15,8 @@ namespace Orchard.Environment.Extensions.Models {
         public string Description { get; set; }
         public string Category { get; set; }
         public IEnumerable<string> Dependencies { get; set; }
+
+        [Obsolete("Temporary property - added for theme transition")]
+        public bool Enabled { get; set; }
     }
 }

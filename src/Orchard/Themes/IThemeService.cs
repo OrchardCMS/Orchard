@@ -1,21 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
+using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Themes {
     public interface IThemeService : IDependency {
-        ITheme GetThemeByName(string themeName);
-        
-        ITheme GetSiteTheme();
-        void SetSiteTheme(string themeName);
-        ITheme GetRequestTheme(RequestContext requestContext);
+        [Obsolete]
+        FeatureDescriptor GetThemeByName(string themeName);
 
+        [Obsolete]
+        FeatureDescriptor GetSiteTheme();
+        [Obsolete]
+        void SetSiteTheme(string themeName);
+
+        [Obsolete]
+        FeatureDescriptor GetRequestTheme(RequestContext requestContext);
+
+        [Obsolete]
         void EnableTheme(string themeName);
+        [Obsolete]
         void DisableTheme(string themeName);
 
-        IEnumerable<ITheme> GetInstalledThemes();
-        IEnumerable<ITheme> GetEnabledThemes();
+        [Obsolete]
+        IEnumerable<FeatureDescriptor> GetInstalledThemes();
+        [Obsolete]
+        IEnumerable<FeatureDescriptor> GetEnabledThemes();
+
+        [Obsolete]
         void InstallTheme(HttpPostedFileBase file);
+        [Obsolete]
         void UninstallTheme(string themeName);
     }
 }

@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Mvc;
 using Orchard.Tests.DisplayManagement;
 using Orchard.Tests.Stubs;
@@ -28,7 +29,7 @@ namespace Orchard.Tests.Mvc {
 
             var workContext = new DefaultDisplayManagerTests.TestWorkContext
             {
-                CurrentTheme = new DefaultDisplayManagerTests.Theme { ThemeName = "Hello" },
+                CurrentTheme = new FeatureDescriptor { Name = "Hello" },
                 ContainerProvider = _containerProvider
             };
             _workContextAccessor = new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext);

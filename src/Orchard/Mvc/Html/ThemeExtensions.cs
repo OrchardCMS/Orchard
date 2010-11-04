@@ -1,7 +1,9 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.UI;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Themes;
 using Orchard.Validation;
 
@@ -15,12 +17,13 @@ namespace Orchard.Mvc.Html {
             helper.RenderPartial(viewName);
         }
 
+        [Obsolete("How do you know the request theme is the same as the place the theme template is rendering from?")]
         public static string ThemePath(this HtmlHelper helper, string path) {
             return helper.ThemePath(helper.Resolve<IThemeService>().GetRequestTheme(helper.ViewContext.RequestContext), path);
         }
 
-        public static string ThemePath(this HtmlHelper helper, ITheme theme, string path) {
-            return helper.Resolve<IExtensionManager>().GetThemeLocation(theme) + path;
+        public static string ThemePath(this HtmlHelper helper, FeatureDescriptor theme, string path) {
+            return theme.Extension.Location + "/" + theme.Extension.Name + path;
         }
     }
 }

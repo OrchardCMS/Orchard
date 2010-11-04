@@ -103,32 +103,28 @@ namespace Orchard.Setup {
 
         [UsedImplicitly]
         class SafeModeThemeService : IThemeService {
-            class SafeModeTheme : ITheme {
+            class SafeModeTheme : FeatureDescriptor {
                 public ContentItem ContentItem { get; set; }
                 public bool Enabled { get; set; }
                 public string ThemeName { get; set; }
                 public string DisplayName { get; set; }
-                public string Description { get; set; }
-                public string Version { get; set; }
-                public string Author { get; set; }
-                public string HomePage { get; set; }
                 public string Tags { get; set; }
                 public string Zones { get; set; }
                 public string BaseTheme { get; set; }
             }
 
-            private readonly SafeModeTheme _theme = new SafeModeTheme {
-                Enabled = true,
-                ThemeName = "SafeMode",
+            private readonly FeatureDescriptor _theme = new FeatureDescriptor {
+                Name = "SafeMode",
                 DisplayName = "SafeMode",
+                Extension = new ExtensionDescriptor { Name = "SafeMode" },
             };
 
-            public ITheme GetThemeByName(string themeName) { return _theme; }
-            public ITheme GetSiteTheme() { return _theme; }
+            public FeatureDescriptor GetThemeByName(string themeName) { return _theme; }
+            public FeatureDescriptor GetSiteTheme() { return _theme; }
             public void SetSiteTheme(string themeName) { }
-            public ITheme GetRequestTheme(RequestContext requestContext) { return _theme; }
-            public IEnumerable<ITheme> GetInstalledThemes() { return new[] { _theme }; }
-            public IEnumerable<ITheme> GetEnabledThemes() { return new[] { _theme }; }
+            public FeatureDescriptor GetRequestTheme(RequestContext requestContext) { return _theme; }
+            public IEnumerable<FeatureDescriptor> GetInstalledThemes() { return new[] { _theme }; }
+            public IEnumerable<FeatureDescriptor> GetEnabledThemes() { return new[] { _theme }; }
 
             public void InstallTheme(HttpPostedFileBase file) { }
             public void UninstallTheme(string themeName) { }

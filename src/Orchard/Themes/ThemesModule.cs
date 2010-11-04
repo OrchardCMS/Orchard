@@ -2,6 +2,7 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
+using Orchard.Environment.Extensions.Models;
 using Module = Autofac.Module;
 
 namespace Orchard.Themes {
@@ -20,7 +21,7 @@ namespace Orchard.Themes {
         }
 
         private static PropertyInfo FindThemeProperty(Type type) {
-            return type.GetProperty("CurrentTheme", typeof(ITheme));
+            return type.GetProperty("CurrentTheme", typeof(FeatureDescriptor));
         }
     }
 }
