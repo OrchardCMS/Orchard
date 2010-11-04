@@ -9,7 +9,7 @@
         <select id="Select1" name="roleActions">
             <option value="1">@T("Remove")</option>
         </select>
-        <input class="button" type="submit" value="@T("Apply")" />
+        <button type="submit">@T("Apply")</button>
     </fieldset>
     <div class="manage">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
     <fieldset>

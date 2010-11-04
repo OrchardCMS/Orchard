@@ -100,9 +100,6 @@
     <Content Include="TheThemeMachine\Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheThemeMachine\Views\Pager.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TheThemeMachine\Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>

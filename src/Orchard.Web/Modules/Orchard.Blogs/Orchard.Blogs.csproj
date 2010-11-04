@@ -158,7 +158,6 @@
     <Content Include="Views\EditorTemplates\Parts\Blogs.BlogArchives.cshtml" />
     <Content Include="Views\Items\Content-Blog.DetailAdmin.cshtml" />
     <Content Include="Views\Items\Content-Blog.Edit.cshtml" />
-    <Content Include="Views\Items\Content-BlogPost.Editor.cshtml" />
     <Content Include="Views\Parts\Blogs.BlogPost.List.cshtml" />
     <Content Include="Views\Parts\Blogs.RecentBlogPosts.cshtml" />
     <Content Include="Views\Parts\Blogs.Blog.BlogPostCount.cshtml" />
