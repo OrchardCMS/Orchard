@@ -13,5 +13,6 @@ namespace Orchard.Media.Services {
         void DeleteFile(string name, string folderName);
         void RenameFile(string name, string newName, string folderName);
         string UploadMediaFile(string folderName, HttpPostedFileBase postedFile);
+        bool FileAllowed(HttpPostedFileBase postedFile);
     }
 }
