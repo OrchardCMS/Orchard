@@ -14,7 +14,7 @@ namespace Orchard.Widgets.RuleEngine {
         }
 
         public bool Matches(string expression) {
-            dynamic execContext = _scriptingManager.ExecuteExpression(@"
+            object execContextType = _scriptingManager.ExecuteExpression(@"
                                         class ExecContext
 	                                        def execute(callbacks, text)
 		                                        @callbacks = callbacks;
@@ -27,13 +27,16 @@ namespace Orchard.Widgets.RuleEngine {
 		                                        @callbacks.send(name, args, &block);
                                             end
                                         end
-                                        ExecContext.new()");
-            return execContext.execute(new CallbackApi(this), expression);
+                                        ExecContext
+                                        ");
+
+            object execContext = _scriptingManager.ExecuteOperation(ops => ops.CreateInstance(execContextType));
+            return _scriptingManager.ExecuteOperation(ops => ops.InvokeMember(execContext, "execute", new CallbackApi(this), expression));
         }
 
         public class CallbackApi {
             private readonly RuleManager _ruleManager;
-            
+
             public CallbackApi(RuleManager ruleManager) {
                 _ruleManager = ruleManager;
             }
@@ -44,7 +47,7 @@ namespace Orchard.Widgets.RuleEngine {
         }
 
         private object Evaluate(string name, IList<object> args) {
-            RuleContext ruleContext = new RuleContext {FunctionName = name, Arguments = args.ToArray()};
+            RuleContext ruleContext = new RuleContext { FunctionName = name, Arguments = args.ToArray() };
 
             foreach (var ruleProvider in _ruleProviders) {
                 ruleProvider.Process(ruleContext);
