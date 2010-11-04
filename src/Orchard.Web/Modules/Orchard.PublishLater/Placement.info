@@ -7,7 +7,7 @@
     -->
     <!-- edit shape just get default placement -->
     <!-- edit "shape" -->
-    <Place Parts_PublishLater_Edit="Sidebar:1"/>
+    <Place Parts_PublishLater_Edit="Sidebar:23"/><!-- immediately following the contents module's save button -->
     <!-- default positioning -->
     <Match DisplayType="SummaryAdmin">
         <Place Parts_PublishLater_Metadata_SummaryAdmin="Meta:1"/>

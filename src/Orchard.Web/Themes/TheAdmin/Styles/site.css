@@ -128,13 +128,13 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 .sections .primary {
     display:inline;
     float:left;
-    width:74.543%;
+    width:69.452%;
 }
 .sections .secondary {
     display:inline;
     float:left;
     margin-left:1.71%;
-    width:23.629%;
+    width:28.721%;
 }
 
 /* Headings and defaults
@@ -841,6 +841,29 @@ table .button {
 }
 .settings legend {
     margin:0 0 -.4em 0;
+}
+/* Core Contents and Orchard.PublishLater */
+fieldset.save-button {
+    clear:none;
+    float:left;
+    padding-right:0;
+    width:auto;
+}
+fieldset.publish-later-datetime {
+    clear:none;
+    float:left;
+    min-width:13.6em;
+    padding-left:6px;
+    padding-right:0;
+    width:68%;
+}
+fieldset.publish-later-datetime legend {
+    display:none;
+}
+fieldset.publish-later-datetime input {
+    padding:1px;
+    text-align:center;
+    color:#666;
 }
 
 /* Fields

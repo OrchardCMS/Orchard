@@ -11,7 +11,6 @@ namespace Orchard.PublishLater.ViewModels {
             _publishLaterPart = publishLaterPart;
         }
 
-        public string Command { get; set; }
         public ContentItem ContentItem { get { return _publishLaterPart.ContentItem; } }
 
         public bool IsPublished {

@@ -7,8 +7,8 @@ html.dyn input.hinted {
     font-style:italic;
 }
 input#PublishLater_ScheduledPublishDate {
-    width:50%;
+    width:49%;
 }
 input#PublishLater_ScheduledPublishTime {
-    width:36%;
+    width:43%;
 }
