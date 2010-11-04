@@ -4,48 +4,36 @@
     Script.Require("jQueryUI_DatePicker");
     Style.Require("PublishLater_DatePicker");
     Style.Require("jQueryUtils_TimePicker");
-    Style.Require("jQueryUI_DatePicker");
+    Style.Require("jQueryUI_DatePicker"); 
 }
-<fieldset>
+<fieldset class="publish-later-datetime">
     <legend>@T("Publish Settings")</legend>
-    <div>
-        @Html.RadioButton("Command", "SaveDraft", Model.ContentItem.VersionRecord == null || !Model.ContentItem.VersionRecord.Published, new { id = ViewData.TemplateInfo.GetFullHtmlFieldId("Command_SaveDraft") })
-        <label class="forcheckbox" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_SaveDraft")">@T("Save Draft")</label>
-    </div>
-    <div>
-        @Html.RadioButton("Command", "PublishNow", Model.ContentItem.VersionRecord != null && Model.ContentItem.VersionRecord.Published, new { id = ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishNow") })
-        <label class="forcheckbox" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishNow")">@T("Publish Now")</label>
-    </div>
-    <div>
-        @Html.RadioButton("Command", "PublishLater", Model.ScheduledPublishUtc != null, new { id = ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater") })
-        <label class="forcheckbox" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")">@T("Publish Later")</label>
-    </div>
-    <div>
-        <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishDate")">@T("Date")</label>
-        @Html.EditorFor(m => m.ScheduledPublishDate)
-        <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishTime")">@T("Time")</label>
-        @Html.EditorFor(m => m.ScheduledPublishTime)
-    </div>
+    <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishDate")">@T("Date")</label>
+    @Html.EditorFor(m => m.ScheduledPublishDate)
+    <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishTime")">@T("Time")</label>
+    @Html.EditorFor(m => m.ScheduledPublishTime)
 </fieldset>
 @using(Script.Foot()) {
 <script type="text/javascript">
 //<![CDATA[
     $(function () {
+        var clearHint = function ($this) { if ($this.val() == $this.data("hint")) { $this.removeClass("hinted").val("") } };
+        var resetHint = function ($this) { setTimeout(function () { if (!$this.val()) { $this.addClass("hinted").val($this.data("hint")) } }, 300) };
         @* todo: (heskew) make a plugin *@
         $("label.forpicker").each(function () {
             var $this = $(this);
             var pickerInput = $("#" + $this.attr("for"));
-            pickerInput.data("hint", $this.text());
             if (!pickerInput.val()) {
+                pickerInput.data("hint", $this.text());
                 pickerInput.addClass("hinted")
-            .val(pickerInput.data("hint"))
-            .focus(function () { var $this = $(this); if ($this.val() == $this.data("hint")) { $this.removeClass("hinted").val("") } })
-            .blur(function () { var $this = $(this); setTimeout(function () { if (!$this.val()) { $this.addClass("hinted").val($this.data("hint")) } }, 300) });
+                    .val(pickerInput.data("hint"))
+                    .focus(function() {clearHint($(this));})
+                    .blur(function() {resetHint($(this));});
+                $this.closest("form").submit(function() {clearHint(pickerInput); pickerInput = 0;});
             }
         });
         $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishDate")').datepicker({ showAnim: "" }).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
         $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishTime")').timepickr().focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_PublishLater")').attr("checked", "checked") });
-
     })
 //]]>
 </script>
