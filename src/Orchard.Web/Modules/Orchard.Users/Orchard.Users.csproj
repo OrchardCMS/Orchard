@@ -128,6 +128,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Account\RegistrationPending.cshtml" />
     <None Include="Views\EditorTemplates\Parts\User.Edit.cshtml" />
     <None Include="Views\EditorTemplates\Parts\User.Create.cshtml" />
   </ItemGroup>
