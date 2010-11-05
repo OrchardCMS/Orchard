@@ -450,8 +450,15 @@ span.message {
     content:"DEBUG » ";
 }
 
-/* Forms   
-----------------------------------------------------------*/
+/* Forms
+***************************************************************/
+
+form              { margin: 0; padding: 0; }
+legend            { font-size: 1.231em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
+fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
+label             { font-weight: normal; display:block; padding: 0 0 0.3em 0; }
+label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+
 form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
     display:inline;
 }
@@ -464,10 +471,7 @@ form.inline fieldset {
     margin:0 1.4em 0 0;
     padding-top:0;
 }
-legend {
-    font-size:1.6em;
-    font-weight:bold;
-}
+
 legend span {
     font-weight:normal;
 }
@@ -663,49 +667,6 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 {
     width:26em;
 }
-
-
-/* Icon buttons
-----------------------------------------------------------*/
-.ibutton, .ibutton:link, .ibutton:visited,
-button.ibutton, button.ibutton:hover, button.ibutton:focus, button.ibutton:active {
-    background:url(images/icons.png) 0 -20px;
-    border:0;
-    display:inline;
-    float:left;
-    height:17px;
-    overflow:hidden;
-    padding:0 0 0 17px;
-    width:0;
-}
-button.ibutton {
-    text-indent:-9999em;
-}
-.ibutton:hover, .ibutton:active, .ibutton:focus { background-position:0 0; }
-.ibutton.remove,
-.ibutton.remove:link,
-.ibutton.remove:visited { background-position:-20px -20px; }
-.ibutton.remove:hover, .ibutton.remove:active, .ibutton.remove:focus { background-position:-20px 0; }
-.ibutton.view,
-.ibutton.view:link,
-.ibutton.view:visited { background-position:-40px -20px; }
-.ibutton.view:hover, .ibutton.view:active, .ibutton.view:focus { background-position:-40px 0; }
-.ibutton.add.page,
-.ibutton.add.page:link,
-.ibutton.add.page:visited { background-position:-60px -20px; }
-.ibutton.add.page:hover, .ibutton.add.page:active, .ibutton.add.page:focus { background-position:-60px 0; }
-.ibutton.edit,
-.ibutton.edit:link,
-.ibutton.edit:visited { background-position:-80px -20px; }
-.ibutton.edit:hover, .ibutton.edit:active, .ibutton.edit:focus { background-position:-80px 0; }
-.ibutton.publish,
-.ibutton.publish:link,
-.ibutton.publish:visited { background-position:-100px -20px; }
-.ibutton.publish:hover, .ibutton.publish:active, .ibutton.publish:focus { background-position:-100px 0; }
-.ibutton.blog,
-.ibutton.blog:link,
-.ibutton.blog:visited { background-position:-120px -20px; }
-.ibutton.blog:hover, .ibutton.blog:active, .ibutton.blog:focus { background-position:-120px 0; }
 
 
 /* (Items) Tables

@@ -14,9 +14,6 @@
 }
 .features.summary-view .feature {
     border:1px solid #EAEAEA;
-    box-shadow: 0px 1px 2px #d6d6d6;
-    -moz-box-shadow: 0px 1px 2px #d6d6d6;
-    -webkit-box-shadow: 0px 1px 2px #d6d6d6;
     display:block;
     float:left;
     height:6em;
