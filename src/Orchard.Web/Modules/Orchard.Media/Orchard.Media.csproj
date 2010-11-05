@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Extensions\LongExtensions.cs" />
     <Compile Include="Handlers\MediaSettingsPartHandler.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MediaSettingsPart.cs" />

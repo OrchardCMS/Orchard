@@ -1,4 +1,5 @@
 ﻿@model Orchard.Media.ViewModels.MediaFolderIndexViewModel
+@using Orchard.Media.Extensions;
 
 <h1>@Html.TitleForPage(T("Manage Media Folders").ToString())</h1>
     @Html.ValidationSummary()
@@ -44,7 +45,7 @@
                 <td>@mediaFolder.User</td>
                 <td>@mediaFolder.LastUpdated</td>
                 <td>@T("Folder")</td>
-                <td>@mediaFolder.Size</td>
+                <td>@mediaFolder.Size.ToFriendlySizeString()</td>
             </tr>
             }
         </table>

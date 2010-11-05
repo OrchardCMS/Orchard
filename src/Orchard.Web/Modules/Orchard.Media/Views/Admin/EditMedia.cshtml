@@ -1,4 +1,5 @@
 ﻿@model Orchard.Media.ViewModels.MediaItemEditViewModel
+@using Orchard.Media.Extensions;
 @using Orchard.Media.Helpers;
 @using Orchard.Media.Models;
 @{ Style.Require("MediaAdmin"); }
@@ -26,7 +27,7 @@
 			    <div>
 			    @* <label>@T("Dimensions: <span>500 x 375 pixels</span>")</label> *@
 			   
-			    <label>@T("Size: <span>{0}</span>", Model.Size)</label>
+			    <label>@T("Size: <span>{0}</span>", Model.Size.ToFriendlySizeString())</label>
 			   
 			    <label>@T("Added on: <span>{0}</span>", Model.LastUpdated)</label>
 			    </div>
