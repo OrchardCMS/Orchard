@@ -16,7 +16,6 @@ namespace Orchard.Environment.Extensions.Models {
         public string Category { get; set; }
         public IEnumerable<string> Dependencies { get; set; }
 
-        [Obsolete("Temporary property - added for theme transition")]
-        public bool Enabled { get; set; }
+        
     }
 }

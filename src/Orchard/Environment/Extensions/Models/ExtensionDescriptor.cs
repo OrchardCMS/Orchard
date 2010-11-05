@@ -31,5 +31,8 @@ namespace Orchard.Environment.Extensions.Models {
         public string BaseTheme { get; set; }
 
         public IEnumerable<FeatureDescriptor> Features { get; set; }
+
+        [Obsolete("Temporary property - added for theme transition")]
+        public bool Enabled { get; set; }
     }
 }

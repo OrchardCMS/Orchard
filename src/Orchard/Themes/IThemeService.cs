@@ -7,15 +7,10 @@ using Orchard.Environment.Extensions.Models;
 namespace Orchard.Themes {
     public interface IThemeService : IDependency {
         [Obsolete]
-        FeatureDescriptor GetThemeByName(string themeName);
+        ExtensionDescriptor GetThemeByName(string themeName);
 
         [Obsolete]
-        FeatureDescriptor GetSiteTheme();
-        [Obsolete]
-        void SetSiteTheme(string themeName);
-
-        [Obsolete]
-        FeatureDescriptor GetRequestTheme(RequestContext requestContext);
+        ExtensionDescriptor GetRequestTheme(RequestContext requestContext);
 
         [Obsolete]
         void EnableTheme(string themeName);
@@ -23,9 +18,9 @@ namespace Orchard.Themes {
         void DisableTheme(string themeName);
 
         [Obsolete]
-        IEnumerable<FeatureDescriptor> GetInstalledThemes();
+        IEnumerable<ExtensionDescriptor> GetInstalledThemes();
         [Obsolete]
-        IEnumerable<FeatureDescriptor> GetEnabledThemes();
+        IEnumerable<ExtensionDescriptor> GetEnabledThemes();
 
         [Obsolete]
         void InstallTheme(HttpPostedFileBase file);

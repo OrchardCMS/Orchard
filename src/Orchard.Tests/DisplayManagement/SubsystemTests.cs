@@ -35,7 +35,7 @@ namespace Orchard.Tests.DisplayManagement {
 
             var workContext = new DefaultDisplayManagerTests.TestWorkContext
             {
-                CurrentTheme = new FeatureDescriptor { Name = "Hello" }
+                CurrentTheme = new ExtensionDescriptor { Name = "Hello" }
             };
 
             var builder = new ContainerBuilder();

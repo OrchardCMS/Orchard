@@ -32,8 +32,8 @@ namespace Orchard {
             set { SetState("CurrentUser", value); }
         }
 
-        public FeatureDescriptor CurrentTheme {
-            get { return GetState<FeatureDescriptor>("CurrentTheme"); }
+        public ExtensionDescriptor CurrentTheme {
+            get { return GetState<ExtensionDescriptor>("CurrentTheme"); }
             set { SetState("CurrentTheme", value); }
         }
     }

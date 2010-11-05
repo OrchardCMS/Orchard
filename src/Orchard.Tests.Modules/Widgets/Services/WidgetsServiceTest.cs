@@ -88,11 +88,11 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<WidgetsService>().As<IWidgetsService>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            var theme1 = new FeatureDescriptor { Extension = new ExtensionDescriptor { Zones = ThemeZoneName1 } };
-            var theme2 = new FeatureDescriptor { Extension = new ExtensionDescriptor { Zones = ThemeZoneName2 } };
+            var theme1 = new ExtensionDescriptor { Zones = ThemeZoneName1 } ;
+            var theme2 = new ExtensionDescriptor { Zones = ThemeZoneName2 } ;
             Mock<IThemeService> themeServiceMock = new Mock<IThemeService>();
             themeServiceMock.Setup(x => x.GetInstalledThemes()).Returns(
-                (new FeatureDescriptor[] { theme1, theme2 }));
+                (new ExtensionDescriptor[] { theme1, theme2 }));
 
             builder.RegisterInstance(themeServiceMock.Object).As<IThemeService>();
             builder.RegisterType<StubWidgetPartHandler>().As<IContentHandler>();

@@ -29,6 +29,13 @@ namespace Orchard.Environment.Extensions {
                 .Where(featureDescriptor => IsFeatureEnabledInDescriptor(featureDescriptor, descriptor));
         }
 
+        public static ExtensionDescriptor GetExtensionDescriptor(this IExtensionManager extensionManager, string name) {
+            return extensionManager.AvailableExtensions().FirstOrDefault(fd => fd.Name == name);
+        }
+        public static FeatureDescriptor GetFeatureDescriptor(this IExtensionManager extensionManager, string name) {
+            return extensionManager.AvailableFeatures().FirstOrDefault(fd => fd.Name == name);
+        }
+
         private static bool IsFeatureEnabledInDescriptor(FeatureDescriptor featureDescriptor, ShellDescriptor shellDescriptor) {
             return shellDescriptor.Features.Any(shellDescriptorFeature => shellDescriptorFeature.Name == featureDescriptor.Name);
         }

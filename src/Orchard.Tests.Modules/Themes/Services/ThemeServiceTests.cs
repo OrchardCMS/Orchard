@@ -45,6 +45,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
     [TestFixture]
     public class ThemeServiceTests {
         private IThemeService _themeService;
+        private ISiteThemeService _siteThemeService;
         private IContainer _container;
         private ISessionFactory _sessionFactory;
         private ISession _session;
@@ -97,42 +98,43 @@ namespace Orchard.Tests.Modules.Themes.Services {
             builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
             _container = builder.Build();
             _themeService = _container.Resolve<IThemeService>();
+            _siteThemeService = _container.Resolve<ISiteThemeService>();
         }
 
         //todo: test theme feature enablement
 
         [Test]
         public void ThemeWithNoBaseThemeCanBeSetAsSiteTheme() {
-            _themeService.SetSiteTheme("ThemeOne");
-            var siteTheme = _themeService.GetSiteTheme();
+            _siteThemeService.SetSiteTheme("ThemeOne");
+            var siteTheme = _siteThemeService.GetSiteTheme();
             Assert.That(siteTheme.Name, Is.EqualTo("ThemeOne"));
         }
 
         [Test]
         public void ThemeWithAvailableBaseThemeCanBeSetAsSiteTheme() {
-            _themeService.SetSiteTheme("ThemeTwo");
-            var siteTheme = _themeService.GetSiteTheme();
+            _siteThemeService.SetSiteTheme("ThemeTwo");
+            var siteTheme = _siteThemeService.GetSiteTheme();
             Assert.That(siteTheme.Name, Is.EqualTo("ThemeTwo"));
-            Assert.That(siteTheme.Extension.BaseTheme, Is.EqualTo("ThemeOne"));
+            Assert.That(siteTheme.BaseTheme, Is.EqualTo("ThemeOne"));
         }
 
         [Test]
         public void ThemeWithUnavailableBaseThemeCanBeSetAsSiteTheme() {
-            _themeService.SetSiteTheme("ThemeOne");
-            _themeService.SetSiteTheme("ThemeThree");
-            var siteTheme = _themeService.GetSiteTheme();
+            _siteThemeService.SetSiteTheme("ThemeOne");
+            _siteThemeService.SetSiteTheme("ThemeThree");
+            var siteTheme = _siteThemeService.GetSiteTheme();
             Assert.That(siteTheme.Name, Is.EqualTo("ThemeOne"));
         }
 
         [Test]
         public void ThemeWithCircularBaseDepTrowsExceptionOnActivation() {
-            _themeService.SetSiteTheme("ThemeOne");
+            _siteThemeService.SetSiteTheme("ThemeOne");
             try {
-                _themeService.SetSiteTheme("ThemeFourBasedOnFive");
+                _siteThemeService.SetSiteTheme("ThemeFourBasedOnFive");
             } catch (InvalidOperationException ex) {
                 Assert.That(ex.Message, Is.StringMatching("ThemeFiveBasedOnFour"));
             }
-            var siteTheme = _themeService.GetSiteTheme();
+            var siteTheme = _siteThemeService.GetSiteTheme();
             Assert.That(siteTheme.Name, Is.EqualTo("ThemeOne"));
         }
 
@@ -148,15 +150,15 @@ namespace Orchard.Tests.Modules.Themes.Services {
 
         [Test]
         public void ActivatingThemeEnablesIt() {
-            _themeService.SetSiteTheme("ThemeOne");
+            _siteThemeService.SetSiteTheme("ThemeOne");
             Assert.IsTrue(_themeService.GetThemeByName("ThemeOne").Enabled);
             Assert.IsTrue(_container.Resolve<IShellDescriptorManager>().GetShellDescriptor().Features.Any(sf => sf.Name == "ThemeOne"));
         }
 
         [Test]
         public void ActivatingThemeDoesNotDisableOldTheme() {
-            _themeService.SetSiteTheme("ThemeOne");
-            _themeService.SetSiteTheme("ThemeTwo");
+            _siteThemeService.SetSiteTheme("ThemeOne");
+            _siteThemeService.SetSiteTheme("ThemeTwo");
             Assert.IsTrue(_themeService.GetThemeByName("ThemeOne").Enabled);
             Assert.IsTrue(_themeService.GetThemeByName("ThemeTwo").Enabled);
             Assert.IsTrue(_container.Resolve<IShellDescriptorManager>().GetShellDescriptor().Features.Any(sf => sf.Name == "ThemeOne"));

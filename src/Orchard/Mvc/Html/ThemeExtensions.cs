@@ -22,8 +22,8 @@ namespace Orchard.Mvc.Html {
             return helper.ThemePath(helper.Resolve<IThemeService>().GetRequestTheme(helper.ViewContext.RequestContext), path);
         }
 
-        public static string ThemePath(this HtmlHelper helper, FeatureDescriptor theme, string path) {
-            return theme.Extension.Location + "/" + theme.Extension.Name + path;
+        public static string ThemePath(this HtmlHelper helper, ExtensionDescriptor theme, string path) {
+            return theme.Location + "/" + theme.Name + path;
         }
     }
 }

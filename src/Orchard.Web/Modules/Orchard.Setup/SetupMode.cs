@@ -113,18 +113,17 @@ namespace Orchard.Setup {
                 public string BaseTheme { get; set; }
             }
 
-            private readonly FeatureDescriptor _theme = new FeatureDescriptor {
+            private readonly ExtensionDescriptor _theme = new ExtensionDescriptor {
                 Name = "SafeMode",
                 DisplayName = "SafeMode",
-                Extension = new ExtensionDescriptor { Name = "SafeMode" },
             };
 
-            public FeatureDescriptor GetThemeByName(string themeName) { return _theme; }
-            public FeatureDescriptor GetSiteTheme() { return _theme; }
+            public ExtensionDescriptor GetThemeByName(string themeName) { return _theme; }
+            public ExtensionDescriptor GetSiteTheme() { return _theme; }
             public void SetSiteTheme(string themeName) { }
-            public FeatureDescriptor GetRequestTheme(RequestContext requestContext) { return _theme; }
-            public IEnumerable<FeatureDescriptor> GetInstalledThemes() { return new[] { _theme }; }
-            public IEnumerable<FeatureDescriptor> GetEnabledThemes() { return new[] { _theme }; }
+            public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) { return _theme; }
+            public IEnumerable<ExtensionDescriptor> GetInstalledThemes() { return new[] { _theme }; }
+            public IEnumerable<ExtensionDescriptor> GetEnabledThemes() { return new[] { _theme }; }
 
             public void InstallTheme(HttpPostedFileBase file) { }
             public void UninstallTheme(string themeName) { }

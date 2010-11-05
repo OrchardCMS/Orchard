@@ -28,6 +28,7 @@ using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.Environment.State;
 using Orchard.Data.Migration;
+using Orchard.Themes.Services;
 using Orchard.Widgets.Models;
 using Orchard.Widgets;
 
@@ -197,7 +198,7 @@ namespace Orchard.Setup.Services {
             siteSettings.Record.SiteCulture = "en-US";
 
             // set site theme
-            var themeService = environment.Resolve<IThemeService>();
+            var themeService = environment.Resolve<ISiteThemeService>();
             themeService.SetSiteTheme("TheThemeMachine");
 
             // add default culture

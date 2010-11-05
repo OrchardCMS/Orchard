@@ -46,22 +46,6 @@ namespace Orchard.Themes.Services {
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
-        public FeatureDescriptor GetSiteTheme() {
-            string currentThemeName = CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName;
-
-            if (string.IsNullOrEmpty(currentThemeName)) {
-                return null;
-            }
-
-            return GetThemeByName(currentThemeName);
-        }
-
-        public void SetSiteTheme(string themeName) {
-            if (DoEnableTheme(themeName)) {
-                CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeName;
-            }
-        }
-
         public void EnableTheme(string themeName) {
             DoEnableTheme(themeName);
         }
@@ -81,7 +65,7 @@ namespace Orchard.Themes.Services {
                 var baseTheme = GetThemeByName(baseThemeName);
                 if (baseTheme == null)
                     return false;
-                baseThemeName = baseTheme.Extension.BaseTheme;
+                baseThemeName = baseTheme.BaseTheme;
             }
 
             return true;
@@ -97,8 +81,8 @@ namespace Orchard.Themes.Services {
                     break;
                 themes.Enqueue(themeName);
 
-                themeName = !string.IsNullOrWhiteSpace(theme.Extension.BaseTheme)
-                    ? theme.Extension.BaseTheme
+                themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
+                    ? theme.BaseTheme
                     : null;
 
             }
@@ -115,8 +99,8 @@ namespace Orchard.Themes.Services {
                 themes.Push(themeName);
 
                 var theme = GetThemeByName(themeName);
-                themeName = !string.IsNullOrWhiteSpace(theme.Extension.BaseTheme)
-                    ? theme.Extension.BaseTheme
+                themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
+                    ? theme.BaseTheme
                     : null;
             }
 
@@ -135,7 +119,7 @@ namespace Orchard.Themes.Services {
 
             // ensure all base themes down the line are present and accounted for
             //todo: (heskew) dito on the need of a meaningful message
-            if (!AllBaseThemesAreInstalled(themeToEnable.Extension.BaseTheme))
+            if (!AllBaseThemesAreInstalled(themeToEnable.BaseTheme))
                 return false;
 
             // enable all theme features
@@ -143,7 +127,7 @@ namespace Orchard.Themes.Services {
             return true;
         }
 
-        public FeatureDescriptor GetRequestTheme(RequestContext requestContext) {
+        public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) {
             var requestTheme = _themeSelectors
                 .Select(x => x.GetTheme(requestContext))
                 .Where(x => x != null)
@@ -161,8 +145,8 @@ namespace Orchard.Themes.Services {
             return GetThemeByName("SafeMode");
         }
 
-        public FeatureDescriptor GetThemeByName(string name) {
-            foreach (var descriptor in _extensionManager.AvailableFeatures()) {
+        public ExtensionDescriptor GetThemeByName(string name) {
+            foreach (var descriptor in _extensionManager.AvailableExtensions()) {
                 if (string.Equals(descriptor.Name, name, StringComparison.OrdinalIgnoreCase)) {
                     return descriptor;
                 }
@@ -173,28 +157,28 @@ namespace Orchard.Themes.Services {
         /// <summary>
         /// Loads only installed themes
         /// </summary>
-        public IEnumerable<FeatureDescriptor> GetInstalledThemes() {
+        public IEnumerable<ExtensionDescriptor> GetInstalledThemes() {
             return GetThemes(_extensionManager.AvailableExtensions());
         }
 
         /// <summary>
         /// Loads only enabled themes
         /// </summary>
-        public IEnumerable<FeatureDescriptor> GetEnabledThemes() {
+        public IEnumerable<ExtensionDescriptor> GetEnabledThemes() {
             return GetThemes(_extensionManager.EnabledExtensions(_shellDescriptor));
         }
 
-        private IEnumerable<FeatureDescriptor> GetThemes(IEnumerable<ExtensionDescriptor> extensions) {
-            var themes = new List<FeatureDescriptor>();
-            foreach (var descriptor in extensions.SelectMany(x=>x.Features)) {
+        private IEnumerable<ExtensionDescriptor> GetThemes(IEnumerable<ExtensionDescriptor> extensions) {
+            var themes = new List<ExtensionDescriptor>();
+            foreach (var descriptor in extensions) {
 
-                if (!string.Equals(descriptor.Extension.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
+                if (!string.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 
-                FeatureDescriptor theme = descriptor;
+                ExtensionDescriptor theme = descriptor;
 
-                if (!theme.Extension.Tags.Contains("hidden")) {
+                if (!theme.Tags.Contains("hidden")) {
                     themes.Add(theme);
                 }
             }
