@@ -90,11 +90,8 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             var theme1 = new ExtensionDescriptor { Zones = ThemeZoneName1 } ;
             var theme2 = new ExtensionDescriptor { Zones = ThemeZoneName2 } ;
-            Mock<IThemeService> themeServiceMock = new Mock<IThemeService>();
-            themeServiceMock.Setup(x => x.GetInstalledThemes()).Returns(
-                (new ExtensionDescriptor[] { theme1, theme2 }));
 
-            builder.RegisterInstance(themeServiceMock.Object).As<IThemeService>();
+
             builder.RegisterType<StubWidgetPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubLayerPartHandler>().As<IContentHandler>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();

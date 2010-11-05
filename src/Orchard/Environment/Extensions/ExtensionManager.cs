@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web;
-using ICSharpCode.SharpZipLib.Zip;
 using Orchard.Environment.Extensions.Folders;
-using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
@@ -31,6 +28,10 @@ namespace Orchard.Environment.Extensions {
 
         // This method does not load extension types, simply parses extension manifests from 
         // the filesystem. 
+        public ExtensionDescriptor GetExtension(string name) {
+            return AvailableExtensions().FirstOrDefault(x => x.Name == name);
+        }
+
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             return _folders.SelectMany(folder => folder.AvailableExtensions());
         }
@@ -67,7 +68,7 @@ namespace Orchard.Environment.Extensions {
         }
 
         private IEnumerable<ExtensionEntry> LoadedExtensions() {
-            foreach ( var descriptor in AvailableExtensions() ) {
+            foreach (var descriptor in AvailableExtensions()) {
                 ExtensionEntry entry = null;
                 try {
                     entry = BuildEntry(descriptor);
@@ -138,65 +139,6 @@ namespace Orchard.Environment.Extensions {
                 }
             }
             return null;
-        }
-
-        public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
-            if (String.IsNullOrEmpty(extensionType)) {
-                throw new ArgumentException(T("extensionType was null or empty").ToString());
-            }
-            string targetFolder;
-            if (String.Equals(extensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
-                targetFolder = PathHelpers.GetPhysicalPath("~/Themes");
-            }
-            else if (String.Equals(extensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
-                targetFolder = PathHelpers.GetPhysicalPath("~/Modules");
-            }
-            else {
-                throw new ArgumentException(T("extensionType was not recognized").ToString());
-            }
-            int postedFileLength = extensionBundle.ContentLength;
-            Stream postedFileStream = extensionBundle.InputStream;
-            byte[] postedFileData = new byte[postedFileLength];
-            postedFileStream.Read(postedFileData, 0, postedFileLength);
-
-            using (var memoryStream = new MemoryStream(postedFileData)) {
-                var fileInflater = new ZipInputStream(memoryStream);
-                ZipEntry entry;
-                while ((entry = fileInflater.GetNextEntry()) != null) {
-                    string directoryName = Path.GetDirectoryName(entry.Name);
-                    if (!Directory.Exists(Path.Combine(targetFolder, directoryName))) {
-                        Directory.CreateDirectory(Path.Combine(targetFolder, directoryName));
-                    }
-
-                    if (!entry.IsDirectory && entry.Name.Length > 0) {
-                        var len = Convert.ToInt32(entry.Size);
-                        var extractedBytes = new byte[len];
-                        fileInflater.Read(extractedBytes, 0, len);
-                        File.WriteAllBytes(Path.Combine(targetFolder, entry.Name), extractedBytes);
-                    }
-                }
-            }
-        }
-
-        public void UninstallExtension(string extensionType, string extensionName) {
-            if (String.IsNullOrEmpty(extensionType)) {
-                throw new ArgumentException(T("extensionType was null or empty").ToString());
-            }
-            string targetFolder;
-            if (String.Equals(extensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
-                targetFolder = PathHelpers.GetPhysicalPath("~/Themes");
-            }
-            else if (String.Equals(extensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
-                targetFolder = PathHelpers.GetPhysicalPath("~/Modules");
-            }
-            else {
-                throw new ArgumentException(T("extensionType was not recognized").ToString());
-            }
-            targetFolder = Path.Combine(targetFolder, extensionName);
-            if (!Directory.Exists(targetFolder)) {
-                throw new ArgumentException(T("extension was not found").ToString());
-            }
-            Directory.Delete(targetFolder, true);
         }
 
         private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {

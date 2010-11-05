@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.Commands;
+using Orchard.Environment.Features;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
@@ -8,10 +9,12 @@ namespace Orchard.Modules.Commands {
     public class FeatureCommands : DefaultOrchardCommandHandler {
         private readonly IModuleService _moduleService;
         private readonly INotifier _notifier;
+        private readonly IFeatureManager _featureManager;
 
-        public FeatureCommands(IModuleService moduleService, INotifier notifier) {
+        public FeatureCommands(IModuleService moduleService, INotifier notifier, IFeatureManager featureManager) {
             _moduleService = moduleService;
             _notifier = notifier;
+            _featureManager = featureManager;
         }
 
         [OrchardSwitch]
@@ -22,8 +25,8 @@ namespace Orchard.Modules.Commands {
         [OrchardSwitches("Summary")]
         public void List() {
             if (Summary) {
-                foreach (var feature in _moduleService.GetAvailableFeatures().OrderBy(f => f.Descriptor.Name)) {
-                    Context.Output.WriteLine(T("{0}, {1}", feature.Descriptor.Name, feature.IsEnabled ? T("Enabled") : T("Disabled")));
+                foreach (var feature in _featureManager.GetAvailableFeatures().OrderBy(f => f.Name)) {
+                    Context.Output.WriteLine(T("{0}, {1}", feature.Name, feature.IsEnabled ? T("Enabled") : T("Disabled")));
                 }
             }
             else {

@@ -6,7 +6,7 @@ namespace Orchard.Modules {
     public interface IModuleService : IDependency {
         [Obsolete]
         IEnumerable<IModule> GetInstalledModules();
-        [Obsolete]
+        [Obsolete("",true)]
         IEnumerable<IModuleFeature> GetAvailableFeatures();
         [Obsolete]
         void EnableFeatures(IEnumerable<string> featureNames);

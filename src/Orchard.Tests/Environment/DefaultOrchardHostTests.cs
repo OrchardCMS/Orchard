@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -86,6 +85,10 @@ namespace Orchard.Tests.Environment {
         }
 
         public class StubExtensionManager : IExtensionManager {
+            public ExtensionDescriptor GetExtension(string name) {
+                throw new NotImplementedException();
+            }
+
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 var ext = new ExtensionDescriptor { Name = "Orchard.Framework" };
                 ext.Features = new[] { new FeatureDescriptor { Extension = ext, Name = ext.Name } };
@@ -114,14 +117,6 @@ namespace Orchard.Tests.Environment {
                         typeof (TestTransientDependency),
                     }
                 };
-            }
-
-            public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
-                throw new NotImplementedException();
-            }
-
-            public void UninstallExtension(string extensionType, string extensionName) {
-                throw new NotImplementedException();
             }
 
             public void Monitor(Action<IVolatileToken> monitor) {

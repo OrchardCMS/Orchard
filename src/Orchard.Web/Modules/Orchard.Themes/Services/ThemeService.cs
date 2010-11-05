@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Environment.Descriptor;
@@ -47,13 +46,7 @@ namespace Orchard.Themes.Services {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public void EnableTheme(string themeName) {
-            DoEnableTheme(themeName);
-        }
 
-        public void DisableTheme(string themeName) {
-            DisableThemeFeatures(themeName);
-        }
 
         private bool AllBaseThemesAreInstalled(string baseThemeName) {
             var themesSeen = new List<string>();
@@ -63,7 +56,7 @@ namespace Orchard.Themes.Services {
                     throw new InvalidOperationException(T("The theme \"{0}\" was already seen - looks like we're going around in circles.", baseThemeName).Text);
                 themesSeen.Add(baseThemeName);
 
-                var baseTheme = GetThemeByName(baseThemeName);
+                var baseTheme = _extensionManager.GetExtension(baseThemeName);
                 if (baseTheme == null)
                     return false;
                 baseThemeName = baseTheme.BaseTheme;
@@ -77,7 +70,7 @@ namespace Orchard.Themes.Services {
             while (themeName != null) {
                 if (themes.Contains(themeName))
                     throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features disabled.", themeName).Text);
-                var theme = GetThemeByName(themeName);
+                var theme = _extensionManager.GetExtension(themeName);
                 if (theme == null)
                     break;
                 themes.Enqueue(themeName);
@@ -99,7 +92,7 @@ namespace Orchard.Themes.Services {
                     throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features enabled.", themeName).Text);
                 themes.Push(themeName);
 
-                var theme = GetThemeByName(themeName);
+                var theme = _extensionManager.GetExtension(themeName);
                 themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
                     ? theme.BaseTheme
                     : null;
@@ -114,7 +107,7 @@ namespace Orchard.Themes.Services {
                 return false;
 
             //todo: (heskew) need messages given in addition to all of these early returns so something meaningful can be presented to the user
-            var themeToEnable = GetThemeByName(themeName);
+            var themeToEnable = _extensionManager.GetExtension(themeName);
             if (themeToEnable == null)
                 return false;
 
@@ -138,21 +131,12 @@ namespace Orchard.Themes.Services {
                 return null;
 
             foreach (var theme in requestTheme) {
-                var t = GetThemeByName(theme.ThemeName);
+                var t = _extensionManager.GetExtension(theme.ThemeName);
                 if (t != null)
                     return t;
             }
 
-            return GetThemeByName("SafeMode");
-        }
-
-        public ExtensionDescriptor GetThemeByName(string name) {
-            foreach (var descriptor in _extensionManager.AvailableExtensions()) {
-                if (string.Equals(descriptor.Name, name, StringComparison.OrdinalIgnoreCase)) {
-                    return descriptor;
-                }
-            }
-            return null;
+            return _extensionManager.GetExtension("SafeMode");
         }
 
         /// <summary>
@@ -160,13 +144,6 @@ namespace Orchard.Themes.Services {
         /// </summary>
         public IEnumerable<ExtensionDescriptor> GetInstalledThemes() {
             return GetThemes(_extensionManager.AvailableExtensions());
-        }
-
-        /// <summary>
-        /// Loads only enabled themes
-        /// </summary>
-        public IEnumerable<ExtensionDescriptor> GetEnabledThemes() {
-            return GetThemes(_extensionManager.EnabledExtensions(_shellDescriptor));
         }
 
         private IEnumerable<ExtensionDescriptor> GetThemes(IEnumerable<ExtensionDescriptor> extensions) {
@@ -184,14 +161,6 @@ namespace Orchard.Themes.Services {
                 }
             }
             return themes;
-        }
-
-        public void InstallTheme(HttpPostedFileBase file) {
-            _extensionManager.InstallExtension("Theme", file);
-        }
-
-        public void UninstallTheme(string themeName) {
-            _extensionManager.UninstallExtension("Theme", themeName);
         }
 
         private static string TryLocalize(string key, string original, Localizer localizer) {

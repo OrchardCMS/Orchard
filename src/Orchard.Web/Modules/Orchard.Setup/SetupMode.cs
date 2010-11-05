@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
 using System.Web.Routing;
 using Autofac;
 using JetBrains.Annotations;
@@ -119,16 +118,7 @@ namespace Orchard.Setup {
             };
 
             public ExtensionDescriptor GetThemeByName(string themeName) { return _theme; }
-            public ExtensionDescriptor GetSiteTheme() { return _theme; }
-            public void SetSiteTheme(string themeName) { }
             public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) { return _theme; }
-            public IEnumerable<ExtensionDescriptor> GetInstalledThemes() { return new[] { _theme }; }
-            public IEnumerable<ExtensionDescriptor> GetEnabledThemes() { return new[] { _theme }; }
-
-            public void InstallTheme(HttpPostedFileBase file) { }
-            public void UninstallTheme(string themeName) { }
-            public void EnableTheme(string themeName) { }
-            public void DisableTheme(string themeName) { }
         }
 
         [UsedImplicitly]

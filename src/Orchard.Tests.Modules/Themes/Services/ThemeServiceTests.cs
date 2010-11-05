@@ -29,6 +29,7 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Modules;
 using Orchard.Modules.Services;
@@ -44,6 +45,7 @@ using Orchard.Themes.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Tests.Modules.Themes.Services {
+#if REFACTORING
     [TestFixture, Ignore]
     public class ThemeServiceTests {
         private IThemeService _themeService;
@@ -51,6 +53,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
         private IContainer _container;
         private ISessionFactory _sessionFactory;
         private ISession _session;
+        private IFeatureManager _featureManager;
 
         [TestFixtureSetUp]
         public void InitFixture() {
@@ -85,7 +88,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<SiteSettingsPartHandler>().As<IContentHandler>();
             builder.RegisterType<ThemeSiteSettingsPartHandler>().As<IContentHandler>();
-            builder.RegisterType<ModuleService>().As<IModuleService>();
+            //builder.RegisterType<ModuleService>().As<IModuleService>();
             builder.RegisterType<ShellDescriptor>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<StubShellDescriptorManager>().As<IShellDescriptorManager>().InstancePerLifetimeScope();
@@ -102,6 +105,7 @@ namespace Orchard.Tests.Modules.Themes.Services {
             _container = builder.Build();
             _themeService = _container.Resolve<IThemeService>();
             _siteThemeService = _container.Resolve<ISiteThemeService>();
+            _featureManager = _container.Resolve<IFeatureManager>();
         }
 
         //todo: test theme feature enablement
@@ -143,10 +147,10 @@ namespace Orchard.Tests.Modules.Themes.Services {
 
         [Test]
         public void CanEnableAndDisableThemes() {
-            _themeService.EnableTheme("ThemeOne");
+            _featureManager.EnableFeature("ThemeOne");
             Assert.IsTrue(_themeService.GetThemeByName("ThemeOne").Enabled);
             Assert.IsTrue(_container.Resolve<IShellDescriptorManager>().GetShellDescriptor().Features.Any(sf => sf.Name == "ThemeOne"));
-            _themeService.DisableTheme("ThemeOne");
+            _featureManager.DisableFeature("ThemeOne");
             Assert.IsFalse(_themeService.GetThemeByName("ThemeOne").Enabled);
             Assert.IsFalse(_container.Resolve<IShellDescriptorManager>().GetShellDescriptor().Features.Any(sf => sf.Name == "ThemeOne"));
         }
@@ -274,4 +278,5 @@ namespace Orchard.Tests.Modules.Themes.Services {
 
         #endregion
     }
+#endif
 }

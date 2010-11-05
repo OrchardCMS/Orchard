@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions.Models;
 
@@ -8,10 +7,10 @@ namespace Orchard.Environment.Extensions {
     public interface IExtensionManager {
         IEnumerable<ExtensionDescriptor> AvailableExtensions();
         IEnumerable<FeatureDescriptor> AvailableFeatures();
-        IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors);
 
-        void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle);
-        void UninstallExtension(string extensionType, string extensionName);
+        ExtensionDescriptor GetExtension(string name);
+
+        IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors);
     }
 
     public static class ExtensionManagerExtensions {
@@ -27,13 +26,6 @@ namespace Orchard.Environment.Extensions {
             return extensionManager.AvailableExtensions()
                 .SelectMany(extensionDescriptor => extensionDescriptor.Features)
                 .Where(featureDescriptor => IsFeatureEnabledInDescriptor(featureDescriptor, descriptor));
-        }
-
-        public static ExtensionDescriptor GetExtensionDescriptor(this IExtensionManager extensionManager, string name) {
-            return extensionManager.AvailableExtensions().FirstOrDefault(fd => fd.Name == name);
-        }
-        public static FeatureDescriptor GetFeatureDescriptor(this IExtensionManager extensionManager, string name) {
-            return extensionManager.AvailableFeatures().FirstOrDefault(fd => fd.Name == name);
         }
 
         private static bool IsFeatureEnabledInDescriptor(FeatureDescriptor featureDescriptor, ShellDescriptor shellDescriptor) {

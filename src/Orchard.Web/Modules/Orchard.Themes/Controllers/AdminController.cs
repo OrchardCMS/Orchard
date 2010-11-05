@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.Data.Migration;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Reports.Services;
@@ -20,6 +22,7 @@ namespace Orchard.Themes.Controllers {
         private readonly IFeatureManager _featureManager;
         private readonly ISiteThemeService _siteThemeService;
         private readonly IPreviewTheme _previewTheme;
+        private readonly IExtensionManager _extensionManager;
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IReportsCoordinator _reportsCoordinator;
 
@@ -32,7 +35,8 @@ namespace Orchard.Themes.Controllers {
             ISiteThemeService siteThemeService,
             IPreviewTheme previewTheme,
             IAuthorizer authorizer,
-            INotifier notifier) {
+            INotifier notifier,
+            IExtensionManager extensionManager) {
             Services = services;
             _dataMigrationManager = dataMigraitonManager;
             _reportsCoordinator = reportsCoordinator;
@@ -40,6 +44,7 @@ namespace Orchard.Themes.Controllers {
             _featureManager = featureManager;
             _siteThemeService = siteThemeService;
             _previewTheme = previewTheme;
+            _extensionManager = extensionManager;
             T = NullLocalizer.Instance;
         }
 
@@ -48,7 +53,7 @@ namespace Orchard.Themes.Controllers {
 
         public ActionResult Index() {
             try {
-                var themes = _themeService.GetInstalledThemes();
+                var themes = _extensionManager.AvailableExtensions().Where(d => d.ExtensionType == "Theme");
                 var currentTheme = _siteThemeService.GetSiteTheme();
                 var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
                 var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes, FeaturesThatNeedUpdate = featuresThatNeedUpdate };
@@ -142,41 +147,6 @@ namespace Orchard.Themes.Controllers {
                 Services.Notifier.Error(T("Activating theme failed: " + exception.Message));
             }
             return RedirectToAction("Index");
-        }
-
-        public ActionResult Install() {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Install(FormCollection input) {
-            try {
-                if (!Services.Authorizer.Authorize(Permissions.ManageThemes, T("Couldn't install theme")))
-                    return new HttpUnauthorizedResult();
-                foreach (string fileName in Request.Files) {
-                    HttpPostedFileBase file = Request.Files[fileName];
-                    _themeService.InstallTheme(file);
-                }
-                return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Installing theme failed: " + exception.Message));
-                return RedirectToAction("Index");
-            }
-        }
-
-        [HttpPost]
-        public ActionResult Uninstall(string themeName) {
-            try {
-                if (!Services.Authorizer.Authorize(Permissions.ManageThemes, T("Couldn't uninstall theme")))
-                    return new HttpUnauthorizedResult();
-                _themeService.UninstallTheme(themeName);
-                return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Uninstalling theme failed: " + exception.Message));
-                return RedirectToAction("Index");
-            }
         }
 
         [HttpPost]
