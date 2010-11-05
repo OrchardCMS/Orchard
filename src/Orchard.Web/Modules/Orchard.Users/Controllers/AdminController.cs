@@ -1,11 +1,9 @@
 using System.Linq;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Security;
-using Orchard.Settings;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
@@ -33,7 +31,6 @@ namespace Orchard.Users.Controllers {
         dynamic Shape { get; set; }
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ActionResult Index() {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to list users")))
@@ -192,7 +189,7 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get(id);
 
             if ( user != null ) {
-                if ( CurrentSite.SuperUser.Equals(user.As<UserPart>().UserName) ) {
+                if (Services.WorkContext.CurrentSite.SuperUser.Equals(user.As<UserPart>().UserName) ) {
                     Services.Notifier.Error(T("Super user can't be moderated"));
                 }
                 else {

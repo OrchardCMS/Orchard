@@ -12,7 +12,6 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Modules;
-using Orchard.Settings;
 using Orchard.Themes.Models;
 
 namespace Orchard.Themes.Services {
@@ -23,6 +22,7 @@ namespace Orchard.Themes.Services {
         private readonly IModuleService _moduleService;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ShellDescriptor _shellDescriptor;
+        private readonly IOrchardServices _orchardServices;
         private readonly IShellDescriptorManager _shellDescriptorManager;
 
         public ThemeService(
@@ -31,20 +31,21 @@ namespace Orchard.Themes.Services {
             IEnumerable<IThemeSelector> themeSelectors,
             IModuleService moduleService,
             IWorkContextAccessor workContextAccessor,
-            ShellDescriptor shellDescriptor) {
+            ShellDescriptor shellDescriptor,
+            IOrchardServices orchardServices) {
             _shellDescriptorManager = shellDescriptorManager;
             _extensionManager = extensionManager;
             _themeSelectors = themeSelectors;
             _moduleService = moduleService;
             _workContextAccessor = workContextAccessor;
             _shellDescriptor = shellDescriptor;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public void EnableTheme(string themeName) {
             DoEnableTheme(themeName);

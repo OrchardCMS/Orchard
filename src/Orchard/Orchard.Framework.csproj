@@ -773,10 +773,8 @@
     <Compile Include="Security\Authorizer.cs" />
     <Compile Include="Security\Providers\FormsAuthenticationService.cs" />
     <Compile Include="Security\SecurityFilter.cs" />
-    <Compile Include="Security\SecurityModule.cs" />
     <Compile Include="Settings\ISite.cs" />
     <Compile Include="Settings\ISiteService.cs" />
-    <Compile Include="Settings\SettingsModule.cs" />
     <Compile Include="Tasks\BackgroundService.cs" />
     <Compile Include="Tasks\IBackgroundTask.cs" />
     <Compile Include="Tasks\SweepGenerator.cs" />

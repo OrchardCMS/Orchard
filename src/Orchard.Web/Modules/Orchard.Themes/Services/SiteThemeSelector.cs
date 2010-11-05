@@ -6,17 +6,19 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Settings;
 using Orchard.Themes.Models;
 
 namespace Orchard.Themes.Services {
     [UsedImplicitly]
     public class SiteThemeSelector : IThemeSelector {
+        private readonly IOrchardServices _orchardServices;
 
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
+        public SiteThemeSelector(IOrchardServices orchardServices) {
+            _orchardServices = orchardServices;
+        }
 
         public ThemeSelectorResult GetTheme(RequestContext context) {
-            string currentThemeName = CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
+            string currentThemeName = _orchardServices.WorkContext.CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
 
             if (String.IsNullOrEmpty(currentThemeName)) {
                 return null;

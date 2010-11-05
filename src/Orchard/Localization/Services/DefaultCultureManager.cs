@@ -3,25 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
-using JetBrains.Annotations;
 using Orchard.Caching;
 using Orchard.Data;
 using Orchard.Localization.Records;
-using Orchard.Settings;
 
 namespace Orchard.Localization.Services {
     public class DefaultCultureManager : ICultureManager {
         private readonly IRepository<CultureRecord> _cultureRepository;
         private readonly IEnumerable<ICultureSelector> _cultureSelectors;
         private readonly ISignals _signals;
+        private readonly IOrchardServices _orchardServices;
 
-        public DefaultCultureManager(IRepository<CultureRecord> cultureRepository, IEnumerable<ICultureSelector> cultureSelectors, ISignals signals) {
+        public DefaultCultureManager(IRepository<CultureRecord> cultureRepository, 
+                                     IEnumerable<ICultureSelector> cultureSelectors, 
+                                     ISignals signals, 
+                                     IOrchardServices orchardServices) {
             _cultureRepository = cultureRepository;
             _cultureSelectors = cultureSelectors;
             _signals = signals;
+            _orchardServices = orchardServices;
         }
-
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public IEnumerable<string> ListCultures() {
             var query = from culture in _cultureRepository.Table select culture.Culture;
@@ -75,7 +76,7 @@ namespace Orchard.Localization.Services {
         }
 
         public string GetSiteCulture() {
-            return CurrentSite == null ? null : CurrentSite.SiteCulture;
+            return _orchardServices.WorkContext.CurrentSite == null ? null : _orchardServices.WorkContext.CurrentSite.SiteCulture;
         }
 
         // "<languagecode2>" or

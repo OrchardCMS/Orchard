@@ -12,18 +12,19 @@ namespace Orchard.Core.Navigation.Drivers {
     public class MenuPartDriver : ContentPartDriver<MenuPart> {
         private readonly IAuthorizationService _authorizationService;
         private readonly INavigationManager _navigationManager;
+        private readonly IOrchardServices _orchardServices;
 
-        public MenuPartDriver(IAuthorizationService authorizationService, INavigationManager navigationManager) {
+        public MenuPartDriver(IAuthorizationService authorizationService, INavigationManager navigationManager, IOrchardServices orchardServices) {
             _authorizationService = authorizationService;
             _navigationManager = navigationManager;
+            _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
         }
 
-        public virtual IUser CurrentUser { get; set; }
         public Localizer T { get; set; }
 
         protected override DriverResult Editor(MenuPart part, dynamic shapeHelper) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part))
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, _orchardServices.WorkContext.CurrentUser, part))
                 return null;
 
             return ContentShape("Parts_Navigation_Menu_Edit",
@@ -31,7 +32,7 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override DriverResult Editor(MenuPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part))
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, _orchardServices.WorkContext.CurrentUser, part))
                 return null;
 
             if (string.IsNullOrEmpty(part.MenuPosition))

@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.Services;
-using Orchard.Settings;
 using Orchard.Themes;
 
 namespace Orchard.Core.HomePage.Controllers {
     [HandleError]
     public class HomeController : Controller {
         private readonly IEnumerable<IHomePageProvider> _homePageProviders;
+        private readonly IOrchardServices _orchardServices;
 
-        public HomeController(IEnumerable<IHomePageProvider> homePageProviders) {
+        public HomeController(IEnumerable<IHomePageProvider> homePageProviders, IOrchardServices orchardServices) {
             _homePageProviders = homePageProviders;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         [Themed]
         public ActionResult Index() {
             try {
-                var homepage = CurrentSite.HomePage;
+                var homepage = _orchardServices.WorkContext.CurrentSite.HomePage;
                 if (String.IsNullOrEmpty(homepage))
                     return View();
 

@@ -10,5 +10,6 @@ namespace Orchard {
         IAuthorizer Authorizer { get; }
         INotifier Notifier { get; }
         dynamic New { get; }
+        WorkContext WorkContext { get; }
     }
 }

@@ -1,12 +1,9 @@
 ﻿using System.Web.Mvc;
-using System.Web.Query.Dynamic;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
-using Orchard.Settings;
 using Orchard.Search.Models;
 using Orchard.UI.Notify;
 using System.Collections.Generic;
@@ -34,10 +31,8 @@ namespace Orchard.Search.Controllers {
         private IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
-
         public ActionResult Index(string q, int page = 1, int pageSize = 10) {
-            var searchFields = CurrentSite.As<SearchSettingsPart>().SearchedFields;
+            var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
             IPageOfItems<ISearchHit> searchHits;
             
@@ -47,7 +42,7 @@ namespace Orchard.Search.Controllers {
             } 
             else {
                 searchHits = _searchService.Query(q, page, pageSize,
-                                                      CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
+                                                      Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
                                                       searchFields,
                                                       searchHit => searchHit);
             }
