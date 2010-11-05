@@ -103,14 +103,14 @@
                 _controllees.hide(); // <- unhook this when the following comment applies
                 $(_controllees.show()[0]).find("input").focus(); // <- aaaand a slideDown there...eventually
             } else if (!(_this.is(":checked") && _controlleesAreHidden)) {
-                //_controllees.slideUp(200); <- hook this back up when chrome behaves, or when I care less
+                //_controllees.slideUp(200); <- hook this back up when chrome behaves, or when I care less...or when chrome behaves
                 _controllees.hide()
             }
             return this;
         }
     });
     // collapsable areas - anything with a data-controllerid attribute has its visibility controlled by the id-ed radio/checkbox
-    (function () {
+    $(function () {
         $("[data-controllerid]").each(function () {
             var controller = $("#" + $(this).attr("data-controllerid"));
             if (controller.data("isControlling")) {
@@ -126,11 +126,12 @@
                 $("[name=" + controller.attr("name") + "]").click(function () { $("[name=" + $(this).attr("name") + "]").each($(this).toggleWhatYouControl); });
             }
         });
-    })();
+    });
     // inline form link buttons (form.inline.link button) swapped out for a link that submits said form
-    (function () {
+    $(function () {
         $("form.inline.link").each(function () {
             var _this = $(this);
+        console.log(_this.html())
             var link = $("<a class='wasFormInlineLink' href='.'/>");
             var button = _this.children("button").first();
             link.text(button.text())
@@ -141,7 +142,7 @@
             _this.css({ "position": "absolute", "left": "-9999em" });
             $("body").append(_this);
         });
-    })();
+    });
     // (do) a little better autofocus
     $(function () {
         $("body").helpfullyFocus();
