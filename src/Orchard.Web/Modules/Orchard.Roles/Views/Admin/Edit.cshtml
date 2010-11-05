@@ -6,7 +6,13 @@
     <fieldset>
 	    <legend>@T("Information")</legend>
 	    <label for="pageTitle">@T("Role Name:")</label>
-	    <input id="Name" class="text" name="Name" type="text" value="@Model.Name" />
+        @if (Model.Name == "Administrator") { // the one special case
+	        <input id="Name" class="text" type="text" value="@Model.Name" readonly="readonly" />
+	        <input class="text" name="Name" type="hidden" value="@Model.Name" />
+        }
+        else {
+	        <input id="Name" class="text" name="Name" type="text" value="@Model.Name" />
+        }
 	    <input type="hidden" value="@Model.Id" name="Id" />
 	</fieldset>
     <fieldset>
@@ -51,6 +57,8 @@
     </fieldset>
     <fieldset>
         <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
+        @if (Model.Name != "Administrator") {
         <button type="submit" name="submit.Delete" value="@T("Remove")">@T("Remove")</button>
+        }
 	</fieldset>
 }
