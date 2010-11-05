@@ -12,16 +12,16 @@ namespace Orchard.Localization.Services {
         private readonly IRepository<CultureRecord> _cultureRepository;
         private readonly IEnumerable<ICultureSelector> _cultureSelectors;
         private readonly ISignals _signals;
-        private readonly IOrchardServices _orchardServices;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         public DefaultCultureManager(IRepository<CultureRecord> cultureRepository, 
                                      IEnumerable<ICultureSelector> cultureSelectors, 
                                      ISignals signals, 
-                                     IOrchardServices orchardServices) {
+                                     IWorkContextAccessor workContextAccessor) {
             _cultureRepository = cultureRepository;
             _cultureSelectors = cultureSelectors;
             _signals = signals;
-            _orchardServices = orchardServices;
+            _workContextAccessor = workContextAccessor;
         }
 
         public IEnumerable<string> ListCultures() {
@@ -76,7 +76,7 @@ namespace Orchard.Localization.Services {
         }
 
         public string GetSiteCulture() {
-            return _orchardServices.WorkContext.CurrentSite == null ? null : _orchardServices.WorkContext.CurrentSite.SiteCulture;
+            return _workContextAccessor.GetContext().CurrentSite == null ? null : _workContextAccessor.GetContext().CurrentSite.SiteCulture;
         }
 
         // "<languagecode2>" or
