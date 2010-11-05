@@ -119,7 +119,7 @@ body {
 /* Headings */
 h1,h2,h3,h4,h5,h6 { font-weight: normal;}
 
-h1 { font-size: 1.231em; }
+h1 { font-size: 1.308em; }
 h2, h2 span { font-size: 1.154em; }
 h3 { font-size: 1.077em; }
 h4 { font-size: 1em; }
@@ -399,7 +399,6 @@ form.link button:hover {
     margin:.2em 0;
 }
 #main ul h3 {
-    font-size:1.6em;
     margin:0 0 .2em;
 }
 

@@ -93,10 +93,6 @@
 .features.detail-view .description::before {
     content:" - ";
 }
-.features .dependencies li,
-.features .actions {
-    font-size:1.4em;
-}
 .features .dependencies {
     font-size:.9em;
     margin:.44em 0 0;
