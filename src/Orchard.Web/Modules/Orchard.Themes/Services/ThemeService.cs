@@ -12,7 +12,6 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Modules;
-using Orchard.Settings;
 using Orchard.Themes.Models;
 
 namespace Orchard.Themes.Services {
@@ -23,6 +22,7 @@ namespace Orchard.Themes.Services {
         private readonly IModuleService _moduleService;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ShellDescriptor _shellDescriptor;
+        private readonly IOrchardServices _orchardServices;
         private readonly IShellDescriptorManager _shellDescriptorManager;
 
         public ThemeService(
@@ -31,23 +31,24 @@ namespace Orchard.Themes.Services {
             IEnumerable<IThemeSelector> themeSelectors,
             IModuleService moduleService,
             IWorkContextAccessor workContextAccessor,
-            ShellDescriptor shellDescriptor) {
+            ShellDescriptor shellDescriptor,
+            IOrchardServices orchardServices) {
             _shellDescriptorManager = shellDescriptorManager;
             _extensionManager = extensionManager;
             _themeSelectors = themeSelectors;
             _moduleService = moduleService;
             _workContextAccessor = workContextAccessor;
             _shellDescriptor = shellDescriptor;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ITheme GetSiteTheme() {
-            string currentThemeName = CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName;
+            string currentThemeName = _orchardServices.WorkContext.CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName;
 
             if (string.IsNullOrEmpty(currentThemeName)) {
                 return null;
@@ -58,7 +59,7 @@ namespace Orchard.Themes.Services {
 
         public void SetSiteTheme(string themeName) {
             if (DoEnableTheme(themeName)) {
-                CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeName;
+                _orchardServices.WorkContext.CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeName;
             }
         }
 

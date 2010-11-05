@@ -1,17 +1,15 @@
 ﻿using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Commands;
 using Orchard.Localization.Services;
-using Orchard.Settings;
 
 namespace Orchard.Localization.Commands {
     public class CultureCommands : DefaultOrchardCommandHandler {
         private readonly ICultureManager _cultureManager;
+        private readonly IOrchardServices _orchardServices;
 
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
-
-        public CultureCommands(ICultureManager cultureManager) {
+        public CultureCommands(ICultureManager cultureManager, IOrchardServices orchardServices) {
             _cultureManager = cultureManager;
+            _orchardServices = orchardServices;
         }
 
         [CommandHelp("cultures list \r\n\t" + "List site cultures")]
@@ -28,7 +26,7 @@ namespace Orchard.Localization.Commands {
         [CommandHelp("cultures get site culture \r\n\t" + "Get culture for the site")]
         [CommandName("cultures get site culture")]
         public void GetSiteCulture() {
-            Context.Output.WriteLine(T("Site Culture is {0}", CurrentSite.SiteCulture));
+            Context.Output.WriteLine(T("Site Culture is {0}", _orchardServices.WorkContext.CurrentSite.SiteCulture));
         }
 
         [CommandHelp("cultures set site culture <culture-name> \r\n\t" + "Set culture for the site")]
@@ -40,7 +38,7 @@ namespace Orchard.Localization.Commands {
                 Context.Output.WriteLine(T("Supplied culture name {0} is not valid.", cultureName));
                 return;
             }
-            CurrentSite.SiteCulture = cultureName;
+            _orchardServices.WorkContext.CurrentSite.SiteCulture = cultureName;
 
             Context.Output.WriteLine(T("Site culture set to {0} successfully", cultureName));
         }

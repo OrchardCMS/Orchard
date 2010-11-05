@@ -35,6 +35,5 @@ namespace Orchard {
             get { return GetState<ITheme>("CurrentTheme"); }
             set { SetState("CurrentTheme", value); }
         }
-
     }
 }
