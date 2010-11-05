@@ -796,16 +796,13 @@ table .button {
 .contentItems .properties li {
     border:0;
     float:left;
-    font-size:1.4em;
     padding:0 0 .1em 0;
 }
 .contentItems .properties .icon {
     margin:0 .2em -.2em;
 }
 .contentItems .related {
-
     text-align:right;
-    font-size:1.4em;
 }
 .contentItems .commentcount {
     line-height:2em;
