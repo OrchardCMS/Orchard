@@ -111,6 +111,24 @@ namespace Orchard.Tags.Controllers {
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public ActionResult Remove(int id, string returnUrl) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't remove tag")))
+                return new HttpUnauthorizedResult();
+
+            Tag tag = _tagService.GetTag(id);
+
+            if (tag == null)
+                return new HttpNotFoundResult();
+
+            _tagService.DeleteTag(id);
+
+            if (!string.IsNullOrWhiteSpace(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("Index");
+        }
+
         public ActionResult Search(int id) {
             Tag tag = _tagService.GetTag(id);
 
