@@ -294,7 +294,6 @@
     <Content Include="Shapes\Views\HeadPreload.cshtml" />
     <Content Include="Shapes\Views\Message.cshtml" />
     <Content Include="Shapes\Views\NotFound.cshtml" />
-    <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
     <Content Include="Settings\Views\EditorTemplates\Parts\Settings.SiteSettingsPart.cshtml" />
   </ItemGroup>
