@@ -1,32 +1,5 @@
-@model Orchard.Users.ViewModels.UserCreateViewModel
-
 <h1>@Html.TitleForPage(T("Add User").ToString()) </h1>
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary() 
-    
-    <fieldset>
-        @Html.LabelFor(m => m.UserName, T("User Name"))
-        @Html.TextBoxFor(m=>m.UserName, new { @class = "textMedium" })
-        @Html.ValidationMessageFor(m=>m.UserName, "*")
-    </fieldset>
-
-    <fieldset>
-        @Html.LabelFor(m => m.Email, T("Email"))
-        @Html.TextBoxFor(m=>m.Email, new { @class = "textMedium" })
-        @Html.ValidationMessageFor(m=>m.Email, "*")
-    </fieldset>
-
-    <fieldset>
-        @Html.LabelFor(m => m.Password, T("Password"))
-        @Html.PasswordFor(m=>m.Password, new { @class = "textMedium" })
-        @Html.ValidationMessageFor(m=>m.Password, "*")
-    </fieldset>
-
-    <fieldset>
-        @Html.LabelFor(m => m.ConfirmPassword, T("Confirm Password"))
-        @Html.PasswordFor(m=>m.ConfirmPassword, new { @class = "textMedium" })
-        @Html.ValidationMessageFor(m=>m.ConfirmPassword, "*")
-    </fieldset>
-
-    @Display(Model.User)
- } 
+    @Display(Model)
+}
