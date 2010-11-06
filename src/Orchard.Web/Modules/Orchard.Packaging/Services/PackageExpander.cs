@@ -4,9 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
+using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
+
+using NuGetPackageManager = NuGet.PackageManager;
 
 namespace Orchard.Packaging.Services {
     [OrchardFeature("PackagingServices")]
@@ -23,10 +26,49 @@ namespace Orchard.Packaging.Services {
         public Localizer T { get; set; }
 
 
-        public PackageInfo ExpandPackage(Stream packageStream) {
+        public PackageInfo ExpandPackage(string packageId, string version, string location, string destination) {
             var context = new ExpandContext();
-            BeginPackage(context, packageStream);
+
+            var packagesPath = Path.Combine(destination, "packages");
+            var projectPath = Path.Combine(destination, "Orchard.Web");
+
+            BeginPackage(context, packageId, version, location, packagesPath);
             try {
+
+                var packageRepository = Uri.IsWellFormedUriString(location, UriKind.Absolute)
+                    ? new DataServicePackageRepository(new Uri(location))
+                    : new LocalPackageRepository(location) as IPackageRepository;
+
+                var package = packageRepository.FindPackage(packageId, exactVersion: new Version(version));
+                
+                if(package == null) {
+                    throw new ArgumentException(T("The specified package could not be found: {0}.{1}", packageId, version).Text);
+                }
+
+                context.ExtensionName = package.Title;
+                context.ExtensionVersion = package.Version.ToString();
+                context.TargetPath = projectPath;
+
+                // packageManager.InstallPackage(package, ignoreDependencies: true);
+
+                //var packageManager = new NuGetPackageManager(
+                //    packageRepository,
+                //    new DefaultPackagePathResolver(location),
+                //    new FileBasedProjectSystem(packagesPath)
+                //);
+
+                var projectManager = new ProjectManager(
+                    packageRepository, // source repository for the package to install
+                    new DefaultPackagePathResolver(location), 
+                    new FileBasedProjectSystem(projectPath), // the location of the project (where to copy the content files)
+                    new LocalPackageRepository(packagesPath) // the location of the uncompressed package, used to check if the package is already installed
+                    );
+
+                // add the package to the project
+                projectManager.AddPackageReference(packageId, new Version(version));
+
+
+#if REFACTORING
                 GetCoreProperties(context);
                 EstablishPaths(context, _virtualPathProvider);
 
@@ -40,6 +82,7 @@ namespace Orchard.Packaging.Services {
                     // this is a simple theme with no csproj
                     ExtractThemeFiles(context);
                 }
+#endif
             }
             finally {
                 EndPackage(context);
@@ -148,14 +191,8 @@ namespace Orchard.Packaging.Services {
             return true;
         }
 
-        private void BeginPackage(ExpandContext context, Stream packageStream) {
-            if (packageStream.CanSeek) {
-                context.Stream = packageStream;
-            }
-            else {
-                context.Stream = new MemoryStream();
-                packageStream.CopyTo(context.Stream);
-            }
+        private void BeginPackage(ExpandContext context, string packageId, string version, string location, string destination) {
+
 #if REFACTORING
             context.Package = Package.Open(context.Stream, FileMode.Open, FileAccess.Read);
 #endif

@@ -167,9 +167,11 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult Install(string syndicationId, string cameFrom) {
+#if REFACTORING
             var packageData = _packageManager.Download(syndicationId);
             _packageManager.Install(packageData.PackageStream);
             _notifier.Information(T("Installed module"));
+#endif
             return RedirectToAction(cameFrom == "Themes" ? "ThemesIndex" : "ModulesIndex");
         }
     }

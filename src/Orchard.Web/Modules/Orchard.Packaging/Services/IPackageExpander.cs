@@ -10,6 +10,6 @@ namespace Orchard.Packaging.Services {
     }
 
     public interface IPackageExpander : IDependency {
-        PackageInfo ExpandPackage(Stream packageStream);
+        PackageInfo ExpandPackage(string packageId, string version, string location, string destination);
     }
 }

@@ -6,6 +6,6 @@ namespace Orchard.Packaging.Services {
         PackageData Download(string feedItemId);
 
         void Push(PackageData packageData, string feedUrl, string login, string password);
-        PackageInfo Install(Stream packageStream);
+        PackageInfo Install(string filename, string destination);
     }
 }
