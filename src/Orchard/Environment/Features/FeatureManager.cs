@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
@@ -8,16 +11,22 @@ namespace Orchard.Environment.Features {
         IEnumerable<FeatureDescriptor> GetAvailableFeatures();
         IEnumerable<FeatureDescriptor> GetEnabledFeatures();
 
-        void EnableFeature(string name);
-        void DisableFeature(string name);
+        void EnableFeatures(IEnumerable<string> featureNames);
+        void DisableFeatures(IEnumerable<string> featureNames);
     }
-
 
     public class FeatureManager : IFeatureManager {
         private readonly IExtensionManager _extensionManager;
+        private readonly ShellDescriptor _shellDescriptor;
+        private readonly IShellDescriptorManager _shellDescriptorManager;
 
-        public FeatureManager(IExtensionManager extensionManager) {
+        public FeatureManager(
+            IExtensionManager extensionManager,
+            ShellDescriptor shellDescriptor,
+            IShellDescriptorManager shellDescriptorManager) {
             _extensionManager = extensionManager;
+            _shellDescriptor = shellDescriptor;
+            _shellDescriptorManager = shellDescriptorManager;
         }
 
         public IEnumerable<FeatureDescriptor> GetAvailableFeatures() {
@@ -28,12 +37,30 @@ namespace Orchard.Environment.Features {
             throw new NotImplementedException();
         }
 
-        public void EnableFeature(string name) {
-            throw new NotImplementedException();
+        public void EnableFeatures(IEnumerable<string> featureNames) {
+            var currentShellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+
+            var updatedFeatures = currentShellDescriptor.Features
+                .Union(featureNames
+                           .Where(name => !currentShellDescriptor.Features.Any(sf => sf.Name == name))
+                           .Select(name => new ShellFeature {Name = name}));            
+
+            _shellDescriptorManager.UpdateShellDescriptor(
+                currentShellDescriptor.SerialNumber,
+                updatedFeatures,
+                currentShellDescriptor.Parameters);
         }
 
-        public void DisableFeature(string name) {
-            throw new NotImplementedException();
+        public void DisableFeatures(IEnumerable<string> featureNames) {
+            var currentShellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+
+            var updatedFeatures = currentShellDescriptor.Features
+                .Where(sf => !featureNames.Contains(sf.Name));
+
+            _shellDescriptorManager.UpdateShellDescriptor(
+                currentShellDescriptor.SerialNumber,
+                updatedFeatures,
+                currentShellDescriptor.Parameters);
         }
 
 

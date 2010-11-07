@@ -15,7 +15,7 @@
 	<p>
 		@T("Version:") @Model.CurrentTheme.Version<br />
 		@Model.CurrentTheme.Description<br />
-		@Model.CurrentTheme.HomePage
+		@Model.CurrentTheme.WebSite
 	</p>
 
 	@Html.ActionLink(T("Install a new Theme").ToString(), "Install", null, new { @class = "button primaryAction" })
@@ -24,11 +24,11 @@
 <h2>@T("Available Themes")</h2>
 <ul class="templates">
 	@foreach (var theme in Model.Themes) {
-		if (Model.CurrentTheme == null || theme.ThemeName != Model.CurrentTheme.ThemeName) {
+		if (Model.CurrentTheme == null || theme.ThemeName != Model.CurrentTheme.Name) {
 			<li>
 				<div>
 					<h3>@theme.DisplayName</h3>
-					@Html.Image(Href(Html.ThemePath(theme, "/Theme.png")), Html.Encode(theme.DisplayName), null)
+					@Html.Image(Href(theme.ThemePath("/Theme.png")), Html.Encode(theme.DisplayName), null)
 					@using (Html.BeginFormAntiForgeryPost(Url.Action(theme.Enabled ? "Disable" : "Enable"), FormMethod.Post, new { @class = "inline" })) {
 						@Html.Hidden("themeName", theme.ThemeName)
 						<button type="submit" title="@T(theme.Enabled ? "Disable" : "Enable")">@T(theme.Enabled ? "Disable" : "Enable")</button>
@@ -41,13 +41,13 @@
 						@Html.Hidden("themeName", theme.ThemeName)
 						<button type="submit" title="@T("Preview")">@T("Preview")</button>
 					}
-					<h5>@T("By") @theme.Author</h5>
+					<h5>@T("By") @theme.Descriptor.Author</h5>
 					<p>
-						@T("Version:") @theme.Version<br />
-						@theme.Description<br />
-						@theme.HomePage
+						@T("Version:") @theme.Descriptor.Version<br />
+						@theme.Descriptor.Description<br />
+						@theme.Descriptor.WebSite
 					</p>
-                    @if(Model.FeaturesThatNeedUpdate.Contains(theme.ThemeName)){
+                    @if(theme.NeedsUpdate){
 						using (Html.BeginFormAntiForgeryPost(Url.Action("Update"), FormMethod.Post, new { @class = "inline link" })) {
                             @Html.Hidden("themeName", theme.ThemeName)
                             <button type="submit" class="update">@T("Update")</button> <br/>

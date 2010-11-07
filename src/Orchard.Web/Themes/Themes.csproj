@@ -49,6 +49,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Primus\Theme.png" />
+    <Content Include="Primus\Theme.txt" />
+    <Content Include="Secundus\Theme.png" />
+    <Content Include="Secundus\Theme.txt" />
     <Content Include="TheAdmin\Scripts\admin.js" />
     <Content Include="TheAdmin\Styles\ie.css" />
     <Content Include="TheAdmin\Styles\images\menuClosed.gif" />
@@ -93,7 +97,6 @@
     <Content Include="TheAdmin\Views\Header.cshtml" />
     <Content Include="TheThemeMachine\Views\Layout.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

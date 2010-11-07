@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Orchard.Data.Migration;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Features;
 using Orchard.Localization;
@@ -18,11 +19,11 @@ using Orchard.UI.Notify;
 namespace Orchard.Themes.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
-        private readonly IThemeManager _themeManager;
-        private readonly IFeatureManager _featureManager;
         private readonly ISiteThemeService _siteThemeService;
         private readonly IPreviewTheme _previewTheme;
         private readonly IExtensionManager _extensionManager;
+        private readonly ShellDescriptor _shellDescriptor;
+        private readonly IThemeService _themeService;
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IReportsCoordinator _reportsCoordinator;
 
@@ -36,27 +37,38 @@ namespace Orchard.Themes.Controllers {
             IPreviewTheme previewTheme,
             IAuthorizer authorizer,
             INotifier notifier,
-            IExtensionManager extensionManager) {
+            IExtensionManager extensionManager,
+            ShellDescriptor shellDescriptor,
+            IThemeService themeService) {
             Services = services;
             _dataMigrationManager = dataMigraitonManager;
             _reportsCoordinator = reportsCoordinator;
-            _themeManager = themeManager;
-            _featureManager = featureManager;
             _siteThemeService = siteThemeService;
             _previewTheme = previewTheme;
             _extensionManager = extensionManager;
+            _shellDescriptor = shellDescriptor;
+            _themeService = themeService;
             T = NullLocalizer.Instance;
         }
 
-        public IOrchardServices Services{ get; set; }
+        public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
         public ActionResult Index() {
             try {
-                var themes = _extensionManager.AvailableExtensions().Where(d => d.ExtensionType == "Theme");
                 var currentTheme = _siteThemeService.GetSiteTheme();
                 var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
-                var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes, FeaturesThatNeedUpdate = featuresThatNeedUpdate };
+
+                var themes = _extensionManager.AvailableExtensions()
+                    .Where(d => d.ExtensionType == "Theme")
+                    .Select(d => new ThemeEntry {
+                        Descriptor = d,
+                        NeedsUpdate = featuresThatNeedUpdate.Contains(d.Name),
+                        Enabled = _shellDescriptor.Features.Any(sf => sf.Name == d.Name)
+                    })
+                    .ToArray();
+
+                var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes };
                 return View(model);
             }
             catch (Exception exception) {
@@ -112,8 +124,7 @@ namespace Orchard.Themes.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't enable the theme")))
                     return new HttpUnauthorizedResult();
 
-                // feature id always == extension id, in this case
-                _featureManager.EnableFeature(themeName);
+                _themeService.EnableThemeFeatures(themeName);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Enabling theme failed: " + exception.Message));
@@ -127,8 +138,7 @@ namespace Orchard.Themes.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't disable the current theme")))
                     return new HttpUnauthorizedResult();
 
-                // feature id always == extension id, in this case
-                _featureManager.DisableFeature(themeName);
+                _themeService.DisableThemeFeatures(themeName);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Disabling theme failed: " + exception.Message));
@@ -141,6 +151,8 @@ namespace Orchard.Themes.Controllers {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't set the current theme")))
                     return new HttpUnauthorizedResult();
+
+                _themeService.EnableThemeFeatures(themeName);
                 _siteThemeService.SetSiteTheme(themeName);
             }
             catch (Exception exception) {
