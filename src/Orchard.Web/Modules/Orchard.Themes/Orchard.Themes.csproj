@@ -86,7 +86,7 @@
     <Compile Include="Services\SafeModeThemeSelector.cs" />
     <Compile Include="Services\SiteThemeSelector.cs" />
     <Compile Include="Services\SiteThemeService.cs" />
-    <Compile Include="Services\ThemeService.cs" />
+    <Compile Include="Services\ThemeManager.cs" />
     <Compile Include="ViewModels\ThemesIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

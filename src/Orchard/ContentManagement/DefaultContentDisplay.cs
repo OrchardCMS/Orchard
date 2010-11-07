@@ -21,7 +21,7 @@ namespace Orchard.ContentManagement {
         private readonly IShapeTableManager _shapeTableManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly Lazy<IThemeService> _themeService;
+        private readonly Lazy<IThemeManager> _themeService;
         private readonly RequestContext _requestContext;
 
         public DefaultContentDisplay(
@@ -30,7 +30,7 @@ namespace Orchard.ContentManagement {
             IShapeTableManager shapeTableManager,
             IWorkContextAccessor workContextAccessor,
             IHttpContextAccessor httpContextAccessor,
-            Lazy<IThemeService> themeService,
+            Lazy<IThemeManager> themeService,
             RequestContext requestContext) {
             _handlers = handlers;
             _shapeFactory = shapeFactory;

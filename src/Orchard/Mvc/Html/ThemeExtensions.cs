@@ -19,7 +19,7 @@ namespace Orchard.Mvc.Html {
 
         [Obsolete("How do you know the request theme is the same as the place the theme template is rendering from?")]
         public static string ThemePath(this HtmlHelper helper, string path) {
-            return helper.ThemePath(helper.Resolve<IThemeService>().GetRequestTheme(helper.ViewContext.RequestContext), path);
+            return helper.ThemePath(helper.Resolve<IThemeManager>().GetRequestTheme(helper.ViewContext.RequestContext), path);
         }
 
         public static string ThemePath(this HtmlHelper helper, ExtensionDescriptor theme, string path) {

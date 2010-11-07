@@ -7,19 +7,19 @@ using Orchard.Themes.ViewModels;
 
 namespace Orchard.Themes.Preview {
     public class PreviewThemeFilter : FilterProvider, IResultFilter {
-        private readonly IThemeService _themeService;
+        private readonly IThemeManager _themeManager;
         private readonly IPreviewTheme _previewTheme;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly dynamic _shapeFactory;
         private readonly IFeatureManager _featureManager;
 
         public PreviewThemeFilter(
-            IThemeService themeService,
+            IThemeManager themeManager,
             IPreviewTheme previewTheme,
             IWorkContextAccessor workContextAccessor,
             IShapeFactory shapeFactory,
             IFeatureManager featureManager) {
-            _themeService = themeService;
+            _themeManager = themeManager;
             _previewTheme = previewTheme;
             _workContextAccessor = workContextAccessor;
             _shapeFactory = shapeFactory;

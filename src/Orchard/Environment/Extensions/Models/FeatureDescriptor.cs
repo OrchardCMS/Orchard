@@ -15,7 +15,5 @@ namespace Orchard.Environment.Extensions.Models {
         public string Description { get; set; }
         public string Category { get; set; }
         public IEnumerable<string> Dependencies { get; set; }
-
-        
     }
 }

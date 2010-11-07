@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Environment.Features {
     public interface IFeatureManager : IDependency {
-        IEnumerable<FeatureInfo> GetFeatures();
         IEnumerable<FeatureDescriptor> GetAvailableFeatures();
         IEnumerable<FeatureDescriptor> GetEnabledFeatures();
 
@@ -12,15 +12,16 @@ namespace Orchard.Environment.Features {
         void DisableFeature(string name);
     }
 
-    public class FeatureInfo {
-        ExtensionDescriptor Extension { get; set; }
-        FeatureDescriptor Descriptor { get; set; }
-        bool IsEnabled { get; set; }
-    }
 
     public class FeatureManager : IFeatureManager {
+        private readonly IExtensionManager _extensionManager;
+
+        public FeatureManager(IExtensionManager extensionManager) {
+            _extensionManager = extensionManager;
+        }
+
         public IEnumerable<FeatureDescriptor> GetAvailableFeatures() {
-            throw new NotImplementedException();
+            return _extensionManager.AvailableFeatures();
         }
 
         public IEnumerable<FeatureDescriptor> GetEnabledFeatures() {

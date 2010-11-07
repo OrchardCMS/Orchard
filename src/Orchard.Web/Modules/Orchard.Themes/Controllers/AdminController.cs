@@ -18,7 +18,7 @@ using Orchard.UI.Notify;
 namespace Orchard.Themes.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
-        private readonly IThemeService _themeService;
+        private readonly IThemeManager _themeManager;
         private readonly IFeatureManager _featureManager;
         private readonly ISiteThemeService _siteThemeService;
         private readonly IPreviewTheme _previewTheme;
@@ -30,7 +30,7 @@ namespace Orchard.Themes.Controllers {
             IDataMigrationManager dataMigraitonManager,
             IReportsCoordinator reportsCoordinator,
             IOrchardServices services,
-            IThemeService themeService,
+            IThemeManager themeManager,
             IFeatureManager featureManager,
             ISiteThemeService siteThemeService,
             IPreviewTheme previewTheme,
@@ -40,7 +40,7 @@ namespace Orchard.Themes.Controllers {
             Services = services;
             _dataMigrationManager = dataMigraitonManager;
             _reportsCoordinator = reportsCoordinator;
-            _themeService = themeService;
+            _themeManager = themeManager;
             _featureManager = featureManager;
             _siteThemeService = siteThemeService;
             _previewTheme = previewTheme;

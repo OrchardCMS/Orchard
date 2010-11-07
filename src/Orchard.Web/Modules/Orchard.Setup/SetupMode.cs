@@ -64,7 +64,7 @@ namespace Orchard.Setup {
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
 
             // setup mode specific implementations of needed service interfaces
-            builder.RegisterType<SafeModeThemeService>().As<IThemeService>().InstancePerLifetimeScope();
+            builder.RegisterType<SafeModeThemeService>().As<IThemeManager>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeText>().As<IText>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeSiteService>().As<ISiteService>().InstancePerLifetimeScope();
 
@@ -101,7 +101,7 @@ namespace Orchard.Setup {
         }
 
         [UsedImplicitly]
-        class SafeModeThemeService : IThemeService {
+        class SafeModeThemeService : IThemeManager {
             class SafeModeTheme : FeatureDescriptor {
                 public ContentItem ContentItem { get; set; }
                 public bool Enabled { get; set; }

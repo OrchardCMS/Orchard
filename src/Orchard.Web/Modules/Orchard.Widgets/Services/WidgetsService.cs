@@ -12,17 +12,17 @@ namespace Orchard.Widgets.Services {
 
     [UsedImplicitly]
     public class WidgetsService : IWidgetsService {
-        private readonly IThemeService _themeService;
+        private readonly IThemeManager _themeManager;
         private readonly IFeatureManager _featureManager;
         private readonly IContentManager _contentManager;
 
         public WidgetsService(
             IContentManager contentManager,
-            IThemeService themeService,
+            IThemeManager themeManager,
             IFeatureManager featureManager) {
 
             _contentManager = contentManager;
-            _themeService = themeService;
+            _themeManager = themeManager;
             _featureManager = featureManager;
         }
 

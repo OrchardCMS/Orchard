@@ -661,15 +661,11 @@
     <Compile Include="Events\IEventBusHandler.cs" />
     <Compile Include="Environment\Extensions\Folders\AreaFolders.cs" />
     <Compile Include="Environment\Extensions\Folders\ExtensionFolders.cs" />
-    <Compile Include="Environment\Extensions\Models\Extension.cs" />
     <Compile Include="Environment\Extensions\Loaders\AreaExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Models\Feature.cs" />
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />
     <Compile Include="Events\IEventHandler.cs" />
-    <Compile Include="Modules\IModule.cs" />
-    <Compile Include="Modules\IModuleFeature.cs" />
-    <Compile Include="Modules\IModuleService.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
@@ -779,7 +775,7 @@
     <Compile Include="Tasks\IBackgroundTask.cs" />
     <Compile Include="Tasks\SweepGenerator.cs" />
     <Compile Include="Themes\IThemeSelector.cs" />
-    <Compile Include="Themes\IThemeService.cs" />
+    <Compile Include="Themes\IThemeManager.cs" />
     <Compile Include="UI\Navigation\MenuFilter.cs" />
     <Compile Include="UI\Navigation\NavigationBuilder.cs" />
     <Compile Include="UI\Navigation\INavigationProvider.cs" />
