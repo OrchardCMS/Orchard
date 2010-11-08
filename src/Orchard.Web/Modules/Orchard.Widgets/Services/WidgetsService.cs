@@ -3,7 +3,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Common.Models;
 using Orchard.Environment.Features;
 using Orchard.Widgets.Models;
 
