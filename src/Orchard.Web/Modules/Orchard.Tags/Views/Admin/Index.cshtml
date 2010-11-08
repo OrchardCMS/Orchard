@@ -3,11 +3,15 @@
 @using Orchard.Utility.Extensions;
 @{
     Script.Require("ShapesBase");
+    Style.Require("TagsAdmin");
 }
 
 <h1>@Html.TitleForPage(T("Manage Tags").ToString()) </h1>
+@Html.ValidationSummary() 
+<div class="manage">
+    @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: View.CreateTag != null ? View.CreateTag : new TagsAdminCreateViewModel())
+</div>
 @using(Html.BeginFormAntiForgeryPost()) {
-    @Html.ValidationSummary()
 	<fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)">
@@ -16,7 +20,6 @@
         </select>
         <button type="submit"name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
-    <div class="manage">@Html.ActionLink(T("Add a tag").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
     <fieldset>
         <table class="items" summary="@T("This is a table of the tags in your application")" >
             <colgroup>

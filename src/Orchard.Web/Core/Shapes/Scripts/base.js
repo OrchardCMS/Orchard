@@ -93,7 +93,39 @@
             }
             // otherwise, make the autofocus attribute work
             var autofocus = _this.find(":input[autofocus]").first();
-            return autofocus.focus();
+            autofocus.focus();
+
+            return _this;
+        },
+        helpfullyPlacehold: function () {
+            var _this = $(this);
+
+            // give it up to the browser to handle placeholder text
+            if ('placeholder' in document.createElement('input')) {
+                return;
+            }
+            // otherwise, make the placeholder attribute work
+            $(":input[placeholder]")
+                .each(function () {
+                    var _this = $(this);
+                    if (_this.val() === "") {
+                        _this.val(_this.attr("placeholder")).addClass("placeholderd");
+                    }
+                })
+                .live("focus", function () {
+                    var _this = $(this);
+                    if (_this.val() === _this.attr("placeholder")) {
+                        _this.val("").removeClass("placeholderd");
+                    }
+                })
+                .live("blur", function () {
+                    var _this = $(this);
+                    if (_this.val() === "") {
+                        _this.val(_this.attr("placeholder")).addClass("placeholderd");
+                    }
+                });
+
+            return _this;
         },
         toggleWhatYouControl: function () {
             var _this = $(this);
@@ -106,7 +138,7 @@
                 //_controllees.slideUp(200); <- hook this back up when chrome behaves, or when I care less...or when chrome behaves
                 _controllees.hide()
             }
-            return this;
+            return _this;
         }
     });
     // collapsable areas - anything with a data-controllerid attribute has its visibility controlled by the id-ed radio/checkbox
@@ -131,7 +163,7 @@
     $(function () {
         $("form.inline.link").each(function () {
             var _this = $(this);
-        console.log(_this.html())
+            console.log(_this.html())
             var link = $("<a class='wasFormInlineLink' href='.'/>");
             var button = _this.children("button").first();
             link.text(button.text())
@@ -143,9 +175,11 @@
             $("body").append(_this);
         });
     });
-    // (do) a little better autofocus
+    // some default value add behavior
     $(function () {
-        $("body").helpfullyFocus();
+        $("body").helpfullyFocus() // (do) a little better autofocus
+            .helpfullyPlacehold(); // pick up on placeholders
+
     });
     // UnsafeUrl links -> form POST
     //todo: need some real microdata support eventually (incl. revisiting usage of data-* attributes)

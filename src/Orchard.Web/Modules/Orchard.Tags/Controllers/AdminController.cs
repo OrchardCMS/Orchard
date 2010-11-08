@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.ContentManagement;
@@ -31,7 +32,9 @@ namespace Orchard.Tags.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Index(FormCollection input) {
+        [FormValueRequired("submit.BulkEdit")]
+        public ActionResult Index(FormCollection input)
+        {
             var viewModel = new TagsAdminIndexViewModel {Tags = new List<TagEntry>(), BulkAction = new TagAdminIndexBulkAction()};
             
             if ( !TryUpdateModel(viewModel) ) {
@@ -58,16 +61,14 @@ namespace Orchard.Tags.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Create() {
-            return View(new TagsAdminCreateViewModel());
-        }
-
-        [HttpPost]
-        public ActionResult Create(FormCollection input) {
+        [HttpPost, ActionName("Index")]
+        [FormValueRequired("submit.Create")]
+        public ActionResult IndexCreatePOST() {
             var viewModel = new TagsAdminCreateViewModel();
 
             if (!TryUpdateModel(viewModel)) {
-                return View(viewModel);
+                ViewData["CreateTag"] = viewModel;
+                return Index();
             }
 
             if (!Services.Authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
@@ -146,6 +147,19 @@ namespace Orchard.Tags.Controllers {
                 Tag = tag,
                 IsChecked = false,
             };
+        }
+
+        public class FormValueRequiredAttribute : ActionMethodSelectorAttribute {
+            private readonly string _submitButtonName;
+
+            public FormValueRequiredAttribute(string submitButtonName) {
+                _submitButtonName = submitButtonName;
+            }
+
+            public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
+                var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
+                return !string.IsNullOrEmpty(value);
+            }
         }
     }
 }

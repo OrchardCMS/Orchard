@@ -915,3 +915,7 @@ fieldset.publish-later-datetime input {
 .clearBoth {
 	clear:both;
 }
+.placeholderd {
+    color:#ccc;
+    font-style:italic;
+}
