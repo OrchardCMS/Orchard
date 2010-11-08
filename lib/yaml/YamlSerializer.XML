@@ -3404,22 +3404,6 @@
             <value>The default instance of the System.Collections.Generic.EqualityComparer&lt;T&gt;
              class for type T.</value>
         </member>
-        <member name="T:System.Yaml.TypeUtils.HashCodeByRef`1">
-            <summary>
-            Calculate hash code by reference.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.HashCodeByRef`1.#cctor">
-            <summary>
-            Initializes a new instance of the HashCodeByRef&lt;T&gt; class.
-            </summary>
-        </member>
-        <member name="P:System.Yaml.TypeUtils.HashCodeByRef`1.GetHashCode">
-            <summary>
-            Calculate hash code by reference.
-            </summary>
-        </member>
         <member name="T:System.Yaml.YamlParser">
             <summary>
             <para>A text parser for<br/>
