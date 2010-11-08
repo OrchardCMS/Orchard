@@ -1,0 +1,12 @@
+﻿Name: Containers
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.8.0
+OrchardVersion: 0.8.0
+Description: The common module introduces container and containable behaviors for content items
+Features:
+    Containers:
+        Description: Container content parts.
+        Dependencies: Settings
+        Category: Content

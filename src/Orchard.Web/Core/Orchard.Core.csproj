@@ -66,12 +66,20 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Containers\Controllers\ItemController.cs" />
+    <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
+    <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
     <Compile Include="Common\Migrations.cs" />
     <Compile Include="Common\Drivers\BodyPartDriver.cs" />
     <Compile Include="Common\Drivers\CommonPartDriver.cs" />
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
+    <Compile Include="Containers\ContainersPathConstraint.cs" />
+    <Compile Include="Containers\Migrations.cs" />
+    <Compile Include="Containers\Models\ContainablePart.cs" />
+    <Compile Include="Containers\Models\ContainerPart.cs" />
     <Compile Include="Common\Shapes.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
+    <Compile Include="Containers\Routes.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
     <Compile Include="Common\Services\ICommonService.cs" />
@@ -242,6 +250,7 @@
     <Content Include="Common\Views\Parts\Common.Body.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\Parts\Common.Metadata.cshtml" />
     <Content Include="Common\Views\Parts\Common.Metadata.SummaryAdmin.cshtml" />
+    <Content Include="Containers\Module.txt" />
     <Content Include="Contents\Views\Admin\Create.cshtml" />
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\List.cshtml" />
