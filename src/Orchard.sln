@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
@@ -95,6 +95,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.PublishLater", "Orc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ContentQueries", "Orchard.Web\Modules\Orchard.ContentQueries\Orchard.ContentQueries.csproj", "{848126A0-9C88-415A-868F-F5F03449D0B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Lists", "Orchard.Web\Modules\Orchard.Lists\Orchard.Lists.csproj", "{137906EA-15FE-4AD8-A6A0-27528F0477D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -104,6 +106,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{137906EA-15FE-4AD8-A6A0-27528F0477D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{137906EA-15FE-4AD8-A6A0-27528F0477D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{137906EA-15FE-4AD8-A6A0-27528F0477D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{137906EA-15FE-4AD8-A6A0-27528F0477D6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{50B779EA-EC00-4699-84C0-03B395C365D2}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
 		{50B779EA-EC00-4699-84C0-03B395C365D2}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
 		{50B779EA-EC00-4699-84C0-03B395C365D2}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
@@ -546,5 +552,6 @@ Global
 		{8A4E42CE-79F8-4BE2-8B1E-A6B83432123B} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{0DFA2E10-96C8-4E05-BC10-B710B97ECCDE} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
+		{137906EA-15FE-4AD8-A6A0-27528F0477D6} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 	EndGlobalSection
 EndGlobal
