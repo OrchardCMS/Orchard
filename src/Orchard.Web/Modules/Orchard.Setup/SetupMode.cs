@@ -102,22 +102,11 @@ namespace Orchard.Setup {
 
         [UsedImplicitly]
         class SafeModeThemeService : IThemeManager {
-            class SafeModeTheme : FeatureDescriptor {
-                public ContentItem ContentItem { get; set; }
-                public bool Enabled { get; set; }
-                public string ThemeName { get; set; }
-                public string DisplayName { get; set; }
-                public string Tags { get; set; }
-                public string Zones { get; set; }
-                public string BaseTheme { get; set; }
-            }
-
             private readonly ExtensionDescriptor _theme = new ExtensionDescriptor {
                 Name = "SafeMode",
                 DisplayName = "SafeMode",
             };
 
-            public ExtensionDescriptor GetThemeByName(string themeName) { return _theme; }
             public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) { return _theme; }
         }
 

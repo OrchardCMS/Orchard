@@ -11,15 +11,10 @@ using Orchard.Modules.ViewModels;
 using Orchard.UI.Notify;
 
 namespace Orchard.Modules.Services {
-     [Obsolete]
     public interface IModuleService : IDependency {
-        [Obsolete]
         void EnableFeatures(IEnumerable<string> featureNames);
-        [Obsolete]
         void EnableFeatures(IEnumerable<string> featureNames, bool force);
-        [Obsolete]
         void DisableFeatures(IEnumerable<string> featureNames);
-        [Obsolete]
         void DisableFeatures(IEnumerable<string> featureNames, bool force);
     }
 
