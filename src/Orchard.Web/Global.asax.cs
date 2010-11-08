@@ -37,7 +37,7 @@ namespace Orchard.Web {
 
         protected void Application_EndRequest() {
             _host.EndRequest();
-            GC.Collect();
+            //GC.Collect();
         }
 
         static void MvcSingletons(ContainerBuilder builder) {
