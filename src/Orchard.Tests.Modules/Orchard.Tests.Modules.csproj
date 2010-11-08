@@ -127,6 +127,9 @@
   <ItemGroup>
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
+    <EmbeddedResource Include="Packaging\Migrations.cs.txt" />
+    <EmbeddedResource Include="Packaging\HelloDriver.cs.txt" />
+    <Compile Include="Packaging\PackageExpanderTests.cs" />
     <Compile Include="Packaging\PackageBuilderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles\Controllers\AdminControllerTests.cs" />

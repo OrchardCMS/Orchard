@@ -93,6 +93,11 @@ namespace Orchard.Packaging.Services {
             return _packageExpander.ExpandPackage(packageId, version, location, destination);
         }
 
+        public PackageInfo Install(Uri uri, string destination) {
+            return null;
+        }
+
+
         #endregion
     }
 }

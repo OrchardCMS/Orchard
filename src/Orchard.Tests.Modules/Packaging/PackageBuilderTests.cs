@@ -30,6 +30,7 @@ namespace Orchard.Tests.Modules.Packaging {
                 Author = "b"
             });
         }
+
         [Test]
         public void PackageForModuleIsOpcPackage() {
             var packageBuilder = _container.Resolve<IPackageBuilder>();
@@ -50,7 +51,6 @@ namespace Orchard.Tests.Modules.Packaging {
             Assert.That(package.PackageProperties.Creator, Is.EqualTo("b"));
             Assert.That(package.PackageProperties.Version, Is.EqualTo("1.0"));
         }
-
 
         [Test]
         public void ProjectFileIsAdded() {

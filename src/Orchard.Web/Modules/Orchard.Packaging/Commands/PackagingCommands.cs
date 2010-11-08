@@ -54,12 +54,23 @@ namespace Orchard.Packaging.Commands {
                 Context.Output.WriteLine(T("File \"{0}\" does not exist.", filename));
             }
 
-            var packageInfo = _packageManager.Install(filename, GetSolutionFolder());
+            var solutionFolder = GetSolutionFolder();
+
+            if(solutionFolder == null) {
+                Context.Output.WriteLine(T("The project's location is not supported"));
+            }
+
+            var packageInfo = _packageManager.Install(filename, solutionFolder);
             Context.Output.WriteLine(T("Package \"{0}\" successfully installed at \"{1}\"", packageInfo.ExtensionName, packageInfo.ExtensionPath));
         }
 
-        private string GetSolutionFolder() {
-            return Directory.GetParent(OrchardWebProj).Parent.FullName;
+        private static string GetSolutionFolder() {
+            var orchardDirectory = Directory.GetParent(OrchardWebProj);
+            if(orchardDirectory.Parent == null) {
+                return null;
+            }
+
+            return orchardDirectory.Parent.FullName;
         }
     }
 }
