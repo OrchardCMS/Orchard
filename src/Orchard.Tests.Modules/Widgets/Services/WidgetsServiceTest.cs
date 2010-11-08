@@ -17,6 +17,7 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Features;
 using Orchard.Security;
 using Orchard.Tests.Stubs;
 using Orchard.Themes;
@@ -77,25 +78,32 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         public override void Register(ContainerBuilder builder) {
+            var mockFeatureManager = new Mock<IFeatureManager>();
+
+            var theme1 = new FeatureDescriptor {Extension = new ExtensionDescriptor {Zones = ThemeZoneName1}};
+            var theme2 = new FeatureDescriptor {Extension = new ExtensionDescriptor {Zones = ThemeZoneName2}};
+            mockFeatureManager.Setup(x => x.GetEnabledFeatures())
+                .Returns(new[] { theme1, theme2 });
+
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
             builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterInstance(new Mock<INotifier>().Object);
+            builder.RegisterInstance(mockFeatureManager.Object);
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<WidgetsService>().As<IWidgetsService>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            var theme1 = new ExtensionDescriptor { Zones = ThemeZoneName1 } ;
-            var theme2 = new ExtensionDescriptor { Zones = ThemeZoneName2 } ;
 
 
             builder.RegisterType<StubWidgetPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubLayerPartHandler>().As<IContentHandler>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
+
         }
 
         [Test]
