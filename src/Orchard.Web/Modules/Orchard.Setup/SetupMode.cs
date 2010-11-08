@@ -105,6 +105,7 @@ namespace Orchard.Setup {
             private readonly ExtensionDescriptor _theme = new ExtensionDescriptor {
                 Name = "SafeMode",
                 DisplayName = "SafeMode",
+                Location = "~/Themes",
             };
 
             public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) { return _theme; }
@@ -165,7 +166,7 @@ namespace Orchard.Setup {
             }
 
             public ResourceDebugMode ResourceDebugMode {
-                get { return ResourceDebugMode.FromAppSetting;  }
+                get { return ResourceDebugMode.FromAppSetting; }
                 set { throw new NotImplementedException(); }
             }
         }
