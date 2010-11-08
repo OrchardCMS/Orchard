@@ -7,10 +7,10 @@ namespace Orchard.Themes {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Site Design"), "10",
-                        menu => menu
-                                    .Add(T("Themes"), "2.0", item => item.Action("Index", "Admin", new { area = "Orchard.Themes" })
-                                                                             .Permission(Permissions.ManageThemes).Permission(Permissions.ApplyTheme)));
+            builder.Add(T("Themes"), "25",
+                menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.Themes" })
+                    .Permission(Permissions.ManageThemes)
+                    .Permission(Permissions.ApplyTheme)));
         }
     }
 }

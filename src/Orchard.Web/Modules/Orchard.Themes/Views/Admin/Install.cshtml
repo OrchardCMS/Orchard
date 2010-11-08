@@ -4,7 +4,7 @@
     <fieldset>
         <label for="ThemeZipPath">@T("File Path to the zip file:")</label>
         <input id="ThemeZipPath" name="ThemeZipPath" type="file" class="text" value="@T("Browse")" size="64" /><br />
-		<input type="submit" class="button" value="@T("Install")" />
+        <button class="primaryAction" type="submit">@T("Install")</button>
 		@Html.AntiForgeryTokenOrchard()
 	</fieldset>
 } 

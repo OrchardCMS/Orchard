@@ -1,4 +1,5 @@
 ﻿@model Orchard.Media.ViewModels.MediaFolderIndexViewModel
+@using Orchard.Media.Extensions;
 
 <h1>@Html.TitleForPage(T("Manage Media Folders").ToString())</h1>
     @Html.ValidationSummary()
@@ -8,7 +9,7 @@
         <select id="Select1" name="publishActions">
             <option value="1">@T("Remove")</option>
         </select>
-        <input class="button roundCorners" type="submit" value="@T("Apply")" />
+        <button type="submit">@T("Apply")</button>
     </fieldset>
 
     <div class="manage">@Html.ActionLink(T("Add a folder").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
@@ -44,7 +45,7 @@
                 <td>@mediaFolder.User</td>
                 <td>@mediaFolder.LastUpdated</td>
                 <td>@T("Folder")</td>
-                <td>@mediaFolder.Size</td>
+                <td>@mediaFolder.Size.ToFriendlySizeString()</td>
             </tr>
             }
         </table>

@@ -4,29 +4,960 @@
         <name>YamlSerializer</name>
     </assembly>
     <members>
-        <member name="T:System.Yaml.Serialization.EasyTypeConverter">
+        <member name="T:System.Yaml.TypeUtils">
             <summary>
-            Converts various types to / from string.<br/>
-            I don't remember why this class was needed....
+            Type 関連のユーティリティメソッド
             </summary>
             <example>
             <code>
-            object obj = GetObjectToConvert();
+            Type type;
+            AttributeType attr = type.GetAttribute&lt;AttributeType&gt;();
             
-            // Check if the type has [TypeConverter] attribute.
-            if( EasyTypeConverter.IsTypeConverterSpecified(type) ) {
+            PropertyInfo propInfo;
+            AttributeType attr = propInfo.GetAttribute&lt;AttributeType&gt;();
             
-              // Convert the object to string.
-              string s = EasyTypeConverter.ConvertToString(obj);
+            string name;
+            Type type = TypeUtils.GetType(name); // search from all assembly loaded
             
-              // Convert the string to an object of the spific type.
-              object restored = EasyTypeConverter.ConvertFromString(s, type);
-              
-              Assert.AreEqual(obj, restored);
             
-            }
             </code>
             </example>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.GetAttribute``1(System.Reflection.MemberInfo)">
+            <summary>
+            Type や PropertyInfo, FieldInfo から指定された型の属性を取り出して返す
+            複数存在した場合には最後の値を返す
+            存在しなければ null を返す
+            </summary>
+            <typeparam name="AttributeType">取り出したい属性の型</typeparam>
+            <returns>取り出した属性値</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.GetType(System.String)">
+            <summary>
+            現在ロードされているすべてのアセンブリから name という名の型を探して返す
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsPureValueType(System.Type)">
+            <summary>
+            Check if the type is a ValueType and does not contain any non ValueType members.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsStruct(System.Type)">
+            <summary>
+            Returnes true if the specified <paramref name="type"/> is a struct type.
+            </summary>
+            <param name="type"><see cref="T:System.Type"/> to be analyzed.</param>
+            <returns>true if the specified <paramref name="type"/> is a struct type; otehrwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.AreEqual(System.Object,System.Object)">
+            <summary>
+            Compare two objects to see if they are equal or not. Null is acceptable.
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsNumeric(System.Object)">
+            <summary>
+            Return if an object is a numeric value.
+            </summary>
+            <param name="obj">Any object to be tested.</param>
+            <returns>True if object is a numeric value.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.CastToNumericType(System.Object,System.Type)">
+            <summary>
+            Cast an object to a specified numeric type.
+            </summary>
+            <param name="obj">Any object</param>
+            <param name="type">Numric type</param>
+            <returns>Numeric value or null if the object is not a numeric value.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.CastToDouble(System.Object)">
+            <summary>
+            Cast boxed numeric value to double
+            </summary>
+            <param name="obj">boxed numeric value</param>
+            <returns>Numeric value in double. Double.Nan if obj is not a numeric value.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsPublic(System.Type)">
+            <summary>
+            Check if type is fully public or not.
+            Nested class is checked if all declared types are public.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.TypeUtils.EqualityComparerByRef`1">
+            <summary>
+            Equality comparer that uses Object.ReferenceEquals(x, y) to compare class values.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.EqualityComparerByRef`1.Equals(`0,`0)">
+            <summary>
+            Determines whether two objects of type  T are equal by calling Object.ReferenceEquals(x, y).
+            </summary>
+            <param name="x">The first object to compare.</param>
+            <param name="y">The second object to compare.</param>
+            <returns>true if the specified objects are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.EqualityComparerByRef`1.GetHashCode(`0)">
+            <summary>
+            Serves as a hash function for the specified object for hashing algorithms and 
+            data structures, such as a hash table.
+            </summary>
+            <param name="obj">The object for which to get a hash code.</param>
+            <returns>A hash code for the specified object.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="obj"/> is null.</exception>
+        </member>
+        <member name="P:System.Yaml.TypeUtils.EqualityComparerByRef`1.Default">
+            <summary>
+            Returns a default equality comparer for the type specified by the generic argument.
+            </summary>
+            <value>The default instance of the System.Collections.Generic.EqualityComparer&lt;T&gt;
+             class for type T.</value>
+        </member>
+        <member name="T:System.Yaml.Serialization.ObjectMemberAccessor">
+            <summary>
+            
+            object に代入されたクラスや構造体のメンバーに、リフレクションを
+            解して簡単にアクセスできるようにしたクラス
+            
+            アクセス方法をキャッシュするので、繰り返し使用する場合に高速化が
+            期待できる
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Serialization.ObjectMemberAccessor.MemberAccessors">
+            <summary>
+            Caches ObjectMemberAccessor instances for reuse.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.FindFor(System.Type)">
+            <summary>
+            
+            指定した型へのアクセス方法を表すインスタンスを返す
+            キャッシュに存在すればそれを返す
+            キャッシュに存在しなければ新しく作って返す
+            作った物はキャッシュされる
+            </summary>
+            <param name="type">クラスまたは構造体を表す型情報</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.GetEnumerator">
+            <summary>
+            メンバ名と Accessor のペアを巡回する
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:System.Yaml.Serialization.ObjectMemberAccessor.Item(System.Object,System.String)">
+            <summary>
+            メンバへの読み書きを行うことができる
+            </summary>
+            <param name="obj">オブジェクト</param>
+            <param name="name">メンバの名前</param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlSerializer">
+             <summary>
+             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> class has instance methods <see cref="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.Object)"/> and <see cref="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])"/>, 
+             with which C# native objects can be converted into / from YAML text without any preparations.</para>
+             <code>
+             var serializer = new YamlSerializer();
+             object obj = GetObjectToSerialize();
+             string yaml = serializer.Serialize(obj);
+             object restored = serializer.Deserialize(yaml);
+             Assert.AreEqual(obj, restored);
+             </code>
+             </summary>
+             
+             <remarks>
+             <h3>What kind of objects can be serialized?</h3>
+             
+             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> can serialize / deserialize native C# objects of primitive types 
+             (bool, char, int,...), enums, built-in non-primitive types (string, decimal), structures, 
+             classes and arrays of these types. </para>
+             
+             <para>
+             On the other hand, it does not deal with IntPtr (which is a primitive type, though) and 
+             pointer types (void*, int*, ...) because these types are, by their nature, not persistent.
+             </para>
+             
+             <para>
+             Classes without a default constructor can be deserialized only when the way of activating an instance 
+             is explicitly specified by <see cref="M:System.Yaml.YamlConfig.AddActivator``1(System.Func{System.Object})"/>.
+             </para>
+             
+             <para><code>
+             object obj = new object[]{ 
+                 null,
+                 "abc", 
+                 true, 
+                 1, 
+                 (Byte)1,
+                 1.0, 
+                 "1",
+                 new double[]{ 1.1, 2, -3 },
+                 new string[]{ "def", "ghi", "1" },
+                 new System.Drawing.Point(1,3), 
+                 new System.Drawing.SolidBrush(Color.Blue)
+             };
+             
+             var serializer = new YamlSerializer();
+             string yaml = serializer.Serialize(obj);
+             // %YAML 1.2
+             // ---
+             // - null
+             // - abc
+             // - True
+             // - 1
+             // - !System.Byte 1
+             // - !!float 1
+             // - "1"
+             // - !&lt;!System.Double[]%gt; [1.1, 2, -3]
+             // - !&lt;!System.String[]%gt;
+             //   - def
+             //   - ghi
+             // - !System.Drawing.Point 1, 3
+             // - !System.Drawing.SolidBrush
+             //   Color: Blue
+             // ...
+             
+             object restored;
+             try {
+                 restored = YamlSerializer.Deserialize(yaml)[0];
+             } catch(MissingMethodException) {
+                 // default constructor is missing for SolidBrush
+             }
+              
+             // Let the library know how to activate an instance of SolidBrush.
+             YamlNode.DefaultConfig.AddActivator&lt;System.Drawing.SolidBrush&gt;(
+                 () =&gt; new System.Drawing.SolidBrush(Color.Black /* dummy */));
+             
+             // Then, all the objects can be restored correctly.
+             restored = serializer.Deserialize(yaml)[0];
+             </code></para>
+             
+             <para>A YAML document generated by <see cref="T:System.Yaml.Serialization.YamlSerializer"/> always have a %YAML directive and
+             explicit document start (<c>"---"</c>) and end (<c>"..."</c>) marks. 
+             This allows several documents to be written in a single YAML stream.</para>
+             
+             <code>
+              var yaml = "";
+              var serializer = new YamlSerializer();
+              yaml += serializer.Serialize("a");
+              yaml += serializer.Serialize(1);
+              yaml += serializer.Serialize(1.1);
+              // %YAML 1.2
+              // ---
+              // a
+              // ...
+              // %YAML 1.2
+              // ---
+              // 1
+              // ...
+              // %YAML 1.2
+              // ---
+              // 1.1
+              // ...
+             
+              object[] objects = serializer.Deserialize(yaml);
+              // objects[0] == "a"
+              // objects[1] == 1
+              // objects[2] == 1.1
+             </code>
+             
+             <para>Since a YAML stream can consist of multiple YAML documents as above,
+             <see cref="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])"/> returns an array of <see cref="T:System.Object"/>.
+             </para>
+             
+             <h3>Serializing structures and classes</h3>
+             
+             <para>For structures and classes, by default, all public fields and public properties are 
+             serialized. Note that protected / private members are always ignored.</para>
+             
+             <h4>Serialization methods</h4>
+             
+             <para>Readonly value-type members are also ignored because there is no way to 
+             assign a new value to them on deserialization, while readonly class-type members 
+             are serialized. When deserializing, instead of creating a new object and assigning it 
+             to the member, the child members of such class instance are restored independently. 
+             Such a deserializing method is refered to <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Content">
+             YamlSerializeMethod.Content</see>. 
+             </para>
+             <para>
+             On the other hand, when writeable fields/properties are deserialized, new objects are 
+             created by using the parameters in the YAML description and assiend to the fields/properties. 
+             Such a deserializing method is refered to <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Assign">
+             YamlSerializeMethod.Assign</see>. Writeable properties can be explicitly specified to use 
+             <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Content"> YamlSerializeMethod.Content</see> method for 
+             deserialization, by adding <see cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/> to its definition.
+             </para>
+             
+             <para>Another type of serializing method is <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Binary">
+             YamlSerializeMethod.Binary</see>. 
+             This method is only applicable to an array-type field / property that contains
+             only value-type members.</para>
+             
+             <para>If serializing method <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Never"/> is specified,
+             the member is never serialized nor deserialized.</para>
+             
+             <code>
+             public class Test1
+             {
+                 public int PublicProp { get; set; }         // processed (by assign)
+                 protected int ProtectedProp { get; set; }           // Ignored
+                 private int PrivateProp { get; set; }               // Ignored
+                 internal int InternalProp { get; set; }             // Ignored
+             
+                 public int PublicField;                     // processed (by assign)
+                 protected int ProtectedField;                       // Ignored
+                 private int PrivateField;                           // Ignored
+                 internal int InternalField;                         // Ignored
+             
+                 public List&lt;string&gt; ClassPropByAssign // processed (by assign)
+                 { get; set; }
+                 
+                 public int ReadOnlyValueProp { get; private set; }  // Ignored
+                 public List&lt;string&gt; ReadOnlyClassProp // processed (by content)
+                 { get; private set; }
+             
+                 [YamlSerialize(YamlSerializeMethod.Content)]
+                 public List&lt;string&gt; ClassPropByContent// processed (by content)
+                 { get; set; }
+            
+                 public int[] IntArrayField =                // processed (by assign)
+                    new int[10];
+            
+                 [YamlSerialize(YamlSerializeMethod.Binary)]
+                 public int[] IntArrayFieldBinary =          // processed (as binary)
+                    new int[100];
+            
+                 [YamlSerialize(YamlSerializeMethod.Never)]
+                 public int PublicPropHidden;                        // Ignored
+            
+                 public Test1()
+                 {
+                     ClassPropByAssign = new List&lt;string&gt;();
+                     ReadOnlyClassProp = new List&lt;string&gt;();
+                     ClassPropByContent = new List&lt;string&gt;();
+                 }
+             }
+             
+             public void TestPropertiesAndFields1()
+             {
+                var test1 = new Test1();
+                test1.ClassPropByAssign.Add("abc");
+                test1.ReadOnlyClassProp.Add("def");
+                test1.ClassPropByContent.Add("ghi");
+                var rand = new Random(0);
+                for ( int i = 0; i &lt; test1.IntArrayFieldBinary.Length; i++ )
+                    test1.IntArrayFieldBinary[i] = rand.Next();
+             
+                var serializer = new YamlSerializer();
+                string yaml = serializer.Serialize(test1);
+                // %YAML 1.2
+                // ---
+                // !YamlSerializerTest.Test1
+                // PublicProp: 0
+                // ClassPropByAssign: 
+                //   Capacity: 4
+                //   ICollection.Items: 
+                //     - abc
+                // ReadOnlyClassProp: 
+                //   Capacity: 4
+                //   ICollection.Items: 
+                //     - def
+                // ClassPropByContent: 
+                //   Capacity: 4
+                //   ICollection.Items: 
+                //     - ghi
+                // PublicField: 0
+                // IntArrayField: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                // IntArrayFieldBinary: |+2
+                //   Gor1XAwenmhGkU5ib9NxR11LXxp1iYlH5LH4c9hImTitWSB9Z78II2UvXSXV99A79fj6UBn3GDzbIbd9
+                //   yBDjAyslYm58iGd/NN+tVjuLRCg3cJBo+PWMbIWm9n4AEC0E7LKXWV5HXUNk7I13APEDWFMM/kWTz2EK
+                //   s7LzFw2gBjpKugkmQJqIfinpQ1J1yqhhz/XjA3TBxDBsEuwrD+SNevQSqEC+/KRbwgE6D011ACMeyRt0
+                //   BOG6ZesRKCtL0YU6tSnLEpgKVBz+R300qD3/W0aZVk+1vHU+auzyGCGUaHCGd6dpRoEhXoIg2m3+AwJX
+                //   EJ37T+TA9BuEPJtyGoq+crQMFQtXj1Zriz3HFbReclLvDdVpZlcOHPga/3+3Y509EHZ7UyT7H1xGeJxn
+                //   eXPrDDb0Ul04MfZb4UYREOfR3HNzNTUYGRsIPUvHOEW7AaoplIfkVQp19DvGBrBqlP2TZ9atlWUHVdth
+                //   7lIBeIh0wiXxoOpCbQ7qVP9GkioQUrMkOcAJaad3exyZaOsXxznFCA==
+                // ...
+             }
+             </code>
+             
+             <h4>Default values of fields and properties</h4>
+             
+             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> is aware of <see cref="T:System.ComponentModel.DefaultValueAttribute">
+             System.ComponentModel.DefaultValueAttribute</see>.
+             So, when a member of a structure / class instance has a value that equals to the default value, 
+             the member will not be written in the YAML text.</para>
+             
+             <para>It also checkes for the result of ShouldSerializeXXX method. For instance, just before serializing <c>Font</c>
+             property of some type, <c>bool ShouldSerializeFont()</c> method is called if exists. If the method returns false, 
+             <c>Font</c> property will not be written in the YAML text. ShouldSerializeXXX method can be non-public.</para>
+             
+             <code>
+             using System.ComponentModel;
+             
+             public class Test2
+             {
+                 [DefaultValue(0)]
+                 public int Default0 = 0;
+             
+                 [DefaultValue("a")]
+                 public string Defaulta = "a";
+             
+                 public int DynamicDefault = 0;
+             
+                 bool ShouldSerializeDynamicDefault()
+                 {
+                     return Default0 != DynamicDefault;
+                 }
+             }
+             
+             public void TestDefaultValue()
+             {
+                 var test2 = new Test2();
+                 var serializer = new YamlSerializer();
+                 
+                 // All properties have defalut values.
+                 var yaml = serializer.Serialize(test2);
+                 // %YAML 1.2
+                 // ---
+                 // !YamlSerializerTest.Test2 {}
+                 // ...
+             
+                 test2.Defaulta = "b";
+                 yaml = serializer.Serialize(test2);
+                 // %YAML 1.2
+                 // ---
+                 // !YamlSerializerTest.Test2
+                 // Defaulta: b
+                 // ...
+             
+                 test2.Defaulta = "a";
+                 var yaml = serializer.Serialize(test2);
+                 // %YAML 1.2
+                 // ---
+                 // !YamlSerializerTest.Test2 {}
+                 // ...
+             
+                 test2.DynamicDefault = 1;
+                 yaml = serializer.Serialize(test2);
+                 // %YAML 1.2
+                 // ---
+                 // !YamlSerializerTest.Test2
+                 // DynamicDefault: 1
+                 // ...
+             
+                 test2.Default0 = 1;
+                 yaml = serializer.Serialize(test2);
+                 // %YAML 1.2
+                 // ---
+                 // !YamlSerializerTest.Test2
+                 // Default0: 1
+                 // ...
+             }
+             </code>
+             
+             <h4>Collection classes</h4>
+             
+             <para>If an object implements <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/> or <see cref="T:System.Collections.IDictionary"/>
+             the child objects are serialized as well its other public members. 
+             Pseudproperty <c>ICollection.Items</c> or <c>IDictionary.Entries</c> appears to hold the child objects.</para>
+             
+             <h3>Multitime appearance of a same object</h3>
+             
+             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> preserve C# objects' graph structure. Namely, when a same objects are refered to
+             from several points in the object graph, the structure is correctly described in YAML text and restored objects
+             preserve the structure. <see cref="T:System.Yaml.Serialization.YamlSerializer"/> can safely manipulate directly / indirectly self refering 
+             objects, too.</para>
+             
+             <code>
+             public class TestClass
+             {
+                 public List&lt;TestClass&gt; list = 
+                     new List&lt;TestClass&gt;();
+             }
+             
+             public class ChildClass: TestClass
+             {
+             }
+             
+             void RecursiveObjectsTest()
+             {
+                 var a = new TestClass();
+                 var b = new ChildClass();
+                 a.list.Add(a);
+                 a.list.Add(a);
+                 a.list.Add(b);
+                 a.list.Add(a);
+                 a.list.Add(b);
+                 b.list.Add(a);
+                 var serializer = new YamlSerializer();
+                 string yaml = serializer.Serialize(a);
+                 // %YAML 1.2
+                 // ---
+                 // &amp;A !TestClass
+                 // list: 
+                 //   Capacity: 8
+                 //   ICollection.Items: 
+                 //     - *A
+                 //     - *A
+                 //     - &amp;B !ChildClass
+                 //       list: 
+                 //         Capacity: 4
+                 //         ICollection.Items: 
+                 //           - *A
+                 //     - *A
+                 //     - *B
+                 // ...
+                 
+                 var restored = (TestClass)serializer.Deserialize(yaml)[0];
+                 Assert.IsTrue(restored == restored.list[0]);
+                 Assert.IsTrue(restored == restored.list[1]);
+                 Assert.IsTrue(restored == restored.list[3]);
+                 Assert.IsTrue(restored == restored.list[5]);
+                 Assert.IsTrue(restored.list[2] == restored.list[4]);
+             }
+             </code>
+             
+             <para>This is not the case if the object is <see cref="T:System.String"/>. Same instances of 
+             <see cref="T:System.String"/> are repeatedly written in a YAML text and restored as different 
+             instance of <see cref="T:System.String"/> when deserialized, unless the content of the string
+             is extremely long (longer than 999 chars).</para>
+             
+             <code>
+              // 1000 chars
+              string long_str =
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
+              string short_str = "12345";
+              object obj = new object[] { long_str, long_str, short_str, short_str };
+              var serializer = new YamlSerializer();
+              string yaml = serializer.Serialize(obj);
+              // %YAML 1.2
+              // ---
+              // - &amp;A 01234567890123456789012345678901234567890123456789 ... (snip) ... 789
+              // - *A
+              // - "12345"
+              // - "12345"
+              // ...
+             </code>
+             
+             <h3>YAML text written / read by <see cref="T:System.Yaml.Serialization.YamlSerializer"/></h3>
+             
+             <para>When serializing, <see cref="T:System.Yaml.Serialization.YamlSerializer"/> intelligently uses various YAML 1.2 styles, 
+             namely the block style, flow style, explicit mapping and implicit mapping, to maximize readability
+             of the YAML stream.</para>
+             
+             <code>
+             [Flags]
+             enum TestEnum: uint 
+             { 
+                 abc = 1, 
+                 あいう = 2 
+             } 
+             
+             public void TestVariousFormats()
+             {
+                 var dict = new Dictionary&lt;object, object&gt;();
+                 dict.Add(new object[] { 1, "a" }, new object());
+                 object obj = new object[]{
+                     dict,
+                     null,
+                     "abc",
+                     "1",
+                     "a ",
+                     "- a",
+                     "abc\n", 
+                     "abc\ndef\n", 
+                     "abc\ndef\nghi", 
+                     new double[]{ 1.1, 2, -3, 3.12, 13.2 },
+                     new int[,] { { 1, 3}, {4, 5}, {10, 1} },
+                     new string[]{ "jkl", "mno\npqr" },
+                     new System.Drawing.Point(1,3),
+                     TestEnum.abc,
+                     TestEnum.abc | TestEnum.あいう,
+                 };
+                 var config = new YamlConfig();
+                 config.ExplicitlyPreserveLineBreaks = false;
+                 var serializer = new YamlSerializer(config);
+                 string yaml = serializer.Serialize(obj);
+                 
+                 // %YAML 1.2
+                 // ---
+                 // - !&lt;!System.Collections.Generic.Dictionary%602[[System.Object,...],[System.Object,...]]&gt;
+                 //   Keys: {}
+                 //   Values: {}
+                 //   IDictionary.Entries: 
+                 //     ? - 1
+                 //       - a
+                 //     : !System.Object {}
+                 // - null
+                 // - abc
+                 // - "1"
+                 // - "a "
+                 // - "- a"
+                 // - "abc\n"
+                 // - |+2
+                 //   abc
+                 //   def
+                 // - |-2
+                 //   abc
+                 //   def
+                 //     ghi
+                 // - !&lt;!System.Double[]&gt; [1.1, 2, -3, 3.12, 13.2]
+                 // - !&lt;!System.Int32[,]&gt; [[1, 3], [4, 5], [10, 1]]
+                 // - !&lt;!System.String[]&gt;
+                 //   - jkl
+                 //   - |-2
+                 //     mno
+                 //     pqr
+                 // - !System.Drawing.Point 1, 3
+                 // - !TestEnum abc
+                 // - !TestEnum abc, あいう
+                 // ...
+             }
+             </code>
+             
+             <para>When deserializing, <see cref="T:System.Yaml.Serialization.YamlSerializer"/> accepts any valid YAML 1.2 documents.
+             TAG directives, comments, flow / block styles, implicit / explicit mappings can be freely used
+             to express valid C# objects. Namely, the members of the array can be given eighter in a flow style
+             or in a block style.
+             </para>
+             
+             <para>By default, <see cref="T:System.Yaml.Serialization.YamlSerializer"/> outputs a YAML stream with line break of "\r\n".
+             This can be customized either by setting <c>YamlNode.DefaultConfig.LineBreakForOutput</c> or 
+             by giving an instance of <see cref="T:System.Yaml.YamlConfig"/> to the <see cref="M:System.Yaml.Serialization.YamlSerializer.#ctor(System.Yaml.YamlConfig)">
+             constructor</see>.
+             </para>
+             
+             <code>
+             var serializer = new YamlSerializer();
+             var yaml = serializer.Serialize("abc");
+             // %YAML 1.2\r\n    // line breaks are explicitly shown in this example
+             // ---\r\n
+             // abc\r\n
+             // ...\r\n
+             
+             var config = new YamlConfig();
+             config.LineBreakForOutput = "\n";
+             serializer = new YamlSerializer(config);
+             var yaml = serializer.Serialize("abc");
+             // %YAML 1.2\n
+             // ---\n
+             // abc\n
+             // ...\n
+             
+             YamlNode.DefaultConfig.LineBreakForOutput = "\n";
+             
+             var serializer = new YamlSerializer();
+             serializer = new YamlSerializer();
+             var yaml = serializer.Serialize("abc");
+             // %YAML 1.2\n
+             // ---\n
+             // abc\n
+             // ...\n
+             </code>
+             
+             <h4>Line breaks in YAML text</h4>
+             
+             <para>By default, line breaks in multi line values are explicitly presented as escaped style. 
+             Although, this makes the resulting YAML stream hard to read, it is necessary to preserve
+             the exact content of the string because the YAML specification requires that a YAML parser 
+             must normalize evely line break that is not escaped in a YAML document to be a single line 
+             feed "\n" when deserializing.</para>
+             
+             <para>In order to have the YAML documents easy to be read, set 
+             <see cref="F:System.Yaml.YamlConfig.ExplicitlyPreserveLineBreaks">YamlConfig.ExplicitlyPreserveLineBreaks
+             </see> false. Then, the multiline values of will be written in literal style.</para> 
+             
+             <para>Of course, it makes all the line breaks to be normalized into a single line feeds "\n".</para>
+             
+             <code>
+             var serializer = new YamlSerializer();
+             var text = "abc\r\n  def\r\nghi\r\n";
+             // abc
+             //   def
+             // ghi
+             
+             // By default, line breaks explicitly appears in escaped form.
+             var yaml = serializer.Serialize(text);
+             // %YAML 1.2
+             // ---
+             // "abc\r\n\
+             // \  def\r\n\
+             // ghi\r\n"
+             // ...
+             
+             // Original line breaks are preserved
+             var restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\r\n  def\r\nghi\r\n"
+            
+             
+             YamlNode.DefaultConfig.ExplicitlyPreserveLineBreaks = false;
+             
+             // Literal style is easier to be read.
+             var yaml = serializer.Serialize(text);
+             // %YAML 1.2
+             // ---
+             // |+2
+             //   abc
+             //     def
+             //   ghi
+             // ...
+             
+             // Original line breaks are lost.
+             var restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\n  def\nghi\n"
+             </code>
+             
+             <para>This library offers two work arounds for this problem, although both of which
+             violates the official behavior of a YAML parser defined in the YAML specification.</para>
+             
+             <para>One is to set <see cref="F:System.Yaml.YamlConfig.LineBreakForInput">YamlConfig.LineBreakForInput</see> 
+             to be "\r\n". Then, the YAML parser normalizes all line breaks into "\r\n" instead of "\n".</para>
+            
+             <para>The other is to set <see cref="F:System.Yaml.YamlConfig.NormalizeLineBreaks">YamlConfig.NormalizeLineBreaks</see> 
+             false. It disables the line break normalization both at output and at input. Namely, the line breaks are 
+             written and read as-is when serialized / deserialized.</para>
+             
+             <code>
+             var serializer = new YamlSerializer();
+             
+             // text with mixed line breaks
+             var text = "abc\r  def\nghi\r\n"; 
+             // abc\r        // line breaks are explicitly shown in this example
+             //   def\n
+             // ghi\r\n
+             
+             YamlNode.DefaultConfig.ExplicitlyPreserveLineBreaks = false;
+             
+             // By default, all line breaks are normalized to "\r\n" when serialized.
+             var yaml = serializer.Serialize(text);
+             // %YAML 1.2\r\n
+             // ---\r\n
+             // |+2\r\n
+             //   abc\r\n
+             //     def\r\n
+             //   ghi\r\n
+             // ...\r\n
+             
+             // When deserialized, line breaks are normalized into "\n".
+             var restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\n  def\nghi\n"
+             
+             // Line breaks are normalized into "\r\n" instead of "\n".
+             YamlNode.DefaultConfig.LineBreakForInput = "\r\n";
+             restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\r\n  def\r\nghi\r\n"
+             
+             // Line breaks are written as is,
+             YamlNode.DefaultConfig.NormalizeLineBreaks = false;
+             var yaml = serializer.Serialize(text);
+             // %YAML 1.2\r\n
+             // ---\r\n
+             // |+2\r\n
+             //   abc\r
+             //     def\n
+             //   ghi\r\n
+             // ...\r\n
+             
+             // and are read as is.
+             restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\r  def\nghi\r\n"
+             
+             // Note that when the line breaks of YAML stream is changed 
+             // between serialization and deserialization, the original
+             // line breaks are lost.
+             yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
+             restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\n  def\nghi\n"
+             </code>
+             
+             <para>It is repeatedly stated that although these two options are useful in many situation,
+             they makes the YAML parser violate the YAML specification. </para>
+             
+             </remarks>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.#ctor">
+            <summary>
+            Initialize an instance of <see cref="T:System.Yaml.Serialization.YamlSerializer"/> that obeys
+            <see cref="P:System.Yaml.YamlNode.DefaultConfig"/>.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.#ctor(System.Yaml.YamlConfig)">
+            <summary>
+            Initialize an instance of <see cref="T:System.Yaml.Serialization.YamlSerializer"/> with custom <paramref name="config"/>.
+            </summary>
+            <param name="config">Custom <see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.Object)">
+            <summary>
+            Serialize C# object <paramref name="obj"/> into YAML text.
+            </summary>
+            <param name="obj">Object to be serialized.</param>
+            <returns>YAML text.</returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.IO.Stream,System.Object)">
+            <summary>
+            Serialize C# object <paramref name="obj"/> into YAML text and write it into a <see cref="T:System.IO.Stream"/> <paramref name="s"/>.
+            </summary>
+            <param name="s">A <see cref="T:System.IO.Stream"/> to which the YAML text is written.</param>
+            <param name="obj">Object to be serialized.</param>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.IO.TextWriter,System.Object)">
+            <summary>
+            Serialize C# object <paramref name="obj"/> into YAML text and write it into a <see cref="T:System.IO.TextWriter"/> <paramref name="tw"/>.
+            </summary>
+            <param name="tw">A <see cref="T:System.IO.TextWriter"/> to which the YAML text is written.</param>
+            <param name="obj">Object to be serialized.</param>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.SerializeToFile(System.String,System.Object)">
+            <summary>
+            Serialize C# object <paramref name="obj"/> into YAML text and save it into a file named as <paramref name="YamlFileName"/>.
+            </summary>
+            <param name="YamlFileName">A file name to which the YAML text is written.</param>
+            <param name="obj">Object to be serialized.</param>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])">
+            <summary>
+            Deserialize C# object(s) from a YAML text. Since a YAML text can contain multiple YAML documents, each of which 
+            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
+            </summary>
+            <param name="yaml">A YAML text from which C# objects are deserialized.</param>
+            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
+            <returns>C# object(s) deserialized from YAML text.</returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.IO.Stream,System.Type[])">
+            <summary>
+            Deserialize C# object(s) from a YAML text in a <see cref="T:System.IO.Stream"/> <paramref name="s"/>. 
+            Since a YAML text can contain multiple YAML documents, each of which 
+            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
+            </summary>
+            <param name="s">A <see cref="T:System.IO.Stream"/> that contains YAML text from which C# objects are deserialized.</param>
+            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
+            <returns>C# object(s) deserialized from YAML text.</returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.IO.TextReader,System.Type[])">
+            <summary>
+            Deserialize C# object(s) from a YAML text in a <see cref="T:System.IO.TextReader"/> <paramref name="tr"/>. 
+            Since a YAML text can contain multiple YAML documents, each of which 
+            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
+            </summary>
+            <param name="tr">A <see cref="T:System.IO.TextReader"/> that contains YAML text from which C# objects are deserialized.</param>
+            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
+            <returns>C# object(s) deserialized from YAML text.</returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.DeserializeFromFile(System.String,System.Type[])">
+            <summary>
+            Deserialize C# object(s) from a YAML text in a file named as <paramref name="YamlFileName"/>. 
+            Since a YAML text can contain multiple YAML documents, each of which 
+            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
+            </summary>
+            <param name="YamlFileName">The name of a file that contains YAML text from which C# objects are deserialized.</param>
+            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
+            <returns>C# object(s) deserialized from YAML text.</returns>
+        </member>
+        <member name="T:System.Yaml.Serialization.StringExtention">
+            <summary>
+            Add .DoFunction method to string
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.StringExtention.DoFormat(System.String,System.Object[])">
+            <summary>
+            Short expression of string.Format(XXX, arg1, arg2, ...)
+            </summary>
+            <param name="format"></param>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlSerializeMethod">
+            <summary>
+            <para>Specify the way to store a property or field of some class or structure.</para>
+            <para>See <see cref="T:System.Yaml.Serialization.YamlSerializer"/> for detail.</para>
+            </summary>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializer"/>
+        </member>
+        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Never">
+            <summary>
+            The property / field will not be stored.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Assign">
+            <summary>
+            When restored, new object is created by using the parameters in
+            the YAML data and assigned to the property / field. When the
+            property / filed is writeable, this is the default.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Content">
+            <summary>
+             Only valid for a property / field that has a class or struct type.
+             When restored, instead of recreating the whole class or struct,
+             the members are independently restored. When the property / field
+             is not writeable this is the default.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Binary">
+            <summary>
+             Only valid for a property / field that has an  array type of a 
+             some value type. The content of the array is stored in a binary
+             format encoded in base64 style.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlSerializeAttribute">
+            <summary>
+            Specify the way to store a property or field of some class or structure.
+            
+            See <see cref="T:System.Yaml.Serialization.YamlSerializer"/> for detail.
+            </summary>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializer"/>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializeAttribute.#ctor(System.Yaml.Serialization.YamlSerializeMethod)">
+            <summary>
+            Specify the way to store a property or field of some class or structure.
+            
+            See <see cref="T:System.Yaml.Serialization.YamlSerializer"/> for detail.
+            </summary>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializer"/>
+            <param name="SerializeMethod">
+             <para>
+             - Never:   The property / field will not be stored.</para>
+             
+             <para>
+             - Assign:  When restored, new object is created by using the parameters in
+                        the YAML data and assigned to the property / field. When the
+                        property / filed is writeable, this is the default.</para>
+             
+             <para>
+             - Content: Only valid for a property / field that has a class or struct type.
+                        When restored, instead of recreating the whole class or struct,
+                        the members are independently restored. When the property / field
+                        is not writeable this is the default.</para>
+            
+             <para>
+             - Binary:  Only valid for a property / field that has an  array type of a 
+                        some value type. The content of the array is stored in a binary
+                        format encoded in base64 style.</para>
+            
+            </param>
         </member>
         <member name="T:System.Yaml.Serialization.YamlRepresenter">
             <summary>
@@ -855,6 +1786,52 @@
             Column in a text.
             </summary>
         </member>
+        <member name="T:System.Yaml.Serialization.EasyTypeConverter">
+            <summary>
+            Converts various types to / from string.<br/>
+            I don't remember why this class was needed....
+            </summary>
+            <example>
+            <code>
+            object obj = GetObjectToConvert();
+            
+            // Check if the type has [TypeConverter] attribute.
+            if( EasyTypeConverter.IsTypeConverterSpecified(type) ) {
+            
+              // Convert the object to string.
+              string s = EasyTypeConverter.ConvertToString(obj);
+            
+              // Convert the string to an object of the spific type.
+              object restored = EasyTypeConverter.ConvertFromString(s, type);
+              
+              Assert.AreEqual(obj, restored);
+            
+            }
+            </code>
+            </example>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlConstructor">
+            <summary>
+            Construct YAML node tree that represents a given C# object.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlConstructor.NodeToObject(System.Yaml.YamlNode,System.Yaml.YamlConfig)">
+            <summary>
+            Construct YAML node tree that represents a given C# object.
+            </summary>
+            <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlConstructor.NodeToObject(System.Yaml.YamlNode,System.Type,System.Yaml.YamlConfig)">
+            <summary>
+            Construct YAML node tree that represents a given C# object.
+            </summary>
+            <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
+            <param name="expected">Expected type for the root object.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
+            <returns></returns>
+        </member>
         <member name="T:System.Yaml.YamlTagValidator">
             <summary>
             Validates a text as a global tag in YAML.
@@ -872,74 +1849,6 @@
         <member name="T:System.Yaml.YamlTagValidator.Status">
             <summary>
             Not used in this parser
-            </summary>
-        </member>
-        <member name="T:System.Yaml.RehashableDictionary`2">
-            <summary>
-            <para>Dictionary that automatically rehash when the content of a key is changed.
-            Keys of this dictionary must implement <see cref="T:System.Yaml.IRehashableKey"/>.</para>
-            <para>It also call back item addition and removal by <see cref="E:System.Yaml.RehashableDictionary`2.Added"/> and
-            <see cref="E:System.Yaml.RehashableDictionary`2.Removed"/> events.</para>
-            </summary>
-            <typeparam name="K">Type of key. Must implements <see cref="T:System.Yaml.IRehashableKey"/>.</typeparam>
-            <typeparam name="V">Type of value.</typeparam>
-        </member>
-        <member name="F:System.Yaml.RehashableDictionary`2.items">
-            <summary>
-            <para>A dictionary that returns <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> or <see cref="T:System.Collections.Generic.List`1"/> 
-            from hash code. This is the main repository that stores the <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> pairs.</para>
-            <para>If there are several entries that have same hash code for thir keys, 
-            a <see cref="T:System.Collections.Generic.List`1"/> is stored to hold all those entries.
-            Otherwise, a <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> is stored.</para>
-            </summary>
-        </member>
-        <member name="F:System.Yaml.RehashableDictionary`2.hashes">
-            <summary>
-            <para>A dictionary that returns hash code from the key reference.
-            The key must be the instance that <see cref="M:System.Object.ReferenceEquals(System.Object,System.Object)"/>
-            to one exsisting in the dictionary.</para>
-            </summary>
-            <remarks>
-            <para>We store the hashes correspoinding to each key. So that when rehash,
-            we can find old hash code to quickly find the entry for the key.</para>
-            <para>It is also used to remember the number of keys exists in the dictionary.</para>
-            </remarks>
-        </member>
-        <member name="M:System.Yaml.RehashableDictionary`2.Rehash(`0)">
-            <summary>
-            Recalc hash key of the <paramref name="key"/>.
-            </summary>
-            <param name="key">The key to be rehash. The key must be the instance that 
-            <see cref="M:System.Object.ReferenceEquals(System.Object,System.Object)"/> to one exsisting in the dictionary.</param>
-        </member>
-        <member name="M:System.Yaml.RehashableDictionary`2.FindItem(`0,System.Boolean,`1,System.Action{System.Int32},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Int32})">
-            <summary>
-            Try to find entry for key (and value).
-            </summary>
-            <param name="key">key to find</param>
-            <param name="compareValue">if true, value matters</param>
-            <param name="value">value to find</param>
-            <param name="NotFound">key not found</param>
-            <param name="FoundOne">hash hit one entry and key found</param>
-            <param name="FoundList">hash hit several entries and key found</param>
-        </member>
-        <member name="M:System.Yaml.RehashableDictionary`2.FindItem(`0,System.Boolean,`1,System.Action{System.Int32},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue}},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Int32})">
-            <summary>
-            Try to find entry for key (and value).
-            </summary>
-            <param name="key">key to find</param>
-            <param name="compareValue">if true, value matters</param>
-            <param name="value">value to find</param>
-            <param name="NotFoundHash">hash not found</param>
-            <param name="NotFoundKeyOne">hash hit one entry but key not found</param>
-            <param name="FoundOne">hash hit one entry and key found</param>
-            <param name="NotFoundKeyList">hash hit several entries but key not found</param>
-            <param name="FoundList">hash hit several entries and key found</param>
-        </member>
-        <member name="T:System.Yaml.RehashableDictionary`2.KeysValuesBase`1">
-            <summary>
-            Collection that is readonly and invalidated when an item is 
-            added to or removed from the dictionary.
             </summary>
         </member>
         <member name="T:System.Yaml.YamlParser">
@@ -1095,67 +2004,6 @@
             [23]
             </summary>
         </member>
-        <member name="T:System.Yaml.Serialization.YamlConstructor">
-            <summary>
-            Construct YAML node tree that represents a given C# object.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlConstructor.NodeToObject(System.Yaml.YamlNode,System.Yaml.YamlConfig)">
-            <summary>
-            Construct YAML node tree that represents a given C# object.
-            </summary>
-            <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
-            <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlConstructor.NodeToObject(System.Yaml.YamlNode,System.Type,System.Yaml.YamlConfig)">
-            <summary>
-            Construct YAML node tree that represents a given C# object.
-            </summary>
-            <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
-            <param name="expected">Expected type for the root object.</param>
-            <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
-            <returns></returns>
-        </member>
-        <member name="T:System.Yaml.StringUriEncodingExtention">
-            <summary>
-            Add string class two methods: .UriEscape(), .UriUnescape()
-            
-            Charset that is not escaped is represented NonUriChar member.
-            
-            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
-            </summary>
-        </member>
-        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscape(System.String)">
-            <summary>
-            Escape the string in URI encoding format.
-            </summary>
-            <param name="s">String to be escaped.</param>
-            <returns>Escaped string.</returns>
-        </member>
-        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscapeForTag(System.String)">
-            <summary>
-            Escape the string in URI encoding format.
-            </summary>
-            <param name="s">String to be escaped.</param>
-            <returns>Escaped string.</returns>
-        </member>
-        <member name="M:System.Yaml.StringUriEncodingExtention.UriUnescape(System.String)">
-            <summary>
-            Unescape the string escaped in URI encoding format.
-            </summary>
-            <param name="s">String to be unescape.</param>
-            <returns>Unescaped string.</returns>
-        </member>
-        <member name="T:System.Yaml.UriEncoding">
-            <summary>
-            Escape / Unescape string in URI encoding format
-            
-            Charset that is not escaped is represented NonUriChar member.
-            
-            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
-            </summary>
-        </member>
         <member name="T:System.Yaml.YamlTagPrefixes">
             <summary>
             Reset();
@@ -1163,62 +2011,6 @@
             Add(tag_handle, tag_prefix);
             verbatim_tag = Resolve(tag_handle, tag_name);
             </summary>
-        </member>
-        <member name="T:System.Yaml.YamlPresenter">
-            <summary>
-            Converts YamlNode tree into yaml text.
-            </summary>
-            <example>
-            <code>
-            YamlNode node;
-            YamlPresenter.ToYaml(node);
-            
-            YamlNode node1;
-            YamlNode node2;
-            YamlNode node3;
-            YamlPresenter.ToYaml(node1, node2, node3);
-            </code>
-            </example>
-        </member>
-        <member name="T:System.Yaml.Serialization.ObjectMemberAccessor">
-            <summary>
-            
-            object に代入されたクラスや構造体のメンバーに、リフレクションを
-            解して簡単にアクセスできるようにしたクラス
-            
-            アクセス方法をキャッシュするので、繰り返し使用する場合に高速化が
-            期待できる
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Serialization.ObjectMemberAccessor.MemberAccessors">
-            <summary>
-            Caches ObjectMemberAccessor instances for reuse.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.FindFor(System.Type)">
-            <summary>
-            
-            指定した型へのアクセス方法を表すインスタンスを返す
-            キャッシュに存在すればそれを返す
-            キャッシュに存在しなければ新しく作って返す
-            作った物はキャッシュされる
-            </summary>
-            <param name="type">クラスまたは構造体を表す型情報</param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.GetEnumerator">
-            <summary>
-            メンバ名と Accessor のペアを巡回する
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:System.Yaml.Serialization.ObjectMemberAccessor.Item(System.Object,System.String)">
-            <summary>
-            メンバへの読み書きを行うことができる
-            </summary>
-            <param name="obj">オブジェクト</param>
-            <param name="name">メンバの名前</param>
-            <returns></returns>
         </member>
         <member name="T:System.Yaml.YamlConfig">
             <summary>
@@ -2720,937 +3512,6 @@
             </summary>
             <value>The number of child nodes of the sequence.</value>
         </member>
-        <member name="T:System.Yaml.Serialization.YamlSerializer">
-             <summary>
-             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> class has instance methods <see cref="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.Object)"/> and <see cref="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])"/>, 
-             with which C# native objects can be converted into / from YAML text without any preparations.</para>
-             <code>
-             var serializer = new YamlSerializer();
-             object obj = GetObjectToSerialize();
-             string yaml = serializer.Serialize(obj);
-             object restored = serializer.Deserialize(yaml);
-             Assert.AreEqual(obj, restored);
-             </code>
-             </summary>
-             
-             <remarks>
-             <h3>What kind of objects can be serialized?</h3>
-             
-             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> can serialize / deserialize native C# objects of primitive types 
-             (bool, char, int,...), enums, built-in non-primitive types (string, decimal), structures, 
-             classes and arrays of these types. </para>
-             
-             <para>
-             On the other hand, it does not deal with IntPtr (which is a primitive type, though) and 
-             pointer types (void*, int*, ...) because these types are, by their nature, not persistent.
-             </para>
-             
-             <para>
-             Classes without a default constructor can be deserialized only when the way of activating an instance 
-             is explicitly specified by <see cref="M:System.Yaml.YamlConfig.AddActivator``1(System.Func{System.Object})"/>.
-             </para>
-             
-             <para><code>
-             object obj = new object[]{ 
-                 null,
-                 "abc", 
-                 true, 
-                 1, 
-                 (Byte)1,
-                 1.0, 
-                 "1",
-                 new double[]{ 1.1, 2, -3 },
-                 new string[]{ "def", "ghi", "1" },
-                 new System.Drawing.Point(1,3), 
-                 new System.Drawing.SolidBrush(Color.Blue)
-             };
-             
-             var serializer = new YamlSerializer();
-             string yaml = serializer.Serialize(obj);
-             // %YAML 1.2
-             // ---
-             // - null
-             // - abc
-             // - True
-             // - 1
-             // - !System.Byte 1
-             // - !!float 1
-             // - "1"
-             // - !&lt;!System.Double[]%gt; [1.1, 2, -3]
-             // - !&lt;!System.String[]%gt;
-             //   - def
-             //   - ghi
-             // - !System.Drawing.Point 1, 3
-             // - !System.Drawing.SolidBrush
-             //   Color: Blue
-             // ...
-             
-             object restored;
-             try {
-                 restored = YamlSerializer.Deserialize(yaml)[0];
-             } catch(MissingMethodException) {
-                 // default constructor is missing for SolidBrush
-             }
-              
-             // Let the library know how to activate an instance of SolidBrush.
-             YamlNode.DefaultConfig.AddActivator&lt;System.Drawing.SolidBrush&gt;(
-                 () =&gt; new System.Drawing.SolidBrush(Color.Black /* dummy */));
-             
-             // Then, all the objects can be restored correctly.
-             restored = serializer.Deserialize(yaml)[0];
-             </code></para>
-             
-             <para>A YAML document generated by <see cref="T:System.Yaml.Serialization.YamlSerializer"/> always have a %YAML directive and
-             explicit document start (<c>"---"</c>) and end (<c>"..."</c>) marks. 
-             This allows several documents to be written in a single YAML stream.</para>
-             
-             <code>
-              var yaml = "";
-              var serializer = new YamlSerializer();
-              yaml += serializer.Serialize("a");
-              yaml += serializer.Serialize(1);
-              yaml += serializer.Serialize(1.1);
-              // %YAML 1.2
-              // ---
-              // a
-              // ...
-              // %YAML 1.2
-              // ---
-              // 1
-              // ...
-              // %YAML 1.2
-              // ---
-              // 1.1
-              // ...
-             
-              object[] objects = serializer.Deserialize(yaml);
-              // objects[0] == "a"
-              // objects[1] == 1
-              // objects[2] == 1.1
-             </code>
-             
-             <para>Since a YAML stream can consist of multiple YAML documents as above,
-             <see cref="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])"/> returns an array of <see cref="T:System.Object"/>.
-             </para>
-             
-             <h3>Serializing structures and classes</h3>
-             
-             <para>For structures and classes, by default, all public fields and public properties are 
-             serialized. Note that protected / private members are always ignored.</para>
-             
-             <h4>Serialization methods</h4>
-             
-             <para>Readonly value-type members are also ignored because there is no way to 
-             assign a new value to them on deserialization, while readonly class-type members 
-             are serialized. When deserializing, instead of creating a new object and assigning it 
-             to the member, the child members of such class instance are restored independently. 
-             Such a deserializing method is refered to <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Content">
-             YamlSerializeMethod.Content</see>. 
-             </para>
-             <para>
-             On the other hand, when writeable fields/properties are deserialized, new objects are 
-             created by using the parameters in the YAML description and assiend to the fields/properties. 
-             Such a deserializing method is refered to <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Assign">
-             YamlSerializeMethod.Assign</see>. Writeable properties can be explicitly specified to use 
-             <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Content"> YamlSerializeMethod.Content</see> method for 
-             deserialization, by adding <see cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/> to its definition.
-             </para>
-             
-             <para>Another type of serializing method is <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Binary">
-             YamlSerializeMethod.Binary</see>. 
-             This method is only applicable to an array-type field / property that contains
-             only value-type members.</para>
-             
-             <para>If serializing method <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Never"/> is specified,
-             the member is never serialized nor deserialized.</para>
-             
-             <code>
-             public class Test1
-             {
-                 public int PublicProp { get; set; }         // processed (by assign)
-                 protected int ProtectedProp { get; set; }           // Ignored
-                 private int PrivateProp { get; set; }               // Ignored
-                 internal int InternalProp { get; set; }             // Ignored
-             
-                 public int PublicField;                     // processed (by assign)
-                 protected int ProtectedField;                       // Ignored
-                 private int PrivateField;                           // Ignored
-                 internal int InternalField;                         // Ignored
-             
-                 public List&lt;string&gt; ClassPropByAssign // processed (by assign)
-                 { get; set; }
-                 
-                 public int ReadOnlyValueProp { get; private set; }  // Ignored
-                 public List&lt;string&gt; ReadOnlyClassProp // processed (by content)
-                 { get; private set; }
-             
-                 [YamlSerialize(YamlSerializeMethod.Content)]
-                 public List&lt;string&gt; ClassPropByContent// processed (by content)
-                 { get; set; }
-            
-                 public int[] IntArrayField =                // processed (by assign)
-                    new int[10];
-            
-                 [YamlSerialize(YamlSerializeMethod.Binary)]
-                 public int[] IntArrayFieldBinary =          // processed (as binary)
-                    new int[100];
-            
-                 [YamlSerialize(YamlSerializeMethod.Never)]
-                 public int PublicPropHidden;                        // Ignored
-            
-                 public Test1()
-                 {
-                     ClassPropByAssign = new List&lt;string&gt;();
-                     ReadOnlyClassProp = new List&lt;string&gt;();
-                     ClassPropByContent = new List&lt;string&gt;();
-                 }
-             }
-             
-             public void TestPropertiesAndFields1()
-             {
-                var test1 = new Test1();
-                test1.ClassPropByAssign.Add("abc");
-                test1.ReadOnlyClassProp.Add("def");
-                test1.ClassPropByContent.Add("ghi");
-                var rand = new Random(0);
-                for ( int i = 0; i &lt; test1.IntArrayFieldBinary.Length; i++ )
-                    test1.IntArrayFieldBinary[i] = rand.Next();
-             
-                var serializer = new YamlSerializer();
-                string yaml = serializer.Serialize(test1);
-                // %YAML 1.2
-                // ---
-                // !YamlSerializerTest.Test1
-                // PublicProp: 0
-                // ClassPropByAssign: 
-                //   Capacity: 4
-                //   ICollection.Items: 
-                //     - abc
-                // ReadOnlyClassProp: 
-                //   Capacity: 4
-                //   ICollection.Items: 
-                //     - def
-                // ClassPropByContent: 
-                //   Capacity: 4
-                //   ICollection.Items: 
-                //     - ghi
-                // PublicField: 0
-                // IntArrayField: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                // IntArrayFieldBinary: |+2
-                //   Gor1XAwenmhGkU5ib9NxR11LXxp1iYlH5LH4c9hImTitWSB9Z78II2UvXSXV99A79fj6UBn3GDzbIbd9
-                //   yBDjAyslYm58iGd/NN+tVjuLRCg3cJBo+PWMbIWm9n4AEC0E7LKXWV5HXUNk7I13APEDWFMM/kWTz2EK
-                //   s7LzFw2gBjpKugkmQJqIfinpQ1J1yqhhz/XjA3TBxDBsEuwrD+SNevQSqEC+/KRbwgE6D011ACMeyRt0
-                //   BOG6ZesRKCtL0YU6tSnLEpgKVBz+R300qD3/W0aZVk+1vHU+auzyGCGUaHCGd6dpRoEhXoIg2m3+AwJX
-                //   EJ37T+TA9BuEPJtyGoq+crQMFQtXj1Zriz3HFbReclLvDdVpZlcOHPga/3+3Y509EHZ7UyT7H1xGeJxn
-                //   eXPrDDb0Ul04MfZb4UYREOfR3HNzNTUYGRsIPUvHOEW7AaoplIfkVQp19DvGBrBqlP2TZ9atlWUHVdth
-                //   7lIBeIh0wiXxoOpCbQ7qVP9GkioQUrMkOcAJaad3exyZaOsXxznFCA==
-                // ...
-             }
-             </code>
-             
-             <h4>Default values of fields and properties</h4>
-             
-             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> is aware of <see cref="T:System.ComponentModel.DefaultValueAttribute">
-             System.ComponentModel.DefaultValueAttribute</see>.
-             So, when a member of a structure / class instance has a value that equals to the default value, 
-             the member will not be written in the YAML text.</para>
-             
-             <para>It also checkes for the result of ShouldSerializeXXX method. For instance, just before serializing <c>Font</c>
-             property of some type, <c>bool ShouldSerializeFont()</c> method is called if exists. If the method returns false, 
-             <c>Font</c> property will not be written in the YAML text. ShouldSerializeXXX method can be non-public.</para>
-             
-             <code>
-             using System.ComponentModel;
-             
-             public class Test2
-             {
-                 [DefaultValue(0)]
-                 public int Default0 = 0;
-             
-                 [DefaultValue("a")]
-                 public string Defaulta = "a";
-             
-                 public int DynamicDefault = 0;
-             
-                 bool ShouldSerializeDynamicDefault()
-                 {
-                     return Default0 != DynamicDefault;
-                 }
-             }
-             
-             public void TestDefaultValue()
-             {
-                 var test2 = new Test2();
-                 var serializer = new YamlSerializer();
-                 
-                 // All properties have defalut values.
-                 var yaml = serializer.Serialize(test2);
-                 // %YAML 1.2
-                 // ---
-                 // !YamlSerializerTest.Test2 {}
-                 // ...
-             
-                 test2.Defaulta = "b";
-                 yaml = serializer.Serialize(test2);
-                 // %YAML 1.2
-                 // ---
-                 // !YamlSerializerTest.Test2
-                 // Defaulta: b
-                 // ...
-             
-                 test2.Defaulta = "a";
-                 var yaml = serializer.Serialize(test2);
-                 // %YAML 1.2
-                 // ---
-                 // !YamlSerializerTest.Test2 {}
-                 // ...
-             
-                 test2.DynamicDefault = 1;
-                 yaml = serializer.Serialize(test2);
-                 // %YAML 1.2
-                 // ---
-                 // !YamlSerializerTest.Test2
-                 // DynamicDefault: 1
-                 // ...
-             
-                 test2.Default0 = 1;
-                 yaml = serializer.Serialize(test2);
-                 // %YAML 1.2
-                 // ---
-                 // !YamlSerializerTest.Test2
-                 // Default0: 1
-                 // ...
-             }
-             </code>
-             
-             <h4>Collection classes</h4>
-             
-             <para>If an object implements <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/> or <see cref="T:System.Collections.IDictionary"/>
-             the child objects are serialized as well its other public members. 
-             Pseudproperty <c>ICollection.Items</c> or <c>IDictionary.Entries</c> appears to hold the child objects.</para>
-             
-             <h3>Multitime appearance of a same object</h3>
-             
-             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> preserve C# objects' graph structure. Namely, when a same objects are refered to
-             from several points in the object graph, the structure is correctly described in YAML text and restored objects
-             preserve the structure. <see cref="T:System.Yaml.Serialization.YamlSerializer"/> can safely manipulate directly / indirectly self refering 
-             objects, too.</para>
-             
-             <code>
-             public class TestClass
-             {
-                 public List&lt;TestClass&gt; list = 
-                     new List&lt;TestClass&gt;();
-             }
-             
-             public class ChildClass: TestClass
-             {
-             }
-             
-             void RecursiveObjectsTest()
-             {
-                 var a = new TestClass();
-                 var b = new ChildClass();
-                 a.list.Add(a);
-                 a.list.Add(a);
-                 a.list.Add(b);
-                 a.list.Add(a);
-                 a.list.Add(b);
-                 b.list.Add(a);
-                 var serializer = new YamlSerializer();
-                 string yaml = serializer.Serialize(a);
-                 // %YAML 1.2
-                 // ---
-                 // &amp;A !TestClass
-                 // list: 
-                 //   Capacity: 8
-                 //   ICollection.Items: 
-                 //     - *A
-                 //     - *A
-                 //     - &amp;B !ChildClass
-                 //       list: 
-                 //         Capacity: 4
-                 //         ICollection.Items: 
-                 //           - *A
-                 //     - *A
-                 //     - *B
-                 // ...
-                 
-                 var restored = (TestClass)serializer.Deserialize(yaml)[0];
-                 Assert.IsTrue(restored == restored.list[0]);
-                 Assert.IsTrue(restored == restored.list[1]);
-                 Assert.IsTrue(restored == restored.list[3]);
-                 Assert.IsTrue(restored == restored.list[5]);
-                 Assert.IsTrue(restored.list[2] == restored.list[4]);
-             }
-             </code>
-             
-             <para>This is not the case if the object is <see cref="T:System.String"/>. Same instances of 
-             <see cref="T:System.String"/> are repeatedly written in a YAML text and restored as different 
-             instance of <see cref="T:System.String"/> when deserialized, unless the content of the string
-             is extremely long (longer than 999 chars).</para>
-             
-             <code>
-              // 1000 chars
-              string long_str =
-                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
-                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
-              string short_str = "12345";
-              object obj = new object[] { long_str, long_str, short_str, short_str };
-              var serializer = new YamlSerializer();
-              string yaml = serializer.Serialize(obj);
-              // %YAML 1.2
-              // ---
-              // - &amp;A 01234567890123456789012345678901234567890123456789 ... (snip) ... 789
-              // - *A
-              // - "12345"
-              // - "12345"
-              // ...
-             </code>
-             
-             <h3>YAML text written / read by <see cref="T:System.Yaml.Serialization.YamlSerializer"/></h3>
-             
-             <para>When serializing, <see cref="T:System.Yaml.Serialization.YamlSerializer"/> intelligently uses various YAML 1.2 styles, 
-             namely the block style, flow style, explicit mapping and implicit mapping, to maximize readability
-             of the YAML stream.</para>
-             
-             <code>
-             [Flags]
-             enum TestEnum: uint 
-             { 
-                 abc = 1, 
-                 あいう = 2 
-             } 
-             
-             public void TestVariousFormats()
-             {
-                 var dict = new Dictionary&lt;object, object&gt;();
-                 dict.Add(new object[] { 1, "a" }, new object());
-                 object obj = new object[]{
-                     dict,
-                     null,
-                     "abc",
-                     "1",
-                     "a ",
-                     "- a",
-                     "abc\n", 
-                     "abc\ndef\n", 
-                     "abc\ndef\nghi", 
-                     new double[]{ 1.1, 2, -3, 3.12, 13.2 },
-                     new int[,] { { 1, 3}, {4, 5}, {10, 1} },
-                     new string[]{ "jkl", "mno\npqr" },
-                     new System.Drawing.Point(1,3),
-                     TestEnum.abc,
-                     TestEnum.abc | TestEnum.あいう,
-                 };
-                 var config = new YamlConfig();
-                 config.ExplicitlyPreserveLineBreaks = false;
-                 var serializer = new YamlSerializer(config);
-                 string yaml = serializer.Serialize(obj);
-                 
-                 // %YAML 1.2
-                 // ---
-                 // - !&lt;!System.Collections.Generic.Dictionary%602[[System.Object,...],[System.Object,...]]&gt;
-                 //   Keys: {}
-                 //   Values: {}
-                 //   IDictionary.Entries: 
-                 //     ? - 1
-                 //       - a
-                 //     : !System.Object {}
-                 // - null
-                 // - abc
-                 // - "1"
-                 // - "a "
-                 // - "- a"
-                 // - "abc\n"
-                 // - |+2
-                 //   abc
-                 //   def
-                 // - |-2
-                 //   abc
-                 //   def
-                 //     ghi
-                 // - !&lt;!System.Double[]&gt; [1.1, 2, -3, 3.12, 13.2]
-                 // - !&lt;!System.Int32[,]&gt; [[1, 3], [4, 5], [10, 1]]
-                 // - !&lt;!System.String[]&gt;
-                 //   - jkl
-                 //   - |-2
-                 //     mno
-                 //     pqr
-                 // - !System.Drawing.Point 1, 3
-                 // - !TestEnum abc
-                 // - !TestEnum abc, あいう
-                 // ...
-             }
-             </code>
-             
-             <para>When deserializing, <see cref="T:System.Yaml.Serialization.YamlSerializer"/> accepts any valid YAML 1.2 documents.
-             TAG directives, comments, flow / block styles, implicit / explicit mappings can be freely used
-             to express valid C# objects. Namely, the members of the array can be given eighter in a flow style
-             or in a block style.
-             </para>
-             
-             <para>By default, <see cref="T:System.Yaml.Serialization.YamlSerializer"/> outputs a YAML stream with line break of "\r\n".
-             This can be customized either by setting <c>YamlNode.DefaultConfig.LineBreakForOutput</c> or 
-             by giving an instance of <see cref="T:System.Yaml.YamlConfig"/> to the <see cref="M:System.Yaml.Serialization.YamlSerializer.#ctor(System.Yaml.YamlConfig)">
-             constructor</see>.
-             </para>
-             
-             <code>
-             var serializer = new YamlSerializer();
-             var yaml = serializer.Serialize("abc");
-             // %YAML 1.2\r\n    // line breaks are explicitly shown in this example
-             // ---\r\n
-             // abc\r\n
-             // ...\r\n
-             
-             var config = new YamlConfig();
-             config.LineBreakForOutput = "\n";
-             serializer = new YamlSerializer(config);
-             var yaml = serializer.Serialize("abc");
-             // %YAML 1.2\n
-             // ---\n
-             // abc\n
-             // ...\n
-             
-             YamlNode.DefaultConfig.LineBreakForOutput = "\n";
-             
-             var serializer = new YamlSerializer();
-             serializer = new YamlSerializer();
-             var yaml = serializer.Serialize("abc");
-             // %YAML 1.2\n
-             // ---\n
-             // abc\n
-             // ...\n
-             </code>
-             
-             <h4>Line breaks in YAML text</h4>
-             
-             <para>By default, line breaks in multi line values are explicitly presented as escaped style. 
-             Although, this makes the resulting YAML stream hard to read, it is necessary to preserve
-             the exact content of the string because the YAML specification requires that a YAML parser 
-             must normalize evely line break that is not escaped in a YAML document to be a single line 
-             feed "\n" when deserializing.</para>
-             
-             <para>In order to have the YAML documents easy to be read, set 
-             <see cref="F:System.Yaml.YamlConfig.ExplicitlyPreserveLineBreaks">YamlConfig.ExplicitlyPreserveLineBreaks
-             </see> false. Then, the multiline values of will be written in literal style.</para> 
-             
-             <para>Of course, it makes all the line breaks to be normalized into a single line feeds "\n".</para>
-             
-             <code>
-             var serializer = new YamlSerializer();
-             var text = "abc\r\n  def\r\nghi\r\n";
-             // abc
-             //   def
-             // ghi
-             
-             // By default, line breaks explicitly appears in escaped form.
-             var yaml = serializer.Serialize(text);
-             // %YAML 1.2
-             // ---
-             // "abc\r\n\
-             // \  def\r\n\
-             // ghi\r\n"
-             // ...
-             
-             // Original line breaks are preserved
-             var restored = (string)serializer.Deserialize(yaml)[0];
-             // "abc\r\n  def\r\nghi\r\n"
-            
-             
-             YamlNode.DefaultConfig.ExplicitlyPreserveLineBreaks = false;
-             
-             // Literal style is easier to be read.
-             var yaml = serializer.Serialize(text);
-             // %YAML 1.2
-             // ---
-             // |+2
-             //   abc
-             //     def
-             //   ghi
-             // ...
-             
-             // Original line breaks are lost.
-             var restored = (string)serializer.Deserialize(yaml)[0];
-             // "abc\n  def\nghi\n"
-             </code>
-             
-             <para>This library offers two work arounds for this problem, although both of which
-             violates the official behavior of a YAML parser defined in the YAML specification.</para>
-             
-             <para>One is to set <see cref="F:System.Yaml.YamlConfig.LineBreakForInput">YamlConfig.LineBreakForInput</see> 
-             to be "\r\n". Then, the YAML parser normalizes all line breaks into "\r\n" instead of "\n".</para>
-            
-             <para>The other is to set <see cref="F:System.Yaml.YamlConfig.NormalizeLineBreaks">YamlConfig.NormalizeLineBreaks</see> 
-             false. It disables the line break normalization both at output and at input. Namely, the line breaks are 
-             written and read as-is when serialized / deserialized.</para>
-             
-             <code>
-             var serializer = new YamlSerializer();
-             
-             // text with mixed line breaks
-             var text = "abc\r  def\nghi\r\n"; 
-             // abc\r        // line breaks are explicitly shown in this example
-             //   def\n
-             // ghi\r\n
-             
-             YamlNode.DefaultConfig.ExplicitlyPreserveLineBreaks = false;
-             
-             // By default, all line breaks are normalized to "\r\n" when serialized.
-             var yaml = serializer.Serialize(text);
-             // %YAML 1.2\r\n
-             // ---\r\n
-             // |+2\r\n
-             //   abc\r\n
-             //     def\r\n
-             //   ghi\r\n
-             // ...\r\n
-             
-             // When deserialized, line breaks are normalized into "\n".
-             var restored = (string)serializer.Deserialize(yaml)[0];
-             // "abc\n  def\nghi\n"
-             
-             // Line breaks are normalized into "\r\n" instead of "\n".
-             YamlNode.DefaultConfig.LineBreakForInput = "\r\n";
-             restored = (string)serializer.Deserialize(yaml)[0];
-             // "abc\r\n  def\r\nghi\r\n"
-             
-             // Line breaks are written as is,
-             YamlNode.DefaultConfig.NormalizeLineBreaks = false;
-             var yaml = serializer.Serialize(text);
-             // %YAML 1.2\r\n
-             // ---\r\n
-             // |+2\r\n
-             //   abc\r
-             //     def\n
-             //   ghi\r\n
-             // ...\r\n
-             
-             // and are read as is.
-             restored = (string)serializer.Deserialize(yaml)[0];
-             // "abc\r  def\nghi\r\n"
-             
-             // Note that when the line breaks of YAML stream is changed 
-             // between serialization and deserialization, the original
-             // line breaks are lost.
-             yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
-             restored = (string)serializer.Deserialize(yaml)[0];
-             // "abc\n  def\nghi\n"
-             </code>
-             
-             <para>It is repeatedly stated that although these two options are useful in many situation,
-             they makes the YAML parser violate the YAML specification. </para>
-             
-             </remarks>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializer.#ctor">
-            <summary>
-            Initialize an instance of <see cref="T:System.Yaml.Serialization.YamlSerializer"/> that obeys
-            <see cref="P:System.Yaml.YamlNode.DefaultConfig"/>.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializer.#ctor(System.Yaml.YamlConfig)">
-            <summary>
-            Initialize an instance of <see cref="T:System.Yaml.Serialization.YamlSerializer"/> with custom <paramref name="config"/>.
-            </summary>
-            <param name="config">Custom <see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.Object)">
-            <summary>
-            Serialize C# object <paramref name="obj"/> into YAML text.
-            </summary>
-            <param name="obj">Object to be serialized.</param>
-            <returns>YAML text.</returns>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.IO.Stream,System.Object)">
-            <summary>
-            Serialize C# object <paramref name="obj"/> into YAML text and write it into a <see cref="T:System.IO.Stream"/> <paramref name="s"/>.
-            </summary>
-            <param name="s">A <see cref="T:System.IO.Stream"/> to which the YAML text is written.</param>
-            <param name="obj">Object to be serialized.</param>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.IO.TextWriter,System.Object)">
-            <summary>
-            Serialize C# object <paramref name="obj"/> into YAML text and write it into a <see cref="T:System.IO.TextWriter"/> <paramref name="tw"/>.
-            </summary>
-            <param name="tw">A <see cref="T:System.IO.TextWriter"/> to which the YAML text is written.</param>
-            <param name="obj">Object to be serialized.</param>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializer.SerializeToFile(System.String,System.Object)">
-            <summary>
-            Serialize C# object <paramref name="obj"/> into YAML text and save it into a file named as <paramref name="YamlFileName"/>.
-            </summary>
-            <param name="YamlFileName">A file name to which the YAML text is written.</param>
-            <param name="obj">Object to be serialized.</param>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])">
-            <summary>
-            Deserialize C# object(s) from a YAML text. Since a YAML text can contain multiple YAML documents, each of which 
-            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
-            </summary>
-            <param name="yaml">A YAML text from which C# objects are deserialized.</param>
-            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
-            <returns>C# object(s) deserialized from YAML text.</returns>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.IO.Stream,System.Type[])">
-            <summary>
-            Deserialize C# object(s) from a YAML text in a <see cref="T:System.IO.Stream"/> <paramref name="s"/>. 
-            Since a YAML text can contain multiple YAML documents, each of which 
-            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
-            </summary>
-            <param name="s">A <see cref="T:System.IO.Stream"/> that contains YAML text from which C# objects are deserialized.</param>
-            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
-            <returns>C# object(s) deserialized from YAML text.</returns>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.IO.TextReader,System.Type[])">
-            <summary>
-            Deserialize C# object(s) from a YAML text in a <see cref="T:System.IO.TextReader"/> <paramref name="tr"/>. 
-            Since a YAML text can contain multiple YAML documents, each of which 
-            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
-            </summary>
-            <param name="tr">A <see cref="T:System.IO.TextReader"/> that contains YAML text from which C# objects are deserialized.</param>
-            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
-            <returns>C# object(s) deserialized from YAML text.</returns>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializer.DeserializeFromFile(System.String,System.Type[])">
-            <summary>
-            Deserialize C# object(s) from a YAML text in a file named as <paramref name="YamlFileName"/>. 
-            Since a YAML text can contain multiple YAML documents, each of which 
-            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
-            </summary>
-            <param name="YamlFileName">The name of a file that contains YAML text from which C# objects are deserialized.</param>
-            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
-            <returns>C# object(s) deserialized from YAML text.</returns>
-        </member>
-        <member name="T:System.Yaml.Serialization.StringExtention">
-            <summary>
-            Add .DoFunction method to string
-            </summary>
-        </member>
-        <member name="M:System.Yaml.Serialization.StringExtention.DoFormat(System.String,System.Object[])">
-            <summary>
-            Short expression of string.Format(XXX, arg1, arg2, ...)
-            </summary>
-            <param name="format"></param>
-            <param name="args"></param>
-            <returns></returns>
-        </member>
-        <member name="T:System.Yaml.Serialization.YamlSerializeMethod">
-            <summary>
-            <para>Specify the way to store a property or field of some class or structure.</para>
-            <para>See <see cref="T:System.Yaml.Serialization.YamlSerializer"/> for detail.</para>
-            </summary>
-            <seealso cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/>
-            <seealso cref="T:System.Yaml.Serialization.YamlSerializer"/>
-        </member>
-        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Never">
-            <summary>
-            The property / field will not be stored.
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Assign">
-            <summary>
-            When restored, new object is created by using the parameters in
-            the YAML data and assigned to the property / field. When the
-            property / filed is writeable, this is the default.
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Content">
-            <summary>
-             Only valid for a property / field that has a class or struct type.
-             When restored, instead of recreating the whole class or struct,
-             the members are independently restored. When the property / field
-             is not writeable this is the default.
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Binary">
-            <summary>
-             Only valid for a property / field that has an  array type of a 
-             some value type. The content of the array is stored in a binary
-             format encoded in base64 style.
-            </summary>
-        </member>
-        <member name="T:System.Yaml.Serialization.YamlSerializeAttribute">
-            <summary>
-            Specify the way to store a property or field of some class or structure.
-            
-            See <see cref="T:System.Yaml.Serialization.YamlSerializer"/> for detail.
-            </summary>
-            <seealso cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/>
-            <seealso cref="T:System.Yaml.Serialization.YamlSerializer"/>
-        </member>
-        <member name="M:System.Yaml.Serialization.YamlSerializeAttribute.#ctor(System.Yaml.Serialization.YamlSerializeMethod)">
-            <summary>
-            Specify the way to store a property or field of some class or structure.
-            
-            See <see cref="T:System.Yaml.Serialization.YamlSerializer"/> for detail.
-            </summary>
-            <seealso cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/>
-            <seealso cref="T:System.Yaml.Serialization.YamlSerializer"/>
-            <param name="SerializeMethod">
-             <para>
-             - Never:   The property / field will not be stored.</para>
-             
-             <para>
-             - Assign:  When restored, new object is created by using the parameters in
-                        the YAML data and assigned to the property / field. When the
-                        property / filed is writeable, this is the default.</para>
-             
-             <para>
-             - Content: Only valid for a property / field that has a class or struct type.
-                        When restored, instead of recreating the whole class or struct,
-                        the members are independently restored. When the property / field
-                        is not writeable this is the default.</para>
-            
-             <para>
-             - Binary:  Only valid for a property / field that has an  array type of a 
-                        some value type. The content of the array is stored in a binary
-                        format encoded in base64 style.</para>
-            
-            </param>
-        </member>
-        <member name="T:System.Yaml.TypeUtils">
-            <summary>
-            Type 関連のユーティリティメソッド
-            </summary>
-            <example>
-            <code>
-            Type type;
-            AttributeType attr = type.GetAttribute&lt;AttributeType&gt;();
-            
-            PropertyInfo propInfo;
-            AttributeType attr = propInfo.GetAttribute&lt;AttributeType&gt;();
-            
-            string name;
-            Type type = TypeUtils.GetType(name); // search from all assembly loaded
-            
-            
-            </code>
-            </example>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.GetAttribute``1(System.Reflection.MemberInfo)">
-            <summary>
-            Type や PropertyInfo, FieldInfo から指定された型の属性を取り出して返す
-            複数存在した場合には最後の値を返す
-            存在しなければ null を返す
-            </summary>
-            <typeparam name="AttributeType">取り出したい属性の型</typeparam>
-            <returns>取り出した属性値</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.GetType(System.String)">
-            <summary>
-            現在ロードされているすべてのアセンブリから name という名の型を探して返す
-            </summary>
-            <param name="name"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.IsPureValueType(System.Type)">
-            <summary>
-            Check if the type is a ValueType and does not contain any non ValueType members.
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.IsStruct(System.Type)">
-            <summary>
-            Returnes true if the specified <paramref name="type"/> is a struct type.
-            </summary>
-            <param name="type"><see cref="T:System.Type"/> to be analyzed.</param>
-            <returns>true if the specified <paramref name="type"/> is a struct type; otehrwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.AreEqual(System.Object,System.Object)">
-            <summary>
-            Compare two objects to see if they are equal or not. Null is acceptable.
-            </summary>
-            <param name="a"></param>
-            <param name="b"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.IsNumeric(System.Object)">
-            <summary>
-            Return if an object is a numeric value.
-            </summary>
-            <param name="obj">Any object to be tested.</param>
-            <returns>True if object is a numeric value.</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.CastToNumericType(System.Object,System.Type)">
-            <summary>
-            Cast an object to a specified numeric type.
-            </summary>
-            <param name="obj">Any object</param>
-            <param name="type">Numric type</param>
-            <returns>Numeric value or null if the object is not a numeric value.</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.CastToDouble(System.Object)">
-            <summary>
-            Cast boxed numeric value to double
-            </summary>
-            <param name="obj">boxed numeric value</param>
-            <returns>Numeric value in double. Double.Nan if obj is not a numeric value.</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.IsPublic(System.Type)">
-            <summary>
-            Check if type is fully public or not.
-            Nested class is checked if all declared types are public.
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="T:System.Yaml.TypeUtils.EqualityComparerByRef`1">
-            <summary>
-            Equality comparer that uses Object.ReferenceEquals(x, y) to compare class values.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.EqualityComparerByRef`1.Equals(`0,`0)">
-            <summary>
-            Determines whether two objects of type  T are equal by calling Object.ReferenceEquals(x, y).
-            </summary>
-            <param name="x">The first object to compare.</param>
-            <param name="y">The second object to compare.</param>
-            <returns>true if the specified objects are equal; otherwise, false.</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.EqualityComparerByRef`1.GetHashCode(`0)">
-            <summary>
-            Serves as a hash function for the specified object for hashing algorithms and 
-            data structures, such as a hash table.
-            </summary>
-            <param name="obj">The object for which to get a hash code.</param>
-            <returns>A hash code for the specified object.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="obj"/> is null.</exception>
-        </member>
-        <member name="P:System.Yaml.TypeUtils.EqualityComparerByRef`1.Default">
-            <summary>
-            Returns a default equality comparer for the type specified by the generic argument.
-            </summary>
-            <value>The default instance of the System.Collections.Generic.EqualityComparer&lt;T&gt;
-             class for type T.</value>
-        </member>
-        <member name="T:System.Yaml.TypeUtils.HashCodeByRef`1">
-            <summary>
-            Calculate hash code by reference.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.HashCodeByRef`1.#cctor">
-            <summary>
-            Initializes a new instance of the HashCodeByRef&lt;T&gt; class.
-            </summary>
-        </member>
-        <member name="P:System.Yaml.TypeUtils.HashCodeByRef`1.GetHashCode">
-            <summary>
-            Calculate hash code by reference.
-            </summary>
-        </member>
         <member name="T:System.Yaml.YamlTagResolver">
             <summary>
             Represents the way to automatically resolve Tag from the Value of a YamlScalar.
@@ -3727,6 +3588,22 @@
             <param name="obj">Decoded value.</param>
             <returns>True if decoded successfully.</returns>
         </member>
+        <member name="T:System.Yaml.YamlPresenter">
+            <summary>
+            Converts YamlNode tree into yaml text.
+            </summary>
+            <example>
+            <code>
+            YamlNode node;
+            YamlPresenter.ToYaml(node);
+            
+            YamlNode node1;
+            YamlNode node2;
+            YamlNode node3;
+            YamlPresenter.ToYaml(node1, node2, node3);
+            </code>
+            </example>
+        </member>
         <member name="T:System.Yaml.StringYamlDoubleQuoteEscapeExtention">
             <summary>
             Extend string object to have .DoubleQuoteEscape() / .DoubleQuoteUnescape().
@@ -3764,6 +3641,113 @@
         <member name="M:System.Yaml.YamlDoubleQuoteEscaping.Unescape(System.String)">
             <summary>
             Unescape control codes, double quotations, backslashes escape in the YAML double quoted string format
+            </summary>
+        </member>
+        <member name="T:System.Yaml.StringUriEncodingExtention">
+            <summary>
+            Add string class two methods: .UriEscape(), .UriUnescape()
+            
+            Charset that is not escaped is represented NonUriChar member.
+            
+            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
+            </summary>
+        </member>
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscape(System.String)">
+            <summary>
+            Escape the string in URI encoding format.
+            </summary>
+            <param name="s">String to be escaped.</param>
+            <returns>Escaped string.</returns>
+        </member>
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscapeForTag(System.String)">
+            <summary>
+            Escape the string in URI encoding format.
+            </summary>
+            <param name="s">String to be escaped.</param>
+            <returns>Escaped string.</returns>
+        </member>
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriUnescape(System.String)">
+            <summary>
+            Unescape the string escaped in URI encoding format.
+            </summary>
+            <param name="s">String to be unescape.</param>
+            <returns>Unescaped string.</returns>
+        </member>
+        <member name="T:System.Yaml.UriEncoding">
+            <summary>
+            Escape / Unescape string in URI encoding format
+            
+            Charset that is not escaped is represented NonUriChar member.
+            
+            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
+            </summary>
+        </member>
+        <member name="T:System.Yaml.RehashableDictionary`2">
+            <summary>
+            <para>Dictionary that automatically rehash when the content of a key is changed.
+            Keys of this dictionary must implement <see cref="T:System.Yaml.IRehashableKey"/>.</para>
+            <para>It also call back item addition and removal by <see cref="E:System.Yaml.RehashableDictionary`2.Added"/> and
+            <see cref="E:System.Yaml.RehashableDictionary`2.Removed"/> events.</para>
+            </summary>
+            <typeparam name="K">Type of key. Must implements <see cref="T:System.Yaml.IRehashableKey"/>.</typeparam>
+            <typeparam name="V">Type of value.</typeparam>
+        </member>
+        <member name="F:System.Yaml.RehashableDictionary`2.items">
+            <summary>
+            <para>A dictionary that returns <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> or <see cref="T:System.Collections.Generic.List`1"/> 
+            from hash code. This is the main repository that stores the <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> pairs.</para>
+            <para>If there are several entries that have same hash code for thir keys, 
+            a <see cref="T:System.Collections.Generic.List`1"/> is stored to hold all those entries.
+            Otherwise, a <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> is stored.</para>
+            </summary>
+        </member>
+        <member name="F:System.Yaml.RehashableDictionary`2.hashes">
+            <summary>
+            <para>A dictionary that returns hash code from the key reference.
+            The key must be the instance that <see cref="M:System.Object.ReferenceEquals(System.Object,System.Object)"/>
+            to one exsisting in the dictionary.</para>
+            </summary>
+            <remarks>
+            <para>We store the hashes correspoinding to each key. So that when rehash,
+            we can find old hash code to quickly find the entry for the key.</para>
+            <para>It is also used to remember the number of keys exists in the dictionary.</para>
+            </remarks>
+        </member>
+        <member name="M:System.Yaml.RehashableDictionary`2.Rehash(`0)">
+            <summary>
+            Recalc hash key of the <paramref name="key"/>.
+            </summary>
+            <param name="key">The key to be rehash. The key must be the instance that 
+            <see cref="M:System.Object.ReferenceEquals(System.Object,System.Object)"/> to one exsisting in the dictionary.</param>
+        </member>
+        <member name="M:System.Yaml.RehashableDictionary`2.FindItem(`0,System.Boolean,`1,System.Action{System.Int32},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Int32})">
+            <summary>
+            Try to find entry for key (and value).
+            </summary>
+            <param name="key">key to find</param>
+            <param name="compareValue">if true, value matters</param>
+            <param name="value">value to find</param>
+            <param name="NotFound">key not found</param>
+            <param name="FoundOne">hash hit one entry and key found</param>
+            <param name="FoundList">hash hit several entries and key found</param>
+        </member>
+        <member name="M:System.Yaml.RehashableDictionary`2.FindItem(`0,System.Boolean,`1,System.Action{System.Int32},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue}},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Int32})">
+            <summary>
+            Try to find entry for key (and value).
+            </summary>
+            <param name="key">key to find</param>
+            <param name="compareValue">if true, value matters</param>
+            <param name="value">value to find</param>
+            <param name="NotFoundHash">hash not found</param>
+            <param name="NotFoundKeyOne">hash hit one entry but key not found</param>
+            <param name="FoundOne">hash hit one entry and key found</param>
+            <param name="NotFoundKeyList">hash hit several entries but key not found</param>
+            <param name="FoundList">hash hit several entries and key found</param>
+        </member>
+        <member name="T:System.Yaml.RehashableDictionary`2.KeysValuesBase`1">
+            <summary>
+            Collection that is readonly and invalidated when an item is 
+            added to or removed from the dictionary.
             </summary>
         </member>
     </members>

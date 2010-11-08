@@ -28,7 +28,7 @@
                     else { 
                     <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@T("User is moderated") " />
                     } 
-                    @row.UserPart.UserName 
+                    @Html.ActionLink(row.UserPart.UserName, "Edit", new { row.UserPart.Id }) 
                 </td>
                 <td>
                     @row.UserPart.Email 

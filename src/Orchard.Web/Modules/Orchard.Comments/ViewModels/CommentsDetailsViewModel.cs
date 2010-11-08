@@ -16,7 +16,7 @@ namespace Orchard.Comments.ViewModels {
 
     public enum CommentDetailsBulkAction {
         None,
-        Pend,
+        Unapprove,
         Approve,
         MarkAsSpam,
         Delete,

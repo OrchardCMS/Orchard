@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using Autofac.Features.Metadata;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.UI.Resources {
     public class ResourceManager : IResourceManager {
@@ -14,7 +15,7 @@ namespace Orchard.UI.Resources {
         private readonly List<LinkEntry> _links = new List<LinkEntry>();
         private readonly Dictionary<string, MetaEntry> _metas = new Dictionary<string, MetaEntry>();
         private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>(StringComparer.OrdinalIgnoreCase);
-        private readonly IEnumerable<Meta<IResourceManifestProvider, IFeatureMetadata>> _providers;
+        private readonly IEnumerable<Meta<IResourceManifestProvider>> _providers;
         private ResourceManifest _dynamicManifest;
         private List<String> _headScripts;
         private List<String> _footScripts;
@@ -31,7 +32,7 @@ namespace Orchard.UI.Resources {
             return resourcePath;
         }
 
-        public ResourceManager(IEnumerable<Meta<IResourceManifestProvider, IFeatureMetadata>> resourceProviders) {
+        public ResourceManager(IEnumerable<Meta<IResourceManifestProvider>> resourceProviders) {
             _providers = resourceProviders;
         }
 
@@ -40,7 +41,9 @@ namespace Orchard.UI.Resources {
                 if (_manifests == null) {
                     var builder = new ResourceManifestBuilder();
                     foreach (var provider in _providers) {
-                        builder.Feature = provider.Metadata.Feature;
+                        builder.Feature = provider.Metadata.ContainsKey("Feature") ?
+                            (Feature) provider.Metadata["Feature"] :
+                            null;
                         provider.Value.BuildManifests(builder);
                     }
                     _manifests = builder.ResourceManifests;

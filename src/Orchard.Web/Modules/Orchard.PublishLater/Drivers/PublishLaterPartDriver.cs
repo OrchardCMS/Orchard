@@ -7,7 +7,6 @@ using Orchard.PublishLater.Services;
 using Orchard.PublishLater.ViewModels;
 using Orchard.Localization;
 using System.Globalization;
-using Orchard.Core.Localization.Services;
 
 namespace Orchard.PublishLater.Drivers {
     public class PublishLaterPartDriver : ContentPartDriver<PublishLaterPart> {
@@ -49,8 +48,8 @@ namespace Orchard.PublishLater.Drivers {
             // date and time are formatted using the same patterns as DateTimePicker is, preventing other cultures issues
             var model = new PublishLaterViewModel(part) {
                 ScheduledPublishUtc = part.ScheduledPublishUtc.Value,
-                ScheduledPublishDate = part.ScheduledPublishUtc.Value.HasValue ? part.ScheduledPublishUtc.Value.Value.ToLocalTime().ToString(DatePattern, CultureInfo.InvariantCulture) : String.Empty,
-                ScheduledPublishTime = part.ScheduledPublishUtc.Value.HasValue ? part.ScheduledPublishUtc.Value.Value.ToLocalTime().ToString(TimePattern, CultureInfo.InvariantCulture) : String.Empty
+                ScheduledPublishDate = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? part.ScheduledPublishUtc.Value.Value.ToLocalTime().ToString(DatePattern, CultureInfo.InvariantCulture) : String.Empty,
+                ScheduledPublishTime = part.ScheduledPublishUtc.Value.HasValue && !part.IsPublished() ? part.ScheduledPublishUtc.Value.Value.ToLocalTime().ToString(TimePattern, CultureInfo.InvariantCulture) : String.Empty
             };
 
             return ContentShape("Parts_PublishLater_Edit",
@@ -60,27 +59,24 @@ namespace Orchard.PublishLater.Drivers {
             var model = new PublishLaterViewModel(part);
 
             updater.TryUpdateModel(model, Prefix, null, null);
-            switch (model.Command) {
-                case "PublishNow":
-                    _commonService.Publish(model.ContentItem);
-                    break;
-                case "PublishLater":
-                    DateTime scheduled;
-                    string parseDateTime = String.Concat(model.ScheduledPublishDate, " ", model.ScheduledPublishTime);
-                    
-                    // use an english culture as it is the one used by jQuery.datepicker by default
-                    if (DateTime.TryParse(parseDateTime, CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AssumeLocal, out scheduled)) {
-                        model.ScheduledPublishUtc = part.ScheduledPublishUtc.Value = scheduled.ToUniversalTime();
-                        _publishLaterService.Publish(model.ContentItem, model.ScheduledPublishUtc.Value);
-                    }
-                    else {
-                        updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));
-                    }
 
-                    break;
-                case "SaveDraft":
-                    break;
+            if (!string.IsNullOrWhiteSpace(model.ScheduledPublishDate) && !string.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
+                DateTime scheduled;
+                string parseDateTime = String.Concat(model.ScheduledPublishDate, " ", model.ScheduledPublishTime);
+
+                // use an english culture as it is the one used by jQuery.datepicker by default
+                if (DateTime.TryParse(parseDateTime, CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AssumeLocal, out scheduled)) {
+                    model.ScheduledPublishUtc = part.ScheduledPublishUtc.Value = scheduled.ToUniversalTime();
+                    _publishLaterService.Publish(model.ContentItem, model.ScheduledPublishUtc.Value);
+                }
+                else {
+                    updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));
+                }
             }
+            else if (!string.IsNullOrWhiteSpace(model.ScheduledPublishDate) || !string.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
+                updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then clear both the date and time fields."));
+            }
+
             return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }

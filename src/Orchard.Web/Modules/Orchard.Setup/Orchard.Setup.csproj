@@ -87,7 +87,6 @@
     <Content Include="Views\Setup\Index.cshtml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
