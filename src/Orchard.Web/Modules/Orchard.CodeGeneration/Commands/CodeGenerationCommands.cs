@@ -61,7 +61,7 @@ namespace Orchard.CodeGeneration.Commands {
             }
 
             string dataMigrationFolderPath = HostingEnvironment.MapPath("~/Modules/" + extensionDescriptor.Name + "/");
-            string dataMigrationFilePath = dataMigrationFolderPath + "Migration.cs";
+            string dataMigrationFilePath = dataMigrationFolderPath + "Migrations.cs";
             string templatesPath = HostingEnvironment.MapPath("~/Modules/Orchard." + ModuleName + "/CodeGenerationTemplates/");
             string moduleCsProjPath = HostingEnvironment.MapPath(string.Format("~/Modules/{0}/{0}.csproj", extensionDescriptor.Name));
                     
@@ -93,11 +93,11 @@ namespace Orchard.CodeGeneration.Commands {
 
             // The string searches in solution/project files can be made aware of comment lines.
             if ( projectFileText.Contains("<Compile Include") ) {
-                string compileReference = string.Format("<Compile Include=\"{0}\" />\r\n    ", "DataMigrations\\" + extensionDescriptor.DisplayName + "DataMigration.cs");
+                string compileReference = string.Format("<Compile Include=\"{0}\" />\r\n    ", "Migrations.cs");
                 projectFileText = projectFileText.Insert(projectFileText.LastIndexOf("<Compile Include"), compileReference);
             }
             else {
-                string itemGroupReference = string.Format("</ItemGroup>\r\n  <ItemGroup>\r\n    <Compile Include=\"{0}\" />\r\n  ", "DataMigrations\\" + extensionDescriptor.DisplayName + "DataMigration.cs");
+                string itemGroupReference = string.Format("</ItemGroup>\r\n  <ItemGroup>\r\n    <Compile Include=\"{0}\" />\r\n  ", "Migrations.cs");
                 projectFileText = projectFileText.Insert(projectFileText.LastIndexOf("</ItemGroup>"), itemGroupReference);
             }
 
@@ -302,6 +302,7 @@ namespace Orchard.CodeGeneration.Commands {
                     // include in solution but dont create a project: just add the references to Orchard.Themes project
                     var itemGroup = CreateProjectItemGroup(HostingEnvironment.MapPath("~/Themes/"), createdFiles, createdFolders);
                     AddFilesToOrchardThemesProject(output, itemGroup);
+                    TouchSolution(output);
                 }
                 else {
                     // create a project (already done) and add it to the solution

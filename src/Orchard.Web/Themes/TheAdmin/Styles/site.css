@@ -120,7 +120,7 @@ body {
 h1,h2,h3,h4,h5,h6 { font-weight: normal;}
 
 h1 { font-size: 1.692em }
-h2, h2 span { font-size: 1.538em; }
+h2 { font-size: 1.538em; }
 h3 { font-size: 1.231em; }
 h4 { font-size: 1.154em; }
 h5 { font-size: 1.077em; }
@@ -482,7 +482,6 @@ label {
 }
 label.forcheckbox {
     display:inline;
-    line-height:1.8em;
 }
 .bulk-actions label, .bulk-items h3, label.sub {
     display:inline;
@@ -618,7 +617,7 @@ input[type="submit"]:hover,input[type="reset"]:hover, input[type="button"]:hover
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffac40), to(#f9760d));
 	background: -moz-linear-gradient(top, #ffac40, #f9760d);
 }
-input[type="submit"]:active, input[type="reset"]:active, input[type="button"]:active, button:active {
+input[type="submit"]:active, input[type="reset"]:active, input[type="button"]:active, button:active, .buton:active, .button.primaryAction:active {
 	text-decoration:none; 
 	background: #62a9e2;
 	color:#fff;
@@ -872,7 +871,7 @@ table .button {
     padding:1em;
 }
 .orchard-media fieldset div, .settings fieldset div, .settings .button {
-    margin:1em 0 .5em;
+    margin:.5em 0;
 }
 .settings legend {
     margin:0 0 -.4em;
@@ -890,7 +889,7 @@ fieldset.publish-later-datetime {
     min-width:13.6em;
     padding-left:6px;
     padding-right:0;
-    width:68%;
+    width:50%;
 }
 fieldset.publish-later-datetime legend {
     display:none;
