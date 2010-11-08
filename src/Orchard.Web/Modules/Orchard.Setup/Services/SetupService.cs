@@ -96,7 +96,7 @@ namespace Orchard.Setup.Services {
                     "Orchard.Media",
                     "Orchard.Widgets",
                     "Orchard.jQuery",
-                    "Orchard.ContentQueries"
+                    "TheThemeMachine",
                 };
 
                 context.EnabledFeatures = hardcoded;
