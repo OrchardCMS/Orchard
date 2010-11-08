@@ -1,21 +1,29 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.Data.Migration;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Themes.Preview;
+using Orchard.Themes.Services;
 using Orchard.Themes.ViewModels;
 using Orchard.UI.Notify;
 
 namespace Orchard.Themes.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
-        private readonly IThemeService _themeService;
+        private readonly ISiteThemeService _siteThemeService;
         private readonly IPreviewTheme _previewTheme;
+        private readonly IExtensionManager _extensionManager;
+        private readonly ShellDescriptor _shellDescriptor;
+        private readonly IThemeService _themeService;
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IReportsCoordinator _reportsCoordinator;
 
@@ -23,27 +31,44 @@ namespace Orchard.Themes.Controllers {
             IDataMigrationManager dataMigraitonManager,
             IReportsCoordinator reportsCoordinator,
             IOrchardServices services,
-            IThemeService themeService,
+            IThemeManager themeManager,
+            IFeatureManager featureManager,
+            ISiteThemeService siteThemeService,
             IPreviewTheme previewTheme,
             IAuthorizer authorizer,
-            INotifier notifier) {
+            INotifier notifier,
+            IExtensionManager extensionManager,
+            ShellDescriptor shellDescriptor,
+            IThemeService themeService) {
             Services = services;
             _dataMigrationManager = dataMigraitonManager;
             _reportsCoordinator = reportsCoordinator;
-            _themeService = themeService;
+            _siteThemeService = siteThemeService;
             _previewTheme = previewTheme;
+            _extensionManager = extensionManager;
+            _shellDescriptor = shellDescriptor;
+            _themeService = themeService;
             T = NullLocalizer.Instance;
         }
 
-        public IOrchardServices Services{ get; set; }
+        public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
         public ActionResult Index() {
             try {
-                var themes = _themeService.GetInstalledThemes();
-                var currentTheme = _themeService.GetSiteTheme();
+                var currentTheme = _siteThemeService.GetSiteTheme();
                 var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
-                var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes, FeaturesThatNeedUpdate = featuresThatNeedUpdate };
+
+                var themes = _extensionManager.AvailableExtensions()
+                    .Where(d => d.ExtensionType == "Theme")
+                    .Select(d => new ThemeEntry {
+                        Descriptor = d,
+                        NeedsUpdate = featuresThatNeedUpdate.Contains(d.Name),
+                        Enabled = _shellDescriptor.Features.Any(sf => sf.Name == d.Name)
+                    })
+                    .ToArray();
+
+                var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes };
                 return View(model);
             }
             catch (Exception exception) {
@@ -71,8 +96,8 @@ namespace Orchard.Themes.Controllers {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
                     return new HttpUnauthorizedResult();
-                _previewTheme.SetPreviewTheme(null); 
-                _themeService.SetSiteTheme(themeName);
+                _previewTheme.SetPreviewTheme(null);
+                _siteThemeService.SetSiteTheme(themeName);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Previewing theme failed: " + exception.Message));
@@ -98,7 +123,8 @@ namespace Orchard.Themes.Controllers {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't enable the theme")))
                     return new HttpUnauthorizedResult();
-                _themeService.EnableTheme(themeName);
+
+                _themeService.EnableThemeFeatures(themeName);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Enabling theme failed: " + exception.Message));
@@ -111,7 +137,8 @@ namespace Orchard.Themes.Controllers {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't disable the current theme")))
                     return new HttpUnauthorizedResult();
-                _themeService.DisableTheme(themeName);
+
+                _themeService.DisableThemeFeatures(themeName);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Disabling theme failed: " + exception.Message));
@@ -124,47 +151,14 @@ namespace Orchard.Themes.Controllers {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't set the current theme")))
                     return new HttpUnauthorizedResult();
-                _themeService.SetSiteTheme(themeName);
+
+                _themeService.EnableThemeFeatures(themeName);
+                _siteThemeService.SetSiteTheme(themeName);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Activating theme failed: " + exception.Message));
             }
             return RedirectToAction("Index");
-        }
-
-        public ActionResult Install() {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Install(FormCollection input) {
-            try {
-                if (!Services.Authorizer.Authorize(Permissions.ManageThemes, T("Couldn't install theme")))
-                    return new HttpUnauthorizedResult();
-                foreach (string fileName in Request.Files) {
-                    HttpPostedFileBase file = Request.Files[fileName];
-                    _themeService.InstallTheme(file);
-                }
-                return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Installing theme failed: " + exception.Message));
-                return RedirectToAction("Index");
-            }
-        }
-
-        [HttpPost]
-        public ActionResult Uninstall(string themeName) {
-            try {
-                if (!Services.Authorizer.Authorize(Permissions.ManageThemes, T("Couldn't uninstall theme")))
-                    return new HttpUnauthorizedResult();
-                _themeService.UninstallTheme(themeName);
-                return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Uninstalling theme failed: " + exception.Message));
-                return RedirectToAction("Index");
-            }
         }
 
         [HttpPost]

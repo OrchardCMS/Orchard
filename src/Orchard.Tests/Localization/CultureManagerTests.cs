@@ -4,13 +4,24 @@ using System.Globalization;
 using System.IO;
 using System.Web;
 using Autofac;
+using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Data;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
+using Orchard.Environment;
 using Orchard.Localization.Records;
 using Orchard.Localization.Services;
+using Orchard.Mvc;
+using Orchard.Security;
 using Orchard.Tests.ContentManagement;
+using Orchard.Tests.Stubs;
+using Orchard.UI.Notify;
 
 namespace Orchard.Tests.Localization {
     [TestFixture]
@@ -32,6 +43,18 @@ namespace Orchard.Tests.Localization {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
+            builder.RegisterInstance(new Mock<ITransactionManager>().Object);
+            builder.RegisterInstance(new Mock<IAuthorizer>().Object);
+            builder.RegisterInstance(new Mock<INotifier>().Object);
+            builder.RegisterInstance(new Mock<IContentDisplay>().Object);
+            builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
+            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<TestCultureSelector>().As<ICultureSelector>();
             builder.RegisterType<DefaultCultureManager>().As<ICultureManager>();
             builder.RegisterType<Signals>().As<ISignals>();

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.ContentManagement;
-using Orchard.Settings;
 using Orchard.Tags.Models;
 using Orchard.Tags.ViewModels;
 using Orchard.Tags.Services;
@@ -22,7 +20,6 @@ namespace Orchard.Tags.Controllers {
         }
 
         public IOrchardServices Services { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         
         public Localizer T { get; set; }
 

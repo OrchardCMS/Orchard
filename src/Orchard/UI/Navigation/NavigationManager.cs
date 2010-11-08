@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using JetBrains.Annotations;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
@@ -11,14 +10,14 @@ namespace Orchard.UI.Navigation {
         private readonly IEnumerable<INavigationProvider> _providers;
         private readonly IAuthorizationService _authorizationService;
         private readonly UrlHelper _urlHelper;
+        private readonly IOrchardServices _orchardServices;
 
-        public NavigationManager(IEnumerable<INavigationProvider> providers, IAuthorizationService authorizationService, UrlHelper urlHelper) {
+        public NavigationManager(IEnumerable<INavigationProvider> providers, IAuthorizationService authorizationService, UrlHelper urlHelper, IOrchardServices orchardServices) {
             _providers = providers;
             _authorizationService = authorizationService;
             _urlHelper = urlHelper;
+            _orchardServices = orchardServices;
         }
-
-        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
@@ -62,11 +61,11 @@ namespace Orchard.UI.Navigation {
         }
 
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {
-            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), CurrentUser, null);
+            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
             foreach (var item in items) {
                 if (hasDebugShowAllMenuItems ||
                     !item.Permissions.Any() ||
-                    item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, CurrentUser, null))) {
+                    item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, _orchardServices.WorkContext.CurrentUser, null))) {
                     yield return new MenuItem {
                         Items = Reduce(item.Items),
                         Permissions = item.Permissions,

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Autofac;
 using NUnit.Framework;
 using Orchard.ContentManagement;
@@ -83,6 +82,10 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                 _availableFeautures = availableFeautures;
             }
 
+            public ExtensionDescriptor GetExtension(string name) {
+                throw new NotImplementedException();
+            }
+
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 throw new NotSupportedException();
             }
@@ -92,14 +95,6 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             }
 
             public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
-                throw new NotSupportedException();
-            }
-
-            public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
-                throw new NotSupportedException();
-            }
-
-            public void UninstallExtension(string extensionType, string extensionName) {
                 throw new NotSupportedException();
             }
         }

@@ -3,23 +3,22 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Common.Models;
-using Orchard.Themes;
+using Orchard.Environment.Features;
 using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets.Services {
 
     [UsedImplicitly]
     public class WidgetsService : IWidgetsService {
-        private readonly IThemeService _themeService;
+        private readonly IFeatureManager _featureManager;
         private readonly IContentManager _contentManager;
 
         public WidgetsService(
             IContentManager contentManager,
-            IThemeService themeService) {
+            IFeatureManager featureManager) {
 
             _contentManager = contentManager;
-            _themeService = themeService;
+            _featureManager = featureManager;
         }
 
         public IEnumerable<string> GetWidgetTypes() {
@@ -41,15 +40,12 @@ namespace Orchard.Widgets.Services {
         }
 
         public IEnumerable<string> GetZones() {
-            HashSet<string> zones = new HashSet<string>();
-
-            foreach (var theme in _themeService.GetEnabledThemes().Where(theme => theme.Zones != null && !theme.Zones.Trim().Equals(string.Empty))) {
-                foreach (string zone in theme.Zones.Split(',').Where(zone => !zones.Contains(zone))) {
-                    zones.Add(zone.Trim());
-                }
-            }
-
-            return zones;
+            return _featureManager.GetEnabledFeatures()
+                .Select(x => x.Extension)
+                .Where(x => x.ExtensionType == "Theme")
+                .SelectMany(x => x.Zones.Split(','))
+                .Distinct()
+                .ToArray();
         }
 
         public IEnumerable<WidgetPart> GetWidgets(int layerId) {

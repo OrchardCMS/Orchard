@@ -8,18 +8,19 @@ using Orchard.ContentManagement;
 using Orchard.Roles.Models;
 using Orchard.Security;
 using Orchard.Security.Permissions;
-using Orchard.Settings;
 
 namespace Orchard.Roles.Services {
     [UsedImplicitly]
     public class RolesBasedAuthorizationService : IAuthorizationService {
         private readonly IRoleService _roleService;
+        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IAuthorizationServiceEventHandler _authorizationServiceEventHandler;
         private static readonly string[] AnonymousRole = new[] { "Anonymous" };
         private static readonly string[] AuthenticatedRole = new[] { "Authenticated" };
 
-        public RolesBasedAuthorizationService(IRoleService roleService, IAuthorizationServiceEventHandler authorizationServiceEventHandler) {
+        public RolesBasedAuthorizationService(IRoleService roleService, IWorkContextAccessor workContextAccessor, IAuthorizationServiceEventHandler authorizationServiceEventHandler) {
             _roleService = roleService;
+            _workContextAccessor = workContextAccessor;
             _authorizationServiceEventHandler = authorizationServiceEventHandler;
 
             T = NullLocalizer.Instance;
@@ -28,7 +29,6 @@ namespace Orchard.Roles.Services {
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
 
         public void CheckAccess(Permission permission, IUser user, IContent content) {
@@ -47,8 +47,8 @@ namespace Orchard.Roles.Services {
 
             for (var adjustmentLimiter = 0; adjustmentLimiter != 3; ++adjustmentLimiter) {
                 if (!context.Granted && context.User != null) {
-                    if (!String.IsNullOrEmpty(CurrentSite.SuperUser) &&
-                           String.Equals(context.User.UserName, CurrentSite.SuperUser, StringComparison.OrdinalIgnoreCase)) {
+                    if (!String.IsNullOrEmpty(_workContextAccessor.GetContext().CurrentSite.SuperUser) &&
+                           String.Equals(context.User.UserName, _workContextAccessor.GetContext().CurrentSite.SuperUser, StringComparison.OrdinalIgnoreCase)) {
                         context.Granted = true;
                     }
                 }

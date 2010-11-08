@@ -49,6 +49,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Primus\Theme.png" />
+    <Content Include="Primus\Theme.txt" />
+    <Content Include="Secundus\Theme.png" />
+    <Content Include="Secundus\Theme.txt" />
     <Content Include="TheAdmin\Scripts\admin.js" />
     <Content Include="TheAdmin\Styles\ie.css" />
     <Content Include="TheAdmin\Styles\images\menuClosed.gif" />

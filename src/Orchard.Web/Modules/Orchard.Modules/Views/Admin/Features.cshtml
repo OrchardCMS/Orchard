@@ -35,7 +35,7 @@
                 var featureId = feature.Descriptor.Name.AsFeatureId(n => T(n));
                 var featureName = string.IsNullOrEmpty(feature.Descriptor.DisplayName) ? feature.Descriptor.Name : feature.Descriptor.DisplayName;
                 var featureState = feature.IsEnabled ? "enabled" : "disabled";
-                var featureClassName = string.Format("feature {0}", featureState + (Model.FeaturesThatNeedUpdate.Contains(feature.Descriptor.Name) ? " update" : String.Empty));
+                var featureClassName = string.Format("feature {0}", featureState + (feature.NeedsUpdate ? " update" : String.Empty));
                 if (feature == features.First()) {
                     featureClassName += " first";
                 }
@@ -74,7 +74,7 @@
                             }
                         }
                     }
-                    @if(Model.FeaturesThatNeedUpdate.Contains(feature.Descriptor.Name)){
+                    @if(feature.NeedsUpdate){
                             using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Update", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
                             @Html.Hidden("id", feature.Descriptor.Name, new { id = "" })
                             <button type="submit" class="update">@T("Update")</button> 

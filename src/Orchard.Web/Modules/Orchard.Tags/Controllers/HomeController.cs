@@ -1,13 +1,9 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Security;
-using Orchard.Settings;
 using Orchard.Tags.Services;
 using Orchard.Tags.ViewModels;
 using Orchard.Themes;
@@ -28,8 +24,6 @@ namespace Orchard.Tags.Controllers {
             _shapeFactory = shapeFactory;
             T = NullLocalizer.Instance;
         }
-
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }

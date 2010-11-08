@@ -14,14 +14,14 @@ namespace Orchard.ContentManagement {
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly IShapeFactory _shapeFactory;
         private readonly IShapeTableManager _shapeTableManager;
-        private readonly Lazy<IThemeService> _themeService;
+        private readonly Lazy<IThemeManager> _themeService;
         private readonly RequestContext _requestContext;
 
         public DefaultContentDisplay(
             Lazy<IEnumerable<IContentHandler>> handlers,
             IShapeFactory shapeFactory,
             IShapeTableManager shapeTableManager,
-            Lazy<IThemeService> themeService,
+            Lazy<IThemeManager> themeService,
             RequestContext requestContext) {
             _handlers = handlers;
             _shapeFactory = shapeFactory;
@@ -99,7 +99,7 @@ namespace Orchard.ContentManagement {
                 //var workContext = _workContextAccessor.GetContext();
                 //var theme = workContext.CurrentTheme;
                 var theme = _themeService.Value.GetRequestTheme(_requestContext);
-                var shapeTable = _shapeTableManager.GetShapeTable(theme.ThemeName);
+                var shapeTable = _shapeTableManager.GetShapeTable(theme.Name);
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
                     var placementContext = new ShapePlacementContext {

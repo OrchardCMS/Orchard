@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
 using System.Web.Routing;
 using Autofac;
 using JetBrains.Annotations;
@@ -65,7 +64,7 @@ namespace Orchard.Setup {
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
 
             // setup mode specific implementations of needed service interfaces
-            builder.RegisterType<SafeModeThemeService>().As<IThemeService>().InstancePerLifetimeScope();
+            builder.RegisterType<SafeModeThemeService>().As<IThemeManager>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeText>().As<IText>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeSiteService>().As<ISiteService>().InstancePerLifetimeScope();
 
@@ -102,38 +101,14 @@ namespace Orchard.Setup {
         }
 
         [UsedImplicitly]
-        class SafeModeThemeService : IThemeService {
-            class SafeModeTheme : ITheme {
-                public ContentItem ContentItem { get; set; }
-                public bool Enabled { get; set; }
-                public string ThemeName { get; set; }
-                public string DisplayName { get; set; }
-                public string Description { get; set; }
-                public string Version { get; set; }
-                public string Author { get; set; }
-                public string HomePage { get; set; }
-                public string Tags { get; set; }
-                public string Zones { get; set; }
-                public string BaseTheme { get; set; }
-            }
-
-            private readonly SafeModeTheme _theme = new SafeModeTheme {
-                Enabled = true,
-                ThemeName = "SafeMode",
+        class SafeModeThemeService : IThemeManager {
+            private readonly ExtensionDescriptor _theme = new ExtensionDescriptor {
+                Name = "SafeMode",
                 DisplayName = "SafeMode",
+                Location = "~/Themes",
             };
 
-            public ITheme GetThemeByName(string themeName) { return _theme; }
-            public ITheme GetSiteTheme() { return _theme; }
-            public void SetSiteTheme(string themeName) { }
-            public ITheme GetRequestTheme(RequestContext requestContext) { return _theme; }
-            public IEnumerable<ITheme> GetInstalledThemes() { return new[] { _theme }; }
-            public IEnumerable<ITheme> GetEnabledThemes() { return new[] { _theme }; }
-
-            public void InstallTheme(HttpPostedFileBase file) { }
-            public void UninstallTheme(string themeName) { }
-            public void EnableTheme(string themeName) { }
-            public void DisableTheme(string themeName) { }
+            public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) { return _theme; }
         }
 
         [UsedImplicitly]
@@ -191,7 +166,7 @@ namespace Orchard.Setup {
             }
 
             public ResourceDebugMode ResourceDebugMode {
-                get { return ResourceDebugMode.FromAppSetting;  }
+                get { return ResourceDebugMode.FromAppSetting; }
                 set { throw new NotImplementedException(); }
             }
         }

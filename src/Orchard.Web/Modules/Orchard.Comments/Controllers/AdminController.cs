@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Settings;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using Orchard.Security;
 using Orchard.Comments.ViewModels;
 using Orchard.Comments.Services;
 
@@ -28,9 +25,6 @@ namespace Orchard.Comments.Controllers {
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
-
-        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public IOrchardServices Services { get; set; }
         public ILogger Logger { get; set; }

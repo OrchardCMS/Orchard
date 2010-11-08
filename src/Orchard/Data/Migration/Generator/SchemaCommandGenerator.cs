@@ -41,8 +41,7 @@ namespace Orchard.Data.Migration.Generator {
         /// Generates SchemaCommand instances in order to create the schema for a specific feature
         /// </summary>
         public IEnumerable<SchemaCommand> GetCreateFeatureCommands(string feature, bool drop) {
-            var dependencies = ShellStateCoordinator.OrderByDependencies(_extensionManager.AvailableExtensions()
-                .SelectMany(ext => ext.Features))
+            var dependencies = _extensionManager.AvailableFeatures()
                 .Where(f => String.Equals(f.Name, feature, StringComparison.OrdinalIgnoreCase))
                 .Where(f => f.Dependencies != null)
                 .SelectMany(f => f.Dependencies)

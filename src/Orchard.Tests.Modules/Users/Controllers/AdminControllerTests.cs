@@ -54,6 +54,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();
+            builder.RegisterType<StubWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<TransactionManager>().As<ITransactionManager>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();

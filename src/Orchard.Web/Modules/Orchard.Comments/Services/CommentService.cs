@@ -5,7 +5,6 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
-using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.Comments.Services {
@@ -14,55 +13,54 @@ namespace Orchard.Comments.Services {
         private readonly IRepository<ClosedCommentsRecord> _closedCommentsRepository;
         private readonly IClock _clock;
         private readonly ICommentValidator _commentValidator;
-        private readonly IContentManager _contentManager;
+        private readonly IOrchardServices _orchardServices;
 
         public CommentService(IRepository<ClosedCommentsRecord> closedCommentsRepository,
                               IClock clock,
                               ICommentValidator commentValidator,
-                              IContentManager contentManager) {
+                              IOrchardServices orchardServices) {
             _closedCommentsRepository = closedCommentsRepository;
             _clock = clock;
             _commentValidator = commentValidator;
-            _contentManager = contentManager;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
-        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
 
         public IContentQuery<CommentPart, CommentPartRecord> GetComments() {
-            return _contentManager
+            return _orchardServices.ContentManager
                        .Query<CommentPart, CommentPartRecord>();
         }
 
         public IContentQuery<CommentPart, CommentPartRecord> GetComments(CommentStatus status) {
-            return _contentManager
+            return _orchardServices.ContentManager
                        .Query<CommentPart, CommentPartRecord>()
                        .Where(c => c.Status == status);
         }
 
         public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id) {
-            return _contentManager
+            return _orchardServices.ContentManager
                        .Query<CommentPart, CommentPartRecord>()
                        .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id);
         }
 
         public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id, CommentStatus status) {
-            return _contentManager
+            return _orchardServices.ContentManager
                        .Query<CommentPart, CommentPartRecord>()
                        .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id)
                        .Where(ctx => ctx.Status == status);
         }
 
         public CommentPart GetComment(int id) {
-            return _contentManager.Get<CommentPart>(id);
+            return _orchardServices.ContentManager.Get<CommentPart>(id);
         }
 
         public ContentItemMetadata GetDisplayForCommentedContent(int id) {
-            var content = _contentManager.Get(id);
+            var content = _orchardServices.ContentManager.Get(id);
             if (content == null)
                 return null;
-            return _contentManager.GetItemMetadata(content);
+            return _orchardServices.ContentManager.GetItemMetadata(content);
         }
 
         public ContentItem GetCommentedContent(int id) {
@@ -70,14 +68,14 @@ namespace Orchard.Comments.Services {
         }
 
         public CommentPart CreateComment(CreateCommentContext context, bool moderateComments) {
-            var comment = _contentManager.Create<CommentPart>("Comment");
+            var comment = _orchardServices.ContentManager.Create<CommentPart>("Comment");
 
             comment.Record.Author = context.Author;
             comment.Record.CommentDateUtc = _clock.UtcNow;
             comment.Record.CommentText = context.CommentText;
             comment.Record.Email = context.Email;
             comment.Record.SiteName = context.SiteName;
-            comment.Record.UserName = (CurrentUser == null ? context.Author : CurrentUser.UserName);
+            comment.Record.UserName = (_orchardServices.WorkContext.CurrentUser == null ? context.Author : _orchardServices.WorkContext.CurrentUser.UserName);
             comment.Record.CommentedOn = context.CommentedOn;
 
             comment.Record.Status = _commentValidator.ValidateComment(comment)
@@ -86,7 +84,7 @@ namespace Orchard.Comments.Services {
 
             // store id of the next layer for large-grained operations, e.g. rss on blog
             //TODO:(rpaquay) Get rid of this (comment aspect takes care of container)
-            var commentedOn = _contentManager.Get<ICommonPart>(comment.Record.CommentedOn);
+            var commentedOn = _orchardServices.ContentManager.Get<ICommonPart>(comment.Record.CommentedOn);
             if (commentedOn != null && commentedOn.Container != null) {
                 comment.Record.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
             }
@@ -119,7 +117,7 @@ namespace Orchard.Comments.Services {
         }
 
         public void DeleteComment(int commentId) {
-            _contentManager.Remove(_contentManager.Get(commentId));
+            _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get(commentId));
         }
 
         public bool CommentsClosedForCommentedContent(int id) {

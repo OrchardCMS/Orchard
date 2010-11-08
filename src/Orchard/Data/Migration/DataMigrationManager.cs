@@ -86,8 +86,7 @@ namespace Orchard.Data.Migration {
             Logger.Information("Updating feature: {0}", feature);
 
             // proceed with dependent features first, whatever the module it's in
-            var dependencies = ShellStateCoordinator.OrderByDependencies(_extensionManager.AvailableExtensions()
-                .SelectMany(ext => ext.Features))
+            var dependencies = _extensionManager.AvailableFeatures()
                 .Where(f => String.Equals(f.Name, feature, StringComparison.OrdinalIgnoreCase))
                 .Where(f => f.Dependencies != null)
                 .SelectMany( f => f.Dependencies )

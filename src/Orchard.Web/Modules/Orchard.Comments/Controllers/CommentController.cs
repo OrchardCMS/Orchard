@@ -1,36 +1,25 @@
 ﻿using System;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.Comments.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Security;
-using Orchard.Settings;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Comments.Controllers {
     public class CommentController : Controller {
         public IOrchardServices Services { get; set; }
-        private readonly IAuthorizer _authorizer;
         private readonly ICommentService _commentService;
         private readonly INotifier _notifier;
 
-        public CommentController(IOrchardServices services, ICommentService commentService, INotifier notifier, IAuthorizer authorizer) {
+        public CommentController(IOrchardServices services, ICommentService commentService, INotifier notifier) {
             Services = services;
             _commentService = commentService;
             _notifier = notifier;
-            _authorizer = authorizer;
             T = NullLocalizer.Instance;
         }
-
-        protected virtual IUser CurrentUser { get; [UsedImplicitly]
-        private set; }
-
-        protected virtual ISite CurrentSite { get; [UsedImplicitly]
-        private set; }
 
         public Localizer T { get; set; }
 
@@ -61,7 +50,7 @@ namespace Orchard.Comments.Controllers {
                                                            CommentedOn = viewModel.CommentedOn
                                                        };
 
-                CommentPart commentPart = _commentService.CreateComment(context, CurrentSite.As<CommentSettingsPart>().Record.ModerateComments);
+                CommentPart commentPart = _commentService.CreateComment(context, Services.WorkContext.CurrentSite.As<CommentSettingsPart>().Record.ModerateComments);
 
                 if (commentPart.Record.Status == CommentStatus.Pending)
                     Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
