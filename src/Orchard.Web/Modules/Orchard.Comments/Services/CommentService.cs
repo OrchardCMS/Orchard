@@ -64,7 +64,7 @@ namespace Orchard.Comments.Services {
         }
 
         public ContentItem GetCommentedContent(int id) {
-            return _contentManager.Get(id);
+            return _orchardServices.ContentManager.Get(id);
         }
 
         public CommentPart CreateComment(CreateCommentContext context, bool moderateComments) {
