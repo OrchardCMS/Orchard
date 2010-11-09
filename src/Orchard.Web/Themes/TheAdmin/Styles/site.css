@@ -296,7 +296,7 @@ form.link button:hover {
 	text-decoration:underline;
 }
 #menu .menu-admin li.section-dashboard h3 {
-    padding:.4em 0;
+    padding:.4em 0 0 .4em;
     font-size:1.308em;
 }
 .section-new {
