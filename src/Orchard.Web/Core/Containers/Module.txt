@@ -8,5 +8,5 @@ Description: The common module introduces container and containable behaviors fo
 Features:
     Containers:
         Description: Container content parts.
-        Dependencies: Settings
+        Dependencies: Contents, Routable
         Category: Content

@@ -14,6 +14,7 @@ namespace Orchard.Lists {
                     .WithPart("CommonPart")
                     .WithPart("RoutePart")
                     .WithPart("ContainerPart")
+                    .WithPart("MenuPart")
                     .Creatable());
 
             //ContentDefinitionManager.AlterTypeDefinition("ListWidget",
