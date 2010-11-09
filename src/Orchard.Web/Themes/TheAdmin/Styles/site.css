@@ -198,23 +198,21 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 .wrapper, .sections {
     overflow:hidden;
 }
-.sections .primary {
+/*.edit-item-primary {
     display:inline;
     float:left;
     width:69.452%;
 }
-.sections .secondary {
+.edit-item-secondary {
     display:inline;
     float:left;
     margin-left:1.71%;
     width:28.721%;
-}
-
-
+}*/
 
 
 /* Links
-----------------------------------------------------------*/
+***************************************************************/
 a, a:link, a:visited,
 form.link button {
     color:#1e5d7d;
@@ -232,7 +230,7 @@ form.link button:hover {
 }
 
 /* Header - Branding and Login  
-----------------------------------------------------------*/
+***************************************************************/
 #header {
 	background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;
 	height:50px;
@@ -286,7 +284,7 @@ form.link button:hover {
 }
 
 /* Navigation
-----------------------------------------------------------*/
+***************************************************************/
 #navshortcut {
     height:0;
     overflow:hidden;
@@ -369,7 +367,7 @@ form.link button:hover {
 }
 
 /* Content
-----------------------------------------------------------*/
+***************************************************************/
 #main h1 {
     margin:0 0 1em;
 }
@@ -391,9 +389,6 @@ form.link button:hover {
 #main form.inline {
     margin:0;
 }
-/*#main h1, #main h2 {
-    border-bottom:1px solid #eaeaea;
-}*/
 #main ul h2 {
     border-bottom:0;
     margin:.2em 0;
@@ -403,7 +398,7 @@ form.link button:hover {
 }
 
 /* Confirmations, Messages and the like
-----------------------------------------------------------*/
+***************************************************************/
 .message, .validation-summary-errors {
 	margin:10px 0 4px 0;
     padding:4px;
@@ -456,7 +451,7 @@ span.message {
 form              { margin: 0; padding: 0; }
 legend            { font-size: 1.231em; font-weight: normal; border:none; }
 fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
-label             { font-weight: normal; display:block; padding: 0 0 0.3em 0; }
+label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 
 form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
@@ -474,14 +469,6 @@ form.inline fieldset {
 
 legend span {
     font-weight:normal;
-}
-label {
-	display:block;
-	color:#4c4c4c;
-	font-weight:bold;
-}
-label.forcheckbox {
-    display:inline;
 }
 .bulk-actions label, .bulk-items h3, label.sub {
     display:inline;
@@ -553,7 +540,17 @@ form.link button {
     padding:0;
     width:auto;
     margin:-2px -3px 0;
-    
+
+    /*Remove CSS3 button properties*/
+    filter:none;
+    background:none;
+    background:none;
+    box-shadow:none;
+    -webkit-box-shadow:none;
+    -moz-box-shadow:none;
+    border-radius:none;
+    -webkit-border-radius:none;
+    -moz-border-radius:none;   
 }
 button.primaryAction, .button.primaryAction, .button.primaryAction:link, .button.primaryAction:visited {
     background:#4687ad;
@@ -865,10 +862,6 @@ table .button {
     white-space:nowrap;
 }
 /* Settings */
-.settings fieldset {
-    margin:.5em 0;
-    padding:1em;
-}
 .orchard-media fieldset div, .settings fieldset div, .settings .button {
     margin:.5em 0;
 }
@@ -878,18 +871,15 @@ table .button {
 /* Core Contents and Orchard.PublishLater */
 
 
-.edit-item-sidebar 
+.edit-item-commit, .edit-item-sidebar 
 {
     border:1px solid #d3d3d3;
     padding:6px;
     
     /*CSS3 properties*/
-		filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f7f7f7',  endColorstr='#f5f5f5');
+		filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f7f7f7', endColorstr='#f5f5f5');
 		background: -webkit-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#f5f5f5));
 		background: -moz-linear-gradient(top, #f7f7f7, #f5f5f5);
-		/*box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
-		-webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
-		-moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);*/
 		border-radius: 3px;
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
