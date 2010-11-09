@@ -85,11 +85,12 @@
             var firstError = _this.find(".input-validation-error").first();
             // try to focus the first error on the page
             if (firstError.size() === 1) {
-                return firstError.focus();
+                firstError.focus();
+                return _this;
             }
             // or, give it up to the browser to autofocus
             if ('autofocus' in document.createElement('input')) {
-                return;
+                return _this;
             }
             // otherwise, make the autofocus attribute work
             var autofocus = _this.find(":input[autofocus]").first();
@@ -102,7 +103,7 @@
 
             // give it up to the browser to handle placeholder text
             if ('placeholder' in document.createElement('input')) {
-                return;
+                return _this;
             }
             // otherwise, make the placeholder attribute work
             $(":input[placeholder]")
