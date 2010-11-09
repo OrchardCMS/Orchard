@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using System.Text.RegularExpressions;
 
 namespace Orchard.Packaging.Services {
     [OrchardFeature("PackagingServices")]
@@ -83,20 +83,9 @@ namespace Orchard.Packaging.Services {
 #endif
         }
 
-        public PackageInfo Install(string filename, string destination) {
-            var name = Path.GetFileNameWithoutExtension(filename);
-
-            string version = String.Join(".", name.Split('.').Reverse().TakeWhile(part => part.All(Char.IsDigit)).Take(4).Reverse().ToArray());
-            string packageId = name.Substring(0, name.Length - version.Length -1); 
-            string location = Path.GetDirectoryName(filename);
-
-            return _packageExpander.ExpandPackage(packageId, version, location, destination);
+        public PackageInfo Install(string packageId, string version, string location, string solutionFolder) {
+            return _packageExpander.ExpandPackage(packageId, version, location, solutionFolder);
         }
-
-        public PackageInfo Install(Uri uri, string destination) {
-            return null;
-        }
-
 
         #endregion
     }

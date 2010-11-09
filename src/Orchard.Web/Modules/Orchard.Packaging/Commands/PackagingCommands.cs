@@ -1,10 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Web.Hosting;
 using Orchard.Commands;
 using Orchard.Environment.Extensions;
 using Orchard.Packaging.Services;
-using Orchard.UI.Notify;
 
 namespace Orchard.Packaging.Commands {
     [OrchardFeature("Orchard.Packaging")]
@@ -18,6 +16,9 @@ namespace Orchard.Packaging.Commands {
             _packageManager = packageManager;
         }
 
+        [OrchardSwitch]
+        public string Version { get; set; }
+        
         [CommandHelp("package create <moduleName>\r\n\t" + "Create a package for the module <moduleName>. The default filename is Orchard.<extension>.<moduleName>.<moduleVersion>.nupkg.")]
         [CommandName("package create")]
         public void CreatePackage(string moduleName) {
@@ -47,30 +48,23 @@ namespace Orchard.Packaging.Commands {
             Context.Output.WriteLine(T("Package \"{0}\" successfully created", fileInfo.FullName));
         }
 
-        [CommandHelp("package install <filename>\r\n\t" + "Install a module from a package <filename>.")]
+        [CommandHelp("package install <packageId> <location> /Version:<version> \r\n\t" + "Install a module or a theme from a package file.")]
         [CommandName("package install")]
-        public void InstallPackage(string filename) {
-            if (!File.Exists(filename)) {
-                Context.Output.WriteLine(T("File \"{0}\" does not exist.", filename));
-            }
-
+        [OrchardSwitches("Version")]
+        public void InstallPackage(string packageId, string location) {
             var solutionFolder = GetSolutionFolder();
 
             if(solutionFolder == null) {
                 Context.Output.WriteLine(T("The project's location is not supported"));
             }
 
-            var packageInfo = _packageManager.Install(filename, solutionFolder);
+            var packageInfo = _packageManager.Install(packageId, Version, location, solutionFolder);
             Context.Output.WriteLine(T("Package \"{0}\" successfully installed at \"{1}\"", packageInfo.ExtensionName, packageInfo.ExtensionPath));
         }
 
         private static string GetSolutionFolder() {
             var orchardDirectory = Directory.GetParent(OrchardWebProj);
-            if(orchardDirectory.Parent == null) {
-                return null;
-            }
-
-            return orchardDirectory.Parent.FullName;
+            return orchardDirectory.Parent == null ? null : orchardDirectory.Parent.FullName;
         }
     }
 }
