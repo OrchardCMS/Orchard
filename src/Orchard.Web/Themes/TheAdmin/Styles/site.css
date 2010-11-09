@@ -946,3 +946,8 @@ fieldset.publish-later-datetime input {
     color:#ccc;
     font-style:italic;
 }
+#orchard-version {
+    color:#FCFCFC;
+    float:right;
+    padding:.7em 1.4em;
+}

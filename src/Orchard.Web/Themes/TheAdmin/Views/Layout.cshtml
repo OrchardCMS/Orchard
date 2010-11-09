@@ -17,12 +17,8 @@
 
     // experimentation
     var thisUser = Html.Resolve<IAuthenticationService>().GetAuthenticatedUser();
-    Model.Header.Add(Display.User(CurrentUser: thisUser), "after");
-    
-    // these are just hacked together to fire existing partials... can change
-
-    //Model.Zones.AddRenderPartial("header", "Header", Model);
-    //Model.Zones.AddRenderPartial("header:after", "User", Model); // todo: (heskew) should be a user display or widget
+    Model.Header.Add(Display.User(CurrentUser: thisUser));
+    Model.Footer.Add(Display.OrchardVersion());
 }
 <div id="header" role="banner">
     @Display(Model.Header)</div>
@@ -39,4 +35,5 @@
         @Display(Model.Navigation)</div>
 </div>
 <div id="footer" role="contentinfo">
-    @Display(Model.Footer)</div>
+    @Display(Model.Footer)
+</div>
