@@ -1,6 +1,8 @@
 ﻿@model Orchard.Tags.ViewModels.TagsAdminEditViewModel
+@using Orchard.ContentManagement;
+@using Orchard.Utility.Extensions;
 
-<h1>@Html.TitleForPage(T("Edit a Tag").ToString()) </h1>
+<h1>@Html.TitleForPage(T("Manage tag: {0}", Model.TagName).ToString()) </h1>
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()  
     <fieldset>
@@ -12,4 +14,28 @@
     <fieldset>
         <button class="primaryAction" type="submit">@T("Save")</button>
     </fieldset>
- } 
+}
+<h2>@T("Content items tagged with {0}", Model.TagName)</h2>
+@if (View.ContentItems == null) {
+    <p>@T("There is nothing tagged with {0}", Model.TagName)</p>
+}
+else {
+    <table class="items">
+	    <colgroup>
+		    <col id="Col1" />
+		    <col id="Col2" />
+	    </colgroup>
+	    <thead>
+		    <tr>
+			    <th scope="col">@T("Content Type")</th>
+			    <th scope="co2">@T("Name")</th>
+		    </tr>
+	    </thead>
+        @foreach (IContent content in View.ContentItems) { 
+        <tr>
+            <td>@content.ContentItem.ContentType.CamelFriendly()</td>
+            <td>@Html.ItemDisplayLink(content.ContentItem)</td>
+        </tr>
+        }
+    </table>
+}

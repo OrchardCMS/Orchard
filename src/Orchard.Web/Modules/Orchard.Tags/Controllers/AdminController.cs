@@ -90,7 +90,9 @@ namespace Orchard.Tags.Controllers {
                 Id = tag.Id,
                 TagName = tag.TagName,
             };
-            
+
+            ViewData["ContentItems"] = _tagService.GetTaggedContentItems(id).ToList();
+
             return View(viewModel);
         }
 
@@ -125,21 +127,6 @@ namespace Orchard.Tags.Controllers {
                 return Redirect(returnUrl);
 
             return RedirectToAction("Index");
-        }
-
-        public ActionResult Search(int id) {
-            Tag tag = _tagService.GetTag(id);
-
-            if (tag == null) {
-                return RedirectToAction("Index");
-            }
-
-            IEnumerable<IContent> contents = _tagService.GetTaggedContentItems(id).ToList();
-            var viewModel = new TagsAdminSearchViewModel {
-                TagName = tag.TagName,
-                Contents = contents,
-            };
-            return View(viewModel);
         }
 
         private static TagEntry CreateTagEntry(Tag tag) {
