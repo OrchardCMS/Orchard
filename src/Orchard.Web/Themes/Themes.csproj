@@ -68,6 +68,7 @@
     <Content Include="SafeMode\Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="TheAdmin\Views\Pager.cshtml" />
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>
