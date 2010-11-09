@@ -193,22 +193,10 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     display:inline;
     float:left;
     width:15.401%;
-    border-right:1px solid #eaeaea;
 }
 .wrapper, .sections {
     overflow:hidden;
 }
-/*.edit-item-primary {
-    display:inline;
-    float:left;
-    width:69.452%;
-}
-.edit-item-secondary {
-    display:inline;
-    float:left;
-    margin-left:1.71%;
-    width:28.721%;
-}*/
 
 
 /* Links
@@ -315,7 +303,15 @@ form.link button:hover {
 	color: #000;
 	text-decoration:underline;
 }
-
+#menu .menu-admin li.section-dashboard h3 {
+    padding:.4em 0;
+    font-size:1.308em;
+}
+.section-new {
+    border-top:1px solid #d3d3d3;
+    border-bottom:1px solid #d3d3d3;
+    padding:12px 0;
+}
 /* todo: make generic so all toggles can use this and clean up jQuery */
 .expando-glyph-container {
     display:inline !important;
@@ -368,9 +364,7 @@ form.link button:hover {
 
 /* Content
 ***************************************************************/
-#main h1 {
-    margin:0 0 1em;
-}
+#main h1 {    margin:0 0 1em;}
 #main h2, #main h3 {
     margin:.5em 0;
 }
@@ -870,8 +864,7 @@ table .button {
 }
 /* Core Contents and Orchard.PublishLater */
 
-
-.edit-item-commit, .edit-item-sidebar 
+.orchard-blogs .edit-item-sidebar, .contents .edit-item-sidebar 
 {
     border:1px solid #d3d3d3;
     padding:6px;

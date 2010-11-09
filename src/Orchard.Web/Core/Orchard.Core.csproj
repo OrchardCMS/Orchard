@@ -360,7 +360,9 @@
     <Content Include="Shapes\Views\Web.config" />
     <Content Include="Common\Placement.info" />
     <Content Include="Common\Views\Parts\Common.Metadata.Summary.cshtml" />
-    <Content Include="Contents\Placement.info" />
+    <Content Include="Contents\Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <Content Include="Contents\Views\Item\Display.cshtml" />
     <Content Include="Localization\Placement.info" />
