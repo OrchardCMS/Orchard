@@ -901,7 +901,11 @@ table .button {
 }
 
 fieldset.publish-button {
+    clear:none;
     float:left;
+    margin: 0 12px;
+    padding: 0 12px;
+    border-left:1px solid #ccc;
 }
 fieldset.save-button {
     clear:none;
@@ -912,9 +916,7 @@ fieldset.save-button {
 fieldset.publish-later-datetime {
     clear:none;
     float:left;
-    margin: 0 0 0 12px;
-    padding:0 0 0 12px;
-    border-left:1px solid #ccc;
+    margin: 0 6px;
 }
 fieldset.publish-later-datetime legend {
     display:none;

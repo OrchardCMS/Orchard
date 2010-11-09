@@ -5,7 +5,7 @@
         Parts_Contents_Publish_SummaryAdmin
     -->
     <!-- edit "shape" -->
-    <Place Content_PublishButton="Sidebar:20"/>
+    <Place Content_PublishButton="Sidebar:24"/>
     <Place Content_SaveButton="Sidebar:23"/>
     <Match DisplayType="Detail">
         <Place Parts_Contents_Publish="Content:5"/>
