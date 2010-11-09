@@ -234,15 +234,7 @@ form.link button:hover {
 	height:60px;
 	margin:-11px 0 0 14px;
 	text-indent:-9999px;
-	width:105px;
-}
-#header #app a {
-	background:url(images/orchardLogo.gif) no-repeat;
-	display:block;
-	height:60px;
-	margin:-11px 0 0 14px;
-	text-indent:-9999px;
-	width:35px;
+	width:40px;
 }
 #site {
     font-size:1.385em; /*18px*/
