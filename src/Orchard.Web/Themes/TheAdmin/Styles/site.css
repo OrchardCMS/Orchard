@@ -629,7 +629,7 @@ input[type="submit"]:active, input[type="reset"]:active, input[type="button"]:ac
 	background: -moz-linear-gradient(top, #fece3b, #fe6001);
 	box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
 	-moz-box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
-	-webkit-box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+	-webkit-box-shadow: inset 1px 1px 1px rgba(254, 225, 109, 0.6), 1px 1px 1px rgba(102, 102, 102, 0.1);
 }
 input[type="submit"]:focus::-moz-focus-inner, button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
   border: 1px dotted transparent;
