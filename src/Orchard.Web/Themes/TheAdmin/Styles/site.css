@@ -454,7 +454,7 @@ span.message {
 ***************************************************************/
 
 form              { margin: 0; padding: 0; }
-legend            { font-size: 1.231em; font-weight: normal; margin: 0 0 1.2em 0; border:none; }
+legend            { font-size: 1.231em; font-weight: normal; border:none; }
 fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
 label             { font-weight: normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
@@ -591,7 +591,6 @@ input[type="submit"], input[type="reset"], input[type="button"], button, .button
 		background:#F5F5F5;
 		border:1px solid #999;
 		cursor:pointer;
-		/*min-width:80px;*/
 		padding: 0 12px 2px 12px;
 		text-align:center;
 		
@@ -877,6 +876,33 @@ table .button {
     margin:0 0 -.4em;
 }
 /* Core Contents and Orchard.PublishLater */
+
+
+.edit-item-sidebar 
+{
+    border:1px solid #d3d3d3;
+    padding:6px;
+    
+    /*CSS3 properties*/
+		filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f7f7f7',  endColorstr='#f5f5f5');
+		background: -webkit-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#f5f5f5));
+		background: -moz-linear-gradient(top, #f7f7f7, #f5f5f5);
+		/*box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+		-webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+		-moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);*/
+		border-radius: 3px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+}
+
+.edit-item-sidebar fieldset {
+    margin:0;
+    padding:0;
+}
+
+fieldset.publish-button {
+    float:left;
+}
 fieldset.save-button {
     clear:none;
     float:left;
@@ -886,10 +912,9 @@ fieldset.save-button {
 fieldset.publish-later-datetime {
     clear:none;
     float:left;
-    min-width:13.6em;
-    padding-left:6px;
-    padding-right:0;
-    width:50%;
+    margin: 0 0 0 12px;
+    padding:0 0 0 12px;
+    border-left:1px solid #ccc;
 }
 fieldset.publish-later-datetime legend {
     display:none;
