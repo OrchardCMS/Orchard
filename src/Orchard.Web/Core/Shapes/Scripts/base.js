@@ -164,7 +164,6 @@
     $(function () {
         $("form.inline.link").each(function () {
             var _this = $(this);
-            console.log(_this.html())
             var link = $("<a class='wasFormInlineLink' href='.'/>");
             var button = _this.children("button").first();
             link.text(button.text())
