@@ -160,6 +160,7 @@
   <ItemGroup>
     <Compile Include="Caching\CacheScopeTests.cs" />
     <Compile Include="Caching\CacheTests.cs" />
+    <Compile Include="Caching\ClockCachingTests.cs" />
     <Compile Include="Commands\CommandHandlerDescriptorBuilderTests.cs" />
     <Compile Include="Commands\CommandHandlerTests.cs" />
     <Compile Include="Commands\CommandManagerTests.cs" />

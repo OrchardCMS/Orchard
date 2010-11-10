@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
@@ -10,7 +9,6 @@ using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
 using Orchard.Localization;
 using Orchard.Services;
-using Orchard.Settings;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Routable.Drivers {
@@ -29,7 +27,6 @@ namespace Orchard.Core.Routable.Drivers {
         private const string TemplateName = "Parts/Routable.RoutePart";
 
         public Localizer T { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         protected override string Prefix {
             get { return "Routable"; }
@@ -70,7 +67,7 @@ namespace Orchard.Core.Routable.Drivers {
                     : "";
             }
 
-            model.PromoteToHomePage = model.Id != 0 && part.Path != null && _routableHomePageProvider != null && CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
+            model.PromoteToHomePage = model.Id != 0 && part.Path != null && _routableHomePageProvider != null && _services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
             return ContentShape("Parts_Routable_Edit",
                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
@@ -102,7 +99,7 @@ namespace Orchard.Core.Routable.Drivers {
             part.Path = part.GetPathWithSlug(part.Slug);
 
             if (part.ContentItem.Id != 0 && model.PromoteToHomePage && _routableHomePageProvider != null) {
-                CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
+                _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
             }
 
             return Editor(part, shapeHelper);

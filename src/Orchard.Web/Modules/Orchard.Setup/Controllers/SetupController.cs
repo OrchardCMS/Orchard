@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 using System.Security.Cryptography;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Linq;
+using System.Xml;
 using Orchard.FileSystems.AppData;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
@@ -41,11 +43,21 @@ namespace Orchard.Setup.Controllers {
 
         private bool ValidateMachineKey() {
             // Get the machineKey section.
-            var section = ConfigurationManager.GetSection("system.web/machineKey") as MachineKeySection;
+            MachineKeySection machineKeySection = null;
 
-            if (section == null
-                || section.DecryptionKey.Contains("AutoGenerate")
-                || section.ValidationKey.Contains("AutoGenerate")) {
+            string webConfigFile = Path.Combine(HttpContext.Request.PhysicalApplicationPath, "web.config");
+            using (XmlTextReader webConfigReader = new XmlTextReader(new StreamReader(webConfigFile))) {
+                if (webConfigReader.ReadToFollowing("machineKey")) {
+                    machineKeySection = new MachineKeySection {
+                        DecryptionKey = webConfigReader.GetAttribute("decryptionKey"), 
+                        ValidationKey = webConfigReader.GetAttribute("validationKey")
+                    };
+                }
+            }
+
+            if (machineKeySection == null
+                || machineKeySection.DecryptionKey.Contains("AutoGenerate")
+                || machineKeySection.ValidationKey.Contains("AutoGenerate")) {
 
                 var rng = new RNGCryptoServiceProvider();
                 var decryptionData = new byte[32];

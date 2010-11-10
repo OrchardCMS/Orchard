@@ -4,14 +4,15 @@
 @using Orchard.Modules.ViewModels;
 @using Orchard.Utility.Extensions;
 @using Orchard.Modules.Models;
-
 @{
     Style.Require("ModulesAdmin");
+    Style.Require("Switchable");
+    Script.Require("Switchable");
 }
 
 <h1>@Html.TitleForPage(T("Manage Features").ToString())</h1>
 @if (Model.Features.Count() > 0) {
-<ul class="features summary-view">@{
+<ul class="features summary-view switchable">@{
     var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category);
     foreach (var featureGroup in featureGroups) {
         var categoryName = LocalizedString.TextOrDefault(featureGroup.First().Descriptor.Category, T("Uncategorized"));
@@ -34,7 +35,7 @@
                 var featureId = feature.Descriptor.Name.AsFeatureId(n => T(n));
                 var featureName = string.IsNullOrEmpty(feature.Descriptor.DisplayName) ? feature.Descriptor.Name : feature.Descriptor.DisplayName;
                 var featureState = feature.IsEnabled ? "enabled" : "disabled";
-                var featureClassName = string.Format("feature {0}", featureState + (Model.FeaturesThatNeedUpdate.Contains(feature.Descriptor.Name) ? " update" : String.Empty));
+                var featureClassName = string.Format("feature {0}", featureState + (feature.NeedsUpdate ? " update" : String.Empty));
                 if (feature == features.First()) {
                     featureClassName += " first";
                 }
@@ -73,7 +74,7 @@
                             }
                         }
                     }
-                    @if(Model.FeaturesThatNeedUpdate.Contains(feature.Descriptor.Name)){
+                    @if(feature.NeedsUpdate){
                             using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Update", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
                             @Html.Hidden("id", feature.Descriptor.Name, new { id = "" })
                             <button type="submit" class="update">@T("Update")</button> 

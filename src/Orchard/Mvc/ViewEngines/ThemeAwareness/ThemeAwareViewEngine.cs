@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Themes;
 
 namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
@@ -64,15 +65,15 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             return _configuredEnginesCache.BindBareEngines(() => new ViewEngineCollectionWrapper(_viewEngineProviders.Select(vep => vep.CreateBareViewEngine())));
         }
 
-        private IViewEngine ShallowEngines(ITheme theme) {
+        private IViewEngine ShallowEngines(ExtensionDescriptor theme) {
             //return _configuredEnginesCache.BindShallowEngines(theme.ThemeName, () => new ViewEngineCollectionWrapper(_viewEngineProviders.Select(vep => vep.CreateBareViewEngine())));
             return DeepEngines(theme);
         }
 
-        private IViewEngine DeepEngines(ITheme theme) {
-            return _configuredEnginesCache.BindDeepEngines(theme.ThemeName, () => {
+        private IViewEngine DeepEngines(ExtensionDescriptor theme) {
+            return _configuredEnginesCache.BindDeepEngines(theme.Name, () => {
                 var engines = Enumerable.Empty<IViewEngine>();
-                var themeLocation = _extensionManager.GetThemeLocation(theme);
+                var themeLocation = theme.Location + "/" + theme.Name;
 
                 var themeParams = new CreateThemeViewEngineParams { VirtualPath = themeLocation };
                 engines = engines.Concat(_viewEngineProviders.Select(vep => vep.CreateThemeViewEngine(themeParams)));

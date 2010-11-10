@@ -10,12 +10,6 @@
     zoom:1;
     *display: inline;
 }
-.templates .inline button {
-    font-size:1.2em;
-}
-.templates .wasFormInlineLink {
-    font-size:1.4em;
-}
 .templates p {
     overflow:hidden;
 }

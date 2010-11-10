@@ -1,12 +1,32 @@
+using System;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Core;
+using Autofac.Features.Metadata;
 
 namespace Orchard.Mvc {
+    public interface IControllerType {
+        Type ControllerType { get; }
+    }
+
     public class OrchardControllerFactory : DefaultControllerFactory {
 
-        public override IController CreateController(RequestContext requestContext, string controllerName) {
+        bool TryResolve<T>(WorkContext workContext, object serviceKey, out T instance ) {
+            if (workContext != null) {
+                var key = new KeyedService(serviceKey, typeof (T));
+                object value;
+                if (workContext.Resolve<ILifetimeScope>().TryResolve(key, out value)) {
+                    instance = (T) value;
+                    return true;
+                }
+            }
+
+            instance = default(T);
+            return false;
+        }
+
+        protected override Type GetControllerType(RequestContext requestContext, string controllerName) {
             var routeData = requestContext.RouteData;
 
             // Determine the area name for the request, and fall back to stock orchard controllers
@@ -15,18 +35,24 @@ namespace Orchard.Mvc {
             // Service name pattern matches the identification strategy
             var serviceKey = (areaName + "/" + controllerName).ToLowerInvariant();
 
-            // Now that the request container is known - try to resolve the controller            
-            object controller;
-            var service = new KeyedService(serviceKey, typeof(IController));
-
+            // Now that the request container is known - try to resolve the controller information
+            Lazy<IController, IControllerType> info;
             var workContext = requestContext.GetWorkContext();
-
-            if (workContext != null &&
-                workContext.Resolve<ILifetimeScope>().TryResolve(service, out controller)) {
-                return (IController)controller;
+            if (TryResolve(workContext, serviceKey, out info)) {
+                return info.Metadata.ControllerType;
             }
 
-            return base.CreateController(requestContext, controllerName);
+            return null;
+        }
+
+        protected override IController GetControllerInstance(RequestContext requestContext, System.Type controllerType) {
+            IController controller;
+            var workContext = requestContext.GetWorkContext();
+            if (TryResolve(workContext, controllerType, out controller)) {
+                return controller;
+            }
+
+            return null;
         }
 
         public static string GetAreaName(RouteBase route) {

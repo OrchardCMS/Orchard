@@ -27,7 +27,6 @@ h4.widgets-layer-header {
 .widgets-availableWidgets table.items th
 {
     background: #f1f1f1;
-    font-size:1.6em;
     padding:.5em 0 .3em .2em;
 }
 
@@ -39,7 +38,6 @@ h4.widgets-layer-header {
 }
 
 .widgets-layerZones {
-    font-size: 1.4em;
     float: left;
     float: right;
     width: 60%;
@@ -76,7 +74,6 @@ h4.widgets-layer-header {
 }
 
 .widgets-layers {
-    font-size: 1.4em;
     border:1px solid #ccc;
     border-right:none;
 }

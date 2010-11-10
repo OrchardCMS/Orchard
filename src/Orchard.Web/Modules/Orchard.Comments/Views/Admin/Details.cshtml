@@ -13,7 +13,7 @@
     } else {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Close", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { 
     <fieldset>
-        <button type="submit" class="button primaryAction" title="@T("Close Comments")">@T("Close Comments")</button>
+        <button type="submit" class="primaryAction" title="@T("Close Comments")">@T("Close Comments")</button>
     </fieldset>
         }
     } 
@@ -29,7 +29,7 @@
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.MarkAsSpam, T("Mark as Spam").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, T("Remove").ToString())
         </select>
-        <input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
+        <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
     <fieldset class="bulk-actions">
         <label for="filterResults">@T("Filter:")</label>
@@ -39,7 +39,7 @@
             @Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Pending, T("Pending Comments").ToString())
             @Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Spam, T("Spam").ToString())
         </select>
-        <input class="button" type="submit" name="submit.Filter" value="@T("Apply")"/>
+        <button type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
     <fieldset>
 		<table class="items" summary="@T("This is a table of the comments for the content item")">
@@ -108,7 +108,7 @@
     } else {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Close", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { 
     <fieldset>
-        <button type="submit" class="button primaryAction" title="@T("Close Comments")">@T("Close Comments")</button>
+        <button type="submit" class="primaryAction" title="@T("Close Comments")">@T("Close Comments")</button>
     </fieldset>
         }
     } 

@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web.Routing;
-using ClaySharp;
 using ClaySharp.Implementation;
-using Microsoft.CSharp.RuntimeBinder;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Logging;
-using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Zones;
 
@@ -19,38 +14,24 @@ namespace Orchard.ContentManagement {
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly IShapeFactory _shapeFactory;
         private readonly IShapeTableManager _shapeTableManager;
-        private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly Lazy<IThemeService> _themeService;
+        private readonly Lazy<IThemeManager> _themeService;
         private readonly RequestContext _requestContext;
 
         public DefaultContentDisplay(
             Lazy<IEnumerable<IContentHandler>> handlers,
             IShapeFactory shapeFactory,
             IShapeTableManager shapeTableManager,
-            IWorkContextAccessor workContextAccessor,
-            IHttpContextAccessor httpContextAccessor,
-            Lazy<IThemeService> themeService,
+            Lazy<IThemeManager> themeService,
             RequestContext requestContext) {
             _handlers = handlers;
             _shapeFactory = shapeFactory;
             _shapeTableManager = shapeTableManager;
-            _workContextAccessor = workContextAccessor;
-            _httpContextAccessor = httpContextAccessor;
             _themeService = themeService;
             _requestContext = requestContext;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
-
-        static readonly CallSiteCollection _shapeHelperCalls = new CallSiteCollection(shapeTypeName => Binder.InvokeMember(
-            CSharpBinderFlags.None,
-            shapeTypeName,
-            Enumerable.Empty<Type>(),
-            null,
-            new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) }));
-
 
         public dynamic BuildDisplay(IContent content, string displayType) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
@@ -118,7 +99,7 @@ namespace Orchard.ContentManagement {
                 //var workContext = _workContextAccessor.GetContext();
                 //var theme = workContext.CurrentTheme;
                 var theme = _themeService.Value.GetRequestTheme(_requestContext);
-                var shapeTable = _shapeTableManager.GetShapeTable(theme.ThemeName);
+                var shapeTable = _shapeTableManager.GetShapeTable(theme.Name);
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
                     var placementContext = new ShapePlacementContext {

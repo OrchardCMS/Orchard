@@ -1,5 +1,9 @@
 @model RolesIndexViewModel
 @using Orchard.Roles.ViewModels;
+@using Orchard.Utility.Extensions;
+@{
+    Script.Require("ShapesBase");
+}
 
 <h1>@Html.TitleForPage(T("Manage Roles").ToString())</h1>
 @using(Html.BeginFormAntiForgeryPost()) {
@@ -9,7 +13,7 @@
         <select id="Select1" name="roleActions">
             <option value="1">@T("Remove")</option>
         </select>
-        <input class="button" type="submit" value="@T("Apply")" />
+        <button type="submit">@T("Apply")</button>
     </fieldset>
     <div class="manage">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
     <fieldset>
@@ -29,8 +33,14 @@
             @foreach (var row in Model.Rows) {
                 <tr>
                     <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)"/></td>
-                    <td>@row.Name</td>
-                    <td>@Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })</td>
+                    <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
+                    <td>
+                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
+                        @if (row.Name != "Administrator") {
+                            @T(" | ")
+                            <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>                       
+                        }
+                    </td>
                 </tr>
             }
         </table>

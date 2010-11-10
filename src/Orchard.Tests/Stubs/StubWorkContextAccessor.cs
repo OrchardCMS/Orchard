@@ -1,10 +1,104 @@
 using System;
+using System.Collections.Generic;
 using System.Web;
+using Autofac;
+using Orchard.ContentManagement;
+using Orchard.Security;
+using Orchard.Settings;
 
 namespace Orchard.Tests.Stubs {
     public class StubWorkContextAccessor : IWorkContextAccessor {
+        private readonly ILifetimeScope _lifetimeScope;
+        private WorkContext _workContext;
+
+        public StubWorkContextAccessor(ILifetimeScope lifetimeScope) {
+            _lifetimeScope = lifetimeScope;
+            _workContext = new WorkContextImpl(_lifetimeScope);
+        }
+
+        public class WorkContextImpl : WorkContext {
+            private readonly ILifetimeScope _lifetimeScope;
+            private Dictionary<string, object> _contextDictonary;
+
+            public WorkContextImpl(ILifetimeScope lifetimeScope) {
+                _contextDictonary = new Dictionary<string, object>();
+                CurrentUser = new StubUser();
+                var ci = new ContentItem();
+                ci.Weld(new StubSite());
+                CurrentSite = ci.As<ISite>();
+                _lifetimeScope = lifetimeScope;
+            }
+
+            public class StubSite : ContentPart, ISite {
+                public string PageTitleSeparator {
+                    get { throw new NotImplementedException(); }
+                }
+
+                public string SiteName {
+                    get { throw new NotImplementedException(); }
+                }
+
+                public string SiteSalt {
+                    get { throw new NotImplementedException(); }
+                }
+
+                public string SuperUser {
+                    get { throw new NotImplementedException(); }
+                }
+
+                public string HomePage {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
+
+                public string SiteCulture {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
+
+                public ResourceDebugMode ResourceDebugMode {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
+            }
+
+            public class StubUser : IUser {
+                public ContentItem ContentItem {
+                    get { throw new NotImplementedException(); }
+                }
+
+                public int Id {
+                    get { return 5; }
+                }
+
+                public string UserName {
+                    get { return "Fake"; }
+                }
+
+                public string Email {
+                    get { return "Fake@fake.com"; }
+                }
+            }
+
+            public override T Resolve<T>() {
+                return _lifetimeScope.Resolve<T>();
+            }
+
+            public override bool TryResolve<T>(out T service) {
+                return _lifetimeScope.TryResolve<T>(out service);
+            }
+
+            public override T GetState<T>(string name) {
+                return (T) _contextDictonary[name];
+            }
+
+            public override void SetState<T>(string name, T value) {
+                _contextDictonary[name] = value;
+            }
+        }
+
         public WorkContext GetContext(HttpContextBase httpContext) {
-            throw new NotSupportedException();
+            return _workContext;
         }
 
         public IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext) {
@@ -12,7 +106,7 @@ namespace Orchard.Tests.Stubs {
         }
 
         public WorkContext GetContext() {
-            return null;
+            return _workContext;
         }
 
         public IWorkContextScope CreateWorkContextScope() {

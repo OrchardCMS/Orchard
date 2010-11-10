@@ -1,0 +1,21 @@
+﻿@model Orchard.Core.Containers.Models.ContainerPart
+
+<fieldset>
+    @Html.LabelFor(m => m.Record.PageSize, T("Page Size"))
+    @Html.TextBoxFor(m => m.Record.PageSize)
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.Record.Paginated, T("Paginated"))
+    @Html.TextBoxFor(m => m.Record.Paginated)
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.Record.OrderByProperty, T("OrderByProperty"))
+    @Html.TextBoxFor(m => m.Record.OrderByProperty)
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.Record.OrderByDirection, T("OrderByDirection"))
+    @Html.TextBoxFor(m => m.Record.OrderByDirection)
+</fieldset>

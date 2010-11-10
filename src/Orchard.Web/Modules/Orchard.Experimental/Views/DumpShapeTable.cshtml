@@ -3,7 +3,7 @@
 @Display(Model.Metadata.ChildContent)
 @{
 	var workContext = ViewContext.GetWorkContext();
-	var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.ThemeName);
+	var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.Name);
 <!--    
 	<ul>
 		@foreach(var binding in shapeTable.Bindings) {

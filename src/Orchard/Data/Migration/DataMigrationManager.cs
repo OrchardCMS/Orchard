@@ -86,8 +86,7 @@ namespace Orchard.Data.Migration {
             Logger.Information("Updating feature: {0}", feature);
 
             // proceed with dependent features first, whatever the module it's in
-            var dependencies = ShellStateCoordinator.OrderByDependencies(_extensionManager.AvailableExtensions()
-                .SelectMany(ext => ext.Features))
+            var dependencies = _extensionManager.AvailableFeatures()
                 .Where(f => String.Equals(f.Name, feature, StringComparison.OrdinalIgnoreCase))
                 .Where(f => f.Dependencies != null)
                 .SelectMany( f => f.Dependencies )
@@ -189,7 +188,7 @@ namespace Orchard.Data.Migration {
                     .ToList();
 
             foreach (var migration in migrations.OfType<DataMigrationImpl>()) {
-                migration.SchemaBuilder = new SchemaBuilder(_interpreter, migration.Feature.Descriptor.Name.Replace(".", "_") + "_");
+                migration.SchemaBuilder = new SchemaBuilder(_interpreter, migration.Feature.Descriptor.Name, (s) => s.Replace(".", "_") + "_");
                 migration.ContentDefinitionManager = _contentDefinitionManager;
             }
 

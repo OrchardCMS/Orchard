@@ -47,9 +47,8 @@ namespace Orchard.Widgets.Filters {
             IEnumerable<WidgetPart> widgetParts = _contentManager.Query<WidgetPart, WidgetPartRecord>().List();
             IEnumerable<LayerPart> activeLayers = _contentManager.Query<LayerPart, LayerPartRecord>().List();
 
-            List<int> activeLayerIds = new List<int>();
+            var activeLayerIds = new List<int>();
             foreach (var activeLayer in activeLayers) {
-                var context = workContext.HttpContext;
                 // ignore the rule if it fails to execute
                 try {
                     if (_ruleManager.Matches(activeLayer.Record.LayerRule)) {
@@ -57,7 +56,7 @@ namespace Orchard.Widgets.Filters {
                     }
                 }
                 catch(Exception e) {
-                    Logger.Debug(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
+                    Logger.Warning(e, T("An error occured during layer evaluation on: {0}", activeLayer.Name).Text);
                 }
             }
 

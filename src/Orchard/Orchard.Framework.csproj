@@ -114,6 +114,7 @@
       <HintPath>..\..\lib\linqnhibernate\NHibernate.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -174,6 +175,7 @@
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
     <Compile Include="Environment\Extensions\Loaders\RawThemeExtensionLoader.cs" />
+    <Compile Include="Environment\Features\FeatureManager.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
@@ -185,6 +187,7 @@
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
+    <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="UI\FlatPositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
@@ -658,18 +661,13 @@
     <Compile Include="Events\EventsRegistrationSource.cs" />
     <Compile Include="Environment\Configuration\IShellSettingsManagerEventHandler.cs" />
     <Compile Include="Events\IEventBus.cs" />
-    <Compile Include="Events\IEventBusHandler.cs" />
     <Compile Include="Environment\Extensions\Folders\AreaFolders.cs" />
     <Compile Include="Environment\Extensions\Folders\ExtensionFolders.cs" />
-    <Compile Include="Environment\Extensions\Models\Extension.cs" />
     <Compile Include="Environment\Extensions\Loaders\AreaExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Models\Feature.cs" />
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />
     <Compile Include="Events\IEventHandler.cs" />
-    <Compile Include="Modules\IModule.cs" />
-    <Compile Include="Modules\IModuleFeature.cs" />
-    <Compile Include="Modules\IModuleService.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
@@ -712,7 +710,6 @@
     <Compile Include="Tasks\Scheduling\IScheduledTaskHandler.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\ScheduledTaskContext.cs" />
-    <Compile Include="Themes\ExtensionManagerExtensions.cs" />
     <Compile Include="Environment\Extensions\Helpers\PathHelpers.cs" />
     <Compile Include="Environment\Extensions\IExtensionManager.cs" />
     <Compile Include="Environment\Extensions\Folders\ModuleFolders.cs" />
@@ -774,17 +771,13 @@
     <Compile Include="Security\Authorizer.cs" />
     <Compile Include="Security\Providers\FormsAuthenticationService.cs" />
     <Compile Include="Security\SecurityFilter.cs" />
-    <Compile Include="Security\SecurityModule.cs" />
     <Compile Include="Settings\ISite.cs" />
     <Compile Include="Settings\ISiteService.cs" />
-    <Compile Include="Settings\SettingsModule.cs" />
     <Compile Include="Tasks\BackgroundService.cs" />
     <Compile Include="Tasks\IBackgroundTask.cs" />
     <Compile Include="Tasks\SweepGenerator.cs" />
-    <Compile Include="Themes\ITheme.cs" />
     <Compile Include="Themes\IThemeSelector.cs" />
-    <Compile Include="Themes\IThemeService.cs" />
-    <Compile Include="Themes\ThemesModule.cs" />
+    <Compile Include="Themes\IThemeManager.cs" />
     <Compile Include="UI\Navigation\MenuFilter.cs" />
     <Compile Include="UI\Navigation\NavigationBuilder.cs" />
     <Compile Include="UI\Navigation\INavigationProvider.cs" />
