@@ -1,13 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using Orchard.Commands;
+﻿using Orchard.Commands;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.Security;
 using Orchard.Users.Services;
-using System.Web.Security;
 
 namespace Orchard.Users.Commands {
     public class UserCommands : DefaultOrchardCommandHandler {
