@@ -3,6 +3,7 @@ using System.Web.Hosting;
 using Orchard.Commands;
 using Orchard.Environment.Extensions;
 using Orchard.Packaging.Services;
+using Orchard.UI.Notify;
 
 namespace Orchard.Packaging.Commands {
     [OrchardFeature("Orchard.Packaging")]
@@ -11,9 +12,11 @@ namespace Orchard.Packaging.Commands {
         private const string CreatePackagePath = "CreatedPackages";
 
         private readonly IPackageManager _packageManager;
+        private readonly INotifier _notifier;
 
-        public PackagingCommands(IPackageManager packageManager) {
+        public PackagingCommands(IPackageManager packageManager, INotifier notifier) {
             _packageManager = packageManager;
+            _notifier = notifier;
         }
 
         [OrchardSwitch]
@@ -59,7 +62,10 @@ namespace Orchard.Packaging.Commands {
             }
 
             var packageInfo = _packageManager.Install(packageId, Version, location, solutionFolder);
-            Context.Output.WriteLine(T("Package \"{0}\" successfully installed at \"{1}\"", packageInfo.ExtensionName, packageInfo.ExtensionPath));
+            
+            foreach(var message in _notifier.List()) {
+                Context.Output.WriteLine(message.Message);
+            }
         }
 
         private static string GetSolutionFolder() {

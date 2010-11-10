@@ -81,6 +81,7 @@
     <Compile Include="Services\IPackageExpander.cs" />
     <Compile Include="Services\IPackageManager.cs" />
     <Compile Include="Services\IPackagingSourceManager.cs" />
+    <Compile Include="Services\NugetLogger.cs" />
     <Compile Include="Services\PackageBuilder.cs" />
     <Compile Include="Services\PackageData.cs" />
     <Compile Include="Services\PackageExpander.cs" />
