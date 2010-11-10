@@ -89,10 +89,13 @@ namespace Orchard.Environment.ShellBuilders {
                     }
 
                     foreach (var item in blueprint.Controllers) {
-                        var serviceKey = (item.AreaName + "/" + item.ControllerName).ToLowerInvariant();
+                        var serviceKeyName = (item.AreaName + "/" + item.ControllerName).ToLowerInvariant();
+                        var serviceKeyType = item.Type;
                         RegisterType(builder, item)
                             .EnableDynamicProxy(dynamicProxyContext)
-                            .Keyed<IController>(serviceKey)
+                            .Keyed<IController>(serviceKeyName)
+                            .Keyed<IController>(serviceKeyType)
+                            .WithMetadata("ControllerType", item.Type)
                             .InstancePerDependency()
                             .OnActivating(e => {
                                               var controller = e.Instance as Controller;
