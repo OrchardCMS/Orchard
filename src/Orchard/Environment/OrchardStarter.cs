@@ -44,6 +44,7 @@ namespace Orchard.Environment {
             builder.RegisterType<AppDataFolderRoot>().As<IAppDataFolderRoot>().SingleInstance();
             builder.RegisterType<DefaultExtensionCompiler>().As<IExtensionCompiler>().SingleInstance();
             builder.RegisterType<DefaultProjectFileParser>().As<IProjectFileParser>().SingleInstance();
+            builder.RegisterType<DefaultAssemblyLoader>().As<IAssemblyLoader>().SingleInstance();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);

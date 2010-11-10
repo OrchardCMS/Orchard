@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
@@ -18,17 +19,20 @@ namespace Orchard.Environment.Extensions.Compilers {
         private readonly IProjectFileParser _projectFileParser;
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;
+        private readonly IAssemblyLoader _assemblyLoader;
 
         public DefaultExtensionCompiler(
             IVirtualPathProvider virtualPathProvider,
             IProjectFileParser projectFileParser,
             IDependenciesFolder dependenciesFolder,
-            IEnumerable<IExtensionLoader> loaders) {
+            IEnumerable<IExtensionLoader> loaders,
+            IAssemblyLoader assemblyLoader) {
 
             _virtualPathProvider = virtualPathProvider;
             _projectFileParser = projectFileParser;
             _dependenciesFolder = dependenciesFolder;
             _loaders = loaders;
+            _assemblyLoader = assemblyLoader;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -55,13 +59,30 @@ namespace Orchard.Environment.Extensions.Compilers {
                     }
 
                     // Add assembly references
+                    var addedReferences = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                     foreach (var reference in dependencyDescriptor.References) {
                         var referenceTemp = reference;
                         var loader = _loaders.SingleOrDefault(l => l.Name == referenceTemp.LoaderName);
                         if (loader != null) {
                             var assembly = loader.LoadReference(reference);
-                            if (assembly != null)
+                            if (assembly != null) {
                                 context.AssemblyBuilder.AddAssemblyReference(assembly);
+                                addedReferences.Add(reference.Name);
+                            }
+                        }
+                    }
+
+                    // Load references specified in project file
+                    foreach (var assemblyReference in descriptor.References) {
+                        if (!addedReferences.Contains(assemblyReference.AssemblyName)) {
+                            var assembly = _assemblyLoader.Load(assemblyReference.AssemblyName);
+                            if (assembly != null) {
+                                context.AssemblyBuilder.AddAssemblyReference(assembly);
+                                addedReferences.Add(assemblyReference.AssemblyName);
+                            }
+                            else {
+                                Logger.Warning("Assembly reference '{0}' for project '{1}' skipped due to load error", assemblyReference.AssemblyName, context.VirtualPath);
+                            }
                         }
                     }
                 }
