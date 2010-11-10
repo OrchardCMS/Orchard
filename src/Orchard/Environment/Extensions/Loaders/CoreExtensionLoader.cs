@@ -10,9 +10,11 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// Load an extension by looking into specific namespaces of the "Orchard.Core" assembly
     /// </summary>
     public class CoreExtensionLoader : ExtensionLoaderBase {
+        private readonly IAssemblyLoader _assemblyLoader;
 
-        public CoreExtensionLoader(IDependenciesFolder dependenciesFolder)
+        public CoreExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyLoader assemblyLoader)
             : base(dependenciesFolder) {
+            _assemblyLoader = assemblyLoader;
 
             Logger = NullLogger.Instance;
         }
@@ -36,7 +38,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
             //Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
-            var assembly = Assembly.Load("Orchard.Core");
+            var assembly = _assemblyLoader.Load("Orchard.Core");
 
             return new ExtensionEntry {
                 Descriptor = descriptor,

@@ -36,11 +36,13 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             foreach (var entry in entries) {
                 if (entry.directive != null) {
                     if (entry.directive.StartsWith("<%@ Assembly Name=\"")) {
-                        provider.AssemblyBuilder.AddAssemblyReference(Assembly.Load(entry.descriptor.Name));
+                        var assembly = AssemblyLoader.Load(entry.descriptor.Name);
+                        if (assembly != null)
+                            provider.AssemblyBuilder.AddAssemblyReference();
                     }
                     else if (entry.directive.StartsWith("<%@ Assembly Src=\"")) {
                         // Returned assembly may be null if the .csproj file doesn't containt any .cs file, for example
-                        Assembly assembly = BuildManager.GetCompiledAssembly(entry.descriptor.VirtualPath);
+                        var assembly = BuildManager.GetCompiledAssembly(entry.descriptor.VirtualPath);
                         if (assembly != null)
                             provider.AssemblyBuilder.AddAssemblyReference(assembly);
                     }
@@ -57,12 +59,14 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             set {
                 _hostContainer = value;
                 BuildManager = _hostContainer.Resolve<IBuildManager>();
+                AssemblyLoader = _hostContainer.Resolve<IAssemblyLoader>();
                 DependenciesFolder = _hostContainer.Resolve<IDependenciesFolder>();
                 Loaders = _hostContainer.Resolve<IEnumerable<IExtensionLoader>>();
             }
         }
 
         public IBuildManager BuildManager { get; set; }
+        public IAssemblyLoader AssemblyLoader { get; set; }
         public IDependenciesFolder DependenciesFolder { get; set; }
         public IEnumerable<IExtensionLoader> Loaders { get; set; }
 

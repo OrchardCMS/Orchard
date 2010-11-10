@@ -7,9 +7,11 @@ using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class AreaExtensionLoader : ExtensionLoaderBase {
+        private readonly IAssemblyLoader _assemblyLoader;
 
-        public AreaExtensionLoader(IDependenciesFolder dependenciesFolder)
+        public AreaExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyLoader assemblyLoader)
             : base(dependenciesFolder) {
+            _assemblyLoader = assemblyLoader;
 
             Logger = NullLogger.Instance;
         }
@@ -33,7 +35,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
             //Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
-            var assembly = Assembly.Load("Orchard.Web");
+            var assembly = _assemblyLoader.Load("Orchard.Web");
 
             return new ExtensionEntry {
                 Descriptor = descriptor,
