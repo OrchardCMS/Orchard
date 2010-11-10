@@ -12,8 +12,7 @@ namespace Orchard.Mvc {
 
     public class OrchardControllerFactory : DefaultControllerFactory {
 
-        bool TryResolve<T>(RequestContext requestContext, object serviceKey, out T instance ) {
-            var workContext = requestContext.GetWorkContext();
+        bool TryResolve<T>(WorkContext workContext, object serviceKey, out T instance ) {
             if (workContext != null) {
                 var key = new KeyedService(serviceKey, typeof (T));
                 object value;
@@ -38,22 +37,22 @@ namespace Orchard.Mvc {
 
             // Now that the request container is known - try to resolve the controller information
             Lazy<IController, IControllerType> info;
-            if (TryResolve(requestContext, serviceKey, out info)) {
+            var workContext = requestContext.GetWorkContext();
+            if (TryResolve(workContext, serviceKey, out info)) {
                 return info.Metadata.ControllerType;
             }
 
-            // fail as appropriate for MVC's expectations
-            return null;
+            return workContext == null ? base.GetControllerType(requestContext, controllerName) : null;
         }
 
         protected override IController GetControllerInstance(RequestContext requestContext, System.Type controllerType) {
             IController controller;
-            if (TryResolve(requestContext, controllerType, out controller)) {
+            var workContext = requestContext.GetWorkContext();
+            if (TryResolve(workContext, controllerType, out controller)) {
                 return controller;
             }
 
-            // fail as appropriate for MVC's expectations
-            return null;
+            return workContext == null ? base.GetControllerInstance(requestContext, controllerType) : null;
         }
 
         public static string GetAreaName(RouteBase route) {
