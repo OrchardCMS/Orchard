@@ -356,7 +356,9 @@ form.link button:hover {
 
 /* Content
 ***************************************************************/
-#main h1 {    margin:0 0 1em;}
+#main h1 {
+    margin:0 0 1em;
+}
 #main h2, #main h3 {
     margin:.5em 0;
 }
@@ -514,11 +516,6 @@ textarea {
 .primary .mceEditor {
     display:block;
     margin:0;
-}
-.secondary fieldset {
-    margin:.446% 0 .446% .446%;
-    padding:4px;
-    width:98.662%;
 }
 form.link button {
     background:inherit;
@@ -722,17 +719,6 @@ table.items th, table.items td {
 	display:table-cell;
 	padding:8px 12px;
 	vertical-align:middle;
-}
-table.items td 
-{
-    vertical-align:top;
-}
-/* todo: Find a better way to do this. These are a fix for buttons and label fonts becomming too large in a table.*/
-table label {
-    font-size:1em;
-}
-table .button {
-    font-size:1em;
 }
 
 /* Content item lists
