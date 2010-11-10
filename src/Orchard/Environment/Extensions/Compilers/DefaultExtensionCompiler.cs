@@ -59,7 +59,6 @@ namespace Orchard.Environment.Extensions.Compilers {
                     }
 
                     // Add assembly references
-                    var addedReferences = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                     foreach (var reference in dependencyDescriptor.References) {
                         var referenceTemp = reference;
                         var loader = _loaders.SingleOrDefault(l => l.Name == referenceTemp.LoaderName);
@@ -67,22 +66,18 @@ namespace Orchard.Environment.Extensions.Compilers {
                             var assembly = loader.LoadReference(reference);
                             if (assembly != null) {
                                 context.AssemblyBuilder.AddAssemblyReference(assembly);
-                                addedReferences.Add(reference.Name);
                             }
                         }
                     }
 
                     // Load references specified in project file
                     foreach (var assemblyReference in descriptor.References) {
-                        if (!addedReferences.Contains(assemblyReference.AssemblyName)) {
-                            var assembly = _assemblyLoader.Load(assemblyReference.AssemblyName);
-                            if (assembly != null) {
-                                context.AssemblyBuilder.AddAssemblyReference(assembly);
-                                addedReferences.Add(assemblyReference.AssemblyName);
-                            }
-                            else {
-                                Logger.Warning("Assembly reference '{0}' for project '{1}' skipped due to load error", assemblyReference.AssemblyName, context.VirtualPath);
-                            }
+                        var assembly = _assemblyLoader.Load(assemblyReference.FullName);
+                        if (assembly != null) {
+                            context.AssemblyBuilder.AddAssemblyReference(assembly);
+                        }
+                        else {
+                            Logger.Warning("Assembly reference '{0}' for project '{1}' skipped due to load error", assemblyReference.FullName, context.VirtualPath);
                         }
                     }
                 }

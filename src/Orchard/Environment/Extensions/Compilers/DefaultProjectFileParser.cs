@@ -40,14 +40,14 @@ namespace Orchard.Environment.Extensions.Compilers {
                 .Elements(ns("ItemGroup"))
                 .Elements(ns("Reference"))
                 .Attributes("Include")
-                .Select(c => new ReferenceDescriptor { AssemblyName = ExtractAssemblyName(c.Value) });
+                .Select(c => new ReferenceDescriptor { SimpleName = ExtractAssemblyName(c.Value), FullName = c.Value });
 
             var projectReferences = document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
                 .Elements(ns("ProjectReference"))
                 .Attributes("Include")
-                .Select(c => new ReferenceDescriptor { AssemblyName = Path.GetFileNameWithoutExtension(c.Value) });
+                .Select(c => new ReferenceDescriptor { SimpleName = Path.GetFileNameWithoutExtension(c.Value), FullName = Path.GetFileNameWithoutExtension(c.Value) });
 
             return assemblyReferences.Union(projectReferences);
         }
