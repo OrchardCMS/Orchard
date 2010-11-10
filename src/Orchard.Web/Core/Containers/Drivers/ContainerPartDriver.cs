@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement.Drivers;
+﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Containers.Models;
 using Orchard.Data;
@@ -21,8 +22,12 @@ namespace Orchard.Core.Containers.Drivers {
     }
 
     public class ContainerPartHandler : ContentHandler {
-        public ContainerPartHandler(IRepository<ContainerPartRecord> repository) {
+        public ContainerPartHandler(IRepository<ContainerPartRecord> repository, IOrchardServices orchardServices) {
             Filters.Add(StorageFilter.For(repository));
+            OnInitializing<ContainerPart>((context, part) => {
+                var containerSiteSettings = orchardServices.WorkContext.CurrentSite.As<ContainerSettingsPart>().Record;
+                part.Record.PageSize = containerSiteSettings.DefaultPageSize;
+            });
         }
     }
 }
