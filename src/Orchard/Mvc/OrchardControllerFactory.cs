@@ -42,7 +42,7 @@ namespace Orchard.Mvc {
                 return info.Metadata.ControllerType;
             }
 
-            return workContext == null ? base.GetControllerType(requestContext, controllerName) : null;
+            return null;
         }
 
         protected override IController GetControllerInstance(RequestContext requestContext, System.Type controllerType) {
@@ -52,7 +52,7 @@ namespace Orchard.Mvc {
                 return controller;
             }
 
-            return workContext == null ? base.GetControllerInstance(requestContext, controllerType) : null;
+            return null;
         }
 
         public static string GetAreaName(RouteBase route) {
