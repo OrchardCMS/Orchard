@@ -21,6 +21,7 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
+using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.Tests.Modules;
 using System.Web.Mvc;
@@ -45,6 +46,8 @@ namespace Orchard.Core.Tests.Routable.Services {
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
+            builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
+            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
 
             builder.RegisterType<ThingHandler>().As<IContentHandler>();

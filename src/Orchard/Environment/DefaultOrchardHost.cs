@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading;
-using System.Web.Mvc;
 using System.Collections.Generic;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
@@ -11,10 +10,7 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Mvc;
-using Orchard.Mvc.ViewEngines;
 using Orchard.Utility.Extensions;
-using Autofac;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
@@ -62,7 +58,7 @@ namespace Orchard.Environment {
         }
 
         void IOrchardHost.ReloadExtensions() {
-            _current = null;
+            DisposeShellContext();
         }
 
         void IOrchardHost.BeginRequest() {
@@ -145,9 +141,18 @@ namespace Orchard.Environment {
                               ctx => {
                                   _extensionLoaderCoordinator.MonitorExtensions(ctx.Monitor);
                                   _hostLocalRestart.Monitor(ctx.Monitor);
-                                  _current = null;
+                                  DisposeShellContext();
                                   return "";
                               });
+        }
+
+        private void DisposeShellContext() {
+            if (_current != null) {
+                foreach (var shellContext in _current) {
+                    shellContext.Shell.Terminate();
+                }
+                _current = null;
+            }
         }
 
         protected virtual void BeginRequest() {
@@ -176,11 +181,11 @@ namespace Orchard.Environment {
         }
 
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
-            _current = null;
+            DisposeShellContext();
         }
 
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor) {
-            _current = null;
+            DisposeShellContext();
         }
     }
 }

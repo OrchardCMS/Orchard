@@ -76,6 +76,7 @@
     <Compile Include="Services\CodeGenerationCommandInterpreter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CodeGenerationTemplates\StaticFilesWebConfig.txt" />
     <Content Include="CodeGenerationTemplates\ThemeManifest.txt" />
     <Content Include="Module.txt" />
     <Content Include="CodeGenerationTemplates\Controller.txt" />
@@ -85,7 +86,6 @@
     <Content Include="CodeGenerationTemplates\ModuleManifest.txt" />
     <Content Include="CodeGenerationTemplates\ModuleWebConfig.txt" />
     <Content Include="CodeGenerationTemplates\ViewsWebConfig.txt" />
-    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

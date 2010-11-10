@@ -19,7 +19,7 @@ namespace Orchard.Environment.AutofacUtil {
             get { return _lifetimeScope.ComponentRegistry; }
         }
 
-        public void Dispose() {                
+        public void Dispose() {
         }
 
         public ILifetimeScope BeginLifetimeScope() {

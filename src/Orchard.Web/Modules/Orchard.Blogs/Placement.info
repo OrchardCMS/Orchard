@@ -4,7 +4,6 @@
         Parts_Blogs_Blog_Manage
         Parts_Blogs_Blog_Description
         Parts_Blogs_Blog_BlogPostCount
-        Parts_Blogs_Blog_Pager
         Parts_Blogs_BlogPost_List -> when in the blog detail display the blog post list is currently hard-coded to Content:5 to enable the current state of blog paging
         Parts_Blogs_BlogPost_List_Admin
     -->
@@ -23,7 +22,6 @@
                  ...placing it in in the Content zone as it's currently implemented to light up the RSS feed for the blog... -->
             <!-- Parts_Blogs_RemotePublishing is made available with the "Remote Blog Publishing" feature -->
             <Place Parts_Blogs_BlogPost_List="Content"
-                   Parts_Blogs_Blog_Pager="Content:after"
                    Parts_Blogs_Blog_Description="Content:before"
                    Parts_Blogs_RemotePublishing="Content"/>
         </Match>

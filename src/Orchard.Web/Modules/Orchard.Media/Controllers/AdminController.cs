@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using JetBrains.Annotations;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Media.Models;
 using Orchard.Media.Services;
 using Orchard.Media.ViewModels;
+using Orchard.Settings;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
@@ -153,6 +156,15 @@ namespace Orchard.Media.Controllers {
                 if (!ModelState.IsValid)
                     return View(viewModel);
 
+                // first validate them all
+                foreach (string fileName in Request.Files) {
+                    HttpPostedFileBase file = Request.Files[fileName];
+                    if (!_mediaService.FileAllowed(file)) {
+                        ModelState.AddModelError("File", T("That file type is not allowed.").ToString());
+                        return View(viewModel);
+                    }
+                }
+                // then save them
                 foreach (string fileName in Request.Files) {
                     HttpPostedFileBase file = Request.Files[fileName];
                     _mediaService.UploadMediaFile(viewModel.MediaPath, file);
@@ -195,10 +207,11 @@ namespace Orchard.Media.Controllers {
             }
         }
 
-        public ActionResult EditMedia(string name, string caption, DateTime lastUpdated, long size, string folderName, string mediaPath) {
+        public ActionResult EditMedia(string name, DateTime lastUpdated, long size, string folderName, string mediaPath) {
             var model = new MediaItemEditViewModel();
             model.Name = name;
-            model.Caption = caption ?? String.Empty;
+            // todo: reimplement
+            //model.Caption = caption ?? String.Empty;
             model.LastUpdated = lastUpdated;
             model.Size = size;
             model.FolderName = folderName;

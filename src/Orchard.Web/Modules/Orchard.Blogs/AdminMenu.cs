@@ -16,7 +16,7 @@ namespace Orchard.Blogs {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Blogs"), "1", BuildMenu);
+            builder.Add(T("Blogs"), "2.5", BuildMenu);
         }
 
         private void BuildMenu(NavigationItemBuilder menu) {
@@ -24,16 +24,15 @@ namespace Orchard.Blogs {
             var blogCount = blogs.Count();
             var singleBlog = blogCount == 1 ? blogs.ElementAt(0) : null;
 
-            if (blogCount > 0 && singleBlog == null)
-                menu.Add(T("Manage Blogs"), "1.0",
-                         item =>
-                         item.Action("List", "BlogAdmin", new {area = "Orchard.Blogs"}).Permission(Permissions.MetaListBlogs));
+            if (blogCount > 0 && singleBlog == null) {
+                menu.Add(T("List"), "3",
+                         item => item.Action("List", "BlogAdmin", new {area = "Orchard.Blogs"}).Permission(Permissions.MetaListBlogs));
+            }
             else if (singleBlog != null)
                 menu.Add(T("Manage Blog"), "1.0",
-                    item =>
-                    item.Action("Item", "BlogAdmin", new {area = "Orchard.Blogs", blogSlug = singleBlog.Slug}).Permission(Permissions.MetaListBlogs));
+                    item => item.Action("Item", "BlogAdmin", new { area = "Orchard.Blogs", blogSlug = singleBlog.Slug }).Permission(Permissions.MetaListBlogs));
 
-            if ( singleBlog != null )
+            if (singleBlog != null)
                 menu.Add(T("Create New Post"), "1.1",
                          item =>
                          item.Action("Create", "BlogPostAdmin", new { area = "Orchard.Blogs", blogSlug = singleBlog.Slug }).Permission(Permissions.PublishBlogPost));

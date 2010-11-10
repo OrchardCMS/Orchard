@@ -1,10 +1,6 @@
 ﻿.summary .content-localization {
     margin: .7em 0;
 } 
-.content-localization .content-localizations li,
-.content-localization .add-localization {
-    font-size:1.4em;
-}
 .content-localization .culture-selected {
     margin-bottom:.5em;
 }

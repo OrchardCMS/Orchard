@@ -43,9 +43,29 @@ namespace Orchard.Mvc.Html {
                 return null;
 
             return html.ActionLink(
-                NonNullOrEmpty(linkText, metadata.DisplayText, "edit"),
+                NonNullOrEmpty(linkText, metadata.DisplayText, content.ContentItem.TypeDefinition.DisplayName),
                 Convert.ToString(metadata.EditorRouteValues["action"]),
                 metadata.EditorRouteValues.Merge(additionalRouteValues));
+        }
+
+        public static string ItemDisplayUrl(this UrlHelper urlHelper, IContent content) {
+            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
+            if (metadata.DisplayRouteValues == null)
+                return null;
+
+            return urlHelper.Action(
+                Convert.ToString(metadata.DisplayRouteValues["action"]),
+                metadata.DisplayRouteValues);
+        }
+
+        public static string ItemEditUrl(this UrlHelper urlHelper, IContent content) {
+            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
+            if (metadata.DisplayRouteValues == null)
+                return null;
+
+            return urlHelper.Action(
+                Convert.ToString(metadata.EditorRouteValues["action"]),
+                metadata.EditorRouteValues);
         }
 
         private static string NonNullOrEmpty(params string[] values) {

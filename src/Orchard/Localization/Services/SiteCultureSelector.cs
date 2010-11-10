@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Web;
-using JetBrains.Annotations;
-using Orchard.Settings;
 
 namespace Orchard.Localization.Services {
     public class SiteCultureSelector : ICultureSelector {
-       protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
+        private readonly IWorkContextAccessor _workContextAccessor;
+
+        public SiteCultureSelector(IWorkContextAccessor workContextAccessor) {
+            _workContextAccessor = workContextAccessor;
+        }
 
         public CultureSelectorResult GetCulture(HttpContextBase context) {
-            string currentCultureName = CurrentSite.SiteCulture;
+            string currentCultureName = _workContextAccessor.GetContext().CurrentSite.SiteCulture;
 
             if (String.IsNullOrEmpty(currentCultureName)) {
                 return null;

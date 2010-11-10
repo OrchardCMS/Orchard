@@ -16,6 +16,9 @@ using PackageIndexReferenceImplementation.Services;
 namespace PackageIndexReferenceImplementation.Controllers {
     [HandleError]
     public class FeedController : Controller {
+        private const string VersionTag = "Version";
+        private const string ExtensionsNamespace = "http://orchardproject.net";
+
         private readonly FeedStorage _feedStorage;
         private readonly MediaStorage _mediaStorage;
 
@@ -104,7 +107,12 @@ namespace PackageIndexReferenceImplementation.Controllers {
             }
 
             if ( !string.IsNullOrEmpty(packageProperties.Version) ) {
-                item.ElementExtensions.Add("Version", "http://orchardproject.net", packageProperties.Version);
+                var versionExtensions = item.ElementExtensions.Where(e => e.OuterName == VersionTag && e.OuterNamespace == ExtensionsNamespace);
+                foreach(var versionExtension in versionExtensions) {
+                    item.ElementExtensions.Remove(versionExtension);
+                }
+
+                item.ElementExtensions.Add(VersionTag, ExtensionsNamespace, packageProperties.Version);
             }
 
             var mediaIdentifier = packageProperties.Identifier + "-" + packageProperties.Version + ".zip";

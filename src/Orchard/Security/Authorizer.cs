@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
@@ -14,16 +13,18 @@ namespace Orchard.Security {
     public class Authorizer : IAuthorizer {
         private readonly IAuthorizationService _authorizationService;
         private readonly INotifier _notifier;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         public Authorizer(
             IAuthorizationService authorizationService,
-            INotifier notifier) {
+            INotifier notifier,
+            IWorkContextAccessor workContextAccessor) {
             _authorizationService = authorizationService;
             _notifier = notifier;
+            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
 
-        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
         public Localizer T { get; set; }
 
         public bool Authorize(Permission permission) {
@@ -35,17 +36,17 @@ namespace Orchard.Security {
         }
 
         public bool Authorize(Permission permission, IContent content, LocalizedString message) {
-            if (_authorizationService.TryCheckAccess(permission, CurrentUser, content))
+            if (_authorizationService.TryCheckAccess(permission, _workContextAccessor.GetContext().CurrentUser, content))
                 return true;
 
             if (message != null) {
-                if (CurrentUser == null) {
+                if (_workContextAccessor.GetContext().CurrentUser == null) {
                     _notifier.Error(T("{0}. Anonymous users do not have {1} permission.",
                                       message, permission.Name));
                 }
                 else {
                     _notifier.Error(T("{0}. Current user, {2}, does not have {1} permission.",
-                                      message, permission.Name, CurrentUser.UserName));
+                                      message, permission.Name, _workContextAccessor.GetContext().CurrentUser.UserName));
                 }
             }
 

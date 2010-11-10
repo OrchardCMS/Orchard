@@ -35,11 +35,12 @@
         <select id="orderResults" name="Options.OrderBy">
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())
+            @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Published, T("recently published").ToString())
         </select>
         <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
     </fieldset>
     <fieldset class="contentItems bulk-items">
 @Display(Model.ContentItems)
-@Display(Model.ContentItems2)
     </fieldset>
+@Display(Model.Pager)
 }

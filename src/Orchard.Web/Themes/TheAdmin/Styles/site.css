@@ -1,69 +1,142 @@
-﻿/* begin: reset
-   todo: (heskew) pare down and combine with existing selectors where appropriate */
-/* http://meyerweb.com/eric/tools/css/reset/ */
-/* v1.0 | 20080212 */
+﻿/*
+Theme: Theme Admin
+Author: Orchard Team – http://www.orchardproject.net
+Copyright: 2010, Orchard. All Rights Reserved
+*/
+
+
+/*  Color Palette
+**************************************************************
+
+Background:
+Borders: 
+Text:
+Secondary Text: 
+Main Accent: 
+Links:
+*/
+
+
+
+/* Reset
+***************************************************************/
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, font, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
-	border:0;
-	font-size:100%;
-	margin:0;
-	padding:0;
-	vertical-align:baseline;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
 }
-ol, ul {
-	list-style:none;
-}
-blockquote, q {
-	quotes:none;
-}
+
+/* Remember focus styles! */
+:focus { outline: 0; }
+
+body { line-height: 1; color: black; background: white; }
+ol, ul { list-style: none; }
+
+/* Tables still need 'cellspacing="0"' in the markup */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+
 blockquote:before, blockquote:after,
-q:before, q:after {
-	content:'';
-	content:none;
-}
-ins {
-	text-decoration:none;
-}
-del {
-	text-decoration:line-through;
-}
-table {
-	border-collapse:collapse;
-	border-spacing:0;
-}
+q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+/* HTML 5 elements as block */  
+header, footer, aside, nav, article { display: block; }
 /* end: reset */
 
-/* Base setup
-----------------------------------------------------------*/
+
+/* Clearing Floats
+***************************************************************/
+
+.group:after 
+{
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+
+/* General
+***************************************************************/
+
+/* Default font settings. 
+The font-size 81.3% sets the base font to 13px 
+
+Pixels 	EMs 	    Percent Points
+6px 	0.462em 	46.2% 	5pt
+7px 	0.538em 	53.8% 	5pt
+8px 	0.615em 	61.5% 	6pt
+9px 	0.692em 	69.2% 	7pt
+10px 	0.769em 	76.9% 	8pt
+11px 	0.846em 	84.6% 	8pt
+12px 	0.923em 	92.3% 	9pt
+13px 	1em 	    100% 	10pt
+14px 	1.077em 	107.7% 	11pt
+15px 	1.154em 	115.4% 	11pt
+16px 	1.231em 	123.1% 	12pt
+17px 	1.308em 	130.8% 	13pt
+18px 	1.385em 	138.5% 	14pt
+19px 	1.462em 	146.2% 	14pt
+20px 	1.538em 	153.8% 	15pt
+21px 	1.615em 	161.5% 	16pt
+22px 	1.692em 	169.2% 	17pt
+23px 	1.769em 	176.9% 	17pt
+24px 	1.846em 	184.6% 	18pt
+*/
+
 html {
     background:#2d2f25;
     color:#333;
 }
-body {
-	color:#333;
-    font-family:Segoe UI,Trebuchet,Arial,Sans-Serif;
-    font-size:62.5%; /* 10px */
-	line-height:1.6em;
-    margin:0 auto 1em;
-    min-width:74em; /* 946px */
-    padding:0;
+
+body { 
+  font-size: 81.3%;
+  color: #333; 
+  background: #fff;
+  font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+  line-height:1.6em;
+  margin:0 auto 1em;  
+  min-width:74em; /* 946px */
+  padding:0;
 }
-button {
-    font-family:Segoe UI,Trebuchet,Arial,Sans-Serif;
+
+/* Headings */
+h1,h2,h3,h4,h5,h6 { font-weight: normal;}
+
+h1 { font-size: 1.692em }
+h2 { font-size: 1.538em; }
+h3 { font-size: 1.231em; }
+h4 { font-size: 1.154em; }
+h5 { font-size: 1.077em; }
+h6 { font-size: 1em; }
+
+h1, h2, h3, h4, h5, legend {
+    padding:.4em 0;
+    font-style: normal;
+    font-weight:normal;
 }
-body#preview {
-    min-width:0;
+
+h1 img, h2 img, h3 img, 
+h4 img, h5 img, h6 img {
+  margin: 0;
 }
-#content {
-    background:#fcfcfc;
-}
+
 
 /* Layout
 
@@ -116,52 +189,18 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     float:right;
     width:83.08%;
 }
-#navigation {
+#menu .menu-admin {
     display:inline;
     float:left;
     width:15.401%;
-    border-right:1px solid #eaeaea;
 }
 .wrapper, .sections {
     overflow:hidden;
 }
-.sections .primary {
-    display:inline;
-    float:left;
-    width:74.543%;
-}
-.sections .secondary {
-    display:inline;
-    float:left;
-    margin-left:1.71%;
-    width:23.629%;
-}
 
-/* Headings and defaults
-----------------------------------------------------------*/
-h1, h2, h3, h4, h5, legend {
-    padding:.4em 0;
-    font-style: normal;
-    font-weight:normal;
-}
-h1 { font-size:2.6em; } /* 26px */
-h2 { font-size:2.1em; } /* 21px */
-h2 span { font-size:.57em; } /* 12px */
-h3 { font-size:1.8em; } /* 18px */
-h3 span { font-size:.667em; } /* 12px */
-h4 { font-size:1.6em; } /* 16px */
-h5 { font-size:1.4em; } /* 14px */
-
-h6, p, dl, label, /*input, select,*/ .button,
-.message, .validation-summary-errors,
-table.items th, table.items td, table.items caption { font-size:1.4em; line-height:1.4em; } /* 14px */
-table.items p, table.items label, table.items input, table.items .button { font-size:1em; line-height:1em; }
-p .button { font-size:inherit; }
-.meta, .hint { font-size:1.2em; } /* 12px */
-form.link button { font-size:1.01em; }
 
 /* Links
-----------------------------------------------------------*/
+***************************************************************/
 a, a:link, a:visited,
 form.link button {
     color:#1e5d7d;
@@ -179,7 +218,7 @@ form.link button:hover {
 }
 
 /* Header - Branding and Login  
-----------------------------------------------------------*/
+***************************************************************/
 #header {
 	background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;
 	height:50px;
@@ -195,76 +234,76 @@ form.link button:hover {
 	height:60px;
 	margin:-11px 0 0 14px;
 	text-indent:-9999px;
-	width:105px;
-}
-#header #app a {
-	background:url(images/orchardLogo.gif) no-repeat;
-	display:block;
-	height:60px;
-	margin:-11px 0 0 14px;
-	text-indent:-9999px;
-	width:35px;
+	width:40px;
 }
 #site {
-    font-size:2em;
+    font-size:1.385em; /*18px*/
 }
 #site a, #site a:visited, #site a:active {
 	color:#fff;
 	float:left;
-	line-height:2.2em;
-	padding:0 0 0 6px;
+	line-height:2.6em;
 	position:relative;
 }
+
 #login {
-    font-size:1.5em;
 	color:#fff;
 	display:block;
 	float:right;
-	margin:16px 20px 0 0;
+	margin:14px 20px 0 0;
 	white-space:nowrap;
 }
+
 #login a, #login a:link, #login a:visited {
     color:#fff;
     padding:0;
 }
+
 #login a:hover, #login a:active, #login a:focus {
     color:#ffea9b;
 }
 
 /* Navigation
-----------------------------------------------------------*/
+***************************************************************/
 #navshortcut {
     height:0;
     overflow:hidden;
     width:0;
 }
-#navigation li {
+#menu .menu-admin li {
 	margin:5px 0 17px 4px;
 }
-#navigation ul li {
+#menu .menu-admin ul li {
     border:0;
     margin:0;
 }
-#navigation li h3 {
+#menu .menu-admin li h3 {
     padding:0 0 0 8px;
 }
-#navigation li h3 a, #navigation li h3 span {
+#menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
 	line-height:1.2em;
 }
-#navigation ul a, #navigation ul a:link, #navigation ul a:visited {
+#menu .menu-admin ul a, #menu .menu-admin ul a:link, #menu .menu-admin ul a:visited {
 	color:#2d2f25;
 	display:block;
-	font-size:1.4em;
 	line-height:1.2em;
 	padding:.4em 0 .4em 12px;
 	text-decoration:none;
 }
-#navigation ul a:hover, #navigation ul a:active, #navigation ul a:focus {
+#menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus {
 	background:#f5f5f5;
 	color: #000;
 	text-decoration:underline;
 }
-
+#menu .menu-admin li.section-dashboard h3 {
+    padding:.4em 0 0 .4em;
+    font-size:1.308em;
+}
+.section-new {
+    border-top:1px solid #d3d3d3;
+    border-bottom:1px solid #d3d3d3;
+    padding:12px 0;
+}
 /* todo: make generic so all toggles can use this and clean up jQuery */
 .expando-glyph-container {
     display:inline !important;
@@ -316,10 +355,8 @@ form.link button:hover {
 }
 
 /* Content
-----------------------------------------------------------*/
-#main h1 {
-    margin:0 0 1em;
-}
+***************************************************************/
+#main h1 {    margin:0 0 1em;}
 #main h2, #main h3 {
     margin:.5em 0;
 }
@@ -338,20 +375,16 @@ form.link button:hover {
 #main form.inline {
     margin:0;
 }
-#main h1, #main h2 {
-    border-bottom:1px solid #eaeaea;
-}
 #main ul h2 {
     border-bottom:0;
     margin:.2em 0;
 }
 #main ul h3 {
-    font-size:1.6em;
     margin:0 0 .2em;
 }
 
 /* Confirmations, Messages and the like
-----------------------------------------------------------*/
+***************************************************************/
 .message, .validation-summary-errors {
 	margin:10px 0 4px 0;
     padding:4px;
@@ -398,8 +431,15 @@ span.message {
     content:"DEBUG » ";
 }
 
-/* Forms   
-----------------------------------------------------------*/
+/* Forms
+***************************************************************/
+
+form              { margin: 0; padding: 0; }
+legend            { font-size: 1.231em; font-weight: normal; border:none; }
+fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
+label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
+label.forcheckbox { margin:0 0 0 .4em; display:inline; }
+
 form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
     display:inline;
 }
@@ -412,21 +452,9 @@ form.inline fieldset {
     margin:0 1.4em 0 0;
     padding-top:0;
 }
-legend {
-    font-size:1.6em;
-    font-weight:bold;
-}
+
 legend span {
     font-weight:normal;
-}
-label {
-	display:block;
-	color:#4c4c4c;
-	font-weight:bold;
-}
-label.forcheckbox {
-    display:inline;
-    line-height:1.8em;
 }
 .bulk-actions label, .bulk-items h3, label.sub {
     display:inline;
@@ -492,55 +520,39 @@ textarea {
     padding:4px;
     width:98.662%;
 }
-button, .button, .button:link, .button:visited {
-    background:#F5F5F5;
-	background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#cbcbcb));
-	background:-moz-linear-gradient(top , #F5F5F5, #cbcbcb);
-	border:1px solid #999999;
-	color:#2D2F25;
-	cursor:pointer;
-	padding:0 0.8em 0.1em 0.8em;
-	text-align:center;
-	text-shadow: 0 1px 1px rgba(0,0,0,.2);
-	box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
-	-webkit-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
-	-moz-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
-
-}
 form.link button {
     background:inherit;
     border:0;
     padding:0;
     width:auto;
     margin:-2px -3px 0;
-    
+
+    /*Remove CSS3 button properties*/
+    filter:none;
+    background:none;
+    background:none;
+    box-shadow:none;
+    -webkit-box-shadow:none;
+    -moz-box-shadow:none;
+    border-radius:none;
+    -webkit-border-radius:none;
+    -moz-border-radius:none;   
 }
-.primaryAction, .primaryAction:link, .primaryAction:visited {
+button.primaryAction, .button.primaryAction, .button.primaryAction:link, .button.primaryAction:visited {
     background:#4687ad;
+    border:1px solid #405f71;
+	color:#fff;
+
+    /*CSS3 properties*/
+	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#4687AD',  endColorstr='#366581');
 	background: -webkit-gradient(linear, left top, left bottom, from(#4687AD), to(#366581));
 	background:-moz-linear-gradient(top , #4687AD, #366581);
-	border:1px solid #405f71;
-	color:#fff;
 }
 button.remove, .remove.button, .remove.button:link, .remove.button:visited {
     background-color:#DECCCA;
     background-image:url(images/tableHeaderBackgroundRed.gif);
     border-color:#d6c9c7;
     color:#5c3732;
-}
-button:hover, .button:hover,
-button:active, .button:active,
-button:focus, .button:focus {
-    border-color:#bb8b2d;
-    color:#fff;
-    text-decoration:none; 
-    background: #ffac40;
-	background: -webkit-gradient(linear, left top, left bottom, from(#ffac40), to(#f06015));
-	background: -moz-linear-gradient(top,  #ffac40,  #f9760d);
-
-}
-button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
-    border-color:#8a8f7a;
 }
 button.remove:hover, .remove.button:hover,
 button.remove:active, .remove.button:active,
@@ -555,6 +567,56 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 .delete.button {
     float:right;
 }
+input[type="submit"], input[type="reset"], input[type="button"], button, .button, .button:link, .button:visited
+  {
+        font-size: 107.7%; /*14px*/
+  		color:#333;
+		background:#F5F5F5;
+		border:1px solid #999;
+		cursor:pointer;
+		padding: 0 12px 2px 12px;
+		text-align:center;
+		
+		/*CSS3 properties*/
+		filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f5f5f5',  endColorstr='#cbcbcb');
+		background: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#cbcbcb));
+		background: -moz-linear-gradient(top, #f5f5f5, #cbcbcb);
+		box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+		-webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3); 
+		-moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+		border-radius: 3px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+    }
+input[type="submit"]:hover,input[type="reset"]:hover, input[type="button"]:hover, button:hover, .button:hover, .button.primaryAction:hover {
+	text-decoration:none; 
+	background: #ffac40;
+	color:#fff;
+	border:1px solid #bb8b2d;
+	
+	/*CSS3 properties*/	
+	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffac40',  endColorstr='#f9760d');
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffac40), to(#f9760d));
+	background: -moz-linear-gradient(top, #ffac40, #f9760d);
+}
+input[type="submit"]:active, input[type="reset"]:active, input[type="button"]:active, button:active, .buton:active, .button.primaryAction:active {
+	text-decoration:none; 
+	background: #62a9e2;
+	color:#fff;
+ 	border:1px solid #bb772d;
+ 
+ 	/*CSS3 properties*/
+ 	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fece3b',  endColorstr='#fe6001');
+ 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fece3b), to(#fe6001));
+	background: -moz-linear-gradient(top, #fece3b, #fe6001);
+	box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+	-moz-box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+	-webkit-box-shadow: inset 1px 1px 1px rgba(254, 225, 109, 0.6), 1px 1px 1px rgba(102, 102, 102, 0.1);
+}
+input[type="submit"]:focus::-moz-focus-inner, button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
+  border: 1px dotted transparent;
+}
+
 .cancel {
     margin:0 0 0 .93em;
 }
@@ -613,49 +675,6 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 }
 
 
-/* Icon buttons
-----------------------------------------------------------*/
-.ibutton, .ibutton:link, .ibutton:visited,
-button.ibutton, button.ibutton:hover, button.ibutton:focus, button.ibutton:active {
-    background:url(images/icons.png) 0 -20px;
-    border:0;
-    display:inline;
-    float:left;
-    height:17px;
-    overflow:hidden;
-    padding:0 0 0 17px;
-    width:0;
-}
-button.ibutton {
-    text-indent:-9999em;
-}
-.ibutton:hover, .ibutton:active, .ibutton:focus { background-position:0 0; }
-.ibutton.remove,
-.ibutton.remove:link,
-.ibutton.remove:visited { background-position:-20px -20px; }
-.ibutton.remove:hover, .ibutton.remove:active, .ibutton.remove:focus { background-position:-20px 0; }
-.ibutton.view,
-.ibutton.view:link,
-.ibutton.view:visited { background-position:-40px -20px; }
-.ibutton.view:hover, .ibutton.view:active, .ibutton.view:focus { background-position:-40px 0; }
-.ibutton.add.page,
-.ibutton.add.page:link,
-.ibutton.add.page:visited { background-position:-60px -20px; }
-.ibutton.add.page:hover, .ibutton.add.page:active, .ibutton.add.page:focus { background-position:-60px 0; }
-.ibutton.edit,
-.ibutton.edit:link,
-.ibutton.edit:visited { background-position:-80px -20px; }
-.ibutton.edit:hover, .ibutton.edit:active, .ibutton.edit:focus { background-position:-80px 0; }
-.ibutton.publish,
-.ibutton.publish:link,
-.ibutton.publish:visited { background-position:-100px -20px; }
-.ibutton.publish:hover, .ibutton.publish:active, .ibutton.publish:focus { background-position:-100px 0; }
-.ibutton.blog,
-.ibutton.blog:link,
-.ibutton.blog:visited { background-position:-120px -20px; }
-.ibutton.blog:hover, .ibutton.blog:active, .ibutton.blog:focus { background-position:-120px 0; }
-
-
 /* (Items) Tables
 ----------------------------------------------------------*/
 table.items {
@@ -689,6 +708,7 @@ table.items thead, table.items th {
 	font-weight:700;
 	overflow:hidden;
 	text-align:left;
+	white-space:nowrap;
 }
 /* todo: (heskew) hook back up */
 table.items tr.hover {
@@ -703,6 +723,10 @@ table.items th, table.items td {
 	padding:8px 12px;
 	vertical-align:middle;
 }
+table.items td 
+{
+    vertical-align:top;
+}
 /* todo: Find a better way to do this. These are a fix for buttons and label fonts becomming too large in a table.*/
 table label {
     font-size:1em;
@@ -710,7 +734,6 @@ table label {
 table .button {
     font-size:1em;
 }
-
 
 /* Content item lists
 ----------------------------------------------------------*/
@@ -779,16 +802,13 @@ table .button {
 .contentItems .properties li {
     border:0;
     float:left;
-    font-size:1.4em;
     padding:0 0 .1em 0;
 }
 .contentItems .properties .icon {
     margin:0 .2em -.2em;
 }
 .contentItems .related {
-
     text-align:right;
-    font-size:1.4em;
 }
 .contentItems .commentcount {
     line-height:2em;
@@ -796,6 +816,16 @@ table .button {
 #main .contentItems p {
     margin:1em 0 0;
 }
+
+
+/* Pager
+***************************************************************/
+
+.pager { list-style: none; padding: 0; margin: 12px 0 0 0; }
+.pager li { float: left; padding: 0 12px 0 0; margin: 0; }
+.pager a, .pager span { font-size: 1.077em; display: block; background-color: whiteSmoke; padding: 6px 6px; color: #333;}
+.pager a:hover { background-color: #eaeaea; color: #333; }
+.pager span { background-color:inherit; }
 
 
 /* Core Modules
@@ -818,15 +848,58 @@ table .button {
     white-space:nowrap;
 }
 /* Settings */
-.settings fieldset {
+.orchard-media fieldset div, .settings fieldset div, .settings .button {
     margin:.5em 0;
-    padding:1em;
-}
-.orchard-media fieldset div, .settings fieldset div, .orchard-media .button, .settings .button {
-    margin:1em 0 .5em 1em;
 }
 .settings legend {
-    margin:0 0 -.4em 0;
+    margin:0 0 -.4em;
+}
+/* Core Contents and Orchard.PublishLater */
+
+.orchard-blogs .edit-item-sidebar, .contents .edit-item-sidebar 
+{
+    border:1px solid #d3d3d3;
+    padding:6px;
+    
+    /*CSS3 properties*/
+		filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f7f7f7', endColorstr='#f5f5f5');
+		background: -webkit-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#f5f5f5));
+		background: -moz-linear-gradient(top, #f7f7f7, #f5f5f5);
+		border-radius: 3px;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+}
+
+.edit-item-sidebar fieldset {
+    margin:0;
+    padding:0;
+}
+
+fieldset.publish-button {
+    clear:none;
+    float:left;
+    margin: 0 12px;
+    padding: 0 12px;
+    border-left:1px solid #ccc;
+}
+fieldset.save-button {
+    clear:none;
+    float:left;
+    padding-right:0;
+    width:auto;
+}
+fieldset.publish-later-datetime {
+    clear:none;
+    float:left;
+    margin: 0 6px;
+}
+fieldset.publish-later-datetime legend {
+    display:none;
+}
+fieldset.publish-later-datetime input {
+    padding:1px;
+    text-align:center;
+    color:#666;
 }
 
 /* Fields
@@ -843,4 +916,13 @@ table .button {
 /* todo: needed? */
 .clearBoth {
 	clear:both;
+}
+.placeholderd {
+    color:#ccc;
+    font-style:italic;
+}
+#orchard-version {
+    color:#FCFCFC;
+    float:right;
+    padding:.7em 1.4em;
 }

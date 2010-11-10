@@ -2,7 +2,11 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Data.Migration;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Features;
 using Orchard.Localization;
+using Orchard.Modules.Services;
 using Orchard.Modules.ViewModels;
 using Orchard.Packaging.Services;
 using Orchard.Reports.Services;
@@ -14,18 +18,27 @@ namespace Orchard.Modules.Controllers {
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IPackageManager _packageManager;
         private readonly IReportsCoordinator _reportsCoordinator;
+        private readonly IExtensionManager _extensionManager;
+        private readonly IFeatureManager _featureManager;
+        private readonly ShellDescriptor _shellDescriptor;
 
         public AdminController(IOrchardServices services,
             IModuleService moduleService,
             IDataMigrationManager dataMigrationManager,
             IPackageManager packageManager,
-            IReportsCoordinator reportsCoordinator) {
+            IReportsCoordinator reportsCoordinator,
+            IExtensionManager extensionManager,
+            IFeatureManager featureManager,
+            ShellDescriptor shellDescriptor) {
 
             Services = services;
             _moduleService = moduleService;
             _dataMigrationManager = dataMigrationManager;
             _packageManager = packageManager;
             _reportsCoordinator = reportsCoordinator;
+            _extensionManager = extensionManager;
+            _featureManager = featureManager;
+            _shellDescriptor = shellDescriptor;
 
             T = NullLocalizer.Instance;
         }
@@ -37,7 +50,7 @@ namespace Orchard.Modules.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageModules, T("Not allowed to manage modules")))
                 return new HttpUnauthorizedResult();
 
-            var modules = _moduleService.GetInstalledModules().ToList();
+            var modules = _extensionManager.AvailableExtensions().Where(x => x.ExtensionType == "Module");
             return View(new ModulesIndexViewModel { Modules = modules });
         }
 
@@ -85,10 +98,16 @@ namespace Orchard.Modules.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
-            var features = _moduleService.GetAvailableFeatures().Where(f => !f.Descriptor.Extension.ExtensionType.Equals("Theme", StringComparison.OrdinalIgnoreCase)).ToList();
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
-            return View(new FeaturesViewModel { Features = features, FeaturesThatNeedUpdate = featuresThatNeedUpdate });
+            var features = _featureManager.GetAvailableFeatures()
+                .Where(f => !f.Extension.ExtensionType.Equals("Theme", StringComparison.OrdinalIgnoreCase))
+                .Select(f=>new ModuleFeature{Descriptor=f,
+                IsEnabled=_shellDescriptor.Features.Any(sf=>sf.Name==f.Name),
+                NeedsUpdate=featuresThatNeedUpdate.Contains(f.Name)})
+                .ToList();
+
+            return View(new FeaturesViewModel { Features = features });
         }
 
         [HttpPost]

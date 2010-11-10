@@ -48,7 +48,8 @@
     <MSBuild
       Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService.sln"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64" />      
+      Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64;DefineConstants=AZURE" 
+       />      
 
     <MSBuild
       Projects="$(SrcFolder)\Orchard.Azure.sln"

@@ -53,7 +53,7 @@ namespace Orchard.DisplayManagement.Implementation {
                 return CoerceHtmlString(context.Value);
 
             var workContext = _workContextAccessor.GetContext(context.ViewContext);
-            var shapeTable = _shapeTableManager.GetShapeTable(workContext.CurrentTheme.ThemeName);
+            var shapeTable = _shapeTableManager.GetShapeTable(workContext.CurrentTheme.Name);
 
             var displayingContext = new ShapeDisplayingContext {
                 Shape = shape,

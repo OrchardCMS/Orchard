@@ -73,7 +73,8 @@ namespace Orchard.ContentTypes.Services {
 
             var contentTypeDefinition = new ContentTypeDefinition(name, typeViewModel.DisplayName);
             _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
-            _contentDefinitionManager.AlterTypeDefinition(name, cfg => cfg.Creatable());
+            _contentDefinitionManager.AlterTypeDefinition(name,
+                cfg => cfg.Creatable().Draftable());
 
             return new EditTypeViewModel(contentTypeDefinition);
         }

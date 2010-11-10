@@ -127,7 +127,7 @@
   <ItemGroup>
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
-    <EmbeddedResource Include="Packaging\Migrations.cs.txt" />
+    <Compile Include="Media\Extensions\LongExtensionsTests.cs" />
     <EmbeddedResource Include="Packaging\HelloDriver.cs.txt" />
     <Compile Include="Packaging\PackageExpanderTests.cs" />
     <Compile Include="Packaging\PackageBuilderTests.cs" />
@@ -159,6 +159,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.CodeGeneration\Orchard.CodeGeneration.csproj">
       <Project>{C0C45321-B51D-4D8D-9B7B-AA4C2E0B2962}</Project>
       <Name>Orchard.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Media\Orchard.Media.csproj">
+      <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
+      <Name>Orchard.Media</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Modules\Orchard.Modules.csproj">
       <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>

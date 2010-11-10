@@ -8,10 +8,8 @@ namespace Orchard.Experimental {
         public Localizer T { get; set; }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Site Configuration"), "11",
-                        menu => menu
-                                    .Add(T("Experimental"), "10.0", item => item.Action("Index", "Home", new { area = "Orchard.Experimental" })
-                                                                                ));
+            builder.Add(T("Configuration"), "50",
+                menu => menu.Add(T("Experimental"), "50", item => item.Action("Index", "Home", new { area = "Orchard.Experimental" })));
         }
     }
 }

@@ -1,21 +1,25 @@
 ﻿@model Orchard.Tags.ViewModels.TagsAdminIndexViewModel
-
 @using Orchard.Tags.ViewModels;
+@using Orchard.Utility.Extensions;
+@{
+    Script.Require("ShapesBase");
+    Style.Require("TagsAdmin");
+}
 
 <h1>@Html.TitleForPage(T("Manage Tags").ToString()) </h1>
-
-    @Html.ValidationSummary()
-
+@Html.ValidationSummary() 
+<div class="manage">
+    @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: View.CreateTag != null ? View.CreateTag : new TagsAdminCreateViewModel())
+</div>
+@using(Html.BeginFormAntiForgeryPost()) {
 	<fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)">
             @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, T("Remove").ToString())
         </select>
-        <input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
+        <button type="submit"name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
-
-    <div class="manage">@Html.ActionLink(T("Add a tag").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
     <fieldset>
         <table class="items" summary="@T("This is a table of the tags in your application")" >
             <colgroup>
@@ -36,13 +40,15 @@
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.Tags[tagIndex].IsChecked)"/>
                 </td>
                 <td>
-                    @Html.ActionLink(Html.Encode(tagEntry.Tag.TagName), "Search", new {id = tagEntry.Tag.Id})
+                    @Html.ActionLink(tagEntry.Tag.TagName, "Edit", new {id = tagEntry.Tag.Id})
                 </td>
                 <td>
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new {id = tagEntry.Tag.Id})
+                    @Html.ActionLink(T("Edit").ToString(), "Edit", new {id = tagEntry.Tag.Id}) @T(" | ")
+                    <a href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
                 </td>
             </tr>
             tagIndex = tagIndex + 1;
 			}
         </table>
     </fieldset>
+}
