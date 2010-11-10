@@ -38,7 +38,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                     if (entry.directive.StartsWith("<%@ Assembly Name=\"")) {
                         var assembly = AssemblyLoader.Load(entry.descriptor.Name);
                         if (assembly != null)
-                            provider.AssemblyBuilder.AddAssemblyReference();
+                            provider.AssemblyBuilder.AddAssemblyReference(assembly);
                     }
                     else if (entry.directive.StartsWith("<%@ Assembly Src=\"")) {
                         // Returned assembly may be null if the .csproj file doesn't containt any .cs file, for example
