@@ -3,6 +3,6 @@ using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.ViewModels {
     public class PackagingSourcesViewModel {
-        public IEnumerable<PackagingSourceRecord> Sources { get; set; }
+        public IEnumerable<PackagingSource> Sources { get; set; }
     }
 }

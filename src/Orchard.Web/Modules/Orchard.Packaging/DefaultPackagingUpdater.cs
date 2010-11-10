@@ -6,7 +6,7 @@ using Orchard.Localization;
 using Orchard.Packaging.Services;
 
 namespace Orchard.Packaging {
-    [OrchardFeature("Gallery")]
+    [OrchardFeature("PackagingServices")]
     public class DefaultPackagingUpdater : IFeatureEventHandler {
         private readonly IPackagingSourceManager _packagingSourceManager;
 

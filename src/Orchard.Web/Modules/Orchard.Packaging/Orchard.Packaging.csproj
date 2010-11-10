@@ -77,7 +77,7 @@
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="DefaultPackagingUpdater.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\PackagingSourceRecord.cs" />
+    <Compile Include="Models\PackagingSource.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\AtomExtensions.cs" />
     <Compile Include="Services\IPackageBuilder.cs" />
@@ -90,7 +90,6 @@
     <Compile Include="Services\PackageExpander.cs" />
     <Compile Include="Services\PackageManager.cs" />
     <Compile Include="Services\PackagingEntry.cs" />
-    <Compile Include="Services\PackagingSource.cs" />
     <Compile Include="Services\PackagingSourceManager.cs" />
     <Compile Include="ViewModels\PackagingAddSourceViewModel.cs" />
     <Compile Include="ViewModels\PackagingHarvestViewModel.cs" />

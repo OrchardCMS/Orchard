@@ -13,9 +13,9 @@ namespace Orchard.Packaging.Services {
         private const string ModulesFilter = "Orchard.Module.";
         private const string ThemesFilter = "Orchard.Theme.";
 
-        private readonly IRepository<PackagingSourceRecord> _packagingSourceRecordRepository;
+        private readonly IRepository<PackagingSource> _packagingSourceRecordRepository;
 
-        public PackagingSourceManager(IRepository<PackagingSourceRecord> packagingSourceRecordRepository) {
+        public PackagingSourceManager(IRepository<PackagingSource> packagingSourceRecordRepository) {
             _packagingSourceRecordRepository = packagingSourceRecordRepository;
             T = NullLocalizer.Instance;
         }
@@ -24,12 +24,12 @@ namespace Orchard.Packaging.Services {
 
         #region IPackagingSourceManager Members
 
-        public IEnumerable<PackagingSourceRecord> GetSources() {
+        public IEnumerable<PackagingSource> GetSources() {
             return _packagingSourceRecordRepository.Table.ToList();
         }
 
         public void AddSource(string feedTitle, string feedUrl) {
-            _packagingSourceRecordRepository.Create(new PackagingSourceRecord {FeedTitle = feedTitle, FeedUrl = feedUrl});
+            _packagingSourceRecordRepository.Create(new PackagingSource {FeedTitle = feedTitle, FeedUrl = feedUrl});
         }
 
         public void RemoveSource(int id) {
@@ -39,14 +39,14 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        public IEnumerable<PackagingEntry> GetModuleList(PackagingSourceRecord packagingSource = null) {
+        public IEnumerable<PackagingEntry> GetModuleList(PackagingSource packagingSource = null) {
             return GetExtensionList(ModulesFilter, packagingSource);
         }
-        public IEnumerable<PackagingEntry> GetThemeList(PackagingSourceRecord packagingSource = null) {
+        public IEnumerable<PackagingEntry> GetThemeList(PackagingSource packagingSource = null) {
             return GetExtensionList(ThemesFilter, packagingSource);
         }
 
-        private IEnumerable<PackagingEntry> GetExtensionList(string filter = null, PackagingSourceRecord packagingSource = null) {
+        private IEnumerable<PackagingEntry> GetExtensionList(string filter = null, PackagingSource packagingSource = null) {
             return ( packagingSource == null ? GetSources() : new[] { packagingSource } )
                 .SelectMany(
                     source =>

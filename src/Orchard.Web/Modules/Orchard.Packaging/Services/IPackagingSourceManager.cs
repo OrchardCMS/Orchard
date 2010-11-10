@@ -4,11 +4,11 @@ using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
     public interface IPackagingSourceManager : IDependency {
-        IEnumerable<PackagingSourceRecord> GetSources();
+        IEnumerable<PackagingSource> GetSources();
         void AddSource(string feedTitle, string feedUrl);
         void RemoveSource(int id);
 
-        IEnumerable<PackagingEntry> GetModuleList(PackagingSourceRecord packagingSource = null);
-        IEnumerable<PackagingEntry> GetThemeList(PackagingSourceRecord packagingSource = null);
+        IEnumerable<PackagingEntry> GetModuleList(PackagingSource packagingSource = null);
+        IEnumerable<PackagingEntry> GetThemeList(PackagingSource packagingSource = null);
     }
 }

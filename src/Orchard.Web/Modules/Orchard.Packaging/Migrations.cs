@@ -1,6 +1,8 @@
 ﻿using Orchard.Data.Migration;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.Packaging {
+    [OrchardFeature("PackagingServices")]
     public class Migrations: DataMigrationImpl {
         public int Create() {
             SchemaBuilder.CreateTable("PackagingSourceRecord", 

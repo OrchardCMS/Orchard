@@ -4,7 +4,7 @@ using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
     public class PackagingEntry {
-        public PackagingSourceRecord Source { get; set; }
+        public PackagingSource Source { get; set; }
         public string Title { get; set; }
         public string PackageId { get; set; }
         public string Version { get; set; }
