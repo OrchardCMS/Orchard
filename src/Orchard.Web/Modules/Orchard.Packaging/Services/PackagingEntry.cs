@@ -1,10 +1,16 @@
-using System.ServiceModel.Syndication;
+
+using System;
+using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
     public class PackagingEntry {
-        public PackagingSource Source { get; set; }
-        public SyndicationFeed SyndicationFeed { get; set; }
-        public SyndicationItem SyndicationItem { get; set; }
+        public PackagingSourceRecord Source { get; set; }
+        public string Title { get; set; }
+        public string PackageId { get; set; }
+        public string Version { get; set; }
         public string PackageStreamUri { get; set; }
+        public DateTime LastUpdated { get; set; }
+        public string Authors { get; set; }
+        public string Description { get; set; }
     }
 }

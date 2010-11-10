@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
     public interface IPackagingSourceManager : IDependency {
-        IEnumerable<PackagingSource> GetSources();
-        void AddSource(PackagingSource source);
-        void RemoveSource(Guid id);
-        void UpdateLists();
+        IEnumerable<PackagingSourceRecord> GetSources();
+        void AddSource(string feedTitle, string feedUrl);
+        void RemoveSource(int id);
 
-        IEnumerable<PackagingEntry> GetModuleList(PackagingSource packagingSource = null);
+        IEnumerable<PackagingEntry> GetModuleList(PackagingSourceRecord packagingSource = null);
+        IEnumerable<PackagingEntry> GetThemeList(PackagingSourceRecord packagingSource = null);
     }
 }

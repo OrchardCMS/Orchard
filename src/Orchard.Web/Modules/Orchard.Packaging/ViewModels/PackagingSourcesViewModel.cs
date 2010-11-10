@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Orchard.Packaging.Services;
+using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.ViewModels {
     public class PackagingSourcesViewModel {
-        public IEnumerable<PackagingSource> Sources { get; set; }
+        public IEnumerable<PackagingSourceRecord> Sources { get; set; }
     }
 }
