@@ -80,6 +80,7 @@
     <Compile Include="Models\PackagingSource.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\AtomExtensions.cs" />
+    <Compile Include="Services\FileBaseProjectSystem.cs" />
     <Compile Include="Services\IPackageBuilder.cs" />
     <Compile Include="Services\IPackageExpander.cs" />
     <Compile Include="Services\IPackageManager.cs" />

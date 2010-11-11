@@ -38,7 +38,7 @@ namespace Orchard.Packaging.Services {
             var packageManager = new NuGetPackageManager(
                     packageRepository,
                     new DefaultPackagePathResolver(location),
-                    new FileBasedProjectSystem(packagesPath) { Logger = logger }
+                    new PhysicalFileSystem(packagesPath) { Logger = logger }
                 ) {Logger = logger};
 
             // specifically tells to ignore dependencies
