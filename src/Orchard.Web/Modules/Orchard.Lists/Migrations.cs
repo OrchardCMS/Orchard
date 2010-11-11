@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Orchard.ContentManagement.MetaData;
+﻿using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
@@ -17,12 +13,12 @@ namespace Orchard.Lists {
                     .WithPart("MenuPart")
                     .Creatable());
 
-            //ContentDefinitionManager.AlterTypeDefinition("ListWidget",
-            //    cfg => cfg
-            //        .WithPart("CommonPart")
-            //        .WithPart("WidgetPart")
-            //        .WithPart("ListWidgetPart")
-            //        .WithSetting("Stereotype", "Widget"));
+            ContentDefinitionManager.AlterTypeDefinition("ListWidget",
+                cfg => cfg
+                    .WithPart("CommonPart")
+                    .WithPart("WidgetPart")
+                    .WithPart("ContainerPart")
+                    .WithSetting("Stereotype", "Widget"));
 
             return 1;
         }
