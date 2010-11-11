@@ -19,7 +19,7 @@ namespace Orchard.Tests.Modules.Packaging {
     public class PackageExpanderTests : ContainerTestBase {
         protected override void Register(Autofac.ContainerBuilder builder) {
             builder.RegisterType<PackageBuilder>().As<IPackageBuilder>();
-            builder.RegisterType<PackageExpander>().As<IPackageExpander>();
+            builder.RegisterType<PackageInstaller>().As<IPackageInstaller>();
             builder.RegisterInstance<IVirtualPathProvider>(new StubVirtualPathProvider(new StubFileSystem(new Clock())));
             builder.RegisterType<InMemoryWebSiteFolder>().As<IWebSiteFolder>()
                 .As<InMemoryWebSiteFolder>().InstancePerLifetimeScope();

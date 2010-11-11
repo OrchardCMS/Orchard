@@ -8,20 +8,23 @@ using NuGetPackageManager = NuGet.PackageManager;
 
 namespace Orchard.Packaging.Services {
     [OrchardFeature("PackagingServices")]
-    public class PackageExpander : IPackageExpander {
+    public class PackageInstaller : IPackageInstaller {
+        private const string PackagesPath = "packages";
+        private const string ProjectPath = "Orchard.Web";
+
         private readonly INotifier _notifier;
 
-        public PackageExpander(INotifier notifier) {
+        public PackageInstaller(INotifier notifier) {
             _notifier = notifier;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public PackageInfo ExpandPackage(string packageId, string version, string location, string solutionFolder) {
+        public PackageInfo Install(string packageId, string version, string location, string solutionFolder) {
 
-            var packagesPath = Path.Combine(solutionFolder, "packages"); // where to download/uncompress packages
-            var projectPath = Path.Combine(solutionFolder, "Orchard.Web"); // where to install packages (in the project's folder)
+            var packagesPath = Path.Combine(solutionFolder, PackagesPath); // where to download/uncompress packages
+            var projectPath = Path.Combine(solutionFolder, ProjectPath); // where to install packages (in the project's folder)
             var logger = new NugetLogger(_notifier);
 
             // instantiates the appropriate package repository
@@ -61,5 +64,31 @@ namespace Orchard.Packaging.Services {
             };
         }
 
+        public void Uninstall(string packageId, string solutionFolder) {
+            var packagesPath = Path.Combine(solutionFolder, PackagesPath); // where to download/uncompress packages
+            var projectPath = Path.Combine(solutionFolder, ProjectPath); // where to install packages (in the project's folder)
+            var logger = new NugetLogger(_notifier);
+
+            // instantiates the appropriate package repository
+            var packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource("Default", packagesPath));
+
+            var packageManager = new NuGetPackageManager(
+                    packageRepository,
+                    new DefaultPackagePathResolver(packagesPath),
+                    new PhysicalFileSystem(packagesPath) { Logger = logger }
+                ) { Logger = logger };
+
+            // specifically tells to ignore dependencies
+            packageManager.UninstallPackage(packageId);
+
+            var projectManager = new ProjectManager(
+               new LocalPackageRepository(packagesPath), // source repository for the package to install
+               new DefaultPackagePathResolver(packagesPath),
+               new FileBasedProjectSystem(projectPath) { Logger = logger } // the location of the project (where to copy the content files)
+               ) { Logger = logger };
+
+            // add the package to the project
+            projectManager.RemovePackageReference(packageId);
+        }
     }
 }

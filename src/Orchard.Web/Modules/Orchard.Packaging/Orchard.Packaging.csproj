@@ -82,13 +82,13 @@
     <Compile Include="Services\AtomExtensions.cs" />
     <Compile Include="Services\FileBaseProjectSystem.cs" />
     <Compile Include="Services\IPackageBuilder.cs" />
-    <Compile Include="Services\IPackageExpander.cs" />
+    <Compile Include="Services\IPackageInstaller.cs" />
     <Compile Include="Services\IPackageManager.cs" />
     <Compile Include="Services\IPackagingSourceManager.cs" />
     <Compile Include="Services\NugetLogger.cs" />
     <Compile Include="Services\PackageBuilder.cs" />
     <Compile Include="Services\PackageData.cs" />
-    <Compile Include="Services\PackageExpander.cs" />
+    <Compile Include="Services\PackageInstaller.cs" />
     <Compile Include="Services\PackageManager.cs" />
     <Compile Include="Services\PackagingEntry.cs" />
     <Compile Include="Services\PackagingSourceManager.cs" />

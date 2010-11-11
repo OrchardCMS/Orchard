@@ -7,12 +7,12 @@ namespace Orchard.Packaging.Services {
     public class PackageManager : IPackageManager {
         private readonly IExtensionManager _extensionManager;
         private readonly IPackageBuilder _packageBuilder;
-        private readonly IPackageExpander _packageExpander;
+        private readonly IPackageInstaller _packageExpander;
 
         public PackageManager(
             IExtensionManager extensionManager,
             IPackageBuilder packageBuilder,
-            IPackageExpander packageExpander) {
+            IPackageInstaller packageExpander) {
             _extensionManager = extensionManager;
             _packageBuilder = packageBuilder;
             _packageExpander = packageExpander;
@@ -34,9 +34,12 @@ namespace Orchard.Packaging.Services {
         }
 
         public PackageInfo Install(string packageId, string version, string location, string solutionFolder) {
-            return _packageExpander.ExpandPackage(packageId, version, location, solutionFolder);
+            return _packageExpander.Install(packageId, version, location, solutionFolder);
         }
 
+        public void Uninstall(string packageId, string solutionFolder) {
+            _packageExpander.Uninstall(packageId, solutionFolder);
+        }
         #endregion
     }
 }

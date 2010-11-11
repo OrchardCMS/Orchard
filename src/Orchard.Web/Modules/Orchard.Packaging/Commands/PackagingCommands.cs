@@ -60,13 +60,28 @@ namespace Orchard.Packaging.Commands {
                 Context.Output.WriteLine(T("The project's location is not supported"));
             }
 
-            var packageInfo = _packageManager.Install(packageId, Version, Path.GetFullPath(location), solutionFolder);
+            _packageManager.Install(packageId, Version, Path.GetFullPath(location), solutionFolder);
             
             foreach(var message in _notifier.List()) {
                 Context.Output.WriteLine(message.Message);
             }
         }
 
+        [CommandHelp("package uninstall <packageId> \r\n\t" + "Uninstall a module or a theme.")]
+        [CommandName("package uninstall")]
+        public void UninstallPackage(string packageId) {
+            var solutionFolder = GetSolutionFolder();
+
+            if ( solutionFolder == null ) {
+                Context.Output.WriteLine(T("The project's location is not supported"));
+            }
+
+            _packageManager.Uninstall(packageId, solutionFolder);
+
+            foreach ( var message in _notifier.List() ) {
+                Context.Output.WriteLine(message.Message);
+            }
+        }
         private static string GetSolutionFolder() {
             var orchardDirectory = Directory.GetParent(OrchardWebProj);
             return orchardDirectory.Parent == null ? null : orchardDirectory.Parent.FullName;
