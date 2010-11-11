@@ -16,11 +16,10 @@ namespace Orchard.Logging {
             // by default, use Orchard's logger that delegates to Castle's logger factory
             moduleBuilder.RegisterType<CastleLoggerFactory>().As<ILoggerFactory>().InstancePerLifetimeScope();
 
-            try {
-                // by default, use Castle's TraceSource based logger factory
-                new SecurityPermission(SecurityPermissionFlag.ControlEvidence | SecurityPermissionFlag.ControlPolicy).Demand();
+            // Register logger type
+            if (AppDomain.CurrentDomain.IsHomogenous && AppDomain.CurrentDomain.IsFullyTrusted) {
                 moduleBuilder.RegisterType<TraceLoggerFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
-            } catch (SecurityException) {
+            } else {
                 // if security model does not allow it, fall back to null logger factory
                 moduleBuilder.RegisterType<NullLogFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
             }
