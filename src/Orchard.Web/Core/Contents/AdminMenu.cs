@@ -24,17 +24,19 @@ namespace Orchard.Core.Contents {
             builder.Add(T("Content"), "2",
                         menu => menu.Add(T("Content Items"), "1", item => item.Action("List", "Admin", new {area = "Contents", id = ""})));
 
-            builder.Add(T("New"), "-1", menu => {
-                menu.Add(T("Content Item"), "1", item => item.Action("List", "Admin", new { area = "Contents", id = "" }));
-                foreach (var contentTypeDefinition in contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable).OrderBy(ctd => ctd.DisplayName)) {
-                    var ci = _contentManager.New(contentTypeDefinition.Name);
-                    var cim = _contentManager.GetItemMetadata(ci);
-                    var createRouteValues = cim.CreateRouteValues;
-                    // review: the display name should be a LocalizedString
-                    if (createRouteValues.Any())
-                        menu.Add(T(contentTypeDefinition.DisplayName), "5", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues));
-                }
-            });
+            var contentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable).OrderBy(ctd => ctd.DisplayName);
+            if (contentTypes.Count() > 0) {
+                builder.Add(T("New"), "-1", menu => {
+                    foreach (var contentTypeDefinition in contentTypes) {
+                        var ci = _contentManager.New(contentTypeDefinition.Name);
+                        var cim = _contentManager.GetItemMetadata(ci);
+                        var createRouteValues = cim.CreateRouteValues;
+                        // review: the display name should be a LocalizedString
+                        if (createRouteValues.Any())
+                            menu.Add(T(contentTypeDefinition.DisplayName), "5", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues));
+                    }
+                });
+            }
         }
     }
 }
