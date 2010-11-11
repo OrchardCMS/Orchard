@@ -60,7 +60,7 @@ namespace Orchard.Packaging.Commands {
                 Context.Output.WriteLine(T("The project's location is not supported"));
             }
 
-            var packageInfo = _packageManager.Install(packageId, Version, location, solutionFolder);
+            var packageInfo = _packageManager.Install(packageId, Version, Path.GetFullPath(location), solutionFolder);
             
             foreach(var message in _notifier.List()) {
                 Context.Output.WriteLine(message.Message);

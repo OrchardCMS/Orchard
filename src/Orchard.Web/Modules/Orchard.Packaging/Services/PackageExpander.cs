@@ -47,8 +47,7 @@ namespace Orchard.Packaging.Services {
             var projectManager = new ProjectManager(
                 new LocalPackageRepository(packagesPath), // source repository for the package to install
                 new DefaultPackagePathResolver(location),
-                new FileBasedProjectSystem(projectPath) { Logger = logger }, // the location of the project (where to copy the content files)
-                new LocalPackageRepository(projectPath)
+                new FileBasedProjectSystem(projectPath) { Logger = logger } // the location of the project (where to copy the content files)
                 ) {Logger = logger};
 
             // add the package to the project
