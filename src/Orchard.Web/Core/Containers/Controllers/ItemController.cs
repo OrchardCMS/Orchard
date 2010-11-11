@@ -7,6 +7,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
 using Orchard.Themes;
+using Orchard.UI.Navigation;
 
 namespace Orchard.Core.Containers.Controllers {
     public class ItemController : Controller {
@@ -22,7 +23,7 @@ namespace Orchard.Core.Containers.Controllers {
         dynamic New { get; set; }
 
         [Themed]
-        public ActionResult Display(string path, int? page) {
+        public ActionResult Display(string path, Pager pager) {
             var matchedPath = _containersPathConstraint.FindPath(path);
             if (string.IsNullOrEmpty(matchedPath)) {
                 throw new ApplicationException("404 - should not have passed path constraint");

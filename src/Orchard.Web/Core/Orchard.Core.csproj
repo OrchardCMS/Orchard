@@ -79,15 +79,14 @@
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
     <Compile Include="Containers\ContainersPathConstraint.cs" />
     <Compile Include="Containers\Migrations.cs" />
-    <Compile Include="Containers\Drivers\ContainerSettingsPartDriver.cs" />
     <Compile Include="Containers\Models\ContainerSettingsPart.cs" />
-    <Compile Include="Containers\Models\ContainerSettingsPartRecord.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
     <Compile Include="Containers\Models\ContainerPart.cs" />
     <Compile Include="Common\Shapes.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Containers\Routes.cs" />
     <Compile Include="Containers\Services\ContainersPathConstraintUpdater.cs" />
+    <Compile Include="Containers\Settings\ContainerSettings.cs" />
     <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
@@ -402,7 +401,8 @@
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Container.cshtml" />
     <Content Include="Containers\Views\Item\Display.cshtml" />
-    <Content Include="Containers\Views\EditorTemplates\Container.SiteSettings.cshtml" />
+    <Content Include="Containers\Views\DefinitionTemplates\ContainerPartSettings.cshtml" />
+    <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettings.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

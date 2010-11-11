@@ -1,7 +1,9 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
+using Orchard.Core.Containers.Settings;
 using Orchard.Data;
 
 namespace Orchard.Core.Containers.Drivers {
@@ -25,8 +27,14 @@ namespace Orchard.Core.Containers.Drivers {
         public ContainerPartHandler(IRepository<ContainerPartRecord> repository, IOrchardServices orchardServices) {
             Filters.Add(StorageFilter.For(repository));
             OnInitializing<ContainerPart>((context, part) => {
-                var containerSiteSettings = orchardServices.WorkContext.CurrentSite.As<ContainerSettingsPart>().Record;
-                part.Record.PageSize = containerSiteSettings.DefaultPageSize;
+                part.Record.PageSize = part.Settings.GetModel<ContainerTypePartSettings>().PageSizeDefault
+                    ?? part.PartDefinition.Settings.GetModel<ContainerPartSettings>().PageSizeDefault;
+                part.Record.Paginated = part.Settings.GetModel<ContainerTypePartSettings>().PaginatedDefault
+                    ?? part.PartDefinition.Settings.GetModel<ContainerPartSettings>().PaginatedDefault;
+
+                //hard-coded defaults for ordering
+                part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.PublishedUtc" : "";
+                part.Record.OrderByDirection = (int)OrderByDirection.Descending;
             });
         }
     }

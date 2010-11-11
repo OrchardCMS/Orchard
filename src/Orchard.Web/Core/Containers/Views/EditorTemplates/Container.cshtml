@@ -1,21 +1,21 @@
 ﻿@model Orchard.Core.Containers.Models.ContainerPart
-
-<fieldset>
-    @Html.LabelFor(m => m.Record.PageSize, T("Page Size"))
-    @Html.TextBoxFor(m => m.Record.PageSize)
+@using Orchard.Core.Containers.Models;
+<fieldset class="with-checkbox">
+    <span>
+        @Html.LabelFor(m => m.Record.PageSize, T("Page Size"))
+        @Html.EditorFor(m => m.Record.PageSize)
+    </span>
+    <span class="checkbox-and-label">
+        @Html.CheckBoxFor(m => m.Record.Paginated)
+        <label for="@Html.FieldIdFor( m => m.Record.Paginated)" class="forcheckbox">@T("Show paging controls")</label>
+    </span>
 </fieldset>
-
 <fieldset>
-    @Html.LabelFor(m => m.Record.Paginated, T("Paginated"))
-    @Html.TextBoxFor(m => m.Record.Paginated)
-</fieldset>
-
-<fieldset>
-    @Html.LabelFor(m => m.Record.OrderByProperty, T("OrderByProperty"))
-    @Html.TextBoxFor(m => m.Record.OrderByProperty)
-</fieldset>
-
-<fieldset>
-    @Html.LabelFor(m => m.Record.OrderByDirection, T("OrderByDirection"))
-    @Html.TextBoxFor(m => m.Record.OrderByDirection)
+    @Html.LabelFor(m => m.Record.OrderByProperty, T("Order By"))
+    @Html.TextBoxFor(m => m.Record.OrderByProperty, new { @class = "textMedium" })
+    <select id="@Html.FieldIdFor( m => m.Record.OrderByDirection)" name="@Html.FieldIdFor( m => m.Record.OrderByDirection)">
+        @Html.SelectOption(Model.Record.OrderByDirection, (int)OrderByDirection.Ascending, T("Ascending").Text)
+        @Html.SelectOption(Model.Record.OrderByDirection, (int)OrderByDirection.Descending, T("Descending").Text)
+    </select>
+    <span class="hint">Currently, only ordering by a content part property is supported (e.g. CommonPart.PublishedUtc).</span>
 </fieldset>

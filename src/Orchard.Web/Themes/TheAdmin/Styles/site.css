@@ -833,7 +833,11 @@ table.items th, table.items td {
     border-color:#666d51;
     border-style:solid;
 }
-.permalink .checkbox-and-label {
+/* Routable and Containers (Core) */
+.with-checkbox .checkbox-and-label { /* todo: (heskew) routable should be changed to use this too */
+    margin-left:10px;
+}
+.checkbox-and-label {
     white-space:nowrap;
 }
 /* Settings */
