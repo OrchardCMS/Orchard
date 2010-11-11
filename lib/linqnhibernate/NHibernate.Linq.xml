@@ -486,6 +486,12 @@
         <!-- Badly formed XML comment ignored for member "M:NHibernate.Linq.Visitors.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})" -->
         <!-- Badly formed XML comment ignored for member "M:NHibernate.Linq.Visitors.Evaluator.PartialEval(System.Linq.Expressions.Expression)" -->
         <!-- Badly formed XML comment ignored for member "T:NHibernate.Linq.Visitors.Evaluator.SubtreeEvaluator" -->
+        <member name="T:NHibernate.Linq.Visitors.Evaluator.Condensor">
+            <summary>
+            Brings certain basic expression patterns closer to the surface to
+            avoid a lambda compile and dynamic invoke in simple cases
+            </summary>
+        </member>
         <member name="T:NHibernate.Linq.Visitors.Evaluator.Nominator">
             <summary>
             Performs bottom-up analysis to determine which nodes can possibly
