@@ -36,10 +36,10 @@ namespace Orchard.Mvc {
             var serviceKey = (areaName + "/" + controllerName).ToLowerInvariant();
 
             // Now that the request container is known - try to resolve the controller information
-            Lazy<IController, IControllerType> info;
+            Lazy<Meta<IController>> info;
             var workContext = requestContext.GetWorkContext();
             if (TryResolve(workContext, serviceKey, out info)) {
-                return info.Metadata.ControllerType;
+                return (Type) info.Value.Metadata["ControllerType"];
             }
 
             return null;
