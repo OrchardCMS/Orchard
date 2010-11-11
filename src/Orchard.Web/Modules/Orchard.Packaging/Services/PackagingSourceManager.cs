@@ -29,7 +29,8 @@ namespace Orchard.Packaging.Services {
         }
 
         public void AddSource(string feedTitle, string feedUrl) {
-            _packagingSourceRecordRepository.Create(new PackagingSource {FeedTitle = feedTitle, FeedUrl = feedUrl});
+            var packagingSource = new PackagingSource {FeedTitle = feedTitle, FeedUrl = feedUrl};
+            _packagingSourceRecordRepository.Create(packagingSource);
         }
 
         public void RemoveSource(int id) {

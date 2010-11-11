@@ -25,9 +25,7 @@ namespace Orchard.Packaging.Services {
             var logger = new NugetLogger(_notifier);
 
             // instantiates the appropriate package repository
-            var packageRepository = Uri.IsWellFormedUriString(location, UriKind.Absolute)
-                ? new DataServicePackageRepository(new Uri(location))
-                : new LocalPackageRepository(location) as IPackageRepository;
+            var packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource("Default", location));
 
             // gets an IPackage instance from the repository
             var packageVersion = String.IsNullOrEmpty(version) ? null : new Version(version);
@@ -50,7 +48,7 @@ namespace Orchard.Packaging.Services {
                 new LocalPackageRepository(packagesPath), // source repository for the package to install
                 new DefaultPackagePathResolver(location),
                 new FileBasedProjectSystem(projectPath) { Logger = logger }, // the location of the project (where to copy the content files)
-                new LocalPackageRepository(packagesPath) // the location of the uncompressed package, used to check if the package is already installed
+                new LocalPackageRepository(projectPath)
                 ) {Logger = logger};
 
             // add the package to the project

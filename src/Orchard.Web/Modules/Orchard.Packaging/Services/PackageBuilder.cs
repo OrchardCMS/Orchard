@@ -143,11 +143,12 @@ namespace Orchard.Packaging.Services {
             context.SourceFolder = webSiteFolder;
             if (moduleType == "Theme") {
                 context.SourcePath = "~/Themes/" + moduleName + "/";
+                context.TargetPath = "\\Content\\Themes\\" + moduleName + "\\";
             }
             else {
                 context.SourcePath = "~/Modules/" + moduleName + "/";
+                context.TargetPath = "\\Content\\Modules\\" + moduleName + "\\";
             }
-            context.TargetPath = "\\Content\\Modules\\" + moduleName + "\\";
         }
 
         private static bool LoadProject(CreateContext context, string relativePath) {

@@ -21,26 +21,25 @@ namespace Orchard.Packaging.Commands {
 
         [OrchardSwitch]
         public string Version { get; set; }
-        
-        [CommandHelp("package create <moduleName>\r\n\t" + "Create a package for the module <moduleName>. The default filename is Orchard.<extension>.<moduleName>.<moduleVersion>.nupkg.")]
+
+        [CommandHelp("package create <extensionName> <path> \r\n\t" + "Create a package for the module <moduleName>. The default filename is Orchard.<extension>.<extensionName>.<moduleVersion>.nupkg.")]
         [CommandName("package create")]
-        public void CreatePackage(string moduleName) {
-            var packageData = _packageManager.Harvest(moduleName);
+        public void CreatePackage(string extensionName, string path) {
+            var packageData = _packageManager.Harvest(extensionName);
             if (packageData == null) {
-                Context.Output.WriteLine(T("Module \"{0}\" does not exist in this Orchard installation.", moduleName));
+                Context.Output.WriteLine(T("Module or Theme \"{0}\" does not exist in this Orchard installation.", extensionName));
                 return;
             }
 
             // append "Orchard.[ExtensionType]" to prevent conflicts with other packages (e.g, TinyMce, jQuery, ...)
             var filename = string.Format("Orchard.{0}.{1}.{2}.nupkg", packageData.ExtensionType, packageData.ExtensionName, packageData.ExtensionVersion);
-            var packagePath = Path.Combine(GetSolutionFolder(), CreatePackagePath);
 
-            if(!Directory.Exists(packagePath)) {
-                Directory.CreateDirectory(packagePath);
+            if ( !Directory.Exists(path) ) {
+                Directory.CreateDirectory(path);
             }
 
             // packages are created in a specific folder otherwise they are in /bin, which crashed the current shell
-            filename = Path.Combine(packagePath, filename);
+            filename = Path.Combine(path, filename);
 
             using ( var stream = File.Create(filename) ) {
                 packageData.PackageStream.CopyTo(stream);
