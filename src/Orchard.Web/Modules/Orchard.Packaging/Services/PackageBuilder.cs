@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Packaging;
 using System.Linq;
 using System.Net.Mime;
 using System.Reflection;
-using System.Web;
-using System.Web.Hosting;
 using System.Xml.Linq;
+using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 
+using NuGetPackageBuilder = NuGet.PackageBuilder;
+
 namespace Orchard.Packaging.Services {
     [OrchardFeature("PackagingServices")]
     public class PackageBuilder : IPackageBuilder {
-        private readonly IExtensionManager _extensionManager;
         private readonly IWebSiteFolder _webSiteFolder;
 
         private static readonly string[] _ignoredThemeExtensions = new[] {
@@ -31,12 +30,9 @@ namespace Orchard.Packaging.Services {
                 _ignoredThemeExtensions.Contains(Path.GetExtension(filePath) ?? "");
         }
 
-        public PackageBuilder(IExtensionManager extensionManager, IWebSiteFolder webSiteFolder) {
-            _extensionManager = extensionManager;
+        public PackageBuilder(IWebSiteFolder webSiteFolder) {
             _webSiteFolder = webSiteFolder;
         }
-
-        #region IPackageBuilder Members
 
         public Stream BuildPackage(ExtensionDescriptor extensionDescriptor) {
             var context = new CreateContext();
@@ -66,30 +62,19 @@ namespace Orchard.Packaging.Services {
 
             return context.Stream;
         }
-
-        #endregion
-
+        
         private void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
-            PackageProperties properties = context.Package.PackageProperties;
-            properties.Title = extensionDescriptor.DisplayName ?? extensionDescriptor.Name;
-            //properties.Subject = "";
-            properties.Creator = extensionDescriptor.Author;
-            properties.Keywords = extensionDescriptor.Tags;
-            properties.Description = extensionDescriptor.Description;
-            //properties.LastModifiedBy = "";
-            //properties.Revision = "";
-            //properties.LastPrinted = "";
-            //properties.Created = "";
-            //properties.Modified = "";
-            properties.Category = extensionDescriptor.Features.Where(f => f.Name == extensionDescriptor.Name).Select(f => f.Category).FirstOrDefault();
-            properties.Identifier = extensionDescriptor.Name;
-            properties.ContentType = "Orchard " + extensionDescriptor.ExtensionType;
-            //properties.Language = "";
-            properties.Version = extensionDescriptor.Version;
-            properties.ContentStatus = "";
+            context.Builder.Id = "Orchard." + extensionDescriptor.ExtensionType + "." + extensionDescriptor.Name;
+            context.Builder.Version = new Version(extensionDescriptor.Version);
+            context.Builder.Title = extensionDescriptor.DisplayName ?? extensionDescriptor.Name;
+            context.Builder.Description = extensionDescriptor.Description;
+            context.Builder.Authors.Add(extensionDescriptor.Author);
+
+            if(Uri.IsWellFormedUriString(extensionDescriptor.WebSite, UriKind.Absolute)) {
+                context.Builder.ProjectUrl = new Uri(extensionDescriptor.WebSite);
+            }
         }
-
-
+        
         private void EmbedProjectFiles(CreateContext context, params string[] itemGroupTypes) {
             IEnumerable<XElement> itemGroups = context.Project
                 .Elements(Ns("Project"))
@@ -125,7 +110,7 @@ namespace Orchard.Packaging.Services {
                 if (context.SourceFolder.FileExists(context.SourcePath + virtualPath)) {
                     EmbedVirtualFile(context, virtualPath, MediaTypeNames.Application.Octet);
                 }
-                else if (hintPath != null) {}
+                else if (hintPath != null) { }
             }
         }
 
@@ -151,18 +136,19 @@ namespace Orchard.Packaging.Services {
 
         private static void BeginPackage(CreateContext context) {
             context.Stream = new MemoryStream();
-            context.Package = Package.Open(context.Stream, FileMode.Create, FileAccess.ReadWrite);
+            context.Builder = new NuGetPackageBuilder();
         }
 
         private static void EstablishPaths(CreateContext context, IWebSiteFolder webSiteFolder, string locationPath, string moduleName, string moduleType) {
             context.SourceFolder = webSiteFolder;
             if (moduleType == "Theme") {
                 context.SourcePath = "~/Themes/" + moduleName + "/";
+                context.TargetPath = "\\Content\\Themes\\" + moduleName + "\\";
             }
             else {
                 context.SourcePath = "~/Modules/" + moduleName + "/";
+                context.TargetPath = "\\Content\\Modules\\" + moduleName + "\\";
             }
-            context.TargetPath = "\\" + moduleName + "\\";
         }
 
         private static bool LoadProject(CreateContext context, string relativePath) {
@@ -174,24 +160,24 @@ namespace Orchard.Packaging.Services {
             return false;
         }
 
-        private static Uri EmbedVirtualFile(CreateContext context, string relativePath, string contentType) {
-            Uri partUri = PackUriHelper.CreatePartUri(new Uri(context.TargetPath + relativePath, UriKind.Relative));
-            PackagePart packagePart = context.Package.CreatePart(partUri, contentType);
-            using (Stream stream = packagePart.GetStream(FileMode.Create, FileAccess.Write)) {
-                context.SourceFolder.CopyFileTo(context.SourcePath + relativePath, stream, true /*actualContent*/);
-            }
-            return partUri;
+        private static void EmbedVirtualFile(CreateContext context, string relativePath, string contentType) {
+            var file = new VirtualPackageFile(
+                context.SourceFolder,
+                context.SourcePath + relativePath, 
+                context.TargetPath + relativePath);
+            context.Builder.Files.Add(file);
         }
 
+
         private static void EndPackage(CreateContext context) {
-            context.Package.Close();
+            context.Builder.Save(context.Stream);
         }
 
         #region Nested type: CreateContext
 
         private class CreateContext {
             public Stream Stream { get; set; }
-            public Package Package { get; set; }
+            public NuGetPackageBuilder Builder { get; set; }
 
             public IWebSiteFolder SourceFolder { get; set; }
             public string SourcePath { get; set; }
@@ -201,5 +187,32 @@ namespace Orchard.Packaging.Services {
         }
 
         #endregion
+
+
+        #region Nested type: CreateContext
+
+        private class VirtualPackageFile : IPackageFile {
+            private readonly IWebSiteFolder _webSiteFolder;
+            private readonly string _virtualPath;
+            private readonly string _packagePath;
+
+            public VirtualPackageFile(IWebSiteFolder webSiteFolder, string virtualPath, string packagePath) {
+                _webSiteFolder = webSiteFolder;
+                _virtualPath = virtualPath;
+                _packagePath = packagePath;
+            }
+
+            public string Path { get { return _packagePath; } }
+
+            public Stream GetStream() {
+                var stream = new MemoryStream();
+                _webSiteFolder.CopyFileTo(_virtualPath, stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                return stream;
+            }
+        }
+
+        #endregion
+
     }
 }
