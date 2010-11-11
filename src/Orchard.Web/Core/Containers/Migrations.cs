@@ -13,11 +13,6 @@ namespace Orchard.Core.Containers {
                               .Column<string>("OrderByProperty")
                               .Column<int>("OrderByDirection"));
 
-            SchemaBuilder.CreateTable("ContainerSettingsPartRecord", table => table
-                .ContentPartRecord()
-                .Column<int>("DefaultPageSize", column => column.WithDefault(10))
-               );
-
             ContentDefinitionManager.AlterPartDefinition("ContainerPart", builder => builder.Attachable());
             ContentDefinitionManager.AlterPartDefinition("ContainablePart", builder => builder.Attachable());
  

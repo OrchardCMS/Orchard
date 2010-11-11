@@ -86,7 +86,11 @@ namespace Orchard.ContentTypes.Controllers {
             if (typeViewModel == null)
                 return HttpNotFound();
 
-            if (!TryUpdateModel(typeViewModel))
+            var edited = new EditTypeViewModel();
+            TryUpdateModel(edited);
+            typeViewModel.DisplayName = edited.DisplayName;
+
+            if (!ModelState.IsValid)
                 return View(typeViewModel);
 
             _contentDefinitionService.AlterType(typeViewModel, this);

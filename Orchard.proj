@@ -209,7 +209,7 @@
     <ItemGroup>
       <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
       <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml" />
-      <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml"/>
+      <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml;$(LibFolder)\msdeploy\*.sql"/>
     </ItemGroup>
 
     <Copy SourceFiles="@(MsDeploy-Folder-Input)"

@@ -8,12 +8,12 @@ Copyright: 2010, Orchard. All Rights Reserved
 /*  Color Palette
 **************************************************************
 
-Background:
+Background: #2d2f25
 Borders: 
-Text:
+Text: #333333
 Secondary Text: 
 Main Accent: 
-Links:
+Links: 1e5d7d
 */
 
 
@@ -28,7 +28,7 @@ del, dfn, em, font, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td {
+table, caption, tbody, tfoot, thead, tr, th, td, button, submit {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -79,6 +79,11 @@ header, footer, aside, nav, article { display: block; }
 The font-size 81.3% sets the base font to 13px 
 
 Pixels 	EMs 	    Percent Points
+1px     0.077em     7.7%    1pt
+2px     0.154em     15.4%   2pt
+3px     0.231em     23.1%   3pt
+4px     0.308em     30.8%   3pt
+5px     0.385em     38.5%   4pt
 6px 	0.462em 	46.2% 	5pt
 7px 	0.538em 	53.8% 	5pt
 8px 	0.615em 	61.5% 	6pt
@@ -564,9 +569,8 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 .delete.button {
     float:right;
 }
-input[type="submit"], input[type="reset"], input[type="button"], button, .button, .button:link, .button:visited
+input[type="submit"], input[type="reset"], input[type="button"], button, submit, .button, .button:link, .button:visited
   {
-        font-size: 107.7%; /*14px*/
   		color:#333;
 		background:#F5F5F5;
 		border:1px solid #999;
@@ -731,7 +735,6 @@ table.items th, table.items td {
     padding:0;
 }
 .contentItems li {
-    border-bottom:1px solid #eaeaea;
     margin:0;
     overflow:hidden;
     padding:0 1.4em .8em;
@@ -830,7 +833,11 @@ table.items th, table.items td {
     border-color:#666d51;
     border-style:solid;
 }
-.permalink .checkbox-and-label {
+/* Routable and Containers (Core) */
+.with-checkbox .checkbox-and-label { /* todo: (heskew) routable should be changed to use this too */
+    margin-left:10px;
+}
+.checkbox-and-label {
     white-space:nowrap;
 }
 /* Settings */

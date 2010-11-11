@@ -4,9 +4,9 @@ Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 0.8.0
 OrchardVersion: 0.8.0
-Description: Description for the module
+Description: Introduces a preconfigured container-enabled content type.
 Features:
     Orchard.Lists:
-        Description: Description for feature Orchard.Lists.
+        Description: A basic container-enabled content type.
         Dependencies: Contents, Containers
         Category: Content
