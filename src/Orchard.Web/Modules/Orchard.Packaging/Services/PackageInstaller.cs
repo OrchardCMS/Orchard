@@ -72,23 +72,25 @@ namespace Orchard.Packaging.Services {
             // instantiates the appropriate package repository
             var packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource("Default", packagesPath));
 
+            var projectManager = new ProjectManager(
+               new LocalPackageRepository(packagesPath),
+               new DefaultPackagePathResolver(packagesPath),
+               new FileBasedProjectSystem(projectPath) { Logger = logger }
+               ) { Logger = logger };
+
+            // removes the package from the project
+            projectManager.RemovePackageReference(packageId);
+
             var packageManager = new NuGetPackageManager(
                     packageRepository,
                     new DefaultPackagePathResolver(packagesPath),
                     new PhysicalFileSystem(packagesPath) { Logger = logger }
                 ) { Logger = logger };
 
-            // specifically tells to ignore dependencies
+
             packageManager.UninstallPackage(packageId);
 
-            var projectManager = new ProjectManager(
-               new LocalPackageRepository(packagesPath), // source repository for the package to install
-               new DefaultPackagePathResolver(packagesPath),
-               new FileBasedProjectSystem(projectPath) { Logger = logger } // the location of the project (where to copy the content files)
-               ) { Logger = logger };
 
-            // add the package to the project
-            projectManager.RemovePackageReference(packageId);
         }
     }
 }
