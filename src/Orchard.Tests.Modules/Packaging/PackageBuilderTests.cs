@@ -22,6 +22,13 @@ namespace Orchard.Tests.Modules.Packaging {
         }
         
         private Stream BuildHelloWorld(IPackageBuilder packageBuilder) {
+
+            // add some content because NuGet requires it
+            var folder = _container.Resolve<InMemoryWebSiteFolder>();
+            using ( var sourceStream = GetType().Assembly.GetManifestResourceStream(GetType(), "Hello.World.csproj.txt") ) {
+                folder.AddFile("~/Modules/Hello.World/Hello.World.csproj", new StreamReader(sourceStream).ReadToEnd());
+            }
+            
             return packageBuilder.BuildPackage(new ExtensionDescriptor {
                 ExtensionType = "Module",
                 Name = "Hello.World",
@@ -47,6 +54,7 @@ namespace Orchard.Tests.Modules.Packaging {
             var stream = BuildHelloWorld(packageBuilder);
 
             var package = Package.Open(stream);
+
             Assert.That(package.PackageProperties.Description, Is.EqualTo("a"));
             Assert.That(package.PackageProperties.Creator, Is.EqualTo("b"));
             Assert.That(package.PackageProperties.Version, Is.EqualTo("1.0"));
@@ -55,14 +63,12 @@ namespace Orchard.Tests.Modules.Packaging {
         [Test]
         public void ProjectFileIsAdded() {
             var packageBuilder = _container.Resolve<IPackageBuilder>();
-            var folder = _container.Resolve<InMemoryWebSiteFolder>();
+            var stream = BuildHelloWorld(packageBuilder);
+
             string content;
-            using (var sourceStream = GetType().Assembly.GetManifestResourceStream(GetType(), "Hello.World.csproj.txt")) {
+            using ( var sourceStream = GetType().Assembly.GetManifestResourceStream(GetType(), "Hello.World.csproj.txt") ) {
                 content = new StreamReader(sourceStream).ReadToEnd();
             }
-            folder.AddFile("~/Modules/Hello.World/Hello.World.csproj", content);
-
-            var stream = BuildHelloWorld(packageBuilder);
 
             var package = Package.Open(stream);
             var projectUri = PackUriHelper.CreatePartUri(new Uri("/Content/Modules/Hello.World/Hello.World.csproj", UriKind.Relative));
