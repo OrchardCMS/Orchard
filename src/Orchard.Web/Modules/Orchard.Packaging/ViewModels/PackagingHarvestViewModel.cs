@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Packaging.Services;
+using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.ViewModels {
     public class PackagingHarvestViewModel {
