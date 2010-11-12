@@ -33,12 +33,12 @@ namespace Orchard.Packaging.Services {
             };
         }
 
-        public PackageInfo Install(string packageId, string version, string location, string solutionFolder) {
-            return _packageExpander.Install(packageId, version, location, solutionFolder);
+        public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
+            return _packageExpander.Install(packageId, version, location, applicationPath);
         }
 
-        public void Uninstall(string packageId, string solutionFolder) {
-            _packageExpander.Uninstall(packageId, solutionFolder);
+        public void Uninstall(string packageId, string applicationPath) {
+            _packageExpander.Uninstall(packageId, applicationPath);
         }
         #endregion
     }

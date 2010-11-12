@@ -108,10 +108,8 @@
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
     <Content Include="Views\Gallery\AddSource.cshtml" />
-    <Content Include="Views\Gallery\Harvest.cshtml" />
     <Content Include="Views\Gallery\Modules.cshtml" />
     <Content Include="Views\Gallery\Sources.cshtml" />
-    <Content Include="Views\Gallery\_Subnav.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup />

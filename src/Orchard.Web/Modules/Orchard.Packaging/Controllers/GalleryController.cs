@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.Environment.Extensions;
@@ -126,54 +127,16 @@ namespace Orchard.Packaging.Controllers {
             });
         }
 
-        public ActionResult Harvest(string extensionName, string feedUrl) {
-            return View(new PackagingHarvestViewModel {
-                ExtensionName = extensionName,
-                FeedUrl = feedUrl,
-                Sources = _packagingSourceManager.GetSources(),
-                Extensions = _extensionManager.AvailableExtensions()
-            });
-        }
+        public ActionResult Install(string packageId, string version, int sourceId, string redirectTo) {
+            var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-        [HttpPost]
-        public ActionResult Harvest(PackagingHarvestViewModel model) {
-            #if REFACTORING
-            model.Sources = _packagingSourceManager.GetSources();
-            model.Extensions = _extensionManager.AvailableExtensions();
-
-            var packageData = _packageManager.Harvest(model.ExtensionName);
-
-            if (string.IsNullOrEmpty(model.FeedUrl)) {
-                return new DownloadStreamResult(
-                    packageData.ExtensionName + "-" + packageData.ExtensionVersion + ".zip",
-                    "application/x-package",
-                    packageData.PackageStream);
+            if(source == null) {
+                return HttpNotFound();
             }
 
-            if (!model.Sources.Any(src => src.FeedUrl == model.FeedUrl)) {
-                ModelState.AddModelError("FeedUrl", T("May only push directly to one of the configured sources.").ToString());
-                return View(model);
-            }
+            _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
 
-            _packageManager.Push(packageData, model.FeedUrl, model.User, model.Password);
-            _notifier.Information(T("Harvested {0} and published onto {1}", model.ExtensionName, model.FeedUrl));
-
-            Update(null);
-
-            return RedirectToAction("Harvest", new { model.ExtensionName, model.FeedUrl });
-#else
-            return View();
-#endif
-
-        }
-
-        public ActionResult Install(string syndicationId, string cameFrom) {
-#if REFACTORING
-            var packageData = _packageManager.Download(syndicationId);
-            _packageManager.Install(packageData.PackageStream);
-            _notifier.Information(T("Installed module"));
-#endif
-            return RedirectToAction(cameFrom == "Themes" ? "ThemesIndex" : "ModulesIndex");
+            return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
         }
     }
 }
