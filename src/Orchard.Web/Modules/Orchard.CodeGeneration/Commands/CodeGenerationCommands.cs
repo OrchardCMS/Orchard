@@ -75,18 +75,19 @@ namespace Orchard.CodeGeneration.Commands {
             }
 
             List<SchemaCommand> commands = _schemaCommandGenerator.GetCreateFeatureCommands(featureName, false).ToList();
-                    
-            var stringWriter = new StringWriter();
-            var interpreter = new CodeGenerationCommandInterpreter(stringWriter);
+            string dataMigrationText;
+            using (var stringWriter = new StringWriter()) {
+                var interpreter = new CodeGenerationCommandInterpreter(stringWriter);
 
-            foreach (var command in commands) {
-                interpreter.Visit(command);
-                stringWriter.WriteLine();
+                foreach (var command in commands) {
+                    interpreter.Visit(command);
+                    stringWriter.WriteLine();
+                }
+
+                dataMigrationText = File.ReadAllText(templatesPath + "DataMigration.txt");
+                dataMigrationText = dataMigrationText.Replace("$$FeatureName$$", featureName);
+                dataMigrationText = dataMigrationText.Replace("$$Commands$$", stringWriter.ToString());
             }
-
-            string dataMigrationText = File.ReadAllText(templatesPath + "DataMigration.txt");
-            dataMigrationText = dataMigrationText.Replace("$$FeatureName$$", featureName);
-            dataMigrationText = dataMigrationText.Replace("$$Commands$$", stringWriter.ToString());
             File.WriteAllText(dataMigrationFilePath, dataMigrationText);
 
             string projectFileText = File.ReadAllText(moduleCsProjPath);
@@ -220,7 +221,7 @@ namespace Orchard.CodeGeneration.Commands {
 
             foreach(var folder in _moduleDirectories) {
                 Directory.CreateDirectory(modulePath + folder);
-                if (folder != "") {
+                if (!String.IsNullOrEmpty(folder)) {
                     folders.Add(modulePath + folder);
                 }
             }
@@ -266,7 +267,7 @@ namespace Orchard.CodeGeneration.Commands {
             foreach (var folderName in _themeDirectories) {
                 var folder = themePath + folderName;
                 Directory.CreateDirectory(folder);
-                if (folderName != "") {
+                if (!String.IsNullOrEmpty(folderName)) {
                     createdFolders.Add(folder);
                 }
             }

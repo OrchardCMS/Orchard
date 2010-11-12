@@ -41,6 +41,7 @@ namespace Orchard.Setup.Controllers {
             return View(model);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "StreamReader closed by XmlTextReader.")]
         private bool ValidateMachineKey() {
             // Get the machineKey section.
             MachineKeySection machineKeySection = null;
@@ -59,12 +60,13 @@ namespace Orchard.Setup.Controllers {
                 || machineKeySection.DecryptionKey.Contains("AutoGenerate")
                 || machineKeySection.ValidationKey.Contains("AutoGenerate")) {
 
-                var rng = new RNGCryptoServiceProvider();
                 var decryptionData = new byte[32];
                 var validationData = new byte[64];
-                
-                rng.GetBytes(decryptionData);
-                rng.GetBytes(validationData);
+
+                using (var rng = new RNGCryptoServiceProvider()) {
+                    rng.GetBytes(decryptionData);
+                    rng.GetBytes(validationData);
+                }
 
                 string decryptionKey = BitConverter.ToString(decryptionData).Replace("-", "");
                 string validationKey = BitConverter.ToString(validationData).Replace("-", "");

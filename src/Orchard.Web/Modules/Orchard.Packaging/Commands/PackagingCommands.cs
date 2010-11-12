@@ -44,7 +44,6 @@ namespace Orchard.Packaging.Commands {
 
             using ( var stream = File.Create(filename) ) {
                 packageData.PackageStream.CopyTo(stream);
-                stream.Close();
             }
 
             var fileInfo = new FileInfo(filename);

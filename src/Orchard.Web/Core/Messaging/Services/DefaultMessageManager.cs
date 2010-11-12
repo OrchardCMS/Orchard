@@ -50,18 +50,24 @@ namespace Orchard.Core.Messaging.Services {
                     Service = service
                 };
 
-                if ( properties != null ) {
-                    foreach (var key in properties.Keys)
-                        context.Properties.Add(key, properties[key]);
+                try {
+
+                    if (properties != null) {
+                        foreach (var key in properties.Keys)
+                            context.Properties.Add(key, properties[key]);
+                    }
+
+                    _messageEventHandler.Sending(context);
+
+                    foreach (var channel in _channels) {
+                        channel.SendMessage(context);
+                    }
+
+                    _messageEventHandler.Sent(context);
                 }
-
-                _messageEventHandler.Sending(context);
-
-                foreach ( var channel in _channels ) {
-                    channel.SendMessage(context);
+                finally {
+                    context.MailMessage.Dispose();
                 }
-
-                _messageEventHandler.Sent(context);
 
                 Logger.Information("Message {0} sent", type);
             }

@@ -20,6 +20,8 @@ namespace Orchard.Commands {
             Invoke(context);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Int32.TryParse(System.String,System.Int32@)")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Boolean.TryParse(System.String,System.Boolean@)")]
         private void SetSwitchValues(CommandContext context) {
             if (context.Switches != null && context.Switches.Any()) {
                 foreach (var commandSwitch in context.Switches) {
@@ -32,11 +34,13 @@ namespace Orchard.Commands {
                     }
                     if (propertyInfo.PropertyType.IsAssignableFrom(typeof(bool))) {
                         bool boolValue;
+                        // todo: might be better to throw here if TryParse returns false instead of silently using 'false', to catch types (e.g. 'ture')
                         Boolean.TryParse(commandSwitch.Value, out boolValue);
                         propertyInfo.SetValue(this, boolValue, null);
                     }
                     else if (propertyInfo.PropertyType.IsAssignableFrom(typeof(int))) {
                         int intValue;
+                        // todo: might be better to throw here if TryParse returns false instead of silently using 0 value
                         Int32.TryParse(commandSwitch.Value, out intValue);
                         propertyInfo.SetValue(this, intValue, null);
                     }
