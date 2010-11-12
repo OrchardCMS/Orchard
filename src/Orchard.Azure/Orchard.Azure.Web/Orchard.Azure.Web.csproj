@@ -44,15 +44,24 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Configuration, Version=2.2.4.900, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\autofac\Autofac.Configuration.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac.Integration.Web">
       <HintPath>..\..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Integration.Web.Mvc">
       <HintPath>..\..\..\lib\autofac\Autofac.Integration.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby">
+      <HintPath>..\..\..\lib\dlr\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic">
+      <HintPath>..\..\..\lib\dlr\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\..\..\lib\dlr\Microsoft.Scripting.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
