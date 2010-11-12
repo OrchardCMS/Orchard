@@ -486,6 +486,9 @@ select, textarea, input.text, input.textMedium, input.text-box {
 input.text, input.textMedium, input.text-box {
     line-height:1.2em;
 }
+input.text-small {
+    width:4em;
+}
 input.textMedium {
     width:26em;
 }

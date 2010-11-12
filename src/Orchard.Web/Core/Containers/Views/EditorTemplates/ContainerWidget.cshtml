@@ -1,5 +1,9 @@
-﻿@model Orchard.Core.Containers.Models.ContainerPart
+﻿@model Orchard.Core.Containers.Models.ContainerWidgetPart
 @using Orchard.Core.Containers.Models;
+<fieldset>
+    @Html.LabelFor(m => m.Record.ContainerId, T("Show items from"))
+    @Html.DropDownListFor(m => m.Record.ContainerId, Model.AvailableContainers)
+</fieldset>
 <fieldset>
     @Html.LabelFor(m => m.Record.OrderByProperty, T("Order by"))
     <select id="@Html.FieldIdFor(m => m.Record.OrderByProperty)" name="@Html.FieldNameFor(m => m.Record.OrderByProperty)">
@@ -15,13 +19,9 @@
         @Html.SelectOption(Model.Record.OrderByDirection, (int)OrderByDirection.Descending, T("Descending").Text)
     </select>
 </fieldset>
-<fieldset class="with-checkbox">
+<fieldset>
     <span>
-        @Html.LabelFor(m => m.Record.PageSize, T("Page size"))
+        @Html.LabelFor(m => m.Record.PageSize, T("Maximum number of items to display"))
         @Html.TextBoxFor(m => m.Record.PageSize, new { @class = "text text-small" })
-    </span>
-    <span class="checkbox-and-label">
-        @Html.CheckBoxFor(m => m.Record.Paginated)
-        <label for="@Html.FieldIdFor(m => m.Record.Paginated)" class="forcheckbox">@T("Show paging controls")</label>
     </span>
 </fieldset>

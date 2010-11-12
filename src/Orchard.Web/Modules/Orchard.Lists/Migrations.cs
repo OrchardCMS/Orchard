@@ -13,13 +13,6 @@ namespace Orchard.Lists {
                     .WithPart("MenuPart")
                     .Creatable());
 
-            ContentDefinitionManager.AlterTypeDefinition("ListWidget",
-                cfg => cfg
-                    .WithPart("CommonPart")
-                    .WithPart("WidgetPart")
-                    .WithPart("ContainerPart")
-                    .WithSetting("Stereotype", "Widget"));
-
             return 1;
         }
     }
