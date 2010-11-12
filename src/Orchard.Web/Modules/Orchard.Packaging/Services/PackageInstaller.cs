@@ -72,7 +72,7 @@ namespace Orchard.Packaging.Services {
             var project = new FileBasedProjectSystem(applicationPath) { Logger = logger };
             var projectManager = new ProjectManager(
                 sourceRepository, // source repository for the package to install
-                new DefaultPackagePathResolver(location),
+                new DefaultPackagePathResolver(applicationPath),
                 project,
                 new ExtensionReferenceRepository(project, sourceRepository, _extensionManager)
                 ) {Logger = logger};

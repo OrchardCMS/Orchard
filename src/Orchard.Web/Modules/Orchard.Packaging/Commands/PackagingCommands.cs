@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Web;
 using System.Web.Hosting;
 using Orchard.Commands;
 using Orchard.Environment.Extensions;
@@ -42,7 +44,6 @@ namespace Orchard.Packaging.Commands {
 
             using ( var stream = File.Create(filename) ) {
                 packageData.PackageStream.CopyTo(stream);
-                stream.Close();
             }
 
             var fileInfo = new FileInfo(filename);
@@ -53,21 +54,34 @@ namespace Orchard.Packaging.Commands {
         [CommandName("package install")]
         [OrchardSwitches("Version")]
         public void InstallPackage(string packageId, string location) {
-            _packageManager.Install(packageId, Version, Path.GetFullPath(location), ApplicationPath);
-            
-            foreach(var message in _notifier.List()) {
-                Context.Output.WriteLine(message.Message);
+            try {
+                _packageManager.Install(packageId, Version, Path.GetFullPath(location), ApplicationPath);
+
+                foreach (var message in _notifier.List()) {
+                    Context.Output.WriteLine(message.Message);
+                }
+            }
+            catch(Exception e) {
+                // Exceptions area thrown by NuGet as error messages
+                Context.Output.WriteLine(HttpUtility.HtmlDecode(T("Could not install the package: {0}", e.Message).Text));
             }
         }
 
         [CommandHelp("package uninstall <packageId> \r\n\t" + "Uninstall a module or a theme.")]
         [CommandName("package uninstall")]
         public void UninstallPackage(string packageId) {
-            _packageManager.Uninstall(packageId, ApplicationPath);
+            try {
+                _packageManager.Uninstall(packageId, ApplicationPath);
 
-            foreach ( var message in _notifier.List() ) {
-                Context.Output.WriteLine(message.Message);
+                foreach ( var message in _notifier.List() ) {
+                    Context.Output.WriteLine(message.Message);
+                }
             }
+            catch(Exception e) {
+                // Exceptions area thrown by NuGet as error messages
+                Context.Output.WriteLine(HttpUtility.HtmlDecode(T("Could not unintall the package: {0}", e.Message).Text));
+            }
+
         }
     }
 }

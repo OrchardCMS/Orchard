@@ -45,6 +45,7 @@ namespace Orchard.Environment.Descriptor {
 
         #region Implementation of IShellDescriptorCache
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "StringReader closed by XmlReader.")]
         public ShellDescriptor Fetch(string name) {
             VerifyCacheFile();
             var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
@@ -64,6 +65,7 @@ namespace Orchard.Environment.Descriptor {
             return null;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "writer closed by xmlWriter.")]
         public void Store(string name, ShellDescriptor descriptor) {
             VerifyCacheFile();
             var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
@@ -101,6 +103,7 @@ namespace Orchard.Environment.Descriptor {
 
         #endregion
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void VerifyCacheFile() {
             if (!_appDataFolder.FileExists(DescriptorCacheFileName)) {
                 var writer = new StringWriter();

@@ -28,14 +28,14 @@
             </div>
 
             <div class="related">
-                @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"SyndicationId", item.PackageId},{"cameFrom", "Modules"}})@T(" | ")
+                @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"packageId", item.PackageId}, {"version", item.Version}, {"sourceId", item.Source.Id}, {"cameFrom", "Modules"}})@T(" | ")
                 <a href="@item.PackageStreamUri">@T("Download")</a>
              </div>
 
              <div class="properties">
                 <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
                 <ul class="pageStatus">
-                    @*todo: (sebros) find a way to get the update date*@<li style="color:red">@T("Last Updated: {0}", DateTime.Now.ToLocalTime())</li>
+                    <li>@T("Last Updated: {0}", DateTime.Now.ToLocalTime())</li>
                     <li>&nbsp;&#124;&nbsp;@T("Author: {0}", item.Authors)</li>
                 </ul>
            </div>   

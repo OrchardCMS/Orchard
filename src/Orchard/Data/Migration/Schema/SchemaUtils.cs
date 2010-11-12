@@ -3,6 +3,7 @@ using System.Data;
 
 namespace Orchard.Data.Migration.Schema {
     public static class SchemaUtils {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Enum.TryParse<System.Data.DbType>(System.String,System.Boolean,System.Data.DbType@)")]
         public static DbType ToDbType(Type type) {
             DbType dbType;
             switch ( System.Type.GetTypeCode(type) ) {
