@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Scripting.Hosting;
+using Orchard.Caching;
 using Orchard.Scripting;
 using Orchard.UI.Widgets;
 
@@ -7,31 +9,43 @@ namespace Orchard.Widgets.RuleEngine {
     public class RuleManager : IRuleManager {
         private readonly IEnumerable<IRuleProvider> _ruleProviders;
         private readonly IScriptingManager _scriptingManager;
+        private readonly ICacheManager _cacheManager;
 
-        public RuleManager(IEnumerable<IRuleProvider> ruleProviders, IScriptingManager scriptingManager) {
+        public RuleManager(IEnumerable<IRuleProvider> ruleProviders, IScriptingManager scriptingManager, ICacheManager cacheManager) {
             _ruleProviders = ruleProviders;
             _scriptingManager = scriptingManager;
+            _cacheManager = cacheManager;
         }
 
         public bool Matches(string expression) {
-            object execContextType = _scriptingManager.ExecuteExpression(@"
-                                        class ExecContext
-	                                        def execute(callbacks, text)
-		                                        @callbacks = callbacks;
-		                                        temp = instance_eval(text.to_s);
-		                                        @callbacks = 0;
-                                                return temp;
-	                                        end
-
-	                                        def method_missing(name, *args, &block)
-		                                        @callbacks.send(name, args, &block);
-                                            end
-                                        end
-                                        ExecContext
-                                        ");
-
-            object execContext = _scriptingManager.ExecuteOperation(ops => ops.CreateInstance(execContextType));
-            return _scriptingManager.ExecuteOperation(ops => ops.InvokeMember(execContext, "execute", new CallbackApi(this), expression));
+            object execContextType = _cacheManager.Get("---", ctx => (object)_scriptingManager.ExecuteExpression(@"
+class ExecBlock
+    def initialize(callbacks)
+        @callbacks = callbacks
+    end
+    def method_missing(name, *args, &block)
+        @callbacks.send(name, args, &block);
+    end
+end
+class ExecContext
+    class << self
+        def alloc(thing)
+            instance_eval 'self.new {' + thing + '}'
+        end
+    end
+    def initialize(&block)
+        @block = block
+    end
+    def evaluate(callbacks)
+      ExecBlock.new(callbacks).instance_eval(&@block)
+    end
+end
+ExecContext
+                                        "));
+            var ops = _cacheManager.Get("----", ctx => (ObjectOperations)_scriptingManager.ExecuteOperation(x => x));
+            object execContext = _cacheManager.Get(expression, ctx => (object)ops.InvokeMember(execContextType, "alloc", expression));
+            dynamic result = ops.InvokeMember(execContext, "evaluate", new CallbackApi(this));
+            return result;
         }
 
         public class CallbackApi {
