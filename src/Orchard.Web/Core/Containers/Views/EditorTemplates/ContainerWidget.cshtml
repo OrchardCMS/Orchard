@@ -1,27 +1,56 @@
-﻿@model Orchard.Core.Containers.Models.ContainerWidgetPart
+﻿@model Orchard.Core.Containers.ViewModels.ContainerWidgetViewModel
 @using Orchard.Core.Containers.Models;
+@{
+    Script.Require("ShapesBase");
+}
 <fieldset>
-    @Html.LabelFor(m => m.Record.ContainerId, T("Show items from"))
-    @Html.DropDownListFor(m => m.Record.ContainerId, Model.AvailableContainers)
-</fieldset>
-<fieldset>
-    @Html.LabelFor(m => m.Record.OrderByProperty, T("Order by"))
-    <select id="@Html.FieldIdFor(m => m.Record.OrderByProperty)" name="@Html.FieldNameFor(m => m.Record.OrderByProperty)">
-        @Html.SelectOption(Model.Record.OrderByProperty, "CommonPart.PublishedUtc", T("Date Published").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "RoutePart.Title", T("Title").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "RoutePart.Slug", T("Slug").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "ContainerCustomPart.Custom1", T("Custom 1").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "ContainerCustomPart.Custom2", T("Custom 2").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "ContainerCustomPart.Custom3", T("Custom 3").Text)
-    </select>
-    <select id="@Html.FieldIdFor(m => m.Record.OrderByDirection)" name="@Html.FieldNameFor(m => m.Record.OrderByDirection)">
-        @Html.SelectOption(Model.Record.OrderByDirection, (int)OrderByDirection.Ascending, T("Ascending").Text)
-        @Html.SelectOption(Model.Record.OrderByDirection, (int)OrderByDirection.Descending, T("Descending").Text)
-    </select>
+    @Html.LabelFor(m => m.Part.Record.ContainerId, T("Show items from"))
+    @Html.DropDownListFor(m => m.Part.Record.ContainerId, Model.AvailableContainers)
 </fieldset>
 <fieldset>
     <span>
-        @Html.LabelFor(m => m.Record.PageSize, T("Maximum number of items to display"))
-        @Html.TextBoxFor(m => m.Record.PageSize, new { @class = "text text-small" })
+        @Html.LabelFor(m => m.Part.Record.PageSize, T("Maximum number of items to display"))
+        @Html.TextBoxFor(m => m.Part.Record.PageSize, new { @class = "text text-small" })
     </span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.Part.Record.OrderByProperty, T("Order by"))
+    <select id="@Html.FieldIdFor(m => m.Part.Record.OrderByProperty)" name="@Html.FieldNameFor(m => m.Part.Record.OrderByProperty)">
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "CommonPart.PublishedUtc", T("Date Published").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "RoutePart.Title", T("Title").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "RoutePart.Slug", T("Slug").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "ContainerCustomPart.CustomOne", T("Custom 1").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "ContainerCustomPart.CustomTwo", T("Custom 2").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "ContainerCustomPart.CustomThree", T("Custom 3").Text)
+    </select>
+    <select title="@T("Order direction")" id="@Html.FieldIdFor(m => m.Part.Record.OrderByDirection)" name="@Html.FieldNameFor(m => m.Part.Record.OrderByDirection)">
+        @Html.SelectOption(Model.Part.Record.OrderByDirection, (int)OrderByDirection.Ascending, T("Ascending").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByDirection, (int)OrderByDirection.Descending, T("Descending").Text)
+    </select>
+</fieldset>
+<fieldset>
+    <div>
+        @Html.EditorFor(m => m.Part.Record.ApplyFilter) 
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Part.Record.ApplyFilter)">@T("Filter items")</label>
+    </div>
+    <div data-controllerid="@Html.FieldIdFor(m => m.Part.Record.ApplyFilter)">
+        @Html.LabelFor(m => m.Part.Record.FilterByProperty, T("Filter where"))
+        <select id="@Html.FieldIdFor(m => m.Part.Record.FilterByProperty)" name="@Html.FieldNameFor(m => m.Part.Record.FilterByProperty)">
+            @Html.SelectOption(Model.Part.Record.FilterByProperty, "CommonPart.PublishedUtc", T("Date Published").Text)
+            @Html.SelectOption(Model.Part.Record.FilterByProperty, "RoutePart.Title", T("Title").Text)
+            @Html.SelectOption(Model.Part.Record.FilterByProperty, "RoutePart.Slug", T("Slug").Text)
+            @Html.SelectOption(Model.Part.Record.FilterByProperty, "ContainerCustomPart.CustomOne", T("Custom 1").Text)
+            @Html.SelectOption(Model.Part.Record.FilterByProperty, "ContainerCustomPart.CustomTwo", T("Custom 2").Text)
+            @Html.SelectOption(Model.Part.Record.FilterByProperty, "ContainerCustomPart.CustomThree", T("Custom 3").Text)
+        </select>
+        <select title="@T("Filter operator")" id="@Html.FieldIdFor(m => m.Part.Record.FilterByOperator)" name="@Html.FieldNameFor(m => m.Part.Record.FilterByOperator)">
+            @Html.SelectOption(Model.Part.Record.FilterByOperator, "=", T("is equal to").Text)
+            @Html.SelectOption(Model.Part.Record.FilterByOperator, "<", T("is less than").Text)
+            @Html.SelectOption(Model.Part.Record.FilterByOperator, ">", T("is greater than").Text)
+            @Html.SelectOption(Model.Part.Record.FilterByOperator, "^=", T("starts with").Text)
+        </select>
+        <span>
+            @Html.TextBoxFor(m => m.Part.Record.FilterByValue, new { @class = "text", title = T("Filter value") })
+        </span>
+    </div>
 </fieldset>

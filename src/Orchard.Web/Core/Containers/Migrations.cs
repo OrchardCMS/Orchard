@@ -13,6 +13,25 @@ namespace Orchard.Core.Containers {
                     .Column<string>("OrderByProperty")
                     .Column<int>("OrderByDirection"));
 
+            SchemaBuilder.CreateTable("ContainerWidgetPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<int>("ContainerId")
+                    .Column<int>("PageSize")
+                    .Column<string>("OrderByProperty")
+                    .Column<int>("OrderByDirection")
+                    .Column<bool>("ApplyFilter")
+                    .Column<string>("FilterByProperty")
+                    .Column<string>("FilterByOperator")
+                    .Column<string>("FilterByValue"));
+
+            SchemaBuilder.CreateTable("ContainerCustomPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("CustomOne")
+                    .Column<string>("CustomTwo")
+                    .Column<string>("CustomThree"));
+
             ContentDefinitionManager.AlterTypeDefinition("ContainerWidget",
                 cfg => cfg
                     .WithPart("CommonPart")
@@ -22,9 +41,9 @@ namespace Orchard.Core.Containers {
 
             ContentDefinitionManager.AlterPartDefinition("ContainerPart", builder => builder.Attachable());
             ContentDefinitionManager.AlterPartDefinition("ContainablePart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("ContainerCustomPart", builder => builder.Attachable());
  
             return 1;
         }
-
     }
 }
