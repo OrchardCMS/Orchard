@@ -37,5 +37,4 @@ using System.Security;
 
 [assembly: AssemblyVersion("0.8.0")]
 [assembly: AssemblyFileVersion("0.8.0")]
-[assembly: AllowPartiallyTrustedCallers]
-[assembly: SecurityRules(SecurityRuleSet.Level2)]
+[assembly: SecurityTransparent]

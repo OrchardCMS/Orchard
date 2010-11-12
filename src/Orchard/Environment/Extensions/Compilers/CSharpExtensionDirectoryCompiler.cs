@@ -19,7 +19,6 @@ namespace Orchard.Environment.Extensions.Compilers {
             _buildManager = buildManager;
         }
 
-        [SecuritySafeCritical]
         public CompilerResults CompileProject(string location) {
             var codeProvider = CodeDomProvider.CreateProvider("cs");
 
