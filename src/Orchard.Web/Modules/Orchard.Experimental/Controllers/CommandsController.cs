@@ -27,16 +27,17 @@ namespace Orchard.Experimental.Controllers {
 
         [HttpPost]
         public ActionResult Execute(CommandsExecuteViewModel model) {
-            var writer = new StringWriter();
-            var commandLine = model.CommandLine.Trim();
-            CommandParameters parameters = GetCommandParameters(commandLine, writer);
+            using (var writer = new StringWriter()) {
+                var commandLine = model.CommandLine.Trim();
+                CommandParameters parameters = GetCommandParameters(commandLine, writer);
 
-            _commandManager.Execute(parameters);
-            model.History = (model.History ?? Enumerable.Empty<string>())
-                .Concat(new[] { model.CommandLine })
-                .Distinct()
-                .ToArray();
-            model.Results = writer.ToString();
+                _commandManager.Execute(parameters);
+                model.History = (model.History ?? Enumerable.Empty<string>())
+                    .Concat(new[] { model.CommandLine })
+                    .Distinct()
+                    .ToArray();
+                model.Results = writer.ToString();
+            }
             return View(model);
         }
 

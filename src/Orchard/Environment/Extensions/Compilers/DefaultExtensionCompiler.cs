@@ -81,6 +81,7 @@ namespace Orchard.Environment.Extensions.Compilers {
             return unit;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         private string GetContents(string virtualPath) {
             string contents;
             using (var stream = _virtualPathProvider.OpenFile(virtualPath)) {

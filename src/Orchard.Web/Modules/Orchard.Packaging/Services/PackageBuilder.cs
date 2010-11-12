@@ -204,6 +204,7 @@ namespace Orchard.Packaging.Services {
 
             public string Path { get { return _packagePath; } }
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Supposed to return an open stream.")]
             public Stream GetStream() {
                 var stream = new MemoryStream();
                 _webSiteFolder.CopyFileTo(_virtualPath, stream);

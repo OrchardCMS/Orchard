@@ -212,15 +212,18 @@ namespace Orchard.Users.Services {
         private static void SetPasswordHashed(UserPartRecord partRecord, string password) {
 
             var saltBytes = new byte[0x10];
-            var random = new RNGCryptoServiceProvider();
-            random.GetBytes(saltBytes);
+            using (var random = new RNGCryptoServiceProvider()) {
+                random.GetBytes(saltBytes);
+            }
 
             var passwordBytes = Encoding.Unicode.GetBytes(password);
 
             var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
 
-            var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm);
-            var hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
+            byte[] hashBytes;
+            using (var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm)) {
+                hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
+            }
 
             partRecord.PasswordFormat = MembershipPasswordFormat.Hashed;
             partRecord.Password = Convert.ToBase64String(hashBytes);
@@ -235,8 +238,10 @@ namespace Orchard.Users.Services {
 
             var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
 
-            var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm);
-            var hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
+            byte[] hashBytes;
+            using (var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm)) {
+                hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
+            }
             
             return partRecord.Password == Convert.ToBase64String(hashBytes);
         }

@@ -2,6 +2,7 @@
 using System.Web.Security;
 
 namespace Orchard.Security.Providers {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
     public class OrchardRoleProvider : RoleProvider {
         public override bool IsUserInRole(string username, string roleName) {
             throw new NotImplementedException();

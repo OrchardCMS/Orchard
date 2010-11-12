@@ -11,7 +11,7 @@ namespace Orchard.Utility {
 
             if (topMenuItem != null) {
                 var maxMenuItem = topMenuItem.Items.Where(PositionHasMojorNumber).OrderByDescending(mi => mi.Position, new FlatPositionComparer()).FirstOrDefault();
-                var positionParts = maxMenuItem.Position.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim() != "");
+                var positionParts = maxMenuItem.Position.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim().Length > 0);
                 if (positionParts.Count() > 0) {
                     int result;
                     if (int.TryParse(positionParts.ElementAt(0), out result)) {

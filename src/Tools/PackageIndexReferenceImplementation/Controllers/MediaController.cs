@@ -20,6 +20,7 @@ namespace PackageIndexReferenceImplementation.Controllers {
             return new StreamResult(contentType, _mediaStorage.GetMedia(id + ":" + contentType));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public ActionResult PreviewTheme(string id, string contentType) {
             var stream = _mediaStorage.GetMedia(id + ":" + contentType);
             var package = Package.Open(stream, FileMode.Open, FileAccess.Read);

@@ -115,8 +115,8 @@ namespace Orchard.Media.Services {
                 return false;
             }
             var mediaSettings = CurrentSite.As<MediaSettingsPart>();
-            var allowedExtensions = mediaSettings.UploadAllowedFileTypeWhitelist.ToLowerInvariant().Split(' ');
-            var ext = (Path.GetExtension(name) ?? "").TrimStart('.').ToLowerInvariant();
+            var allowedExtensions = mediaSettings.UploadAllowedFileTypeWhitelist.ToUpperInvariant().Split(' ');
+            var ext = (Path.GetExtension(name) ?? "").TrimStart('.').ToUpperInvariant();
             if (string.IsNullOrWhiteSpace(ext)) {
                 return false;
             }

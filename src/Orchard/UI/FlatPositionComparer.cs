@@ -11,10 +11,10 @@ namespace Orchard.UI {
             // null == "before; "" == "0"
             x = x == null
                 ? "before"
-                : x.Trim() == "" ? "0" : x.Trim(':').TrimEnd('.'); // ':' is _sometimes_ used as a partition identifier
+                : x.Trim().Length == 0 ? "0" : x.Trim(':').TrimEnd('.'); // ':' is _sometimes_ used as a partition identifier
             y = y == null
                 ? "before"
-                : y.Trim() == "" ? "0" : y.Trim(':').TrimEnd('.');
+                : y.Trim().Length == 0 ? "0" : y.Trim(':').TrimEnd('.');
 
             var xParts = x.Split(new[] { '.', ':' });
             var yParts = y.Split(new[] { '.', ':' });

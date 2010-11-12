@@ -13,7 +13,6 @@ namespace Orchard.Core.Routable.Services {
             _contentManager = contentManager;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "Slugs should be lowercase.")]
         public void FillSlugFromTitle<TModel>(TModel model) where TModel : RoutePart {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
                 return;
