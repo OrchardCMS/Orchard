@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Containers.Extensions;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
@@ -48,34 +49,23 @@ namespace Orchard.Core.Containers.Controllers {
                 .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
 
             var descendingOrder = container.As<ContainerPart>().Record.OrderByDirection == (int) OrderByDirection.Descending;
-            //todo: (heskew) order by custom part properties
-            switch (container.As<ContainerPart>().Record.OrderByProperty) {
-                case "RoutePart.Title":
-                    query = descendingOrder
-                        ? query.OrderByDescending<RoutePartRecord, string>(record => record.Title)
-                        : query.OrderBy<RoutePartRecord, string>(record => record.Title);
-                    break;
-                case "RoutePart.Slug":
-                    query = descendingOrder
-                        ? query.OrderByDescending<RoutePartRecord, string>(record => record.Slug)
-                        : query.OrderBy<RoutePartRecord, string>(record => record.Slug);
-                    break;
-                default: // "CommonPart.PublishedUtc"
-                    query = descendingOrder
-                        ? query.OrderByDescending<CommonPartRecord, DateTime?>(record => record.PublishedUtc)
-                        : query.OrderBy<CommonPartRecord, DateTime?>(record => record.PublishedUtc);
-                    break;
-            }
+            query = query.OrderBy(container.As<ContainerPart>().Record.OrderByProperty, descendingOrder);
 
+            pager.PageSize = pager.PageSize != Pager.PageSizeDefault && container.As<ContainerPart>().Record.Paginated
+                               ? pager.PageSize
+                               : container.As<ContainerPart>().Record.PageSize;
             var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
-            var pageOfItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
+
+            var startIndex = container.As<ContainerPart>().Record.Paginated ? pager.GetStartIndex() : 0;
+            var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
 
             var list = Shape.List();
             list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
-                .Pager(pagerShape);
+                .Pager(pagerShape)
+                .ShowPager(container.As<ContainerPart>().Record.Paginated);
 
             return View(viewModel);
         }

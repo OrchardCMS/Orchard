@@ -1,7 +1,7 @@
 ﻿namespace Orchard.UI.Navigation {
     public class Pager {
         private const int PageDefault = 1;
-        private const int PageSizeDefault = 10;
+        public const int PageSizeDefault = 10;
         private int _pageSize;
         private int _size;
 

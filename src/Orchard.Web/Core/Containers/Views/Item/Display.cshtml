@@ -1,2 +1,4 @@
 ﻿@Display(Model.ContentItems)
-@Display(Model.Pager)
+@if (Model.ShowPager) {
+    @Display(Model.Pager)
+}
