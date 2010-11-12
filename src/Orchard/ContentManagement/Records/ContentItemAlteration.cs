@@ -56,7 +56,7 @@ namespace Orchard.ContentManagement.Records {
         class Alteration<TItemRecord, TPartRecord> : IAlteration<TItemRecord> {
             public void Override(AutoMapping<TItemRecord> mapping) {
 
-                mapping.References<TPartRecord>(typeof(TItemRecord), typeof(TPartRecord).Name)
+                mapping.References<TPartRecord>(typeof(TItemRecord), typeof(TPartRecord).Name, typeof(TPartRecord).Name)
                     .Access.NoOp()
                     .Column("Id")
                     .ForeignKey("none") // prevent foreign key constraint from ContentItem(Version)Record to TPartRecord
