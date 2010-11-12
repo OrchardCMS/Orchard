@@ -81,7 +81,6 @@ namespace Orchard.Setup.Services {
                     "Localization",
                     "Routable",
                     "Settings",
-                    "XmlRpc",
                     "Messaging",
                     "Orchard.Users",
                     "Orchard.Roles",

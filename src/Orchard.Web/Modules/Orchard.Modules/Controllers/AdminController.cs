@@ -76,11 +76,13 @@ namespace Orchard.Modules.Controllers {
 
                 foreach (string fileName in Request.Files) {
                     var file = Request.Files[fileName];
-
+#if REFACTORING
                     var info = _packageManager.Install(file.InputStream);
+
                     Services.Notifier.Information(T("Installed package \"{0}\", version {1} of type \"{2}\" at location \"{3}\"",
                         info.ExtensionName, info.ExtensionVersion, info.ExtensionType, info.ExtensionPath));
-                }
+#endif
+                    }
 
                 return RedirectToAction("index");
             }

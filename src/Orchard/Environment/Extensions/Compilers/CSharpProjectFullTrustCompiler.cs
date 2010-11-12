@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
 using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Environment.Extensions.Compilers {
@@ -22,6 +23,7 @@ namespace Orchard.Environment.Extensions.Compilers {
         /// Compile a csproj file given its virtual path. Use the CSharp CodeDomProvider
         /// class, which is only available in full trust.
         /// </summary>
+        [SecuritySafeCritical]
         public CompilerResults CompileProject(string virtualPath, string outputDirectory) {
             var codeProvider = CodeDomProvider.CreateProvider("cs");
             var directory = _virtualPathProvider.GetDirectoryName(virtualPath);

@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Containers.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
 using Orchard.Themes;
@@ -17,10 +17,10 @@ namespace Orchard.Core.Containers.Controllers {
         public ItemController(IContentManager contentManager, IContainersPathConstraint containersPathConstraint, IShapeFactory shapeFactory) {
             _contentManager = contentManager;
             _containersPathConstraint = containersPathConstraint;
-            New = shapeFactory;
+            Shape = shapeFactory;
         }
 
-        dynamic New { get; set; }
+        dynamic Shape { get; set; }
 
         [Themed]
         public ActionResult Display(string path, Pager pager) {
@@ -42,17 +42,42 @@ namespace Orchard.Core.Containers.Controllers {
                 throw new ApplicationException("Ambiguous content");
             }
 
-            var containerId = hits.Single().Id;
-            var items = _contentManager
-                .Query<ContentPart<CommonPartRecord>, CommonPartRecord>(VersionOptions.Published)
-                .Where(x => x.Container.Id == containerId)
-                .List();
+            var container = _contentManager.Get(hits.Single().Id);
+            IContentQuery<ContentItem> query = _contentManager
+                .Query(VersionOptions.Published)
+                .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
 
-            var itemDisplays = items.Select(item => _contentManager.BuildDisplay(item, "Summary"));
-            var list = New.List();
-            list.AddRange(itemDisplays);
+            var descendingOrder = container.As<ContainerPart>().Record.OrderByDirection == (int) OrderByDirection.Descending;
+            //todo: (heskew) order by custom part properties
+            switch (container.As<ContainerPart>().Record.OrderByProperty) {
+                case "RoutePart.Title":
+                    query = descendingOrder
+                        ? query.OrderByDescending<RoutePartRecord, string>(record => record.Title)
+                        : query.OrderBy<RoutePartRecord, string>(record => record.Title);
+                    break;
+                case "RoutePart.Slug":
+                    query = descendingOrder
+                        ? query.OrderByDescending<RoutePartRecord, string>(record => record.Slug)
+                        : query.OrderBy<RoutePartRecord, string>(record => record.Slug);
+                    break;
+                default: // "CommonPart.PublishedUtc"
+                    query = descendingOrder
+                        ? query.OrderByDescending<CommonPartRecord, DateTime?>(record => record.PublishedUtc)
+                        : query.OrderBy<CommonPartRecord, DateTime?>(record => record.PublishedUtc);
+                    break;
+            }
 
-            return View(list);
+            var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
+            var pageOfItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
+
+            var list = Shape.List();
+            list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+
+            var viewModel = Shape.ViewModel()
+                .ContentItems(list)
+                .Pager(pagerShape);
+
+            return View(viewModel);
         }
     }
 }

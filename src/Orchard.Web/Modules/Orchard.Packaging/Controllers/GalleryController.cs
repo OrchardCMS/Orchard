@@ -15,6 +15,7 @@ namespace Orchard.Packaging.Controllers {
     [OrchardFeature("Gallery")]
     [Themed, Admin]
     public class GalleryController : Controller {
+
         private readonly IPackageManager _packageManager;
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IExtensionManager _extensionManager;
@@ -34,24 +35,15 @@ namespace Orchard.Packaging.Controllers {
 
         Localizer T { get; set; }
 
-        public ActionResult ModulesIndex() {
-            return Modules(Guid.Empty);
-        }
-
-        public ActionResult ThemesIndex() {
-            return Themes(Guid.Empty);
-        }
-
         public ActionResult Sources() {
             return View(new PackagingSourcesViewModel {
                 Sources = _packagingSourceManager.GetSources(),
             });
         }
 
-        public ActionResult Remove(Guid id) {
+        public ActionResult Remove(int id) {
             _packagingSourceManager.RemoveSource(id);
             _notifier.Information(T("The feed has been removed successfully."));
-            Update(null);
             return RedirectToAction("Sources");
         }
 
@@ -92,9 +84,9 @@ namespace Orchard.Packaging.Controllers {
                 if ( !ModelState.IsValid )
                     return View(new PackagingAddSourceViewModel { Url = url });
 
-                _packagingSourceManager.AddSource(new PackagingSource { Id = Guid.NewGuid(), FeedUrl = url, FeedTitle = title });
+                _packagingSourceManager.AddSource(title, url);
                 _notifier.Information(T("The feed has been added successfully."));
-                Update(null);
+
                 return RedirectToAction("Sources");
             }
             catch ( Exception exception ) {
@@ -104,30 +96,34 @@ namespace Orchard.Packaging.Controllers {
         }
 
 
-        public ActionResult Modules(Guid? sourceId) {
+        public ActionResult Modules(int? sourceId) {
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-            return View("Modules", new PackagingModulesViewModel {
-                Modules = _packagingSourceManager.GetModuleList(selectedSource).Where(p => p.SyndicationItem.Categories.All(c => c.Name == "Orchard Module" || c.Name != "Orchard Theme")),
+            var sources = selectedSource != null 
+                ? new [] { selectedSource }
+                : _packagingSourceManager.GetSources()
+            ;
+
+            return View("Modules", new PackagingExtensionsViewModel {
+                Extensions = sources.SelectMany(source => _packagingSourceManager.GetModuleList(source)),
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 SelectedSource = selectedSource
             });
         }
 
-        public ActionResult Themes(Guid? sourceId) {
+        public ActionResult Themes(int? sourceId) {
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-            return View("Themes", new PackagingModulesViewModel {
-                Modules = _packagingSourceManager.GetModuleList(selectedSource).Where(p => p.SyndicationItem.Categories.Any(c => c.Name == "Orchard Theme")),
+            var sources = selectedSource != null
+                ? new[] { selectedSource }
+                : _packagingSourceManager.GetSources()
+            ;
+
+            return View("Themes", new PackagingExtensionsViewModel {
+                Extensions = sources.SelectMany(source => _packagingSourceManager.GetThemeList(source)),
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 SelectedSource = selectedSource
             });
-        }
-
-        public ActionResult Update(string cameFrom) {
-            _packagingSourceManager.UpdateLists();
-            _notifier.Information(T("List of available modules and themes is updated."));
-            return RedirectToAction(cameFrom == "Themes" ? "ThemesIndex" : "ModulesIndex");
         }
 
         public ActionResult Harvest(string extensionName, string feedUrl) {
@@ -141,6 +137,7 @@ namespace Orchard.Packaging.Controllers {
 
         [HttpPost]
         public ActionResult Harvest(PackagingHarvestViewModel model) {
+            #if REFACTORING
             model.Sources = _packagingSourceManager.GetSources();
             model.Extensions = _extensionManager.AvailableExtensions();
 
@@ -164,12 +161,18 @@ namespace Orchard.Packaging.Controllers {
             Update(null);
 
             return RedirectToAction("Harvest", new { model.ExtensionName, model.FeedUrl });
+#else
+            return View();
+#endif
+
         }
 
         public ActionResult Install(string syndicationId, string cameFrom) {
+#if REFACTORING
             var packageData = _packageManager.Download(syndicationId);
             _packageManager.Install(packageData.PackageStream);
             _notifier.Information(T("Installed module"));
+#endif
             return RedirectToAction(cameFrom == "Themes" ? "ThemesIndex" : "ModulesIndex");
         }
     }

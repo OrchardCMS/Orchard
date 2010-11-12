@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security;
 using System.Web.Compilation;
 
 namespace Orchard.Environment.Extensions.Compilers {
@@ -18,6 +19,7 @@ namespace Orchard.Environment.Extensions.Compilers {
             _buildManager = buildManager;
         }
 
+        [SecuritySafeCritical]
         public CompilerResults CompileProject(string location) {
             var codeProvider = CodeDomProvider.CreateProvider("cs");
 

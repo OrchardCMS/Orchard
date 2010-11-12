@@ -45,6 +45,7 @@ namespace Orchard.Widgets.Services {
                 .Where(x => x.ExtensionType == "Theme")
                 .SelectMany(x => x.Zones.Split(','))
                 .Distinct()
+                .Select(x => x.Trim())
                 .ToArray();
         }
 

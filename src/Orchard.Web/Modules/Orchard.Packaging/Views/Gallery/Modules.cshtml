@@ -1,11 +1,10 @@
-﻿@model Orchard.Packaging.ViewModels.PackagingModulesViewModel
+﻿@model Orchard.Packaging.ViewModels.PackagingExtensionsViewModel
 @using System.Linq;
 
 @{ Style.Require("PackagingAdmin"); }
 
-<h1>@Html.TitleForPage(T("Browse Gallery - Modules").ToString())</h1>
+<h1>@Html.TitleForPage(T("Browse Gallery - Modules").Text)</h1>
 
-<div class="manage">@Html.ActionLink(T("Refresh").ToString(), "Update", new { cameFrom = "Modules" }, new { @class = "button primaryAction" })</div>
 @using ( Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery")) ) {
     <fieldset class="bulk-actions">
         <label for="filterResults" class="bulk-filter">@T("Feed:")</label>
@@ -20,24 +19,24 @@
 }
     
 
-@if (Model.Modules.Count() > 0) {
+@if (Model.Extensions.Count() > 0) {
     <ul class="contentItems">
-    @foreach (var item in Model.Modules) {
+    @foreach (var item in Model.Extensions) {
         <li> 
             <div class="moduleName">
-                <h2>@(item.SyndicationItem.Title == null ? T("(No title)").Text : item.SyndicationItem.Title.Text)<span> - @T("Version: {0}", item.SyndicationItem.ElementExtensions.ReadElementExtensions<string>("Version", "http://orchardproject.net").FirstOrDefault() ?? T("N/A").Text)</span></h2>
+                <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
             </div>
 
             <div class="related">
-                @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"SyndicationId",item.SyndicationItem.Id},{"cameFrom", "Modules"}})@T(" | ")
+                @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"SyndicationId", item.PackageId},{"cameFrom", "Modules"}})@T(" | ")
                 <a href="@item.PackageStreamUri">@T("Download")</a>
              </div>
 
              <div class="properties">
-                <p>@(item.SyndicationItem.Summary == null ? T("(No description").Text : item.SyndicationItem.Summary.Text)</p>
+                <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
                 <ul class="pageStatus">
-                    <li>@T("Last Updated: {0}", item.SyndicationItem.LastUpdatedTime.ToLocalTime())</li>
-                    <li>&nbsp;&#124;&nbsp;@T("Author: {0}", item.SyndicationItem.Authors.Any() ? String.Join(", ", item.SyndicationItem.Authors.Select(a => a.Name)) : T("Unknown").Text)</li>
+                    @*todo: (sebros) find a way to get the update date*@<li style="color:red">@T("Last Updated: {0}", DateTime.Now.ToLocalTime())</li>
+                    <li>&nbsp;&#124;&nbsp;@T("Author: {0}", item.Authors)</li>
                 </ul>
            </div>   
         </li>}

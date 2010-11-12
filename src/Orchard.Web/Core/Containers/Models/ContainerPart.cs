@@ -11,9 +11,4 @@ namespace Orchard.Core.Containers.Models {
         public virtual string OrderByProperty { get; set; }
         public virtual int OrderByDirection { get; set; }
     }
-
-    public enum OrderByDirection { 
-        Ascending,
-        Descending,
-    }
 }
