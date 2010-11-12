@@ -8,8 +8,7 @@ using Orchard.UI.Notify;
 namespace Orchard.Packaging.Commands {
     [OrchardFeature("Orchard.Packaging")]
     public class PackagingCommands : DefaultOrchardCommandHandler {
-        private static readonly string OrchardWebProj = HostingEnvironment.MapPath("~/Orchard.Web.csproj");
-        private const string CreatePackagePath = "CreatedPackages";
+        private static readonly string ApplicationPath = HostingEnvironment.MapPath("~/");
 
         private readonly IPackageManager _packageManager;
         private readonly INotifier _notifier;
@@ -54,13 +53,7 @@ namespace Orchard.Packaging.Commands {
         [CommandName("package install")]
         [OrchardSwitches("Version")]
         public void InstallPackage(string packageId, string location) {
-            var solutionFolder = GetSolutionFolder();
-
-            if(solutionFolder == null) {
-                Context.Output.WriteLine(T("The project's location is not supported"));
-            }
-
-            _packageManager.Install(packageId, Version, Path.GetFullPath(location), solutionFolder);
+            _packageManager.Install(packageId, Version, Path.GetFullPath(location), ApplicationPath);
             
             foreach(var message in _notifier.List()) {
                 Context.Output.WriteLine(message.Message);
@@ -70,21 +63,11 @@ namespace Orchard.Packaging.Commands {
         [CommandHelp("package uninstall <packageId> \r\n\t" + "Uninstall a module or a theme.")]
         [CommandName("package uninstall")]
         public void UninstallPackage(string packageId) {
-            var solutionFolder = GetSolutionFolder();
-
-            if ( solutionFolder == null ) {
-                Context.Output.WriteLine(T("The project's location is not supported"));
-            }
-
-            _packageManager.Uninstall(packageId, solutionFolder);
+            _packageManager.Uninstall(packageId, ApplicationPath);
 
             foreach ( var message in _notifier.List() ) {
                 Context.Output.WriteLine(message.Message);
             }
-        }
-        private static string GetSolutionFolder() {
-            var orchardDirectory = Directory.GetParent(OrchardWebProj);
-            return orchardDirectory.Parent == null ? null : orchardDirectory.Parent.FullName;
         }
     }
 }

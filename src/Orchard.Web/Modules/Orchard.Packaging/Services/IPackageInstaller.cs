@@ -7,7 +7,7 @@ namespace Orchard.Packaging.Services {
     }
 
     public interface IPackageInstaller : IDependency {
-        PackageInfo Install(string packageId, string version, string location, string solutionFolder);
-        void Uninstall(string packageId, string solutionFolder);
+        PackageInfo Install(string packageId, string version, string location, string applicationFolder);
+        void Uninstall(string packageId, string applicationFolder);
     }
 }
