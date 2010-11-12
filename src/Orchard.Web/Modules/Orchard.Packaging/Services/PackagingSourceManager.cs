@@ -8,7 +8,7 @@ using Orchard.Localization;
 using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
-    [OrchardFeature("PackagingServices")]
+    [OrchardFeature("Gallery")]
     public class PackagingSourceManager : IPackagingSourceManager {
         private const string ModulesFilter = "Orchard.Module.";
         private const string ThemesFilter = "Orchard.Theme.";

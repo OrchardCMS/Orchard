@@ -2,10 +2,9 @@
 using Orchard.Environment.Extensions;
 
 namespace Orchard.Packaging {
-    [OrchardFeature("PackagingServices")]
     public class Migrations: DataMigrationImpl {
         public int Create() {
-            SchemaBuilder.CreateTable("PackagingSourceRecord", 
+            SchemaBuilder.CreateTable("PackagingSource", 
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("FeedTitle", c => c.WithLength(255))

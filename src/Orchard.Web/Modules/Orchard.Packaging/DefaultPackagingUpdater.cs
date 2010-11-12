@@ -1,12 +1,11 @@
-﻿using System;
-using Orchard.Environment;
+﻿using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Packaging.Services;
 
 namespace Orchard.Packaging {
-    [OrchardFeature("PackagingServices")]
+    [OrchardFeature("Gallery")]
     public class DefaultPackagingUpdater : IFeatureEventHandler {
         private readonly IPackagingSourceManager _packagingSourceManager;
 
