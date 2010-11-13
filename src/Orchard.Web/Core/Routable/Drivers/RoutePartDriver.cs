@@ -79,10 +79,6 @@ namespace Orchard.Core.Routable.Drivers {
                     updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."));
             }
 
-            if (!_routableService.ProcessSlug(part))
-                _services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
-                    part.Slug, part.GetEffectiveSlug(), part.ContentItem.ContentType));
-
             if (part.ContentItem.Id != 0 && model.PromoteToHomePage && _routableHomePageProvider != null)
                 _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
 

@@ -33,7 +33,7 @@ namespace Orchard.Core.Routable.Handlers {
             OnGetEditorShape<RoutePart>(SetModelProperties);
             OnUpdateEditorShape<RoutePart>(SetModelProperties);
 
-            OnPublished<RoutePart>((context, routable) => {
+            OnPublishing<RoutePart>((context, routable) => {
                 if (context.PublishingItemVersionRecord != null)
                     processSlug(routable);
                 if (!string.IsNullOrEmpty(routable.Path))

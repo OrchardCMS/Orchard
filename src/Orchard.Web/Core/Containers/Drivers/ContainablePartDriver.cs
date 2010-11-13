@@ -44,21 +44,8 @@ namespace Orchard.Core.Containers.Drivers {
                     if (updater != null) {
                         var oldContainerId = model.ContainerId;
                         updater.TryUpdateModel(model, "Containable", null, null);
-                        if (oldContainerId != model.ContainerId) {
+                        if (oldContainerId != model.ContainerId)
                             commonPart.Container = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
-                            // reprocess  slug
-                            var routable = part.As<IRoutableAspect>();
-                            _routableService.ProcessSlug(part.As<IRoutableAspect>());
-                            if (!_routableService.ProcessSlug(routable)) {
-                                var existingConflict = _services.Notifier.List().FirstOrDefault(n => n.Message.TextHint == "Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"");
-                                if (existingConflict != null)
-                                    existingConflict.Message = T("Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
-                                                                 routable.Slug, routable.GetEffectiveSlug(), routable.ContentItem.ContentType);
-                                else
-                                    _services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
-                                                                 routable.Slug, routable.GetEffectiveSlug(), routable.ContentItem.ContentType));
-                            }
-                        }
                     }
 
                     var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).List();

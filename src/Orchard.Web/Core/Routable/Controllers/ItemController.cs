@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Routable.Models;
+using Orchard.Core.Routable.Services;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -62,7 +63,7 @@ namespace Orchard.Core.Routable.Controllers {
                 contentItem = _contentManager.Get((int)id, VersionOptions.Latest);
 
             if (contentItem == null) {
-                contentItem = _contentManager.New(contentType);
+                contentItem = _contentManager.Create(contentType, VersionOptions.Draft);
 
                 if (containerId != null) {
                     var containerItem = _contentManager.Get((int)containerId);
@@ -71,9 +72,10 @@ namespace Orchard.Core.Routable.Controllers {
             }
 
             _contentManager.UpdateEditor(contentItem, this);
+            _contentManager.Publish(contentItem);
             _transactionManager.Cancel();
 
-            return Json(contentItem.As<IRoutableAspect>().Slug ?? slug);
+            return Json(contentItem.As<IRoutableAspect>().GetEffectiveSlug() ?? slug);
         }
 
 
