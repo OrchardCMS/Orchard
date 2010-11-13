@@ -1,7 +1,7 @@
 ﻿using Orchard.Messaging.Events;
 using Orchard.ContentManagement;
-using Orchard.Users.Models;
 using Orchard.Messaging.Models;
+using Orchard.Security;
 
 namespace Orchard.Email.Services {
     public class EmailMessageEventHandler : IMessageEventHandler {
@@ -16,7 +16,7 @@ namespace Orchard.Email.Services {
             if ( contentItem == null )
                 return;
 
-            var recipient = contentItem.As<UserPart>();
+            var recipient = contentItem.As<IUser>();
             if ( recipient == null )
                 return;
 
