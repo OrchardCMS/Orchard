@@ -1,10 +1,8 @@
 ﻿<h1>@Html.TitleForPage(T("Manage Settings").ToString())</h1>
 @using (Html.BeginFormAntiForgeryPost()) {
-@Html.ValidationSummary()
-
-@Display(Model.Primary)
-<fieldset>
-    <input class="button primaryAction" type="submit" value="@T("Save")" />
-</fieldset>
+    @Html.ValidationSummary()
+    @Display(Model.Content)
+    <fieldset>
+        <button class="primaryAction" type="submit">@T("Save")</button>
+    </fieldset>
 }
-

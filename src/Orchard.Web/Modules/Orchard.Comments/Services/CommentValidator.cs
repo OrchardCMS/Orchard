@@ -2,10 +2,9 @@
 using System.Web;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.ContentManagement;
-using Orchard.Settings;
 using Orchard.UI.Notify;
 using Joel.Net;
 
@@ -15,18 +14,20 @@ namespace Orchard.Comments.Services {
     [UsedImplicitly]
     public class AkismetCommentValidator : ICommentValidator {
         private readonly INotifier _notifer;
-        public AkismetCommentValidator(INotifier notifier) {
+        private readonly IOrchardServices _orchardServices;
+
+        public AkismetCommentValidator(INotifier notifier, IOrchardServices orchardServices) {
             _notifer = notifier;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public bool ValidateComment(CommentPart commentPart) {
-            CommentSettingsPartRecord commentSettingsPartRecord = CurrentSite.As<CommentSettingsPart>().Record;
+            CommentSettingsPartRecord commentSettingsPartRecord = _orchardServices.WorkContext.CurrentSite.As<CommentSettingsPart>().Record;
             string akismetKey = commentSettingsPartRecord.AkismetKey;
             string akismetUrl = commentSettingsPartRecord.AkismetUrl;
             bool enableSpamProtection = commentSettingsPartRecord.EnableSpamProtection;

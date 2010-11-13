@@ -1,4 +1,9 @@
 ﻿<Placement>
-  <Place Parts_Tags_ShowTags="Header:after.7"/>
-  <Place Parts_Tags_Edit="Primary:7"/>
+    <Place Parts_Tags_Edit="Content:7"/>
+    <Match DisplayType="Detail">
+        <Place Parts_Tags_ShowTags="Header:after.7"/>
+    </Match>
+    <Match DisplayType="Summary">
+        <Place Parts_Tags_ShowTags="Header:after.7"/>
+    </Match>
 </Placement>

@@ -135,6 +135,7 @@ namespace Orchard.Commands {
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private IContainer CreateHostContainer() {
             var hostContainer = OrchardStarter.CreateHostContainer(ContainerRegistrations);
 

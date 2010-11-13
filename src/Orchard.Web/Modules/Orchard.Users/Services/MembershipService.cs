@@ -11,7 +11,6 @@ using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Users.Events;
 using Orchard.Users.Models;
-using Orchard.Settings;
 using Orchard.Messaging.Services;
 using System.Collections.Generic;
 
@@ -19,19 +18,18 @@ namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class MembershipService : IMembershipService {
         private static readonly TimeSpan DelayToValidate = new TimeSpan(7, 0, 0, 0); // one week to validate email
-        private readonly IContentManager _contentManager;
+        private readonly IOrchardServices _orchardServices;
         private readonly IMessageManager _messageManager;
         private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
 
-        public MembershipService(IContentManager contentManager, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers) {
-            _contentManager = contentManager;
+        public MembershipService(IOrchardServices orchardServices, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers) {
+            _orchardServices = orchardServices;
             _messageManager = messageManager;
             _userEventHandlers = userEventHandlers;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public MembershipSettings GetSettings() {
             var settings = new MembershipSettings();
@@ -42,9 +40,9 @@ namespace Orchard.Users.Services {
         public IUser CreateUser(CreateUserParams createUserParams) {
             Logger.Information("CreateUser {0} {1}", createUserParams.Username, createUserParams.Email);
 
-            var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
+            var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
 
-            var user = _contentManager.New<UserPart>("User");
+            var user = _orchardServices.ContentManager.New<UserPart>("User");
 
             user.Record.UserName = createUserParams.Username;
             user.Record.Email = createUserParams.Email;
@@ -71,14 +69,14 @@ namespace Orchard.Users.Services {
                 return null;
             }
 
-            _contentManager.Create(user);
+            _orchardServices.ContentManager.Create(user);
 
             foreach ( var userEventHandler in _userEventHandlers ) {
                 userEventHandler.Created(userContext);
             }
 
             if ( registrationSettings != null  && registrationSettings.UsersAreModerated && registrationSettings.NotifyModeration && !createUserParams.IsApproved ) {
-                var superUser = GetUser(CurrentSite.SuperUser);
+                var superUser = GetUser(_orchardServices.WorkContext.CurrentSite.SuperUser);
                 if(superUser != null)
                     _messageManager.Send(superUser.ContentItem.Record, MessageTypes.Moderation);
             }
@@ -137,16 +135,16 @@ namespace Orchard.Users.Services {
         public IUser GetUser(string username) {
             var lowerName = username == null ? "" : username.ToLower();
 
-            return _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
+            return _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
         }
 
         public IUser ValidateUser(string userNameOrEmail, string password) {
             var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLower();
 
-            var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
+            var user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
 
             if(user == null)
-                user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
+                user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
 
             if ( user == null || ValidatePassword(user.As<UserPart>().Record, password) == false )
                 return null;
@@ -214,15 +212,18 @@ namespace Orchard.Users.Services {
         private static void SetPasswordHashed(UserPartRecord partRecord, string password) {
 
             var saltBytes = new byte[0x10];
-            var random = new RNGCryptoServiceProvider();
-            random.GetBytes(saltBytes);
+            using (var random = new RNGCryptoServiceProvider()) {
+                random.GetBytes(saltBytes);
+            }
 
             var passwordBytes = Encoding.Unicode.GetBytes(password);
 
             var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
 
-            var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm);
-            var hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
+            byte[] hashBytes;
+            using (var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm)) {
+                hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
+            }
 
             partRecord.PasswordFormat = MembershipPasswordFormat.Hashed;
             partRecord.Password = Convert.ToBase64String(hashBytes);
@@ -237,8 +238,10 @@ namespace Orchard.Users.Services {
 
             var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
 
-            var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm);
-            var hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
+            byte[] hashBytes;
+            using (var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm)) {
+                hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
+            }
             
             return partRecord.Password == Convert.ToBase64String(hashBytes);
         }

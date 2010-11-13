@@ -7,7 +7,7 @@ using Orchard.Mvc.Html;
 using Orchard.Services;
 
 namespace Orchard.Core.Shapes {
-    public class DateTimeShapes : IDependency {
+    public class DateTimeShapes : ISingletonDependency {
         private readonly IClock _clock;
 
         public DateTimeShapes(IClock clock) {

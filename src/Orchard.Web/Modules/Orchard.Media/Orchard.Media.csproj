@@ -27,7 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -71,6 +71,11 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Extensions\LongExtensions.cs" />
+    <Compile Include="Handlers\MediaSettingsPartHandler.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\MediaSettingsPart.cs" />
+    <Compile Include="Models\MediaSettingsPartRecord.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Helpers\MediaHelpers.cs" />
     <Compile Include="Permissions.cs" />
@@ -92,7 +97,6 @@
     <Content Include="Content\Admin\images\folder.gif" />
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
-    <Content Include="Web.config" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
@@ -113,6 +117,17 @@
     <Content Include="Views\Admin\EditMedia.cshtml" />
     <Content Include="Views\Admin\EditProperties.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts\Media.MediaSettings.cshtml" />
+    <Content Include="Content\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

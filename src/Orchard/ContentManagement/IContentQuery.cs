@@ -16,6 +16,7 @@ namespace Orchard.ContentManagement {
 
         IEnumerable<TPart> List();
         IEnumerable<TPart> Slice(int skip, int count);
+        int Count();
 
         IContentQuery<TPart, TRecord> Join<TRecord>() where TRecord : ContentPartRecord;
 

@@ -66,12 +66,12 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table1.AddRow(new string[] {
                         "module",
-                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Or" +
-                            "chard.jQuery, TinyMce"});
+                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.PublishLat" +
+                            "er, Orchard.Themes, Orchard.jQuery, TinyMce"});
             table1.AddRow(new string[] {
                         "core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater," +
-                            " Scheduling, Settings, Shapes, XmlRpc"});
+                        "Common, Contents, Dashboard, Feeds, HomePage, Messaging, Navigation, Routable, Sc" +
+                            "heduling, Settings, Shapes, XmlRpc"});
             table1.AddRow(new string[] {
                         "theme",
                         "SafeMode"});
@@ -102,12 +102,12 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table2.AddRow(new string[] {
                         "module",
-                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Or" +
-                            "chard.jQuery, TinyMce"});
+                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.PublishLat" +
+                            "er, Orchard.Themes, Orchard.jQuery, TinyMce"});
             table2.AddRow(new string[] {
                         "core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater," +
-                            " Scheduling, Settings, Shapes, XmlRpc"});
+                        "Common, Contents, Dashboard, Feeds, HomePage, Messaging, Navigation, Routable, Sc" +
+                            "heduling, Settings, Shapes, XmlRpc"});
             table2.AddRow(new string[] {
                         "theme",
                         "SafeMode"});
@@ -138,12 +138,12 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table3.AddRow(new string[] {
                         "module",
-                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Or" +
-                            "chard.jQuery, TinyMce"});
+                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.PublishLat" +
+                            "er, Orchard.Themes, Orchard.jQuery, TinyMce"});
             table3.AddRow(new string[] {
                         "core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater," +
-                            " Scheduling, Settings, Shapes, XmlRpc"});
+                        "Common, Contents, Dashboard, Feeds, HomePage, Messaging, Navigation, Routable, Sc" +
+                            "heduling, Settings, Shapes, XmlRpc"});
             table3.AddRow(new string[] {
                         "theme",
                         "SafeMode"});
@@ -176,12 +176,12 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table4.AddRow(new string[] {
                         "module",
-                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Or" +
-                            "chard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce"});
+                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.PublishLat" +
+                            "er, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce"});
             table4.AddRow(new string[] {
                         "core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater," +
-                            " Scheduling, Settings, Shapes, XmlRpc"});
+                        "Common, Contents, Dashboard, Feeds, HomePage, Messaging, Navigation, Routable, Sc" +
+                            "heduling, Settings, Shapes, XmlRpc"});
             table4.AddRow(new string[] {
                         "theme",
                         "SafeMode, TheThemeMachine"});

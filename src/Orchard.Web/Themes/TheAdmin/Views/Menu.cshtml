@@ -1,17 +1,24 @@
 ﻿@using System.Web.Routing;
+@using Orchard.Utility.Extensions;
 @{
 	Script.Require("jQuery");
     Script.Include("admin.js");
     IEnumerable<dynamic> firstLevelMenuItems = Model;
+
+    Model.Attributes.Add("role", "navigation");
+    var tag = Tag(Model, "ul");
 }
-﻿<ul id="navigation" role="navigation">
+﻿@tag.StartElement
 	@foreach(var firstLevelMenuItem in Model) {
         IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
 
+        string sectionHeaderText = firstLevelMenuItem.Text;
         var firstOfTheSecond = secondLevelMenuItems.FirstOrDefault();
-        var sectionHeaderMarkup = firstOfTheSecond != null
-            ? Html.ActionLink((string)firstLevelMenuItem.Text, (string)firstOfTheSecond.RouteValues["action"], (RouteValueDictionary)firstOfTheSecond.RouteValues)
-            : new HtmlString(string.Format("<span>{0}</span>", Html.Encode(firstLevelMenuItem.Text)));
+        var sectionHeaderMarkup = firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)
+            ? Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href)
+            : firstOfTheSecond != null
+                ? Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href)
+                : new HtmlString(string.Format("<span>{0}</span>", Html.Encode(sectionHeaderText)));
 
         if (firstLevelMenuItem == firstLevelMenuItems.First()) {
             firstLevelMenuItem.Classes.Add("first");
@@ -20,24 +27,27 @@
             firstLevelMenuItem.Classes.Add("last");
         }
 
+        firstLevelMenuItem.Classes.Add("section-" + sectionHeaderText.HtmlClassify());
         var firstLevelTag = Tag(firstLevelMenuItem, "li");
         @firstLevelTag.StartElement
             <h3>@sectionHeaderMarkup</h3>
-            <ul class="menuItems">
-        	@foreach(var secondLevelMenuItem in secondLevelMenuItems) {
-                <li>
-                    <a href="@secondLevelMenuItem.Href">@secondLevelMenuItem.Text</a>
-                </li>
+            if (secondLevelMenuItems.Count() > 1) {
+                <ul class="menuItems">
+        	    @foreach(var secondLevelMenuItem in secondLevelMenuItems) {
+                    <li>
+                        <a href="@secondLevelMenuItem.Href">@secondLevelMenuItem.Text</a>
+                    </li>
+                }
+                </ul>
             }
-            </ul>
        @firstLevelTag.EndElement
     }
-</ul>
+@tag.EndElement
 @using(Script.Foot()) {
 <script type="text/javascript">
 //<![CDATA[
     (function ($) {
-        $("#navigation h3").expandoControl(function(controller) { return controller.next(); }, { key: "N42", path: "@Url.Content("~/")" });
+        $("@string.Format(".{0} h3", string.Join(".", Model.Classes))").expandoControl(function(controller) { return controller.next(); }, { key: "N42", path: "@Url.Content("~/")" });
     })(jQuery);
 //]]>
 </script>

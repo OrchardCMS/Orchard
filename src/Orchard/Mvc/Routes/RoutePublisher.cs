@@ -2,21 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
+using Autofac;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 
 namespace Orchard.Mvc.Routes {
     public class RoutePublisher : IRoutePublisher {
         private readonly RouteCollection _routeCollection;
         private readonly ShellSettings _shellSettings;
-        private readonly Func<RouteBase, ShellRoute> _shellRouteFactory;
+        private readonly ILifetimeScope _shellLifetimeScope;
+        private readonly IRunningShellTable _runningShellTable;
 
         public RoutePublisher(
             RouteCollection routeCollection,
             ShellSettings shellSettings,
-            Func<RouteBase, ShellRoute> shellRouteFactory) {
+            ILifetimeScope shellLifetimeScope,
+            IRunningShellTable runningShellTable) {
             _routeCollection = routeCollection;
             _shellSettings = shellSettings;
-            _shellRouteFactory = shellRouteFactory;
+            _shellLifetimeScope = shellLifetimeScope;
+            _runningShellTable = runningShellTable;
         }
 
         public void Publish(IEnumerable<RouteDescriptor> routes) {
@@ -41,8 +46,8 @@ namespace Orchard.Mvc.Routes {
 
                 // new routes are added
                 foreach (var routeDescriptor in routesArray) {
-                    //_routeCollection.Add(route.Name, _shellRouteFactory(_shellSettings.Name, route.Route));
-                    _routeCollection.Add(routeDescriptor.Name, _shellRouteFactory(routeDescriptor.Route));
+                    ShellRoute shellRoute = new ShellRoute(routeDescriptor.Route, _shellSettings, _shellLifetimeScope, _runningShellTable);
+                    _routeCollection.Add(routeDescriptor.Name, shellRoute);
                 }
             }
         }

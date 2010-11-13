@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using Orchard.Localization;
 
 namespace Orchard {
+    [Serializable]
     public class OrchardCoreException : Exception {
         private readonly LocalizedString _localizedMessage;
 

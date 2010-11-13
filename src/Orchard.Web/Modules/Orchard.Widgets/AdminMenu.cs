@@ -7,9 +7,9 @@ namespace Orchard.Widgets {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Widgets"), "10",
-                        menu => menu
-                                    .Add(T("Manage Widgets"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Widgets" }).Permission(Permissions.ManageWidgets)));
+            builder.Add(T("Widgets"), "4",
+                menu => menu.Add(T("Configure"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.Widgets" })
+                    .Permission(Permissions.ManageWidgets)));
         }
     }
 }

@@ -1,0 +1,36 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Common.Models;
+@using Orchard.PublishLater.Models;
+@{
+    PublishLaterPart publishLaterPart = Model.ContentPart;
+    DateTime? versionPublishedUtc = publishLaterPart.As<CommonPart>() == null ? null : publishLaterPart.As<CommonPart>().VersionPublishedUtc;
+}
+<ul class="pageStatus">
+    <li>@* Published or not *@
+    @if (publishLaterPart.HasPublished()) {
+        <img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/online.gif")" alt="@T("Online")" title="@T("The page is currently online")" /> <text>@T("Published")&nbsp;&#124;&nbsp;</text>
+    }
+    else {
+        <img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/offline.gif")" alt="@T("Offline")" title="@T("The page is currently offline")" /> <text>@T("Not Published")&nbsp;&#124;&nbsp;</text>
+    }
+    </li>
+    <li>
+    @* Does the page have a draft *@
+    @if (publishLaterPart.HasDraft()) {
+        <img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/draft.gif")" alt="@T("Draft")" title="@T("The page has a draft")" /><text> @T("Draft")&nbsp;&#124;&nbsp;</text>
+    }
+    else {
+        <text>@T("No Draft")&nbsp;&#124;&nbsp;</text>
+    }
+    </li>
+    @if ((((DateTime?)Model.ScheduledPublishUtc).HasValue && ((DateTime?)Model.ScheduledPublishUtc).Value > DateTime.UtcNow) || (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue)) {
+        <li>
+        @if (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue) {
+            @T("Published: {0}", Display.DateTimeRelative(dateTimeUtc: versionPublishedUtc.Value))
+        }
+        else {
+            <img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/scheduled.gif")" alt="@T("Scheduled")" title="@T("The page is scheduled for publishing")" /><text>  @T("Scheduled") </text>
+            @Html.DateTime(((DateTime?)Model.ScheduledPublishUtc).Value.ToLocalTime(), T("M/d/yyyy h:mm tt"))
+        }&nbsp;&#124;&nbsp;</li>
+    }
+</ul>

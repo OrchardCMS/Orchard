@@ -148,6 +148,11 @@ namespace Orchard.Roles.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Delete")]
         public ActionResult EditDeletePOST(int id) {
+            return Delete(id, null);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
@@ -155,6 +160,10 @@ namespace Orchard.Roles.Controllers {
                 _roleService.DeleteRole(id);
 
                 Services.Notifier.Information(T("Role was successfully deleted."));
+
+                if (!string.IsNullOrWhiteSpace(returnUrl))
+                    return Redirect(returnUrl);
+
                 return RedirectToAction("Index");
             } catch (Exception exception) {
                 Services.Notifier.Error(T("Editing Role failed: {0}", exception.Message));

@@ -9,16 +9,12 @@ using Orchard.Utility;
 
 namespace Orchard.DisplayManagement.Descriptors {
 
-    public interface IFeatureMetadata {
-        Feature Feature { get; }
-    }
-
     public class DefaultShapeTableManager : IShapeTableManager {
-        private readonly IEnumerable<Meta<IShapeTableProvider, IFeatureMetadata>> _bindingStrategies;
+        private readonly IEnumerable<Meta<IShapeTableProvider>> _bindingStrategies;
         private readonly IExtensionManager _extensionManager;
 
         public DefaultShapeTableManager(
-            IEnumerable<Meta<IShapeTableProvider, IFeatureMetadata>> bindingStrategies,
+            IEnumerable<Meta<IShapeTableProvider>> bindingStrategies,
             IExtensionManager extensionManager) {
             _extensionManager = extensionManager;
             _bindingStrategies = bindingStrategies;
@@ -30,7 +26,10 @@ namespace Orchard.DisplayManagement.Descriptors {
             return _tables.GetOrAdd(themeName ?? "", x => {
                 var builderFactory = new ShapeTableBuilderFactory();
                 foreach (var bindingStrategy in _bindingStrategies) {
-                    var strategyDefaultFeature = bindingStrategy.Metadata.Feature;
+                    Feature strategyDefaultFeature = bindingStrategy.Metadata.ContainsKey("Feature") ?
+                        (Feature) bindingStrategy.Metadata["Feature"] : 
+                        null;
+
                     var builder = builderFactory.CreateTableBuilder(strategyDefaultFeature);
                     bindingStrategy.Value.Discover(builder);
                 }

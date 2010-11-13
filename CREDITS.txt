@@ -135,6 +135,12 @@ Website:      http://code.google.com/p/nhlambdaextensions/
 Copyright:    Unknown http://code.google.com/p/nhlambdaextensions/people/list
 License:      LGPL 2.1
 
+NuGet
+-----
+Website:      http://www.nuget.org/nuget.codeplex.com
+Copyright:    Copyright 2010 Outercurve Foundation
+License:      Apache Software Foundation License 2.0
+
 nUnit
 -----
 Website:      http://www.nunit.org/index.php

@@ -27,7 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -87,7 +87,6 @@
     <Content Include="Views\Setup\Index.cshtml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -97,6 +96,10 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Themes\Orchard.Themes.csproj">
+      <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
+      <Name>Orchard.Themes</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
       <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>

@@ -85,15 +85,48 @@
             var firstError = _this.find(".input-validation-error").first();
             // try to focus the first error on the page
             if (firstError.size() === 1) {
-                return firstError.focus();
+                firstError.focus();
+                return _this;
             }
             // or, give it up to the browser to autofocus
             if ('autofocus' in document.createElement('input')) {
-                return;
+                return _this;
             }
             // otherwise, make the autofocus attribute work
             var autofocus = _this.find(":input[autofocus]").first();
-            return autofocus.focus();
+            autofocus.focus();
+
+            return _this;
+        },
+        helpfullyPlacehold: function () {
+            var _this = $(this);
+
+            // give it up to the browser to handle placeholder text
+            if ('placeholder' in document.createElement('input')) {
+                return _this;
+            }
+            // otherwise, make the placeholder attribute work
+            $(":input[placeholder]")
+                .each(function () {
+                    var _this = $(this);
+                    if (_this.val() === "") {
+                        _this.val(_this.attr("placeholder")).addClass("placeholderd");
+                    }
+                })
+                .live("focus", function () {
+                    var _this = $(this);
+                    if (_this.val() === _this.attr("placeholder")) {
+                        _this.val("").removeClass("placeholderd");
+                    }
+                })
+                .live("blur", function () {
+                    var _this = $(this);
+                    if (_this.val() === "") {
+                        _this.val(_this.attr("placeholder")).addClass("placeholderd");
+                    }
+                });
+
+            return _this;
         },
         toggleWhatYouControl: function () {
             var _this = $(this);
@@ -103,14 +136,14 @@
                 _controllees.hide(); // <- unhook this when the following comment applies
                 $(_controllees.show()[0]).find("input").focus(); // <- aaaand a slideDown there...eventually
             } else if (!(_this.is(":checked") && _controlleesAreHidden)) {
-                //_controllees.slideUp(200); <- hook this back up when chrome behaves, or when I care less
+                //_controllees.slideUp(200); <- hook this back up when chrome behaves, or when I care less...or when chrome behaves
                 _controllees.hide()
             }
-            return this;
+            return _this;
         }
     });
     // collapsable areas - anything with a data-controllerid attribute has its visibility controlled by the id-ed radio/checkbox
-    (function () {
+    $(function () {
         $("[data-controllerid]").each(function () {
             var controller = $("#" + $(this).attr("data-controllerid"));
             if (controller.data("isControlling")) {
@@ -126,9 +159,9 @@
                 $("[name=" + controller.attr("name") + "]").click(function () { $("[name=" + $(this).attr("name") + "]").each($(this).toggleWhatYouControl); });
             }
         });
-    })();
+    });
     // inline form link buttons (form.inline.link button) swapped out for a link that submits said form
-    (function () {
+    $(function () {
         $("form.inline.link").each(function () {
             var _this = $(this);
             var link = $("<a class='wasFormInlineLink' href='.'/>");
@@ -141,10 +174,12 @@
             _this.css({ "position": "absolute", "left": "-9999em" });
             $("body").append(_this);
         });
-    })();
-    // (do) a little better autofocus
+    });
+    // some default value add behavior
     $(function () {
-        $("body").helpfullyFocus();
+        $("body").helpfullyFocus() // (do) a little better autofocus
+            .helpfullyPlacehold(); // pick up on placeholders
+
     });
     // UnsafeUrl links -> form POST
     //todo: need some real microdata support eventually (incl. revisiting usage of data-* attributes)

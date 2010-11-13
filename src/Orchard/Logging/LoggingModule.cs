@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security;
+using System.Security.Permissions;
 using Autofac;
 using Autofac.Core;
 using Castle.Core.Logging;
@@ -14,11 +16,16 @@ namespace Orchard.Logging {
             // by default, use Orchard's logger that delegates to Castle's logger factory
             moduleBuilder.RegisterType<CastleLoggerFactory>().As<ILoggerFactory>().InstancePerLifetimeScope();
 
-            // by default, use Castle's TraceSource based logger factory
-            moduleBuilder.RegisterType<TraceLoggerFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
+            // Register logger type
+            if (AppDomain.CurrentDomain.IsHomogenous && AppDomain.CurrentDomain.IsFullyTrusted) {
+                moduleBuilder.RegisterType<TraceLoggerFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
+            } else {
+                // if security model does not allow it, fall back to null logger factory
+                moduleBuilder.RegisterType<NullLogFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
+            }
 
             // call CreateLogger in response to the request for an ILogger implementation
-            moduleBuilder.Register((ctx, ps) => CreateLogger(ctx, ps)).As<ILogger>().InstancePerDependency();
+            moduleBuilder.Register(CreateLogger).As<ILogger>().InstancePerDependency();
         }
 
         protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {

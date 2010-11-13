@@ -7,7 +7,6 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
-using Orchard.Settings;
 using Orchard.Tags.Models;
 using Orchard.UI.Notify;
 
@@ -16,27 +15,25 @@ namespace Orchard.Tags.Services {
     public class TagService : ITagService {
         private readonly IRepository<Tag> _tagRepository;
         private readonly IRepository<TagsContentItems> _tagsContentItemsRepository;
-        private readonly IContentManager _contentManager;
         private readonly INotifier _notifier;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IOrchardServices _orchardServices;
 
         public TagService(IRepository<Tag> tagRepository,
                           IRepository<TagsContentItems> tagsContentItemsRepository,
-                          IContentManager contentManager,
                           INotifier notifier,
-                          IAuthorizationService authorizationService) {
+                          IAuthorizationService authorizationService,
+                          IOrchardServices orchardServices) {
             _tagRepository = tagRepository;
             _tagsContentItemsRepository = tagsContentItemsRepository;
-            _contentManager = contentManager;
             _notifier = notifier;
             _authorizationService = authorizationService;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
-        public virtual ISite CurrentSite { get; set; }
-        public virtual IUser CurrentUser { get; set; }
         public Localizer T { get; set; }
 
         public IEnumerable<Tag> GetTags() {
@@ -53,7 +50,7 @@ namespace Orchard.Tags.Services {
 
         public void CreateTag(string tagName) {
             if (_tagRepository.Get(x => x.TagName == tagName) == null) {
-                _authorizationService.CheckAccess(Permissions.CreateTag, CurrentUser, null);
+                _authorizationService.CheckAccess(Permissions.CreateTag, _orchardServices.WorkContext.CurrentUser, null);
 
                 Tag tag = new Tag { TagName = tagName };
                 _tagRepository.Create(tag);
@@ -104,7 +101,7 @@ namespace Orchard.Tags.Services {
         public IEnumerable<IContent> GetTaggedContentItems(int id) {
             return _tagsContentItemsRepository
                 .Fetch(x => x.TagId == id)
-                .Select(t =>_contentManager.Get(t.ContentItemId))
+                .Select(t =>_orchardServices.ContentManager.Get(t.ContentItemId))
                 .Where(c => c!= null);
         }
 
@@ -133,7 +130,7 @@ namespace Orchard.Tags.Services {
 
             foreach (var tagContentItem in currentTagsForContentItem) {
                 if (!newTagsForContentItem.Contains(tagContentItem.TagId)) {
-                    _authorizationService.CheckAccess(Permissions.ApplyTag, CurrentUser, null);
+                    _authorizationService.CheckAccess(Permissions.ApplyTag, _orchardServices.WorkContext.CurrentUser, null);
 
                     _tagsContentItemsRepository.Delete(tagContentItem);
                 }
@@ -143,7 +140,7 @@ namespace Orchard.Tags.Services {
             }
 
             foreach (var newTagForContentItem in newTagsForContentItem) {
-                _authorizationService.CheckAccess(Permissions.ApplyTag, CurrentUser, null);
+                _authorizationService.CheckAccess(Permissions.ApplyTag, _orchardServices.WorkContext.CurrentUser, null);
 
                 _tagsContentItemsRepository.Create(new TagsContentItems { ContentItemId = contentItemId, TagId = newTagForContentItem });
             }

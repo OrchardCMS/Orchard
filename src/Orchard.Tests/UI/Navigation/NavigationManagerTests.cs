@@ -1,20 +1,25 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Autofac;
 using NUnit.Framework;
 using Orchard.ContentManagement;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.Settings;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Navigation;
+using Orchard.UI.Notify;
 
 namespace Orchard.Tests.UI.Navigation {
     [TestFixture]
     public class NavigationManagerTests {
         [Test]
         public void EmptyMenuIfNameDoesntMatch() {
-            var manager = new NavigationManager(new[] { new StubProvider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())));
+            var manager = new NavigationManager(new[] { new StubProvider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())), new StubOrchardServices());
 
             var menuItems = manager.BuildMenu("primary");
             Assert.That(menuItems.Count(), Is.EqualTo(0));
@@ -31,7 +36,7 @@ namespace Orchard.Tests.UI.Navigation {
 
         [Test]
         public void NavigationManagerShouldUseProvidersToBuildNamedMenu() {
-            var manager = new NavigationManager(new[] { new StubProvider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())));
+            var manager = new NavigationManager(new[] { new StubProvider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())), new StubOrchardServices());
 
             var menuItems = manager.BuildMenu("admin");
             Assert.That(menuItems.Count(), Is.EqualTo(2));
@@ -43,7 +48,7 @@ namespace Orchard.Tests.UI.Navigation {
 
         [Test]
         public void NavigationManagerShouldMergeAndOrderNavigation() {
-            var manager = new NavigationManager(new INavigationProvider[] { new StubProvider(), new Stub2Provider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())));
+            var manager = new NavigationManager(new INavigationProvider[] { new StubProvider(), new Stub2Provider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())), new StubOrchardServices());
 
             var menuItems = manager.BuildMenu("admin");
             Assert.That(menuItems.Count(), Is.EqualTo(3));
@@ -88,6 +93,40 @@ namespace Orchard.Tests.UI.Navigation {
                     .Add(T("Frap"), "3.0", x => x.Action("foo"))
                     .Add(T("Bar"), "4.0", x => x.Add(T("Quad"), "1.a"));
             }
+        }
+    }
+
+    public class StubOrchardServices : IOrchardServices {
+        private readonly ILifetimeScope _lifetimeScope;
+
+        public StubOrchardServices() {}
+
+        public StubOrchardServices(ILifetimeScope lifetimeScope) {
+            _lifetimeScope = lifetimeScope;
+        }
+
+        public IContentManager ContentManager {
+            get { throw new NotImplementedException(); }
+        }
+
+        public ITransactionManager TransactionManager {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IAuthorizer Authorizer {
+            get { throw new NotImplementedException(); }
+        }
+
+        public INotifier Notifier {
+            get { throw new NotImplementedException(); }
+        }
+
+        public dynamic New {
+            get { throw new NotImplementedException(); }
+        }
+
+        public WorkContext WorkContext {
+            get { return new StubWorkContextAccessor(_lifetimeScope).GetContext(); }
         }
     }
 }

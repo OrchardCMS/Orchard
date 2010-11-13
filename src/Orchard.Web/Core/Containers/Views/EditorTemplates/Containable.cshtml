@@ -1,0 +1,5 @@
+﻿@model Orchard.Core.Containers.ViewModels.ContainableViewModel
+<fieldset>
+    @Html.LabelFor(m => m.ContainerId, T("Add to"))
+    @Html.DropDownListFor(m => m.ContainerId, Model.AvailableContainers)
+</fieldset>

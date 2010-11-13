@@ -1,0 +1,11 @@
+﻿.orchard-tags #main .manage form {
+    margin:0;   
+}
+.orchard-tags .manage fieldset {
+    display:inline;
+    margin:0;
+    padding:0;
+}
+.orchard-tags .manage label[for=TagName] {
+    display:none;
+}

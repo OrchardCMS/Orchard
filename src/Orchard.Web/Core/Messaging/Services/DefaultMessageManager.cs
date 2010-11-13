@@ -1,36 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Messaging.Models;
 using Orchard.Logging;
 using Orchard.Messaging.Events;
 using Orchard.Messaging.Models;
 using Orchard.Messaging.Services;
-using Orchard.Settings;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.Core.Messaging.Services {
     public class DefaultMessageManager : IMessageManager {
         private readonly IMessageEventHandler _messageEventHandler;
         private readonly IEnumerable<IMessagingChannel> _channels;
-        
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
+        private readonly IOrchardServices _orchardServices;
+
         public ILogger Logger { get; set; }
 
         public DefaultMessageManager(
             IMessageEventHandler messageEventHandler,
-            IEnumerable<IMessagingChannel> channels) {
+            IEnumerable<IMessagingChannel> channels,
+            IOrchardServices orchardServices) {
             _messageEventHandler = messageEventHandler;
             _channels = channels;
+            _orchardServices = orchardServices;
         }
 
         public void Send(ContentItemRecord recipient, string type, string service = null, Dictionary<string, string> properties = null) {
             if ( !HasChannels() )
                 return;
 
-            var messageSettings = CurrentSite.As<MessageSettingsPart>().Record;
+            var messageSettings = _orchardServices.WorkContext.CurrentSite.As<MessageSettingsPart>().Record;
 
             if ( messageSettings == null || String.IsNullOrWhiteSpace(messageSettings.DefaultChannelService) ) {
                 return;
@@ -50,18 +50,24 @@ namespace Orchard.Core.Messaging.Services {
                     Service = service
                 };
 
-                if ( properties != null ) {
-                    foreach (var key in properties.Keys)
-                        context.Properties.Add(key, properties[key]);
+                try {
+
+                    if (properties != null) {
+                        foreach (var key in properties.Keys)
+                            context.Properties.Add(key, properties[key]);
+                    }
+
+                    _messageEventHandler.Sending(context);
+
+                    foreach (var channel in _channels) {
+                        channel.SendMessage(context);
+                    }
+
+                    _messageEventHandler.Sent(context);
                 }
-
-                _messageEventHandler.Sending(context);
-
-                foreach ( var channel in _channels ) {
-                    channel.SendMessage(context);
+                finally {
+                    context.MailMessage.Dispose();
                 }
-
-                _messageEventHandler.Sent(context);
 
                 Logger.Information("Message {0} sent", type);
             }

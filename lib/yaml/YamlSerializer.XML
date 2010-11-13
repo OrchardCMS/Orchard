@@ -4,30 +4,6 @@
         <name>YamlSerializer</name>
     </assembly>
     <members>
-        <member name="T:System.Yaml.Serialization.EasyTypeConverter">
-            <summary>
-            Converts various types to / from string.<br/>
-            I don't remember why this class was needed....
-            </summary>
-            <example>
-            <code>
-            object obj = GetObjectToConvert();
-            
-            // Check if the type has [TypeConverter] attribute.
-            if( EasyTypeConverter.IsTypeConverterSpecified(type) ) {
-            
-              // Convert the object to string.
-              string s = EasyTypeConverter.ConvertToString(obj);
-            
-              // Convert the string to an object of the spific type.
-              object restored = EasyTypeConverter.ConvertFromString(s, type);
-              
-              Assert.AreEqual(obj, restored);
-            
-            }
-            </code>
-            </example>
-        </member>
         <member name="T:System.Yaml.Serialization.YamlRepresenter">
             <summary>
             Converts C# object to YamlNode
@@ -141,18 +117,21 @@
             <param name="tag">Tag for the mapping.</param>
             <returns>Created mapping node.</returns>
         </member>
-        <member name="T:System.Yaml.ParseErrorException">
+        <member name="T:System.Yaml.YamlPresenter">
             <summary>
-            <para>When <see cref="T:System.Yaml.Parser`1"/> reports syntax error by exception, this class is thrown.</para>
+            Converts YamlNode tree into yaml text.
+            </summary>
+            <example>
+            <code>
+            YamlNode node;
+            YamlPresenter.ToYaml(node);
             
-            <para>Sytax errors can also be reported by simply returing false with giving some warnings.</para>
-            </summary>
-        </member>
-        <member name="M:System.Yaml.ParseErrorException.#ctor(System.String)">
-            <summary>
-            Initialize an instance of <see cref="T:System.Yaml.ParseErrorException"/>
-            </summary>
-            <param name="message">Error message.</param>
+            YamlNode node1;
+            YamlNode node2;
+            YamlNode node3;
+            YamlPresenter.ToYaml(node1, node2, node3);
+            </code>
+            </example>
         </member>
         <member name="T:System.Yaml.Parser`1">
             <summary>
@@ -855,24 +834,57 @@
             Column in a text.
             </summary>
         </member>
-        <member name="T:System.Yaml.YamlTagValidator">
+        <member name="T:System.Yaml.StringUriEncodingExtention">
             <summary>
-            Validates a text as a global tag in YAML.
+            Add string class two methods: .UriEscape(), .UriUnescape()
             
-            <a href="http://www.faqs.org/rfcs/rfc4151.html">RFC4151 - The 'tag' URI Scheme</a>>
+            Charset that is not escaped is represented NonUriChar member.
+            
+            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
             </summary>
         </member>
-        <member name="M:System.Yaml.YamlTagValidator.IsValid(System.String)">
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscape(System.String)">
             <summary>
-            Validates a text as a global tag in YAML.
+            Escape the string in URI encoding format.
             </summary>
-            <param name="tag">A candidate for a global tag in YAML.</param>
-            <returns>True if <paramref name="tag"/> is  a valid global tag.</returns>
+            <param name="s">String to be escaped.</param>
+            <returns>Escaped string.</returns>
         </member>
-        <member name="T:System.Yaml.YamlTagValidator.Status">
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscapeForTag(System.String)">
             <summary>
-            Not used in this parser
+            Escape the string in URI encoding format.
             </summary>
+            <param name="s">String to be escaped.</param>
+            <returns>Escaped string.</returns>
+        </member>
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriUnescape(System.String)">
+            <summary>
+            Unescape the string escaped in URI encoding format.
+            </summary>
+            <param name="s">String to be unescape.</param>
+            <returns>Unescaped string.</returns>
+        </member>
+        <member name="T:System.Yaml.UriEncoding">
+            <summary>
+            Escape / Unescape string in URI encoding format
+            
+            Charset that is not escaped is represented NonUriChar member.
+            
+            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
+            </summary>
+        </member>
+        <member name="T:System.Yaml.ParseErrorException">
+            <summary>
+            <para>When <see cref="T:System.Yaml.Parser`1"/> reports syntax error by exception, this class is thrown.</para>
+            
+            <para>Sytax errors can also be reported by simply returing false with giving some warnings.</para>
+            </summary>
+        </member>
+        <member name="M:System.Yaml.ParseErrorException.#ctor(System.String)">
+            <summary>
+            Initialize an instance of <see cref="T:System.Yaml.ParseErrorException"/>
+            </summary>
+            <param name="message">Error message.</param>
         </member>
         <member name="T:System.Yaml.RehashableDictionary`2">
             <summary>
@@ -942,159 +954,6 @@
             added to or removed from the dictionary.
             </summary>
         </member>
-        <member name="T:System.Yaml.YamlParser">
-            <summary>
-            <para>A text parser for<br/>
-            YAML Ain’t Markup Language (YAML™) Version 1.2<br/>
-            3rd Edition (2009-07-21)<br/>
-            http://yaml.org/spec/1.2/spec.html </para>
-            
-            <para>This class parse a YAML document and compose representing <see cref="T:System.Yaml.YamlNode"/> graph.</para>
-            </summary>
-            <example>
-            <code>
-            string yaml = LoadYamlSource();
-            YamlParser parser = new YamlParser();
-            Node[] result = null;
-            try {
-                result = parser.Parse(yaml);
-                ...
-                // you can reuse parser as many times you want
-                ...
-                
-            } catch( ParseErrorException e ) {
-                MessageBox.Show(e.Message);
-            }
-            if(result != null) {
-                ...
-            
-            }
-            </code>
-            </example>
-            <remarks>
-            <para>Currently, this parser violates the YAML 1.2 specification in the following points.</para>
-            <para>- line breaks are not normalized.</para>
-            <para>- omission of the final line break is allowed in plain / literal / folded text.</para>
-            <para>- ':' followed by ns-indicator is excluded from ns-plain-char.</para>
-            </remarks>
-        </member>
-        <member name="M:System.Yaml.YamlParser.#ctor">
-            <summary>
-            Initialize a YAML parser.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlParser.Parse(System.String)">
-            <summary>
-            Parse YAML text and returns a list of <see cref="T:System.Yaml.YamlNode"/>.
-            </summary>
-            <param name="yaml">YAML text to be parsed.</param>
-            <returns>A list of <see cref="T:System.Yaml.YamlNode"/> parsed from the given text</returns>
-        </member>
-        <member name="M:System.Yaml.YamlParser.Parse(System.String,System.Yaml.YamlConfig)">
-            <summary>
-            Parse YAML text and returns a list of <see cref="T:System.Yaml.YamlNode"/>.
-            </summary>
-            <param name="yaml">YAML text to be parsed.</param>
-            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML Configuration</see> to be used in parsing.</param>
-            <returns>A list of <see cref="T:System.Yaml.YamlNode"/> parsed from the given text</returns>
-        </member>
-        <member name="M:System.Yaml.YamlParser.StoreWarning(System.String)">
-            <summary>
-            Add message in <see cref="P:System.Yaml.YamlParser.Warnings"/> property.
-            </summary>
-            <param name="message"></param>
-        </member>
-        <member name="M:System.Yaml.YamlParser.ReservedDirective(System.String,System.String[])">
-            <summary>
-            Invoked when unknown directive is found in YAML document.
-            </summary>
-            <param name="name">Name of the directive</param>
-            <param name="args">Parameters for the directive</param>
-        </member>
-        <member name="M:System.Yaml.YamlParser.YamlDirective(System.String)">
-            <summary>
-            Invoked when YAML directive is found in YAML document.
-            </summary>
-            <param name="version">Given version</param>
-        </member>
-        <member name="M:System.Yaml.YamlParser.Rewind">
-            <summary>
-            rewinding action
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlParser.SetTag(System.String,System.String)">
-            <summary>
-            set status.tag with tag resolution
-            </summary>
-            <param name="tag_handle"></param>
-            <param name="tag_suffix"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.YamlParser.SetTag(System.String)">
-            <summary>
-            set status.tag with verbatim tag value
-            </summary>
-            <param name="verbatim_tag">verbatim tag</param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.YamlParser.AutoDetectTag(System.String)">
-            <summary>
-            Used when the parser resolves a tag for a scalar node from its value.
-            
-            New resolution rules can be add before calling <see cref="M:System.Yaml.YamlParser.Parse(System.String)"/> method.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlParser.eScalar">
-            <summary>
-            [105]
-            </summary>
-        </member>
-        <member name="M:System.Yaml.YamlParser.eNode">
-            <summary>
-            [106]
-            </summary>
-        </member>
-        <member name="P:System.Yaml.YamlParser.Warnings">
-            <summary>
-            Warnings that are made while parsing a YAML text.
-            This property is cleared by new call for <see cref="M:System.Yaml.YamlParser.Parse(System.String)"/> method.
-            </summary>
-        </member>
-        <member name="T:System.Yaml.YamlParser.State">
-            <summary>
-            additional fields to be rewound
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.State.tag">
-            <summary>
-            tag for the next value (will be cleared when the next value is created)
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.State.anchor">
-            <summary>
-            anchor for the next value (will be cleared when the next value is created)
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.State.value">
-            <summary>
-            current value
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.State.anchor_depth">
-            <summary>
-            anchor rewinding position
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.Charsets.cIndicator">
-            <summary>
-            [22]
-            </summary>
-        </member>
-        <member name="F:System.Yaml.YamlParser.Charsets.cFlowIndicator">
-            <summary>
-            [23]
-            </summary>
-        </member>
         <member name="T:System.Yaml.Serialization.YamlConstructor">
             <summary>
             Construct YAML node tree that represents a given C# object.
@@ -1115,109 +974,6 @@
             <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
             <param name="expected">Expected type for the root object.</param>
             <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
-            <returns></returns>
-        </member>
-        <member name="T:System.Yaml.StringUriEncodingExtention">
-            <summary>
-            Add string class two methods: .UriEscape(), .UriUnescape()
-            
-            Charset that is not escaped is represented NonUriChar member.
-            
-            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
-            </summary>
-        </member>
-        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscape(System.String)">
-            <summary>
-            Escape the string in URI encoding format.
-            </summary>
-            <param name="s">String to be escaped.</param>
-            <returns>Escaped string.</returns>
-        </member>
-        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscapeForTag(System.String)">
-            <summary>
-            Escape the string in URI encoding format.
-            </summary>
-            <param name="s">String to be escaped.</param>
-            <returns>Escaped string.</returns>
-        </member>
-        <member name="M:System.Yaml.StringUriEncodingExtention.UriUnescape(System.String)">
-            <summary>
-            Unescape the string escaped in URI encoding format.
-            </summary>
-            <param name="s">String to be unescape.</param>
-            <returns>Unescaped string.</returns>
-        </member>
-        <member name="T:System.Yaml.UriEncoding">
-            <summary>
-            Escape / Unescape string in URI encoding format
-            
-            Charset that is not escaped is represented NonUriChar member.
-            
-            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
-            </summary>
-        </member>
-        <member name="T:System.Yaml.YamlTagPrefixes">
-            <summary>
-            Reset();
-            SetupDefaultTagPrefixes();
-            Add(tag_handle, tag_prefix);
-            verbatim_tag = Resolve(tag_handle, tag_name);
-            </summary>
-        </member>
-        <member name="T:System.Yaml.YamlPresenter">
-            <summary>
-            Converts YamlNode tree into yaml text.
-            </summary>
-            <example>
-            <code>
-            YamlNode node;
-            YamlPresenter.ToYaml(node);
-            
-            YamlNode node1;
-            YamlNode node2;
-            YamlNode node3;
-            YamlPresenter.ToYaml(node1, node2, node3);
-            </code>
-            </example>
-        </member>
-        <member name="T:System.Yaml.Serialization.ObjectMemberAccessor">
-            <summary>
-            
-            object に代入されたクラスや構造体のメンバーに、リフレクションを
-            解して簡単にアクセスできるようにしたクラス
-            
-            アクセス方法をキャッシュするので、繰り返し使用する場合に高速化が
-            期待できる
-            </summary>
-        </member>
-        <member name="F:System.Yaml.Serialization.ObjectMemberAccessor.MemberAccessors">
-            <summary>
-            Caches ObjectMemberAccessor instances for reuse.
-            </summary>
-        </member>
-        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.FindFor(System.Type)">
-            <summary>
-            
-            指定した型へのアクセス方法を表すインスタンスを返す
-            キャッシュに存在すればそれを返す
-            キャッシュに存在しなければ新しく作って返す
-            作った物はキャッシュされる
-            </summary>
-            <param name="type">クラスまたは構造体を表す型情報</param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.GetEnumerator">
-            <summary>
-            メンバ名と Accessor のペアを巡回する
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:System.Yaml.Serialization.ObjectMemberAccessor.Item(System.Object,System.String)">
-            <summary>
-            メンバへの読み書きを行うことができる
-            </summary>
-            <param name="obj">オブジェクト</param>
-            <param name="name">メンバの名前</param>
             <returns></returns>
         </member>
         <member name="T:System.Yaml.YamlConfig">
@@ -2720,6 +2476,348 @@
             </summary>
             <value>The number of child nodes of the sequence.</value>
         </member>
+        <member name="T:System.Yaml.YamlParser">
+            <summary>
+            <para>A text parser for<br/>
+            YAML Ain’t Markup Language (YAML™) Version 1.2<br/>
+            3rd Edition (2009-07-21)<br/>
+            http://yaml.org/spec/1.2/spec.html </para>
+            
+            <para>This class parse a YAML document and compose representing <see cref="T:System.Yaml.YamlNode"/> graph.</para>
+            </summary>
+            <example>
+            <code>
+            string yaml = LoadYamlSource();
+            YamlParser parser = new YamlParser();
+            Node[] result = null;
+            try {
+                result = parser.Parse(yaml);
+                ...
+                // you can reuse parser as many times you want
+                ...
+                
+            } catch( ParseErrorException e ) {
+                MessageBox.Show(e.Message);
+            }
+            if(result != null) {
+                ...
+            
+            }
+            </code>
+            </example>
+            <remarks>
+            <para>Currently, this parser violates the YAML 1.2 specification in the following points.</para>
+            <para>- line breaks are not normalized.</para>
+            <para>- omission of the final line break is allowed in plain / literal / folded text.</para>
+            <para>- ':' followed by ns-indicator is excluded from ns-plain-char.</para>
+            </remarks>
+        </member>
+        <member name="M:System.Yaml.YamlParser.#ctor">
+            <summary>
+            Initialize a YAML parser.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlParser.Parse(System.String)">
+            <summary>
+            Parse YAML text and returns a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="yaml">YAML text to be parsed.</param>
+            <returns>A list of <see cref="T:System.Yaml.YamlNode"/> parsed from the given text</returns>
+        </member>
+        <member name="M:System.Yaml.YamlParser.Parse(System.String,System.Yaml.YamlConfig)">
+            <summary>
+            Parse YAML text and returns a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="yaml">YAML text to be parsed.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML Configuration</see> to be used in parsing.</param>
+            <returns>A list of <see cref="T:System.Yaml.YamlNode"/> parsed from the given text</returns>
+        </member>
+        <member name="M:System.Yaml.YamlParser.StoreWarning(System.String)">
+            <summary>
+            Add message in <see cref="P:System.Yaml.YamlParser.Warnings"/> property.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:System.Yaml.YamlParser.ReservedDirective(System.String,System.String[])">
+            <summary>
+            Invoked when unknown directive is found in YAML document.
+            </summary>
+            <param name="name">Name of the directive</param>
+            <param name="args">Parameters for the directive</param>
+        </member>
+        <member name="M:System.Yaml.YamlParser.YamlDirective(System.String)">
+            <summary>
+            Invoked when YAML directive is found in YAML document.
+            </summary>
+            <param name="version">Given version</param>
+        </member>
+        <member name="M:System.Yaml.YamlParser.Rewind">
+            <summary>
+            rewinding action
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlParser.SetTag(System.String,System.String)">
+            <summary>
+            set status.tag with tag resolution
+            </summary>
+            <param name="tag_handle"></param>
+            <param name="tag_suffix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.YamlParser.SetTag(System.String)">
+            <summary>
+            set status.tag with verbatim tag value
+            </summary>
+            <param name="verbatim_tag">verbatim tag</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.YamlParser.AutoDetectTag(System.String)">
+            <summary>
+            Used when the parser resolves a tag for a scalar node from its value.
+            
+            New resolution rules can be add before calling <see cref="M:System.Yaml.YamlParser.Parse(System.String)"/> method.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlParser.eScalar">
+            <summary>
+            [105]
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlParser.eNode">
+            <summary>
+            [106]
+            </summary>
+        </member>
+        <member name="P:System.Yaml.YamlParser.Warnings">
+            <summary>
+            Warnings that are made while parsing a YAML text.
+            This property is cleared by new call for <see cref="M:System.Yaml.YamlParser.Parse(System.String)"/> method.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlParser.State">
+            <summary>
+            additional fields to be rewound
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.tag">
+            <summary>
+            tag for the next value (will be cleared when the next value is created)
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.anchor">
+            <summary>
+            anchor for the next value (will be cleared when the next value is created)
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.value">
+            <summary>
+            current value
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.anchor_depth">
+            <summary>
+            anchor rewinding position
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.Charsets.cIndicator">
+            <summary>
+            [22]
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.Charsets.cFlowIndicator">
+            <summary>
+            [23]
+            </summary>
+        </member>
+        <member name="T:System.Yaml.Serialization.EasyTypeConverter">
+            <summary>
+            Converts various types to / from string.<br/>
+            I don't remember why this class was needed....
+            </summary>
+            <example>
+            <code>
+            object obj = GetObjectToConvert();
+            
+            // Check if the type has [TypeConverter] attribute.
+            if( EasyTypeConverter.IsTypeConverterSpecified(type) ) {
+            
+              // Convert the object to string.
+              string s = EasyTypeConverter.ConvertToString(obj);
+            
+              // Convert the string to an object of the spific type.
+              object restored = EasyTypeConverter.ConvertFromString(s, type);
+              
+              Assert.AreEqual(obj, restored);
+            
+            }
+            </code>
+            </example>
+        </member>
+        <member name="T:System.Yaml.YamlTagPrefixes">
+            <summary>
+            Reset();
+            SetupDefaultTagPrefixes();
+            Add(tag_handle, tag_prefix);
+            verbatim_tag = Resolve(tag_handle, tag_name);
+            </summary>
+        </member>
+        <member name="T:System.Yaml.Serialization.ObjectMemberAccessor">
+            <summary>
+            
+            object に代入されたクラスや構造体のメンバーに、リフレクションを
+            解して簡単にアクセスできるようにしたクラス
+            
+            アクセス方法をキャッシュするので、繰り返し使用する場合に高速化が
+            期待できる
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Serialization.ObjectMemberAccessor.MemberAccessors">
+            <summary>
+            Caches ObjectMemberAccessor instances for reuse.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.FindFor(System.Type)">
+            <summary>
+            
+            指定した型へのアクセス方法を表すインスタンスを返す
+            キャッシュに存在すればそれを返す
+            キャッシュに存在しなければ新しく作って返す
+            作った物はキャッシュされる
+            </summary>
+            <param name="type">クラスまたは構造体を表す型情報</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.GetEnumerator">
+            <summary>
+            メンバ名と Accessor のペアを巡回する
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:System.Yaml.Serialization.ObjectMemberAccessor.Item(System.Object,System.String)">
+            <summary>
+            メンバへの読み書きを行うことができる
+            </summary>
+            <param name="obj">オブジェクト</param>
+            <param name="name">メンバの名前</param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.TypeUtils">
+            <summary>
+            Type 関連のユーティリティメソッド
+            </summary>
+            <example>
+            <code>
+            Type type;
+            AttributeType attr = type.GetAttribute&lt;AttributeType&gt;();
+            
+            PropertyInfo propInfo;
+            AttributeType attr = propInfo.GetAttribute&lt;AttributeType&gt;();
+            
+            string name;
+            Type type = TypeUtils.GetType(name); // search from all assembly loaded
+            
+            
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.GetAttribute``1(System.Reflection.MemberInfo)">
+            <summary>
+            Type や PropertyInfo, FieldInfo から指定された型の属性を取り出して返す
+            複数存在した場合には最後の値を返す
+            存在しなければ null を返す
+            </summary>
+            <typeparam name="AttributeType">取り出したい属性の型</typeparam>
+            <returns>取り出した属性値</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.GetType(System.String)">
+            <summary>
+            現在ロードされているすべてのアセンブリから name という名の型を探して返す
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsPureValueType(System.Type)">
+            <summary>
+            Check if the type is a ValueType and does not contain any non ValueType members.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsStruct(System.Type)">
+            <summary>
+            Returnes true if the specified <paramref name="type"/> is a struct type.
+            </summary>
+            <param name="type"><see cref="T:System.Type"/> to be analyzed.</param>
+            <returns>true if the specified <paramref name="type"/> is a struct type; otehrwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.AreEqual(System.Object,System.Object)">
+            <summary>
+            Compare two objects to see if they are equal or not. Null is acceptable.
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsNumeric(System.Object)">
+            <summary>
+            Return if an object is a numeric value.
+            </summary>
+            <param name="obj">Any object to be tested.</param>
+            <returns>True if object is a numeric value.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.CastToNumericType(System.Object,System.Type)">
+            <summary>
+            Cast an object to a specified numeric type.
+            </summary>
+            <param name="obj">Any object</param>
+            <param name="type">Numric type</param>
+            <returns>Numeric value or null if the object is not a numeric value.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.CastToDouble(System.Object)">
+            <summary>
+            Cast boxed numeric value to double
+            </summary>
+            <param name="obj">boxed numeric value</param>
+            <returns>Numeric value in double. Double.Nan if obj is not a numeric value.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsPublic(System.Type)">
+            <summary>
+            Check if type is fully public or not.
+            Nested class is checked if all declared types are public.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.TypeUtils.EqualityComparerByRef`1">
+            <summary>
+            Equality comparer that uses Object.ReferenceEquals(x, y) to compare class values.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.EqualityComparerByRef`1.Equals(`0,`0)">
+            <summary>
+            Determines whether two objects of type  T are equal by calling Object.ReferenceEquals(x, y).
+            </summary>
+            <param name="x">The first object to compare.</param>
+            <param name="y">The second object to compare.</param>
+            <returns>true if the specified objects are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.EqualityComparerByRef`1.GetHashCode(`0)">
+            <summary>
+            Serves as a hash function for the specified object for hashing algorithms and 
+            data structures, such as a hash table.
+            </summary>
+            <param name="obj">The object for which to get a hash code.</param>
+            <returns>A hash code for the specified object.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="obj"/> is null.</exception>
+        </member>
+        <member name="P:System.Yaml.TypeUtils.EqualityComparerByRef`1.Default">
+            <summary>
+            Returns a default equality comparer for the type specified by the generic argument.
+            </summary>
+            <value>The default instance of the System.Collections.Generic.EqualityComparer&lt;T&gt;
+             class for type T.</value>
+        </member>
         <member name="T:System.Yaml.Serialization.YamlSerializer">
              <summary>
              <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> class has instance methods <see cref="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.Object)"/> and <see cref="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])"/>, 
@@ -3518,139 +3616,6 @@
             
             </param>
         </member>
-        <member name="T:System.Yaml.TypeUtils">
-            <summary>
-            Type 関連のユーティリティメソッド
-            </summary>
-            <example>
-            <code>
-            Type type;
-            AttributeType attr = type.GetAttribute&lt;AttributeType&gt;();
-            
-            PropertyInfo propInfo;
-            AttributeType attr = propInfo.GetAttribute&lt;AttributeType&gt;();
-            
-            string name;
-            Type type = TypeUtils.GetType(name); // search from all assembly loaded
-            
-            
-            </code>
-            </example>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.GetAttribute``1(System.Reflection.MemberInfo)">
-            <summary>
-            Type や PropertyInfo, FieldInfo から指定された型の属性を取り出して返す
-            複数存在した場合には最後の値を返す
-            存在しなければ null を返す
-            </summary>
-            <typeparam name="AttributeType">取り出したい属性の型</typeparam>
-            <returns>取り出した属性値</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.GetType(System.String)">
-            <summary>
-            現在ロードされているすべてのアセンブリから name という名の型を探して返す
-            </summary>
-            <param name="name"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.IsPureValueType(System.Type)">
-            <summary>
-            Check if the type is a ValueType and does not contain any non ValueType members.
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.IsStruct(System.Type)">
-            <summary>
-            Returnes true if the specified <paramref name="type"/> is a struct type.
-            </summary>
-            <param name="type"><see cref="T:System.Type"/> to be analyzed.</param>
-            <returns>true if the specified <paramref name="type"/> is a struct type; otehrwise false.</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.AreEqual(System.Object,System.Object)">
-            <summary>
-            Compare two objects to see if they are equal or not. Null is acceptable.
-            </summary>
-            <param name="a"></param>
-            <param name="b"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.IsNumeric(System.Object)">
-            <summary>
-            Return if an object is a numeric value.
-            </summary>
-            <param name="obj">Any object to be tested.</param>
-            <returns>True if object is a numeric value.</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.CastToNumericType(System.Object,System.Type)">
-            <summary>
-            Cast an object to a specified numeric type.
-            </summary>
-            <param name="obj">Any object</param>
-            <param name="type">Numric type</param>
-            <returns>Numeric value or null if the object is not a numeric value.</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.CastToDouble(System.Object)">
-            <summary>
-            Cast boxed numeric value to double
-            </summary>
-            <param name="obj">boxed numeric value</param>
-            <returns>Numeric value in double. Double.Nan if obj is not a numeric value.</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.IsPublic(System.Type)">
-            <summary>
-            Check if type is fully public or not.
-            Nested class is checked if all declared types are public.
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="T:System.Yaml.TypeUtils.EqualityComparerByRef`1">
-            <summary>
-            Equality comparer that uses Object.ReferenceEquals(x, y) to compare class values.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.EqualityComparerByRef`1.Equals(`0,`0)">
-            <summary>
-            Determines whether two objects of type  T are equal by calling Object.ReferenceEquals(x, y).
-            </summary>
-            <param name="x">The first object to compare.</param>
-            <param name="y">The second object to compare.</param>
-            <returns>true if the specified objects are equal; otherwise, false.</returns>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.EqualityComparerByRef`1.GetHashCode(`0)">
-            <summary>
-            Serves as a hash function for the specified object for hashing algorithms and 
-            data structures, such as a hash table.
-            </summary>
-            <param name="obj">The object for which to get a hash code.</param>
-            <returns>A hash code for the specified object.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="obj"/> is null.</exception>
-        </member>
-        <member name="P:System.Yaml.TypeUtils.EqualityComparerByRef`1.Default">
-            <summary>
-            Returns a default equality comparer for the type specified by the generic argument.
-            </summary>
-            <value>The default instance of the System.Collections.Generic.EqualityComparer&lt;T&gt;
-             class for type T.</value>
-        </member>
-        <member name="T:System.Yaml.TypeUtils.HashCodeByRef`1">
-            <summary>
-            Calculate hash code by reference.
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:System.Yaml.TypeUtils.HashCodeByRef`1.#cctor">
-            <summary>
-            Initializes a new instance of the HashCodeByRef&lt;T&gt; class.
-            </summary>
-        </member>
-        <member name="P:System.Yaml.TypeUtils.HashCodeByRef`1.GetHashCode">
-            <summary>
-            Calculate hash code by reference.
-            </summary>
-        </member>
         <member name="T:System.Yaml.YamlTagResolver">
             <summary>
             Represents the way to automatically resolve Tag from the Value of a YamlScalar.
@@ -3764,6 +3729,25 @@
         <member name="M:System.Yaml.YamlDoubleQuoteEscaping.Unescape(System.String)">
             <summary>
             Unescape control codes, double quotations, backslashes escape in the YAML double quoted string format
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlTagValidator">
+            <summary>
+            Validates a text as a global tag in YAML.
+            
+            <a href="http://www.faqs.org/rfcs/rfc4151.html">RFC4151 - The 'tag' URI Scheme</a>>
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagValidator.IsValid(System.String)">
+            <summary>
+            Validates a text as a global tag in YAML.
+            </summary>
+            <param name="tag">A candidate for a global tag in YAML.</param>
+            <returns>True if <paramref name="tag"/> is  a valid global tag.</returns>
+        </member>
+        <member name="T:System.Yaml.YamlTagValidator.Status">
+            <summary>
+            Not used in this parser
             </summary>
         </member>
     </members>

@@ -27,7 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -70,12 +70,30 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Containers\Controllers\ItemController.cs" />
+    <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
+    <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
     <Compile Include="Common\Migrations.cs" />
     <Compile Include="Common\Drivers\BodyPartDriver.cs" />
     <Compile Include="Common\Drivers\CommonPartDriver.cs" />
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
+    <Compile Include="Containers\ContainersPathConstraint.cs" />
+    <Compile Include="Containers\Drivers\ContainerWidgetPartDriver.cs" />
+    <Compile Include="Containers\Drivers\ContainerCustomPartDriver.cs" />
+    <Compile Include="Containers\Extensions\ContentQueryExtensions.cs" />
+    <Compile Include="Containers\Migrations.cs" />
+    <Compile Include="Containers\Models\ContainablePart.cs" />
+    <Compile Include="Containers\Models\ContainerPart.cs" />
     <Compile Include="Common\Shapes.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
+    <Compile Include="Containers\Models\ContainerWidgetPart.cs" />
+    <Compile Include="Containers\Models\ContainerCustomPart.cs" />
+    <Compile Include="Containers\Models\OrderByDirection.cs" />
+    <Compile Include="Containers\Routes.cs" />
+    <Compile Include="Containers\Services\ContainersPathConstraintUpdater.cs" />
+    <Compile Include="Containers\Settings\ContainerSettings.cs" />
+    <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
+    <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
     <Compile Include="Common\Services\ICommonService.cs" />
@@ -105,14 +123,6 @@
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
     <Compile Include="Messaging\ViewModels\MessageSettingsPartViewModel.cs" />
     <Compile Include="Navigation\Services\MainMenuNavigationProvider.cs" />
-    <Compile Include="PublishLater\ResourceManifest.cs" />
-    <Compile Include="PublishLater\Migrations.cs" />
-    <Compile Include="PublishLater\Drivers\PublishLaterPartDriver.cs" />
-    <Compile Include="PublishLater\Models\PublishLaterPart.cs" />
-    <Compile Include="PublishLater\Handlers\PublishLaterPartHandler.cs" />
-    <Compile Include="PublishLater\Services\PublishLaterService.cs" />
-    <Compile Include="PublishLater\Services\IPublishLaterService.cs" />
-    <Compile Include="PublishLater\ViewModels\PublishLaterViewModel.cs" />
     <Compile Include="Routable\ResourceManifest.cs" />
     <Compile Include="Routable\Services\RoutableHomePageProvider.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
@@ -202,8 +212,6 @@
     <Compile Include="Routable\ViewModels\RoutableDisplayViewModel.cs" />
     <Compile Include="Scheduling\Migrations.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
-    <Compile Include="PublishLater\Handlers\PublishingTaskHandler.cs" />
-    <Compile Include="PublishLater\Services\PublishingTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
@@ -256,6 +264,7 @@
     <Content Include="Common\Views\Parts\Common.Body.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\Parts\Common.Metadata.cshtml" />
     <Content Include="Common\Views\Parts\Common.Metadata.SummaryAdmin.cshtml" />
+    <Content Include="Containers\Module.txt" />
     <Content Include="Contents\Views\Admin\Create.cshtml" />
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\List.cshtml" />
@@ -265,13 +274,6 @@
     <Content Include="Contents\Views\Parts\Contents.Publish.SummaryAdmin.cshtml" />
     <Content Include="Messaging\Module.txt" />
     <Content Include="Messaging\Views\EditorTemplates\Parts\MessageSettings.cshtml" />
-    <Content Include="PublishLater\Content\Admin\images\draft.gif" />
-    <Content Include="PublishLater\Content\Admin\images\offline.gif" />
-    <Content Include="PublishLater\Content\Admin\images\online.gif" />
-    <Content Include="PublishLater\Content\Admin\images\published.gif" />
-    <Content Include="PublishLater\Content\Admin\images\scheduled.gif" />
-    <Content Include="PublishLater\Views\Parts\PublishLater.Metadata.cshtml" />
-    <Content Include="PublishLater\Views\Parts\PublishLater.Metadata.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Fields\Common.Text.Edit.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
     <Content Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
@@ -281,9 +283,6 @@
     <Content Include="Localization\Styles\base.css" />
     <Content Include="Localization\Views\Parts\Localization.ContentTranslations.Summary.cshtml" />
     <Content Include="Localization\Views\Parts\Localization.ContentTranslations.cshtml" />
-    <Content Include="PublishLater\Module.txt" />
-    <Content Include="PublishLater\Styles\datetime.css" />
-    <Content Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.cshtml" />
     <Content Include="Reports\Module.txt" />
     <Content Include="Reports\Views\Admin\Display.cshtml" />
     <Content Include="Reports\Views\Admin\Index.cshtml" />
@@ -298,12 +297,8 @@
     <Content Include="Settings\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Views\Admin\Culture.cshtml" />
     <Content Include="Contents\Views\Items\Content.Edit.cshtml" />
-    <Content Include="Routable\Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Settings\Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Routable\Placement.info" />
+    <Content Include="Settings\Placement.info" />
     <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.cshtml" />
     <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.cshtml" />
     <Content Include="Shapes\Module.txt" />
@@ -322,8 +317,6 @@
     <Content Include="Shapes\Views\HeadPreload.cshtml" />
     <Content Include="Shapes\Views\Message.cshtml" />
     <Content Include="Shapes\Views\NotFound.cshtml" />
-    <Content Include="Shapes\Views\UI\Switchable.cshtml" />
-    <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
     <Content Include="Settings\Views\EditorTemplates\Parts\Settings.SiteSettingsPart.cshtml" />
   </ItemGroup>
@@ -367,7 +360,6 @@
     <Content Include="Routable\Views\Web.config" />
     <Content Include="Localization\Views\Web.config" />
     <Content Include="Reports\Views\Web.config" />
-    <Content Include="PublishLater\Views\Web.config" />
     <Content Include="Messaging\Views\Web.config" />
     <Content Include="Contents\Views\Items\Content.cshtml" />
     <Content Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
@@ -380,24 +372,46 @@
     <Content Include="Shapes\Views\Web.config" />
     <Content Include="Common\Placement.info" />
     <Content Include="Common\Views\Parts\Common.Metadata.Summary.cshtml" />
-    <Content Include="Contents\Placement.info" />
+    <Content Include="Contents\Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <Content Include="Contents\Views\Item\Display.cshtml" />
     <Content Include="Localization\Placement.info" />
-    <Content Include="Messaging\Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Navigation\Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="PublishLater\Placement.info">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Messaging\Placement.info" />
+    <Content Include="Navigation\Placement.info" />
     <Content Include="Routable\Views\Parts\RoutableTitle.cshtml" />
-    <Content Include="PublishLater\Views\Parts\PublishLater.Metadata.Summary.cshtml" />
     <Content Include="Routable\Views\Item\Display.cshtml" />
     <Content Include="Routable\Views\Routable.HomePage.cshtml" />
     <Content Include="Localization\Views\Parts\Localization.ContentTranslations.SummaryAdmin.cshtml" />
+    <Content Include="Contents\Views\Items\Content.Summary.cshtml" />
+    <Content Include="Shapes\Views\Pager.cshtml" />
+    <Content Include="Contents\Views\Content.SaveButton.cshtml" />
+    <Content Include="Contents\Views\Content.PublishButton.cshtml" />
+    <Content Include="Shapes\Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Shapes\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Routable\Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Localization\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Settings\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Containers\Placement.info" />
+    <Content Include="Containers\Views\EditorTemplates\ContainerWidget.cshtml" />
+    <Content Include="Containers\Views\EditorTemplates\Container.cshtml" />
+    <Content Include="Containers\Views\Item\Display.cshtml" />
+    <Content Include="Containers\Views\DefinitionTemplates\ContainerPartSettings.cshtml" />
+    <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettings.cshtml" />
+    <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
+    <Content Include="Containers\Views\Parts\ContainerWidget.cshtml" />
+    <Content Include="Containers\Views\EditorTemplates\ContainerCustom.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

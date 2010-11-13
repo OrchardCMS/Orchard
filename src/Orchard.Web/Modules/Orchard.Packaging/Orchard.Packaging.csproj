@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,9 +35,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NuGet.Core, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\nuget\NuGet.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -67,33 +74,33 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="WindowsBase">
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="Commands\GalleryCommands.cs" />
     <Compile Include="Commands\PackagingCommands.cs" />
     <Compile Include="Controllers\DownloadStreamResult.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="DefaultPackagingUpdater.cs" />
+    <Compile Include="Migrations.cs" />
+    <Compile Include="Models\PackagingSource.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\AtomExtensions.cs" />
+    <Compile Include="Services\ExtensionReferenceRepository.cs" />
+    <Compile Include="Services\FileBaseProjectSystem.cs" />
     <Compile Include="Services\IPackageBuilder.cs" />
-    <Compile Include="Services\IPackageExpander.cs" />
+    <Compile Include="Services\IPackageInstaller.cs" />
     <Compile Include="Services\IPackageManager.cs" />
     <Compile Include="Services\IPackagingSourceManager.cs" />
+    <Compile Include="Services\NugetLogger.cs" />
     <Compile Include="Services\PackageBuilder.cs" />
     <Compile Include="Services\PackageData.cs" />
-    <Compile Include="Services\PackageExpander.cs" />
+    <Compile Include="Services\PackageInstaller.cs" />
     <Compile Include="Services\PackageManager.cs" />
     <Compile Include="Services\PackagingEntry.cs" />
-    <Compile Include="Services\PackagingSource.cs" />
     <Compile Include="Services\PackagingSourceManager.cs" />
     <Compile Include="ViewModels\PackagingAddSourceViewModel.cs" />
     <Compile Include="ViewModels\PackagingHarvestViewModel.cs" />
-    <Compile Include="ViewModels\PackagingModulesViewModel.cs" />
+    <Compile Include="ViewModels\PackagingExtensionsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\PackagingSourcesViewModel.cs" />
   </ItemGroup>
@@ -101,17 +108,11 @@
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
     <Content Include="Views\Gallery\AddSource.cshtml" />
-    <Content Include="Views\Gallery\Harvest.cshtml" />
     <Content Include="Views\Gallery\Modules.cshtml" />
     <Content Include="Views\Gallery\Sources.cshtml" />
-    <Content Include="Views\Gallery\_Subnav.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\" />
-    <Folder Include="Models\" />
-    <Folder Include="Scripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
@@ -119,7 +120,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <Content Include="Content\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Gallery\Themes.cshtml" />

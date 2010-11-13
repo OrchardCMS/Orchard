@@ -14,7 +14,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Services;
-using Orchard.Core.PublishLater.Services;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
 using Orchard.DisplayManagement;
@@ -43,7 +42,6 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<TestHandler>().As<IContentHandler>();
             builder.RegisterType<CommonPartHandler>().As<IContentHandler>();
             builder.RegisterType<CommonService>().As<ICommonService>();
-            builder.RegisterType<PublishingTaskManager>().As<IPublishingTaskManager>();
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();

@@ -28,6 +28,7 @@ using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.Environment.State;
 using Orchard.Data.Migration;
+using Orchard.Themes.Services;
 using Orchard.Widgets.Models;
 using Orchard.Widgets;
 
@@ -69,7 +70,6 @@ namespace Orchard.Setup.Services {
                     "Orchard.Framework",
                     "Common",
                     "Shapes",
-                    "PublishLater",
                     "Contents",
                     "Dashboard",
                     "Reports",
@@ -81,7 +81,6 @@ namespace Orchard.Setup.Services {
                     "Localization",
                     "Routable",
                     "Settings",
-                    "XmlRpc",
                     "Messaging",
                     "Orchard.Users",
                     "Orchard.Roles",
@@ -89,12 +88,14 @@ namespace Orchard.Setup.Services {
                     "PackagingServices",
                     "Orchard.Modules",
                     "Orchard.Themes",
+                    "Orchard.PublishLater",
                     "Orchard.Blogs",
                     "Orchard.Comments",
                     "Orchard.Tags",
                     "Orchard.Media",
                     "Orchard.Widgets",
-                    "Orchard.jQuery"
+                    "Orchard.jQuery",
+                    "TheThemeMachine",
                 };
 
                 context.EnabledFeatures = hardcoded;
@@ -197,7 +198,7 @@ namespace Orchard.Setup.Services {
             siteSettings.Record.SiteCulture = "en-US";
 
             // set site theme
-            var themeService = environment.Resolve<IThemeService>();
+            var themeService = environment.Resolve<ISiteThemeService>();
             themeService.SetSiteTheme("TheThemeMachine");
 
             // add default culture
@@ -217,6 +218,7 @@ namespace Orchard.Setup.Services {
                 .WithPart("CommentsPart")
                 .WithPart("TagsPart")
                 .WithPart("LocalizationPart")
+                .Draftable()
                 .Indexed()
                 );
             contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
@@ -227,6 +229,7 @@ namespace Orchard.Setup.Services {
                 .WithPart("TagsPart")
                 .WithPart("LocalizationPart")
                 .Creatable()
+                .Draftable()
                 .Indexed()
                 );
             contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg

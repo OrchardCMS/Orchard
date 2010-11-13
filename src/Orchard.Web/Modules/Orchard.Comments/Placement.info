@@ -7,7 +7,8 @@
     -->
     <!-- widget and edit shapes just get default placement -->
     <!-- edit "shapes" -->
-    <Place Parts_Comments_Enable="Primary:10"/>
+    <Place Parts_Comments_Enable="Content:10"/>
+    <Place Parts_Comments_SiteSettings="Content:10"/>
     <Match DisplayType="Detail">
         <Place Parts_Comments="Content:10" />
     </Match>
@@ -15,6 +16,6 @@
         <Place Parts_Comments_Count="Meta:5"/>
     </Match>
     <Match DisplayType="SummaryAdmin">
-        <Place Parts_Comments_Count_SummaryAdmin="Secondary"/>
+        <Place Parts_Comments_Count_SummaryAdmin="Sidebar"/>
     </Match>
 </Placement>

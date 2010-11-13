@@ -14,14 +14,15 @@ namespace Orchard.Tags.Drivers {
         private const string TemplateName = "Parts/Tags";
         private readonly ITagService _tagService;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IOrchardServices _orchardServices;
 
         public TagsPartDriver(ITagService tagService,
-                             IAuthorizationService authorizationService) {
+                             IAuthorizationService authorizationService,
+                             IOrchardServices orchardServices) {
             _tagService = tagService;
             _authorizationService = authorizationService;
+            _orchardServices = orchardServices;
         }
-
-        public virtual IUser CurrentUser { get; set; }
 
         protected override string Prefix {
             get { return "Tags"; }
@@ -33,7 +34,7 @@ namespace Orchard.Tags.Drivers {
         }
 
         protected override DriverResult Editor(TagsPart part, dynamic shapeHelper) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, CurrentUser, part))
+            if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, _orchardServices.WorkContext.CurrentUser, part))
                 return null;
 
             return ContentShape("Parts_Tags_Edit",
@@ -41,7 +42,7 @@ namespace Orchard.Tags.Drivers {
         }
 
         protected override DriverResult Editor(TagsPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, CurrentUser, part))
+            if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, _orchardServices.WorkContext.CurrentUser, part))
                 return null;
 
             var model = new EditTagsViewModel();

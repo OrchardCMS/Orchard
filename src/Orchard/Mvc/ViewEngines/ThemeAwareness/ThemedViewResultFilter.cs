@@ -6,12 +6,12 @@ using Orchard.Themes;
 namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
 
     public class ThemedViewResultFilter : FilterProvider, IResultFilter {
-        private readonly IThemeService _themeService;
+        private readonly IThemeManager _themeManager;
         private readonly WorkContext _workContext;
         private readonly ILayoutAwareViewEngine _layoutAwareViewEngine;
 
-        public ThemedViewResultFilter(IThemeService themeService, WorkContext workContext, ILayoutAwareViewEngine layoutAwareViewEngine) {
-            _themeService = themeService;
+        public ThemedViewResultFilter(IThemeManager themeManager, WorkContext workContext, ILayoutAwareViewEngine layoutAwareViewEngine) {
+            _themeManager = themeManager;
             _workContext = workContext;
             _layoutAwareViewEngine = layoutAwareViewEngine;
             Logger = NullLogger.Instance;
@@ -26,7 +26,7 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             }
 
             if (_workContext.CurrentTheme == null) {
-                _workContext.CurrentTheme = _themeService.GetRequestTheme(filterContext.RequestContext);
+                _workContext.CurrentTheme = _themeManager.GetRequestTheme(filterContext.RequestContext);
             }
 
             viewResultBase.ViewEngineCollection = new ViewEngineCollection(new[] { _layoutAwareViewEngine });

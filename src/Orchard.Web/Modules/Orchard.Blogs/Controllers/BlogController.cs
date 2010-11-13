@@ -3,13 +3,15 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
+using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
-using Orchard.ContentManagement;
+using Orchard.Core.Feeds;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
 using Orchard.Themes;
+using Orchard.UI.Navigation;
 
 namespace Orchard.Blogs.Controllers {
     [Themed]
@@ -18,6 +20,7 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
         private readonly IBlogSlugConstraint _blogSlugConstraint;
+        private readonly IFeedManager _feedManager;
         private readonly RouteCollection _routeCollection;
 
         public BlogController(
@@ -25,12 +28,14 @@ namespace Orchard.Blogs.Controllers {
             IBlogService blogService,
             IBlogPostService blogPostService,
             IBlogSlugConstraint blogSlugConstraint,
+            IFeedManager feedManager,
             RouteCollection routeCollection, 
             IShapeFactory shapeFactory) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
             _blogSlugConstraint = blogSlugConstraint;
+            _feedManager = feedManager;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
@@ -51,10 +56,7 @@ namespace Orchard.Blogs.Controllers {
             return View(viewModel);
         }
 
-        //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
-        public ActionResult Item(string blogSlug, int page) {
-            const int pageSize = 10;
-
+        public ActionResult Item(string blogSlug, Pager pager) {
             var correctedSlug = _blogSlugConstraint.FindSlug(blogSlug);
             if (correctedSlug == null)
                 return HttpNotFound();
@@ -63,20 +65,17 @@ namespace Orchard.Blogs.Controllers {
             if (blogPart == null)
                 return HttpNotFound();
 
-            var blogPosts = _blogPostService.Get(blogPart, (page - 1) * pageSize, pageSize)
+            _feedManager.Register(blogPart);
+            var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
                 .Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
-
-            blogPart.As<BlogPagerPart>().Page = page;
-            blogPart.As<BlogPagerPart>().PageSize = pageSize;
-            blogPart.As<BlogPagerPart>().BlogSlug = correctedSlug;
-            blogPart.As<BlogPagerPart>().ThereIsANextPage = _blogPostService.Get(blogPart, (page) * pageSize, pageSize).Any();
-
             var blog = _services.ContentManager.BuildDisplay(blogPart);
 
             var list = Shape.List();
             list.AddRange(blogPosts);
-
             blog.Content.Add(Shape.Parts_Blogs_BlogPost_List(ContentItems: list), "5");
+
+            var totalItemCount = _blogPostService.PostCount(blogPart);
+            blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
 
             return View(blog);
         }

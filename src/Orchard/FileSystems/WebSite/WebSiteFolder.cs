@@ -43,6 +43,7 @@ namespace Orchard.FileSystems.WebSite {
             return ReadFile(virtualPath, false);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public string ReadFile(string virtualPath, bool actualContent) {
             if (!_virtualPathProvider.FileExists(virtualPath)) {
                 return null;

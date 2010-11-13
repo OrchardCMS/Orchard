@@ -18,10 +18,9 @@ namespace Orchard.MultiTenancy {
             if ( _shellSettings.Name != "Default" )
                 return;
 
-            builder.Add(T("Tenants"), "22",
-                        menu => menu
-                                    .Add(T("Manage Tenants"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.MultiTenancy" }).Permission(Permissions.ManageTenants))
-                                    .Add(T("Add New Tenant"), "1.1", item => item.Action("Add", "Admin", new { area = "Orchard.MultiTenancy" }).Permission(Permissions.ManageTenants)));
+            builder.Add(T("Tenants"), "100",
+                menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.MultiTenancy" })
+                    .Permission(Permissions.ManageTenants)));
         }
     }
 }

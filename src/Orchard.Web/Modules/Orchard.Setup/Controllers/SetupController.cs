@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 using System.Security.Cryptography;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Linq;
+using System.Xml;
 using Orchard.FileSystems.AppData;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
@@ -39,20 +41,32 @@ namespace Orchard.Setup.Controllers {
             return View(model);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "StreamReader closed by XmlTextReader.")]
         private bool ValidateMachineKey() {
             // Get the machineKey section.
-            var section = ConfigurationManager.GetSection("system.web/machineKey") as MachineKeySection;
+            MachineKeySection machineKeySection = null;
 
-            if (section == null
-                || section.DecryptionKey.Contains("AutoGenerate")
-                || section.ValidationKey.Contains("AutoGenerate")) {
+            string webConfigFile = Path.Combine(HttpContext.Request.PhysicalApplicationPath, "web.config");
+            using (XmlTextReader webConfigReader = new XmlTextReader(new StreamReader(webConfigFile))) {
+                if (webConfigReader.ReadToFollowing("machineKey")) {
+                    machineKeySection = new MachineKeySection {
+                        DecryptionKey = webConfigReader.GetAttribute("decryptionKey"), 
+                        ValidationKey = webConfigReader.GetAttribute("validationKey")
+                    };
+                }
+            }
 
-                var rng = new RNGCryptoServiceProvider();
+            if (machineKeySection == null
+                || machineKeySection.DecryptionKey.Contains("AutoGenerate")
+                || machineKeySection.ValidationKey.Contains("AutoGenerate")) {
+
                 var decryptionData = new byte[32];
                 var validationData = new byte[64];
-                
-                rng.GetBytes(decryptionData);
-                rng.GetBytes(validationData);
+
+                using (var rng = new RNGCryptoServiceProvider()) {
+                    rng.GetBytes(decryptionData);
+                    rng.GetBytes(validationData);
+                }
 
                 string decryptionKey = BitConverter.ToString(decryptionData).Replace("-", "");
                 string validationKey = BitConverter.ToString(validationData).Replace("-", "");

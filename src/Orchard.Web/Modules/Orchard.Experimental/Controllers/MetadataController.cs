@@ -23,6 +23,7 @@ namespace Orchard.Experimental.Controllers {
             _contentDefinitionReader = contentDefinitionReader;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "StringWriter is disposed by wrapped XmlWriter.")]
         public ActionResult Index() {
             var model = new MetadataIndexViewModel {
                 TypeDefinitions = _contentDefinitionManager.ListTypeDefinitions(),

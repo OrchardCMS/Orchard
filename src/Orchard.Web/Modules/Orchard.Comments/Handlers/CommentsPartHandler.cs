@@ -35,7 +35,8 @@ namespace Orchard.Comments.Handlers {
 
             OnRemoved<CommentsPart>(
                 (context, c) => {
-                    foreach (var comment in commentService.GetCommentsForCommentedContent(context.ContentItem.Id)) {
+                    var comments = commentService.GetCommentsForCommentedContent(context.ContentItem.Id).List();
+                    foreach (var comment in comments) {
                         contentManager.Remove(comment.ContentItem);
                     }
                 });

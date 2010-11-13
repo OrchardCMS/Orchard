@@ -5,9 +5,12 @@ using System.Text;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
 using JetBrains.Annotations;
+using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
 using Orchard.Logging;
 using Orchard.Media.Models;
+using Orchard.Security;
+using Orchard.Settings;
 
 namespace Orchard.Media.Services {
     [UsedImplicitly]
@@ -21,6 +24,9 @@ namespace Orchard.Media.Services {
         }
 
         public ILogger Logger { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
+        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
+
 
         public string GetPublicUrl(string path) {
             return _storageProvider.GetPublicUrl(path);
@@ -82,18 +88,18 @@ namespace Orchard.Media.Services {
         }
 
         public void RenameFile(string name, string newName, string folderName) {
-            _storageProvider.RenameFile(folderName + "\\" + name, folderName + "\\" + newName);
+            if (FileAllowed(newName, false)) {
+                _storageProvider.RenameFile(folderName + "\\" + name, folderName + "\\" + newName);
+            }
         }
 
         public string UploadMediaFile(string folderName, HttpPostedFileBase postedFile) {
-
             if (postedFile.FileName.EndsWith(".zip")) {
                 UnzipMediaFileArchive(folderName, postedFile);
                 // Don't save the zip file.
                 return _storageProvider.GetPublicUrl(folderName);
             }
-            
-            if (postedFile.ContentLength > 0) {
+            if (FileAllowed(postedFile) && postedFile.ContentLength > 0) {
                 var filePath = Path.Combine(folderName, Path.GetFileName(postedFile.FileName));
                 var inputStream = postedFile.InputStream;
 
@@ -102,6 +108,41 @@ namespace Orchard.Media.Services {
             }
 
             return null;
+        }
+
+        private bool FileAllowed(string name, bool allowZip) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                return false;
+            }
+            var mediaSettings = CurrentSite.As<MediaSettingsPart>();
+            var allowedExtensions = mediaSettings.UploadAllowedFileTypeWhitelist.ToUpperInvariant().Split(' ');
+            var ext = (Path.GetExtension(name) ?? "").TrimStart('.').ToUpperInvariant();
+            if (string.IsNullOrWhiteSpace(ext)) {
+                return false;
+            }
+            // whitelist does not apply to the superuser
+            if (CurrentUser == null || !CurrentSite.SuperUser.Equals(CurrentUser.UserName, StringComparison.Ordinal)) {
+                // zip files at the top level are allowed since this is how you upload multiple files at once.
+                if (allowZip && ext.Equals("zip", StringComparison.OrdinalIgnoreCase)) {
+                    return true;
+                }
+                // must be in the whitelist
+                if (Array.IndexOf(allowedExtensions, ext) == -1) {
+                    return false;
+                }
+            }
+            // blacklist always applies
+            if (string.Equals(name.Trim(), "web.config", StringComparison.OrdinalIgnoreCase)) {
+                return false;
+            }
+            return true;
+        }
+
+        public bool FileAllowed(HttpPostedFileBase postedFile) {
+            if (postedFile == null) {
+                return false;
+            }
+            return FileAllowed(postedFile.FileName, true);
         }
 
         private void SaveStream(string filePath, Stream inputStream) {
@@ -139,12 +180,17 @@ namespace Orchard.Media.Services {
                         var entryName = Path.Combine(targetFolder, entry.Name);
                         var directoryName = Path.GetDirectoryName(entryName);
 
-                        try { _storageProvider.CreateFolder(directoryName); }
-                        catch {
-                            // no handling needed - this is to force the folder to exist if it doesn't
-                        }
+                        // skip disallowed files
+                        if (FileAllowed(entry.Name, false)) {
+                            try {
+                                _storageProvider.CreateFolder(directoryName);
+                            }
+                            catch {
+                                // no handling needed - this is to force the folder to exist if it doesn't
+                            }
 
-                        SaveStream(entryName, fileInflater);
+                            SaveStream(entryName, fileInflater);
+                        }
                     }
                 }
             }

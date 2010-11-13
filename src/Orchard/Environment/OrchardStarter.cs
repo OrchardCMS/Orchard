@@ -7,7 +7,6 @@ using System.Web.Mvc;
 using Autofac;
 using Autofac.Configuration;
 using Orchard.Caching;
-using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Compilers;

@@ -10,8 +10,6 @@ using Orchard.Security;
 using Orchard.Themes;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
-using Orchard.Settings;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
 
@@ -21,21 +19,23 @@ namespace Orchard.Users.Controllers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
+        private readonly IOrchardServices _orchardServices;
 
         public AccountController(
             IAuthenticationService authenticationService, 
             IMembershipService membershipService,
-            IUserService userService) {
+            IUserService userService, 
+            IOrchardServices orchardServices) {
             _authenticationService = authenticationService;
             _membershipService = membershipService;
             _userService = userService;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ActionResult AccessDenied() {
             var returnUrl = Request.QueryString["ReturnUrl"];
@@ -93,7 +93,7 @@ namespace Orchard.Users.Controllers {
 
         public ActionResult Register() {
             // ensure users can register
-            var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
+            var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
             if ( !registrationSettings.UsersCanRegister ) {
                 return HttpNotFound();
             }
@@ -106,7 +106,7 @@ namespace Orchard.Users.Controllers {
         [HttpPost]
         public ActionResult Register(string userName, string email, string password, string confirmPassword) {
             // ensure users can register
-            var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
+            var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
             if ( !registrationSettings.UsersCanRegister ) {
                 return HttpNotFound();
             }
@@ -123,6 +123,10 @@ namespace Orchard.Users.Controllers {
                         _membershipService.SendChallengeEmail(user.As<UserPart>(), Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", token = challengeToken })));
 
                         return RedirectToAction("ChallengeEmailSent");
+                    }
+
+                    if (user.As<UserPart>().RegistrationStatus == UserStatus.Pending) {
+                        return RedirectToAction("RegistrationPending");
                     }
 
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
@@ -172,6 +176,10 @@ namespace Orchard.Users.Controllers {
                 ModelState.AddModelError("_FORM", T("The current password is incorrect or the new password is invalid."));
                 return ChangePassword();
             }
+        }
+
+        public ActionResult RegistrationPending() {
+            return View();
         }
 
         public ActionResult ChangePasswordSuccess() {

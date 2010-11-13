@@ -27,7 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -70,6 +70,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\TagsContentItems.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ITagService.cs" />
     <Compile Include="ViewModels\EditTagsViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -85,18 +86,15 @@
     <Compile Include="ViewModels\TagsAdminCreateViewModel.cs" />
     <Compile Include="ViewModels\TagsAdminEditViewModel.cs" />
     <Compile Include="ViewModels\TagsAdminIndexViewModel.cs" />
-    <Compile Include="ViewModels\TagsAdminSearchViewModel.cs" />
     <Compile Include="ViewModels\TagsSearchViewModel.cs" />
     <Compile Include="ViewModels\TagsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\Admin\Create.cshtml" />
-    <Content Include="Web.config" />
+    <Content Include="Styles\admin.css" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Admin\Search.cshtml" />
     <Content Include="Views\Parts\Tags.ShowTags.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Tags.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -116,6 +114,12 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Views\EditorTemplates\Parts\CreateTag.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

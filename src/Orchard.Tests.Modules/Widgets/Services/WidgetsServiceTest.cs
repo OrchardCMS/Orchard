@@ -16,6 +16,8 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Features;
 using Orchard.Security;
 using Orchard.Tests.Stubs;
 using Orchard.Themes;
@@ -25,7 +27,7 @@ using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
 namespace Orchard.Tests.Modules.Widgets.Services {
-    
+
     [TestFixture]
     public class WidgetsServiceTest : DatabaseEnabledTestsBase {
 
@@ -76,28 +78,32 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         public override void Register(ContainerBuilder builder) {
+            var mockFeatureManager = new Mock<IFeatureManager>();
+
+            var theme1 = new FeatureDescriptor {Extension = new ExtensionDescriptor {Zones = ThemeZoneName1}};
+            var theme2 = new FeatureDescriptor {Extension = new ExtensionDescriptor {Zones = ThemeZoneName2}};
+            mockFeatureManager.Setup(x => x.GetEnabledFeatures())
+                .Returns(new[] { theme1, theme2 });
+
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
             builder.RegisterInstance(new Mock<ITransactionManager>().Object);
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterInstance(new Mock<INotifier>().Object);
+            builder.RegisterInstance(mockFeatureManager.Object);
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<WidgetsService>().As<IWidgetsService>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            Theme theme1 = new Theme { Zones = ThemeZoneName1 };
-            Theme theme2 = new Theme { Zones = ThemeZoneName2 };
-            Mock<IThemeService> themeServiceMock = new Mock<IThemeService>();
-            themeServiceMock.Setup(x => x.GetInstalledThemes()).Returns(
-                (new ITheme[] { theme1, theme2 }));
 
-            builder.RegisterInstance(themeServiceMock.Object).As<IThemeService>();
+
             builder.RegisterType<StubWidgetPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubLayerPartHandler>().As<IContentHandler>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
+
         }
 
         [Test]
@@ -153,7 +159,7 @@ namespace Orchard.Tests.Modules.Widgets.Services {
 
             WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", WidgetTitle1, "1", "");
             Assert.That(widgetPart, Is.Not.Null);
-            
+
             widgetResult = _widgetService.GetWidget(0);
             Assert.That(widgetResult, Is.Null, "Still yields null on an invalid identifier");
 
@@ -225,7 +231,7 @@ namespace Orchard.Tests.Modules.Widgets.Services {
 
             widgetPart1 = _widgetService.GetWidget(widgetPart1.Id);
             Assert.That(widgetPart1.Position, Is.EqualTo(Position2), "First widget moved to second widget position");
-            
+
             widgetPart2 = _widgetService.GetWidget(widgetPart2.Id);
             Assert.That(widgetPart2.Position, Is.EqualTo(Position1), "Second widget moved to first widget position");
 

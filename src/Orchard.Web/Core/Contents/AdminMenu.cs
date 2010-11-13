@@ -21,16 +21,22 @@ namespace Orchard.Core.Contents {
         public void GetNavigation(NavigationBuilder builder) {
             var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
 
-            builder.Add(T("Content"), "2", menu => {
-                menu.Add(T("Manage Content"), "1", item => item.Action("List", "Admin", new { area = "Contents", id = "" }));
-                foreach (var contentTypeDefinition in contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable)) {
-                    var ci = _contentManager.New(contentTypeDefinition.Name);
-                    var cim = _contentManager.GetItemMetadata(ci);
-                    var createRouteValues = cim.CreateRouteValues;
-                    if (createRouteValues.Any())
-                        menu.Add(T("Create {0}", contentTypeDefinition.DisplayName), "1.3", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues));
-                }
-            });
+            builder.Add(T("Content"), "2",
+                        menu => menu.Add(T("Content Items"), "1", item => item.Action("List", "Admin", new {area = "Contents", id = ""})));
+
+            var contentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable).OrderBy(ctd => ctd.DisplayName);
+            if (contentTypes.Count() > 0) {
+                builder.Add(T("New"), "-1", menu => {
+                    foreach (var contentTypeDefinition in contentTypes) {
+                        var ci = _contentManager.New(contentTypeDefinition.Name);
+                        var cim = _contentManager.GetItemMetadata(ci);
+                        var createRouteValues = cim.CreateRouteValues;
+                        // review: the display name should be a LocalizedString
+                        if (createRouteValues.Any())
+                            menu.Add(T(contentTypeDefinition.DisplayName), "5", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues));
+                    }
+                });
+            }
         }
     }
 }

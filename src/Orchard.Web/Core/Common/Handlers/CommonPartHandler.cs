@@ -147,50 +147,5 @@ namespace Orchard.Core.Common.Handlers {
             if (part.ContainerField.Value != null)
                 part.ContainerField.Value = part.ContainerField.Value;
         }
-
-
-        //private void GetEditor(BuildEditorContext context, CommonPart instance) {
-        //    var currentUser = _authenticationService.GetAuthenticatedUser();
-        //    if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, instance)) {
-        //        return;
-        //    }
-        //    var viewModel = new OwnerEditorViewModel();
-        //    if (instance.Owner != null)
-        //        viewModel.Owner = instance.Owner.UserName;
-
-        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonPart") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
-        //}
-
-
-        //private void UpdateEditor(UpdateEditorContext context, CommonPart instance) {
-        //    // this event is hooked so the modified timestamp is changed when an edit-post occurs.
-        //    // kind of a loose rule of thumb. may not be sufficient
-        //    instance.ModifiedUtc = _clock.UtcNow;
-        //    instance.VersionModifiedUtc = _clock.UtcNow;
-
-        //    var currentUser = _authenticationService.GetAuthenticatedUser();
-        //    if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, instance)) {
-        //        return;
-        //    }
-
-        //    var viewModel = new OwnerEditorViewModel();
-        //    if (instance.Owner != null)
-        //        viewModel.Owner = instance.Owner.UserName;
-
-        //    var priorOwner = viewModel.Owner;
-        //    context.Updater.TryUpdateModel(viewModel, "CommonPart", null, null);
-
-        //    if (viewModel.Owner != null && viewModel.Owner != priorOwner) {
-        //        var newOwner = _membershipService.GetUser(viewModel.Owner);
-        //        if (newOwner == null) {
-        //            context.Updater.AddModelError("CommonPart.Owner", T("Invalid user name"));
-        //        }
-        //        else {
-        //            instance.Owner = newOwner;
-        //        }
-        //    }
-
-        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonPart") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
-        //}
     }
 }

@@ -9,10 +9,10 @@ Features:
     Orchard.Blogs:
         Name: Blogs
         Description: A simple web log.
-        Dependencies: Feeds
+        Dependencies: Shapes, Common, Routable, Feeds, Orchard.Widgets, Orchard.jQuery
         Category: Content
     Orchard.Blogs.RemotePublishing:
         Name: Remote Blog Publishing
         Description: Blog easier using a dedicated MetaWeblogAPI-compatible publishing tool.
-        Dependencies: XmlRpc
+        Dependencies: XmlRpc, Orchard.Blogs
         Category: Content Publishing
