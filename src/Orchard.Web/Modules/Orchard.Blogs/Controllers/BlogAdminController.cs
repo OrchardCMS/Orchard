@@ -6,6 +6,7 @@ using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Routable.Services;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -71,11 +72,11 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
-            if (!blog.Has<IPublishingControlAspect>())
-                _contentManager.Publish(blog.ContentItem);
+            _contentManager.Publish(blog.ContentItem);
 
-            _blogSlugConstraint.AddSlug((string)model.Slug);
-            return Redirect(Url.BlogForAdmin((string)model.Slug));
+            var slug = blog.As<IRoutableAspect>().GetEffectiveSlug();
+            _blogSlugConstraint.AddSlug(slug);
+            return Redirect(Url.BlogForAdmin(blog));
         }
 
         public ActionResult Edit(string blogSlug) {
@@ -103,7 +104,7 @@ namespace Orchard.Blogs.Controllers {
             if (!ModelState.IsValid)
                 return View(model);
 
-            _blogSlugConstraint.AddSlug(blog.Slug);
+            _blogSlugConstraint.AddSlug(blog.As<IRoutableAspect>().GetEffectiveSlug());
             Services.Notifier.Information(T("Blog information updated"));
             return Redirect(Url.BlogsForAdmin());
         }

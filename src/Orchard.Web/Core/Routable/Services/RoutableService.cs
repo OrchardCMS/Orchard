@@ -113,6 +113,10 @@ namespace Orchard.Core.Routable.Services {
                 : slug;
         }
 
+        public static string GetChildPath(this IRoutableAspect routableAspect, string slug) {
+            return string.Format("{0}/{1}", routableAspect.Path, slug);
+        }
+
         public static string GetEffectiveSlug(this IRoutableAspect routableAspect) {
             var containerPath = routableAspect.GetContainerPath();
 

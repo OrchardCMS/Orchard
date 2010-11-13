@@ -117,8 +117,9 @@ namespace Orchard.Blogs.Services {
 
             var array = new XRpcArray();
             foreach (var blog in _blogService.Get()) {
+                var thisBlog = blog;
                 array.Add(new XRpcStruct()
-                              .Set("url", urlHelper.AbsoluteAction(() => urlHelper.Blog(blog.Slug)))
+                              .Set("url", urlHelper.AbsoluteAction(() => urlHelper.Blog(thisBlog)))
                               .Set("blogid", blog.Id)
                               .Set("blogName", blog.Name));
             }

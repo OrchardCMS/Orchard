@@ -1,5 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Orchard.Blogs.Models;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Environment.Extensions;
 
@@ -8,7 +10,7 @@ namespace Orchard.Blogs.Drivers {
     [OrchardFeature("Orchard.Blogs.RemotePublishing")]
     public class RemoteBlogPublishingDriver : ContentPartDriver<BlogPart> {
         protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_Blogs_RemotePublishing", shape => shape.Slug(part.Slug));
+            return ContentShape("Parts_Blogs_RemotePublishing", shape => shape.Path(part.As<IRoutableAspect>().Path));
         }
     }
 }
