@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Orchard.Caching;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
@@ -13,15 +14,17 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Environment.Extensions {
     public class ExtensionManager : IExtensionManager {
         private readonly IEnumerable<IExtensionFolders> _folders;
+        private readonly ICacheManager _cacheManager;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private IEnumerable<FeatureDescriptor> _featureDescriptors;
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ExtensionManager(IEnumerable<IExtensionFolders> folders, IEnumerable<IExtensionLoader> loaders) {
+        public ExtensionManager(IEnumerable<IExtensionFolders> folders, IEnumerable<IExtensionLoader> loaders, ICacheManager cacheManager) {
             _folders = folders;
-            _loaders = loaders.OrderBy(x => x.Order);
+            _cacheManager = cacheManager;
+            _loaders = loaders.OrderBy(x => x.Order).ToArray();
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -67,35 +70,20 @@ namespace Orchard.Environment.Extensions {
                    item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, subject.Name));
         }
 
-        private IEnumerable<ExtensionEntry> LoadedExtensions() {
-            foreach (var descriptor in AvailableExtensions()) {
-                ExtensionEntry entry = null;
-                try {
-                    entry = BuildEntry(descriptor);
-                }
-                catch (HttpCompileException ex) {
-                    Logger.Warning(ex, "Unable to load extension {0}", descriptor.Name);
-                }
-                if (entry != null)
-                    yield return entry;
-            }
-        }
-
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
             return featureDescriptors
-                .Select(LoadFeature)
+                .Select(descriptor => _cacheManager.Get(descriptor.Name, ctx => LoadFeature(descriptor)))
                 .ToArray();
         }
 
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
+            
+            var extensionDescriptor = featureDescriptor.Extension;
             var featureName = featureDescriptor.Name;
+            var extensionName = extensionDescriptor.Name;
 
-            string extensionName = GetExtensionForFeature(featureName);
-            if (extensionName == null)
-                throw new ArgumentException(T("Feature {0} was not found in any of the installed extensions", featureName).ToString());
-
-            var extension = LoadedExtensions().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
-            if (extension == null) {
+            var extensionEntry = _cacheManager.Get(extensionName, ctx => BuildEntry(extensionDescriptor));
+            if (extensionEntry == null) {
                 // If the feature could not be compiled for some reason,
                 // return a "null" feature, i.e. a feature with no exported types.
                 return new Feature {
@@ -104,7 +92,7 @@ namespace Orchard.Environment.Extensions {
                 };
             }
 
-            var extensionTypes = extension.ExportedTypes.Where(t => t.IsClass && !t.IsAbstract);
+            var extensionTypes = extensionEntry.ExportedTypes.Where(t => t.IsClass && !t.IsAbstract);
             var featureTypes = new List<Type>();
 
             foreach (var type in extensionTypes) {
@@ -126,21 +114,7 @@ namespace Orchard.Environment.Extensions {
             }
             return extensionName;
         }
-
-        private string GetExtensionForFeature(string featureName) {
-            foreach (var extensionDescriptor in AvailableExtensions()) {
-                if (String.Equals(extensionDescriptor.Name, featureName, StringComparison.OrdinalIgnoreCase)) {
-                    return extensionDescriptor.Name;
-                }
-                foreach (var feature in extensionDescriptor.Features) {
-                    if (String.Equals(feature.Name, featureName, StringComparison.OrdinalIgnoreCase)) {
-                        return extensionDescriptor.Name;
-                    }
-                }
-            }
-            return null;
-        }
-
+        
         private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
             foreach (var loader in _loaders) {
                 ExtensionEntry entry = loader.Load(descriptor);

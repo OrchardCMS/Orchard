@@ -11,6 +11,7 @@ using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.Extensions.ExtensionTypes;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Environment.Extensions {
     [TestFixture]
@@ -265,7 +266,7 @@ Features:
     Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -291,7 +292,7 @@ Features:
     Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -326,7 +327,7 @@ Features:
     Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Name == "TestFeature");
@@ -356,7 +357,7 @@ Features:
     Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Name == "TestFeature");
@@ -384,7 +385,7 @@ Features:
     Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var testModule = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Name == "TestModule");
@@ -408,7 +409,7 @@ Version: 1.0.3
 OrchardVersion: 1
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Name == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
@@ -427,7 +428,7 @@ Version: 1.0.3
 OrchardVersion: 1
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Name == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
