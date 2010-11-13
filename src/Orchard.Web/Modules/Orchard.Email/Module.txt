@@ -9,4 +9,4 @@ Features:
     Orchard.Email:
         Description: Email Messaging services.
         Category: Messaging
-        Dependencies: Messaging
+        Dependencies: Messaging, Orchard.Users
