@@ -24,14 +24,9 @@ namespace Orchard.Core.Routable.Handlers {
 
             Action<RoutePart> processSlug = (
                 routable => {
-                    var originalSlug = routable.Slug;
-                    if (!_routableService.ProcessSlug(routable)) {
+                    if (!_routableService.ProcessSlug(routable))
                         _services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
-                                                     originalSlug, routable.Slug, routable.ContentItem.ContentType));
-                    }
-
-                    // TEMP: path format patterns replaces this logic
-                    routable.Path = routable.GetPathWithSlug(routable.Slug);
+                                                     routable.Slug, routable.GetEffectiveSlug(), routable.ContentItem.ContentType));
                 });
 
             OnGetDisplayShape<RoutePart>(SetModelProperties);
