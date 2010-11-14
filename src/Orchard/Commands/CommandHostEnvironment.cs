@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Web.Hosting;
 using Orchard.Environment;
 using Orchard.Localization;
@@ -21,7 +22,7 @@ namespace Orchard.Commands {
         }
 
         public bool IsAssemblyLoaded(string name) {
-            return AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == name);
+            return AppDomain.CurrentDomain.GetAssemblies().Any(assembly => new AssemblyName(assembly.FullName).Name == name);
         }
 
         public void RestartAppDomain() {
