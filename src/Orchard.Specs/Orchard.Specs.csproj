@@ -154,6 +154,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MultiTenancy.feature</DependentUpon>
     </Compile>
+    <Compile Include="Pages.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Pages.feature</DependentUpon>
+    </Compile>
     <Compile Include="Util\PathExtensions.cs" />
     <Compile Include="WebHosting.feature.cs">
       <DependentUpon>WebHosting.feature</DependentUpon>
@@ -219,6 +224,10 @@
     <None Include="MultiTenancy.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>MultiTenancy.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Pages.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Pages.feature.cs</LastGenOutput>
     </None>
     <None Include="WebHosting.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
