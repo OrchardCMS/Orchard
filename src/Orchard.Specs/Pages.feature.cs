@@ -98,9 +98,68 @@ this.ScenarioSetup(scenarioInfo);
 #line 19
         testRunner.And("I go to \"super-duper\"");
 #line 20
-    testRunner.Then("I should see \"<h1>Super Duper</h1>\"");
+    testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"");
 #line 21
         testRunner.And("I should see \"This is super.\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("If I create a page which gets a conflicting path generated its path is made to be" +
+            " unique")]
+        public virtual void IfICreateAPageWhichGetsAConflictingPathGeneratedItsPathIsMadeToBeUnique()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("If I create a page which gets a conflicting path generated its path is made to be" +
+                    " unique", ((string[])(null)));
+#line 23
+this.ScenarioSetup(scenarioInfo);
+#line 24
+    testRunner.Given("I have installed Orchard");
+#line 25
+    testRunner.When("I go to \"admin/contents/create/page\"");
+#line hidden
+            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table2.AddRow(new string[] {
+                        "Routable.Title",
+                        "Super Duper"});
+            table2.AddRow(new string[] {
+                        "Body.Text",
+                        "This is super."});
+#line 26
+        testRunner.And("I fill in", ((string)(null)), table2);
+#line 30
+        testRunner.And("I hit \"Publish Now\"");
+#line 31
+        testRunner.And("I go to \"super-duper\"");
+#line 32
+    testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"");
+#line 33
+        testRunner.And("I should see \"This is super.\"");
+#line 34
+    testRunner.When("I go to \"admin/contents/create/page\"");
+#line hidden
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table3.AddRow(new string[] {
+                        "Routable.Title",
+                        "Super Duper"});
+            table3.AddRow(new string[] {
+                        "Body.Text",
+                        "This is super number two."});
+#line 35
+        testRunner.And("I fill in", ((string)(null)), table3);
+#line 39
+        testRunner.And("I hit \"Publish Now\"");
+#line 40
+        testRunner.And("I go to \"super-duper-2\"");
+#line 41
+    testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"");
+#line 42
+        testRunner.And("I should see \"This is super number two.\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
