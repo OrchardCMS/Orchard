@@ -22,5 +22,9 @@ namespace Orchard.Core.Routable.Services {
         /// <returns>True if the slug has been created, False if a conflict occured</returns>
         bool ProcessSlug(IRoutableAspect part);
 
+        /// <summary>
+        /// Updated the paths of all contained items to reflect the current path of this item
+        /// </summary>
+        void FixContainedPaths(IRoutableAspect part);
     }
 }

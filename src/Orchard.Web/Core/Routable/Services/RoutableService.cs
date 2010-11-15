@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Routable.Services {
@@ -12,6 +13,18 @@ namespace Orchard.Core.Routable.Services {
 
         public RoutableService(IContentManager contentManager) {
             _contentManager = contentManager;
+        }
+
+        public void FixContainedPaths(IRoutableAspect part) {
+            var items = _contentManager.Query(VersionOptions.Published)
+                .Join<CommonPartRecord>().Where(cr => cr.Container.Id == part.Id)
+                .List()
+                .Select(item => item.As<IRoutableAspect>()).Where(item => item != null);
+
+            foreach (var itemRoute in items) {
+                itemRoute.ContentItem.VersionRecord.Published = false; // <- to force a republish
+                _contentManager.Publish(itemRoute.ContentItem);
+            }
         }
 
         public void FillSlugFromTitle<TModel>(TModel model) where TModel : IRoutableAspect {
@@ -86,6 +99,7 @@ namespace Orchard.Core.Routable.Services {
                 var originalSlug = part.Slug;
                 var newSlug = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Path));
                 part.Path = part.GetPathWithSlug(newSlug);
+                part.Slug = newSlug;
 
                 if (originalSlug != newSlug)
                     return false;

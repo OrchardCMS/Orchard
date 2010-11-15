@@ -132,6 +132,8 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
+            conditionallyPublish(blogPost.ContentItem);
+
             Services.Notifier.Information(T("Your {0} has been saved.", blogPost.TypeDefinition.DisplayName));
 
             if (!String.IsNullOrEmpty(returnUrl))

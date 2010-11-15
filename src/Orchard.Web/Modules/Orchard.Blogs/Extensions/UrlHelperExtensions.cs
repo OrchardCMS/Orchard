@@ -48,11 +48,11 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogEdit(this UrlHelper urlHelper, BlogPart blogPart) {
-            return urlHelper.Action("Edit", "BlogAdmin", new { blogSlug = blogPart.As<IRoutableAspect>().Path, area = "Orchard.Blogs" });
+            return urlHelper.Action("Edit", "BlogAdmin", new { blogPart.Id, area = "Orchard.Blogs" });
         }
 
         public static string BlogRemove(this UrlHelper urlHelper, BlogPart blogPart) {
-            return urlHelper.Action("Remove", "BlogAdmin", new { blogSlug = blogPart.As<IRoutableAspect>().Path, area = "Orchard.Blogs" });
+            return urlHelper.Action("Remove", "BlogAdmin", new { blogPart.Id, area = "Orchard.Blogs" });
         }
 
         public static string BlogPostCreate(this UrlHelper urlHelper, BlogPart blogPart) {

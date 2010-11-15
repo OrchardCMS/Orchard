@@ -73,17 +73,16 @@ namespace Orchard.Blogs.Controllers {
             }
 
             _contentManager.Publish(blog.ContentItem);
+            _blogSlugConstraint.AddSlug(blog.As<IRoutableAspect>().GetEffectiveSlug());
 
-            var slug = blog.As<IRoutableAspect>().GetEffectiveSlug();
-            _blogSlugConstraint.AddSlug(slug);
             return Redirect(Url.BlogForAdmin(blog));
         }
 
-        public ActionResult Edit(string blogSlug) {
+        public ActionResult Edit(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(id, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -92,20 +91,24 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST(string blogSlug) {
+        public ActionResult EditPOST(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(id, VersionOptions.DraftRequired);
             if (blog == null)
                 return HttpNotFound();
 
             var model = Services.ContentManager.UpdateEditor(blog, this);
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
                 return View(model);
+            }
 
+            _contentManager.Publish(blog);
             _blogSlugConstraint.AddSlug(blog.As<IRoutableAspect>().GetEffectiveSlug());
             Services.Notifier.Information(T("Blog information updated"));
+
             return Redirect(Url.BlogsForAdmin());
         }
 

@@ -24,6 +24,10 @@ namespace Orchard.Blogs.Services {
                 .List().FirstOrDefault();
         }
 
+        public ContentItem Get(int id, VersionOptions versionOptions) {
+            return _contentManager.Get(id, versionOptions);
+        }
+
         public IEnumerable<BlogPart> Get() {
             return _contentManager.Query<BlogPart, BlogPartRecord>()
                 .Join<RoutePartRecord>()

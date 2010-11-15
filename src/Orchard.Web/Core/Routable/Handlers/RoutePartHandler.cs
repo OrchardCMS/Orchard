@@ -33,11 +33,27 @@ namespace Orchard.Core.Routable.Handlers {
             OnGetEditorShape<RoutePart>(SetModelProperties);
             OnUpdateEditorShape<RoutePart>(SetModelProperties);
 
-            OnPublishing<RoutePart>((context, routable) => {
+            OnPublished<RoutePart>((context, route) => {
+                var path = route.Path;
+                route.Path = route.GetPathWithSlug(route.Slug);
+
                 if (context.PublishingItemVersionRecord != null)
-                    processSlug(routable);
-                if (!string.IsNullOrEmpty(routable.Path))
-                    _routablePathConstraint.AddPath(routable.Path);
+                    processSlug(route);
+
+                // if the path has changed by having the slug changed on the way in (e.g. user input) or to avoid conflict
+                // then update and publish all contained items
+                if (path != route.Path) {
+                    _routablePathConstraint.RemovePath(path);
+                    _routableService.FixContainedPaths(route);
+                }
+
+                if (!string.IsNullOrWhiteSpace(route.Path))
+                    _routablePathConstraint.AddPath(route.Path);
+            });
+
+            OnRemoved<RoutePart>((context, route) => {
+                if (!string.IsNullOrWhiteSpace(route.Path))
+                    _routablePathConstraint.RemovePath(route.Path);
             });
 
             OnIndexing<RoutePart>((context, part) => context.DocumentIndex.Add("title", part.Record.Title).RemoveTags().Analyze());

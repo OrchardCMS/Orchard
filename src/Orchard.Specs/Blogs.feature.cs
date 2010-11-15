@@ -218,6 +218,85 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             testRunner.CollectScenarioErrors();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can create a new blog and blog post and when I change the slug of the blog the " +
+            "path of the plog post is updated")]
+        public virtual void ICanCreateANewBlogAndBlogPostAndWhenIChangeTheSlugOfTheBlogThePathOfThePlogPostIsUpdated()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can create a new blog and blog post and when I change the slug of the blog the " +
+                    "path of the plog post is updated", ((string[])(null)));
+#line 66
+this.ScenarioSetup(scenarioInfo);
+#line 67
+    testRunner.Given("I have installed Orchard");
+#line 68
+    testRunner.When("I go to \"admin/blogs/create\"");
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table7.AddRow(new string[] {
+                        "Routable.Title",
+                        "My Blog"});
+#line 69
+        testRunner.And("I fill in", ((string)(null)), table7);
+#line 72
+        testRunner.And("I hit \"Save\"");
+#line 73
+        testRunner.And("I go to \"my-blog\"");
+#line 74
+    testRunner.Then("I should see \"<h1[^>]*>.*?My Blog.*?</h1>\"");
+#line 75
+    testRunner.When("I go to \"admin/blogs/my-blog/posts/create\"");
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table8.AddRow(new string[] {
+                        "Routable.Title",
+                        "My Post"});
+            table8.AddRow(new string[] {
+                        "Body.Text",
+                        "Hi there."});
+#line 76
+        testRunner.And("I fill in", ((string)(null)), table8);
+#line 80
+        testRunner.And("I hit \"Publish Now\"");
+#line 81
+        testRunner.And("I go to \"my-blog/my-post\"");
+#line 82
+    testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
+#line 83
+        testRunner.And("I should see \"Hi there.\"");
+#line 84
+    testRunner.When("I go to \"admin/blogs/my-blog\"");
+#line 85
+        testRunner.And("I follow \"Blog Properties\"");
+#line hidden
+            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table9.AddRow(new string[] {
+                        "Routable.Slug",
+                        "my-other-blog"});
+#line 86
+        testRunner.And("I fill in", ((string)(null)), table9);
+#line 89
+        testRunner.And("I hit \"Save\"");
+#line 90
+        testRunner.And("I go to \"my-other-blog\"");
+#line 91
+    testRunner.Then("I should see \"<h1[^>]*>.*?My Blog.*?</h1>\"");
+#line 92
+    testRunner.When("I go to \"my-other-blog/my-post\"");
+#line 93
+    testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
+#line 94
+        testRunner.And("I should see \"Hi there.\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
     }
 }
 #endregion

@@ -62,3 +62,33 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I go to "my-blog/my-post-3"
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Are you still there?"
+
+Scenario: I can create a new blog and blog post and when I change the slug of the blog the path of the plog post is updated
+    Given I have installed Orchard
+    When I go to "admin/blogs/create"
+        And I fill in
+            | name | value |
+            | Routable.Title | My Blog |
+        And I hit "Save"
+        And I go to "my-blog"
+    Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
+    When I go to "admin/blogs/my-blog/posts/create"
+        And I fill in
+            | name | value |
+            | Routable.Title | My Post |
+            | Body.Text | Hi there. |
+        And I hit "Publish Now"
+        And I go to "my-blog/my-post"
+    Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
+        And I should see "Hi there."
+    When I go to "admin/blogs/my-blog"
+        And I follow "Blog Properties"
+        And I fill in
+            | name | value |
+            | Routable.Slug | my-other-blog |
+        And I hit "Save"
+        And I go to "my-other-blog"
+    Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
+    When I go to "my-other-blog/my-post"
+    Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
+        And I should see "Hi there."
