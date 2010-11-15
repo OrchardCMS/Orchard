@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Soap;
+using System.Xml.Serialization;
 using NHibernate;
 using NHibernate.Cfg;
 using Orchard.Data;
@@ -66,7 +69,10 @@ namespace Orchard.Data {
         private ISessionFactory BuildSessionFactory() {
             Logger.Debug("Building session factory");
 
-            var config = GetConfiguration();
+            if (!(AppDomain.CurrentDomain.IsHomogenous && AppDomain.CurrentDomain.IsFullyTrusted))
+                NHibernate.Cfg.Environment.UseReflectionOptimizer = false;
+
+            Configuration config = GetConfiguration();
             return config.BuildSessionFactory();
         }
 
