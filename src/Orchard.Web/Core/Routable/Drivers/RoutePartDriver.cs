@@ -41,15 +41,21 @@ namespace Orchard.Core.Routable.Drivers {
         }
 
         protected override DriverResult Display(RoutePart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_RoutableTitle", 
-                () => shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title, Path: part.Path));
+            return Combined(
+                ContentShape("Parts_RoutableTitle",
+                    () => shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title, Path: part.Path)),
+                ContentShape("Parts_RoutableTitle_Summary",
+                    () => shapeHelper.Parts_RoutableTitle_Summary(ContentPart: part, Title: part.Title, Path: part.Path)),
+                ContentShape("Parts_RoutableTitle_SummaryAdmin",
+                    () => shapeHelper.Parts_RoutableTitle_SummaryAdmin(ContentPart: part, Title: part.Title, Path: part.Path))
+                );
         }
 
         protected override DriverResult Editor(RoutePart part, dynamic shapeHelper) {
             var model = new RoutableEditorViewModel {
                 ContentType = part.ContentItem.ContentType,
                 Id = part.ContentItem.Id,
-                Slug = part.GetEffectiveSlug(),
+                Slug = part.Slug,
                 Title = part.Title,
                 ContainerId = GetContainerId(part),
             };
