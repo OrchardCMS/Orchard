@@ -25,12 +25,12 @@ namespace Orchard.Users.Handlers {
                 return;
 
             if ( context.Type == MessageTypes.Moderation ) {
-                context.MailMessage.Subject = "User needs moderation";
+                context.MailMessage.Subject = T("User needs moderation").Text;
                 context.MailMessage.Body = T("The following user account needs to be moderated: {0}", recipient.UserName).Text;
             }
 
             if ( context.Type == MessageTypes.Validation ) {
-                context.MailMessage.Subject = "User account validation";
+                context.MailMessage.Subject = T("User account validation").Text;
                 context.MailMessage.Body = T("Dear {0}, please <a href=\"{1}\">click here</a> to validate you email address.", recipient.UserName, context.Properties["ChallengeUrl"]).Text;
             }
 
