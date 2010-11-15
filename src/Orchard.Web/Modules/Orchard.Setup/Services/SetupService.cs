@@ -86,6 +86,7 @@ namespace Orchard.Setup.Services {
                     "Orchard.Roles",
                     "TinyMce",
                     "PackagingServices",
+                    "Orchard.Pages",
                     "Orchard.Modules",
                     "Orchard.Themes",
                     "Orchard.PublishLater",
@@ -213,7 +214,7 @@ namespace Orchard.Setup.Services {
             //hackInstallationGenerator.GenerateInstallEvents();
 
             var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-            //todo: (heskew) pull these definitions (and initial content creation) out into more appropriate modules
+            //todo: (heskew) pull these definitions (and initial content creation) out into a distribution configuration when we have that capability
             contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
                 .WithPart("CommentsPart")
                 .WithPart("TagsPart")
@@ -222,13 +223,8 @@ namespace Orchard.Setup.Services {
                 .Indexed()
                 );
             contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
-                .WithPart("CommonPart")
-                .WithPart("PublishLaterPart")
-                .WithPart("RoutePart")
-                .WithPart("BodyPart")
                 .WithPart("TagsPart")
                 .WithPart("LocalizationPart")
-                .Creatable()
                 .Draftable()
                 .Indexed()
                 );

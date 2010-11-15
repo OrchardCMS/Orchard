@@ -35,15 +35,13 @@ namespace Orchard.Blogs {
                                                  },
                              new RouteDescriptor {
                                                      Route = new Route(
-                                                         "Admin/Blogs/{blogSlug}/Edit",
+                                                         "Admin/Blogs/{id}/Edit",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "BlogAdmin"},
                                                                                       {"action", "Edit"}
                                                                                   },
-                                                         new RouteValueDictionary {
-                                                                                      {"blogSlug", _blogSlugConstraint}
-                                                                                  },
+                                                         new RouteValueDictionary (),
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
                                                                                   },
@@ -51,15 +49,13 @@ namespace Orchard.Blogs {
                                                  },
                              new RouteDescriptor {
                                                      Route = new Route(
-                                                         "Admin/Blogs/{blogSlug}/Remove",
+                                                         "Admin/Blogs/{id}/Remove",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "BlogAdmin"},
                                                                                       {"action", "Remove"}
                                                                                   },
-                                                         new RouteValueDictionary {
-                                                                                      {"blogSlug", _blogSlugConstraint}
-                                                                                  },
+                                                         new RouteValueDictionary (),
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
                                                                                   },

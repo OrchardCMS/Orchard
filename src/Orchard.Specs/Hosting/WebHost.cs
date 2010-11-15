@@ -69,9 +69,10 @@ namespace Orchard.Specs.Hosting {
             var targetModule = _tempSite.Combine(extensionFolder).Combine(extensionName);
 
             sourceModule.ShallowCopy("*.txt", targetModule);
+            sourceModule.ShallowCopy("*.info", targetModule);
 
             //sourceModule.ShallowCopy("*.csproj", targetModule);
-            //sourceModule.DeepCopy("*.cs", targetModule);
+            //sourceModule.DeepCopy("*.cs", targetModule);)
 
             if (sourceModule.Combine("bin").IsDirectory) {
                 sourceModule.Combine("bin").ShallowCopy("*.dll", targetModule.Combine("bin"));

@@ -213,10 +213,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            var isDraftable = contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable;
-            _contentManager.Create(
-                contentItem,
-                isDraftable ? VersionOptions.Draft : VersionOptions.Published);
+            _contentManager.Create(contentItem, VersionOptions.Draft);
 
             var model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {

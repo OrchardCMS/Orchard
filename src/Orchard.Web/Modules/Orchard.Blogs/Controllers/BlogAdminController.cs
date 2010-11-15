@@ -6,6 +6,7 @@ using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Routable.Services;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -71,18 +72,17 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
-            if (!blog.Has<IPublishingControlAspect>())
-                _contentManager.Publish(blog.ContentItem);
+            _contentManager.Publish(blog.ContentItem);
+            _blogSlugConstraint.AddSlug(blog.As<IRoutableAspect>().GetEffectiveSlug());
 
-            _blogSlugConstraint.AddSlug((string)model.Slug);
-            return Redirect(Url.BlogForAdmin((string)model.Slug));
+            return Redirect(Url.BlogForAdmin(blog));
         }
 
-        public ActionResult Edit(string blogSlug) {
+        public ActionResult Edit(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(id, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -91,20 +91,24 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST(string blogSlug) {
+        public ActionResult EditPOST(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(id, VersionOptions.DraftRequired);
             if (blog == null)
                 return HttpNotFound();
 
             var model = Services.ContentManager.UpdateEditor(blog, this);
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
                 return View(model);
+            }
 
-            _blogSlugConstraint.AddSlug(blog.Slug);
+            _contentManager.Publish(blog);
+            _blogSlugConstraint.AddSlug(blog.As<IRoutableAspect>().GetEffectiveSlug());
             Services.Notifier.Information(T("Blog information updated"));
+
             return Redirect(Url.BlogsForAdmin());
         }
 

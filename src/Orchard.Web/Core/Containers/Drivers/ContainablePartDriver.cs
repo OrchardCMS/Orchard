@@ -6,14 +6,21 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.ViewModels;
+using Orchard.Core.Routable.Models;
+using Orchard.Core.Routable.Services;
 using Orchard.Localization;
+using Orchard.UI.Notify;
 
 namespace Orchard.Core.Containers.Drivers {
     public class ContainablePartDriver : ContentPartDriver<ContainablePart> {
         private readonly IContentManager _contentManager;
+        private readonly IRoutableService _routableService;
+        private readonly IOrchardServices _services;
 
-        public ContainablePartDriver(IContentManager contentManager) {
+        public ContainablePartDriver(IContentManager contentManager, IRoutableService routableService, IOrchardServices services) {
             _contentManager = contentManager;
+            _routableService = routableService;
+            _services = services;
             T = NullLocalizer.Instance;
         }
 
@@ -37,9 +44,8 @@ namespace Orchard.Core.Containers.Drivers {
                     if (updater != null) {
                         var oldContainerId = model.ContainerId;
                         updater.TryUpdateModel(model, "Containable", null, null);
-                        if (oldContainerId != model.ContainerId) {
+                        if (oldContainerId != model.ContainerId)
                             commonPart.Container = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
-                        }
                     }
 
                     var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).List();

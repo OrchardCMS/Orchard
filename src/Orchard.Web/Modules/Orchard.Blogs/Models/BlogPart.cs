@@ -9,11 +9,6 @@ namespace Orchard.Blogs.Models {
             set { this.As<RoutePart>().Title = value; }
         }
 
-        public string Slug {
-            get { return this.As<RoutePart>().Slug; }
-            set { this.As<RoutePart>().Slug = value; }
-        }
-
         public string Description {
             get { return Record.Description; }
             set { Record.Description = value; }

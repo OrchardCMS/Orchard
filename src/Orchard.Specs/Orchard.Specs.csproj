@@ -127,6 +127,11 @@
     <Compile Include="Bindings\CommandLine.cs" />
     <Compile Include="Bindings\ContentRights.cs" />
     <Compile Include="Bindings\OrchardSiteFactory.cs" />
+    <Compile Include="Blogs.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Blogs.feature</DependentUpon>
+    </Compile>
     <Compile Include="ContentRights.feature.cs">
       <DependentUpon>ContentRights.feature</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -153,6 +158,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MultiTenancy.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Pages.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Pages.feature</DependentUpon>
     </Compile>
     <Compile Include="Util\PathExtensions.cs" />
     <Compile Include="WebHosting.feature.cs">
@@ -195,6 +205,10 @@
     <Content Include="Hosting\Orchard.Web\Config\Sites.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Blogs.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Blogs.feature.cs</LastGenOutput>
+    </None>
     <None Include="ContentRights.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ContentRights.feature.cs</LastGenOutput>
@@ -219,6 +233,10 @@
     <None Include="MultiTenancy.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>MultiTenancy.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Pages.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Pages.feature.cs</LastGenOutput>
     </None>
     <None Include="WebHosting.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

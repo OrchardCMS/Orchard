@@ -1,9 +1,12 @@
+using System;
+using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
 using Orchard.UI.Admin;
@@ -39,7 +42,21 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost, ActionName("Create")]
+        [FormValueRequired("submit.Save")]
         public ActionResult CreatePOST() {
+            return CreatePOST(contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    Services.ContentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("Create")]
+        [FormValueRequired("submit.Publish")]
+        public ActionResult CreateAndPublishPOST() {
+            return CreatePOST(contentItem => Services.ContentManager.Publish(contentItem));
+        }
+
+        public ActionResult CreatePOST(Action<ContentItem> conditionallyPublish) {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
@@ -55,11 +72,10 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
-            if (!blogPost.Has<IPublishingControlAspect>())
-                Services.ContentManager.Publish(blogPost.ContentItem);
+            conditionallyPublish(blogPost.ContentItem);
 
             Services.Notifier.Information(T("Your {0} has been created.", blogPost.TypeDefinition.DisplayName));
-            return Redirect(Url.BlogPostEdit((string)model.Blog.Slug, (int)model.ContentItem.Id));
+            return Redirect(Url.BlogPostEdit(blogPost));
         }
 
         //todo: the content shape template has extra bits that the core contents module does not (remove draft functionality)
@@ -82,7 +98,21 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST(string blogSlug, int postId) {
+        [FormValueRequired("submit.Save")]
+        public ActionResult EditPOST(string blogSlug, int postId, string returnUrl) {
+            return EditPOST(blogSlug, postId, returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    Services.ContentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Publish")]
+        public ActionResult EditAndPublishPOST(string blogSlug, int postId, string returnUrl) {
+            return EditPOST(blogSlug, postId, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
+        }
+
+        public ActionResult EditPOST(string blogSlug, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
@@ -102,8 +132,14 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
+            conditionallyPublish(blogPost.ContentItem);
+
             Services.Notifier.Information(T("Your {0} has been saved.", blogPost.TypeDefinition.DisplayName));
-            return Redirect(Url.BlogPostEdit((BlogPostPart)model.ContentItem.Get(typeof(BlogPostPart))));
+
+            if (!String.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+
+            return Redirect(Url.BlogPostEdit(blogPost));
         }
 
         [ValidateAntiForgeryTokenOrchard]
@@ -142,7 +178,7 @@ namespace Orchard.Blogs.Controllers {
         ActionResult RedirectToEdit(IContent item) {
             if (item == null || item.As<BlogPostPart>() == null)
                 return HttpNotFound();
-            return RedirectToAction("Edit", new { BlogSlug = item.As<BlogPostPart>().BlogPart.Slug, PostId = item.ContentItem.Id });
+            return RedirectToAction("Edit", new { BlogSlug = item.As<IRoutableAspect>().Path, PostId = item.ContentItem.Id });
         }
 
         [ValidateAntiForgeryTokenOrchard]
@@ -162,7 +198,7 @@ namespace Orchard.Blogs.Controllers {
             _blogPostService.Delete(post);
             Services.Notifier.Information(T("Blog post was successfully deleted"));
 
-            return Redirect(Url.BlogForAdmin(blogSlug));
+            return Redirect(Url.BlogForAdmin(blog));
         }
 
         [ValidateAntiForgeryTokenOrchard]
@@ -181,7 +217,7 @@ namespace Orchard.Blogs.Controllers {
             _blogPostService.Publish(post);
             Services.Notifier.Information(T("Blog post successfully published."));
 
-            return Redirect(Url.BlogForAdmin(blog.Slug));
+            return Redirect(Url.BlogForAdmin(blog));
         }
 
         [ValidateAntiForgeryTokenOrchard]
@@ -200,7 +236,7 @@ namespace Orchard.Blogs.Controllers {
             _blogPostService.Unpublish(post);
             Services.Notifier.Information(T("Blog post successfully unpublished."));
 
-            return Redirect(Url.BlogForAdmin(blog.Slug));
+            return Redirect(Url.BlogForAdmin(blog));
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
@@ -209,6 +245,19 @@ namespace Orchard.Blogs.Controllers {
 
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
+        }
+    }
+
+    public class FormValueRequiredAttribute : ActionMethodSelectorAttribute {
+        private readonly string _submitButtonName;
+
+        public FormValueRequiredAttribute(string submitButtonName) {
+            _submitButtonName = submitButtonName;
+        }
+
+        public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
+            var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
+            return !string.IsNullOrEmpty(value);
         }
     }
 }

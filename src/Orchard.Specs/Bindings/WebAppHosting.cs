@@ -156,7 +156,7 @@ namespace Orchard.Specs.Bindings {
         [When(@"I fill in")]
         public void WhenIFillIn(Table table) {
             var inputs = _doc.DocumentNode
-                .SelectNodes("//input") ?? Enumerable.Empty<HtmlNode>();
+                .SelectNodes("(//input|//textarea)") ?? Enumerable.Empty<HtmlNode>();
 
             foreach (var row in table.Rows) {
                 var r = row;
@@ -191,11 +191,14 @@ namespace Orchard.Specs.Bindings {
             var form = Form.LocateAround(submit);
             var urlPath = form.Start.GetAttributeValue("action", Details.UrlPath);
             var inputs = form.Children
-                    .SelectMany(elt => elt.DescendantsAndSelf("input"))
+                    .SelectMany(elt => elt.DescendantsAndSelf("input").Concat(elt.Descendants("textarea")))
                     .Where(node => !((node.GetAttributeValue("type", "") == "radio" || node.GetAttributeValue("type", "") == "checkbox") && node.GetAttributeValue("checked", "") != "checked"))
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
                     .Where(g => !string.IsNullOrEmpty(g.Key))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
+
+            if (submit.Attributes.Contains("name"))
+                inputs.Add(submit.GetAttributeValue("name", ""), new[] {submit.GetAttributeValue("value", "yes")});
 
             Details = Host.SendRequest(urlPath, inputs);
             _doc = new HtmlDocument();
@@ -221,7 +224,7 @@ namespace Orchard.Specs.Bindings {
 
         [Then(@"I should see ""(.*)""")]
         public void ThenIShouldSee(string text) {
-            Assert.That(Details.ResponseText, Is.StringContaining(text));
+            Assert.That(Details.ResponseText, Is.StringMatching(text));
         }
 
         [Then(@"I should not see ""(.*)""")]

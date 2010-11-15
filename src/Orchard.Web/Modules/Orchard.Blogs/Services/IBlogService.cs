@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using Orchard.Blogs.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Services {
     public interface IBlogService : IDependency {
         BlogPart Get(string slug);
+        ContentItem Get(int id, VersionOptions versionOptions);
         IEnumerable<BlogPart> Get();
         void Delete(BlogPart blogPart);
     }

@@ -412,6 +412,8 @@
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
     <Content Include="Containers\Views\Parts\ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\ContainerCustom.cshtml" />
+    <Content Include="Routable\Views\Parts\RoutableTitle_Summary.cshtml" />
+    <Content Include="Routable\Views\Parts\RoutableTitle_SummaryAdmin.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

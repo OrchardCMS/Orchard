@@ -5,12 +5,13 @@
 @{
     Script.Require("ShapesBase");
     ContentItem contentItem = Model.ContentItem;
+    BlogPart blog = (BlogPart)contentItem.Get(typeof(BlogPart));
     var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
         <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
-        <h3>@Html.Link((string)Model.Title, Url.BlogForAdmin((string)Model.Slug))</h3>
+        <h3>@Html.Link((string)Model.Title, Url.BlogForAdmin((BlogPart)blog))</h3>
         @if (Model.Header != null) {
         <div class="header">@Display(Model.Header)</div>
         }
@@ -20,11 +21,11 @@
     </div>
     <div class="related">
         @Display(Model.Actions)
-        <a href="@Url.Blog((string)Model.Slug)" title="@T("View")">@T("View")</a>@T(" | ")
-        <a href="@Url.BlogForAdmin((string)Model.Slug)" title="@T("List Posts")">@T("List Posts")</a>@T(" | ")
-        <a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" title="@T("New Post")">@T("New Post")</a>@T(" | ")
-        <a href="@Url.BlogEdit((string)Model.Slug)" title="@T("Edit")">@T("Edit")</a>@T(" | ")
-        <a href="@Url.BlogRemove((string)Model.Slug)" title="@T("Remove")" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
+        <a href="@Url.Blog(blog)" title="@T("View")">@T("View")</a>@T(" | ")
+        <a href="@Url.BlogForAdmin(blog)" title="@T("List Posts")">@T("List Posts")</a>@T(" | ")
+        <a href="@Url.BlogPostCreate(blog)" title="@T("New Post")">@T("New Post")</a>@T(" | ")
+        <a href="@Url.BlogEdit(blog)" title="@T("Edit")">@T("Edit")</a>@T(" | ")
+        <a href="@Url.BlogRemove(blog)" title="@T("Remove")" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
     </div>
     @if (Model.Content != null) {
     <div class="primary">@Display(Model.Content)</div>
