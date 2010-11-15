@@ -3,7 +3,19 @@
     As an author
     I want to create, publish and edit pages
 
-Scenario: The "Page" content type is available to create from the admin menu
+Scenario: In the admin (menu) there is a link to create a Page
 	Given I have installed Orchard
-    When I go to ""
+    When I go to "admin"
     Then I should see "<a href="/Admin/Contents/Create/Page">Page</a>"
+
+Scenario: I can create and publish a new Page
+    Given I have installed Orchard
+    When I go to "admin/contents/create/page"
+        And I fill in
+            | name | value |
+            | Routable.Title | Super Duper |
+            | Body.Text | This is super. |
+        And I hit "Publish Now"
+        And I go to "super-duper"
+    Then I should see "<h1>Super Duper</h1>"
+        And I should see "This is super."

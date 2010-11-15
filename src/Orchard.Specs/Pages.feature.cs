@@ -54,18 +54,53 @@ namespace Orchard.Specs
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("The \"Page\" content type is available to create from the admin menu")]
-        public virtual void ThePageContentTypeIsAvailableToCreateFromTheAdminMenu()
+        [NUnit.Framework.DescriptionAttribute("In the admin (menu) there is a link to create a Page")]
+        public virtual void InTheAdminMenuThereIsALinkToCreateAPage()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The \"Page\" content type is available to create from the admin menu", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("In the admin (menu) there is a link to create a Page", ((string[])(null)));
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line 7
  testRunner.Given("I have installed Orchard");
 #line 8
-    testRunner.When("I go to \"\"");
+    testRunner.When("I go to \"admin\"");
 #line 9
     testRunner.Then("I should see \"<a href=\"/Admin/Contents/Create/Page\">Page</a>\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can create and publish a new Page")]
+        public virtual void ICanCreateAndPublishANewPage()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can create and publish a new Page", ((string[])(null)));
+#line 11
+this.ScenarioSetup(scenarioInfo);
+#line 12
+    testRunner.Given("I have installed Orchard");
+#line 13
+    testRunner.When("I go to \"admin/contents/create/page\"");
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table1.AddRow(new string[] {
+                        "Routable.Title",
+                        "Super Duper"});
+            table1.AddRow(new string[] {
+                        "Body.Text",
+                        "This is super."});
+#line 14
+        testRunner.And("I fill in", ((string)(null)), table1);
+#line 18
+        testRunner.And("I hit \"Publish Now\"");
+#line 19
+        testRunner.And("I go to \"super-duper\"");
+#line 20
+    testRunner.Then("I should see \"<h1>Super Duper</h1>\"");
+#line 21
+        testRunner.And("I should see \"This is super.\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
