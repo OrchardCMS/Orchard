@@ -9,6 +9,7 @@ using log4net.Core;
 using NUnit.Framework;
 using Orchard.Specs.Hosting;
 using TechTalk.SpecFlow;
+using Path = Bleroy.FluentPath.Path;
 
 namespace Orchard.Specs.Bindings {
     [Binding]
@@ -17,9 +18,7 @@ namespace Orchard.Specs.Bindings {
         private RequestDetails _details;
         private HtmlDocument _doc;
         private MessageSink _messages;
-
-        public WebAppHosting() {
-        }
+        private static readonly Path _orchardTemp = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Specs");
 
         public WebHost Host {
             get { return _webHost; }
@@ -28,6 +27,16 @@ namespace Orchard.Specs.Bindings {
         public RequestDetails Details {
             get { return _details; }
             set { _details = value; }
+        }
+
+        [BeforeTestRun]
+        public static void BeforeTestRun() {
+            _orchardTemp.Delete(true).CreateDirectory();
+        }
+
+        [AfterTestRun]
+        public static void AfterTestRun() {
+            _orchardTemp.Delete(true); // <- try to clear any stragglers on the way out
         }
 
         [AfterScenario]
@@ -46,7 +55,7 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have a clean site based on (.*)")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
-            _webHost = new WebHost();
+            _webHost = new WebHost(_orchardTemp);
             Host.Initialize(siteFolder, "/");
             var shuttle = new Shuttle();
             Host.Execute(() => {

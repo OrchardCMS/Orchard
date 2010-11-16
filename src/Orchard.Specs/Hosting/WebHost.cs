@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Reflection;
 using System.Web.Hosting;
 using Orchard.Specs.Util;
@@ -7,15 +6,25 @@ using Path = Bleroy.FluentPath.Path;
 
 namespace Orchard.Specs.Hosting {
     public class WebHost {
+        private readonly Path _orchardTemp;
         private WebHostAgent _webHostAgent;
         private Path _tempSite;
         private Path _orchardWebPath;
 
+        public WebHost(Path orchardTemp) {
+            _orchardTemp = orchardTemp;
+            AppDomain.CurrentDomain.DomainUnload += WebHostCleanup;
+            AppDomain.CurrentDomain.ProcessExit += WebHostCleanup;
+        }
+
+        void WebHostCleanup(object sender, EventArgs e) {
+            _tempSite.Delete(true); // <- try to clean up after the appdomain unloads (still not guaranteed to get everything - probably overkill - might go away)
+        }
 
         public void Initialize(string templateName, string virtualDirectory) {
             var baseDir = Path.Get(AppDomain.CurrentDomain.BaseDirectory);
 
-            _tempSite = Path.Get(System.IO.Path.GetTempFileName()).Delete().CreateDirectory();
+            _tempSite = Path.Get(_orchardTemp).Combine(System.IO.Path.GetRandomFileName()).Delete().CreateDirectory();
 
             // Trying the two known relative paths to the Orchard.Web directory.
             // The second one is for the target "spec" in orchard.proj.
@@ -62,6 +71,10 @@ namespace Orchard.Specs.Hosting {
                 _webHostAgent.Shutdown();
                 _webHostAgent = null;
             }
+            try {
+                _tempSite.Delete(true); // <- progressively clean as much as possible
+            }
+            catch {}
         }
 
         public void CopyExtension(string extensionFolder, string extensionName) {
