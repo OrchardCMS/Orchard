@@ -6,6 +6,7 @@ namespace Orchard.Core.Routable.Models {
         [StringLength(1024)]
         public virtual string Title { get; set; }
 
+        [StringLength(1024)]
         public virtual string Slug { get; set; }
 
         [StringLength(2048)]
