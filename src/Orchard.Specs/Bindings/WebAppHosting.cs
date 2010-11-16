@@ -31,7 +31,9 @@ namespace Orchard.Specs.Bindings {
 
         [BeforeTestRun]
         public static void BeforeTestRun() {
-            _orchardTemp.Delete(true).CreateDirectory();
+            if ( _orchardTemp.Exists ) {
+                _orchardTemp.Delete(true).CreateDirectory();
+            }
         }
 
         [AfterTestRun]

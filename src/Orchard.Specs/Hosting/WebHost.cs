@@ -24,7 +24,12 @@ namespace Orchard.Specs.Hosting {
         public void Initialize(string templateName, string virtualDirectory) {
             var baseDir = Path.Get(AppDomain.CurrentDomain.BaseDirectory);
 
-            _tempSite = Path.Get(_orchardTemp).Combine(System.IO.Path.GetRandomFileName()).Delete().CreateDirectory();
+            _tempSite = Path.Get(_orchardTemp).Combine(System.IO.Path.GetRandomFileName());
+            if(_tempSite.Exists) {
+                _tempSite.Delete();
+            }
+
+            _tempSite.CreateDirectory();
 
             // Trying the two known relative paths to the Orchard.Web directory.
             // The second one is for the target "spec" in orchard.proj.
