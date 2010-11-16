@@ -92,6 +92,7 @@ namespace Orchard.FileSystems.AppData {
             return Combine(AppDataPath, path);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public void CreateFile(string path, string content) {
             using (var stream = CreateFile(path)) {
                 using (var tw = new StreamWriter(stream)) {

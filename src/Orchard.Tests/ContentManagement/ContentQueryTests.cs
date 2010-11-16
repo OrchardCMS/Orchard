@@ -248,6 +248,15 @@ namespace Orchard.Tests.ContentManagement {
 
         }
 
+        [Test]
+        public void CountReturnsNumber() {
+            AddSampleData();
+
+            var count = _manager.Query()
+                .Count();
+
+            Assert.That(count, Is.EqualTo(4));
+        }
 
         [Test]
         public void QueryShouldJoinVersionedRecords() {

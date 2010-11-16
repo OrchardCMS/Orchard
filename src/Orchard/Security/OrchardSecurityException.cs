@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.Localization;
 
 namespace Orchard.Security {
+    [Serializable]
     public class OrchardSecurityException : OrchardCoreException {
         public OrchardSecurityException(LocalizedString message) : base(message) { }
         public OrchardSecurityException(LocalizedString message, Exception innerException) : base(message, innerException) { }

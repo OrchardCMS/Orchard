@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using Orchard.Localization;
 
 namespace Orchard.Commands {
+    [Serializable]
     public class OrchardCommandHostRetryException : OrchardCoreException {
         public OrchardCommandHostRetryException(LocalizedString message)
             : base(message) {

@@ -34,32 +34,34 @@ namespace Orchard.Email.Services {
                 return;
             }
 
-            var smtpClient = new SmtpClient { UseDefaultCredentials = !smtpSettings.RequireCredentials };
-            if ( !smtpClient.UseDefaultCredentials && !String.IsNullOrWhiteSpace(smtpSettings.UserName) ) {
-                smtpClient.Credentials = new NetworkCredential(smtpSettings.UserName, smtpSettings.Password);
-            }
+            using (var smtpClient = new SmtpClient()) {
+                smtpClient.UseDefaultCredentials = !smtpSettings.RequireCredentials;
+                if (!smtpClient.UseDefaultCredentials && !String.IsNullOrWhiteSpace(smtpSettings.UserName)) {
+                    smtpClient.Credentials = new NetworkCredential(smtpSettings.UserName, smtpSettings.Password);
+                }
 
-            if(context.MailMessage.To.Count == 0) {
-                Logger.Error("Recipient is missing an email address");
-                return;
-            }
+                if (context.MailMessage.To.Count == 0) {
+                    Logger.Error("Recipient is missing an email address");
+                    return;
+                }
 
-            if ( smtpSettings.Host != null )
-                smtpClient.Host = smtpSettings.Host;
+                if (smtpSettings.Host != null)
+                    smtpClient.Host = smtpSettings.Host;
 
-            smtpClient.Port = smtpSettings.Port;
-            smtpClient.EnableSsl = smtpSettings.EnableSsl;
-            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtpClient.Port = smtpSettings.Port;
+                smtpClient.EnableSsl = smtpSettings.EnableSsl;
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-            context.MailMessage.From = new MailAddress(smtpSettings.Address);
-            context.MailMessage.IsBodyHtml = context.MailMessage.Body != null && context.MailMessage.Body.Contains("<") && context.MailMessage.Body.Contains(">");
+                context.MailMessage.From = new MailAddress(smtpSettings.Address);
+                context.MailMessage.IsBodyHtml = context.MailMessage.Body != null && context.MailMessage.Body.Contains("<") && context.MailMessage.Body.Contains(">");
 
-            try {
-                smtpClient.Send(context.MailMessage);
-                Logger.Debug("Message sent to {0}: {1}", context.MailMessage.To[0].Address, context.Type);
-            }
-            catch(Exception e) {
-                Logger.Error(e, "An unexpected error while sending a message to {0}: {1}", context.MailMessage.To[0].Address, context.Type);
+                try {
+                    smtpClient.Send(context.MailMessage);
+                    Logger.Debug("Message sent to {0}: {1}", context.MailMessage.To[0].Address, context.Type);
+                }
+                catch (Exception e) {
+                    Logger.Error(e, "An unexpected error while sending a message to {0}: {1}", context.MailMessage.To[0].Address, context.Type);
+                }
             }
         }
 

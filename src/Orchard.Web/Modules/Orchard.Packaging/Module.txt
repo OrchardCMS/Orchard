@@ -8,12 +8,12 @@ Description: The packaging module enables packaging modules using the OPC format
 Features:
     PackagingServices:
         Description: Core services for packaging using the OPC format.
-        Category: Core
+        Category: Packaging
     Orchard.Packaging:
         Description: Commands for creating/installing local modules.
         Dependencies: PackagingServices
         Category: Packaging
     Gallery:
         Description: Module gallery management.
-        Dependencies: PackagingServices
+        Dependencies: PackagingServices, Orchard.Packaging
         Category: Packaging

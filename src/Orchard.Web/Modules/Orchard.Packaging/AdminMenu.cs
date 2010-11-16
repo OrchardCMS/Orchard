@@ -10,12 +10,12 @@ namespace Orchard.Packaging {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Gallery"), "5", menu => menu
-                        .Add(T("Browse Modules"), "1.0", item => item
-                             .Action("ModulesIndex", "Gallery", new { area = "Orchard.Packaging" }))
-                        .Add(T("Browse Themes"), "2.0", item => item
-                             .Action("ThemesIndex", "Gallery", new { area = "Orchard.Packaging" }))
-                        .Add(T("Gallery Feeds"), "3.0", item => item
+            builder.Add(T("Gallery"), "30", menu => menu
+                        .Add(T("Modules"), "1.0", item => item
+                             .Action("Modules", "Gallery", new { area = "Orchard.Packaging" }))
+                        .Add(T("Themes"), "2.0", item => item
+                             .Action("Themes", "Gallery", new { area = "Orchard.Packaging" }))
+                        .Add(T("Feeds"), "3.0", item => item
                              .Action("Sources", "Gallery", new { area = "Orchard.Packaging" })));
         }
     }

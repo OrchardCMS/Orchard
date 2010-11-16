@@ -321,6 +321,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "Nothing comes from user input.")]
         private void RunPendingStatements() {
 
             var connection = _session.Connection;

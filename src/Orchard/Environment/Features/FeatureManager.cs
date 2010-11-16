@@ -34,7 +34,8 @@ namespace Orchard.Environment.Features {
         }
 
         public IEnumerable<FeatureDescriptor> GetEnabledFeatures() {
-            throw new NotImplementedException();
+            var currentShellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+            return _extensionManager.EnabledFeatures(currentShellDescriptor);
         }
 
         public void EnableFeatures(IEnumerable<string> featureNames) {

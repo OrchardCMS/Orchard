@@ -8,6 +8,7 @@ using Orchard.Core.Navigation.ViewModels;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
+using Orchard.UI;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 
@@ -41,7 +42,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 model = new NavigationManagementViewModel();
 
             if (model.MenuItemEntries == null || model.MenuItemEntries.Count() < 1)
-                model.MenuItemEntries = _menuService.Get().Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.MenuItem.Position, new PositionComparer()).ToList();
+                model.MenuItemEntries = _menuService.Get().Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.MenuItem.Position, new FlatPositionComparer()).ToList();
 
             // need action name as this action is referenced from another action
             return View("Index", model);

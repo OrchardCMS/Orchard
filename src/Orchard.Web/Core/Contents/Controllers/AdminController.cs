@@ -8,6 +8,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
@@ -15,6 +16,7 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Contents.Controllers {
@@ -44,12 +46,9 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult List(ListContentsViewModel model) {
+        public ActionResult List(ListContentsViewModel model, Pager pager) {
             if (model.ContainerId != null && _contentManager.GetLatest((int)model.ContainerId) == null)
                 return HttpNotFound();
-
-            const int pageSize = 20;
-            var skip = (Math.Max(model.Page ?? 0, 1) - 1) * pageSize;
 
             var query = _contentManager.Query(VersionOptions.Latest, GetCreatableTypes().Select(ctd => ctd.Name).ToArray());
 
@@ -67,56 +66,34 @@ namespace Orchard.Core.Contents.Controllers {
             if (model.ContainerId != null)
                 query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
 
-            // Ordering
-            //-- want something like 
-            //switch (model.Options.OrderBy) {
-            //    case ContentsOrder.Modified:
-            //        query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
-            //        break;
-            //    case ContentsOrder.Published:
-            //        query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
-            //        break;
-            //    case ContentsOrder.Created:
-            //        query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
-            //        break;
-            //}
-
-            //-- but resorting to
-
-            var contentItems = query.List();
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
-                    contentItems = contentItems.OrderByDescending(ci => ci.VersionRecord.Id);
+                    //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.ContentItemRecord.Versions.Single(civr => civr.Latest).Id);
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
                     break;
-                //case ContentsOrder.Published:
-                // would be lying w/out a published date instead of a bool but that only comes with the common aspect
-                //    contentItems = contentItems.OrderByDescending(ci => ci.VersionRecord.Published/*Date*/);
-                //    break;
+                case ContentsOrder.Published:
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
+                    break;
                 case ContentsOrder.Created:
-                    contentItems = contentItems.OrderByDescending(ci => ci.Id);
+                    //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.Id);
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
                     break;
             }
-
-            //-- for the moment
-            //-- because I'd rather do this
-
-            //var contentItems = query.Slice(skip, pageSize);
-
-            //-- instead of this (having the ordering and skip/take after the query)
-
-            contentItems = contentItems.Skip(skip).Take(pageSize).ToList();
 
             model.Options.SelectedFilter = model.TypeName;
             model.Options.FilterOptions = GetCreatableTypes()
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Key);
 
+            var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
+            var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
             var list = Shape.List();
-            list.AddRange(contentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
+                .Pager(pagerShape)
                 .Options(model.Options)
                 .TypeDisplayName(model.TypeDisplayName ?? "");
 
@@ -215,24 +192,39 @@ namespace Orchard.Core.Contents.Controllers {
             return View(model);
         }
 
+        [HttpPost, ActionName("Create")]
+        [FormValueRequired("submit.Save")]
+        public ActionResult CreatePOST(string id) {
+            return CreatePOST(id, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    _contentManager.Publish(contentItem);
+            });
+        }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePOST(string id) {
+        [FormValueRequired("submit.Publish")]
+        public ActionResult CreateAndPublishPOST(string id) {
+            return CreatePOST(id, contentItem => _contentManager.Publish(contentItem));
+        }
+
+        private ActionResult CreatePOST(string id, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.New(id);
 
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            _contentManager.Create(contentItem, VersionOptions.Draft);
-            var model = _contentManager.UpdateEditor(contentItem, this);
+            var isDraftable = contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable;
+            _contentManager.Create(
+                contentItem,
+                isDraftable ? VersionOptions.Draft : VersionOptions.Published);
 
+            var model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 return View(model);
             }
 
-            if (!contentItem.Has<IPublishingControlAspect>())
-                _contentManager.Publish(contentItem);
+            conditionallyPublish(contentItem);
 
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been created.")
@@ -255,7 +247,21 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int id, string returnUrl) {
+            return EditPOST(id, returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    _contentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Publish")]
+        public ActionResult EditAndPublishPOST(int id, string returnUrl) {
+            return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
+        }
+
+        private ActionResult EditPOST(int id, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
 
             if (contentItem == null)
@@ -270,9 +276,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return View("Edit", model);
             }
 
-            //need to go about this differently - to know when to publish (IPlublishableAspect ?)
-            if (!contentItem.Has<IPublishingControlAspect>())
-                _contentManager.Publish(contentItem);
+            conditionallyPublish(contentItem);
 
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been saved.")

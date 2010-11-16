@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
 using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Environment.Extensions.Compilers {

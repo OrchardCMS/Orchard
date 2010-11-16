@@ -1,12 +1,10 @@
-﻿@model Orchard.Packaging.ViewModels.PackagingModulesViewModel
-@{
-	Style.Require("PackagingAdmin");
-	Style.Require("ThemesAdmin");
-}
+﻿@model Orchard.Packaging.ViewModels.PackagingExtensionsViewModel
+@using System.Linq;
 
-<h1>@Html.TitleForPage(T("Browse Gallery - Themes").ToString())</h1>
+@{ Style.Require("PackagingAdmin"); }
 
-<div class="manage">@Html.ActionLink(T("Refresh").ToString(), "Update", new { cameFrom = "Themes" }, new { @class = "button primaryAction" })</div>
+<h1>@Html.TitleForPage(T("Browse Gallery - Themes").Text)</h1>
+
 @using ( Html.BeginFormAntiForgeryPost(Url.Action("Themes", "Gallery")) ) {
     <fieldset class="bulk-actions">
         <label for="filterResults" class="bulk-filter">@T("Feed:")</label>
@@ -18,32 +16,29 @@
         </select>
         <button type="submit">@T("Apply")</button>
     </fieldset>
-}  
+}
+    
 
-@if (Model.Modules.Count() > 0) {
-<ul class="templates">
-	@foreach (var item in Model.Modules) {
-		<li>
-	@{
-		var author = item.SyndicationItem.Authors.Any() ? String.Join(", ", item.SyndicationItem.Authors.Select(a => a.Name)) : T("Unknown").Text;
-		var title = item.SyndicationItem.Title == null ? T("(No title)").Text : item.SyndicationItem.Title.Text;
-		var thumbnail = item.SyndicationItem.Links.Where(l=>l.RelationshipType=="thumbnail").Select(l=>l.Uri.ToString()).FirstOrDefault();
-	}
-			<div>
-				<h3>@title</h3>
-				@if(!String.IsNullOrEmpty(thumbnail)) {
-					@Html.Image(thumbnail, Html.Encode(title), null)
-				}
-				<br/>
-                @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"SyndicationId",item.SyndicationItem.Id},{"cameFrom", "Themes" }}, new Dictionary<string, object> { { "class", "button" } })
-                <a class="button" href="@item.PackageStreamUri">@T("Download")</a>
-				<h5>@T("By") @author</h5>
-				<p>
-				    @T("Version: {0}", item.SyndicationItem.ElementExtensions.ReadElementExtensions<string>("Version", "http://orchardproject.net").FirstOrDefault() ?? T("N/A").Text)<br />
-					@(item.SyndicationItem.Summary == null ? T("(No description").Text : item.SyndicationItem.Summary.Text)<br />
-				</p>
-			</div>   
-		</li>
-	}
-</ul>
+@if (Model.Extensions.Count() > 0) {
+    <ul class="contentItems">
+    @foreach (var item in Model.Extensions) {
+        <li> 
+            <div class="moduleName">
+                <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
+            </div>
+
+            <div class="related">
+                @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"SyndicationId", item.PackageId},{"cameFrom", "Modules"}})@T(" | ")
+                <a href="@item.PackageStreamUri">@T("Download")</a>
+             </div>
+
+             <div class="properties">
+                <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
+                <ul class="pageStatus">
+                    <li>@T("Last Updated: {0}", DateTime.Now.ToLocalTime())</li>
+                    <li>&nbsp;&#124;&nbsp;@T("Author: {0}", item.Authors)</li>
+                </ul>
+           </div>   
+        </li>}
+    </ul>
 }

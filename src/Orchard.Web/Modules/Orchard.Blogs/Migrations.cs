@@ -39,7 +39,6 @@ namespace Orchard.Blogs {
                     .WithPart("BlogPart")
                     .WithPart("CommonPart")
                     .WithPart("RoutePart")
-                    .WithPart("BlogPagerPart")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("BlogPost",

@@ -55,46 +55,52 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.New<IUser>("User");
-            var model = new UserCreateViewModel {
-                User = Services.ContentManager.BuildEditor(user)
-            };
+            var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Create", Model: new UserCreateViewModel(), Prefix: null);
+            editor.Metadata.Position = "2";
+            var model = Services.ContentManager.BuildEditor(user);
+            model.Content.Add(editor);
+
             return View(model);
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePOST(UserCreateViewModel model) {
+        public ActionResult CreatePOST(UserCreateViewModel createModel) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.New<IUser>("User");
-            model.User = Services.ContentManager.UpdateEditor(user, this);
-            if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
-                return View(model);
+            if (!string.IsNullOrEmpty(createModel.UserName)) {
+                string userExistsMessage = _userService.VerifyUserUnicity(createModel.UserName, createModel.Email);
+                if (userExistsMessage != null) {
+                    AddModelError("NotUniqueUserName", T(userExistsMessage));
+                }
             }
 
-            string userExistsMessage = _userService.VerifyUserUnicity(model.UserName, model.Email);
-            if (userExistsMessage != null) {
-                AddModelError("NotUniqueUserName", T(userExistsMessage));
-            }
-
-            if (model.Password != model.ConfirmPassword) {
+            if (createModel.Password != createModel.ConfirmPassword) {
                 AddModelError("ConfirmPassword", T("Password confirmation must match"));
             }
 
-            user = _membershipService.CreateUser(new CreateUserParams(
-                                                         model.UserName,
-                                                         model.Password,
-                                                         model.Email,
-                                                         null, null, true));
+            var user = Services.ContentManager.New<IUser>("User");
+            if (ModelState.IsValid) {
+                user = _membershipService.CreateUser(new CreateUserParams(
+                                                  createModel.UserName,
+                                                  createModel.Password,
+                                                  createModel.Email,
+                                                  null, null, true));
+            }
 
-            model.User = Services.ContentManager.UpdateEditor(user, this);
+            var model = Services.ContentManager.UpdateEditor(user, this);
 
-            if (ModelState.IsValid == false) {
+            if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
+
+                var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Create", Model: createModel, Prefix: null);
+                editor.Metadata.Position = "2";
+                model.Content.Add(editor);
+
                 return View(model);
             }
 
+            Services.Notifier.Information(T("User created"));
             return RedirectToAction("edit", new { user.Id });
         }
 
@@ -103,10 +109,12 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<UserPart>(id);
+            var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Edit", Model: new UserEditViewModel {User = user}, Prefix: null);
+            editor.Metadata.Position = "2";
+            var model = Services.ContentManager.BuildEditor(user);
+            model.Content.Add(editor);
 
-            return View(new UserEditViewModel {
-                User = Services.ContentManager.BuildEditor(user) 
-            });
+            return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -115,26 +123,27 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get(id);
-            var model = new UserEditViewModel {
-                User = Services.ContentManager.UpdateEditor(user, this)
-            };
+            var model = Services.ContentManager.UpdateEditor(user, this);
 
-            TryUpdateModel(model);
+            var editModel = new UserEditViewModel {User = user};
+            TryUpdateModel(editModel);
 
-            if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
-                return View(model);
-            }
+            if (ModelState.IsValid) {
+                ((IContent)model.ContentItem).As<UserPart>().NormalizedUserName = editModel.UserName.ToLower();
 
-            model.User.As<UserPart>().NormalizedUserName = model.UserName.ToLower();
-
-            string userExistsMessage = _userService.VerifyUserUnicity(id, model.UserName, model.Email);
-            if (userExistsMessage != null) {
-                AddModelError("NotUniqueUserName", T(userExistsMessage));
+                string userExistsMessage = _userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email);
+                if (userExistsMessage != null) {
+                    AddModelError("NotUniqueUserName", T(userExistsMessage));
+                }
             }
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
+
+                var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Edit", Model: editModel, Prefix: null);
+                editor.Metadata.Position = "2";
+                model.Content.Add(editor);
+
                 return View(model);
             }
 

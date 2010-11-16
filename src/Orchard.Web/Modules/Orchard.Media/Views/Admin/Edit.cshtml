@@ -1,4 +1,5 @@
 ﻿@model Orchard.Media.ViewModels.MediaFolderEditViewModel
+@using Orchard.Media.Extensions;
 @using Orchard.Media.Helpers;
 @using Orchard.Media.Models;
 @{ Style.Require("MediaAdmin"); }
@@ -24,7 +25,7 @@
         <select id="Select1" name="publishActions">
             <option value="1">@T("Remove")</option>
         </select>
-        <input class="button" type="submit" value="@T("Apply")" />
+        <button type="submit">@T("Apply")</button>
     </fieldset>
 
     <div class="manage">
@@ -70,7 +71,7 @@
                     <td>@mediaFile.User</td>
                     <td>@mediaFile.LastUpdated</td>
                     <td>@mediaFile.Type</td>
-                    <td>@mediaFile.Size</td>
+                    <td>@mediaFile.Size.ToFriendlySizeString()</td>
                 </tr>
             }
 
@@ -87,7 +88,7 @@
                     <td>@mediaFolder.User</td>
                     <td>@mediaFolder.LastUpdated</td>
                     <td>@T("Folder")</td>
-                    <td>@mediaFolder.Size</td>
+                    <td>@mediaFolder.Size.ToFriendlySizeString()</td>
             </tr>
             }
         </table>

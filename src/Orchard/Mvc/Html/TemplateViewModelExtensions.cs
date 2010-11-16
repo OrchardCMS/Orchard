@@ -3,7 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.ContentManagement.ViewModels;
-using Orchard.UI.Navigation;
+using Orchard.UI;
 
 namespace Orchard.Mvc.Html {
     public static class TemplateViewModelExtensions {
@@ -11,7 +11,7 @@ namespace Orchard.Mvc.Html {
             if (templates == null)
                 return;
 
-            foreach (var template in templates.OrderByDescending(t => t.Position, new PositionComparer())) {
+            foreach (var template in templates.OrderByDescending(t => t.Position, new FlatPositionComparer())) {
                 html.RenderTemplates(template);
             }
         }

@@ -81,7 +81,6 @@ namespace Orchard.Setup.Services {
                     "Localization",
                     "Routable",
                     "Settings",
-                    "XmlRpc",
                     "Messaging",
                     "Orchard.Users",
                     "Orchard.Roles",
@@ -219,6 +218,7 @@ namespace Orchard.Setup.Services {
                 .WithPart("CommentsPart")
                 .WithPart("TagsPart")
                 .WithPart("LocalizationPart")
+                .Draftable()
                 .Indexed()
                 );
             contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
@@ -229,6 +229,7 @@ namespace Orchard.Setup.Services {
                 .WithPart("TagsPart")
                 .WithPart("LocalizationPart")
                 .Creatable()
+                .Draftable()
                 .Indexed()
                 );
             contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg

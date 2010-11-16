@@ -4,14 +4,15 @@
 @using Orchard.Modules.ViewModels;
 @using Orchard.Utility.Extensions;
 @using Orchard.Modules.Models;
-
 @{
     Style.Require("ModulesAdmin");
+    Style.Require("Switchable");
+    Script.Require("Switchable");
 }
 
 <h1>@Html.TitleForPage(T("Manage Features").ToString())</h1>
 @if (Model.Features.Count() > 0) {
-<ul class="features summary-view">@{
+<ul class="features summary-view switchable">@{
     var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category);
     foreach (var featureGroup in featureGroups) {
         var categoryName = LocalizedString.TextOrDefault(featureGroup.First().Descriptor.Category, T("Uncategorized"));

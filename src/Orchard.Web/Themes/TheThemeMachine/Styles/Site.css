@@ -343,11 +343,6 @@ nav ul
 .blog-post-title {}
 .meta {}
 
-.blog-pagination { list-style: none; padding: 0; margin: 12px 0 0 0; }
-.blog-pagination li { float: left; padding: 0 12px 0 0; margin: 0; }
-.blog-pagination a { font-size: 1.077em; display: block; background-color: #dbdbdb; padding: 6px 6px; color: #434343;}
-.blog-pagination a:hover { background-color: #434343; color: #fff; }
-
 /* Comments */
 #comments { margin: 24px 0 0 0; padding: 0; }
 .comment-form { margin: 24px 0 0 0; padding: 0; }
@@ -488,6 +483,16 @@ nav ul
 .content-control .manage-actions { position:absolute; top: 0px; right: 0px; }
 .content-control .manage-actions a { display: block; background-color: #dbdbdb; color: #434343; padding: 3px 6px;  }
 .content-control .manage-actions a:hover { background-color: #434343; color: #fff; text-decoration: none; }
+
+
+
+/* Pager
+***************************************************************/
+
+.pager { list-style: none; padding: 0; margin: 12px 0 0 0; }
+.pager li { float: left; padding: 0 12px 0 0; margin: 0; }
+.pager a { font-size: 1.077em; display: block; background-color: #dbdbdb; padding: 6px 6px; color: #434343;}
+.pager a:hover { background-color: #434343; color: #fff; }
 
 
 

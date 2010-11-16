@@ -125,6 +125,10 @@ namespace Orchard.Users.Controllers {
                         return RedirectToAction("ChallengeEmailSent");
                     }
 
+                    if (user.As<UserPart>().RegistrationStatus == UserStatus.Pending) {
+                        return RedirectToAction("RegistrationPending");
+                    }
+
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
                     return Redirect("~/");
                 }
@@ -172,6 +176,10 @@ namespace Orchard.Users.Controllers {
                 ModelState.AddModelError("_FORM", T("The current password is incorrect or the new password is invalid."));
                 return ChangePassword();
             }
+        }
+
+        public ActionResult RegistrationPending() {
+            return View();
         }
 
         public ActionResult ChangePasswordSuccess() {

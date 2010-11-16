@@ -41,7 +41,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -160,6 +160,7 @@
   <ItemGroup>
     <Compile Include="Caching\CacheScopeTests.cs" />
     <Compile Include="Caching\CacheTests.cs" />
+    <Compile Include="Caching\ClockCachingTests.cs" />
     <Compile Include="Commands\CommandHandlerDescriptorBuilderTests.cs" />
     <Compile Include="Commands\CommandHandlerTests.cs" />
     <Compile Include="Commands\CommandManagerTests.cs" />
@@ -245,6 +246,7 @@
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
     <Compile Include="Records\BigRecord.cs" />
     <Compile Include="Scripting\ScriptingTests.cs" />
+    <Compile Include="Stubs\InMemoryWebSiteFolder.cs" />
     <Compile Include="Stubs\StubHttpContextAccessor.cs" />
     <Compile Include="Stubs\StubWorkContextAccessor.cs" />
     <Compile Include="Stubs\StubExtensionManager.cs" />

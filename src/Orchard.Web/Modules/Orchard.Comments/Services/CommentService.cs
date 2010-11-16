@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement.Aspects;
@@ -29,32 +28,28 @@ namespace Orchard.Comments.Services {
 
         public ILogger Logger { get; set; }
 
-        public IEnumerable<CommentPart> GetComments() {
+        public IContentQuery<CommentPart, CommentPartRecord> GetComments() {
             return _orchardServices.ContentManager
-                .Query<CommentPart, CommentPartRecord>()
-                .List();
+                       .Query<CommentPart, CommentPartRecord>();
         }
 
-        public IEnumerable<CommentPart> GetComments(CommentStatus status) {
+        public IContentQuery<CommentPart, CommentPartRecord> GetComments(CommentStatus status) {
             return _orchardServices.ContentManager
-                .Query<CommentPart, CommentPartRecord>()
-                .Where(c => c.Status == status)
-                .List();
+                       .Query<CommentPart, CommentPartRecord>()
+                       .Where(c => c.Status == status);
         }
 
-        public IEnumerable<CommentPart> GetCommentsForCommentedContent(int id) {
+        public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id) {
             return _orchardServices.ContentManager
-                .Query<CommentPart, CommentPartRecord>()
-                .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id)
-                .List();
+                       .Query<CommentPart, CommentPartRecord>()
+                       .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id);
         }
 
-        public IEnumerable<CommentPart> GetCommentsForCommentedContent(int id, CommentStatus status) {
+        public IContentQuery<CommentPart, CommentPartRecord> GetCommentsForCommentedContent(int id, CommentStatus status) {
             return _orchardServices.ContentManager
-                .Query<CommentPart, CommentPartRecord>()
-                .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id)
-                .Where(ctx => ctx.Status == status)
-                .List();
+                       .Query<CommentPart, CommentPartRecord>()
+                       .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id)
+                       .Where(ctx => ctx.Status == status);
         }
 
         public CommentPart GetComment(int id) {
@@ -66,6 +61,10 @@ namespace Orchard.Comments.Services {
             if (content == null)
                 return null;
             return _orchardServices.ContentManager.GetItemMetadata(content);
+        }
+
+        public ContentItem GetCommentedContent(int id) {
+            return _orchardServices.ContentManager.Get(id);
         }
 
         public CommentPart CreateComment(CreateCommentContext context, bool moderateComments) {
@@ -107,7 +106,7 @@ namespace Orchard.Comments.Services {
             commentPart.Record.Status = CommentStatus.Approved;
         }
 
-        public void PendComment(int commentId) {
+        public void UnapproveComment(int commentId) {
             CommentPart commentPart = GetComment(commentId);
             commentPart.Record.Status = CommentStatus.Pending;
         }

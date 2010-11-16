@@ -1,4 +1,5 @@
 ﻿using System;
+using Orchard.Caching;
 using Orchard.Services;
 
 namespace Orchard.Tests.Stubs {
@@ -15,6 +16,15 @@ namespace Orchard.Tests.Stubs {
 
         public DateTime FutureMoment(TimeSpan span) {
             return UtcNow.Add(span);
+        }
+
+
+        public IVolatileToken When(TimeSpan duration) {
+            return new Clock.AbsoluteExpirationToken(this, duration);
+        }
+
+        public IVolatileToken WhenUtc(DateTime absoluteUtc) {
+            return new Clock.AbsoluteExpirationToken(this, absoluteUtc);
         }
     }
 }

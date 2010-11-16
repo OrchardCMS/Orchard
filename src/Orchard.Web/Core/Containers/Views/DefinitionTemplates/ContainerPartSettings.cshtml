@@ -1,0 +1,9 @@
+﻿@model Orchard.Core.Containers.Settings.ContainerPartSettings
+<fieldset>
+    <label for="@Html.FieldIdFor(m => m.PageSizeDefault)">@T("Default Page Size")</label>
+    @Html.EditorFor(m => m.PageSizeDefault)
+</fieldset>
+<fieldset>
+    @Html.EditorFor(m => m.PaginatedDefault)
+    <label for="@Html.FieldIdFor( m => m.PaginatedDefault)" class="forcheckbox">@T("Show paging controls")</label>
+</fieldset>

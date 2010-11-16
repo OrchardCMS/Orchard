@@ -1,23 +1,26 @@
 ﻿@model Orchard.Search.ViewModels.SearchViewModel
-@{ Style.Require("Search"); }
+@{
+    Style.Require("Search");
 
+    IEnumerable<object> searchResults = Model.ContentItems;
+    Model.ContentItems.Classes.Add("content-items");
+    Model.ContentItems.Classes.Add("search-results");
+}
 <h1>@Html.TitleForPage(T("Search").Text)</h1>
-
-@using(Html.BeginForm("index", "search", new { area = "Orchard.Search" }, FormMethod.Get, new { @class = "search" })) { 
+@using(Html.BeginForm("index", "search", new { area = "Orchard.Search" }, FormMethod.Get, new { @class = "search group" })) { 
     <fieldset>
         @Html.TextBox("q", Model.Query)
         <button type="submit">@T("Search")</button>
     </fieldset>
 } 
-
-@if (!string.IsNullOrWhiteSpace(Model.Query)) {
-    if (Model.PageOfResults.Count() == 0) { 
-        <p class="search-summary">@T.Plural("the <em>one</em> result", "<em>zero</em> results", Model.PageOfResults.Count())</p>
+@if (HasText(Model.Query)) {
+    if (searchResults.Count() == 0) { 
+        <p class="search-summary">@T.Plural("the <em>one</em> result", "<em>zero</em> results", searchResults.Count())</p>
     } else { 
-        <p class="search-summary">@T.Plural("the <em>one</em> result", "<em>{1} - {2}</em> of <em>{0}</em> results", Model.PageOfResults.TotalItemCount, Model.PageOfResults.StartPosition, Model.PageOfResults.EndPosition)</p>
+        <p class="search-summary">@T.Plural("the <em>one</em> result", "<em>{1} - {2}</em> of <em>{0}</em> results", Model.TotalItemCount, Model.StartPosition, Model.EndPosition)</p>
     }
 }
-@if (Model.PageOfResults != null && Model.PageOfResults.Count() > 0) { 
-    @Html.UnorderedList(Model.PageOfResults.Where(hit => hit.Content != null), (r, i) => Display(r.Content), "search-results contentItems")
-    @Html.Pager(Model.PageOfResults, Model.PageOfResults.PageNumber, Model.DefaultPageSize, new {q = Model.Query}) 
+@if (searchResults != null && searchResults.Count() > 0) {
+    @Display(searchResults)
+    @Display(Model.Pager)
 } 

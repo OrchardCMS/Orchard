@@ -91,7 +91,7 @@ namespace Orchard.UI.Navigation {
 
         private static IEnumerable<MenuItem> Merge(IEnumerable<IEnumerable<MenuItem>> sources) {
             var comparer = new MenuItemComparer();
-            var orderer = new PositionComparer();
+            var orderer = new FlatPositionComparer();
 
             return sources.SelectMany(x => x).ToArray()
                 .GroupBy(key => key, (key, items) => Join(items), comparer)
@@ -115,7 +115,7 @@ namespace Orchard.UI.Navigation {
         }
 
         private static string SelectBestPositionValue(IEnumerable<string> positions) {
-            var comparer = new PositionComparer();
+            var comparer = new FlatPositionComparer();
             return positions.Aggregate(string.Empty,
                                        (agg, pos) =>
                                        string.IsNullOrEmpty(agg)

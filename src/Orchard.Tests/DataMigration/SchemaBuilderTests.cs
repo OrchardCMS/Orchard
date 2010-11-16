@@ -26,6 +26,7 @@ namespace Orchard.Tests.DataMigration {
         private string _tempFolder;
         private SchemaBuilder _schemaBuilder;
         private DefaultDataMigrationInterpreter _interpreter;
+        private ISession _session;
 
         [SetUp]
         public void Setup() {
@@ -38,7 +39,7 @@ namespace Orchard.Tests.DataMigration {
 
             var builder = new ContainerBuilder();
 
-            var session = _sessionFactory.OpenSession();
+            _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(appDataFolder).As<IAppDataFolder>();
             builder.RegisterType<SqlCeDataServicesProvider>().As<IDataServicesProvider>();
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>();
@@ -46,7 +47,7 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>();
             builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>();
             builder.RegisterType<SessionFactoryHolder>().As<ISessionFactoryHolder>();
-            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(session)).As<ISessionLocator>();
+            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
             builder.RegisterInstance(new ShellBlueprint { Records = Enumerable.Empty<RecordBlueprint>() }).As<ShellBlueprint>();
             builder.RegisterInstance(new ShellSettings { Name = "temp", DataProvider = "SqlCe", DataTablePrefix = "TEST" }).As<ShellSettings>();
             builder.RegisterModule(new DataModule());
@@ -133,10 +134,24 @@ namespace Orchard.Tests.DataMigration {
                 .AlterTable("User", table => table
                     .AddColumn("Age", DbType.Int32))
                 .AlterTable("User", table => table
-                    .AlterColumn("Lastname", column => column.WithDefault("John")))
+                    .AlterColumn("Lastname", column => column.WithDefault("Doe")))
                 .AlterTable("User", table => table
                     .DropColumn("Firstname")
                 );
+
+            // creating a new row should assign a default value to Firstname and Age
+            _schemaBuilder
+                .ExecuteSql("insert into TEST_User VALUES (DEFAULT, DEFAULT)");
+
+            // ensure wehave one record woth the default value
+            var command = _session.Connection.CreateCommand();
+            command.CommandText = "SELECT count(*) FROM TEST_User WHERE Lastname = 'Doe'";
+            Assert.That(command.ExecuteScalar(), Is.EqualTo(1));
+
+            // ensure this is not a false positive
+            command = _session.Connection.CreateCommand();
+            command.CommandText = "SELECT count(*) FROM TEST_User WHERE Lastname = 'Foo'";
+            Assert.That(command.ExecuteScalar(), Is.EqualTo(0));
         }
 
         [Test]

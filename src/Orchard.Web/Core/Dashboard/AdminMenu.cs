@@ -8,8 +8,9 @@ namespace Orchard.Core.Dashboard {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Orchard"), "0",
-                        menu => menu.Add(T("Dashboard"), "0", item => item.Action("Index", "Admin", new { area = "Dashboard" }).Permission(StandardPermissions.AccessAdminPanel)));
+            builder.Add(T("Dashboard"), "-5",
+                        menu => menu.Add(T("Orchard"), "-5", item => item.Action("Index", "Admin", new { area = "Dashboard" })
+                            .Permission(StandardPermissions.AccessAdminPanel)));
         }
     }
 }

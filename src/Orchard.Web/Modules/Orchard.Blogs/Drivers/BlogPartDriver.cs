@@ -41,24 +41,25 @@ namespace Orchard.Blogs.Drivers {
                 ContentShape("Parts_Blogs_Blog_Description",
                              () => shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part, Description: part.Description)),
                 ContentShape("Parts_Blogs_Blog_BlogPostCount",
-                             () => shapeHelper.Parts_Blogs_Blog_BlogPostCount(ContentPart: part, PostCount: part.PostCount)),
+                             () => shapeHelper.Parts_Blogs_Blog_BlogPostCount(ContentPart: part, PostCount: part.PostCount))
+                //,
                 // todo: (heskew) implement a paging solution that doesn't require blog posts to be tied to the blog within the controller
-                ContentShape("Parts_Blogs_BlogPost_List",
-                             () => {
-                                 _feedManager.Register(part);
-                                 return null;
+                //ContentShape("Parts_Blogs_BlogPost_List",
+                //             () => {
+                //                 _feedManager.Register(part);
                 //                 var list = shapeHelper.List();
                 //                 list.AddRange(_blogPostService.Get(part)
                 //                                           .Select(bp => _contentManager.BuildDisplay(bp, "Summary")));
                 //                 return shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, ContentItems: list);
-                             }),
-                ContentShape("Parts_Blogs_BlogPost_List_Admin",
-                             () => {
-                                 var list = shapeHelper.List();
-                                 list.AddRange(_blogPostService.Get(part, VersionOptions.Latest)
-                                                           .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin")));
-                                 return shapeHelper.Parts_Blogs_BlogPost_List_Admin(ContentPart: part, ContentItems: list);
-                             })
+                //             }),
+                //ContentShape("Parts_Blogs_BlogPost_List_Admin",
+                //             () =>
+                //             {
+                //                 var list = shapeHelper.List();
+                //                 list.AddRange(_blogPostService.Get(part, VersionOptions.Latest)
+                //                                           .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin")));
+                //                 return shapeHelper.Parts_Blogs_BlogPost_List_Admin(ContentPart: part, ContentItems: list);
+                //             })
                 );
         }
 
