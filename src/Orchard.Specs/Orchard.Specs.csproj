@@ -123,6 +123,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Admin.feature</DependentUpon>
+    </Compile>
     <Compile Include="Bindings\BindingBase.cs" />
     <Compile Include="Bindings\CommandLine.cs" />
     <Compile Include="Bindings\ContentRights.cs" />
@@ -205,6 +210,10 @@
     <Content Include="Hosting\Orchard.Web\Config\Sites.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Admin.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Admin.feature.cs</LastGenOutput>
+    </None>
     <None Include="Blogs.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Blogs.feature.cs</LastGenOutput>
