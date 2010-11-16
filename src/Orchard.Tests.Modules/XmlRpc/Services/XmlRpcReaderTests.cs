@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Xml.Linq;
 using NUnit.Framework;
 using Orchard.Core.XmlRpc.Models;
@@ -85,6 +86,18 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
             Assert.That(xmlStruct["seven"], Is.EqualTo(new DateTime(1998, 7, 17, 14, 8, 55)));
             Assert.That(xmlStruct["eight"], Is.EqualTo(Convert.FromBase64String("eW91IGNhbid0IHJlYWQgdGhpcyE=")));
 
+        }
+
+        [Test]
+        public void StructShouldMapDefaultDateTimeWithBadFormat() {
+            var source = XElement.Parse(@"
+<struct>
+    <member><name>seven</name><value><dateTime.iso8601>FOO</dateTime.iso8601></value></member>
+</struct>");
+
+            var xmlStruct = _structMapper.Map(source);
+            Assert.That(xmlStruct["seven"], Is.GreaterThan(DateTime.Now.AddSeconds(-1)));
+            Assert.That(xmlStruct["seven"], Is.LessThan(DateTime.Now.AddSeconds(1)));
         }
 
         [Test]
