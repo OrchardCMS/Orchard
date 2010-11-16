@@ -58,6 +58,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations\SqlDatabaseConnectionStringAttribute.cs" />
