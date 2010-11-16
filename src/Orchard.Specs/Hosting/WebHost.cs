@@ -18,17 +18,16 @@ namespace Orchard.Specs.Hosting {
         }
 
         void WebHostCleanup(object sender, EventArgs e) {
-            _tempSite.Delete(true); // <- try to clean up after the appdomain unloads (still not guaranteed to get everything - probably overkill - might go away)
+            try {
+                _tempSite.Delete(true); // <- try to clean up after the appdomain unloads (still not guaranteed to get everything - probably overkill - might go away)
+            } catch{}
         }
 
         public void Initialize(string templateName, string virtualDirectory) {
             var baseDir = Path.Get(AppDomain.CurrentDomain.BaseDirectory);
 
             _tempSite = Path.Get(_orchardTemp).Combine(System.IO.Path.GetRandomFileName());
-            if(_tempSite.Exists) {
-                _tempSite.Delete();
-            }
-
+            try { _tempSite.Delete(); } catch {}
             _tempSite.CreateDirectory();
 
             // Trying the two known relative paths to the Orchard.Web directory.
