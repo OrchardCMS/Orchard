@@ -177,7 +177,7 @@ namespace Orchard.Core.Tests.Routable.Services {
             var thing1 = CreateRoutePartFromScratch("Foo", "", "bar");
             var thing2 = CreateRoutePartWithExistingContainer("Foo", thing1.As<ICommonPart>().Container);
             Assert.That(thing2.Path, Is.EqualTo("bar/foo-2"));
-            Assert.That(thing2.Slug, Is.EqualTo("foo"));
+            Assert.That(thing2.Slug, Is.EqualTo("foo-2"));
         }
 
         [Test]
@@ -185,7 +185,7 @@ namespace Orchard.Core.Tests.Routable.Services {
             var thing1 = CreateRoutePartFromScratch("Hi", "foo", "bar");
             var thing2 = CreateRoutePartWithExistingContainer("There", thing1.As<ICommonPart>().Container, "foo");
             Assert.That(thing2.Path, Is.EqualTo("bar/foo-2"));
-            Assert.That(thing2.Slug, Is.EqualTo("foo"));
+            Assert.That(thing2.Slug, Is.EqualTo("foo-2"));
         }
 
         [Test]
