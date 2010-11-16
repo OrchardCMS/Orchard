@@ -9,7 +9,6 @@ using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
 using Orchard.Localization;
 using Orchard.Services;
-using Orchard.UI.Notify;
 
 namespace Orchard.Core.Routable.Drivers {
     public class RoutePartDriver : ContentPartDriver<RoutePart> {
