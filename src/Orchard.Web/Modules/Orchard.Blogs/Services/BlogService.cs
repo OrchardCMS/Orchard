@@ -35,9 +35,9 @@ namespace Orchard.Blogs.Services {
                 .List();
         }
 
-        public void Delete(BlogPart blogPart) {
-            _contentManager.Remove(blogPart.ContentItem);
-            _blogSlugConstraint.RemoveSlug(blogPart.As<IRoutableAspect>().Path);
+        public void Delete(ContentItem blog) {
+            _contentManager.Remove(blog);
+            _blogSlugConstraint.RemoveSlug(blog.As<IRoutableAspect>().Path);
         }
     }
 }

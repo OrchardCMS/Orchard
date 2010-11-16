@@ -113,16 +113,16 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Remove(string blogSlug) {
+        public ActionResult Remove(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't delete blog")))
                 return new HttpUnauthorizedResult();
 
-            BlogPart blogPart = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(id, VersionOptions.Latest);
 
-            if (blogPart == null)
+            if (blog == null)
                 return HttpNotFound();
 
-            _blogService.Delete(blogPart);
+            _blogService.Delete(blog);
 
             Services.Notifier.Information(T("Blog was successfully deleted"));
             return Redirect(Url.BlogsForAdmin());
