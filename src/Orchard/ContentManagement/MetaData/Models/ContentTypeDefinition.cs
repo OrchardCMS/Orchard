@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement.MetaData.Models {
     public class ContentTypeDefinition {
         public ContentTypeDefinition(string name, string displayName, IEnumerable<ContentTypePartDefinition> parts, SettingsDictionary settings) {
             Name = name;
             DisplayName = displayName;
-            Parts = parts;
+            Parts = parts.ToReadOnlyCollection();
             Settings = settings;
         }
 
