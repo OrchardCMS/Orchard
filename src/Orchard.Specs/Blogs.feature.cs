@@ -297,6 +297,92 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             testRunner.CollectScenarioErrors();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("When viewing a blog the user agent is given an RSS feed of the blog\'s posts")]
+        public virtual void WhenViewingABlogTheUserAgentIsGivenAnRSSFeedOfTheBlogSPosts()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When viewing a blog the user agent is given an RSS feed of the blog\'s posts", ((string[])(null)));
+#line 96
+this.ScenarioSetup(scenarioInfo);
+#line 97
+    testRunner.Given("I have installed Orchard");
+#line 98
+    testRunner.When("I go to \"admin/blogs/create\"");
+#line hidden
+            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table10.AddRow(new string[] {
+                        "Routable.Title",
+                        "My Blog"});
+#line 99
+        testRunner.And("I fill in", ((string)(null)), table10);
+#line 102
+        testRunner.And("I hit \"Save\"");
+#line 103
+        testRunner.And("I go to \"admin/blogs/my-blog/posts/create\"");
+#line hidden
+            TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table11.AddRow(new string[] {
+                        "Routable.Title",
+                        "My Post"});
+            table11.AddRow(new string[] {
+                        "Body.Text",
+                        "Hi there."});
+#line 104
+        testRunner.And("I fill in", ((string)(null)), table11);
+#line 108
+        testRunner.And("I hit \"Publish Now\"");
+#line 109
+        testRunner.And("I am redirected");
+#line 110
+        testRunner.And("I go to \"my-blog/my-post\"");
+#line 111
+    testRunner.Then("I should see \"<link rel=\"alternate\" type=\"application/rss\\+xml\" title=\"My Blog\" h" +
+                    "ref=\"/rss\\?containerid=\\d+\" />\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Enabling remote blog publishing inserts the appropriate metaweblogapi markup into" +
+            " the blog\'s page")]
+        public virtual void EnablingRemoteBlogPublishingInsertsTheAppropriateMetaweblogapiMarkupIntoTheBlogSPage()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Enabling remote blog publishing inserts the appropriate metaweblogapi markup into" +
+                    " the blog\'s page", ((string[])(null)));
+#line 114
+this.ScenarioSetup(scenarioInfo);
+#line 115
+    testRunner.Given("I have installed Orchard");
+#line 116
+        testRunner.And("I have enabled \"XmlRpc\"");
+#line 117
+        testRunner.And("I have enabled \"Orchard.Blogs.RemotePublishing\"");
+#line 118
+    testRunner.When("I go to \"admin/blogs/create\"");
+#line hidden
+            TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table12.AddRow(new string[] {
+                        "Routable.Title",
+                        "My Blog"});
+#line 119
+        testRunner.And("I fill in", ((string)(null)), table12);
+#line 122
+        testRunner.And("I hit \"Save\"");
+#line 123
+        testRunner.And("I go to \"my-blog\"");
+#line 124
+    testRunner.Then("I should see \"<link href=\"[^\"]+my-blog/wlwmanifest\\.xml\" rel=\"wlwmanifest\" type=\"" +
+                    "application/wlwmanifest\\+xml\" />\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
     }
 }
 #endregion

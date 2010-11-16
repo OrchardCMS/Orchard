@@ -92,3 +92,33 @@ Scenario: I can create a new blog and blog post and when I change the slug of th
     When I go to "my-other-blog/my-post"
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Hi there."
+
+Scenario: When viewing a blog the user agent is given an RSS feed of the blog's posts
+    Given I have installed Orchard
+    When I go to "admin/blogs/create"
+        And I fill in
+            | name | value |
+            | Routable.Title | My Blog |
+        And I hit "Save"
+        And I go to "admin/blogs/my-blog/posts/create"
+        And I fill in
+            | name | value |
+            | Routable.Title | My Post |
+            | Body.Text | Hi there. |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "my-blog/my-post"
+    Then I should see "<link rel="alternate" type="application/rss\+xml" title="My Blog" href="/rss\?containerid=\d+" />"
+
+    
+Scenario: Enabling remote blog publishing inserts the appropriate metaweblogapi markup into the blog's page
+    Given I have installed Orchard
+        And I have enabled "XmlRpc"
+        And I have enabled "Orchard.Blogs.RemotePublishing"
+    When I go to "admin/blogs/create"
+        And I fill in
+            | name | value |
+            | Routable.Title | My Blog |
+        And I hit "Save"
+        And I go to "my-blog"
+    Then I should see "<link href="[^"]+my-blog/wlwmanifest\.xml" rel="wlwmanifest" type="application/wlwmanifest\+xml" />"
