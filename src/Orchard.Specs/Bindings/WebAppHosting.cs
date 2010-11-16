@@ -31,14 +31,14 @@ namespace Orchard.Specs.Bindings {
 
         [BeforeTestRun]
         public static void BeforeTestRun() {
-            if ( _orchardTemp.Exists ) {
-                _orchardTemp.Delete(true).CreateDirectory();
-            }
+            try { _orchardTemp.Delete(true).CreateDirectory(); } catch {}
         }
 
         [AfterTestRun]
         public static void AfterTestRun() {
-            _orchardTemp.Delete(true); // <- try to clear any stragglers on the way out
+            try {
+                _orchardTemp.Delete(true); // <- try to clear any stragglers on the way out
+            } catch {}
         }
 
         [AfterScenario]
