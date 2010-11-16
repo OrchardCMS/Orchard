@@ -10,10 +10,10 @@ namespace Orchard.UI.Zones {
             _shapeFactory = shapeFactory;
         }
 
-        public Func<T> Get<T>(string name) {
+        public Func<WorkContext, T> Get<T>(string name) {
             if (name == "Layout") {
                 var layout = _shapeFactory.Create("Layout", Arguments.Empty());
-                return () => (T)layout;
+                return ctx => (T)layout;
             }
             return null;
         }

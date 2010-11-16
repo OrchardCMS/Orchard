@@ -111,7 +111,7 @@ namespace Orchard.Environment {
                 if (resolver == null) {
                     return () => default(T);
                 }
-                return () => resolver();
+                return () => resolver(this);
             }
 
 
