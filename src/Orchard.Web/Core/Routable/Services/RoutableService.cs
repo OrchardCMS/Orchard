@@ -32,7 +32,7 @@ namespace Orchard.Core.Routable.Services {
                 return;
 
             var slug = model.Title;
-            var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s]+");
+            var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>]+");
 
             slug = dissallowed.Replace(slug, "-");
             slug = slug.Trim('-');
@@ -79,7 +79,7 @@ namespace Orchard.Core.Routable.Services {
         }
 
         public bool IsSlugValid(string slug) {
-            return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s]+$") && !(slug.StartsWith(".") || slug.EndsWith("."));
+            return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s\""\<\>]+$") && !(slug.StartsWith(".") || slug.EndsWith("."));
         }
 
         public bool ProcessSlug(IRoutableAspect part) {

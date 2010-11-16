@@ -82,7 +82,7 @@ namespace Orchard.Core.Routable.Drivers {
                 if ( slug.StartsWith(".") || slug.EndsWith(".") )
                     updater.AddModelError("Routable.Slug", T("The \".\" can't be used around routes."));
                 else
-                    updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."));
+                    updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\". No spaces are allowed (please use dashes or underscores instead)."));
             }
 
             if (part.ContentItem.Id != 0 && model.PromoteToHomePage && _routableHomePageProvider != null)
