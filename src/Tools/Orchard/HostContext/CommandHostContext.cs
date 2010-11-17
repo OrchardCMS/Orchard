@@ -9,8 +9,6 @@ namespace Orchard.HostContext {
         public DirectoryInfo OrchardDirectory { get; set; }
         public int StartSessionResult { get; set; }
         public bool DisplayUsageHelp { get; set; }
-        public ApplicationManager AppManager { get; set; }
-        public ApplicationObject AppObject { get; set; }
         public CommandHost CommandHost { get; set; }
         public Logger Logger { get; set; }
     }

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security;
 using Orchard.Parameters;
 
 namespace Orchard {
     public class OrchardParametersParser : IOrchardParametersParser {
-
+        [SecurityCritical]
         public OrchardParameters Parse(CommandParameters parameters) {
 
             var result = new OrchardParameters {
