@@ -69,16 +69,11 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminMenu.cs" />
-    <Compile Include="Controllers\DatabaseUpdateController.cs" />
     <Compile Include="Commands\DataMigrationCommands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\DatabaseUpdate\Index.cshtml" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
