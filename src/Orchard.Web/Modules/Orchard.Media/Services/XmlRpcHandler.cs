@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Web;
+using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
@@ -16,6 +17,11 @@ namespace Orchard.Media.Services {
         public XmlRpcHandler(IMembershipService membershipService, IAuthorizationService authorizationService) {
             _membershipService = membershipService;
             _authorizationService = authorizationService;
+        }
+
+        public void SetCapabilities(XElement options) {
+            const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
+            options.SetElementValue(XName.Get("supportsFileUpload", manifestUri), "Yes");
         }
 
         public void Process(XmlRpcContext context) {

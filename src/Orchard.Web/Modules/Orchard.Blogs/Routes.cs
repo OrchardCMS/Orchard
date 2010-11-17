@@ -205,27 +205,10 @@ namespace Orchard.Blogs {
                              new RouteDescriptor {
                                                      Priority = 11,
                                                      Route = new Route(
-                                                         "{blogSlug}/wlwmanifest.xml",
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "Blog"},
-                                                                                      {"action", "LiveWriterManifest"}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"blogSlug", _blogSlugConstraint}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"}
-                                                                                  },
-                                                         new MvcRouteHandler())
-                                                 },
-                             new RouteDescriptor {
-                                                     Priority = 11,
-                                                     Route = new Route(
                                                          "{blogSlug}/rsd",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "Blog"},
+                                                                                      {"controller", "RemoteBlogPublishing"},
                                                                                       {"action", "Rsd"}
                                                                                   },
                                                          new RouteValueDictionary {

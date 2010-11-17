@@ -147,6 +147,7 @@
     <Compile Include="Widgets\RuleEngine\UrlRuleProviderTest.cs" />
     <Compile Include="Widgets\Services\WidgetsServiceTest.cs" />
     <Compile Include="Widgets\WidgetsTests.cs" />
+    <Compile Include="XmlRpc\Controllers\LiveWriterControllerTests.cs" />
     <Compile Include="XmlRpc\Controllers\HomeControllerTests.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcReaderTests.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcWriterTests.cs" />

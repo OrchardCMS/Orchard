@@ -37,6 +37,8 @@ namespace Orchard.Tests.Modules.XmlRpc.Controllers {
         }
 
         public class StubHandler : IXmlRpcHandler {
+            public void SetCapabilities(XElement element) {}
+
             public void Process(XmlRpcContext context) {
                 ProcessCalls++;
                 context.Response = new XRpcMethodResponse();

@@ -245,6 +245,7 @@
     <Compile Include="Shapes\DateTimeShapes.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterController.cs" />
+    <Compile Include="XmlRpc\IXmlRpcDriver.cs" />
     <Compile Include="XmlRpc\IXmlRpcHandler.cs" />
     <Compile Include="XmlRpc\Models\ModelBinderProvider.cs" />
     <Compile Include="XmlRpc\Models\XRpcArray.cs" />
