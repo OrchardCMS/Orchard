@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
@@ -29,7 +28,7 @@ namespace Orchard.Comments {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {ManageComments}
+                    Permissions = new[] {ManageComments, AddComment}
                 },
                 new PermissionStereotype {
                     Name = "Anonymous",
@@ -37,19 +36,19 @@ namespace Orchard.Comments {
                 },
                 new PermissionStereotype {
                     Name = "Editor",
-                    //Permissions = new[] {}
+                    Permissions = new[] {AddComment}
                 },
                 new PermissionStereotype {
                     Name = "Moderator",
-                    //Permissions = new[] {}
+                    Permissions = new[] {AddComment}
                 },
                 new PermissionStereotype {
                     Name = "Author",
-                    //Permissions = new[] {}
+                    Permissions = new[] {AddComment}
                 },
                 new PermissionStereotype {
                     Name = "Contributor",
-                    //Permissions = new[] {}
+                    Permissions = new[] {AddComment}
                 },
             };
         }
