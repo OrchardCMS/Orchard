@@ -30,6 +30,7 @@ using Orchard.Tests.ContentManagement;
 using Orchard.Data.Providers;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Modules.Migrations.Orchard.Tests.DataMigration.Records;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Modules.Migrations {
     [TestFixture]
@@ -77,6 +78,8 @@ namespace Orchard.Tests.Modules.Migrations {
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SchemaCommandGenerator>().As<ISchemaCommandGenerator>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
 
@@ -103,7 +106,7 @@ Features:
             public IDictionary<string, string> Manifests { get; set; }
 
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                foreach ( var e in Manifests ) {
+                foreach (var e in Manifests) {
                     string name = e.Key;
                     var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
                     yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
@@ -112,7 +115,7 @@ Features:
         }
 
         public class StubLoaders : IExtensionLoader {
-#region Implementation of IExtensionLoader
+            #region Implementation of IExtensionLoader
 
             public int Order {
                 get { return 1; }

@@ -39,14 +39,14 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         public ContentTypeDefinition GetTypeDefinition(string name) {
-            return _cacheManager.Get(name, ctx => {
+            return _cacheManager.Get(name ?? string.Empty, ctx => {
                 MonitorContentDefinitionSignal(ctx);
                 return _typeDefinitionRepository.Fetch(x => x.Name == name).Select(Build).SingleOrDefault();
             });
         }
 
         public ContentPartDefinition GetPartDefinition(string name) {
-            return _cacheManager.Get(name, ctx => {
+            return _cacheManager.Get(name ?? string.Empty, ctx => {
                 MonitorContentDefinitionSignal(ctx);
                 return _partDefinitionRepository.Fetch(x => x.Name == name).Select(Build).SingleOrDefault();
             });

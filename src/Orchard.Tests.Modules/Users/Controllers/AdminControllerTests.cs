@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
@@ -62,6 +63,9 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
+
             _authorizer = new Mock<IAuthorizer>();
             builder.RegisterInstance(_authorizer.Object);
         }
