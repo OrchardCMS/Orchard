@@ -176,40 +176,6 @@ namespace Orchard.Modules.Services {
                     : featuresInQuestion.First()));
         }
 
-        private static string TryLocalize(string key, string original, Localizer localizer) {
-            var localized = localizer(key).Text;
-
-            if(key == localized) {
-                // no specific localization available
-                return original;
-            }
-
-            return localized;
-        }
-
-        //private IModule AssembleModuleFromDescriptor(ExtensionDescriptor extensionDescriptor) {
-
-        //    var localizer = LocalizationUtilities.Resolve(_workContextAccessor.GetContext(), String.Concat(extensionDescriptor.Location, "/", extensionDescriptor.Name, "/Module.txt"));
-
-        //    return new Module {
-        //        //ModuleName = extensionDescriptor.Name,
-        //        //DisplayName = TryLocalize("Name", extensionDescriptor.DisplayName, localizer),
-        //        //Description = TryLocalize("Description", extensionDescriptor.Description, localizer),
-        //        //Version = extensionDescriptor.Version,
-        //        //Author = TryLocalize("Author", extensionDescriptor.Author, localizer),
-        //        //HomePage = TryLocalize("Website", extensionDescriptor.WebSite, localizer),
-        //        //Tags = TryLocalize("Tags", extensionDescriptor.Tags, localizer),
-        //        //Features = extensionDescriptor.Features.Select(f => new FeatureDescriptor {
-        //        //    Category = TryLocalize(f.Name + " Category", f.Category, localizer),
-        //        //    Dependencies = f.Dependencies,
-        //        //    Description = TryLocalize(f.Name + " Description", f.Description, localizer),
-        //        //    DisplayName = TryLocalize(f.Name + " Name", f.DisplayName, localizer),
-        //        //    Extension = f.Extension,
-        //        //    Name = f.Name,
-        //        //})
-        //    };
-        //}
-
         private static ModuleFeature AssembleModuleFromDescriptor(Feature feature, bool isEnabled) {
             return new ModuleFeature {
                                          Descriptor = feature.Descriptor,
