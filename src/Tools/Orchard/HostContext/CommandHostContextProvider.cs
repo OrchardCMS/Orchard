@@ -3,7 +3,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security;
 using System.Web;
+using System.Web.Compilation;
 using System.Web.Hosting;
 using Orchard.Host;
 using Orchard.Parameters;
@@ -20,6 +22,7 @@ namespace Orchard.HostContext {
             _args = args;
         }
 
+        [SecurityCritical]
         public CommandHostContext CreateContext() {
             var context = new CommandHostContext();
             context.RetryResult = 240;/*special return code for "Retry"*/
@@ -27,6 +30,7 @@ namespace Orchard.HostContext {
             return context;
         }
 
+        [SecurityCritical]
         public void Shutdown(CommandHostContext context) {
             try {
                 if (context.CommandHost != null) {
@@ -38,9 +42,9 @@ namespace Orchard.HostContext {
                 LogInfo(context, "   (AppDomain already unloaded)");
             }
 
-            if (context.AppObject != null) {
+            if (context.CommandHost != null) {
                 LogInfo(context, "Shutting down ASP.NET AppDomain...");
-                context.AppManager.ShutdownApplication(context.AppObject.ApplicationId);
+                ApplicationManager.GetApplicationManager().ShutdownAll();
             }
         }
 
@@ -72,9 +76,7 @@ namespace Orchard.HostContext {
             LogInfo(context, "Orchard root directory: \"{0}\"", context.OrchardDirectory.FullName);
 
             LogInfo(context, "Creating ASP.NET AppDomain for command agent...");
-            context.AppManager = ApplicationManager.GetApplicationManager();
-            context.AppObject = CreateWorkerAppDomainWithHost(context.AppManager, context.Arguments.VirtualPath, context.OrchardDirectory.FullName, typeof(CommandHost));
-            context.CommandHost = (CommandHost)context.AppObject.ObjectInstance;
+            context.CommandHost = CreateWorkerAppDomainWithHost(context.Arguments.VirtualPath, context.OrchardDirectory.FullName, typeof(CommandHost));
 
             LogInfo(context, "Starting Orchard session");
             context.StartSessionResult = context.CommandHost.StartSession(_input, _output);
@@ -113,29 +115,9 @@ namespace Orchard.HostContext {
                 string.Format("Directory \"{0}\" doesn't seem to contain an Orchard installation", new DirectoryInfo(directory).FullName));
         }
 
-        private static ApplicationObject CreateWorkerAppDomainWithHost(ApplicationManager appManager, string virtualPath, string physicalPath, Type hostType) {
-            // this creates worker app domain in a way that host doesn't need to be in GAC or bin
-            // using BuildManagerHost via private reflection
-            string uniqueAppString = string.Concat(virtualPath, physicalPath).ToLowerInvariant();
-            string appId = (uniqueAppString.GetHashCode()).ToString("x", CultureInfo.InvariantCulture);
-
-            // create BuildManagerHost in the worker app domain
-            var buildManagerHostType = typeof(HttpRuntime).Assembly.GetType("System.Web.Compilation.BuildManagerHost");
-            var buildManagerHost = appManager.CreateObject(appId, buildManagerHostType, virtualPath, physicalPath, false);
-
-            // call BuildManagerHost.RegisterAssembly to make Host type loadable in the worker app domain
-            buildManagerHostType.InvokeMember(
-                "RegisterAssembly",
-                BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic,
-                null,
-                buildManagerHost,
-                new object[] { hostType.Assembly.FullName, hostType.Assembly.Location });
-
-            // create Host in the worker app domain
-            return new ApplicationObject {
-                ApplicationId = appId,
-                ObjectInstance = appManager.CreateObject(appId, hostType, virtualPath, physicalPath, false)
-            };
+        private static CommandHost CreateWorkerAppDomainWithHost(string virtualPath, string physicalPath, Type hostType) {
+            ClientBuildManager clientBuildManager = new ClientBuildManager(virtualPath, physicalPath);
+            return (CommandHost)clientBuildManager.CreateObject(hostType, false);
         }
     }
 }

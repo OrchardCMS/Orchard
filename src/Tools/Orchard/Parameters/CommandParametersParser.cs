@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security;
 
 namespace Orchard.Parameters {
     public class CommandParametersParser : ICommandParametersParser {
+        [SecurityCritical]
         public CommandParameters Parse(IEnumerable<string> args) {
             var result = new CommandParameters {
                 Arguments = new List<string>(),
