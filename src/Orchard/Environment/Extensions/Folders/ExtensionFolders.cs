@@ -62,7 +62,7 @@ namespace Orchard.Environment.Extensions.Folders {
                         }
                         catch ( Exception ex ) {
                             // Ignore invalid module manifests
-                            Logger.Error(ex, "A module could not be loaded. It was ignored.");
+                            Logger.Error(ex, "The module '{0}' could not be loaded. It was ignored.", extensionName);
                         }
                     }
                     return localList;                                              
