@@ -9,7 +9,3 @@ Features:
     Orchard.Migrations:
         Description: Data migration commands.
         Category: Developer
-    DatabaseUpdate:
-        Description: Automatically updates database schema.
-        Dependencies: Orchard.Migrations
-        Category: Developer
