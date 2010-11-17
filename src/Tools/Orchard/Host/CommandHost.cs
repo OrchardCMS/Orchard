@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Web.Hosting;
 using Orchard.Parameters;
 using Orchard.ResponseFiles;
@@ -19,11 +20,13 @@ namespace Orchard.Host {
             HostingEnvironment.RegisterObject(this);
         }
 
+        [SecurityCritical]
         public override object InitializeLifetimeService() {
             // never expire the license
             return null;
         }
 
+        [SecuritySafeCritical]
         void IRegisteredObject.Stop(bool immediate) {
             HostingEnvironment.UnregisterObject(this);
         }
