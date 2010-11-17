@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\RemoteBlogPublishingController.cs" />
     <Compile Include="Drivers\BlogArchivesPartDriver.cs" />
     <Compile Include="Drivers\RemoteBlogPublishingDriver.cs" />
     <Compile Include="Drivers\RecentBlogPostsPartDriver.cs" />

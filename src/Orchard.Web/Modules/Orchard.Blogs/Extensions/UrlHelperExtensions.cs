@@ -20,11 +20,11 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogLiveWriterManifest(this UrlHelper urlHelper, BlogPart blogPart) {
-            return urlHelper.AbsoluteAction(() => urlHelper.Action("LiveWriterManifest", "Blog", new { blogSlug = blogPart.As<IRoutableAspect>().Path, area = "Orchard.Blogs" }));
+            return urlHelper.AbsoluteAction(() => urlHelper.Action("Manifest", "LiveWriter", new { area = "XmlRpc" }));
         }
 
         public static string BlogRsd(this UrlHelper urlHelper, BlogPart blogPart) {
-            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "Blog", new { blogSlug = blogPart.As<IRoutableAspect>().Path, area = "Orchard.Blogs" }));
+            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { blogSlug = blogPart.As<IRoutableAspect>().Path, area = "Orchard.Blogs" }));
         }
 
         public static string BlogArchiveYear(this UrlHelper urlHelper, BlogPart blogPart, int year) {
