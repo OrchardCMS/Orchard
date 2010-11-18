@@ -555,9 +555,7 @@
     <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\Dependencies\IDependenciesFolder.cs" />
     <Compile Include="Environment\Extensions\Compilers\IExtensionCompiler.cs" />
-    <Compile Include="Environment\Extensions\Compilers\CSharpExtensionDirectoryCompiler.cs" />
     <Compile Include="Environment\Extensions\Compilers\DefaultExtensionCompiler.cs" />
-    <Compile Include="Environment\Extensions\Compilers\CSharpProjectFullTrustCompiler.cs" />
     <Compile Include="Environment\Extensions\Compilers\DefaultProjectFileParser.cs" />
     <Compile Include="Environment\IAssemblyBuilder.cs" />
     <Compile Include="Environment\IBuildManager.cs" />
