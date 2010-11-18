@@ -22,7 +22,7 @@ namespace Orchard.Data.Migration {
         }
 
         public void Install(Feature feature) {
-            var featureName = feature.Descriptor.Name;
+            var featureName = feature.Descriptor.Id;
             _dataMigrationManager.Update(featureName);
         }
 
@@ -33,7 +33,7 @@ namespace Orchard.Data.Migration {
         }
 
         public void Uninstall(Feature feature) {
-            var featureName = feature.Descriptor.Name;
+            var featureName = feature.Descriptor.Id;
             if ( _dataMigrationManager.IsFeatureAlreadyInstalled(featureName) ) {
                 _dataMigrationManager.Uninstall(featureName);
             }

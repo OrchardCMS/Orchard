@@ -129,7 +129,7 @@ namespace Orchard.Localization.Services {
 
             foreach ( var module in _extensionManager.AvailableExtensions() ) {
                 if ( String.Equals(module.ExtensionType, "Module") ) {
-                    string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Name, culture);
+                    string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Id, culture);
                     text = _webSiteFolder.ReadFile(modulePath);
                     if ( text != null ) {
                         ParseLocalizationStream(text, translations, true);
@@ -140,7 +140,7 @@ namespace Orchard.Localization.Services {
 
             foreach ( var theme in _extensionManager.AvailableExtensions() ) {
                 if ( String.Equals(theme.ExtensionType, "Theme") ) {
-                    string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Name, culture);
+                    string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Id, culture);
                     text = _webSiteFolder.ReadFile(themePath);
                     if ( text != null ) {
                         ParseLocalizationStream(text, translations, true);

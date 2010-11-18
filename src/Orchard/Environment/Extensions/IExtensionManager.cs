@@ -8,7 +8,7 @@ namespace Orchard.Environment.Extensions {
         IEnumerable<ExtensionDescriptor> AvailableExtensions();
         IEnumerable<FeatureDescriptor> AvailableFeatures();
 
-        ExtensionDescriptor GetExtension(string name);
+        ExtensionDescriptor GetExtension(string id);
 
         IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors);
     }
@@ -19,7 +19,7 @@ namespace Orchard.Environment.Extensions {
             return extensionManager.AvailableExtensions()
                 .Where(extensionDescriptor =>
                     extensionDescriptor.Features.Any(featureDescriptor =>
-                        enabledFeatures.Any(availableFeature => featureDescriptor.Name == availableFeature.Name)));
+                        enabledFeatures.Any(availableFeature => featureDescriptor.Id == availableFeature.Id)));
         }
 
         public static IEnumerable<FeatureDescriptor> EnabledFeatures(this IExtensionManager extensionManager, ShellDescriptor descriptor) {
@@ -29,7 +29,7 @@ namespace Orchard.Environment.Extensions {
         }
 
         private static bool IsFeatureEnabledInDescriptor(FeatureDescriptor featureDescriptor, ShellDescriptor shellDescriptor) {
-            return shellDescriptor.Features.Any(shellDescriptorFeature => shellDescriptorFeature.Name == featureDescriptor.Name);
+            return shellDescriptor.Features.Any(shellDescriptorFeature => shellDescriptorFeature.Name == featureDescriptor.Id);
         }
     }
 }

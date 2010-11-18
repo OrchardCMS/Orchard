@@ -87,13 +87,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
             // that a new site compilation is needed (since ascx files may be referencing
             // this now removed extension).
-            Logger.Information("ExtensionDeactivated: Module \"{0}\" has been de-activated, forcing site recompilation", extension.Name);
+            Logger.Information("ExtensionDeactivated: Module \"{0}\" has been de-activated, forcing site recompilation", extension.Id);
             ctx.ResetSiteCompilation = true;
         }
 
         public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
             if (_reloadWorkaround.AppDomainRestartNeeded) {
-                Logger.Information("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Name);
+                Logger.Information("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Id);
                 ctx.RestartAppDomain = _reloadWorkaround.AppDomainRestartNeeded;
             }
         }
@@ -200,8 +200,8 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         private string GetProjectPath(ExtensionDescriptor descriptor) {
-            string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name,
-                                                       descriptor.Name + ".csproj");
+            string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
+                                                       descriptor.Id + ".csproj");
 
             if (!_virtualPathProvider.FileExists(projectPath)) {
                 return null;

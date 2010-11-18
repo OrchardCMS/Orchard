@@ -30,8 +30,8 @@ namespace Orchard.Modules.Commands {
         public void List() {
             var enabled = _shellDescriptor.Features.Select(x => x.Name);
             if (Summary) {
-                foreach (var feature in _featureManager.GetAvailableFeatures().OrderBy(f => f.Name)) {
-                    Context.Output.WriteLine(T("{0}, {1}", feature.Name, enabled.Contains(feature.Name) ? T("Enabled") : T("Disabled")));
+                foreach (var feature in _featureManager.GetAvailableFeatures().OrderBy(f => f.Id)) {
+                    Context.Output.WriteLine(T("{0}, {1}", feature.Id, enabled.Contains(feature.Id) ? T("Enabled") : T("Disabled")));
                 }
             }
             else {
@@ -41,12 +41,12 @@ namespace Orchard.Modules.Commands {
                 var categories = _featureManager.GetAvailableFeatures().ToList().GroupBy(f => f.Category);
                 foreach (var category in categories) {
                     Context.Output.WriteLine(T("Category: {0}", category.Key.OrDefault(T("General"))));
-                    foreach (var feature in category.OrderBy(f => f.Name)) {
-                        Context.Output.WriteLine(T("  Name: {0}", feature.Name));
-                        Context.Output.WriteLine(T("    State:         {0}", enabled.Contains(feature.Name) ? T("Enabled") : T("Disabled")));
+                    foreach (var feature in category.OrderBy(f => f.Id)) {
+                        Context.Output.WriteLine(T("  Name: {0}", feature.Id));
+                        Context.Output.WriteLine(T("    State:         {0}", enabled.Contains(feature.Id) ? T("Enabled") : T("Disabled")));
                         Context.Output.WriteLine(T("    Description:   {0}", feature.Description.OrDefault(T("<none>"))));
                         Context.Output.WriteLine(T("    Category:      {0}", feature.Category.OrDefault(T("<none>"))));
-                        Context.Output.WriteLine(T("    Module:        {0}", feature.Extension.Name.OrDefault(T("<none>"))));
+                        Context.Output.WriteLine(T("    Module:        {0}", feature.Extension.Id.OrDefault(T("<none>"))));
                         Context.Output.WriteLine(T("    Dependencies:  {0}", string.Join(", ", feature.Dependencies).OrDefault(T("<none>"))));
                     }
                 }
@@ -59,7 +59,7 @@ namespace Orchard.Modules.Commands {
             Context.Output.WriteLine(T("Enabling features {0}", string.Join(",", featureNames)));
             bool listAvailableFeatures = false;
             List<string> featuresToEnable = new List<string>();
-            string[] availableFeatures = _featureManager.GetAvailableFeatures().Select(x => x.Name).ToArray();
+            string[] availableFeatures = _featureManager.GetAvailableFeatures().Select(x => x.Id).ToArray();
             foreach (var featureName in featureNames) {
                 if (availableFeatures.Contains(featureName)) {
                     featuresToEnable.Add(featureName);

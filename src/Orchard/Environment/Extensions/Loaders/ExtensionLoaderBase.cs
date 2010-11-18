@@ -32,7 +32,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         public abstract ExtensionProbeEntry Probe(ExtensionDescriptor descriptor);
 
         public ExtensionEntry Load(ExtensionDescriptor descriptor) {
-            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Id);
             if (dependency != null && dependency.LoaderName == this.Name) {
                 return LoadWorker(descriptor);
             }

@@ -87,12 +87,12 @@ namespace Orchard.Environment.Extensions {
 
         private void ProcessExtension(ExtensionLoadingContext context, ExtensionDescriptor extension) {
 
-            var extensionProbes = context.AvailableExtensionsProbes.ContainsKey(extension.Name) ?
-                context.AvailableExtensionsProbes[extension.Name] :
+            var extensionProbes = context.AvailableExtensionsProbes.ContainsKey(extension.Id) ?
+                context.AvailableExtensionsProbes[extension.Id] :
                 Enumerable.Empty<ExtensionProbeEntry>();
 
             if (Logger.IsEnabled(LogLevel.Debug)) {
-                Logger.Debug("Loaders for extension \"{0}\": ", extension.Name);
+                Logger.Debug("Loaders for extension \"{0}\": ", extension.Id);
                 foreach (var probe in extensionProbes) {
                     Logger.Debug("  Loader: {0}", probe.Loader.Name);
                     Logger.Debug("    VirtualPath: {0}", probe.VirtualPath);
@@ -103,14 +103,14 @@ namespace Orchard.Environment.Extensions {
             var moduleReferences =
                 context.AvailableExtensions
                     .Where(e =>
-                           context.ReferencesByModule.ContainsKey(extension.Name) &&
-                           context.ReferencesByModule[extension.Name].Any(r => StringComparer.OrdinalIgnoreCase.Equals(e.Name, r.Name)))
+                           context.ReferencesByModule.ContainsKey(extension.Id) &&
+                           context.ReferencesByModule[extension.Id].Any(r => StringComparer.OrdinalIgnoreCase.Equals(e.Id, r.Name)))
                     .ToList();
 
             var processedModuleReferences =
                 moduleReferences
-                .Where(e => context.ProcessedExtensions.ContainsKey(e.Name))
-                .Select(e => context.ProcessedExtensions[e.Name])
+                .Where(e => context.ProcessedExtensions.ContainsKey(e.Id))
+                .Select(e => context.ProcessedExtensions[e.Id])
                 .ToList();
 
             var activatedExtension = extensionProbes
@@ -119,18 +119,18 @@ namespace Orchard.Environment.Extensions {
 
             var previousDependency = context
                 .PreviousDependencies
-                .Where(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, extension.Name))
+                .Where(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, extension.Id))
                 .FirstOrDefault();
 
             if (activatedExtension == null) {
-                Logger.Warning("No loader found for extension \"{0}\"!", extension.Name);
+                Logger.Warning("No loader found for extension \"{0}\"!", extension.Id);
             }
 
             var references = ProcessExtensionReferences(context, activatedExtension);
 
             foreach (var loader in _loaders) {
                 if (activatedExtension != null && activatedExtension.Loader.Name == loader.Name) {
-                    Logger.Information("Activating extension \"{0}\" with loader \"{1}\"", activatedExtension.Descriptor.Name, loader.Name);
+                    Logger.Information("Activating extension \"{0}\" with loader \"{1}\"", activatedExtension.Descriptor.Id, loader.Name);
                     loader.ExtensionActivated(context, extension);
                 }
                 else if (previousDependency != null && previousDependency.LoaderName == loader.Name) {
@@ -141,7 +141,7 @@ namespace Orchard.Environment.Extensions {
 
             if (activatedExtension != null) {
                 context.NewDependencies.Add(new DependencyDescriptor {
-                    Name = extension.Name,
+                    Name = extension.Id,
                     LoaderName = activatedExtension.Loader.Name,
                     VirtualPath = activatedExtension.VirtualPath,
                     References = references
@@ -150,14 +150,14 @@ namespace Orchard.Environment.Extensions {
 
             // Keep track of which loader we use for every extension
             // This will be needed for processing references from other dependent extensions
-            context.ProcessedExtensions.Add(extension.Name, activatedExtension);
+            context.ProcessedExtensions.Add(extension.Id, activatedExtension);
         }
 
         private ExtensionLoadingContext CreateLoadingContext() {
             var availableExtensions = _extensionManager
                 .AvailableExtensions()
                 .Where(d => d.ExtensionType == "Module" || d.ExtensionType == "Theme")
-                .OrderBy(d => d.Name)
+                .OrderBy(d => d.Id)
                 .ToList();
 
             var previousDependencies = _dependenciesFolder.LoadDescriptors().ToList();
@@ -165,13 +165,13 @@ namespace Orchard.Environment.Extensions {
             var availableExtensionsProbes = availableExtensions.SelectMany(extension => _loaders
                                                                                             .Select(loader => loader.Probe(extension))
                                                                                             .Where(probe => probe != null))
-                .GroupBy(e => e.Descriptor.Name)
+                .GroupBy(e => e.Descriptor.Id)
                 .ToDictionary(g => g.Key, g => g.AsEnumerable()
                                                    .OrderByDescending(probe => probe.LastWriteTimeUtc)
                                                    .ThenBy(probe => probe.Loader.Order), StringComparer.OrdinalIgnoreCase);
 
             var deletedDependencies = previousDependencies
-                .Where(e => !availableExtensions.Any(e2 => StringComparer.OrdinalIgnoreCase.Equals(e2.Name, e.Name)))
+                .Where(e => !availableExtensions.Any(e2 => StringComparer.OrdinalIgnoreCase.Equals(e2.Id, e.Name)))
                 .ToList();
 
             // Collect references for all modules
@@ -181,7 +181,7 @@ namespace Orchard.Environment.Extensions {
                     .ToList();
 
             var referencesByModule = references
-                .GroupBy(entry => entry.Descriptor.Name, StringComparer.OrdinalIgnoreCase)
+                .GroupBy(entry => entry.Descriptor.Id, StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(g => g.Key, g => g.AsEnumerable(), StringComparer.OrdinalIgnoreCase);
 
             var referencesByName = references
@@ -190,8 +190,8 @@ namespace Orchard.Environment.Extensions {
 
             var sortedAvailableExtensions =
                 availableExtensions.OrderByDependencies(
-                    (item, dep) => referencesByModule.ContainsKey(item.Name) &&
-                                   referencesByModule[item.Name].Any(r => StringComparer.OrdinalIgnoreCase.Equals(dep.Name, r.Name)))
+                    (item, dep) => referencesByModule.ContainsKey(item.Id) &&
+                                   referencesByModule[item.Id].Any(r => StringComparer.OrdinalIgnoreCase.Equals(dep.Id, r.Name)))
                     .ToList();
 
             return new ExtensionLoadingContext {
@@ -208,8 +208,8 @@ namespace Orchard.Environment.Extensions {
             if (activatedExtension == null)
                 return Enumerable.Empty<DependencyReferenceDescriptor>();
 
-            var referenceNames = (context.ReferencesByModule.ContainsKey(activatedExtension.Descriptor.Name) ?
-                context.ReferencesByModule[activatedExtension.Descriptor.Name] :
+            var referenceNames = (context.ReferencesByModule.ContainsKey(activatedExtension.Descriptor.Id) ?
+                context.ReferencesByModule[activatedExtension.Descriptor.Id] :
                 Enumerable.Empty<ExtensionReferenceProbeEntry>())
                 .Select(r => r.Name)
                 .Distinct(StringComparer.OrdinalIgnoreCase);

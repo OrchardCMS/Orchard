@@ -103,8 +103,8 @@ namespace Orchard.Modules.Controllers {
             var features = _featureManager.GetAvailableFeatures()
                 .Where(f => !f.Extension.ExtensionType.Equals("Theme", StringComparison.OrdinalIgnoreCase))
                 .Select(f=>new ModuleFeature{Descriptor=f,
-                IsEnabled=_shellDescriptor.Features.Any(sf=>sf.Name==f.Name),
-                NeedsUpdate=featuresThatNeedUpdate.Contains(f.Name)})
+                IsEnabled=_shellDescriptor.Features.Any(sf=>sf.Name==f.Id),
+                NeedsUpdate=featuresThatNeedUpdate.Contains(f.Id)})
                 .ToList();
 
             return View(new FeaturesViewModel { Features = features });

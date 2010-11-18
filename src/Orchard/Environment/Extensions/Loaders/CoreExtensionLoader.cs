@@ -27,7 +27,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                     Descriptor = descriptor,
                     LastWriteTimeUtc = DateTime.MinValue,
                     Loader = this,
-                    VirtualPath = "~/Core/" + descriptor.Name
+                    VirtualPath = "~/Core/" + descriptor.Id
                 };
             }
             return null;
@@ -46,7 +46,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         private static bool IsTypeFromModule(Type type, ExtensionDescriptor descriptor) {
-            return (type.Namespace + ".").StartsWith("Orchard.Core." + descriptor.Name + ".");
+            return (type.Namespace + ".").StartsWith("Orchard.Core." + descriptor.Id + ".");
         }
     }
 }

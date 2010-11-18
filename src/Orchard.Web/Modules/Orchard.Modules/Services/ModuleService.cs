@@ -53,7 +53,7 @@ namespace Orchard.Modules.Services {
             return _extensionManager.AvailableExtensions()
                 .SelectMany(m => _extensionManager.LoadFeatures(m.Features))
                 .Select(f => AssembleModuleFromDescriptor(f, enabledFeatures
-                    .FirstOrDefault(sf => string.Equals(sf.Name, f.Descriptor.Name, StringComparison.OrdinalIgnoreCase)) != null));
+                    .FirstOrDefault(sf => string.Equals(sf.Name, f.Descriptor.Id, StringComparison.OrdinalIgnoreCase)) != null));
         }
 
         public void EnableFeatures(IEnumerable<string> featureNames) {
@@ -111,10 +111,10 @@ namespace Orchard.Modules.Services {
             var getDisabledDependencies =
                 new Func<string, IEnumerable<ModuleFeature>, IEnumerable<ModuleFeature>>(
                     (n, fs) => {
-                        var feature = fs.Single(f => f.Descriptor.Name == n);
+                        var feature = fs.Single(f => f.Descriptor.Id == n);
                         return feature.Descriptor.Dependencies != null
                                    ? feature.Descriptor.Dependencies.Select(
-                                       fn => fs.Single(f => f.Descriptor.Name == fn)).Where(f => !f.IsEnabled)
+                                       fn => fs.Single(f => f.Descriptor.Id == fn)).Where(f => !f.IsEnabled)
                                    : Enumerable.Empty<ModuleFeature>();
                     });
 
@@ -152,7 +152,7 @@ namespace Orchard.Modules.Services {
             var dependencies = new List<string> {featureName};
 
             foreach (var dependency in getAffectedDependencies(featureName, features))
-                dependencies.AddRange(GetAffectedFeatures(dependency.Descriptor.Name, features, getAffectedDependencies));
+                dependencies.AddRange(GetAffectedFeatures(dependency.Descriptor.Id, features, getAffectedDependencies));
 
             return dependencies;
         }

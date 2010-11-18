@@ -44,7 +44,7 @@ namespace Orchard.Packaging.Services {
             IEnumerable<IPackage> packages;
 
             packages = from extension in _extensionManager.AvailableExtensions()
-                       let id = "Orchard." + extension.ExtensionType + "." + extension.Name
+                       let id = "Orchard." + extension.ExtensionType + "." + extension.Id
                        let version = Version.Parse(extension.Version)
                        let package = SourceRepository.FindPackage(id, version)
                        where package != null

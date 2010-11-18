@@ -14,12 +14,12 @@ namespace Orchard.Security {
                 // This is a lie, but it enables the permissions and stereotypes to be created
                 return new Feature {
                     Descriptor = new FeatureDescriptor {
-                        Name = "Orchard.Framework",
+                        Id = "Orchard.Framework",
                         Category = "Core",
                         Dependencies = Enumerable.Empty<string>(),
                         Description = "",
                         Extension = new ExtensionDescriptor {
-                            Name = "Orchard.Framework"
+                            Id = "Orchard.Framework"
                         }
                     },
                     ExportedTypes = Enumerable.Empty<Type>()

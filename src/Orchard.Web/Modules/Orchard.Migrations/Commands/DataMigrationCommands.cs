@@ -30,7 +30,7 @@ namespace Orchard.Migrations.Commands {
                                                    ? featureNames
                                                    : _extensionManager.AvailableExtensions()
                                                          .SelectMany(ext => ext.Features)
-                                                         .Select(f => f.Name);
+                                                         .Select(f => f.Id);
 
                 foreach(var feature in features) {
                     _dataMigrationManager.Update(feature);    

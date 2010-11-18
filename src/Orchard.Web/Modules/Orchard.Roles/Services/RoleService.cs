@@ -80,7 +80,7 @@ namespace Orchard.Roles.Services {
             foreach (var permissionProvider in _permissionProviders) {
                 foreach (var permission in permissionProvider.GetPermissions()) {
                     if (String.Equals(permissionName, permission.Name, StringComparison.OrdinalIgnoreCase)) {
-                        return permissionProvider.Feature.Descriptor.Name;
+                        return permissionProvider.Feature.Descriptor.Id;
                     }
                 }
             }
@@ -105,7 +105,7 @@ namespace Orchard.Roles.Services {
         public IDictionary<string, IEnumerable<Permission>> GetInstalledPermissions() {
             var installedPermissions = new Dictionary<string, IEnumerable<Permission>>();
             foreach (var permissionProvider in _permissionProviders) {
-                var featureName = permissionProvider.Feature.Descriptor.Name;
+                var featureName = permissionProvider.Feature.Descriptor.Id;
                 var permissions = permissionProvider.GetPermissions();
                 foreach(var permission in permissions) {
                     var category = permission.Category;

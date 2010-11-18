@@ -35,10 +35,10 @@ namespace Orchard.Roles {
         void IFeatureEventHandler.Uninstall(Feature feature) {}
 
         public void AddDefaultRolesForFeature(Feature feature) {
-            var featureName = feature.Descriptor.Name;
+            var featureName = feature.Descriptor.Id;
 
             // when another module is being enabled, locate matching permission providers
-            var providersForEnabledModule = _permissionProviders.Where(x => x.Feature.Descriptor.Name == featureName);
+            var providersForEnabledModule = _permissionProviders.Where(x => x.Feature.Descriptor.Id == featureName);
 
             if (providersForEnabledModule.Any()) {
                 Logger.Debug("Configuring default roles for module {0}", featureName);

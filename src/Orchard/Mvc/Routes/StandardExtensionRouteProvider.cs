@@ -17,7 +17,7 @@ namespace Orchard.Mvc.Routes {
         public IEnumerable<RouteDescriptor> GetRoutes() {
             var displayNamesPerArea = _blueprint.Controllers.GroupBy(
                 x => x.AreaName,
-                x => x.Feature.Descriptor.Extension.DisplayName);
+                x => x.Feature.Descriptor.Extension.Name);
 
             foreach (var item in displayNamesPerArea) {
                 var areaName = item.Key;

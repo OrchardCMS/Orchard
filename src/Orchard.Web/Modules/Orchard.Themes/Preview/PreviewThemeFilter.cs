@@ -38,9 +38,9 @@ namespace Orchard.Themes.Preview {
 
             var themeListItems = installedThemes
                 .Select(theme => new SelectListItem {
-                    Text = theme.DisplayName,
-                    Value = theme.Name,
-                    Selected = theme.Name == previewThemeName
+                    Text = theme.Name,
+                    Value = theme.Id,
+                    Selected = theme.Id == previewThemeName
                 })
                 .ToList();
 

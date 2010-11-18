@@ -42,7 +42,7 @@ namespace Orchard.UI.Resources {
         public string BasePath {
             get {
                 if (_basePath == null && Feature != null) {
-                    _basePath = VirtualPathUtility.AppendTrailingSlash(Feature.Descriptor.Extension.Location + "/" + Feature.Descriptor.Extension.Name);
+                    _basePath = VirtualPathUtility.AppendTrailingSlash(Feature.Descriptor.Extension.Location + "/" + Feature.Descriptor.Extension.Id);
                 }
                 return _basePath;
             }

@@ -53,24 +53,24 @@ namespace Orchard.CodeGeneration.Commands {
             Context.Output.WriteLine(T("Creating Data Migration for {0}", featureName));
 
             ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(extension => extension.ExtensionType == "Module" &&
-                                                                                                             extension.Features.Any(feature => String.Equals(feature.Name, featureName, StringComparison.OrdinalIgnoreCase)));
+                                                                                                             extension.Features.Any(feature => String.Equals(feature.Id, featureName, StringComparison.OrdinalIgnoreCase)));
 
             if (extensionDescriptor == null) {
                 Context.Output.WriteLine(T("Creating data migration failed: target Feature {0} could not be found.", featureName));
                 return false;
             }
 
-            string dataMigrationFolderPath = HostingEnvironment.MapPath("~/Modules/" + extensionDescriptor.Name + "/");
+            string dataMigrationFolderPath = HostingEnvironment.MapPath("~/Modules/" + extensionDescriptor.Id + "/");
             string dataMigrationFilePath = dataMigrationFolderPath + "Migrations.cs";
             string templatesPath = HostingEnvironment.MapPath("~/Modules/Orchard." + ModuleName + "/CodeGenerationTemplates/");
-            string moduleCsProjPath = HostingEnvironment.MapPath(string.Format("~/Modules/{0}/{0}.csproj", extensionDescriptor.Name));
+            string moduleCsProjPath = HostingEnvironment.MapPath(string.Format("~/Modules/{0}/{0}.csproj", extensionDescriptor.Id));
                     
             if (!Directory.Exists(dataMigrationFolderPath)) {
                 Directory.CreateDirectory(dataMigrationFolderPath);
             }
 
             if (File.Exists(dataMigrationFilePath)) {
-                Context.Output.WriteLine(T("Data migration already exists in target Module {0}.", extensionDescriptor.Name));
+                Context.Output.WriteLine(T("Data migration already exists in target Module {0}.", extensionDescriptor.Id));
                 return false;
             }
 
@@ -104,7 +104,7 @@ namespace Orchard.CodeGeneration.Commands {
 
             File.WriteAllText(moduleCsProjPath, projectFileText);
             TouchSolution(Context.Output);
-            Context.Output.WriteLine(T("Data migration created successfully in Module {0}", extensionDescriptor.Name));
+            Context.Output.WriteLine(T("Data migration created successfully in Module {0}", extensionDescriptor.Id));
 
             return true;
         }
@@ -115,7 +115,7 @@ namespace Orchard.CodeGeneration.Commands {
         public bool CreateModule(string moduleName) {
             Context.Output.WriteLine(T("Creating Module {0}", moduleName));
 
-            if ( _extensionManager.AvailableExtensions().Any(extension => String.Equals(moduleName, extension.DisplayName, StringComparison.OrdinalIgnoreCase)) ) {
+            if ( _extensionManager.AvailableExtensions().Any(extension => String.Equals(moduleName, extension.Name, StringComparison.OrdinalIgnoreCase)) ) {
                 Context.Output.WriteLine(T("Creating Module {0} failed: a module of the same name already exists", moduleName));
                 return false;
             }
@@ -131,14 +131,14 @@ namespace Orchard.CodeGeneration.Commands {
         [OrchardSwitches("IncludeInSolution,BasedOn,CreateProject")]
         public void CreateTheme(string themeName) {
             Context.Output.WriteLine(T("Creating Theme {0}", themeName));
-            if (_extensionManager.AvailableExtensions().Any(extension => String.Equals(themeName, extension.Name, StringComparison.OrdinalIgnoreCase))) {
+            if (_extensionManager.AvailableExtensions().Any(extension => String.Equals(themeName, extension.Id, StringComparison.OrdinalIgnoreCase))) {
                 Context.Output.WriteLine(T("Creating Theme {0} failed: an extention of the same name already exists", themeName));
             }
             else {
                 if (!string.IsNullOrEmpty(BasedOn)) {
                     if (!_extensionManager.AvailableExtensions().Any(extension =>
                         string.Equals(extension.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase) &&
-                        string.Equals(BasedOn, extension.Name, StringComparison.OrdinalIgnoreCase))) {
+                        string.Equals(BasedOn, extension.Id, StringComparison.OrdinalIgnoreCase))) {
                         Context.Output.WriteLine(T("Creating Theme {0} failed: base theme named {1} was not found.", themeName, BasedOn));
                         return;
                     }
@@ -154,16 +154,16 @@ namespace Orchard.CodeGeneration.Commands {
             Context.Output.WriteLine(T("Creating Controller {0} in Module {1}", controllerName, moduleName));
 
             ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(extension => extension.ExtensionType == "Module" &&
-                                                                                                             string.Equals(moduleName, extension.DisplayName, StringComparison.OrdinalIgnoreCase));
+                                                                                                             string.Equals(moduleName, extension.Name, StringComparison.OrdinalIgnoreCase));
 
             if (extensionDescriptor == null) {
                 Context.Output.WriteLine(T("Creating Controller {0} failed: target Module {1} could not be found.", controllerName, moduleName));
                 return;
             }
 
-            string moduleControllersPath = HostingEnvironment.MapPath("~/Modules/" + extensionDescriptor.Name + "/Controllers/");
+            string moduleControllersPath = HostingEnvironment.MapPath("~/Modules/" + extensionDescriptor.Id + "/Controllers/");
             string controllerPath = moduleControllersPath + controllerName + ".cs";
-            string moduleCsProjPath = HostingEnvironment.MapPath(string.Format("~/Modules/{0}/{0}.csproj", extensionDescriptor.Name));
+            string moduleCsProjPath = HostingEnvironment.MapPath(string.Format("~/Modules/{0}/{0}.csproj", extensionDescriptor.Id));
             string templatesPath = HostingEnvironment.MapPath("~/Modules/Orchard." + ModuleName + "/CodeGenerationTemplates/");
 
             if (!Directory.Exists(moduleControllersPath)) {

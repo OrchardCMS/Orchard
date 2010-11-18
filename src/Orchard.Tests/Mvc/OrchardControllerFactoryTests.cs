@@ -42,7 +42,7 @@ namespace Orchard.Tests.Mvc {
 
             var workContext = new DefaultDisplayManagerTests.TestWorkContext
             {
-                CurrentTheme = new ExtensionDescriptor { Name = "Hello" },
+                CurrentTheme = new ExtensionDescriptor { Id = "Hello" },
                 ContainerProvider = _containerProvider
             };
             _workContextAccessor = new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext);

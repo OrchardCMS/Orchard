@@ -60,7 +60,7 @@ namespace Orchard.Data.Migration {
                     
                     // try to resolve a Create method
                     if ( GetCreateMethod(dataMigration) != null ) {
-                        features.Add(dataMigration.Feature.Descriptor.Name);
+                        features.Add(dataMigration.Feature.Descriptor.Id);
                         continue;
                     }
                 }
@@ -68,7 +68,7 @@ namespace Orchard.Data.Migration {
                 var lookupTable = CreateUpgradeLookupTable(dataMigration);
 
                 if(lookupTable.ContainsKey(current)) {
-                    features.Add(dataMigration.Feature.Descriptor.Name);
+                    features.Add(dataMigration.Feature.Descriptor.Id);
                 }
             }
 
@@ -87,7 +87,7 @@ namespace Orchard.Data.Migration {
 
             // proceed with dependent features first, whatever the module it's in
             var dependencies = _extensionManager.AvailableFeatures()
-                .Where(f => String.Equals(f.Name, feature, StringComparison.OrdinalIgnoreCase))
+                .Where(f => String.Equals(f.Id, feature, StringComparison.OrdinalIgnoreCase))
                 .Where(f => f.Dependencies != null)
                 .SelectMany( f => f.Dependencies )
                 .ToList();
@@ -184,11 +184,11 @@ namespace Orchard.Data.Migration {
         /// </summary>
         private IEnumerable<IDataMigration> GetDataMigrations(string feature) {
             var migrations = _dataMigrations
-                    .Where(dm => String.Equals(dm.Feature.Descriptor.Name, feature, StringComparison.OrdinalIgnoreCase))
+                    .Where(dm => String.Equals(dm.Feature.Descriptor.Id, feature, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
             foreach (var migration in migrations.OfType<DataMigrationImpl>()) {
-                migration.SchemaBuilder = new SchemaBuilder(_interpreter, migration.Feature.Descriptor.Name, (s) => s.Replace(".", "_") + "_");
+                migration.SchemaBuilder = new SchemaBuilder(_interpreter, migration.Feature.Descriptor.Id, (s) => s.Replace(".", "_") + "_");
                 migration.ContentDefinitionManager = _contentDefinitionManager;
             }
 

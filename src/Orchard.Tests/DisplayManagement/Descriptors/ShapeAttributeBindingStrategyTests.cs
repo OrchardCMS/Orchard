@@ -26,9 +26,9 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             builder.RegisterAutoMocking();
             _testFeature = new Feature {
                 Descriptor = new FeatureDescriptor {
-                    Name = "Testing",
+                    Id = "Testing",
                     Extension = new ExtensionDescriptor {
-                        Name = "Testing",
+                        Id = "Testing",
                         ExtensionType = "Module",
                     }
                 }

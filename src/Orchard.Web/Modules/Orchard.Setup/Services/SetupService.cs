@@ -235,7 +235,7 @@ namespace Orchard.Setup.Services {
             // If "Orchard.Widgets" is enabled, setup default layers and widgets
             var extensionManager = environment.Resolve<IExtensionManager>();
             var shellDescriptor = environment.Resolve<ShellDescriptor>();
-            if (extensionManager.EnabledFeatures(shellDescriptor).Where(d => d.Name == "Orchard.Widgets").Any()) {
+            if (extensionManager.EnabledFeatures(shellDescriptor).Where(d => d.Id == "Orchard.Widgets").Any()) {
                 // Create default layers
                 var layerInitializer = environment.Resolve<IDefaultLayersInitializer>();
                 layerInitializer.CreateDefaultLayers();

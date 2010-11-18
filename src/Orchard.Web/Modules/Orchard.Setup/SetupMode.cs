@@ -103,8 +103,8 @@ namespace Orchard.Setup {
         [UsedImplicitly]
         class SafeModeThemeService : IThemeManager {
             private readonly ExtensionDescriptor _theme = new ExtensionDescriptor {
+                Id = "SafeMode",
                 Name = "SafeMode",
-                DisplayName = "SafeMode",
                 Location = "~/Themes",
             };
 

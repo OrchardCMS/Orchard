@@ -23,7 +23,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static string ThemePath(this HtmlHelper helper, ExtensionDescriptor theme, string path) {
-            return theme.Location + "/" + theme.Name + path;
+            return theme.Location + "/" + theme.Id + path;
         }
     }
 }
