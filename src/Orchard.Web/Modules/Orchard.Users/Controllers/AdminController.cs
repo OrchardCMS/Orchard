@@ -57,10 +57,10 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.New<IUser>("User");
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Create", Model: new UserCreateViewModel(), Prefix: null);
             editor.Metadata.Position = "2";
-            var model = Services.ContentManager.BuildEditor(user);
+            dynamic model = Services.ContentManager.BuildEditor(user);
             model.Content.Add(editor);
 
-            return View(model);
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -111,10 +111,10 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get<UserPart>(id);
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Edit", Model: new UserEditViewModel {User = user}, Prefix: null);
             editor.Metadata.Position = "2";
-            var model = Services.ContentManager.BuildEditor(user);
+            dynamic model = Services.ContentManager.BuildEditor(user);
             model.Content.Add(editor);
 
-            return View(model);
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Edit")]

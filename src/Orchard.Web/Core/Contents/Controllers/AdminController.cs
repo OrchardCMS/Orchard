@@ -188,8 +188,8 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
-            var model = _contentManager.BuildEditor(contentItem);
-            return View(model);
+            dynamic model = _contentManager.BuildEditor(contentItem);
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -241,9 +241,8 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
 
-            var model = _contentManager.BuildEditor(contentItem);
-
-            return View(model);
+            dynamic model = _contentManager.BuildEditor(contentItem);
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Edit")]
