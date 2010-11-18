@@ -65,11 +65,11 @@ namespace Orchard.Blogs.Controllers {
             var blog = Services.ContentManager.New<BlogPart>("Blog");
 
             _contentManager.Create(blog, VersionOptions.Draft);
-            var model = _contentManager.UpdateEditor(blog, this);
+            dynamic model = _contentManager.UpdateEditor(blog, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
-                return View(model);
+                return View((object)model);
             }
 
             if (!blog.Has<IPublishingControlAspect>())
@@ -100,9 +100,9 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.UpdateEditor(blog, this);
+            dynamic model = Services.ContentManager.UpdateEditor(blog, this);
             if (!ModelState.IsValid)
-                return View(model);
+                return View((object)model);
 
             _blogSlugConstraint.AddSlug(blog.Slug);
             Services.Notifier.Information(T("Blog information updated"));
@@ -134,10 +134,10 @@ namespace Orchard.Blogs.Controllers {
                                           return blog;
                                       }));
 
-            var viewModel = Services.New.ViewModel()
+            dynamic viewModel = Services.New.ViewModel()
                 .ContentItems(list);
 
-            return View(viewModel);
+            return View((object)viewModel);
         }
 
         public ActionResult Item(string blogSlug, Pager pager) {
@@ -149,7 +149,7 @@ namespace Orchard.Blogs.Controllers {
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest)
                 .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin"));
 
-            var blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
+            dynamic blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
 
             var list = Shape.List();
             list.AddRange(blogPosts);
@@ -158,7 +158,7 @@ namespace Orchard.Blogs.Controllers {
             var totalItemCount = _blogPostService.PostCount(blogPart, VersionOptions.Latest);
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
             
-            return View(blog);
+            return View((object)blog);
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

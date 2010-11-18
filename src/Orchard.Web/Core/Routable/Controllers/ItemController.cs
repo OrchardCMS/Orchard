@@ -47,8 +47,8 @@ namespace Orchard.Core.Routable.Controllers {
                 throw new ApplicationException("Ambiguous content");
             }
 
-            var model = _contentManager.BuildDisplay(hits.Single());
-            return View(model);
+            dynamic model = _contentManager.BuildDisplay(hits.Single());
+            return View((object)model);
         }
 
         public ActionResult Slugify(string contentType, int? id, int? containerId) {

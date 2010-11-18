@@ -50,9 +50,9 @@ namespace Orchard.Blogs.Controllers {
             if (postPart == null)
                 return HttpNotFound();
 
-            var model = _services.ContentManager.BuildDisplay(postPart);
+            dynamic model = _services.ContentManager.BuildDisplay(postPart);
 
-            return View(model);
+            return View((object)model);
         }
 
         public ActionResult ListByArchive(string blogSlug, string archiveData) {
@@ -69,7 +69,7 @@ namespace Orchard.Blogs.Controllers {
 
             _feedManager.Register(blogPart);
 
-            var viewModel = Shape.ViewModel()
+            dynamic viewModel = Shape.ViewModel()
                 .ContentItems(list)
                 .Blog(blogPart)
                 .ArchiveData(archive);
@@ -77,7 +77,7 @@ namespace Orchard.Blogs.Controllers {
             //todo: (heskew) add back
             //.ArchiveData(archive) <-- ??
 
-            return View(viewModel);
+            return View((object)viewModel);
         }
     }
 }

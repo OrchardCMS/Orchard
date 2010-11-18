@@ -88,7 +88,7 @@ namespace Orchard.Users.Controllers {
                                                   null, null, true));
             }
 
-            var model = Services.ContentManager.UpdateEditor(user, this);
+            dynamic model = Services.ContentManager.UpdateEditor(user, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -97,7 +97,7 @@ namespace Orchard.Users.Controllers {
                 editor.Metadata.Position = "2";
                 model.Content.Add(editor);
 
-                return View(model);
+                return View((object)model);
             }
 
             Services.Notifier.Information(T("User created"));
@@ -123,7 +123,7 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get(id);
-            var model = Services.ContentManager.UpdateEditor(user, this);
+            dynamic model = Services.ContentManager.UpdateEditor(user, this);
 
             var editModel = new UserEditViewModel {User = user};
             TryUpdateModel(editModel);
@@ -144,7 +144,7 @@ namespace Orchard.Users.Controllers {
                 editor.Metadata.Position = "2";
                 model.Content.Add(editor);
 
-                return View(model);
+                return View((object)model);
             }
 
             Services.Notifier.Information(T("User information updated"));
