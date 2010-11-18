@@ -7,6 +7,7 @@ using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Security;
 using Orchard.Tags.Helpers;
+using Orchard.Tags.Models;
 
 namespace Orchard.Tags.Services {
     public class XmlRpcHandler : IXmlRpcHandler {
@@ -15,7 +16,6 @@ namespace Orchard.Tags.Services {
         private readonly IContentManager _contentManager;
         private readonly ITagService _tagService;
         private readonly IOrchardServices _orchardServices;
-        private IEnumerable<string> _tags;
 
         public XmlRpcHandler(
             IMembershipService membershipService,
@@ -39,12 +39,24 @@ namespace Orchard.Tags.Services {
 
         public void Process(XmlRpcContext context) {
             switch (context.Request.MethodName) {
+                case "metaWeblog.getCategories": // hack... because live writer still asks for it...
+                    if (context.Response == null)
+                        context.Response = new XRpcMethodResponse();
+                    break;
                 case "wp.getTags":
                     var tags = MetaWeblogGetTags(
                         Convert.ToString(context.Request.Params[0].Value),
                         Convert.ToString(context.Request.Params[1].Value),
                         Convert.ToString(context.Request.Params[2].Value));
                     context.Response = new XRpcMethodResponse().Add(tags);
+                    break;
+                case "metaWeblog.getPost":
+                    MetaWeblogAttachTagsToPost(
+                        GetPost(context.Response),
+                        Convert.ToInt32(context.Request.Params[0].Value),
+                        Convert.ToString(context.Request.Params[1].Value),
+                        Convert.ToString(context.Request.Params[2].Value),
+                        context._drivers);
                     break;
                 case "metaWeblog.newPost":
                     MetaWeblogUpdateTags(
@@ -69,6 +81,38 @@ namespace Orchard.Tags.Services {
             }
         }
 
+        private void MetaWeblogAttachTagsToPost(XRpcStruct postStruct, int postId, string userName, string password, ICollection<IXmlRpcDriver> drivers) {
+            if (postId < 1)
+                return;
+
+            var user = _membershipService.ValidateUser(userName, password);
+            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
+
+            var driver = new XmlRpcDriver(item => {
+                var post = item as XRpcStruct;
+                if (post == null)
+                    return;
+
+                var contentItem = _contentManager.Get(postId, VersionOptions.Latest);
+                if (contentItem == null)
+                    return;
+
+                var tags = contentItem.As<TagsPart>().CurrentTags.Select(tag => tag.TagName);
+                post.Set("mt_keywords", string.Join(", ", tags));
+            });
+
+            if (postStruct != null)
+                driver.Process(postStruct);
+            else
+                drivers.Add(driver);
+        }
+
+        private static XRpcStruct GetPost(XRpcMethodResponse response) {
+            return response != null && response.Params.Count == 1 && response.Params[0].Value is XRpcStruct
+                       ? response.Params[0].Value as XRpcStruct
+                       : null;
+        }
+
         private static int GetId(XRpcMethodResponse response) {
             return response != null && response.Params.Count == 1 && response.Params[0].Value is int
                        ? Convert.ToInt32(response.Params[0].Value)
@@ -77,7 +121,7 @@ namespace Orchard.Tags.Services {
 
         private XRpcArray MetaWeblogGetTags(string appKey, string userName, string password) {
             var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(StandardPermissions.AccessFrontEnd, user, null);
+            _authorizationService.CheckAccess(StandardPermissions.AccessAdminPanel, user, null);
 
             var array = new XRpcArray();
             foreach (var tag in _tagService.GetTags()) {
@@ -103,16 +147,20 @@ namespace Orchard.Tags.Services {
             if (string.IsNullOrWhiteSpace(rawTags))
                 return;
 
-            var driver = new XmlRpcDriver(id => {
-                var contentItem = _contentManager.Get(id);
+            var tags = TagHelpers.ParseCommaSeparatedTagNames(rawTags);
+            var driver = new XmlRpcDriver(item => {
+                if (!(item is int))
+                    return;
+
+                var id = (int)item;
+                var contentItem = _contentManager.Get(id, VersionOptions.Latest);
                 if (contentItem == null)
                     return;
 
                 _orchardServices.WorkContext.CurrentUser = user;
-                _tagService.UpdateTagsForContentItem(id, _tags);
+                _tagService.UpdateTagsForContentItem(id, tags);
             });
 
-            _tags = TagHelpers.ParseCommaSeparatedTagNames(rawTags);
             if (contentItemId > 0)
                 driver.Process(contentItemId);
             else
@@ -120,14 +168,14 @@ namespace Orchard.Tags.Services {
         }
 
         public class XmlRpcDriver : IXmlRpcDriver {
-            private readonly Action<int> _process;
+            private readonly Action<object> _process;
 
-            public XmlRpcDriver(Action<int> process) {
+            public XmlRpcDriver(Action<object > process) {
                 _process = process;
             }
 
-            public void Process(int id) {
-                _process(id);
+            public void Process(object item) {
+                _process(item);
             }
         }
     }

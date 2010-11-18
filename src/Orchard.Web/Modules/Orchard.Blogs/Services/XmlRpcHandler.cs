@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
@@ -90,7 +89,8 @@ namespace Orchard.Blogs.Services {
                     urlHelper,
                     Convert.ToInt32(context.Request.Params[0].Value),
                     Convert.ToString(context.Request.Params[1].Value),
-                    Convert.ToString(context.Request.Params[2].Value));
+                    Convert.ToString(context.Request.Params[2].Value),
+                    context._drivers);
                 context.Response = new XRpcMethodResponse().Add(result);
             }
 
@@ -151,7 +151,7 @@ namespace Orchard.Blogs.Services {
                 throw new ArgumentException();
 
             var array = new XRpcArray();
-            foreach (var blogPost in _blogPostService.Get(blog).Take(numberOfPosts)) {
+            foreach (var blogPost in _blogPostService.Get(blog, 0, numberOfPosts, VersionOptions.Latest)) {
                 array.Add(CreateBlogStruct(blogPost, urlHelper));
             }
             return array;
@@ -177,7 +177,7 @@ namespace Orchard.Blogs.Services {
             var slug = content.Optional<string>("wp_slug");
 
             var blogPost = _contentManager.New<BlogPostPart>("BlogPost");
-            
+
             // BodyPart
             if (blogPost.Is<BodyPart>()) {
                 blogPost.As<BodyPart>().Text = description;
@@ -212,19 +212,25 @@ namespace Orchard.Blogs.Services {
             UrlHelper urlHelper,
             int postId,
             string userName,
-            string password) {
+            string password,
+            IEnumerable<IXmlRpcDriver> drivers) {
 
             var user = _membershipService.ValidateUser(userName, password);
             _authorizationService.CheckAccess(StandardPermissions.AccessFrontEnd, user, null);
 
-            var blogPost = _blogPostService.Get(postId);
+            var blogPost = _blogPostService.Get(postId, VersionOptions.Latest);
             if (blogPost == null)
                 throw new ArgumentException();
 
-            return CreateBlogStruct(blogPost, urlHelper);
+            var postStruct = CreateBlogStruct(blogPost, urlHelper);
+
+            foreach (var driver in drivers)
+                driver.Process(postStruct);
+
+            return postStruct;
         }
 
-        private bool MetaWeblogEditPost(int postId, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
+        private bool MetaWeblogEditPost(int postId, string userName, string password, XRpcStruct content, bool publish, IEnumerable<IXmlRpcDriver> drivers) {
 
             var user = _membershipService.ValidateUser(userName, password);
             _authorizationService.CheckAccess(StandardPermissions.AccessFrontEnd, user, null);
@@ -251,7 +257,7 @@ namespace Orchard.Blogs.Services {
             return true;
         }
 
-        private bool MetaWeblogDeletePost(string appkey, string postId, string userName, string password, bool publish, ICollection<IXmlRpcDriver> drivers) {
+        private bool MetaWeblogDeletePost(string appkey, string postId, string userName, string password, bool publish, IEnumerable<IXmlRpcDriver> drivers) {
             var user = _membershipService.ValidateUser(userName, password);
             _authorizationService.CheckAccess(StandardPermissions.AccessFrontEnd, user, null);
 
