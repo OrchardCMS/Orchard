@@ -34,9 +34,9 @@ namespace Orchard.Core.Settings.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            var model = Services.ContentManager.BuildEditor(_siteService.GetSiteSettings());
+            dynamic model = Services.ContentManager.BuildEditor(_siteService.GetSiteSettings());
 
-            return View(model);
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Index")]
@@ -45,11 +45,11 @@ namespace Orchard.Core.Settings.Controllers {
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings();
-            var model = Services.ContentManager.UpdateEditor(site, this);
+            dynamic model = Services.ContentManager.UpdateEditor(site, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                return View(model);
+                return View((object)model);
             }
 
             Services.Notifier.Information(T("Settings updated"));

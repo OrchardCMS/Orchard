@@ -91,13 +91,13 @@ namespace Orchard.Core.Contents.Controllers {
             var list = Shape.List();
             list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
 
-            var viewModel = Shape.ViewModel()
+            dynamic viewModel = Shape.ViewModel()
                 .ContentItems(list)
                 .Pager(pagerShape)
                 .Options(model.Options)
                 .TypeDisplayName(model.TypeDisplayName ?? "");
 
-            return View(viewModel);
+            return View((object)viewModel);
         }
 
         private IEnumerable<ContentTypeDefinition> GetCreatableTypes() {
@@ -174,9 +174,9 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         ActionResult CreatableTypeList() {
-            var viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes());
+            dynamic viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes());
 
-            return View("CreatableTypeList", viewModel);
+            return View("CreatableTypeList", (object)viewModel);
         }
 
         public ActionResult Create(string id) {
@@ -215,10 +215,10 @@ namespace Orchard.Core.Contents.Controllers {
 
             _contentManager.Create(contentItem, VersionOptions.Draft);
 
-            var model = _contentManager.UpdateEditor(contentItem, this);
+            dynamic model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
-                return View(model);
+                return View((object)model);
             }
 
             conditionallyPublish(contentItem);
@@ -266,10 +266,10 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
-            var model = _contentManager.UpdateEditor(contentItem, this);
+            dynamic model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
-                return View("Edit", model);
+                return View("Edit", (object)model);
             }
 
             conditionallyPublish(contentItem);

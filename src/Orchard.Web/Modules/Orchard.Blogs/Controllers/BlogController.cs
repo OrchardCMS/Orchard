@@ -43,10 +43,10 @@ namespace Orchard.Blogs.Controllers {
             var list = Shape.List();
             list.AddRange(blogs);
 
-            var viewModel = Shape.ViewModel()
+            dynamic viewModel = Shape.ViewModel()
                 .ContentItems(list);
 
-            return View(viewModel);
+            return View((object)viewModel);
         }
 
         public ActionResult Item(string blogSlug, Pager pager) {
@@ -61,7 +61,7 @@ namespace Orchard.Blogs.Controllers {
             _feedManager.Register(blogPart);
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
                 .Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
-            var blog = _services.ContentManager.BuildDisplay(blogPart);
+            dynamic blog = _services.ContentManager.BuildDisplay(blogPart);
 
             var list = Shape.List();
             list.AddRange(blogPosts);
@@ -70,7 +70,7 @@ namespace Orchard.Blogs.Controllers {
             var totalItemCount = _blogPostService.PostCount(blogPart);
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
 
-            return View(blog);
+            return View((object)blog);
         }
     }
 }
