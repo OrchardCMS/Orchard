@@ -277,7 +277,7 @@
     <Content Include="Messaging\Views\EditorTemplates\Parts\MessageSettings.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Fields\Common.Text.Edit.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
-    <Content Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
+    <Content Include="Common\Views\Body.Editor.cshtml" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
     <Content Include="Localization\Styles\admin.css" />

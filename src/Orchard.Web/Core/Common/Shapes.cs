@@ -15,6 +15,11 @@ namespace Orchard.Core.Common {
         public Localizer T { get; set; }
 
         public void Discover(ShapeTableBuilder builder) {
+            builder.Describe("Body_Editor")
+                .OnDisplaying(displaying => {
+                    string flavor = displaying.Shape.EditorFlavor;
+                    displaying.ShapeMetadata.Alternates.Add("Body_Editor__" + flavor);
+                });
             builder.Describe("Fields_Common_Text")
                 .OnDisplaying(displaying => {
                     string textFieldName = displaying.Shape.Name;

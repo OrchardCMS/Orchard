@@ -1,0 +1,5 @@
+﻿@using Orchard.Utility.Extensions;
+@{
+    string editorFlavor = Model.EditorFlavor;
+}
+@Html.TextArea("Text", (string)Model.Text, 25, 80, new { @class = editorFlavor.HtmlClassify() })

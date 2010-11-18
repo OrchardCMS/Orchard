@@ -17,9 +17,6 @@ namespace Orchard.Core.Common.Drivers {
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
         private const string TemplateName = "Parts/Common.Body";
-        //todo: change back - or to something better
-        private const string DefaultTextEditorTemplate = "TinyMceTextEditor";
-        private const string PlainTextEditorTemplate = "PlainTextEditor";
 
         public BodyPartDriver(IOrchardServices services, IEnumerable<IHtmlFilter> htmlFilters) {
             _htmlFilters = htmlFilters;
@@ -64,7 +61,7 @@ namespace Orchard.Core.Common.Drivers {
         private static BodyEditorViewModel BuildEditorViewModel(BodyPart part) {
             return new BodyEditorViewModel {
                 BodyPart = part,
-                TextEditorTemplate = GetFlavor(part) == "html" ? DefaultTextEditorTemplate : PlainTextEditorTemplate,
+                EditorFlavor = GetFlavor(part),
                 AddMediaPath = new PathBuilder(part).AddContentType().AddContainerSlug().AddSlug().ToString()
             };
         }
