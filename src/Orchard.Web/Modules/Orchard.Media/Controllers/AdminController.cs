@@ -149,7 +149,7 @@ namespace Orchard.Media.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.UploadMediaFiles, T("Couldn't upload media file")))
                     return new HttpUnauthorizedResult();
 
-                if(Request.Files[0].FileName.IsNullOrEmptyTrimmed()) {
+                if(String.IsNullOrWhiteSpace(Request.Files[0].FileName)) {
                     ModelState.AddModelError("File", T("Select a file to upload").ToString());
                 }
 
