@@ -1,4 +1,4 @@
-﻿Feature: Blog management
+﻿Feature: Blog
     In order to add blogs to my site
     As an author
     I want to create blogs and create, publish and edit blog posts
@@ -121,4 +121,8 @@ Scenario: Enabling remote blog publishing inserts the appropriate metaweblogapi 
             | Routable.Title | My Blog |
         And I hit "Save"
         And I go to "my-blog"
-    Then I should see "<link href="[^"]+my-blog/wlwmanifest\.xml" rel="wlwmanifest" type="application/wlwmanifest\+xml" />"
+    Then I should see "<link href="[^"]*/XmlRpc/LiveWriter/Manifest" rel="wlwmanifest" type="application/wlwmanifest\+xml" />"
+    When I go to "/XmlRpc/LiveWriter/Manifest"
+    Then the content type should be "\btext/xml\b"
+        And I should see "<manifest xmlns="http\://schemas\.microsoft\.com/wlw/manifest/weblog">"
+        And I should see "<clientType>Metaweblog</clientType>"

@@ -17,8 +17,8 @@ namespace Orchard.Specs
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.4.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Blog management")]
-    public partial class BlogManagementFeature
+    [NUnit.Framework.DescriptionAttribute("Blog")]
+    public partial class BlogFeature
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -30,7 +30,7 @@ namespace Orchard.Specs
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Blog management", "In order to add blogs to my site\r\nAs an author\r\nI want to create blogs and create" +
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Blog", "In order to add blogs to my site\r\nAs an author\r\nI want to create blogs and create" +
                     ", publish and edit blog posts", GenerationTargetLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
@@ -378,8 +378,17 @@ this.ScenarioSetup(scenarioInfo);
 #line 123
         testRunner.And("I go to \"my-blog\"");
 #line 124
-    testRunner.Then("I should see \"<link href=\"[^\"]+my-blog/wlwmanifest\\.xml\" rel=\"wlwmanifest\" type=\"" +
-                    "application/wlwmanifest\\+xml\" />\"");
+    testRunner.Then("I should see \"<link href=\"[^\"]*/XmlRpc/LiveWriter/Manifest\" rel=\"wlwmanifest\" typ" +
+                    "e=\"application/wlwmanifest\\+xml\" />\"");
+#line 125
+    testRunner.When("I go to \"/XmlRpc/LiveWriter/Manifest\"");
+#line 126
+    testRunner.Then("the content type should be \"\\btext/xml\\b\"");
+#line 127
+        testRunner.And("I should see \"<manifest xmlns=\"http\\://schemas\\.microsoft\\.com/wlw/manifest/weblo" +
+                    "g\">\"");
+#line 128
+        testRunner.And("I should see \"<clientType>Metaweblog</clientType>\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }

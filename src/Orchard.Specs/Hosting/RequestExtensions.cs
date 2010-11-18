@@ -112,14 +112,19 @@ namespace Orchard.Specs.Hosting {
             }
 
             public override void SendKnownResponseHeader(int index, string value) {
-                if (index == HeaderSetCookie) {
-                    _details.ResponseHeaders.Add("Set-Cookie", value);
-                }
-                else if (index == HeaderLocation) {
-                    _details.ResponseHeaders.Add("Location", value);
-                }
-                else {
-                    _details.ResponseHeaders.Add("known header #" + index, value);
+                switch (index) {
+                    case HeaderSetCookie:
+                        _details.ResponseHeaders.Add("Set-Cookie", value);
+                        break;
+                    case HeaderLocation:
+                        _details.ResponseHeaders.Add("Location", value);
+                        break;
+                    case HeaderContentType:
+                        _details.ResponseHeaders.Add("Content-Type", value);
+                        break;
+                    default:
+                        _details.ResponseHeaders.Add("known header #" + index, value);
+                        break;
                 }
                 base.SendKnownResponseHeader(index, value);
             }

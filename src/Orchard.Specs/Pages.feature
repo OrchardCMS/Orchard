@@ -1,4 +1,4 @@
-﻿Feature: Content Page management
+﻿Feature: Pages
     In order to add content pages to my site
     As an author
     I want to create, publish and edit pages

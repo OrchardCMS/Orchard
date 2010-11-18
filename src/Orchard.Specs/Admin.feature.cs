@@ -30,8 +30,8 @@ namespace Orchard.Specs
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "The Admin side of the app", "In order to manage my site\nAs a privileged user\nI want to not have my cheese move" +
-                    "d in the admin", GenerationTargetLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "The Admin side of the app", "In order to manage my site\r\nAs a privileged user\r\nI want to not have my cheese mo" +
+                    "ved in the admin", GenerationTargetLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
