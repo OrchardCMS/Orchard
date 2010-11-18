@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
@@ -49,12 +50,12 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
-            var blog = Services.ContentManager.New<BlogPart>("Blog");
+            BlogPart blog = Services.ContentManager.New<BlogPart>("Blog");
             if (blog == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(blog);
-            return View(model);
+            dynamic model = Services.ContentManager.BuildEditor(blog);
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -86,8 +87,8 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(blog);
-            return View(model);
+            dynamic model = Services.ContentManager.BuildEditor(blog);
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Edit")]

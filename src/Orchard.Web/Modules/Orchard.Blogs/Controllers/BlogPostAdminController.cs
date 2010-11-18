@@ -36,9 +36,8 @@ namespace Orchard.Blogs.Controllers {
             if (blogPost.BlogPart == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(blogPost);
-
-            return View(model);
+            dynamic model = Services.ContentManager.BuildEditor(blogPost);
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -92,9 +91,8 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(post);
-
-            return View(model);
+            dynamic model = Services.ContentManager.BuildEditor(post);
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Edit")]
