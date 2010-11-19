@@ -8,5 +8,4 @@ Description: The users module enables user management.
 Features:
     Orchard.Users:
         Description: Standard users.
-        Dependencies: Messaging
         Category: Core

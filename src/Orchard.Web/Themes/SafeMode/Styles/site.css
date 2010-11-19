@@ -172,47 +172,44 @@ button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
 
 
 /* Confirmations, Messages and the like
-----------------------------------------------------------*/
+***************************************************************/
 .message, .validation-summary-errors {
 	margin:10px 0 4px 0;
     padding:4px;
-	white-space:pre-wrap;
 }
-form .message, form .validation-summary-errors {
-    margin:0 10px;
-    white-space:inherit;
+messages div.message {
+    clear:both;
 }
 span.message {
     display:block;
 	margin:4px 0 4px 4px;
 }
-.message a {
+.messages a {
     font-weight:bold;
-}
-
-.confirmation.message {
-	background:#e6f1c9; /* green */
-	border:1px solid #cfe493;
-}
-.warning.message {
-	background:#fdf5bc; /* yellow */
-	border:1px solid #ffea9b;
 }
 /* todo: (heskew) what else (other inputs) needs this? */
 .critical.message, .validation-summary-errors,
-.input-validation-error.text-box, .input-validation-error.text,
-input[type="password"].input-validation-error {
+.input-validation-error.text-box, .input-validation-error.text {
 	border:1px solid #990808;
 }
 .critical.message, .validation-summary-errors {
 	background:#e68585; /* red */
 	color:#fff;
 }
-.info.message {
-    background:#fff; /* orange :P */
-	border:1px dashed #D2D6C6;
+.message-Information {
+    background:#e6f1c9; /* green */
+	border:1px solid #cfe493;
+	color:#062232;
 }
-.debug.message {
+.message-Warning {
+	background:#fdf5bc; /* yellow */
+	border:1px solid #ffea9b;
+}
+.message-Error {
+	background:#e68585; /* red */
+	border:1px solid #990808;
+	color:#fff;
+}.debug.message {
     background:#eee;
 	border:1px dashed #D2D6C6;
 	color:#7a7a7a;

@@ -26,7 +26,6 @@ using Orchard.Localization.Services;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
-using Orchard.Themes;
 using Orchard.Environment.State;
 using Orchard.Data.Migration;
 using Orchard.Themes.Services;
@@ -68,35 +67,42 @@ namespace Orchard.Setup.Services {
             // The vanilla Orchard distibution has the following features enabled.
             if (context.EnabledFeatures == null || context.EnabledFeatures.Count() == 0) {
                 string[] hardcoded = {
+                    // Framework
                     "Orchard.Framework",
+                    
+                    // Core
                     "Common",
-                    "Shapes",
+                    "Containers",
                     "Contents",
                     "Dashboard",
-                    "Reports",
                     "Feeds",
                     "HomePage",
                     "Navigation",
-                    "Scheduling",
-                    "Indexing",
-                    "Localization",
+                    "Reports",
                     "Routable",
+                    "Scheduling",
                     "Settings",
-                    "Messaging",
-                    "Orchard.Users",
-                    "Orchard.Roles",
-                    "TinyMce",
-                    "PackagingServices",
-                    "Orchard.Pages",
-                    "Orchard.Modules",
-                    "Orchard.Themes",
-                    "Orchard.PublishLater",
+                    "Shapes",
+
+                    // Other
+                    "Orchard.PublishLater", // todo: (sebros) remove
                     "Orchard.Blogs",
                     "Orchard.Comments",
-                    "Orchard.Tags",
-                    "Orchard.Media",
-                    "Orchard.Widgets",
+                    "Orchard.ContentTypes",
                     "Orchard.jQuery",
+                    "Orchard.Lists",
+                    "Orchard.Media",
+                    "Orchard.Migrations",
+                    "Orchard.Modules",
+                    "Orchard.Pages",
+                    "Orchard.Roles",
+                    "Orchard.Tags",
+                    "Orchard.Themes",
+                    "Orchard.Users",
+                    "Orchard.Widgets",
+                    "TinyMce",
+
+                    // Themes
                     "TheThemeMachine",
                 };
 

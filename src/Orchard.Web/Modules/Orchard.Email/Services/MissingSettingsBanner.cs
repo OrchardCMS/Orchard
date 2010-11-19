@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.Core.Messaging.Models;
 using Orchard.Localization;
 using Orchard.Email.Models;
 using Orchard.UI.Admin.Notification;
@@ -24,12 +22,6 @@ namespace Orchard.Email.Services {
 
             if ( smtpSettings == null || !smtpSettings.IsValid() ) {
                 yield return new NotifyEntry { Message = T("The SMTP settings needs to be configured." ), Type = NotifyType.Warning};
-            }
-
-            var messageSettings = _orchardServices.WorkContext.CurrentSite.As<MessageSettingsPart>().Record;
-
-            if ( messageSettings == null || String.IsNullOrWhiteSpace(messageSettings.DefaultChannelService) ) {
-                yield return new NotifyEntry { Message = T("The default channel service needs to be configured."), Type = NotifyType.Warning };
             }
         }
     }
