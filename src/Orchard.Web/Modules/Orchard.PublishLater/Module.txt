@@ -9,4 +9,4 @@ Features:
     Orchard.PublishLater:
         Description: Draft creation and scheduled publishing.
         Category: Content
-        Dependencies: Common, Settings, Scheduling
+        Dependencies: Common, Scheduling, Orchard.jQuery

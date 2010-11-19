@@ -6,7 +6,7 @@ namespace Orchard.Messaging.Services {
         /// <summary>
         /// Sends a message to a channel
         /// </summary>
-        void Send(ContentItemRecord recipient, string type, string service = null, Dictionary<string, string> properties = null);
+        void Send(ContentItemRecord recipient, string type, string service, Dictionary<string, string> properties = null);
 
         /// <summary>
         /// Wether at least one channel is active on the current site
