@@ -1,9 +1,7 @@
 ﻿using System;
-using System.IO;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Scripting;
-using Orchard.Scripting.Scripting;
 using Orchard.UI.Widgets;
 using Orchard.Widgets.RuleEngine;
 

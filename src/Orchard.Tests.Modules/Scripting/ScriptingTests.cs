@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Dynamic;
 using System.IO;
 using Autofac;
 using ClaySharp;
-using ClaySharp.Behaviors;
 using NUnit.Framework;
 using Orchard.Scripting;
-using Orchard.Scripting.Scripting;
 
 namespace Orchard.Tests.Scripting {
     [TestFixture]
