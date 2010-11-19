@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Orchard.Messaging.Email")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Orchard")]
 [assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2009")]
 [assembly: AssemblyTrademark("")]

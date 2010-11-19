@@ -8,9 +8,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("PackageIndexReferenceImplementation")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("PackageIndexReferenceImplementation")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
+[assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
