@@ -153,10 +153,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\yaml\Yaml.dll</HintPath>
     </Reference>
-    <Reference Include="YamlSerializer, Version=0.9.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\yaml\YamlSerializer.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentManagement\DefaultContentDisplay.cs" />
