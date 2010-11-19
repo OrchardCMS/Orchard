@@ -208,7 +208,22 @@
   <Target Name="Package-MsDeploy">
     <ItemGroup>
       <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
-      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml" />
+
+      <MsDeploy-Exclude-Modules Include="
+        $(StageFolder)\**\Modules\Orchard.Localization\**;
+        $(StageFolder)\**\Modules\Orchard.Messaging\**;
+        $(StageFolder)\**\Modules\Lucene\**;
+        $(StageFolder)\**\Modules\Orchard.ArchiveLater\**;
+        $(StageFolder)\**\Modules\Orchard.CodeGeneration\**;
+        $(StageFolder)\**\Modules\Orchard.Email\**;
+        $(StageFolder)\**\Modules\Orchard.Experimental\**;
+        $(StageFolder)\**\Modules\Orchard.Indexing\**;
+        $(StageFolder)\**\Modules\Orchard.Migrations\**;
+        $(StageFolder)\**\Modules\Orchard.MultiTenancy\**;
+        $(StageFolder)\**\Modules\Orchard.Search\**;
+        " />
+      
+      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;@(MsDeploy-Exclude-Modules)" />
       <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml;$(LibFolder)\msdeploy\*.sql"/>
     </ItemGroup>
 
