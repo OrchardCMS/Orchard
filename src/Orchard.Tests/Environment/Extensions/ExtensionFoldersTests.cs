@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Orchard.Caching;
 using Orchard.Environment.Extensions.Folders;
-using Orchard.FileSystems.WebSite;
 using Orchard.Tests.Stubs;
-using Yaml.Grammar;
 
 namespace Orchard.Tests.Environment.Extensions {
     [TestFixture]
