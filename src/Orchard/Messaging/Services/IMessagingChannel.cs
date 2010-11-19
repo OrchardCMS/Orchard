@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Orchard.ContentManagement;
 using Orchard.Messaging.Models;
 
 namespace Orchard.Messaging.Services {

@@ -78,14 +78,14 @@ namespace Orchard.Users.Services {
             if ( registrationSettings != null  && registrationSettings.UsersAreModerated && registrationSettings.NotifyModeration && !createUserParams.IsApproved ) {
                 var superUser = GetUser(_orchardServices.WorkContext.CurrentSite.SuperUser);
                 if(superUser != null)
-                    _messageManager.Send(superUser.ContentItem.Record, MessageTypes.Moderation);
+                    _messageManager.Send(superUser.ContentItem.Record, MessageTypes.Moderation, "email");
             }
 
             return user;
         }
 
         public void SendChallengeEmail(IUser user, string url) {
-            _messageManager.Send(user.ContentItem.Record, MessageTypes.Validation, "Email", new Dictionary<string, string> { { "ChallengeUrl", url } });
+            _messageManager.Send(user.ContentItem.Record, MessageTypes.Validation, "email", new Dictionary<string, string> { { "ChallengeUrl", url } });
         }
 
         public IUser ValidateChallengeToken(string challengeToken) {

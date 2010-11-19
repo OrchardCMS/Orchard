@@ -8,7 +8,6 @@ using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Modules.Services;
 using Orchard.Modules.ViewModels;
-using Orchard.Packaging.Services;
 using Orchard.Reports.Services;
 using Orchard.UI.Notify;
 
@@ -16,7 +15,6 @@ namespace Orchard.Modules.Controllers {
     public class AdminController : Controller {
         private readonly IModuleService _moduleService;
         private readonly IDataMigrationManager _dataMigrationManager;
-        private readonly IPackageManager _packageManager;
         private readonly IReportsCoordinator _reportsCoordinator;
         private readonly IExtensionManager _extensionManager;
         private readonly IFeatureManager _featureManager;
@@ -25,7 +23,6 @@ namespace Orchard.Modules.Controllers {
         public AdminController(IOrchardServices services,
             IModuleService moduleService,
             IDataMigrationManager dataMigrationManager,
-            IPackageManager packageManager,
             IReportsCoordinator reportsCoordinator,
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
@@ -34,7 +31,6 @@ namespace Orchard.Modules.Controllers {
             Services = services;
             _moduleService = moduleService;
             _dataMigrationManager = dataMigrationManager;
-            _packageManager = packageManager;
             _reportsCoordinator = reportsCoordinator;
             _extensionManager = extensionManager;
             _featureManager = featureManager;

@@ -10,7 +10,6 @@ using NUnit.Framework;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
-using Orchard.Core.Messaging.Services;
 using Orchard.Core.Settings.Metadata;
 using Orchard.Data;
 using Orchard.DisplayManagement;
