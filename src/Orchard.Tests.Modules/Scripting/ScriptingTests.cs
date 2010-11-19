@@ -8,6 +8,7 @@ using ClaySharp;
 using ClaySharp.Behaviors;
 using NUnit.Framework;
 using Orchard.Scripting;
+using Orchard.Scripting.Scripting;
 
 namespace Orchard.Tests.Scripting {
     [TestFixture]

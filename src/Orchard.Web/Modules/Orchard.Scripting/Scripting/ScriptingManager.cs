@@ -25,7 +25,7 @@ namespace Orchard.Scripting {
             return _scriptingRuntime.ExecuteExpression(expression, _scope.Value);
         }
 
-        public dynamic ExecuteOperation(Func<ObjectOperations, dynamic> invoke) {
+        public dynamic ExecuteOperation(Func<ObjectOperations, object> invoke) {
             return invoke(_operations.Value);
         }
 
