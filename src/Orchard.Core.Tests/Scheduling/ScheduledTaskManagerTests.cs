@@ -124,5 +124,40 @@ namespace Orchard.Core.Tests.Scheduling {
             var secondTask = tasks.Single(x => x.TaskType == "Second");
             Assert.That(secondTask.ContentItem.Version, Is.EqualTo(2));
         }
+
+        [Test]
+        public void ShouldGetTasksByType() {
+            _scheduledTaskManager.CreateTask("First", _clock.UtcNow, null);
+            _scheduledTaskManager.CreateTask("First", _clock.UtcNow, null);
+            _scheduledTaskManager.CreateTask("First", _clock.UtcNow, null);
+            _scheduledTaskManager.CreateTask("Second", _clock.UtcNow, null);
+            _scheduledTaskManager.CreateTask("Second", _clock.UtcNow, null);
+            _scheduledTaskManager.CreateTask("Third", _clock.UtcNow, null);
+
+            _session.Flush();
+            _session.Clear();
+
+            Assert.That(_scheduledTaskManager.GetTasks("First").Count(), Is.EqualTo(3));
+            Assert.That(_scheduledTaskManager.GetTasks("Second").Count(), Is.EqualTo(2));
+            Assert.That(_scheduledTaskManager.GetTasks("Third").Count(), Is.EqualTo(1));
+            Assert.That(_scheduledTaskManager.GetTasks("Fourth").Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ShouldGetTasksByTypeAndScheduledDate() {
+            _scheduledTaskManager.CreateTask("First", _clock.UtcNow, null);
+            _scheduledTaskManager.CreateTask("First", _clock.UtcNow.AddHours(1), null);
+            _scheduledTaskManager.CreateTask("First", _clock.UtcNow.AddHours(2), null);
+
+            _session.Flush();
+            _session.Clear();
+
+            Assert.That(_scheduledTaskManager.GetTasks("Foo", _clock.UtcNow.AddHours(5)).Count(), Is.EqualTo(0));
+
+            Assert.That(_scheduledTaskManager.GetTasks("First", _clock.UtcNow.AddMinutes(-1)).Count(), Is.EqualTo(0));
+            Assert.That(_scheduledTaskManager.GetTasks("First", _clock.UtcNow.AddMinutes(1)).Count(), Is.EqualTo(1));
+            Assert.That(_scheduledTaskManager.GetTasks("First", _clock.UtcNow.AddHours(1)).Count(), Is.EqualTo(2));
+            Assert.That(_scheduledTaskManager.GetTasks("First", _clock.UtcNow.AddHours(2)).Count(), Is.EqualTo(3));
+        }
     }
 }
