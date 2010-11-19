@@ -43,7 +43,7 @@ namespace Orchard.Comments.Controllers {
                     CommentedOn = viewModel.CommentedOn
                 };
 
-                if (!context.SiteName.StartsWith("http://") && !context.SiteName.StartsWith("https://")) {
+                if (!String.IsNullOrEmpty(context.SiteName) && !context.SiteName.StartsWith("http://") && !context.SiteName.StartsWith("https://")) {
                     context.SiteName = "http://" + context.SiteName;
                 }
 
