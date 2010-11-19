@@ -92,7 +92,6 @@ namespace Orchard.Setup.Services {
                     "Orchard.jQuery",
                     "Orchard.Lists",
                     "Orchard.Media",
-                    "Orchard.Migrations",
                     "Orchard.Modules",
                     "Orchard.Pages",
                     "Orchard.Roles",
