@@ -36,6 +36,10 @@ namespace Orchard {
                 DisplayUsageHelp();
                 return CommandReturnCodes.Ok;
             }
+            if(context.StartSessionResult == CommandReturnCodes.Fail) {
+                _commandHostContextProvider.Shutdown(context);
+                return context.StartSessionResult;
+            }
 
             CommandReturnCodes result;
             if (context.Arguments.Arguments.Any())
@@ -56,6 +60,10 @@ namespace Orchard {
             if (result.StartSessionResult == result.RetryResult) {
                 result = _commandHostContextProvider.CreateContext();
             }
+            else if(result.StartSessionResult == CommandReturnCodes.Fail) {
+                _output.WriteLine("Failed to initialize Orchard session.");    
+            }
+
             return result;
         }
 
