@@ -7,6 +7,7 @@ using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using HtmlAgilityPack;
+using Orchard.Commands;
 using Orchard.Specs.Util;
 
 namespace Orchard.Specs.Hosting {

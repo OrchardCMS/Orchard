@@ -8,6 +8,16 @@ using Orchard.Parameters;
 using Orchard.ResponseFiles;
 
 namespace Orchard.Host {
+
+    /// <summary>
+    /// Different return codes for a command execution.
+    /// </summary>
+    public enum CommandReturnCodes {
+        Ok = 0,
+        Fail = 5,
+        Retry = 240
+    }
+
     /// <summary>
     /// The CommandHost runs inside the ASP.NET AppDomain and serves as an intermediate
     /// between the command line and the CommandHostAgent, which is known to the Orchard
@@ -31,7 +41,7 @@ namespace Orchard.Host {
             HostingEnvironment.UnregisterObject(this);
         }
 
-        public int StartSession(TextReader input, TextWriter output) {
+        public CommandReturnCodes StartSession(TextReader input, TextWriter output) {
             _agent = CreateAgent();
             return StartHost(_agent, input, output);
         }
@@ -43,9 +53,9 @@ namespace Orchard.Host {
             }
         }
 
-        public int RunCommand(TextReader input, TextWriter output, Logger logger, OrchardParameters args) {
+        public CommandReturnCodes RunCommand(TextReader input, TextWriter output, Logger logger, OrchardParameters args) {
             var agent = CreateAgent();
-            int result = (int)agent.GetType().GetMethod("RunSingleCommand").Invoke(agent, new object[] { 
+            CommandReturnCodes result = (CommandReturnCodes)agent.GetType().GetMethod("RunSingleCommand").Invoke(agent, new object[] { 
                 input,
                 output,
                 args.Tenant,
@@ -55,8 +65,8 @@ namespace Orchard.Host {
             return result;
         }
 
-        public int RunCommandInSession(TextReader input, TextWriter output, Logger logger, OrchardParameters args) {
-            int result = (int)_agent.GetType().GetMethod("RunCommand").Invoke(_agent, new object[] { 
+        public CommandReturnCodes RunCommandInSession(TextReader input, TextWriter output, Logger logger, OrchardParameters args) {
+            CommandReturnCodes result = (CommandReturnCodes)_agent.GetType().GetMethod("RunCommand").Invoke(_agent, new object[] { 
                 input,
                 output,
                 args.Tenant,
@@ -66,11 +76,11 @@ namespace Orchard.Host {
             return result;
         }
 
-        public int RunCommands(TextReader input, TextWriter output, Logger logger, IEnumerable<ResponseLine> responseLines) {
+        public CommandReturnCodes RunCommands(TextReader input, TextWriter output, Logger logger, IEnumerable<ResponseLine> responseLines) {
             var agent = CreateAgent();
 
-            int result = StartHost(agent, input, output);
-            if (result != 0)
+            CommandReturnCodes result = StartHost(agent, input, output);
+            if (result != CommandReturnCodes.Ok)
                 return result;
 
             foreach (var line in responseLines) {
@@ -78,14 +88,14 @@ namespace Orchard.Host {
 
                 var args = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(line.Args));
 
-                result = (int)agent.GetType().GetMethod("RunCommand").Invoke(agent, new object[] { 
+                result = (CommandReturnCodes)agent.GetType().GetMethod("RunCommand").Invoke(agent, new object[] { 
                     input,
                     output,
                     args.Tenant,
                     args.Arguments.ToArray(),
                     args.Switches});
 
-                if (result != 0) {
+                if (result != CommandReturnCodes.Ok) {
                     output.WriteLine("{0} ({1}): Command returned error ({2})", line.Filename, line.LineNumber, result);
                     return result;
                 }
@@ -99,12 +109,12 @@ namespace Orchard.Host {
             return Activator.CreateInstance("Orchard.Framework", "Orchard.Commands.CommandHostAgent").Unwrap();
         }
 
-        private int StopHost(object agent, TextReader input, TextWriter output) {
-            return (int)agent.GetType().GetMethod("StopHost").Invoke(agent, new object[] { input, output });
+        private CommandReturnCodes StopHost(object agent, TextReader input, TextWriter output) {
+            return (CommandReturnCodes)agent.GetType().GetMethod("StopHost").Invoke(agent, new object[] { input, output });
         }
 
-        private int StartHost(object agent, TextReader input, TextWriter output) {
-            return (int)agent.GetType().GetMethod("StartHost").Invoke(agent, new object[] { input, output });
+        private CommandReturnCodes StartHost(object agent, TextReader input, TextWriter output) {
+            return (CommandReturnCodes)agent.GetType().GetMethod("StartHost").Invoke(agent, new object[] { input, output });
         }
     }
 }

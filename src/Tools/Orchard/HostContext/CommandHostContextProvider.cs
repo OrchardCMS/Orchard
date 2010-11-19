@@ -24,8 +24,7 @@ namespace Orchard.HostContext {
 
         [SecurityCritical]
         public CommandHostContext CreateContext() {
-            var context = new CommandHostContext();
-            context.RetryResult = 240;/*special return code for "Retry"*/
+            var context = new CommandHostContext { RetryResult = CommandReturnCodes.Retry };
             Initialize(context);
             return context;
         }

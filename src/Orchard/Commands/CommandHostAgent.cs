@@ -16,6 +16,17 @@ using Orchard.Logging;
 using Orchard.Tasks;
 
 namespace Orchard.Commands {
+    
+    /// <summary>
+    /// Different return codes for a command execution.
+    /// </summary>
+    public enum CommandReturnCodes
+    {
+        Ok = 0,
+        Fail = 5,
+        Retry = 240
+    }
+
     /// <summary>
     /// This is the guy instantiated by the orchard.exe host. It is reponsible for
     /// executing a single command.
@@ -32,19 +43,19 @@ namespace Orchard.Commands {
         public ILogger Logger { get; set; }
 
 
-        public int RunSingleCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
-            int result = StartHost(input, output);
-            if (result != 0)
+        public CommandReturnCodes RunSingleCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
+            CommandReturnCodes result = StartHost(input, output);
+            if (result != CommandReturnCodes.Ok)
                 return result;
 
             result = RunCommand(input, output, tenant, args, switches);
-            if (result != 0)
+            if (result != CommandReturnCodes.Ok)
                 return result;
 
             return StopHost(input, output);
         }
 
-        public int RunCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
+        public CommandReturnCodes RunCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
             try {
                 tenant = tenant ?? "Default";
 
@@ -80,12 +91,12 @@ namespace Orchard.Commands {
                 while (processingEngine.AreTasksPending())
                     processingEngine.ExecuteNextTask();
 
-                return 0;
+                return CommandReturnCodes.Ok;
             }
             catch (OrchardCommandHostRetryException e) {
                 // Special "Retry" return code for our host
                 output.WriteLine("{0} (Retrying...)", e.Message);
-                return 240;
+                return CommandReturnCodes.Retry;
             }
             catch (Exception e) {
                 for (int i = 0; e != null; e = e.InnerException, i++) {
@@ -95,43 +106,43 @@ namespace Orchard.Commands {
                     output.WriteLine("Error: {0}", e.Message);
                     output.WriteLine("{0}", e.StackTrace);
                 }
-                return 5;
+                return CommandReturnCodes.Fail;
             }
         }
 
-        public int StartHost(TextReader input, TextWriter output) {
+        public CommandReturnCodes StartHost(TextReader input, TextWriter output) {
             try {
                 _hostContainer = CreateHostContainer();
-                return 0;
+                return CommandReturnCodes.Ok;
             }
             catch (OrchardCommandHostRetryException e) {
                 // Special "Retry" return code for our host
                 output.WriteLine("{0} (Retrying...)", e.Message);
-                return 240;
+                return CommandReturnCodes.Retry;
             }
             catch (Exception e) {
                 for (; e != null; e = e.InnerException) {
                     output.WriteLine("Error: {0}", e.Message);
                     output.WriteLine("{0}", e.StackTrace);
                 }
-                return 5;
+                return CommandReturnCodes.Fail;
             }
         }
 
-        public int StopHost(TextReader input, TextWriter output) {
+        public CommandReturnCodes StopHost(TextReader input, TextWriter output) {
             try {
                 if (_hostContainer != null) {
                     _hostContainer.Dispose();
                     _hostContainer = null;
                 }
-                return 0;
+                return CommandReturnCodes.Ok;
             }
             catch (Exception e) {
                 for (; e != null; e = e.InnerException) {
                     output.WriteLine("Error: {0}", e.Message);
                     output.WriteLine("{0}", e.StackTrace);
                 }
-                return 5;
+                return CommandReturnCodes.Fail;
             }
         }
 
