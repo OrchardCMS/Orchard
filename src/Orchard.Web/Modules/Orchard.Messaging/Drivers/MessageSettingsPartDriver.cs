@@ -35,6 +35,7 @@ namespace Orchard.Messaging.Drivers {
 
         protected override DriverResult Editor(MessageSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new MessageSettingsPartViewModel {
+                ChannelServices = _messageQueueManager.GetAvailableChannelServices(),
                 MessageSettings = part
             };
 
