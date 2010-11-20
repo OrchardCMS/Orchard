@@ -49,6 +49,7 @@ namespace Orchard.Core.Routable.Controllers {
             }
 
             dynamic model = _contentManager.BuildDisplay(hits.Single());
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 

@@ -35,7 +35,7 @@ namespace Orchard.Core.Settings.Controllers {
                 return new HttpUnauthorizedResult();
 
             dynamic model = Services.ContentManager.BuildEditor(_siteService.GetSiteSettings());
-
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -49,6 +49,7 @@ namespace Orchard.Core.Settings.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
 

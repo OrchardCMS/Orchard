@@ -60,6 +60,7 @@ namespace Orchard.Users.Controllers {
             dynamic model = Services.ContentManager.BuildEditor(user);
             model.Content.Add(editor);
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -97,6 +98,7 @@ namespace Orchard.Users.Controllers {
                 editor.Metadata.Position = "2";
                 model.Content.Add(editor);
 
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
 
@@ -114,6 +116,7 @@ namespace Orchard.Users.Controllers {
             dynamic model = Services.ContentManager.BuildEditor(user);
             model.Content.Add(editor);
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -144,6 +147,7 @@ namespace Orchard.Users.Controllers {
                 editor.Metadata.Position = "2";
                 model.Content.Add(editor);
 
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
 

@@ -19,6 +19,7 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Display(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Published);
             dynamic model = _contentManager.BuildDisplay(contentItem);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -31,6 +32,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             var contentItem = _contentManager.Get(id, versionOptions);
             dynamic model = _contentManager.BuildDisplay(contentItem);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View("Display", (object)model);
         }
     }

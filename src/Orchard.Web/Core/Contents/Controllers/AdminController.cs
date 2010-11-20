@@ -97,6 +97,7 @@ namespace Orchard.Core.Contents.Controllers {
                 .Options(model.Options)
                 .TypeDisplayName(model.TypeDisplayName ?? "");
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);
         }
 
@@ -176,6 +177,7 @@ namespace Orchard.Core.Contents.Controllers {
         ActionResult CreatableTypeList() {
             dynamic viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes());
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View("CreatableTypeList", (object)viewModel);
         }
 
@@ -189,6 +191,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             dynamic model = _contentManager.BuildEditor(contentItem);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -218,6 +221,7 @@ namespace Orchard.Core.Contents.Controllers {
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
 
@@ -239,6 +243,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             dynamic model = _contentManager.BuildEditor(contentItem);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -269,6 +274,7 @@ namespace Orchard.Core.Contents.Controllers {
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View("Edit", (object)model);
             }
 

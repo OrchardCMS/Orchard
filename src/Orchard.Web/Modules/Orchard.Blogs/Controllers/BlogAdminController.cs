@@ -55,6 +55,7 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             dynamic model = Services.ContentManager.BuildEditor(blog);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -70,6 +71,7 @@ namespace Orchard.Blogs.Controllers {
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
 
@@ -88,6 +90,7 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             dynamic model = Services.ContentManager.BuildEditor(blog);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -103,6 +106,7 @@ namespace Orchard.Blogs.Controllers {
             dynamic model = Services.ContentManager.UpdateEditor(blog, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
 
@@ -140,7 +144,7 @@ namespace Orchard.Blogs.Controllers {
 
             dynamic viewModel = Services.New.ViewModel()
                 .ContentItems(list);
-
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);
         }
 
@@ -161,7 +165,8 @@ namespace Orchard.Blogs.Controllers {
 
             var totalItemCount = _blogPostService.PostCount(blogPart, VersionOptions.Latest);
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
-            
+
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)blog);
         }
 

@@ -46,6 +46,7 @@ namespace Orchard.Blogs.Controllers {
             dynamic viewModel = Shape.ViewModel()
                 .ContentItems(list);
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);
         }
 
@@ -70,6 +71,7 @@ namespace Orchard.Blogs.Controllers {
             var totalItemCount = _blogPostService.PostCount(blogPart);
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)blog);
         }
     }

@@ -37,6 +37,7 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             dynamic model = Services.ContentManager.BuildEditor(blogPost);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -92,6 +93,7 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             dynamic model = Services.ContentManager.BuildEditor(post);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 

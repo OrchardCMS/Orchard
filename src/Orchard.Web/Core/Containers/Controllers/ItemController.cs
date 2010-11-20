@@ -67,6 +67,7 @@ namespace Orchard.Core.Containers.Controllers {
                 .Pager(pagerShape)
                 .ShowPager(container.As<ContainerPart>().Record.Paginated);
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);
         }
     }

@@ -66,6 +66,7 @@ namespace Orchard.Environment {
         }
 
         IEnumerable<object> IDependencyResolver.GetServices(Type serviceType) {
-            return Resolve<IEnumerable>(typeof(IEnumerable<>).MakeGenericType(serviceType), Enumerable.Empty<object>()).Cast<object>();        }
+            return Resolve<IEnumerable>(typeof(IEnumerable<>).MakeGenericType(serviceType), Enumerable.Empty<object>()).Cast<object>();
+        }
     }
 }
