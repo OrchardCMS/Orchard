@@ -41,6 +41,7 @@ namespace Orchard.UI.Navigation {
                 var menuItemShape = shapeFactory.MenuItem()
                     .Text(menuItem.Text)
                     .Href(menuItem.Href)
+                    .LinkToFirstChild(menuItem.LinkToFirstChild)
                     .RouteValues(menuItem.RouteValues)
                     .Item(menuItem)
                     .Menu(menu)
