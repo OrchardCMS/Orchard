@@ -10,8 +10,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orchard.Search</RootNamespace>
-    <AssemblyName>Orchard.Search</AssemblyName>
+    <RootNamespace>Orchard.Scripting</RootNamespace>
+    <AssemblyName>Orchard.Scripting</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
   </PropertyGroup>
@@ -85,10 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scripting\IScriptingManager.cs" />
-    <Compile Include="Scripting\IScriptingRuntime.cs" />
-    <Compile Include="Scripting\ScriptingManager.cs" />
-    <Compile Include="Scripting\ScriptingRuntime.cs" />
+    <Compile Include="Services\IScriptingManager.cs" />
+    <Compile Include="Services\IScriptingRuntime.cs" />
+    <Compile Include="Services\ScriptingManager.cs" />
+    <Compile Include="Services\ScriptingRuntime.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

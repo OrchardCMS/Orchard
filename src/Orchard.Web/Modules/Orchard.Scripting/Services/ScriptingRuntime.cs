@@ -1,7 +1,7 @@
 ﻿using IronRuby;
 using Microsoft.Scripting.Hosting;
 
-namespace Orchard.Scripting {
+namespace Orchard.Scripting.Services {
     public class ScriptingRuntime : IScriptingRuntime {
         private readonly LanguageSetup _defaultLanguageSetup;
         private readonly ScriptRuntime _scriptingRuntime;

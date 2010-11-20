@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.Scripting;
+using Orchard.Scripting.Services;
 using Orchard.UI.Widgets;
 
 namespace Orchard.Widgets.RuleEngine {

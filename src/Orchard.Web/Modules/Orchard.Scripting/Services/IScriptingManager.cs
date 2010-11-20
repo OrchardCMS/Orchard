@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Scripting.Hosting;
 
-namespace Orchard.Scripting {
+namespace Orchard.Scripting.Services {
     public interface IScriptingManager /* : IDependency */ {
         dynamic GetVariable(string name);
         void SetVariable(string name, object value);
