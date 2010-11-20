@@ -32,6 +32,9 @@ using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
+using Orchard.Settings;
+using Orchard.Core.Settings.Services;
+using Orchard.Caching;
 
 namespace Orchard.Tests.Modules.Users.Controllers {
     [TestFixture]
@@ -41,6 +44,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<AdminController>().SingleInstance();
+            builder.RegisterType<SiteService>().As<ISiteService>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType(typeof(SettingsFormatter))
                 .As(typeof(IMapper<XElement, SettingsDictionary>))
