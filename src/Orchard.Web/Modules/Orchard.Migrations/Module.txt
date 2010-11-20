@@ -4,7 +4,7 @@ Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 0.8.0
 OrchardVersion: 0.8.0
-Description: 
+Description: Data migration commands.
 Features:
     Orchard.Migrations:
         Description: Data migration commands.

@@ -12,6 +12,7 @@
     <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
     <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
     <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
+    <GalleryArtifactFolder>$(ArtifactsFolder)\Gallery</GalleryArtifactFolder>
     <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
     <ThemesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Themes</ThemesSrcFolder>
 
@@ -20,6 +21,7 @@
     <StageFolder>$(BuildFolder)\Stage</StageFolder>
     <MsDeployFolder>$(BuildFolder)\MsDeploy</MsDeployFolder>
     <ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
+    <GalleryFolder>$(BuildFolder)\Gallery</GalleryFolder>
 
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
     <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
@@ -54,6 +56,14 @@
   </Target>
 
 
+  <Target Name="Gallery">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Gallery-Stage"/>
+    <CallTarget Targets="Gallery-Setup"/>
+  </Target>
+  
   <!-- Building -->
 
   <Target Name="Clean">
@@ -285,7 +295,33 @@
     <Exec Command="$(ProfilingFolder)\bin\Orchard.exe @$(SrcFolder)\Orchard.Profile\profiling-setup-commands.txt" WorkingDirectory="$(ProfilingFolder)"/>
   </Target>
 
+  <!-- Gallery Packaging -->
 
+  <Target Name="Gallery-Stage">
+    <ItemGroup>
+      <Gallery-Web Include="$(StageFolder)\**\*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Gallery-Web)" DestinationFolder="$(GalleryFolder)\%(RecursiveDir)"/>
+
+  </Target>
+
+  <Target Name="Gallery-Setup">
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; setup /SiteName:Gallery /AdminUsername:admin /AdminPassword:gallery-secret /DatabaseProvider:SqlCe" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; feature enable Orchard.Packaging &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Localization &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Messaging &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Lucene &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.ArchiveLater &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.CodeGeneration &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Email &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Experimental &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Indexing &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Migrations &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.MultiTenancy &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Search &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+  </Target>
+  
   <!-- Version -->
   <!-- Update all AssemblyInfo.cs and module.txt files to contain $(Version) -->
   <Target Name="SetVersion" Condition="$(Version) != ''">
