@@ -2,7 +2,7 @@
 using Microsoft.Scripting.Hosting;
 
 namespace Orchard.Scripting.Services {
-    public interface IScriptingManager /* : IDependency */ {
+    public interface IScriptingManager : IDependency {
         dynamic GetVariable(string name);
         void SetVariable(string name, object value);
         dynamic ExecuteExpression(string expression);

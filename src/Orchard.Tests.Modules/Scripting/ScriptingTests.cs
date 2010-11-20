@@ -5,7 +5,7 @@ using System.IO;
 using Autofac;
 using ClaySharp;
 using NUnit.Framework;
-using Orchard.Scripting;
+using Orchard.Scripting.Services;
 
 namespace Orchard.Tests.Scripting {
     [TestFixture]
