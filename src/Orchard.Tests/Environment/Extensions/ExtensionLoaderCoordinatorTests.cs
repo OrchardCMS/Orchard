@@ -45,8 +45,7 @@ namespace Orchard.Tests.Environment.Extensions {
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 foreach (var e in Manifests) {
                     string name = e.Key;
-                    var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, _extensionType, parseResult);
+                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, _extensionType, Manifests[name]);
                 }
             }
         }
@@ -157,8 +156,8 @@ Name: SuperWiki
 Version: 1.0.3
 OrchardVersion: 1
 Features:
-  SuperWiki: 
-    Description: My super wiki module for Orchard.
+    SuperWiki: 
+        Description: My super wiki module for Orchard.
 ");
 
             var descriptor = _manager.AvailableExtensions().Single();
@@ -181,22 +180,22 @@ Website: http://anotherwiki.codeplex.com
 Version: 1.2.3
 OrchardVersion: 1
 Features:
-  AnotherWiki: 
-    Description: My super wiki module for Orchard.
-    Dependencies: Versioning, Search
-    Category: Content types
-  AnotherWiki Editor:
-    Description: A rich editor for wiki contents.
-    Dependencies: TinyMCE, AnotherWiki
-    Category: Input methods
-  AnotherWiki DistributionList:
-    Description: Sends e-mail alerts when wiki contents gets published.
-    Dependencies: AnotherWiki, Email Subscriptions
-    Category: Email
-  AnotherWiki Captcha:
-    Description: Kills spam. Or makes it zombie-like.
-    Dependencies: AnotherWiki, reCaptcha
-    Category: Spam
+    AnotherWiki: 
+        Description: My super wiki module for Orchard.
+        Dependencies: Versioning, Search
+        Category: Content types
+    AnotherWiki Editor:
+        Description: A rich editor for wiki contents.
+        Dependencies: TinyMCE, AnotherWiki
+        Category: Input methods
+    AnotherWiki DistributionList:
+        Description: Sends e-mail alerts when wiki contents gets published.
+        Dependencies: AnotherWiki, Email Subscriptions
+        Category: Email
+    AnotherWiki Captcha:
+        Description: Kills spam. Or makes it zombie-like.
+        Dependencies: AnotherWiki, reCaptcha
+        Category: Spam
 ");
 
             var descriptor = _manager.AvailableExtensions().Single();
@@ -262,10 +261,10 @@ Name: TestModule
 Version: 1.0.3
 OrchardVersion: 1
 Features:
-  TestModule: 
-    Description: My test module for Orchard.
-  TestFeature:
-    Description: Contains the Phi type.
+    TestModule: 
+        Description: My test module for Orchard.
+    TestFeature:
+        Description: Contains the Phi type.
 ");
 
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
@@ -288,10 +287,10 @@ Name: TestModule
 Version: 1.0.3
 OrchardVersion: 1
 Features:
-  TestModule: 
-    Description: My test module for Orchard.
-  TestFeature:
-    Description: Contains the Phi type.
+    TestModule: 
+        Description: My test module for Orchard.
+    TestFeature:
+        Description: Contains the Phi type.
 ");
 
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
@@ -323,10 +322,10 @@ Name: TestModule
 Version: 1.0.3
 OrchardVersion: 1
 Features:
-  TestModule: 
-    Description: My test module for Orchard.
-  TestFeature:
-    Description: Contains the Phi type.
+    TestModule: 
+        Description: My test module for Orchard.
+    TestFeature:
+        Description: Contains the Phi type.
 ");
 
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
@@ -353,10 +352,10 @@ Name: TestModule
 Version: 1.0.3
 OrchardVersion: 1
 Features:
-  TestModule: 
-    Description: My test module for Orchard.
-  TestFeature:
-    Description: Contains the Phi type.
+    TestModule: 
+        Description: My test module for Orchard.
+    TestFeature:
+        Description: Contains the Phi type.
 ");
 
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
@@ -381,10 +380,10 @@ Name: TestModule
 Version: 1.0.3
 OrchardVersion: 1
 Features:
-  TestModule: 
-    Description: My test module for Orchard.
-  TestFeature:
-    Description: Contains the Phi type.
+    TestModule: 
+        Description: My test module for Orchard.
+    TestFeature:
+        Description: Contains the Phi type.
 ");
 
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());

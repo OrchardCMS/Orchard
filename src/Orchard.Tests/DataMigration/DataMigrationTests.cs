@@ -20,7 +20,6 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.ContentManagement;
 using Orchard.Data.Providers;
 using Orchard.Tests.Stubs;
-using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.DataMigration {
     [TestFixture]
@@ -91,8 +90,7 @@ namespace Orchard.Tests.DataMigration {
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 foreach (var e in Manifests) {
                     string name = e.Key;
-                    var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
+                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", Manifests[name]);
                 }
             }
         }
@@ -235,8 +233,8 @@ Name: Module2
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
+    Feature1: 
+        Description: Feature
 ");
 
             _dataMigrationManager.Update("Feature1");
@@ -252,8 +250,8 @@ Name: Module1
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
+    Feature1: 
+        Description: Feature
 ");
             
             _dataMigrationManager.Update("Feature1");
@@ -269,8 +267,8 @@ Name: Module1
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
+    Feature1: 
+        Description: Feature
 ");
             
             _dataMigrationManager.Update("Feature1");
@@ -288,8 +286,8 @@ Name: Module1
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
+    Feature1: 
+        Description: Feature
 ");
             
             _dataMigrationManager.Update("Feature1");
@@ -306,8 +304,8 @@ Name: Module1
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
+    Feature1: 
+        Description: Feature
 ");
             _repository.Create(new DataMigrationRecord {
                 Version = 42,
@@ -329,9 +327,9 @@ Name: Module1
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
-    Dependencies: Feature2
+    Feature1: 
+        Description: Feature
+        Dependencies: Feature2
 ");
 
             _folders.Manifests.Add("Module2", @"
@@ -339,8 +337,8 @@ Name: Module2
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature2: 
-    Description: Feature
+    Feature2: 
+        Description: Feature
 ");
             _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(2));
@@ -358,8 +356,8 @@ Name: Module1
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
+    Feature1: 
+        Description: Feature
 ");
 
             _dataMigrationManager.Update("Feature1");
@@ -376,14 +374,14 @@ Name: Module1
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
-  Feature2: 
-    Description: Feature
-  Feature3: 
-    Description: Feature
-  Feature4: 
-    Description: Feature
+    Feature1: 
+        Description: Feature
+    Feature2: 
+        Description: Feature
+    Feature3: 
+        Description: Feature
+    Feature4: 
+        Description: Feature
 ");
 
             // even if there is a data migration class, as it is empty there should me no migration to do
@@ -425,8 +423,8 @@ Name: Module1
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
+    Feature1: 
+        Description: Feature
 ");
 
             _dataMigrationManager.Update("Feature1");

@@ -93,8 +93,8 @@ Name: Module1
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
+    Feature1: 
+        Description: Feature
 ");
         }
 
@@ -108,8 +108,7 @@ Features:
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 foreach (var e in Manifests) {
                     string name = e.Key;
-                    var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
+                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", Manifests[name]);
                 }
             }
         }

@@ -7,15 +7,8 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 using Orchard.Localization;
 using Orchard.Logging;
-using Yaml.Grammar;
 
 namespace Orchard.Environment.Extensions.Folders {
-    public class ParseResult {
-        public string Location { get; set; }
-        public string Name { get; set; }
-        public YamlDocument YamlDocument { get; set; }
-    }
-
     public class ExtensionFolders : IExtensionFolders {
         private readonly IEnumerable<string> _paths;
         private readonly string _manifestName;
@@ -73,11 +66,31 @@ namespace Orchard.Environment.Extensions.Folders {
             return list;
         }
 
+        public static ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionName, string extensionType, string manifestText) {
+            Dictionary<string, string> manifest = ParseManifest(manifestText);
+            var extensionDescriptor = new ExtensionDescriptor {
+                Location = locationPath,
+                Name = extensionName,
+                ExtensionType = extensionType,
+                DisplayName = GetValue(manifest, "Name") ?? extensionName,
+                Description = GetValue(manifest, "Description"),
+                Version = GetValue(manifest, "Version"),
+                OrchardVersion = GetValue(manifest, "OrchardVersion"),
+                Author = GetValue(manifest, "Author"),
+                WebSite = GetValue(manifest, "Website"),
+                Tags = GetValue(manifest, "Tags"),
+                AntiForgery = GetValue(manifest, "AntiForgery"),
+                Zones = GetValue(manifest, "Zones"),
+                BaseTheme = GetValue(manifest, "BaseTheme"),
+            };
+            extensionDescriptor.Features = GetFeaturesForExtension(GetValue(manifest, "Features"), extensionDescriptor);
+
+            return extensionDescriptor;
+        }
+
         private ExtensionDescriptor GetExtensionDescriptor(string locationPath, string extensionName, string manifestPath) {
             return _cacheManager.Get(manifestPath, context => {
-
                 context.Monitor(_webSiteFolder.WhenPathChanges(manifestPath));
-
                 var manifestText = _webSiteFolder.ReadFile(manifestPath);
                 if (manifestText == null) {
                     if (_manifestIsOptional) {
@@ -88,84 +101,128 @@ namespace Orchard.Environment.Extensions.Folders {
                     }
                 }
 
-                return GetDescriptorForExtension(locationPath, extensionName, ParseManifest(manifestText));
+                return GetDescriptorForExtension(locationPath, extensionName, manifestText);
             });
         }
 
-        private ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionName, ParseResult parseResult) {
-            return GetDescriptorForExtension(locationPath, extensionName, _extensionType, parseResult);
+        private ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionName, string manifestText) {
+            return GetDescriptorForExtension(locationPath, extensionName, _extensionType, manifestText);
         }
 
-        public static ParseResult ParseManifest(string manifestText) {
-            bool success;
-            var yamlStream = new YamlParser().ParseYamlStream(new TextInput(manifestText), out success);
-            if (yamlStream == null || !success) {
-                return null;
-            }
-            return new ParseResult {
-                Name = manifestText,
-                YamlDocument = yamlStream.Documents.Single()
-            };
-        }
+        private static Dictionary<string, string> ParseManifest(string manifestText) {
+            var manifest = new Dictionary<string, string>();
 
-        public static ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionName, string extensionType, ParseResult parseResult) {
-            var mapping = (Mapping)parseResult.YamlDocument.Root;
-            var fields = mapping.Entities
-                .Where(x => x.Key is Scalar)
-                .ToDictionary(x => ((Scalar)x.Key).Text, x => x.Value);
-
-            var extensionDescriptor = new ExtensionDescriptor {
-                Location = locationPath,
-                Name = extensionName,
-                ExtensionType = extensionType,
-                DisplayName = GetValue(fields, "Name") ?? extensionName,
-                Description = GetValue(fields, "Description"),
-                Version = GetValue(fields, "Version"),
-                OrchardVersion = GetValue(fields, "OrchardVersion"),
-                Author = GetValue(fields, "Author"),
-                WebSite = GetValue(fields, "Website"),
-                Tags = GetValue(fields, "Tags"),
-                AntiForgery = GetValue(fields, "AntiForgery"),
-                Zones = GetValue(fields, "Zones"),
-                BaseTheme = GetValue(fields, "BaseTheme"),
-            };
-
-            extensionDescriptor.Features = GetFeaturesForExtension(GetMapping(fields, "Features"), extensionDescriptor);
-
-            return extensionDescriptor;
-        }
-
-        private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(Mapping features, ExtensionDescriptor extensionDescriptor) {
-            var featureDescriptors = new List<FeatureDescriptor>();
-            if (features != null) {
-                foreach (var entity in features.Entities) {
-                    var featureDescriptor = new FeatureDescriptor {
-                        Extension = extensionDescriptor,
-                        Name = entity.Key.ToString(),
-                    };
-
-                    if (featureDescriptor.Name == extensionDescriptor.Name) {
-                        featureDescriptor.DisplayName = extensionDescriptor.DisplayName;
+            using (StringReader reader = new StringReader(manifestText)) {
+                string line;
+                while ((line = reader.ReadLine()) != null) {
+                    string[] field = line.Split(new[] {":"}, 2, StringSplitOptions.None);
+                    int fieldLength = field.Length;
+                    if (fieldLength != 2)
+                        continue;
+                    for (int i = 0; i < fieldLength; i++) {
+                        field[i] = field[i].Trim();
                     }
-
-                    var featureMapping = (Mapping)entity.Value;
-                    foreach (var featureEntity in featureMapping.Entities) {
-                        if (featureEntity.Key.ToString() == "Description") {
-                            featureDescriptor.Description = featureEntity.Value.ToString();
-                        }
-                        else if (featureEntity.Key.ToString() == "Category") {
-                            featureDescriptor.Category = featureEntity.Value.ToString();
-                        }
-                        else if (featureEntity.Key.ToString() == "Name") {
-                            featureDescriptor.DisplayName = featureEntity.Value.ToString();
-                        }
-                        else if (featureEntity.Key.ToString() == "Dependencies") {
-                            featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureEntity.Value.ToString());
-                        }
+                    switch (field[0]) {
+                        case "Name":
+                            manifest.Add("Name", field[1]);
+                            break;
+                        case "Description":
+                            manifest.Add("Description", field[1]);
+                            break;
+                        case "Version":
+                            manifest.Add("Version", field[1]);
+                            break;
+                        case "OrchardVersion":
+                            manifest.Add("OrchardVersion", field[1]);
+                            break;
+                        case "Author":
+                            manifest.Add("Author", field[1]);
+                            break;
+                        case "Website":
+                            manifest.Add("Website", field[1]);
+                            break;
+                        case "Tags":
+                            manifest.Add("Tags", field[1]);
+                            break;
+                        case "AntiForgery":
+                            manifest.Add("AntiForgery", field[1]);
+                            break;
+                        case "Zones":
+                            manifest.Add("Zones", field[1]);
+                            break;
+                        case "BaseTheme":
+                            manifest.Add("BaseTheme", field[1]);
+                            break;
+                        case "Features":
+                            manifest.Add("Features", reader.ReadToEnd());
+                            break;
                     }
-                    featureDescriptors.Add(featureDescriptor);
                 }
             }
+
+            return manifest;
+        }
+
+        private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(string featuresText, ExtensionDescriptor extensionDescriptor) {
+            var featureDescriptors = new List<FeatureDescriptor>();
+            if (featuresText != null) {
+                FeatureDescriptor featureDescriptor = null;
+                using (StringReader reader = new StringReader(featuresText)) {
+                    string line;
+                    while ((line = reader.ReadLine()) != null) {
+                        if (IsFeatureDeclaration(line)) {
+                            if (featureDescriptor != null) {
+                                featureDescriptors.Add(featureDescriptor);
+                                featureDescriptor = null;
+                            }
+                            featureDescriptor = new FeatureDescriptor {
+                                Extension = extensionDescriptor
+                            };
+                            string[] featureDeclaration = line.Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries);
+                            featureDescriptor.Name = featureDeclaration[0].Trim();
+                            if (featureDescriptor.Name == extensionDescriptor.Name) {
+                                featureDescriptor.DisplayName = extensionDescriptor.DisplayName;
+                            }
+                        }
+                        else if (IsFeatureFieldDeclaration(line)) {
+                                if (featureDescriptor != null) {
+                                    string[] featureField = line.Split(new[] {":"}, 2, StringSplitOptions.None);
+                                    int featureFieldLength = featureField.Length;
+                                    if (featureFieldLength != 2)
+                                        continue;
+                                    for (int i = 0; i < featureFieldLength; i++) {
+                                        featureField[i] = featureField[i].Trim();
+                                    }
+                                    switch (featureField[0]) {
+                                        case "Name":
+                                            featureDescriptor.DisplayName = featureField[1];
+                                            break;
+                                        case "Description":
+                                            featureDescriptor.Description = featureField[1];
+                                            break;
+                                        case "Category":
+                                            featureDescriptor.Category = featureField[1];
+                                            break;
+                                        case "Dependencies":
+                                            featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureField[1]);
+                                            break;
+                                    }
+                                }
+                                else {
+                                    string message = string.Format("The line {0} in manifest for extension {1} was ignored", line, extensionDescriptor.Name);
+                                    throw new ArgumentException(message);
+                                }
+                        }
+                        else {
+                            string message = string.Format("The line {0} in manifest for extension {1} was ignored", line, extensionDescriptor.Name);
+                            throw new ArgumentException(message);
+                        }
+                    }
+                    if (featureDescriptor != null)
+                        featureDescriptors.Add(featureDescriptor);
+                }
+            }
+
             if (!featureDescriptors.Any(fd => fd.Name == extensionDescriptor.Name)) {
                 featureDescriptors.Add(new FeatureDescriptor {
                     Name = extensionDescriptor.Name,
@@ -174,7 +231,29 @@ namespace Orchard.Environment.Extensions.Folders {
                     Extension = extensionDescriptor
                 });
             }
+
             return featureDescriptors;
+        }
+
+        private static bool IsFeatureFieldDeclaration(string line) {
+            if (line.StartsWith("\t\t") ||
+                line.StartsWith("\t    ") ||
+                line.StartsWith("    ") ||
+                line.StartsWith("    \t"))
+                return true;
+
+            return false;
+        }
+
+        private static bool IsFeatureDeclaration(string line) {
+            int lineLength = line.Length;
+            if (line.StartsWith("\t") && lineLength >= 2) {
+                return !Char.IsWhiteSpace(line[1]);
+            }
+            if (line.StartsWith("    ") && lineLength >= 5)
+                return !Char.IsWhiteSpace(line[4]);
+
+            return false;
         }
 
         private static string[] ParseFeatureDependenciesEntry(string dependenciesEntry) {
@@ -185,14 +264,9 @@ namespace Orchard.Environment.Extensions.Folders {
             return dependencies.ToArray();
         }
 
-        private static Mapping GetMapping(IDictionary<string, DataItem> fields, string key) {
-            DataItem value;
-            return fields.TryGetValue(key, out value) ? (Mapping)value : null;
-        }
-
-        private static string GetValue(IDictionary<string, DataItem> fields, string key) {
-            DataItem value;
-            return fields.TryGetValue(key, out value) ? value.ToString() : null;
+        private static string GetValue(IDictionary<string, string> fields, string key) {
+            string value;
+            return fields.TryGetValue(key, out value) ? value : null;
         }
     }
 }
