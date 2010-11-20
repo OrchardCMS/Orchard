@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Orchard.Scripting;
 using Orchard.Scripting.Services;
-using Orchard.UI.Widgets;
+using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.RuleEngine {
     public class RuleManager : IRuleManager {
@@ -17,15 +16,15 @@ namespace Orchard.Widgets.RuleEngine {
         public bool Matches(string expression) {
             object execContextType = _scriptingManager.ExecuteExpression(@"
                                         class ExecContext
-	                                        def execute(callbacks, text)
-		                                        @callbacks = callbacks;
-		                                        temp = instance_eval(text.to_s);
-		                                        @callbacks = 0;
+                                            def execute(callbacks, text)
+                                                @callbacks = callbacks;
+                                                temp = instance_eval(text.to_s);
+                                                @callbacks = 0;
                                                 return temp;
-	                                        end
+                                            end
 
-	                                        def method_missing(name, *args, &block)
-		                                        @callbacks.send(name, args, &block);
+                                            def method_missing(name, *args, &block)
+                                                @callbacks.send(name, args, &block);
                                             end
                                         end
                                         ExecContext

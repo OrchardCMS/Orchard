@@ -69,7 +69,7 @@ namespace Orchard.Setup.Services {
                 string[] hardcoded = {
                     // Framework
                     "Orchard.Framework",
-                    
+
                     // Core
                     "Common",
                     "Containers",
@@ -98,6 +98,7 @@ namespace Orchard.Setup.Services {
                     "Orchard.Tags",
                     "Orchard.Themes",
                     "Orchard.Users",
+                    "Orchard.Scripting",
                     "Orchard.Widgets",
                     "TinyMce",
 
@@ -108,7 +109,6 @@ namespace Orchard.Setup.Services {
                 context.EnabledFeatures = hardcoded;
             }
 
-            
             var shellSettings = new ShellSettings(_shellSettings);
 
             if (string.IsNullOrEmpty(shellSettings.DataProvider)) {

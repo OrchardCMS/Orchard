@@ -8,7 +8,6 @@ using Autofac.Builder;
 using Autofac.Configuration;
 using Autofac.Core;
 using Autofac.Features.Indexed;
-using Autofac.Integration.Web.Mvc;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;

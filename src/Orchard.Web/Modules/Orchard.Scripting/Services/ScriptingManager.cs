@@ -4,8 +4,8 @@ using Microsoft.Scripting.Hosting;
 namespace Orchard.Scripting.Services {
     public class ScriptingManager : IScriptingManager {
         private readonly IScriptingRuntime _scriptingRuntime;
-        private Lazy<ScriptScope> _scope;
-        private Lazy<ObjectOperations> _operations;
+        private readonly Lazy<ScriptScope> _scope;
+        private readonly Lazy<ObjectOperations> _operations;
 
         public ScriptingManager(IScriptingRuntime scriptingRuntime) {
             _scriptingRuntime = scriptingRuntime;
@@ -32,6 +32,5 @@ namespace Orchard.Scripting.Services {
         public void ExecuteFile(string fileName) {
             _scriptingRuntime.ExecuteFile(fileName, _scope.Value);
         }
-
     }
 }

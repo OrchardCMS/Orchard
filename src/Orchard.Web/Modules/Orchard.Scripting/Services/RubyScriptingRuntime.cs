@@ -2,11 +2,11 @@
 using Microsoft.Scripting.Hosting;
 
 namespace Orchard.Scripting.Services {
-    public class ScriptingRuntime : IScriptingRuntime {
+    public class RubyScriptingRuntime : IScriptingRuntime {
         private readonly LanguageSetup _defaultLanguageSetup;
         private readonly ScriptRuntime _scriptingRuntime;
 
-        public ScriptingRuntime() {
+        public RubyScriptingRuntime() {
             _defaultLanguageSetup = Ruby.CreateRubySetup();
 
             var setup = new ScriptRuntimeSetup();
@@ -14,7 +14,7 @@ namespace Orchard.Scripting.Services {
             _scriptingRuntime = new ScriptRuntime(setup);
         }
 
-        ScriptEngine GetDefaultEngine() {
+        public ScriptEngine GetDefaultEngine() {
             return _scriptingRuntime.GetEngineByTypeName(_defaultLanguageSetup.TypeName);
         }
 

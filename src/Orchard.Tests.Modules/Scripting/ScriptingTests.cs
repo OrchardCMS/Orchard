@@ -20,7 +20,7 @@ namespace Orchard.Tests.Modules.Scripting {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterType<ScriptingRuntime>().As<IScriptingRuntime>();
+            builder.RegisterType<RubyScriptingRuntime>().As<IScriptingRuntime>();
             builder.RegisterType<ScriptingManager>().As<IScriptingManager>();
             _container = builder.Build();
             _scriptingRuntime = _container.Resolve<IScriptingRuntime>();

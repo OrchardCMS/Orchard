@@ -1,5 +1,5 @@
 ﻿using System;
-using Orchard.UI.Widgets;
+using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.RuleEngine {
     public class BuiltinRuleProvider : IRuleProvider {

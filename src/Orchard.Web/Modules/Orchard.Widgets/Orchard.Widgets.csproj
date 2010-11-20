@@ -88,7 +88,10 @@
     <Compile Include="RuleEngine\BuiltinRuleProvider.cs" />
     <Compile Include="RuleEngine\RuleManager.cs" />
     <Compile Include="RuleEngine\UrlRuleProvider.cs" />
+    <Compile Include="Services\IRuleManager.cs" />
+    <Compile Include="Services\IRuleProvider.cs" />
     <Compile Include="Services\IWidgetsService.cs" />
+    <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="ViewModels\WidgetsIndexViewModel.cs" />

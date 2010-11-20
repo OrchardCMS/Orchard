@@ -20,8 +20,6 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Security;
 using Orchard.Tests.Stubs;
-using Orchard.Themes;
-using Orchard.Themes.Models;
 using Orchard.UI.Notify;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
