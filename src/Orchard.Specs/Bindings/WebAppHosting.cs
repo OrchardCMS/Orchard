@@ -31,21 +31,30 @@ namespace Orchard.Specs.Bindings {
 
         [BeforeTestRun]
         public static void BeforeTestRun() {
-            try { _orchardTemp.Delete(true).CreateDirectory(); } catch {}
+            try { _orchardTemp.Delete(true).CreateDirectory(); }
+            catch { }
         }
 
         [AfterTestRun]
         public static void AfterTestRun() {
             try {
                 _orchardTemp.Delete(true); // <- try to clear any stragglers on the way out
-            } catch {}
+            }
+            catch { }
+        }
+
+        [BeforeScenario]
+        public void CleanOutTheOldWebHost() {
+            if (_webHost != null) {
+                _webHost.Clean();
+                _webHost = null;
+            }
         }
 
         [AfterScenario]
         public void AfterScenario() {
             if (_webHost != null) {
                 _webHost.Dispose();
-                _webHost = null;
             }
         }
 

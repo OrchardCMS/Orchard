@@ -10,7 +10,6 @@ namespace Orchard.Specs.Bindings {
     public class OrchardSiteFactory : BindingBase {
         [Given(@"I have installed Orchard")]
         public void GivenIHaveInstalledOrchard() {
-
             var webApp = Binding<WebAppHosting>();
 
             webApp.GivenIHaveACleanSiteWith(TableData(
@@ -52,7 +51,6 @@ namespace Orchard.Specs.Bindings {
             });
 
         }
-
 
         [Given(@"I have tenant ""(.*)\"" on ""(.*)\"" as ""(.*)\""")]
         public void GivenIHaveTenantOnSiteAsName(string shellName, string hostName, string siteName) {

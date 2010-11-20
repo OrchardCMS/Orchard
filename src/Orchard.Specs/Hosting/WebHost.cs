@@ -13,14 +13,6 @@ namespace Orchard.Specs.Hosting {
 
         public WebHost(Path orchardTemp) {
             _orchardTemp = orchardTemp;
-            AppDomain.CurrentDomain.DomainUnload += WebHostCleanup;
-            AppDomain.CurrentDomain.ProcessExit += WebHostCleanup;
-        }
-
-        void WebHostCleanup(object sender, EventArgs e) {
-            try {
-                _tempSite.Delete(true); // <- try to clean up after the appdomain unloads (still not guaranteed to get everything - probably overkill - might go away)
-            } catch{}
         }
 
         public void Initialize(string templateName, string virtualDirectory) {
@@ -28,7 +20,6 @@ namespace Orchard.Specs.Hosting {
 
             _tempSite = Path.Get(_orchardTemp).Combine(System.IO.Path.GetRandomFileName());
             try { _tempSite.Delete(); } catch {}
-            _tempSite.CreateDirectory();
 
             // Trying the two known relative paths to the Orchard.Web directory.
             // The second one is for the target "spec" in orchard.proj.
@@ -75,10 +66,14 @@ namespace Orchard.Specs.Hosting {
                 _webHostAgent.Shutdown();
                 _webHostAgent = null;
             }
+            Clean();
+        }
+
+        public void Clean() {
             try {
                 _tempSite.Delete(true); // <- progressively clean as much as possible
             }
-            catch {}
+            catch { }
         }
 
         public void CopyExtension(string extensionFolder, string extensionName) {

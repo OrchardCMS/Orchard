@@ -6,14 +6,16 @@ using Autofac;
 using ClaySharp;
 using NUnit.Framework;
 using Orchard.Scripting.Services;
+using Path = Bleroy.FluentPath.Path;
 
-namespace Orchard.Tests.Scripting {
+namespace Orchard.Tests.Modules.Scripting {
     [TestFixture]
     public class ScriptingTests {
         private IContainer _container;
         private IScriptingRuntime _scriptingRuntime;
         private IScriptingManager _scriptingManager;
-        private string _tempFolderName;
+        private readonly Path _tempFixtureFolderName = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Tests.Modules.Scripting");
+        private Path _tempFolderName;
 
         [SetUp]
         public void Init() {
@@ -23,14 +25,18 @@ namespace Orchard.Tests.Scripting {
             _container = builder.Build();
             _scriptingRuntime = _container.Resolve<IScriptingRuntime>();
             _scriptingManager = _container.Resolve<IScriptingManager>();
-            _tempFolderName = Path.GetTempFileName();
-            File.Delete(_tempFolderName);
-            Directory.CreateDirectory(_tempFolderName);
+            _tempFolderName = _tempFixtureFolderName.Combine(System.IO.Path.GetRandomFileName());
+            try {
+                _tempFolderName.Delete();
+            }
+            catch { }
+            _tempFolderName.CreateDirectory();
         }
 
         [TearDown]
         public void Term() {
-            Directory.Delete(_tempFolderName, true);
+            try { _tempFixtureFolderName.Delete(true); }
+            catch { }
         }
 
         [Test]
@@ -71,7 +77,7 @@ namespace Orchard.Tests.Scripting {
 
         [Test]
         public void ScriptingManagerCanExecuteFile() {
-            var targetPath = Path.Combine(_tempFolderName, "SampleMethodDefinition.rb");
+            var targetPath = _tempFolderName.Combine("SampleMethodDefinition.rb");
             File.WriteAllText(targetPath, "def f\r\nreturn 32\r\nend\r\n");
             _scriptingManager.ExecuteFile(targetPath);
             Assert.That(_scriptingManager.ExecuteExpression("f / 4"), Is.EqualTo(8));
@@ -95,7 +101,7 @@ namespace Orchard.Tests.Scripting {
 
         [Test]
         public void CanDeclareCallbackOnInstanceEvalWithFile() {
-            var targetPath = Path.Combine(_tempFolderName, "CallbackOnInstanceEval.rb");
+            var targetPath = _tempFolderName.Combine("CallbackOnInstanceEval.rb");
             File.WriteAllText(targetPath, "class ExecContext\r\ndef initialize(callbacks)\r\n@callbacks = callbacks;\r\nend\r\ndef execute(text)\r\ninstance_eval(text.to_s);\r\nend\r\ndef method_missing(name, *args, &block)\r\n@callbacks.send(name, args, &block);\r\nend\r\nend\r\ndef execute(&block)\r\nExecContext.new(callbacks).instance_eval(&block);\r\nend\r\n");
             _scriptingManager.ExecuteFile(targetPath);
             _scriptingManager.SetVariable("callbacks", new CallbackApi());

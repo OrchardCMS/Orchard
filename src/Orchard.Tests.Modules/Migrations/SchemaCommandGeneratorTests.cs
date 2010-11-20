@@ -30,6 +30,7 @@ using Orchard.Tests.ContentManagement;
 using Orchard.Data.Providers;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Modules.Migrations.Orchard.Tests.DataMigration.Records;
+using Path = Bleroy.FluentPath.Path;
 
 namespace Orchard.Tests.Modules.Migrations {
     [TestFixture]
@@ -37,9 +38,10 @@ namespace Orchard.Tests.Modules.Migrations {
         private IContainer _container;
         private StubFolders _folders;
         private ISchemaCommandGenerator _generator;
-
         private ISessionFactory _sessionFactory;
         private ISession _session;
+        private readonly Path _tempFixtureFolderName = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Tests.Modules.Migrations");
+        private Path _tempFolderName;
 
         [TestFixtureSetUp]
         public void CreateDb() {
@@ -51,9 +53,13 @@ namespace Orchard.Tests.Modules.Migrations {
                 typeof(ContentItemRecord),
                 typeof(ContentTypeRecord)};
 
-            var databaseFileName = System.IO.Path.GetTempFileName();
+            _tempFolderName = _tempFixtureFolderName.Combine(System.IO.Path.GetRandomFileName());
+            try {
+                _tempFixtureFolderName.Delete(true);
+            } catch {}
+            _tempFixtureFolderName.CreateDirectory();
             _sessionFactory = DataUtility.CreateSessionFactory(
-                databaseFileName, types);
+                _tempFolderName, types);
 
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
@@ -65,7 +71,7 @@ namespace Orchard.Tests.Modules.Migrations {
             });
 
             builder.RegisterInstance(new ShellSettings { Name = "Default", DataTablePrefix = "TEST", DataProvider = "SqlCe" });
-            builder.RegisterInstance(AppDataFolderTests.CreateAppDataFolder(Path.GetDirectoryName(databaseFileName))).As<IAppDataFolder>();
+            builder.RegisterInstance(AppDataFolderTests.CreateAppDataFolder(_tempFixtureFolderName)).As<IAppDataFolder>();
             builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>();
             builder.RegisterType<SqlCeDataServicesProvider>().As<IDataServicesProvider>();
             builder.RegisterInstance(manager).As<IDataServicesProviderFactory>();
@@ -93,6 +99,12 @@ Features:
   Feature1: 
     Description: Feature
 ");
+        }
+
+        [TestFixtureTearDown]
+        public void Term() {
+            try { _tempFixtureFolderName.Delete(true); }
+            catch { }
         }
 
         public class StubFolders : IExtensionFolders {
