@@ -10,7 +10,7 @@
 		<ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts\Azure</ArtifactsFolder>
 		
 		<CompileFolder>$(BuildFolder)\Compile</CompileFolder>
-		<ServiceFolder>$(CompileFolder)\Orchard.Azure.CloudService.csx</ServiceFolder>
+		<ServiceFolder>$(CompileFolder)\Orchard.Azure.csx</ServiceFolder>
 		<CloudRootFolder>$(ServiceFolder)\roles\Orchard.Azure.Web\approot</CloudRootFolder>
 		<WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
 		<StageFolder>$(BuildFolder)\Stage</StageFolder>
@@ -40,19 +40,19 @@
 <!-- Building -->
 
 	<Target Name="Clean">
-		<MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService.sln" Targets="Clean" />
+		<MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln" Targets="Clean" />
 		<RemoveDir Directories="$(BuildFolder)" />
 	</Target>
 
   <Target Name ="Compile">
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService.sln"
+      Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln"
       Targets="Build"
       Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64;DefineConstants=AZURE" 
        />      
 
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.Azure.sln"
+      Projects="$(SrcFolder)\Orchard.Azure.Tests\Orchard.Azure.Tests.sln"
       Targets="Build"
       Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64" />      
     
@@ -109,12 +109,12 @@
       Value="Error" />
     
     <Copy 
-        SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceConfiguration.cscfg" 
+        SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure\ServiceConfiguration.cscfg" 
         DestinationFolder="$(StageFolder)" 
       />
 
     <Copy 
-        SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\Properties.txt" 
+        SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure\Properties.txt" 
         DestinationFolder="$(ServiceFolder)" 
       />
 
