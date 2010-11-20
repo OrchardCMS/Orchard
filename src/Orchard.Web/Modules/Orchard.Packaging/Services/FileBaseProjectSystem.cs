@@ -9,7 +9,7 @@ namespace Orchard.Packaging.Services {
     public class FileBasedProjectSystem : IProjectSystem {
         private const string NetFrameworkIdentifier = ".NETFramework";
         private const string BinDir = "bin";
-        private string _root;
+        private readonly string _root;
 
         public FileBasedProjectSystem(string root) {
             if (String.IsNullOrEmpty(root)) {
@@ -81,7 +81,7 @@ namespace Orchard.Packaging.Services {
         }
 
         public void DeleteDirectory(string path) {
-            DeleteDirectory(path, recursive: false);
+            DeleteDirectory(path, false);
         }
 
         public void DeleteDirectory(string path, bool recursive) {
@@ -98,26 +98,14 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        public void AddReference(string referencePath) {
-            // Copy to bin by default
-            string src = referencePath;
-            string referenceName = Path.GetFileName(referencePath);
-            string dest = GetFullPath(GetReferencePath(referenceName));
-
-            // Ensure the destination path exists
-            Directory.CreateDirectory(Path.GetDirectoryName(dest));
-
-            // Copy the reference over
-            File.Copy(src, dest, overwrite: true);
+        public void AddReference(string referencePath, Stream stream) {
+            // Not used by Orchard
+            throw new NotSupportedException();
         }
 
         public void RemoveReference(string name) {
-            DeleteFile(GetReferencePath(name));
-
-            // Delete the bin directory if this was the last reference
-            if (!GetFiles(BinDir).Any()) {
-                DeleteDirectory(BinDir);
-            }
+            // Not used by Orchard
+            throw new NotSupportedException();
         }
 
         public dynamic GetPropertyValue(string propertyName) {
