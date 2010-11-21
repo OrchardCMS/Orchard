@@ -1,7 +1,0 @@
-Name: Primus
-Author: Lou
-Description: desc
-Version: 0.1
-Website: http://whereslou.com
-Zones: Main, Sidebar
-BaseTheme: TheThemeMachine
