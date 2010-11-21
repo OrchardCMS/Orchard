@@ -176,9 +176,9 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table4.AddRow(new string[] {
                         "module",
-                        "Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messagings, O" +
-                            "rchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard." +
-                            "Widgets, Orchard.jQuery, TinyMce"});
+                        "Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Or" +
+                            "chard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.W" +
+                            "idgets, Orchard.jQuery, TinyMce"});
             table4.AddRow(new string[] {
                         "core",
                         "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, S" +
