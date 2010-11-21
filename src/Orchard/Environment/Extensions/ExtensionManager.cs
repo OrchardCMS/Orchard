@@ -72,7 +72,7 @@ namespace Orchard.Environment.Extensions {
 
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
             return featureDescriptors
-                .Select(descriptor => _cacheManager.Get(descriptor.Name, ctx => LoadFeature(descriptor)))
+                .Select(descriptor => _cacheManager.Get(descriptor.Id, ctx => LoadFeature(descriptor)))
                 .ToArray();
         }
 
