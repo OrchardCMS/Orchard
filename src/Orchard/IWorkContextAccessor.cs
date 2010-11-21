@@ -9,9 +9,9 @@ namespace Orchard {
         WorkContext GetContext();
         IWorkContextScope CreateWorkContextScope();
     }
-    
+
     public interface IWorkContextStateProvider : IDependency {
-        Func<T> Get<T>(string name);
+        Func<WorkContext, T> Get<T>(string name);
     }
 
     public interface IWorkContextScope : IDisposable {

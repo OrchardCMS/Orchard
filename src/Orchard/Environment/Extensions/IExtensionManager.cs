@@ -14,14 +14,6 @@ namespace Orchard.Environment.Extensions {
     }
 
     public static class ExtensionManagerExtensions {
-        public static IEnumerable<ExtensionDescriptor> EnabledExtensions(this IExtensionManager extensionManager, ShellDescriptor descriptor) {
-            var enabledFeatures = EnabledFeatures(extensionManager, descriptor);
-            return extensionManager.AvailableExtensions()
-                .Where(extensionDescriptor =>
-                    extensionDescriptor.Features.Any(featureDescriptor =>
-                        enabledFeatures.Any(availableFeature => featureDescriptor.Id == availableFeature.Id)));
-        }
-
         public static IEnumerable<FeatureDescriptor> EnabledFeatures(this IExtensionManager extensionManager, ShellDescriptor descriptor) {
             return extensionManager.AvailableExtensions()
                 .SelectMany(extensionDescriptor => extensionDescriptor.Features)

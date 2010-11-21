@@ -56,21 +56,6 @@ namespace Orchard.Tests.Environment.Blueprint {
         }
 
         [Test]
-        public void StoreNullWillClearEntry() {
-            var service = _container.Resolve<IShellDescriptorCache>();
-
-            var descriptor1 = new ShellDescriptor { SerialNumber = 6655321 };
-            service.Store("Hello", descriptor1);
-            var result1 = service.Fetch("Hello");
-            Assert.That(result1, Is.Not.Null);
-
-            service.Store("Hello", null);
-            var result2 = service.Fetch("Hello");
-            Assert.That(result2, Is.Null);
-        }
-
-
-        [Test]
         public void AllDataWillRoundTrip() {
             var service = _container.Resolve<IShellDescriptorCache>();
 

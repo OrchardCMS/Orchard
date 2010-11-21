@@ -11,7 +11,6 @@ using Orchard.FileSystems.WebSite;
 namespace Orchard.Localization.Services {
     public class DefaultLocalizedStringManager : ILocalizedStringManager {
         private readonly IWebSiteFolder _webSiteFolder;
-        private readonly ICultureManager _cultureManager;
         private readonly IExtensionManager _extensionManager;
         private readonly ICacheManager _cacheManager;
         private readonly ShellSettings _shellSettings;
@@ -23,13 +22,11 @@ namespace Orchard.Localization.Services {
         const string TenantLocalizationFilePathFormat = "~/App_Data/Sites/{0}/Localization/{1}/orchard.po";
 
         public DefaultLocalizedStringManager(
-            ICultureManager cultureManager, 
-            IWebSiteFolder webSiteFolder, 
+            IWebSiteFolder webSiteFolder,
             IExtensionManager extensionManager,
             ICacheManager cacheManager,
             ShellSettings shellSettings,
             ISignals signals) {
-            _cultureManager = cultureManager;
             _webSiteFolder = webSiteFolder;
             _extensionManager = extensionManager;
             _cacheManager = cacheManager;
@@ -44,45 +41,36 @@ namespace Orchard.Localization.Services {
         // parent culture as defined in the .net culture hierarchy. e.g. fr-FR will fallback to fr.
         // In case it's not found anywhere, the text is returned as is.
         public string GetLocalizedString(string scope, string text, string cultureName) {
-            var cultures = LoadCultures();
+            var culture = LoadCulture(cultureName);
 
-            foreach (var culture in cultures) {
-                if (String.Equals(cultureName, culture.CultureName, StringComparison.OrdinalIgnoreCase)) {
-                    string scopedKey = (scope + "|" + text).ToLowerInvariant();
-                    if (culture.Translations.ContainsKey(scopedKey)) {
-                        return culture.Translations[scopedKey];
-                    }
-
-                    string genericKey = ("|" + text).ToLowerInvariant();
-                    if ( culture.Translations.ContainsKey(genericKey) ) {
-                        return culture.Translations[genericKey];
-                    }
-
-                    return GetParentTranslation(scope, text, cultureName, cultures);
-                }
+            string scopedKey = (scope + "|" + text).ToLowerInvariant();
+            if (culture.Translations.ContainsKey(scopedKey)) {
+                return culture.Translations[scopedKey];
             }
 
-            return text;
+            string genericKey = ("|" + text).ToLowerInvariant();
+            if (culture.Translations.ContainsKey(genericKey)) {
+                return culture.Translations[genericKey];
+            }
+
+            return GetParentTranslation(scope, text, cultureName);
         }
 
-        private static string GetParentTranslation(string scope, string text, string cultureName, IEnumerable<CultureDictionary> cultures) {
+        private string GetParentTranslation(string scope, string text, string cultureName) {
             string scopedKey = (scope + "|" + text).ToLowerInvariant();
             string genericKey = ("|" + text).ToLowerInvariant();
             try {
                 CultureInfo cultureInfo = CultureInfo.GetCultureInfo(cultureName);
                 CultureInfo parentCultureInfo = cultureInfo.Parent;
                 if (parentCultureInfo.IsNeutralCulture) {
-                    foreach (var culture in cultures) {
-                        if (String.Equals(parentCultureInfo.Name, culture.CultureName, StringComparison.OrdinalIgnoreCase)) {
-                            if (culture.Translations.ContainsKey(scopedKey)) {
-                                return culture.Translations[scopedKey];
-                            }
-                            if (culture.Translations.ContainsKey(genericKey)) {
-                                return culture.Translations[genericKey];
-                            }
-                            break;
-                        }
+                    var culture = LoadCulture(parentCultureInfo.Name);
+                    if (culture.Translations.ContainsKey(scopedKey)) {
+                        return culture.Translations[scopedKey];
                     }
+                    if (culture.Translations.ContainsKey(genericKey)) {
+                        return culture.Translations[genericKey];
+                    }
+                    return text;
                 }
             }
             catch (CultureNotFoundException) { }
@@ -90,22 +78,17 @@ namespace Orchard.Localization.Services {
             return text;
         }
 
-        // Loads the culture dictionaries in memory and caches them.
+        // Loads the culture dictionary in memory and caches it.
         // Cache entry will be invalidated any time the directories hosting 
         // the .po files are modified.
-        private IEnumerable<CultureDictionary> LoadCultures() {
-            return _cacheManager.Get("cultures", ctx => {
-                var cultures = new List<CultureDictionary>();
-                foreach (var culture in _cultureManager.ListCultures()) {
-                    cultures.Add(new CultureDictionary {
-                        CultureName = culture,
-                        Translations = LoadTranslationsForCulture(culture, ctx)
-                    });
-                }
+        private CultureDictionary LoadCulture(string culture) {
+            return _cacheManager.Get(culture, ctx => {
                 ctx.Monitor(_signals.When("culturesChanged"));
-                return cultures;
+                return new CultureDictionary {
+                    CultureName = culture,
+                    Translations = LoadTranslationsForCulture(culture, ctx)
+                };
             });
-
         }
 
         // Merging occurs from multiple locations:
@@ -128,22 +111,22 @@ namespace Orchard.Localization.Services {
                 context.Monitor(_webSiteFolder.WhenPathChanges(corePath));
             }
 
-            foreach ( var module in _extensionManager.AvailableExtensions() ) {
-                if ( String.Equals(module.ExtensionType, "Module") ) {
+            foreach (var module in _extensionManager.AvailableExtensions()) {
+                if (String.Equals(module.ExtensionType, "Module")) {
                     string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Id, culture);
                     text = _webSiteFolder.ReadFile(modulePath);
-                    if ( text != null ) {
+                    if (text != null) {
                         ParseLocalizationStream(text, translations, true);
                         context.Monitor(_webSiteFolder.WhenPathChanges(modulePath));
                     }
                 }
             }
 
-            foreach ( var theme in _extensionManager.AvailableExtensions() ) {
-                if ( String.Equals(theme.ExtensionType, "Theme") ) {
+            foreach (var theme in _extensionManager.AvailableExtensions()) {
+                if (String.Equals(theme.ExtensionType, "Theme")) {
                     string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Id, culture);
                     text = _webSiteFolder.ReadFile(themePath);
-                    if ( text != null ) {
+                    if (text != null) {
                         ParseLocalizationStream(text, translations, true);
                         context.Monitor(_webSiteFolder.WhenPathChanges(themePath));
                     }
@@ -225,7 +208,7 @@ namespace Orchard.Localization.Services {
                 if (poLine.StartsWith("msgstr")) {
                     string translation = ParseTranslation(poLine);
                     // ignore incomplete localizations (empty msgid or msgstr)
-                    if ( !String.IsNullOrWhiteSpace(id) && !String.IsNullOrWhiteSpace(translation) ) {
+                    if (!String.IsNullOrWhiteSpace(id) && !String.IsNullOrWhiteSpace(translation)) {
                         string scopedKey = (scope + "|" + id).ToLowerInvariant();
                         if (!translations.ContainsKey(scopedKey)) {
                             translations.Add(scopedKey, translation);

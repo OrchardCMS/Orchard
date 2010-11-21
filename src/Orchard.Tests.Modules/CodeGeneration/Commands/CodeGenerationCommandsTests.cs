@@ -3,6 +3,7 @@ using System.IO;
 using Autofac;
 using Autofac.Features.Metadata;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.CodeGeneration.Commands;
 using Orchard.Commands;
 using Orchard.Data;
@@ -15,6 +16,7 @@ using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Tests.FileSystems.AppData;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Modules.CodeGeneration.Commands {
     [TestFixture]
@@ -46,6 +48,7 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
             builder.RegisterType<CompositionStrategy>().As<ICompositionStrategy>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SchemaCommandGenerator>().As<ISchemaCommandGenerator>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
 
             _container = builder.Build();
             _extensionManager = _container.Resolve<IExtensionManager>();
@@ -54,7 +57,7 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
 
         [Test]
         public void CreateDataMigrationTestNonExistentFeature() {
-            CodeGenerationCommands codeGenerationCommands = new CodeGenerationCommands(_extensionManager, 
+            CodeGenerationCommands codeGenerationCommands = new CodeGenerationCommands(_extensionManager,
                 _schemaCommandGenerator);
 
             TextWriter textWriterOutput = new StringWriter();

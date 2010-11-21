@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security;
 using Orchard.Settings;
@@ -35,6 +36,11 @@ namespace Orchard {
         public ExtensionDescriptor CurrentTheme {
             get { return GetState<ExtensionDescriptor>("CurrentTheme"); }
             set { SetState("CurrentTheme", value); }
+        }
+
+        public string CurrentCulture {
+            get { return GetState<string>("CurrentCulture"); }
+            set { SetState("CurrentCulture", value); }
         }
     }
 }

@@ -113,10 +113,10 @@ namespace Orchard.Setup {
 
         [UsedImplicitly]
         class SafeModeSiteWorkContextProvider : IWorkContextStateProvider {
-            public Func<T> Get<T>(string name) {
+            public Func<WorkContext, T> Get<T>(string name) {
                 if (name == "CurrentSite") {
                     ISite safeModeSite = new SafeModeSite();
-                    return () => (T)safeModeSite;
+                    return ctx => (T)safeModeSite;
                 }
                 return null;
             }

@@ -10,7 +10,7 @@ namespace Orchard.Scripting.Services {
         public ScriptingManager(IScriptingRuntime scriptingRuntime) {
             _scriptingRuntime = scriptingRuntime;
             _scope = new Lazy<ScriptScope>(()=>_scriptingRuntime.CreateScope());
-            _operations = new Lazy<ObjectOperations>(()=>_scope.Value.Engine.CreateOperations());
+            _operations = new Lazy<ObjectOperations>(()=>_scope.Value.Engine.Operations);
         }
 
         public dynamic GetVariable(string name) {

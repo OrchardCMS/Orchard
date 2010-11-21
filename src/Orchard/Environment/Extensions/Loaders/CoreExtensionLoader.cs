@@ -10,9 +10,12 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// Load an extension by looking into specific namespaces of the "Orchard.Core" assembly
     /// </summary>
     public class CoreExtensionLoader : ExtensionLoaderBase {
+        private readonly string _coreAssemblyName = "Orchard.Core";
+        private readonly IAssemblyLoader _assemblyLoader;
 
-        public CoreExtensionLoader(IDependenciesFolder dependenciesFolder)
+        public CoreExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyLoader assemblyLoader)
             : base(dependenciesFolder) {
+            _assemblyLoader = assemblyLoader;
 
             Logger = NullLogger.Instance;
         }
@@ -36,7 +39,11 @@ namespace Orchard.Environment.Extensions.Loaders {
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
             //Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
-            var assembly = Assembly.Load("Orchard.Core");
+            var assembly = _assemblyLoader.Load(_coreAssemblyName);
+            if (assembly == null) {
+                Logger.Error("Core modules cannot be activated because assembly '{0}' could not be loaded", _coreAssemblyName);
+                return null;
+            }
 
             return new ExtensionEntry {
                 Descriptor = descriptor,
@@ -45,8 +52,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        private static bool IsTypeFromModule(Type type, ExtensionDescriptor descriptor) {
-            return (type.Namespace + ".").StartsWith("Orchard.Core." + descriptor.Id + ".");
+        private bool IsTypeFromModule(Type type, ExtensionDescriptor descriptor) {
+            return (type.Namespace + ".").StartsWith(_coreAssemblyName + "." + descriptor.Id + ".");
         }
     }
 }

@@ -2,6 +2,8 @@
 using Autofac;
 using NUnit.Framework;
 using Orchard.Scripting.Services;
+using Orchard.Caching;
+using Orchard.Tests.Stubs;
 using Orchard.Widgets.RuleEngine;
 using Orchard.Widgets.Services;
 
@@ -18,6 +20,8 @@ namespace Orchard.Tests.Modules.Widgets {
             builder.RegisterType<ScriptingManager>().As<IScriptingManager>();
             builder.RegisterType<AlwaysTrueRuleProvider>().As<IRuleProvider>();
             builder.RegisterType<RuleManager>().As<IRuleManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+
             _container = builder.Build();
             _ruleManager = _container.Resolve<IRuleManager>();
         }

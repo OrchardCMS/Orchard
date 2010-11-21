@@ -109,8 +109,8 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
                     Descriptor = descriptor,
                     Loader = this,
-                    Name = r.AssemblyName,
-                    VirtualPath = GetReferenceVirtualPath(projectPath, r.AssemblyName)
+                    Name = r.SimpleName,
+                    VirtualPath = GetReferenceVirtualPath(projectPath, r.SimpleName)
                 });
             }
         }

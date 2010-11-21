@@ -9,7 +9,7 @@ using Orchard.Utility;
 
 namespace Orchard.DisplayManagement.Descriptors {
 
-    public class DefaultShapeTableManager : IShapeTableManager {
+    public class DefaultShapeTableManager : IShapeTableManager, ISingletonDependency {
         private readonly IEnumerable<Meta<IShapeTableProvider>> _bindingStrategies;
         private readonly IExtensionManager _extensionManager;
 
