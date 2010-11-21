@@ -33,7 +33,7 @@ namespace Orchard.Environment {
             // If short assembly name, look in list of loaded assemblies first
             if (shortName == fullName) {
                 var result = AppDomain.CurrentDomain.GetAssemblies()
-                    .Where(a => StringComparer.OrdinalIgnoreCase.Equals(shortName, a.GetName().Name))
+                    .Where(a => StringComparer.OrdinalIgnoreCase.Equals(shortName, this.ExtractAssemblyName(a.FullName)))
                     .SingleOrDefault();
 
                 if (result != null)
