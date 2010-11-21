@@ -227,6 +227,24 @@ namespace Orchard.Environment.Extensions {
             string referenceName,
             IList<DependencyReferenceDescriptor> activatedReferences) {
 
+            // If the reference is an extension has been processed already, use the same loader as 
+            // that extension, since a given extension should be loaded with a unique loader for the 
+            // whole application
+            var bestExtensionReference = context.ProcessedExtensions.ContainsKey(referenceName) ?
+                context.ProcessedExtensions[referenceName] :
+                null;
+
+            // Activated the extension reference
+            if (bestExtensionReference != null) {
+                activatedReferences.Add(new DependencyReferenceDescriptor {
+                    LoaderName = bestExtensionReference.Loader.Name,
+                    Name = referenceName,
+                    VirtualPath = bestExtensionReference.VirtualPath
+                });
+
+                return;
+            }
+
             // Skip references from "~/bin"
             if (_buildManager.HasReferencedAssembly(referenceName))
                 return;
@@ -243,20 +261,6 @@ namespace Orchard.Environment.Extensions {
                 .ThenBy(e => e.Entry.Name)
                 .FirstOrDefault();
 
-            var bestExtensionReference = context.ProcessedExtensions.ContainsKey(referenceName) ?
-                context.ProcessedExtensions[referenceName] :
-                null;
-
-            // Pick the best one of module vs binary
-            if (bestExtensionReference != null && bestBinaryReference != null) {
-                if (bestExtensionReference.LastWriteTimeUtc >= bestBinaryReference.LastWriteTimeUtc) {
-                    bestBinaryReference = null;
-                }
-                else {
-                    bestExtensionReference = null;
-                }
-            }
-
             // Activate the binary ref
             if (bestBinaryReference != null) {
                 if (!context.ProcessedReferences.Contains(bestBinaryReference.Entry.Name)) {
@@ -269,15 +273,6 @@ namespace Orchard.Environment.Extensions {
                     VirtualPath = bestBinaryReference.Entry.VirtualPath
                 });
                 return;
-            }
-
-            // Activated the module ref
-            if (bestExtensionReference != null) {
-                activatedReferences.Add(new DependencyReferenceDescriptor {
-                    LoaderName = bestExtensionReference.Loader.Name,
-                    Name = referenceName,
-                    VirtualPath = bestExtensionReference.VirtualPath
-                });
             }
         }
 
