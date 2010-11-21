@@ -9,6 +9,5 @@ namespace Orchard.Messaging.Models {
             get { return Record.DefaultChannelService; }
             set { Record.DefaultChannelService = value;  }
         }
-    
     }
 }
