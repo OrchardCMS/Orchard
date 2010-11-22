@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
+using Orchard.Mvc;
 using Orchard.Services;
 using Orchard.Utility.Extensions;
 
@@ -12,10 +13,11 @@ namespace Orchard.Environment
     public class DefaultHostEnvironment : IHostEnvironment
     {
         private readonly IClock _clock;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DefaultHostEnvironment(IClock clock)
-        {
+        public DefaultHostEnvironment(IClock clock, IHttpContextAccessor httpContextAccessor) {
             _clock = clock;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public bool IsFullTrust
@@ -46,17 +48,18 @@ namespace Orchard.Environment
             // If setting up extensions/modules requires an AppDomain restart, it's very unlikely the
             // current request can be processed correctly.  So, we redirect to the same URL, so that the
             // new request will come to the newly started AppDomain.
-            if (HttpContext.Current != null)
+            var httpContext = _httpContextAccessor.Current();
+            if (httpContext != null)
             {
                 // Don't redirect posts...
-                if (HttpContext.Current.Request.RequestType == "GET")
+                if (httpContext.Request.RequestType == "GET")
                 {
-                    HttpContext.Current.Response.Redirect(HttpContext.Current.Request.ToUrlString(), true /*endResponse*/);
+                    httpContext.Response.Redirect(HttpContext.Current.Request.ToUrlString(), true /*endResponse*/);
                 }
                 else
                 {
-                    HttpContext.Current.Response.WriteFile("~/Refresh.html");
-                    HttpContext.Current.Response.End();
+                    httpContext.Response.WriteFile("~/Refresh.html");
+                    httpContext.Response.End();
                 }
             }
         }
