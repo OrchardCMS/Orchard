@@ -1,16 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.IO;
 using System.Web;
-using System.Web.Hosting;
 using Orchard.Mvc;
 using Orchard.Services;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment
 {
-    public class DefaultHostEnvironment : IHostEnvironment
+    public class DefaultHostEnvironment : HostEnvironment
     {
         private readonly IClock _clock;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -20,27 +16,7 @@ namespace Orchard.Environment
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public bool IsFullTrust
-        {
-            get { return AppDomain.CurrentDomain.IsFullyTrusted; }
-        }
-
-        public string MapPath(string virtualPath)
-        {
-            return HostingEnvironment.MapPath(virtualPath);
-        }
-
-        public bool IsAssemblyLoaded(string name)
-        {
-            return AppDomain.CurrentDomain.GetAssemblies().Any(assembly => new AssemblyName(assembly.FullName).Name == name);
-        }
-
-        public void RestartAppDomain()
-        {
-            ResetSiteCompilation();
-        }
-
-        public void ResetSiteCompilation()
+        public override void ResetSiteCompilation()
         {
             // Touch web.config
             File.SetLastWriteTimeUtc(MapPath("~/web.config"), _clock.UtcNow);
