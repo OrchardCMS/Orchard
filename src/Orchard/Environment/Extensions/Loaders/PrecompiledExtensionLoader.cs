@@ -121,10 +121,21 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+            // If the assembly exists, monitor it
             string assemblyPath = GetAssemblyPath(descriptor);
             if (assemblyPath != null) {
                 Logger.Information("Monitoring virtual path \"{0}\"", assemblyPath);
                 monitor(_virtualPathMonitor.WhenPathChanges(assemblyPath));
+                return;
+            }
+
+            // If the assembly doesn't exist, we monitor the containing "bin" folder, as the assembly 
+            // may exist later if it is recompiled in Visual Studio for example, and we need to 
+            // detect that as a change of configuration.
+            var assemblyDirectory = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id, "bin");
+            if (_virtualPathProvider.DirectoryExists(assemblyDirectory)) {
+                Logger.Information("Monitoring virtual path \"{0}\"", assemblyDirectory);
+                monitor(_virtualPathMonitor.WhenPathChanges(assemblyDirectory));
             }
         }
 
