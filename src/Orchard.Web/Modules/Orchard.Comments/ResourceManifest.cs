@@ -1,9 +1,10 @@
 using Orchard.UI.Resources;
 
-namespace Orchard.MultiTenancy {
+namespace Orchard.Comments {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
-            builder.Add().DefineStyle("MultiTenancyAdmin").SetUrl("orchard-multitenancy-admin.css");
+            var manifest = builder.Add();
+            manifest.DefineStyle("Admin").SetUrl("orchard-comments-admin.css");
         }
     }
 }

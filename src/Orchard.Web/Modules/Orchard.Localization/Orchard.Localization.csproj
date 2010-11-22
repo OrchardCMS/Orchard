@@ -61,8 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Styles\admin.css" />
-    <Content Include="Styles\base.css" />
+    <Content Include="Styles\orchard-localization-admin.css" />
+    <Content Include="Styles\orchard-localization-base.css" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\Web.config">
