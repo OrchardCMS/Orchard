@@ -1,4 +1,6 @@
+using System.Linq;
 using JetBrains.Annotations;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
@@ -13,39 +15,39 @@ namespace Orchard.Core.Common.Handlers {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
         private readonly IContentManager _contentManager;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public CommonPartHandler(
             IRepository<CommonPartRecord> commonRepository,
             IRepository<CommonPartVersionRecord> commonVersionRepository,
             IClock clock,
             IAuthenticationService authenticationService,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IContentDefinitionManager contentDefinitionManager) {
 
             _clock = clock;
             _authenticationService = authenticationService;
             _contentManager = contentManager;
+            _contentDefinitionManager = contentDefinitionManager;
             T = NullLocalizer.Instance;
 
             Filters.Add(StorageFilter.For(commonRepository));
             Filters.Add(StorageFilter.For(commonVersionRepository));
 
+            Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(ContentTypeWithACommonPart));
+
             OnInitializing<CommonPart>(PropertySetHandlers);
             OnInitializing<CommonPart>(AssignCreatingOwner);
-            OnInitializing<ContentPart<CommonPartRecord>>(AssignCreatingDates);
+            OnInitializing<CommonPart>(AssignCreatingDates);
             OnInitializing<ContentPart<CommonPartVersionRecord>>(AssignCreatingDates);
 
             OnLoaded<CommonPart>(LazyLoadHandlers);
 
-            OnVersioning<CommonPart>(CopyOwnerAndContainer);
-
+            OnVersioned<CommonPart>(AssignVersioningDates);
             OnVersioned<ContentPart<CommonPartVersionRecord>>(AssignVersioningDates);
 
-            OnPublishing<ContentPart<CommonPartRecord>>(AssignPublishingDates);
+            OnPublishing<CommonPart>(AssignPublishingDates);
             OnPublishing<ContentPart<CommonPartVersionRecord>>(AssignPublishingDates);
-
-            //OnGetDisplayViewModel<CommonPart>();
-            //OnGetEditorViewModel<CommonPart>(GetEditor);
-            //OnUpdateEditorViewModel<CommonPart>(UpdateEditor);
 
             OnIndexing<CommonPart>((context, commonPart) => context.DocumentIndex
                                                     .Add("type", commonPart.ContentItem.ContentType).Store()
@@ -58,6 +60,9 @@ namespace Orchard.Core.Common.Handlers {
 
         public Localizer T { get; set; }
 
+        bool ContentTypeWithACommonPart(string typeName) {
+            return _contentDefinitionManager.GetTypeDefinition(typeName).Parts.Any(part => part.PartDefinition.Name == "CommonPart");
+        }
 
         void AssignCreatingOwner(InitializingContentContext context, CommonPart part) {
             // and use the current user as Owner
@@ -66,10 +71,10 @@ namespace Orchard.Core.Common.Handlers {
             }
         }
 
-        void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonPartRecord> part) {
+        void AssignCreatingDates(InitializingContentContext context, CommonPart part) {
             // assign default create/modified dates
-            part.Record.CreatedUtc = _clock.UtcNow;
-            part.Record.ModifiedUtc = _clock.UtcNow;
+            part.CreatedUtc = _clock.UtcNow;
+            part.ModifiedUtc = _clock.UtcNow;
         }
 
         void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonPartVersionRecord> part) {
@@ -78,22 +83,31 @@ namespace Orchard.Core.Common.Handlers {
             part.Record.ModifiedUtc = _clock.UtcNow;
         }
 
-        void AssignVersioningDates(VersionContentContext context, ContentPart<CommonPartVersionRecord> existing, ContentPart<CommonPartVersionRecord> building) {
-            // assign create/modified dates for the new version
-            building.Record.CreatedUtc = _clock.UtcNow;
-            building.Record.ModifiedUtc = _clock.UtcNow;
+        void AssignVersioningDates(VersionContentContext context, CommonPart existing, CommonPart building) {
+            // assign the created
+            building.CreatedUtc = existing.CreatedUtc ?? _clock.UtcNow;
+            // persist and published dates
+            building.PublishedUtc = existing.PublishedUtc;
+            // assign modified date for the new version
+            building.ModifiedUtc = _clock.UtcNow;
+        }
 
+        void AssignVersioningDates(VersionContentContext context, ContentPart<CommonPartVersionRecord> existing, ContentPart<CommonPartVersionRecord> building) {
+            // assign the created date
+            building.Record.CreatedUtc = _clock.UtcNow;
+            // assign modified date for the new version
+            building.Record.ModifiedUtc = _clock.UtcNow;
             // publish date should be null until publish method called
             building.Record.PublishedUtc = null;
         }
 
-        void AssignPublishingDates(PublishContentContext context, ContentPart<CommonPartRecord> part) {
+        void AssignPublishingDates(PublishContentContext context, CommonPart part) {
             // don't assign dates when unpublishing
             if (context.PublishingItemVersionRecord == null)
                 return;
-
-            // assign version-agnostic publish date
-            part.Record.PublishedUtc = _clock.UtcNow;
+            
+            // set the initial published date
+            part.PublishedUtc = part.PublishedUtc ?? _clock.UtcNow;
         }
 
         void AssignPublishingDates(PublishContentContext context, ContentPart<CommonPartVersionRecord> part) {
@@ -101,13 +115,8 @@ namespace Orchard.Core.Common.Handlers {
             if (context.PublishingItemVersionRecord == null)
                 return;
 
-            // assign version-specific publish date
-            part.Record.PublishedUtc = _clock.UtcNow;
-        }
-
-        private static void CopyOwnerAndContainer(VersionContentContext c, CommonPart c1, CommonPart c2) {
-            c2.Owner = c1.Owner;
-            c2.Container = c1.Container;
+            // assign the version's published date
+            part.Record.PublishedUtc = part.Record.PublishedUtc ?? _clock.UtcNow;
         }
 
         void LazyLoadHandlers(LoadContentContext context, CommonPart part) {
@@ -120,28 +129,22 @@ namespace Orchard.Core.Common.Handlers {
             // add handlers that will update records when part properties are set
 
             part.OwnerField.Setter(user => {
-                                         if (user == null) {
-                                             part.Record.OwnerId = 0;
-                                         }
-                                         else {
-                                             part.Record.OwnerId = user.ContentItem.Id;
-                                         }
-                                         return user;
-                                     });
+                                       part.Record.OwnerId = user == null
+                                           ? 0
+                                           : user.ContentItem.Id;
+                                       return user;
+                                   });
 
             // Force call to setter if we had already set a value
             if (part.OwnerField.Value != null)
                 part.OwnerField.Value = part.OwnerField.Value;
 
             part.ContainerField.Setter(container => {
-                                             if (container == null) {
-                                                 part.Record.Container = null;
-                                             }
-                                             else {
-                                                 part.Record.Container = container.ContentItem.Record;
-                                             }
-                                             return container;
-                                         });
+                                           part.Record.Container = container == null
+                                               ? null
+                                               : container.ContentItem.Record;
+                                           return container;
+                                       });
 
             // Force call to setter if we had already set a value
             if (part.ContainerField.Value != null)
