@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using Orchard.Caching;
 
 namespace Orchard.FileSystems.AppData {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Orchard.Environment;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
 
@@ -7,9 +8,11 @@ namespace Orchard.FileSystems.Dependencies {
     public class DefaultAssemblyProbingFolder : IAssemblyProbingFolder {
         private const string BasePath = "Dependencies";
         private readonly IAppDataFolder _appDataFolder;
+        private readonly IAssemblyLoader _assemblyLoader;
 
-        public DefaultAssemblyProbingFolder(IAppDataFolder appDataFolder) {
+        public DefaultAssemblyProbingFolder(IAppDataFolder appDataFolder, IAssemblyLoader assemblyLoader) {
             _appDataFolder = appDataFolder;
+            _assemblyLoader = assemblyLoader;
 
             Logger = NullLogger.Instance;
         }
@@ -39,7 +42,7 @@ namespace Orchard.FileSystems.Dependencies {
             if (!_appDataFolder.FileExists(path))
                 return null;
 
-            return Assembly.Load(moduleName);
+            return _assemblyLoader.Load(moduleName);
         }
 
         public void DeleteAssembly(string moduleName) {

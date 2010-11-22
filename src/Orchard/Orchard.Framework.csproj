@@ -116,9 +116,6 @@
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -140,14 +137,6 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Yaml, Version=1.0.3370.39839, Culture=neutral, PublicKeyToken=187a3d240e44a135, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\yaml\Yaml.dll</HintPath>
-    </Reference>
-    <Reference Include="YamlSerializer, Version=0.9.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\yaml\YamlSerializer.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentManagement\DefaultContentDisplay.cs" />
@@ -164,14 +153,18 @@
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Environment\HostEnvironment.cs" />
     <Compile Include="Environment\DefaultHostEnvironment.cs" />
     <Compile Include="Environment\Extensions\Loaders\RawThemeExtensionLoader.cs" />
     <Compile Include="Environment\Features\FeatureManager.cs" />
+    <Compile Include="Environment\IAssemblyLoader.cs" />
+    <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
+    <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />

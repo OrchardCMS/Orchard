@@ -1,15 +1,17 @@
 using System;
 using System.Linq;
-using System.Reflection;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class AreaExtensionLoader : ExtensionLoaderBase {
+        private readonly string _hostAssemblyName = "Orchard.Web";
+        private readonly IAssemblyLoader _assemblyLoader;
 
-        public AreaExtensionLoader(IDependenciesFolder dependenciesFolder)
+        public AreaExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyLoader assemblyLoader)
             : base(dependenciesFolder) {
+            _assemblyLoader = assemblyLoader;
 
             Logger = NullLogger.Instance;
         }
@@ -33,7 +35,11 @@ namespace Orchard.Environment.Extensions.Loaders {
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
             //Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
-            var assembly = Assembly.Load("Orchard.Web");
+            var assembly = _assemblyLoader.Load(_hostAssemblyName);
+            if (assembly == null) {
+                Logger.Warning("Support for 'Areas' modules disabled because assembly '{0}' could not be loaded", _hostAssemblyName);
+                return null;
+            }
 
             return new ExtensionEntry {
                 Descriptor = descriptor,
@@ -42,8 +48,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        private static bool IsTypeFromModule(Type type, ExtensionDescriptor descriptor) {
-            return (type.Namespace + ".").StartsWith("Orchard.Web.Areas." + descriptor.Id + ".");
+        private bool IsTypeFromModule(Type type, ExtensionDescriptor descriptor) {
+            return (type.Namespace + ".").StartsWith(_hostAssemblyName + ".Areas." + descriptor.Id + ".");
         }
     }
 }

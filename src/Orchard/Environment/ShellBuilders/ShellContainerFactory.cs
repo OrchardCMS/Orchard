@@ -70,6 +70,9 @@ namespace Orchard.Environment.ShellBuilders {
                             registration = registration.As(interfaceType);
                             if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerMatchingLifetimeScope("shell");
+                            } 
+                            else if (typeof(IUnitOfWorkDependency).IsAssignableFrom(interfaceType)) {
+                                registration = registration.InstancePerMatchingLifetimeScope("work");
                             }
                             else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerDependency();

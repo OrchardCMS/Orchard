@@ -8,9 +8,9 @@ namespace Orchard.Security {
             _authenticationService = authenticationService;
         }
 
-        public Func<T> Get<T>(string name) {
+        public Func<WorkContext, T> Get<T>(string name) {
             if (name == "CurrentUser") 
-                return () => (T)_authenticationService.GetAuthenticatedUser();
+                return ctx => (T)_authenticationService.GetAuthenticatedUser();
             return null;
         }
     }

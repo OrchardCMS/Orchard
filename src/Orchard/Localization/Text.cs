@@ -8,12 +8,13 @@ using Orchard.Logging;
 namespace Orchard.Localization {
     public class Text : IText {
         private readonly string _scope;
-        private readonly ICultureManager _cultureManager;
+        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ILocalizedStringManager _localizedStringManager;
 
-        public Text(string scope, ICultureManager cultureManager, ILocalizedStringManager localizedStringManager) {
+
+        public Text(string scope, IWorkContextAccessor workContextAccessor, ILocalizedStringManager localizedStringManager) {
             _scope = scope;
-            _cultureManager = cultureManager;
+            _workContextAccessor = workContextAccessor;
             _localizedStringManager = localizedStringManager;
             Logger = NullLogger.Instance;
         }
@@ -23,7 +24,8 @@ namespace Orchard.Localization {
         public LocalizedString Get(string textHint, params object[] args) {
             Logger.Debug("{0} localizing '{1}'", _scope, textHint);
 
-            string currentCulture = HttpContext.Current == null ? _cultureManager.GetSiteCulture() : _cultureManager.GetCurrentCulture(new HttpContextWrapper(HttpContext.Current));
+            var workContext = _workContextAccessor.GetContext();
+            var currentCulture = workContext.CurrentCulture;
             var localizedFormat = _localizedStringManager.GetLocalizedString(_scope, textHint, currentCulture);
 
             return args.Length == 0 

@@ -15,9 +15,11 @@ namespace Orchard.Environment {
 
     public class DefaultBuildManager : IBuildManager {
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IAssemblyLoader _assemblyLoader;
 
-        public DefaultBuildManager(IVirtualPathProvider virtualPathProvider) {
+        public DefaultBuildManager(IVirtualPathProvider virtualPathProvider, IAssemblyLoader assemblyLoader) {
             _virtualPathProvider = virtualPathProvider;
+            _assemblyLoader = assemblyLoader;
         }
 
         public IEnumerable<Assembly> GetReferencedAssemblies() {
@@ -33,27 +35,12 @@ namespace Orchard.Environment {
             if (!HasReferencedAssembly(name))
                 return null;
 
-            return Assembly.Load(name);
+            return _assemblyLoader.Load(name);
         }
 
 
         public Assembly GetCompiledAssembly(string virtualPath) {
             return BuildManager.GetCompiledAssembly(virtualPath);
-        }
-    }
-
-    public static class BuildManagerExtensions {
-        public static IEnumerable<string> GetReferencedAssemblyNames(this IBuildManager buildManager) {
-            return buildManager
-                .GetReferencedAssemblies()
-                .Select(a => ExtractAssemblyName(a.FullName));
-        }
-
-        public static string ExtractAssemblyName(string fullName) {
-            int index = fullName.IndexOf(',');
-            if (index < 0)
-                return fullName;
-            return fullName.Substring(0, index);
         }
     }
 }

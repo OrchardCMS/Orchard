@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.Stubs;
 
@@ -10,7 +11,7 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         public void FolderShouldBeEmptyByDefault() {
             var clock = new StubClock();
             var appDataFolder = new StubAppDataFolder(clock);
-            var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder);
+            var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder, new DefaultAssemblyLoader(new StubCacheManager()));
 
             Assert.That(dependenciesFolder.AssemblyExists("foo"), Is.False);
         }
@@ -19,7 +20,7 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         public void LoadAssemblyShouldNotThrowIfAssemblyNotFound() {
             var clock = new StubClock();
             var appDataFolder = new StubAppDataFolder(clock);
-            var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder);
+            var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder, new DefaultAssemblyLoader(new StubCacheManager()));
 
             Assert.That(dependenciesFolder.LoadAssembly("foo"), Is.Null);
         }
@@ -28,7 +29,7 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         public void GetAssemblyDateTimeUtcShouldThrowIfAssemblyNotFound() {
             var clock = new StubClock();
             var appDataFolder = new StubAppDataFolder(clock);
-            var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder);
+            var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder, new DefaultAssemblyLoader(new StubCacheManager()));
 
             Assert.That(() => dependenciesFolder.GetAssemblyDateTimeUtc("foo"), Throws.Exception);
         }
@@ -37,7 +38,7 @@ namespace Orchard.Tests.FileSystems.Dependencies {
         public void DeleteAssemblyShouldNotThrowIfAssemblyNotFound() {
             var clock = new StubClock();
             var appDataFolder = new StubAppDataFolder(clock);
-            var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder);
+            var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder, new DefaultAssemblyLoader(new StubCacheManager()));
 
             Assert.DoesNotThrow(() => dependenciesFolder.DeleteAssembly("foo"));
         }
@@ -51,12 +52,12 @@ namespace Orchard.Tests.FileSystems.Dependencies {
             var name = assembly.GetName().Name;
 
             {
-                var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder);
+                var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder, new DefaultAssemblyLoader(new StubCacheManager()));
                 dependenciesFolder.StoreAssembly(name, assembly.Location);
             }
 
             {
-                var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder);
+                var dependenciesFolder = new DefaultAssemblyProbingFolder(appDataFolder, new DefaultAssemblyLoader(new StubCacheManager()));
                 Assert.That(dependenciesFolder.AssemblyExists(name), Is.True);
                 Assert.That(dependenciesFolder.LoadAssembly(name), Is.SameAs(GetType().Assembly));
                 Assert.DoesNotThrow(() => dependenciesFolder.DeleteAssembly(name));

@@ -23,5 +23,6 @@ namespace Orchard.FileSystems.Dependencies {
         DependencyDescriptor GetDescriptor(string moduleName);
         IEnumerable<DependencyDescriptor> LoadDescriptors();
         void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors);
+        IEnumerable<string> GetViewCompilationDependencies();
     }
 }
