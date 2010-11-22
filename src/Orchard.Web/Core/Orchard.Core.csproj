@@ -70,6 +70,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Models\CommonPartVersionRecord.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
@@ -131,7 +132,6 @@
     <Compile Include="Routable\IRoutablePathConstraint.cs" />
     <Compile Include="Routable\Models\RoutePart.cs" />
     <Compile Include="Common\Permissions.cs" />
-    <Compile Include="Common\Models\CommonPartVersionRecord.cs" />
     <Compile Include="Common\Utilities\LazyField.cs" />
     <Compile Include="Common\Handlers\CommonPartHandler.cs" />
     <Compile Include="Common\Models\CommonPart.cs" />

@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Routing;
 using Autofac;
 using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Drivers.Coordinators;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common;
+using Orchard.Core.Common.Drivers;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
@@ -27,6 +31,7 @@ using Orchard.Tests.Modules;
 using Orchard.Core.Common.ViewModels;
 using System.Web.Mvc;
 using Orchard.Tests.Stubs;
+using Orchard.Themes;
 
 namespace Orchard.Core.Tests.Common.Providers {
     [TestFixture]
@@ -41,12 +46,19 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<TestHandler>().As<IContentHandler>();
             builder.RegisterType<CommonPartHandler>().As<IContentHandler>();
+            builder.RegisterType<CommonPartDriver>().As<IContentPartDriver>();
+            builder.RegisterType<ContentPartDriverCoordinator>().As<IContentHandler>();
             builder.RegisterType<CommonService>().As<ICommonService>();
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
-            builder.RegisterInstance(new Mock<IContentDisplay>().Object);
+            builder.RegisterInstance(new Mock<IThemeManager>().Object);
+            builder.RegisterInstance(new Mock<IOrchardServices>().Object);
+            builder.RegisterInstance(new Mock<RequestContext>().Object);
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             _authn = new Mock<IAuthenticationService>();
             _authz = new Mock<IAuthorizationService>();
@@ -152,7 +164,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             contentManager.UpdateEditor(item.ContentItem, updater);
         }
 
-        [Test, Ignore("Fix pending")]
+        [Test]
         public void PublishingShouldFailIfOwnerIsEmpty()
         {
             var contentManager = _container.Resolve<IContentManager>();
@@ -222,9 +234,9 @@ namespace Orchard.Core.Tests.Common.Providers {
             Assert.That(item1.CreatedUtc, Is.EqualTo(createUtc));
             Assert.That(item2.CreatedUtc, Is.EqualTo(createUtc));
 
-            // both instances non-versioned dates show the most recent publish
-            Assert.That(item1.PublishedUtc, Is.EqualTo(publish2Utc));
-            Assert.That(item2.PublishedUtc, Is.EqualTo(publish2Utc));
+            // both instances non-versioned dates show the earliest publish date
+            Assert.That(item1.PublishedUtc, Is.EqualTo(publish1Utc));
+            Assert.That(item2.PublishedUtc, Is.EqualTo(publish1Utc));
 
             // version1 versioned dates show create was upfront and publish was oldest
             Assert.That(item1.VersionCreatedUtc, Is.EqualTo(createUtc));

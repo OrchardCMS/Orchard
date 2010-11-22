@@ -51,14 +51,10 @@ namespace Orchard.Core.Common.Drivers {
                 ContainerEditor(part, null, shapeHelper));
         }
 
-        protected override DriverResult Editor(CommonPart instance, IUpdateModel updater, dynamic shapeHelper) {
-            // this event is hooked so the modified timestamp is changed when an edit-post occurs.            
-            instance.ModifiedUtc = _clock.UtcNow;
-            instance.VersionModifiedUtc = _clock.UtcNow;
-
+        protected override DriverResult Editor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             return Combined(
-                OwnerEditor(instance, updater, shapeHelper),
-                ContainerEditor(instance, updater, shapeHelper));
+                OwnerEditor(part, updater, shapeHelper),
+                ContainerEditor(part, updater, shapeHelper));
         }
 
         DriverResult OwnerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {

@@ -50,9 +50,8 @@ namespace Orchard.Core.Common.Models {
                 return PartVersionRecord == null ? CreatedUtc : PartVersionRecord.CreatedUtc;
             }
             set {
-                if (PartVersionRecord != null) {
+                if (PartVersionRecord != null)
                     PartVersionRecord.CreatedUtc = value;
-                }
             }
         }
 
@@ -61,9 +60,8 @@ namespace Orchard.Core.Common.Models {
                 return PartVersionRecord == null ? PublishedUtc : PartVersionRecord.PublishedUtc;
             }
             set {
-                if (PartVersionRecord != null) {
+                if (PartVersionRecord != null)
                     PartVersionRecord.PublishedUtc = value;
-                }
             }
         }
 
@@ -72,9 +70,8 @@ namespace Orchard.Core.Common.Models {
                 return PartVersionRecord == null ? ModifiedUtc : PartVersionRecord.ModifiedUtc;
             }
             set {
-                if (PartVersionRecord != null) {
+                if (PartVersionRecord != null)
                     PartVersionRecord.ModifiedUtc = value;
-                }
             }
         }
     }
