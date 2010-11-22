@@ -9,3 +9,4 @@ Features:
     Orchard.Widgets:
         Description: An implementation of widgets.
         Category: Widget
+        Dependencies: Orchard.Scripting

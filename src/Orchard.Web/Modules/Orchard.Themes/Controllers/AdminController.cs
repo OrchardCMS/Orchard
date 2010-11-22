@@ -63,8 +63,8 @@ namespace Orchard.Themes.Controllers {
                     .Where(d => d.ExtensionType == "Theme")
                     .Select(d => new ThemeEntry {
                         Descriptor = d,
-                        NeedsUpdate = featuresThatNeedUpdate.Contains(d.Name),
-                        Enabled = _shellDescriptor.Features.Any(sf => sf.Name == d.Name)
+                        NeedsUpdate = featuresThatNeedUpdate.Contains(d.Id),
+                        Enabled = _shellDescriptor.Features.Any(sf => sf.Name == d.Id)
                     })
                     .ToArray();
 

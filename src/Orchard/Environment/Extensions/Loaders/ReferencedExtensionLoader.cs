@@ -30,7 +30,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         public override int Order { get { return 20; } }
 
         public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
-            DeleteAssembly(ctx, extension.Name);
+            DeleteAssembly(ctx, extension.Id);
         }
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
@@ -53,7 +53,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (HostingEnvironment.IsHosted == false)
                 return null;
 
-            var assembly = _buildManager.GetReferencedAssembly(descriptor.Name);
+            var assembly = _buildManager.GetReferencedAssembly(descriptor.Id);
             if (assembly == null)
                 return null;
 
@@ -61,7 +61,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Descriptor = descriptor,
                 LastWriteTimeUtc = File.GetLastWriteTimeUtc(assembly.Location),
                 Loader = this,
-                VirtualPath = _virtualPathProvider.Combine("~/bin", descriptor.Name + ".dll")
+                VirtualPath = _virtualPathProvider.Combine("~/bin", descriptor.Id + ".dll")
             };
         }
 
@@ -69,7 +69,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (HostingEnvironment.IsHosted == false)
                 return null;
 
-            var assembly = _buildManager.GetReferencedAssembly(descriptor.Name);
+            var assembly = _buildManager.GetReferencedAssembly(descriptor.Id);
             if (assembly == null)
                 return null;
 

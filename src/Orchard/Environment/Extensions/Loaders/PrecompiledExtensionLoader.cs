@@ -68,31 +68,31 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             // Copy the assembly if it doesn't exist or if it is older than the source file.
             bool copyAssembly =
-                !_assemblyProbingFolder.AssemblyExists(extension.Name) ||
-                File.GetLastWriteTimeUtc(sourceFileName) > _assemblyProbingFolder.GetAssemblyDateTimeUtc(extension.Name);
+                !_assemblyProbingFolder.AssemblyExists(extension.Id) ||
+                File.GetLastWriteTimeUtc(sourceFileName) > _assemblyProbingFolder.GetAssemblyDateTimeUtc(extension.Id);
 
             if (copyAssembly) {
-                ctx.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(extension.Name, sourceFileName));
+                ctx.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(extension.Id, sourceFileName));
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (_hostEnvironment.IsAssemblyLoaded(extension.Name)) {
-                    Logger.Information("ExtensionRemoved: Module \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", extension.Name);
+                if (_hostEnvironment.IsAssemblyLoaded(extension.Id)) {
+                    Logger.Information("ExtensionRemoved: Module \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", extension.Id);
                     ctx.RestartAppDomain = true;
                 }
             }
         }
 
         public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
-            if (_assemblyProbingFolder.AssemblyExists(extension.Name)) {
+            if (_assemblyProbingFolder.AssemblyExists(extension.Id)) {
                 ctx.DeleteActions.Add(
                     () => {
-                        Logger.Information("ExtensionDeactivated: Deleting assembly \"{0}\" from probing directory", extension.Name);
-                        _assemblyProbingFolder.DeleteAssembly(extension.Name);
+                        Logger.Information("ExtensionDeactivated: Deleting assembly \"{0}\" from probing directory", extension.Id);
+                        _assemblyProbingFolder.DeleteAssembly(extension.Id);
                     });
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (_hostEnvironment.IsAssemblyLoaded(extension.Name)) {
-                    Logger.Information("ExtensionDeactivated: Module \"{0}\" is deactivated and its assembly is loaded, forcing AppDomain restart", extension.Name);
+                if (_hostEnvironment.IsAssemblyLoaded(extension.Id)) {
+                    Logger.Information("ExtensionDeactivated: Module \"{0}\" is deactivated and its assembly is loaded, forcing AppDomain restart", extension.Id);
                     ctx.RestartAppDomain = true;
                 }
             }
@@ -121,10 +121,21 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+            // If the assembly exists, monitor it
             string assemblyPath = GetAssemblyPath(descriptor);
             if (assemblyPath != null) {
                 Logger.Information("Monitoring virtual path \"{0}\"", assemblyPath);
                 monitor(_virtualPathMonitor.WhenPathChanges(assemblyPath));
+                return;
+            }
+
+            // If the assembly doesn't exist, we monitor the containing "bin" folder, as the assembly 
+            // may exist later if it is recompiled in Visual Studio for example, and we need to 
+            // detect that as a change of configuration.
+            var assemblyDirectory = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id, "bin");
+            if (_virtualPathProvider.DirectoryExists(assemblyDirectory)) {
+                Logger.Information("Monitoring virtual path \"{0}\"", assemblyDirectory);
+                monitor(_virtualPathMonitor.WhenPathChanges(assemblyDirectory));
             }
         }
 
@@ -136,7 +147,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             return _virtualPathProvider
                 .ListFiles(_virtualPathProvider.GetDirectoryName(assemblyPath))
                 .Where(s => StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(s), ".dll"))
-                .Where(s => !StringComparer.OrdinalIgnoreCase.Equals(Path.GetFileNameWithoutExtension(s), descriptor.Name))
+                .Where(s => !StringComparer.OrdinalIgnoreCase.Equals(Path.GetFileNameWithoutExtension(s), descriptor.Id))
                 .Select(path => new ExtensionReferenceProbeEntry {
                     Descriptor = descriptor,
                     Loader = this,
@@ -152,7 +163,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             // which will have a different identity (i.e. name) from the dynamic module.
             bool result = references.All(r => r.Loader.GetType() != typeof (DynamicExtensionLoader));
             if (!result) {
-                Logger.Information("Extension \"{0}\" will not be loaded as pre-compiled extension because one or more referenced extension is dynamically compiled", extension.Name);
+                Logger.Information("Extension \"{0}\" will not be loaded as pre-compiled extension because one or more referenced extension is dynamically compiled", extension.Id);
             }
             return result;
         }
@@ -175,7 +186,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
-            var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Name);
+            var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Id);
             if (assembly == null)
                 return null;
 
@@ -189,8 +200,8 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public string GetAssemblyPath(ExtensionDescriptor descriptor) {
-            var assemblyPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name, "bin",
-                                                            descriptor.Name + ".dll");
+            var assemblyPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id, "bin",
+                                                            descriptor.Id + ".dll");
             if (!_virtualPathProvider.FileExists(assemblyPath))
                 return null;
 

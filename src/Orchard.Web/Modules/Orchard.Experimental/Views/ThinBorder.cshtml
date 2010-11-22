@@ -2,7 +2,7 @@
 @using Orchard.DisplayManagement.Descriptors;
 @{
 	var workContext = ViewContext.GetWorkContext();
-	var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.Name);
+	var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.Id);
 	var descriptor = shapeTable.Descriptors[Model.Metadata.Type];	
 }
 

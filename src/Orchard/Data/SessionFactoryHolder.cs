@@ -1,8 +1,11 @@
 ﻿using System;
+using System.IO;
+using System.Xml.Serialization;
 using NHibernate;
 using NHibernate.Cfg;
 using Orchard.Data;
 using Orchard.Data.Providers;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
@@ -19,6 +22,7 @@ namespace Orchard.Data {
     public class SessionFactoryHolder : ISessionFactoryHolder {
         private readonly ShellSettings _shellSettings;
         private readonly ShellBlueprint _shellBlueprint;
+        private readonly IHostEnvironment _hostEnvironment;
         private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
         private readonly IAppDataFolder _appDataFolder;
         private readonly ISessionConfigurationCache _sessionConfigurationCache;
@@ -31,12 +35,14 @@ namespace Orchard.Data {
             ShellBlueprint shellBlueprint,
             IDataServicesProviderFactory dataServicesProviderFactory,
             IAppDataFolder appDataFolder,
-            ISessionConfigurationCache sessionConfigurationCache) {
+            ISessionConfigurationCache sessionConfigurationCache,
+            IHostEnvironment hostEnvironment) {
             _shellSettings = shellSettings;
             _shellBlueprint = shellBlueprint;
             _dataServicesProviderFactory = dataServicesProviderFactory;
             _appDataFolder = appDataFolder;
             _sessionConfigurationCache = sessionConfigurationCache;
+            _hostEnvironment = hostEnvironment;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -66,7 +72,10 @@ namespace Orchard.Data {
         private ISessionFactory BuildSessionFactory() {
             Logger.Debug("Building session factory");
 
-            var config = GetConfiguration();
+            if (!_hostEnvironment.IsFullTrust)
+                NHibernate.Cfg.Environment.UseReflectionOptimizer = false;
+
+            Configuration config = GetConfiguration();
             return config.BuildSessionFactory();
         }
 

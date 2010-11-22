@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
@@ -6,6 +7,7 @@ using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Routable.Services;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -48,12 +50,13 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
-            var blog = Services.ContentManager.New<BlogPart>("Blog");
+            BlogPart blog = Services.ContentManager.New<BlogPart>("Blog");
             if (blog == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(blog);
-            return View(model);
+            dynamic model = Services.ContentManager.BuildEditor(blog);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -64,61 +67,67 @@ namespace Orchard.Blogs.Controllers {
             var blog = Services.ContentManager.New<BlogPart>("Blog");
 
             _contentManager.Create(blog, VersionOptions.Draft);
-            var model = _contentManager.UpdateEditor(blog, this);
+            dynamic model = _contentManager.UpdateEditor(blog, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
-                return View(model);
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                return View((object)model);
             }
 
-            if (!blog.Has<IPublishingControlAspect>())
-                _contentManager.Publish(blog.ContentItem);
+            _contentManager.Publish(blog.ContentItem);
+            _blogSlugConstraint.AddSlug(blog.As<IRoutableAspect>().GetEffectiveSlug());
 
-            _blogSlugConstraint.AddSlug((string)model.Slug);
-            return Redirect(Url.BlogForAdmin((string)model.Slug));
+            return Redirect(Url.BlogForAdmin(blog));
         }
 
-        public ActionResult Edit(string blogSlug) {
+        public ActionResult Edit(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(id, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.BuildEditor(blog);
-            return View(model);
+            dynamic model = Services.ContentManager.BuildEditor(blog);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST(string blogSlug) {
+        public ActionResult EditPOST(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(id, VersionOptions.DraftRequired);
             if (blog == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.UpdateEditor(blog, this);
-            if (!ModelState.IsValid)
-                return View(model);
+            dynamic model = Services.ContentManager.UpdateEditor(blog, this);
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                return View((object)model);
+            }
 
-            _blogSlugConstraint.AddSlug(blog.Slug);
+            _contentManager.Publish(blog);
+            _blogSlugConstraint.AddSlug(blog.As<IRoutableAspect>().GetEffectiveSlug());
             Services.Notifier.Information(T("Blog information updated"));
+
             return Redirect(Url.BlogsForAdmin());
         }
 
         [HttpPost]
-        public ActionResult Remove(string blogSlug) {
+        public ActionResult Remove(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't delete blog")))
                 return new HttpUnauthorizedResult();
 
-            BlogPart blogPart = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(id, VersionOptions.Latest);
 
-            if (blogPart == null)
+            if (blog == null)
                 return HttpNotFound();
 
-            _blogService.Delete(blogPart);
+            _blogService.Delete(blog);
 
             Services.Notifier.Information(T("Blog was successfully deleted"));
             return Redirect(Url.BlogsForAdmin());
@@ -133,10 +142,10 @@ namespace Orchard.Blogs.Controllers {
                                           return blog;
                                       }));
 
-            var viewModel = Services.New.ViewModel()
+            dynamic viewModel = Services.New.ViewModel()
                 .ContentItems(list);
-
-            return View(viewModel);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)viewModel);
         }
 
         public ActionResult Item(string blogSlug, Pager pager) {
@@ -148,7 +157,7 @@ namespace Orchard.Blogs.Controllers {
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest)
                 .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin"));
 
-            var blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
+            dynamic blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
 
             var list = Shape.List();
             list.AddRange(blogPosts);
@@ -156,8 +165,9 @@ namespace Orchard.Blogs.Controllers {
 
             var totalItemCount = _blogPostService.PostCount(blogPart, VersionOptions.Latest);
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
-            
-            return View(blog);
+
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)blog);
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

@@ -38,10 +38,10 @@ namespace Orchard.Packaging.Services {
             var context = new CreateContext();
             BeginPackage(context);
             try {
-                EstablishPaths(context, _webSiteFolder, extensionDescriptor.Location, extensionDescriptor.Name, extensionDescriptor.ExtensionType);
+                EstablishPaths(context, _webSiteFolder, extensionDescriptor.Location, extensionDescriptor.Id, extensionDescriptor.ExtensionType);
                 SetCoreProperties(context, extensionDescriptor);
 
-                string projectFile = extensionDescriptor.Name + ".csproj";
+                string projectFile = extensionDescriptor.Id + ".csproj";
                 if (LoadProject(context, projectFile)) {
                     EmbedVirtualFile(context, projectFile, MediaTypeNames.Text.Xml);
                     EmbedProjectFiles(context, "Compile", "Content", "None", "EmbeddedResource");
@@ -64,9 +64,9 @@ namespace Orchard.Packaging.Services {
         }
         
         private void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
-            context.Builder.Id = "Orchard." + extensionDescriptor.ExtensionType + "." + extensionDescriptor.Name;
+            context.Builder.Id = "Orchard." + extensionDescriptor.ExtensionType + "." + extensionDescriptor.Id;
             context.Builder.Version = new Version(extensionDescriptor.Version);
-            context.Builder.Title = extensionDescriptor.DisplayName ?? extensionDescriptor.Name;
+            context.Builder.Title = extensionDescriptor.Name ?? extensionDescriptor.Id;
             context.Builder.Description = extensionDescriptor.Description;
             context.Builder.Authors.Add(extensionDescriptor.Author);
 

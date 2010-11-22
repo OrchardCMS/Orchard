@@ -45,7 +45,7 @@ namespace Orchard.Core.Scheduling.Services {
         }
 
         public IEnumerable<IScheduledTask> GetTasks(string taskType, DateTime? scheduledBeforeUtc = null) {
-            var query = scheduledBeforeUtc == null 
+            var query = scheduledBeforeUtc != null 
                 ? _repository.Fetch(t => t.TaskType == taskType && t.ScheduledUtc <= scheduledBeforeUtc)
                 : _repository.Fetch(t => t.TaskType == taskType);
 

@@ -21,6 +21,13 @@ namespace Orchard.UI.Resources {
         private List<String> _footScripts;
         private IEnumerable<IResourceManifest> _manifests;
 
+        private static string ToAppRelativePath(string resourcePath) {
+            if (!String.IsNullOrEmpty(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
+                resourcePath = VirtualPathUtility.ToAppRelative(resourcePath);
+            }
+            return resourcePath;
+        }
+
         private static string FixPath(string resourcePath, string relativeFromPath) {
             if (!String.IsNullOrEmpty(resourcePath) && !VirtualPathUtility.IsAbsolute(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
                 // appears to be a relative path (e.g. 'foo.js' or '../foo.js', not "/foo.js" or "http://..")
@@ -93,7 +100,7 @@ namespace Orchard.UI.Resources {
             }
             resourcePath = FixPath(resourcePath, relativeFromPath);
             resourceDebugPath = FixPath(resourceDebugPath, relativeFromPath);
-            return Require(resourceType, resourcePath).Define(d => d.SetUrl(resourcePath, resourceDebugPath));
+            return Require(resourceType, ToAppRelativePath(resourcePath)).Define(d => d.SetUrl(resourcePath, resourceDebugPath));
         }
 
         public virtual void RegisterHeadScript(string script) {
@@ -128,16 +135,16 @@ namespace Orchard.UI.Resources {
             // return the resource with the greatest version number.
             // If not found and an inlineDefinition is given, define the resource on the fly
             // using the action.
-            var name = settings.Name;
+            var name = settings.Name ?? "";
             var type = settings.Type;
             var resource = (from p in ResourceProviders
                             from r in p.GetResources(type)
-                            where r.Key == name
+                            where name.Equals(r.Key, StringComparison.OrdinalIgnoreCase)
                             orderby r.Value.Version descending
                             select r.Value).FirstOrDefault();
             if (resource == null && _dynamicManifest != null) {
                 resource = (from r in _dynamicManifest.GetResources(type)
-                            where r.Key == name
+                            where name.Equals(r.Key, StringComparison.OrdinalIgnoreCase)
                             orderby r.Value.Version descending
                             select r.Value).FirstOrDefault();
             }

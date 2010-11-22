@@ -23,7 +23,7 @@ namespace Orchard.Tests.DisplayManagement {
                 Bindings = new Dictionary<string, ShapeBinding>(StringComparer.OrdinalIgnoreCase)
             };
             _workContext = new TestWorkContext {
-                CurrentTheme = new ExtensionDescriptor { Name = "Hello" }
+                CurrentTheme = new ExtensionDescriptor { Id = "Hello" }
             };
 
 

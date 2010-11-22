@@ -21,13 +21,13 @@ namespace Orchard.Packaging.Services {
         #region IPackageManager Members
 
         public PackageData Harvest(string extensionName) {
-            ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(x => x.Name == extensionName);
+            ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(x => x.Id == extensionName);
             if (extensionDescriptor == null) {
                 return null;
             }
             return new PackageData {
                 ExtensionType = extensionDescriptor.ExtensionType,
-                ExtensionName = extensionDescriptor.Name,
+                ExtensionName = extensionDescriptor.Id,
                 ExtensionVersion = extensionDescriptor.Version,
                 PackageStream = _packageBuilder.BuildPackage(extensionDescriptor),
             };

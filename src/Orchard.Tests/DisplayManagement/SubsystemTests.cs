@@ -24,10 +24,10 @@ namespace Orchard.Tests.DisplayManagement {
             {
                 Descriptor = new FeatureDescriptor
                 {
-                    Name = "Testing",
+                    Id = "Testing",
                     Extension = new ExtensionDescriptor
                     {
-                        Name = "Testing",
+                        Id = "Testing",
                         ExtensionType = "Module",
                     }
                 }
@@ -35,7 +35,7 @@ namespace Orchard.Tests.DisplayManagement {
 
             var workContext = new DefaultDisplayManagerTests.TestWorkContext
             {
-                CurrentTheme = new ExtensionDescriptor { Name = "Hello" }
+                CurrentTheme = new ExtensionDescriptor { Id = "Hello" }
             };
 
             var builder = new ContainerBuilder();

@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
-using Orchard.UI.Widgets;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 

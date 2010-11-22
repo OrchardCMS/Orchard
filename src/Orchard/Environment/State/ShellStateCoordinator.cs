@@ -107,7 +107,7 @@ namespace Orchard.Environment.State {
             var orderedFeatureDescriptorsAndStates = orderedFeatureDescriptors
                 .Select(featureDescriptor => new {
                     FeatureDescriptor = featureDescriptor,
-                    FeatureState = shellState.Features.FirstOrDefault(s => s.Name == featureDescriptor.Name),
+                    FeatureState = shellState.Features.FirstOrDefault(s => s.Name == featureDescriptor.Id),
                 })
                 .Where(entry => entry.FeatureState != null);
 
@@ -132,9 +132,9 @@ namespace Orchard.Environment.State {
             // create additional stub entries for the sake of firing state change events on missing features
             var allEntries = loadedEntries.Concat(additionalState.Select(featureState => {
                 var featureDescriptor = new FeatureDescriptor {
-                    Name = featureState.Name,
+                    Id = featureState.Name,
                     Extension = new ExtensionDescriptor {
-                        Name = featureState.Name
+                        Id = featureState.Name
                     }
                 };
                 return new {

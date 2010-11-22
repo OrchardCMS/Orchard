@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Globalization;
+using NUnit.Framework;
 using Orchard.Media.Extensions;
 
 namespace Orchard.Tests.Modules.Media.Extensions {
@@ -22,35 +23,50 @@ namespace Orchard.Tests.Modules.Media.Extensions {
         public void MegabytesAreFriendly() {
             long size = 6593528;
             string friendly = size.ToFriendlySizeString();
-            Assert.That(friendly, Is.EqualTo("6.3 MB"));
+
+            Assert.That(friendly, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator == "." ?
+                Is.EqualTo("6.3 MB") :
+                Is.EqualTo("6,3 MB"));
         }
 
         [Test]
         public void GigabytesAreFriendly() {
             long size = 46896534657;
             string friendly = size.ToFriendlySizeString();
-            Assert.That(friendly, Is.EqualTo("43.68 GB"));
+
+            Assert.That(friendly, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator == "." ? 
+                Is.EqualTo("43.68 GB") : 
+                Is.EqualTo("43,68 GB"));
         }
 
         [Test]
         public void TerabytesAreFriendly() {
             long size = 386594723458690;
             string friendly = size.ToFriendlySizeString();
-            Assert.That(friendly, Is.EqualTo("351.606 TB"));
+
+            Assert.That(friendly, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator == "." ?
+                Is.EqualTo("351.606 TB") :
+                Is.EqualTo("351,606 TB"));
         }
 
         [Test]
         public void PetabytesAreSlightlyFriendlyAsTerabytes() {
             long size = 56794738495678965;
             string friendly = size.ToFriendlySizeString();
-            Assert.That(friendly, Is.EqualTo("51654.514 TB"));
+
+            Assert.That(friendly, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator == "." ?
+                Is.EqualTo("51654.514 TB") :
+                Is.EqualTo("51654,514 TB"));
         }
 
         [Test]
         public void VeryLargeSizeDoesNotCauseFailure() {
             long size = 5679473849567896593;
             string friendly = size.ToFriendlySizeString();
-            Assert.That(friendly, Is.EqualTo("5165451.375 TB"));
+
+            Assert.That(friendly, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator == "." ?
+                Is.EqualTo("5165451.375 TB") :
+                Is.EqualTo("5165451,375 TB"));
         }
 
         [Test]

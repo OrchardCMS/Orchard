@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Orchard.Scripting.Services;
+using Orchard.Widgets.Services;
 using Microsoft.Scripting.Hosting;
 using Orchard.Caching;
-using Orchard.Scripting;
-using Orchard.UI.Widgets;
 
 namespace Orchard.Widgets.RuleEngine {
     public class RuleManager : IRuleManager {

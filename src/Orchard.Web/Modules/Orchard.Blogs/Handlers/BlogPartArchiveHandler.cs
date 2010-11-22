@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Blogs.Models;
+using Orchard.Blogs.Services;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
@@ -10,12 +12,12 @@ using Orchard.Data;
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPartArchiveHandler : ContentHandler {
-        public BlogPartArchiveHandler(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IRepository<CommonPartRecord> commonRepository) {
-            OnPublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, commonRepository, bp));
-            OnRemoved<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, commonRepository, bp));
+        public BlogPartArchiveHandler(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IBlogPostService blogPostService) {
+            OnPublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
+            OnRemoved<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
         }
 
-        private static void RecalculateBlogArchive(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IRepository<CommonPartRecord> commonRepository, BlogPostPart blogPostPart) {
+        private static void RecalculateBlogArchive(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IBlogPostService blogPostService, BlogPostPart blogPostPart) {
             blogArchiveRepository.Flush();
 
             // remove all current blog archive records
@@ -26,19 +28,16 @@ namespace Orchard.Blogs.Handlers {
             blogArchiveRecords.ToList().ForEach(blogArchiveRepository.Delete);
 
             // get all blog posts for the current blog
-            var postsQuery =
-                from bpr in commonRepository.Table
-                where bpr.ContentItemRecord.ContentType.Name == "BlogPost" && bpr.Container.Id == blogPostPart.BlogPart.Record.Id
-                orderby bpr.PublishedUtc
-                select bpr;
+            var posts = blogPostService.Get(blogPostPart.BlogPart, VersionOptions.Published);
 
             // create a dictionary of all the year/month combinations and their count of posts that are published in this blog
-            var inMemoryBlogArchives = new Dictionary<DateTime, int>(postsQuery.Count());
-            foreach (var post in postsQuery) {
-                if (!post.PublishedUtc.HasValue)
+            var inMemoryBlogArchives = new Dictionary<DateTime, int>(posts.Count());
+            foreach (var post in posts) {
+                if (!post.Has<CommonPart>())
                     continue;
 
-                var key = new DateTime(post.PublishedUtc.Value.Year, post.PublishedUtc.Value.Month, 1);
+                var commonPart = post.As<CommonPart>();
+                var key = new DateTime(commonPart.PublishedUtc.Value.Year, commonPart.PublishedUtc.Value.Month, 1);
 
                 if (inMemoryBlogArchives.ContainsKey(key))
                     inMemoryBlogArchives[key]++;

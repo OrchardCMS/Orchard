@@ -1,6 +1,6 @@
 ﻿using System;
 using Orchard.Security;
-using Orchard.UI.Widgets;
+using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.RuleEngine {
     public class AuthenticatedRuleProvider : IRuleProvider {

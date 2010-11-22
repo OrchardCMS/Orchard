@@ -2,8 +2,8 @@
 using NUnit.Framework;
 using Orchard.Mvc;
 using Orchard.Tests.Stubs;
-using Orchard.UI.Widgets;
 using Orchard.Widgets.RuleEngine;
+using Orchard.Widgets.Services;
 
 namespace Orchard.Tests.Modules.Widgets.RuleEngine {
     [TestFixture]

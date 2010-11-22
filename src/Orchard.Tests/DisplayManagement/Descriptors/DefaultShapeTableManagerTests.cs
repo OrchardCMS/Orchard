@@ -18,24 +18,24 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
 
             var features = new [] {
                 new FeatureDescriptor {
-                    Name = "Theme1",
+                    Id = "Theme1",
                     Extension = new ExtensionDescriptor {
-                        Name = "Theme1",
+                        Id = "Theme1",
                         ExtensionType = "Theme"
                     }
                 },
                 new FeatureDescriptor {
-                    Name = "DerivedTheme",
+                    Id = "DerivedTheme",
                     Extension = new ExtensionDescriptor {
-                        Name = "DerivedTheme",
+                        Id = "DerivedTheme",
                         ExtensionType = "Theme",
                         BaseTheme = "BaseTheme"
                     }
                 },
                 new FeatureDescriptor {
-                    Name = "BaseTheme",
+                    Id = "BaseTheme",
                     Extension = new ExtensionDescriptor {
-                        Name = "BaseTheme",
+                        Id = "BaseTheme",
                         ExtensionType = "Theme"
                     }
                 }
@@ -65,10 +65,10 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         static Feature TestFeature() {
             return new Feature {
                 Descriptor = new FeatureDescriptor {
-                    Name = "Testing",
+                    Id = "Testing",
                     Dependencies = Enumerable.Empty<string>(),
                     Extension = new ExtensionDescriptor {
-                        Name = "Testing",
+                        Id = "Testing",
                         ExtensionType = "Module",
                     }
                 }
@@ -107,7 +107,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             void IShapeTableProvider.Discover(ShapeTableBuilder builder) {
                 foreach (var pair in FeatureShapes) {
                     foreach (var shape in pair.Value) {
-                        builder.Describe(shape).From(pair.Key).BoundAs(pair.Key.Descriptor.Name, null);
+                        builder.Describe(shape).From(pair.Key).BoundAs(pair.Key.Descriptor.Id, null);
                     }
                 }
                 Discover(builder);

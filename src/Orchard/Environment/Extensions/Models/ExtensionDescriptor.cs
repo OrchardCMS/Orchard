@@ -10,7 +10,7 @@ namespace Orchard.Environment.Extensions.Models {
         /// <summary>
         /// Folder name under virtual path base
         /// </summary>
-        public string Name { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// "Theme" or "Module"
@@ -18,7 +18,7 @@ namespace Orchard.Environment.Extensions.Models {
         public string ExtensionType { get; set; }
         
         // extension metadata
-        public string DisplayName { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
         public string Version { get; set; }
         public string OrchardVersion { get; set; }

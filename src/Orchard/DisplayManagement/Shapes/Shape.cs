@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace Orchard.DisplayManagement.Shapes {
     public class Shape : IShape, IEnumerable {
@@ -18,11 +20,19 @@ namespace Orchard.DisplayManagement.Shapes {
 
         public virtual Shape Add(object item, string position = DefaultPosition) {
             try {
-                ((dynamic)item).Metadata.Position = position;
+                // todo: (sebros) this is a temporary implementation to prevent common known scenarios throwing exceptions. The final solution would need to filter based on the fact that it is a Shape instance
+                if ( item is MvcHtmlString ||
+                    item is String ) {
+                    // need to implement positioned wrapper for non-shape objects
+                }
+                else {
+                    ((dynamic) item).Metadata.Position = position;
+                }
             }
             catch {
-                // need to implemented positioned wrapper for non-shape objects
+                // need to implement positioned wrapper for non-shape objects
             }
+
             _items.Add(item); // not messing with position at the moment
             return this;
         }

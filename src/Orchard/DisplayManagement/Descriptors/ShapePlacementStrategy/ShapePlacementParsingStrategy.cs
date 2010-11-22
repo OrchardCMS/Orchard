@@ -31,14 +31,14 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
             var activeExtensions = Once(activeFeatures);
 
             foreach (var extensionDescriptor in activeExtensions) {
-                foreach (var featureDescriptor in extensionDescriptor.Features.Where(fd => fd.Name == fd.Extension.Name)) {
+                foreach (var featureDescriptor in extensionDescriptor.Features.Where(fd => fd.Id == fd.Extension.Id)) {
                     ProcessFeatureDescriptor(builder, featureDescriptor);
                 }
             }
         }
 
         private void ProcessFeatureDescriptor(ShapeTableBuilder builder, FeatureDescriptor featureDescriptor) {
-            var virtualPath = featureDescriptor.Extension.Location + "/" + featureDescriptor.Extension.Name + "/Placement.info";
+            var virtualPath = featureDescriptor.Extension.Location + "/" + featureDescriptor.Extension.Id + "/Placement.info";
             var placementFile = _placementFileParser.Parse(virtualPath);
             if (placementFile != null) {
                 ProcessPlacementFile(builder, featureDescriptor, placementFile);
@@ -106,12 +106,12 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         }
 
         private bool FeatureIsEnabled(FeatureDescriptor fd) {
-            return _shellDescriptor.Features.Any(sf => sf.Name == fd.Name);
+            return _shellDescriptor.Features.Any(sf => sf.Name == fd.Id);
         }
 
         private static IEnumerable<ExtensionDescriptor> Once(IEnumerable<FeatureDescriptor> featureDescriptors) {
             var once = new ConcurrentDictionary<string, object>();
-            return featureDescriptors.Select(fd => fd.Extension).Where(ed => once.TryAdd(ed.Name, null)).ToList();
+            return featureDescriptors.Select(fd => fd.Extension).Where(ed => once.TryAdd(ed.Id, null)).ToList();
         }
 
     }

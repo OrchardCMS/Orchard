@@ -1,6 +1,6 @@
 ﻿using System;
 using Orchard.Mvc;
-using Orchard.UI.Widgets;
+using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.RuleEngine {
     public class UrlRuleProvider : IRuleProvider {

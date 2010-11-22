@@ -47,6 +47,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
@@ -55,6 +57,7 @@
     <Compile Include="Models\TagsContentItems.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ITagService.cs" />
+    <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="ViewModels\EditTagsViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Drivers\TagsPartDriver.cs" />

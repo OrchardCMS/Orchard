@@ -10,7 +10,7 @@ namespace Orchard.Core.Routable {
                 table => table
                     .ContentPartVersionRecord()
                     .Column<string>("Title", column => column.WithLength(1024))
-                    .Column<string>("Slug")
+                    .Column<string>("Slug", column => column.WithLength(1024))
                     .Column<string>("Path", column => column.WithLength(2048))
                 );
 

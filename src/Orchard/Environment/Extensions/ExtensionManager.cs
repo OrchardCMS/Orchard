@@ -31,8 +31,8 @@ namespace Orchard.Environment.Extensions {
 
         // This method does not load extension types, simply parses extension manifests from 
         // the filesystem. 
-        public ExtensionDescriptor GetExtension(string name) {
-            return AvailableExtensions().FirstOrDefault(x => x.Name == name);
+        public ExtensionDescriptor GetExtension(string id) {
+            return AvailableExtensions().FirstOrDefault(x => x.Id == id);
         }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
@@ -61,28 +61,28 @@ namespace Orchard.Environment.Extensions {
                 }
                 if (subject.Extension.ExtensionType == "Theme") {
                     // theme depends on another if it is its base theme
-                    return item.Extension.BaseTheme == subject.Name;
+                    return item.Extension.BaseTheme == subject.Id;
                 }
             }
 
             // Return based on explicit dependencies
             return item.Dependencies != null &&
-                   item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, subject.Name));
+                   item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, subject.Id));
         }
 
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
             return featureDescriptors
-                .Select(descriptor => _cacheManager.Get(descriptor.Name, ctx => LoadFeature(descriptor)))
+                .Select(descriptor => _cacheManager.Get(descriptor.Id, ctx => LoadFeature(descriptor)))
                 .ToArray();
         }
 
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
             
             var extensionDescriptor = featureDescriptor.Extension;
-            var featureName = featureDescriptor.Name;
-            var extensionName = extensionDescriptor.Name;
+            var featureId = featureDescriptor.Id;
+            var extensionId = extensionDescriptor.Id;
 
-            var extensionEntry = _cacheManager.Get(extensionName, ctx => BuildEntry(extensionDescriptor));
+            var extensionEntry = _cacheManager.Get(extensionId, ctx => BuildEntry(extensionDescriptor));
             if (extensionEntry == null) {
                 // If the feature could not be compiled for some reason,
                 // return a "null" feature, i.e. a feature with no exported types.
@@ -96,8 +96,8 @@ namespace Orchard.Environment.Extensions {
             var featureTypes = new List<Type>();
 
             foreach (var type in extensionTypes) {
-                string sourceFeature = GetSourceFeatureNameForType(type, extensionName);
-                if (String.Equals(sourceFeature, featureName, StringComparison.OrdinalIgnoreCase)) {
+                string sourceFeature = GetSourceFeatureNameForType(type, extensionId);
+                if (String.Equals(sourceFeature, featureId, StringComparison.OrdinalIgnoreCase)) {
                     featureTypes.Add(type);
                 }
             }
@@ -108,11 +108,11 @@ namespace Orchard.Environment.Extensions {
             };
         }
 
-        private static string GetSourceFeatureNameForType(Type type, string extensionName) {
+        private static string GetSourceFeatureNameForType(Type type, string extensionId) {
             foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false)) {
                 return featureAttribute.FeatureName;
             }
-            return extensionName;
+            return extensionId;
         }
         
         private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
@@ -122,7 +122,7 @@ namespace Orchard.Environment.Extensions {
                     return entry;
             }
 
-            Logger.Warning("No suitable loader found for extension \"{0}\"", descriptor.Name);
+            Logger.Warning("No suitable loader found for extension \"{0}\"", descriptor.Id);
             return null;
         }
     }

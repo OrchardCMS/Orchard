@@ -6,7 +6,18 @@ namespace Orchard.Blogs.Routing {
     public class IsArchiveConstraint : IRouteConstraint {
         public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values,
                           RouteDirection routeDirection) {
-            return values[parameterName] != null && (new ArchiveData(values[parameterName].ToString())).Year > 0;
+            if(values[parameterName] == null) {
+                return false;
+            }
+
+            try {
+                var archiveData = new ArchiveData(values[parameterName].ToString());
+                archiveData.ToDateTime();
+                return true;
+            }
+            catch {
+                return false;
+            }
         }
     }
 }

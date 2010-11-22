@@ -112,7 +112,8 @@ namespace Orchard.Widgets.Controllers {
 
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 dynamic model = Services.ContentManager.BuildEditor(widgetPart);
-                return View(model);
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                return View((object)model);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Creating widget failed: {0}", exception.Message));
@@ -155,7 +156,8 @@ namespace Orchard.Widgets.Controllers {
                     return HttpNotFound();
 
                 dynamic model = Services.ContentManager.BuildEditor(layerPart);
-                return View(model);
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                return View((object)model);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Creating layer failed: {0}", exception.Message));
@@ -200,7 +202,8 @@ namespace Orchard.Widgets.Controllers {
                 }
 
                 dynamic model = Services.ContentManager.BuildEditor(layerPart);
-                return View(model);
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                return View((object)model);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Editing layer failed: {0}", exception.Message));
@@ -265,7 +268,8 @@ namespace Orchard.Widgets.Controllers {
                 }
 
                 dynamic model = Services.ContentManager.BuildEditor(widgetPart);
-                return View(model);
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                return View((object)model);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));

@@ -23,16 +23,16 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if ( descriptor.Location == "~/Themes") {
-                string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name,
-                                           descriptor.Name + ".csproj");
+                string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
+                                           descriptor.Id + ".csproj");
 
                 // ignore themes including a .csproj in this loader
                 if ( _virtualPathProvider.FileExists(projectPath) ) {
                     return null;
                 }
 
-                var assemblyPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name, "bin",
-                                                descriptor.Name + ".dll");
+                var assemblyPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id, "bin",
+                                                descriptor.Id + ".dll");
 
                 // ignore themes with /bin in this loader
                 if ( _virtualPathProvider.FileExists(assemblyPath) )
@@ -43,7 +43,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                     Descriptor = descriptor,
                     LastWriteTimeUtc = DateTime.MinValue,
                     Loader = this,
-                    VirtualPath = "~/Theme/" + descriptor.Name
+                    VirtualPath = "~/Theme/" + descriptor.Id
                 };
             }
             return null;

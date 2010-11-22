@@ -35,11 +35,6 @@ namespace Orchard.Utility.Extensions {
             return Regex.Replace(friendlier, @"[^a-zA-Z]+", m => m.Index == 0 ? "" : "-").ToLowerInvariant();
         }
 
-        public static bool IsNullOrEmptyTrimmed(this string text) {
-            return text == null
-                || string.IsNullOrEmpty(text.Trim());
-        }
-
         public static LocalizedString OrDefault(this string text, LocalizedString defaultValue) {
             return string.IsNullOrEmpty(text)
                 ? defaultValue

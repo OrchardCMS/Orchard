@@ -29,8 +29,8 @@ namespace Orchard.Tests.Environment.Utility {
 
         public static ExtensionDescriptor ExtensionDescriptor(string name, string displayName) {
             var descriptor = new ExtensionDescriptor {
-                                                         Name = name,
-                                                         DisplayName = displayName,
+                                                         Id = name,
+                                                         Name = displayName,
                                                          Features = Enumerable.Empty<FeatureDescriptor>(),
                                                      };
             return descriptor;
@@ -42,7 +42,7 @@ namespace Orchard.Tests.Environment.Utility {
 
         public static ExtensionDescriptor WithFeatures(this ExtensionDescriptor descriptor, params string[] names) {
             descriptor.Features = descriptor.Features.Concat(
-                names.Select(name => new FeatureDescriptor { Extension=descriptor , Name = name, }));
+                names.Select(name => new FeatureDescriptor { Extension=descriptor , Id = name, }));
 
             return descriptor;
         }

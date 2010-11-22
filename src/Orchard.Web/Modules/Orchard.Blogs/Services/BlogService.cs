@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Services {
@@ -17,10 +18,14 @@ namespace Orchard.Blogs.Services {
             _blogSlugConstraint = blogSlugConstraint;
         }
 
-        public BlogPart Get(string slug) {
+        public BlogPart Get(string path) {
             return _contentManager.Query<BlogPart, BlogPartRecord>()
-                .Join<RoutePartRecord>().Where(rr => rr.Slug == slug)
+                .Join<RoutePartRecord>().Where(rr => rr.Path == path)
                 .List().FirstOrDefault();
+        }
+
+        public ContentItem Get(int id, VersionOptions versionOptions) {
+            return _contentManager.Get(id, versionOptions);
         }
 
         public IEnumerable<BlogPart> Get() {
@@ -30,9 +35,9 @@ namespace Orchard.Blogs.Services {
                 .List();
         }
 
-        public void Delete(BlogPart blogPart) {
-            _contentManager.Remove(blogPart.ContentItem);
-            _blogSlugConstraint.RemoveSlug(blogPart.Slug);
+        public void Delete(ContentItem blog) {
+            _contentManager.Remove(blog);
+            _blogSlugConstraint.RemoveSlug(blog.As<IRoutableAspect>().Path);
         }
     }
 }

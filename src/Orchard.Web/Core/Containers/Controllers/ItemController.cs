@@ -62,12 +62,13 @@ namespace Orchard.Core.Containers.Controllers {
             var list = Shape.List();
             list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
 
-            var viewModel = Shape.ViewModel()
+            dynamic viewModel = Shape.ViewModel()
                 .ContentItems(list)
                 .Pager(pagerShape)
                 .ShowPager(container.As<ContainerPart>().Record.Paginated);
 
-            return View(viewModel);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)viewModel);
         }
     }
 }

@@ -99,7 +99,7 @@ namespace Orchard.ContentManagement {
                 //var workContext = _workContextAccessor.GetContext();
                 //var theme = workContext.CurrentTheme;
                 var theme = _themeService.Value.GetRequestTheme(_requestContext);
-                var shapeTable = _shapeTableManager.GetShapeTable(theme.Name);
+                var shapeTable = _shapeTableManager.GetShapeTable(theme.Id);
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
                     var placementContext = new ShapePlacementContext {

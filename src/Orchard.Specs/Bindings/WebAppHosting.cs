@@ -9,6 +9,7 @@ using log4net.Core;
 using NUnit.Framework;
 using Orchard.Specs.Hosting;
 using TechTalk.SpecFlow;
+using Path = Bleroy.FluentPath.Path;
 
 namespace Orchard.Specs.Bindings {
     [Binding]
@@ -17,9 +18,7 @@ namespace Orchard.Specs.Bindings {
         private RequestDetails _details;
         private HtmlDocument _doc;
         private MessageSink _messages;
-
-        public WebAppHosting() {
-        }
+        private static readonly Path _orchardTemp = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Specs");
 
         public WebHost Host {
             get { return _webHost; }
@@ -30,11 +29,32 @@ namespace Orchard.Specs.Bindings {
             set { _details = value; }
         }
 
+        [BeforeTestRun]
+        public static void BeforeTestRun() {
+            try { _orchardTemp.Delete(true).CreateDirectory(); }
+            catch { }
+        }
+
+        [AfterTestRun]
+        public static void AfterTestRun() {
+            try {
+                _orchardTemp.Delete(true); // <- try to clear any stragglers on the way out
+            }
+            catch { }
+        }
+
+        [BeforeScenario]
+        public void CleanOutTheOldWebHost() {
+            if (_webHost != null) {
+                _webHost.Clean();
+                _webHost = null;
+            }
+        }
+
         [AfterScenario]
         public void AfterScenario() {
             if (_webHost != null) {
                 _webHost.Dispose();
-                _webHost = null;
             }
         }
 
@@ -46,7 +66,7 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have a clean site based on (.*)")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
-            _webHost = new WebHost();
+            _webHost = new WebHost(_orchardTemp);
             Host.Initialize(siteFolder, "/");
             var shuttle = new Shuttle();
             Host.Execute(() => {
@@ -156,7 +176,7 @@ namespace Orchard.Specs.Bindings {
         [When(@"I fill in")]
         public void WhenIFillIn(Table table) {
             var inputs = _doc.DocumentNode
-                .SelectNodes("//input") ?? Enumerable.Empty<HtmlNode>();
+                .SelectNodes("(//input|//textarea)") ?? Enumerable.Empty<HtmlNode>();
 
             foreach (var row in table.Rows) {
                 var r = row;
@@ -191,11 +211,14 @@ namespace Orchard.Specs.Bindings {
             var form = Form.LocateAround(submit);
             var urlPath = form.Start.GetAttributeValue("action", Details.UrlPath);
             var inputs = form.Children
-                    .SelectMany(elt => elt.DescendantsAndSelf("input"))
+                    .SelectMany(elt => elt.DescendantsAndSelf("input").Concat(elt.Descendants("textarea")))
                     .Where(node => !((node.GetAttributeValue("type", "") == "radio" || node.GetAttributeValue("type", "") == "checkbox") && node.GetAttributeValue("checked", "") != "checked"))
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
                     .Where(g => !string.IsNullOrEmpty(g.Key))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
+
+            if (submit.Attributes.Contains("name"))
+                inputs.Add(submit.GetAttributeValue("name", ""), new[] {submit.GetAttributeValue("value", "yes")});
 
             Details = Host.SendRequest(urlPath, inputs);
             _doc = new HtmlDocument();
@@ -219,9 +242,14 @@ namespace Orchard.Specs.Bindings {
             Assert.That(Details.StatusDescription, Is.EqualTo(statusDescription));
         }
 
+        [Then(@"the content type should be ""(.*)""")]
+        public void ThenTheContentTypeShouldBe(string contentType) {
+            Assert.That(Details.ResponseHeaders["Content-Type"], Is.StringMatching(contentType));
+        }
+
         [Then(@"I should see ""(.*)""")]
         public void ThenIShouldSee(string text) {
-            Assert.That(Details.ResponseText, Is.StringContaining(text));
+            Assert.That(Details.ResponseText, Is.StringMatching(text));
         }
 
         [Then(@"I should not see ""(.*)""")]

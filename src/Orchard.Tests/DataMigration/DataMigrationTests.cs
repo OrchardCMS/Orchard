@@ -97,19 +97,19 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationEmpty : IDataMigration {
             public Feature Feature {
-                get { return new Feature() {Descriptor = new FeatureDescriptor() {Name = "Feature1"}}; }
+                get { return new Feature() {Descriptor = new FeatureDescriptor() {Id = "Feature1"}}; }
             }
         }
 
         public class DataMigration11 : IDataMigration {
             public Feature Feature {
-                get { return new Feature() {Descriptor = new FeatureDescriptor() {Name = "Feature1"}}; }
+                get { return new Feature() {Descriptor = new FeatureDescriptor() {Id = "Feature1"}}; }
             }
         }
 
         public class DataMigration11Create : IDataMigration {
             public Feature Feature {
-                get { return new Feature() {Descriptor = new FeatureDescriptor() {Name = "Feature1"}}; }
+                get { return new Feature() {Descriptor = new FeatureDescriptor() {Id = "Feature1"}}; }
             }
 
             public int Create() {
@@ -119,7 +119,7 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationCreateCanBeFollowedByUpdates : IDataMigration {
             public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Name = "Feature1" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } }; }
             }
 
             public int Create() {
@@ -133,7 +133,7 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationSameMigrationClassCanEvolve : IDataMigration {
             public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Name = "Feature1" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } }; }
             }
 
             public int Create() {
@@ -151,7 +151,7 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationDependenciesModule1 : IDataMigration {
             public Feature Feature {
-                get { return new Feature() {Descriptor = new FeatureDescriptor() {Name = "Feature1"}}; }
+                get { return new Feature() {Descriptor = new FeatureDescriptor() {Id = "Feature1"}}; }
             }
 
             public int Create() {
@@ -161,7 +161,7 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationDependenciesModule2 : IDataMigration {
             public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Name = "Feature2" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature2" } }; }
             }
 
             public int Create() {
@@ -171,7 +171,7 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationWithSchemaBuilder : DataMigrationImpl {
             public override Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Name = "Feature1" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } }; }
             }
 
             public int Create() {
@@ -182,13 +182,13 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationFeatureNeedUpdate1 : IDataMigration {
             public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Name = "Feature1" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } }; }
             }
         }
 
         public class DataMigrationFeatureNeedUpdate2 : IDataMigration {
             public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Name = "Feature2" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature2" } }; }
             }
 
             public int Create() {
@@ -198,7 +198,7 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationFeatureNeedUpdate3 : IDataMigration {
             public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Name = "Feature3" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature3" } }; }
             }
 
             public int Create() {
@@ -212,7 +212,7 @@ namespace Orchard.Tests.DataMigration {
         
         public class DataMigrationSimpleBuilder : DataMigrationImpl {
             public override Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Name = "Feature1" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } }; }
             }
 
             public int Create() {

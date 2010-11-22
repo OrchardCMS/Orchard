@@ -62,10 +62,10 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
 
         void AddFeature(string name, params string[] dependencies) {
             var featureDescriptor = new FeatureDescriptor {
-                Name = name,
+                Id = name,
                 Dependencies = dependencies,
                 Extension = new ExtensionDescriptor {
-                    Name = name,
+                    Id = name,
                     Location = "~/Modules"
                 }
             };

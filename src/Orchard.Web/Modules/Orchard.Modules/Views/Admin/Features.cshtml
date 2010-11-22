@@ -32,8 +32,8 @@
             var features = featureGroup.OrderBy(f => f.Descriptor.Name);
             foreach (var feature in features) {
                 //hmmm...I feel like I've done this before...
-                var featureId = feature.Descriptor.Name.AsFeatureId(n => T(n));
-                var featureName = string.IsNullOrEmpty(feature.Descriptor.DisplayName) ? feature.Descriptor.Name : feature.Descriptor.DisplayName;
+                var featureId = feature.Descriptor.Id.AsFeatureId(n => T(n));
+                var featureName = string.IsNullOrEmpty(feature.Descriptor.Name) ? feature.Descriptor.Id : feature.Descriptor.Name;
                 var featureState = feature.IsEnabled ? "enabled" : "disabled";
                 var featureClassName = string.Format("feature {0}", featureState + (feature.NeedsUpdate ? " update" : String.Empty));
                 if (feature == features.First()) {
@@ -42,6 +42,8 @@
                 if (feature == features.Last()) {
                     featureClassName += " last";
                 }
+                var dependencies = (from d in feature.Descriptor.Dependencies
+                                    select (from f in Model.Features where f.Descriptor.Id == d select f).Single()).OrderBy(f => f.Descriptor.Name);
             <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
                 <div class="summary">
                     <div class="properties">
@@ -49,9 +51,8 @@
                         <p class="description">@feature.Descriptor.Description</p>@if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) {
                         <div class="dependencies">
                             <h4>@T("Depends on:")</h4>
-                            @Html.UnorderedList(
-                        feature.Descriptor.Dependencies.OrderBy(s => s),
-                        (s, i) => Html.Link(s, string.Format("#{0}", s.AsFeatureId(n => T(n)))),
+                            @Html.UnorderedList(dependencies,
+                            (s, i) => Html.Link(string.IsNullOrEmpty(s.Descriptor.Name) ? s.Descriptor.Id : s.Descriptor.Name, string.Format("#{0}", s.Descriptor.Id.AsFeatureId(n => T(n)))),
                         "",
                         "dependency",
                         "")
@@ -61,14 +62,14 @@
                     @if (showActions) {
                         if (feature.IsEnabled) {
                             using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Disable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
-                                @Html.Hidden("id", feature.Descriptor.Name, new {id = ""})
+                                @Html.Hidden("id", feature.Descriptor.Id, new {id = ""})
                                 @Html.Hidden("force", true)
                                 <button type="submit">@T("Disable")</button> 
                             }
                         }
                         else {
                             using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Enable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
-                                @Html.Hidden("id", feature.Descriptor.Name, new { id = "" })
+                                @Html.Hidden("id", feature.Descriptor.Id, new { id = "" })
                                 @Html.Hidden("force", true)
                                 <button type="submit">@T("Enable")</button> 
                             }
@@ -76,7 +77,7 @@
                     }
                     @if(feature.NeedsUpdate){
                             using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Update", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
-                            @Html.Hidden("id", feature.Descriptor.Name, new { id = "" })
+                            @Html.Hidden("id", feature.Descriptor.Id, new { id = "" })
                             <button type="submit" class="update">@T("Update")</button> 
                         }
                     }

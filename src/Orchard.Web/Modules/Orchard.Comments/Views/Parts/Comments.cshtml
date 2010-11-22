@@ -10,8 +10,8 @@
 </div>
 }
 
-@if (Model.CommentsActive == false) {
-    if (Model.Comments.Count > 0) {
+@if (Model.ContentPart.CommentsActive == false) {
+    if (Model.ContentPart.Comments.Count > 0) {
         <div id="comments">
             <p class="comment-disabled">@T("Comments have been disabled for this content.")</p>
         </div>

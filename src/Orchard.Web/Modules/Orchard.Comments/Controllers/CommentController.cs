@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
@@ -7,6 +8,7 @@ using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
+using System.Text.RegularExpressions;
 
 namespace Orchard.Comments.Controllers {
     public class CommentController : Controller {
@@ -31,39 +33,35 @@ namespace Orchard.Comments.Controllers {
                     : Redirect("~/");
             
             var viewModel = new CommentsCreateViewModel();
-            try {
-
-                // UpdateModel(viewModel);
-
-                if(!TryUpdateModel(viewModel)) {
-                    if (Request.Form["Name"].IsNullOrEmptyTrimmed()) {
-                        _notifier.Error(T("You must provide a Name in order to comment"));
-                    }
-                    return Redirect(returnUrl);
-                }
-
+            
+            if (TryUpdateModel(viewModel)) {
                 var context = new CreateCommentContext {
-                                                           Author = viewModel.Name,
-                                                           CommentText = viewModel.CommentText,
-                                                           Email = viewModel.Email,
-                                                           SiteName = viewModel.SiteName,
-                                                           CommentedOn = viewModel.CommentedOn
-                                                       };
+                    Author = viewModel.Name,
+                    CommentText = viewModel.CommentText,
+                    Email = viewModel.Email,
+                    SiteName = viewModel.SiteName,
+                    CommentedOn = viewModel.CommentedOn
+                };
+
+                if (!String.IsNullOrEmpty(context.SiteName) && !context.SiteName.StartsWith("http://") && !context.SiteName.StartsWith("https://")) {
+                    context.SiteName = "http://" + context.SiteName;
+                }
 
                 CommentPart commentPart = _commentService.CreateComment(context, Services.WorkContext.CurrentSite.As<CommentSettingsPart>().Record.ModerateComments);
 
                 if (commentPart.Record.Status == CommentStatus.Pending)
                     Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
+            }
+            else {
+                foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select( e=> e.ErrorMessage)) {
+                    _notifier.Error(T(error));
+                }
+            }
 
-                return !String.IsNullOrEmpty(returnUrl)
-                    ? Redirect(returnUrl)
-                    : Redirect("~/");
-            }
-            catch (Exception exception) {
-                _notifier.Error(T("Creating Comment failed: " + exception.Message));
-                // return View(viewModel);
-                return Redirect(returnUrl);
-            }
+            return !String.IsNullOrEmpty(returnUrl)
+                ? Redirect(returnUrl)
+                : Redirect("~/");
+            
         }
     }
 }

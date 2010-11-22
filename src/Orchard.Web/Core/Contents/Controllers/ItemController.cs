@@ -18,8 +18,9 @@ namespace Orchard.Core.Contents.Controllers {
         // /Contents/Item/Display/72
         public ActionResult Display(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Published);
-            var model = _contentManager.BuildDisplay(contentItem);
-            return View(model);
+            dynamic model = _contentManager.BuildDisplay(contentItem);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)model);
         }
 
         // /Contents/Item/Preview/72
@@ -30,8 +31,9 @@ namespace Orchard.Core.Contents.Controllers {
                 versionOptions = VersionOptions.Number((int)version);
 
             var contentItem = _contentManager.Get(id, versionOptions);
-            var model = _contentManager.BuildDisplay(contentItem);
-            return View("Display", model);
+            dynamic model = _contentManager.BuildDisplay(contentItem);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View("Display", (object)model);
         }
     }
 }

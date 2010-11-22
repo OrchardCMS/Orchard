@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -112,7 +113,7 @@ namespace Orchard.Localization.Services {
 
             foreach (var module in _extensionManager.AvailableExtensions()) {
                 if (String.Equals(module.ExtensionType, "Module")) {
-                    string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Name, culture);
+                    string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Id, culture);
                     text = _webSiteFolder.ReadFile(modulePath);
                     if (text != null) {
                         ParseLocalizationStream(text, translations, true);
@@ -123,7 +124,7 @@ namespace Orchard.Localization.Services {
 
             foreach (var theme in _extensionManager.AvailableExtensions()) {
                 if (String.Equals(theme.ExtensionType, "Theme")) {
-                    string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Name, culture);
+                    string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Id, culture);
                     text = _webSiteFolder.ReadFile(themePath);
                     if (text != null) {
                         ParseLocalizationStream(text, translations, true);
@@ -147,6 +148,46 @@ namespace Orchard.Localization.Services {
             }
 
             return translations;
+        }
+
+        private static readonly Dictionary<char, char> _escapeTranslations = new Dictionary<char, char> {
+            { 'n', '\n' },
+            { 'r', '\r' },
+            { 't', '\t' }
+        };
+
+        private static string Unescape(string str) {
+            StringBuilder sb = null;
+            bool escaped = false;
+            for (var i = 0; i < str.Length; i++) {
+                var c = str[i];
+                if (escaped) {
+                    if (sb == null) {
+                        sb = new StringBuilder(str.Length);
+                        if (i > 1) {
+                            sb.Append(str.Substring(0, i - 1));
+                        }
+                    }
+                    char unescaped;
+                    if (_escapeTranslations.TryGetValue(c, out unescaped)) {
+                        sb.Append(unescaped);
+                    }
+                    else {
+                        // General rule: \x ==> x
+                        sb.Append(c);
+                    }
+                    escaped = false;
+                }
+                else {
+                    if (c == '\\') {
+                        escaped = true;
+                    }
+                    else if (sb != null) {
+                        sb.Append(c);
+                    }
+                }
+            }
+            return sb == null ? str : sb.ToString();
         }
 
         private static void ParseLocalizationStream(string text, IDictionary<string, string> translations, bool merge) {
@@ -185,15 +226,15 @@ namespace Orchard.Localization.Services {
         }
 
         private static string ParseTranslation(string poLine) {
-            return poLine.Substring(6).Trim().Trim('"');
+            return Unescape(poLine.Substring(6).Trim().Trim('"'));
         }
 
         private static string ParseId(string poLine) {
-            return poLine.Substring(5).Trim().Trim('"');
+            return Unescape(poLine.Substring(5).Trim().Trim('"'));
         }
 
         private static string ParseScope(string poLine) {
-            return poLine.Substring(2).Trim().Trim('"');
+            return Unescape(poLine.Substring(2).Trim().Trim('"'));
         }
 
         class CultureDictionary {

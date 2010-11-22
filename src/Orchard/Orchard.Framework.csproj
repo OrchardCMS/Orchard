@@ -89,19 +89,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\sharpziplib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="IronRuby">
-      <HintPath>..\..\lib\dlr\IronRuby.dll</HintPath>
-    </Reference>
-    <Reference Include="IronRuby.Libraries">
-      <HintPath>..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Dynamic">
-      <HintPath>..\..\lib\dlr\Microsoft.Dynamic.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting">
-      <HintPath>..\..\lib\dlr\Microsoft.Scripting.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure">
       <HintPath>..\..\lib\aspnetmvc\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -165,6 +153,7 @@
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Environment\HostEnvironment.cs" />
     <Compile Include="Environment\DefaultHostEnvironment.cs" />
     <Compile Include="Environment\Extensions\Loaders\RawThemeExtensionLoader.cs" />
     <Compile Include="Environment\Features\FeatureManager.cs" />
@@ -172,12 +161,10 @@
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
+    <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
-    <Compile Include="Scripting\IScriptingManager.cs" />
-    <Compile Include="Scripting\IScriptingRuntime.cs" />
-    <Compile Include="Scripting\ScriptingManager.cs" />
-    <Compile Include="Scripting\ScriptingRuntime.cs" />
+    <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
@@ -186,9 +173,6 @@
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
     <Compile Include="UI\Resources\ResourceManifestBuilder.cs" />
-    <Compile Include="UI\Widgets\IRuleManager.cs" />
-    <Compile Include="UI\Widgets\IRuleProvider.cs" />
-    <Compile Include="UI\Widgets\RuleContext.cs" />
     <Compile Include="UI\Zones\LayoutWorkContext.cs" />
     <Compile Include="UI\Zones\ZoneHoldingBehavior.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ConfiguredEnginesCache.cs" />
@@ -546,9 +530,7 @@
     <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\Dependencies\IDependenciesFolder.cs" />
     <Compile Include="Environment\Extensions\Compilers\IExtensionCompiler.cs" />
-    <Compile Include="Environment\Extensions\Compilers\CSharpExtensionDirectoryCompiler.cs" />
     <Compile Include="Environment\Extensions\Compilers\DefaultExtensionCompiler.cs" />
-    <Compile Include="Environment\Extensions\Compilers\CSharpProjectFullTrustCompiler.cs" />
     <Compile Include="Environment\Extensions\Compilers\DefaultProjectFileParser.cs" />
     <Compile Include="Environment\IAssemblyBuilder.cs" />
     <Compile Include="Environment\IBuildManager.cs" />

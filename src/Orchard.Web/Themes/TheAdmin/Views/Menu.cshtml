@@ -16,7 +16,7 @@
         var firstOfTheSecond = secondLevelMenuItems.FirstOrDefault();
         var sectionHeaderMarkup = firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)
             ? Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href)
-            : firstOfTheSecond != null
+            : firstOfTheSecond != null && firstLevelMenuItem.LinkToFirstChild
                 ? Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href)
                 : new HtmlString(string.Format("<span>{0}</span>", Html.Encode(sectionHeaderText)));
 

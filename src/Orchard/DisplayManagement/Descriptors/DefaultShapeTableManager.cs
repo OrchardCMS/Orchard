@@ -73,7 +73,7 @@ namespace Orchard.DisplayManagement.Descriptors {
 
             if (extensionType == "Theme") {
                 // alterations from themes must be from the given theme or a base theme
-                var featureName = alteration.Feature.Descriptor.Name;
+                var featureName = alteration.Feature.Descriptor.Id;
                 return featureName == themeName || IsBaseTheme(featureName, themeName);
             }
 
@@ -84,7 +84,7 @@ namespace Orchard.DisplayManagement.Descriptors {
             // determine if the given feature is a base theme of the given theme
             var availableFeatures = _extensionManager.AvailableFeatures();
 
-            var themeFeature = availableFeatures.SingleOrDefault(fd => fd.Name == themeName);
+            var themeFeature = availableFeatures.SingleOrDefault(fd => fd.Id == themeName);
             while(themeFeature != null) {
                 var baseTheme = themeFeature.Extension.BaseTheme;
                 if (String.IsNullOrEmpty(baseTheme)) {
@@ -93,7 +93,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                 if (featureName == baseTheme) {
                     return true;
                 }
-                themeFeature = availableFeatures.SingleOrDefault(fd => fd.Name == baseTheme);
+                themeFeature = availableFeatures.SingleOrDefault(fd => fd.Id == baseTheme);
             }
             return false;
         }

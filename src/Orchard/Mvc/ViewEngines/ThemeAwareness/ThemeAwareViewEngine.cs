@@ -71,15 +71,15 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
         }
 
         private IViewEngine DeepEngines(ExtensionDescriptor theme) {
-            return _configuredEnginesCache.BindDeepEngines(theme.Name, () => {
+            return _configuredEnginesCache.BindDeepEngines(theme.Id, () => {
                 var engines = Enumerable.Empty<IViewEngine>();
-                var themeLocation = theme.Location + "/" + theme.Name;
+                var themeLocation = theme.Location + "/" + theme.Id;
 
                 var themeParams = new CreateThemeViewEngineParams { VirtualPath = themeLocation };
                 engines = engines.Concat(_viewEngineProviders.Select(vep => vep.CreateThemeViewEngine(themeParams)));
 
-                var activeFeatures = _extensionManager.AvailableFeatures().Where(fd => _shellDescriptor.Features.Any(sdf => sdf.Name == fd.Name));
-                var activeModuleLocations = activeFeatures.Select(fd => fd.Extension.Location + "/" + fd.Extension.Name).Distinct();
+                var activeFeatures = _extensionManager.AvailableFeatures().Where(fd => _shellDescriptor.Features.Any(sdf => sdf.Name == fd.Id));
+                var activeModuleLocations = activeFeatures.Select(fd => fd.Extension.Location + "/" + fd.Extension.Id).Distinct();
                 var moduleParams = new CreateModulesViewEngineParams { VirtualPaths = activeModuleLocations };
                 engines = engines.Concat(_viewEngineProviders.Select(vep => vep.CreateModulesViewEngine(moduleParams)));
 

@@ -28,7 +28,7 @@ namespace Orchard.Tests.Modules.Packaging {
         private Stream BuildHelloWorld(IPackageBuilder packageBuilder) {
             return packageBuilder.BuildPackage(new ExtensionDescriptor {
                 ExtensionType = "Module",
-                Name = "Hello.World",
+                Id = "Hello.World",
                 Version = "1.0",
                 Description = "a",
                 Author = "b"

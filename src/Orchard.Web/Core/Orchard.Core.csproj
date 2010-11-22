@@ -49,7 +49,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
@@ -104,30 +104,14 @@
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\Shapes.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
-    <Compile Include="Localization\ResourceManifest.cs" />
-    <Compile Include="Localization\ViewModels\EditLocalizationViewModel.cs" />
-    <Compile Include="Messaging\Migrations.cs" />
-    <Compile Include="Messaging\Drivers\MessageSettingsPartDriver.cs" />
-    <Compile Include="Messaging\Handlers\MessageSettingsPartHandler.cs" />
-    <Compile Include="Messaging\Models\MessageSettingsPart.cs" />
-    <Compile Include="Messaging\Models\MessageSettingsPartRecord.cs" />
-    <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
-    <Compile Include="Messaging\ViewModels\MessageSettingsPartViewModel.cs" />
     <Compile Include="Navigation\Services\MainMenuNavigationProvider.cs" />
     <Compile Include="Routable\ResourceManifest.cs" />
     <Compile Include="Routable\Services\RoutableHomePageProvider.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
-    <Compile Include="Localization\Services\ILocalizationService.cs" />
-    <Compile Include="Localization\Services\LocalizationService.cs" />
-    <Compile Include="Localization\ViewModels\ContentLocalizationsViewModel.cs" />
     <Compile Include="Reports\AdminMenu.cs" />
     <Compile Include="Reports\Controllers\AdminController.cs" />
     <Compile Include="Reports\Routes.cs" />
-    <Compile Include="Localization\Controllers\AdminController.cs" />
-    <Compile Include="Localization\Migrations.cs" />
-    <Compile Include="Localization\ViewModels\AddLocalizationViewModel.cs" />
-    <Compile Include="Localization\Drivers\LocalizationPartDriver.cs" />
     <Compile Include="Navigation\Migrations.cs" />
     <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
     <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
@@ -173,9 +157,6 @@
     <Compile Include="Feeds\Rss\RssResult.cs" />
     <Compile Include="HomePage\Controllers\HomeController.cs" />
     <Compile Include="HomePage\Routes.cs" />
-    <Compile Include="Localization\Handlers\LocalizationPartHandler.cs" />
-    <Compile Include="Localization\Models\LocalizationPart.cs" />
-    <Compile Include="Localization\Models\LocalizationPartRecord.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItemPart.cs" />
@@ -236,6 +217,7 @@
     <Compile Include="Shapes\DateTimeShapes.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterController.cs" />
+    <Compile Include="XmlRpc\IXmlRpcDriver.cs" />
     <Compile Include="XmlRpc\IXmlRpcHandler.cs" />
     <Compile Include="XmlRpc\Models\ModelBinderProvider.cs" />
     <Compile Include="XmlRpc\Models\XRpcArray.cs" />
@@ -260,26 +242,16 @@
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\List.cshtml" />
     <Content Include="Feeds\Views\Feed.cshtml" />
-    <Content Include="Localization\Views\EditorTemplates\Parts\Localization.ContentTranslations.Edit.cshtml" />
     <Content Include="Contents\Views\Parts\Contents.Publish.cshtml" />
     <Content Include="Contents\Views\Parts\Contents.Publish.SummaryAdmin.cshtml" />
-    <Content Include="Messaging\Module.txt" />
-    <Content Include="Messaging\Views\EditorTemplates\Parts\MessageSettings.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Fields\Common.Text.Edit.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
-    <Content Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
+    <Content Include="Common\Views\Body.Editor.cshtml" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
-    <Content Include="Localization\Styles\admin.css" />
-    <Content Include="Localization\Styles\base.css" />
-    <Content Include="Localization\Views\Parts\Localization.ContentTranslations.Summary.cshtml" />
-    <Content Include="Localization\Views\Parts\Localization.ContentTranslations.cshtml" />
     <Content Include="Reports\Module.txt" />
     <Content Include="Reports\Views\Admin\Display.cshtml" />
     <Content Include="Reports\Views\Admin\Index.cshtml" />
-    <Content Include="Localization\Module.txt" />
-    <Content Include="Localization\Views\Admin\Translate.cshtml" />
-    <Content Include="Localization\Views\CultureSelection.cshtml" />
     <Content Include="Routable\Module.txt" />
     <Content Include="Routable\Scripts\jquery.slugify.js" />
     <Content Include="Routable\Views\EditorTemplates\Parts\Routable.RoutePart.cshtml" />
@@ -349,9 +321,7 @@
     <None Include="App_Data\Localization\fr-FR\orchard.core.po" />
     <Content Include="Contents\Views\Web.config" />
     <Content Include="Routable\Views\Web.config" />
-    <Content Include="Localization\Views\Web.config" />
     <Content Include="Reports\Views\Web.config" />
-    <Content Include="Messaging\Views\Web.config" />
     <Content Include="Contents\Views\Items\Content.cshtml" />
     <Content Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
     <Content Include="Shapes\Views\Document.cshtml" />
@@ -368,13 +338,10 @@
     </Content>
     <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <Content Include="Contents\Views\Item\Display.cshtml" />
-    <Content Include="Localization\Placement.info" />
-    <Content Include="Messaging\Placement.info" />
     <Content Include="Navigation\Placement.info" />
     <Content Include="Routable\Views\Parts\RoutableTitle.cshtml" />
     <Content Include="Routable\Views\Item\Display.cshtml" />
     <Content Include="Routable\Views\Routable.HomePage.cshtml" />
-    <Content Include="Localization\Views\Parts\Localization.ContentTranslations.SummaryAdmin.cshtml" />
     <Content Include="Contents\Views\Items\Content.Summary.cshtml" />
     <Content Include="Shapes\Views\Pager.cshtml" />
     <Content Include="Contents\Views\Content.SaveButton.cshtml" />
@@ -386,9 +353,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Routable\Scripts\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Localization\Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Settings\Styles\Web.config">
@@ -403,6 +367,8 @@
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
     <Content Include="Containers\Views\Parts\ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\ContainerCustom.cshtml" />
+    <Content Include="Routable\Views\Parts\RoutableTitle_Summary.cshtml" />
+    <Content Include="Routable\Views\Parts\RoutableTitle_SummaryAdmin.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

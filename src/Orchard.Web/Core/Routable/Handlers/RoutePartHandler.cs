@@ -24,25 +24,36 @@ namespace Orchard.Core.Routable.Handlers {
 
             Action<RoutePart> processSlug = (
                 routable => {
-                    var originalSlug = routable.Slug;
-                    if (!_routableService.ProcessSlug(routable)) {
+                    if (!_routableService.ProcessSlug(routable))
                         _services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
-                                                     originalSlug, routable.Slug, routable.ContentItem.ContentType));
-                    }
-
-                    // TEMP: path format patterns replaces this logic
-                    routable.Path = routable.GetPathWithSlug(routable.Slug);
+                                                     routable.Slug, routable.GetEffectiveSlug(), routable.ContentItem.ContentType));
                 });
 
             OnGetDisplayShape<RoutePart>(SetModelProperties);
             OnGetEditorShape<RoutePart>(SetModelProperties);
             OnUpdateEditorShape<RoutePart>(SetModelProperties);
 
-            OnPublished<RoutePart>((context, routable) => {
+            OnPublished<RoutePart>((context, route) => {
+                var path = route.Path;
+                route.Path = route.GetPathWithSlug(route.Slug);
+
                 if (context.PublishingItemVersionRecord != null)
-                    processSlug(routable);
-                if (!string.IsNullOrEmpty(routable.Path))
-                    _routablePathConstraint.AddPath(routable.Path);
+                    processSlug(route);
+
+                // if the path has changed by having the slug changed on the way in (e.g. user input) or to avoid conflict
+                // then update and publish all contained items
+                if (path != route.Path) {
+                    _routablePathConstraint.RemovePath(path);
+                    _routableService.FixContainedPaths(route);
+                }
+
+                if (!string.IsNullOrWhiteSpace(route.Path))
+                    _routablePathConstraint.AddPath(route.Path);
+            });
+
+            OnRemoved<RoutePart>((context, route) => {
+                if (!string.IsNullOrWhiteSpace(route.Path))
+                    _routablePathConstraint.RemovePath(route.Path);
             });
 
             OnIndexing<RoutePart>((context, part) => context.DocumentIndex.Add("title", part.Record.Title).RemoveTags().Analyze());

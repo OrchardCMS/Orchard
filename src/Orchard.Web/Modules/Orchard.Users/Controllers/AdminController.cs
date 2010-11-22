@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.Core.Settings.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Security;
@@ -9,21 +10,27 @@ using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 using Orchard.Mvc.Extensions;
+using System;
+using Orchard.Settings;
 
 namespace Orchard.Users.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
+        private readonly ISiteService _siteService;
 
         public AdminController(
             IOrchardServices services,
             IMembershipService membershipService,
             IUserService userService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            ISiteService siteService) {
             Services = services;
             _membershipService = membershipService;
             _userService = userService;
+            _siteService = siteService;
+
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
@@ -57,10 +64,11 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.New<IUser>("User");
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Create", Model: new UserCreateViewModel(), Prefix: null);
             editor.Metadata.Position = "2";
-            var model = Services.ContentManager.BuildEditor(user);
+            dynamic model = Services.ContentManager.BuildEditor(user);
             model.Content.Add(editor);
 
-            return View(model);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -88,7 +96,7 @@ namespace Orchard.Users.Controllers {
                                                   null, null, true));
             }
 
-            var model = Services.ContentManager.UpdateEditor(user, this);
+            dynamic model = Services.ContentManager.UpdateEditor(user, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -97,7 +105,8 @@ namespace Orchard.Users.Controllers {
                 editor.Metadata.Position = "2";
                 model.Content.Add(editor);
 
-                return View(model);
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                return View((object)model);
             }
 
             Services.Notifier.Information(T("User created"));
@@ -111,10 +120,11 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get<UserPart>(id);
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Edit", Model: new UserEditViewModel {User = user}, Prefix: null);
             editor.Metadata.Position = "2";
-            var model = Services.ContentManager.BuildEditor(user);
+            dynamic model = Services.ContentManager.BuildEditor(user);
             model.Content.Add(editor);
 
-            return View(model);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)model);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -122,18 +132,24 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.Get(id);
-            var model = Services.ContentManager.UpdateEditor(user, this);
+            var user = Services.ContentManager.Get<UserPart>(id);
+            string previousName = user.UserName;
+
+            dynamic model = Services.ContentManager.UpdateEditor(user, this);
 
             var editModel = new UserEditViewModel {User = user};
-            TryUpdateModel(editModel);
-
-            if (ModelState.IsValid) {
-                ((IContent)model.ContentItem).As<UserPart>().NormalizedUserName = editModel.UserName.ToLower();
-
+            if (TryUpdateModel(editModel)) {
                 string userExistsMessage = _userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email);
                 if (userExistsMessage != null) {
                     AddModelError("NotUniqueUserName", T(userExistsMessage));
+                }
+                else {
+                    // also update the Super user if this is the renamed account
+                    if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, previousName, StringComparison.OrdinalIgnoreCase)) {
+                        _siteService.GetSiteSettings().As<SiteSettingsPart>().SuperUser = editModel.UserName;
+                    }
+
+                    user.NormalizedUserName = editModel.UserName.ToLower();
                 }
             }
 
@@ -144,7 +160,8 @@ namespace Orchard.Users.Controllers {
                 editor.Metadata.Position = "2";
                 model.Content.Add(editor);
 
-                return View(model);
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                return View((object)model);
             }
 
             Services.Notifier.Information(T("User information updated"));
@@ -155,9 +172,21 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            Services.ContentManager.Remove(Services.ContentManager.Get(id));
+            var user = Services.ContentManager.Get<IUser>(id);
 
-            Services.Notifier.Information(T("User deleted"));
+            if (user != null) {
+                if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                    Services.Notifier.Error(T("The Super user can't be removed. Please disable this account or specify another Super user account"));
+                }
+                else if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                    Services.Notifier.Error(T("You can't remove your own account. Please log in with another account"));
+                }
+                else{
+                    Services.ContentManager.Remove(user.ContentItem);
+                    Services.Notifier.Information(T("User deleted"));
+                }
+            }
+
             return RedirectToAction("Index");
         }
 
@@ -195,15 +224,15 @@ namespace Orchard.Users.Controllers {
             if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.Get(id);
+            var user = Services.ContentManager.Get<IUser>(id);
 
-            if ( user != null ) {
-                if (Services.WorkContext.CurrentSite.SuperUser.Equals(user.As<UserPart>().UserName) ) {
-                    Services.Notifier.Error(T("Super user can't be moderated"));
+            if (user != null) {
+                if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                    Services.Notifier.Error(T("You can't disable your own account. Please log in with another account"));
                 }
                 else {
                     user.As<UserPart>().RegistrationStatus = UserStatus.Pending;
-                    Services.Notifier.Information(T("User moderated"));
+                    Services.Notifier.Information(T("User {0} disabled", user.UserName));
                 }
             }
 

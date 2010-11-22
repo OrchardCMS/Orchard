@@ -8,9 +8,8 @@ using System.Security;
 [assembly: AssemblyTitle("Orchard.Widgets")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MSIT")]
 [assembly: AssemblyProduct("Orchard.Widgets")]
-[assembly: AssemblyCopyright("Copyright © MSIT 2010")]
+[assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

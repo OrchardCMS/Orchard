@@ -40,19 +40,19 @@
 <!-- Building -->
 
 	<Target Name="Clean">
-		<MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService.sln" Targets="Clean" />
+		<MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln" Targets="Clean" />
 		<RemoveDir Directories="$(BuildFolder)" />
 	</Target>
 
   <Target Name ="Compile">
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService.sln"
+      Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln"
       Targets="Build"
       Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64;DefineConstants=AZURE" 
        />      
 
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.Azure.sln"
+      Projects="$(SrcFolder)\Orchard.Azure.Tests\Orchard.Azure.Tests.sln"
       Targets="Build"
       Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64" />      
     

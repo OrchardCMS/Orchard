@@ -131,7 +131,7 @@ namespace Orchard.Tests.Environment.Extensions {
             var available = _manager.AvailableExtensions();
 
             Assert.That(available.Count(), Is.EqualTo(4));
-            Assert.That(available, Has.Some.Property("Name").EqualTo("foo"));
+            Assert.That(available, Has.Some.Property("Id").EqualTo("foo"));
         }
 
         [Test]
@@ -143,8 +143,8 @@ Version: 2.x
 ");
 
             var descriptor = _manager.AvailableExtensions().Single();
-            Assert.That(descriptor.Name, Is.EqualTo("Sample"));
-            Assert.That(descriptor.DisplayName, Is.EqualTo("Sample Extension"));
+            Assert.That(descriptor.Id, Is.EqualTo("Sample"));
+            Assert.That(descriptor.Name, Is.EqualTo("Sample Extension"));
             Assert.That(descriptor.Version, Is.EqualTo("2.x"));
         }
 
@@ -161,12 +161,12 @@ Features:
 ");
 
             var descriptor = _manager.AvailableExtensions().Single();
-            Assert.That(descriptor.Name, Is.EqualTo("SuperWiki"));
+            Assert.That(descriptor.Id, Is.EqualTo("SuperWiki"));
             Assert.That(descriptor.Version, Is.EqualTo("1.0.3"));
             Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
             Assert.That(descriptor.Features.Count(), Is.EqualTo(1));
-            Assert.That(descriptor.Features.First().Name, Is.EqualTo("SuperWiki"));
-            Assert.That(descriptor.Features.First().Extension.Name, Is.EqualTo("SuperWiki"));
+            Assert.That(descriptor.Features.First().Id, Is.EqualTo("SuperWiki"));
+            Assert.That(descriptor.Features.First().Extension.Id, Is.EqualTo("SuperWiki"));
             Assert.That(descriptor.Features.First().Description, Is.EqualTo("My super wiki module for Orchard."));
         }
 
@@ -199,15 +199,15 @@ Features:
 ");
 
             var descriptor = _manager.AvailableExtensions().Single();
-            Assert.That(descriptor.Name, Is.EqualTo("MyCompany.AnotherWiki"));
-            Assert.That(descriptor.DisplayName, Is.EqualTo("AnotherWiki"));
+            Assert.That(descriptor.Id, Is.EqualTo("MyCompany.AnotherWiki"));
+            Assert.That(descriptor.Name, Is.EqualTo("AnotherWiki"));
             Assert.That(descriptor.Author, Is.EqualTo("Coder Notaprogrammer"));
             Assert.That(descriptor.WebSite, Is.EqualTo("http://anotherwiki.codeplex.com"));
             Assert.That(descriptor.Version, Is.EqualTo("1.2.3"));
             Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
             Assert.That(descriptor.Features.Count(), Is.EqualTo(5));
             foreach (var featureDescriptor in descriptor.Features) {
-                switch (featureDescriptor.Name) {
+                switch (featureDescriptor.Id) {
                     case "AnotherWiki":
                         Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
                         Assert.That(featureDescriptor.Description, Is.EqualTo("My super wiki module for Orchard."));
@@ -308,7 +308,7 @@ Features:
 
         [Test, Ignore("This assertion appears to be inconsistent with the comment in extension manager - an empty feature is returned")]
         public void ExtensionManagerShouldThrowIfFeatureDoesNotExist() {
-            var featureDescriptor = new FeatureDescriptor { Name = "NoSuchFeature" };
+            var featureDescriptor = new FeatureDescriptor { Id = "NoSuchFeature" };
             Assert.Throws<ArgumentException>(() => _manager.LoadFeatures(new[] { featureDescriptor }));
         }
 
@@ -331,7 +331,7 @@ Features:
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
-                .Single(x => x.Name == "TestFeature");
+                .Single(x => x.Id == "TestFeature");
 
             foreach (var feature in extensionManager.LoadFeatures(new[] { testFeature })) {
                 foreach (var type in feature.ExportedTypes) {
@@ -361,7 +361,7 @@ Features:
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
-                .Single(x => x.Name == "TestFeature");
+                .Single(x => x.Id == "TestFeature");
 
             foreach (var feature in extensionManager.LoadFeatures(new[] { testFeature })) {
                 foreach (var type in feature.ExportedTypes) {
@@ -389,7 +389,7 @@ Features:
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var testModule = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
-                .Single(x => x.Name == "TestModule");
+                .Single(x => x.Id == "TestModule");
 
             foreach (var feature in extensionManager.LoadFeatures(new[] { testModule })) {
                 foreach (var type in feature.ExportedTypes) {
@@ -411,10 +411,10 @@ OrchardVersion: 1
 ");
 
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
-            var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Name == "Minimalistic");
+            var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Id == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
-            Assert.That(minimalisticModule.Features.Single().Name, Is.EqualTo("Minimalistic"));
+            Assert.That(minimalisticModule.Features.Single().Id, Is.EqualTo("Minimalistic"));
         }
 
 
@@ -430,10 +430,10 @@ OrchardVersion: 1
 ");
 
             IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
-            var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Name == "Minimalistic");
+            var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Id == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
-            Assert.That(minimalisticModule.Features.Single().Name, Is.EqualTo("Minimalistic"));
+            Assert.That(minimalisticModule.Features.Single().Id, Is.EqualTo("Minimalistic"));
         }
     }
 }

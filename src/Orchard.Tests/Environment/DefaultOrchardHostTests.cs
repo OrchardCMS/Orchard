@@ -90,8 +90,8 @@ namespace Orchard.Tests.Environment {
             }
 
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                var ext = new ExtensionDescriptor { Name = "Orchard.Framework" };
-                ext.Features = new[] { new FeatureDescriptor { Extension = ext, Name = ext.Name } };
+                var ext = new ExtensionDescriptor { Id = "Orchard.Framework" };
+                ext.Features = new[] { new FeatureDescriptor { Extension = ext, Id = ext.Id } };
                 yield return ext;
             }
 
@@ -102,7 +102,7 @@ namespace Orchard.Tests.Environment {
 
             public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
                 foreach (var descriptor in featureDescriptors) {
-                    if (descriptor.Name == "Orchard.Framework") {
+                    if (descriptor.Id == "Orchard.Framework") {
                         yield return FrameworkFeature(descriptor);
                     }
                 }

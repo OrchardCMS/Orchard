@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
 using JetBrains.Annotations;
@@ -9,24 +8,20 @@ using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
 using Orchard.Logging;
 using Orchard.Media.Models;
-using Orchard.Security;
-using Orchard.Settings;
 
 namespace Orchard.Media.Services {
     [UsedImplicitly]
     public class MediaService : IMediaService {
         private readonly IStorageProvider _storageProvider;
+        private readonly IOrchardServices _orchardServices;
 
-        public MediaService(
-            IStorageProvider storageProvider) {
+        public MediaService(IStorageProvider storageProvider, IOrchardServices orchardServices) {
             _storageProvider = storageProvider;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
-        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
-
 
         public string GetPublicUrl(string path) {
             return _storageProvider.GetPublicUrl(path);
@@ -114,14 +109,16 @@ namespace Orchard.Media.Services {
             if (string.IsNullOrWhiteSpace(name)) {
                 return false;
             }
-            var mediaSettings = CurrentSite.As<MediaSettingsPart>();
+            var currentSite = _orchardServices.WorkContext.CurrentSite;
+            var mediaSettings = currentSite.As<MediaSettingsPart>();
             var allowedExtensions = mediaSettings.UploadAllowedFileTypeWhitelist.ToUpperInvariant().Split(' ');
             var ext = (Path.GetExtension(name) ?? "").TrimStart('.').ToUpperInvariant();
             if (string.IsNullOrWhiteSpace(ext)) {
                 return false;
             }
             // whitelist does not apply to the superuser
-            if (CurrentUser == null || !CurrentSite.SuperUser.Equals(CurrentUser.UserName, StringComparison.Ordinal)) {
+            var currentUser = _orchardServices.WorkContext.CurrentUser;
+            if (currentUser == null || !currentSite.SuperUser.Equals(currentUser.UserName, StringComparison.Ordinal)) {
                 // zip files at the top level are allowed since this is how you upload multiple files at once.
                 if (allowZip && ext.Equals("zip", StringComparison.OrdinalIgnoreCase)) {
                     return true;

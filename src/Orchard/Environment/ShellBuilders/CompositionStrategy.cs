@@ -55,9 +55,9 @@ namespace Orchard.Environment.ShellBuilders {
         private static IEnumerable<Feature> BuiltinFeatures() {
             yield return new Feature {
                 Descriptor = new FeatureDescriptor {
-                    Name = "Orchard.Framework",
+                    Id = "Orchard.Framework",
                     Extension = new ExtensionDescriptor {
-                        Name = "Orchard.Framework"
+                        Id = "Orchard.Framework"
                     }
                 },
                 ExportedTypes =
@@ -104,7 +104,7 @@ namespace Orchard.Environment.ShellBuilders {
         }
 
         private static ControllerBlueprint BuildController(Type type, Feature feature) {
-            var areaName = feature.Descriptor.Extension.Name;
+            var areaName = feature.Descriptor.Extension.Id;
 
             var controllerName = type.Name;
             if (controllerName.EndsWith("Controller"))
@@ -129,7 +129,7 @@ namespace Orchard.Environment.ShellBuilders {
 
         private static RecordBlueprint BuildRecord(Type type, Feature feature, ShellSettings settings) {
             var extensionDescriptor = feature.Descriptor.Extension;
-            var extensionName = extensionDescriptor.Name.Replace('.', '_');
+            var extensionName = extensionDescriptor.Id.Replace('.', '_');
 
             var dataTablePrefix = "";
             if (!string.IsNullOrEmpty(settings.DataTablePrefix))

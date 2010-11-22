@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security;
 using System.Text;
 
 namespace Orchard.Parameters {
@@ -8,6 +9,7 @@ namespace Orchard.Parameters {
     }
 
     public class CommandLineParser : ICommandLineParser {
+        [SecurityCritical]
         public IEnumerable<string> Parse(string commandLine) {
             return SplitArgs(commandLine);
         }

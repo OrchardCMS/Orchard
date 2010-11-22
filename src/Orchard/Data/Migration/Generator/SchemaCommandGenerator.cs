@@ -42,13 +42,13 @@ namespace Orchard.Data.Migration.Generator {
         /// </summary>
         public IEnumerable<SchemaCommand> GetCreateFeatureCommands(string feature, bool drop) {
             var dependencies = _extensionManager.AvailableFeatures()
-                .Where(f => String.Equals(f.Name, feature, StringComparison.OrdinalIgnoreCase))
+                .Where(f => String.Equals(f.Id, feature, StringComparison.OrdinalIgnoreCase))
                 .Where(f => f.Dependencies != null)
                 .SelectMany(f => f.Dependencies)
                 .ToList();
 
             var shellDescriptor = new ShellDescriptor {
-                Features = dependencies.Select(name => new ShellFeature { Name = name }).Union(new[] { new ShellFeature { Name = feature }, new ShellFeature { Name = "Orchard.Framework" } })
+                Features = dependencies.Select(id => new ShellFeature { Name = id }).Union(new[] { new ShellFeature { Name = feature }, new ShellFeature { Name = "Orchard.Framework" } })
             };
 
             var shellBlueprint = _compositionStrategy.Compose(_shellSettings, shellDescriptor);
@@ -75,9 +75,9 @@ namespace Orchard.Data.Migration.Generator {
 
             string prefix = feature.Replace(".", "_") + "_";
 
-            foreach(var table in tables.Where(t => parameters.RecordDescriptors.Any(rd => rd.Feature.Descriptor.Name == feature && rd.TableName == t.Name))) {
+            foreach(var table in tables.Where(t => parameters.RecordDescriptors.Any(rd => rd.Feature.Descriptor.Id == feature && rd.TableName == t.Name))) {
                 string tableName = table.Name;
-                var recordType = parameters.RecordDescriptors.Where(rd => rd.Feature.Descriptor.Name == feature && rd.TableName == tableName).First().Type;
+                var recordType = parameters.RecordDescriptors.Where(rd => rd.Feature.Descriptor.Id == feature && rd.TableName == tableName).First().Type;
                 var isContentPart = typeof(ContentPartRecord).IsAssignableFrom(recordType);
 
                 if ( tableName.StartsWith(prefix) ) {

@@ -28,6 +28,11 @@ namespace Orchard.UI.Navigation {
             return this;
         }
 
+        public NavigationItemBuilder LinkToFirstChild(bool value) {
+            _item.LinkToFirstChild = value;
+            return this;
+        }
+
         public NavigationItemBuilder Permission(Permission permission) {
             _item.Permissions = _item.Permissions.Concat(new[]{permission});
             return this;
