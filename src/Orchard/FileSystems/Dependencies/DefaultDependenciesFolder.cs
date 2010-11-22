@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.Caching;
-using Orchard.Data;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 
@@ -54,6 +53,10 @@ namespace Orchard.FileSystems.Dependencies {
             if (!newDescriptors.SequenceEqual(existingDescriptors, new DependencyDescriptorComparer())) {
                 WriteDependencies(PersistencePath, dependencyDescriptors);
             }
+        }
+
+        public IEnumerable<string> GetViewCompilationDependencies() {
+            yield return _appDataFolder.GetVirtualPath(this.PersistencePath);
         }
 
         private IEnumerable<DependencyDescriptor> ReadDependencies(string persistancePath) {

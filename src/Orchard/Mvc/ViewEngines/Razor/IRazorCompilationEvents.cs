@@ -55,6 +55,10 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                     provider.AddVirtualPathDependency(virtualDependency);
                 }
             }
+
+            foreach (var virtualDependency in _dependenciesFolder.GetViewCompilationDependencies()) {
+                provider.AddVirtualPathDependency(virtualDependency);
+            }
         }
 
         public void CodeGenerationCompleted(RazorBuildProvider provider, CodeGenerationCompleteEventArgs e) {
