@@ -1,0 +1,7 @@
+
+== nhibernate ==
+
+https://nhibernate.svn.sourceforge.net/svnroot/nhibernate/branches/2.1.x/nhibernate
+at revision #4966
+applied perf-embedded-serializer-and-compiled-schema-reuse.patch
+nant -t:net-3.5 -D:project.config=release 

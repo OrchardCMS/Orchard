@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentNHibernate.Conventions;
@@ -8,15 +9,15 @@ using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Data.Conventions {
     public class RecordTableNameConvention : IClassConvention {
-        private readonly IEnumerable<RecordBlueprint> _descriptors;
+        private readonly Dictionary<Type, RecordBlueprint> _descriptors;
 
         public RecordTableNameConvention(IEnumerable<RecordBlueprint> descriptors) {
-            _descriptors = descriptors;
+            _descriptors = descriptors.ToDictionary(d => d.Type);
         }
 
         public void Apply(IClassInstance instance) {
-            var desc = _descriptors.Where(d => d.Type == instance.EntityType).SingleOrDefault();
-            if (desc != null) {
+            RecordBlueprint desc;
+            if (_descriptors.TryGetValue(instance.EntityType, out desc)) {
                 instance.Table(desc.TableName);
             }
         }
