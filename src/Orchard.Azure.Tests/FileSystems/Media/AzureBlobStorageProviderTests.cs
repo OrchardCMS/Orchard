@@ -45,6 +45,18 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
+        public void RootFolderAreNotCropped() {
+            _azureBlobStorageProvider.CreateFolder("default");
+            _azureBlobStorageProvider.CreateFolder("foo");
+
+            var folders = _azureBlobStorageProvider.ListFolders("");
+
+            Assert.That(folders.Count(), Is.EqualTo(2));
+            Assert.That(folders.Any(f => f.GetName() == "default"), Is.True);
+            Assert.That(folders.Any(f => f.GetName() == "foo"), Is.True);
+        }
+
+        [Test]
         public void CreateFileShouldReturnCorrectStorageFile() {
             var storageFile = _azureBlobStorageProvider.CreateFile("foo.txt");
 
