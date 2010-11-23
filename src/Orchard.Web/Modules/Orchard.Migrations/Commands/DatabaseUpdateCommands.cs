@@ -23,7 +23,7 @@ namespace Orchard.Migrations.Commands {
         }
 
         [CommandName("update database")]
-        [CommandHelp("update database \r\n\t" + "Automatically updates the database schema for the enabled features")]
+        [CommandHelp("update database \r\n\t" + "Automatically updates the database schema according to the defintion of the \"Record\" types in code for the enabled features.")]
         public string UpdateDatabase() {
             try {
                 _schemaCommandGenerator.UpdateDatabase();
@@ -37,7 +37,7 @@ namespace Orchard.Migrations.Commands {
         }
 
         [CommandName("create tables")]
-        [CommandHelp("create tables <feature-name> [/Drop:true|false] \r\n\t" + "Creates the database tables for the <feature-name> and optionally drops them before if specified")]
+        [CommandHelp("create tables <feature-name> [/Drop:true|false] \r\n\t" + "Creates the database tables according to the defintion of the \"Record\" types in code for the <feature-name> and optionally drops them before if specified.")]
         [OrchardSwitches("Drop")]
         public string CreateTables(string featureName) {
             var stringInterpreter = new StringCommandInterpreter(Context.Output);
