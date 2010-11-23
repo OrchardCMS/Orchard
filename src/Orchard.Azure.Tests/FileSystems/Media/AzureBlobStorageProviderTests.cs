@@ -106,6 +106,17 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
+        public void CreateFolderWithSubFolder() {
+            _azureBlobStorageProvider.CreateFolder("folder");
+            Assert.AreEqual(0, _azureBlobStorageProvider.ListFolders("folder").Count());
+
+            _azureBlobStorageProvider.CreateFolder("folder/folder");
+            Assert.AreEqual(1, _azureBlobStorageProvider.ListFolders("folder").Count());
+            Assert.AreEqual(0, _azureBlobStorageProvider.ListFiles("folder/folder").Count());
+            Assert.AreEqual("folder", _azureBlobStorageProvider.ListFolders("folder").First().GetName());
+        }
+
+        [Test]
         public void DeleteFolderShouldDeleteFilesAlso() {
             _azureBlobStorageProvider.CreateFile("folder/foo1.txt");
             _azureBlobStorageProvider.CreateFile("folder/foo2.txt");

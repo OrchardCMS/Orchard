@@ -51,8 +51,40 @@ namespace Orchard.Azure {
         }
 
         private static void EnsurePathIsRelative(string path) {
-            if (path.StartsWith("/") || path.StartsWith("http://"))
+            if ( path.StartsWith("/") || path.StartsWith("http://") || path.StartsWith("https://") )
                 throw new ArgumentException("Path must be relative");
+        }
+
+        public string Combine(string path1, string path2) {
+            if ( path1 == null) {
+                throw new ArgumentNullException("path1");
+            }
+
+            if ( path2 == null ) {
+                throw new ArgumentNullException("path2");
+            }
+
+            if ( String.IsNullOrEmpty(path2) ) {
+                return path1;
+            }
+
+            if ( String.IsNullOrEmpty(path1) ) {
+                return path2;
+            }
+
+            if ( path2.StartsWith("http://") || path2.StartsWith("https://") )
+            {
+                return path2;
+            }
+
+            var ch = path1[path1.Length - 1];
+
+            if (ch != '/')
+            {
+                return (path1.TrimEnd('/') + '/' + path2.TrimStart('/'));
+            }
+
+            return (path1 + path2);
         }
 
         public IStorageFile GetFile(string path) {
@@ -75,7 +107,7 @@ namespace Orchard.Azure {
             
             EnsurePathIsRelative(path);
 
-            string prefix = String.Concat(Container.Name, "/", _root, path);
+            string prefix = String.Concat(Combine(Container.Name, _root), path);
             
             if ( !prefix.EndsWith("/") )
                 prefix += "/";
@@ -121,7 +153,7 @@ namespace Orchard.Azure {
                 Container.EnsureDirectoryDoesNotExist(String.Concat(_root, path));
 
                 // Creating a virtually hidden file to make the directory an existing concept
-                CreateFile(path + "/" + FolderEntry);
+                CreateFile(Combine(path, FolderEntry));
             }
         }
 
@@ -263,7 +295,8 @@ namespace Orchard.Azure {
             }
 
             public string GetName() {
-                return Path.GetDirectoryName(GetPath() + "/");
+                var path = GetPath();
+                return path.Substring(path.LastIndexOf('/') +1 );
             }
 
             public string GetPath() {
