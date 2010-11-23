@@ -148,6 +148,10 @@ namespace Orchard.FileSystems.Media {
             File.Move(Map(path), Map(newPath));
         }
 
+        public string Combine(string path1, string path2) {
+            return Path.Combine(path1, path2);
+        }
+
         #endregion
 
         private class FileSystemStorageFile : IStorageFile {

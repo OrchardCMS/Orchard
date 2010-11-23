@@ -66,7 +66,7 @@ namespace Orchard.Media.Services {
                 _storageProvider.CreateFolder(name);
                 return;
             }
-            _storageProvider.CreateFolder(mediaPath + "\\" + name);
+            _storageProvider.CreateFolder(_storageProvider.Combine(mediaPath, name));
         }
 
         public void DeleteFolder(string name) {
@@ -79,12 +79,12 @@ namespace Orchard.Media.Services {
         }
 
         public void DeleteFile(string name, string folderName) {
-            _storageProvider.DeleteFile(folderName + "\\" + name);
+            _storageProvider.DeleteFile(_storageProvider.Combine(folderName, name));
         }
 
         public void RenameFile(string name, string newName, string folderName) {
             if (FileAllowed(newName, false)) {
-                _storageProvider.RenameFile(folderName + "\\" + name, folderName + "\\" + newName);
+                _storageProvider.RenameFile(_storageProvider.Combine(folderName, name), _storageProvider.Combine(folderName, newName));
             }
         }
 
@@ -193,14 +193,14 @@ namespace Orchard.Media.Services {
             }
         }
 
-        private static string RenameFolderPath(string path, string newName) {
-            var lastIndex = path.LastIndexOf("\\");
+        private string RenameFolderPath(string path, string newName) {
+            var lastIndex = Math.Max(path.LastIndexOf(Path.DirectorySeparatorChar), path.LastIndexOf(Path.AltDirectorySeparatorChar));
 
             if (lastIndex == -1) {
                 return newName;
             }
 
-            return path.Substring(0, lastIndex) + "\\" + newName;
+            return _storageProvider.Combine(path.Substring(0, lastIndex), newName);
         }
     }
 }
