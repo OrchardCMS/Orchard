@@ -12,5 +12,6 @@ namespace Orchard.FileSystems.Media {
         void DeleteFile(string path);
         void RenameFile(string path, string newPath);
         IStorageFile CreateFile(string path);
+        string Combine(string path1, string path2);
     }
 }

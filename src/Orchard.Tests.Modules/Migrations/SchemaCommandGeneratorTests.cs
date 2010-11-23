@@ -32,6 +32,8 @@ using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Modules.Migrations.Orchard.Tests.DataMigration.Records;
 using Path = Bleroy.FluentPath.Path;
 using Orchard.Tests.Stubs;
+using Orchard.Tests.Environment;
+using Orchard.Environment;
 
 namespace Orchard.Tests.Modules.Migrations {
     [TestFixture]
@@ -85,6 +87,7 @@ namespace Orchard.Tests.Modules.Migrations {
             builder.RegisterType<SchemaCommandGenerator>().As<ISchemaCommandGenerator>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
 
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();

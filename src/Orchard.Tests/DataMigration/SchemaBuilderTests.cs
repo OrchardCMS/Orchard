@@ -8,12 +8,14 @@ using Orchard.Data;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Schema;
 using Orchard.Data.Providers;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Reports.Services;
 using Orchard.Tests.ContentManagement;
 using System.IO;
+using Orchard.Tests.Environment;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 
@@ -47,6 +49,7 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>();
             builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>();
             builder.RegisterType<SessionFactoryHolder>().As<ISessionFactoryHolder>();
+            builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
             builder.RegisterInstance(new ShellBlueprint { Records = Enumerable.Empty<RecordBlueprint>() }).As<ShellBlueprint>();
             builder.RegisterInstance(new ShellSettings { Name = "temp", DataProvider = "SqlCe", DataTablePrefix = "TEST" }).As<ShellSettings>();

@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Indexing;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
 using Orchard.Search.Models;
@@ -29,26 +31,29 @@ namespace Orchard.Search.Controllers {
             _contentManager = contentManager;
 
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
             Shape = shapeFactory;
         }
 
         private IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
         dynamic Shape { get; set; }
 
         public ActionResult Index(Pager pager, string q = "") {
             var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
-            IPageOfItems<ISearchHit> searchHits;
-            if (q.Trim().StartsWith("?") || q.Trim().StartsWith("*")) {
-                searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
-                Services.Notifier.Error(T("'*' or '?' not allowed as first character in WildcardQuery"));
-            } 
-            else {
+            IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
+            try {
+
                 searchHits = _searchService.Query(q, pager.Page, pager.PageSize,
-                                                      Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
-                                                      searchFields,
-                                                      searchHit => searchHit);
+                                                  Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
+                                                  searchFields,
+                                                  searchHit => searchHit);
+            }
+            catch(Exception e) {
+                Services.Notifier.Error(T("Invalid search query: {0}", q));
+                Logger.Error(e, "Invalid search query: " + q);
             }
 
             var list = Shape.List();
