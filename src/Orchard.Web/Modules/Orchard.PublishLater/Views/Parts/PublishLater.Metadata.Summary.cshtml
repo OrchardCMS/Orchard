@@ -3,8 +3,8 @@
 @using Orchard.PublishLater.Models;
 @{
     PublishLaterPart publishLaterPart = Model.ContentPart;
-    DateTime? versionPublishedUtc = publishLaterPart.As<CommonPart>() == null ? null : publishLaterPart.As<CommonPart>().VersionPublishedUtc;
+    DateTime? publishedUtc = publishLaterPart.As<CommonPart>() == null ? null : publishLaterPart.As<CommonPart>().PublishedUtc;
 }
-@if (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue) {
-    @T("Published: {0}", Display.DateTimeRelative(dateTimeUtc: versionPublishedUtc.Value)) @T(" | ")
+@if (publishLaterPart.IsPublished() && publishedUtc.HasValue) {
+    @T("Published: {0}", Display.DateTimeRelative(dateTimeUtc: publishedUtc.Value)) @T(" | ")
 }

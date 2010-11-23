@@ -77,7 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Styles\admin.css" />
+    <Content Include="Styles\orchard-tags-admin.css" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />

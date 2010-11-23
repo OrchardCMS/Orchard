@@ -7,8 +7,6 @@ using Orchard.Comments.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
-using System.Text.RegularExpressions;
 
 namespace Orchard.Comments.Controllers {
     public class CommentController : Controller {
@@ -33,16 +31,19 @@ namespace Orchard.Comments.Controllers {
                     : Redirect("~/");
             
             var viewModel = new CommentsCreateViewModel();
-            
-            if (TryUpdateModel(viewModel)) {
-                var context = new CreateCommentContext {
-                    Author = viewModel.Name,
-                    CommentText = viewModel.CommentText,
-                    Email = viewModel.Email,
-                    SiteName = viewModel.SiteName,
-                    CommentedOn = viewModel.CommentedOn
-                };
 
+            TryUpdateModel(viewModel);
+            
+            var context = new CreateCommentContext {
+                Author = viewModel.Name,
+                CommentText = viewModel.CommentText,
+                Email = viewModel.Email,
+                SiteName = viewModel.SiteName,
+                CommentedOn = viewModel.CommentedOn
+            };
+
+
+            if (ModelState.IsValid) {
                 if (!String.IsNullOrEmpty(context.SiteName) && !context.SiteName.StartsWith("http://") && !context.SiteName.StartsWith("https://")) {
                     context.SiteName = "http://" + context.SiteName;
                 }
@@ -56,6 +57,13 @@ namespace Orchard.Comments.Controllers {
                 foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select( e=> e.ErrorMessage)) {
                     _notifier.Error(T(error));
                 }
+            }
+
+            if(!ModelState.IsValid) {
+                TempData["CreateCommentContext.Name"] = context.Author;
+                TempData["CreateCommentContext.CommentText"] = context.CommentText;
+                TempData["CreateCommentContext.Email"] = context.Email;
+                TempData["CreateCommentContext.SiteName"] = context.SiteName;
             }
 
             return !String.IsNullOrEmpty(returnUrl)
