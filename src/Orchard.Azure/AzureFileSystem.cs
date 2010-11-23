@@ -256,7 +256,7 @@ namespace Orchard.Azure {
             }
 
             public string GetPath() {
-                return _blob.Uri.ToString().Substring(_rootPath.Length+1);
+                return _blob.Uri.ToString().Substring(_rootPath.Length).Trim('/');
             }
 
             public string GetName() {
@@ -300,7 +300,7 @@ namespace Orchard.Azure {
             }
 
             public string GetPath() {
-                return _blob.Uri.ToString().Substring(_rootPath.Length + 1).TrimEnd('/');
+                return _blob.Uri.ToString().Substring(_rootPath.Length).Trim('/');
             }
 
             public long GetSize() {
