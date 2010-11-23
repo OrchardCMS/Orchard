@@ -31,7 +31,8 @@ namespace Orchard.Core.Contents.Handlers {
                 context.Metadata.RemoveRouteValues = new RouteValueDictionary {
                     {"Area", "Contents"},
                     {"Controller", "Item"},
-                    {"Action", "Remove"}
+                    {"Action", "Remove"},
+                    {"Id", context.ContentItem.Id}
                 };
             }
         }
