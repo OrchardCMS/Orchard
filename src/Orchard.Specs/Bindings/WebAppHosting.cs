@@ -105,17 +105,17 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have module ""(.*)""")]
         public void GivenIHaveModule(string moduleName) {
-            Host.CopyExtension("Modules", moduleName);
+            Host.CopyExtension("Modules", moduleName, ExtensionDeploymentOptions.CompiledAssembly);
         }
 
         [Given(@"I have theme ""(.*)""")]
         public void GivenIHaveTheme(string themeName) {
-            Host.CopyExtension("Themes", themeName);
+            Host.CopyExtension("Themes", themeName, ExtensionDeploymentOptions.CompiledAssembly);
         }
 
         [Given(@"I have core ""(.*)""")]
         public void GivenIHaveCore(string moduleName) {
-            Host.CopyExtension("Core", moduleName);
+            Host.CopyExtension("Core", moduleName, ExtensionDeploymentOptions.CompiledAssembly);
         }
 
         [Given(@"I have a clean site with")]
