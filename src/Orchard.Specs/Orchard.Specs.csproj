@@ -142,6 +142,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Hosting\ExtensionDeploymentOptions.cs" />
+    <Compile Include="SiteCompilation.feature.cs">
+      <DependentUpon>SiteCompilation.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Hosting\MessageSink.cs" />
     <Compile Include="Hosting\HostingTraceListener.cs" />
     <Compile Include="Hosting\TraceEnabledDataServicesProviderFactory.cs" />
@@ -221,6 +227,10 @@
     <None Include="ContentRights.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ContentRights.feature.cs</LastGenOutput>
+    </None>
+    <None Include="SiteCompilation.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>SiteCompilation.feature.cs</LastGenOutput>
     </None>
     <None Include="Hosting\Orchard.Web\Config\Diagnostics.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
