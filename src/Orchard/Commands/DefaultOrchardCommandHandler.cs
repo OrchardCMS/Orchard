@@ -30,10 +30,10 @@ namespace Orchard.Commands {
             // Find the property
             PropertyInfo propertyInfo = GetType().GetProperty(commandSwitch.Key, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
             if (propertyInfo == null) {
-                throw new ArgumentException(T("Switch \"{0}\" was not found", commandSwitch.Key).Text);
+                throw new InvalidOperationException(T("Switch \"{0}\" was not found", commandSwitch.Key).Text);
             }
             if (propertyInfo.GetCustomAttributes(typeof(OrchardSwitchAttribute), false).Length == 0) {
-                throw new ArgumentException(T("A property \"{0}\" exists but is not decorated with \"{1}\"", commandSwitch.Key, typeof(OrchardSwitchAttribute).Name).Text);
+                throw new InvalidOperationException(T("A property \"{0}\" exists but is not decorated with \"{1}\"", commandSwitch.Key, typeof(OrchardSwitchAttribute).Name).Text);
             }
 
             // Set the value
@@ -46,7 +46,7 @@ namespace Orchard.Commands {
                     LocalizedString.TextOrDefault(commandSwitch.Value, T("(empty)")), 
                     propertyInfo.PropertyType.FullName, 
                     commandSwitch.Key).Text;
-                throw new ArgumentException(message, e);
+                throw new InvalidOperationException(message, e);
             }
         }
 
@@ -56,7 +56,7 @@ namespace Orchard.Commands {
             var arguments = (context.Arguments ?? Enumerable.Empty<string>()).ToArray();
             object[] invokeParameters = GetInvokeParametersForMethod(context.CommandDescriptor.MethodInfo, arguments);
             if (invokeParameters == null) {
-                throw new ArgumentException(T("Command arguments \"{0}\" don't match command definition", string.Join(" ", arguments)).ToString());
+                throw new InvalidOperationException(T("Command arguments \"{0}\" don't match command definition", string.Join(" ", arguments)).ToString());
             }
 
             this.Context = context;
@@ -108,7 +108,7 @@ namespace Orchard.Commands {
 
             foreach (var commandSwitch in switches.Keys) {
                 if (!supportedSwitches.Contains(commandSwitch)) {
-                    throw new ArgumentException(T("Method \"{0}\" does not support switch \"{1}\".", methodInfo.Name, commandSwitch).ToString());
+                    throw new InvalidOperationException(T("Method \"{0}\" does not support switch \"{1}\".", methodInfo.Name, commandSwitch).ToString());
                 }
             }
         }
