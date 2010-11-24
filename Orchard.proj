@@ -120,10 +120,12 @@
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.StageProjectAlteration" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
 
   <Target Name="Package-Stage">
     <CallTarget Targets="CompileMsBuildTasks"/>
-
+    <CallTarget Targets="ValidateProjectFiles"/>
+    
     <ItemGroup>
       <SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\*"/>
       <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\*"/>
@@ -322,7 +324,19 @@
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Search &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
   </Target>
 
-  <!-- Version -->
+  <!-- ValidateProjectFiles-->
+  <Target Name="ValidateProjectFiles">
+    <CallTarget Targets="CompileMsBuildTasks"/>
+
+    <ItemGroup>
+      <Validate-ProjectFiles Include="$(ModulesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.csproj"/>
+    </ItemGroup>
+
+    <ValidateExtensionProjectFiles Files="@(Validate-ProjectFiles)"/>
+
+  </Target>
+
+  <!-- SetVersion -->
   <!-- Update all AssemblyInfo.cs and module.txt files to contain $(Version) -->
   <Target Name="SetVersion" Condition="$(Version) != ''">
     <CallTarget Targets="CompileMsBuildTasks"/>
