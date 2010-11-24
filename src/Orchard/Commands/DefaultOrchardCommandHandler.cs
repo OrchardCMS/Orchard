@@ -13,44 +13,40 @@ namespace Orchard.Commands {
         public Localizer T { get; set; }
         public CommandContext Context { get; set; }
 
-        #region Implementation of ICommandHandler
-
         public void Execute(CommandContext context) {
             SetSwitchValues(context);
             Invoke(context);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Int32.TryParse(System.String,System.Int32@)")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Boolean.TryParse(System.String,System.Boolean@)")]
         private void SetSwitchValues(CommandContext context) {
             if (context.Switches != null && context.Switches.Any()) {
                 foreach (var commandSwitch in context.Switches) {
-                    PropertyInfo propertyInfo = GetType().GetProperty(commandSwitch.Key);
-                    if (propertyInfo == null) {
-                        throw new InvalidOperationException(T("Switch \"{0}\" was not found", commandSwitch.Key).Text);
-                    }
-                    if (propertyInfo.GetCustomAttributes(typeof(OrchardSwitchAttribute), false).Length == 0) {
-                        throw new InvalidOperationException(T("A property \"{0}\" exists but is not decorated with \"{1}\"", commandSwitch.Key, typeof(OrchardSwitchAttribute).Name).Text);
-                    }
-                    if (propertyInfo.PropertyType.IsAssignableFrom(typeof(bool))) {
-                        bool boolValue;
-                        // todo: might be better to throw here if TryParse returns false instead of silently using 'false', to catch types (e.g. 'ture')
-                        Boolean.TryParse(commandSwitch.Value, out boolValue);
-                        propertyInfo.SetValue(this, boolValue, null);
-                    }
-                    else if (propertyInfo.PropertyType.IsAssignableFrom(typeof(int))) {
-                        int intValue;
-                        // todo: might be better to throw here if TryParse returns false instead of silently using 0 value
-                        Int32.TryParse(commandSwitch.Value, out intValue);
-                        propertyInfo.SetValue(this, intValue, null);
-                    }
-                    else if (propertyInfo.PropertyType.IsAssignableFrom(typeof(string))) {
-                        propertyInfo.SetValue(this, commandSwitch.Value, null);
-                    }
-                    else {
-                        throw new InvalidOperationException(T("No property named \"{0}\" found of type bool, int or string.", commandSwitch).Text);
-                    }
+                    SetSwitchValue(commandSwitch);
                 }
+            }
+        }
+
+        private void SetSwitchValue(KeyValuePair<string, string> commandSwitch) {
+            // Find the property
+            PropertyInfo propertyInfo = GetType().GetProperty(commandSwitch.Key, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+            if (propertyInfo == null) {
+                throw new ArgumentException(T("Switch \"{0}\" was not found", commandSwitch.Key).Text);
+            }
+            if (propertyInfo.GetCustomAttributes(typeof(OrchardSwitchAttribute), false).Length == 0) {
+                throw new ArgumentException(T("A property \"{0}\" exists but is not decorated with \"{1}\"", commandSwitch.Key, typeof(OrchardSwitchAttribute).Name).Text);
+            }
+
+            // Set the value
+            try {
+                object value = Convert.ChangeType(commandSwitch.Value, propertyInfo.PropertyType);
+                propertyInfo.SetValue(this, value, null/*index*/);
+            }
+            catch(Exception e) {
+                string message = T("Error converting value \"{0}\" to \"{1}\" for switch \"{2}\"",
+                    LocalizedString.TextOrDefault(commandSwitch.Value, T("(empty)")), 
+                    propertyInfo.PropertyType.FullName, 
+                    commandSwitch.Key).Text;
+                throw new ArgumentException(message, e);
             }
         }
 
@@ -60,7 +56,7 @@ namespace Orchard.Commands {
             var arguments = (context.Arguments ?? Enumerable.Empty<string>()).ToArray();
             object[] invokeParameters = GetInvokeParametersForMethod(context.CommandDescriptor.MethodInfo, arguments);
             if (invokeParameters == null) {
-                throw new InvalidOperationException(T("Command arguments \"{0}\" don't match command definition", string.Join(" ", arguments)).ToString());
+                throw new ArgumentException(T("Command arguments \"{0}\" don't match command definition", string.Join(" ", arguments)).ToString());
             }
 
             this.Context = context;
@@ -76,7 +72,8 @@ namespace Orchard.Commands {
             bool methodHasParams = false;
 
             if (methodParameters.Length == 0) {
-                if (args.Count == 0) return invokeParameters.ToArray();
+                if (args.Count == 0)
+                    return invokeParameters.ToArray();
                 return null;
             }
 
@@ -103,17 +100,17 @@ namespace Orchard.Commands {
         private void CheckMethodForSwitches(MethodInfo methodInfo, IDictionary<string, string> switches) {
             if (switches == null || switches.Count == 0)
                 return;
-            var supportedSwitches = new List<string>();
+
+            var supportedSwitches = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (OrchardSwitchesAttribute switchesAttribute in methodInfo.GetCustomAttributes(typeof(OrchardSwitchesAttribute), false)) {
-                supportedSwitches.AddRange(switchesAttribute.SwitchName);
+                supportedSwitches.UnionWith(switchesAttribute.Switches);
             }
+
             foreach (var commandSwitch in switches.Keys) {
                 if (!supportedSwitches.Contains(commandSwitch)) {
-                    throw new InvalidOperationException(T("Method \"{0}\" does not support switch \"{1}\".", methodInfo.Name, commandSwitch).ToString());
+                    throw new ArgumentException(T("Method \"{0}\" does not support switch \"{1}\".", methodInfo.Name, commandSwitch).ToString());
                 }
             }
         }
-
-        #endregion
     }
 }
