@@ -83,9 +83,11 @@ namespace Orchard.Media.Services {
         }
 
         public void RenameFile(string name, string newName, string folderName) {
-            if (FileAllowed(newName, false)) {
-                _storageProvider.RenameFile(_storageProvider.Combine(folderName, name), _storageProvider.Combine(folderName, newName));
+            if (!FileAllowed(newName, false)) {
+                throw new ArgumentException("New file name " + newName + " not allowed.");
             }
+
+            _storageProvider.RenameFile(_storageProvider.Combine(folderName, name), _storageProvider.Combine(folderName, newName));
         }
 
         public string UploadMediaFile(string folderName, HttpPostedFileBase postedFile) {

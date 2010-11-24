@@ -111,12 +111,13 @@ namespace Orchard.Media.Controllers {
         [HttpPost, ActionName("EditProperties")]
         [FormValueRequired("submit.Delete")]
         public ActionResult EditPropertiesDeletePOST() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media folder")))
+                return new HttpUnauthorizedResult();
+
             var viewModel = new MediaFolderEditPropertiesViewModel();
             try {
                 UpdateModel(viewModel);
 
-                if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media folder")))
-                    return new HttpUnauthorizedResult();
                 _mediaService.DeleteFolder(viewModel.MediaPath);
 
                 return RedirectToAction("Index");
