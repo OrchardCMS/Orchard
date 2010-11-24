@@ -63,7 +63,7 @@
     <CallTarget Targets="Gallery-Stage"/>
     <CallTarget Targets="Gallery-Setup"/>
   </Target>
-  
+
   <!-- Building -->
 
   <Target Name="Clean">
@@ -123,7 +123,7 @@
 
   <Target Name="Package-Stage">
     <CallTarget Targets="CompileMsBuildTasks"/>
-    
+
     <ItemGroup>
       <SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\*"/>
       <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\*"/>
@@ -134,8 +134,8 @@
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
-	  <Stage-Themes Include="$(ThemesSrcFolder)\**\*" Exclude="@(Stage-Bin-Exclude);$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\bin\**;$(ThemesSrcFolder)\obj\**;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\Properties\**" />
-	  <Stage-Themes-Binaries Include="$(ThemesSrcFolder)\*\**\bin\*" />
+      <Stage-Themes Include="$(ThemesSrcFolder)\**\*" Exclude="@(Stage-Bin-Exclude);$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\bin\**;$(ThemesSrcFolder)\obj\**;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\Properties\**" />
+      <Stage-Themes-Binaries Include="$(ThemesSrcFolder)\*\**\bin\*" />
 
       <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);@(Stage-Themes);$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
 
@@ -195,11 +195,11 @@
     <XmlUpdate XmlFileName="$(StageFolder)\web.config"
       XPath="/configuration/system.web/machineKey/@validationKey"
       Value="AutoGenerate" />
-    
+
     <XmlUpdate XmlFileName="$(StageFolder)\web.config"
       XPath="/configuration/system.web/machineKey/@decryptionKey"
       Value="AutoGenerate" />
-    
+
     <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
       XPath="/system.diagnostics/trace/@autoflush"
       Value="false" />
@@ -232,7 +232,7 @@
         $(StageFolder)\**\Modules\Orchard.MultiTenancy\**;
         $(StageFolder)\**\Modules\Orchard.Search\**;
         " />
-      
+
       <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;@(MsDeploy-Exclude-Modules)" />
       <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml;$(LibFolder)\msdeploy\*.sql"/>
     </ItemGroup>
@@ -321,12 +321,12 @@
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.MultiTenancy &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Search &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
   </Target>
-  
+
   <!-- Version -->
   <!-- Update all AssemblyInfo.cs and module.txt files to contain $(Version) -->
   <Target Name="SetVersion" Condition="$(Version) != ''">
     <CallTarget Targets="CompileMsBuildTasks"/>
-    
+
     <ItemGroup>
       <Version-AssemblyInfos Include="$(SrcFolder)\**\AssemblyInfo.cs" />
       <Version-Modules Include="$(SrcFolder)\**\Module.txt" />
@@ -338,10 +338,10 @@
         ReplacementText="${1}${2}:${3}$(Version)"
         IgnoreCase="True"/>
 
-	<FileUpdateLines Files="@(Version-Themes)"
-        Regex="^(orchardversion|version)(\s*):(\s*)(.*)"
-        ReplacementText="${1}${2}:${3}$(Version)"
-        IgnoreCase="True"/>
+    <FileUpdateLines Files="@(Version-Themes)"
+          Regex="^(orchardversion|version)(\s*):(\s*)(.*)"
+          ReplacementText="${1}${2}:${3}$(Version)"
+          IgnoreCase="True"/>
 
     <FileUpdateLines Files="@(Version-AssemblyInfos)"
         Regex="^\[assembly:(\s)*(AssemblyVersion|AssemblyFileVersion)(\s)*\(&quot;(.*)&quot;\)(\s)*\]"
