@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
@@ -22,6 +23,7 @@ namespace Orchard.ContentTypes.ViewModels {
         }
 
         public string Name { get; set; }
+        [Required]
         public string DisplayName { get; set; }
         public SettingsDictionary Settings { get; set; }
         public IEnumerable<EditPartFieldViewModel> Fields { get; set; }
