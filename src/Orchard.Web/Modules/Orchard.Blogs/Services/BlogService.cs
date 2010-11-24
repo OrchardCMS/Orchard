@@ -29,7 +29,11 @@ namespace Orchard.Blogs.Services {
         }
 
         public IEnumerable<BlogPart> Get() {
-            return _contentManager.Query<BlogPart, BlogPartRecord>()
+            return Get(VersionOptions.Published);
+        }
+
+        public IEnumerable<BlogPart> Get(VersionOptions versionOptions) {
+            return _contentManager.Query<BlogPart, BlogPartRecord>(versionOptions)
                 .Join<RoutePartRecord>()
                 .OrderBy(br => br.Title)
                 .List();
