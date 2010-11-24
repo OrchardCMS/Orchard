@@ -7,7 +7,7 @@
         <article class="comment">
             <header>
                 <h4>
-                    <span class="who">@Html.LinkOrDefault(comment.Record.UserName, comment.Record.SiteName, new { rel = "nofollow" })
+                    <span class="who">@Html.LinkOrDefault(comment.Record.Author, comment.Record.SiteName, new { rel = "nofollow" })
                     </span>
                     <span class="when">said <time datetime="@comment.Record.CommentDateUtc.GetValueOrDefault()">@Html.Link((string)Display.DateTimeRelative(dateTimeUtc: comment.Record.CommentDateUtc.GetValueOrDefault()).ToString(), "#")</time>
                     </span>
