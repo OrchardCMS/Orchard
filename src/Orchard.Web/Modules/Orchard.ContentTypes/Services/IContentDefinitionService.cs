@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.ViewModels;
 
 namespace Orchard.ContentTypes.Services {
     public interface IContentDefinitionService : IDependency {
         IEnumerable<EditTypeViewModel> GetTypes();
         EditTypeViewModel GetType(string name);
-        EditTypeViewModel AddType(CreateTypeViewModel typeViewModel);
+        ContentTypeDefinition AddType(string name, string displayName);
         void AlterType(EditTypeViewModel typeViewModel, IUpdateModel updater);
         void RemoveType(string name);
         void AddPartToType(string partName, string typeName);
         void RemovePartFromType(string partName, string typeName);
+        string GenerateName(string displayName);
 
         IEnumerable<EditPartViewModel> GetParts();
         EditPartViewModel GetPart(string name);

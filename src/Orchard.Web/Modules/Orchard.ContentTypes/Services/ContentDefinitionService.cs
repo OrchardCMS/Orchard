@@ -65,18 +65,24 @@ namespace Orchard.ContentTypes.Services {
             return viewModel;
         }
 
-        public EditTypeViewModel AddType(CreateTypeViewModel typeViewModel) {
-            var name = GenerateName(typeViewModel.DisplayName);
+        public ContentTypeDefinition AddType(string name, string displayName) {
+            if(String.IsNullOrWhiteSpace(displayName)) {
+                throw new ArgumentException("displayName");
+            }
 
-            while (_contentDefinitionManager.GetTypeDefinition(name) != null)
+            if(String.IsNullOrWhiteSpace(name)) {
+                name = GenerateName(displayName);
+            }
+
+            while ( _contentDefinitionManager.GetTypeDefinition(name) != null )
                 name = VersionName(name);
 
-            var contentTypeDefinition = new ContentTypeDefinition(name, typeViewModel.DisplayName);
+            var contentTypeDefinition = new ContentTypeDefinition(name, displayName);
             _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
             _contentDefinitionManager.AlterTypeDefinition(name,
                 cfg => cfg.Creatable().Draftable());
 
-            return new EditTypeViewModel(contentTypeDefinition);
+            return contentTypeDefinition;
         }
 
         public void AlterType(EditTypeViewModel typeViewModel, IUpdateModel updateModel) {
@@ -210,19 +216,20 @@ namespace Orchard.ContentTypes.Services {
         }
 
         //gratuitously stolen from the RoutableService
-        private static string GenerateName(string displayName) {
-            if (string.IsNullOrWhiteSpace(displayName))
-                return "";
+        public string GenerateName(string name) {
+            if ( string.IsNullOrWhiteSpace(name) )
+                return String.Empty;
 
-            var name = displayName;
-            //todo: might need to be made more restrictive depending on how name is used (like as an XML node name, for instance)
-            var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s]+");
+            var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""<>]+");
 
-            name = dissallowed.Replace(name, "-");
-            name = name.Trim('-');
+            name = dissallowed.Replace(name, String.Empty);
+            name = name.Trim();
 
             if (name.Length > 128)
                 name = name.Substring(0, 128);
+
+            while ( _contentDefinitionManager.GetTypeDefinition(name) != null )
+                name = VersionName(name);
 
             return name;
         }
