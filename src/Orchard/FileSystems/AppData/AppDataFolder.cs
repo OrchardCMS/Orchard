@@ -59,13 +59,19 @@ namespace Orchard.FileSystems.AppData {
                     // If successful, we are done...
                     return;
                 }
-                catch (Exception) {
+                catch {
                     // We need to try with another extension
                 }
             }
 
-            // Everything failed, throw an exception
-            throw new OrchardCoreException(T("Unable to make room for file \"{0}\" in \"App_Data\" folder: too many conflicts.", destinationFileName));
+            // Try again with the original filename. This should throw the same exception
+            // we got at the very beginning.
+            try {
+                File.Delete(destinationFileName);
+            }
+            catch (Exception e) {
+                throw new OrchardCoreException(T("Unable to make room for file \"{0}\" in \"App_Data\" folder", destinationFileName), e);
+            }
         }
 
         /// <summary>
