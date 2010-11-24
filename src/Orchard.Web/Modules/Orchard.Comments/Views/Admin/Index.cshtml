@@ -53,7 +53,11 @@
 		    </thead>
             @{var commentIndex = 0;}
             @foreach (var commentEntry in Model.Comments) {
-            <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment">
+                var commentClass = "";
+                if (!HasText(commentEntry.Comment.UserName)) {
+                    commentClass = "anonymous";
+                }
+            <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
                 <td>
                     <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.NameOf(m => m.Comments[commentIndex].Comment.Id)"/>
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"/>
@@ -63,7 +67,12 @@
                     else if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending") } 
                     else { @T("Approved") }
                 </td>
-                <td>@commentEntry.Comment.UserName</td>
+                <td>
+                    <div>@commentEntry.Comment.Author</div>
+                    @if (HasText(commentEntry.Comment.UserName) && commentEntry.Comment.Author != commentEntry.Comment.UserName) {
+                        <div class="authenticated-commenter-id">@commentEntry.Comment.UserName</div>
+                    }
+                </td>
                 <td>
                     @* would ideally have permalinks for individual comments *@
                     <p><a href="@Url.ItemDisplayUrl(commentEntry.CommentedOn)#comments"><time>@Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>

@@ -7,6 +7,7 @@ namespace Orchard.Blogs.Services {
         BlogPart Get(string slug);
         ContentItem Get(int id, VersionOptions versionOptions);
         IEnumerable<BlogPart> Get();
+        IEnumerable<BlogPart> Get(VersionOptions versionOptions);
         void Delete(ContentItem blog);
     }
 }
