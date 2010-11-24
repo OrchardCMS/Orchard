@@ -84,7 +84,7 @@ namespace Orchard.Roles.Services {
                     }
                 }
             }
-            throw new ArgumentException("Permission " + permissionName + " was not found in any of the installed modules.");
+            throw new ArgumentException(T("Permission {0} was not found in any of the installed modules.", permissionName).ToString());
         }
 
         private string GetPermissionDescription(string permissionName) {
@@ -95,7 +95,7 @@ namespace Orchard.Roles.Services {
                     }
                 }
             }
-            throw new ArgumentException("Permission " + permissionName + " was not found in any of the installed modules.");
+            throw new ArgumentException(T("Permission {0} was not found in any of the installed modules.", permissionName).ToString());
         }
 
         public void DeleteRole(int id) {

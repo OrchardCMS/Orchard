@@ -208,7 +208,11 @@ namespace Orchard.FileSystems.Media {
             public FileSystemStorageFolder(string path, DirectoryInfo directoryInfo) {
                 _path = path;
                 _directoryInfo = directoryInfo;
+
+                T = NullLocalizer.Instance;
             }
+
+            public Localizer T { get; set; }
 
             #region Implementation of IStorageFolder
 
@@ -232,7 +236,7 @@ namespace Orchard.FileSystems.Media {
                 if (_directoryInfo.Parent != null) {
                     return new FileSystemStorageFolder(Path.GetDirectoryName(_path), _directoryInfo.Parent);
                 }
-                throw new ArgumentException("Directory " + _directoryInfo.Name + " does not have a parent directory");
+                throw new ArgumentException(T("Directory {0} does not have a parent directory", _directoryInfo.Name).ToString());
             }
 
             #endregion
