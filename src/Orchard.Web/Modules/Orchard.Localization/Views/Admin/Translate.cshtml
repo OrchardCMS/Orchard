@@ -1,5 +1,5 @@
 @model AddLocalizationViewModel
-@using Orchard.Core.Localization.ViewModels;
+@using Orchard.Localization.ViewModels;
 @{
     dynamic content = Model.Content;
     content.Zones.Content.Add(New.Partial(TemplateName: "CultureSelection", Model: Model), "0");

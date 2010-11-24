@@ -9,3 +9,6 @@ Features:
     Orchard.Migrations:
         Description: Data migration commands.
         Category: Developer
+    DatabaseUpdate:
+        Description: Commands for updating the database schema according to the definition of the "Record" classes in code.
+        Category: Developer

@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Configuration;
-using System.IO;
-using System.Security.Cryptography;
-using System.Web.Configuration;
 using System.Web.Mvc;
-using System.Linq;
-using System.Xml;
 using Orchard.FileSystems.AppData;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
@@ -41,58 +35,19 @@ namespace Orchard.Setup.Controllers {
             return View(model);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "StreamReader closed by XmlTextReader.")]
-        private bool ValidateMachineKey() {
-            // Get the machineKey section.
-            MachineKeySection machineKeySection = null;
-
-            string webConfigFile = Path.Combine(HttpContext.Request.PhysicalApplicationPath, "web.config");
-            using (XmlTextReader webConfigReader = new XmlTextReader(new StreamReader(webConfigFile))) {
-                if (webConfigReader.ReadToFollowing("machineKey")) {
-                    machineKeySection = new MachineKeySection {
-                        DecryptionKey = webConfigReader.GetAttribute("decryptionKey"), 
-                        ValidationKey = webConfigReader.GetAttribute("validationKey")
-                    };
-                }
-            }
-
-            if (machineKeySection == null
-                || machineKeySection.DecryptionKey.Contains("AutoGenerate")
-                || machineKeySection.ValidationKey.Contains("AutoGenerate")) {
-
-                var decryptionData = new byte[32];
-                var validationData = new byte[64];
-
-                using (var rng = new RNGCryptoServiceProvider()) {
-                    rng.GetBytes(decryptionData);
-                    rng.GetBytes(validationData);
-                }
-
-                string decryptionKey = BitConverter.ToString(decryptionData).Replace("-", "");
-                string validationKey = BitConverter.ToString(validationData).Replace("-", "");
-
-                ModelState.AddModelError("MachineKey", T("You need to define a MachineKey value in your web.config file. Here is one for you:\n <machineKey validationKey=\"{0}\" decryptionKey=\"{1}\" validation=\"SHA1\" decryption=\"AES\" />", validationKey, decryptionKey).ToString());
-                return false;
-            }
-
-            return true;
-        }
-
         public ActionResult Index() {
-            ValidateMachineKey();
-
             var initialSettings = _setupService.Prime();
             return IndexViewResult(new SetupViewModel { AdminUsername = "admin", DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider)});
         }
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(SetupViewModel model) {
-            //HACK: (erikpo) Couldn't get a custom ValidationAttribute to validate two properties
+            //TODO: Couldn't get a custom ValidationAttribute to validate two properties
             if (!model.DatabaseOptions && string.IsNullOrEmpty(model.DatabaseConnectionString))
-                ModelState.AddModelError("DatabaseConnectionString", "A SQL connection string is required");
+                ModelState.AddModelError("DatabaseConnectionString", T("A SQL connection string is required").Text);
 
             if (!String.IsNullOrWhiteSpace(model.ConfirmPassword) && model.AdminPassword != model.ConfirmPassword ) {
-                ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").ToString());
+                ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").Text);
             }
 
             if(!model.DatabaseOptions && !String.IsNullOrWhiteSpace(model.DatabaseTablePrefix)) {
@@ -101,8 +56,6 @@ namespace Orchard.Setup.Controllers {
                     ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter").Text);
                 }
             }
-
-            ValidateMachineKey();
 
             if (!ModelState.IsValid) {
                 return IndexViewResult(model);

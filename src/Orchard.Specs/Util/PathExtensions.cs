@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Path = Bleroy.FluentPath.Path;
 
 namespace Orchard.Specs.Util {
@@ -31,6 +32,13 @@ namespace Orchard.Specs.Util {
         public static Path ShallowCopy(this Path sourcePath, string pattern, Path targetPath) {
             sourcePath
                 .GetFiles(pattern, false /*recursive*/)
+                .ForEach(file => FileCopy(sourcePath, targetPath, file));
+            return sourcePath;
+        }
+
+        public static Path ShallowCopy(this Path sourcePath, Predicate<Path> predicatePath, Path targetPath) {
+            sourcePath
+                .GetFiles(predicatePath, false /*recursive*/)
                 .ForEach(file => FileCopy(sourcePath, targetPath, file));
             return sourcePath;
         }

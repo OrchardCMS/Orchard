@@ -6,18 +6,15 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Localization;
+using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPostPartHandler : ContentHandler {
         private readonly IBlogPostService _blogPostService;
-        private readonly IOrchardServices _orchardServices;
 
-        public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, IOrchardServices orchardServices, RequestContext requestContext) {
+        public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext) {
             _blogPostService = blogPostService;
-            _orchardServices = orchardServices;
-            T = NullLocalizer.Instance;
 
             Action<BlogPart> updateBlogPostCount =
                 (blog => {
@@ -65,6 +62,32 @@ namespace Orchard.Blogs.Handlers {
             context.Shape.Blog = blogPost.BlogPart;
         }
 
-        Localizer T { get; set; }
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            var blogPost = context.ContentItem.As<BlogPostPart>();
+            
+            if (blogPost == null)
+                return;
+
+            context.Metadata.CreateRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "BlogPostAdmin"},
+                {"Action", "Create"},
+                {"blogSlug", blogPost.BlogPart.As<RoutePart>().Slug}
+            };
+            context.Metadata.EditorRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "BlogPostAdmin"},
+                {"Action", "Edit"},
+                {"postId", context.ContentItem.Id},
+                {"blogSlug", blogPost.BlogPart.As<RoutePart>().Slug}
+            };
+            context.Metadata.RemoveRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "BlogPostAdmin"},
+                {"Action", "Delete"},
+                {"postId", context.ContentItem.Id},
+                {"blogSlug", blogPost.BlogPart.As<RoutePart>().Slug}
+            };
+        }
     }
 }

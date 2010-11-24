@@ -60,7 +60,7 @@
   <ItemGroup>
     <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Module.txt" />
-    <Content Include="Styles\datetime.css" />
+    <Content Include="Styles\orchard-archivelater-datetime.css" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />

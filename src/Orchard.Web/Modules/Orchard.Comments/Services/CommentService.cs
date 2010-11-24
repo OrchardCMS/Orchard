@@ -75,7 +75,7 @@ namespace Orchard.Comments.Services {
             comment.Record.CommentText = context.CommentText;
             comment.Record.Email = context.Email;
             comment.Record.SiteName = context.SiteName;
-            comment.Record.UserName = (_orchardServices.WorkContext.CurrentUser == null ? context.Author : _orchardServices.WorkContext.CurrentUser.UserName);
+            comment.Record.UserName = (_orchardServices.WorkContext.CurrentUser != null ? _orchardServices.WorkContext.CurrentUser.UserName : null);
             comment.Record.CommentedOn = context.CommentedOn;
 
             comment.Record.Status = _commentValidator.ValidateComment(comment)

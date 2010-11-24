@@ -9,12 +9,14 @@ using Orchard.Commands;
 using Orchard.Data;
 using Orchard.Data.Migration.Generator;
 using Orchard.Data.Providers;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
+using Orchard.Tests.Environment;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 
@@ -49,6 +51,7 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SchemaCommandGenerator>().As<ISchemaCommandGenerator>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
 
             _container = builder.Build();
             _extensionManager = _container.Resolve<IExtensionManager>();

@@ -52,12 +52,12 @@ namespace Orchard.ContentTypes.Controllers {
                 ModelState.AddModelError("DisplayName", T("A type with the same name already exists.").ToString());
             }
 
-            var typeViewModel = _contentDefinitionService.AddType(viewModel);
-
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(viewModel);
             }
+
+            var typeViewModel = _contentDefinitionService.AddType(viewModel);
 
             Services.Notifier.Information(T("The \"{0}\" content type has been created.", typeViewModel.DisplayName));
 

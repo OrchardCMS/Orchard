@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -71,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Styles\admin.css" />
+    <Content Include="Styles\orchard-contenttypes-admin.css" />
     <Content Include="Views\Admin\AddFieldTo.cshtml" />
     <Content Include="Views\Admin\AddPartsTo.cshtml" />
     <Content Include="Views\Admin\CreatePart.cshtml" />

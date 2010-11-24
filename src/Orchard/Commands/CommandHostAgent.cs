@@ -99,13 +99,7 @@ namespace Orchard.Commands {
                 return CommandReturnCodes.Retry;
             }
             catch (Exception e) {
-                for (int i = 0; e != null; e = e.InnerException, i++) {
-                    if (i > 0) {
-                        output.WriteLine("-------------------------------------------------------------------");
-                    }
-                    output.WriteLine("Error: {0}", e.Message);
-                    output.WriteLine("{0}", e.StackTrace);
-                }
+                OutputException(output, e);
                 return CommandReturnCodes.Fail;
             }
         }
@@ -121,10 +115,7 @@ namespace Orchard.Commands {
                 return CommandReturnCodes.Retry;
             }
             catch (Exception e) {
-                for (; e != null; e = e.InnerException) {
-                    output.WriteLine("Error: {0}", e.Message);
-                    output.WriteLine("{0}", e.StackTrace);
-                }
+                OutputException(output, e);
                 return CommandReturnCodes.Fail;
             }
         }
@@ -138,11 +129,19 @@ namespace Orchard.Commands {
                 return CommandReturnCodes.Ok;
             }
             catch (Exception e) {
-                for (; e != null; e = e.InnerException) {
-                    output.WriteLine("Error: {0}", e.Message);
-                    output.WriteLine("{0}", e.StackTrace);
-                }
+                OutputException(output, e);
                 return CommandReturnCodes.Fail;
+            }
+        }
+
+        private void OutputException(TextWriter output, Exception e) {
+            for (int i = 0; e != null; e = e.InnerException, i++) {
+                if (i > 0) {
+                    output.WriteLine("---- Inner Exception -----------------------------------------------------------------------");
+                }
+                output.WriteLine("Error: {0}", e.Message);
+                output.WriteLine("   Exception Type: {0}", e.GetType().FullName);
+                output.WriteLine("{0}", e.StackTrace);
             }
         }
 

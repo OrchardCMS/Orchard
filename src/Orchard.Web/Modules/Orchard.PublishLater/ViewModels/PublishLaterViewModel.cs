@@ -1,6 +1,5 @@
 ﻿using System;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.PublishLater.Models;
 
 namespace Orchard.PublishLater.ViewModels {
@@ -29,8 +28,6 @@ namespace Orchard.PublishLater.ViewModels {
         public bool HasPublished {
             get { return IsPublished || ContentItem.ContentManager.Get(ContentItem.Id, VersionOptions.Published) != null; }
         }
-
-        public DateTime? VersionPublishedUtc { get { return ContentItem.As<CommonPart>() == null ? null : ContentItem.As<CommonPart>().VersionPublishedUtc; } }
 
         public DateTime? ScheduledPublishUtc { get; set; }
 

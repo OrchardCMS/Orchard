@@ -70,8 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Styles\admin.css" />
-    <Content Include="Styles\search.css" />
+    <Content Include="Styles\orchard-search-admin.css" />
+    <Content Include="Styles\orchard-search-search.css" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

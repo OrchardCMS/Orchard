@@ -65,6 +65,7 @@
     <Compile Include="Drivers\CommentsContainerPartDriver.cs" />
     <Compile Include="Drivers\CommentSettingsPartDriver.cs" />
     <Compile Include="Drivers\CommentsPartDriver.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Models\ClosedCommentsRecord.cs" />
     <Compile Include="Models\CommentPart.cs" />
@@ -97,7 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Styles\admin.css" />
+    <Content Include="Styles\orchard-comments-admin.css" />
     <Content Include="Views\Admin\Details.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
@@ -126,7 +127,11 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

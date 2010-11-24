@@ -81,7 +81,7 @@
   <ItemGroup>
     <Content Include="Content\Admin\images\folder.gif" />
     <Content Include="Module.txt" />
-    <Content Include="Styles\admin.css" />
+    <Content Include="Styles\orchard-media-admin.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

@@ -45,6 +45,18 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
+        public void RootFolderAreNotCropped() {
+            _azureBlobStorageProvider.CreateFolder("default");
+            _azureBlobStorageProvider.CreateFolder("foo");
+
+            var folders = _azureBlobStorageProvider.ListFolders("");
+
+            Assert.That(folders.Count(), Is.EqualTo(2));
+            Assert.That(folders.Any(f => f.GetName() == "default"), Is.True);
+            Assert.That(folders.Any(f => f.GetName() == "foo"), Is.True);
+        }
+
+        [Test]
         public void CreateFileShouldReturnCorrectStorageFile() {
             var storageFile = _azureBlobStorageProvider.CreateFile("foo.txt");
 
@@ -103,6 +115,17 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
             Assert.AreEqual(1, _azureBlobStorageProvider.ListFolders(null).Count());
             Assert.AreEqual("folder", _azureBlobStorageProvider.ListFolders(null).First().GetName());
             Assert.AreEqual("folder", _azureBlobStorageProvider.ListFolders(null).First().GetPath());
+        }
+
+        [Test]
+        public void CreateFolderWithSubFolder() {
+            _azureBlobStorageProvider.CreateFolder("folder");
+            Assert.AreEqual(0, _azureBlobStorageProvider.ListFolders("folder").Count());
+
+            _azureBlobStorageProvider.CreateFolder("folder/folder");
+            Assert.AreEqual(1, _azureBlobStorageProvider.ListFolders("folder").Count());
+            Assert.AreEqual(0, _azureBlobStorageProvider.ListFiles("folder/folder").Count());
+            Assert.AreEqual("folder", _azureBlobStorageProvider.ListFolders("folder").First().GetName());
         }
 
         [Test]

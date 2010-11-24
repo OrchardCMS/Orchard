@@ -103,9 +103,9 @@
     <Content Include="Content\Admin\images\published.gif" />
     <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Module.txt" />
-    <Content Include="Scripts\archives.js" />
-    <Content Include="Styles\admin.css" />
-    <Content Include="Styles\archives.css" />
+    <Content Include="Scripts\orchard-blogs-archives.js" />
+    <Content Include="Styles\orchard-blogs-admin.css" />
+    <Content Include="Styles\orchard-blogs-archives.css" />
     <Content Include="Views\BlogAdmin\Create.cshtml" />
     <Content Include="Views\BlogAdmin\Edit.cshtml" />
     <Content Include="Views\BlogAdmin\Item.cshtml" />
@@ -136,7 +136,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Data\Localization\fr-FR\orchard.module.po" />
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>

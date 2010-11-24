@@ -19,6 +19,7 @@ namespace Orchard.Specs.Bindings {
         private HtmlDocument _doc;
         private MessageSink _messages;
         private static readonly Path _orchardTemp = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Specs");
+        private ExtensionDeploymentOptions _moduleDeploymentOptions = ExtensionDeploymentOptions.CompiledAssembly;
 
         public WebHost Host {
             get { return _webHost; }
@@ -63,6 +64,10 @@ namespace Orchard.Specs.Bindings {
             GivenIHaveACleanSiteBasedOn("Orchard.Web");
         }
 
+        [Given(@"I have chosen to deploy modules as source files only")]
+        public void GivenIHaveChosenToDeployModulesAsSourceFilesOnly() {
+            _moduleDeploymentOptions = ExtensionDeploymentOptions.SourceCode;
+        }
 
         [Given(@"I have a clean site based on (.*)")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
@@ -105,17 +110,17 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have module ""(.*)""")]
         public void GivenIHaveModule(string moduleName) {
-            Host.CopyExtension("Modules", moduleName);
+            Host.CopyExtension("Modules", moduleName, _moduleDeploymentOptions);
         }
 
         [Given(@"I have theme ""(.*)""")]
         public void GivenIHaveTheme(string themeName) {
-            Host.CopyExtension("Themes", themeName);
+            Host.CopyExtension("Themes", themeName, ExtensionDeploymentOptions.CompiledAssembly);
         }
 
         [Given(@"I have core ""(.*)""")]
         public void GivenIHaveCore(string moduleName) {
-            Host.CopyExtension("Core", moduleName);
+            Host.CopyExtension("Core", moduleName, ExtensionDeploymentOptions.CompiledAssembly);
         }
 
         [Given(@"I have a clean site with")]

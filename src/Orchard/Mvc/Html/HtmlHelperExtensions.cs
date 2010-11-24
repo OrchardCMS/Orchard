@@ -226,7 +226,7 @@ namespace Orchard.Mvc.Html {
 
         public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime value) {
             //TODO: (erikpo) This default format should come from a site setting
-            return htmlHelper.DateTime(value, new LocalizedString("MMM d yyyy h:mm tt")); //todo: above comment and get rid of just wrapping this as a localized string
+            return htmlHelper.DateTime(value.ToLocalTime(), new LocalizedString("MMM d yyyy h:mm tt")); //todo: above comment and get rid of just wrapping this as a localized string
         }
 
         public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime value, LocalizedString customFormat) {

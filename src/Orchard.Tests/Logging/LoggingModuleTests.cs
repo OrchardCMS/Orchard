@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Logging;
+using Orchard.Tests.Environment;
 
 namespace Orchard.Tests.Logging {
     [TestFixture]
@@ -13,6 +15,7 @@ namespace Orchard.Tests.Logging {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggingModule());
             builder.RegisterType<Thing>();
+            builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
             var container = builder.Build();
             var thing = container.Resolve<Thing>();
             Assert.That(thing.Logger, Is.Not.Null);
@@ -46,6 +49,7 @@ namespace Orchard.Tests.Logging {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggingModule());
             builder.RegisterType<Thing>();
+            builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
             var container = builder.Build();
             var thing = container.Resolve<Thing>();
             Assert.That(thing.Logger, Is.Not.Null);

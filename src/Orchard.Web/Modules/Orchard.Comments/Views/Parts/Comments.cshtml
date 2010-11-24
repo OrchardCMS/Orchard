@@ -3,6 +3,14 @@
 @using Orchard.Security;
 @using Orchard.Utility.Extensions;
 
+@{
+	var contextExists = TempData["CreateCommentContext.Name"] != null;
+	var name = Convert.ToString(TempData["CreateCommentContext.Name"]);
+	var commentText = Convert.ToString(TempData["CreateCommentContext.CommentText"]);
+	var email = Convert.ToString(TempData["CreateCommentContext.Email"]);
+	var siteName = Convert.ToString(TempData["CreateCommentContext.SiteName"]);
+}
+
 @if (Model.ContentPart.Comments.Count > 0) {
 <div id="comments">
     <h2 class="comment-count">@T.Plural("1 Comment", "{0} Comments", (int)Model.ContentPart.Comments.Count)</h2>
@@ -30,15 +38,15 @@ using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, Fo
     <ol>
         <li>
             <label for="Name">@T("Name")</label>
-            <input id="Name" class="text" name="Name" type="text" />
+            <input id="Name" class="text" name="Name" type="text" value="@(contextExists ? name : String.Empty)" />
         </li>
         <li>
             <label for="Email">@T("Email")</label>
-            <input id="Email" class="text" name="Email" type="text" />
+            <input id="Email" class="text" name="Email" type="text" value="@(contextExists ? email : String.Empty)"/>
         </li>
         <li>
             <label for="SiteName">@T("Url")</label>
-            <input id="SiteName" class="text" name="SiteName" type="text" />
+            <input id="SiteName" class="text" name="SiteName" type="text" value="@(contextExists ? siteName : String.Empty)"/>
         </li>
      </ol>
     </fieldset>
@@ -52,7 +60,7 @@ using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, Fo
     <ol>
         <li>
             <label for="comment-text">@T("Comment")</label>
-            <textarea id="comment-text" rows="10" cols="30" name="CommentText"></textarea>
+            <textarea id="comment-text" rows="10" cols="30" name="CommentText">@(contextExists ? commentText : String.Empty)</textarea>
         </li>
         <li>
             <button class="primaryAction" type="submit">@T("Submit Comment")</button>

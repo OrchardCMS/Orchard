@@ -4,10 +4,10 @@ namespace Orchard.Blogs {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
-            manifest.DefineStyle("BlogsAdmin").SetUrl("admin.css");
-            manifest.DefineStyle("BlogsArchives").SetUrl("archives.css");
+            manifest.DefineStyle("BlogsAdmin").SetUrl("orchard-blogs-admin.css");
+            manifest.DefineStyle("BlogsArchives").SetUrl("orchard-blogs-archives.css");
 
-            manifest.DefineScript("BlogsArchives").SetUrl("archives.js").SetDependencies("jQuery");
+            manifest.DefineScript("BlogsArchives").SetUrl("orchard-blogs-archives.js").SetDependencies("jQuery");
         }
     }
 }

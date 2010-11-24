@@ -19,7 +19,8 @@ namespace Orchard.Specs.Hosting {
             var baseDir = Path.Get(AppDomain.CurrentDomain.BaseDirectory);
 
             _tempSite = Path.Get(_orchardTemp).Combine(System.IO.Path.GetRandomFileName());
-            try { _tempSite.Delete(); } catch {}
+            try { _tempSite.Delete(); }
+            catch { }
 
             // Trying the two known relative paths to the Orchard.Web directory.
             // The second one is for the target "spec" in orchard.proj.
@@ -76,30 +77,47 @@ namespace Orchard.Specs.Hosting {
             catch { }
         }
 
-        public void CopyExtension(string extensionFolder, string extensionName) {
+        public void CopyExtension(string extensionFolder, string extensionName, ExtensionDeploymentOptions deploymentOptions) {
             var sourceModule = _orchardWebPath.Combine(extensionFolder).Combine(extensionName);
             var targetModule = _tempSite.Combine(extensionFolder).Combine(extensionName);
 
             sourceModule.ShallowCopy("*.txt", targetModule);
             sourceModule.ShallowCopy("*.info", targetModule);
 
-            //sourceModule.ShallowCopy("*.csproj", targetModule);
-            //sourceModule.DeepCopy("*.cs", targetModule);)
+            if ((deploymentOptions & ExtensionDeploymentOptions.SourceCode) == ExtensionDeploymentOptions.SourceCode) {
+                sourceModule.ShallowCopy("*.csproj", targetModule);
+                sourceModule.DeepCopy("*.cs", targetModule);
+            }
 
             if (sourceModule.Combine("bin").IsDirectory) {
-                sourceModule.Combine("bin").ShallowCopy("*.dll", targetModule.Combine("bin"));
-                sourceModule.Combine("bin").ShallowCopy("*.exe", targetModule.Combine("bin"));
-                sourceModule.Combine("bin").ShallowCopy("*.pdb", targetModule.Combine("bin"));
+                sourceModule.Combine("bin").ShallowCopy(path => IsExtensionBinaryFile(path, extensionName, deploymentOptions), targetModule.Combine("bin"));
             }
 
             if (sourceModule.Combine("Views").IsDirectory)
                 sourceModule.Combine("Views").DeepCopy(targetModule.Combine("Views"));
         }
 
+        private bool IsExtensionBinaryFile(Path path, string extensionName, ExtensionDeploymentOptions deploymentOptions) {
+            bool isValidExtension =
+                StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".exe") ||
+                StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".dll") ||
+                StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".pdb");
+
+            if (!isValidExtension)
+                return false;
+
+            bool isExtensionAssembly = StringComparer.OrdinalIgnoreCase.Equals(path.FileNameWithoutExtension, extensionName);
+            bool copyExtensionAssembly = (deploymentOptions & ExtensionDeploymentOptions.CompiledAssembly) == ExtensionDeploymentOptions.CompiledAssembly;
+            if (isExtensionAssembly && !copyExtensionAssembly)
+                return false;
+
+            return true;
+        }
+
         public string HostName { get; set; }
         public string PhysicalDirectory { get; private set; }
         public string VirtualDirectory { get; private set; }
-        
+
         public string Cookies { get; set; }
 
 

@@ -23,11 +23,17 @@ namespace Orchard.Widgets.RuleEngine {
                     appPath = "";
                 url = string.Format("{0}/{1}", appPath, url);
             }
-            if (url != "/" && !url.Contains("?") && url.EndsWith("/"))
+
+            if (!url.Contains("?"))
                 url = url.TrimEnd('/');
+
+            var requestPath = context.Request.Path;
+            if (!requestPath.Contains("?"))
+                requestPath = requestPath.TrimEnd('/');
+
             ruleContext.Result = url.EndsWith("*")
-                                     ? context.Request.Path.ToUpperInvariant().StartsWith(url.TrimEnd('*').ToUpperInvariant())
-                                     : context.Request.Path.ToUpperInvariant() == url.ToUpperInvariant();
+                ? requestPath.StartsWith(url.TrimEnd('*'), StringComparison.OrdinalIgnoreCase)
+                : string.Equals(requestPath, url, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
