@@ -47,8 +47,12 @@ namespace Orchard.ContentTypes.Controllers {
             if(String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
                 ModelState.AddModelError("DisplayName", T("The Content Type name can't be empty.").ToString());
             }
+            
+            if ( _contentDefinitionService.GetTypes().Any(t => String.Equals(t.Name.Trim(), viewModel.Name.Trim(), StringComparison.OrdinalIgnoreCase)) ) {
+                ModelState.AddModelError("Name", T("A type with the same technical name already exists.").ToString());
+            }
 
-            if(_contentDefinitionService.GetTypes().Any(t => t.DisplayName == viewModel.DisplayName)) {
+            if ( _contentDefinitionService.GetTypes().Any(t => String.Equals(t.DisplayName.Trim(), viewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase)) ) {
                 ModelState.AddModelError("DisplayName", T("A type with the same name already exists.").ToString());
             }
 
@@ -57,11 +61,17 @@ namespace Orchard.ContentTypes.Controllers {
                 return View(viewModel);
             }
 
-            var typeViewModel = _contentDefinitionService.AddType(viewModel);
+            var contentTypeDefinition = _contentDefinitionService.AddType(viewModel.Name, viewModel.DisplayName);
+            var typeViewModel = new EditTypeViewModel(contentTypeDefinition);
+
 
             Services.Notifier.Information(T("The \"{0}\" content type has been created.", typeViewModel.DisplayName));
 
             return RedirectToAction("Edit", new { id = typeViewModel.Name });
+        }
+
+        public ActionResult ContentTypeName(string displayName) {
+            return Json(_contentDefinitionService.GenerateName(displayName));
         }
 
         public ActionResult Edit(string id) {
@@ -90,8 +100,17 @@ namespace Orchard.ContentTypes.Controllers {
             TryUpdateModel(edited);
             typeViewModel.DisplayName = edited.DisplayName;
 
+            if ( String.IsNullOrWhiteSpace(typeViewModel.DisplayName) ) {
+                ModelState.AddModelError("DisplayName", T("The Content Type name can't be empty.").ToString());
+            }
+
+            if ( _contentDefinitionService.GetTypes().Any(t => String.Equals(t.DisplayName.Trim(), typeViewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase) && !String.Equals(t.Name, id)) ) {
+                ModelState.AddModelError("DisplayName", T("A type with the same name already exists.").ToString());
+            }
+
             if (!ModelState.IsValid)
                 return View(typeViewModel);
+
 
             _contentDefinitionService.AlterType(typeViewModel, this);
 
