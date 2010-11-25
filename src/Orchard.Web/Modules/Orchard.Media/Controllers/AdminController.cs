@@ -18,6 +18,8 @@ namespace Orchard.Media.Controllers {
         public AdminController(IOrchardServices services, IMediaService mediaService) {
             Services = services;
             _mediaService = mediaService;
+
+            T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; set;}
@@ -61,6 +63,8 @@ namespace Orchard.Media.Controllers {
                 UpdateModel(viewModel);
 
                 _mediaService.CreateFolder(viewModel.MediaPath, viewModel.Name);
+
+                Services.Notifier.Information(T("Media folder created"));
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
@@ -86,6 +90,8 @@ namespace Orchard.Media.Controllers {
                         if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media file")))
                             return new HttpUnauthorizedResult();
                         _mediaService.DeleteFile(fileName, folderName);
+
+                        Services.Notifier.Information(T("Media file deleted"));
                     }
                     else if (key.StartsWith("Checkbox.Folder.") && input[key] == "true") {
                         string folderName = key.Substring("Checkbox.Folder.".Length);
@@ -93,6 +99,8 @@ namespace Orchard.Media.Controllers {
                         if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media folder")))
                             return new HttpUnauthorizedResult();
                         _mediaService.DeleteFolder(folderPath);
+
+                        Services.Notifier.Information(T("Media folder deleted"));
                     }
                 }
                 return RedirectToAction("Index");
@@ -120,10 +128,11 @@ namespace Orchard.Media.Controllers {
 
                 _mediaService.DeleteFolder(viewModel.MediaPath);
 
+                Services.Notifier.Information(T("Media folder deleted"));
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error(T("Modifying Folder Properties failed: {0}", exception.Message));
+                Services.Notifier.Error(T("Deleting media folder failed: {0}", exception.Message));
                 return View(viewModel);
             }
         }
@@ -140,9 +149,10 @@ namespace Orchard.Media.Controllers {
 
                 _mediaService.RenameFolder(viewModel.MediaPath, viewModel.Name);
 
+                Services.Notifier.Information(T("Media folder properties modified"));
                 return RedirectToAction("Index");
             } catch (Exception exception) {
-                Services.Notifier.Error(T("Modifying Folder Properties failed: {0}", exception.Message));
+                Services.Notifier.Error(T("Modifying media folder properties failed: {0}", exception.Message));
                 return View(viewModel);
             }
         }
@@ -182,6 +192,7 @@ namespace Orchard.Media.Controllers {
                     _mediaService.UploadMediaFile(viewModel.MediaPath, file);
                 }
 
+                Services.Notifier.Information(T("Media file(s) uploaded"));
                 return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
             }
             catch (Exception exception) {
@@ -244,6 +255,8 @@ namespace Orchard.Media.Controllers {
                 UpdateModel(viewModel);
 
                 _mediaService.DeleteFile(viewModel.Name, viewModel.MediaPath);
+
+                Services.Notifier.Information(T("Media deleted"));
                 return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
             } catch (Exception exception) {
                 Services.Notifier.Error(T("Removing media file failed: {0}", exception.Message));
@@ -268,6 +281,7 @@ namespace Orchard.Media.Controllers {
                     viewModelName = input["NewName"];
                 }
 
+                Services.Notifier.Information(T("Media information updated"));
                 return RedirectToAction("EditMedia", new { name = viewModelName, 
                                                            caption = viewModel.Caption, 
                                                            lastUpdated = viewModel.LastUpdated, 

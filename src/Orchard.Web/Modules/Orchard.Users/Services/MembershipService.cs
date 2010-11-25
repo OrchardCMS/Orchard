@@ -6,6 +6,7 @@ using System.Text;
 using System.Web.Security;
 using System.Xml.Linq;
 using JetBrains.Annotations;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
@@ -27,9 +28,11 @@ namespace Orchard.Users.Services {
             _messageManager = messageManager;
             _userEventHandlers = userEventHandlers;
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public MembershipSettings GetSettings() {
             var settings = new MembershipSettings();
@@ -179,7 +182,7 @@ namespace Orchard.Users.Services {
                     SetPasswordEncrypted(partRecord, password);
                     break;
                 default:
-                    throw new ApplicationException("Unexpected password format value");
+                    throw new ApplicationException(T("Unexpected password format value").ToString());
             }
         }
 

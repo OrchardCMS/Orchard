@@ -4,11 +4,11 @@
 @using Orchard.Utility.Extensions;
 
 @{
-	var contextExists = TempData["CreateCommentContext.Name"] != null;
-	var name = Convert.ToString(TempData["CreateCommentContext.Name"]);
-	var commentText = Convert.ToString(TempData["CreateCommentContext.CommentText"]);
-	var email = Convert.ToString(TempData["CreateCommentContext.Email"]);
-	var siteName = Convert.ToString(TempData["CreateCommentContext.SiteName"]);
+    var contextExists = TempData["CreateCommentContext.Name"] != null;
+    var name = Convert.ToString(TempData["CreateCommentContext.Name"]);
+    var commentText = Convert.ToString(TempData["CreateCommentContext.CommentText"]);
+    var email = Convert.ToString(TempData["CreateCommentContext.Email"]);
+    var siteName = Convert.ToString(TempData["CreateCommentContext.SiteName"]);
 }
 
 @if (Model.ContentPart.Comments.Count > 0) {

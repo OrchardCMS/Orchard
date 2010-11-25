@@ -29,15 +29,15 @@ small, strike, strong, sub, sup, tt, var,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td, button, submit {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	outline: 0;
-	font-weight: inherit;
-	font-style: inherit;
-	font-size: 100%;
-	font-family: inherit;
-	vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
 }
 
 /* Remember focus styles! */
@@ -64,11 +64,11 @@ header, footer, aside, nav, article { display: block; }
 
 .group:after 
 {
-	content: ".";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
 }
 
 
@@ -78,31 +78,31 @@ header, footer, aside, nav, article { display: block; }
 /* Default font settings. 
 The font-size 81.3% sets the base font to 13px 
 
-Pixels 	EMs 	    Percent Points
+Pixels     EMs         Percent Points
 1px     0.077em     7.7%    1pt
 2px     0.154em     15.4%   2pt
 3px     0.231em     23.1%   3pt
 4px     0.308em     30.8%   3pt
 5px     0.385em     38.5%   4pt
-6px 	0.462em 	46.2% 	5pt
-7px 	0.538em 	53.8% 	5pt
-8px 	0.615em 	61.5% 	6pt
-9px 	0.692em 	69.2% 	7pt
-10px 	0.769em 	76.9% 	8pt
-11px 	0.846em 	84.6% 	8pt
-12px 	0.923em 	92.3% 	9pt
-13px 	1em 	    100% 	10pt
-14px 	1.077em 	107.7% 	11pt
-15px 	1.154em 	115.4% 	11pt
-16px 	1.231em 	123.1% 	12pt
-17px 	1.308em 	130.8% 	13pt
-18px 	1.385em 	138.5% 	14pt
-19px 	1.462em 	146.2% 	14pt
-20px 	1.538em 	153.8% 	15pt
-21px 	1.615em 	161.5% 	16pt
-22px 	1.692em 	169.2% 	17pt
-23px 	1.769em 	176.9% 	17pt
-24px 	1.846em 	184.6% 	18pt
+6px     0.462em     46.2%     5pt
+7px     0.538em     53.8%     5pt
+8px     0.615em     61.5%     6pt
+9px     0.692em     69.2%     7pt
+10px     0.769em     76.9%     8pt
+11px     0.846em     84.6%     8pt
+12px     0.923em     92.3%     9pt
+13px     1em         100%     10pt
+14px     1.077em     107.7%     11pt
+15px     1.154em     115.4%     11pt
+16px     1.231em     123.1%     12pt
+17px     1.308em     130.8%     13pt
+18px     1.385em     138.5%     14pt
+19px     1.462em     146.2%     14pt
+20px     1.538em     153.8%     15pt
+21px     1.615em     161.5%     16pt
+22px     1.692em     169.2%     17pt
+23px     1.769em     176.9%     17pt
+24px     1.846em     184.6%     18pt
 */
 
 html {
@@ -225,8 +225,8 @@ form.link button:hover {
 /* Header - Branding and Login  
 ***************************************************************/
 #header {
-	background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;
-	height:50px;
+    background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;
+    height:50px;
 }
 #header #app {
     float:left;
@@ -234,29 +234,29 @@ form.link button:hover {
     padding:.4em 0;
 }
 #header #app a {
-	background:url(images/orchardLogo.gif) no-repeat;
-	display:block;
-	height:60px;
-	margin:-11px 0 0 14px;
-	text-indent:-9999px;
-	width:40px;
+    background:url(images/orchardLogo.gif) no-repeat;
+    display:block;
+    height:60px;
+    margin:-11px 0 0 14px;
+    text-indent:-9999px;
+    width:40px;
 }
 #site {
     font-size:1.385em; /*18px*/
 }
 #site a, #site a:visited, #site a:active {
-	color:#fff;
-	float:left;
-	line-height:2.6em;
-	position:relative;
+    color:#fff;
+    float:left;
+    line-height:2.6em;
+    position:relative;
 }
 
 #login {
-	color:#fff;
-	display:block;
-	float:right;
-	margin:14px 20px 0 0;
-	white-space:nowrap;
+    color:#fff;
+    display:block;
+    float:right;
+    margin:14px 20px 0 0;
+    white-space:nowrap;
 }
 
 #login a, #login a:link, #login a:visited {
@@ -276,7 +276,7 @@ form.link button:hover {
     width:0;
 }
 #menu .menu-admin li {
-	margin:5px 0 17px 4px;
+    margin:5px 0 17px 4px;
 }
 #menu .menu-admin ul li {
     border:0;
@@ -286,19 +286,19 @@ form.link button:hover {
     padding:0 0 0 8px;
 }
 #menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
-	line-height:1.2em;
+    line-height:1.2em;
 }
 #menu .menu-admin ul a, #menu .menu-admin ul a:link, #menu .menu-admin ul a:visited {
-	color:#2d2f25;
-	display:block;
-	line-height:1.2em;
-	padding:.4em 0 .4em 12px;
-	text-decoration:none;
+    color:#2d2f25;
+    display:block;
+    line-height:1.2em;
+    padding:.4em 0 .4em 12px;
+    text-decoration:none;
 }
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus {
-	background:#f5f5f5;
-	color: #000;
-	text-decoration:underline;
+    background:#f5f5f5;
+    color: #000;
+    text-decoration:underline;
 }
 #menu .menu-admin li.section-dashboard h3 {
     padding:.4em 0 0 .4em;
@@ -393,7 +393,7 @@ form.link button:hover {
 /* Confirmations, Messages and the like
 ***************************************************************/
 .message, .validation-summary-errors {
-	margin:10px 0 4px 0;
+    margin:10px 0 4px 0;
     padding:4px;
 }
 messages div.message {
@@ -401,7 +401,7 @@ messages div.message {
 }
 span.message {
     display:block;
-	margin:4px 0 4px 4px;
+    margin:4px 0 4px 4px;
 }
 .messages a {
     font-weight:bold;
@@ -409,30 +409,30 @@ span.message {
 /* todo: (heskew) what else (other inputs) needs this? */
 .critical.message, .validation-summary-errors,
 .input-validation-error.text-box, .input-validation-error.text {
-	border:1px solid #990808;
+    border:1px solid #990808;
 }
 .critical.message, .validation-summary-errors {
-	background:#e68585; /* red */
-	color:#fff;
+    background:#e68585; /* red */
+    color:#fff;
 }
 .message-Information {
     background:#e6f1c9; /* green */
-	border:1px solid #cfe493;
-	color:#062232;
+    border:1px solid #cfe493;
+    color:#062232;
 }
 .message-Warning {
-	background:#fdf5bc; /* yellow */
-	border:1px solid #ffea9b;
+    background:#fdf5bc; /* yellow */
+    border:1px solid #ffea9b;
 }
 .message-Error {
-	background:#e68585; /* green */
-	border:1px solid #990808;
-	color:#fff;
+    background:#e68585; /* green */
+    border:1px solid #990808;
+    color:#fff;
 }.debug.message {
     background:#eee;
-	border:1px dashed #D2D6C6;
-	color:#7a7a7a;
-	margin:20px 0 14px 0;
+    border:1px dashed #D2D6C6;
+    color:#7a7a7a;
+    margin:20px 0 14px 0;
 }
 .debug.message:before {
     content:"DEBUG » ";
@@ -470,7 +470,7 @@ label.bulk-order {
     text-transform:lowercase;
 }
 label span {
-	font-weight:normal;
+    font-weight:normal;
 }
 label input {
     vertical-align:text-top;
@@ -496,7 +496,7 @@ select {
     padding:1px;
 }
 select:focus, textarea:focus, input.text:focus, input.text-box:focus {
-	border-color:#666d51;
+    border-color:#666d51;
 }
 input.check-box {
     margin-left:0;
@@ -546,12 +546,12 @@ form.link button {
 button.primaryAction, .button.primaryAction, .button.primaryAction:link, .button.primaryAction:visited {
     background:#4687ad;
     border:1px solid #405f71;
-	color:#fff;
+    color:#fff;
 
     /*CSS3 properties*/
-	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#4687AD',  endColorstr='#366581');
-	background: -webkit-gradient(linear, left top, left bottom, from(#4687AD), to(#366581));
-	background:-moz-linear-gradient(top , #4687AD, #366581);
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#4687AD',  endColorstr='#366581');
+    background: -webkit-gradient(linear, left top, left bottom, from(#4687AD), to(#366581));
+    background:-moz-linear-gradient(top , #4687AD, #366581);
 }
 button.remove, .remove.button, .remove.button:link, .remove.button:visited {
     background-color:#DECCCA;
@@ -574,48 +574,48 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 }
 input[type="submit"], input[type="reset"], input[type="button"], button, submit, .button, .button:link, .button:visited
   {
-  		color:#333;
-		background:#F5F5F5;
-		border:1px solid #999;
-		cursor:pointer;
-		padding: 0 12px 2px 12px;
-		text-align:center;
-		
-		/*CSS3 properties*/
-		filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f5f5f5',  endColorstr='#cbcbcb');
-		background: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#cbcbcb));
-		background: -moz-linear-gradient(top, #f5f5f5, #cbcbcb);
-		box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
-		-webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3); 
-		-moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
-		border-radius: 3px;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
+          color:#333;
+        background:#F5F5F5;
+        border:1px solid #999;
+        cursor:pointer;
+        padding: 0 12px 2px 12px;
+        text-align:center;
+        
+        /*CSS3 properties*/
+        filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f5f5f5',  endColorstr='#cbcbcb');
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#cbcbcb));
+        background: -moz-linear-gradient(top, #f5f5f5, #cbcbcb);
+        box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+        -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3); 
+        -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
     }
 input[type="submit"]:hover,input[type="reset"]:hover, input[type="button"]:hover, button:hover, .button:hover, .button.primaryAction:hover {
-	text-decoration:none; 
-	background: #ffac40;
-	color:#fff;
-	border:1px solid #bb8b2d;
-	
-	/*CSS3 properties*/	
-	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffac40',  endColorstr='#f9760d');
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffac40), to(#f9760d));
-	background: -moz-linear-gradient(top, #ffac40, #f9760d);
+    text-decoration:none; 
+    background: #ffac40;
+    color:#fff;
+    border:1px solid #bb8b2d;
+    
+    /*CSS3 properties*/    
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffac40',  endColorstr='#f9760d');
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffac40), to(#f9760d));
+    background: -moz-linear-gradient(top, #ffac40, #f9760d);
 }
 input[type="submit"]:active, input[type="reset"]:active, input[type="button"]:active, button:active, .buton:active, .button.primaryAction:active {
-	text-decoration:none; 
-	background: #62a9e2;
-	color:#fff;
- 	border:1px solid #bb772d;
+    text-decoration:none; 
+    background: #62a9e2;
+    color:#fff;
+     border:1px solid #bb772d;
  
- 	/*CSS3 properties*/
- 	filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fece3b',  endColorstr='#fe6001');
- 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fece3b), to(#fe6001));
-	background: -moz-linear-gradient(top, #fece3b, #fe6001);
-	box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
-	-moz-box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
-	-webkit-box-shadow: inset 1px 1px 1px rgba(254, 225, 109, 0.6), 1px 1px 1px rgba(102, 102, 102, 0.1);
+     /*CSS3 properties*/
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fece3b',  endColorstr='#fe6001');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(#fece3b), to(#fe6001));
+    background: -moz-linear-gradient(top, #fece3b, #fe6001);
+    box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+    -moz-box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+    -webkit-box-shadow: inset 1px 1px 1px rgba(254, 225, 109, 0.6), 1px 1px 1px rgba(102, 102, 102, 0.1);
 }
 input[type="submit"]:focus::-moz-focus-inner, button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
   border: 1px dotted transparent;
@@ -683,36 +683,36 @@ input[type="submit"]:focus::-moz-focus-inner, button:focus::-moz-focus-inner, .b
 ----------------------------------------------------------*/
 table.items {
     margin:0 0 1.4em 0;
-	background:#fff;
-	border:1px solid #eaeaea;
-	border-bottom:none;
-	border-collapse:separate;
-	border-spacing:0;
-	width:100%;
+    background:#fff;
+    border:1px solid #eaeaea;
+    border-bottom:none;
+    border-collapse:separate;
+    border-spacing:0;
+    width:100%;
 }
 table.items caption {
-	padding:8px 0;
-	text-indent:0;
+    padding:8px 0;
+    text-indent:0;
 }
 table.items col {
-	border-spacing:0;
-	display:table-column;
+    border-spacing:0;
+    display:table-column;
 }
 table.items colgroup 
 {
-	border-spacing:0;
-	display:table-column-group;
+    border-spacing:0;
+    display:table-column-group;
 }
 table.items tbody {
-	border-spacing:0;
-	vertical-align:middle;
+    border-spacing:0;
+    vertical-align:middle;
 }
 table.items thead, table.items th {
-	background:#f5f5f5;
-	font-weight:700;
-	overflow:hidden;
-	text-align:left;
-	white-space:nowrap;
+    background:#f5f5f5;
+    font-weight:700;
+    overflow:hidden;
+    text-align:left;
+    white-space:nowrap;
 }
 /* todo: (heskew) hook back up */
 table.items tr.hover {
@@ -721,11 +721,11 @@ table.items tr.hover {
 table.items tr.critical {background:#e68585; border:inherit;}
 table.items tr.warning {background:#fdf5bc; border:inherit;}
 table.items th, table.items td {
-	border-bottom:1px solid #eaeaea;
-	border-spacing:0px;
-	display:table-cell;
-	padding:8px 12px;
-	vertical-align:middle;
+    border-bottom:1px solid #eaeaea;
+    border-spacing:0px;
+    display:table-cell;
+    padding:8px 12px;
+    vertical-align:middle;
 }
 
 /* Content item lists
@@ -829,7 +829,7 @@ table.items th, table.items td {
     border-style:dashed;
     margin-left:0;
     margin-right:2em;
-	width:350px;
+    width:350px;
 }
 .permalink input.text:focus {
     background:#FFF;
@@ -858,12 +858,12 @@ table.items th, table.items td {
     padding:6px;
     
     /*CSS3 properties*/
-		filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f7f7f7', endColorstr='#f5f5f5');
-		background: -webkit-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#f5f5f5));
-		background: -moz-linear-gradient(top, #f7f7f7, #f5f5f5);
-		border-radius: 3px;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
+        filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f7f7f7', endColorstr='#f5f5f5');
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#f5f5f5));
+        background: -moz-linear-gradient(top, #f7f7f7, #f5f5f5);
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
 }
 
 .edit-item-sidebar fieldset {
@@ -911,7 +911,7 @@ fieldset.publish-later-datetime input {
 }
 /* todo: needed? */
 .clearBoth {
-	clear:both;
+    clear:both;
 }
 .placeholderd {
     color:#ccc;

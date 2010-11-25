@@ -1,6 +1,5 @@
-using System.Net.Mail;
-using Orchard.ContentManagement.Records;
 using System.ComponentModel.DataAnnotations;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Media.Models {
     public class MediaSettingsPartRecord : ContentPartRecord {

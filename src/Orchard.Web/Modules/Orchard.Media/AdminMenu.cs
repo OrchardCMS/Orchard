@@ -5,6 +5,10 @@ namespace Orchard.Media {
     public class AdminMenu : INavigationProvider {
         public Localizer T { get; set; }
 
+        public AdminMenu() {
+            T = NullLocalizer.Instance;
+        }
+
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {

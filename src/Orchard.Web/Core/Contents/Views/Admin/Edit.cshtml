@@ -1,9 +1,9 @@
 @{
-	var typeDisplayName = Model.ContentItem.TypeDefinition.DisplayName;
-	var pageTitle = T("Edit Content");
-	if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
-		pageTitle = T("Edit {0}", typeDisplayName);
-	}
+    var typeDisplayName = Model.ContentItem.TypeDefinition.DisplayName;
+    var pageTitle = T("Edit Content");
+    if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
+        pageTitle = T("Edit {0}", typeDisplayName);
+    }
 }
 <h1>@Html.TitleForPage(pageTitle)</h1>
 @using (Html.BeginFormAntiForgeryPost()) {

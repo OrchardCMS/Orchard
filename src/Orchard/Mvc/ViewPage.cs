@@ -48,7 +48,7 @@ namespace Orchard.Mvc {
             }
         }
         
-	    public override void InitHelpers() {
+        public override void InitHelpers() {
             base.InitHelpers();
 
             _workContext = ViewContext.GetWorkContext();

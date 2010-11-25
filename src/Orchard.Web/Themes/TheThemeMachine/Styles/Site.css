@@ -29,15 +29,15 @@ small, strike, strong, sub, sup, tt, var,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	outline: 0;
-	font-weight: inherit;
-	font-style: inherit;
-	font-size: 100%;
-	font-family: inherit;
-	vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
 }
 
 /* Remember focus styles! */
@@ -64,20 +64,20 @@ header, footer, aside, nav, article { display: block; }
 
 .group:after 
 {
-	content: ".";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
 }
 
 .zone:after /* Self clears every zone container */
 {
-	content: ".";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
 }
 
 
@@ -88,26 +88,26 @@ header, footer, aside, nav, article { display: block; }
 /* Default font settings. 
 The font-size 81.3% sets the base font to 13px 
 
-Pixels 	EMs 	    Percent Points
-6px 	0.462em 	46.2% 	5pt
-7px 	0.538em 	53.8% 	5pt
-8px 	0.615em 	61.5% 	6pt
-9px 	0.692em 	69.2% 	7pt
-10px 	0.769em 	76.9% 	8pt
-11px 	0.846em 	84.6% 	8pt
-12px 	0.923em 	92.3% 	9pt
-13px 	1em 	    100% 	10pt
-14px 	1.077em 	107.7% 	11pt
-15px 	1.154em 	115.4% 	11pt
-16px 	1.231em 	123.1% 	12pt
-17px 	1.308em 	130.8% 	13pt
-18px 	1.385em 	138.5% 	14pt
-19px 	1.462em 	146.2% 	14pt
-20px 	1.538em 	153.8% 	15pt
-21px 	1.615em 	161.5% 	16pt
-22px 	1.692em 	169.2% 	17pt
-23px 	1.769em 	176.9% 	17pt
-24px 	1.846em 	184.6% 	18pt
+Pixels     EMs         Percent Points
+6px     0.462em     46.2%     5pt
+7px     0.538em     53.8%     5pt
+8px     0.615em     61.5%     6pt
+9px     0.692em     69.2%     7pt
+10px     0.769em     76.9%     8pt
+11px     0.846em     84.6%     8pt
+12px     0.923em     92.3%     9pt
+13px     1em         100%     10pt
+14px     1.077em     107.7%     11pt
+15px     1.154em     115.4%     11pt
+16px     1.231em     123.1%     12pt
+17px     1.308em     130.8%     13pt
+18px     1.385em     138.5%     14pt
+19px     1.462em     146.2%     14pt
+20px     1.538em     153.8%     15pt
+21px     1.615em     161.5%     16pt
+22px     1.692em     169.2%     17pt
+23px     1.769em     176.9%     17pt
+24px     1.846em     184.6%     18pt
 */
 
 body { 
@@ -172,7 +172,7 @@ acronym     { border-bottom: 1px dotted #666; }
 address     { margin: 0 0 0.923em; font-style: italic; }
 del         { color:#666; }
 
-pre 		{ margin: 0.923em 0; white-space: pre; }
+pre         { margin: 0.923em 0; white-space: pre; }
 pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.462em; }
 
 
@@ -187,12 +187,12 @@ label             { font-weight: normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 
 input[type="text"], input[type="password"] {
-	display: block;
+    display: block;
     padding: 0.3em;
 }
 
 input[type="checkbox"] {
-	margin:.2em 0 1.2em 0;
+    margin:.2em 0 1.2em 0;
 }
 
 fieldset ol     { list-style-type:none; padding: 0; margin: 0; }
@@ -205,61 +205,61 @@ fieldset ol li  { margin: 0 0 6px 0; }
 #layout-wrapper { }
 
 #layout-header, #layout-featured, #layout-before-main, #layout-main, #layout-footer, #layout-after-main, #layout-tripel {
-	width:960px;
-	margin:0 auto;
+    width:960px;
+    margin:0 auto;
 }
 
 /* Navigation */
 #layout-navigation 
 {
-	width: 960px;
-	margin: 0 auto;
-	display: block;
-	border-bottom: 1px solid #dbdbdb;
+    width: 960px;
+    margin: 0 auto;
+    display: block;
+    border-bottom: 1px solid #dbdbdb;
 }
 
 nav ul 
 {
-	padding: 0px;
-	margin: 0px;
+    padding: 0px;
+    margin: 0px;
 }
-	nav ul li
-	 {
-		border:1px solid #dbdbdb;
-		background:#f6f6f6;
-		display:block;
-		float:left;
-		margin:0 2px -1px 0;
-	}
-	nav ul li.current 
-	{
-		border-bottom: 1px solid #fff;
-		background:#fff;
-	}
-	nav ul a 
-	{
-		padding:0 18px;
-		display:block;
-		float:left;
-		color: #333;
-		font-size: 1.077em;
-		text-decoration:none;
-		line-height:24px;
-	}
+    nav ul li
+     {
+        border:1px solid #dbdbdb;
+        background:#f6f6f6;
+        display:block;
+        float:left;
+        margin:0 2px -1px 0;
+    }
+    nav ul li.current 
+    {
+        border-bottom: 1px solid #fff;
+        background:#fff;
+    }
+    nav ul a 
+    {
+        padding:0 18px;
+        display:block;
+        float:left;
+        color: #333;
+        font-size: 1.077em;
+        text-decoration:none;
+        line-height:24px;
+    }
 
 #layout-header {}
-	#branding 
-	{   
-		font-family: 'Lobster', Tahoma, Arial, Helvetica, sans-serif;
-		font-size: 2.9em;
-		padding: 0;
-		margin: 0;
-	}
-	#branding a 
-	{
-		text-decoration:none;
-		color: #434343;
-	}
+    #branding 
+    {   
+        font-family: 'Lobster', Tahoma, Arial, Helvetica, sans-serif;
+        font-size: 2.9em;
+        padding: 0;
+        margin: 0;
+    }
+    #branding a 
+    {
+        text-decoration:none;
+        color: #434343;
+    }
 #layout-navigation {}
 #layout-featured {}
 #layout-before-main {}
@@ -278,22 +278,22 @@ nav ul
     #tripel-third {}
 #layout-footer {}
     #footer-quad {}
-	    #footer-quad-first {}
-	    #footer-quad-second {}
-	    #footer-quad-third {}		
-	    #footer-quad-forth {}
-	#footer-sig {}
-	
+        #footer-quad-first {}
+        #footer-quad-second {}
+        #footer-quad-third {}        
+        #footer-quad-forth {}
+    #footer-sig {}
+    
 /* Zones */
 .zone 
 {
     padding: 12px;
     
     /*  Enable this to see zone visualizations
-	background-color: yellow;
-	box-shadow:inset 0 0 1px purple;
-	-moz-box-shadow:inset 0 0 1px purple;
-	-webkit-box-shadow:inset 0 0 1px purple;
+    background-color: yellow;
+    box-shadow:inset 0 0 1px purple;
+    -moz-box-shadow:inset 0 0 1px purple;
+    -webkit-box-shadow:inset 0 0 1px purple;
     */
 } 
 .zone-header { padding: 30px 0 30px 12px; position: relative; }
@@ -527,15 +527,15 @@ nav ul
 ***************************************************************/
 
 input[type="submit"], input[type="button"], button, .button, .button:link, .button:visited {
-	color:#333;
-	background:#F5F5F5;
-	background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#cbcbcb));
-	background:-moz-linear-gradient(top , #F5F5F5, #cbcbcb);
-	border:1px solid #999;
-	cursor:pointer;
-	margin:.2em 0 2em 0;
-	padding:.3em 1.8em;
-	text-align:center;
+    color:#333;
+    background:#F5F5F5;
+    background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#cbcbcb));
+    background:-moz-linear-gradient(top , #F5F5F5, #cbcbcb);
+    border:1px solid #999;
+    cursor:pointer;
+    margin:.2em 0 2em 0;
+    padding:.3em 1.8em;
+    text-align:center;
 }
 
 input[type="submit"]:hover, input[type="button"]:hover,
@@ -544,8 +544,8 @@ input[type="submit"]:focus, input[type="button"]:focus,
 button:hover, .button:hover,
 button:active, .button:active,
 button:focus, .button:focus {
-	text-decoration:none; 
-	background: #ebebeb;
-	background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
-	background:-moz-linear-gradient(top , #e1e1e1, #ebebeb);
+    text-decoration:none; 
+    background: #ebebeb;
+    background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#ebebeb));
+    background:-moz-linear-gradient(top , #e1e1e1, #ebebeb);
 }

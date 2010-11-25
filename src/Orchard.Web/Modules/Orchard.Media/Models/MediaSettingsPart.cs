@@ -1,5 +1,4 @@
 ﻿using Orchard.ContentManagement;
-using System;
 
 namespace Orchard.Media.Models {
     public class MediaSettingsPart : ContentPart<MediaSettingsPartRecord> {

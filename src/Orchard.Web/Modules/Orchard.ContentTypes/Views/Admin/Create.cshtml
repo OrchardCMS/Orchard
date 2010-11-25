@@ -15,26 +15,26 @@
 @using(Script.Foot()){
 <script type="text/javascript">
 //<![CDATA[
-	$(function(){
-		//pull slug input from tab order
-		$("#@Html.FieldIdFor(m=>m.Name)").attr("tabindex",-1);
-		$("#@Html.FieldIdFor(m=>m.DisplayName)").blur(function(){
-			var name = $("#@Html.FieldIdFor(m=>m.Name)");
-			if (name.val()) { return true; }
-			var displayName = $("#@Html.FieldIdFor(m=>m.DisplayName)").val();
-			jQuery.post(
-				"@Url.Action("ContentTypeName","Admin",new RouteValueDictionary{{"Area","Orchard.ContentTypes"}})",
-				{
-					displayName: $("#@Html.FieldIdFor(m=>m.DisplayName)").val(),
-					__RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
-				},
-				function(data) {
-					name.val(data);
-				},
-				"json"
-			);
-		})
-	})
+    $(function(){
+        //pull slug input from tab order
+        $("#@Html.FieldIdFor(m=>m.Name)").attr("tabindex",-1);
+        $("#@Html.FieldIdFor(m=>m.DisplayName)").blur(function(){
+            var name = $("#@Html.FieldIdFor(m=>m.Name)");
+            if (name.val()) { return true; }
+            var displayName = $("#@Html.FieldIdFor(m=>m.DisplayName)").val();
+            jQuery.post(
+                "@Url.Action("ContentTypeName","Admin",new RouteValueDictionary{{"Area","Orchard.ContentTypes"}})",
+                {
+                    displayName: $("#@Html.FieldIdFor(m=>m.DisplayName)").val(),
+                    __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
+                },
+                function(data) {
+                    name.val(data);
+                },
+                "json"
+            );
+        })
+    })
 //]]>
 </script>
 }
