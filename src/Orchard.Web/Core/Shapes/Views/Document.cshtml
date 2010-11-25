@@ -1,7 +1,7 @@
 ﻿@using Orchard.Mvc.Html;
 @using Orchard.UI.Resources;
 @{
-	RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});
+    RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});
     //todo: (heskew) get conditions (as in conditional comments) hooked up for script tags too
     Script.Include("html5.js").AtLocation(ResourceLocation.Head);
 

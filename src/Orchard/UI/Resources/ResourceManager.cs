@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using Autofac.Features.Metadata;
-using Orchard.DisplayManagement.Descriptors;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.UI.Resources {

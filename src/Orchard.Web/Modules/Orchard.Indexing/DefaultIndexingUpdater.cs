@@ -15,7 +15,7 @@ namespace Orchard.Indexing {
         public DefaultIndexingUpdater (IIndexingTaskManager indexingTaskManager, IContentManager contentManager){
             _indexingTaskManager = indexingTaskManager;
             _contentManager = contentManager;
-	    }
+        }
 
         public void Install(Environment.Extensions.Models.Feature feature) {
         }

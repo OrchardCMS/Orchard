@@ -1,7 +1,5 @@
 using System;
 using System.Web.Mvc;
-using Autofac;
-using Autofac.Integration.Web;
 
 namespace Orchard.Mvc.Html {
     public static class ContainerExtensions {

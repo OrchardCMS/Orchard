@@ -1,5 +1,5 @@
 ﻿@{
-	var themes = (IEnumerable<SelectListItem>)Model.Themes;
+    var themes = (IEnumerable<SelectListItem>)Model.Themes;
 }
 <style type="text/css">
 body {
@@ -57,15 +57,15 @@ html.dyn #themepreview button.preview { display:none; }
 </style>
 
 <div id="themepreview">
-	@using(Html.BeginFormAntiForgeryPost(Url.Action("Preview", new{Controller="Admin", Area="Orchard.Themes"}), FormMethod.Post, new { @class = "inline" })) { 
-		<fieldset>
-			<span>@T("You are previewing: ")</span>
-			@Html.DropDownList("ThemeName", themes, new {onChange = "this.form.submit();"})
-			@Html.Hidden("ReturnUrl", Context.Request.RawUrl)
-			<button type="submit" class="preview" title="@T("Preview")" name="submit.Preview" value="@T("Preview")">@T("Preview")</button>
-			<button type="submit" title="@T("Apply")" name="submit.Apply" value="@T("Apply")">@T("Apply this theme")</button>
-			<button type="submit" class="cancel" title="@T("Cancel")" name="submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
-		</fieldset>
-	}
+    @using(Html.BeginFormAntiForgeryPost(Url.Action("Preview", new{Controller="Admin", Area="Orchard.Themes"}), FormMethod.Post, new { @class = "inline" })) { 
+        <fieldset>
+            <span>@T("You are previewing: ")</span>
+            @Html.DropDownList("ThemeName", themes, new {onChange = "this.form.submit();"})
+            @Html.Hidden("ReturnUrl", Context.Request.RawUrl)
+            <button type="submit" class="preview" title="@T("Preview")" name="submit.Preview" value="@T("Preview")">@T("Preview")</button>
+            <button type="submit" title="@T("Apply")" name="submit.Apply" value="@T("Apply")">@T("Apply this theme")</button>
+            <button type="submit" class="cancel" title="@T("Cancel")" name="submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
+        </fieldset>
+    }
 </div>
 

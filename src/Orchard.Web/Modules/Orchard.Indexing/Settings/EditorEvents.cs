@@ -14,7 +14,7 @@ namespace Orchard.Indexing.Settings {
         public EditorEvents(IIndexingTaskManager indexingTaskManager, IContentManager contentManager){
             _indexingTaskManager = indexingTaskManager;
             _contentManager = contentManager;
-	    }
+        }
 
         private string _contentTypeName;
         private bool _tasksCreated = false;

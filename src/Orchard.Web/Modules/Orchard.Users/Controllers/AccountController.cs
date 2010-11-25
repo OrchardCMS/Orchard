@@ -211,7 +211,7 @@ namespace Orchard.Users.Controllers {
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext) {
             if (filterContext.HttpContext.User.Identity is WindowsIdentity) {
-                throw new InvalidOperationException("Windows authentication is not supported.");
+                throw new InvalidOperationException(T("Windows authentication is not supported.").ToString());
             }
         }
 

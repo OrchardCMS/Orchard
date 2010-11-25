@@ -47,18 +47,18 @@ h4.widgets-layer-header {
 }
 
 .widgets-layerZones .widgets-zone {
-	background:#f5f5f5;
-	border: 1px solid #f1f1f1;
-	padding: 1em 2em 1em 2em;
-	margin: 0 0 .6em 0;
+    background:#f5f5f5;
+    border: 1px solid #f1f1f1;
+    padding: 1em 2em 1em 2em;
+    margin: 0 0 .6em 0;
 }
 
 .widgets-layerZones .widgets-zoneWidget {
     margin: .6em;
     padding: 1em 2em 1em 3em;
-	background:#ffffff;
-	border: 1px solid #f1f1f1;
-	vertical-align: middle;
+    background:#ffffff;
+    border: 1px solid #f1f1f1;
+    vertical-align: middle;
 }
 
 .widgets-availableLayers fieldset 
@@ -79,8 +79,8 @@ h4.widgets-layer-header {
 }
 
 .widgets-layers ul {
-	background: #f5f5f5;
-	border: 1px solid #f1f1f1;
+    background: #f5f5f5;
+    border: 1px solid #f1f1f1;
 }
 
 .widgets-layers ul li 
@@ -90,17 +90,17 @@ h4.widgets-layer-header {
 }
 
 .widgets-layers .widgets-currentLayer {
-	background: #c3d9ff;
+    background: #c3d9ff;
 }
 
 .widgets-layers .widgets-currentLayer a {
-	color: #333;
-	font-weight: 600;
+    color: #333;
+    font-weight: 600;
 }
 
 .widgets-layerZones ul li ul {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .new-layer {
