@@ -138,21 +138,16 @@
       <DependentUpon>Blogs.feature</DependentUpon>
     </Compile>
     <Compile Include="ContentRights.feature.cs">
-      <DependentUpon>ContentRights.feature</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>ContentRights.feature</DependentUpon>
     </Compile>
     <Compile Include="ContentTypes.feature.cs">
-      <DependentUpon>ContentTypes.feature</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>ContentTypes.feature</DependentUpon>
     </Compile>
     <Compile Include="Hosting\ExtensionDeploymentOptions.cs" />
-    <Compile Include="SiteCompilation.feature.cs">
-      <DependentUpon>SiteCompilation.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="Hosting\MessageSink.cs" />
     <Compile Include="Hosting\HostingTraceListener.cs" />
     <Compile Include="Hosting\TraceEnabledDataServicesProviderFactory.cs" />
@@ -180,31 +175,36 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Pages.feature</DependentUpon>
     </Compile>
-    <Compile Include="Util\PathExtensions.cs" />
-    <Compile Include="WebHosting.feature.cs">
-      <DependentUpon>WebHosting.feature</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Hosting\Orchard.Web\Global.asax.cs" />
-    <Compile Include="Hosting\SerializableDelegate.cs" />
-    <Compile Include="Bindings\WebAppHosting.cs" />
-    <Compile Include="Hosting\WebHost.cs" />
-    <Compile Include="Hosting\WebHostAgent.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Setup.feature</DependentUpon>
+    </Compile>
+    <Compile Include="SiteCompilation.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SiteCompilation.feature</DependentUpon>
     </Compile>
     <Compile Include="UsingSpecFlow.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>UsingSpecFlow.feature</DependentUpon>
     </Compile>
+    <Compile Include="Util\PathExtensions.cs" />
+    <Compile Include="Hosting\Orchard.Web\Global.asax.cs" />
+    <Compile Include="Hosting\SerializableDelegate.cs" />
+    <Compile Include="Bindings\WebAppHosting.cs" />
+    <Compile Include="Hosting\WebHost.cs" />
+    <Compile Include="Hosting\WebHostAgent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bindings\SanityCheck.cs" />
     <Compile Include="Hosting\Orchard.Web\_Default.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebHosting.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebHosting.feature</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

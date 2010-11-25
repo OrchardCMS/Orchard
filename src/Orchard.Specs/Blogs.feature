@@ -4,7 +4,7 @@
     I want to create blogs and create, publish and edit blog posts
 
 Scenario: In the admin (menu) there is a link to create a Blog
-	Given I have installed Orchard
+    Given I have installed Orchard
     When I go to "admin"
     Then I should see "<a href="/Admin/Blogs/Create">Blogs</a>"
     

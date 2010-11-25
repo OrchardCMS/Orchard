@@ -13,9 +13,9 @@ Scenario: I can create a new content type
             | name | value |
             | DisplayName | Event |
             | Name | Event |
-		And I hit "Create"
-		And I go to "Admin/ContentTypes/"
-	Then I should see "Event"
+        And I hit "Create"
+        And I go to "Admin/ContentTypes/"
+    Then I should see "Event"
 
 Scenario: I can't create a content type with an already existing name
     Given I have installed Orchard
@@ -25,17 +25,17 @@ Scenario: I can't create a content type with an already existing name
             | name | value |
             | DisplayName | Event |
             | Name | Event |
-		And I hit "Create"
-		And I go to "Admin/ContentTypes/"
-	Then I should see "Event"
+        And I hit "Create"
+        And I go to "Admin/ContentTypes/"
+    Then I should see "Event"
     When I go to "Admin/ContentTypes/Create"
         And I fill in
             | name | value |
             | DisplayName | Event |
             | Name | Event-2 |
-		And I hit "Create"
-	Then I should see "<h1[^>]*>.*?New Content Type.*?</h1>"
-		And I should see "validation-summary-errors"
+        And I hit "Create"
+    Then I should see "<h1[^>]*>.*?New Content Type.*?</h1>"
+        And I should see "validation-summary-errors"
 
 Scenario: I can't create a content type with an already existing technical name
     Given I have installed Orchard
@@ -45,17 +45,17 @@ Scenario: I can't create a content type with an already existing technical name
             | name | value |
             | DisplayName | Dinner |
             | Name | Dinner |
-		And I hit "Create"
-		And I go to "Admin/ContentTypes/"
-	Then I should see "Dinner"    
-	When I go to "Admin/ContentTypes/Create"
+        And I hit "Create"
+        And I go to "Admin/ContentTypes/"
+    Then I should see "Dinner"    
+    When I go to "Admin/ContentTypes/Create"
         And I fill in
             | name | value |
             | DisplayName | Dinner2 |
             | Name | Dinner |
-		And I hit "Create"
-	Then I should see "<h1[^>]*>.*?New Content Type.*?</h1>"
-		And I should see "validation-summary-errors"
+        And I hit "Create"
+    Then I should see "<h1[^>]*>.*?New Content Type.*?</h1>"
+        And I should see "validation-summary-errors"
 
 Scenario: I can't rename a content type with an already existing name
     Given I have installed Orchard
@@ -65,20 +65,20 @@ Scenario: I can't rename a content type with an already existing name
             | name | value |
             | DisplayName | Dinner |
             | Name | Dinner |
-		And I hit "Create"
-		And I go to "Admin/ContentTypes/"
-	Then I should see "Dinner"    
+        And I hit "Create"
+        And I go to "Admin/ContentTypes/"
+    Then I should see "Dinner"    
     When I go to "Admin/ContentTypes/Create"
         And I fill in
             | name | value |
             | DisplayName | Event |
             | Name | Event |
-		And I hit "Create"
-		And I go to "Admin/ContentTypes/"
-	Then I should see "Event"    
+        And I hit "Create"
+        And I go to "Admin/ContentTypes/"
+    Then I should see "Event"    
     When I go to "Admin/ContentTypes/Edit/Dinner"
         And I fill in
             | name | value |
             | DisplayName | Event |
-		And I hit "Save"
-	Then I should see "validation-summary-errors"
+        And I hit "Save"
+    Then I should see "validation-summary-errors"
