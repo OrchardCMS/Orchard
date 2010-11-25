@@ -170,8 +170,10 @@ namespace Orchard.Specs.Bindings {
         [When(@"I follow ""(.*)""")]
         public void WhenIFollow(string linkText) {
             var link = _doc.DocumentNode
-                .SelectNodes("//a")
-                .Single(elt => elt.InnerText == linkText);
+                            .SelectNodes("//a")
+                            .SingleOrDefault(elt => elt.InnerText == linkText)
+                       ?? _doc.DocumentNode
+                            .SelectSingleNode(string.Format("//a[@title='{0}']", linkText));
 
             var urlPath = link.Attributes["href"].Value;
 
