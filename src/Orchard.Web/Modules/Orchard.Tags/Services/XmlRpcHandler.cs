@@ -158,7 +158,7 @@ namespace Orchard.Tags.Services {
                     return;
 
                 _orchardServices.WorkContext.CurrentUser = user;
-                _tagService.UpdateTagsForContentItem(id, tags);
+                _tagService.UpdateTagsForContentItem(contentItem, tags);
             });
 
             if (contentItemId > 0)

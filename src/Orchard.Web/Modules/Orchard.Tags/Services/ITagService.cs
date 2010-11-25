@@ -4,14 +4,17 @@ using Orchard.Tags.Models;
 
 namespace Orchard.Tags.Services {
     public interface ITagService : IDependency {
-        IEnumerable<Tag> GetTags();
-        Tag GetTag(int id);
-        Tag GetTagByName(string tagName);
+        IEnumerable<TagRecord> GetTags();
+        TagRecord GetTag(int tagId);
+        TagRecord GetTagByName(string tagName);
+        IEnumerable<IContent> GetTaggedContentItems(int tagId);
+
         void CreateTag(string tagName);
-        void DeleteTag(int id);
-        void UpdateTag(int id, string tagName);
-        IEnumerable<IContent> GetTaggedContentItems(int id);
-        void TagContentItem(int contentItemId, string tagName);
-        void UpdateTagsForContentItem(int contentItemId, IEnumerable<string> tagNamesForContentItem);
+
+        void DeleteTag(int tagId);
+
+        void UpdateTag(int tagId, string tagName);
+
+        void UpdateTagsForContentItem(ContentItem contentItem, IEnumerable<string> tagNamesForContentItem);
     }
 }

@@ -6,7 +6,7 @@ namespace Orchard.Tags {
     public class TagsDataMigration : DataMigrationImpl {
 
         public int Create() {
-            SchemaBuilder.CreateTable("Tag", 
+            SchemaBuilder.CreateTable("TagRecord", 
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("TagName")

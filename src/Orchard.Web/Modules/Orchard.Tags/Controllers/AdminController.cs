@@ -25,7 +25,7 @@ namespace Orchard.Tags.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            IEnumerable<Tag> tags = _tagService.GetTags();
+            IEnumerable<TagRecord> tags = _tagService.GetTags();
             var entries = tags.Select(CreateTagEntry).ToList();
             var model = new TagsAdminIndexViewModel { Tags = entries };
             return View(model);
@@ -50,7 +50,7 @@ namespace Orchard.Tags.Controllers {
                         return new HttpUnauthorizedResult();
 
                     foreach (TagEntry entry in checkedEntries) {
-                        _tagService.DeleteTag(entry.Tag.Id);
+                        _tagService.DeleteTag(entry.TagRecord.Id);
                     }
                     break;
 
@@ -80,15 +80,15 @@ namespace Orchard.Tags.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            Tag tag = _tagService.GetTag(id);
+            TagRecord tagRecord = _tagService.GetTag(id);
 
-            if(tag == null) {
+            if(tagRecord == null) {
                 return RedirectToAction("Index");
             }
 
             var viewModel = new TagsAdminEditViewModel {
-                Id = tag.Id,
-                TagName = tag.TagName,
+                Id = tagRecord.Id,
+                TagName = tagRecord.TagName,
             };
 
             ViewData["ContentItems"] = _tagService.GetTaggedContentItems(id).ToList();
@@ -116,9 +116,9 @@ namespace Orchard.Tags.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't remove tag")))
                 return new HttpUnauthorizedResult();
 
-            Tag tag = _tagService.GetTag(id);
+            TagRecord tagRecord = _tagService.GetTag(id);
 
-            if (tag == null)
+            if (tagRecord == null)
                 return new HttpNotFoundResult();
 
             _tagService.DeleteTag(id);
@@ -129,9 +129,9 @@ namespace Orchard.Tags.Controllers {
             return RedirectToAction("Index");
         }
 
-        private static TagEntry CreateTagEntry(Tag tag) {
+        private static TagEntry CreateTagEntry(TagRecord tagRecord) {
             return new TagEntry {
-                Tag = tag,
+                TagRecord = tagRecord,
                 IsChecked = false,
             };
         }
