@@ -44,16 +44,19 @@ namespace Orchard.ContentTypes.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content type.")))
                 return new HttpUnauthorizedResult();
 
-            if(String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
-                ModelState.AddModelError("DisplayName", T("The Content Type name can't be empty.").ToString());
+            viewModel.DisplayName = viewModel.DisplayName ?? String.Empty;
+            viewModel.Name = viewModel.Name ?? String.Empty;
+
+            if (String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
+                ModelState.AddModelError("DisplayName", T("The Display Name name can't be empty.").ToString());
             }
             
             if ( _contentDefinitionService.GetTypes().Any(t => String.Equals(t.Name.Trim(), viewModel.Name.Trim(), StringComparison.OrdinalIgnoreCase)) ) {
-                ModelState.AddModelError("Name", T("A type with the same technical name already exists.").ToString());
+                ModelState.AddModelError("Name", T("A type with the same Id already exists.").ToString());
             }
 
             if ( _contentDefinitionService.GetTypes().Any(t => String.Equals(t.DisplayName.Trim(), viewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase)) ) {
-                ModelState.AddModelError("DisplayName", T("A type with the same name already exists.").ToString());
+                ModelState.AddModelError("DisplayName", T("A type with the same Name already exists.").ToString());
             }
 
             if (!ModelState.IsValid) {
