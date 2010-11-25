@@ -22,7 +22,7 @@ namespace Orchard.Tests.Environment {
         }
 
         protected override void Register(ContainerBuilder builder) {
-            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking();
         }
 
