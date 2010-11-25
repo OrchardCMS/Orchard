@@ -89,18 +89,18 @@ base + "__" + contenttype
 
 
 ==template discovery strategy==
-Items/Content.cshtml -> "Items_Content"
-Items/Content.Summary.cshtml -> "Items_Content"
-Items/Content.Edit.cshtml -> "Items_Content"
-Items/Content-Page.cshtml -> "Items_Content__Page"
-Items/Content-45.cshtml -> "Items_Content__45"
-Items/Content-45.Summary.cshtml -> "Items_Content_Summary__45"
-Items/Content.Summary-45.cshtml -> "Items_Content_Summary__Page"
-Items/Page.cshtml -> "Items_Content__Page"
+Items/Content.cshtml -> "Content"
+Items/Content.Summary.cshtml -> "Content_Summary"
+Items/Content.Edit.cshtml -> "Content_Edit"
+Items/Content-Page.cshtml -> "Content__Page"
+Items/Content-45.cshtml -> "Content__45"
+Items/Content-45.Summary.cshtml -> "Content_Summary__45"
+Items/Content.Summary-45.cshtml -> "Content_Summary__Page"
+Items/Page.cshtml -> "Content__Page"
 
-Items/BlogPost.cshtml -> "Items_Content__BlogPost"
-Items/BlogPost.Summary.cshtml -> "Items_Content__BlogPost"
-Items/BlogPost.Edit.cshtml -> "Items_Content__BlogPost"
+Items/BlogPost.cshtml -> "Content__BlogPost"
+Items/BlogPost.Summary.cshtml -> "Content_Summary__BlogPost"
+Items/BlogPost.Edit.cshtml -> "Content_Edit__BlogPost"
 
 Widgets-TwitterThing.cshtml -> "Widget__TwitterThing"
 
