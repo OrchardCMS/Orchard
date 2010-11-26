@@ -10,27 +10,48 @@ namespace Orchard {
         }
 
         public static WorkContext GetWorkContext(this RequestContext requestContext) {
-            if (requestContext == null) {
+            if (requestContext == null)
                 return null;
-            }
 
             var routeData = requestContext.RouteData;
-            object value;
-            if (routeData == null ||
-                routeData.DataTokens == null ||
-                !routeData.DataTokens.TryGetValue("IWorkContextAccessor", out value) ||
-                !(value is IWorkContextAccessor)) {
+            if (routeData == null || routeData.DataTokens == null)
                 return null;
+            
+            object workContextValue;
+            if (!routeData.DataTokens.TryGetValue("IWorkContextAccessor", out workContextValue)) {
+                workContextValue = FindWorkContextInParent(routeData);
             }
 
-            var workContextAccessor = (IWorkContextAccessor)value;
+            if (!(workContextValue is IWorkContextAccessor))
+                return null;
+
+            var workContextAccessor = (IWorkContextAccessor)workContextValue;
             return workContextAccessor.GetContext(requestContext.HttpContext);
         }
 
-        public static WorkContext GetWorkContext(this ControllerContext controllerContext) {
-            if (controllerContext == null) {
+        private static object FindWorkContextInParent(RouteData routeData) {
+            object parentViewContextValue;
+            if (!routeData.DataTokens.TryGetValue("ParentActionViewContext", out parentViewContextValue)
+                || !(parentViewContextValue is ViewContext)) {
                 return null;
             }
+
+            var parentRouteData = ((ViewContext)parentViewContextValue).RouteData;
+            if (parentRouteData == null || parentRouteData.DataTokens == null)
+                return null;
+
+            object workContextValue;
+            if (!parentRouteData.DataTokens.TryGetValue("IWorkContextAccessor", out workContextValue)) {
+                workContextValue = FindWorkContextInParent(parentRouteData);
+            }
+
+            return workContextValue;
+        }
+
+        public static WorkContext GetWorkContext(this ControllerContext controllerContext) {
+            if (controllerContext == null)
+                return null;
+
             return WorkContextExtensions.GetWorkContext(controllerContext.RequestContext);
         }
 
