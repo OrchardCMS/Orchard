@@ -10,13 +10,16 @@ namespace Orchard.Core.Routable.Services {
     [UsedImplicitly]
     public class RoutableHomePageProvider : IHomePageProvider {
         private readonly IContentManager _contentManager;
+        private readonly IWorkContextAccessor _workContextAccessor;
         public const string Name = "RoutableHomePageProvider";
 
         public RoutableHomePageProvider(
             IOrchardServices services, 
             IContentManager contentManager,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            IWorkContextAccessor workContextAccessor) {
             _contentManager = contentManager;
+            _workContextAccessor = workContextAccessor;
             Services = services;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -39,11 +42,13 @@ namespace Orchard.Core.Routable.Services {
             if (contentItem == null || !contentItem.Is<RoutePart>())
                 return new HttpNotFoundResult();
 
-            var model = _contentManager.BuildDisplay(contentItem);
+            // get the display metadata for the home page item
+            var displayRouteValues = _contentManager.GetItemMetadata(contentItem).DisplayRouteValues;
 
-            return new ViewResult {
+            var model = Shape.ViewModel(RouteValues: displayRouteValues);
+            return new PartialViewResult {
                 ViewName = "Routable.HomePage",
-                ViewData = new ViewDataDictionary<dynamic>(model)
+                ViewData = new ViewDataDictionary<object>(model)
             };
         }
     }
