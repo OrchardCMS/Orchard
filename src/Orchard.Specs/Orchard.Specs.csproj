@@ -206,6 +206,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WebHosting.feature</DependentUpon>
     </Compile>
+    <Compile Include="Widgets.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Widgets.feature</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Hosting\Orchard.Web\Web.config">
@@ -277,6 +282,10 @@
     <None Include="UsingSpecFlow.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>UsingSpecFlow.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Widgets.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Widgets.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

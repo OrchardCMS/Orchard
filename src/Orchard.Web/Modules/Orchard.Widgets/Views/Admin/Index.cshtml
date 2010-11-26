@@ -52,21 +52,16 @@
                 <div class="widgets-layers">
                     <ul>
                         @foreach (var layer in Model.Layers) {
+                            var layerClass = "widgets-editLayer";
                             if (layer.Id == Model.CurrentLayer.Id) {
-                                <li class="widgets-currentLayer widgets-editLayer">
-                                 <a href="@Url.Action("EditLayer", new { @layer.Id })">
-                                        <img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.png")" />
-                                    </a>
-                                    @Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
-                                </li>
-                            } else {
-                                <li class="widgets-editLayer">
-                                <a href="@Url.Action("EditLayer", new { @layer.Id })">
-                                        <img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.png")" />
-                                    </a>
-                                    @Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
-                                </li>
+                                layerClass += " widgets-currentLayer";
                             }
+                            <li class="@layerClass">
+                                <a href="@Url.Action("EditLayer", new { @layer.Id })" title="@T("Edit {0} layer", layer.Name)">
+                                    <img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.png")" />
+                                </a>
+                                @Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
+                            </li>
                         }
                     </ul>
                     <div class="new-layer">
