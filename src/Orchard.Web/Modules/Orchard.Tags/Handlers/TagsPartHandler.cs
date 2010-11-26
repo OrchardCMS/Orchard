@@ -12,16 +12,6 @@ namespace Orchard.Tags.Handlers {
         public TagsPartHandler(IRepository<TagsPartRecord> repository, IRepository<TagRecord> tagsRepository, IRepository<ContentTagRecord> tagsContentItemsRepository) {
             Filters.Add(StorageFilter.For(repository));
  
-            OnLoading<TagsPart>((context, tags) => {
-                // populate list of attached tags on demand
-                tags._currentTags.Loader(list => {
-                    foreach(var tag in tagsContentItemsRepository.Fetch(x => x.TagsPartRecord.Id == context.ContentItem.Id))
-                        list.Add(tag.TagRecord);
-                    return list;
-                });
-
-            });
-
             OnRemoved<TagsPart>((context, tags) => {
                 tagsContentItemsRepository.Flush();
 
