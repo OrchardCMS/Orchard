@@ -315,10 +315,10 @@
     <Content Include="Common\Views\Parts\Common.Body.Summary.cshtml" />
     <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <None Include="App_Data\Localization\en-US\orchard.core.po" />
-    <None Include="App_Data\Localization\fr-FR\orchard.core.po" />
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Contents\Views\Web.config" />
     <Content Include="Routable\Views\Web.config" />
     <Content Include="Reports\Views\Web.config" />
