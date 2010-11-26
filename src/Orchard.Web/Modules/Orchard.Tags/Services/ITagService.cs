@@ -8,6 +8,7 @@ namespace Orchard.Tags.Services {
         TagRecord GetTag(int tagId);
         TagRecord GetTagByName(string tagName);
         IEnumerable<IContent> GetTaggedContentItems(int tagId);
+        IEnumerable<IContent> GetTaggedContentItems(int tagId, VersionOptions options);
 
         TagRecord CreateTag(string tagName);
 
@@ -16,5 +17,6 @@ namespace Orchard.Tags.Services {
         void UpdateTag(int tagId, string tagName);
 
         void UpdateTagsForContentItem(ContentItem contentItem, IEnumerable<string> tagNamesForContentItem);
+        void RemoveTagsForContentItem(ContentItem contentItem);
     }
 }

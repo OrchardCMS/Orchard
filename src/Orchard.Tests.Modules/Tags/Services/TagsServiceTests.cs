@@ -97,6 +97,27 @@ namespace Orchard.Tests.Modules.Tags.Services {
         }
 
         [Test]
+        public void TagsShouldDeletedAferRemovingContentItem() {
+            var thing = _contentManager.New("thing");
+            _contentManager.Create(thing, VersionOptions.Published);
+            _tagService.UpdateTagsForContentItem(thing, new string[] { "tag1", "tag2", "tag3" });
+
+            ClearSession();
+
+            Assert.That(_tagService.GetTagByName("tag1"), Is.Not.Null);
+            Assert.That(_tagService.GetTagByName("tag2"), Is.Not.Null);
+            Assert.That(_tagService.GetTagByName("tag3"), Is.Not.Null);
+
+            _contentManager.Remove(_contentManager.Get(thing.Id));
+
+            ClearSession();
+
+            Assert.That(_tagService.GetTagByName("tag1"), Is.Null);
+            Assert.That(_tagService.GetTagByName("tag2"), Is.Null);
+            Assert.That(_tagService.GetTagByName("tag3"), Is.Null);
+        }
+
+        [Test]
         public void ContentItemsShouldBeReturnedFromTagService() {
             var thing1 = _contentManager.New("thing");
             _contentManager.Create(thing1);

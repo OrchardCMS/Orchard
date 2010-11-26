@@ -109,9 +109,13 @@ namespace Orchard.Tags.Services {
         }
 
         public IEnumerable<IContent> GetTaggedContentItems(int tagId) {
+            return GetTaggedContentItems(tagId, VersionOptions.Published);
+        }
+
+        public IEnumerable<IContent> GetTaggedContentItems(int tagId, VersionOptions options) {
             return _contentTagRepository
                 .Fetch(x => x.TagRecord.Id == tagId)
-                .Select(t => _orchardServices.ContentManager.Get(t.TagsPartRecord.Id))
+                .Select(t => _orchardServices.ContentManager.Get(t.TagsPartRecord.Id, options))
                 .Where(c => c != null);
         }
 
@@ -119,6 +123,27 @@ namespace Orchard.Tags.Services {
             var tagRecord = GetTagByName(tagName);
             var tagsContentItems = new ContentTagRecord { TagsPartRecord = tagsPartRecord, TagRecord = tagRecord };
             _contentTagRepository.Create(tagsContentItems);
+        }
+
+        public void RemoveTagsForContentItem(ContentItem contentItem) {
+            if (contentItem.Id == 0)
+                throw new OrchardException(T("Error removing tag to content item: the content item has not been created yet."));
+
+            _contentTagRepository.Flush();
+
+            var tagsPart = contentItem.As<TagsPart>();
+
+            // delete orphan tags (for each tag, if there is no other contentItem than the one being deleted, it's an orphan)
+            foreach (var tag in tagsPart.CurrentTags) {
+                if (_contentTagRepository.Count(x => x.TagsPartRecord.Id != contentItem.Id) == 0) {
+                    _tagRepository.Delete(tag);
+                }
+            }
+
+            // delete tag links with this contentItem (ContentTagRecords)
+            foreach (var record in _contentTagRepository.Fetch(x => x.TagsPartRecord.Id == contentItem.Id)) {
+                _contentTagRepository.Delete(record);
+            }
         }
 
         public void UpdateTagsForContentItem(ContentItem contentItem, IEnumerable<string> tagNamesForContentItem) {

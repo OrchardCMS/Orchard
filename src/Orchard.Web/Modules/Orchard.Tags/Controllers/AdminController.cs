@@ -91,7 +91,7 @@ namespace Orchard.Tags.Controllers {
                 TagName = tagRecord.TagName,
             };
 
-            ViewData["ContentItems"] = _tagService.GetTaggedContentItems(id).ToList();
+            ViewData["ContentItems"] = _tagService.GetTaggedContentItems(id, VersionOptions.Latest).ToList();
 
             return View(viewModel);
         }
