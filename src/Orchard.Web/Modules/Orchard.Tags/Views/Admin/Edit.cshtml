@@ -34,7 +34,7 @@ else {
         @foreach (IContent content in View.ContentItems) { 
         <tr>
             <td>@content.ContentItem.ContentType.CamelFriendly()</td>
-            <td>@Html.ItemDisplayLink(content.ContentItem)</td>
+            <td>@Html.ItemEditLink(content.ContentItem)</td>
         </tr>
         }
     </table>
