@@ -50,7 +50,7 @@ namespace Orchard.Tags.Controllers {
                         return new HttpUnauthorizedResult();
 
                     foreach (TagEntry entry in checkedEntries) {
-                        _tagService.DeleteTag(entry.TagRecord.Id);
+                        _tagService.DeleteTag(entry.Tag.Id);
                     }
                     break;
 
@@ -131,7 +131,7 @@ namespace Orchard.Tags.Controllers {
 
         private static TagEntry CreateTagEntry(TagRecord tagRecord) {
             return new TagEntry {
-                TagRecord = tagRecord,
+                Tag = tagRecord,
                 IsChecked = false,
             };
         }

@@ -8,7 +8,7 @@ namespace Orchard.Tags.ViewModels {
     }
 
     public class TagEntry {
-        public TagRecord TagRecord { get; set; }
+        public TagRecord Tag { get; set; }
         public bool IsChecked { get; set; }
     }
 

@@ -54,7 +54,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\TagsContentItems.cs" />
+    <Compile Include="Models\ContentTagRecord.cs" />
     <Compile Include="Models\TagsPartRecord.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ITagService.cs" />
