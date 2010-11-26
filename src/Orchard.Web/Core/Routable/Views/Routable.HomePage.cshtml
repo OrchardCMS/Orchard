@@ -1,1 +1,4 @@
-@Display(Model)
+@{
+    RouteValueDictionary routeValues = Model.RouteValues;
+    Html.RenderAction(routeValues["action"] as string, routeValues["controller"] as string, routeValues);
+}
