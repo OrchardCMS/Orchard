@@ -197,8 +197,8 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get(id);
 
             if ( user != null ) {
-                string challengeToken = _membershipService.GetEncryptedChallengeToken(user.As<UserPart>());
-                _membershipService.SendChallengeEmail(user.As<UserPart>(), Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", token = challengeToken})));
+                string challengeToken = _userService.GetNonce(user.As<UserPart>());
+                _userService.SendChallengeEmail(user.As<UserPart>(), Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", token = challengeToken})));
             }
 
             Services.Notifier.Information(T("Challenge email sent"));
