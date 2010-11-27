@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Routable.Models;
 using Orchard.Data;
 
 namespace Orchard.Blogs.Handlers {
@@ -23,6 +24,12 @@ namespace Orchard.Blogs.Handlers {
             if (blog == null)
                 return;
 
+            context.Metadata.DisplayRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "Blog"},
+                {"Action", "Item"},
+                {"blogSlug", blog.As<RoutePart>().Slug}
+            };
             context.Metadata.CreateRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogAdmin"},

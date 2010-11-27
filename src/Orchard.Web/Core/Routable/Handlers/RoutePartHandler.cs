@@ -72,8 +72,15 @@ namespace Orchard.Core.Routable.Handlers {
     public class RoutePartHandlerBase : ContentHandlerBase {
         public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
             var routable = context.ContentItem.As<RoutePart>();
-            if (routable != null) {
-                context.Metadata.DisplayText = routable.Title;
+
+            if (routable == null)
+                return;
+
+            context.Metadata.DisplayText = routable.Title;
+
+            // set the display route values if it hasn't been set or only has been set by the Contents module. 
+            // allows other modules to set their own display. probably not common enough to warrant some priority implemntation
+            if (context.Metadata.DisplayRouteValues == null || context.Metadata.DisplayRouteValues["Area"] as string == "Contents") {
                 context.Metadata.DisplayRouteValues = new RouteValueDictionary {
                     {"Area", "Routable"},
                     {"Controller", "Item"},

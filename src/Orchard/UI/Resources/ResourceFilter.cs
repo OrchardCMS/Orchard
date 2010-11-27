@@ -1,4 +1,3 @@
-using System;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Mvc.Filters;
@@ -20,6 +19,10 @@ namespace Orchard.UI.Resources {
 
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+            // should only run on a full view rendering result
+            if (!(filterContext.Result is ViewResult))
+                return;
+
             var ctx = _workContextAccessor.GetContext();
             var head = ctx.Layout.Head;
             var tail = ctx.Layout.Tail;

@@ -8,8 +8,5 @@
         IUser ValidateUser(string userNameOrEmail, string password);
         void SetPassword(IUser user, string password);
 
-        IUser ValidateChallengeToken(string challengeToken);
-        void SendChallengeEmail(IUser user, string url);
-        string GetEncryptedChallengeToken(IUser user);
     }
 }
