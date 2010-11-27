@@ -14,6 +14,7 @@
     <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
     <GalleryArtifactFolder>$(ArtifactsFolder)\Gallery</GalleryArtifactFolder>
     <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
+    <OrchardCoreSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Core</OrchardCoreSrcFolder>
     <ThemesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Themes</ThemesSrcFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
@@ -329,7 +330,7 @@
     <CallTarget Targets="CompileMsBuildTasks"/>
 
     <ItemGroup>
-      <Validate-ProjectFiles Include="$(ModulesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.csproj"/>
+      <Validate-ProjectFiles Include="$(ModulesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.csproj;$(OrchardCoreSrcFolder)\Orchard.Core.csproj"/>
     </ItemGroup>
 
     <ValidateExtensionProjectFiles Files="@(Validate-ProjectFiles)"/>
