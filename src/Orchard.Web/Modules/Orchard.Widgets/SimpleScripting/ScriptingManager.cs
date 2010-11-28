@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Caching;
+using Orchard.Localization;
 using Orchard.Widgets.Services;
 using Orchard.Widgets.SimpleScripting.Ast;
 using Orchard.Widgets.SimpleScripting.Compiler;
@@ -18,24 +19,44 @@ namespace Orchard.Widgets.SimpleScripting {
         public ScriptingEngine(IEnumerable<IRuleProvider> ruleProviders, ICacheManager cacheManager) {
             _ruleProviders = ruleProviders;
             _cacheManager = cacheManager;
+            T = NullLocalizer.Instance;
         }
 
+        public Localizer T { get; set; }
+
         public bool Matches(string expression) {
+            var expr = _cacheManager.Get(expression, ctx => {
+                    var ast = ParseExpression(expression);
+                    return new { Tree = ast, Errors = ast.GetErrors().ToList() };
+                });
 
-            var expressionTree = _cacheManager.Get(expression, ctx => 
-                ParseExpression(expression));
+            if (expr.Errors.Any()) {
+                //TODO: Collect all errors
+                throw new OrchardException(T("Syntax error: {0}", expr.Errors.First().Message));
+            }
 
-            object result = EvaluateExpression(expressionTree.Root);
+            var result = EvaluateExpression(expr.Tree);
+            if (result.IsError) {
+                throw new ApplicationException(result.Error.Message);
+            }
 
-            return (bool)Convert.ChangeType(result, typeof (bool));
+            if (!result.IsBool) {
+                throw new OrchardException(T("Expression is not a boolean value"));
+            }
+
+            return result.BoolValue;
         }
 
         private AbstractSyntaxTree ParseExpression(string expression) {
             return new Parser(expression).Parse();
         }
 
-        private object EvaluateExpression(AstNode root) {
-            throw new NotImplementedException();
+        private EvaluationResult EvaluateExpression(AbstractSyntaxTree tree) {
+            var context = new EvaluationContext {
+                Tree = tree,
+                MethodInvocationCallback = (m, args) => Evaluate(m, args)
+            };
+            return new Interpreter().Evalutate(context);
         }
 
         private object Evaluate(string name, IEnumerable<object> args) {
