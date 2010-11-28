@@ -4,16 +4,14 @@ using Orchard.Widgets.SimpleScripting.Ast;
 
 namespace Orchard.Widgets.SimpleScripting.Compiler {
     public class Interpreter {
-        private readonly InterpreterVisitor _interpreterVisitor = new InterpreterVisitor();
-
         public EvaluationResult Evalutate(EvaluationContext context) {
-            return _interpreterVisitor.Evaluate(context);
+            return new InterpreterVisitor(context).Evaluate();
         }
     }
 
     public class EvaluationContext {
         public AbstractSyntaxTree Tree { get; set; }
-        public Func<object, string, IList<object>> MethodInvocationCallback { get; set; }
+        public Func<string, IList<object>, object> MethodInvocationCallback { get; set; }
     }
 
     public class EvaluationResult {

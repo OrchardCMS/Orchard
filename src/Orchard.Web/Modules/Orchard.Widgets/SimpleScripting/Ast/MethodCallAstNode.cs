@@ -11,6 +11,9 @@ namespace Orchard.Widgets.SimpleScripting.Ast {
             _arguments = arguments;
         }
 
+        public Token Target { get { return _token;  } }
+        public IList<AstNode> Arguments { get { return _arguments; } }
+
         public Token Token { get { return _token; } }
 
         public override IEnumerable<AstNode> Children {

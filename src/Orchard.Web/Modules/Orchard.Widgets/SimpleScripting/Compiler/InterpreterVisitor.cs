@@ -1,10 +1,17 @@
 ﻿using System;
+using System.Linq;
 using Orchard.Widgets.SimpleScripting.Ast;
 
 namespace Orchard.Widgets.SimpleScripting.Compiler {
     public class InterpreterVisitor : AstVisitor {
-        public EvaluationResult Evaluate(EvaluationContext context) {
-            return Evaluate(context.Tree.Root);
+        private readonly EvaluationContext _context;
+
+        public InterpreterVisitor(EvaluationContext context) {
+            _context = context;
+        }
+
+        public EvaluationResult Evaluate() {
+            return Evaluate(_context.Tree.Root);
         }
 
         private EvaluationResult Evaluate(AstNode node) {
@@ -52,6 +59,14 @@ namespace Orchard.Widgets.SimpleScripting.Compiler {
                 default:
                     throw new InvalidOperationException(string.Format("Internal error: binary expression {0} is not supported.", node.Token));
             }
+        }
+
+        public override object VisitMethodCall(MethodCallAstNode node) {
+            var arguments = node.Arguments.Select(arg => Evaluate(arg)).ToList();
+            if (arguments.Any(arg => arg.IsError))
+                return arguments.First(arg => arg.IsError);
+
+            return Result(_context.MethodInvocationCallback((string)node.Target.Value, arguments.Select(arg => arg.Value).ToList()));
         }
 
         public override object VisitError(ErrorAstNode node) {
