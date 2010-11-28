@@ -3,7 +3,7 @@ using Orchard.Widgets.SimpleScripting;
 
 namespace Orchard.Tests.Modules.SimpleScriptingTests {
     [TestFixture]
-    public class ExpressionLexerTests {
+    public class ExpressionTokenizerTests {
 
         [Test]
         public void LexerShouldProcessSingleQuotedStringLiteral() {
