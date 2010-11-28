@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Widgets.SimpleScripting.Ast;
 
 namespace Orchard.Widgets.SimpleScripting.Compiler {
@@ -29,8 +30,7 @@ namespace Orchard.Widgets.SimpleScripting.Compiler {
             var expr = ParseKeywordAndExpression();
 
             var token = IsMatch(TokenKind.Or);
-            if (token != null)
-            {
+            if (token != null) {
                 var right = ParseKeywordOrExpression();
 
                 expr = new BinaryAstNode(expr, token, right);
@@ -56,7 +56,7 @@ namespace Orchard.Widgets.SimpleScripting.Compiler {
             var token = IsMatch(TokenKind.Not);
             if (token != null) {
                 var expr = ParseKeywordNotExpression();
-                    
+
                 return new UnaryAstNode(expr, token);
             }
 
@@ -66,8 +66,6 @@ namespace Orchard.Widgets.SimpleScripting.Compiler {
         private AstNode ParseRelationalExpression() {
             var expr = ParseAdditiveExpression();
             //TODO
-            //var Token = IsMatch(TokenKind.Not);
-            //if (Token != null) {
             return expr;
         }
 
@@ -104,7 +102,7 @@ namespace Orchard.Widgets.SimpleScripting.Compiler {
 
         private AstNode ParsePrimaryExpression() {
             var token = _lexer.Token();
-            switch(_lexer.Token().Kind) {
+            switch (_lexer.Token().Kind) {
                 case TokenKind.True:
                 case TokenKind.False:
                 case TokenKind.SingleQuotedStringLiteral:
@@ -113,9 +111,39 @@ namespace Orchard.Widgets.SimpleScripting.Compiler {
                     return ProduceConstant(token);
                 case TokenKind.OpenParen:
                     return ParseParenthesizedExpression();
+                case TokenKind.Identifier:
+                    return ParseMethodCallExpression();
                 default:
                     return ProduceError(token);
             }
+        }
+
+        private AstNode ParseParenthesizedExpression() {
+            Match(TokenKind.OpenParen);
+            var expr = ParseExpression();
+            Match(TokenKind.CloseParen);
+            return expr;
+        }
+
+        private AstNode ParseMethodCallExpression() {
+            var target = _lexer.Token();
+            _lexer.NextToken();
+
+            bool hasParenthesis = (IsMatch(TokenKind.OpenParen) != null);
+
+            var arguments = new List<AstNode>();
+            while (true) {
+                var argument = ParseExpression();
+                arguments.Add(argument);
+
+                if (IsMatch(TokenKind.Comma) == null)
+                    break;
+            }
+
+            if (hasParenthesis)
+                Match(TokenKind.CloseParen);
+
+            return new MethodCallAstNode(target, arguments);
         }
 
         private AstNode ProduceConstant(Token token) {
@@ -125,15 +153,7 @@ namespace Orchard.Widgets.SimpleScripting.Compiler {
 
         private AstNode ProduceError(Token token) {
             _lexer.NextToken();
-            return new ErrorAstNode(token,
-                                                      string.Format("Unexptected Token in primary expression ({0})", token));
-        }
-
-        private AstNode ParseParenthesizedExpression() {
-            Match(TokenKind.OpenParen);
-            var expr = ParseExpression();
-            Match(TokenKind.CloseParen);
-            return expr;
+            return new ErrorAstNode(token, string.Format("Unexptected Token in primary expression ({0})", token));
         }
 
         private void Match(TokenKind kind) {

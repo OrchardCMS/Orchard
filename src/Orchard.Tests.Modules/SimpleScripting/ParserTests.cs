@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using NUnit.Framework;
-using Orchard.Widgets.SimpleScripting;
 using Orchard.Widgets.SimpleScripting.Ast;
 using Orchard.Widgets.SimpleScripting.Compiler;
 
-namespace Orchard.Tests.Modules.SimpleScriptingTests {
+namespace Orchard.Tests.Modules.SimpleScripting {
     [TestFixture]
     public class ParserTests {
         [Test]
@@ -23,6 +22,37 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
                 "binop", TokenKind.Plus,
                     "const", true,
                     "const", true,
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandCommandExpressions() {
+            var tree = new Parser("print 'foo', 'bar'").Parse();
+            CheckTree(tree, new object[] {
+                "call", TokenKind.Identifier, "print",
+                    "const", "foo",
+                    "const", "bar",
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandCallExpressions() {
+            var tree = new Parser("print('foo', 'bar')").Parse();
+            CheckTree(tree, new object[] {
+                "call", TokenKind.Identifier, "print",
+                    "const", "foo",
+                    "const", "bar",
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandCallExpressions2() {
+            var tree = new Parser("print 1+2").Parse();
+            CheckTree(tree, new object[] {
+                "call", TokenKind.Identifier, "print",
+                    "binop", TokenKind.Plus,
+                        "const", 1,
+                        "const", 2,
             });
         }
 
@@ -123,7 +153,7 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         private void CheckExpression(AstNode astNode, int indent, object[] objects, ref int index) {
             var exprName = (string)objects[index++];
             Type type = null;
-            switch(exprName) {
+            switch (exprName) {
                 case "const":
                     type = typeof(ConstantAstNode);
                     break;
@@ -132,6 +162,9 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
                     break;
                 case "unop":
                     type = typeof(UnaryAstNode);
+                    break;
+                case "call":
+                    type = typeof(MethodCallAstNode);
                     break;
                 case "error":
                     type = typeof(ErrorAstNode);
@@ -151,8 +184,12 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
             else if (exprName == "unop") {
                 Assert.That((astNode as UnaryAstNode).Operator.Kind, Is.EqualTo(objects[index++]));
             }
+            else if (exprName == "call") {
+                Assert.That((astNode as MethodCallAstNode).Token.Kind, Is.EqualTo(objects[index++]));
+                Assert.That((astNode as MethodCallAstNode).Token.Value, Is.EqualTo(objects[index++]));
+            }
 
-            foreach(var child in astNode.Children) {
+            foreach (var child in astNode.Children) {
                 CheckExpression(child, indent + 1, objects, ref index);
             }
         }

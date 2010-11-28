@@ -1,10 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using NUnit.Framework;
-using Orchard.Widgets.SimpleScripting;
 using Orchard.Widgets.SimpleScripting.Compiler;
 
-namespace Orchard.Tests.Modules.SimpleScriptingTests {
+namespace Orchard.Tests.Modules.SimpleScripting {
     [TestFixture]
     public class EvaluatorTests {
         [Test]

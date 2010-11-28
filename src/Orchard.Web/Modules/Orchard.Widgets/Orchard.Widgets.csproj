@@ -80,6 +80,7 @@
     <Compile Include="SimpleScripting\Ast\ConstantAstNode.cs" />
     <Compile Include="SimpleScripting\Ast\AstVisitor.cs" />
     <Compile Include="SimpleScripting\Ast\ErrorAstNode.cs" />
+    <Compile Include="SimpleScripting\Ast\MethodCallAstNode.cs" />
     <Compile Include="SimpleScripting\Compiler\Interpreter.cs" />
     <Compile Include="SimpleScripting\Compiler\InterpreterVisitor.cs" />
     <Compile Include="SimpleScripting\Compiler\Lexer.cs" />

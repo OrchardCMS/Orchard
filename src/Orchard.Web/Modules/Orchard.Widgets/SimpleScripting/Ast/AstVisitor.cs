@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 
 namespace Orchard.Widgets.SimpleScripting.Ast {
     public class AstVisitor {
@@ -26,6 +23,10 @@ namespace Orchard.Widgets.SimpleScripting.Ast {
         }
 
         public virtual object VisitUnary(UnaryAstNode node) {
+            return null;
+        }
+
+        public virtual object VisitMethodCall(MethodCallAstNode node) {
             return null;
         }
     }

@@ -27,6 +27,9 @@ namespace Orchard.Widgets.SimpleScripting.Compiler {
                 case ')':
                     NextCharacter();
                     return CreateToken(TokenKind.CloseParen);
+                case ',':
+                    NextCharacter();
+                    return CreateToken(TokenKind.Comma);
                 case '+':
                     NextCharacter();
                     return CreateToken(TokenKind.Plus);

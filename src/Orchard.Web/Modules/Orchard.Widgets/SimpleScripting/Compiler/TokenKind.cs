@@ -6,6 +6,7 @@
         StringLiteral,
         SingleQuotedStringLiteral,
         Integer,
+        Comma,
         Plus,
         Minus,
         Mul,
