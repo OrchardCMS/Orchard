@@ -75,6 +75,12 @@
     <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />
+    <Compile Include="SimpleScripting\ExpressionLexer.cs" />
+    <Compile Include="SimpleScripting\ExpressionTokenizer.cs" />
+    <Compile Include="SimpleScripting\ExpressionParser.cs" />
+    <Compile Include="SimpleScripting\ExpressionTree.cs" />
+    <Compile Include="SimpleScripting\ScriptingManager.cs" />
+    <Compile Include="SimpleScripting\TokenKind.cs" />
     <Compile Include="ViewModels\WidgetsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
