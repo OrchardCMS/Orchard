@@ -109,16 +109,24 @@ namespace Orchard.Widgets.SimpleScripting {
                 case TokenKind.False:
                 case TokenKind.SingleQuotedStringLiteral:
                 case TokenKind.StringLiteral:
-                case TokenKind.NumberLiteral:
-                    _lexer.NextToken();
-                    return new ExpressionTree.ContantExpression(token);
+                case TokenKind.Integer:
+                    return ProduceConstant(token);
                 case TokenKind.OpenParen:
                     return ParseParenthesizedExpression();
                 default:
-                    _lexer.NextToken();
-                    return new ExpressionTree.ErrorExpression(token,
-                        string.Format("Unexptected token in primary expression ({0})", token));
+                    return ProduceError(token);
             }
+        }
+
+        private ExpressionTree.Expression ProduceConstant(ExpressionTokenizer.Token token) {
+            _lexer.NextToken();
+            return new ExpressionTree.ConstantExpression(token);
+        }
+
+        private ExpressionTree.Expression ProduceError(ExpressionTokenizer.Token token) {
+            _lexer.NextToken();
+            return new ExpressionTree.ErrorExpression(token,
+                                                      string.Format("Unexptected token in primary expression ({0})", token));
         }
 
         private ExpressionTree.Expression ParseParenthesizedExpression() {

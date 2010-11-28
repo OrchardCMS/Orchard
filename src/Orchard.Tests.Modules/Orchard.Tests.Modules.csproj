@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
+    <Compile Include="SimpleScriptingTests\ExpressionEvaluatorTests.cs" />
     <Compile Include="SimpleScriptingTests\ExpressionParserTests.cs" />
     <Compile Include="SimpleScriptingTests\ExpressionLexerTests.cs" />
     <Compile Include="SimpleScriptingTests\SimpleScriptingTests.cs" />

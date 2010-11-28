@@ -24,11 +24,7 @@ namespace Orchard.Widgets.SimpleScripting {
                 var ewt = (this as IExpressionWithToken);
                 if (ewt != null) {
                     sb.Append(" - ");
-                    sb.Append(ewt.Token.Kind);
-                    if (ewt.Token.Value != null) {
-                        sb.Append(" - ");
-                        sb.Append(ewt.Token.Value);
-                    }
+                    sb.Append(ewt.Token);
                 }
                 return sb.ToString();
             }
@@ -57,10 +53,10 @@ namespace Orchard.Widgets.SimpleScripting {
         }
 
 
-        public class ContantExpression : Expression, IExpressionWithToken {
+        public class ConstantExpression : Expression, IExpressionWithToken {
             private readonly ExpressionTokenizer.Token _token;
 
-            public ContantExpression(ExpressionTokenizer.Token token) {
+            public ConstantExpression(ExpressionTokenizer.Token token) {
                 _token = token;
             }
 

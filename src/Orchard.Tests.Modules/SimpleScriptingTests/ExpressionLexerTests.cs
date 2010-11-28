@@ -35,9 +35,9 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void LexerShouldProcessReservedWords() {
             TestReservedWord("true", true, TokenKind.True);
             TestReservedWord("false", false, TokenKind.False);
-            TestReservedWord("not", "not", TokenKind.Not);
-            TestReservedWord("and", "and", TokenKind.And);
-            TestReservedWord("or", "or", TokenKind.Or);
+            TestReservedWord("not", null, TokenKind.Not);
+            TestReservedWord("and", null, TokenKind.And);
+            TestReservedWord("or", null, TokenKind.Or);
         }
 
         private void TestReservedWord(string expression, object value, TokenKind expectedTokenKind) {
@@ -58,7 +58,7 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
 
         [Test]
         public void LexerShouldProcesSequenceOfTokens2() {
-            CheckTokenSequence("1+2*3", TokenKind.NumberLiteral, TokenKind.Plus, TokenKind.NumberLiteral, TokenKind.Mul, TokenKind.NumberLiteral);
+            CheckTokenSequence("1+2*3", TokenKind.Integer, TokenKind.Plus, TokenKind.Integer, TokenKind.Mul, TokenKind.Integer);
         }
 
 

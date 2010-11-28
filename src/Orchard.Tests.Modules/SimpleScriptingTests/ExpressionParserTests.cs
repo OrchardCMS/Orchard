@@ -10,7 +10,7 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandConstantExpressions() {
             var tree = new ExpressionParser("true").Parse();
             CheckTree(tree, new object[] {
-                typeof(ExpressionTree.ContantExpression), true,
+                "const", true,
             });
         }
 
@@ -18,9 +18,9 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandBinaryExpressions() {
             var tree = new ExpressionParser("true+true").Parse();
             CheckTree(tree, new object[] {
-                typeof(ExpressionTree.BinaryExpression), TokenKind.Plus,
-                    typeof(ExpressionTree.ContantExpression), true,
-                    typeof(ExpressionTree.ContantExpression), true,
+                "binop", TokenKind.Plus,
+                    "const", true,
+                    "const", true,
             });
         }
 
@@ -28,11 +28,11 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandOperatorPrecedence() {
             var tree = new ExpressionParser("1+2*3").Parse();
             CheckTree(tree, new object[] {
-                typeof(ExpressionTree.BinaryExpression), TokenKind.Plus,
-                    typeof(ExpressionTree.ContantExpression), 1,
-                    typeof(ExpressionTree.BinaryExpression), TokenKind.Mul,
-                        typeof(ExpressionTree.ContantExpression), 2,
-                        typeof(ExpressionTree.ContantExpression), 3,
+                "binop", TokenKind.Plus,
+                    "const", 1,
+                    "binop", TokenKind.Mul,
+                        "const", 2,
+                        "const", 3,
             });
         }
 
@@ -40,11 +40,11 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandOperatorPrecedence2() {
             var tree = new ExpressionParser("1*2+3").Parse();
             CheckTree(tree, new object[] {
-                typeof(ExpressionTree.BinaryExpression), TokenKind.Plus,
-                    typeof(ExpressionTree.BinaryExpression), TokenKind.Mul,
-                        typeof(ExpressionTree.ContantExpression), 1,
-                        typeof(ExpressionTree.ContantExpression), 2,
-                    typeof(ExpressionTree.ContantExpression), 3,
+                "binop", TokenKind.Plus,
+                    "binop", TokenKind.Mul,
+                        "const", 1,
+                        "const", 2,
+                    "const", 3,
             });
         }
 
@@ -52,10 +52,10 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandOperatorPrecedence3() {
             var tree = new ExpressionParser("not true or true").Parse();
             CheckTree(tree, new object[] {
-                typeof(ExpressionTree.BinaryExpression), TokenKind.Or,
-                    typeof(ExpressionTree.UnaryExpression), TokenKind.Not,
-                        typeof(ExpressionTree.ContantExpression), true,
-                    typeof(ExpressionTree.ContantExpression), true,
+                "binop", TokenKind.Or,
+                    "unop", TokenKind.Not,
+                        "const", true,
+                    "const", true,
             });
         }
 
@@ -63,10 +63,10 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandOperatorPrecedence4() {
             var tree = new ExpressionParser("not (true or true)").Parse();
             CheckTree(tree, new object[] {
-                typeof(ExpressionTree.UnaryExpression), TokenKind.Not,
-                  typeof(ExpressionTree.BinaryExpression), TokenKind.Or,
-                    typeof(ExpressionTree.ContantExpression), true,
-                    typeof(ExpressionTree.ContantExpression), true,
+                "unop", TokenKind.Not,
+                  "binop", TokenKind.Or,
+                    "const", true,
+                    "const", true,
             });
         }
 
@@ -74,11 +74,11 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandParenthesis() {
             var tree = new ExpressionParser("1*(2+3)").Parse();
             CheckTree(tree, new object[] {
-                typeof(ExpressionTree.BinaryExpression), TokenKind.Mul,
-                    typeof(ExpressionTree.ContantExpression), 1,
-                    typeof(ExpressionTree.BinaryExpression), TokenKind.Plus,
-                        typeof(ExpressionTree.ContantExpression), 2,
-                        typeof(ExpressionTree.ContantExpression), 3,
+                "binop", TokenKind.Mul,
+                    "const", 1,
+                    "binop", TokenKind.Plus,
+                        "const", 2,
+                        "const", 3,
             });
         }
 
@@ -86,16 +86,16 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandComplexExpressions() {
             var tree = new ExpressionParser("not 1 * (2 / 4 * 6 + (3))").Parse();
             CheckTree(tree, new object[] {
-                typeof(ExpressionTree.UnaryExpression), TokenKind.Not,
-                    typeof(ExpressionTree.BinaryExpression), TokenKind.Mul,
-                        typeof(ExpressionTree.ContantExpression), 1,
-                        typeof(ExpressionTree.BinaryExpression), TokenKind.Plus,
-                            typeof(ExpressionTree.BinaryExpression), TokenKind.Div,
-                                typeof(ExpressionTree.ContantExpression), 2,
-                                typeof(ExpressionTree.BinaryExpression), TokenKind.Mul,
-                                    typeof(ExpressionTree.ContantExpression), 4,
-                                    typeof(ExpressionTree.ContantExpression), 6,
-                            typeof(ExpressionTree.ContantExpression), 3,
+                "unop", TokenKind.Not,
+                    "binop", TokenKind.Mul,
+                        "const", 1,
+                        "binop", TokenKind.Plus,
+                            "binop", TokenKind.Div,
+                                "const", 2,
+                                "binop", TokenKind.Mul,
+                                    "const", 4,
+                                    "const", 6,
+                            "const", 3,
             });
         }
 
@@ -103,9 +103,9 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldContainErrorExpressions() {
             var tree = new ExpressionParser("1 + not 3").Parse();
             CheckTree(tree, new object[] {
-                typeof(ExpressionTree.BinaryExpression), TokenKind.Plus,
-                    typeof(ExpressionTree.ContantExpression), 1,
-                    typeof(ExpressionTree.ErrorExpression),
+                "binop", TokenKind.Plus,
+                    "const", 1,
+                    "error",
             });
         }
 
@@ -119,19 +119,34 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         }
 
         private void CheckExpression(ExpressionTree.Expression expression, int indent, object[] objects, ref int index) {
-            var type = (Type)objects[index++];
+            var exprName = (string)objects[index++];
+            Type type = null;
+            switch(exprName) {
+                case "const":
+                    type = typeof(ExpressionTree.ConstantExpression);
+                    break;
+                case "binop":
+                    type = typeof(ExpressionTree.BinaryExpression);
+                    break;
+                case "unop":
+                    type = typeof(ExpressionTree.UnaryExpression);
+                    break;
+                case "error":
+                    type = typeof(ExpressionTree.ErrorExpression);
+                    break;
+            }
 
             Trace.WriteLine(string.Format("{0}: {1}{2} (Current: {3})", indent, new string(' ', indent * 2), type.Name, expression));
 
             Assert.That(expression.GetType(), Is.EqualTo(type));
 
-            if (type == typeof(ExpressionTree.ContantExpression)) {
-                Assert.That((expression as ExpressionTree.ContantExpression).Value, Is.EqualTo(objects[index++]));
+            if (exprName == "const") {
+                Assert.That((expression as ExpressionTree.ConstantExpression).Value, Is.EqualTo(objects[index++]));
             }
-            else if (type == typeof(ExpressionTree.BinaryExpression)) {
+            else if (exprName == "binop") {
                 Assert.That((expression as ExpressionTree.BinaryExpression).Operator.Kind, Is.EqualTo(objects[index++]));
             }
-            else if (type == typeof(ExpressionTree.UnaryExpression)) {
+            else if (exprName == "unop") {
                 Assert.That((expression as ExpressionTree.UnaryExpression).Operator.Kind, Is.EqualTo(objects[index++]));
             }
 

@@ -5,7 +5,7 @@
         CloseParen,
         StringLiteral,
         SingleQuotedStringLiteral,
-        NumberLiteral,
+        Integer,
         Plus,
         Minus,
         Mul,

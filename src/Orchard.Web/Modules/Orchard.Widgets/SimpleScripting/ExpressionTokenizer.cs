@@ -6,6 +6,7 @@ namespace Orchard.Widgets.SimpleScripting {
         private readonly string _expression;
         private readonly StringBuilder _stringBuilder;
         private int _index;
+        private int _startTokenIndex;
 
         public ExpressionTokenizer(string expression) {
             _expression = expression;
@@ -17,6 +18,7 @@ namespace Orchard.Widgets.SimpleScripting {
                 return CreateToken(TokenKind.Eof);
 
         LexAgain:
+            _startTokenIndex = _index;
             char ch = Character();
             switch (ch) {
                 case '(':
@@ -84,7 +86,7 @@ namespace Orchard.Widgets.SimpleScripting {
                     _stringBuilder.Append(Character());
                 }
                 else {
-                    return CreateToken(TokenKind.NumberLiteral, Int32.Parse(_stringBuilder.ToString()));
+                    return CreateToken(TokenKind.Integer, Int32.Parse(_stringBuilder.ToString()));
                 }
             }
         }
@@ -96,11 +98,11 @@ namespace Orchard.Widgets.SimpleScripting {
                 case "false":
                     return CreateToken(TokenKind.False, false);
                 case "or":
-                    return CreateToken(TokenKind.Or, identifier);
+                    return CreateToken(TokenKind.Or, null);
                 case "and":
-                    return CreateToken(TokenKind.And, identifier);
+                    return CreateToken(TokenKind.And, null);
                 case "not":
-                    return CreateToken(TokenKind.Not, identifier);
+                    return CreateToken(TokenKind.Not, null);
                 default:
                     return CreateToken(TokenKind.Identifier, identifier);
             }
@@ -201,7 +203,7 @@ namespace Orchard.Widgets.SimpleScripting {
         private Token CreateToken(TokenKind kind, object value = null) {
             return new Token {
                 Kind = kind,
-                Position = _index,
+                Position = _startTokenIndex,
                 Value = value
             };
         }
@@ -216,7 +218,7 @@ namespace Orchard.Widgets.SimpleScripting {
             public object Value { get; set; }
 
             public override string ToString() {
-                return string.Format("{0} at position {1}", Value ?? Kind, Position);
+                return string.Format("{0} ({1}) at position {2}", Kind, Value ?? "<noval>", Position);
             }
         }
     }
