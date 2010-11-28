@@ -4,7 +4,7 @@ using Orchard.Tests.Stubs;
 using Orchard.Widgets.Services;
 using Orchard.Widgets.SimpleScripting;
 
-namespace Orchard.Tests.Modules.SimpleScripting {
+namespace Orchard.Tests.Modules.Scripting {
     [TestFixture]
     public class SimpleScriptingTests {
         [Test]

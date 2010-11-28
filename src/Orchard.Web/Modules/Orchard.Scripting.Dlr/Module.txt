@@ -1,11 +1,11 @@
-﻿Name: Scripting
+﻿Name: DLR Scripting
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
 Version: 0.8.0
 OrchardVersion: 0.8.0
-Description: The scripting module enables the possibility to execute scripts. 
+Description: The DLR scripting module enables the possibility to execute scripts using the DLR.
 Features:
-    Orchard.Scripting:
-        Description: Scripting support.
+    Orchard.Scripting.Dlr:
+        Description: DLR Scripting support.
         Category: Scripting

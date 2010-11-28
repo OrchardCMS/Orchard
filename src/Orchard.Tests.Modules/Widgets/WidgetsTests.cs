@@ -1,7 +1,7 @@
 ﻿using System;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Scripting.Services;
+using Orchard.Scripting.Dlr.Services;
 using Orchard.Caching;
 using Orchard.Tests.Stubs;
 using Orchard.Widgets.RuleEngine;

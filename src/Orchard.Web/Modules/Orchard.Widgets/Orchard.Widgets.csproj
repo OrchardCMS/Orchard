@@ -117,9 +117,9 @@
       <Name>Orchard.Framework</Name>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Scripting\Orchard.Scripting.csproj">
+    <ProjectReference Include="..\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj">
       <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
-      <Name>Orchard.Scripting</Name>
+      <Name>Orchard.Scripting.Dlr</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

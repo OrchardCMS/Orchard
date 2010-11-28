@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Orchard.Widgets.SimpleScripting.Compiler;
 
-namespace Orchard.Tests.Modules.SimpleScripting {
+namespace Orchard.Tests.Modules.Scripting {
     [TestFixture]
     public class TokenizerTests {
 

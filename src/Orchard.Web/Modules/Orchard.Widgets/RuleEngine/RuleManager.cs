@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Orchard.Scripting.Services;
+using Orchard.Scripting.Dlr.Services;
 using Orchard.Widgets.Services;
 using Microsoft.Scripting.Hosting;
 using Orchard.Caching;

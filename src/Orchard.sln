@@ -98,7 +98,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Messaging", "Orchar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Localization", "Orchard.Web\Modules\Orchard.Localization\Orchard.Localization.csproj", "{FBC8B571-ED50-49D8-8D9D-64AB7454A0D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Scripting", "Orchard.Web\Modules\Orchard.Scripting\Orchard.Scripting.csproj", "{2AD6973D-C7BB-416E-89FE-EEE34664E05F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Scripting.Dlr", "Orchard.Web\Modules\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj", "{2AD6973D-C7BB-416E-89FE-EEE34664E05F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
