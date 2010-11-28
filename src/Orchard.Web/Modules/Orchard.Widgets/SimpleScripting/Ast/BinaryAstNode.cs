@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Widgets.SimpleScripting.Compiler;
 
 namespace Orchard.Widgets.SimpleScripting.Ast {
@@ -21,11 +22,19 @@ namespace Orchard.Widgets.SimpleScripting.Ast {
             get { return _token; }
         }
 
+        public override object Accept(AstVisitor visitor) {
+            return visitor.VisitBinary(this);
+        }
+
         public override IEnumerable<AstNode> Children {
             get {
                 yield return _left;
                 yield return _right;
             }
         }
+
+        public AstNode Left { get { return _left; } }
+
+        public AstNode Right { get { return _right; } }
     }
 }

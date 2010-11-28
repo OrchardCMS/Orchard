@@ -25,5 +25,9 @@ namespace Orchard.Widgets.SimpleScripting.Ast {
                 yield return _expr;
             }
         }
+
+        public override object Accept(AstVisitor visitor) {
+            return visitor.VisitUnary(this);
+        }
     }
 }

@@ -78,7 +78,10 @@
     <Compile Include="SimpleScripting\Ast\AstNode.cs" />
     <Compile Include="SimpleScripting\Ast\BinaryAstNode.cs" />
     <Compile Include="SimpleScripting\Ast\ConstantAstNode.cs" />
+    <Compile Include="SimpleScripting\Ast\AstVisitor.cs" />
     <Compile Include="SimpleScripting\Ast\ErrorAstNode.cs" />
+    <Compile Include="SimpleScripting\Compiler\Interpreter.cs" />
+    <Compile Include="SimpleScripting\Compiler\InterpreterVisitor.cs" />
     <Compile Include="SimpleScripting\Compiler\Lexer.cs" />
     <Compile Include="SimpleScripting\Compiler\Tokenizer.cs" />
     <Compile Include="SimpleScripting\Compiler\Parser.cs" />

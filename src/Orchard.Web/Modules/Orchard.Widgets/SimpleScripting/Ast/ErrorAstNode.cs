@@ -22,5 +22,9 @@ namespace Orchard.Widgets.SimpleScripting.Ast {
         public override string ToString() {
             return String.Format("{0} - {1}", GetType().Name, Message);
         }
+
+        public override object Accept(AstVisitor visitor) {
+            return visitor.VisitError(this);
+        }
     }
 }

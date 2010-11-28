@@ -13,5 +13,9 @@ namespace Orchard.Widgets.SimpleScripting.Ast {
         }
 
         public object Value { get { return _token.Value; } }
+
+        public override object Accept(AstVisitor visitor) {
+            return visitor.VisitConstant(this);
+        }
     }
 }
