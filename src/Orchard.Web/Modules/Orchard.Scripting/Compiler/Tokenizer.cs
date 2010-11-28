@@ -14,52 +14,53 @@ namespace Orchard.Scripting.Compiler {
         }
 
         public Token NextToken() {
-            if (Eof())
-                return CreateToken(TokenKind.Eof);
+            while (true) {
+                if (Eof())
+                    return CreateToken(TokenKind.Eof);
 
-        LexAgain:
-            _startTokenIndex = _index;
-            char ch = Character();
-            switch (ch) {
-                case '(':
-                    NextCharacter();
-                    return CreateToken(TokenKind.OpenParen);
-                case ')':
-                    NextCharacter();
-                    return CreateToken(TokenKind.CloseParen);
-                case ',':
-                    NextCharacter();
-                    return CreateToken(TokenKind.Comma);
-                case '+':
-                    NextCharacter();
-                    return CreateToken(TokenKind.Plus);
-                case '-':
-                    NextCharacter();
-                    return CreateToken(TokenKind.Minus);
-                case '*':
-                    NextCharacter();
-                    return CreateToken(TokenKind.Mul);
-                case '/':
-                    NextCharacter();
-                    return CreateToken(TokenKind.Div);
-                case '"':
-                    return LexStringLiteral();
-                case '\'':
-                    return LexSingleQuotedStringLiteral();
-            }
+                _startTokenIndex = _index;
+                char ch = Character();
+                switch (ch) {
+                    case '(':
+                        NextCharacter();
+                        return CreateToken(TokenKind.OpenParen);
+                    case ')':
+                        NextCharacter();
+                        return CreateToken(TokenKind.CloseParen);
+                    case ',':
+                        NextCharacter();
+                        return CreateToken(TokenKind.Comma);
+                    case '+':
+                        NextCharacter();
+                        return CreateToken(TokenKind.Plus);
+                    case '-':
+                        NextCharacter();
+                        return CreateToken(TokenKind.Minus);
+                    case '*':
+                        NextCharacter();
+                        return CreateToken(TokenKind.Mul);
+                    case '/':
+                        NextCharacter();
+                        return CreateToken(TokenKind.Div);
+                    case '"':
+                        return LexStringLiteral();
+                    case '\'':
+                        return LexSingleQuotedStringLiteral();
+                }
 
-            if (IsDigitCharacter(ch)) {
-                return LexInteger();
-            }
-            else if (IsIdentifierCharacter(ch)) {
-                return LexIdentifierOrKeyword();
-            }
-            else if (IsWhitespaceCharacter(ch)) {
-                NextCharacter();
-                goto LexAgain;
-            }
+                if (IsDigitCharacter(ch)) {
+                    return LexInteger();
+                }
+                else if (IsIdentifierCharacter(ch)) {
+                    return LexIdentifierOrKeyword();
+                }
+                else if (IsWhitespaceCharacter(ch)) {
+                    NextCharacter();
+                    continue;
+                }
 
-            return CreateToken(TokenKind.Invalid, "Unrecognized character");
+                return CreateToken(TokenKind.Invalid, "Unrecognized character");
+            }
         }
 
         private Token LexIdentifierOrKeyword() {

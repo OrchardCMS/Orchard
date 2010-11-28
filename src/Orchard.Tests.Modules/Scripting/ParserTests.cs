@@ -16,6 +16,14 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
+        public void ParserShouldIgnoreWhitespaces() {
+            var tree = new Parser("  true \n  ").Parse();
+            CheckTree(tree, new object[] {
+                "const", true,
+            });
+        }
+
+        [Test]
         public void ParserShouldUnderstandBinaryExpressions() {
             var tree = new Parser("true+true").Parse();
             CheckTree(tree, new object[] {
