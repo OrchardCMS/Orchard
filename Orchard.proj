@@ -233,6 +233,7 @@
         $(StageFolder)\**\Modules\Orchard.Indexing\**;
         $(StageFolder)\**\Modules\Orchard.Migrations\**;
         $(StageFolder)\**\Modules\Orchard.MultiTenancy\**;
+        $(StageFolder)\**\Modules\Orchard.Scripting.Dlr\**;
         $(StageFolder)\**\Modules\Orchard.Search\**;
         " />
 
@@ -322,6 +323,7 @@
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Indexing &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Migrations &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.MultiTenancy &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Scriping.Dlr &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Search &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
   </Target>
 
