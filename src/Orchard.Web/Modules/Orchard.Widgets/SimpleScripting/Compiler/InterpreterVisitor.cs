@@ -3,85 +3,112 @@ using Orchard.Widgets.SimpleScripting.Ast;
 
 namespace Orchard.Widgets.SimpleScripting.Compiler {
     public class InterpreterVisitor : AstVisitor {
-        private readonly EvaluationContext _context;
-
-        public InterpreterVisitor(EvaluationContext context) {
-            _context = context;
+        public EvaluationResult Evaluate(EvaluationContext context) {
+            return Evaluate(context.Tree.Root);
         }
 
-        public EvaluationResult Evaluate() {
-            return Evaluate(_context.Tree.Root);
-        }
-
-        public EvaluationResult Evaluate(AstNode node) {
+        private EvaluationResult Evaluate(AstNode node) {
             return (EvaluationResult)this.Visit(node);
         }
 
         public override object VisitConstant(ConstantAstNode node) {
-            return new EvaluationResult { Value = node.Value };
+            return Result(node.Value);
+        }
+
+        public override object VisitUnary(UnaryAstNode node) {
+            var operandValue = Evaluate(node.Operand);
+            if (operandValue.IsError)
+                return operandValue;
+
+            var operandBoolValue = ConvertToBool(operandValue);
+            if (operandBoolValue.IsError)
+                return operandBoolValue;
+
+            return Result(!operandBoolValue.BoolValue);
         }
 
         public override object VisitBinary(BinaryAstNode node) {
             var left = Evaluate(node.Left);
-            if (left.HasErrors)
+            if (left.IsError)
                 return left;
 
             var right = Evaluate(node.Right);
-            if (right.HasErrors)
+            if (right.IsError)
                 return right;
 
             switch (node.Token.Kind) {
                 case TokenKind.Plus:
-                    return EvaluateArithmetic(left, right, (a, b) => a + b);
+                    return EvaluateArithmetic(left, right, (a, b) => Result(a.Int32Value + b.Int32Value));
                 case TokenKind.Minus:
-                    return EvaluateArithmetic(left, right, (a, b) => a - b);
+                    return EvaluateArithmetic(left, right, (a, b) => Result(a.Int32Value - b.Int32Value));
                 case TokenKind.Mul:
-                    return EvaluateArithmetic(left, right, (a, b) => a * b);
+                    return EvaluateArithmetic(left, right, (a, b) => Result(a.Int32Value * b.Int32Value));
                 case TokenKind.Div:
-                    //TODO: divide by zero?
-                    return EvaluateArithmetic(left, right, (a, b) => a / b);
+                    return EvaluateArithmetic(left, right, (a, b) => b.Int32Value == 0 ? Error("Attempted to divide by zero.") : Result(a.Int32Value / b.Int32Value));
                 case TokenKind.And:
-                    return EvaluateLogical(left, right, (a, b) => a && b);
+                    return EvaluateLogical(left, right, (a, b) => Result(a.BoolValue && b.BoolValue));
                 case TokenKind.Or:
-                    return EvaluateLogical(left, right, (a, b) => a || b);
-
+                    return EvaluateLogical(left, right, (a, b) => Result(a.BoolValue || b.BoolValue));
+                default:
+                    throw new InvalidOperationException(string.Format("Internal error: binary expression {0} is not supported.", node.Token));
             }
-
-            return new EvaluationResult {HasErrors = true};
         }
 
-        private EvaluationResult EvaluateArithmetic(EvaluationResult left, EvaluationResult right, Func<int, int, int> operation) {
+        public override object VisitError(ErrorAstNode node) {
+            return Error(node.Message);
+        }
+
+        private static EvaluationResult EvaluateArithmetic(EvaluationResult left, EvaluationResult right,
+            Func<EvaluationResult, EvaluationResult, EvaluationResult> operation) {
             //TODO: Proper type conversion
             var leftValue = ConvertToInt(left);
+            if (leftValue.IsError)
+                return leftValue;
+
             var rightValue = ConvertToInt(right);
+            if (rightValue.IsError)
+                return rightValue;
 
-            return new EvaluationResult { Value = operation(leftValue.Value, rightValue.Value) };
+            return operation(leftValue, rightValue);
         }
 
-        private EvaluationResult EvaluateLogical(EvaluationResult left, EvaluationResult right, Func<bool, bool, bool> operation) {
-            //TODO: Proper type conversion
+        private static EvaluationResult EvaluateLogical(EvaluationResult left, EvaluationResult right,
+            Func<EvaluationResult, EvaluationResult, EvaluationResult> operation) {
             var leftValue = ConvertToBool(left);
+            if (leftValue.IsError)
+                return leftValue;
+
             var rightValue = ConvertToBool(right);
+            if (rightValue.IsError)
+                return rightValue;
 
-            return new EvaluationResult { Value = operation(leftValue.Value, rightValue.Value) };
+            return operation(leftValue, rightValue);
         }
 
+        private static EvaluationResult ConvertToInt(EvaluationResult value) {
+            //TODO: Proper type conversion
+            if (value.IsInt32)
+                return value;
 
-        private EvaluationResult<int> ConvertToInt(EvaluationResult value) {
-            if (value.Value is int)
-                return new EvaluationResult<int> { Value = (int)value.Value };
-
-            return new EvaluationResult<int>() { HasErrors = true, Value = 0 };
+            return Error(string.Format("Value '{0}' is not convertible to an integer.", value));
         }
 
-        private EvaluationResult<bool> ConvertToBool(EvaluationResult value) {
-            if (value.Value is bool)
-                return new EvaluationResult<bool>() { Value = (bool)value.Value };
+        private static EvaluationResult ConvertToBool(EvaluationResult value) {
+            //TODO: Proper type conversion
+            if (value.IsBool)
+                return value;
 
-            if (value.Value is int)
-                return new EvaluationResult<bool>() { Value = ((int)value.Value) != 0 };
+            return Error(string.Format("Value '{0}' is not convertible to a boolean.", value));
+        }
 
-            return new EvaluationResult<bool>() { HasErrors = true, Value = false };
+        private static EvaluationResult Result(object value) {
+            if (value is EvaluationResult)
+                throw new InvalidOperationException("Internal error: value cannot be an evaluation result.");
+            return new EvaluationResult(value);
+        }
+
+        private static EvaluationResult Error(string message) {
+            return new EvaluationResult(new Error { Message = message });
         }
     }
 }
