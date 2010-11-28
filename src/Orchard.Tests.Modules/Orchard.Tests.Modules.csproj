@@ -135,10 +135,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
-    <Compile Include="SimpleScriptingTests\ExpressionEvaluatorTests.cs" />
-    <Compile Include="SimpleScriptingTests\ExpressionParserTests.cs" />
-    <Compile Include="SimpleScriptingTests\ExpressionTokenizerTests.cs" />
-    <Compile Include="SimpleScriptingTests\SimpleScriptingTests.cs" />
+    <Compile Include="SimpleScripting\EvaluatorTests.cs" />
+    <Compile Include="SimpleScripting\ParserTests.cs" />
+    <Compile Include="SimpleScripting\TokenizerTests.cs" />
+    <Compile Include="SimpleScripting\SimpleScriptingTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="Media\Extensions\LongExtensionsTests.cs" />
     <EmbeddedResource Include="Packaging\HelloDriver.cs.txt" />

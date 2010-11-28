@@ -75,12 +75,19 @@
     <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />
-    <Compile Include="SimpleScripting\ExpressionLexer.cs" />
-    <Compile Include="SimpleScripting\ExpressionTokenizer.cs" />
-    <Compile Include="SimpleScripting\ExpressionParser.cs" />
-    <Compile Include="SimpleScripting\ExpressionTree.cs" />
+    <Compile Include="SimpleScripting\AstNode.cs" />
+    <Compile Include="SimpleScripting\BinaryAstNode.cs" />
+    <Compile Include="SimpleScripting\ConstantAstNode.cs" />
+    <Compile Include="SimpleScripting\ErrorAstNode.cs" />
+    <Compile Include="SimpleScripting\Lexer.cs" />
+    <Compile Include="SimpleScripting\Tokenizer.cs" />
+    <Compile Include="SimpleScripting\Parser.cs" />
+    <Compile Include="SimpleScripting\AbstractSyntaxTree.cs" />
+    <Compile Include="SimpleScripting\IAstNodeWithToken.cs" />
     <Compile Include="SimpleScripting\ScriptingManager.cs" />
-    <Compile Include="SimpleScripting\TokenKind.cs" />
+    <Compile Include="SimpleScripting\Terminal.cs" />
+    <Compile Include="SimpleScripting\TerminalKind.cs" />
+    <Compile Include="SimpleScripting\UnaryAstNode.cs" />
     <Compile Include="ViewModels\WidgetsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

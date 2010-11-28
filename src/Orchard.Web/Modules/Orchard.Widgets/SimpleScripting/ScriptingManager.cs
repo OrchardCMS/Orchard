@@ -28,11 +28,11 @@ namespace Orchard.Widgets.SimpleScripting {
             return (bool)Convert.ChangeType(result, typeof (bool));
         }
 
-        private ExpressionTree ParseExpression(string expression) {
-            return new ExpressionParser(expression).Parse();
+        private AbstractSyntaxTree ParseExpression(string expression) {
+            return new Parser(expression).Parse();
         }
 
-        private object EvaluateExpression(ExpressionTree.Expression root) {
+        private object EvaluateExpression(AstNode root) {
             throw new NotImplementedException();
         }
 
