@@ -54,6 +54,7 @@
     <Compile Include="Ast\IAstNodeWithToken.cs" />
     <Compile Include="Ast\MethodCallAstNode.cs" />
     <Compile Include="Ast\UnaryAstNode.cs" />
+    <Compile Include="IGlobalMethodProvider.cs" />
     <Compile Include="IScriptExpressionEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compiler\Interpreter.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="Compiler\Token.cs" />
     <Compile Include="Compiler\Tokenizer.cs" />
     <Compile Include="Compiler\TokenKind.cs" />
-    <Compile Include="ScriptingManager.cs" />
+    <Compile Include="ScriptExpressionEvaluator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

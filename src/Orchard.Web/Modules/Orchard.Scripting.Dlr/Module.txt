@@ -7,5 +7,6 @@ OrchardVersion: 0.8.0
 Description: The DLR scripting module enables the possibility to execute scripts using the DLR.
 Features:
     Orchard.Scripting.Dlr:
-        Description: DLR Scripting support.
+        Description: DLR scripting support.
+        Dependencies: Orchard.Scripting
         Category: Scripting

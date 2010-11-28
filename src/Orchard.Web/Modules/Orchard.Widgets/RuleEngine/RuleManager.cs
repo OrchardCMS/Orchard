@@ -1,73 +1,55 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Orchard.Scripting.Dlr.Services;
+using Orchard.Localization;
+using Orchard.Scripting;
 using Orchard.Widgets.Services;
-using Microsoft.Scripting.Hosting;
-using Orchard.Caching;
 
 namespace Orchard.Widgets.RuleEngine {
     public class RuleManager : IRuleManager {
         private readonly IEnumerable<IRuleProvider> _ruleProviders;
-        private readonly IScriptingManager _scriptingManager;
-        private readonly ICacheManager _cacheManager;
+        private readonly IEnumerable<IScriptExpressionEvaluator> _evaluators;
 
-        public RuleManager(IEnumerable<IRuleProvider> ruleProviders, IScriptingManager scriptingManager, ICacheManager cacheManager) {
+        public RuleManager(IEnumerable<IRuleProvider> ruleProviders, IEnumerable<IScriptExpressionEvaluator> evaluators) {
             _ruleProviders = ruleProviders;
-            _scriptingManager = scriptingManager;
-            _cacheManager = cacheManager;
+            _evaluators = evaluators;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public bool Matches(string expression) {
-            object execContextType = _cacheManager.Get("---", ctx => (object)_scriptingManager.ExecuteExpression(@"
-class ExecBlock
-    def initialize(callbacks)
-        @callbacks = callbacks
-    end
-    def method_missing(name, *args, &block)
-        @callbacks.send(name, args, &block);
-    end
-end
-class ExecContext
-    class << self
-        def alloc(thing)
-            instance_eval 'self.new {' + thing + '}'
-        end
-    end
-    def initialize(&block)
-        @block = block
-    end
-    def evaluate(callbacks)
-      ExecBlock.new(callbacks).instance_eval(&@block)
-    end
-end
-ExecContext
-                                        "));
-            var ops = _cacheManager.Get("----", ctx => (ObjectOperations)_scriptingManager.ExecuteOperation(x => x));
-            object execContext = _cacheManager.Get(expression, ctx => (object)ops.InvokeMember(execContextType, "alloc", expression));
-            dynamic result = ops.InvokeMember(execContext, "evaluate", new CallbackApi(this));
-            return result;
+            var evaluator = _evaluators.FirstOrDefault();
+            if (evaluator == null) {
+                throw new OrchardException(T("There are currently not scripting engine enabled"));
+            }
+
+            var result = evaluator.Evaluate(expression, new List<IGlobalMethodProvider> { new GlobalMethodProvider(this) });
+            if (!(result is bool)) {
+                throw new OrchardException(T("Expression is not a boolean value"));
+            }
+            return (bool)result;
         }
 
-        public class CallbackApi {
+        private class GlobalMethodProvider : IGlobalMethodProvider {
             private readonly RuleManager _ruleManager;
 
-            public CallbackApi(RuleManager ruleManager) {
+            public GlobalMethodProvider(RuleManager ruleManager) {
                 _ruleManager = ruleManager;
             }
 
-            public object send(string name, IList<object> args) {
-                return _ruleManager.Evaluate(name, args);
+            public void Process(GlobalMethodContext context) {
+                var ruleContext = new RuleContext {
+                    FunctionName = context.FunctionName,
+                    Arguments = context.Arguments.ToArray(),
+                    Result = context.Result
+                };
+
+                foreach(var ruleProvider in _ruleManager._ruleProviders) {
+                    ruleProvider.Process(ruleContext);
+                }
+
+                context.Result = ruleContext.Result;
             }
-        }
-
-        private object Evaluate(string name, IList<object> args) {
-            RuleContext ruleContext = new RuleContext { FunctionName = name, Arguments = args.ToArray() };
-
-            foreach (var ruleProvider in _ruleProviders) {
-                ruleProvider.Process(ruleContext);
-            }
-
-            return ruleContext.Result;
         }
     }
 }
