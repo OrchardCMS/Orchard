@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using NUnit.Framework;
 using Orchard.Widgets.SimpleScripting;
+using Orchard.Widgets.SimpleScripting.Ast;
+using Orchard.Widgets.SimpleScripting.Compiler;
 
 namespace Orchard.Tests.Modules.SimpleScriptingTests {
     [TestFixture]
@@ -18,7 +20,7 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandBinaryExpressions() {
             var tree = new Parser("true+true").Parse();
             CheckTree(tree, new object[] {
-                "binop", TerminalKind.Plus,
+                "binop", TokenKind.Plus,
                     "const", true,
                     "const", true,
             });
@@ -28,9 +30,9 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandOperatorPrecedence() {
             var tree = new Parser("1+2*3").Parse();
             CheckTree(tree, new object[] {
-                "binop", TerminalKind.Plus,
+                "binop", TokenKind.Plus,
                     "const", 1,
-                    "binop", TerminalKind.Mul,
+                    "binop", TokenKind.Mul,
                         "const", 2,
                         "const", 3,
             });
@@ -40,8 +42,8 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandOperatorPrecedence2() {
             var tree = new Parser("1*2+3").Parse();
             CheckTree(tree, new object[] {
-                "binop", TerminalKind.Plus,
-                    "binop", TerminalKind.Mul,
+                "binop", TokenKind.Plus,
+                    "binop", TokenKind.Mul,
                         "const", 1,
                         "const", 2,
                     "const", 3,
@@ -52,8 +54,8 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandOperatorPrecedence3() {
             var tree = new Parser("not true or true").Parse();
             CheckTree(tree, new object[] {
-                "binop", TerminalKind.Or,
-                    "unop", TerminalKind.Not,
+                "binop", TokenKind.Or,
+                    "unop", TokenKind.Not,
                         "const", true,
                     "const", true,
             });
@@ -63,8 +65,8 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandOperatorPrecedence4() {
             var tree = new Parser("not (true or true)").Parse();
             CheckTree(tree, new object[] {
-                "unop", TerminalKind.Not,
-                  "binop", TerminalKind.Or,
+                "unop", TokenKind.Not,
+                  "binop", TokenKind.Or,
                     "const", true,
                     "const", true,
             });
@@ -74,9 +76,9 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandParenthesis() {
             var tree = new Parser("1*(2+3)").Parse();
             CheckTree(tree, new object[] {
-                "binop", TerminalKind.Mul,
+                "binop", TokenKind.Mul,
                     "const", 1,
-                    "binop", TerminalKind.Plus,
+                    "binop", TokenKind.Plus,
                         "const", 2,
                         "const", 3,
             });
@@ -86,13 +88,13 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldUnderstandComplexExpressions() {
             var tree = new Parser("not 1 * (2 / 4 * 6 + (3))").Parse();
             CheckTree(tree, new object[] {
-                "unop", TerminalKind.Not,
-                    "binop", TerminalKind.Mul,
+                "unop", TokenKind.Not,
+                    "binop", TokenKind.Mul,
                         "const", 1,
-                        "binop", TerminalKind.Plus,
-                            "binop", TerminalKind.Div,
+                        "binop", TokenKind.Plus,
+                            "binop", TokenKind.Div,
                                 "const", 2,
-                                "binop", TerminalKind.Mul,
+                                "binop", TokenKind.Mul,
                                     "const", 4,
                                     "const", 6,
                             "const", 3,
@@ -103,7 +105,7 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
         public void ParserShouldContainErrorExpressions() {
             var tree = new Parser("1 + not 3").Parse();
             CheckTree(tree, new object[] {
-                "binop", TerminalKind.Plus,
+                "binop", TokenKind.Plus,
                     "const", 1,
                     "error",
             });

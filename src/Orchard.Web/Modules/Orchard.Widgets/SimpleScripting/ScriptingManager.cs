@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Caching;
 using Orchard.Widgets.Services;
+using Orchard.Widgets.SimpleScripting.Ast;
+using Orchard.Widgets.SimpleScripting.Compiler;
 
 namespace Orchard.Widgets.SimpleScripting {
     public interface IScriptingEngine : IDependency {

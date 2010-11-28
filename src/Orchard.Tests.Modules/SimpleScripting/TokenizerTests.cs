@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Orchard.Widgets.SimpleScripting;
+using Orchard.Widgets.SimpleScripting.Compiler;
 
 namespace Orchard.Tests.Modules.SimpleScriptingTests {
     [TestFixture]
@@ -7,70 +8,70 @@ namespace Orchard.Tests.Modules.SimpleScriptingTests {
 
         [Test]
         public void LexerShouldProcessSingleQuotedStringLiteral() {
-            TestStringLiteral(@"'toto'", @"toto", TerminalKind.SingleQuotedStringLiteral);
-            TestStringLiteral(@"'to\'to'", @"to'to", TerminalKind.SingleQuotedStringLiteral);
-            TestStringLiteral(@"'to\\to'", @"to\to", TerminalKind.SingleQuotedStringLiteral);
-            TestStringLiteral(@"'to\ato'", @"to\ato", TerminalKind.SingleQuotedStringLiteral);
+            TestStringLiteral(@"'toto'", @"toto", TokenKind.SingleQuotedStringLiteral);
+            TestStringLiteral(@"'to\'to'", @"to'to", TokenKind.SingleQuotedStringLiteral);
+            TestStringLiteral(@"'to\\to'", @"to\to", TokenKind.SingleQuotedStringLiteral);
+            TestStringLiteral(@"'to\ato'", @"to\ato", TokenKind.SingleQuotedStringLiteral);
         }
 
         [Test]
         public void LexerShouldProcessStringLiteral() {
-            TestStringLiteral(@"""toto""", @"toto", TerminalKind.StringLiteral);
-            TestStringLiteral(@"""to\'to""", @"to'to", TerminalKind.StringLiteral);
-            TestStringLiteral(@"""to\\to""", @"to\to", TerminalKind.StringLiteral);
-            TestStringLiteral(@"""to\ato""", @"toato", TerminalKind.StringLiteral);
+            TestStringLiteral(@"""toto""", @"toto", TokenKind.StringLiteral);
+            TestStringLiteral(@"""to\'to""", @"to'to", TokenKind.StringLiteral);
+            TestStringLiteral(@"""to\\to""", @"to\to", TokenKind.StringLiteral);
+            TestStringLiteral(@"""to\ato""", @"toato", TokenKind.StringLiteral);
         }
 
-        private void TestStringLiteral(string value, string expected, TerminalKind expectedTerminalKind) {
+        private void TestStringLiteral(string value, string expected, TokenKind expectedTokenKind) {
             var lexer = new Tokenizer(value);
             var token1 = lexer.NextToken();
-            Assert.That(token1.Kind, Is.EqualTo(expectedTerminalKind));
+            Assert.That(token1.Kind, Is.EqualTo(expectedTokenKind));
             Assert.That(token1.Value, Is.EqualTo(expected));
 
             var token2 = lexer.NextToken();
-            Assert.That(token2.Kind, Is.EqualTo(TerminalKind.Eof));
+            Assert.That(token2.Kind, Is.EqualTo(TokenKind.Eof));
         }
 
         [Test]
         public void LexerShouldProcessReservedWords() {
-            TestReservedWord("true", true, TerminalKind.True);
-            TestReservedWord("false", false, TerminalKind.False);
-            TestReservedWord("not", null, TerminalKind.Not);
-            TestReservedWord("and", null, TerminalKind.And);
-            TestReservedWord("or", null, TerminalKind.Or);
+            TestReservedWord("true", true, TokenKind.True);
+            TestReservedWord("false", false, TokenKind.False);
+            TestReservedWord("not", null, TokenKind.Not);
+            TestReservedWord("and", null, TokenKind.And);
+            TestReservedWord("or", null, TokenKind.Or);
         }
 
-        private void TestReservedWord(string expression, object value, TerminalKind expectedTerminalKind) {
+        private void TestReservedWord(string expression, object value, TokenKind expectedTokenKind) {
             var lexer = new Tokenizer(expression);
             var token1 = lexer.NextToken();
-            Assert.That(token1.Kind, Is.EqualTo(expectedTerminalKind));
+            Assert.That(token1.Kind, Is.EqualTo(expectedTokenKind));
             Assert.That(token1.Value, Is.EqualTo(value));
 
             var token2 = lexer.NextToken();
-            Assert.That(token2.Kind, Is.EqualTo(TerminalKind.Eof));
+            Assert.That(token2.Kind, Is.EqualTo(TokenKind.Eof));
         }
 
         [Test]
         public void LexerShouldProcesSequenceOfTokens() {
-            CheckTokenSequence("true false", TerminalKind.True, TerminalKind.False);
-            CheckTokenSequence("true toto false", TerminalKind.True, TerminalKind.Identifier, TerminalKind.False);
+            CheckTokenSequence("true false", TokenKind.True, TokenKind.False);
+            CheckTokenSequence("true toto false", TokenKind.True, TokenKind.Identifier, TokenKind.False);
         }
 
         [Test]
         public void LexerShouldProcesSequenceOfTokens2() {
-            CheckTokenSequence("1+2*3", TerminalKind.Integer, TerminalKind.Plus, TerminalKind.Integer, TerminalKind.Mul, TerminalKind.Integer);
+            CheckTokenSequence("1+2*3", TokenKind.Integer, TokenKind.Plus, TokenKind.Integer, TokenKind.Mul, TokenKind.Integer);
         }
 
 
-        private void CheckTokenSequence(string expression, params TerminalKind[] terminalKinds) {
+        private void CheckTokenSequence(string expression, params TokenKind[] tokenKinds) {
             var lexer = new Tokenizer(expression);
-            foreach (var kind in terminalKinds) {
+            foreach (var kind in tokenKinds) {
                 var token = lexer.NextToken();
                 Assert.That(token.Kind, Is.EqualTo(kind));
             }
 
             var token2 = lexer.NextToken();
-            Assert.That(token2.Kind, Is.EqualTo(TerminalKind.Eof));
+            Assert.That(token2.Kind, Is.EqualTo(TokenKind.Eof));
         }
     }
 }

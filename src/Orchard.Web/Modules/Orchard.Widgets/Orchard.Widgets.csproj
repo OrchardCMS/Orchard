@@ -75,19 +75,19 @@
     <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />
-    <Compile Include="SimpleScripting\AstNode.cs" />
-    <Compile Include="SimpleScripting\BinaryAstNode.cs" />
-    <Compile Include="SimpleScripting\ConstantAstNode.cs" />
-    <Compile Include="SimpleScripting\ErrorAstNode.cs" />
-    <Compile Include="SimpleScripting\Lexer.cs" />
-    <Compile Include="SimpleScripting\Tokenizer.cs" />
-    <Compile Include="SimpleScripting\Parser.cs" />
-    <Compile Include="SimpleScripting\AbstractSyntaxTree.cs" />
-    <Compile Include="SimpleScripting\IAstNodeWithToken.cs" />
+    <Compile Include="SimpleScripting\Ast\AstNode.cs" />
+    <Compile Include="SimpleScripting\Ast\BinaryAstNode.cs" />
+    <Compile Include="SimpleScripting\Ast\ConstantAstNode.cs" />
+    <Compile Include="SimpleScripting\Ast\ErrorAstNode.cs" />
+    <Compile Include="SimpleScripting\Compiler\Lexer.cs" />
+    <Compile Include="SimpleScripting\Compiler\Tokenizer.cs" />
+    <Compile Include="SimpleScripting\Compiler\Parser.cs" />
+    <Compile Include="SimpleScripting\Ast\AbstractSyntaxTree.cs" />
+    <Compile Include="SimpleScripting\Ast\IAstNodeWithToken.cs" />
     <Compile Include="SimpleScripting\ScriptingManager.cs" />
-    <Compile Include="SimpleScripting\Terminal.cs" />
-    <Compile Include="SimpleScripting\TerminalKind.cs" />
-    <Compile Include="SimpleScripting\UnaryAstNode.cs" />
+    <Compile Include="SimpleScripting\Compiler\Token.cs" />
+    <Compile Include="SimpleScripting\Compiler\TokenKind.cs" />
+    <Compile Include="SimpleScripting\Ast\UnaryAstNode.cs" />
     <Compile Include="ViewModels\WidgetsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

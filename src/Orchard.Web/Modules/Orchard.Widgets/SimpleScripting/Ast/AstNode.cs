@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Orchard.Widgets.SimpleScripting {
+namespace Orchard.Widgets.SimpleScripting.Ast {
     public class AstNode {
         public virtual IEnumerable<AstNode> Children {
             get {
@@ -16,7 +16,7 @@ namespace Orchard.Widgets.SimpleScripting {
             var ewt = (this as IAstNodeWithToken);
             if (ewt != null) {
                 sb.Append(" - ");
-                sb.Append(ewt.Terminal);
+                sb.Append(ewt.Token);
             }
             return sb.ToString();
         }

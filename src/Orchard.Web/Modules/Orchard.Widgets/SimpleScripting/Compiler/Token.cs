@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Orchard.Widgets.SimpleScripting {
-    public class Terminal {
-        public TerminalKind Kind { get; set; }
+namespace Orchard.Widgets.SimpleScripting.Compiler {
+    public class Token {
+        public TokenKind Kind { get; set; }
         public int Position { get; set; }
         public object Value { get; set; }
 

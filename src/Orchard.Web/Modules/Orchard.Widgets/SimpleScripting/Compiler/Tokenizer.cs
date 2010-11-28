@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Orchard.Widgets.SimpleScripting {
+namespace Orchard.Widgets.SimpleScripting.Compiler {
     public class Tokenizer {
         private readonly string _expression;
         private readonly StringBuilder _stringBuilder;
@@ -13,9 +13,9 @@ namespace Orchard.Widgets.SimpleScripting {
             _stringBuilder = new StringBuilder();
         }
 
-        public Terminal NextToken() {
+        public Token NextToken() {
             if (Eof())
-                return CreateToken(TerminalKind.Eof);
+                return CreateToken(TokenKind.Eof);
 
         LexAgain:
             _startTokenIndex = _index;
@@ -23,22 +23,22 @@ namespace Orchard.Widgets.SimpleScripting {
             switch (ch) {
                 case '(':
                     NextCharacter();
-                    return CreateToken(TerminalKind.OpenParen);
+                    return CreateToken(TokenKind.OpenParen);
                 case ')':
                     NextCharacter();
-                    return CreateToken(TerminalKind.CloseParen);
+                    return CreateToken(TokenKind.CloseParen);
                 case '+':
                     NextCharacter();
-                    return CreateToken(TerminalKind.Plus);
+                    return CreateToken(TokenKind.Plus);
                 case '-':
                     NextCharacter();
-                    return CreateToken(TerminalKind.Minus);
+                    return CreateToken(TokenKind.Minus);
                 case '*':
                     NextCharacter();
-                    return CreateToken(TerminalKind.Mul);
+                    return CreateToken(TokenKind.Mul);
                 case '/':
                     NextCharacter();
-                    return CreateToken(TerminalKind.Div);
+                    return CreateToken(TokenKind.Div);
                 case '"':
                     return LexStringLiteral();
                 case '\'':
@@ -56,10 +56,10 @@ namespace Orchard.Widgets.SimpleScripting {
                 goto LexAgain;
             }
 
-            return CreateToken(TerminalKind.Invalid, "Unrecognized character");
+            return CreateToken(TokenKind.Invalid, "Unrecognized character");
         }
 
-        private Terminal LexIdentifierOrKeyword() {
+        private Token LexIdentifierOrKeyword() {
             _stringBuilder.Clear();
 
             _stringBuilder.Append(Character());
@@ -75,7 +75,7 @@ namespace Orchard.Widgets.SimpleScripting {
             }
         }
 
-        private Terminal LexInteger() {
+        private Token LexInteger() {
             _stringBuilder.Clear();
 
             _stringBuilder.Append(Character());
@@ -86,25 +86,25 @@ namespace Orchard.Widgets.SimpleScripting {
                     _stringBuilder.Append(Character());
                 }
                 else {
-                    return CreateToken(TerminalKind.Integer, Int32.Parse(_stringBuilder.ToString()));
+                    return CreateToken(TokenKind.Integer, Int32.Parse(_stringBuilder.ToString()));
                 }
             }
         }
 
-        private Terminal CreateIdentiferOrKeyword(string identifier) {
+        private Token CreateIdentiferOrKeyword(string identifier) {
             switch (identifier) {
                 case "true":
-                    return CreateToken(TerminalKind.True, true);
+                    return CreateToken(TokenKind.True, true);
                 case "false":
-                    return CreateToken(TerminalKind.False, false);
+                    return CreateToken(TokenKind.False, false);
                 case "or":
-                    return CreateToken(TerminalKind.Or, null);
+                    return CreateToken(TokenKind.Or, null);
                 case "and":
-                    return CreateToken(TerminalKind.And, null);
+                    return CreateToken(TokenKind.And, null);
                 case "not":
-                    return CreateToken(TerminalKind.Not, null);
+                    return CreateToken(TokenKind.Not, null);
                 default:
-                    return CreateToken(TerminalKind.Identifier, identifier);
+                    return CreateToken(TokenKind.Identifier, identifier);
             }
         }
 
@@ -123,26 +123,26 @@ namespace Orchard.Widgets.SimpleScripting {
             return ch >= '0' && ch <= '9';
         }
 
-        private Terminal LexSingleQuotedStringLiteral() {
+        private Token LexSingleQuotedStringLiteral() {
             _stringBuilder.Clear();
 
             while (true) {
                 NextCharacter();
 
                 if (Eof())
-                    return CreateToken(TerminalKind.Invalid, "Unterminated string literal");
+                    return CreateToken(TokenKind.Invalid, "Unterminated string literal");
 
                 // Termination
                 if (Character() == '\'') {
                     NextCharacter();
-                    return CreateToken(TerminalKind.SingleQuotedStringLiteral, _stringBuilder.ToString());
+                    return CreateToken(TokenKind.SingleQuotedStringLiteral, _stringBuilder.ToString());
                 }
                 // backslash notation
                 else if (Character() == '\\') {
                     NextCharacter();
 
                     if (Eof())
-                        return CreateToken(TerminalKind.Invalid, "Unterminated string literal");
+                        return CreateToken(TokenKind.Invalid, "Unterminated string literal");
 
                     if (Character() == '\\') {
                         _stringBuilder.Append('\\');
@@ -162,26 +162,26 @@ namespace Orchard.Widgets.SimpleScripting {
             }
         }
 
-        private Terminal LexStringLiteral() {
+        private Token LexStringLiteral() {
             _stringBuilder.Clear();
 
             while (true) {
                 NextCharacter();
 
                 if (Eof())
-                    return CreateToken(TerminalKind.Invalid, "Unterminated string literal");
+                    return CreateToken(TokenKind.Invalid, "Unterminated string literal");
 
                 // Termination
                 if (Character() == '"') {
                     NextCharacter();
-                    return CreateToken(TerminalKind.StringLiteral, _stringBuilder.ToString());
+                    return CreateToken(TokenKind.StringLiteral, _stringBuilder.ToString());
                 }
                 // backslash notation
                 else if (Character() == '\\') {
                     NextCharacter();
 
                     if (Eof())
-                        return CreateToken(TerminalKind.Invalid, "Unterminated string literal");
+                        return CreateToken(TokenKind.Invalid, "Unterminated string literal");
 
                     _stringBuilder.Append(Character());
                 }
@@ -200,8 +200,8 @@ namespace Orchard.Widgets.SimpleScripting {
             return _expression[_index];
         }
 
-        private Terminal CreateToken(TerminalKind kind, object value = null) {
-            return new Terminal {
+        private Token CreateToken(TokenKind kind, object value = null) {
+            return new Token {
                 Kind = kind,
                 Position = _startTokenIndex,
                 Value = value

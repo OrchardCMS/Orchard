@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
+using Orchard.Widgets.SimpleScripting.Compiler;
 
-namespace Orchard.Widgets.SimpleScripting {
+namespace Orchard.Widgets.SimpleScripting.Ast {
     public class UnaryAstNode : AstNode, IAstNodeWithToken {
         private readonly AstNode _expr;
-        private readonly Terminal _terminal;
+        private readonly Token _token;
 
-        public UnaryAstNode(AstNode expr, Terminal terminal) {
+        public UnaryAstNode(AstNode expr, Token token) {
             _expr = expr;
-            _terminal = terminal;
+            _token = token;
         }
 
-        public Terminal Terminal {
-            get { return _terminal; }
+        public Token Token {
+            get { return _token; }
         }
 
 
-        public Terminal Operator {
-            get { return _terminal; }
+        public Token Operator {
+            get { return _token; }
         }
 
         public override IEnumerable<AstNode> Children {

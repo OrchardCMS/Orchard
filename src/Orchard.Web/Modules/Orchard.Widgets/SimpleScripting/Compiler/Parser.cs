@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Orchard.Widgets.SimpleScripting.Ast;
 
-namespace Orchard.Widgets.SimpleScripting {
+namespace Orchard.Widgets.SimpleScripting.Compiler {
     public class Parser {
         private readonly string _expression;
         private readonly Lexer _lexer;
@@ -28,7 +28,7 @@ namespace Orchard.Widgets.SimpleScripting {
         private AstNode ParseKeywordOrExpression() {
             var expr = ParseKeywordAndExpression();
 
-            var token = IsMatch(TerminalKind.Or);
+            var token = IsMatch(TokenKind.Or);
             if (token != null)
             {
                 var right = ParseKeywordOrExpression();
@@ -42,7 +42,7 @@ namespace Orchard.Widgets.SimpleScripting {
         private AstNode ParseKeywordAndExpression() {
             var expr = ParseKeywordNotExpression();
 
-            var token = IsMatch(TerminalKind.And);
+            var token = IsMatch(TokenKind.And);
             if (token != null) {
                 var right = ParseKeywordAndExpression();
 
@@ -53,7 +53,7 @@ namespace Orchard.Widgets.SimpleScripting {
         }
 
         private AstNode ParseKeywordNotExpression() {
-            var token = IsMatch(TerminalKind.Not);
+            var token = IsMatch(TokenKind.Not);
             if (token != null) {
                 var expr = ParseKeywordNotExpression();
                     
@@ -66,15 +66,15 @@ namespace Orchard.Widgets.SimpleScripting {
         private AstNode ParseRelationalExpression() {
             var expr = ParseAdditiveExpression();
             //TODO
-            //var Terminal = IsMatch(TokenKind.Not);
-            //if (Terminal != null) {
+            //var Token = IsMatch(TokenKind.Not);
+            //if (Token != null) {
             return expr;
         }
 
         private AstNode ParseAdditiveExpression() {
             var expr = ParseMultiplicativeExpression();
 
-            var token = IsMatch(TerminalKind.Plus, TerminalKind.Minus);
+            var token = IsMatch(TokenKind.Plus, TokenKind.Minus);
             if (token != null) {
                 var right = ParseAdditiveExpression();
 
@@ -87,7 +87,7 @@ namespace Orchard.Widgets.SimpleScripting {
         private AstNode ParseMultiplicativeExpression() {
             var expr = ParseUnaryExpression();
 
-            var token = IsMatch(TerminalKind.Mul, TerminalKind.Div);
+            var token = IsMatch(TokenKind.Mul, TokenKind.Div);
             if (token != null) {
                 var right = ParseMultiplicativeExpression();
 
@@ -105,47 +105,47 @@ namespace Orchard.Widgets.SimpleScripting {
         private AstNode ParsePrimaryExpression() {
             var token = _lexer.Token();
             switch(_lexer.Token().Kind) {
-                case TerminalKind.True:
-                case TerminalKind.False:
-                case TerminalKind.SingleQuotedStringLiteral:
-                case TerminalKind.StringLiteral:
-                case TerminalKind.Integer:
+                case TokenKind.True:
+                case TokenKind.False:
+                case TokenKind.SingleQuotedStringLiteral:
+                case TokenKind.StringLiteral:
+                case TokenKind.Integer:
                     return ProduceConstant(token);
-                case TerminalKind.OpenParen:
+                case TokenKind.OpenParen:
                     return ParseParenthesizedExpression();
                 default:
                     return ProduceError(token);
             }
         }
 
-        private AstNode ProduceConstant(Terminal terminal) {
+        private AstNode ProduceConstant(Token token) {
             _lexer.NextToken();
-            return new ConstantAstNode(terminal);
+            return new ConstantAstNode(token);
         }
 
-        private AstNode ProduceError(Terminal terminal) {
+        private AstNode ProduceError(Token token) {
             _lexer.NextToken();
-            return new ErrorAstNode(terminal,
-                                                      string.Format("Unexptected Terminal in primary expression ({0})", terminal));
+            return new ErrorAstNode(token,
+                                                      string.Format("Unexptected Token in primary expression ({0})", token));
         }
 
         private AstNode ParseParenthesizedExpression() {
-            Match(TerminalKind.OpenParen);
+            Match(TokenKind.OpenParen);
             var expr = ParseExpression();
-            Match(TerminalKind.CloseParen);
+            Match(TokenKind.CloseParen);
             return expr;
         }
 
-        private void Match(TerminalKind kind) {
+        private void Match(TokenKind kind) {
             var token = _lexer.Token();
             if (token.Kind == kind) {
                 _lexer.NextToken();
                 return;
             }
-            AddError(token, string.Format("Expected Terminal {0}", kind));
+            AddError(token, string.Format("Expected Token {0}", kind));
         }
 
-        private Terminal IsMatch(TerminalKind kind) {
+        private Token IsMatch(TokenKind kind) {
             var token = _lexer.Token();
             if (token.Kind == kind) {
                 _lexer.NextToken();
@@ -154,7 +154,7 @@ namespace Orchard.Widgets.SimpleScripting {
             return null;
         }
 
-        private Terminal IsMatch(TerminalKind kind, TerminalKind kind2) {
+        private Token IsMatch(TokenKind kind, TokenKind kind2) {
             var token = _lexer.Token();
             if (token.Kind == kind || token.Kind == kind2) {
                 _lexer.NextToken();
@@ -163,7 +163,7 @@ namespace Orchard.Widgets.SimpleScripting {
             return null;
         }
 
-        private void AddError(Terminal terminal, string message) {
+        private void AddError(Token token, string message) {
             _errors.Add(message);
         }
     }

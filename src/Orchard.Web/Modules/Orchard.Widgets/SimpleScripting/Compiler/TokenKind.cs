@@ -1,5 +1,5 @@
-﻿namespace Orchard.Widgets.SimpleScripting {
-    public enum TerminalKind {
+﻿namespace Orchard.Widgets.SimpleScripting.Compiler {
+    public enum TokenKind {
         Eof,
         OpenParen,
         CloseParen,

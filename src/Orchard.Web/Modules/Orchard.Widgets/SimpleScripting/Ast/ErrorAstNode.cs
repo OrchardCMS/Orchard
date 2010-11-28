@@ -1,17 +1,18 @@
 ﻿using System;
+using Orchard.Widgets.SimpleScripting.Compiler;
 
-namespace Orchard.Widgets.SimpleScripting {
+namespace Orchard.Widgets.SimpleScripting.Ast {
     public class ErrorAstNode : AstNode, IAstNodeWithToken {
-        private readonly Terminal _terminal;
+        private readonly Token _token;
         private readonly string _message;
 
-        public ErrorAstNode(Terminal terminal, string message) {
-            _terminal = terminal;
+        public ErrorAstNode(Token token, string message) {
+            _token = token;
             _message = message;
         }
 
-        public Terminal Terminal {
-            get { return _terminal; }
+        public Token Token {
+            get { return _token; }
         }
 
         public string Message {

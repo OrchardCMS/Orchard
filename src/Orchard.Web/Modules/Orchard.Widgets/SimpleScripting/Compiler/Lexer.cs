@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 
-namespace Orchard.Widgets.SimpleScripting {
+namespace Orchard.Widgets.SimpleScripting.Compiler {
     public class Lexer {
         private readonly Tokenizer _tokenizer;
-        private readonly List<Terminal> _tokens= new List<Terminal>();
+        private readonly List<Token> _tokens= new List<Token>();
         private int _tokenIndex;
 
         public Lexer(Tokenizer tokenizer) {
             _tokenizer = tokenizer;
         }
 
-        public Terminal Token() {
+        public Token Token() {
             if (_tokenIndex == _tokens.Count) {
                 _tokens.Add(_tokenizer.NextToken());
             }
