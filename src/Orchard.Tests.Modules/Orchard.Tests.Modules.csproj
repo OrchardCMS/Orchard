@@ -200,6 +200,10 @@
       <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
       <Name>Orchard.Scripting.Dlr</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Scripting\Orchard.Scripting.csproj">
+      <Project>{99002B65-86F7-415E-BF4A-381AA8AB9CCC}</Project>
+      <Name>Orchard.Scripting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Setup\Orchard.Setup.csproj">
       <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
       <Name>Orchard.Setup</Name>

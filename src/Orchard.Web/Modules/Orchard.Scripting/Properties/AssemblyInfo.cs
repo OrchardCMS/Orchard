@@ -5,11 +5,11 @@ using System.Security;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Orchard.Scripting.Dlr")]
+[assembly: AssemblyTitle("Orchard.Scripting")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("Orchard.Scripting.Dlr")]
-[assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2019")]
+[assembly: AssemblyProduct("Orchard.Scripting")]
+[assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Security;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("53940737-B980-476B-8FDB-F8897FFA314D")]
+[assembly: Guid("c3411c26-8f40-4126-85d9-ea38da650dcf")]
 
 // Version information for an assembly consists of the following four values:
 //

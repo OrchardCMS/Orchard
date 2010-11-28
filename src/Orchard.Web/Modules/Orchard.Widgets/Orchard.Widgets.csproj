@@ -75,23 +75,6 @@
     <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />
-    <Compile Include="SimpleScripting\Ast\AstNode.cs" />
-    <Compile Include="SimpleScripting\Ast\BinaryAstNode.cs" />
-    <Compile Include="SimpleScripting\Ast\ConstantAstNode.cs" />
-    <Compile Include="SimpleScripting\Ast\AstVisitor.cs" />
-    <Compile Include="SimpleScripting\Ast\ErrorAstNode.cs" />
-    <Compile Include="SimpleScripting\Ast\MethodCallAstNode.cs" />
-    <Compile Include="SimpleScripting\Compiler\Interpreter.cs" />
-    <Compile Include="SimpleScripting\Compiler\InterpreterVisitor.cs" />
-    <Compile Include="SimpleScripting\Compiler\Lexer.cs" />
-    <Compile Include="SimpleScripting\Compiler\Tokenizer.cs" />
-    <Compile Include="SimpleScripting\Compiler\Parser.cs" />
-    <Compile Include="SimpleScripting\Ast\AbstractSyntaxTree.cs" />
-    <Compile Include="SimpleScripting\Ast\IAstNodeWithToken.cs" />
-    <Compile Include="SimpleScripting\ScriptingManager.cs" />
-    <Compile Include="SimpleScripting\Compiler\Token.cs" />
-    <Compile Include="SimpleScripting\Compiler\TokenKind.cs" />
-    <Compile Include="SimpleScripting\Ast\UnaryAstNode.cs" />
     <Compile Include="ViewModels\WidgetsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +103,10 @@
     <ProjectReference Include="..\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj">
       <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
       <Name>Orchard.Scripting.Dlr</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Scripting\Orchard.Scripting.csproj">
+      <Project>{99002B65-86F7-415E-BF4A-381AA8AB9CCC}</Project>
+      <Name>Orchard.Scripting</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

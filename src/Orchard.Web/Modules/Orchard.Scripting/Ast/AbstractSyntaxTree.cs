@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using Orchard.Widgets.SimpleScripting.Ast;
 
-namespace Orchard.Widgets.SimpleScripting.Ast {
+namespace Orchard.Scripting.SimpleScripting.Ast {
     public class AbstractSyntaxTree {
         public AstNode Root { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using NUnit.Framework;
+using Orchard.Scripting.SimpleScripting.Ast;
 using Orchard.Widgets.SimpleScripting.Ast;
 using Orchard.Widgets.SimpleScripting.Compiler;
 
