@@ -336,6 +336,14 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod, IDictionary<string, object> htmlAttributes) {
+            // Force the browser not to cache protected forms, and to reload them if needed.
+            var response = htmlHelper.ViewContext.HttpContext.Response;
+            response.Cache.SetExpires(System.DateTime.UtcNow.AddDays(-1));
+            response.Cache.SetValidUntilExpires(false);
+            response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
+            response.Cache.SetCacheability(HttpCacheability.NoCache);
+            response.Cache.SetNoStore();
+
             var tagBuilder = new TagBuilder("form");
 
             tagBuilder.MergeAttributes(htmlAttributes);
@@ -346,7 +354,6 @@ namespace Orchard.Mvc.Html {
 
             return new MvcFormAntiForgeryPost(htmlHelper);
         }
-
         #endregion
 
         #region AntiForgeryTokenOrchard
