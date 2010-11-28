@@ -129,10 +129,18 @@ namespace Orchard.Widgets.SimpleScripting.Compiler {
             var target = _lexer.Token();
             _lexer.NextToken();
 
-            bool hasParenthesis = (IsMatch(TokenKind.OpenParen) != null);
+            bool isParenthesizedCall = (IsMatch(TokenKind.OpenParen) != null);
 
             var arguments = new List<AstNode>();
             while (true) {
+                // Special case: we might reach the end of the token stream
+                if (_lexer.Token().Kind == TokenKind.Eof)
+                    break;
+
+                // Special case: we must support "foo()"
+                if (isParenthesizedCall && _lexer.Token().Kind == TokenKind.CloseParen)
+                    break;
+
                 var argument = ParseExpression();
                 arguments.Add(argument);
 
@@ -140,7 +148,7 @@ namespace Orchard.Widgets.SimpleScripting.Compiler {
                     break;
             }
 
-            if (hasParenthesis)
+            if (isParenthesizedCall)
                 Match(TokenKind.CloseParen);
 
             return new MethodCallAstNode(target, arguments);

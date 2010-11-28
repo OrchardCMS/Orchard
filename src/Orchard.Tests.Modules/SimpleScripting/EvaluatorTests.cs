@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using NUnit.Framework;
 using Orchard.Widgets.SimpleScripting.Compiler;
 
@@ -18,7 +19,6 @@ namespace Orchard.Tests.Modules.SimpleScripting {
         public void EvaluateInvalidBooleanExpression() {
             var result = EvaluateSimpleExpression("true and 1");
             Assert.That(result.IsError, Is.True);
-            Trace.WriteLine(string.Format("Evaluation error: {0}", result.Error.Message));
         }
 
         [Test]
@@ -63,6 +63,22 @@ namespace Orchard.Tests.Modules.SimpleScripting {
             Assert.That(result.Value, Is.EqualTo(2 + 3));
         }
 
+        [Test]
+        public void EvaluateSimpleMethodCall4() {
+            var result = EvaluateSimpleExpression("foo",
+                (m, args) => (m == "foo") ? true : false);
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void EvaluateSimpleMethodCall5() {
+            var result = EvaluateSimpleExpression("foo()",
+                (m, args) => (m == "foo") ? true : false);
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(true));
+        }
+
         private EvaluationResult EvaluateSimpleExpression(string expression) {
             return EvaluateSimpleExpression(expression, (m, args) => null);
         }
@@ -71,10 +87,15 @@ namespace Orchard.Tests.Modules.SimpleScripting {
             string expression, Func<string, IList<object>, object> methodInvocationCallback) {
 
             var ast = new Parser(expression).Parse();
+            foreach(var error in ast.GetErrors()) {
+                Trace.WriteLine(string.Format("Error during parsing of '{0}': {1}", expression, error.Message));
+            }
+            Assert.That(ast.GetErrors().Any(), Is.False);
             var result = new Interpreter().Evalutate(new EvaluationContext {
                 Tree = ast,
                 MethodInvocationCallback = methodInvocationCallback
             });
+            Trace.WriteLine(string.Format("Result of evaluation of '{0}': {1}", expression, result));
             return result;
         }
     }
