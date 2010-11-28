@@ -43,6 +43,26 @@ namespace Orchard.Tests.Modules.SimpleScripting {
             Assert.That(result.Value, Is.EqualTo(4 * 2));
         }
 
+        [Test]
+        public void EvaluateSimpleMethodCall2() {
+            var result = EvaluateSimpleExpression("foo 1 + bar 3",
+                (m, args) => 
+                    (m == "foo") ? (int)args[0] * 2 : 
+                    (m == "bar") ? (int)args[0] : 0);
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(2 * (1 + 3)));
+        }
+
+        [Test]
+        public void EvaluateSimpleMethodCall3() {
+            var result = EvaluateSimpleExpression("foo(1) + bar(3)",
+                (m, args) =>
+                    (m == "foo") ? (int)args[0] * 2 :
+                    (m == "bar") ? (int)args[0] : 0);
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(2 + 3));
+        }
+
         private EvaluationResult EvaluateSimpleExpression(string expression) {
             return EvaluateSimpleExpression(expression, (m, args) => null);
         }
