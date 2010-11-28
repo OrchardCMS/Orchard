@@ -16,7 +16,9 @@ namespace Orchard.Scripting.Ast {
         public AstNode Operand { get { return _operand; } }
 
         public override IEnumerable<AstNode> Children {
-            get { yield return _operand; }
+            get {
+                return new List<AstNode>(1) { _operand };
+            }
         }
 
         public override object Accept(AstVisitor visitor) {

@@ -27,8 +27,7 @@ namespace Orchard.Scripting.Ast {
 
         public override IEnumerable<AstNode> Children {
             get {
-                yield return _left;
-                yield return _right;
+                return new List<AstNode>(2) { _left, _right };
             }
         }
 
