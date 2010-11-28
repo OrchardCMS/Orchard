@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Caching;
 using Orchard.Localization;
-using Orchard.Scripting.SimpleScripting.Ast;
-using Orchard.Widgets.SimpleScripting.Compiler;
+using Orchard.Scripting.Ast;
+using Orchard.Scripting.Compiler;
 
-namespace Orchard.Widgets.SimpleScripting {
+namespace Orchard.Scripting {
     public class GlobalMethodContext {
         public string FunctionName { get; set; }
         public IList<object> Arguments { get; set; }

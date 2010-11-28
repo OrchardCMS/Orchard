@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Orchard.Widgets.SimpleScripting.Compiler;
+using Orchard.Scripting.Compiler;
 
 namespace Orchard.Tests.Modules.Scripting {
     [TestFixture]

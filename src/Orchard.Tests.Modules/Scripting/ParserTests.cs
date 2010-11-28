@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using NUnit.Framework;
-using Orchard.Scripting.SimpleScripting.Ast;
-using Orchard.Widgets.SimpleScripting.Ast;
-using Orchard.Widgets.SimpleScripting.Compiler;
+using Orchard.Scripting.Ast;
+using Orchard.Scripting.Compiler;
 
 namespace Orchard.Tests.Modules.Scripting {
     [TestFixture]

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Orchard.Widgets.SimpleScripting.Compiler {
+namespace Orchard.Scripting.Compiler {
     public class Tokenizer {
         private readonly string _expression;
         private readonly StringBuilder _stringBuilder;

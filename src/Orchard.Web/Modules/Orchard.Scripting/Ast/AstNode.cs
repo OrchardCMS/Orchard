@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Orchard.Widgets.SimpleScripting.Ast {
+namespace Orchard.Scripting.Ast {
     public abstract class AstNode {
         public virtual IEnumerable<AstNode> Children {
             get {

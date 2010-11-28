@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Orchard.Widgets.SimpleScripting.Compiler;
+using Orchard.Scripting.Compiler;
 
-namespace Orchard.Widgets.SimpleScripting.Ast {
+namespace Orchard.Scripting.Ast {
     public class UnaryAstNode : AstNode, IAstNodeWithToken {
         private readonly AstNode _operand;
         private readonly Token _token;

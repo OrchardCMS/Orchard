@@ -1,6 +1,6 @@
-﻿using Orchard.Widgets.SimpleScripting.Compiler;
+﻿using Orchard.Scripting.Compiler;
 
-namespace Orchard.Widgets.SimpleScripting.Ast {
+namespace Orchard.Scripting.Ast {
     public interface IAstNodeWithToken {
         Token Token { get; }
     }

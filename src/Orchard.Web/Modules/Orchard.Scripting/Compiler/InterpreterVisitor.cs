@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Orchard.Widgets.SimpleScripting.Ast;
+using Orchard.Scripting.Ast;
 
-namespace Orchard.Widgets.SimpleScripting.Compiler {
+namespace Orchard.Scripting.Compiler {
     public class InterpreterVisitor : AstVisitor {
         private readonly EvaluationContext _context;
 

@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using Orchard.Scripting;
 using Orchard.Tests.Stubs;
 using Orchard.Widgets.Services;
-using Orchard.Widgets.SimpleScripting;
 
 namespace Orchard.Tests.Modules.Scripting {
     [TestFixture]

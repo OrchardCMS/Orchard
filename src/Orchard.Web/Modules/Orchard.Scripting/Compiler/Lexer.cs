@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Orchard.Widgets.SimpleScripting.Compiler {
+namespace Orchard.Scripting.Compiler {
     public class Lexer {
         private readonly Tokenizer _tokenizer;
         private readonly List<Token> _tokens= new List<Token>();

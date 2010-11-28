@@ -1,4 +1,4 @@
-﻿namespace Orchard.Widgets.SimpleScripting.Compiler {
+﻿namespace Orchard.Scripting.Compiler {
     public enum TokenKind {
         Eof,
         OpenParen,

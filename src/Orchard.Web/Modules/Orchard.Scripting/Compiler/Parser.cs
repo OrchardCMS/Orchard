@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Orchard.Scripting.SimpleScripting.Ast;
-using Orchard.Widgets.SimpleScripting.Ast;
+﻿using System.Collections.Generic;
+using Orchard.Scripting.Ast;
 
-namespace Orchard.Widgets.SimpleScripting.Compiler {
+namespace Orchard.Scripting.Compiler {
     public class Parser {
         private readonly string _expression;
         private readonly Lexer _lexer;

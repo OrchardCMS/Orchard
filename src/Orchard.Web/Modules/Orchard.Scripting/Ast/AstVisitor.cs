@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Orchard.Widgets.SimpleScripting.Ast {
+namespace Orchard.Scripting.Ast {
     public class AstVisitor {
         public virtual object Visit(AstNode node) {
             return node.Accept(this);

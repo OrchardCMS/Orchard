@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Orchard.Widgets.SimpleScripting.Ast;
 
-namespace Orchard.Scripting.SimpleScripting.Ast {
+namespace Orchard.Scripting.Ast {
     public class AbstractSyntaxTree {
         public AstNode Root { get; set; }
 

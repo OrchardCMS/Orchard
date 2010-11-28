@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Orchard.Widgets.SimpleScripting.Compiler {
+namespace Orchard.Scripting.Compiler {
     public class Token {
         public TokenKind Kind { get; set; }
         public int Position { get; set; }

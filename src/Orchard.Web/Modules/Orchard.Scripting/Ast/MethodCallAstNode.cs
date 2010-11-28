@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Orchard.Widgets.SimpleScripting.Compiler;
+using Orchard.Scripting.Compiler;
 
-namespace Orchard.Widgets.SimpleScripting.Ast {
+namespace Orchard.Scripting.Ast {
     public class MethodCallAstNode : AstNode, IAstNodeWithToken {
         private readonly Token _token;
         private readonly IList<AstNode> _arguments;
