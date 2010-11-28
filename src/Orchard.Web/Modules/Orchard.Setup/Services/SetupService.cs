@@ -99,6 +99,7 @@ namespace Orchard.Setup.Services {
                     "Orchard.Themes",
                     "Orchard.Users",
                     "Orchard.Scripting",
+                    "Orchard.Scripting.Lightweight",
                     "Orchard.Widgets",
                     "TinyMce",
 

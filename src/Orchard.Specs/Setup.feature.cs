@@ -177,8 +177,9 @@ this.ScenarioSetup(scenarioInfo);
             table4.AddRow(new string[] {
                         "module",
                         "Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Or" +
-                            "chard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard" +
-                            ".Modules, Orchard.Widgets, Orchard.jQuery, TinyMce"});
+                            "chard.Scripting, Orchard.Scripting.Lightweight, Orchard.Comments, Orchard.Publis" +
+                            "hLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMc" +
+                            "e"});
             table4.AddRow(new string[] {
                         "core",
                         "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, S" +
