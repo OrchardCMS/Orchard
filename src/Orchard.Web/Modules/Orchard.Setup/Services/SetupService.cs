@@ -283,7 +283,25 @@ namespace Orchard.Setup.Services {
             page.As<RoutePart>().Title = T("Welcome to Orchard!").Text;
             page.As<RoutePart>().Path = "";
             page.As<RoutePart>().Slug = "";
-            page.As<BodyPart>().Text = string.Format(CultureInfo.CurrentCulture, "<p>You’ve successfully setup your Orchard Site and this is the homepage of your new site. Here are a few things you can look at to get familiar with the application. Once you feel confident you don’t need this anymore, you can <a href=\"Admin/Contents/Edit/{0}\">remove this by going into editing mode</a> and replacing it with whatever you want.</p><p>First things first - You’ll probably want to <a href=\"Admin/Settings\">manage your settings</a> and configure Orchard to your liking. After that, you can head over to <a href=\"Admin/Themes\">manage themes to change or install new themes</a> and really make it your own. Once you’re happy with a look and feel, it’s time for some content. You can start creating new custom content types or start with some built-in ones by <a href=\"Admin/Pages/Create\">adding a page</a>, <a href=\"Admin/Blogs/Create\">creating a blog</a> or <a href=\"Admin/Navigation\">managing your menus.</a></p><p>Finally, Orchard has been designed to be extended. It comes with a few built-in modules such as pages and blogs or themes. If you’re looking to add additional functionality, you can do so by creating your own module or installing a new one that someone has made. Modules are created by other users of Orchard just like you so if you feel up to it, <a href=\"http://www.orchardproject.net/\">please consider participating</a>. XOXO – The Orchard Team </p>", page.Id);
+            page.As<BodyPart>().Text = string.Format(CultureInfo.CurrentCulture,
+@"<p>You've successfully setup your Orchard Site and this is the homepage of your new site.
+Here are a few things you can look at to get familiar with the application.
+Once you feel confident you don't need this anymore, you can
+<a href=""Admin/Contents/Edit/{0}"">remove it by going into editing mode</a>
+and replacing it with whatever you want.</p>
+<p>First things first - You'll probably want to <a href=""Admin/Settings"">manage your settings</a>
+and configure Orchard to your liking. After that, you can head over to
+<a href=""Admin/Themes"">manage themes to change or install new themes</a>
+and really make it your own. Once you're happy with a look and feel, it's time for some content.
+You can start creating new custom content types or start from the built-in ones by
+<a href=""Admin/Pages/Create"">adding a page</a>, <a href=""Admin/Blogs/Create"">creating a blog</a>
+or <a href=""Admin/Navigation"">managing your menus.</a></p>
+<p>Finally, Orchard has been designed to be extended. It comes with a few built-in
+modules such as pages and blogs or themes. If you're looking to add additional functionality,
+you can do so by creating your own module or by installing one that somebody else built.
+Modules are created by other users of Orchard just like you so if you feel up to it,
+<a href=""http://orchardproject.net/contribution"">please consider participating</a>.
+Thanks for using Orchard – The Orchard Team </p>", page.Id);
 
             contentManager.Publish(page);
             siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
