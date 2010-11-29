@@ -155,6 +155,9 @@ namespace Orchard.Scripting.Compiler {
                     return CreateToken(TokenKind.And, null);
                 case "not":
                     return CreateToken(TokenKind.Not, null);
+                case "null":
+                case "nil":
+                    return CreateToken(TokenKind.NullLiteral, null);
                 default:
                     return CreateToken(TokenKind.Identifier, identifier);
             }

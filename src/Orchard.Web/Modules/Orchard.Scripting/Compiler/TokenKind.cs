@@ -25,6 +25,7 @@
         LessThan,
         LessThanEqual,
         GreaterThan,
-        GreaterThanEqual
+        GreaterThanEqual,
+        NullLiteral
     }
 }

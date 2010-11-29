@@ -171,6 +171,16 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
+        public void ParserShouldUnderstandRelationalOperators7() {
+            var tree = new Parser("null == null").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.EqualEqual,
+                  "const", null,
+                  "const", null,
+            });
+        }
+
+        [Test]
         public void ParserShouldUnderstandRelationalOperatorPrecedence() {
             var tree = new Parser("1 < 2 or 2 > 3 and !false").Parse();
             CheckTree(tree, new object[] {

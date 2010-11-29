@@ -4,7 +4,7 @@ namespace Orchard.Scripting.Compiler {
     public abstract class PrimitiveType {
         public static PrimitiveType InstanceFor(object value) {
             if (value == null)
-                return NilPrimitiveType.Instance;
+                return NullPrimitiveType.Instance;
             if (value is bool)
                 return BooleanPrimitiveType.Instance;
             if (value is int)
@@ -82,11 +82,11 @@ namespace Orchard.Scripting.Compiler {
         }
     }
 
-    public class NilPrimitiveType : PrimitiveType {
-        private static NilPrimitiveType _instance;
+    public class NullPrimitiveType : PrimitiveType {
+        private static NullPrimitiveType _instance;
 
-        public static NilPrimitiveType Instance {
-            get { return _instance ?? (_instance = new NilPrimitiveType()); }
+        public static NullPrimitiveType Instance {
+            get { return _instance ?? (_instance = new NullPrimitiveType()); }
         }
 
         public override EvaluationResult EqualityOperator(EvaluationResult value, EvaluationResult other) {

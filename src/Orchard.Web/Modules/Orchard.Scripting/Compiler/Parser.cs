@@ -113,6 +113,7 @@ namespace Orchard.Scripting.Compiler {
         private AstNode ParsePrimaryExpression() {
             var token = _lexer.Token();
             switch (_lexer.Token().Kind) {
+                case TokenKind.NullLiteral:
                 case TokenKind.True:
                 case TokenKind.False:
                 case TokenKind.SingleQuotedStringLiteral:

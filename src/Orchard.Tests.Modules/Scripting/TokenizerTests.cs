@@ -35,6 +35,8 @@ namespace Orchard.Tests.Modules.Scripting {
         public void LexerShouldProcessReservedWords() {
             TestReservedWord("true", true, TokenKind.True);
             TestReservedWord("false", false, TokenKind.False);
+            TestReservedWord("nil", null, TokenKind.NullLiteral);
+            TestReservedWord("null", null, TokenKind.NullLiteral);
             TestReservedWord("not", null, TokenKind.Not);
             TestReservedWord("and", null, TokenKind.And);
             TestReservedWord("or", null, TokenKind.Or);
