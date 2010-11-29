@@ -1,6 +1,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
@@ -61,7 +62,12 @@ namespace Orchard.Core.Common.Handlers {
         public Localizer T { get; set; }
 
         bool ContentTypeWithACommonPart(string typeName) {
-            return _contentDefinitionManager.GetTypeDefinition(typeName).Parts.Any(part => part.PartDefinition.Name == "CommonPart");
+            ContentTypeDefinition contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName);
+
+            if (contentTypeDefinition != null) {
+                return contentTypeDefinition.Parts.Any(part => part.PartDefinition.Name == "CommonPart");
+            }
+            return false;
         }
 
         void AssignCreatingOwner(InitializingContentContext context, CommonPart part) {
