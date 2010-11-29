@@ -22,28 +22,11 @@ namespace Orchard.Scripting.Compiler {
         }
 
         private AstNode ParseKeywordLogicalExpression() {
-            return ParseKeywordOrExpression();
-        }
-
-        private AstNode ParseKeywordOrExpression() {
-            var expr = ParseKeywordAndExpression();
-
-            var token = IsMatch(TokenKind.Or);
-            if (token != null) {
-                var right = ParseKeywordOrExpression();
-
-                expr = new BinaryAstNode(expr, token, right);
-            }
-
-            return expr;
-        }
-
-        private AstNode ParseKeywordAndExpression() {
             var expr = ParseKeywordNotExpression();
 
-            var token = IsMatch(TokenKind.And);
+            var token = IsMatch(TokenKind.Or, TokenKind.And);
             if (token != null) {
-                var right = ParseKeywordAndExpression();
+                var right = ParseKeywordLogicalExpression();
 
                 expr = new BinaryAstNode(expr, token, right);
             }
@@ -56,15 +39,37 @@ namespace Orchard.Scripting.Compiler {
             if (token != null) {
                 var expr = ParseKeywordNotExpression();
 
-                return new UnaryAstNode(expr, token);
+                return new UnaryAstNode(token, expr);
             }
 
-            return ParseRelationalExpression();
+            return ParseEqualityExpression();
+        }
+
+        private AstNode ParseEqualityExpression() {
+            var expr = ParseRelationalExpression();
+
+            var token = IsMatch(TokenKind.EqualEqual, TokenKind.NotEqual);
+            if (token != null) {
+                var right = ParseEqualityExpression();
+
+                expr = new BinaryAstNode(expr, token, right);
+            }
+
+            return expr;
         }
 
         private AstNode ParseRelationalExpression() {
             var expr = ParseAdditiveExpression();
-            //TODO
+
+            var token = 
+                IsMatch(TokenKind.LessThan, TokenKind.LessThanEqual) ??
+                IsMatch(TokenKind.GreaterThan, TokenKind.GreaterThanEqual);
+            if (token != null) {
+                var right = ParseRelationalExpression();
+
+                expr = new BinaryAstNode(expr, token, right);
+            }
+
             return expr;
         }
 
@@ -95,7 +100,13 @@ namespace Orchard.Scripting.Compiler {
         }
 
         private AstNode ParseUnaryExpression() {
-            //TODO
+            var token = IsMatch(TokenKind.NotSign);
+            if (token != null) {
+                var expr = ParseUnaryExpression();
+
+                return new UnaryAstNode(token, expr);
+            }
+
             return ParsePrimaryExpression();
         }
 

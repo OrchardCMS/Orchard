@@ -6,7 +6,7 @@ namespace Orchard.Scripting.Ast {
         private readonly AstNode _operand;
         private readonly Token _token;
 
-        public UnaryAstNode(AstNode operand, Token token) {
+        public UnaryAstNode(Token token, AstNode operand) {
             _operand = operand;
             _token = token;
         }

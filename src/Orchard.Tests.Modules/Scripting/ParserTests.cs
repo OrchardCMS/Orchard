@@ -111,6 +111,100 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
+        public void ParserShouldUnderstandRelationalOperators() {
+            var tree = new Parser("true == true").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.EqualEqual,
+                  "const", true,
+                  "const", true,
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandRelationalOperators2() {
+            var tree = new Parser("1 != 2").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.NotEqual,
+                  "const", 1,
+                  "const", 2,
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandRelationalOperators3() {
+            var tree = new Parser("1 < 2").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.LessThan,
+                  "const", 1,
+                  "const", 2,
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandRelationalOperators4() {
+            var tree = new Parser("1 <= 2").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.LessThanEqual,
+                  "const", 1,
+                  "const", 2,
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandRelationalOperators5() {
+            var tree = new Parser("1 > 2").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.GreaterThan,
+                  "const", 1,
+                  "const", 2,
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandRelationalOperators6() {
+            var tree = new Parser("1 >= 2").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.GreaterThanEqual,
+                  "const", 1,
+                  "const", 2,
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandRelationalOperatorPrecedence() {
+            var tree = new Parser("1 < 2 or 2 > 3 and !false").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.Or,
+                  "binop", TokenKind.LessThan,
+                    "const", 1,
+                    "const", 2,
+                  "binop", TokenKind.And,
+                    "binop", TokenKind.GreaterThan,
+                      "const", 2,
+                      "const", 3,
+                    "unop", TokenKind.NotSign,
+                      "const", false,
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandRelationalOperatorPrecedence2() {
+            var tree = new Parser("1 < 2 and 2 > 3 or !false").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.And,
+                  "binop", TokenKind.LessThan,
+                    "const", 1,
+                    "const", 2,
+                  "binop", TokenKind.Or,
+                    "binop", TokenKind.GreaterThan,
+                      "const", 2,
+                      "const", 3,
+                    "unop", TokenKind.NotSign,
+                      "const", false,
+            });
+        }
+
+        [Test]
         public void ParserShouldUnderstandParenthesis() {
             var tree = new Parser("1*(2+3)").Parse();
             CheckTree(tree, new object[] {
@@ -177,6 +271,8 @@ namespace Orchard.Tests.Modules.Scripting {
                 case "error":
                     type = typeof(ErrorAstNode);
                     break;
+                default:
+                    throw new InvalidOperationException(string.Format("Test error: unrecognized expression type abbreviation '{0}'", exprName));
             }
 
             Trace.WriteLine(string.Format("{0}: {1}{2} (Current: {3})", indent, new string(' ', indent * 2), type.Name, astNode));
