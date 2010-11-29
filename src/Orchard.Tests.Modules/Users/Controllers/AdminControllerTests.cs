@@ -35,6 +35,7 @@ using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 using Orchard.Settings;
 using Orchard.Core.Settings.Services;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Tests.Modules.Users.Controllers {
     [TestFixture]
@@ -68,6 +69,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();
+            builder.RegisterInstance(new ShellSettings { Name = "Alpha", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "~/foo" });
 
             _authorizer = new Mock<IAuthorizer>();
             builder.RegisterInstance(_authorizer.Object);
