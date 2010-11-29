@@ -32,7 +32,7 @@ namespace Orchard.Scripting {
 
             var result = EvaluateExpression(expr.Tree, providers);
             if (result.IsError) {
-                throw new ApplicationException(result.Error.Message);
+                throw new ApplicationException(result.ErrorValue.Message);
             }
 
             return result.Value;

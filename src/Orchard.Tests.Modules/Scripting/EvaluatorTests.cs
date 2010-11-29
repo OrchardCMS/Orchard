@@ -36,6 +36,62 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
+        public void EvaluateRelationalOperators() {
+            var result = EvaluateSimpleExpression("1 < 2");
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void EvaluateRelationalOperators2() {
+            var result = EvaluateSimpleExpression("2 <= 2");
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void EvaluateRelationalOperators3() {
+            var result = EvaluateSimpleExpression("1 < 2 or 2 > 3 and !false");
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void EvaluateRelationalOperators4() {
+            var result = EvaluateSimpleExpression("1 > 2 or 2 > 3 and !false");
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void EvaluateRelationalOperators5() {
+            var result = EvaluateSimpleExpression("1 > 2 or 4 > 3 and !false");
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void EvaluateRelationalOperators6() {
+            var result = EvaluateSimpleExpression("!false");
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void EvaluateEqualityOperators() {
+            var result = EvaluateSimpleExpression("1 == 2");
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void EvaluateEqualityOperators2() {
+            var result = EvaluateSimpleExpression("1 != 2");
+            Assert.That(result.IsError, Is.False);
+            Assert.That(result.Value, Is.EqualTo(true));
+        }
+
+        [Test]
         public void EvaluateSimpleMethodCall() {
             var result = EvaluateSimpleExpression("print 1 + 2 * 3 - 6 / 2", 
                 (m, args) => (m == "print") ? (int)args[0] * 2 : 0);

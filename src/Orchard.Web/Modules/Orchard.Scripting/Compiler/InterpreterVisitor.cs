@@ -27,11 +27,17 @@ namespace Orchard.Scripting.Compiler {
             if (operandValue.IsError)
                 return operandValue;
 
-            var operandBoolValue = ConvertToBool(operandValue);
-            if (operandBoolValue.IsError)
-                return operandBoolValue;
+            switch (node.Operator.Kind) {
+                case TokenKind.Not:
+                case TokenKind.NotSign:
+                    var operandBoolValue = ConvertToBool(operandValue);
+                    if (operandBoolValue.IsError)
+                        return operandBoolValue;
 
-            return Result(!operandBoolValue.BoolValue);
+                    return Result(!operandBoolValue.BoolValue);
+                default:
+                    throw new InvalidOperationException(string.Format("Internal error: unary operator '{0}' is not supported.", node.Token.Kind));
+            }
         }
 
         public override object VisitBinary(BinaryAstNode node) {
@@ -56,8 +62,21 @@ namespace Orchard.Scripting.Compiler {
                     return EvaluateLogical(left, right, (a, b) => Result(a.BoolValue && b.BoolValue));
                 case TokenKind.Or:
                     return EvaluateLogical(left, right, (a, b) => Result(a.BoolValue || b.BoolValue));
+                case TokenKind.EqualEqual:
+                    return EvaluateEquality(left, right, v => v);
+                case TokenKind.NotEqual:
+                    return EvaluateEquality(left, right, v => !v);
+                case TokenKind.LessThan:
+                    return EvaluateComparison(left, right, v => v < 0);
+                case TokenKind.LessThanEqual:
+                    return EvaluateComparison(left, right, v => v <= 0);
+                case TokenKind.GreaterThan:
+                    return EvaluateComparison(left, right, v => v > 0);
+                case TokenKind.GreaterThanEqual:
+                    return EvaluateComparison(left, right, v => v >= 0);
+
                 default:
-                    throw new InvalidOperationException(string.Format("Internal error: binary expression {0} is not supported.", node.Token));
+                    throw new InvalidOperationException(string.Format("Internal error: binary operator '{0}' is not supported.", node.Token.Kind));
             }
         }
 
@@ -71,6 +90,22 @@ namespace Orchard.Scripting.Compiler {
 
         public override object VisitError(ErrorAstNode node) {
             return Error(node.Message);
+        }
+
+        private EvaluationResult EvaluateEquality(EvaluationResult left, EvaluationResult right, Func<bool, bool> operation) {
+            var type = PrimitiveType.InstanceFor(left.Value);
+            var result = type.EqualityOperator(left, right);
+            if (result.IsBool)
+                return Result(operation(result.BoolValue));
+            return result;
+        }
+
+        private EvaluationResult EvaluateComparison(EvaluationResult left, EvaluationResult right, Func<int, bool> operation) {
+            var type = PrimitiveType.InstanceFor(left.Value);
+            var result = type.ComparisonOperator(left, right);
+            if (result.IsInt32)
+                return Result(operation(result.Int32Value));
+            return result;
         }
 
         private static EvaluationResult EvaluateArithmetic(EvaluationResult left, EvaluationResult right,
@@ -117,13 +152,11 @@ namespace Orchard.Scripting.Compiler {
         }
 
         private static EvaluationResult Result(object value) {
-            if (value is EvaluationResult)
-                throw new InvalidOperationException("Internal error: value cannot be an evaluation result.");
-            return new EvaluationResult(value);
+            return EvaluationResult.Result(value);
         }
 
         private static EvaluationResult Error(string message) {
-            return new EvaluationResult(new Error { Message = message });
+            return EvaluationResult.Error(message);
         }
     }
 }

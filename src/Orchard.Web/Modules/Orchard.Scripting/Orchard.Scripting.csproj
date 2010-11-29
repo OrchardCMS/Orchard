@@ -54,6 +54,8 @@
     <Compile Include="Ast\IAstNodeWithToken.cs" />
     <Compile Include="Ast\MethodCallAstNode.cs" />
     <Compile Include="Ast\UnaryAstNode.cs" />
+    <Compile Include="Compiler\EvaluationResult.cs" />
+    <Compile Include="Compiler\PrimitiveType.cs" />
     <Compile Include="IGlobalMethodProvider.cs" />
     <Compile Include="IScriptExpressionEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
