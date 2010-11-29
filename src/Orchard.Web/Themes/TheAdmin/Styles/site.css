@@ -477,6 +477,8 @@ label input {
 }
 .hint {
     display:block;
+    font-size:0.923em;
+    color:#7c7c7c;
 }
 /* todo: (heskew) try to get .text on stuff like .text-box */
 select, textarea, input.text, input.textMedium, input.text-box {
