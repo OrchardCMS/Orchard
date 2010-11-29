@@ -5,12 +5,13 @@ namespace Orchard.Users.Services {
         string VerifyUserUnicity(string userName, string email);
         string VerifyUserUnicity(int id, string userName, string email);
 
-        void SendChallengeEmail(IUser user, string url);
+        void SendChallengeEmail(IUser user, Func<string, string> createUrl);
         IUser ValidateChallenge(string challengeToken);
 
         bool SendLostPasswordEmail(string usernameOrEmail, Func<string, string> createUrl);
         IUser ValidateLostPassword(string nonce);
 
-        string GetNonce(IUser user);
+        string CreateNonce(IUser user, TimeSpan delay);
+        bool DecryptNonce(string challengeToken, out string username, out DateTime validateByUtc);
     }
 }

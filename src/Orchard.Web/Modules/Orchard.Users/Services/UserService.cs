@@ -12,22 +12,26 @@ using System.Globalization;
 using System.Text;
 using System.Web.Security;
 using Orchard.Messaging.Services;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class UserService : IUserService {
         private static readonly TimeSpan DelayToValidate = new TimeSpan(7, 0, 0, 0); // one week to validate email
+        private static readonly TimeSpan DelayToResetPassword = new TimeSpan(1, 0, 0, 0); // 24 hours to validate email
 
         private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
         private readonly IClock _clock;
         private readonly IMessageManager _messageManager;
+        private readonly ShellSettings _shellSettings;
 
-        public UserService(IContentManager contentManager, IMembershipService membershipService, IClock clock, IMessageManager messageManager) {
+        public UserService(IContentManager contentManager, IMembershipService membershipService, IClock clock, IMessageManager messageManager, ShellSettings shellSettings) {
             _contentManager = contentManager;
             _membershipService = membershipService;
             _clock = clock;
             _messageManager = messageManager;
+            _shellSettings = shellSettings;
             Logger = NullLogger.Instance;
         }
 
@@ -63,23 +67,25 @@ namespace Orchard.Users.Services {
             return null;
         }
 
-        public string GetNonce(IUser user) {
-            var challengeToken = new XElement("Token", new XAttribute("username", user.UserName), new XAttribute("validate-by-utc", _clock.UtcNow.Add(DelayToValidate).ToString(CultureInfo.InvariantCulture))).ToString();
-            var data = Encoding.UTF8.GetBytes(challengeToken);
+        public string CreateNonce(IUser user, TimeSpan delay) {
+            // the tenant's name is added to the token to prevent cross-tenant requests
+            var challengeToken = new XElement("n", new XAttribute("s", _shellSettings.Name), new XAttribute("un", user.UserName), new XAttribute("utc", _clock.UtcNow.ToUniversalTime().Add(delay).ToString(CultureInfo.InvariantCulture))).ToString();
+            var data = Encoding.Unicode.GetBytes(challengeToken);
             return MachineKey.Encode(data, MachineKeyProtection.All);
         }
 
-        private bool DecryptNonce(string challengeToken, out string username, out DateTime validateByUtc) {
+        public bool DecryptNonce(string challengeToken, out string username, out DateTime validateByUtc) {
             username = null;
             validateByUtc = _clock.UtcNow;
 
             try {
                 var data = MachineKey.Decode(challengeToken, MachineKeyProtection.All);
-                var xml = Encoding.UTF8.GetString(data);
+                var xml = Encoding.Unicode.GetString(data);
                 var element = XElement.Parse(xml);
-                username = element.Attribute("username").Value;
-                validateByUtc = DateTime.Parse(element.Attribute("validate-by-utc").Value, CultureInfo.InvariantCulture);
-                return true;
+                var tenant = element.Attribute("s").Value;
+                username = element.Attribute("un").Value;
+                validateByUtc = DateTime.Parse(element.Attribute("utc").Value, CultureInfo.InvariantCulture);
+                return String.Equals(_shellSettings.Name, tenant, StringComparison.Ordinal) && _clock.UtcNow <= validateByUtc;
             }
             catch {
                 return false;
@@ -107,7 +113,9 @@ namespace Orchard.Users.Services {
             return user;
         }
 
-        public void SendChallengeEmail(IUser user, string url) {
+        public void SendChallengeEmail(IUser user, Func<string, string> createUrl) {
+            string nonce = CreateNonce(user, DelayToValidate);
+            string url = createUrl(nonce);
             _messageManager.Send(user.ContentItem.Record, MessageTypes.Validation, "email", new Dictionary<string, string> { { "ChallengeUrl", url } });
         }
 
@@ -116,7 +124,7 @@ namespace Orchard.Users.Services {
             var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName || u.Email == lowerName).List().FirstOrDefault();
 
             if (user != null) {
-                string nonce = GetNonce(user);
+                string nonce = CreateNonce(user, DelayToResetPassword);
                 string url = createUrl(nonce);
 
                 _messageManager.Send(user.ContentItem.Record, MessageTypes.LostPassword, "email", new Dictionary<string, string> { { "LostPasswordUrl", url } });
