@@ -5,10 +5,10 @@ using System.IO;
 using Autofac;
 using ClaySharp;
 using NUnit.Framework;
-using Orchard.Scripting.Services;
+using Orchard.Scripting.Dlr.Services;
 using Path = Bleroy.FluentPath.Path;
 
-namespace Orchard.Tests.Modules.Scripting {
+namespace Orchard.Tests.Modules.Scripting.Dlr {
     [TestFixture]
     public class ScriptingTests {
         private IContainer _container;

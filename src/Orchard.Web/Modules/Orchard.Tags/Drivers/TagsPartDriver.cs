@@ -50,7 +50,7 @@ namespace Orchard.Tags.Drivers {
 
             var tagNames = TagHelpers.ParseCommaSeparatedTagNames(model.Tags);
             if (part.ContentItem.Id != 0) {
-                _tagService.UpdateTagsForContentItem(part.ContentItem.Id, tagNames);
+                _tagService.UpdateTagsForContentItem(part.ContentItem, tagNames);
             }
 
             return ContentShape("Parts_Tags_Edit",

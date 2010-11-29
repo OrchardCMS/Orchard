@@ -1,7 +1,7 @@
 ﻿@using System.Web.Routing;
 @using Orchard.Utility.Extensions;
 @{
-	Script.Require("jQuery");
+    Script.Require("jQuery");
     Script.Include("admin.js");
     IEnumerable<dynamic> firstLevelMenuItems = Model;
 
@@ -9,7 +9,7 @@
     var tag = Tag(Model, "ul");
 }
 ﻿@tag.StartElement
-	@foreach(var firstLevelMenuItem in Model) {
+    @foreach(var firstLevelMenuItem in Model) {
         IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
 
         string sectionHeaderText = firstLevelMenuItem.Text;
@@ -33,7 +33,7 @@
             <h3>@sectionHeaderMarkup</h3>
             if (secondLevelMenuItems.Count() > 1) {
                 <ul class="menuItems">
-        	    @foreach(var secondLevelMenuItem in secondLevelMenuItems) {
+                @foreach(var secondLevelMenuItem in secondLevelMenuItems) {
                     <li>
                         <a href="@secondLevelMenuItem.Href">@secondLevelMenuItem.Text</a>
                     </li>

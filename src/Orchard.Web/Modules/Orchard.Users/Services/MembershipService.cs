@@ -6,6 +6,7 @@ using System.Text;
 using System.Web.Security;
 using System.Xml.Linq;
 using JetBrains.Annotations;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
@@ -13,23 +14,27 @@ using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Messaging.Services;
 using System.Collections.Generic;
+using Orchard.Services;
 
 namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class MembershipService : IMembershipService {
-        private static readonly TimeSpan DelayToValidate = new TimeSpan(7, 0, 0, 0); // one week to validate email
         private readonly IOrchardServices _orchardServices;
         private readonly IMessageManager _messageManager;
         private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
+        private readonly IClock _clock;
 
-        public MembershipService(IOrchardServices orchardServices, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers) {
+        public MembershipService(IOrchardServices orchardServices, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers, IClock clock) {
             _orchardServices = orchardServices;
             _messageManager = messageManager;
             _userEventHandlers = userEventHandlers;
+            _clock = clock;
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public MembershipSettings GetSettings() {
             var settings = new MembershipSettings();
@@ -84,54 +89,6 @@ namespace Orchard.Users.Services {
             return user;
         }
 
-        public void SendChallengeEmail(IUser user, string url) {
-            _messageManager.Send(user.ContentItem.Record, MessageTypes.Validation, "email", new Dictionary<string, string> { { "ChallengeUrl", url } });
-        }
-
-        public IUser ValidateChallengeToken(string challengeToken) {
-            string username;
-            DateTime validateByUtc;
-
-            if(!DecryptChallengeToken(challengeToken, out username, out validateByUtc)) {
-                return null;
-            }
-
-            if ( validateByUtc < DateTime.UtcNow )
-                return null;
-
-            var user = GetUser(username);
-            if ( user == null )
-                return null;
-
-            user.As<UserPart>().EmailStatus = UserStatus.Approved;
-
-            return user;
-        }
-
-        public string GetEncryptedChallengeToken(IUser user) {
-            var challengeToken = new XElement("Token", new XAttribute("username", user.UserName), new XAttribute("validate-by-utc", DateTime.UtcNow.Add(DelayToValidate).ToString(CultureInfo.InvariantCulture))).ToString();
-            var data = Encoding.UTF8.GetBytes(challengeToken);
-            return MachineKey.Encode(data, MachineKeyProtection.All);
-        }
-
-        private static bool DecryptChallengeToken(string challengeToken, out string username, out DateTime validateByUtc) {
-            username = null;
-            validateByUtc = DateTime.UtcNow;
-
-            try {
-                var data = MachineKey.Decode(challengeToken, MachineKeyProtection.All);
-                var xml = Encoding.UTF8.GetString(data);
-                var element = XElement.Parse(xml);
-                username = element.Attribute("username").Value;
-                validateByUtc = DateTime.Parse(element.Attribute("validate-by-utc").Value, CultureInfo.InvariantCulture);
-                return true;
-            }
-            catch {
-                return false;
-            }
-
-        }
-
         public IUser GetUser(string username) {
             var lowerName = username == null ? "" : username.ToLower();
 
@@ -179,7 +136,7 @@ namespace Orchard.Users.Services {
                     SetPasswordEncrypted(partRecord, password);
                     break;
                 default:
-                    throw new ApplicationException("Unexpected password format value");
+                    throw new ApplicationException(T("Unexpected password format value").ToString());
             }
         }
 

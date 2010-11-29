@@ -6,10 +6,14 @@
 }
 
 <h1 class="page-title">@Html.TitleForPage(Model.Title)</h1>
-<p>@T("Please enter your username and password.") @if(userCanRegister) { <text> </text> @Html.ActionLink("Register", "Register") @T(" if you don't have an account.") }</p>
+<p>
+    @T("Please enter your username and password.") 
+    @if(userCanRegister) { @Html.ActionLink(T("Register").Text, "Register") @T(" if you don't have an account.") }
+    @Html.ActionLink(T("Lost your Password?").Text, "LostPassword")
+</p>
 @Html.ValidationSummary(T("Login was unsuccessful. Please correct the errors and try again.").ToString())
 
-@using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", new {ReturnUrl = Request.QueryString["ReturnUrl"]}))) {
+@using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))) {
 <fieldset class="login-form group">
     <legend>@T("Account Information")</legend>
     <ol>

@@ -135,6 +135,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
+    <Compile Include="Scripting\EvaluatorTests.cs" />
+    <Compile Include="Scripting\ParserTests.cs" />
+    <Compile Include="Scripting\TokenizerTests.cs" />
+    <Compile Include="Scripting\SimpleScriptingTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="Media\Extensions\LongExtensionsTests.cs" />
     <EmbeddedResource Include="Packaging\HelloDriver.cs.txt" />
@@ -144,9 +148,12 @@
     <Compile Include="Roles\Controllers\AdminControllerTests.cs" />
     <Compile Include="Roles\Services\RoleServiceTests.cs" />
     <Compile Include="Migrations\SchemaCommandGeneratorTests.cs" />
-    <Compile Include="Scripting\ScriptingTests.cs" />
+    <Compile Include="Scripting.Dlr\ScriptingTests.cs" />
     <Compile Include="Settings\Blueprint\ShellDescriptorManagerTests.cs" />
+    <Compile Include="Tags\Services\TagsServiceTests.cs" />
     <Compile Include="Themes\Services\ThemeServiceTests.cs" />
+    <Compile Include="Users\Controllers\AccountControllerTests.cs" />
+    <Compile Include="Users\Services\UserServiceTests.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="Users\Controllers\AdminControllerTests.cs" />
     <Compile Include="Users\Services\MembershipServiceTests.cs" />
@@ -191,13 +198,21 @@
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Scripting\Orchard.Scripting.csproj">
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj">
       <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
+      <Name>Orchard.Scripting.Dlr</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Scripting\Orchard.Scripting.csproj">
+      <Project>{99002B65-86F7-415E-BF4A-381AA8AB9CCC}</Project>
       <Name>Orchard.Scripting</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Setup\Orchard.Setup.csproj">
       <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
       <Name>Orchard.Setup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Tags\Orchard.Tags.csproj">
+      <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
+      <Name>Orchard.Tags</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>

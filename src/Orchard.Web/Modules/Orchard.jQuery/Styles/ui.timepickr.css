@@ -1,14 +1,14 @@
 .ui-timepickr {
-	display:none;
+    display:none;
     position:absolute;
-	padding:2px 2px 2px 0;
+    padding:2px 2px 2px 0;
 }
 
 .ui-timepickr-row {
     padding:0;
-	float:right;
-	clear:both;
-	overflow:hidden;
+    float:right;
+    clear:both;
+    overflow:hidden;
     margin:2px 0; 
     display:none;
     position:relative;

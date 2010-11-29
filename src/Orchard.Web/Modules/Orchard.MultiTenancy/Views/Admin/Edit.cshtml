@@ -17,12 +17,12 @@
     <fieldset>
         <legend>@T("Database Setup")</legend>
         @if (Model.State.CurrentState != TenantState.State.Uninitialized) { 
-			<div class="warning message">@T("Warning: If you don't know what you're doing you *will* (likely) send this tenant into a downward spiral of irrecoverable disrepair. Have a nice day.")</div>
+            <div class="warning message">@T("Warning: If you don't know what you're doing you *will* (likely) send this tenant into a downward spiral of irrecoverable disrepair. Have a nice day.")</div>
         } else { 
- 			<div>
-				@Html.RadioButtonFor(svm => svm.DataProvider, "", new { id = "tenantDatabaseOption" })
-				<label for="tenantDatabaseOption" class="forcheckbox">@T("Allow the tenant to set up the database")</label>
-			</div>
+             <div>
+                @Html.RadioButtonFor(svm => svm.DataProvider, "", new { id = "tenantDatabaseOption" })
+                <label for="tenantDatabaseOption" class="forcheckbox">@T("Allow the tenant to set up the database")</label>
+            </div>
         } 
         <div>
             @Html.RadioButtonFor(svm => svm.DataProvider, "SqlCe", new { id = "builtinDatabaseOption" })
@@ -42,7 +42,7 @@
             </span>
         </div>
     </fieldset>
-	<fieldset>
+    <fieldset>
         <button class="primaryAction" type="submit">@T("Save")</button>
     </fieldset>
 } 

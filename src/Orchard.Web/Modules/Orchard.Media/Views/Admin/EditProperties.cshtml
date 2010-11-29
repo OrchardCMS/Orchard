@@ -9,7 +9,6 @@
     @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {
         @Html.ActionLink(navigation.FolderName, "Edit",
                   new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) <text>&#62;</text>
-	    
     } 
     @T("Folder Properties")</p>
 </div>    
@@ -18,10 +17,10 @@
     @Html.ValidationSummary()
     <fieldset>
         <label for="Name">@T("Folder Name:")</label>
-		<input id="MediaPath" name="MediaPath" type="hidden" value="@Model.MediaPath" />
-		<input id="Name" class="textMedium" name="Name" type="text" value="@Model.Name" />
+        <input id="MediaPath" name="MediaPath" type="hidden" value="@Model.MediaPath" />
+        <input id="Name" class="textMedium" name="Name" type="text" value="@Model.Name" />
     </fieldset>
-    <fieldset>		
+    <fieldset>        
         <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
         <button type="submit" name="submit.Delete" value="@T("Remove")">@T("Remove")</button>
     </fieldset>

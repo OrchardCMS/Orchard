@@ -17,21 +17,21 @@
 @using(Script.Foot()){
 <script type="text/javascript">
 //<![CDATA[
-	$(function(){
-		//pull slug input from tab order
-		$("#@Html.FieldIdFor(m=>m.Slug)").attr("tabindex",-1);
-		$("#@Html.FieldIdFor(m=>m.Title)").blur(function(){
-			var slug = $("#@Html.FieldIdFor(m=>m.Slug)");
-			if (slug.val()) { return true; }
-			$(this).slugify({
-				target:slug,
-				contentType:"@Model.ContentType",
-				id:"@Model.Id",
-				@if (Model.ContainerId != null) {<text>containerId:@Model.ContainerId,</text>}
-				url:"@Url.Action("Slugify","Item",new RouteValueDictionary{{"Area","Routable"}})"
-			})
-		})
-	})
+    $(function(){
+        //pull slug input from tab order
+        $("#@Html.FieldIdFor(m=>m.Slug)").attr("tabindex",-1);
+        $("#@Html.FieldIdFor(m=>m.Title)").blur(function(){
+            var slug = $("#@Html.FieldIdFor(m=>m.Slug)");
+            if (slug.val()) { return true; }
+            $(this).slugify({
+                target:slug,
+                contentType:"@Model.ContentType",
+                id:"@Model.Id",
+                @if (Model.ContainerId != null) {<text>containerId:@Model.ContainerId,</text>}
+                url:"@Url.Action("Slugify","Item",new RouteValueDictionary{{"Area","Routable"}})"
+            })
+        })
+    })
 //]]>
 </script>
 }

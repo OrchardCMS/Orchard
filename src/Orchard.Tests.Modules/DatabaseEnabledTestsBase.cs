@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Autofac;
@@ -64,8 +65,10 @@ namespace Orchard.Tests.Modules {
         }
 
         protected void ClearSession() {
+            Trace.WriteLine("Flush and clear session");
             _session.Flush();
             _session.Clear();
+            Trace.WriteLine("Flushed and cleared session");
         }
     }
 }

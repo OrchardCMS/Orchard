@@ -95,11 +95,11 @@ namespace Orchard.Commands {
             }
             catch (OrchardCommandHostRetryException e) {
                 // Special "Retry" return code for our host
-                output.WriteLine("{0} (Retrying...)", e.Message);
+                output.WriteLine(T("{0} (Retrying...)", e.Message));
                 return CommandReturnCodes.Retry;
             }
             catch (Exception e) {
-                OutputException(output, e);
+                OutputException(output, T("Error executing command \"{0}\"", string.Join(" ", args)), e);
                 return CommandReturnCodes.Fail;
             }
         }
@@ -111,11 +111,11 @@ namespace Orchard.Commands {
             }
             catch (OrchardCommandHostRetryException e) {
                 // Special "Retry" return code for our host
-                output.WriteLine("{0} (Retrying...)", e.Message);
+                output.WriteLine(T("{0} (Retrying...)", e.Message));
                 return CommandReturnCodes.Retry;
             }
             catch (Exception e) {
-                OutputException(output, e);
+                OutputException(output, T("Error starting up Orchard command line host"), e);
                 return CommandReturnCodes.Fail;
             }
         }
@@ -129,20 +129,42 @@ namespace Orchard.Commands {
                 return CommandReturnCodes.Ok;
             }
             catch (Exception e) {
-                OutputException(output, e);
+                OutputException(output, T("Error shutting down Orchard command line host"), e);
                 return CommandReturnCodes.Fail;
             }
         }
 
-        private void OutputException(TextWriter output, Exception e) {
-            for (int i = 0; e != null; e = e.InnerException, i++) {
-                if (i > 0) {
-                    output.WriteLine("---- Inner Exception -----------------------------------------------------------------------");
-                }
-                output.WriteLine("Error: {0}", e.Message);
-                output.WriteLine("   Exception Type: {0}", e.GetType().FullName);
-                output.WriteLine("{0}", e.StackTrace);
+        private void OutputException(TextWriter output, LocalizedString title, Exception exception) {
+            // Display header
+            output.WriteLine();
+            output.WriteLine(T("{0}", title));
+            output.WriteLine(T("--------------------------------------------------------------------------------"));
+
+            // Push exceptions in a stack so we display from inner most to outer most
+            var errors = new Stack<Exception>();
+            for (var scan = exception; scan != null; scan = scan.InnerException) {
+                errors.Push(scan);
             }
+
+            // Display inner most exception details
+            exception = errors.Peek();
+            output.WriteLine(T("{0}", exception.Message));
+            output.WriteLine();
+            output.WriteLine(T("Exception Details: {0}: {1}", exception.GetType().FullName, exception.Message));
+            output.WriteLine();
+            output.WriteLine(T("Stack Trace:"));
+            output.WriteLine();
+
+            // Display exceptions from inner most to outer most
+            foreach(var error in errors) {
+                output.WriteLine(T("[{0}: {1}]", error.GetType().Name, error.Message));
+                output.WriteLine(T("{0}", error.StackTrace));
+                output.WriteLine();
+            }
+
+            // Display footer
+            output.WriteLine("--------------------------------------------------------------------------------");
+            output.WriteLine();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]

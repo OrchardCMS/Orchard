@@ -17,7 +17,7 @@ Scenario: Creating a folder
         And I fill in
             | name | value |
             | Name | Hello World |
-        And I hit "Save"		
+        And I hit "Save"        
         And I am redirected
     Then I should see "Manage Media Folders"
         And I should see "Hello World"

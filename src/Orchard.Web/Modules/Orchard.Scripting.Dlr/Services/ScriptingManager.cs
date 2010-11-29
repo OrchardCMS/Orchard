@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Scripting.Hosting;
 
-namespace Orchard.Scripting.Services {
+namespace Orchard.Scripting.Dlr.Services {
     public class ScriptingManager : IScriptingManager {
         private readonly IScriptingRuntime _scriptingRuntime;
         private readonly Lazy<ScriptScope> _scope;

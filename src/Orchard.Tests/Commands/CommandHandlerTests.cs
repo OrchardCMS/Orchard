@@ -76,6 +76,14 @@ namespace Orchard.Tests.Commands {
         }
 
         [Test]
+        public void TestCaseInsensitiveForCommand() {
+            var commandContext = CreateCommandContext("BAZ", new Dictionary<string, string> { { "VERBOSE", "true" } });
+            _handler.Execute(commandContext);
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo("Command Baz Called : This was a test"));
+        }
+
+
+        [Test]
         public void TestBooleanSwitchForCommand() {
             var commandContext = CreateCommandContext("Baz", new Dictionary<string, string> {{"Verbose", "true"}});
             _handler.Execute(commandContext);

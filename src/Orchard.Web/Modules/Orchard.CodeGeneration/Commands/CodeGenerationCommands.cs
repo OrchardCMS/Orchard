@@ -291,6 +291,9 @@ namespace Orchard.CodeGeneration.Commands {
             File.WriteAllText(themePath + "Theme.txt", templateText);
             createdFiles.Add(themePath + "Theme.txt");
 
+            File.WriteAllBytes(themePath + "Theme.png", File.ReadAllBytes(_codeGenTemplatePath + "Theme.png"));
+            createdFiles.Add(themePath + "Theme.png");
+
             // create new csproj for the theme
             if (projectGuid != null) {
                 var itemGroup = CreateProjectItemGroup(themePath, createdFiles, createdFolders);

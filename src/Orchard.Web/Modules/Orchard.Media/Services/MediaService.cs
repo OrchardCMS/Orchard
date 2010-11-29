@@ -6,7 +6,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
-using Orchard.Logging;
+using Orchard.Localization;
 using Orchard.Media.Models;
 
 namespace Orchard.Media.Services {
@@ -18,10 +18,11 @@ namespace Orchard.Media.Services {
         public MediaService(IStorageProvider storageProvider, IOrchardServices orchardServices) {
             _storageProvider = storageProvider;
             _orchardServices = orchardServices;
-            Logger = NullLogger.Instance;
+
+            T = NullLocalizer.Instance;
         }
 
-        public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public string GetPublicUrl(string path) {
             return _storageProvider.GetPublicUrl(path);
@@ -83,9 +84,11 @@ namespace Orchard.Media.Services {
         }
 
         public void RenameFile(string name, string newName, string folderName) {
-            if (FileAllowed(newName, false)) {
-                _storageProvider.RenameFile(_storageProvider.Combine(folderName, name), _storageProvider.Combine(folderName, newName));
+            if (!FileAllowed(newName, false)) {
+                throw new ArgumentException(T("New file name {0} not allowed", newName).ToString());
             }
+
+            _storageProvider.RenameFile(_storageProvider.Combine(folderName, name), _storageProvider.Combine(folderName, newName));
         }
 
         public string UploadMediaFile(string folderName, HttpPostedFileBase postedFile) {

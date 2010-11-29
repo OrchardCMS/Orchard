@@ -89,6 +89,10 @@ namespace Orchard.FileSystems.VirtualPath {
             }
             public bool IsCurrent { get; set; }
             public string VirtualPath { get; private set; }
+
+            public override string ToString() {
+                return string.Format("IsCurrent: {0}, VirtualPath: \"{1}\"", IsCurrent, VirtualPath);
+            }
         }
 
         class Thunk {

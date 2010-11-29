@@ -47,7 +47,6 @@ namespace Orchard.Environment.Extensions.Folders {
                     foreach (var subfolderPath in subfolderPaths) {
                         var extensionId = Path.GetFileName(subfolderPath.TrimEnd('/', '\\'));
                         var manifestPath = Path.Combine(subfolderPath, _manifestName);
-                        ctx.Monitor(_webSiteFolder.WhenPathChanges(manifestPath));
                         try {
                             var descriptor = GetExtensionDescriptor(path, extensionId, manifestPath);
                             if (descriptor != null)

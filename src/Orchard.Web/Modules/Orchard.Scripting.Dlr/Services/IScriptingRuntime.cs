@@ -1,6 +1,6 @@
 ﻿using Microsoft.Scripting.Hosting;
 
-namespace Orchard.Scripting.Services {
+namespace Orchard.Scripting.Dlr.Services {
     public interface IScriptingRuntime : ISingletonDependency {
         ScriptScope CreateScope();
         dynamic ExecuteExpression(string expression, ScriptScope scope);

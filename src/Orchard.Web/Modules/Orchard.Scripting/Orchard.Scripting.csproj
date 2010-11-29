@@ -6,7 +6,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</ProjectGuid>
+    <ProjectGuid>{99002B65-86F7-415E-BF4A-381AA8AB9CCC}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -34,23 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IronRuby, Version=1.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\dlr\IronRuby.dll</HintPath>
-    </Reference>
-    <Reference Include="IronRuby.Libraries, Version=1.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Dynamic, Version=1.1.0.10, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\dlr\Microsoft.Dynamic.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting, Version=1.1.0.10, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\dlr\Microsoft.Scripting.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -61,11 +45,28 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ast\AbstractSyntaxTree.cs" />
+    <Compile Include="Ast\AstNode.cs" />
+    <Compile Include="Ast\AstVisitor.cs" />
+    <Compile Include="Ast\BinaryAstNode.cs" />
+    <Compile Include="Ast\ConstantAstNode.cs" />
+    <Compile Include="Ast\ErrorAstNode.cs" />
+    <Compile Include="Ast\IAstNodeWithToken.cs" />
+    <Compile Include="Ast\MethodCallAstNode.cs" />
+    <Compile Include="Ast\UnaryAstNode.cs" />
+    <Compile Include="Compiler\EvaluationResult.cs" />
+    <Compile Include="Compiler\PrimitiveType.cs" />
+    <Compile Include="IGlobalMethodProvider.cs" />
+    <Compile Include="IScriptExpressionEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IScriptingManager.cs" />
-    <Compile Include="Services\IScriptingRuntime.cs" />
-    <Compile Include="Services\RubyScriptingRuntime.cs" />
-    <Compile Include="Services\ScriptingManager.cs" />
+    <Compile Include="Compiler\Interpreter.cs" />
+    <Compile Include="Compiler\InterpreterVisitor.cs" />
+    <Compile Include="Compiler\Lexer.cs" />
+    <Compile Include="Compiler\Parser.cs" />
+    <Compile Include="Compiler\Token.cs" />
+    <Compile Include="Compiler\Tokenizer.cs" />
+    <Compile Include="Compiler\TokenKind.cs" />
+    <Compile Include="ScriptExpressionEvaluator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

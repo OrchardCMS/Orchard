@@ -66,9 +66,9 @@
     </Content>
     <Content Include="TheAdmin\Views\Pager.cshtml" />
     <Content Include="TheAdmin\Views\OrchardVersion.cshtml" />
-    <None Include="Web.config">
+    <Content Include="Web.config">
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <Content Include="TheAdmin\Views\Menu.cshtml" />
     <Content Include="TheThemeMachine\Views\Branding.cshtml" />
     <Content Include="TheThemeMachine\Views\BadgeOfHonor.cshtml" />

@@ -10,7 +10,6 @@ using Orchard.Packaging.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
-using System.Xml.XPath;
 
 namespace Orchard.Packaging.Controllers {
     [OrchardFeature("Gallery")]
@@ -34,7 +33,7 @@ namespace Orchard.Packaging.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public ActionResult Sources() {
             return View(new PackagingSourcesViewModel {

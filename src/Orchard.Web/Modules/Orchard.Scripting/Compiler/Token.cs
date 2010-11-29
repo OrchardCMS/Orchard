@@ -1,0 +1,16 @@
+﻿using System;
+
+namespace Orchard.Scripting.Compiler {
+    public class Token {
+        public TokenKind Kind { get; set; }
+        public int Position { get; set; }
+        public object Value { get; set; }
+
+        public override string ToString() {
+            if (Value == null)
+                return String.Format("Token {0} at position {1}", Kind, Position);
+            else
+                return String.Format("Token {0} ({1}) at position {2}", Kind, Value, Position);
+        }
+    }
+}
