@@ -78,20 +78,20 @@ header, footer, aside, nav, article { display: block; }
 /* Default font settings. 
 The font-size 81.3% sets the base font to 13px 
 
-Pixels     EMs         Percent Points
-1px     0.077em     7.7%    1pt
-2px     0.154em     15.4%   2pt
-3px     0.231em     23.1%   3pt
-4px     0.308em     30.8%   3pt
-5px     0.385em     38.5%   4pt
-6px     0.462em     46.2%     5pt
-7px     0.538em     53.8%     5pt
-8px     0.615em     61.5%     6pt
-9px     0.692em     69.2%     7pt
-10px     0.769em     76.9%     8pt
-11px     0.846em     84.6%     8pt
-12px     0.923em     92.3%     9pt
-13px     1em         100%     10pt
+Pixels   EMs         Percent    Points
+1px      0.077em     7.7%       1pt
+2px      0.154em     15.4%      2pt
+3px      0.231em     23.1%      3pt
+4px      0.308em     30.8%      3pt
+5px      0.385em     38.5%      4pt
+6px      0.462em     46.2%      5pt
+7px      0.538em     53.8%      5pt
+8px      0.615em     61.5%      6pt
+9px      0.692em     69.2%      7pt
+10px     0.769em     76.9%      8pt
+11px     0.846em     84.6%      8pt
+12px     0.923em     92.3%      9pt
+13px     1em         100%       10pt
 14px     1.077em     107.7%     11pt
 15px     1.154em     115.4%     11pt
 16px     1.231em     123.1%     12pt
@@ -506,7 +506,7 @@ input.large.text, textarea, fieldset {
     clear:both;
 }
 fieldset {
-    margin:0 0 1.3em 0;
+    margin:0 0 1em 0;
     padding:6px 0 0;
 }
 textarea {
@@ -855,7 +855,7 @@ table.items th, table.items td {
 .orchard-blogs .edit-item-sidebar, .contents .edit-item-sidebar 
 {
     border:1px solid #d3d3d3;
-    padding:6px;
+    padding:8px;
     
     /*CSS3 properties*/
         filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f7f7f7', endColorstr='#f5f5f5');
@@ -885,9 +885,7 @@ fieldset.save-button {
     width:auto;
 }
 fieldset.publish-later-datetime {
-    clear:none;
     float:left;
-    margin: 0 6px;
 }
 fieldset.publish-later-datetime legend {
     display:none;
