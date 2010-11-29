@@ -61,6 +61,12 @@ namespace Orchard.Tests.Modules.Scripting {
             CheckTokenSequence("1+2*3", TokenKind.Integer, TokenKind.Plus, TokenKind.Integer, TokenKind.Mul, TokenKind.Integer);
         }
 
+        [Test]
+        public void LexerShouldProcesSequenceOfTokens3() {
+            CheckTokenSequence("= == < <= > >= ! !=", TokenKind.Equal, TokenKind.EqualEqual, 
+                TokenKind.LessThan, TokenKind.LessThanEqual, 
+                TokenKind.GreaterThan, TokenKind.GreaterThanEqual, TokenKind.NotSign, TokenKind.NotEqual);
+        }
 
         private void CheckTokenSequence(string expression, params TokenKind[] tokenKinds) {
             var lexer = new Tokenizer(expression);

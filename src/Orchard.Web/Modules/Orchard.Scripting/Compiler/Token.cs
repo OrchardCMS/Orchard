@@ -7,7 +7,10 @@ namespace Orchard.Scripting.Compiler {
         public object Value { get; set; }
 
         public override string ToString() {
-            return String.Format("{0} ({1}) at position {2}", Kind, Value ?? "<noval>", Position);
+            if (Value == null)
+                return String.Format("Token {0} at position {1}", Kind, Position);
+            else
+                return String.Format("Token {0} ({1}) at position {2}", Kind, Value, Position);
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿namespace Orchard.Scripting.Compiler {
     public enum TokenKind {
+        Invalid,
         Eof,
         OpenParen,
         CloseParen,
         StringLiteral,
         SingleQuotedStringLiteral,
+        Identifier,
         Integer,
         Comma,
         Plus,
@@ -13,10 +15,16 @@
         Div,
         True,
         False,
-        Identifier,
         And,
         Or,
         Not,
-        Invalid
+        Equal,
+        EqualEqual,
+        NotSign,
+        NotEqual,
+        LessThan,
+        LessThanEqual,
+        GreaterThan,
+        GreaterThanEqual
     }
 }

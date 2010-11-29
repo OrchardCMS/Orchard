@@ -46,6 +46,14 @@ namespace Orchard.Scripting.Compiler {
                         return LexStringLiteral();
                     case '\'':
                         return LexSingleQuotedStringLiteral();
+                    case '!':
+                        return LexNotSign();
+                    case '=':
+                        return LexEqual();
+                    case '<':
+                        return LexLessThan();
+                    case '>':
+                        return LexGreaterThan();
                 }
 
                 if (IsDigitCharacter(ch)) {
@@ -61,6 +69,46 @@ namespace Orchard.Scripting.Compiler {
 
                 return CreateToken(TokenKind.Invalid, "Unrecognized character");
             }
+        }
+
+        private Token LexNotSign() {
+            NextCharacter();
+            char ch = Character();
+            if (ch == '=') {
+                NextCharacter();
+                return CreateToken(TokenKind.NotEqual);
+            }
+            return CreateToken(TokenKind.NotSign);
+        }
+
+        private Token LexGreaterThan() {
+            NextCharacter();
+            char ch = Character();
+            if (ch == '=') {
+                NextCharacter();
+                return CreateToken(TokenKind.GreaterThanEqual);
+            }
+            return CreateToken(TokenKind.GreaterThan);
+        }
+
+        private Token LexLessThan() {
+            NextCharacter();
+            char ch = Character();
+            if (ch == '=') {
+                NextCharacter();
+                return CreateToken(TokenKind.LessThanEqual);
+            }
+            return CreateToken(TokenKind.LessThan);
+        }
+
+        private Token LexEqual() {
+            NextCharacter();
+            char ch = Character();
+            if (ch == '=') {
+                NextCharacter();
+                return CreateToken(TokenKind.EqualEqual);
+            }
+            return CreateToken(TokenKind.Equal);
         }
 
         private Token LexIdentifierOrKeyword() {
