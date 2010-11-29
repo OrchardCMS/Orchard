@@ -18,6 +18,7 @@ namespace Orchard.Messaging.Services {
             IEnumerable<IMessagingChannel> channels) {
             _messageEventHandler = messageEventHandler;
             _channels = channels;
+            Logger = NullLogger.Instance;
         }
 
         public void Send(ContentItemRecord recipient, string type, string service, Dictionary<string, string> properties = null) {

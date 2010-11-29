@@ -120,8 +120,7 @@ namespace Orchard.Users.Controllers {
 
                 if (user != null) {
                     if ( user.As<UserPart>().EmailStatus == UserStatus.Pending ) {
-                        string challengeToken = _userService.GetNonce(user.As<UserPart>());
-                        _userService.SendChallengeEmail(user.As<UserPart>(), Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", token = challengeToken })));
+                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
 
                         return RedirectToAction("ChallengeEmailSent");
                     }
