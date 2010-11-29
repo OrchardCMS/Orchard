@@ -35,8 +35,6 @@ namespace Orchard.Core.Common.Handlers {
             Filters.Add(StorageFilter.For(commonRepository));
             Filters.Add(StorageFilter.For(commonVersionRepository));
 
-            Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(ContentTypeWithACommonPart));
-
             OnInitializing<CommonPart>(PropertySetHandlers);
             OnInitializing<CommonPart>(AssignCreatingOwner);
             OnInitializing<CommonPart>(AssignCreatingDates);
@@ -60,6 +58,11 @@ namespace Orchard.Core.Common.Handlers {
         }
 
         public Localizer T { get; set; }
+
+        protected override void Activating(ActivatingContentContext context) {
+            if (ContentTypeWithACommonPart(context.ContentType))
+                context.Builder.Weld<ContentPart<CommonPartVersionRecord>>();
+        }
 
         bool ContentTypeWithACommonPart(string typeName) {
             //Note: What about content type handlers which activate "CommonPart" in code?
