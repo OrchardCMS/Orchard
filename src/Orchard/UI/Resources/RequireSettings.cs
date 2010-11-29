@@ -9,6 +9,7 @@ namespace Orchard.UI.Resources {
         public bool DebugMode { get; set; }
         public bool CdnMode { get; set; }
         public ResourceLocation Location { get; set; }
+        public string Condition { get; set; }
         public Action<ResourceDefinition> InlineDefinition { get; set; }
 
         public RequireSettings AtHead() {
@@ -55,6 +56,11 @@ namespace Orchard.UI.Resources {
             return this;
         }
 
+        public RequireSettings UseCondition(string condition) {
+            Condition = Condition ?? condition;
+            return this;
+        }
+
         public RequireSettings Define(Action<ResourceDefinition> resourceDefinition) {
             InlineDefinition = resourceDefinition ?? InlineDefinition;
             return this;
@@ -69,6 +75,7 @@ namespace Orchard.UI.Resources {
                 .UseCdn(CdnMode).UseCdn(other.CdnMode)
                 .UseDebugMode(DebugMode).UseDebugMode(other.DebugMode)
                 .UseCulture(Culture).UseCulture(other.Culture)
+                .UseCondition(Condition).UseCondition(other.Condition)
                 .Define(InlineDefinition).Define(other.InlineDefinition);
         }
     }
