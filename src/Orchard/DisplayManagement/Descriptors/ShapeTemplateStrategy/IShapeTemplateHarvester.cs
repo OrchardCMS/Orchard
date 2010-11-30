@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Orchard.Environment.Extensions.Models;
-using Orchard.Events;
+﻿using System.Collections.Generic;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
     /// <summary>
@@ -70,7 +66,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
     }
 
     public interface IShapeTemplateViewEngine : IDependency {
-        IEnumerable<string> DetectTemplateFileNames(string virtualPath);
+        IEnumerable<string> DetectTemplateFileNames(IEnumerable<string> fileNames);
     }
 
 }

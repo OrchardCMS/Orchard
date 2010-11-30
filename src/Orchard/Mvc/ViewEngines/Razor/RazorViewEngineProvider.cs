@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 using Orchard.Mvc.ViewEngines.WebForms;
 
 namespace Orchard.Mvc.ViewEngines.Razor {
     public class RazorViewEngineProvider : IViewEngineProvider, IShapeTemplateViewEngine {
-        private readonly IVirtualPathProvider _virtualPathProvider;
-
-        public RazorViewEngineProvider(IVirtualPathProvider virtualPathProvider) {
-            _virtualPathProvider = virtualPathProvider;
+        public RazorViewEngineProvider() {
             Logger = NullLogger.Instance;
             RazorCompilationEventsShim.EnsureInitialized();
         }
@@ -103,13 +98,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             };
         }
 
-        public IEnumerable<string> DetectTemplateFileNames(string virtualPath) {
-            var fileNames = _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
-            foreach (var fileName in fileNames) {
-                if (fileName.EndsWith(".cshtml", StringComparison.OrdinalIgnoreCase)) {
-                    yield return fileName;
-                }
-            }
+        public IEnumerable<string> DetectTemplateFileNames(IEnumerable<string> fileNames) {
+            return fileNames.Where(fileName => fileName.EndsWith(".cshtml", StringComparison.OrdinalIgnoreCase));
         }
     }
 }
