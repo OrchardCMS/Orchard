@@ -107,7 +107,9 @@ namespace Orchard.Localization.Controllers {
             } else {
                 // create
                 contentItemTranslation = _contentManager.New(contentItem.ContentType);
-                contentItemTranslation.As<ICommonPart>().Container = contentItem.As<ICommonPart>().Container;
+                if (contentItemTranslation.Has<ICommonPart>() && contentItem.Has<ICommonPart>()) {
+                    contentItemTranslation.As<ICommonPart>().Container = contentItem.As<ICommonPart>().Container;
+                }
 
                 var localized = contentItemTranslation.As<LocalizationPart>();
                 localized.MasterContentItem = contentItem;
