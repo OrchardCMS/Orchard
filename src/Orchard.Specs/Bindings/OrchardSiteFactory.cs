@@ -17,11 +17,12 @@ namespace Orchard.Specs.Bindings {
         public void GivenIHaveInstalledOrchard(string virtualDirectory) {
             var webApp = Binding<WebAppHosting>();
 
-            webApp.GivenIHaveACleanSiteWith(TableData(
+            webApp.GivenIHaveACleanSiteWith(
+                virtualDirectory,
+                TableData(
                 new { extension = "module", names = "Orchard.Setup, Orchard.Pages, Orchard.Blogs, Orchard.Messaging, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce" },
                 new { extension = "core", names = "Common, Dashboard, Feeds, HomePage, Navigation, Contents, Routable, Scheduling, Settings, Shapes, XmlRpc" },
-                new { extension = "theme", names = "SafeMode, TheAdmin, TheThemeMachine" }),
-                virtualDirectory);
+                new { extension = "theme", names = "SafeMode, TheAdmin, TheThemeMachine" }));
 
             webApp.WhenIGoTo("Setup");
 

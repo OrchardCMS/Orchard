@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using Autofac;
 using Orchard.Mvc;
 
 namespace Orchard.Environment {
-    public class DefaultWorkContextAccessor : IWorkContextAccessor {
+    public class WorkContextAccessor : IWorkContextAccessor {
         readonly ILifetimeScope _lifetimeScope;
 
         readonly IHttpContextAccessor _httpContextAccessor;
@@ -18,7 +16,7 @@ namespace Orchard.Environment {
         [ThreadStatic]
         static ConcurrentDictionary<object, WorkContext> _threadStaticContexts;
 
-        public DefaultWorkContextAccessor(
+        public WorkContextAccessor(
             IHttpContextAccessor httpContextAccessor,
             ILifetimeScope lifetimeScope) {
             _httpContextAccessor = httpContextAccessor;
@@ -39,85 +37,29 @@ namespace Orchard.Environment {
         }
 
         public IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext) {
+            var workLifetime = _lifetimeScope.BeginLifetimeScope("work");
+            workLifetime.Resolve<WorkContextProperty<HttpContextBase>>().Value = httpContext;
 
-            var workLifetime = SpawnWorkLifetime(builder => {
-                builder.Register(ctx => httpContext)
-                    .As<HttpContextBase>();
-
-                builder.Register(ctx => new WorkContextImplementation(ctx))
-                    .As<WorkContext>()
-                    .InstancePerMatchingLifetimeScope("work");
-            });
             return new HttpContextScopeImplementation(
                 workLifetime,
                 httpContext,
                 _workContextKey);
         }
 
+
         public IWorkContextScope CreateWorkContextScope() {
             var httpContext = _httpContextAccessor.Current();
             if (httpContext != null)
                 return CreateWorkContextScope(httpContext);
 
-            var workLifetime = SpawnWorkLifetime(builder => {
-                builder.Register(ctx => httpContext)
-                    .As<HttpContextBase>();
-
-                builder.Register(ctx => new WorkContextImplementation(ctx))
-                    .As<WorkContext>()
-                    .InstancePerMatchingLifetimeScope("work");
-            });
             return new ThreadStaticScopeImplementation(
-                workLifetime,
+                _lifetimeScope.BeginLifetimeScope("work"),
                 EnsureThreadStaticContexts(),
                 _workContextKey);
         }
 
         static ConcurrentDictionary<object, WorkContext> EnsureThreadStaticContexts() {
             return _threadStaticContexts ?? (_threadStaticContexts = new ConcurrentDictionary<object, WorkContext>());
-        }
-
-        private ILifetimeScope SpawnWorkLifetime(Action<ContainerBuilder> configurationAction) {
-            return _lifetimeScope.BeginLifetimeScope("work", configurationAction);
-        }
-
-        class WorkContextImplementation : WorkContext {
-            readonly IComponentContext _componentContext;
-            readonly ConcurrentDictionary<string, Func<object>> _stateResolvers = new ConcurrentDictionary<string, Func<object>>();
-            readonly IEnumerable<IWorkContextStateProvider> _workContextStateProviders;
-
-            public WorkContextImplementation(IComponentContext componentContext) {
-                _componentContext = componentContext;
-                _workContextStateProviders = componentContext.Resolve<IEnumerable<IWorkContextStateProvider>>();
-            }
-
-            public override T Resolve<T>() {
-                return _componentContext.Resolve<T>();
-            }
-
-            public override bool TryResolve<T>(out T service) {
-                return _componentContext.TryResolve(out service);
-            }
-
-            public override T GetState<T>(string name) {
-                var resolver = _stateResolvers.GetOrAdd(name, FindResolverForState<T>);
-                return (T)resolver();
-            }
-
-            Func<object> FindResolverForState<T>(string name) {
-                var resolver = _workContextStateProviders.Select(wcsp => wcsp.Get<T>(name))
-                    .FirstOrDefault(value => !Equals(value, default(T)));
-
-                if (resolver == null) {
-                    return () => default(T);
-                }
-                return () => resolver(this);
-            }
-
-
-            public override void SetState<T>(string name, T value) {
-                _stateResolvers[name] = () => value;
-            }
         }
 
 

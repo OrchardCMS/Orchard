@@ -70,7 +70,7 @@ namespace Orchard.Core.Routable.Drivers {
             var containerUrl = new UriBuilder(request.ToRootUrlString()) { Path = (request.ApplicationPath ?? "").TrimEnd('/') + "/" + (part.GetContainerPath() ?? "") };
             model.ContainerAbsoluteUrl = containerUrl.Uri.ToString().TrimEnd('/');
 
-            model.PromoteToHomePage = model.Id != 0 && part.Path != null && _routableHomePageProvider != null && _services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
+            model.PromoteToHomePage = model.Id != 0 && _routableHomePageProvider != null && _services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
             return ContentShape("Parts_Routable_Edit",
                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
@@ -81,6 +81,7 @@ namespace Orchard.Core.Routable.Drivers {
 
             part.Title = model.Title;
             part.Slug = model.Slug;
+            part.PromoteToHomePage = model.PromoteToHomePage;
 
             if ( !_routableService.IsSlugValid(part.Slug) ) {
                 var slug = (part.Slug ?? String.Empty);
@@ -89,9 +90,6 @@ namespace Orchard.Core.Routable.Drivers {
                 else
                     updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\". No spaces are allowed (please use dashes or underscores instead)."));
             }
-
-            if (part.ContentItem.Id != 0 && model.PromoteToHomePage && _routableHomePageProvider != null)
-                _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
 
             return Editor(part, shapeHelper);
         }

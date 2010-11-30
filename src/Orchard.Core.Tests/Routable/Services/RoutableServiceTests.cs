@@ -46,7 +46,7 @@ namespace Orchard.Core.Tests.Routable.Services {
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
             builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
-            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
 
             builder.RegisterType<ThingHandler>().As<IContentHandler>();

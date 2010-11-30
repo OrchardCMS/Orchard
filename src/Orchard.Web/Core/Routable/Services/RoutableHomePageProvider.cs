@@ -2,7 +2,6 @@
 using JetBrains.Annotations;
 using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
-using Orchard.Localization;
 using Orchard.Services;
 using Orchard.ContentManagement;
 
@@ -10,24 +9,16 @@ namespace Orchard.Core.Routable.Services {
     [UsedImplicitly]
     public class RoutableHomePageProvider : IHomePageProvider {
         private readonly IContentManager _contentManager;
-        private readonly IWorkContextAccessor _workContextAccessor;
         public const string Name = "RoutableHomePageProvider";
 
         public RoutableHomePageProvider(
-            IOrchardServices services, 
             IContentManager contentManager,
-            IShapeFactory shapeFactory,
-            IWorkContextAccessor workContextAccessor) {
+            IShapeFactory shapeFactory) {
             _contentManager = contentManager;
-            _workContextAccessor = workContextAccessor;
-            Services = services;
-            T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }
-        public IOrchardServices Services { get; private set; }
-        public Localizer T { get; set; }
 
         public string GetProviderName() {
             return Name;
@@ -37,8 +28,8 @@ namespace Orchard.Core.Routable.Services {
             return GetProviderName() + ";" + id;
         }
 
-        public ActionResult GetHomePage(int itemId) {
-            var contentItem = _contentManager.Get(itemId, VersionOptions.Published);
+        public ActionResult GetHomePage(int id) {
+            var contentItem = _contentManager.Get(id, VersionOptions.Published);
             if (contentItem == null || !contentItem.Is<RoutePart>())
                 return new HttpNotFoundResult();
 
