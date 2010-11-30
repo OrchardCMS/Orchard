@@ -22,5 +22,8 @@ Scenario: Hitting blogs
     When I go to "/blog4" 10 times
      
 Scenario: Hitting home page
-    Given I am logged in
-    When I go to "/" 40 times
+    //Given I am logged in
+    When I go to "/" 10 times
+    When I go to "/" 10 times
+    When I go to "/" 10 times
+    When I go to "/" 10 times

@@ -1,7 +1,6 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
@@ -67,9 +66,11 @@ namespace Orchard.Core.Common.Handlers {
         bool ContentTypeWithACommonPart(string typeName) {
             //Note: What about content type handlers which activate "CommonPart" in code?
             var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName);
-            if (contentTypeDefinition == null)
-                return false;
-            return contentTypeDefinition.Parts.Any(part => part.PartDefinition.Name == "CommonPart");
+            
+            if (contentTypeDefinition != null)
+                return contentTypeDefinition.Parts.Any(part => part.PartDefinition.Name == "CommonPart");
+
+            return false;
         }
 
         void AssignCreatingOwner(InitializingContentContext context, CommonPart part) {
