@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -6,6 +8,7 @@ using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Data;
 using Orchard.Localization;
+using Orchard.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Routable.Handlers {
@@ -13,11 +16,18 @@ namespace Orchard.Core.Routable.Handlers {
         private readonly IOrchardServices _services;
         private readonly IRoutablePathConstraint _routablePathConstraint;
         private readonly IRoutableService _routableService;
+        private readonly IHomePageProvider _routableHomePageProvider;
 
-        public RoutePartHandler(IOrchardServices services, IRepository<RoutePartRecord> repository, IRoutablePathConstraint routablePathConstraint, IRoutableService routableService) {
+        public RoutePartHandler(
+            IOrchardServices services,
+            IRepository<RoutePartRecord> repository,
+            IRoutablePathConstraint routablePathConstraint,
+            IRoutableService routableService,
+            IEnumerable<IHomePageProvider> homePageProviders) {
             _services = services;
             _routablePathConstraint = routablePathConstraint;
             _routableService = routableService;
+            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             T = NullLocalizer.Instance;
 
             Filters.Add(StorageFilter.For(repository));
@@ -34,21 +44,10 @@ namespace Orchard.Core.Routable.Handlers {
             OnUpdateEditorShape<RoutePart>(SetModelProperties);
 
             OnPublished<RoutePart>((context, route) => {
-                var path = route.Path;
-                route.Path = route.GetPathWithSlug(route.Slug);
+                FinalizePath(route, context, processSlug);
 
-                if (context.PublishingItemVersionRecord != null)
-                    processSlug(route);
-
-                // if the path has changed by having the slug changed on the way in (e.g. user input) or to avoid conflict
-                // then update and publish all contained items
-                if (path != route.Path) {
-                    _routablePathConstraint.RemovePath(path);
-                    _routableService.FixContainedPaths(route);
-                }
-
-                if (!string.IsNullOrWhiteSpace(route.Path))
-                    _routablePathConstraint.AddPath(route.Path);
+                if (route.ContentItem.Id != 0 && route.PromoteToHomePage && _routableHomePageProvider != null)
+                    _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(route.ContentItem.Id);
             });
 
             OnRemoved<RoutePart>((context, route) => {
@@ -57,6 +56,24 @@ namespace Orchard.Core.Routable.Handlers {
             });
 
             OnIndexing<RoutePart>((context, part) => context.DocumentIndex.Add("title", part.Record.Title).RemoveTags().Analyze());
+        }
+
+        private void FinalizePath(RoutePart route, PublishContentContext context, Action<RoutePart> processSlug) {
+            var path = route.Path;
+            route.Path = route.GetPathWithSlug(route.Slug);
+
+            if (context.PublishingItemVersionRecord != null)
+                processSlug(route);
+
+            // if the path has changed by having the slug changed on the way in (e.g. user input) or to avoid conflict
+            // then update and publish all contained items
+            if (path != route.Path) {
+                _routablePathConstraint.RemovePath(path);
+                _routableService.FixContainedPaths(route);
+            }
+
+            if (!string.IsNullOrWhiteSpace(route.Path))
+                _routablePathConstraint.AddPath(route.Path);
         }
 
         private static void SetModelProperties(BuildShapeContext context, RoutePart routable) {
