@@ -107,6 +107,24 @@
 .features .dependencies li:last-child::after {
     content:"";
 }
+.features .missingdependencies {
+    font-size:.9em;
+    color:Red;
+    margin:.44em 0 0;
+}
+.features .missingdependencies>* {
+    display:inline;
+}
+.features .missingdependencies li {
+    display:inline;
+    margin-left:.5em;
+}
+.features .missingdependencies li::after {
+    content:", ";
+}
+.features .missingdependencies li:last-child::after {
+    content:"";
+}
 .features .feature .actions {
     position:absolute;
     right:.4em;

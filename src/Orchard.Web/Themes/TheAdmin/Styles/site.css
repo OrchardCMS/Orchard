@@ -425,7 +425,7 @@ span.message {
     border:1px solid #ffea9b;
 }
 .message-Error {
-    background:#e68585; /* green */
+    background:#e68585; /* red */
     border:1px solid #990808;
     color:#fff;
 }.debug.message {
@@ -477,6 +477,8 @@ label input {
 }
 .hint {
     display:block;
+    font-size:0.923em;
+    color:#7c7c7c;
 }
 /* todo: (heskew) try to get .text on stuff like .text-box */
 select, textarea, input.text, input.textMedium, input.text-box {
@@ -821,7 +823,7 @@ table.items th, table.items td {
 
 
 /* Core Modules
-----------------------------------------------------------*/
+***************************************************************/
 /* Routable */
 .permalink input.text {
     background:transparent;
@@ -897,7 +899,7 @@ fieldset.publish-later-datetime input {
 }
 
 /* Fields
-----------------------------------------------------------*/
+***************************************************************/
 /* TextField */
 #main .summary p.text-field {
     margin:.5em 0;

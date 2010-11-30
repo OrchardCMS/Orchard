@@ -143,7 +143,7 @@ aside h6 { font-size: 1em; }
 /* Lists */
 li ul, 
 li ol       { margin:0 1.5em; }
-ul, ol      { margin: 0 1.5em 1.5em 1.5em; }
+ul, ol      { margin: 1.5em; line-height: 1.538em; }
 
 ul          { list-style-type: disc; }
 ol          { list-style-type: decimal; }
@@ -391,6 +391,12 @@ nav ul
 .search-results .blog-post .metadata .published { display: inline; margin: 0 6px 0 0; }
 .search-results .blog-post .metadata .commentcount { display: inline; }
 
+/* Confirmations */
+.message, .validation-summary-errors { margin:10px 0 4px 0; padding:4px; }
+.messages a { font-weight:bold; }
+.message-Information { background:#e6f1c9; /* green */ border:1px solid #cfe493; color:#062232; }
+.message-Warning { background:#fdf5bc; /* yellow */ border:1px solid #ffea9b; }
+.critical.message, .validation-summary-errors, .message-Error { background:#e68585; /* red */ border:1px solid #990808; color:#fff; }
 
 
 /* Secondary

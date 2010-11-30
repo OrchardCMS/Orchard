@@ -77,7 +77,13 @@ namespace Orchard.Environment.Extensions {
             var featureId = featureDescriptor.Id;
             var extensionId = extensionDescriptor.Id;
 
-            var extensionEntry = _cacheManager.Get(extensionId, ctx => BuildEntry(extensionDescriptor));
+            ExtensionEntry extensionEntry;
+            try {
+                extensionEntry = _cacheManager.Get(extensionId, ctx => BuildEntry(extensionDescriptor));
+            }
+            catch (Exception ex) {
+                throw new OrchardException(T("Error while loading extension '{0}'.", extensionId), ex);
+            }
             if (extensionEntry == null) {
                 // If the feature could not be compiled for some reason,
                 // return a "null" feature, i.e. a feature with no exported types.
