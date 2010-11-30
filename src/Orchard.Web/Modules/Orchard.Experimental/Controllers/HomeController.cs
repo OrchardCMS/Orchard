@@ -1,6 +1,7 @@
 using System;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using Orchard.Experimental.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -13,9 +14,11 @@ namespace Orchard.Experimental.Controllers {
     [Themed, Admin]
     public class HomeController : Controller {
         private readonly INotifier _notifier;
+        private readonly IContainerSpyOutput _containerSpyOutput;
 
-        public HomeController(INotifier notifier, IShapeFactory shapeFactory) {
+        public HomeController(INotifier notifier, IShapeFactory shapeFactory, IContainerSpyOutput containerSpyOutput) {
             _notifier = notifier;
+            _containerSpyOutput = containerSpyOutput;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
@@ -106,6 +109,12 @@ namespace Orchard.Experimental.Controllers {
 
         public static string Break(dynamic view) {
             return view.Model.Box.Title;
+        }
+
+        public ActionResult ContainerData() {
+            var root = new XElement("root");
+            _containerSpyOutput.Write(root);
+            return Content(root.ToString(), "text/xml");
         }
     }
 
