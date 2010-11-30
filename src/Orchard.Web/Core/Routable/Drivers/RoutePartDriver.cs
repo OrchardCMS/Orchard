@@ -8,17 +8,24 @@ using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Services;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Routable.Drivers {
     public class RoutePartDriver : ContentPartDriver<RoutePart> {
         private readonly IOrchardServices _services;
         private readonly IRoutableService _routableService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHomePageProvider _routableHomePageProvider;
 
-        public RoutePartDriver(IOrchardServices services, IRoutableService routableService, IEnumerable<IHomePageProvider> homePageProviders) {
+        public RoutePartDriver(IOrchardServices services,
+            IRoutableService routableService,
+            IEnumerable<IHomePageProvider> homePageProviders,
+            IHttpContextAccessor httpContextAccessor) {
             _services = services;
             _routableService = routableService;
+            _httpContextAccessor = httpContextAccessor;
             _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             T = NullLocalizer.Instance;
         }
@@ -59,10 +66,9 @@ namespace Orchard.Core.Routable.Drivers {
                 ContainerId = GetContainerId(part),
             };
 
-            var containerPath = part.GetContainerPath();
-            model.DisplayLeadingPath = !string.IsNullOrWhiteSpace(containerPath)
-                ? string.Format("{0}/", containerPath)
-                : "";
+            var request = _httpContextAccessor.Current().Request;
+            var containerUrl = new UriBuilder(request.ToRootUrlString()) { Path = (request.ApplicationPath ?? "").TrimEnd('/') + "/" + (part.GetContainerPath() ?? "") };
+            model.ContainerAbsoluteUrl = containerUrl.Uri.ToString().TrimEnd('/');
 
             model.PromoteToHomePage = model.Id != 0 && part.Path != null && _routableHomePageProvider != null && _services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
             return ContentShape("Parts_Routable_Edit",

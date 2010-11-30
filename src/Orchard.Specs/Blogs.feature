@@ -126,3 +126,25 @@ Scenario: Enabling remote blog publishing inserts the appropriate metaweblogapi 
     Then the content type should be "\btext/xml\b"
         And I should see "<manifest xmlns="http\://schemas\.microsoft\.com/wlw/manifest/weblog">"
         And I should see "<clientType>Metaweblog</clientType>"
+
+Scenario: The virtual path of my installation when not at the root is reflected in the URL example for the slug field when creating a blog or blog post
+    Given I have installed Orchard at "/OrchardLocal"
+    When I go to "admin/blogs/create"
+    Then I should see "<span>http\://localhost/OrchardLocal/</span>"
+    When I fill in
+        | name | value |
+        | Routable.Title | My Blog |
+        And I hit "Save"
+        And I go to "admin/blogs/my-blog/posts/create"
+    Then I should see "<span>http\://localhost/OrchardLocal/my-blog/</span>"
+
+Scenario: The virtual path of my installation when at the root is reflected in the URL example for the slug field when creating a blog or blog post
+    Given I have installed Orchard at "/"
+    When I go to "admin/blogs/create"
+    Then I should see "<span>http\://localhost/</span>"
+    When I fill in
+        | name | value |
+        | Routable.Title | My Blog |
+        And I hit "Save"
+        And I go to "admin/blogs/my-blog/posts/create"
+    Then I should see "<span>http\://localhost/my-blog/</span>"

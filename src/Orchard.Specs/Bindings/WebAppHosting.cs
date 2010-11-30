@@ -60,8 +60,8 @@ namespace Orchard.Specs.Bindings {
         }
 
         [Given(@"I have a clean site")]
-        public void GivenIHaveACleanSite() {
-            GivenIHaveACleanSiteBasedOn("Orchard.Web");
+        public void GivenIHaveACleanSite(string virtualDirectory = "/") {
+            GivenIHaveACleanSiteBasedOn("Orchard.Web", virtualDirectory);
         }
 
         [Given(@"I have chosen to deploy modules as source files only")]
@@ -71,8 +71,13 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have a clean site based on (.*)")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
+            GivenIHaveACleanSiteBasedOn(siteFolder, "/");
+        }
+
+        [Given(@"I have a clean site based on (.*) at ""(.*)\""")]
+        public void GivenIHaveACleanSiteBasedOn(string siteFolder, string virtualDirectory) {
             _webHost = new WebHost(_orchardTemp);
-            Host.Initialize(siteFolder, "/");
+            Host.Initialize(siteFolder, virtualDirectory ?? "/");
             var shuttle = new Shuttle();
             Host.Execute(() => {
                 log4net.Config.BasicConfigurator.Configure(new CastleAppender());
@@ -124,8 +129,8 @@ namespace Orchard.Specs.Bindings {
         }
 
         [Given(@"I have a clean site with")]
-        public void GivenIHaveACleanSiteWith(Table table) {
-            GivenIHaveACleanSite();
+        public void GivenIHaveACleanSiteWith(Table table, string virtualDirectory = "/") {
+            GivenIHaveACleanSite(virtualDirectory);
             foreach (var row in table.Rows) {
                 foreach (var name in row["names"].Split(',').Select(x => x.Trim())) {
                     switch (row["extension"]) {
