@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Autofac;
 using Moq;
 using NUnit.Framework;
@@ -11,6 +10,7 @@ using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Tests.DisplayManagement.Descriptors {
     [TestFixture]
@@ -18,16 +18,19 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         private ShellDescriptor _descriptor;
         private IList<FeatureDescriptor> _features;
         private TestViewEngine _testViewEngine;
+        private TestVirtualPathProvider _testVirtualPathProvider;
 
 
         protected override void Register(Autofac.ContainerBuilder builder) {
             _descriptor = new ShellDescriptor { };
             _testViewEngine = new TestViewEngine();
+            _testVirtualPathProvider = new TestVirtualPathProvider();
 
             builder.Register(ctx => _descriptor);
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
             builder.RegisterInstance(_testViewEngine).As<IShapeTemplateViewEngine>();
+            builder.RegisterInstance(_testVirtualPathProvider).As<IVirtualPathProvider>();
 
             var extensionManager = new Mock<IExtensionManager>();
             builder.Register(ctx => extensionManager);
@@ -35,20 +38,62 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         }
 
         public class TestViewEngine : Dictionary<string, object>, IShapeTemplateViewEngine {
-            public IEnumerable<string> DetectTemplateFileNames(string virtualPath) {
-                var virtualPathNorm = virtualPath.Replace("\\", "/");
+            public IEnumerable<string> DetectTemplateFileNames(IEnumerable<string> fileNames) {
+                return fileNames;
+            }
+        }
 
-                foreach (var key in Keys) {
-                    var keyNorm = key.Replace("\\", "/");
+        public class TestVirtualPathProvider : IVirtualPathProvider {
+            public string Combine(params string[] paths) {
+                throw new NotImplementedException();
+            }
 
-                    if (keyNorm.StartsWith(virtualPathNorm, StringComparison.OrdinalIgnoreCase)) {
-                        var rest = keyNorm.Substring(virtualPathNorm.Length).TrimStart('/', '\\');
-                        if (rest.IndexOfAny(new[] { '/', '\\' }) != -1) {
-                            continue;
-                        }
-                        yield return Path.GetFileNameWithoutExtension(rest);
-                    }
-                }
+            public string ToAppRelative(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public string MapPath(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public bool FileExists(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public Stream OpenFile(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public StreamWriter CreateText(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public Stream CreateFile(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public DateTime GetFileLastWriteTimeUtc(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public bool DirectoryExists(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public void CreateDirectory(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public string GetDirectoryName(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<string> ListFiles(string path) {
+                return new List<string> {"~/Modules/Alpha/Views/AlphaShape.blah"};
+            }
+
+            public IEnumerable<string> ListDirectories(string path) {
+                throw new NotImplementedException();
             }
         }
 
