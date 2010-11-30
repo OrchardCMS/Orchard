@@ -74,7 +74,7 @@ namespace Orchard.Specs.Bindings {
             GivenIHaveACleanSiteBasedOn(siteFolder, "/");
         }
 
-        [Given(@"I have a clean site based on (.*) at ""(.*)\""")]
+        [Given(@"I have a clean site based on (.*) at ""(.*)""")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder, string virtualDirectory) {
             _webHost = new WebHost(_orchardTemp);
             Host.Initialize(siteFolder, virtualDirectory ?? "/");
@@ -129,7 +129,13 @@ namespace Orchard.Specs.Bindings {
         }
 
         [Given(@"I have a clean site with")]
-        public void GivenIHaveACleanSiteWith(Table table, string virtualDirectory = "/") {
+        public void GivenIHaveACleanSiteWith(Table table) {
+            GivenIHaveACleanSiteWith("/", table);
+        }
+
+
+        [Given(@"I have a clean site at ""(.*)"" with")]
+        public void GivenIHaveACleanSiteWith(string virtualDirectory, Table table) {
             GivenIHaveACleanSite(virtualDirectory);
             foreach (var row in table.Rows) {
                 foreach (var name in row["names"].Split(',').Select(x => x.Trim())) {
