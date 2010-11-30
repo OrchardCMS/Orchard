@@ -6,8 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
-using HtmlAgilityPack;
-using Orchard.Commands;
 using Orchard.Specs.Util;
 
 namespace Orchard.Specs.Hosting {
@@ -16,12 +14,13 @@ namespace Orchard.Specs.Hosting {
 
             var physicalPath = Bleroy.FluentPath.Path.Get(webHost.PhysicalDirectory);
 
+            urlPath = StripVDir(urlPath, webHost.VirtualDirectory);
             var details = new RequestDetails {
                 HostName = webHost.HostName,
                 UrlPath = urlPath,
                 Page = physicalPath
                     .Combine(urlPath.TrimStart('/', '\\'))
-                    .GetRelativePath(physicalPath),
+                    .GetRelativePath(physicalPath)
             };
 
             if (!string.IsNullOrEmpty(webHost.Cookies)) {
@@ -50,6 +49,12 @@ namespace Orchard.Specs.Hosting {
             }
 
             return details;
+        }
+
+        private static string StripVDir(string urlPath, string virtualDirectory) {
+            return urlPath.StartsWith(virtualDirectory, StringComparison.OrdinalIgnoreCase)
+                ? urlPath.Substring(virtualDirectory.Length)
+                : urlPath;
         }
 
         public static RequestDetails SendRequest(this WebHost webHost, string urlPath) {
