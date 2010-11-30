@@ -44,7 +44,6 @@
                 }
                 var dependencies = (from d in feature.Descriptor.Dependencies
                                     select (from f in Model.Features where f.Descriptor.Id == d select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);                
-            @* todo: missingDependencies -- show them in a special way. Can be found like this:
                 var missingDependencies = feature.Descriptor.Dependencies
                     .Where(d => !Model.Features.Any(f => f.Descriptor.Id == d));
                 if (showActions) {
