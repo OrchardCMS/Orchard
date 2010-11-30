@@ -107,15 +107,15 @@ namespace Orchard.Indexing.Commands {
         }
 
         [CommandName("index refresh")]
-        [CommandHelp("index refresh /ContenItem:<content item id> \r\n\t" + "Refreshes the index for the specifed <content item id>")]
+        [CommandHelp("index refresh /ContentItemId:<content item id> \r\n\t" + "Refreshes the index for the specifed <content item id>")]
         [OrchardSwitches("ContentItem")]
         public string Refresh() {
-            int contenItemId;
-            if ( !int.TryParse(ContentItemId, out contenItemId) ) {
+            int contentItemId;
+            if ( !int.TryParse(ContentItemId, out contentItemId) ) {
                 return "Invalid content item id. Not an integer.";
             }
 
-            var contentItem = _contentManager.Get(contenItemId);
+            var contentItem = _contentManager.Get(contentItemId);
             _indexingTaskManager.CreateUpdateIndexTask(contentItem);
 
             return "Content Item marked for reindexing";
