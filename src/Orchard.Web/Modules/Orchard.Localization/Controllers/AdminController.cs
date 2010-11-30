@@ -111,13 +111,7 @@ namespace Orchard.Localization.Controllers {
                     contentItemTranslation.As<ICommonPart>().Container = contentItem.As<ICommonPart>().Container;
                 }
 
-                var localized = contentItemTranslation.As<LocalizationPart>();
-                localized.MasterContentItem = contentItem;
-                if (!string.IsNullOrWhiteSpace(model.SelectedCulture))
-                    localized.Culture = _cultureManager.GetCultureByName(model.SelectedCulture);
                 _contentManager.Create(contentItemTranslation, VersionOptions.Draft);
-
-                conditionallyPublish(contentItemTranslation);
             }
 
             model.Content = _contentManager.UpdateEditor(contentItemTranslation, this);
@@ -134,6 +128,14 @@ namespace Orchard.Localization.Controllers {
                 Services.Notifier.Information(T("Edited content item translation."));
             }
             else {
+                LocalizationPart localized = contentItemTranslation.As<LocalizationPart>();
+                localized.MasterContentItem = contentItem;
+                if (!string.IsNullOrWhiteSpace(model.SelectedCulture)) {
+                    localized.Culture = _cultureManager.GetCultureByName(model.SelectedCulture);
+                }
+
+                conditionallyPublish(contentItemTranslation);
+
                 Services.Notifier.Information(T("Created content item translation."));
             }
 
