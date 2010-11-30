@@ -854,7 +854,8 @@ table.items th, table.items td {
 }
 /* Core Contents and Orchard.PublishLater */
 
-.orchard-blogs .edit-item-sidebar, .contents .edit-item-sidebar 
+
+.edit-item-sidebar 
 {
     border:1px solid #d3d3d3;
     padding:8px;
