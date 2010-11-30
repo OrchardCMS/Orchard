@@ -301,7 +301,7 @@ modules such as pages and blogs or themes. If you're looking to add additional f
 you can do so by creating your own module or by installing one that somebody else built.
 Modules are created by other users of Orchard just like you so if you feel up to it,
 <a href=""http://orchardproject.net/contribution"">please consider participating</a>.</p>
-</p>Thanks for using Orchard – The Orchard Team </p>", page.Id).Text;
+<p>Thanks for using Orchard – The Orchard Team </p>", page.Id).Text;
 
             contentManager.Publish(page);
             siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
