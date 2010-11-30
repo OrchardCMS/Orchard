@@ -128,7 +128,12 @@ namespace Orchard.Localization.Controllers {
                 return View(model);
             }
 
-            Services.Notifier.Information(T("Created content item translation."));
+            if (existingTranslation != null) {
+                Services.Notifier.Information(T("Edited content item translation."));
+            }
+            else {
+                Services.Notifier.Information(T("Created content item translation."));
+            }
 
             var metadata = _contentManager.GetItemMetadata(model.Content);
             if (metadata.EditorRouteValues == null)
