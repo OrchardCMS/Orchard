@@ -283,7 +283,7 @@ namespace Orchard.Setup.Services {
             page.As<RoutePart>().Title = T("Welcome to Orchard!").Text;
             page.As<RoutePart>().Path = "";
             page.As<RoutePart>().Slug = "";
-            page.As<BodyPart>().Text = string.Format(CultureInfo.CurrentCulture,
+            page.As<BodyPart>().Text = T(
 @"<p>You've successfully setup your Orchard Site and this is the homepage of your new site.
 Here are a few things you can look at to get familiar with the application.
 Once you feel confident you don't need this anymore, you can
@@ -300,8 +300,8 @@ or <a href=""Admin/Navigation"">managing your menus.</a></p>
 modules such as pages and blogs or themes. If you're looking to add additional functionality,
 you can do so by creating your own module or by installing one that somebody else built.
 Modules are created by other users of Orchard just like you so if you feel up to it,
-<a href=""http://orchardproject.net/contribution"">please consider participating</a>.
-Thanks for using Orchard – The Orchard Team </p>", page.Id);
+<a href=""http://orchardproject.net/contribution"">please consider participating</a>.</p>
+</p>Thanks for using Orchard – The Orchard Team </p>", page.Id).Text;
 
             contentManager.Publish(page);
             siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
