@@ -158,6 +158,9 @@
     <Compile Include="Environment\Extensions\Loaders\RawThemeExtensionLoader.cs" />
     <Compile Include="Environment\Features\FeatureManager.cs" />
     <Compile Include="Environment\IAssemblyLoader.cs" />
+    <Compile Include="Environment\WorkContextImplementation.cs" />
+    <Compile Include="Environment\WorkContextModule.cs" />
+    <Compile Include="Environment\WorkContextProperty.cs" />
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
@@ -419,7 +422,7 @@
     <Compile Include="DisplayManagement\Implementation\IDisplayManager.cs" />
     <Compile Include="DisplayManagement\IShapeFactory.cs" />
     <Compile Include="DisplayManagement\Descriptors\Interfaces.cs" />
-    <Compile Include="Environment\DefaultWorkContextAccessor.cs" />
+    <Compile Include="Environment\WorkContextAccessor.cs" />
     <Compile Include="Environment\IHostLocalRestart.cs" />
     <Compile Include="Environment\IShellContainerRegistrations.cs" />
     <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />

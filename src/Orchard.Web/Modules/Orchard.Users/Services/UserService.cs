@@ -38,32 +38,30 @@ namespace Orchard.Users.Services {
         public ILogger Logger { get; set; }
 
         public string VerifyUserUnicity(string userName, string email) {
-            IEnumerable<UserPart> allUsers = _contentManager.Query<UserPart, UserPartRecord>().List();
+            string normalizedUserName = userName.ToLower();
 
-            foreach (var user in allUsers) {
-                if (String.Equals(userName.ToLower(), user.NormalizedUserName, StringComparison.OrdinalIgnoreCase)) {
-                    return "A user with that name already exists";
-                }
-                if (String.Equals(email, user.Email, StringComparison.OrdinalIgnoreCase)) {
-                    return "A user with that email already exists";
-                }
+            if (_contentManager.Query<UserPart, UserPartRecord>()
+                                   .Where(user => 
+                                          user.NormalizedUserName == normalizedUserName || 
+                                          user.Email == email)
+                                   .List().Any()) {
+                return "User with that username and/or email already exists.";
             }
 
             return null;
         }
 
         public string VerifyUserUnicity(int id, string userName, string email) {
-            IEnumerable<UserPart> allUsers = _contentManager.Query<UserPart, UserPartRecord>().List();
-            foreach (var user in allUsers) {
-                if (user.Id == id)
-                    continue;
-                if (String.Equals(userName.ToLower(), user.NormalizedUserName, StringComparison.OrdinalIgnoreCase)) {
-                    return "A user with that name already exists";
-                }
-                if (String.Equals(email, user.Email, StringComparison.OrdinalIgnoreCase)) {
-                    return "A user with that email already exists";
-                }
+            string normalizedUserName = userName.ToLower();
+
+            if (_contentManager.Query<UserPart, UserPartRecord>()
+                                   .Where(user =>
+                                          user.NormalizedUserName == normalizedUserName ||
+                                          user.Email == email)
+                                   .List().Any(user => user.Id != id)) {
+                return "User with that username and/or email already exists.";
             }
+
             return null;
         }
 

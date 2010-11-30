@@ -69,7 +69,7 @@
 
   <Target Name="Clean">
     <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
-    <RemoveDir Directories="$(BuildFolder)" />
+    <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true"/>
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
 
@@ -126,7 +126,7 @@
   <Target Name="Package-Stage">
     <CallTarget Targets="CompileMsBuildTasks"/>
     <CallTarget Targets="ValidateProjectFiles"/>
-    
+
     <ItemGroup>
       <SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\*"/>
       <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\*"/>
@@ -293,10 +293,18 @@
 
     <Copy SourceFiles="@(Profiling-Web)" DestinationFolder="$(ProfilingFolder)\%(RecursiveDir)"/>
 
+    <XmlUpdate XmlFileName="$(ProfilingFolder)\web.config"
+      XPath="/configuration/system.web/trust/@level"
+      Value="Full" />
+
   </Target>
 
   <Target Name="Profiling-Setup">
-    <Exec Command="$(ProfilingFolder)\bin\Orchard.exe @$(SrcFolder)\Orchard.Profile\profiling-setup-commands.txt" WorkingDirectory="$(ProfilingFolder)"/>
+    <ReadLinesFromFile File="$(SrcFolder)\Orchard.Profile\profiling-setup-commands.txt">
+      <Output TaskParameter="Lines" ItemName="ProfilingSetupCommands"/>
+    </ReadLinesFromFile>
+
+    <Exec Command="$(ProfilingFolder)\bin\Orchard.exe %(ProfilingSetupCommands.Identity)" WorkingDirectory="$(ProfilingFolder)"/>
   </Target>
 
   <!-- Gallery Packaging -->
@@ -307,7 +315,6 @@
     </ItemGroup>
 
     <Copy SourceFiles="@(Gallery-Web)" DestinationFolder="$(GalleryFolder)\%(RecursiveDir)"/>
-
   </Target>
 
   <Target Name="Gallery-Setup">
