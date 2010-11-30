@@ -334,7 +334,7 @@ nav ul
 /* Tags */
 .tags { margin-top: 12px; }
 .tags a { background-color: #dbdbdb; padding: 3px 6px; color: #434343; }
-.tags a:hover { background-color: #434343; padding: 3px; color: #fff; }
+.tags a:hover { background-color: #434343; color: #fff; }
 
 /* Metadata */
 .metadata { margin: 0 0 12px 0; color: #999; font-size: 0.846em; }
