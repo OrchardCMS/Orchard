@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,14 +42,14 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
 
             var hits = activeExtensions.SelectMany(extensionDescriptor => {
                 var pathContexts = harvesterInfos.SelectMany(harvesterInfo => harvesterInfo.subPaths.Select(subPath => {
-                    var basePath = Path.Combine(extensionDescriptor.Location, extensionDescriptor.Id);
-                    var virtualPath = Path.Combine(basePath, subPath);
+                    var basePath = Path.Combine(extensionDescriptor.Location, extensionDescriptor.Id).Replace(Path.DirectorySeparatorChar, '/');
+                    var virtualPath = Path.Combine(basePath, subPath).Replace(Path.DirectorySeparatorChar, '/');
                     return new { harvesterInfo.harvester, basePath, subPath, virtualPath };
                 }));
 
                 var fileContexts = pathContexts.SelectMany(pathContext => _shapeTemplateViewEngines.SelectMany(ve => {
                     var fileNames = ve.DetectTemplateFileNames(pathContext.virtualPath);
-                    return fileNames.Select(fileName => new { fileName = Path.GetFileNameWithoutExtension(fileName), fileVirtualPath = Path.Combine(pathContext.virtualPath, fileName).Replace('\\', '/'), pathContext });
+                    return fileNames.Select(fileName => new { fileName = Path.GetFileNameWithoutExtension(fileName), fileVirtualPath = Path.Combine(pathContext.virtualPath, fileName).Replace(Path.DirectorySeparatorChar, '/'), pathContext });
                 }));
 
                 var shapeContexts = fileContexts.SelectMany(fileContext => {
