@@ -4,8 +4,6 @@ namespace Orchard.ContentManagement.Handlers {
         void Initializing(InitializingContentContext context);
         void Creating(CreateContentContext context);
         void Created(CreateContentContext context);
-        void Saving(SaveContentContext context);
-        void Saved(SaveContentContext context);
         void Loading(LoadContentContext context);
         void Loaded(LoadContentContext context);
         void Versioning(VersionContentContext context);

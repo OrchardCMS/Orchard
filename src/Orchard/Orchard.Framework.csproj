@@ -309,7 +309,6 @@
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\SaveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\StorageFilter.cs">
       <SubType>Code</SubType>
     </Compile>

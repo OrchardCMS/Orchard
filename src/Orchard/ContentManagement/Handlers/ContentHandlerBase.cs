@@ -5,8 +5,6 @@
         public virtual void Initializing(InitializingContentContext context) {}
         public virtual void Creating(CreateContentContext context) {}
         public virtual void Created(CreateContentContext context) {}
-        public virtual void Saving(SaveContentContext context) {}
-        public virtual void Saved(SaveContentContext context) {}
         public virtual void Loading(LoadContentContext context) {}
         public virtual void Loaded(LoadContentContext context) {}
         public virtual void Versioning(VersionContentContext context) {}
