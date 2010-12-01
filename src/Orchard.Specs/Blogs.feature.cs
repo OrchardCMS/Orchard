@@ -460,6 +460,67 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             testRunner.CollectScenarioErrors();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I set my blog to be the content for the home page and the posts for the blog shou" +
+            "ld still be at the blog path prefixed path")]
+        public virtual void ISetMyBlogToBeTheContentForTheHomePageAndThePostsForTheBlogShouldStillBeAtTheBlogPathPrefixedPath()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I set my blog to be the content for the home page and the posts for the blog shou" +
+                    "ld still be at the blog path prefixed path", ((string[])(null)));
+#line 152
+this.ScenarioSetup(scenarioInfo);
+#line 153
+    testRunner.Given("I have installed Orchard");
+#line 154
+    testRunner.When("I go to \"admin/blogs/create\"");
+#line hidden
+            TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table15.AddRow(new string[] {
+                        "Routable.Title",
+                        "My Blog"});
+            table15.AddRow(new string[] {
+                        "Routable.PromoteToHomePage",
+                        "true"});
+#line 155
+        testRunner.And("I fill in", ((string)(null)), table15);
+#line 159
+        testRunner.And("I hit \"Save\"");
+#line 160
+        testRunner.And("I go to \"admin/blogs/my-blog/posts/create\"");
+#line hidden
+            TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table16.AddRow(new string[] {
+                        "Routable.Title",
+                        "My Post"});
+            table16.AddRow(new string[] {
+                        "Body.Text",
+                        "Hi there."});
+#line 161
+        testRunner.And("I fill in", ((string)(null)), table16);
+#line 165
+        testRunner.And("I hit \"Publish Now\"");
+#line 166
+        testRunner.And("I am redirected");
+#line 167
+        testRunner.And("I go to \"/Default.aspx\"");
+#line 168
+    testRunner.Then("I should see \"<h1>My Blog</h1>\"");
+#line 169
+    testRunner.When("I go to \"/my-blog\"");
+#line 170
+    testRunner.Then("the status should be 404 \"Not Found\"");
+#line 171
+    testRunner.When("I go to \"/my-blog/my-post\"");
+#line 172
+    testRunner.Then("I should see \"<h1>My Post</h1>\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
     }
 }
 #endregion

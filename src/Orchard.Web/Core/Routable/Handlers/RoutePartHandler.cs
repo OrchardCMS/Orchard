@@ -23,6 +23,7 @@ namespace Orchard.Core.Routable.Handlers {
             IRepository<RoutePartRecord> repository,
             IRoutablePathConstraint routablePathConstraint,
             IRoutableService routableService,
+            IWorkContextAccessor workContextAccessor,
             IEnumerable<IHomePageProvider> homePageProviders) {
             _services = services;
             _routablePathConstraint = routablePathConstraint;
@@ -46,8 +47,10 @@ namespace Orchard.Core.Routable.Handlers {
             OnPublished<RoutePart>((context, route) => {
                 FinalizePath(route, context, processSlug);
 
-                if (route.ContentItem.Id != 0 && route.PromoteToHomePage && _routableHomePageProvider != null)
+                if (route.ContentItem.Id != 0 && route.PromoteToHomePage && _routableHomePageProvider != null) {
                     _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(route.ContentItem.Id);
+                    _routablePathConstraint.AddPath("");
+                }
             });
 
             OnRemoved<RoutePart>((context, route) => {
@@ -87,6 +90,14 @@ namespace Orchard.Core.Routable.Handlers {
     }
 
     public class RoutePartHandlerBase : ContentHandlerBase {
+        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IHomePageProvider _routableHomePageProvider;
+
+        public RoutePartHandlerBase(IWorkContextAccessor workContextAccessor, IEnumerable<IHomePageProvider> homePageProviders) {
+            _workContextAccessor = workContextAccessor;
+            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
+        }
+
         public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
             var routable = context.ContentItem.As<RoutePart>();
 
@@ -98,11 +109,15 @@ namespace Orchard.Core.Routable.Handlers {
             // set the display route values if it hasn't been set or only has been set by the Contents module. 
             // allows other modules to set their own display. probably not common enough to warrant some priority implemntation
             if (context.Metadata.DisplayRouteValues == null || context.Metadata.DisplayRouteValues["Area"] as string == "Contents") {
+                var itemPath = routable.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)
+                    ? ""
+                    : routable.Path;
+
                 context.Metadata.DisplayRouteValues = new RouteValueDictionary {
                     {"Area", "Routable"},
                     {"Controller", "Item"},
                     {"Action", "Display"},
-                    {"path", routable.Path}
+                    {"path", itemPath}
                 };
             }
         }

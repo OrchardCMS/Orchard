@@ -1,7 +1,9 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
+using Orchard.Localization;
 using Orchard.Services;
 using Orchard.ContentManagement;
 
@@ -16,8 +18,10 @@ namespace Orchard.Core.Routable.Services {
             IShapeFactory shapeFactory) {
             _contentManager = contentManager;
             Shape = shapeFactory;
+            T = NullLocalizer.Instance;
         }
 
+        public Localizer T { get; set; }
         dynamic Shape { get; set; }
 
         public string GetProviderName() {
@@ -26,6 +30,15 @@ namespace Orchard.Core.Routable.Services {
 
         public string GetSettingValue(int id) {
             return GetProviderName() + ";" + id;
+        }
+
+        public int GetHomePageId(string value) {
+            int id;
+
+            if (string.IsNullOrWhiteSpace(value) || !int.TryParse(value.Substring(Name.Length + 1), out id))
+                throw new ApplicationException(T("Invalid home page setting value for {0}: {1}", Name, value).Text);
+
+            return id;
         }
 
         public ActionResult GetHomePage(int id) {

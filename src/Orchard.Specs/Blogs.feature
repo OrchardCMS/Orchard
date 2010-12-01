@@ -148,3 +148,25 @@ Scenario: The virtual path of my installation when at the root is reflected in t
         And I hit "Save"
         And I go to "admin/blogs/my-blog/posts/create"
     Then I should see "<span>http\://localhost/my-blog/</span>"
+
+Scenario: I set my blog to be the content for the home page and the posts for the blog should still be at the blog path prefixed path
+    Given I have installed Orchard
+    When I go to "admin/blogs/create"
+        And I fill in
+            | name | value |
+            | Routable.Title | My Blog |
+            | Routable.PromoteToHomePage | true |
+        And I hit "Save"
+        And I go to "admin/blogs/my-blog/posts/create"
+        And I fill in
+            | name | value |
+            | Routable.Title | My Post |
+            | Body.Text | Hi there. |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "/Default.aspx"
+    Then I should see "<h1>My Blog</h1>"
+    When I go to "/my-blog"
+    Then the status should be 404 "Not Found"
+    When I go to "/my-blog/my-post"
+    Then I should see "<h1>My Post</h1>"

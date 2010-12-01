@@ -243,7 +243,8 @@ namespace Orchard.Blogs {
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "Blog"},
-                                                                                      {"action", "Item"}
+                                                                                      {"action", "Item"},
+                                                                                      {"blogSlug", ""}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"blogSlug", _blogSlugConstraint}
