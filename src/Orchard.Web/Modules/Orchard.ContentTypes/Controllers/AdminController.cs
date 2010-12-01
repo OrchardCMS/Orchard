@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.ViewModels;
@@ -12,10 +13,12 @@ using Orchard.UI.Notify;
 namespace Orchard.ContentTypes.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentDefinitionService _contentDefinitionService;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public AdminController(IOrchardServices orchardServices, IContentDefinitionService contentDefinitionService) {
+        public AdminController(IOrchardServices orchardServices, IContentDefinitionService contentDefinitionService, IContentDefinitionManager contentDefinitionManager) {
             Services = orchardServices;
             _contentDefinitionService = contentDefinitionService;
+            _contentDefinitionManager = contentDefinitionManager;
             T = NullLocalizer.Instance;
         }
 
@@ -222,7 +225,8 @@ namespace Orchard.ContentTypes.Controllers {
 
         public ActionResult ListParts() {
             return View(new ListContentPartsViewModel {
-                Parts = _contentDefinitionService.GetParts()
+                // only user-defined parts (not code as they are not configurable)
+                Parts = _contentDefinitionManager.ListPartDefinitions().Select(cpd => new EditPartViewModel(cpd))
             });
         }
 
