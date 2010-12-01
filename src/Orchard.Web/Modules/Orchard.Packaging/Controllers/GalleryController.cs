@@ -1,15 +1,20 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using NuGet;
 using Orchard.Environment.Extensions;
+using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
+using IPackageManager = Orchard.Packaging.Services.IPackageManager;
 
 namespace Orchard.Packaging.Controllers {
     [OrchardFeature("Gallery")]
@@ -18,18 +23,19 @@ namespace Orchard.Packaging.Controllers {
 
         private readonly IPackageManager _packageManager;
         private readonly IPackagingSourceManager _packagingSourceManager;
-        private readonly IExtensionManager _extensionManager;
+        private readonly IAppDataFolderRoot _appDataFolderRoot;
         private readonly INotifier _notifier;
 
         public GalleryController(
             IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
-            IExtensionManager extensionManager,
-            INotifier notifier) {
+            INotifier notifier,
+            IAppDataFolderRoot appDataFolderRoot) {
             _packageManager = packageManager;
             _packagingSourceManager = packagingSourceManager;
-            _extensionManager = extensionManager;
             _notifier = notifier;
+            _appDataFolderRoot = appDataFolderRoot;
+
             T = NullLocalizer.Instance;
         }
 
@@ -95,7 +101,6 @@ namespace Orchard.Packaging.Controllers {
             }
         }
 
-
         public ActionResult Modules(int? sourceId) {
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
@@ -136,6 +141,44 @@ namespace Orchard.Packaging.Controllers {
             _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
 
             return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
+        }
+
+        public ActionResult AddModule(string returnUrl) {
+            return View();
+        }
+
+        [HttpPost, ActionName("AddModule")]
+        public ActionResult AddModulePOST(string returnUrl) {
+            // module not used for anything o2ther than display (and that only to not have object in the view 'T')
+            try {
+                if (string.IsNullOrWhiteSpace(Request.Files[0].FileName)) {
+                    ModelState.AddModelError("File", T("Select a file to upload.").ToString());
+                }
+
+                foreach (string fileName in Request.Files) {
+                    HttpPostedFileBase file = Request.Files[fileName];
+                    if (file != null) {
+                        string fullFileName = Path.Combine(_appDataFolderRoot.RootFolder, fileName + ".nupkg").Replace(Path.DirectorySeparatorChar, '/');
+                        file.SaveAs(fullFileName);
+                        PackageInfo info = _packageManager.Install(new ZipPackage(fullFileName), _appDataFolderRoot.RootFolder, HostingEnvironment.MapPath("~/"));
+                        System.IO.File.Delete(fullFileName);
+
+                        _notifier.Information(T("Installed package \"{0}\", version {1} of type \"{2}\" at location \"{3}\"",
+                            info.ExtensionName, info.ExtensionVersion, info.ExtensionType, info.ExtensionPath));
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(returnUrl))
+                    return Redirect(returnUrl);
+
+                return RedirectToAction("Modules");
+            } catch (Exception exception) {
+                for (var scan = exception; scan != null; scan = scan.InnerException) {
+                    _notifier.Error(T("Uploading module package failed: {0}", exception.Message));
+                }
+
+                return View("AddModule");
+            }
         }
     }
 }
