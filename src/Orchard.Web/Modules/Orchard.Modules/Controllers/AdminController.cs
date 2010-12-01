@@ -26,8 +26,8 @@ namespace Orchard.Modules.Controllers {
             IReportsCoordinator reportsCoordinator,
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
-            ShellDescriptor shellDescriptor) {
-
+            ShellDescriptor shellDescriptor)
+        {
             Services = services;
             _moduleService = moduleService;
             _dataMigrationManager = dataMigrationManager;
@@ -47,47 +47,10 @@ namespace Orchard.Modules.Controllers {
                 return new HttpUnauthorizedResult();
 
             var modules = _extensionManager.AvailableExtensions().Where(x => x.ExtensionType == "Module");
-            return View(new ModulesIndexViewModel { Modules = modules });
-        }
 
-        public ActionResult Add() {
-            return View(new ModuleAddViewModel());
-        }
-
-        [HttpPost, ActionName("Add")]
-        public ActionResult AddPOST() {
-            // module not used for anything other than display (and that only to not have object in the view 'T')
-            var viewModel = new ModuleAddViewModel();
-            try {
-                UpdateModel(viewModel);
-                if (!Services.Authorizer.Authorize(Permissions.ManageModules, T("Couldn't upload module package.")))
-                    return new HttpUnauthorizedResult();
-
-                if (string.IsNullOrWhiteSpace(Request.Files[0].FileName)) {
-                    ModelState.AddModelError("File", T("Select a file to upload.").ToString());
-                }
-
-                if (!ModelState.IsValid)
-                    return View("add", viewModel);
-
-                foreach (string fileName in Request.Files) {
-                    var file = Request.Files[fileName];
-#if REFACTORING
-                    var info = _packageManager.Install(file.InputStream);
-
-                    Services.Notifier.Information(T("Installed package \"{0}\", version {1} of type \"{2}\" at location \"{3}\"",
-                        info.ExtensionName, info.ExtensionVersion, info.ExtensionType, info.ExtensionPath));
-#endif
-                    }
-
-                return RedirectToAction("index");
-            }
-            catch (Exception exception) {
-                for (var scan = exception; scan != null; scan = scan.InnerException) {
-                    Services.Notifier.Error(T("Uploading module package failed: {0}", exception.Message));
-                }
-                return View("add", viewModel);
-            }
+            return View(new ModulesIndexViewModel { 
+                Modules = modules, 
+                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "Gallery") != null });
         }
 
         public ActionResult Features() {

@@ -1,4 +1,5 @@
 using System.Linq;
+using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
@@ -31,6 +32,11 @@ namespace Orchard.Packaging.Services {
                 ExtensionVersion = extensionDescriptor.Version,
                 PackageStream = _packageBuilder.BuildPackage(extensionDescriptor),
             };
+        }
+
+        public PackageInfo Install(IPackage package, string location, string applicationPath)
+        {
+            return _packageExpander.Install(package, location, applicationPath);
         }
 
         public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
