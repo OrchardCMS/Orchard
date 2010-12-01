@@ -17,7 +17,10 @@ Scenario: I can create a new blog and blog post
         And I hit "Save"
         And I go to "my-blog"
     Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
-    When I go to "admin/blogs/my-blog/posts/create"
+    When I go to "admin/blogs"
+        And I follow "My Blog"
+    Then I should see "foo"
+    When I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -34,7 +37,9 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
             | name | value |
             | Routable.Title | My Blog |
         And I hit "Save"
-        And I go to "admin/blogs/my-blog/posts/create"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -43,7 +48,9 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I go to "my-blog/my-post"
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Hi there."
-    When I go to "admin/blogs/my-blog/posts/create"
+    When I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -52,7 +59,9 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I go to "my-blog/my-post-2"
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Hi there, again."
-    When I go to "admin/blogs/my-blog/posts/create"
+    When I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -72,7 +81,9 @@ Scenario: I can create a new blog and blog post and when I change the slug of th
         And I hit "Save"
         And I go to "my-blog"
     Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
-    When I go to "admin/blogs/my-blog/posts/create"
+    When I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -81,7 +92,8 @@ Scenario: I can create a new blog and blog post and when I change the slug of th
         And I go to "my-blog/my-post"
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Hi there."
-    When I go to "admin/blogs/my-blog"
+    When I go to "admin/blogs"
+        And I follow "My Blog"
         And I follow "Blog Properties"
         And I fill in
             | name | value |
@@ -100,7 +112,9 @@ Scenario: When viewing a blog the user agent is given an RSS feed of the blog's 
             | name | value |
             | Routable.Title | My Blog |
         And I hit "Save"
-        And I go to "admin/blogs/my-blog/posts/create"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -135,7 +149,9 @@ Scenario: The virtual path of my installation when not at the root is reflected 
         | name | value |
         | Routable.Title | My Blog |
         And I hit "Save"
-        And I go to "admin/blogs/my-blog/posts/create"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
     Then I should see "<span>http\://localhost/OrchardLocal/my-blog/</span>"
 
 Scenario: The virtual path of my installation when at the root is reflected in the URL example for the slug field when creating a blog or blog post
@@ -146,10 +162,12 @@ Scenario: The virtual path of my installation when at the root is reflected in t
         | name | value |
         | Routable.Title | My Blog |
         And I hit "Save"
-        And I go to "admin/blogs/my-blog/posts/create"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
     Then I should see "<span>http\://localhost/my-blog/</span>"
 
-Scenario: I set my blog to be the content for the home page and the posts for the blog should still be at the blog path prefixed path
+Scenario: I set my blog to be the content for the home page and the posts for the blog be rooted to the app
     Given I have installed Orchard
     When I go to "admin/blogs/create"
         And I fill in
@@ -157,7 +175,9 @@ Scenario: I set my blog to be the content for the home page and the posts for th
             | Routable.Title | My Blog |
             | Routable.PromoteToHomePage | true |
         And I hit "Save"
-        And I go to "admin/blogs/my-blog/posts/create"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -168,5 +188,5 @@ Scenario: I set my blog to be the content for the home page and the posts for th
     Then I should see "<h1>My Blog</h1>"
     When I go to "/my-blog"
     Then the status should be 404 "Not Found"
-    When I go to "/my-blog/my-post"
+    When I go to "/my-post"
     Then I should see "<h1>My Post</h1>"

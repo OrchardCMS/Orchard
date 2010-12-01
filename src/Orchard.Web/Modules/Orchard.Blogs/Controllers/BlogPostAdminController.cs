@@ -80,11 +80,11 @@ namespace Orchard.Blogs.Controllers {
 
         //todo: the content shape template has extra bits that the core contents module does not (remove draft functionality)
         //todo: - move this extra functionality there or somewhere else that's appropriate?
-        public ActionResult Edit(string blogSlug, int postId) {
+        public ActionResult Edit(int blogId, int postId) {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -99,8 +99,8 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditPOST(string blogSlug, int postId, string returnUrl) {
-            return EditPOST(blogSlug, postId, returnUrl, contentItem => {
+        public ActionResult EditPOST(int blogId, int postId, string returnUrl) {
+            return EditPOST(blogId, postId, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
             });
@@ -108,15 +108,15 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult EditAndPublishPOST(string blogSlug, int postId, string returnUrl) {
-            return EditPOST(blogSlug, postId, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
+        public ActionResult EditAndPublishPOST(int blogId, int postId, string returnUrl) {
+            return EditPOST(blogId, postId, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
         }
 
-        public ActionResult EditPOST(string blogSlug, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {
+        public ActionResult EditPOST(int blogId, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -178,16 +178,16 @@ namespace Orchard.Blogs.Controllers {
         ActionResult RedirectToEdit(IContent item) {
             if (item == null || item.As<BlogPostPart>() == null)
                 return HttpNotFound();
-            return RedirectToAction("Edit", new { BlogSlug = item.As<IRoutableAspect>().Path, PostId = item.ContentItem.Id });
+            return RedirectToAction("Edit", new { BlogId = item.As<BlogPostPart>().BlogPart.Id, PostId = item.ContentItem.Id });
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Delete(string blogSlug, int postId) {
+        public ActionResult Delete(int blogId, int postId) {
             //refactoring: test PublishBlogPost/PublishOthersBlogPost in addition if published
             if (!Services.Authorizer.Authorize(Permissions.DeleteBlogPost, T("Couldn't delete blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -198,15 +198,15 @@ namespace Orchard.Blogs.Controllers {
             _blogPostService.Delete(post);
             Services.Notifier.Information(T("Blog post was successfully deleted"));
 
-            return Redirect(Url.BlogForAdmin(blog));
+            return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Publish(string blogSlug, int postId) {
+        public ActionResult Publish(int blogId, int postId) {
             if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't publish blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -217,15 +217,15 @@ namespace Orchard.Blogs.Controllers {
             _blogPostService.Publish(post);
             Services.Notifier.Information(T("Blog post successfully published."));
 
-            return Redirect(Url.BlogForAdmin(blog));
+            return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Unpublish(string blogSlug, int postId) {
+        public ActionResult Unpublish(int blogId, int postId) {
             if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't unpublish blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -236,7 +236,7 @@ namespace Orchard.Blogs.Controllers {
             _blogPostService.Unpublish(post);
             Services.Notifier.Information(T("Blog post successfully unpublished."));
 
-            return Redirect(Url.BlogForAdmin(blog));
+            return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

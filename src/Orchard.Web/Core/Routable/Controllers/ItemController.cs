@@ -58,14 +58,7 @@ namespace Orchard.Core.Routable.Controllers {
                 throw new ApplicationException(T("Ambiguous content").Text);
             }
 
-            var item = hits.Single();
-            // primary action run for a home paged item shall not pass
-            if (!RouteData.DataTokens.ContainsKey("ParentActionViewContext")
-                && item.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)) {
-                return HttpNotFound();
-            }
-
-            dynamic model = _contentManager.BuildDisplay(item);
+            dynamic model = _contentManager.BuildDisplay(hits.Single());
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }

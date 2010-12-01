@@ -97,7 +97,13 @@ this.ScenarioSetup(scenarioInfo);
 #line 19
     testRunner.Then("I should see \"<h1[^>]*>.*?My Blog.*?</h1>\"");
 #line 20
-    testRunner.When("I go to \"admin/blogs/my-blog/posts/create\"");
+    testRunner.When("I go to \"admin/blogs\"");
+#line 21
+        testRunner.And("I follow \"My Blog\"");
+#line 22
+    testRunner.Then("I should see \"foo\"");
+#line 23
+    testRunner.When("I follow \"New Post\"");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -108,15 +114,15 @@ this.ScenarioSetup(scenarioInfo);
             table2.AddRow(new string[] {
                         "Body.Text",
                         "Hi there."});
-#line 21
+#line 24
         testRunner.And("I fill in", ((string)(null)), table2);
-#line 25
-        testRunner.And("I hit \"Publish Now\"");
-#line 26
-        testRunner.And("I go to \"my-blog/my-post\"");
-#line 27
-    testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
 #line 28
+        testRunner.And("I hit \"Publish Now\"");
+#line 29
+        testRunner.And("I go to \"my-blog/my-post\"");
+#line 30
+    testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
+#line 31
         testRunner.And("I should see \"Hi there.\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -129,11 +135,11 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can create a new blog with multiple blog posts each with the same title and uni" +
                     "que slugs are generated or given for said posts", ((string[])(null)));
-#line 30
+#line 33
 this.ScenarioSetup(scenarioInfo);
-#line 31
+#line 34
     testRunner.Given("I have installed Orchard");
-#line 32
+#line 35
     testRunner.When("I go to \"admin/blogs/create\"");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
@@ -142,12 +148,16 @@ this.ScenarioSetup(scenarioInfo);
             table3.AddRow(new string[] {
                         "Routable.Title",
                         "My Blog"});
-#line 33
-        testRunner.And("I fill in", ((string)(null)), table3);
 #line 36
+        testRunner.And("I fill in", ((string)(null)), table3);
+#line 39
         testRunner.And("I hit \"Save\"");
-#line 37
-        testRunner.And("I go to \"admin/blogs/my-blog/posts/create\"");
+#line 40
+        testRunner.And("I go to \"admin/blogs\"");
+#line 41
+        testRunner.And("I follow \"My Blog\"");
+#line 42
+        testRunner.And("I follow \"New Post\"");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -158,18 +168,22 @@ this.ScenarioSetup(scenarioInfo);
             table4.AddRow(new string[] {
                         "Body.Text",
                         "Hi there."});
-#line 38
-        testRunner.And("I fill in", ((string)(null)), table4);
-#line 42
-        testRunner.And("I hit \"Publish Now\"");
 #line 43
+        testRunner.And("I fill in", ((string)(null)), table4);
+#line 47
+        testRunner.And("I hit \"Publish Now\"");
+#line 48
         testRunner.And("I go to \"my-blog/my-post\"");
-#line 44
+#line 49
     testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
-#line 45
+#line 50
         testRunner.And("I should see \"Hi there.\"");
-#line 46
-    testRunner.When("I go to \"admin/blogs/my-blog/posts/create\"");
+#line 51
+    testRunner.When("I go to \"admin/blogs\"");
+#line 52
+        testRunner.And("I follow \"My Blog\"");
+#line 53
+        testRunner.And("I follow \"New Post\"");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -180,18 +194,22 @@ this.ScenarioSetup(scenarioInfo);
             table5.AddRow(new string[] {
                         "Body.Text",
                         "Hi there, again."});
-#line 47
-        testRunner.And("I fill in", ((string)(null)), table5);
-#line 51
-        testRunner.And("I hit \"Publish Now\"");
-#line 52
-        testRunner.And("I go to \"my-blog/my-post-2\"");
-#line 53
-    testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
 #line 54
+        testRunner.And("I fill in", ((string)(null)), table5);
+#line 58
+        testRunner.And("I hit \"Publish Now\"");
+#line 59
+        testRunner.And("I go to \"my-blog/my-post-2\"");
+#line 60
+    testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
+#line 61
         testRunner.And("I should see \"Hi there, again.\"");
-#line 55
-    testRunner.When("I go to \"admin/blogs/my-blog/posts/create\"");
+#line 62
+    testRunner.When("I go to \"admin/blogs\"");
+#line 63
+        testRunner.And("I follow \"My Blog\"");
+#line 64
+        testRunner.And("I follow \"New Post\"");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -205,15 +223,15 @@ this.ScenarioSetup(scenarioInfo);
             table6.AddRow(new string[] {
                         "Body.Text",
                         "Are you still there?"});
-#line 56
+#line 65
         testRunner.And("I fill in", ((string)(null)), table6);
-#line 61
+#line 70
         testRunner.And("I hit \"Publish Now\"");
-#line 62
+#line 71
         testRunner.And("I go to \"my-blog/my-post-3\"");
-#line 63
+#line 72
     testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
-#line 64
+#line 73
         testRunner.And("I should see \"Are you still there?\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -226,11 +244,11 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can create a new blog and blog post and when I change the slug of the blog the " +
                     "path of the plog post is updated", ((string[])(null)));
-#line 66
+#line 75
 this.ScenarioSetup(scenarioInfo);
-#line 67
+#line 76
     testRunner.Given("I have installed Orchard");
-#line 68
+#line 77
     testRunner.When("I go to \"admin/blogs/create\"");
 #line hidden
             TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
@@ -239,16 +257,20 @@ this.ScenarioSetup(scenarioInfo);
             table7.AddRow(new string[] {
                         "Routable.Title",
                         "My Blog"});
-#line 69
+#line 78
         testRunner.And("I fill in", ((string)(null)), table7);
-#line 72
+#line 81
         testRunner.And("I hit \"Save\"");
-#line 73
+#line 82
         testRunner.And("I go to \"my-blog\"");
-#line 74
+#line 83
     testRunner.Then("I should see \"<h1[^>]*>.*?My Blog.*?</h1>\"");
-#line 75
-    testRunner.When("I go to \"admin/blogs/my-blog/posts/create\"");
+#line 84
+    testRunner.When("I go to \"admin/blogs\"");
+#line 85
+        testRunner.And("I follow \"My Blog\"");
+#line 86
+        testRunner.And("I follow \"New Post\"");
 #line hidden
             TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -259,19 +281,21 @@ this.ScenarioSetup(scenarioInfo);
             table8.AddRow(new string[] {
                         "Body.Text",
                         "Hi there."});
-#line 76
+#line 87
         testRunner.And("I fill in", ((string)(null)), table8);
-#line 80
+#line 91
         testRunner.And("I hit \"Publish Now\"");
-#line 81
+#line 92
         testRunner.And("I go to \"my-blog/my-post\"");
-#line 82
+#line 93
     testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
-#line 83
+#line 94
         testRunner.And("I should see \"Hi there.\"");
-#line 84
-    testRunner.When("I go to \"admin/blogs/my-blog\"");
-#line 85
+#line 95
+    testRunner.When("I go to \"admin/blogs\"");
+#line 96
+        testRunner.And("I follow \"My Blog\"");
+#line 97
         testRunner.And("I follow \"Blog Properties\"");
 #line hidden
             TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
@@ -280,19 +304,19 @@ this.ScenarioSetup(scenarioInfo);
             table9.AddRow(new string[] {
                         "Routable.Slug",
                         "my-other-blog"});
-#line 86
+#line 98
         testRunner.And("I fill in", ((string)(null)), table9);
-#line 89
+#line 101
         testRunner.And("I hit \"Save\"");
-#line 90
+#line 102
         testRunner.And("I go to \"my-other-blog\"");
-#line 91
+#line 103
     testRunner.Then("I should see \"<h1[^>]*>.*?My Blog.*?</h1>\"");
-#line 92
+#line 104
     testRunner.When("I go to \"my-other-blog/my-post\"");
-#line 93
+#line 105
     testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
-#line 94
+#line 106
         testRunner.And("I should see \"Hi there.\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -303,11 +327,11 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void WhenViewingABlogTheUserAgentIsGivenAnRSSFeedOfTheBlogSPosts()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("When viewing a blog the user agent is given an RSS feed of the blog\'s posts", ((string[])(null)));
-#line 96
+#line 108
 this.ScenarioSetup(scenarioInfo);
-#line 97
+#line 109
     testRunner.Given("I have installed Orchard");
-#line 98
+#line 110
     testRunner.When("I go to \"admin/blogs/create\"");
 #line hidden
             TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
@@ -316,12 +340,16 @@ this.ScenarioSetup(scenarioInfo);
             table10.AddRow(new string[] {
                         "Routable.Title",
                         "My Blog"});
-#line 99
+#line 111
         testRunner.And("I fill in", ((string)(null)), table10);
-#line 102
+#line 114
         testRunner.And("I hit \"Save\"");
-#line 103
-        testRunner.And("I go to \"admin/blogs/my-blog/posts/create\"");
+#line 115
+        testRunner.And("I go to \"admin/blogs\"");
+#line 116
+        testRunner.And("I follow \"My Blog\"");
+#line 117
+        testRunner.And("I follow \"New Post\"");
 #line hidden
             TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -332,15 +360,15 @@ this.ScenarioSetup(scenarioInfo);
             table11.AddRow(new string[] {
                         "Body.Text",
                         "Hi there."});
-#line 104
+#line 118
         testRunner.And("I fill in", ((string)(null)), table11);
-#line 108
+#line 122
         testRunner.And("I hit \"Publish Now\"");
-#line 109
+#line 123
         testRunner.And("I am redirected");
-#line 110
+#line 124
         testRunner.And("I go to \"my-blog/my-post\"");
-#line 111
+#line 125
     testRunner.Then("I should see \"<link rel=\"alternate\" type=\"application/rss\\+xml\" title=\"My Blog\" h" +
                     "ref=\"/rss\\?containerid=\\d+\" />\"");
 #line hidden
@@ -354,15 +382,15 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Enabling remote blog publishing inserts the appropriate metaweblogapi markup into" +
                     " the blog\'s page", ((string[])(null)));
-#line 114
+#line 128
 this.ScenarioSetup(scenarioInfo);
-#line 115
+#line 129
     testRunner.Given("I have installed Orchard");
-#line 116
+#line 130
         testRunner.And("I have enabled \"XmlRpc\"");
-#line 117
+#line 131
         testRunner.And("I have enabled \"Orchard.Blogs.RemotePublishing\"");
-#line 118
+#line 132
     testRunner.When("I go to \"admin/blogs/create\"");
 #line hidden
             TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
@@ -371,23 +399,23 @@ this.ScenarioSetup(scenarioInfo);
             table12.AddRow(new string[] {
                         "Routable.Title",
                         "My Blog"});
-#line 119
+#line 133
         testRunner.And("I fill in", ((string)(null)), table12);
-#line 122
+#line 136
         testRunner.And("I hit \"Save\"");
-#line 123
+#line 137
         testRunner.And("I go to \"my-blog\"");
-#line 124
+#line 138
     testRunner.Then("I should see \"<link href=\"[^\"]*/XmlRpc/LiveWriter/Manifest\" rel=\"wlwmanifest\" typ" +
                     "e=\"application/wlwmanifest\\+xml\" />\"");
-#line 125
+#line 139
     testRunner.When("I go to \"/XmlRpc/LiveWriter/Manifest\"");
-#line 126
+#line 140
     testRunner.Then("the content type should be \"\\btext/xml\\b\"");
-#line 127
+#line 141
         testRunner.And("I should see \"<manifest xmlns=\"http\\://schemas\\.microsoft\\.com/wlw/manifest/weblo" +
                     "g\">\"");
-#line 128
+#line 142
         testRunner.And("I should see \"<clientType>Metaweblog</clientType>\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -400,13 +428,13 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The virtual path of my installation when not at the root is reflected in the URL " +
                     "example for the slug field when creating a blog or blog post", ((string[])(null)));
-#line 130
+#line 144
 this.ScenarioSetup(scenarioInfo);
-#line 131
+#line 145
     testRunner.Given("I have installed Orchard at \"/OrchardLocal\"");
-#line 132
+#line 146
     testRunner.When("I go to \"admin/blogs/create\"");
-#line 133
+#line 147
     testRunner.Then("I should see \"<span>http\\://localhost/OrchardLocal/</span>\"");
 #line hidden
             TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
@@ -415,13 +443,17 @@ this.ScenarioSetup(scenarioInfo);
             table13.AddRow(new string[] {
                         "Routable.Title",
                         "My Blog"});
-#line 134
+#line 148
     testRunner.When("I fill in", ((string)(null)), table13);
-#line 137
+#line 151
         testRunner.And("I hit \"Save\"");
-#line 138
-        testRunner.And("I go to \"admin/blogs/my-blog/posts/create\"");
-#line 139
+#line 152
+        testRunner.And("I go to \"admin/blogs\"");
+#line 153
+        testRunner.And("I follow \"My Blog\"");
+#line 154
+        testRunner.And("I follow \"New Post\"");
+#line 155
     testRunner.Then("I should see \"<span>http\\://localhost/OrchardLocal/my-blog/</span>\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -434,13 +466,13 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("The virtual path of my installation when at the root is reflected in the URL exam" +
                     "ple for the slug field when creating a blog or blog post", ((string[])(null)));
-#line 141
+#line 157
 this.ScenarioSetup(scenarioInfo);
-#line 142
+#line 158
     testRunner.Given("I have installed Orchard at \"/\"");
-#line 143
+#line 159
     testRunner.When("I go to \"admin/blogs/create\"");
-#line 144
+#line 160
     testRunner.Then("I should see \"<span>http\\://localhost/</span>\"");
 #line hidden
             TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
@@ -449,30 +481,34 @@ this.ScenarioSetup(scenarioInfo);
             table14.AddRow(new string[] {
                         "Routable.Title",
                         "My Blog"});
-#line 145
+#line 161
     testRunner.When("I fill in", ((string)(null)), table14);
-#line 148
+#line 164
         testRunner.And("I hit \"Save\"");
-#line 149
-        testRunner.And("I go to \"admin/blogs/my-blog/posts/create\"");
-#line 150
+#line 165
+        testRunner.And("I go to \"admin/blogs\"");
+#line 166
+        testRunner.And("I follow \"My Blog\"");
+#line 167
+        testRunner.And("I follow \"New Post\"");
+#line 168
     testRunner.Then("I should see \"<span>http\\://localhost/my-blog/</span>\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("I set my blog to be the content for the home page and the posts for the blog shou" +
-            "ld still be at the blog path prefixed path")]
-        public virtual void ISetMyBlogToBeTheContentForTheHomePageAndThePostsForTheBlogShouldStillBeAtTheBlogPathPrefixedPath()
+        [NUnit.Framework.DescriptionAttribute("I set my blog to be the content for the home page and the posts for the blog be r" +
+            "ooted to the app")]
+        public virtual void ISetMyBlogToBeTheContentForTheHomePageAndThePostsForTheBlogBeRootedToTheApp()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I set my blog to be the content for the home page and the posts for the blog shou" +
-                    "ld still be at the blog path prefixed path", ((string[])(null)));
-#line 152
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I set my blog to be the content for the home page and the posts for the blog be r" +
+                    "ooted to the app", ((string[])(null)));
+#line 170
 this.ScenarioSetup(scenarioInfo);
-#line 153
+#line 171
     testRunner.Given("I have installed Orchard");
-#line 154
+#line 172
     testRunner.When("I go to \"admin/blogs/create\"");
 #line hidden
             TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
@@ -484,12 +520,16 @@ this.ScenarioSetup(scenarioInfo);
             table15.AddRow(new string[] {
                         "Routable.PromoteToHomePage",
                         "true"});
-#line 155
+#line 173
         testRunner.And("I fill in", ((string)(null)), table15);
-#line 159
+#line 177
         testRunner.And("I hit \"Save\"");
-#line 160
-        testRunner.And("I go to \"admin/blogs/my-blog/posts/create\"");
+#line 178
+        testRunner.And("I go to \"admin/blogs\"");
+#line 179
+        testRunner.And("I follow \"My Blog\"");
+#line 180
+        testRunner.And("I follow \"New Post\"");
 #line hidden
             TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -500,23 +540,23 @@ this.ScenarioSetup(scenarioInfo);
             table16.AddRow(new string[] {
                         "Body.Text",
                         "Hi there."});
-#line 161
+#line 181
         testRunner.And("I fill in", ((string)(null)), table16);
-#line 165
+#line 185
         testRunner.And("I hit \"Publish Now\"");
-#line 166
+#line 186
         testRunner.And("I am redirected");
-#line 167
+#line 187
         testRunner.And("I go to \"/Default.aspx\"");
-#line 168
+#line 188
     testRunner.Then("I should see \"<h1>My Blog</h1>\"");
-#line 169
+#line 189
     testRunner.When("I go to \"/my-blog\"");
-#line 170
+#line 190
     testRunner.Then("the status should be 404 \"Not Found\"");
-#line 171
-    testRunner.When("I go to \"/my-blog/my-post\"");
-#line 172
+#line 191
+    testRunner.When("I go to \"/my-post\"");
+#line 192
     testRunner.Then("I should see \"<h1>My Post</h1>\"");
 #line hidden
             testRunner.CollectScenarioErrors();

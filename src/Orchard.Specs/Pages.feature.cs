@@ -166,11 +166,11 @@ this.ScenarioSetup(scenarioInfo);
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("A new page marked to be the home page and publish does take over the home page an" +
-            "d is not accessible from its own standard path.")]
-        public virtual void ANewPageMarkedToBeTheHomePageAndPublishDoesTakeOverTheHomePageAndIsNotAccessibleFromItsOwnStandardPath_()
+            "d is not accessible from its own standard path")]
+        public virtual void ANewPageMarkedToBeTheHomePageAndPublishDoesTakeOverTheHomePageAndIsNotAccessibleFromItsOwnStandardPath()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A new page marked to be the home page and publish does take over the home page an" +
-                    "d is not accessible from its own standard path.", ((string[])(null)));
+                    "d is not accessible from its own standard path", ((string[])(null)));
 #line 44
 this.ScenarioSetup(scenarioInfo);
 #line 45

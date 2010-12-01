@@ -281,8 +281,9 @@ namespace Orchard.Setup.Services {
             // create a welcome page that's promoted to the home page
             var page = contentManager.Create("Page", VersionOptions.Draft);
             page.As<RoutePart>().Title = T("Welcome to Orchard!").Text;
-            page.As<RoutePart>().Path = "";
-            page.As<RoutePart>().Slug = "";
+            page.As<RoutePart>().Path = "welcome-to-orchard";
+            page.As<RoutePart>().Slug = "welcome-to-orchard";
+            page.As<RoutePart>().PromoteToHomePage = true;
             page.As<BodyPart>().Text = T(
 @"<p>You've successfully setup your Orchard Site and this is the homepage of your new site.
 Here are a few things you can look at to get familiar with the application.
@@ -304,7 +305,6 @@ Modules are created by other users of Orchard just like you so if you feel up to
 <p>Thanks for using Orchard – The Orchard Team </p>", page.Id).Text;
 
             contentManager.Publish(page);
-            siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
 
             // add a menu item for the shiny new home page
             var menuItem = contentManager.Create("MenuItem");

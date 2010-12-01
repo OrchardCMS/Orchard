@@ -65,13 +65,13 @@ namespace Orchard.Blogs.Handlers {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogAdmin"},
                 {"Action", "Edit"},
-                {"Id", context.ContentItem.Id}
+                {"blogId", context.ContentItem.Id}
             };
             context.Metadata.RemoveRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogAdmin"},
                 {"Action", "Remove"},
-                {"Id", context.ContentItem.Id}
+                {"blogId", context.ContentItem.Id}
             };
         }
     }
