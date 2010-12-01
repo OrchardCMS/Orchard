@@ -642,7 +642,6 @@
     <Compile Include="Events\IEventBus.cs" />
     <Compile Include="Environment\Extensions\Folders\AreaFolders.cs" />
     <Compile Include="Environment\Extensions\Folders\ExtensionFolders.cs" />
-    <Compile Include="Environment\Extensions\Loaders\AreaExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Models\Feature.cs" />
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />
