@@ -7,20 +7,14 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.ViewModels;
 using Orchard.Core.Routable.Models;
-using Orchard.Core.Routable.Services;
 using Orchard.Localization;
-using Orchard.UI.Notify;
 
 namespace Orchard.Core.Containers.Drivers {
     public class ContainablePartDriver : ContentPartDriver<ContainablePart> {
         private readonly IContentManager _contentManager;
-        private readonly IRoutableService _routableService;
-        private readonly IOrchardServices _services;
 
-        public ContainablePartDriver(IContentManager contentManager, IRoutableService routableService, IOrchardServices services) {
+        public ContainablePartDriver(IContentManager contentManager) {
             _contentManager = contentManager;
-            _routableService = routableService;
-            _services = services;
             T = NullLocalizer.Instance;
         }
 
