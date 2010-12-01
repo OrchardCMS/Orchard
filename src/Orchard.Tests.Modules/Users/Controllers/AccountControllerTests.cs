@@ -231,13 +231,14 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         public void ResetPasswordLinkShouldBeSent() {
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
             registrationSettings.UsersCanRegister = true;
+            registrationSettings.EnableLostPassword = true;
             _session.Flush();
 
             _controller.Register("bar", "bar@baz.com", "66554321", "66554321");
             _session.Flush();
 
             _controller.Url = new UrlHelper(new RequestContext(new HttpContextStub(), new RouteData()));
-            var result = _controller.LostPassword("bar");
+            var result = _controller.RequestLostPassword("bar");
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
 
             Assert.That(((RedirectToRouteResult)result).RouteValues["action"], Is.EqualTo("LogOn"));

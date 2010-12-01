@@ -23,5 +23,10 @@ namespace Orchard.Users.Models {
             set { Record.NotifyModeration = value; }
         }
 
+        public bool EnableLostPassword {
+            get { return Record.EnableLostPassword; }
+            set { Record.EnableLostPassword = value; }
+        }
+
     }
 }

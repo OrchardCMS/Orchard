@@ -5,10 +5,10 @@ using Orchard.ContentManagement;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.Handlers {
-    public class ModerationMessageAlteration : IMessageEventHandler {
+    public class UserMessagesAlteration : IMessageEventHandler {
         private readonly IContentManager _contentManager;
 
-        public ModerationMessageAlteration(IContentManager contentManager) {
+        public UserMessagesAlteration(IContentManager contentManager) {
             _contentManager = contentManager;
             T = NullLocalizer.Instance;
         }
