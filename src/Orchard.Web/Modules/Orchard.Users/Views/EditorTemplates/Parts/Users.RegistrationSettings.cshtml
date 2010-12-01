@@ -8,6 +8,11 @@
         @Html.ValidationMessage("UsersCanRegister", "*")
     </div>
     <div>
+        @Html.EditorFor(m => m.EnableLostPassword) 
+        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.EnableLostPassword)">@T("Display a link to enable users to reset their email")</label>
+        @Html.ValidationMessage("EnableLostPassword", "*")
+    </div>
+    <div>
         @Html.EditorFor(m => m.UsersMustValidateEmail)
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersMustValidateEmail)">@T("Users must verify their email address")</label>
         @Html.ValidationMessage("UsersMustValidateEmail", "*")

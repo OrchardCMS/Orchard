@@ -31,15 +31,11 @@
     display: inline;
 }
 
-.culture-selection div {
-    font-size:1.4em;
-}
 .culture-selection dl {
     margin:.2em 0;
 }
 .culture-selection dt {
     color:#4C4C4C;
-    font-weight:bold;
 }
 .culture-selection dt, .culture-selection dd, .culture-selection ul {
     display:inline;

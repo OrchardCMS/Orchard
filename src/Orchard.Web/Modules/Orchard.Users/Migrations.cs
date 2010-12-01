@@ -26,6 +26,7 @@ namespace Orchard.Users {
                     .Column<bool>("UsersMustValidateEmail", c => c.WithDefault(false))
                     .Column<bool>("UsersAreModerated", c => c.WithDefault(false))
                     .Column<bool>("NotifyModeration", c => c.WithDefault(false))
+                    .Column<bool>("EnableLostPassword", c => c.WithDefault(false))
                 );
 
             return 1;

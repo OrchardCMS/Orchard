@@ -214,6 +214,23 @@ namespace Orchard.Specs.Bindings {
                                 radio.Attributes.Remove("checked");
                         }
                         break;
+                    case "checkbox":
+                        if (string.Equals(row["value"], "true", StringComparison.OrdinalIgnoreCase)) {
+                            input.Attributes.Add("checked", "checked");
+                        }
+                        else {
+                            input.Attributes.Remove("checked");
+                        }
+
+                        var hiddenForCheckbox = inputs.Where(
+                            x =>
+                            x.GetAttributeValue("type", "") == "hidden" &&
+                            x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]
+                            ).FirstOrDefault();
+                        if (hiddenForCheckbox != null)
+                            hiddenForCheckbox.Attributes.Add("value", row["value"]);
+
+                        break;
                     default:
                         input.Attributes.Add("value", row["value"]);
                         break;

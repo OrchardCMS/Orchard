@@ -11,12 +11,27 @@
 }
 .content-localization .content-localizations li,
 .content-localization .add-localization {
-    font-size:1.2em;
-    float:left;
+    display:inline;
+    list-style: none;
+    line-height:0;
+    margin: 0 .2em;
+}
+.content-localization .content-localizations li::after {
+    content:",";
+}
+.content-localization .content-localizations li:last-child::after {
+    content:"";
 }
 .content-localization .content-localizations>* {
-    display:inline-block;
+    display:inline;
 }
 .content-localization .localizations {
     margin:0;
+}
+
+.content-localization .content-localizations li::after {
+    content:", ";
+}
+.content-localization .content-localizations li:last-child::after {
+    content:"";
 }
