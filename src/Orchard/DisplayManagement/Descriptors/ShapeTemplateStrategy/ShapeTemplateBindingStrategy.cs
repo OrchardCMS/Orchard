@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,22 +9,27 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
     public class ShapeTemplateBindingStrategy : IShapeTableProvider {
         private readonly ShellDescriptor _shellDescriptor;
         private readonly IExtensionManager _extensionManager;
+        private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IEnumerable<IShapeTemplateHarvester> _harvesters;
         private readonly IEnumerable<IShapeTemplateViewEngine> _shapeTemplateViewEngines;
+
 
         public ShapeTemplateBindingStrategy(
             IEnumerable<IShapeTemplateHarvester> harvesters,
             ShellDescriptor shellDescriptor,
             IExtensionManager extensionManager,
+            IVirtualPathProvider virtualPathProvider,
             IEnumerable<IShapeTemplateViewEngine> shapeTemplateViewEngines) {
             _harvesters = harvesters;
             _shellDescriptor = shellDescriptor;
             _extensionManager = extensionManager;
+            _virtualPathProvider = virtualPathProvider;
             _shapeTemplateViewEngines = shapeTemplateViewEngines;
         }
 
@@ -43,14 +47,15 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
 
             var hits = activeExtensions.SelectMany(extensionDescriptor => {
                 var pathContexts = harvesterInfos.SelectMany(harvesterInfo => harvesterInfo.subPaths.Select(subPath => {
-                    var basePath = Path.Combine(extensionDescriptor.Location, extensionDescriptor.Id);
-                    var virtualPath = Path.Combine(basePath, subPath);
-                    return new { harvesterInfo.harvester, basePath, subPath, virtualPath };
+                    var basePath = Path.Combine(extensionDescriptor.Location, extensionDescriptor.Id).Replace(Path.DirectorySeparatorChar, '/');
+                    var virtualPath = Path.Combine(basePath, subPath).Replace(Path.DirectorySeparatorChar, '/');
+                    var fileNames = _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
+                    return new { harvesterInfo.harvester, basePath, subPath, virtualPath, fileNames };
                 }));
 
                 var fileContexts = pathContexts.SelectMany(pathContext => _shapeTemplateViewEngines.SelectMany(ve => {
-                    var fileNames = ve.DetectTemplateFileNames(pathContext.virtualPath);
-                    return fileNames.Select(fileName => new { fileName = Path.GetFileNameWithoutExtension(fileName), fileVirtualPath = Path.Combine(pathContext.virtualPath, fileName).Replace('\\', '/'), pathContext });
+                    var fileNames = ve.DetectTemplateFileNames(pathContext.fileNames);
+                    return fileNames.Select(fileName => new { fileName = Path.GetFileNameWithoutExtension(fileName), fileVirtualPath = Path.Combine(pathContext.virtualPath, fileName).Replace(Path.DirectorySeparatorChar, '/'), pathContext });
                 }));
 
                 var shapeContexts = fileContexts.SelectMany(fileContext => {

@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Records;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Logging;
 
@@ -41,38 +39,17 @@ namespace Orchard.Data.Migration {
         public ILogger Logger { get; set; }
 
         public IEnumerable<string> GetFeaturesThatNeedUpdate() {
+            var currentVersions = _dataMigrationRepository.Table.ToDictionary(r => r.DataMigrationClass);
 
-            var features = new List<string>();
+            var outOfDateMigrations = _dataMigrations.Where(dataMigration => {
+                DataMigrationRecord record;
+                if (currentVersions.TryGetValue(dataMigration.GetType().FullName, out record))
+                    return CreateUpgradeLookupTable(dataMigration).ContainsKey(record.Version);
 
-            // compare current version and available migration methods for each migration class
-            foreach ( var dataMigration in _dataMigrations ) {
-                
-                // get current version for this migration
-                var dataMigrationRecord = GetDataMigrationRecord(dataMigration);
+                return (GetCreateMethod(dataMigration) != null);
+            });
 
-                var current = 0;
-                if (dataMigrationRecord != null) {
-                    current = dataMigrationRecord.Version;
-                }
-
-                // do we need to call Create() ?
-                if (current == 0) {
-                    
-                    // try to resolve a Create method
-                    if ( GetCreateMethod(dataMigration) != null ) {
-                        features.Add(dataMigration.Feature.Descriptor.Id);
-                        continue;
-                    }
-                }
-
-                var lookupTable = CreateUpgradeLookupTable(dataMigration);
-
-                if(lookupTable.ContainsKey(current)) {
-                    features.Add(dataMigration.Feature.Descriptor.Id);
-                }
-            }
-
-            return features;
+            return outOfDateMigrations.Select(m => m.Feature.Descriptor.Id).ToList();
         }
 
         public void Update(IEnumerable<string> features) {
@@ -206,20 +183,26 @@ namespace Orchard.Data.Migration {
         /// Create a list of all available Update methods from a data migration class, indexed by the version number
         /// </summary>
         private static Dictionary<int, MethodInfo> CreateUpgradeLookupTable(IDataMigration dataMigration) {
-            var updateMethodNameRegex = new Regex(@"^UpdateFrom(?<version>\d+)$", RegexOptions.Compiled);
+            return dataMigration
+                .GetType()
+                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Select(mi => GetUpdateMethod(mi))
+                .Where(tuple => tuple != null)
+                .ToDictionary(tuple => tuple.Item1, tuple => tuple.Item2);
+        }
 
-            // update methods might also be called after Create()
-            var lookupTable = new Dictionary<int, MethodInfo>();
+        private static Tuple<int, MethodInfo> GetUpdateMethod(MethodInfo mi) {
+            const string updatefromPrefix = "UpdateFrom";
 
-            // construct a lookup table with all managed initial versions
-            foreach ( var methodInfo in dataMigration.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance) ) {
-                var match = updateMethodNameRegex.Match(methodInfo.Name);
-                if ( match.Success ) {
-                    lookupTable.Add(int.Parse(match.Groups["version"].Value), methodInfo);
+            if (mi.Name.StartsWith(updatefromPrefix)) {
+                var version = mi.Name.Substring(updatefromPrefix.Length);
+                int versionValue;
+                if (int.TryParse(version, out versionValue)) {
+                    return new Tuple<int, MethodInfo>(versionValue, mi);
                 }
             }
 
-            return lookupTable;
+            return null;
         }
 
         /// <summary>
