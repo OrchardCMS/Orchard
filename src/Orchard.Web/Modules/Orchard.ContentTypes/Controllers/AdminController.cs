@@ -242,13 +242,17 @@ namespace Orchard.ContentTypes.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content part.")))
                 return new HttpUnauthorizedResult();
 
-            var partViewModel = _contentDefinitionService.AddPart(viewModel);
-
             if (!ModelState.IsValid)
                 return View(viewModel);
 
-            Services.Notifier.Information(T("The \"{0}\" content part has been created.", partViewModel.Name));
+            var partViewModel = _contentDefinitionService.AddPart(viewModel);
 
+            if (partViewModel == null) {
+                Services.Notifier.Information(T("The content part could not be created."));
+                return View(viewModel);
+            }
+
+            Services.Notifier.Information(T("The \"{0}\" content part has been created.", partViewModel.Name));
             return RedirectToAction("EditPart", new { id = partViewModel.Name });
         }
 

@@ -184,10 +184,13 @@ namespace Orchard.ContentTypes.Services {
             while (_contentDefinitionManager.GetPartDefinition(name) != null)
                 name = VersionName(name);
 
-            var contentPartDefinition = new ContentPartDefinition(name);
-            _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
+            if (!String.IsNullOrEmpty(name)) {
+                var contentPartDefinition = new ContentPartDefinition(name);
+                _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
+                return new EditPartViewModel(contentPartDefinition);
+            }
 
-            return new EditPartViewModel(contentPartDefinition);
+            return null;
         }
 
         public void AlterPart(EditPartViewModel partViewModel, IUpdateModel updateModel) {
