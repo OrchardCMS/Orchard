@@ -20,8 +20,11 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static string Ellipsize(this string text, int characterCount, string ellipsis) {
-            if (string.IsNullOrWhiteSpace(text) || characterCount < 0 || text.Length <= characterCount)
+            if (string.IsNullOrWhiteSpace(text))
                 return "";
+            
+            if (characterCount < 0 || text.Length <= characterCount)
+                return text;
 
             return Regex.Replace(text.Substring(0, characterCount + 1), @"\s+\S*$", "") + ellipsis;
         }
@@ -41,7 +44,16 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static string RemoveTags(this string html) {
-            return Regex.Replace(html, "<[^<>]*>", "", RegexOptions.Singleline);
+            return string.IsNullOrEmpty(html)
+                ? ""
+                : Regex.Replace(html, "<[^<>]*>", "", RegexOptions.Singleline);
+        }
+
+        // not accounting for only \r (e.g. Apple OS 9 carriage return only new lines)
+        public static string ReplaceNewLinesWith(this string text, string replacement) {
+            return string.IsNullOrWhiteSpace(text)
+                ? ""
+                : Regex.Replace(text, @"(\r?\n)", replacement, RegexOptions.Singleline);
         }
     }
 }
