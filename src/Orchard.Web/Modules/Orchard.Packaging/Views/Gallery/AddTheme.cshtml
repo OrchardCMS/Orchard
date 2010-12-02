@@ -1,10 +1,11 @@
-﻿<h1>@Html.TitleForPage(T("Install Theme").ToString())</h1>
-@using (Html.BeginForm("Install", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" })) {
-    @Html.ValidationSummary()
-    <fieldset>
-        <label for="ThemeZipPath">@T("File Path to the zip file:")</label>
-        <input id="ThemeZipPath" name="ThemeZipPath" type="file" class="text" value="@T("Browse")" size="64" /><br />
-        <button class="primaryAction" type="submit">@T("Install")</button>
-        @Html.AntiForgeryTokenOrchard()
-    </fieldset>
-} 
+﻿@{
+    <h1>@Html.TitleForPage(T("Install a Theme").ToString())</h1>
+    using (Html.BeginFormAntiForgeryPost(Url.Action("AddTheme", new { area = "Orchard.Gallery" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+        Html.ValidationSummary();
+        <fieldset>
+            <label for="ModulePackage">@T("Theme Package")</label>
+            <input type="file" id="ThemePackage" size="64" name="ThemePackage" />
+        </fieldset>
+        <button type="submit" class="primaryAction">@T("Install")</button>
+    }
+}
