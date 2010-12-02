@@ -210,9 +210,11 @@ namespace Orchard.ContentTypes.Services {
 
         public void AddFieldToPart(string fieldName, string fieldTypeName, string partName) {
             fieldName = SafeName(fieldName);
-            _contentDefinitionManager.AlterPartDefinition(partName, partBuilder => 
-                partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName))
-            );
+            if (string.IsNullOrEmpty(fieldName)) {
+                throw new OrchardException(T("Fields must have a name containing no spaces or symbols."));
+            }
+            _contentDefinitionManager.AlterPartDefinition(partName,
+                partBuilder => partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName)));
         }
 
         public void RemoveFieldFromPart(string fieldName, string partName) {

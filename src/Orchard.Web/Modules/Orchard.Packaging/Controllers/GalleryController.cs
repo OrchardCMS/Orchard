@@ -6,6 +6,7 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using NuGet;
+using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
@@ -25,16 +26,19 @@ namespace Orchard.Packaging.Controllers {
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IAppDataFolderRoot _appDataFolderRoot;
         private readonly INotifier _notifier;
+        private readonly IHostEnvironment _hostEnvironment;
 
         public GalleryController(
             IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
             INotifier notifier,
-            IAppDataFolderRoot appDataFolderRoot) {
+            IAppDataFolderRoot appDataFolderRoot,
+            IHostEnvironment hostEnvironment) {
             _packageManager = packageManager;
             _packagingSourceManager = packagingSourceManager;
             _notifier = notifier;
             _appDataFolderRoot = appDataFolderRoot;
+            _hostEnvironment = hostEnvironment;
 
             T = NullLocalizer.Instance;
         }
@@ -60,12 +64,11 @@ namespace Orchard.Packaging.Controllers {
         [HttpPost]
         public ActionResult AddSource(string url) {
             try {
-                if ( !String.IsNullOrEmpty(url) ) {
+                if (!String.IsNullOrEmpty(url)) {
                     if (!url.StartsWith("http")) {
                         ModelState.AddModelError("Url", T("The Url is not valid").Text);
                     }
-                }
-                else if ( String.IsNullOrWhiteSpace(url)) {
+                } else if (String.IsNullOrWhiteSpace(url)) {
                     ModelState.AddModelError("Url", T("Url is required").Text);
                 }
 
@@ -73,29 +76,27 @@ namespace Orchard.Packaging.Controllers {
                 // try to load the feed
                 try {
 
-                    XNamespace atomns = "http://www.w3.org/2005/Atom" ;
+                    XNamespace atomns = "http://www.w3.org/2005/Atom";
                     var feed = XDocument.Load(url, LoadOptions.PreserveWhitespace);
                     var titleNode = feed.Descendants(atomns + "title").FirstOrDefault();
-                    if ( titleNode != null )
+                    if (titleNode != null)
                         title = titleNode.Value;
 
-                    if(String.IsNullOrWhiteSpace(title)) {
+                    if (String.IsNullOrWhiteSpace(title)) {
                         ModelState.AddModelError("Url", T("The feed has no title.").Text);
                     }
-                }
-                catch {
+                } catch {
                     ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
                 }
 
-                if ( !ModelState.IsValid )
+                if (!ModelState.IsValid)
                     return View(new PackagingAddSourceViewModel { Url = url });
 
                 _packagingSourceManager.AddSource(title, url);
                 _notifier.Information(T("The feed has been added successfully."));
 
                 return RedirectToAction("Sources");
-            }
-            catch ( Exception exception ) {
+            } catch (Exception exception) {
                 _notifier.Error(T("Adding feed failed: {0}", exception.Message));
                 return View(new PackagingAddSourceViewModel { Url = url });
             }
@@ -104,8 +105,8 @@ namespace Orchard.Packaging.Controllers {
         public ActionResult Modules(int? sourceId) {
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-            var sources = selectedSource != null 
-                ? new [] { selectedSource }
+            var sources = selectedSource != null
+                ? new[] { selectedSource }
                 : _packagingSourceManager.GetSources()
             ;
 
@@ -134,7 +135,7 @@ namespace Orchard.Packaging.Controllers {
         public ActionResult Install(string packageId, string version, int sourceId, string redirectTo) {
             var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-            if(source == null) {
+            if (source == null) {
                 return HttpNotFound();
             }
 
@@ -147,15 +148,30 @@ namespace Orchard.Packaging.Controllers {
             return View();
         }
 
+        [HttpPost, ActionName("AddTheme")]
+        public ActionResult AddThemePOST(string returnUrl) {
+            return InstallPackage(returnUrl, Request.RawUrl);
+        }
+
+        [HttpPost, ActionName("RemoveTheme")]
+        public ActionResult RemoveThemePOST(string themeId, string returnUrl, string retryUrl) {
+            return UninstallPackage(PackagingSourceManager.ThemesFilter + themeId, returnUrl, retryUrl);
+        }
+
         public ActionResult AddModule(string returnUrl) {
             return View();
         }
 
         [HttpPost, ActionName("AddModule")]
         public ActionResult AddModulePOST(string returnUrl) {
-            // module not used for anything o2ther than display (and that only to not have object in the view 'T')
+            return InstallPackage(returnUrl, Request.RawUrl);
+        }
+
+        public ActionResult InstallPackage(string returnUrl, string retryUrl) {
             try {
-                if (string.IsNullOrWhiteSpace(Request.Files[0].FileName)) {
+                if (Request.Files != null &&
+                    Request.Files.Count > 0 &&
+                    !string.IsNullOrWhiteSpace(Request.Files[0].FileName)) {
                     ModelState.AddModelError("File", T("Select a file to upload.").ToString());
                 }
 
@@ -172,16 +188,29 @@ namespace Orchard.Packaging.Controllers {
                     }
                 }
 
-                if (!string.IsNullOrEmpty(returnUrl))
-                    return Redirect(returnUrl);
-
-                return RedirectToAction("Modules");
+                return Redirect(returnUrl);
             } catch (Exception exception) {
-                for (var scan = exception; scan != null; scan = scan.InnerException) {
+                for (Exception scan = exception; scan != null; scan = scan.InnerException) {
                     _notifier.Error(T("Uploading module package failed: {0}", exception.Message));
                 }
 
-                return View("AddModule");
+                return Redirect(retryUrl);
+            }
+        }
+
+        public ActionResult UninstallPackage(string id, string returnUrl, string retryUrl) {
+            try {
+                _packageManager.Uninstall(id, HostingEnvironment.MapPath("~/"));
+
+                _notifier.Information(T("Uninstalled package \"{0}\"", id));
+
+                return Redirect(returnUrl);
+            } catch (Exception exception) {
+                for (Exception scan = exception; scan != null; scan = scan.InnerException) {
+                    _notifier.Error(T("Uninstall failed: {0}", exception.Message));
+                }
+
+                return Redirect(retryUrl);
             }
         }
     }

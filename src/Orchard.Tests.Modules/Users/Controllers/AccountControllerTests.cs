@@ -191,6 +191,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             registrationSettings.UsersCanRegister = true;
             registrationSettings.UsersAreModerated = true;
             registrationSettings.NotifyModeration = true;
+            registrationSettings.NotificationsRecipients = "admin";
 
             _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<SiteSettingsPart>().SuperUser = "admin";
             _session.Flush();

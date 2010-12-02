@@ -81,9 +81,18 @@ namespace Orchard.Users.Services {
             }
 
             if ( registrationSettings != null  && registrationSettings.UsersAreModerated && registrationSettings.NotifyModeration && !createUserParams.IsApproved ) {
-                var superUser = GetUser(_orchardServices.WorkContext.CurrentSite.SuperUser);
-                if(superUser != null)
-                    _messageManager.Send(superUser.ContentItem.Record, MessageTypes.Moderation, "email");
+                var usernames = String.IsNullOrWhiteSpace(registrationSettings.NotificationsRecipients)
+                                    ? new string[0]
+                                    : registrationSettings.NotificationsRecipients.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach ( var userName in usernames ) {
+                    if (String.IsNullOrWhiteSpace(userName)) {
+                        continue;
+                    }
+                    var recipient = GetUser(userName);
+                    if (recipient != null)
+                        _messageManager.Send(recipient.ContentItem.Record, MessageTypes.Moderation, "email");
+                }
             }
 
             return user;

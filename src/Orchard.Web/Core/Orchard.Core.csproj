@@ -71,7 +71,7 @@
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
     <Compile Include="Containers\ContainersPathConstraint.cs" />
     <Compile Include="Containers\Drivers\ContainerWidgetPartDriver.cs" />
-    <Compile Include="Containers\Drivers\ContainerCustomPartDriver.cs" />
+    <Compile Include="Containers\Drivers\CustomPropertiesDriver.cs" />
     <Compile Include="Containers\Extensions\ContentQueryExtensions.cs" />
     <Compile Include="Containers\Migrations.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
@@ -79,7 +79,7 @@
     <Compile Include="Common\Shapes.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Containers\Models\ContainerWidgetPart.cs" />
-    <Compile Include="Containers\Models\ContainerCustomPart.cs" />
+    <Compile Include="Containers\Models\CustomPropertiesPart.cs" />
     <Compile Include="Containers\Models\OrderByDirection.cs" />
     <Compile Include="Containers\Routes.cs" />
     <Compile Include="Containers\Services\ContainersPathConstraintUpdater.cs" />
@@ -92,8 +92,6 @@
     <Compile Include="Common\Services\CommonService.cs" />
     <Compile Include="Common\Settings\BodySettings.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
-    <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
-    <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Drivers\ContentsDriver.cs" />
     <Compile Include="Contents\DynamicPermissions.cs" />
@@ -366,7 +364,7 @@
     <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettings.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
     <Content Include="Containers\Views\Parts\ContainerWidget.cshtml" />
-    <Content Include="Containers\Views\EditorTemplates\ContainerCustom.cshtml" />
+    <Content Include="Containers\Views\EditorTemplates\CustomProperties.cshtml" />
     <Content Include="Routable\Views\Parts\RoutableTitle_Summary.cshtml" />
     <Content Include="Routable\Views\Parts\RoutableTitle_SummaryAdmin.cshtml" />
   </ItemGroup>

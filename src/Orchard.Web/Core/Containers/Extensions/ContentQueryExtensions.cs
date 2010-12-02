@@ -21,20 +21,20 @@ namespace Orchard.Core.Containers.Extensions
                                 ? query.OrderByDescending<RoutePartRecord, string>(record => record.Slug)
                                 : query.OrderBy<RoutePartRecord, string>(record => record.Slug);
                     break;
-                case "ContainerCustomPart.CustomOne":
+                case "CustomPropertiesPart.CustomOne":
                     query = descendingOrder
-                                ? query.OrderByDescending<ContainerCustomPartRecord, string>(record => record.CustomOne)
-                                : query.OrderBy<ContainerCustomPartRecord, string>(record => record.CustomOne);
+                                ? query.OrderByDescending<CustomPropertiesPartRecord, string>(record => record.CustomOne)
+                                : query.OrderBy<CustomPropertiesPartRecord, string>(record => record.CustomOne);
                     break;
-                case "ContainerCustomPart.CustomTwo":
+                case "CustomPropertiesPart.CustomTwo":
                     query = descendingOrder
-                                ? query.OrderByDescending<ContainerCustomPartRecord, string>(record => record.CustomTwo)
-                                : query.OrderBy<ContainerCustomPartRecord, string>(record => record.CustomTwo);
+                                ? query.OrderByDescending<CustomPropertiesPartRecord, string>(record => record.CustomTwo)
+                                : query.OrderBy<CustomPropertiesPartRecord, string>(record => record.CustomTwo);
                     break;
-                case "ContainerCustomPart.CustomThree":
+                case "CustomPropertiesPart.CustomThree":
                     query = descendingOrder
-                                ? query.OrderByDescending<ContainerCustomPartRecord, string>(record => record.CustomThree)
-                                : query.OrderBy<ContainerCustomPartRecord, string>(record => record.CustomThree);
+                                ? query.OrderByDescending<CustomPropertiesPartRecord, string>(record => record.CustomThree)
+                                : query.OrderBy<CustomPropertiesPartRecord, string>(record => record.CustomThree);
                     break;
                 default: // "CommonPart.PublishedUtc"
                     query = descendingOrder
@@ -69,18 +69,18 @@ namespace Orchard.Core.Containers.Extensions
             {"CommonPart.PublishedUtc|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CommonPartRecord>(r => r.PublishedUtc == DateTime.Parse(s)))}, // todo: (heskew) not practical as is. needs some sense of precision....
             {"CommonPart.PublishedUtc|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CommonPartRecord>(r => true /* can't modified PublishedUtc for partial comparisons */))},
             // todo: (hesekw) this could benefit from a better filter implementation as this is currently very limited in functionality and I have no idea how the custom parts will be used by folks
-            {"ContainerCustomPart.CustomOne|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => true /* CompareTo is not implemented - r.CustomOne.CompareTo(s) == -1*/))},
-            {"ContainerCustomPart.CustomOne|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => true /* CompareTo is not implemented - r.CustomOne.CompareTo(s) == 1*/))},
-            {"ContainerCustomPart.CustomOne|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => r.CustomOne.Equals(s, StringComparison.OrdinalIgnoreCase)))},
-            {"ContainerCustomPart.CustomOne|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => r.CustomOne.StartsWith(s, StringComparison.OrdinalIgnoreCase)))},
-            {"ContainerCustomPart.CustomTwo|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => true /* CompareTo is not implemented - r.CustomTwo.CompareTo(s) == -1*/))},
-            {"ContainerCustomPart.CustomTwo|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => true /* CompareTo is not implemented - r.CustomTwo.CompareTo(s) == 1*/))},
-            {"ContainerCustomPart.CustomTwo|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => r.CustomTwo.Equals(s, StringComparison.OrdinalIgnoreCase)))},
-            {"ContainerCustomPart.CustomTwo|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => r.CustomTwo.StartsWith(s, StringComparison.OrdinalIgnoreCase)))},
-            {"ContainerCustomPart.CustomThree|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => true /* CompareTo is not implemented - r.CustomThree.CompareTo(s) == -1*/))},
-            {"ContainerCustomPart.CustomThree|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => true /* CompareTo is not implemented - r.CustomThree.CompareTo(s) == 1*/))},
-            {"ContainerCustomPart.CustomThree|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => r.CustomThree.Equals(s, StringComparison.OrdinalIgnoreCase)))},
-            {"ContainerCustomPart.CustomThree|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<ContainerCustomPartRecord>(r => r.CustomThree.StartsWith(s, StringComparison.OrdinalIgnoreCase)))},
+            {"CustomPropertiesPart.CustomOne|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => true /* CompareTo is not implemented - r.CustomOne.CompareTo(s) == -1*/))},
+            {"CustomPropertiesPart.CustomOne|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => true /* CompareTo is not implemented - r.CustomOne.CompareTo(s) == 1*/))},
+            {"CustomPropertiesPart.CustomOne|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => r.CustomOne.Equals(s, StringComparison.OrdinalIgnoreCase)))},
+            {"CustomPropertiesPart.CustomOne|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => r.CustomOne.StartsWith(s, StringComparison.OrdinalIgnoreCase)))},
+            {"CustomPropertiesPart.CustomTwo|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => true /* CompareTo is not implemented - r.CustomTwo.CompareTo(s) == -1*/))},
+            {"CustomPropertiesPart.CustomTwo|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => true /* CompareTo is not implemented - r.CustomTwo.CompareTo(s) == 1*/))},
+            {"CustomPropertiesPart.CustomTwo|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => r.CustomTwo.Equals(s, StringComparison.OrdinalIgnoreCase)))},
+            {"CustomPropertiesPart.CustomTwo|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => r.CustomTwo.StartsWith(s, StringComparison.OrdinalIgnoreCase)))},
+            {"CustomPropertiesPart.CustomThree|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => true /* CompareTo is not implemented - r.CustomThree.CompareTo(s) == -1*/))},
+            {"CustomPropertiesPart.CustomThree|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => true /* CompareTo is not implemented - r.CustomThree.CompareTo(s) == 1*/))},
+            {"CustomPropertiesPart.CustomThree|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => r.CustomThree.Equals(s, StringComparison.OrdinalIgnoreCase)))},
+            {"CustomPropertiesPart.CustomThree|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<CustomPropertiesPartRecord>(r => r.CustomThree.StartsWith(s, StringComparison.OrdinalIgnoreCase)))},
         };
     }
 }

@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0"?>
 <configuration>
+  <appSettings>
+    <add key="webpages:Enabled" value="false" />
+  </appSettings>
   <system.web>
     <compilation targetFramework="4.0">
       <assemblies>

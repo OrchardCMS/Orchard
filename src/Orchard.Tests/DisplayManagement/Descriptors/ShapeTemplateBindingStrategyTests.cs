@@ -97,7 +97,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             }
         }
 
-        protected override void Resolve(IContainer container) {
+        protected override void Resolve(ILifetimeScope container) {
             _features = new List<FeatureDescriptor>();
 
             container.Resolve<Mock<IExtensionManager>>()

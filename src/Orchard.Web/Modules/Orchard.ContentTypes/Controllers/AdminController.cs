@@ -326,8 +326,8 @@ namespace Orchard.ContentTypes.Controllers {
             if (partViewModel == null) {
                 //id passed in might be that of a type w/ no implicit field
                 if (typeViewModel != null) {
-                    partViewModel = new EditPartViewModel { Name = typeViewModel.Name };
-                    _contentDefinitionService.AddPart(new CreatePartViewModel { Name = partViewModel.Name });
+                    partViewModel = new EditPartViewModel {Name = typeViewModel.Name};
+                    _contentDefinitionService.AddPart(new CreatePartViewModel {Name = partViewModel.Name});
                     _contentDefinitionService.AddPartToType(partViewModel.Name, typeViewModel.Name);
                 }
                 else {
@@ -341,7 +341,14 @@ namespace Orchard.ContentTypes.Controllers {
                 return AddFieldTo(id);
             }
 
-            _contentDefinitionService.AddFieldToPart(viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
+            try {
+                _contentDefinitionService.AddFieldToPart(viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
+            }
+            catch (Exception ex) {
+                Services.Notifier.Information(T("The \"{0}\" field was not added. {1}", viewModel.DisplayName, ex.Message));
+                Services.TransactionManager.Cancel();
+                return AddFieldTo(id);
+            }
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();

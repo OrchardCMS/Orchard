@@ -25,7 +25,7 @@ namespace Orchard.Core.Containers {
                     .Column<string>("FilterByOperator")
                     .Column<string>("FilterByValue"));
 
-            SchemaBuilder.CreateTable("ContainerCustomPartRecord",
+            SchemaBuilder.CreateTable("CustomPropertiesPartRecord",
                 table => table
                     .ContentPartRecord()
                     .Column<string>("CustomOne")
@@ -41,7 +41,7 @@ namespace Orchard.Core.Containers {
 
             ContentDefinitionManager.AlterPartDefinition("ContainerPart", builder => builder.Attachable());
             ContentDefinitionManager.AlterPartDefinition("ContainablePart", builder => builder.Attachable());
-            ContentDefinitionManager.AlterPartDefinition("ContainerCustomPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("CustomPropertiesPart", builder => builder.Attachable());
  
             return 1;
         }

@@ -28,9 +28,6 @@
         @Html.Password("password")
         @Html.ValidationMessage("password")
     </li>
-    <li>
-        @Html.CheckBox("rememberMe", new { id = "remember-me" })<label class="forcheckbox" for="remember-me">@T("Remember me?")</label>
-    </li>
     <button class="primaryAction" type="submit">@T("Sign In")</button>
     </ol>
 </fieldset>
