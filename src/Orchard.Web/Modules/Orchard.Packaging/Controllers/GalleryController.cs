@@ -143,6 +143,10 @@ namespace Orchard.Packaging.Controllers {
             return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
         }
 
+        public ActionResult AddTheme(string returnUrl) {
+            return View();
+        }
+
         public ActionResult AddModule(string returnUrl) {
             return View();
         }
