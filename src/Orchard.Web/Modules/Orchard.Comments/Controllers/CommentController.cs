@@ -50,8 +50,15 @@ namespace Orchard.Comments.Controllers {
 
                 CommentPart commentPart = _commentService.CreateComment(context, Services.WorkContext.CurrentSite.As<CommentSettingsPart>().Record.ModerateComments);
 
-                if (commentPart.Record.Status == CommentStatus.Pending)
-                    Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
+                if (commentPart.Record.Status == CommentStatus.Pending) {
+                    // if the user who submitted the comment has the right to moderate, don't make this comment moderated
+                    if (Services.Authorizer.Authorize(Permissions.ManageComments)) {
+                        commentPart.Record.Status = CommentStatus.Approved;
+                    }
+                    else {
+                        Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
+                    }
+                }
             }
             else {
                 foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select( e=> e.ErrorMessage)) {
