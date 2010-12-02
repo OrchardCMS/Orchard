@@ -15,18 +15,18 @@ Scenario: I can create a new blog and blog post
             | name | value |
             | Routable.Title | My Blog |
         And I hit "Save"
-        And I go to "my-blog"
-    Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
-    When I go to "admin/blogs"
+        And I go to "admin/blogs"
         And I follow "My Blog"
-    Then I should see "foo"
-    When I follow "New Post"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
             | Body.Text | Hi there. |
         And I hit "Publish Now"
-        And I go to "my-blog/my-post"
+        And I go to "my-blog"
+    Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
+        And I should see "<h1[^>]*>.*?My Post.*?</h1>"
+    When I go to "my-blog/my-post"
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Hi there."
 
