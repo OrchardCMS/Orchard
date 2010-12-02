@@ -19,20 +19,16 @@ namespace Orchard.Modules.Services {
     }
 
     public class ModuleService : IModuleService {
-        private const string ModuleExtensionType = "module";
         private readonly IExtensionManager _extensionManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
-        private readonly IWorkContextAccessor _workContextAccessor;
 
         public ModuleService(
                 IOrchardServices orchardServices, 
                 IExtensionManager extensionManager,
-                IShellDescriptorManager shellDescriptorManager,
-                IWorkContextAccessor workContextAccessor) {
+                IShellDescriptorManager shellDescriptorManager) {
             Services = orchardServices;
             _extensionManager = extensionManager;
             _shellDescriptorManager = shellDescriptorManager;
-            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
 

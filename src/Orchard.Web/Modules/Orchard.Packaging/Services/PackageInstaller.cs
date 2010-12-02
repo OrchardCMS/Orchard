@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using NuGet;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.UI.Notify;
@@ -94,7 +95,7 @@ namespace Orchard.Packaging.Services {
             {
                 ExtensionName = package.Title ?? package.Id,
                 ExtensionVersion = package.Version.ToString(),
-                ExtensionType = package.Id.StartsWith("Orchard.Theme") ? "Theme" : "Module",
+                ExtensionType = package.Id.StartsWith("Orchard.Theme") ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module,
                 ExtensionPath = applicationPath
             };
         }

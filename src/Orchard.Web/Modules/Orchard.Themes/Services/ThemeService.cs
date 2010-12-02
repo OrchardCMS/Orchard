@@ -110,7 +110,7 @@ namespace Orchard.Themes.Services {
             var themes = new List<ExtensionDescriptor>();
             foreach (var descriptor in extensions) {
 
-                if (!string.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
+                if (!string.Equals(descriptor.ExtensionType, DefaultExtensionTypes.Theme, StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 

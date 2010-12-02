@@ -153,6 +153,7 @@
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Environment\Extensions\Models\DefaultExtensionTypes.cs" />
     <Compile Include="Environment\HostEnvironment.cs" />
     <Compile Include="Environment\DefaultHostEnvironment.cs" />
     <Compile Include="Environment\Extensions\Loaders\RawThemeExtensionLoader.cs" />

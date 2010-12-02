@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Orchard.Data.Migration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Modules.Services;
@@ -46,7 +47,7 @@ namespace Orchard.Modules.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageModules, T("Not allowed to manage modules")))
                 return new HttpUnauthorizedResult();
 
-            var modules = _extensionManager.AvailableExtensions().Where(x => x.ExtensionType == "Module");
+            var modules = _extensionManager.AvailableExtensions().Where(x => x.ExtensionType == DefaultExtensionTypes.Module);
 
             return View(new ModulesIndexViewModel { 
                 Modules = modules, 
@@ -60,7 +61,7 @@ namespace Orchard.Modules.Controllers {
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
             var features = _featureManager.GetAvailableFeatures()
-                .Where(f => !f.Extension.ExtensionType.Equals("Theme", StringComparison.OrdinalIgnoreCase))
+                .Where(f => !f.Extension.ExtensionType.Equals(DefaultExtensionTypes.Theme, StringComparison.OrdinalIgnoreCase))
                 .Select(f=>new ModuleFeature{Descriptor=f,
                 IsEnabled=_shellDescriptor.Features.Any(sf=>sf.Name==f.Id),
                 NeedsUpdate=featuresThatNeedUpdate.Contains(f.Id)})

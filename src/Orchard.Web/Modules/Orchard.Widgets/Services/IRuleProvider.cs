@@ -3,4 +3,3 @@
         void Process(RuleContext ruleContext);
     }
 }
-

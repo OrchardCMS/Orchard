@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Orchard.Data.Migration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Reports.Services;
@@ -58,7 +59,7 @@ namespace Orchard.Themes.Controllers {
                 var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
                 var themes = _extensionManager.AvailableExtensions()
-                    .Where(d => d.ExtensionType == "Theme")
+                    .Where(d => d.ExtensionType == DefaultExtensionTypes.Theme)
                     .Select(d => new ThemeEntry {
                         Descriptor = d,
                         NeedsUpdate = featuresThatNeedUpdate.Contains(d.Id),

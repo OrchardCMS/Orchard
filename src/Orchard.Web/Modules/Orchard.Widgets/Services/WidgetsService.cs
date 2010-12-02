@@ -3,6 +3,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Widgets.Models;
 
@@ -42,7 +43,7 @@ namespace Orchard.Widgets.Services {
         public IEnumerable<string> GetZones() {
             return _featureManager.GetEnabledFeatures()
                 .Select(x => x.Extension)
-                .Where(x => x.ExtensionType == "Theme")
+                .Where(x => x.ExtensionType == DefaultExtensionTypes.Theme)
                 .SelectMany(x => x.Zones.Split(','))
                 .Distinct()
                 .Select(x => x.Trim())

@@ -4,13 +4,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
+using Orchard.CodeGeneration.Services;
 using Orchard.Commands;
 using Orchard.Data.Migration.Generator;
-using Orchard.CodeGeneration.Services;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Localization;
 
 namespace Orchard.CodeGeneration.Commands {
 
@@ -52,7 +51,7 @@ namespace Orchard.CodeGeneration.Commands {
         public bool CreateDataMigration(string featureName) {
             Context.Output.WriteLine(T("Creating Data Migration for {0}", featureName));
 
-            ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(extension => extension.ExtensionType == "Module" &&
+            ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(extension => extension.ExtensionType == DefaultExtensionTypes.Module &&
                                                                                                              extension.Features.Any(feature => String.Equals(feature.Id, featureName, StringComparison.OrdinalIgnoreCase)));
 
             if (extensionDescriptor == null) {
@@ -137,7 +136,7 @@ namespace Orchard.CodeGeneration.Commands {
             else {
                 if (!string.IsNullOrEmpty(BasedOn)) {
                     if (!_extensionManager.AvailableExtensions().Any(extension =>
-                        string.Equals(extension.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(extension.ExtensionType, DefaultExtensionTypes.Theme, StringComparison.OrdinalIgnoreCase) &&
                         string.Equals(BasedOn, extension.Id, StringComparison.OrdinalIgnoreCase))) {
                         Context.Output.WriteLine(T("Creating Theme {0} failed: base theme named {1} was not found.", themeName, BasedOn));
                         return;
@@ -153,7 +152,7 @@ namespace Orchard.CodeGeneration.Commands {
         public void CreateController(string moduleName, string controllerName) {
             Context.Output.WriteLine(T("Creating Controller {0} in Module {1}", controllerName, moduleName));
 
-            ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(extension => extension.ExtensionType == "Module" &&
+            ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(extension => extension.ExtensionType == DefaultExtensionTypes.Module &&
                                                                                                              string.Equals(moduleName, extension.Name, StringComparison.OrdinalIgnoreCase));
 
             if (extensionDescriptor == null) {

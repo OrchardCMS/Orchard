@@ -102,7 +102,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
         }
 
         private bool FeatureIsTheme(FeatureDescriptor fd) {
-            return fd.Extension.ExtensionType == "Theme";
+            return fd.Extension.ExtensionType == DefaultExtensionTypes.Theme;
         }
 
         private bool FeatureIsEnabled(FeatureDescriptor fd) {

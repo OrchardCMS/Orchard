@@ -7,6 +7,7 @@ using HtmlAgilityPack;
 using log4net.Appender;
 using log4net.Core;
 using NUnit.Framework;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Specs.Hosting;
 using TechTalk.SpecFlow;
 using Path = Bleroy.FluentPath.Path;
@@ -140,13 +141,13 @@ namespace Orchard.Specs.Bindings {
             foreach (var row in table.Rows) {
                 foreach (var name in row["names"].Split(',').Select(x => x.Trim())) {
                     switch (row["extension"]) {
-                        case "core":
+                        case DefaultExtensionTypes.Core:
                             GivenIHaveCore(name);
                             break;
-                        case "module":
+                        case DefaultExtensionTypes.Module:
                             GivenIHaveModule(name);
                             break;
-                        case "theme":
+                        case DefaultExtensionTypes.Theme:
                             GivenIHaveTheme(name);
                             break;
                         default:

@@ -49,13 +49,14 @@ namespace Orchard.Environment.Extensions {
         /// <param name="subject"></param>
         /// <returns></returns>
         internal static bool HasDependency(FeatureDescriptor item, FeatureDescriptor subject) {
-            if (item.Extension.ExtensionType == "Theme") {
-                // Themes implicitly depend on modules to ensure build and override ordering
-                if (subject.Extension.ExtensionType == "Module") {
+            if (item.Extension.ExtensionType == DefaultExtensionTypes.Theme) {
+                if (subject.Extension.ExtensionType == DefaultExtensionTypes.Module) {
+                    // Themes implicitly depend on modules to ensure build and override ordering
                     return true;
                 }
-                if (subject.Extension.ExtensionType == "Theme") {
-                    // theme depends on another if it is its base theme
+                
+                if (subject.Extension.ExtensionType == DefaultExtensionTypes.Theme) {
+                    // Theme depends on another if it is its base theme
                     return item.Extension.BaseTheme == subject.Id;
                 }
             }
