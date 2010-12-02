@@ -1,6 +1,6 @@
 ﻿@model Orchard.Setup.ViewModels.SetupViewModel
 @{
-    Script.Include("setup.js");
+    Script.Include("setup.js").AtFoot();
 }
 <h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
 
