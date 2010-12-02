@@ -47,7 +47,7 @@ namespace Orchard.Modules.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageModules, T("Not allowed to manage modules")))
                 return new HttpUnauthorizedResult();
 
-            var modules = _extensionManager.AvailableExtensions().Where(x => x.ExtensionType == DefaultExtensionTypes.Module);
+            var modules = _extensionManager.AvailableExtensions().Where(x => DefaultExtensionTypes.IsModule(x.ExtensionType));
 
             return View(new ModulesIndexViewModel { 
                 Modules = modules, 
@@ -61,7 +61,7 @@ namespace Orchard.Modules.Controllers {
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
             var features = _featureManager.GetAvailableFeatures()
-                .Where(f => !f.Extension.ExtensionType.Equals(DefaultExtensionTypes.Theme, StringComparison.OrdinalIgnoreCase))
+                .Where(f => !DefaultExtensionTypes.IsTheme(f.Extension.ExtensionType))
                 .Select(f=>new ModuleFeature{Descriptor=f,
                 IsEnabled=_shellDescriptor.Features.Any(sf=>sf.Name==f.Id),
                 NeedsUpdate=featuresThatNeedUpdate.Contains(f.Id)})

@@ -113,7 +113,7 @@ namespace Orchard.Localization.Services {
             }
 
             foreach (var module in _extensionManager.AvailableExtensions()) {
-                if (String.Equals(module.ExtensionType, DefaultExtensionTypes.Module)) {
+                if (DefaultExtensionTypes.IsModule(module.ExtensionType)) {
                     string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Id, culture);
                     text = _webSiteFolder.ReadFile(modulePath);
                     if (text != null) {
@@ -124,7 +124,7 @@ namespace Orchard.Localization.Services {
             }
 
             foreach (var theme in _extensionManager.AvailableExtensions()) {
-                if (String.Equals(theme.ExtensionType, DefaultExtensionTypes.Theme)) {
+                if (DefaultExtensionTypes.IsTheme(theme.ExtensionType)) {
                     string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Id, culture);
                     text = _webSiteFolder.ReadFile(themePath);
                     if (text != null) {

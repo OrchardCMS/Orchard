@@ -46,8 +46,7 @@ namespace Orchard.Packaging.Services {
                     EmbedVirtualFile(context, projectFile, MediaTypeNames.Text.Xml);
                     EmbedProjectFiles(context, "Compile", "Content", "None", "EmbeddedResource");
                     EmbedReferenceFiles(context);
-                }
-                else if (extensionDescriptor.ExtensionType == DefaultExtensionTypes.Theme) {
+                } else if (DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType)) {
                     // this is a simple theme with no csproj
                     EmbedThemeFiles(context);
                 }
@@ -141,7 +140,7 @@ namespace Orchard.Packaging.Services {
 
         private static void EstablishPaths(CreateContext context, IWebSiteFolder webSiteFolder, string locationPath, string moduleName, string moduleType) {
             context.SourceFolder = webSiteFolder;
-            if (moduleType == DefaultExtensionTypes.Theme) {
+            if (DefaultExtensionTypes.IsTheme(moduleType)) {
                 context.SourcePath = "~/Themes/" + moduleName + "/";
                 context.TargetPath = "\\Content\\Themes\\" + moduleName + "\\";
             }

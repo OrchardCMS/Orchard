@@ -59,7 +59,7 @@ namespace Orchard.Themes.Controllers {
                 var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
                 var themes = _extensionManager.AvailableExtensions()
-                    .Where(d => d.ExtensionType == DefaultExtensionTypes.Theme)
+                    .Where(d => DefaultExtensionTypes.IsTheme(d.ExtensionType))
                     .Select(d => new ThemeEntry {
                         Descriptor = d,
                         NeedsUpdate = featuresThatNeedUpdate.Contains(d.Id),

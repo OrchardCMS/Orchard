@@ -30,7 +30,7 @@ namespace Orchard.Themes.Preview {
 
             var installedThemes = _featureManager.GetEnabledFeatures()
                 .Select(x => x.Extension)
-                .Where(x => x.ExtensionType == DefaultExtensionTypes.Theme)
+                .Where(x =>  DefaultExtensionTypes.IsTheme(x.ExtensionType))
                 .Distinct();
 
             var themeListItems = installedThemes
