@@ -39,7 +39,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 
-        protected override void Resolve(IContainer container) {
+        protected override void Resolve(ILifetimeScope container) {
             // implementation resorts to orchard host to resolve "current scope" services
             container.Resolve<Mock<IOrchardHostContainer>>()
                 .Setup(x => x.Resolve<IComponentContext>())

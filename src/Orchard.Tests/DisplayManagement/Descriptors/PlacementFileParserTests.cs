@@ -21,7 +21,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         }
 
 
-        protected override void Resolve(IContainer container) {
+        protected override void Resolve(ILifetimeScope container) {
             _parser = container.Resolve<IPlacementFileParser>();
             _folder = container.Resolve<InMemoryWebSiteFolder>();
         }

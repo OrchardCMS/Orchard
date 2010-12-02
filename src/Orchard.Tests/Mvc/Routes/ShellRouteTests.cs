@@ -36,6 +36,7 @@ namespace Orchard.Tests.Mvc.Routes {
             rootBuilder.Register(ctx => _routes);
             rootBuilder.RegisterType<ShellRoute>().InstancePerDependency();
             rootBuilder.RegisterType<RunningShellTable>().As<IRunningShellTable>().SingleInstance();
+            rootBuilder.RegisterModule(new WorkContextModule());
             rootBuilder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
             rootBuilder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>();
 
