@@ -263,8 +263,8 @@ namespace Orchard.Users.Controllers {
             return View();
         }
 
-        public ActionResult ChallengeEmail(string token) {
-            var user = _userService.ValidateChallenge(token);
+        public ActionResult ChallengeEmail(string nonce) {
+            var user = _userService.ValidateChallenge(nonce);
 
             if ( user != null ) {
                 _authenticationService.SignIn(user, false /* createPersistentCookie */);
