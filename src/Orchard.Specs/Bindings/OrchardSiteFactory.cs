@@ -2,6 +2,7 @@
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Specs.Hosting.Orchard.Web;
 using TechTalk.SpecFlow;
 
@@ -20,9 +21,9 @@ namespace Orchard.Specs.Bindings {
             webApp.GivenIHaveACleanSiteWith(
                 virtualDirectory,
                 TableData(
-                new { extension = "module", names = "Orchard.Setup, Orchard.Pages, Orchard.Blogs, Orchard.Messaging, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce" },
-                new { extension = "core", names = "Common, Dashboard, Feeds, HomePage, Navigation, Contents, Routable, Scheduling, Settings, Shapes, XmlRpc" },
-                new { extension = "theme", names = "SafeMode, TheAdmin, TheThemeMachine" }));
+                new { extension = DefaultExtensionTypes.Module, names = "Orchard.Setup, Orchard.Pages, Orchard.Blogs, Orchard.Messaging, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce" },
+                new { extension = DefaultExtensionTypes.Core, names = "Common, Dashboard, Feeds, HomePage, Navigation, Contents, Routable, Scheduling, Settings, Shapes, XmlRpc" },
+                new { extension = DefaultExtensionTypes.Theme, names = "SafeMode, TheAdmin, TheThemeMachine" }));
 
             webApp.WhenIGoTo("Setup");
 

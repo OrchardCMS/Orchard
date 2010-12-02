@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
 using Orchard.Data.Migration;
-using Orchard.DisplayManagement;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Reports.Services;
-using Orchard.Security;
 using Orchard.Themes.Preview;
 using Orchard.Themes.Services;
 using Orchard.Themes.ViewModels;
@@ -19,35 +17,36 @@ using Orchard.UI.Notify;
 namespace Orchard.Themes.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
+        private readonly IDataMigrationManager _dataMigrationManager;
+        private readonly IFeatureManager _featureManager;
         private readonly ISiteThemeService _siteThemeService;
-        private readonly IPreviewTheme _previewTheme;
         private readonly IExtensionManager _extensionManager;
         private readonly ShellDescriptor _shellDescriptor;
+        private readonly IPreviewTheme _previewTheme;
         private readonly IThemeService _themeService;
-        private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IReportsCoordinator _reportsCoordinator;
 
         public AdminController(
-            IDataMigrationManager dataMigraitonManager,
-            IReportsCoordinator reportsCoordinator,
             IOrchardServices services,
-            IThemeManager themeManager,
+            IDataMigrationManager dataMigraitonManager,
             IFeatureManager featureManager,
             ISiteThemeService siteThemeService,
-            IPreviewTheme previewTheme,
-            IAuthorizer authorizer,
-            INotifier notifier,
             IExtensionManager extensionManager,
             ShellDescriptor shellDescriptor,
-            IThemeService themeService) {
+            IPreviewTheme previewTheme, 
+            IThemeService themeService,
+            IReportsCoordinator reportsCoordinator) {
             Services = services;
+
             _dataMigrationManager = dataMigraitonManager;
-            _reportsCoordinator = reportsCoordinator;
             _siteThemeService = siteThemeService;
-            _previewTheme = previewTheme;
             _extensionManager = extensionManager;
             _shellDescriptor = shellDescriptor;
+            _featureManager = featureManager;
+            _previewTheme = previewTheme;
             _themeService = themeService;
+            _reportsCoordinator = reportsCoordinator;
+
             T = NullLocalizer.Instance;
         }
 
@@ -60,7 +59,7 @@ namespace Orchard.Themes.Controllers {
                 var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
                 var themes = _extensionManager.AvailableExtensions()
-                    .Where(d => d.ExtensionType == "Theme")
+                    .Where(d => DefaultExtensionTypes.IsTheme(d.ExtensionType))
                     .Select(d => new ThemeEntry {
                         Descriptor = d,
                         NeedsUpdate = featuresThatNeedUpdate.Contains(d.Id),
@@ -68,8 +67,9 @@ namespace Orchard.Themes.Controllers {
                     })
                     .ToArray();
 
-                var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes };
-                return View(model);
+                return View(new ThemesIndexViewModel {
+                    CurrentTheme = currentTheme, Themes = themes,
+                    InstallThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "Gallery") != null });
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Listing themes failed: " + exception.Message));

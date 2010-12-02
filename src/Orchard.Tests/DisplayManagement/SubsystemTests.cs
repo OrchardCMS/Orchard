@@ -28,7 +28,7 @@ namespace Orchard.Tests.DisplayManagement {
                     Extension = new ExtensionDescriptor
                     {
                         Id = "Testing",
-                        ExtensionType = "Module",
+                        ExtensionType = DefaultExtensionTypes.Module,
                     }
                 }
             };

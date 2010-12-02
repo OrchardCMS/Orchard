@@ -41,7 +41,7 @@ namespace Orchard.Tests.Environment.Extensions {
             }
 
             public StubFolders()
-                : this("Module") {
+                : this(DefaultExtensionTypes.Module) {
             }
 
             public IDictionary<string, string> Manifests { get; set; }
@@ -459,7 +459,7 @@ Features:
         public void FeatureDescriptorsShouldBeLoadedInThemes() {
             var extensionLoader = new StubLoaders();
             var moduleExtensionFolder = new StubFolders();
-            var themeExtensionFolder = new StubFolders("Theme");
+            var themeExtensionFolder = new StubFolders(DefaultExtensionTypes.Theme);
 
             moduleExtensionFolder.Manifests.Add("Alpha", @"
 Name: Alpha
@@ -499,7 +499,7 @@ OrchardVersion: 1
         public void ThemeFeatureDescriptorsShouldBeAbleToDependOnModules() {
             var extensionLoader = new StubLoaders();
             var moduleExtensionFolder = new StubFolders();
-            var themeExtensionFolder = new StubFolders("Theme");
+            var themeExtensionFolder = new StubFolders(DefaultExtensionTypes.Theme);
 
             moduleExtensionFolder.Manifests.Add("Alpha", @"
 Name: Alpha

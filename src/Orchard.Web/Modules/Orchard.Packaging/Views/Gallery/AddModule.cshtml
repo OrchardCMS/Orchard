@@ -1,12 +1,6 @@
-﻿@model ModuleAddViewModel
-@using Orchard.Modules.ViewModels;
-@{
-    Style.Require("ModulesAdmin");
-}
-
-@{
+﻿@{
     <h1>@Html.TitleForPage(T("Install a Module").ToString())</h1>
-    using (Html.BeginFormAntiForgeryPost(Url.Action("add", new { area = "Orchard.Modules" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+    using (Html.BeginFormAntiForgeryPost(Url.Action("AddModule", new { area = "Orchard.Gallery" }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
         Html.ValidationSummary();
         <fieldset>
             <label for="ModulePackage">@T("Module Package")</label>

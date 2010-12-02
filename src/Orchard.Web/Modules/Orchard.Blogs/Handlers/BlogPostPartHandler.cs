@@ -30,9 +30,10 @@ namespace Orchard.Blogs.Handlers {
             OnUpdateEditorShape<BlogPostPart>(SetModelProperties);
 
             OnInitializing<BlogPostPart>((context, bp) => {
-                var blogSlug = requestContext.RouteData.Values.ContainsKey("blogSlug") ? requestContext.RouteData.Values["blogSlug"] as string : null;
-                if (!string.IsNullOrEmpty(blogSlug)) {
-                    bp.BlogPart = blogService.Get(blogSlug);
+                var blogId = requestContext.RouteData.Values.ContainsKey("blogId") ? requestContext.RouteData.Values["blogId"] as string : null;
+                if (!string.IsNullOrEmpty(blogId)) {
+                    var blog = blogService.Get(int.Parse(blogId), VersionOptions.Latest);
+                    bp.BlogPart = blog.As<BlogPart>();
                     return;
                 }
 
@@ -72,14 +73,14 @@ namespace Orchard.Blogs.Handlers {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogPostAdmin"},
                 {"Action", "Create"},
-                {"blogSlug", blogPost.BlogPart.As<RoutePart>().Slug}
+                {"blogId", blogPost.BlogPart.Id}
             };
             context.Metadata.EditorRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogPostAdmin"},
                 {"Action", "Edit"},
                 {"postId", context.ContentItem.Id},
-                {"blogSlug", blogPost.BlogPart.As<RoutePart>().Slug}
+                {"blogId", blogPost.BlogPart.Id}
             };
             context.Metadata.RemoveRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},

@@ -23,7 +23,7 @@ namespace Orchard.Tests.Environment.Extensions {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            _folders = new StubFolders("Module");
+            _folders = new StubFolders(DefaultExtensionTypes.Module);
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
@@ -254,7 +254,7 @@ Features:
         [Test]
         public void ExtensionManagerShouldLoadFeatures() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders("Module");
+            var extensionFolder = new StubFolders(DefaultExtensionTypes.Module);
 
             extensionFolder.Manifests.Add("TestModule", @"
 Name: TestModule
@@ -280,7 +280,7 @@ Features:
         [Test]
         public void ExtensionManagerFeaturesContainNonAbstractClasses() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders("Module");
+            var extensionFolder = new StubFolders(DefaultExtensionTypes.Module);
 
             extensionFolder.Manifests.Add("TestModule", @"
 Name: TestModule
@@ -315,7 +315,7 @@ Features:
         [Test]
         public void ExtensionManagerTestFeatureAttribute() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders("Module");
+            var extensionFolder = new StubFolders(DefaultExtensionTypes.Module);
 
             extensionFolder.Manifests.Add("TestModule", @"
 Name: TestModule
@@ -345,7 +345,7 @@ Features:
         [Test]
         public void ExtensionManagerLoadFeatureReturnsTypesFromSpecificFeaturesWithFeatureAttribute() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders("Module");
+            var extensionFolder = new StubFolders(DefaultExtensionTypes.Module);
 
             extensionFolder.Manifests.Add("TestModule", @"
 Name: TestModule
@@ -373,7 +373,7 @@ Features:
         [Test]
         public void ExtensionManagerLoadFeatureDoesNotReturnTypesFromNonMatchingFeatures() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders("Module");
+            var extensionFolder = new StubFolders(DefaultExtensionTypes.Module);
 
             extensionFolder.Manifests.Add("TestModule", @"
 Name: TestModule
@@ -402,7 +402,7 @@ Features:
         [Test]
         public void ModuleNameIsIntroducedAsFeatureImplicitly() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders("Module");
+            var extensionFolder = new StubFolders(DefaultExtensionTypes.Module);
 
             extensionFolder.Manifests.Add("Minimalistic", @"
 Name: Minimalistic
@@ -421,7 +421,7 @@ OrchardVersion: 1
         [Test]
         public void ThemeNameIsIntroducedAsFeatureImplicitly() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders("Theme");
+            var extensionFolder = new StubFolders(DefaultExtensionTypes.Theme);
 
             extensionFolder.Manifests.Add("Minimalistic", @"
 Name: Minimalistic

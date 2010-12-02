@@ -7,6 +7,7 @@ OrchardVersion: 0.8.0
 Description: An implementation of widgets for Orchard.
 Features:
     Orchard.Widgets:
+        Name: Widgets
         Description: An implementation of widgets.
         Category: Widget
         Dependencies: Orchard.Scripting

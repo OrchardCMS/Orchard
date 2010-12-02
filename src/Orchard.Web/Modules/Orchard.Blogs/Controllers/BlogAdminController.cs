@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
@@ -50,7 +49,7 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
-            BlogPart blog = Services.ContentManager.New<BlogPart>("Blog");
+            var blog = Services.ContentManager.New<BlogPart>("Blog");
             if (blog == null)
                 return HttpNotFound();
 
@@ -81,11 +80,11 @@ namespace Orchard.Blogs.Controllers {
             return Redirect(Url.BlogForAdmin(blog));
         }
 
-        public ActionResult Edit(int id) {
+        public ActionResult Edit(int blogId) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(id, VersionOptions.Latest);
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -95,11 +94,11 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST(int id) {
+        public ActionResult EditPOST(int blogId) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(id, VersionOptions.DraftRequired);
+            var blog = _blogService.Get(blogId, VersionOptions.DraftRequired);
             if (blog == null)
                 return HttpNotFound();
 
@@ -118,11 +117,11 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Remove(int id) {
+        public ActionResult Remove(int blogId) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't delete blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(id, VersionOptions.Latest);
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
 
             if (blog == null)
                 return HttpNotFound();
@@ -148,8 +147,8 @@ namespace Orchard.Blogs.Controllers {
             return View((object)viewModel);
         }
 
-        public ActionResult Item(string blogSlug, Pager pager) {
-            BlogPart blogPart = _blogService.Get(blogSlug);
+        public ActionResult Item(int blogId, Pager pager) {
+            BlogPart blogPart = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
 
             if (blogPart == null)
                 return HttpNotFound();

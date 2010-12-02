@@ -6,9 +6,9 @@ Feature: Setup
 Scenario: Root request shows setup form
     Given I have a clean site with
             | extension | names |
-            | module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
-            | core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc  |
-            | theme | SafeMode |
+            | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
+            | Core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc  |
+            | Theme | SafeMode |
     When I go to "/Default.aspx"
     Then I should see "Welcome to Orchard"
         And I should see "Finish Setup"
@@ -17,9 +17,9 @@ Scenario: Root request shows setup form
 Scenario: Setup folder also shows setup form
     Given I have a clean site with
             | extension | names |
-            | module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
-            | core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc  |
-            | theme | SafeMode |
+            | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
+            | Core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc  |
+            | Theme | SafeMode |
     When I go to "/Setup"
     Then I should see "Welcome to Orchard"
         And I should see "Finish Setup"
@@ -28,9 +28,9 @@ Scenario: Setup folder also shows setup form
 Scenario: Some of the initial form values are required
     Given I have a clean site with
             | extension | names |
-            | module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
-            | core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc  |
-            | theme | SafeMode |
+            | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
+            | Core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc  |
+            | Theme | SafeMode |
     When I go to "/Setup"
         And I hit "Finish Setup"
     Then I should see "<input autofocus="autofocus" class="input-validation-error" id="SiteName" name="SiteName" type="text" value="" />"
@@ -39,9 +39,9 @@ Scenario: Some of the initial form values are required
 Scenario: Calling setup on a brand new install
     Given I have a clean site with
             | extension | names |
-            | module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce |
-            | core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc  |
-            | theme | SafeMode, TheThemeMachine |
+            | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce |
+            | Core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc  |
+            | Theme | SafeMode, TheThemeMachine |
         And I am on "/Setup"
     When I fill in 
             | name | value |

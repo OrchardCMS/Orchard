@@ -18,7 +18,9 @@
         @Model.CurrentTheme.WebSite
     </p>
 
-    @Html.ActionLink(T("Install a new Theme").ToString(), "Install", null, new { @class = "button primaryAction" })
+    if (Model.InstallThemes) {
+        @Html.ActionLink(T("Install a new Theme").ToString(), "Install", null, new { @class = "button primaryAction" })
+    }
 }
 
 <h2>@T("Available Themes")</h2>

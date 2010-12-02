@@ -41,7 +41,7 @@ Scenario: If I create a page which gets a conflicting path generated its path is
     Then I should see "<h1[^>]*>.*?Super Duper.*?</h1>"
         And I should see "This is super number two."
 
-Scenario: A new page marked to be the home page and publish does take over the home page and is not accessible from its own standard path.
+Scenario: A new page marked to be the home page and publish does take over the home page and is not accessible from its own standard path
     Given I have installed Orchard
     When I go to "admin/contents/create/page"
         And I fill in

@@ -19,7 +19,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
     public class ShapeAttributeBindingStrategyTests : ContainerTestBase {
         private Feature _testFeature;
 
-        protected override void Register([NotNull] Autofac.ContainerBuilder builder) {
+        protected override void Register([NotNull] ContainerBuilder builder) {
             if (builder == null) {
                 throw new ArgumentNullException("builder");
             }
@@ -29,7 +29,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                     Id = "Testing",
                     Extension = new ExtensionDescriptor {
                         Id = "Testing",
-                        ExtensionType = "Module",
+                        ExtensionType = DefaultExtensionTypes.Module,
                     }
                 }
             };

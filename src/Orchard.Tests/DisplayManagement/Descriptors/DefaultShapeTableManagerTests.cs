@@ -21,14 +21,14 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                     Id = "Theme1",
                     Extension = new ExtensionDescriptor {
                         Id = "Theme1",
-                        ExtensionType = "Theme"
+                        ExtensionType = DefaultExtensionTypes.Theme
                     }
                 },
                 new FeatureDescriptor {
                     Id = "DerivedTheme",
                     Extension = new ExtensionDescriptor {
                         Id = "DerivedTheme",
-                        ExtensionType = "Theme",
+                        ExtensionType = DefaultExtensionTypes.Theme,
                         BaseTheme = "BaseTheme"
                     }
                 },
@@ -36,7 +36,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                     Id = "BaseTheme",
                     Extension = new ExtensionDescriptor {
                         Id = "BaseTheme",
-                        ExtensionType = "Theme"
+                        ExtensionType = DefaultExtensionTypes.Theme
                     }
                 }
             };
@@ -69,7 +69,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                     Dependencies = Enumerable.Empty<string>(),
                     Extension = new ExtensionDescriptor {
                         Id = "Testing",
-                        ExtensionType = "Module",
+                        ExtensionType = DefaultExtensionTypes.Module,
                     }
                 }
             };

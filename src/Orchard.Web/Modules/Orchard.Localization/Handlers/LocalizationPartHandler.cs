@@ -39,7 +39,8 @@ namespace Orchard.Localization.Handlers {
                 return masterContentItem;
             });
             localizationPart.CultureField.Loader(ctx => _cultureManager.GetCultureById(localizationPart.Record.CultureId));
-            localizationPart.MasterContentItemField.Loader(ctx => _contentManager.Get(localizationPart.Record.MasterContentItemId)); 
+            localizationPart.MasterContentItemField.Loader(ctx =>
+                _contentManager.Get(localizationPart.Record.MasterContentItemId, localizationPart.IsPublished() ? VersionOptions.Published : VersionOptions.Latest)); 
         }
     }
 }

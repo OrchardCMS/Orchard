@@ -7,6 +7,7 @@ OrchardVersion: 0.8.0
 Description: The tags module is providing basic tagging for arbitrary content types. 
 Features:
     Orchard.Tags:
+        Name: Tags
         Description: Tag a content item.
         Dependencies: Settings
         Category: Navigation
