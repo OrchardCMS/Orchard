@@ -7,6 +7,7 @@ OrchardVersion: 0.8.0
 Description: The users module enables user management.
 Features:
     Orchard.Users:
+        Name: Users
         Description: Standard users.
         Category: Core
         Dependencies: Settings

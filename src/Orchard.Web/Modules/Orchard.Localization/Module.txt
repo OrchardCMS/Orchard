@@ -7,6 +7,7 @@ OrchardVersion: 0.8.0
 Description: The localization module enables the localization of content items.
 Features:
     Orchard.Localization:
+        Name: Localization
         Description: Localize content items.
         Dependencies: Settings
         Category: Content

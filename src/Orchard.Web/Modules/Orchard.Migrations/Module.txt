@@ -7,8 +7,10 @@ OrchardVersion: 0.8.0
 Description: Data migration commands.
 Features:
     Orchard.Migrations:
+        Name: Migrations
         Description: Data migration commands.
         Category: Developer
     DatabaseUpdate:
+        Name: Database Update
         Description: Commands for updating the database schema according to the definition of the "Record" classes in code.
         Category: Developer

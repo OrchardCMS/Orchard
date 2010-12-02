@@ -7,5 +7,6 @@ OrchardVersion: 0.8.0
 Description: Tools to create Orchard components.
 Features:
     Orchard.CodeGeneration:
+        Name: Code Generation
         Description: Tools to create Orchard components.
         Category: Developer
