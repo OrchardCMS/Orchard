@@ -9,6 +9,6 @@
         document.addEventListener("submit", show, false);
     }
     else {
-        document.attachEvent("onsubmit", show);
+        document.forms[0].attachEvent("onsubmit", show);
     }
 })();
