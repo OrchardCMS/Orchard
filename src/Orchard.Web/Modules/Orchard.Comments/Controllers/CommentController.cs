@@ -23,7 +23,7 @@ namespace Orchard.Comments.Controllers {
 
         public Localizer T { get; set; }
 
-        [HttpPost]
+        [HttpPost, ValidateInput(false)]
         public ActionResult Create(string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
                 return !String.IsNullOrEmpty(returnUrl)
