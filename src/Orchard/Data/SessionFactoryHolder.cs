@@ -86,6 +86,23 @@ namespace Orchard.Data {
                 _dataServicesProviderFactory
                     .CreateProvider(parameters)
                     .BuildConfiguration(parameters));
+            
+            #region NH-2.1.2 specific optimization
+            // cannot be done in fluent config
+            // the IsSelectable = false prevents unused ContentPartRecord proxies from being created 
+            // for each ContentItemRecord or ContentItemVersionRecord.
+            // done for perf reasons - has no other side-effect
+
+            foreach (var persistentClass in config.ClassMappings) {
+                if (persistentClass.EntityName.StartsWith("Orchard.ContentManagement.Records.")) {
+                    foreach (var property in persistentClass.PropertyIterator) {
+                        if (property.Name.EndsWith("Record") && !property.IsBasicPropertyAccessor) {
+                            property.IsSelectable = false;
+                        }
+                    }
+                }
+            }
+            #endregion
 
             return config;
         }
