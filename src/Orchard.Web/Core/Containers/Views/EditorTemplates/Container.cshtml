@@ -6,9 +6,9 @@
         @Html.SelectOption(Model.Record.OrderByProperty, "CommonPart.PublishedUtc", T("Date Published").Text)
         @Html.SelectOption(Model.Record.OrderByProperty, "RoutePart.Title", T("Title").Text)
         @Html.SelectOption(Model.Record.OrderByProperty, "RoutePart.Slug", T("Slug").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "ContainerCustomPart.CustomOne", T("Custom 1").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "ContainerCustomPart.CustomTwo", T("Custom 2").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "ContainerCustomPart.CustomThree", T("Custom 3").Text)
+        @Html.SelectOption(Model.Record.OrderByProperty, "CustomPropertiesPart.CustomOne", T("Custom 1").Text)
+        @Html.SelectOption(Model.Record.OrderByProperty, "CustomPropertiesPart.CustomTwo", T("Custom 2").Text)
+        @Html.SelectOption(Model.Record.OrderByProperty, "CustomPropertiesPart.CustomThree", T("Custom 3").Text)
     </select>
     <select id="@Html.FieldIdFor(m => m.Record.OrderByDirection)" name="@Html.FieldNameFor(m => m.Record.OrderByDirection)">
         @Html.SelectOption(Model.Record.OrderByDirection, (int)OrderByDirection.Ascending, T("Ascending").Text)
