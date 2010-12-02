@@ -35,16 +35,16 @@ namespace Orchard.Core.Containers.Drivers {
         }
 
         protected override DriverResult Editor(ContainerPart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
-        }
-
-        protected override DriverResult Editor(ContainerPart part, IUpdateModel updater, dynamic shapeHelper) {
             // if there are no containable items then show a nice little warning
             if (!_contentDefinitionManager.ListTypeDefinitions()
                 .Where(typeDefinition => typeDefinition.Parts.Any(partDefinition => partDefinition.PartDefinition.Name == "ContainablePart")).Any()) {
                 Services.Notifier.Warning(T("There are no content types in the system with a Containable part attached. Consider adding a Containable part to some content type, existing or new, in order to relate items to this (Container enabled) item."));
             }
 
+            return Editor(part, null, shapeHelper);
+        }
+
+        protected override DriverResult Editor(ContainerPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape(
                 "Parts_Container_Edit",
                 () => {
