@@ -57,19 +57,19 @@ namespace Orchard.Users.Controllers {
             if (_authenticationService.GetAuthenticatedUser() != null)
                 return Redirect("~/");
 
-            return View(new LogOnViewModel {Title = "Log On"});
+            return View(new LogOnViewModel { Title = T("Log On").Text });
         }
 
         [HttpPost]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
-        public ActionResult LogOn(string userNameOrEmail, string password, bool rememberMe, string returnUrl) {
+        public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl) {
             var user = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
-                return View(new LogOnViewModel {Title = "Log On"});
+                return View(new LogOnViewModel { Title = T("Log On").Text });
             }
 
-            _authenticationService.SignIn(user, rememberMe);
+            _authenticationService.SignIn(user, false);
 
             if (string.IsNullOrEmpty(returnUrl))
                 return new RedirectResult("~/");
