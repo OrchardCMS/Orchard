@@ -8,7 +8,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
-using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
@@ -62,9 +61,10 @@ namespace Orchard.Core.Contents.Controllers {
                                             : contentTypeDefinition.Name;
                 query = query.ForType(model.TypeName);
             }
-
-            if (model.ContainerId != null)
+            // content type and container filters are mutually exclusive
+            else if (model.ContainerId != null) {
                 query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
+            }
 
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
