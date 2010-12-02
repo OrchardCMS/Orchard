@@ -16,13 +16,34 @@ namespace Orchard.Core.Contents {
                 new RouteDescriptor {
                     Priority = 5,
                     Route = new Route(
-                        "Admin/Contents/List/InContainer/{containerId}",
+                        "Admin/Contents/List/{id}/InContainer/{containerId}",
                         new RouteValueDictionary {
                             {"area", "Contents"},
                             {"controller", "Admin"},
                             {"action", "List"}
                         },
-                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"id", @"\w+"},
+                            {"containerId", @"\d+"}
+                        },
+                        new RouteValueDictionary {
+                            {"area", "Contents"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 5,
+                    Route = new Route(
+                        "Admin/Contents/List/InContainer/{containerId}",
+                        new RouteValueDictionary {
+                            {"area", "Contents"},
+                            {"controller", "Admin"},
+                            {"action", "List"},
+                            {"id", ""}
+                        },
+                        new RouteValueDictionary{
+                            {"containerId", @"\d+"}
+                        },
                         new RouteValueDictionary {
                             {"area", "Contents"}
                         },

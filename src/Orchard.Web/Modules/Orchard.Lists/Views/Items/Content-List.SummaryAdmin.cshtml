@@ -8,7 +8,7 @@
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
         <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
-        <h3>@Html.Link(contentItemMetadata.DisplayText, Url.Action("List", "Admin", new { area = "Contents", containerId = contentItem.Id }))</h3>
+        <h3>@Html.Link(contentItemMetadata.DisplayText, Url.Action("List", "Admin", new { area = "Contents", containerId = contentItem.Id, id = "" }))</h3>
         @if (Model.Header != null) {
         <div class="header">@Display(Model.Header)</div>
         }
@@ -18,7 +18,7 @@
     </div>
     <div class="related">
         @Display(Model.Actions)
-        @Html.Link(T("List Items").Text, Url.Action("List", "Admin", new { area = "Contents", containerId = contentItem.Id }))@T(" | ")
+        @Html.Link(T("List Items").Text, Url.Action("List", "Admin", new { area = "Contents", containerId = contentItem.Id, id = "" }))@T(" | ")
         @Html.ItemEditLink(T("Edit").Text, contentItem) @T(" | ")
         @Html.Link(T("Remove").Text, Url.Action("Remove", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
     </div>

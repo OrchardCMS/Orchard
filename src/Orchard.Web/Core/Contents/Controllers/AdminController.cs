@@ -61,8 +61,8 @@ namespace Orchard.Core.Contents.Controllers {
                                             : contentTypeDefinition.Name;
                 query = query.ForType(model.TypeName);
             }
-            // content type and container filters are mutually exclusive
-            else if (model.ContainerId != null) {
+            
+            if (model.ContainerId != null) {
                 query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
             }
 
