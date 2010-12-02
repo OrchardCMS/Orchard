@@ -58,7 +58,6 @@ blockquote, q { quotes: "" ""; }
 header, footer, aside, nav, article { display: block; }
 /* end: reset */
 
-
 /* Clearing Floats
 ***************************************************************/
 
@@ -458,6 +457,10 @@ form.inline fieldset {
     height:auto;
     margin:0 1.4em 0 0;
     padding-top:0;
+}
+
+input[type="checkbox"]:focus, input[type="radio"]:focus {
+    outline:1px dotted #666d51;
 }
 
 legend span {
