@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
@@ -24,7 +25,7 @@ namespace Orchard.Blogs.Handlers {
             _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             Filters.Add(StorageFilter.For(repository));
 
-            OnPublished<RoutePart>((context, route) => {
+            Action<PublishContentContext, RoutePart> publishedHandler = (context, route) => {
                 if (route.Is<BlogPart>()) {
                     if (route.ContentItem.Id != 0 && route.PromoteToHomePage)
                         _blogSlugConstraint.AddSlug("");
@@ -32,12 +33,15 @@ namespace Orchard.Blogs.Handlers {
                 else if (route.ContentItem.Id != 0 && route.PromoteToHomePage) {
                     _blogSlugConstraint.RemoveSlug("");
                 }
-            });
+            };
+
+            OnPublished<RoutePart>(publishedHandler);
+            OnUnpublished<RoutePart>(publishedHandler);
 
             OnGetDisplayShape<BlogPart>((context, blog) => {
-                                            context.Shape.Description = blog.Description;
-                                            context.Shape.PostCount = blog.PostCount;
-                                        });
+                context.Shape.Description = blog.Description;
+                context.Shape.PostCount = blog.PostCount;
+            });
         }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {

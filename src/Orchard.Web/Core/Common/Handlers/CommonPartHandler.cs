@@ -45,7 +45,9 @@ namespace Orchard.Core.Common.Handlers {
             OnVersioned<ContentPart<CommonPartVersionRecord>>(AssignVersioningDates);
 
             OnPublishing<CommonPart>(AssignPublishingDates);
+            OnUnpublishing<CommonPart>(AssignPublishingDates);
             OnPublishing<ContentPart<CommonPartVersionRecord>>(AssignPublishingDates);
+            OnUnpublishing<ContentPart<CommonPartVersionRecord>>(AssignPublishingDates);
 
             OnIndexing<CommonPart>((context, commonPart) => context.DocumentIndex
                                                     .Add("type", commonPart.ContentItem.ContentType).Store()

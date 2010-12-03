@@ -50,6 +50,7 @@ namespace Orchard.Blogs.Handlers {
             });
             OnCreated<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
             OnPublished<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
+            OnUnpublished<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
             OnVersioned<BlogPostPart>((context, bp1, bp2) => updateBlogPostCount(bp2.BlogPart));
             OnRemoved<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
 

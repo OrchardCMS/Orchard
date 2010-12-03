@@ -11,7 +11,9 @@
         public virtual void Versioned(VersionContentContext context) {}
         public virtual void Publishing(PublishContentContext context) {}
         public virtual void Published(PublishContentContext context) {}
-        public virtual void Removing(RemoveContentContext context) {}
+        public virtual void Unpublishing(PublishContentContext context) { }
+        public virtual void Unpublished(PublishContentContext context) { }
+        public virtual void Removing(RemoveContentContext context) { }
         public virtual void Removed(RemoveContentContext context) {}
         public virtual void Indexing(IndexContentContext context) {}
         public virtual void Indexed(IndexContentContext context) {}
