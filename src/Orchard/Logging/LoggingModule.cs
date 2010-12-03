@@ -11,6 +11,12 @@ using Module = Autofac.Module;
 namespace Orchard.Logging {
 
     public class LoggingModule : Module {
+        private readonly IDictionary<string, ILogger> _loggerCache;
+
+        public LoggingModule() {
+            _loggerCache = new Dictionary<string, ILogger>();
+        }
+
         protected override void Load(ContainerBuilder moduleBuilder) {
             // by default, use Orchard's logger that delegates to Castle's logger factory
             moduleBuilder.RegisterType<CastleLoggerFactory>().As<ILoggerFactory>().InstancePerLifetimeScope();
@@ -65,8 +71,15 @@ namespace Orchard.Logging {
                 var propertyInfo = entry.PropertyInfo;
 
                 yield return (ctx, instance) => {
-                    var propertyValue = ctx.Resolve<ILogger>(new TypedParameter(typeof(Type), componentType));
-                    propertyInfo.SetValue(instance, propertyValue, null);
+                    string component = componentType.ToString();
+                    if (_loggerCache.ContainsKey(component)) {
+                        propertyInfo.SetValue(instance, _loggerCache[component], null);
+                    }
+                    else {
+                        var propertyValue = ctx.Resolve<ILogger>(new TypedParameter(typeof(Type), componentType));
+                        _loggerCache.Add(component, propertyValue);
+                        propertyInfo.SetValue(instance, propertyValue, null);  
+                    }
                 };
             }
         }
