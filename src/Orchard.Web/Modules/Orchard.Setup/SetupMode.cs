@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Routing;
 using Autofac;
 using JetBrains.Annotations;
+using Orchard.Caching;
 using Orchard.Commands;
 using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
@@ -46,6 +46,7 @@ namespace Orchard.Setup {
             builder.RegisterModule(new MvcModule());
             builder.RegisterModule(new CommandModule());
             builder.RegisterModule(new WorkContextModule());
+            builder.RegisterModule(new CacheModule());
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();

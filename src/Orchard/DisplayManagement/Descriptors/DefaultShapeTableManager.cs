@@ -1,29 +1,30 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac.Features.Metadata;
+using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Utility;
 
 namespace Orchard.DisplayManagement.Descriptors {
 
-    public class DefaultShapeTableManager : IShapeTableManager, ISingletonDependency {
+    public class DefaultShapeTableManager : IShapeTableManager {
         private readonly IEnumerable<Meta<IShapeTableProvider>> _bindingStrategies;
         private readonly IExtensionManager _extensionManager;
+        private readonly ICacheManager _cacheManager;
 
         public DefaultShapeTableManager(
             IEnumerable<Meta<IShapeTableProvider>> bindingStrategies,
-            IExtensionManager extensionManager) {
+            IExtensionManager extensionManager,
+            ICacheManager cacheManager) {
             _extensionManager = extensionManager;
+            _cacheManager = cacheManager;
             _bindingStrategies = bindingStrategies;
         }
 
-        readonly ConcurrentDictionary<string, ShapeTable> _tables = new ConcurrentDictionary<string, ShapeTable>();
-
         public ShapeTable GetShapeTable(string themeName) {
-            return _tables.GetOrAdd(themeName ?? "", x => {
+            return _cacheManager.Get(themeName ?? "", x => {
                 var builderFactory = new ShapeTableBuilderFactory();
                 foreach (var bindingStrategy in _bindingStrategies) {
                     Feature strategyDefaultFeature = bindingStrategy.Metadata.ContainsKey("Feature") ?
