@@ -7,6 +7,7 @@ using HtmlAgilityPack;
 using log4net.Appender;
 using log4net.Core;
 using NUnit.Framework;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Specs.Hosting;
 using TechTalk.SpecFlow;
 using Path = Bleroy.FluentPath.Path;
@@ -60,8 +61,8 @@ namespace Orchard.Specs.Bindings {
         }
 
         [Given(@"I have a clean site")]
-        public void GivenIHaveACleanSite() {
-            GivenIHaveACleanSiteBasedOn("Orchard.Web");
+        public void GivenIHaveACleanSite(string virtualDirectory = "/") {
+            GivenIHaveACleanSiteBasedOn("Orchard.Web", virtualDirectory);
         }
 
         [Given(@"I have chosen to deploy modules as source files only")]
@@ -71,8 +72,13 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have a clean site based on (.*)")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
+            GivenIHaveACleanSiteBasedOn(siteFolder, "/");
+        }
+
+        [Given(@"I have a clean site based on (.*) at ""(.*)""")]
+        public void GivenIHaveACleanSiteBasedOn(string siteFolder, string virtualDirectory) {
             _webHost = new WebHost(_orchardTemp);
-            Host.Initialize(siteFolder, "/");
+            Host.Initialize(siteFolder, virtualDirectory ?? "/");
             var shuttle = new Shuttle();
             Host.Execute(() => {
                 log4net.Config.BasicConfigurator.Configure(new CastleAppender());
@@ -125,17 +131,23 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have a clean site with")]
         public void GivenIHaveACleanSiteWith(Table table) {
-            GivenIHaveACleanSite();
+            GivenIHaveACleanSiteWith("/", table);
+        }
+
+
+        [Given(@"I have a clean site at ""(.*)"" with")]
+        public void GivenIHaveACleanSiteWith(string virtualDirectory, Table table) {
+            GivenIHaveACleanSite(virtualDirectory);
             foreach (var row in table.Rows) {
                 foreach (var name in row["names"].Split(',').Select(x => x.Trim())) {
                     switch (row["extension"]) {
-                        case "core":
+                        case DefaultExtensionTypes.Core:
                             GivenIHaveCore(name);
                             break;
-                        case "module":
+                        case DefaultExtensionTypes.Module:
                             GivenIHaveModule(name);
                             break;
-                        case "theme":
+                        case DefaultExtensionTypes.Theme:
                             GivenIHaveTheme(name);
                             break;
                         default:
@@ -202,6 +214,23 @@ namespace Orchard.Specs.Bindings {
                             else if (radio.Attributes.Contains("checked"))
                                 radio.Attributes.Remove("checked");
                         }
+                        break;
+                    case "checkbox":
+                        if (string.Equals(row["value"], "true", StringComparison.OrdinalIgnoreCase)) {
+                            input.Attributes.Add("checked", "checked");
+                        }
+                        else {
+                            input.Attributes.Remove("checked");
+                        }
+
+                        var hiddenForCheckbox = inputs.Where(
+                            x =>
+                            x.GetAttributeValue("type", "") == "hidden" &&
+                            x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]
+                            ).FirstOrDefault();
+                        if (hiddenForCheckbox != null)
+                            hiddenForCheckbox.Attributes.Add("value", row["value"]);
+
                         break;
                     default:
                         input.Attributes.Add("value", row["value"]);

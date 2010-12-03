@@ -153,11 +153,13 @@
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Environment\Extensions\Models\DefaultExtensionTypes.cs" />
     <Compile Include="Environment\HostEnvironment.cs" />
     <Compile Include="Environment\DefaultHostEnvironment.cs" />
     <Compile Include="Environment\Extensions\Loaders\RawThemeExtensionLoader.cs" />
     <Compile Include="Environment\Features\FeatureManager.cs" />
     <Compile Include="Environment\IAssemblyLoader.cs" />
+    <Compile Include="Environment\ViewsBackgroundCompilation.cs" />
     <Compile Include="Environment\WorkContextImplementation.cs" />
     <Compile Include="Environment\WorkContextModule.cs" />
     <Compile Include="Environment\WorkContextProperty.cs" />
@@ -309,7 +311,6 @@
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\SaveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\StorageFilter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -640,9 +641,7 @@
     <Compile Include="Events\EventsRegistrationSource.cs" />
     <Compile Include="Environment\Configuration\IShellSettingsManagerEventHandler.cs" />
     <Compile Include="Events\IEventBus.cs" />
-    <Compile Include="Environment\Extensions\Folders\AreaFolders.cs" />
     <Compile Include="Environment\Extensions\Folders\ExtensionFolders.cs" />
-    <Compile Include="Environment\Extensions\Loaders\AreaExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Models\Feature.cs" />
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />

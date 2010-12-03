@@ -71,7 +71,6 @@
     <Content Include="Content\orchard.ico" />
     <Content Include="Styles\orchard-themes-admin.css" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Admin\Install.cshtml" />
     <Content Include="Views\ThemePreview.cshtml" />
   </ItemGroup>
   <ItemGroup>

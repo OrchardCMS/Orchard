@@ -25,11 +25,11 @@ namespace Orchard.Localization.Drivers {
                                : part.Id;
             return Combined(
                 ContentShape("Parts_Localization_ContentTranslations",
-                             () => shapeHelper.Parts_Localization_ContentTranslations(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part))),
+                             () => shapeHelper.Parts_Localization_ContentTranslations(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
                 ContentShape("Parts_Localization_ContentTranslations_Summary",
-                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part))),
+                             () => shapeHelper.Parts_Localization_ContentTranslations_Summary(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part, VersionOptions.Published))),
                 ContentShape("Parts_Localization_ContentTranslations_SummaryAdmin",
-                             () => shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part)))
+                             () => shapeHelper.Parts_Localization_ContentTranslations_SummaryAdmin(ContentPart: part, MasterId: masterId, Localizations: GetDisplayLocalizations(part, VersionOptions.Latest)))
                 );
         }
 
@@ -56,8 +56,8 @@ namespace Orchard.Localization.Drivers {
             return Editor(part, shapeHelper);
         }
 
-        private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part) {
-            return _localizationService.GetLocalizations(part.ContentItem)
+        private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part, VersionOptions versionOptions) {
+            return _localizationService.GetLocalizations(part.ContentItem, versionOptions)
                 .Select(c => {
                             var localized = c.ContentItem.As<LocalizationPart>();
                             if (localized.Culture == null)
@@ -67,7 +67,7 @@ namespace Orchard.Localization.Drivers {
         }
 
         private IEnumerable<LocalizationPart> GetEditorLocalizations(LocalizationPart part) {
-            return _localizationService.GetLocalizations(part.ContentItem)
+            return _localizationService.GetLocalizations(part.ContentItem, VersionOptions.Latest)
                 .Select(c => {
                     var localized = c.ContentItem.As<LocalizationPart>();
                     if (localized.Culture == null)

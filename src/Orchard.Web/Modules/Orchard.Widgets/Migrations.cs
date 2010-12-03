@@ -60,15 +60,6 @@ namespace Orchard.Widgets {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            ContentDefinitionManager.AlterTypeDefinition("WidgetPage",
-                cfg => cfg
-                    .WithPart("CommonPart")
-                    .WithPart("RoutePart")
-                    .WithPart("WidgetBagPart")
-                    .WithPart("MenuPart")
-                    .Creatable()
-                );
-
             return 1;
         }
     }

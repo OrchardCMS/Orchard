@@ -7,6 +7,7 @@ OrchardVersion: 0.8.0
 Description: The Messaging module adds messaging functionalities.
 Features:
     Orchard.Messaging:
+        Name: Messaging
         Description: Messaging services.
         Category: Messaging
         Dependencies: Settings

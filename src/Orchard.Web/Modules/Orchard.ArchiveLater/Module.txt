@@ -7,6 +7,7 @@ OrchardVersion: 0.8.0
 Description: The ArhiveLater module introduces scheduled archiving functionality.
 Features:
     Orchard.ArchiveLater:
+        Name: Archive Later
         Description: Scheduled archiving.
         Category: Content
         Dependencies: Common, Scheduling, Orchard.jQuery

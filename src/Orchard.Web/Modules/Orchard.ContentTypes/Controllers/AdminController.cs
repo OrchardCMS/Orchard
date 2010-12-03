@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.ViewModels;
@@ -12,10 +13,12 @@ using Orchard.UI.Notify;
 namespace Orchard.ContentTypes.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentDefinitionService _contentDefinitionService;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public AdminController(IOrchardServices orchardServices, IContentDefinitionService contentDefinitionService) {
+        public AdminController(IOrchardServices orchardServices, IContentDefinitionService contentDefinitionService, IContentDefinitionManager contentDefinitionManager) {
             Services = orchardServices;
             _contentDefinitionService = contentDefinitionService;
+            _contentDefinitionManager = contentDefinitionManager;
             T = NullLocalizer.Instance;
         }
 
@@ -222,7 +225,8 @@ namespace Orchard.ContentTypes.Controllers {
 
         public ActionResult ListParts() {
             return View(new ListContentPartsViewModel {
-                Parts = _contentDefinitionService.GetParts()
+                // only user-defined parts (not code as they are not configurable)
+                Parts = _contentDefinitionManager.ListPartDefinitions().Select(cpd => new EditPartViewModel(cpd))
             });
         }
 
@@ -238,13 +242,17 @@ namespace Orchard.ContentTypes.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content part.")))
                 return new HttpUnauthorizedResult();
 
-            var partViewModel = _contentDefinitionService.AddPart(viewModel);
-
             if (!ModelState.IsValid)
                 return View(viewModel);
 
-            Services.Notifier.Information(T("The \"{0}\" content part has been created.", partViewModel.Name));
+            var partViewModel = _contentDefinitionService.AddPart(viewModel);
 
+            if (partViewModel == null) {
+                Services.Notifier.Information(T("The content part could not be created."));
+                return View(viewModel);
+            }
+
+            Services.Notifier.Information(T("The \"{0}\" content part has been created.", partViewModel.Name));
             return RedirectToAction("EditPart", new { id = partViewModel.Name });
         }
 
@@ -318,8 +326,8 @@ namespace Orchard.ContentTypes.Controllers {
             if (partViewModel == null) {
                 //id passed in might be that of a type w/ no implicit field
                 if (typeViewModel != null) {
-                    partViewModel = new EditPartViewModel { Name = typeViewModel.Name };
-                    _contentDefinitionService.AddPart(new CreatePartViewModel { Name = partViewModel.Name });
+                    partViewModel = new EditPartViewModel {Name = typeViewModel.Name};
+                    _contentDefinitionService.AddPart(new CreatePartViewModel {Name = partViewModel.Name});
                     _contentDefinitionService.AddPartToType(partViewModel.Name, typeViewModel.Name);
                 }
                 else {
@@ -333,7 +341,14 @@ namespace Orchard.ContentTypes.Controllers {
                 return AddFieldTo(id);
             }
 
-            _contentDefinitionService.AddFieldToPart(viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
+            try {
+                _contentDefinitionService.AddFieldToPart(viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
+            }
+            catch (Exception ex) {
+                Services.Notifier.Information(T("The \"{0}\" field was not added. {1}", viewModel.DisplayName, ex.Message));
+                Services.TransactionManager.Cancel();
+                return AddFieldTo(id);
+            }
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();

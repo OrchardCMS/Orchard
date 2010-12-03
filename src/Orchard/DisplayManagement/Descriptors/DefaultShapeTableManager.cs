@@ -67,12 +67,11 @@ namespace Orchard.DisplayManagement.Descriptors {
             }
 
             var extensionType = alteration.Feature.Descriptor.Extension.ExtensionType;
-
-            if (extensionType == "Module") {
+            if (DefaultExtensionTypes.IsModule(extensionType)) {
                 return true;
             }
 
-            if (extensionType == "Theme") {
+            if (DefaultExtensionTypes.IsTheme(extensionType)) {
                 // alterations from themes must be from the given theme or a base theme
                 var featureName = alteration.Feature.Descriptor.Id;
                 return featureName == themeName || IsBaseTheme(featureName, themeName);

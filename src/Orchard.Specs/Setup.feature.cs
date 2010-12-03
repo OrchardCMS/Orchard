@@ -65,15 +65,15 @@ this.ScenarioSetup(scenarioInfo);
                         "extension",
                         "names"});
             table1.AddRow(new string[] {
-                        "module",
+                        "Module",
                         "Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Or" +
                             "chard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce"});
             table1.AddRow(new string[] {
-                        "core",
+                        "Core",
                         "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, S" +
                             "ettings, Shapes, XmlRpc"});
             table1.AddRow(new string[] {
-                        "theme",
+                        "Theme",
                         "SafeMode"});
 #line 7
 testRunner.Given("I have a clean site with", ((string)(null)), table1);
@@ -101,15 +101,15 @@ this.ScenarioSetup(scenarioInfo);
                         "extension",
                         "names"});
             table2.AddRow(new string[] {
-                        "module",
+                        "Module",
                         "Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Or" +
                             "chard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce"});
             table2.AddRow(new string[] {
-                        "core",
+                        "Core",
                         "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, S" +
                             "ettings, Shapes, XmlRpc"});
             table2.AddRow(new string[] {
-                        "theme",
+                        "Theme",
                         "SafeMode"});
 #line 18
 testRunner.Given("I have a clean site with", ((string)(null)), table2);
@@ -137,15 +137,15 @@ this.ScenarioSetup(scenarioInfo);
                         "extension",
                         "names"});
             table3.AddRow(new string[] {
-                        "module",
+                        "Module",
                         "Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Or" +
                             "chard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce"});
             table3.AddRow(new string[] {
-                        "core",
+                        "Core",
                         "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, S" +
                             "ettings, Shapes, XmlRpc"});
             table3.AddRow(new string[] {
-                        "theme",
+                        "Theme",
                         "SafeMode"});
 #line 29
 testRunner.Given("I have a clean site with", ((string)(null)), table3);
@@ -175,16 +175,16 @@ this.ScenarioSetup(scenarioInfo);
                         "extension",
                         "names"});
             table4.AddRow(new string[] {
-                        "module",
+                        "Module",
                         "Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Or" +
                             "chard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard" +
                             ".Modules, Orchard.Widgets, Orchard.jQuery, TinyMce"});
             table4.AddRow(new string[] {
-                        "core",
+                        "Core",
                         "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, S" +
                             "ettings, Shapes, XmlRpc"});
             table4.AddRow(new string[] {
-                        "theme",
+                        "Theme",
                         "SafeMode, TheThemeMachine"});
 #line 40
 testRunner.Given("I have a clean site with", ((string)(null)), table4);

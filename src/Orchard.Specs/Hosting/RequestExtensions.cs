@@ -4,10 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Hosting;
-using HtmlAgilityPack;
-using Orchard.Commands;
 using Orchard.Specs.Util;
 
 namespace Orchard.Specs.Hosting {
@@ -16,12 +15,13 @@ namespace Orchard.Specs.Hosting {
 
             var physicalPath = Bleroy.FluentPath.Path.Get(webHost.PhysicalDirectory);
 
+            urlPath = StripVDir(urlPath, webHost.VirtualDirectory);
             var details = new RequestDetails {
                 HostName = webHost.HostName,
                 UrlPath = urlPath,
                 Page = physicalPath
                     .Combine(urlPath.TrimStart('/', '\\'))
-                    .GetRelativePath(physicalPath),
+                    .GetRelativePath(physicalPath)
             };
 
             if (!string.IsNullOrEmpty(webHost.Cookies)) {
@@ -46,10 +46,37 @@ namespace Orchard.Specs.Hosting {
             string setCookie;
             if (details.ResponseHeaders.TryGetValue("Set-Cookie", out setCookie)) {
                 Trace.WriteLine(string.Format("Set-Cookie: {0}", setCookie));
-                webHost.Cookies = (webHost.Cookies + ';' + setCookie.Split(';').FirstOrDefault()).Trim(';');
+                var cookieName = setCookie.Split(';')[0].Split('=')[0];
+                DateTime expires;
+                if (!string.IsNullOrEmpty(webHost.Cookies)
+                    && setCookie.Contains("expires=")
+                    && DateTime.TryParse(setCookie.Split(new[] { "expires=" }, 2, StringSplitOptions.None)[1].Split(';')[0], out expires)
+                    && expires < DateTime.Now) {
+                    // remove
+                    Trace.WriteLine(string.Format("Removing cookie: {0}", cookieName));
+                    webHost.Cookies = Regex.Replace(webHost.Cookies, string.Format("{0}=[^;]*;?", cookieName), "");
+                }
+                else if (!string.IsNullOrEmpty(webHost.Cookies)
+                    && Regex.IsMatch(webHost.Cookies, string.Format("\b{0}=", cookieName))) {
+                    // replace
+                    Trace.WriteLine(string.Format("Replacing cookie: {0}", cookieName));
+                    webHost.Cookies = Regex.Replace(webHost.Cookies, string.Format("{0}=[^;]*(;?)", cookieName), string.Format("{0}$1", setCookie.Split(';')[0]));
+                }
+                else {
+                    // add
+                    Trace.WriteLine(string.Format("Adding cookie: {0}", cookieName));
+                    webHost.Cookies = (webHost.Cookies + ';' + setCookie.Split(';').FirstOrDefault()).Trim(';');
+                }
+                Trace.WriteLine(string.Format("Cookie jar: {0}", webHost.Cookies));
             }
 
             return details;
+        }
+
+        private static string StripVDir(string urlPath, string virtualDirectory) {
+            return urlPath.StartsWith(virtualDirectory, StringComparison.OrdinalIgnoreCase)
+                ? urlPath.Substring(virtualDirectory.Length)
+                : urlPath;
         }
 
         public static RequestDetails SendRequest(this WebHost webHost, string urlPath) {

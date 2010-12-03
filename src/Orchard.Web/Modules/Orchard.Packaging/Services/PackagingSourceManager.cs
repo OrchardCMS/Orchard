@@ -10,8 +10,8 @@ using Orchard.Packaging.Models;
 namespace Orchard.Packaging.Services {
     [OrchardFeature("Gallery")]
     public class PackagingSourceManager : IPackagingSourceManager {
-        private const string ModulesFilter = "Orchard.Module.";
-        private const string ThemesFilter = "Orchard.Theme.";
+        public const string ModulesFilter = "Orchard.Module.";
+        public const string ThemesFilter = "Orchard.Theme.";
 
         private readonly IRepository<PackagingSource> _packagingSourceRecordRepository;
 

@@ -40,3 +40,29 @@ Scenario: If I create a page which gets a conflicting path generated its path is
         And I go to "super-duper-2"
     Then I should see "<h1[^>]*>.*?Super Duper.*?</h1>"
         And I should see "This is super number two."
+
+Scenario: A new page marked to be the home page and publish does take over the home page and is not accessible from its own standard path
+    Given I have installed Orchard
+    When I go to "admin/contents/create/page"
+        And I fill in
+            | name | value |
+            | Routable.Title | Super Duper |
+            | Body.Text | This is a draft of the new home page. |
+            | Routable.PromoteToHomePage | true |
+        And I hit "Publish Now"
+        And I go to "/Default.aspx"
+    Then I should see "<h1>Super Duper</h1>"
+    When I go to "super-duper"
+    Then the status should be 404 "Not Found"
+
+Scenario: A new page marked to be the home page but only saved as draft does not take over the home page
+    Given I have installed Orchard
+    When I go to "admin/contents/create/page"
+        And I fill in
+            | name | value |
+            | Routable.Title | Drafty |
+            | Body.Text | This is a draft of the new home page. |
+            | Routable.PromoteToHomePage | true |
+        And I hit "Save"
+        And I go to "/Default.aspx"
+    Then I should see "<h1>Welcome to Orchard!</h1>"

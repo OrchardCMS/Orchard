@@ -5,14 +5,14 @@
         void Initializing(InitializingContentContext context);
         void Creating(CreateContentContext context);
         void Created(CreateContentContext context);
-        void Saving(SaveContentContext context);
-        void Saved(SaveContentContext context);
         void Loading(LoadContentContext context);
         void Loaded(LoadContentContext context);
         void Versioning(VersionContentContext context);
         void Versioned(VersionContentContext context);
         void Publishing(PublishContentContext context);
         void Published(PublishContentContext context);
+        void Unpublishing(PublishContentContext context);
+        void Unpublished(PublishContentContext context);
         void Removing(RemoveContentContext context);
         void Removed(RemoveContentContext context);
         void Indexing(IndexContentContext context);

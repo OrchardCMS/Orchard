@@ -23,7 +23,7 @@
         if (featureGroup == featureGroups.Last()) {
             categoryClassName += " last";
         }
-        
+
         //temporarily "disable" actions on core features
         var showActions = categoryName.ToString() != "Core";
     <li class="@categoryClassName">
@@ -44,10 +44,11 @@
                 }
                 var dependencies = (from d in feature.Descriptor.Dependencies
                                     select (from f in Model.Features where f.Descriptor.Id == d select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);                
-            @* todo: missingDependencies -- show them in a special way. Can be found like this:
                 var missingDependencies = feature.Descriptor.Dependencies
                     .Where(d => !Model.Features.Any(f => f.Descriptor.Id == d));
-             *@
+                if (showActions) {
+                    showActions = missingDependencies.Count() == 0;
+                }
             <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
                 <div class="summary">
                     <div class="properties">
@@ -60,6 +61,11 @@
                         "",
                         "dependency",
                         "")
+                        </div>}
+                        @if (missingDependencies.Any()) {
+                        <div class="missingdependencies">
+                            <h4>@T("Missing:")</h4>
+                            @Html.UnorderedList(missingDependencies, (s, i) => MvcHtmlString.Create(s), "", "missingdependency", "")
                         </div>}
                     </div>
                     <div class="actions">
@@ -90,5 +96,4 @@
             </li>}
         }</ul>
     </li>}
-}</ul>}   
-
+}</ul>}

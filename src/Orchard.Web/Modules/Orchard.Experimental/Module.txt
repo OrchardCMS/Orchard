@@ -7,16 +7,20 @@ OrchardVersion: 0.8.0
 Description: An assortment of debugging tools.
 Features:
     Orchard.Experimental:
+        Name: Experimental
         Description: An assortment of debugging tools.
         Category: Developer
     Profiling:
+        Name: Profiling
         Description: Tools to help profile Orchard.
         Category: Developer
         Dependencies: Orchard.Experimental
     Orchard.Experimental.WebCommandLine:
+        Name: Web Command Line
         Description: Enables site administrators to execute Orchard.exe commands via web interface
         Category: Developer
     Orchard.Experimental.TestingLists:
+        Name: Testing Lists
         Description: Adds some content definitions to help test lists
         Dependencies: Orchard.Lists
         Category: Developer

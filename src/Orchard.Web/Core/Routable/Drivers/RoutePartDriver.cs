@@ -8,17 +8,24 @@ using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Services;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Routable.Drivers {
     public class RoutePartDriver : ContentPartDriver<RoutePart> {
         private readonly IOrchardServices _services;
         private readonly IRoutableService _routableService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHomePageProvider _routableHomePageProvider;
 
-        public RoutePartDriver(IOrchardServices services, IRoutableService routableService, IEnumerable<IHomePageProvider> homePageProviders) {
+        public RoutePartDriver(IOrchardServices services,
+            IRoutableService routableService,
+            IEnumerable<IHomePageProvider> homePageProviders,
+            IHttpContextAccessor httpContextAccessor) {
             _services = services;
             _routableService = routableService;
+            _httpContextAccessor = httpContextAccessor;
             _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             T = NullLocalizer.Instance;
         }
@@ -59,12 +66,11 @@ namespace Orchard.Core.Routable.Drivers {
                 ContainerId = GetContainerId(part),
             };
 
-            var containerPath = part.GetContainerPath();
-            model.DisplayLeadingPath = !string.IsNullOrWhiteSpace(containerPath)
-                ? string.Format("{0}/", containerPath)
-                : "";
+            var request = _httpContextAccessor.Current().Request;
+            var containerUrl = new UriBuilder(request.ToRootUrlString()) { Path = (request.ApplicationPath ?? "").TrimEnd('/') + "/" + (part.GetContainerPath() ?? "") };
+            model.ContainerAbsoluteUrl = containerUrl.Uri.ToString().TrimEnd('/');
 
-            model.PromoteToHomePage = model.Id != 0 && part.Path != null && _routableHomePageProvider != null && _services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
+            model.PromoteToHomePage = model.Id != 0 && _routableHomePageProvider != null && _services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
             return ContentShape("Parts_Routable_Edit",
                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
@@ -75,6 +81,7 @@ namespace Orchard.Core.Routable.Drivers {
 
             part.Title = model.Title;
             part.Slug = model.Slug;
+            part.PromoteToHomePage = model.PromoteToHomePage;
 
             if ( !_routableService.IsSlugValid(part.Slug) ) {
                 var slug = (part.Slug ?? String.Empty);
@@ -83,9 +90,6 @@ namespace Orchard.Core.Routable.Drivers {
                 else
                     updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\". No spaces are allowed (please use dashes or underscores instead)."));
             }
-
-            if (part.ContentItem.Id != 0 && model.PromoteToHomePage && _routableHomePageProvider != null)
-                _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
 
             return Editor(part, shapeHelper);
         }

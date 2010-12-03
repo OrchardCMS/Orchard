@@ -228,11 +228,11 @@ namespace Orchard.ContentManagement {
                 PublishingItemVersionRecord = null
             };
 
-            Handlers.Invoke(handler => handler.Publishing(context), Logger);
+            Handlers.Invoke(handler => handler.Unpublishing(context), Logger);
 
             publishedItem.VersionRecord.Published = false;
 
-            Handlers.Invoke(handler => handler.Published(context), Logger);
+            Handlers.Invoke(handler => handler.Unpublished(context), Logger);
         }
 
         public virtual void Remove(ContentItem contentItem) {

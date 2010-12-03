@@ -184,10 +184,13 @@ namespace Orchard.ContentTypes.Services {
             while (_contentDefinitionManager.GetPartDefinition(name) != null)
                 name = VersionName(name);
 
-            var contentPartDefinition = new ContentPartDefinition(name);
-            _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
+            if (!String.IsNullOrEmpty(name)) {
+                var contentPartDefinition = new ContentPartDefinition(name);
+                _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
+                return new EditPartViewModel(contentPartDefinition);
+            }
 
-            return new EditPartViewModel(contentPartDefinition);
+            return null;
         }
 
         public void AlterPart(EditPartViewModel partViewModel, IUpdateModel updateModel) {
@@ -206,18 +209,20 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public void AddFieldToPart(string fieldName, string fieldTypeName, string partName) {
-            _contentDefinitionManager.AlterPartDefinition(partName, partBuilder => 
-                partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName))
-            );
+            fieldName = SafeName(fieldName);
+            if (string.IsNullOrEmpty(fieldName)) {
+                throw new OrchardException(T("Fields must have a name containing no spaces or symbols."));
+            }
+            _contentDefinitionManager.AlterPartDefinition(partName,
+                partBuilder => partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName)));
         }
 
         public void RemoveFieldFromPart(string fieldName, string partName) {
             _contentDefinitionManager.AlterPartDefinition(partName, typeBuilder => typeBuilder.RemoveField(fieldName));
         }
 
-        //gratuitously stolen from the RoutableService
-        public string GenerateName(string name) {
-            if ( string.IsNullOrWhiteSpace(name) )
+        private static string SafeName(string name) {
+            if (string.IsNullOrWhiteSpace(name))
                 return String.Empty;
 
             var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""<>]+");
@@ -227,6 +232,12 @@ namespace Orchard.ContentTypes.Services {
 
             if (name.Length > 128)
                 name = name.Substring(0, 128);
+            return name;
+        }
+
+        //gratuitously stolen from the RoutableService
+        public string GenerateName(string name) {
+            name = SafeName(name);
 
             while ( _contentDefinitionManager.GetTypeDefinition(name) != null )
                 name = VersionName(name);

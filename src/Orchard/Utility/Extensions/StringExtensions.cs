@@ -6,8 +6,8 @@ namespace Orchard.Utility.Extensions {
     public static class StringExtensions {
         private static readonly Regex humps = new Regex("(?:^[a-zA-Z][^A-Z]*|[A-Z][^A-Z]*)");
         public static string CamelFriendly(this string camel) {
-            if (camel == null)
-                return null;
+            if (string.IsNullOrWhiteSpace(camel))
+                return "";
 
             var matches = humps.Matches(camel).OfType<Match>().Select(m => m.Value);
             return matches.Any()
@@ -20,17 +20,19 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static string Ellipsize(this string text, int characterCount, string ellipsis) {
-            var cleanTailRegex = new Regex(@"\s+\S*$");
-
-            if (string.IsNullOrEmpty(text) || characterCount < 0 || text.Length <= characterCount)
+            if (string.IsNullOrWhiteSpace(text))
+                return "";
+            
+            if (characterCount < 0 || text.Length <= characterCount)
                 return text;
 
-            return cleanTailRegex.Replace(text.Substring(0, characterCount + 1), "") + ellipsis;
+            return Regex.Replace(text.Substring(0, characterCount + 1), @"\s+\S*$", "") + ellipsis;
         }
 
         public static string HtmlClassify(this string text) {
             if (string.IsNullOrWhiteSpace(text))
-                return text;
+                return "";
+
             var friendlier = text.CamelFriendly();
             return Regex.Replace(friendlier, @"[^a-zA-Z]+", m => m.Index == 0 ? "" : "-").ToLowerInvariant();
         }
@@ -42,10 +44,16 @@ namespace Orchard.Utility.Extensions {
         }
 
         public static string RemoveTags(this string html) {
-            var tagRegex = new Regex("<[^<>]*>", RegexOptions.Singleline);
-            var text = tagRegex.Replace(html, "");
+            return string.IsNullOrEmpty(html)
+                ? ""
+                : Regex.Replace(html, "<[^<>]*>", "", RegexOptions.Singleline);
+        }
 
-            return text;
+        // not accounting for only \r (e.g. Apple OS 9 carriage return only new lines)
+        public static string ReplaceNewLinesWith(this string text, string replacement) {
+            return string.IsNullOrWhiteSpace(text)
+                ? ""
+                : Regex.Replace(text, @"(\r?\n)", replacement, RegexOptions.Singleline);
         }
     }
 }

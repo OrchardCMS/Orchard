@@ -23,6 +23,7 @@ namespace Orchard.Indexing.Handlers {
             _indexNotifierHandlers = indexNotifierHandlers;
 
             OnPublished<ContentPart>(CreateIndexingTask);
+            OnUnpublished<ContentPart>(CreateIndexingTask);
             OnRemoved<ContentPart>(RemoveIndexingTask);
         }
 

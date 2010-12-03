@@ -59,7 +59,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Events\UserContext.cs" />
-    <Compile Include="Handlers\ModerationMessageAlteration.cs" />
+    <Compile Include="Handlers\UserMessagesAlteration.cs" />
     <Compile Include="Handlers\RegistrationSettingsPartHandler.cs" />
     <Compile Include="Events\IUserEventHandler.cs" />
     <Compile Include="Models\MessageTypes.cs" />
@@ -74,6 +74,7 @@
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Services\MissingSettingsBanner.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="ViewModels\LogOnViewModel.cs" />
     <Compile Include="ViewModels\UserCreateViewModel.cs" />
@@ -122,6 +123,9 @@
     <Content Include="Views\Account\RegistrationPending.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\User.Edit.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\User.Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\RequestLostPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\LostPassword.cshtml" />

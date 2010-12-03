@@ -137,6 +137,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Blogs.feature</DependentUpon>
     </Compile>
+    <Compile Include="Comments.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Comments.feature</DependentUpon>
+    </Compile>
     <Compile Include="ContentRights.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -233,6 +238,10 @@
     <None Include="Blogs.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Blogs.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Comments.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Comments.feature.cs</LastGenOutput>
     </None>
     <None Include="ContentRights.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

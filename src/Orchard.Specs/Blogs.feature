@@ -15,15 +15,18 @@ Scenario: I can create a new blog and blog post
             | name | value |
             | Routable.Title | My Blog |
         And I hit "Save"
-        And I go to "my-blog"
-    Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
-    When I go to "admin/blogs/my-blog/posts/create"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
             | Body.Text | Hi there. |
         And I hit "Publish Now"
-        And I go to "my-blog/my-post"
+        And I go to "my-blog"
+    Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
+        And I should see "<h1[^>]*>.*?My Post.*?</h1>"
+    When I go to "my-blog/my-post"
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Hi there."
 
@@ -34,7 +37,9 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
             | name | value |
             | Routable.Title | My Blog |
         And I hit "Save"
-        And I go to "admin/blogs/my-blog/posts/create"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -43,7 +48,9 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I go to "my-blog/my-post"
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Hi there."
-    When I go to "admin/blogs/my-blog/posts/create"
+    When I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -52,7 +59,9 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I go to "my-blog/my-post-2"
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Hi there, again."
-    When I go to "admin/blogs/my-blog/posts/create"
+    When I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -72,7 +81,9 @@ Scenario: I can create a new blog and blog post and when I change the slug of th
         And I hit "Save"
         And I go to "my-blog"
     Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
-    When I go to "admin/blogs/my-blog/posts/create"
+    When I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -81,7 +92,8 @@ Scenario: I can create a new blog and blog post and when I change the slug of th
         And I go to "my-blog/my-post"
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Hi there."
-    When I go to "admin/blogs/my-blog"
+    When I go to "admin/blogs"
+        And I follow "My Blog"
         And I follow "Blog Properties"
         And I fill in
             | name | value |
@@ -100,7 +112,9 @@ Scenario: When viewing a blog the user agent is given an RSS feed of the blog's 
             | name | value |
             | Routable.Title | My Blog |
         And I hit "Save"
-        And I go to "admin/blogs/my-blog/posts/create"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -126,3 +140,53 @@ Scenario: Enabling remote blog publishing inserts the appropriate metaweblogapi 
     Then the content type should be "\btext/xml\b"
         And I should see "<manifest xmlns="http\://schemas\.microsoft\.com/wlw/manifest/weblog">"
         And I should see "<clientType>Metaweblog</clientType>"
+
+Scenario: The virtual path of my installation when not at the root is reflected in the URL example for the slug field when creating a blog or blog post
+    Given I have installed Orchard at "/OrchardLocal"
+    When I go to "admin/blogs/create"
+    Then I should see "<span>http\://localhost/OrchardLocal/</span>"
+    When I fill in
+        | name | value |
+        | Routable.Title | My Blog |
+        And I hit "Save"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
+    Then I should see "<span>http\://localhost/OrchardLocal/my-blog/</span>"
+
+Scenario: The virtual path of my installation when at the root is reflected in the URL example for the slug field when creating a blog or blog post
+    Given I have installed Orchard at "/"
+    When I go to "admin/blogs/create"
+    Then I should see "<span>http\://localhost/</span>"
+    When I fill in
+        | name | value |
+        | Routable.Title | My Blog |
+        And I hit "Save"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
+    Then I should see "<span>http\://localhost/my-blog/</span>"
+
+Scenario: I set my blog to be the content for the home page and the posts for the blog be rooted to the app
+    Given I have installed Orchard
+    When I go to "admin/blogs/create"
+        And I fill in
+            | name | value |
+            | Routable.Title | My Blog |
+            | Routable.PromoteToHomePage | true |
+        And I hit "Save"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post"
+        And I fill in
+            | name | value |
+            | Routable.Title | My Post |
+            | Body.Text | Hi there. |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "/Default.aspx"
+    Then I should see "<h1>My Blog</h1>"
+    When I go to "/my-blog"
+    Then the status should be 404 "Not Found"
+    When I go to "/my-post"
+    Then I should see "<h1>My Post</h1>"

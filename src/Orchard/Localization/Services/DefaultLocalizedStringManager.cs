@@ -6,6 +6,7 @@ using System.Text;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 
 namespace Orchard.Localization.Services {
@@ -112,7 +113,7 @@ namespace Orchard.Localization.Services {
             }
 
             foreach (var module in _extensionManager.AvailableExtensions()) {
-                if (String.Equals(module.ExtensionType, "Module")) {
+                if (DefaultExtensionTypes.IsModule(module.ExtensionType)) {
                     string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Id, culture);
                     text = _webSiteFolder.ReadFile(modulePath);
                     if (text != null) {
@@ -123,7 +124,7 @@ namespace Orchard.Localization.Services {
             }
 
             foreach (var theme in _extensionManager.AvailableExtensions()) {
-                if (String.Equals(theme.ExtensionType, "Theme")) {
+                if (DefaultExtensionTypes.IsTheme(theme.ExtensionType)) {
                     string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Id, culture);
                     text = _webSiteFolder.ReadFile(themePath);
                     if (text != null) {

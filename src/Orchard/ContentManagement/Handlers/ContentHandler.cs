@@ -29,14 +29,6 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnCreated = handler });
         }
 
-        protected void OnSaving<TPart>(Action<SaveContentContext, TPart> handler) where TPart : class, IContent {
-            Filters.Add(new InlineStorageFilter<TPart> { OnSaving = handler });
-        }
-
-        protected void OnSaved<TPart>(Action<SaveContentContext, TPart> handler) where TPart : class, IContent {
-            Filters.Add(new InlineStorageFilter<TPart> { OnSaved = handler });
-        }
-
         protected void OnLoading<TPart>(Action<LoadContentContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnLoading = handler });
         }
@@ -59,6 +51,14 @@ namespace Orchard.ContentManagement.Handlers {
 
         protected void OnPublished<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnPublished = handler });
+        }
+
+        protected void OnUnpublishing<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnUnpublishing = handler });
+        }
+
+        protected void OnUnpublished<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnUnpublished = handler });
         }
 
         protected void OnRemoving<TPart>(Action<RemoveContentContext, TPart> handler) where TPart : class, IContent {
@@ -97,14 +97,14 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<InitializingContentContext, TPart> OnInitializing { get; set; }
             public Action<CreateContentContext, TPart> OnCreating { get; set; }
             public Action<CreateContentContext, TPart> OnCreated { get; set; }
-            public Action<SaveContentContext, TPart> OnSaving { get; set; }
-            public Action<SaveContentContext, TPart> OnSaved { get; set; }
             public Action<LoadContentContext, TPart> OnLoading { get; set; }
             public Action<LoadContentContext, TPart> OnLoaded { get; set; }
             public Action<VersionContentContext, TPart, TPart> OnVersioning { get; set; }
             public Action<VersionContentContext, TPart, TPart> OnVersioned { get; set; }
             public Action<PublishContentContext, TPart> OnPublishing { get; set; }
             public Action<PublishContentContext, TPart> OnPublished { get; set; }
+            public Action<PublishContentContext, TPart> OnUnpublishing { get; set; }
+            public Action<PublishContentContext, TPart> OnUnpublished { get; set; }
             public Action<RemoveContentContext, TPart> OnRemoving { get; set; }
             public Action<RemoveContentContext, TPart> OnRemoved { get; set; }
             public Action<IndexContentContext, TPart> OnIndexing { get; set; }
@@ -120,12 +120,6 @@ namespace Orchard.ContentManagement.Handlers {
             }
             protected override void Created(CreateContentContext context, TPart instance) {
                 if (OnCreated != null) OnCreated(context, instance);
-            }
-            protected override void Saving(SaveContentContext context, TPart instance) {
-                if (OnSaving != null) OnSaving(context, instance);
-            }
-            protected override void Saved(SaveContentContext context, TPart instance) {
-                if (OnSaved != null) OnSaved(context, instance);
             }
             protected override void Loading(LoadContentContext context, TPart instance) {
                 if (OnLoading != null) OnLoading(context, instance);
@@ -144,6 +138,12 @@ namespace Orchard.ContentManagement.Handlers {
             }
             protected override void Published(PublishContentContext context, TPart instance) {
                 if (OnPublished != null) OnPublished(context, instance);
+            }
+            protected override void Unpublishing(PublishContentContext context, TPart instance) {
+                if (OnUnpublishing != null) OnUnpublishing(context, instance);
+            }
+            protected override void Unpublished(PublishContentContext context, TPart instance) {
+                if (OnUnpublished != null) OnUnpublished(context, instance);
             }
             protected override void Removing(RemoveContentContext context, TPart instance) {
                 if (OnRemoving != null) OnRemoving(context, instance);
@@ -211,18 +211,6 @@ namespace Orchard.ContentManagement.Handlers {
             Created(context);
         }
 
-        void IContentHandler.Saving(SaveContentContext context) {
-            foreach (var filter in Filters.OfType<IContentStorageFilter>())
-                filter.Saving(context);
-            Saving(context);
-        }
-
-        void IContentHandler.Saved(SaveContentContext context) {
-            foreach (var filter in Filters.OfType<IContentStorageFilter>())
-                filter.Saved(context);
-            Saved(context);
-        }
-
         void IContentHandler.Loading(LoadContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Loading(context);
@@ -257,6 +245,18 @@ namespace Orchard.ContentManagement.Handlers {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Published(context);
             Published(context);
+        }
+
+        void IContentHandler.Unpublishing(PublishContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Unpublishing(context);
+            Unpublishing(context);
+        }
+
+        void IContentHandler.Unpublished(PublishContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Unpublished(context);
+            Unpublished(context);
         }
 
         void IContentHandler.Removing(RemoveContentContext context) {
@@ -312,9 +312,6 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Creating(CreateContentContext context) { }
         protected virtual void Created(CreateContentContext context) { }
 
-        protected virtual void Saving(SaveContentContext context) { }
-        protected virtual void Saved(SaveContentContext context) { }
-
         protected virtual void Loading(LoadContentContext context) { }
         protected virtual void Loaded(LoadContentContext context) { }
 
@@ -323,6 +320,9 @@ namespace Orchard.ContentManagement.Handlers {
 
         protected virtual void Publishing(PublishContentContext context) { }
         protected virtual void Published(PublishContentContext context) { }
+
+        protected virtual void Unpublishing(PublishContentContext context) { }
+        protected virtual void Unpublished(PublishContentContext context) { }
 
         protected virtual void Removing(RemoveContentContext context) { }
         protected virtual void Removed(RemoveContentContext context) { }

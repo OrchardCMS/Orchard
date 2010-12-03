@@ -1,4 +1,5 @@
 using System.Linq;
+using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
@@ -33,6 +34,11 @@ namespace Orchard.Packaging.Services {
             };
         }
 
+        public PackageInfo Install(IPackage package, string location, string applicationPath)
+        {
+            return _packageExpander.Install(package, location, applicationPath);
+        }
+
         public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
             return _packageExpander.Install(packageId, version, location, applicationPath);
         }
@@ -40,6 +46,7 @@ namespace Orchard.Packaging.Services {
         public void Uninstall(string packageId, string applicationPath) {
             _packageExpander.Uninstall(packageId, applicationPath);
         }
+
         #endregion
     }
 }

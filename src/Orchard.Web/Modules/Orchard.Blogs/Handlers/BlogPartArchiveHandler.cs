@@ -14,6 +14,7 @@ namespace Orchard.Blogs.Handlers {
     public class BlogPartArchiveHandler : ContentHandler {
         public BlogPartArchiveHandler(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IBlogPostService blogPostService) {
             OnPublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
+            OnUnpublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
             OnRemoved<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, blogPostService, bp));
         }
 

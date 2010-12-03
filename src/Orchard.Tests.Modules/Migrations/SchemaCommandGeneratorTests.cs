@@ -123,7 +123,7 @@ Features:
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 foreach (var e in Manifests) {
                     string name = e.Key;
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", Manifests[name]);
+                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, DefaultExtensionTypes.Module, Manifests[name]);
                 }
             }
         }

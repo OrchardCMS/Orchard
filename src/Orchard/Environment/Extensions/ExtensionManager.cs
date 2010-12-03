@@ -49,13 +49,14 @@ namespace Orchard.Environment.Extensions {
         /// <param name="subject"></param>
         /// <returns></returns>
         internal static bool HasDependency(FeatureDescriptor item, FeatureDescriptor subject) {
-            if (item.Extension.ExtensionType == "Theme") {
-                // Themes implicitly depend on modules to ensure build and override ordering
-                if (subject.Extension.ExtensionType == "Module") {
+            if (DefaultExtensionTypes.IsTheme(item.Extension.ExtensionType)) {
+                if (DefaultExtensionTypes.IsModule(subject.Extension.ExtensionType)) {
+                    // Themes implicitly depend on modules to ensure build and override ordering
                     return true;
                 }
-                if (subject.Extension.ExtensionType == "Theme") {
-                    // theme depends on another if it is its base theme
+                
+                if (DefaultExtensionTypes.IsTheme(subject.Extension.ExtensionType)) {
+                    // Theme depends on another if it is its base theme
                     return item.Extension.BaseTheme == subject.Id;
                 }
             }
@@ -77,7 +78,13 @@ namespace Orchard.Environment.Extensions {
             var featureId = featureDescriptor.Id;
             var extensionId = extensionDescriptor.Id;
 
-            var extensionEntry = _cacheManager.Get(extensionId, ctx => BuildEntry(extensionDescriptor));
+            ExtensionEntry extensionEntry;
+            try {
+                extensionEntry = _cacheManager.Get(extensionId, ctx => BuildEntry(extensionDescriptor));
+            }
+            catch (Exception ex) {
+                throw new OrchardException(T("Error while loading extension '{0}'.", extensionId), ex);
+            }
             if (extensionEntry == null) {
                 // If the feature could not be compiled for some reason,
                 // return a "null" feature, i.e. a feature with no exported types.

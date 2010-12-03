@@ -25,7 +25,7 @@ namespace Orchard.Environment.Extensions.Folders {
             IWebSiteFolder webSiteFolder) {
             _paths = paths;
             _manifestName = manifestName;
-            _extensionType = manifestName == "Theme.txt" ? "Theme" : "Module";
+            _extensionType = manifestName == "Theme.txt" ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module;
             _manifestIsOptional = manifestIsOptional;
             _cacheManager = cacheManager;
             _webSiteFolder = webSiteFolder;

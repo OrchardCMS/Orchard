@@ -13,7 +13,7 @@ namespace Orchard.Environment.Extensions.Models {
         public string Id { get; set; }
 
         /// <summary>
-        /// "Theme" or "Module"
+        /// The extension type.
         /// </summary>
         public string ExtensionType { get; set; }
         
@@ -26,7 +26,7 @@ namespace Orchard.Environment.Extensions.Models {
         public string WebSite { get; set; }
         public string Tags { get; set; }
         public string AntiForgery { get; set; }
-        public string Zones { get; set; }        
+        public string Zones { get; set; }
         public string BaseTheme { get; set; }
 
         public IEnumerable<FeatureDescriptor> Features { get; set; }

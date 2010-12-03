@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 using Orchard.Blogs.Services;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 
@@ -32,12 +30,12 @@ namespace Orchard.Blogs {
             }
             else if (singleBlog != null)
                 menu.Add(T("Manage Blog"), "1.0",
-                    item => item.Action("Item", "BlogAdmin", new { area = "Orchard.Blogs", blogSlug = singleBlog.As<IRoutableAspect>().Path }).Permission(Permissions.MetaListBlogs));
+                    item => item.Action("Item", "BlogAdmin", new { area = "Orchard.Blogs", blogId = singleBlog.Id }).Permission(Permissions.MetaListBlogs));
 
             if (singleBlog != null)
                 menu.Add(T("Create New Post"), "1.1",
                          item =>
-                         item.Action("Create", "BlogPostAdmin", new { area = "Orchard.Blogs", blogSlug = singleBlog.As<IRoutableAspect>().Path }).Permission(Permissions.PublishBlogPost));
+                         item.Action("Create", "BlogPostAdmin", new { area = "Orchard.Blogs", blogId = singleBlog.Id }).Permission(Permissions.PublishBlogPost));
 
             menu.Add(T("Create New Blog"), "1.2",
                      item =>

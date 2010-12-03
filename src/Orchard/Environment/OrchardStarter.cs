@@ -48,6 +48,7 @@ namespace Orchard.Environment {
             builder.RegisterType<DefaultProjectFileParser>().As<IProjectFileParser>().SingleInstance();
             builder.RegisterType<DefaultAssemblyLoader>().As<IAssemblyLoader>().SingleInstance();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+            builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
@@ -73,12 +74,9 @@ namespace Orchard.Environment {
                         {
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>().SingleInstance()
                                 .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Modules" }));
-                            builder.RegisterType<AreaFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Areas" }));
                             builder.RegisterType<ThemeFolders>().As<IExtensionFolders>().SingleInstance()
                                 .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Themes" }));
 
-                            builder.RegisterType<AreaExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<PrecompiledExtensionLoader>().As<IExtensionLoader>().SingleInstance();
