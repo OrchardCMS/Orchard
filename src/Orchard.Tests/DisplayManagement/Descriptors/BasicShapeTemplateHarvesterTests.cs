@@ -32,6 +32,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         [Test]
         public void DefaultItemsContentTemplate() {
             VerifyShapeType("Views/Items", "Content", "Content");
+            VerifyShapeType("Views", "Items.Content", "Content");
         }
 
         [Test]
@@ -59,10 +60,46 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         }
 
         [Test]
+        public void DefaultItemsContentTemplate2() {
+            VerifyShapeType("Views", "Content", "Content");
+        }
+
+        [Test]
+        public void ImplicitSpecializationOfItemsContentTemplate2() {
+            VerifyShapeType("Views", "MyType", "MyType");
+        }
+
+        [Test]
+        public void ExplicitSpecializationOfItemsContentTemplate2() {
+            VerifyShapeType("Views", "Content-MyType", "Content__MyType");
+        }
+
+        [Test]
+        public void ContentItemDisplayTypes2() {
+            VerifyShapeType("Views", "Content", "Content");
+            VerifyShapeType("Views", "Content.Summary", "Content_Summary");
+            VerifyShapeType("Views", "Content.Edit", "Content_Edit");
+        }
+
+        [Test]
+        public void ExplicitSpecializationMixedWithDisplayTypes2() {
+            VerifyShapeType("Views", "Content-MyType", "Content__MyType");
+            VerifyShapeType("Views", "Content-MyType.Summary", "Content_Summary__MyType");
+            VerifyShapeType("Views", "Content-MyType.Edit", "Content_Edit__MyType");
+        }
+
+        [Test]
         public void MultipleDotsAreNormalizedToUnderscore() {
             VerifyShapeType("Views/Parts", "Common.Body", "Parts_Common_Body");
             VerifyShapeType("Views/Parts", "Common.Body.Summary", "Parts_Common_Body_Summary");
             VerifyShapeType("Views/Parts", "Localization.ContentTranslations.Summary", "Parts_Localization_ContentTranslations_Summary");
+        }
+
+        [Test]
+        public void MultipleDotsAreNormalizedToUnderscore2() {
+            VerifyShapeType("Views", "Parts.Common.Body", "Parts_Common_Body");
+            VerifyShapeType("Views", "Parts.Common.Body.Summary", "Parts_Common_Body_Summary");
+            VerifyShapeType("Views", "Parts.Localization.ContentTranslations.Summary", "Parts_Localization_ContentTranslations_Summary");
         }
     }
 }
