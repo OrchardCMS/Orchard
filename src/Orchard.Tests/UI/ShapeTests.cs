@@ -29,7 +29,7 @@ namespace Orchard.Tests.UI {
             throw new NotImplementedException("this test fixture needs to move to modules tests now");
         }
 
-        protected override void Resolve(IContainer container) {
+        protected override void Resolve(ILifetimeScope container) {
             _workContext = container.Resolve<IWorkContextAccessor>().CreateWorkContextScope().WorkContext;
         }
 

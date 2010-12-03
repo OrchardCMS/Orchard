@@ -19,7 +19,7 @@
     </p>
 
     if (Model.InstallThemes) {
-        @Html.ActionLink(T("Install a new Theme").ToString(), "Install", null, new { @class = "button primaryAction" })
+        @Html.ActionLink(T("Install a new Theme").ToString(), "AddTheme", "Gallery", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })
     }
 }
 
@@ -55,11 +55,13 @@
                             <button type="submit" class="update">@T("Update")</button> <br/>
                         }
                     }
-                    @using (Html.BeginFormAntiForgeryPost(Url.Action("Uninstall"), FormMethod.Post, new { @class = "inline link" })) {
-                        @Html.Hidden("themeName", theme.Id)
-                        <button type="submit" class="uninstall" title="@T("Uninstall")">@T("Uninstall")</button>
+
+                    @if (Model.InstallThemes) {
+                        using (Html.BeginFormAntiForgeryPost(Url.Action("RemoveTheme", "Gallery", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl, retryUrl = HttpContext.Current.Request.RawUrl, themeId = theme.Id }), FormMethod.Post, new { @class = "inline link" })) {
+                            <button type="submit" class="uninstall" title="@T("Uninstall")">@T("Uninstall")</button>
+                        }
                     }
-                </div>   
+                </div>
             </li>
         }
     }

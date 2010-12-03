@@ -86,7 +86,7 @@ namespace Orchard.Core.Containers.Drivers {
                 part.Record.PageSize = 5;
                 part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.PublishedUtc" : "";
                 part.Record.OrderByDirection = (int)OrderByDirection.Descending;
-                part.Record.FilterByProperty = "ContainerCustomPart.CustomOne";
+                part.Record.FilterByProperty = "CustomPropertiesPart.CustomOne";
                 part.Record.FilterByOperator = "=";
             });
         }

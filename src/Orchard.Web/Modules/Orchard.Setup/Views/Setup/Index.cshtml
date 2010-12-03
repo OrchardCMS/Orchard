@@ -1,5 +1,7 @@
 ﻿@model Orchard.Setup.ViewModels.SetupViewModel
-
+@{
+    Script.Include("setup.js").AtFoot();
+}
 <h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
 
 @using (Html.BeginFormAntiForgeryPost()) {
@@ -48,6 +50,18 @@ if (!Model.DatabaseIsPreconfigured) {
     </div>
 </fieldset>
 }
+<div id="throbber">
+    <div class="curtain"></div>
+    <div class="curtain-content">
+        <div>
+            <h1>@T("Configuring Orchard...")</h1>
+            <p>
+                <img src="@Href("../../content/synchronizing.gif")" alt="" />
+            </p>
+        </div>
+    </div>
+</div>
+    
 <fieldset>
     <button class="primaryAction" type="submit">@T("Finish Setup")</button>
 </fieldset>

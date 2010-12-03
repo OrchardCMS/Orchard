@@ -47,14 +47,12 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Drivers\LayerPartDriver.cs" />
-    <Compile Include="Drivers\WidgetBagPartDriver.cs" />
     <Compile Include="Drivers\WidgetPartDriver.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Handlers\LayerPartHandler.cs" />
     <Compile Include="Handlers\WidgetPartHandler.cs" />
     <Compile Include="Models\LayerPart.cs" />
     <Compile Include="Models\LayerPartRecord.cs" />
-    <Compile Include="Models\WidgetBagPart.cs" />
     <Compile Include="Models\WidgetPart.cs" />
     <Compile Include="Models\WidgetPartRecord.cs" />
     <Compile Include="Permissions.cs" />

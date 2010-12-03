@@ -46,6 +46,7 @@ namespace Orchard.Packaging.Services {
         public void Uninstall(string packageId, string applicationPath) {
             _packageExpander.Uninstall(packageId, applicationPath);
         }
+
         #endregion
     }
 }

@@ -93,17 +93,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 17
         testRunner.And("I hit \"Save\"");
 #line 18
-        testRunner.And("I go to \"my-blog\"");
+        testRunner.And("I go to \"admin/blogs\"");
 #line 19
-    testRunner.Then("I should see \"<h1[^>]*>.*?My Blog.*?</h1>\"");
-#line 20
-    testRunner.When("I go to \"admin/blogs\"");
-#line 21
         testRunner.And("I follow \"My Blog\"");
-#line 22
-    testRunner.Then("I should see \"foo\"");
-#line 23
-    testRunner.When("I follow \"New Post\"");
+#line 20
+        testRunner.And("I follow \"New Post\"");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -114,12 +108,18 @@ this.ScenarioSetup(scenarioInfo);
             table2.AddRow(new string[] {
                         "Body.Text",
                         "Hi there."});
-#line 24
+#line 21
         testRunner.And("I fill in", ((string)(null)), table2);
-#line 28
+#line 25
         testRunner.And("I hit \"Publish Now\"");
+#line 26
+        testRunner.And("I go to \"my-blog\"");
+#line 27
+    testRunner.Then("I should see \"<h1[^>]*>.*?My Blog.*?</h1>\"");
+#line 28
+        testRunner.And("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
 #line 29
-        testRunner.And("I go to \"my-blog/my-post\"");
+    testRunner.When("I go to \"my-blog/my-post\"");
 #line 30
     testRunner.Then("I should see \"<h1[^>]*>.*?My Post.*?</h1>\"");
 #line 31
