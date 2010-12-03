@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Orchard.Environment;
 using Orchard.FileSystems.AppData;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
@@ -11,11 +12,13 @@ namespace Orchard.Setup.Controllers {
     [ValidateInput(false), Themed]
     public class SetupController : Controller {
         private readonly IAppDataFolder _appDataFolder;
+        private readonly IViewsBackgroundCompilation _viewsBackgroundCompilation;
         private readonly INotifier _notifier;
         private readonly ISetupService _setupService;
 
-        public SetupController(INotifier notifier, ISetupService setupService, IAppDataFolder appDataFolder) {
+        public SetupController(INotifier notifier, ISetupService setupService, IAppDataFolder appDataFolder, IViewsBackgroundCompilation viewsBackgroundCompilation) {
             _appDataFolder = appDataFolder;
+            _viewsBackgroundCompilation = viewsBackgroundCompilation;
             _notifier = notifier;
             _setupService = setupService;
             T = NullLocalizer.Instance;
@@ -37,6 +40,17 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
+
+            // On the first time installation of Orchard, the user gets to the setup screen, which
+            // will take a while to finish (user inputting data and the setup process itself).
+            // We use this opportunity to start a background task to "pre-compile" all the known
+            // views in the app folder, so that the application is more reponsive when the user
+            // hits the homepage and admin screens for the first time.
+            if (StringComparer.OrdinalIgnoreCase.Equals(initialSettings.Name, "Default")) {
+                _viewsBackgroundCompilation.Start();
+            }
+
+            //
             return IndexViewResult(new SetupViewModel { AdminUsername = "admin", DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider)});
         }
 
@@ -74,6 +88,11 @@ namespace Orchard.Setup.Controllers {
                 };
 
                 _setupService.Setup(setupContext);
+
+                // First time installation if finally done. Tell the background views compilation
+                // process to stop, so that it doesn't interfere with the user (asp.net compilation
+                // uses a "single lock" mechanism for compiling views).
+                _viewsBackgroundCompilation.Stop();
 
                 // redirect to the welcome page.
                 return Redirect("~/");
