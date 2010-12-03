@@ -4,6 +4,7 @@ using System.Web.Routing;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy;
@@ -11,6 +12,7 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.DisplayManagement {
@@ -45,6 +47,7 @@ namespace Orchard.Tests.DisplayManagement {
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterInstance(new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext)).As<IWorkContextAccessor>();
             builder.RegisterInstance(new SimpleShapes()).WithMetadata("Feature", testFeature);
             builder.RegisterInstance(new RouteCollection());

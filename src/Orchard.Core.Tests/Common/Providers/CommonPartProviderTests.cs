@@ -6,6 +6,7 @@ using Autofac;
 using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Drivers.Coordinators;
@@ -53,6 +54,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterInstance(new Mock<IThemeManager>().Object);
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
             builder.RegisterInstance(new Mock<RequestContext>().Object);
