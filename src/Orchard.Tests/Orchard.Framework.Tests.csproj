@@ -212,6 +212,7 @@
     <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
     <Compile Include="ContainerTestBase.cs" />
     <Compile Include="DisplayManagement\Descriptors\BasicShapeTemplateHarvesterTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\StylesheetBindingStrategyTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableManagerTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\InMemoryWebSiteFolder.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementFileParserTests.cs" />
