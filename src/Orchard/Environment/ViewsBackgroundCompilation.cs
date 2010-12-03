@@ -45,6 +45,8 @@ namespace Orchard.Environment {
         }
 
         private void CompileViews(object sender, ElapsedEventArgs elapsedEventArgs) {
+            Stopwatch totalTime = new Stopwatch();
+            totalTime.Start();
             Logger.Information("Starting background compilation of views");
             ((Timer)sender).Stop();
 
@@ -91,6 +93,7 @@ namespace Orchard.Environment {
                 .DirectoriesToBrowse
                 .SelectMany(folder => GetViewDirectories(folder, context.FileExtensionsToCompile));
 
+            int directoryCount = 0;
             foreach (var viewDirectory in directories) {
                 if (_stopping) {
                     if (Logger.IsEnabled(LogLevel.Information)) {
@@ -104,8 +107,11 @@ namespace Orchard.Environment {
                 }
 
                 CompileDirectory(context, viewDirectory);
+                directoryCount++;
             }
-            Logger.Information("Ending background compilation of views");
+
+            totalTime.Stop();
+            Logger.Information("Ending background compilation of views, {0} directories processed in {1} msec", directoryCount, totalTime.Elapsed.TotalSeconds);
         }
 
         private void CompileDirectory(CompilationContext context, string viewDirectory) {
