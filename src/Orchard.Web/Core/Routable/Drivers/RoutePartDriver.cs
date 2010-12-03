@@ -30,7 +30,7 @@ namespace Orchard.Core.Routable.Drivers {
             T = NullLocalizer.Instance;
         }
 
-        private const string TemplateName = "Parts/Routable.RoutePart";
+        private const string TemplateName = "Parts.Routable.RoutePart";
 
         public Localizer T { get; set; }
 

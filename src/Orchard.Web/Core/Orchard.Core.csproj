@@ -252,7 +252,7 @@
     <Content Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Routable\Module.txt" />
     <Content Include="Routable\Scripts\jquery.slugify.js" />
-    <Content Include="Routable\Views\EditorTemplates\Parts\Routable.RoutePart.cshtml" />
+    <Content Include="Routable\Views\EditorTemplates\Parts.Routable.RoutePart.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Views\Admin\Index.cshtml" />
@@ -337,8 +337,8 @@
     <Content Include="Contents\Views\Content.ControlWrapper.cshtml" />
     <Content Include="Contents\Views\Item\Display.cshtml" />
     <Content Include="Navigation\Placement.info" />
-    <Content Include="Routable\Views\Parts\RoutableTitle.cshtml" />
-    <Content Include="Routable\Views\Item\Display.cshtml" />
+    <Content Include="Routable\Views\Parts.RoutableTitle.cshtml" />
+    <Content Include="Routable\Views\Item.Display.cshtml" />
     <Content Include="Routable\Views\Routable.HomePage.cshtml" />
     <Content Include="Contents\Views\Items\Content.Summary.cshtml" />
     <Content Include="Shapes\Views\Pager.cshtml" />
@@ -365,8 +365,8 @@
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
     <Content Include="Containers\Views\Parts\ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\CustomProperties.cshtml" />
-    <Content Include="Routable\Views\Parts\RoutableTitle_Summary.cshtml" />
-    <Content Include="Routable\Views\Parts\RoutableTitle_SummaryAdmin.cshtml" />
+    <Content Include="Routable\Views\Parts.RoutableTitle_Summary.cshtml" />
+    <Content Include="Routable\Views\Parts.RoutableTitle_SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Containers\Views\Parts\Container.Contained.SummaryAdmin.cshtml" />
