@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.DisplayManagement.Descriptors {
     [TestFixture]
     public class DefaultShapeTableManagerTests : ContainerTestBase {
-        protected override void Register(Autofac.ContainerBuilder builder) {
+        protected override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
 
             var features = new [] {
                 new FeatureDescriptor {

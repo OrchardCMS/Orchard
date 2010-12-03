@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=2.2.4.900, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL" />
     <Reference Include="HibernatingRhinos.Profiler.Appender">
       <HintPath>..\..\..\..\lib\nhprof\HibernatingRhinos.Profiler.Appender.dll</HintPath>
     </Reference>
@@ -53,6 +54,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\ProfilingCommands.cs" />
+    <Compile Include="ContainerSpy.cs" />
     <Compile Include="Controllers\CommandsController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

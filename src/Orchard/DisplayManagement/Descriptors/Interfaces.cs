@@ -1,6 +1,6 @@
 ﻿namespace Orchard.DisplayManagement.Descriptors {
 
-    public interface IShapeTableManager : IDependency {
+    public interface IShapeTableManager : ISingletonDependency {
         ShapeTable GetShapeTable(string themeName);
     }
 
