@@ -231,10 +231,10 @@
     <Content Include="Common\Module.txt" />
     <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.cshtml" />
     <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.cshtml" />
-    <Content Include="Common\Views\Fields\Common.Text.cshtml" />
-    <Content Include="Common\Views\Parts\Common.Body.SummaryAdmin.cshtml" />
-    <Content Include="Common\Views\Parts\Common.Metadata.cshtml" />
-    <Content Include="Common\Views\Parts\Common.Metadata.SummaryAdmin.cshtml" />
+    <Content Include="Common\Views\Fields.Common.Text.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Body.SummaryAdmin.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Metadata.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Metadata.SummaryAdmin.cshtml" />
     <Content Include="Containers\Module.txt" />
     <Content Include="Contents\Views\Admin\Create.cshtml" />
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
@@ -242,8 +242,8 @@
     <Content Include="Feeds\Views\Feed.cshtml" />
     <Content Include="Contents\Views\Parts\Contents.Publish.cshtml" />
     <Content Include="Contents\Views\Parts\Contents.Publish.SummaryAdmin.cshtml" />
-    <Content Include="Common\Views\EditorTemplates\Fields\Common.Text.Edit.cshtml" />
-    <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Fields.Common.Text.Edit.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Parts.Common.Container.cshtml" />
     <Content Include="Common\Views\Body.Editor.cshtml" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
@@ -294,9 +294,9 @@
     <Content Include="Common\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\Parts\Common.Body.cshtml" />
-    <Content Include="Common\Views\EditorTemplates\Parts\Common.Body.cshtml" />
-    <Content Include="Common\Views\EditorTemplates\Parts\Common.Owner.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Body.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Parts.Common.Body.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Parts.Common.Owner.cshtml" />
     <Content Include="Feeds\Module.txt" />
     <Content Include="Navigation\Module.txt" />
     <Content Include="Scheduling\Module.txt" />
@@ -310,7 +310,7 @@
     <Content Include="Navigation\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\Parts\Common.Body.Summary.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Body.Summary.cshtml" />
     <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -330,7 +330,7 @@
     <Content Include="Shapes\Views\MenuItem.cshtml" />
     <Content Include="Shapes\Views\Web.config" />
     <Content Include="Common\Placement.info" />
-    <Content Include="Common\Views\Parts\Common.Metadata.Summary.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Metadata.Summary.cshtml" />
     <Content Include="Contents\Placement.info">
       <SubType>Designer</SubType>
     </Content>

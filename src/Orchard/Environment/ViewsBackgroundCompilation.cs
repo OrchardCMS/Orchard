@@ -111,7 +111,7 @@ namespace Orchard.Environment {
             }
 
             totalTime.Stop();
-            Logger.Information("Ending background compilation of views, {0} directories processed in {1} msec", directoryCount, totalTime.Elapsed.TotalSeconds);
+            Logger.Information("Ending background compilation of views, {0} directories processed in {1} sec", directoryCount, totalTime.Elapsed.TotalSeconds);
         }
 
         private void CompileDirectory(CompilationContext context, string viewDirectory) {

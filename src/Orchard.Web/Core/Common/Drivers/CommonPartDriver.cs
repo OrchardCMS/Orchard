@@ -83,7 +83,7 @@ namespace Orchard.Core.Common.Drivers {
             }
 
             return ContentShape("Parts_Common_Owner_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Common.Owner", Model: model, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Common.Owner", Model: model, Prefix: Prefix));
         }
 
         DriverResult ContainerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -112,7 +112,7 @@ namespace Orchard.Core.Common.Drivers {
             }
 
             return ContentShape("Parts_Common_Container_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Common.Container", Model: model, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Common.Container", Model: model, Prefix: Prefix));
         }
     }
 }

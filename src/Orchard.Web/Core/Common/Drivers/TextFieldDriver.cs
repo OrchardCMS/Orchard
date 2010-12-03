@@ -22,7 +22,7 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override DriverResult Editor(ContentPart part, TextField field, dynamic shapeHelper) {
             return ContentShape("Fields_Common_Text_Edit",
-                () => shapeHelper.EditorTemplate(TemplateName: "Fields/Common.Text.Edit", Model: field, Prefix: GetPrefix(field, part)));
+                () => shapeHelper.EditorTemplate(TemplateName: "Fields.Common.Text.Edit", Model: field, Prefix: GetPrefix(field, part)));
         }
 
         protected override DriverResult Editor(ContentPart part, TextField field, IUpdateModel updater, dynamic shapeHelper) {
