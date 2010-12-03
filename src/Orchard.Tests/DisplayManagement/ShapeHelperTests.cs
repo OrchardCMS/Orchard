@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Autofac;
+﻿using Autofac;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions;
 using Orchard.Tests.Stubs;
 
@@ -22,6 +18,7 @@ namespace Orchard.Tests.DisplayManagement {
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             _container = builder.Build();
 
         }
