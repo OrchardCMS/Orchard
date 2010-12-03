@@ -50,11 +50,11 @@ namespace Orchard.Environment.Extensions.Compilers {
 
             try {
                 using (var stream = _virtualPathProvider.OpenFile(context.VirtualPath)) {
-                    var descriptor = _projectFileParser.Parse(stream);
+                    var projectFileDescriptor = _projectFileParser.Parse(stream);
 
                     // Add source files
                     var directory = _virtualPathProvider.GetDirectoryName(context.VirtualPath);
-                    foreach (var filename in descriptor.SourceFilenames.Select(f => _virtualPathProvider.Combine(directory, f))) {
+                    foreach (var filename in projectFileDescriptor.SourceFilenames.Select(f => _virtualPathProvider.Combine(directory, f))) {
                         context.AssemblyBuilder.AddCodeCompileUnit(CreateCompileUnit(filename));
                     }
 
@@ -71,19 +71,29 @@ namespace Orchard.Environment.Extensions.Compilers {
                     }
 
                     // Load references specified in project file
-                    foreach (var assemblyReference in descriptor.References) {
+                    foreach (var assemblyReference in projectFileDescriptor.References) {
                         var assembly = _assemblyLoader.Load(assemblyReference.FullName);
                         if (assembly != null) {
                             context.AssemblyBuilder.AddAssemblyReference(assembly);
                         }
                         else {
-                            Logger.Warning("Assembly reference '{0}' for project '{1}' skipped due to load error", assemblyReference.FullName, context.VirtualPath);
+                            Logger.Warning("Assembly reference '{0}' for project '{1}' cannot be loaded", assemblyReference.FullName, context.VirtualPath);
+                            throw new OrchardCoreException(T(
+                                "The assembly reference '{0}' could not be loaded.\r\n\r\n" +
+                                "There are generally a few ways to solve this issue:\r\n" +
+                                "1. Remove the assembly reference from the project file if it's not needed.\r\n" +
+                                "2. Ensure the assembly reference is present in the 'bin' directory of the module.\r\n" +
+                                "3. Ensure the assembly reference is present in the 'bin' directory of the application.\r\n" +
+                                "4. Specify the strong name of the assembly (name, version, culture, publickey) if the assembly is present in the GAC.", 
+                                assemblyReference.FullName));
                         }
                     }
                 }
             }
             catch (Exception e) {
-                throw new OrchardCoreException(T("Error compiling module \"{0}\" from file \"{1}\"", moduleName, context.VirtualPath), e);
+                //Note: we need to embed the "e.Message" in the exception text because 
+                //      ASP.NET build manager "swallows" inner exceptions from this method.
+                throw new OrchardCoreException(T("Error compiling module \"{0}\" from file \"{1}\":\r\n{2}", moduleName, context.VirtualPath, e.Message), e);
             }
         }
 
