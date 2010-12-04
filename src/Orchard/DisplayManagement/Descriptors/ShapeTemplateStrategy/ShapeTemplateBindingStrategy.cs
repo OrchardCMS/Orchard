@@ -1,10 +1,12 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using Orchard.Caching;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
@@ -15,6 +17,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
     public class ShapeTemplateBindingStrategy : IShapeTableProvider {
         private readonly ShellDescriptor _shellDescriptor;
         private readonly IExtensionManager _extensionManager;
+        private readonly ICacheManager _cacheManager;
+        private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IEnumerable<IShapeTemplateHarvester> _harvesters;
         private readonly IEnumerable<IShapeTemplateViewEngine> _shapeTemplateViewEngines;
@@ -24,11 +28,15 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             IEnumerable<IShapeTemplateHarvester> harvesters,
             ShellDescriptor shellDescriptor,
             IExtensionManager extensionManager,
+            ICacheManager cacheManager,
+            IVirtualPathMonitor virtualPathMonitor,
             IVirtualPathProvider virtualPathProvider,
             IEnumerable<IShapeTemplateViewEngine> shapeTemplateViewEngines) {
             _harvesters = harvesters;
             _shellDescriptor = shellDescriptor;
             _extensionManager = extensionManager;
+            _cacheManager = cacheManager;
+            _virtualPathMonitor = virtualPathMonitor;
             _virtualPathProvider = virtualPathProvider;
             _shapeTemplateViewEngines = shapeTemplateViewEngines;
         }
@@ -49,13 +57,21 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                 var pathContexts = harvesterInfos.SelectMany(harvesterInfo => harvesterInfo.subPaths.Select(subPath => {
                     var basePath = Path.Combine(extensionDescriptor.Location, extensionDescriptor.Id).Replace(Path.DirectorySeparatorChar, '/');
                     var virtualPath = Path.Combine(basePath, subPath).Replace(Path.DirectorySeparatorChar, '/');
-                    var fileNames = _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
+                    var fileNames = _cacheManager.Get(virtualPath, ctx => {
+                        ctx.Monitor(_virtualPathMonitor.WhenPathChanges(virtualPath));
+                        return _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
+                    });
                     return new { harvesterInfo.harvester, basePath, subPath, virtualPath, fileNames };
                 }));
 
                 var fileContexts = pathContexts.SelectMany(pathContext => _shapeTemplateViewEngines.SelectMany(ve => {
                     var fileNames = ve.DetectTemplateFileNames(pathContext.fileNames);
-                    return fileNames.Select(fileName => new { fileName = Path.GetFileNameWithoutExtension(fileName), fileVirtualPath = Path.Combine(pathContext.virtualPath, fileName).Replace(Path.DirectorySeparatorChar, '/'), pathContext });
+                    return fileNames.Select(
+                        fileName => new {
+                            fileName = Path.GetFileNameWithoutExtension(fileName),
+                            fileVirtualPath = Path.Combine(pathContext.virtualPath, fileName).Replace(Path.DirectorySeparatorChar, '/'),
+                            pathContext
+                        });
                 }));
 
                 var shapeContexts = fileContexts.SelectMany(fileContext => {

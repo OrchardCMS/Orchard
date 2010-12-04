@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Xml.Serialization;
-using NHibernate;
+﻿using NHibernate;
 using NHibernate.Cfg;
-using Orchard.Data;
 using Orchard.Data.Providers;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;

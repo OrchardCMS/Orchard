@@ -5,12 +5,14 @@ using System.Linq;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.DisplayManagement.Descriptors {
     [TestFixture]
@@ -21,12 +23,14 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         private TestVirtualPathProvider _testVirtualPathProvider;
 
 
-        protected override void Register(Autofac.ContainerBuilder builder) {
-            _descriptor = new ShellDescriptor { };
+        protected override void Register(ContainerBuilder builder) {
+            _descriptor = new ShellDescriptor();
             _testViewEngine = new TestViewEngine();
             _testVirtualPathProvider = new TestVirtualPathProvider();
 
             builder.Register(ctx => _descriptor);
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubVirtualPathMonitor>().As<IVirtualPathMonitor>();
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
             builder.RegisterInstance(_testViewEngine).As<IShapeTemplateViewEngine>();
