@@ -240,8 +240,8 @@
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\List.cshtml" />
     <Content Include="Feeds\Views\Feed.cshtml" />
-    <Content Include="Contents\Views\Parts\Contents.Publish.cshtml" />
-    <Content Include="Contents\Views\Parts\Contents.Publish.SummaryAdmin.cshtml" />
+    <Content Include="Contents\Views\Parts.Contents.Publish.cshtml" />
+    <Content Include="Contents\Views\Parts.Contents.Publish.SummaryAdmin.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Fields.Common.Text.Edit.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Parts.Common.Container.cshtml" />
     <Content Include="Common\Views\Body.Editor.cshtml" />
@@ -257,7 +257,7 @@
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Views\Admin\Culture.cshtml" />
-    <Content Include="Contents\Views\Items\Content.Edit.cshtml" />
+    <Content Include="Contents\Views\Content.Edit.cshtml" />
     <Content Include="Routable\Placement.info" />
     <Content Include="Settings\Placement.info" />
     <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.cshtml" />
@@ -320,8 +320,8 @@
     <Content Include="Contents\Views\Web.config" />
     <Content Include="Routable\Views\Web.config" />
     <Content Include="Reports\Views\Web.config" />
-    <Content Include="Contents\Views\Items\Content.cshtml" />
-    <Content Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
+    <Content Include="Contents\Views\Content.cshtml" />
+    <Content Include="Contents\Views\Content.SummaryAdmin.cshtml" />
     <Content Include="Shapes\Views\Document.cshtml" />
     <Content Include="Shapes\Views\User.cshtml" />
     <Content Include="Shapes\Views\Header.cshtml" />
@@ -340,7 +340,7 @@
     <Content Include="Routable\Views\Parts.RoutableTitle.cshtml" />
     <Content Include="Routable\Views\Item\Display.cshtml" />
     <Content Include="Routable\Views\Routable.HomePage.cshtml" />
-    <Content Include="Contents\Views\Items\Content.Summary.cshtml" />
+    <Content Include="Contents\Views\Content.Summary.cshtml" />
     <Content Include="Shapes\Views\Pager.cshtml" />
     <Content Include="Contents\Views\Content.SaveButton.cshtml" />
     <Content Include="Contents\Views\Content.PublishButton.cshtml" />
