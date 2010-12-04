@@ -9,7 +9,7 @@ namespace Orchard.Logging {
         Fatal
     }
 
-    public interface ILogger : ISingletonDependency {
+    public interface ILogger {
         bool IsEnabled(LogLevel level);
         void Log(LogLevel level, Exception exception, string format, params object[] args);
     }
