@@ -29,7 +29,7 @@ namespace Orchard.Environment {
             _stopping = false;
             var timer = new Timer();
             timer.Elapsed += CompileViews;
-            timer.Interval = TimeSpan.FromMilliseconds(100).TotalMilliseconds;
+            timer.Interval = TimeSpan.FromMilliseconds(1500).TotalMilliseconds;
             timer.AutoReset = false;
             timer.Start();
         }
@@ -45,7 +45,7 @@ namespace Orchard.Environment {
         }
 
         private void CompileViews(object sender, ElapsedEventArgs elapsedEventArgs) {
-            Stopwatch totalTime = new Stopwatch();
+            var totalTime = new Stopwatch();
             totalTime.Start();
             Logger.Information("Starting background compilation of views");
             ((Timer)sender).Stop();
@@ -59,24 +59,28 @@ namespace Orchard.Environment {
                     "~/Themes/SafeMode/Views",
 
                     // Homepage
-                    "~/Themes/TheThemeMachine/Views",
-                    "~/Core/Common/Views",
-                    "~/Core/Contents/Views",
                     "~/Core/Routable/Views",
+                    "~/Core/Contents/Views",
+                    "~/Core/Common/Views",
                     "~/Core/Settings/Views",
-                    "~/Core/Shapes/Views",
-                    "~/Core/Feeds/Views",
-                    "~/Modules/Orchard.Tags/Views",
-                    "~/Modules/Orchard.Widgets/Views",
 
                     // Dashboard
                     "~/Core/Dashboard/Views",
                     "~/Themes/TheAdmin/Views",
 
+                    // Content Items
+                    "~/Modules/Orchard.PublishLater/Views",
+
+                    // Content Types
+                    "~/Modules/Orchard.ContentTypes/Views",
+
                     // "Edit" homepage
                     "~/Modules/TinyMce/Views",
+                    "~/Modules/Orchard.Tags/Views",
+                    "~/Core/Navigation/Views",
 
                     // Various other admin pages
+                    "~/Core/Settings/Views",
                     "~/Modules/Orchard.Modules/Views",
                     "~/Modules/Orchard.Users/Views",
                     "~/Modules/Orchard.Media/Views",

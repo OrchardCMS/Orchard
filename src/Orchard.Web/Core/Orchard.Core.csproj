@@ -279,7 +279,7 @@
     <Content Include="Shapes\Views\Message.cshtml" />
     <Content Include="Shapes\Views\NotFound.cshtml" />
     <Content Include="XmlRpc\Module.txt" />
-    <Content Include="Settings\Views\EditorTemplates\Parts\Settings.SiteSettingsPart.cshtml" />
+    <Content Include="Settings\Views\EditorTemplates\Parts.Settings.SiteSettingsPart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
@@ -306,7 +306,7 @@
     <Content Include="Dashboard\Views\Admin\Index.cshtml" />
     <Content Include="HomePage\Module.txt" />
     <Content Include="Navigation\Views\Admin\Index.cshtml" />
-    <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.Menu.Edit.cshtml" />
+    <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.Menu.Edit.cshtml" />
     <Content Include="Navigation\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
