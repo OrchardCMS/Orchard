@@ -1,14 +1,13 @@
-﻿using System.Text;
-using System.Web.Security;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using System;
+using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Email.Models {
     public class SmtpSettingsPart : ContentPart<SmtpSettingsPartRecord> {
-        public bool IsValid() {
-            return !String.IsNullOrWhiteSpace(Record.Host)
-                && Record.Port > 0
-                && !String.IsNullOrWhiteSpace(Record.Address);
+        private readonly ComputedField<string> _password = new ComputedField<string>();
+
+        public ComputedField<string> PasswordField {
+            get { return _password; }
         }
 
         public string Address {
@@ -42,8 +41,14 @@ namespace Orchard.Email.Models {
         }
 
         public string Password {
-            get { return String.IsNullOrWhiteSpace(Record.Password) ? String.Empty : Encoding.UTF8.GetString(MachineKey.Decode(Record.Password, MachineKeyProtection.All)); ; }
-            set { Record.Password = String.IsNullOrWhiteSpace(value) ? String.Empty : MachineKey.Encode(Encoding.UTF8.GetBytes(value), MachineKeyProtection.All); }
+            get { return _password.Value; }
+            set { _password.Value = value; }
+        }
+
+        public bool IsValid() {
+            return !String.IsNullOrWhiteSpace(Record.Host)
+                && Record.Port > 0
+                && !String.IsNullOrWhiteSpace(Record.Address);
         }
     }
 }

@@ -16,6 +16,9 @@
             DataTablePrefix = settings.DataTablePrefix;
             RequestUrlHost = settings.RequestUrlHost;
             RequestUrlPrefix = settings.RequestUrlPrefix;
+            EncryptionAlgorithm = settings.EncryptionAlgorithm;
+            EncryptionKey = settings.EncryptionKey;
+            EncryptionIV = settings.EncryptionIV;
             State = settings.State;
         }
 
@@ -27,6 +30,10 @@
 
         public string RequestUrlHost { get; set; }
         public string RequestUrlPrefix { get; set; }
+
+        public string EncryptionAlgorithm { get; set; }
+        public string EncryptionKey { get; set; }
+        public string EncryptionIV { get; set; }
 
         public TenantState State { get; set; }
     }

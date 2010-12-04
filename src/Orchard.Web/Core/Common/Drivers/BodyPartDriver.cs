@@ -16,7 +16,7 @@ namespace Orchard.Core.Common.Drivers {
     public class BodyPartDriver : ContentPartDriver<BodyPart> {
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
-        private const string TemplateName = "Parts/Common.Body";
+        private const string TemplateName = "Parts.Common.Body";
 
         public BodyPartDriver(IOrchardServices services, IEnumerable<IHtmlFilter> htmlFilters) {
             _htmlFilters = htmlFilters;

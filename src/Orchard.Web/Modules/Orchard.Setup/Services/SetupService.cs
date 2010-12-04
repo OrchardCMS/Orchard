@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -29,6 +30,7 @@ using Orchard.Settings;
 using Orchard.Environment.State;
 using Orchard.Data.Migration;
 using Orchard.Themes.Services;
+using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
 using Orchard.Widgets;
 
@@ -117,6 +119,21 @@ namespace Orchard.Setup.Services {
                 shellSettings.DataConnectionString = context.DatabaseConnectionString;
                 shellSettings.DataTablePrefix = context.DatabaseTablePrefix;
             }
+
+            #region Encryption Settings
+
+            // generate random keys for encryption
+            var key = new byte[32];
+            var iv = new byte[16];
+            using ( var random = new RNGCryptoServiceProvider() ) {
+                random.GetBytes(key);
+                random.GetBytes(iv);
+            }
+            
+            shellSettings.EncryptionAlgorithm = "AES";
+            shellSettings.EncryptionKey = key.ToHexString();
+            shellSettings.EncryptionIV = iv.ToHexString();
+            #endregion
 
             var shellDescriptor = new ShellDescriptor {
                 Features = context.EnabledFeatures.Select(name => new ShellFeature { Name = name })

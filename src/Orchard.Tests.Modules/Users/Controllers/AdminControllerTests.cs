@@ -26,6 +26,7 @@ using Orchard.Messaging.Events;
 using Orchard.Messaging.Services;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.Security.Providers;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.Users.Controllers;
@@ -69,7 +70,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();
-            builder.RegisterInstance(new ShellSettings { Name = "Alpha", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "~/foo" });
+            builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
+            builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());
 
             _authorizer = new Mock<IAuthorizer>();
             builder.RegisterInstance(_authorizer.Object);

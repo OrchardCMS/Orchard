@@ -28,7 +28,7 @@ namespace Orchard.Core.Navigation.Drivers {
                 return null;
 
             return ContentShape("Parts_Navigation_Menu_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Navigation.Menu.Edit", Model: part, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Navigation.Menu.Edit", Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(MenuPart part, IUpdateModel updater, dynamic shapeHelper) {

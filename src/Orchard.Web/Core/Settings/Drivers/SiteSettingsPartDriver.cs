@@ -40,7 +40,7 @@ namespace Orchard.Core.Settings.Drivers {
             };
 
             return ContentShape("Parts_Settings_SiteSettingsPart",
-                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Settings.SiteSettingsPart", Model: model, Prefix: Prefix));
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Settings.SiteSettingsPart", Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(SiteSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -65,7 +65,7 @@ namespace Orchard.Core.Settings.Drivers {
             }
 
             return ContentShape("Parts_Settings_SiteSettingsPart",
-                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Settings.SiteSettingsPart", Model: model, Prefix: Prefix));
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Settings.SiteSettingsPart", Model: model, Prefix: Prefix));
         }
     }
 }

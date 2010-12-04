@@ -84,6 +84,15 @@ namespace Orchard.Environment.Configuration {
                         case "RequestUrlPrefix":
                             shellSettings.RequestUrlPrefix = settingFields[1];
                             break;
+                        case "EncryptionAlgorithm":
+                            shellSettings.EncryptionAlgorithm = settingFields[1];
+                            break;
+                        case "EncryptionKey":
+                            shellSettings.EncryptionKey = settingFields[1];
+                            break;
+                        case "EncryptionIV":
+                            shellSettings.EncryptionIV = settingFields[1];
+                            break;
                     }
                 }
             }
@@ -94,14 +103,18 @@ namespace Orchard.Environment.Configuration {
             if (settings == null)
                 return "";
 
-            return string.Format("Name: {0}\r\nDataProvider: {1}\r\nDataConnectionString: {2}\r\nDataPrefix: {3}\r\nRequestUrlHost: {4}\r\nRequestUrlPrefix: {5}\r\nState: {6}\r\n",
+            return string.Format("Name: {0}\r\nDataProvider: {1}\r\nDataConnectionString: {2}\r\nDataPrefix: {3}\r\nRequestUrlHost: {4}\r\nRequestUrlPrefix: {5}\r\nState: {6}\r\nEncryptionAlgorithm: {7}\r\nEncryptionKey: {8}\r\nEncryptionIV: {9}\r\n",
                      settings.Name,
                      settings.DataProvider,
                      settings.DataConnectionString ?? "null",
                      settings.DataTablePrefix ?? "null",
                      settings.RequestUrlHost ?? "null",
                      settings.RequestUrlPrefix ?? "null",
-                     settings.State != null ? settings.State.ToString() : String.Empty);
+                     settings.State != null ? settings.State.ToString() : String.Empty,
+                     settings.EncryptionAlgorithm ?? "null",
+                     settings.EncryptionKey ?? "null",
+                     settings.EncryptionIV ?? "null"
+                     );
         }
     }
 }

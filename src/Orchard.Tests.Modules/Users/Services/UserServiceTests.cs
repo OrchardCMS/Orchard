@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web.Security;
 using System.Xml.Linq;
 using Autofac;
 using Moq;
@@ -21,6 +20,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Messaging.Events;
 using Orchard.Messaging.Services;
 using Orchard.Security;
+using Orchard.Security.Providers;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 using Orchard.Users.Handlers;
@@ -96,7 +96,9 @@ namespace Orchard.Tests.Modules.Users.Services {
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
-            builder.RegisterInstance(new ShellSettings { Name = "Alpha", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "~/foo" });
+
+            builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
+            builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());
 
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
@@ -121,25 +123,5 @@ namespace Orchard.Tests.Modules.Users.Services {
             Assert.That(username, Is.EqualTo("foo"));
             Assert.That(validateByUtc, Is.GreaterThan(_clock.UtcNow));
         }
-
-        [Test]
-        public void NonceShouldNotBeUsedOnAnotherTenant() {
-            var user = _membershipService.CreateUser(new CreateUserParams("foo", "66554321", "foo@bar.com", "", "", true));
-            var nonce = _userService.CreateNonce(user, new TimeSpan(1, 0, 0));
-
-            Assert.That(nonce, Is.Not.Empty);
-
-            string username;
-            DateTime validateByUtc;
-
-            _container.Resolve<ShellSettings>().Name = "Beta";
-
-            var result = _userService.DecryptNonce(nonce, out username, out validateByUtc);
-
-            Assert.That(result, Is.False);
-            Assert.That(username, Is.EqualTo("foo"));
-            Assert.That(validateByUtc, Is.GreaterThan(_clock.UtcNow));
-        }
-
     }
 }

@@ -25,13 +25,15 @@ namespace Orchard.Users.Services {
         private readonly IClock _clock;
         private readonly IMessageManager _messageManager;
         private readonly ShellSettings _shellSettings;
+        private readonly IEncryptionService _encryptionService;
 
-        public UserService(IContentManager contentManager, IMembershipService membershipService, IClock clock, IMessageManager messageManager, ShellSettings shellSettings) {
+        public UserService(IContentManager contentManager, IMembershipService membershipService, IClock clock, IMessageManager messageManager, ShellSettings shellSettings, IEncryptionService encryptionService) {
             _contentManager = contentManager;
             _membershipService = membershipService;
             _clock = clock;
             _messageManager = messageManager;
             _shellSettings = shellSettings;
+            _encryptionService = encryptionService;
             Logger = NullLogger.Instance;
         }
 
@@ -66,24 +68,22 @@ namespace Orchard.Users.Services {
         }
 
         public string CreateNonce(IUser user, TimeSpan delay) {
-            // the tenant's name is added to the token to prevent cross-tenant requests
-            var challengeToken = new XElement("n", new XAttribute("s", _shellSettings.Name), new XAttribute("un", user.UserName), new XAttribute("utc", _clock.UtcNow.ToUniversalTime().Add(delay).ToString(CultureInfo.InvariantCulture))).ToString();
-            var data = Encoding.Unicode.GetBytes(challengeToken);
-            return MachineKey.Encode(data, MachineKeyProtection.All);
+            var challengeToken = new XElement("n", new XAttribute("un", user.UserName), new XAttribute("utc", _clock.UtcNow.ToUniversalTime().Add(delay).ToString(CultureInfo.InvariantCulture))).ToString();
+            var data = Encoding.UTF8.GetBytes(challengeToken);
+            return Convert.ToBase64String(_encryptionService.Encode(data));
         }
 
-        public bool DecryptNonce(string challengeToken, out string username, out DateTime validateByUtc) {
+        public bool DecryptNonce(string nonce, out string username, out DateTime validateByUtc) {
             username = null;
             validateByUtc = _clock.UtcNow;
 
             try {
-                var data = MachineKey.Decode(challengeToken, MachineKeyProtection.All);
-                var xml = Encoding.Unicode.GetString(data);
+                var data = _encryptionService.Decode(Convert.FromBase64String(nonce));
+                var xml = Encoding.UTF8.GetString(data);
                 var element = XElement.Parse(xml);
-                var tenant = element.Attribute("s").Value;
                 username = element.Attribute("un").Value;
                 validateByUtc = DateTime.Parse(element.Attribute("utc").Value, CultureInfo.InvariantCulture);
-                return String.Equals(_shellSettings.Name, tenant, StringComparison.Ordinal) && _clock.UtcNow <= validateByUtc;
+                return _clock.UtcNow <= validateByUtc;
             }
             catch {
                 return false;

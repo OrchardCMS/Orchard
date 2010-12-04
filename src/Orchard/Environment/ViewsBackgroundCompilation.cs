@@ -29,7 +29,7 @@ namespace Orchard.Environment {
             _stopping = false;
             var timer = new Timer();
             timer.Elapsed += CompileViews;
-            timer.Interval = TimeSpan.FromMilliseconds(100).TotalMilliseconds;
+            timer.Interval = TimeSpan.FromMilliseconds(1500).TotalMilliseconds;
             timer.AutoReset = false;
             timer.Start();
         }
@@ -45,6 +45,8 @@ namespace Orchard.Environment {
         }
 
         private void CompileViews(object sender, ElapsedEventArgs elapsedEventArgs) {
+            var totalTime = new Stopwatch();
+            totalTime.Start();
             Logger.Information("Starting background compilation of views");
             ((Timer)sender).Stop();
 
@@ -57,25 +59,30 @@ namespace Orchard.Environment {
                     "~/Themes/SafeMode/Views",
 
                     // Homepage
-                    "~/Themes/TheThemeMachine/Views",
-                    "~/Core/Common/Views",
-                    "~/Core/Contents/Views",
                     "~/Core/Routable/Views",
+                    "~/Core/Contents/Views",
+                    "~/Core/Common/Views",
                     "~/Core/Settings/Views",
-                    "~/Core/Shapes/Views",
-                    "~/Core/Feeds/Views",
-                    "~/Modules/Orchard.Tags/Views",
-                    "~/Modules/Orchard.Widgets/Views",
 
                     // Dashboard
                     "~/Core/Dashboard/Views",
                     "~/Themes/TheAdmin/Views",
 
+                    // Content Items
+                    "~/Modules/Orchard.PublishLater/Views",
+
+                    // Content Types
+                    "~/Modules/Orchard.ContentTypes/Views",
+
                     // "Edit" homepage
                     "~/Modules/TinyMce/Views",
+                    "~/Modules/Orchard.Tags/Views",
+                    "~/Core/Navigation/Views",
 
                     // Various other admin pages
-                    "~/Modules/Orchard.Modules/Views",
+                    "~/Core/Settings/Views",
+                    "~/Core/Containers/Views",
+                    "~/Modules/Orchard.Widgets/Views",
                     "~/Modules/Orchard.Users/Views",
                     "~/Modules/Orchard.Media/Views",
                     "~/Modules/Orchard.Comments/Views",
@@ -91,6 +98,7 @@ namespace Orchard.Environment {
                 .DirectoriesToBrowse
                 .SelectMany(folder => GetViewDirectories(folder, context.FileExtensionsToCompile));
 
+            int directoryCount = 0;
             foreach (var viewDirectory in directories) {
                 if (_stopping) {
                     if (Logger.IsEnabled(LogLevel.Information)) {
@@ -104,8 +112,11 @@ namespace Orchard.Environment {
                 }
 
                 CompileDirectory(context, viewDirectory);
+                directoryCount++;
             }
-            Logger.Information("Ending background compilation of views");
+
+            totalTime.Stop();
+            Logger.Information("Ending background compilation of views, {0} directories processed in {1} sec", directoryCount, totalTime.Elapsed.TotalSeconds);
         }
 
         private void CompileDirectory(CompilationContext context, string viewDirectory) {
@@ -118,7 +129,6 @@ namespace Orchard.Environment {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             try {
-
                 var firstFile = _virtualPathProvider
                     .ListFiles(viewDirectory)
                     .Where(f => context.FileExtensionsToCompile.Any(e => f.EndsWith(e, StringComparison.OrdinalIgnoreCase)))

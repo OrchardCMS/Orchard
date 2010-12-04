@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +15,7 @@ namespace Orchard.Logging {
         private readonly IDictionary<string, ILogger> _loggerCache;
 
         public LoggingModule() {
-            _loggerCache = new Dictionary<string, ILogger>();
+            _loggerCache = new ConcurrentDictionary<string, ILogger>();
         }
 
         protected override void Load(ContainerBuilder moduleBuilder) {
@@ -78,7 +79,7 @@ namespace Orchard.Logging {
                     else {
                         var propertyValue = ctx.Resolve<ILogger>(new TypedParameter(typeof(Type), componentType));
                         _loggerCache.Add(component, propertyValue);
-                        propertyInfo.SetValue(instance, propertyValue, null);  
+                        propertyInfo.SetValue(instance, propertyValue, null);
                     }
                 };
             }
