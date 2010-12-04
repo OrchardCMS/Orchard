@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Orchard.Localization;
 
@@ -54,6 +55,17 @@ namespace Orchard.Utility.Extensions {
             return string.IsNullOrWhiteSpace(text)
                 ? ""
                 : Regex.Replace(text, @"(\r?\n)", replacement, RegexOptions.Singleline);
+        }
+
+        public static string ToHexString(this byte[] bytes) {
+            return BitConverter.ToString(bytes).Replace("-", "");
+        }
+
+        public static byte[] ToByteArray(this string hex) {
+            return Enumerable.Range(0, hex.Length).
+                Where(x => 0 == x % 2).
+                Select(x => Convert.ToByte(hex.Substring(x, 2), 16)).
+                ToArray();
         }
     }
 }

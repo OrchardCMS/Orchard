@@ -6,10 +6,8 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
-using Orchard.ContentTypes.Extensions;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Extensions;
-using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 
 namespace Orchard.ContentTypes.Services {

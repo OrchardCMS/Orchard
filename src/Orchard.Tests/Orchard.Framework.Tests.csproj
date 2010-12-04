@@ -212,6 +212,7 @@
     <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
     <Compile Include="ContainerTestBase.cs" />
     <Compile Include="DisplayManagement\Descriptors\BasicShapeTemplateHarvesterTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\StylesheetBindingStrategyTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableManagerTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\InMemoryWebSiteFolder.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementFileParserTests.cs" />
@@ -244,6 +245,7 @@
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
     <Compile Include="Records\BigRecord.cs" />
+    <Compile Include="Security\DefaultEncryptionServiceTests.cs" />
     <Compile Include="Stubs\InMemoryWebSiteFolder.cs" />
     <Compile Include="Stubs\StubHttpContextAccessor.cs" />
     <Compile Include="Stubs\StubWorkContextAccessor.cs" />

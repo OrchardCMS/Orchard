@@ -5,34 +5,30 @@ using System.Linq;
 using Autofac;
 using Moq;
 using NUnit.Framework;
-using Orchard.Caching;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy;
 using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
-using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.DisplayManagement.Descriptors {
     [TestFixture]
-    public class ShapeTemplateBindingStrategyTests : ContainerTestBase {
+    public class StylesheetBindingStrategyTests : ContainerTestBase {
         private ShellDescriptor _descriptor;
         private IList<FeatureDescriptor> _features;
         private TestViewEngine _testViewEngine;
         private TestVirtualPathProvider _testVirtualPathProvider;
 
 
-        protected override void Register(ContainerBuilder builder) {
-            _descriptor = new ShellDescriptor();
+        protected override void Register(Autofac.ContainerBuilder builder) {
+            _descriptor = new ShellDescriptor { };
             _testViewEngine = new TestViewEngine();
             _testVirtualPathProvider = new TestVirtualPathProvider();
 
             builder.Register(ctx => _descriptor);
-            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
-            builder.RegisterType<StubVirtualPathMonitor>().As<IVirtualPathMonitor>();
-            builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
-            builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
+            builder.RegisterType<StylesheetBindingStrategy>().As<IShapeTableProvider>();
             builder.RegisterInstance(_testViewEngine).As<IShapeTemplateViewEngine>();
             builder.RegisterInstance(_testVirtualPathProvider).As<IVirtualPathProvider>();
 
@@ -93,7 +89,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             }
 
             public IEnumerable<string> ListFiles(string path) {
-                return new List<string> {"~/Modules/Alpha/Views/AlphaShape.blah"};
+                return new List<string> {"~/Modules/Alpha/Styles/AlphaStyle.css"};
             }
 
             public IEnumerable<string> ListDirectories(string path) {
@@ -132,7 +128,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         public void TemplateResolutionWorks() {
             AddEnabledFeature("Alpha");
 
-            _testViewEngine.Add("~/Modules/Alpha/Views/AlphaShape.blah", null);
+            _testViewEngine.Add("~/Modules/Alpha/Styles/AlphaShape.css", null);
             var strategy = _container.Resolve<IShapeTableProvider>();
 
             IList<ShapeAlterationBuilder> alterationBuilders = new List<ShapeAlterationBuilder>();
@@ -140,7 +136,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             strategy.Discover(builder);
             var alterations = alterationBuilders.Select(alterationBuilder=>alterationBuilder.Build());
 
-            Assert.That(alterations.Any(alteration => alteration.ShapeType == "AlphaShape"));
+            Assert.That(alterations.Any(alteration => alteration.ShapeType == "Style"));
         }
 
     }

@@ -11,16 +11,21 @@ namespace Orchard.FileSystems.VirtualPath {
         private readonly string _prefix = Guid.NewGuid().ToString("n");
         private readonly IDictionary<string, Weak<Token>> _tokens = new Dictionary<string, Weak<Token>>();
         private readonly IClock _clock;
+        private readonly IVirtualPathProvider _virtualPathProvider;
 
-        public DefaultVirtualPathMonitor(IClock clock) {
+        public DefaultVirtualPathMonitor(IClock clock, IVirtualPathProvider virtualPathProvider) {
             _clock = clock;
+            _virtualPathProvider = virtualPathProvider;
             _thunk = new Thunk(this);
         }
 
         public IVolatileToken WhenPathChanges(string virtualPath) {
             // Fix this to monitor first existing parent directory.
-            var token = BindToken(virtualPath);
-            BindSignal(virtualPath);
+            IVolatileToken token = new Token(virtualPath);
+            if (_virtualPathProvider.DirectoryExists(virtualPath)) {
+                token = BindToken(virtualPath);
+                BindSignal(virtualPath);
+            }
             return token;
         }
 
@@ -108,6 +113,5 @@ namespace Orchard.FileSystems.VirtualPath {
                     provider.Signal(key, value, reason);
             }
         }
-
     }
 }
