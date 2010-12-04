@@ -8,9 +8,13 @@ namespace Orchard.Environment {
     }
 
     public interface IFeatureEventHandler : IEventHandler {
-        void Install(Feature feature);
-        void Enable(Feature feature);
-        void Disable(Feature feature);
-        void Uninstall(Feature feature);
+        void Installing(Feature feature);
+        void Installed(Feature feature);
+        void Enabling(Feature feature);
+        void Enabled(Feature feature);
+        void Disabling(Feature feature);
+        void Disabled(Feature feature);
+        void Uninstalling(Feature feature);
+        void Uninstalled(Feature feature);
     }
 }

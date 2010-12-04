@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Environment;
@@ -24,15 +25,30 @@ namespace Orchard.Roles {
 
         public ILogger Logger { get; set; }
 
-        void IFeatureEventHandler.Install(Feature feature) {
+        void IFeatureEventHandler.Installing(Feature feature) {
             AddDefaultRolesForFeature(feature);
         }
 
-        void IFeatureEventHandler.Enable(Feature feature) {}
+        void IFeatureEventHandler.Installed(Feature feature) {
+        }
 
-        void IFeatureEventHandler.Disable(Feature feature) {}
+        void IFeatureEventHandler.Enabling(Feature feature) {
+        }
 
-        void IFeatureEventHandler.Uninstall(Feature feature) {}
+        void IFeatureEventHandler.Enabled(Feature feature) {
+        }
+
+        void IFeatureEventHandler.Disabling(Feature feature) {
+        }
+
+        void IFeatureEventHandler.Disabled(Feature feature) {
+        }
+
+        void IFeatureEventHandler.Uninstalling(Feature feature) {
+        }
+
+        void IFeatureEventHandler.Uninstalled(Feature feature) {
+        }
 
         public void AddDefaultRolesForFeature(Feature feature) {
             var featureName = feature.Descriptor.Id;

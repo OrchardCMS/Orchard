@@ -157,28 +157,32 @@ namespace Orchard.Environment.State {
             // lower enabled states in reverse order
             foreach (var entry in allEntries.Reverse().Where(entry => entry.FeatureState.EnableState == ShellFeatureState.State.Falling)) {
                 Logger.Information("Disabling feature '{0}'", entry.Feature.Descriptor.Id);
-                _featureEvents.Disable(entry.Feature);
+                _featureEvents.Disabling(entry.Feature);
                 _stateManager.UpdateEnabledState(entry.FeatureState, ShellFeatureState.State.Down);
+                _featureEvents.Disabled(entry.Feature);
             }
 
             // lower installed states in reverse order
             foreach (var entry in allEntries.Reverse().Where(entry => entry.FeatureState.InstallState == ShellFeatureState.State.Falling)) {
                 Logger.Information("Uninstalling feature '{0}'", entry.Feature.Descriptor.Id);
-                _featureEvents.Uninstall(entry.Feature);
+                _featureEvents.Uninstalling(entry.Feature);
                 _stateManager.UpdateInstalledState(entry.FeatureState, ShellFeatureState.State.Down);
+                _featureEvents.Uninstalled(entry.Feature);
             }
 
             // raise install and enabled states in order
             foreach (var entry in allEntries.Where(entry => IsRising(entry.FeatureState))) {
                 if (entry.FeatureState.InstallState == ShellFeatureState.State.Rising) {
                     Logger.Information("Installing feature '{0}'", entry.Feature.Descriptor.Id);
-                    _featureEvents.Install(entry.Feature);
+                    _featureEvents.Installing(entry.Feature);
                     _stateManager.UpdateInstalledState(entry.FeatureState, ShellFeatureState.State.Up);
+                    _featureEvents.Installed(entry.Feature);
                 }
                 if (entry.FeatureState.EnableState == ShellFeatureState.State.Rising) {
                     Logger.Information("Enabling feature '{0}'", entry.Feature.Descriptor.Id);
-                    _featureEvents.Enable(entry.Feature);
+                    _featureEvents.Enabling(entry.Feature);
                     _stateManager.UpdateEnabledState(entry.FeatureState, ShellFeatureState.State.Up);
+                    _featureEvents.Enabled(entry.Feature);
                 }
             }
 
