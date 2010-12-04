@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
@@ -10,7 +11,7 @@ namespace Orchard.Localization {
         private readonly IDictionary<string, Localizer> _localizerCache;
         
         public LocalizationModule() {
-            _localizerCache = new Dictionary<string, Localizer>();
+            _localizerCache = new ConcurrentDictionary<string, Localizer>();
         }
 
         protected override void Load(ContainerBuilder builder) {
