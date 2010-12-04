@@ -268,7 +268,6 @@
     <Compile Include="Environment\Extensions\ExtensionTypes\StubTypes.cs" />
     <Compile Include="Localization\NullLocalizerTests.cs" />
     <Compile Include="Logging\LoggingModuleTests.cs" />
-    <Compile Include="Mvc\ModelBinders\KeyedListModelBinderTests.cs" />
     <Compile Include="Mvc\OrchardControllerFactoryTests.cs" />
     <Compile Include="Mvc\RouteCollectionPublisherTests.cs" />
     <Compile Include="Mvc\Routes\StandardExtensionRouteProviderTests.cs" />
@@ -329,7 +328,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Mvc\ModelBinders\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -747,7 +747,6 @@
     <Compile Include="Mvc\ModelBinders\ModelBinderPublisher.cs" />
     <Compile Include="Mvc\ModelBinders\IModelBinderProvider.cs" />
     <Compile Include="Mvc\ModelBinders\IModelBinderPublisher.cs" />
-    <Compile Include="Mvc\ModelBinders\KeyedListModelBinder.cs" />
     <Compile Include="Mvc\ModelBinders\ModelBinderDescriptor.cs" />
     <Compile Include="Mvc\Routes\RouteExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\IViewEngineProvider.cs" />
