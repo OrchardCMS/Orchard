@@ -22,11 +22,6 @@ namespace Orchard.Events {
 
         public IEnumerable Notify(string messageName, IDictionary<string, object> eventData) {
             // call ToArray to ensure evaluation has taken place
-            return NotifyHandlers(messageName, eventData, false/*failFast*/).ToArray();
-        }
-
-        public IEnumerable NotifyFailFast(string messageName, IDictionary<string, object> eventData) {
-            // call ToArray to ensure evaluation has taken place
             return NotifyHandlers(messageName, eventData, true/*failFast*/).ToArray();
         }
 
