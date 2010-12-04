@@ -42,6 +42,22 @@
     <CallTarget Targets="Package"/>
   </Target>
 
+  <Target Name="FullBuild">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Test"/>
+    <CallTarget Targets="Package"/>
+    <CallTarget Targets="Gallery"/>
+    <CallTarget Targets="Spec"/> <!-- Note: move to the end until SpecFlow test are more reliable -->
+  </Target>
+
+  <Target Name="FastPackage">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package"/>
+    <CallTarget Targets="Gallery"/>
+  </Target>
+
   <Target Name="Package">
     <CallTarget Targets="Package-Stage"/>
     <CallTarget Targets="Package-MsDeploy"/>
@@ -56,11 +72,7 @@
     <CallTarget Targets="Profiling-Setup"/>
   </Target>
 
-
   <Target Name="Gallery">
-    <CallTarget Targets="Clean"/>
-    <CallTarget Targets="Compile"/>
-    <CallTarget Targets="Package-Stage"/>
     <CallTarget Targets="Gallery-Stage"/>
     <CallTarget Targets="Gallery-Setup"/>
   </Target>
