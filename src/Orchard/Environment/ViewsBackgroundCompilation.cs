@@ -81,7 +81,8 @@ namespace Orchard.Environment {
 
                     // Various other admin pages
                     "~/Core/Settings/Views",
-                    "~/Modules/Orchard.Modules/Views",
+                    "~/Core/Containers/Views",
+                    "~/Modules/Orchard.Widgets/Views",
                     "~/Modules/Orchard.Users/Views",
                     "~/Modules/Orchard.Media/Views",
                     "~/Modules/Orchard.Comments/Views",
@@ -128,7 +129,6 @@ namespace Orchard.Environment {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             try {
-
                 var firstFile = _virtualPathProvider
                     .ListFiles(viewDirectory)
                     .Where(f => context.FileExtensionsToCompile.Any(e => f.EndsWith(e, StringComparison.OrdinalIgnoreCase)))

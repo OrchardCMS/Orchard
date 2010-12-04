@@ -25,7 +25,7 @@
         <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Approve, T("Approve").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Pend, T("Pend").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Unapprove, T("Unapprove").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.MarkAsSpam, T("Mark as Spam").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, T("Remove").ToString())
         </select>
