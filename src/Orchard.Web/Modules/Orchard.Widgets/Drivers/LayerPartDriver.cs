@@ -28,7 +28,7 @@ namespace Orchard.Widgets.Drivers {
 
         protected override DriverResult Editor(LayerPart layerPart, dynamic shapeHelper) {
             return ContentShape("Parts_Widgets_LayerPart",
-                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Widgets.LayerPart", Model: layerPart, Prefix: Prefix));
+                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.LayerPart", Model: layerPart, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(LayerPart layerPart, IUpdateModel updater, dynamic shapeHelper) {

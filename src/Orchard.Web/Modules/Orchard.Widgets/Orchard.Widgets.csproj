@@ -105,13 +105,10 @@
     <Content Include="Views\Admin\EditWidget.cshtml" />
     <Content Include="Views\Admin\EditLayer.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Items\Widget.Edit.cshtml" />
-    <Content Include="Views\Items\Widget.cshtml" />
+    <Content Include="Views\Widget.Edit.cshtml" />
+    <Content Include="Views\Widget.cshtml" />
     <Content Include="Views\Widget.ControlWrapper.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Widgets.WidgetPart.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Widgets.LayerPart.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Widgets.WidgetBagPart.cshtml" />
-    <Content Include="Views\Items\Content-WidgetPage.cshtml" />
+    <Content Include="Views\Content-WidgetPage.cshtml" />
     <Content Include="Views\Widget.Wrapper.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +120,15 @@
     <Content Include="Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Content-WidgetPage.cshtml" />
+    <Content Include="Views\Widget.cshtml" />
+    <Content Include="Views\Widget.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.Widgets.LayerPart.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Widgets.WidgetPart.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
