@@ -22,13 +22,18 @@ namespace Orchard.Events {
 
         public IEnumerable Notify(string messageName, IDictionary<string, object> eventData) {
             // call ToArray to ensure evaluation has taken place
-            return NotifyHandlers(messageName, eventData).ToArray();
+            return NotifyHandlers(messageName, eventData, false/*failFast*/).ToArray();
         }
 
-        private IEnumerable<object> NotifyHandlers(string messageName, IDictionary<string, object> eventData) {
+        public IEnumerable NotifyFailFast(string messageName, IDictionary<string, object> eventData) {
+            // call ToArray to ensure evaluation has taken place
+            return NotifyHandlers(messageName, eventData, true/*failFast*/).ToArray();
+        }
+
+        private IEnumerable<object> NotifyHandlers(string messageName, IDictionary<string, object> eventData, bool failFast) {
             string[] parameters = messageName.Split('.');
             if (parameters.Length != 2) {
-                throw new ArgumentException(messageName + T(" is not formatted correctly"));
+                throw new ArgumentException(T("{0} is not formatted correctly", messageName).Text);
             }
             string interfaceName = parameters[0];
             string methodName = parameters[1];
@@ -36,7 +41,7 @@ namespace Orchard.Events {
             var eventHandlers = _eventHandlers();
             foreach (var eventHandler in eventHandlers) {
                 IEnumerable returnValue;
-                if (TryNotifyHandler(eventHandler, messageName, interfaceName, methodName, eventData, out returnValue)) {
+                if (TryNotifyHandler(eventHandler, messageName, interfaceName, methodName, eventData, failFast, out returnValue)) {
                     if (returnValue != null) {
                         foreach (var value in returnValue) {
                             yield return value;
@@ -46,7 +51,7 @@ namespace Orchard.Events {
             }
         }
 
-        private bool TryNotifyHandler(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> eventData, out IEnumerable returnValue) {
+        private bool TryNotifyHandler(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> eventData, bool failFast, out IEnumerable returnValue) {
             try {
                 return TryInvoke(eventHandler, interfaceName, methodName, eventData, out returnValue);
             }
@@ -55,6 +60,9 @@ namespace Orchard.Events {
                              messageName,
                              eventHandler.GetType().FullName,
                              ex.GetType().Name);
+
+                if (failFast)
+                    throw;
 
                 returnValue = null;
                 return false;
@@ -75,7 +83,7 @@ namespace Orchard.Events {
         private static bool TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
             MethodInfo method = GetMatchingMethod(eventHandler, interfaceType, methodName, arguments);
             if (method != null) {
-                List<object> parameters = new List<object>();
+                var parameters = new List<object>();
                 foreach (var methodParameter in method.GetParameters()) {
                     parameters.Add(arguments[methodParameter.Name]);
                 }
@@ -90,8 +98,8 @@ namespace Orchard.Events {
         }
 
         private static MethodInfo GetMatchingMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments) {
-            List<MethodInfo> allMethods = new List<MethodInfo>(interfaceType.GetMethods());
-            List<MethodInfo> candidates = new List<MethodInfo>(allMethods);
+            var allMethods = new List<MethodInfo>(interfaceType.GetMethods());
+            var candidates = new List<MethodInfo>(allMethods);
 
             foreach (var method in allMethods) {
                 if (String.Equals(method.Name, methodName, StringComparison.OrdinalIgnoreCase)) {
@@ -114,6 +122,5 @@ namespace Orchard.Events {
 
             return null;
         }
-
     }
 }

@@ -75,7 +75,7 @@ namespace Orchard.Environment.State {
                         entry.MessageName,
                         entry.ProcessId, 
                         entry.ShellSettings.Name);
-                    eventBus.Notify(entry.MessageName, entry.EventData);
+                    eventBus.NotifyFailFast(entry.MessageName, entry.EventData);
                 }
             }
         }
