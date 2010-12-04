@@ -154,6 +154,7 @@
     <Compile Include="Themes\Services\ThemeServiceTests.cs" />
     <Compile Include="Users\Controllers\AccountControllerTests.cs" />
     <Compile Include="Users\Services\UserServiceTests.cs" />
+    <Compile Include="Users\ShellSettingsUtility.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="Users\Controllers\AdminControllerTests.cs" />
     <Compile Include="Users\Services\MembershipServiceTests.cs" />

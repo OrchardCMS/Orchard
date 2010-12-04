@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -26,20 +27,19 @@ using Orchard.Messaging.Events;
 using Orchard.Messaging.Services;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.Security.Providers;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.Users.Controllers;
 using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
-using Orchard.Users.ViewModels;
 using Orchard.Settings;
 using Orchard.Core.Settings.Services;
 using Orchard.Tests.Messaging;
 using Orchard.Environment.Configuration;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.Handlers;
-using Orchard.Messaging.Models;
 using System.Collections.Specialized;
 
 namespace Orchard.Tests.Modules.Users.Controllers {
@@ -74,11 +74,14 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SiteSettingsPartHandler>().As<IContentHandler>();
             builder.RegisterType<RegistrationSettingsPartHandler>().As<IContentHandler>();
+            
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<Signals>().As<ISignals>();
-            builder.RegisterInstance(new ShellSettings { Name = "Alpha", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "~/foo" });
+
+            builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
+            builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());
 
             _authorizer = new Mock<IAuthorizer>();
             builder.RegisterInstance(_authorizer.Object);
