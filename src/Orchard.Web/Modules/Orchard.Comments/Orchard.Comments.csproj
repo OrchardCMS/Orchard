@@ -115,11 +115,11 @@
   <ItemGroup>
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Parts\Comments.cshtml" />
-    <Content Include="Views\Parts\Comments.Count.cshtml" />
-    <Content Include="Views\Parts\Comments.Count.SummaryAdmin.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Comments.Comments.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Comments.SiteSettings.cshtml" />
+    <Content Include="Views\Parts.Comments.cshtml" />
+    <Content Include="Views\Parts.Comments.Count.cshtml" />
+    <Content Include="Views\Parts.Comments.Count.SummaryAdmin.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Comments.Comments.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Comments.SiteSettings.cshtml" />
     <Content Include="Views\ListOfComments.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +132,7 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
