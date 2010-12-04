@@ -363,13 +363,13 @@
     <Content Include="Containers\Views\DefinitionTemplates\ContainerPartSettings.cshtml" />
     <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettings.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
-    <Content Include="Containers\Views\Parts\ContainerWidget.cshtml" />
+    <Content Include="Containers\Views\Parts.ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\CustomProperties.cshtml" />
     <Content Include="Routable\Views\Parts.RoutableTitle_Summary.cshtml" />
     <Content Include="Routable\Views\Parts.RoutableTitle_SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Containers\Views\Parts\Container.Contained.SummaryAdmin.cshtml" />
+    <Content Include="Containers\Views\Parts.Container.Contained.SummaryAdmin.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
