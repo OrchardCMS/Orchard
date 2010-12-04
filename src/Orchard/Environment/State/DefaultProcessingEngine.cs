@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor.Models;
@@ -69,13 +70,25 @@ namespace Orchard.Environment.State {
             var shellContext = _shellContextFactory.CreateDescribedContext(entry.ShellSettings, entry.ShellDescriptor);
             using (shellContext.LifetimeScope) {
                 using (var standaloneEnvironment = shellContext.LifetimeScope.CreateWorkContextScope()) {
-                    var eventBus = standaloneEnvironment.Resolve<IEventBus>();
 
-                    Logger.Information("Executing event {0} in process {1} for shell {2}", 
-                        entry.MessageName,
-                        entry.ProcessId, 
-                        entry.ShellSettings.Name);
-                    eventBus.NotifyFailFast(entry.MessageName, entry.EventData);
+                    ITransactionManager transactionManager;
+                    if (!standaloneEnvironment.TryResolve(out transactionManager))
+                        transactionManager = null;
+
+                    try {
+                        var eventBus = standaloneEnvironment.Resolve<IEventBus>();
+                        Logger.Information("Executing event {0} in process {1} for shell {2}",
+                                           entry.MessageName,
+                                           entry.ProcessId,
+                                           entry.ShellSettings.Name);
+                        eventBus.Notify(entry.MessageName, entry.EventData);
+                    }
+                    catch {
+                        // any database changes in this using(env) scope are invalidated
+                        if (transactionManager != null)
+                            transactionManager.Cancel();
+                        throw;
+                    }
                 }
             }
         }
