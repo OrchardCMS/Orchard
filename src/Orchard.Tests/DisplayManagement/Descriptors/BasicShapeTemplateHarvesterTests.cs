@@ -32,7 +32,6 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         [Test]
         public void DefaultItemsContentTemplate() {
             VerifyShapeType("Views/Items", "Content", "Content");
-            VerifyShapeType("Views", "Items.Content", "Content");
         }
 
         [Test]
