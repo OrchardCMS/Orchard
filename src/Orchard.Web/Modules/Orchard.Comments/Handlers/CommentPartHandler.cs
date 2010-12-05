@@ -1,8 +1,6 @@
 using JetBrains.Annotations;
-using Orchard.Comments.Drivers;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Common.Models;
 using Orchard.Data;
 
 namespace Orchard.Comments.Handlers {
