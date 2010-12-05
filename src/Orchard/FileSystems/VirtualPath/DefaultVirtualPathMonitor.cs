@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Caching;
 using System.Web.Hosting;
 using Orchard.Caching;
+using Orchard.Logging;
 using Orchard.Services;
 
 namespace Orchard.FileSystems.VirtualPath {
@@ -11,22 +13,28 @@ namespace Orchard.FileSystems.VirtualPath {
         private readonly string _prefix = Guid.NewGuid().ToString("n");
         private readonly IDictionary<string, Weak<Token>> _tokens = new Dictionary<string, Weak<Token>>();
         private readonly IClock _clock;
-        private readonly IVirtualPathProvider _virtualPathProvider;
 
-        public DefaultVirtualPathMonitor(IClock clock, IVirtualPathProvider virtualPathProvider) {
+        public DefaultVirtualPathMonitor(IClock clock) {
             _clock = clock;
-            _virtualPathProvider = virtualPathProvider;
             _thunk = new Thunk(this);
+            Logger = NullLogger.Instance;
         }
 
+        ILogger Logger { get; set; }
+
         public IVolatileToken WhenPathChanges(string virtualPath) {
-            // Fix this to monitor first existing parent directory.
-            IVolatileToken token = new Token(virtualPath);
-            if (_virtualPathProvider.DirectoryExists(virtualPath)) {
-                token = BindToken(virtualPath);
+            try {
+                var token = BindToken(virtualPath);
                 BindSignal(virtualPath);
+                return token;
             }
-            return token;
+            catch (HttpException e) {
+                // This exception happens if trying to monitor a directory or file
+                // inside a directory which doesn't exist
+                Logger.Warning(e, "Error monitor file changes on virtual path '{0}'", virtualPath);
+                // Fix this to monitor first existing parent directory.
+                return new Token(virtualPath);
+            }
         }
 
         private Token BindToken(string virtualPath) {
