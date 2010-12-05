@@ -331,7 +331,7 @@
 
   <Target Name="Gallery-Setup">
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; setup /SiteName:Gallery /AdminUsername:admin /AdminPassword:gallery-secret /DatabaseProvider:SqlCe" WorkingDirectory="$(GalleryFolder)"/>
-    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; feature enable Orchard.Packaging &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; feature enable Orchard.Packaging" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Localization &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Messaging &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Lucene &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
