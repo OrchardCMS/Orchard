@@ -3,7 +3,6 @@
     As a root Orchard system operator
     I want to create and manage tenant configurations
 
-@ignore
 Scenario: Default site is listed 
     Given I have installed Orchard
         And I have installed "Orchard.MultiTenancy"
@@ -115,7 +114,6 @@ Scenario: An existing initialized tenant cannot have its database option cleared
         And I should see "<h2>Scott</h2>"
         And I should not see "Allow the tenant to set up the database"
 
-@ignore
 Scenario: Default tenant cannot be disabled
     Given I have installed Orchard
         And I have installed "Orchard.MultiTenancy"
@@ -166,7 +164,6 @@ Scenario: A running tenant which is disabled can be enabled
         And I am redirected
     Then I should see "<form action="/Admin/MultiTenancy/disable""
 
-@ignore    
 Scenario: Listing tenants from command line
     Given I have installed Orchard
         And I have installed "Orchard.MultiTenancy"
