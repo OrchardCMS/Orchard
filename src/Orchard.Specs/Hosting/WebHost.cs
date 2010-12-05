@@ -1,5 +1,9 @@
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Web;
 using System.Web.Hosting;
 using Orchard.Specs.Util;
 using Path = Bleroy.FluentPath.Path;
@@ -10,6 +14,7 @@ namespace Orchard.Specs.Hosting {
         private WebHostAgent _webHostAgent;
         private Path _tempSite;
         private Path _orchardWebPath;
+        private Path _codeGenDir;
 
         public WebHost(Path orchardTemp) {
             _orchardTemp = orchardTemp;
@@ -60,6 +65,17 @@ namespace Orchard.Specs.Hosting {
 
             _webHostAgent = (WebHostAgent)ApplicationHost.CreateApplicationHost(typeof(WebHostAgent), VirtualDirectory, PhysicalDirectory);
 
+            var shuttle = new Shuttle();
+            Execute(() => { shuttle.CodeGenDir = HttpRuntime.CodegenDir; });
+
+            // ASP.NET folder seems to be always nested into an empty directory
+            _codeGenDir = shuttle.CodeGenDir;
+            _codeGenDir = _codeGenDir.Parent;
+        }
+
+        [Serializable]
+        class Shuttle {
+            public string CodeGenDir;
         }
 
         public void Dispose() {
@@ -71,10 +87,42 @@ namespace Orchard.Specs.Hosting {
         }
 
         public void Clean() {
+            // Try to delete temporary files for up to ~1.2 seconds.
+            for (int i = 0; i < 4; i++) {
+                Trace.WriteLine("Waiting 300msec before trying to delete temporary files");
+                Thread.Sleep(300);
+
+                if (TryDeleteTempFiles()) {
+                    Trace.WriteLine("Successfully deleted all temporary files");
+                    break;
+                }
+            }
+        }
+
+        private bool TryDeleteTempFiles() {
+            var result = true;
+            if (_codeGenDir != null && _codeGenDir.Exists) {
+                Trace.WriteLine(string.Format("Trying to delete temporary files at '{0}", _codeGenDir));
+                try {
+                    _codeGenDir.Delete(true); // <- clean as much as possible
+                }
+                catch(Exception e) {
+                    Trace.WriteLine(string.Format("failure: '{0}", e));
+                    result = false;
+                }
+            }
+
+            if (_tempSite != null && _tempSite.Exists)
             try {
+                Trace.WriteLine(string.Format("Trying to delete temporary files at '{0}", _tempSite));
                 _tempSite.Delete(true); // <- progressively clean as much as possible
             }
-            catch { }
+            catch (Exception e) {
+                Trace.WriteLine(string.Format("failure: '{0}", e));
+                result = false;
+            }
+
+            return result;
         }
 
         public void CopyExtension(string extensionFolder, string extensionName, ExtensionDeploymentOptions deploymentOptions) {
