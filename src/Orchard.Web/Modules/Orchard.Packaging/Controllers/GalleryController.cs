@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
 using Orchard.Themes;
@@ -30,9 +32,11 @@ namespace Orchard.Packaging.Controllers {
             _notifier = notifier;
 
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Sources() {
             return View(new PackagingSourcesViewModel {
@@ -99,8 +103,20 @@ namespace Orchard.Packaging.Controllers {
                 : _packagingSourceManager.GetSources()
             ;
 
+            IEnumerable<PackagingEntry> extensions = null;
+            foreach (var source in sources) {
+                try {
+                    var sourceExtensions = _packagingSourceManager.GetModuleList(source).ToArray();
+                    extensions = extensions == null ? sourceExtensions : extensions.Concat(sourceExtensions);
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message);
+                    _notifier.Error(T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message));
+                }
+            }
+
             return View("Modules", new PackagingExtensionsViewModel {
-                Extensions = sources.SelectMany(source => _packagingSourceManager.GetModuleList(source)),
+                Extensions = extensions ?? new PackagingEntry[] {},
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 SelectedSource = selectedSource
             });
