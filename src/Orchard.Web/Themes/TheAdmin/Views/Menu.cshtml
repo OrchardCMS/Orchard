@@ -31,7 +31,7 @@
         var firstLevelTag = Tag(firstLevelMenuItem, "li");
         @firstLevelTag.StartElement
             <h3>@sectionHeaderMarkup</h3>
-            if (secondLevelMenuItems.Count() > 1) {
+            if (secondLevelMenuItems.Count() > 1 || !firstLevelMenuItem.LinkToFirstChild) {
                 <ul class="menuItems">
                 @foreach(var secondLevelMenuItem in secondLevelMenuItems) {
                     <li>
