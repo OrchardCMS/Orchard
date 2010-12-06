@@ -48,7 +48,7 @@ namespace Orchard.Blogs.Drivers {
 
         protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_RecentBlogPosts_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Blogs.RecentBlogPosts", Model: part, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.RecentBlogPosts", Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(RecentBlogPostsPart part, IUpdateModel updater, dynamic shapeHelper) {

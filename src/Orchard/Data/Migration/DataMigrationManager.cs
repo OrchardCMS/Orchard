@@ -59,7 +59,6 @@ namespace Orchard.Data.Migration {
         }
 
         public void Update(string feature){
-
             Logger.Information("Updating feature: {0}", feature);
 
             // proceed with dependent features first, whatever the module it's in
@@ -125,6 +124,8 @@ namespace Orchard.Data.Migration {
         }
 
         public void Uninstall(string feature) {
+            Logger.Information("Uninstalling feature: {0}", feature);
+
             var migrations = GetDataMigrations(feature);
 
             // apply update methods to each migration class for the module

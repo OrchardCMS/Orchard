@@ -22,7 +22,7 @@ namespace Orchard.Comments.Drivers {
 
         protected override DriverResult Editor(CommentsPart part, dynamic shapeHelper) {
             return ContentShape("Parts_Comments_Enable",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Comments.Comments", Model: part, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comments.Comments", Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(CommentsPart part, IUpdateModel updater, dynamic shapeHelper) {

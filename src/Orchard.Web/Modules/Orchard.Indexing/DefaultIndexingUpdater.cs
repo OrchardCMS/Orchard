@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Orchard.Environment;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Tasks.Indexing;
 using Orchard.ContentManagement;
 
 namespace Orchard.Indexing {
     public class DefaultIndexingUpdater : IFeatureEventHandler {
-
         private readonly IIndexingTaskManager _indexingTaskManager;
         private readonly IContentManager _contentManager;
 
@@ -17,10 +14,16 @@ namespace Orchard.Indexing {
             _contentManager = contentManager;
         }
 
-        public void Install(Environment.Extensions.Models.Feature feature) {
+        public void Installing(Feature feature) {
         }
 
-        public void Enable(Environment.Extensions.Models.Feature feature) {
+        public void Installed(Feature feature) {
+        }
+
+        public void Enabling(Feature feature) {
+        }
+
+        public void Enabled(Feature feature) {
             // create indexing tasks for all currently existing content, even when the module is enabled again
             // as some content might have been created while this module was not active, and indexing tasks 
             // would not exist for them, resulting in an uncomplete index.
@@ -30,10 +33,16 @@ namespace Orchard.Indexing {
             }
         }
 
-        public void Disable(Environment.Extensions.Models.Feature feature) {
+        public void Disabling(Feature feature) {
         }
 
-        public void Uninstall(Environment.Extensions.Models.Feature feature) {
+        public void Disabled(Feature feature) {
+        }
+
+        public void Uninstalling(Feature feature) {
+        }
+
+        public void Uninstalled(Feature feature) {
         }
     }
 }

@@ -116,13 +116,13 @@
     <Content Include="Views\BlogPost\ListByArchive.cshtml" />
     <Content Include="Views\Blog\Item.cshtml" />
     <Content Include="Views\Blog\List.cshtml" />
-    <Content Include="Views\Parts\Blogs.Blog.Manage.cshtml" />
-    <Content Include="Views\Parts\Blogs.Blog.Description.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Blogs.Blog.Fields.cshtml" />
-    <Content Include="Views\Parts\Blogs.BlogPost.ListAdmin.cshtml">
+    <Content Include="Views\Parts.Blogs.Blog.Manage.cshtml" />
+    <Content Include="Views\Parts.Blogs.Blog.Description.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Blogs.Blog.Fields.cshtml" />
+    <Content Include="Views\Parts.Blogs.BlogPost.ListAdmin.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Items\Content-Blog.SummaryAdmin.cshtml" />
+    <Content Include="Views\Content-Blog.SummaryAdmin.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -139,15 +139,15 @@
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Parts\Blogs.RemotePublishing.cshtml" />
-    <Content Include="Views\Parts\Blogs.BlogArchives.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Blogs.BlogArchives.cshtml" />
-    <Content Include="Views\Items\Content-Blog.DetailAdmin.cshtml" />
-    <Content Include="Views\Items\Content-Blog.Edit.cshtml" />
-    <Content Include="Views\Parts\Blogs.BlogPost.List.cshtml" />
-    <Content Include="Views\Parts\Blogs.RecentBlogPosts.cshtml" />
-    <Content Include="Views\Parts\Blogs.Blog.BlogPostCount.cshtml" />
+    <Content Include="Views\Parts.Blogs.RemotePublishing.cshtml" />
+    <Content Include="Views\Parts.Blogs.BlogArchives.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Blogs.RecentBlogPosts.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Blogs.BlogArchives.cshtml" />
+    <Content Include="Views\Content-Blog.DetailAdmin.cshtml" />
+    <Content Include="Views\Content-Blog.Edit.cshtml" />
+    <Content Include="Views\Parts.Blogs.BlogPost.List.cshtml" />
+    <Content Include="Views\Parts.Blogs.RecentBlogPosts.cshtml" />
+    <Content Include="Views\Parts.Blogs.Blog.BlogPostCount.cshtml" />
     <Content Include="Scripts\Web.config">
       <SubType>Designer</SubType>
     </Content>

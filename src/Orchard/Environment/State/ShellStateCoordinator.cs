@@ -7,6 +7,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.State.Models;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Logging;
 
 namespace Orchard.Environment.State {
     public class ShellStateCoordinator : IShellStateManagerEventHandler, IShellDescriptorManagerEventHandler {
@@ -27,7 +28,10 @@ namespace Orchard.Environment.State {
             _extensionManager = extensionManager;
             _processingEngine = processingEngine;
             _featureEvents = featureEvents;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor) {
             // deduce and apply state changes involved
@@ -73,6 +77,7 @@ namespace Orchard.Environment.State {
                         .ToArray()
                 };
 
+                Logger.Information("Adding pending task 'ApplyChanges' for shell '{0}'", _settings.Name);
                 _processingEngine.AddTask(
                     _settings,
                     descriptor,
@@ -98,6 +103,8 @@ namespace Orchard.Environment.State {
         }
 
         void IShellStateManagerEventHandler.ApplyChanges() {
+            Logger.Information("Applying changes for for shell '{0}'", _settings.Name);
+
             var shellState = _stateManager.GetShellState();
 
             // start with description of all declared features in order - order preserved with all merging
@@ -149,25 +156,33 @@ namespace Orchard.Environment.State {
 
             // lower enabled states in reverse order
             foreach (var entry in allEntries.Reverse().Where(entry => entry.FeatureState.EnableState == ShellFeatureState.State.Falling)) {
-                _featureEvents.Disable(entry.Feature);
+                Logger.Information("Disabling feature '{0}'", entry.Feature.Descriptor.Id);
+                _featureEvents.Disabling(entry.Feature);
                 _stateManager.UpdateEnabledState(entry.FeatureState, ShellFeatureState.State.Down);
+                _featureEvents.Disabled(entry.Feature);
             }
 
             // lower installed states in reverse order
             foreach (var entry in allEntries.Reverse().Where(entry => entry.FeatureState.InstallState == ShellFeatureState.State.Falling)) {
-                _featureEvents.Uninstall(entry.Feature);
+                Logger.Information("Uninstalling feature '{0}'", entry.Feature.Descriptor.Id);
+                _featureEvents.Uninstalling(entry.Feature);
                 _stateManager.UpdateInstalledState(entry.FeatureState, ShellFeatureState.State.Down);
+                _featureEvents.Uninstalled(entry.Feature);
             }
 
             // raise install and enabled states in order
             foreach (var entry in allEntries.Where(entry => IsRising(entry.FeatureState))) {
                 if (entry.FeatureState.InstallState == ShellFeatureState.State.Rising) {
-                    _featureEvents.Install(entry.Feature);
+                    Logger.Information("Installing feature '{0}'", entry.Feature.Descriptor.Id);
+                    _featureEvents.Installing(entry.Feature);
                     _stateManager.UpdateInstalledState(entry.FeatureState, ShellFeatureState.State.Up);
+                    _featureEvents.Installed(entry.Feature);
                 }
                 if (entry.FeatureState.EnableState == ShellFeatureState.State.Rising) {
-                    _featureEvents.Enable(entry.Feature);
+                    Logger.Information("Enabling feature '{0}'", entry.Feature.Descriptor.Id);
+                    _featureEvents.Enabling(entry.Feature);
                     _stateManager.UpdateEnabledState(entry.FeatureState, ShellFeatureState.State.Up);
+                    _featureEvents.Enabled(entry.Feature);
                 }
             }
 

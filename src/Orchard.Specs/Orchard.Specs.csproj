@@ -220,6 +220,7 @@
   <ItemGroup>
     <Content Include="Hosting\Orchard.Web\Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Hosting\Orchard.Web\Core\Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

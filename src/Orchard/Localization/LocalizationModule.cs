@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
@@ -8,9 +9,9 @@ using Module = Autofac.Module;
 namespace Orchard.Localization {
     public class LocalizationModule : Module {
         private readonly IDictionary<string, Localizer> _localizerCache;
-        
+
         public LocalizationModule() {
-            _localizerCache = new Dictionary<string, Localizer>();
+            _localizerCache = new ConcurrentDictionary<string, Localizer>();
         }
 
         protected override void Load(ContainerBuilder builder) {
@@ -28,7 +29,7 @@ namespace Orchard.Localization {
                     if (_localizerCache.ContainsKey(scope)) {
                         userProperty.SetValue(e.Instance, _localizerCache[scope], null);
                     }
-                    else                    {
+                    else {
                         var localizer = LocalizationUtilities.Resolve(e.Context, scope);
                         _localizerCache.Add(scope, localizer);
                         userProperty.SetValue(e.Instance, localizer, null);

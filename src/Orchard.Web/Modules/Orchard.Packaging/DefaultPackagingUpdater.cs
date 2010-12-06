@@ -1,4 +1,5 @@
-﻿using Orchard.Environment;
+﻿using System;
+using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
@@ -15,17 +16,31 @@ namespace Orchard.Packaging {
 
         public Localizer T { get; set; }
 
-        public void Install(Feature feature) {
-            _packagingSourceManager.AddSource( "Orchard Extensions Gallery", "http://feed.nuget.org/ctp2/odata/v1" );
+        public void Installing(Feature feature) {
         }
 
-        public void Enable(Feature feature) {
+        public void Installed(Feature feature) {
+            if (feature.Descriptor.Id == "Gallery") {
+                _packagingSourceManager.AddSource("Orchard Extensions Gallery", "http://feed.nuget.org/ctp2/odata/v1");
+            }
         }
 
-        public void Disable(Feature feature) {
+        public void Enabling(Feature feature) {
         }
 
-        public void Uninstall(Feature feature) {
+        public void Enabled(Feature feature) {
+        }
+
+        public void Disabling(Feature feature) {
+        }
+
+        public void Disabled(Feature feature) {
+        }
+
+        public void Uninstalling(Feature feature) {
+        }
+
+        public void Uninstalled(Feature feature) {
         }
     }
 }
