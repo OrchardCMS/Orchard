@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\PackagingCommands.cs" />
+    <Compile Include="Controllers\PackagingServicesController.cs" />
     <Compile Include="Controllers\DownloadStreamResult.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="DefaultPackagingUpdater.cs" />
@@ -94,7 +95,7 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Gallery\AddModule.cshtml" />
+    <Content Include="Views\PackagingServices\AddModule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -121,7 +122,7 @@
     <Content Include="Views\Gallery\Themes.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Gallery\AddTheme.cshtml" />
+    <Content Include="Views\PackagingServices\AddTheme.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -119,7 +119,10 @@ namespace Orchard.Localization.Controllers {
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 model.SiteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem) && s != _cultureManager.GetSiteCulture());
-                contentItem.As<LocalizationPart>().Culture.Culture = null;
+                var culture = contentItem.As<LocalizationPart>().Culture;
+                if (culture != null) {
+                    culture.Culture = null;
+                }
                 model.Content = _contentManager.BuildEditor(contentItem);
                 return View(model);
             }
