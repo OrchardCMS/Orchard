@@ -10,7 +10,7 @@
 <h1>@Html.TitleForPage(T("Installed Modules").ToString())</h1>
 
 @if (Model.InstallModules) {
-    <div class="manage">@Html.ActionLink(T("Install a module").ToString(), "AddModule", "Gallery", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
+    <div class="manage">@Html.ActionLink(T("Install a module").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
 }
 
 @if (Model.Modules.Count() > 0) {

@@ -50,8 +50,9 @@ namespace Orchard.Modules.Controllers {
             var modules = _extensionManager.AvailableExtensions().Where(x => DefaultExtensionTypes.IsModule(x.ExtensionType));
 
             return View(new ModulesIndexViewModel { 
-                Modules = modules, 
-                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "Gallery") != null });
+                Modules = modules,
+                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null
+            });
         }
 
         public ActionResult Features() {
