@@ -3,7 +3,6 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
