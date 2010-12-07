@@ -6,7 +6,6 @@
     IEnumerable<KeyValuePair<ArchiveData, int>> archives = Model.Archives;
 }
 <div class="archives">
-    <h3>@T("Archives")</h3>
     @if (archives.Count() > 20) {
     <ul class="years">
         @{
