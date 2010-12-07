@@ -219,13 +219,17 @@
       XPath="/configuration/system.web/machineKey/@decryptionKey"
       Value="AutoGenerate" />
 
-    <!--<XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
-      XPath="/system.diagnostics/trace/@autoflush"
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/appender/immediateFlush/@value"
       Value="false" />
 
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
-      XPath="/system.diagnostics/sources/source/@switchValue"
-      Value="Error" />-->
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/logger/priority/@value"
+      Value="ERROR" />
+
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/root/priority/@value"
+      Value="ERROR" />
 
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"

@@ -1,7 +1,4 @@
-﻿using System;
-using FluentNHibernate.Cfg;
-using FluentNHibernate.Cfg.Db;
-using NHibernate;
+﻿using FluentNHibernate.Cfg.Db;
 using NHibernate.Cfg;
 
 namespace Orchard.Data.Providers {

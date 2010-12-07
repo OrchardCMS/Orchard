@@ -99,15 +99,19 @@
     <XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
-    
-    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\Diagnostics.config"
-      XPath="/system.diagnostics/trace/@autoflush"
+
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/appender/immediateFlush/@value"
       Value="false" />
 
-    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\Diagnostics.config"
-      XPath="/system.diagnostics/sources/source/@switchValue"
-      Value="Error" />
-    
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/logger/priority/@value"
+      Value="ERROR" />
+
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/root/priority/@value"
+      Value="ERROR" />
+
     <Copy 
         SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceConfiguration.cscfg" 
         DestinationFolder="$(StageFolder)" 

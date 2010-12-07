@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.Instances;
-using Orchard.Environment.Descriptor;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Data.Conventions {
