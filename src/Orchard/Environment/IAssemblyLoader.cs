@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Orchard.Caching;
 using Orchard.Logging;
 
 namespace Orchard.Environment {
@@ -12,11 +11,11 @@ namespace Orchard.Environment {
     }
 
     public class DefaultAssemblyLoader : IAssemblyLoader {
-        private readonly ICacheManager _cacheManager;
+        private readonly IEnumerable<IAssemblyNameResolver> _assemblyNameResolvers;
         private readonly ConcurrentDictionary<string, Assembly> _loadedAssemblies = new ConcurrentDictionary<string, Assembly>(StringComparer.OrdinalIgnoreCase);
 
-        public DefaultAssemblyLoader(ICacheManager cacheManager) {
-            _cacheManager = cacheManager;
+        public DefaultAssemblyLoader(IEnumerable<IAssemblyNameResolver> assemblyNameResolvers) {
+            _assemblyNameResolvers = assemblyNameResolvers.OrderBy(l => l.Order);
             Logger = NullLogger.Instance;
         }
 
@@ -33,38 +32,38 @@ namespace Orchard.Environment {
         }
 
         private Assembly LoadWorker(string shortName, string fullName) {
+            // Try loading the assembly with regular fusion rules first (common case)
+            Assembly result = LookupFusion(fullName);
+            if (result != null)
+                return result;
+
             // If short assembly name, try to figure out the full assembly name using 
             // a policy compatible with Medium Trust.
             if (shortName == fullName) {
-                // Look in assemblies loaded in the AppDomain first.
-                var result = AppDomain.CurrentDomain.GetAssemblies()
-                    .Where(a => StringComparer.OrdinalIgnoreCase.Equals(shortName, this.ExtractAssemblyName(a.FullName)))
-                    .SingleOrDefault();
-
-                if (result != null)
-                    return result;
-
-                // A few common .net framework assemblies are referenced by the Orchard.Framework assembly.
-                // Look into those to see if we can find the assembly we are looking for.
-                var orchardFrameworkReferences = _cacheManager.Get(
-                    typeof(IAssemblyLoader),
-                    ctx => ctx.Key.Assembly
-                                .GetReferencedAssemblies()
-                                .GroupBy(n => this.ExtractAssemblyName(n.FullName), StringComparer.OrdinalIgnoreCase)
-                                .ToDictionary(n => n.Key /*short assembly name*/, g => g.OrderBy(n => n.Version).Last() /* highest assembly version */, StringComparer.OrdinalIgnoreCase));
-
-                AssemblyName assemblyName;
-                if (orchardFrameworkReferences.TryGetValue(shortName, out assemblyName)) {
-                    return Assembly.Load(assemblyName.FullName);
-                }
+                var resolvedName = _assemblyNameResolvers.Select(r => r.Resolve(shortName)).Where(f => f != null).FirstOrDefault();
+                if (resolvedName != null)
+                    return Assembly.Load(resolvedName);
             }
 
             return Assembly.Load(fullName);
+        }
+
+        private Assembly LookupFusion(string fullName) {
+            try {
+                return Assembly.Load(fullName);
+            }
+            catch {
+                return null;
+            }
         }
     }
 
     public static class AssemblyLoaderExtensions {
         public static string ExtractAssemblyName(this IAssemblyLoader assemblyLoader, string fullName) {
+            return ExtractAssemblyName(fullName);
+        }
+
+        public static string ExtractAssemblyName(string fullName) {
             int index = fullName.IndexOf(',');
             if (index < 0)
                 return fullName;
