@@ -71,7 +71,7 @@ header, footer, aside, nav, article { display: block; }
     visibility: hidden;
 }
 
-.zone:after /* Self clears every zone container */
+.zone:after, .widget-control:after /* .zone:after self clears every zone container - .widget-control:after self clears any floats used in a widget */
 {
     content: ".";
     display: block;
@@ -423,13 +423,6 @@ nav ul
 ***************************************************************/
 .widgets {}
 .widget h1 { font-size: 1.077em; }
-
-/* Search */
-/* Search widget shuld go into the sidebar for proper styling */
-/* TODO: (mibach) Generic any zone compatible search widget */
-.search-form {}
-.search-form input[type="text"] { float: left; }
-.search-form button[type="submit"] { float: left; margin: 0; margin-left: 6px; }
 
 /* Edit Mode Widgets */
 /* These are the edit controls that appear when you're logged-in */
