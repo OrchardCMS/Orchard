@@ -24,7 +24,6 @@ namespace Orchard.Environment.Extensions {
         public IList<Action> CopyActions { get; private set; }
 
         public bool RestartAppDomain { get; set; }
-        public bool ResetSiteCompilation { get; set; }
 
         /// <summary>
         /// List of extensions (modules) present in the system

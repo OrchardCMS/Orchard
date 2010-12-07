@@ -9,7 +9,7 @@ namespace Orchard.Commands {
 
         public Localizer T { get; set; }
 
-        public override void ResetSiteCompilation() {
+        public override void RestartAppDomain() {
             throw new OrchardCommandHostRetryException(T("A change of configuration requires the session to be restarted."));
         }
     }

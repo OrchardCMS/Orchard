@@ -74,11 +74,6 @@ namespace Orchard.Environment.Extensions {
             Logger.Information("Done loading extensions...");
 
             // Very last step: Notify the host environment to restart the AppDomain if needed
-            if (context.ResetSiteCompilation) {
-                Logger.Information("Reset site compilation state required.");
-                _hostEnvironment.ResetSiteCompilation();
-            }
-
             if (context.RestartAppDomain) {
                 Logger.Information("AppDomain restart required.");
                 _hostEnvironment.RestartAppDomain();

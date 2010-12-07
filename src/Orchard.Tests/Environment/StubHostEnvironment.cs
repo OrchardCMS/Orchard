@@ -2,8 +2,7 @@
 
 namespace Orchard.Tests.Environment {
     public class StubHostEnvironment : HostEnvironment {
-        public override void ResetSiteCompilation() {
-            
+        public override void RestartAppDomain() {
         }
     }
 }

@@ -17,10 +17,6 @@ namespace Orchard.Environment {
             return AppDomain.CurrentDomain.GetAssemblies().Any(assembly => new AssemblyName(assembly.FullName).Name == name);
         }
 
-        public void RestartAppDomain() {
-            ResetSiteCompilation();
-        }
-
-        public abstract void ResetSiteCompilation();
+        public abstract void RestartAppDomain();
     }
 }

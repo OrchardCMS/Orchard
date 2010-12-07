@@ -76,19 +76,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
-            // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
-            // that a new site compilation is needed (since ascx files may be referencing
-            // this now removed extension).
-            Logger.Information("ExtensionRemoved: Module \"{0}\" has been removed, forcing site recompilation", dependency.Name);
-            ctx.ResetSiteCompilation = true;
         }
 
         public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
-            // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
-            // that a new site compilation is needed (since ascx files may be referencing
-            // this now removed extension).
-            Logger.Information("ExtensionDeactivated: Module \"{0}\" has been de-activated, forcing site recompilation", extension.Id);
-            ctx.ResetSiteCompilation = true;
         }
 
         public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
