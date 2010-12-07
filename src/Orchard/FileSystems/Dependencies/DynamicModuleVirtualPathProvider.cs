@@ -9,10 +9,14 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.FileSystems.Dependencies {
+    /// <summary>
+    /// The purpose of this virtual path provider is to add file dependencies to .csproj files
+    /// served from the "~/Modules" or "~/Themes" directory.
+    /// </summary>
     public class DynamicModuleVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-        private readonly string[] _modulesPrefixes = { "~/Modules/" };
+        private readonly string[] _modulesPrefixes = { "~/Modules/", "~/Themes/" };
 
         public DynamicModuleVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
             _dependenciesFolder = dependenciesFolder;
