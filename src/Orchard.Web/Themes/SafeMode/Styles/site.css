@@ -127,49 +127,88 @@ input[type="password"] {
     padding:4px;
     width:98%;
 }
-    
-button, .button, .button:link, .button:visited {
+
+button.primaryAction, .button.primaryAction, .button.primaryAction:link, .button.primaryAction:visited {
+    background:#4687ad;
+    border:1px solid #405f71;
     font-size: 102%;
     font-weight:600;
-    background:#F5F5F5;
-    background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#cbcbcb));
-    background:-moz-linear-gradient(top , #F5F5F5, #cbcbcb);
-    border:1px solid #999999;
-    color:#2D2F25;
-    cursor:pointer;
-    margin:0 0 20px 20px;
-    padding:.2em 1.4em;
-    text-align:center;
-    text-shadow: 0 1px 1px rgba(0,0,0,.2);
-    box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
-    -webkit-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
-    -moz-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
-}
-
-button:hover, .button:hover,
-button:active, .button:active,
-button:focus, .button:focus {
-    border-color:#bb8b2d;
     color:#fff;
-    text-decoration:none; 
-    background: #ffac40;
-    background: -webkit-gradient(linear, left top, left bottom, from(#ffac40), to(#f06015));
-    background: -moz-linear-gradient(top,  #ffac40,  #f9760d);
+    margin:0 0 20px 20px;
+    padding:3px 28px;
 
-}
-
-button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
-    border-color:#8a8f7a;
-}
-
-.primaryAction, .primaryAction:link, .primaryAction:visited {
-    background:#4687ad;
+    /*CSS3 properties*/
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#4687AD',  endColorstr='#366581');
     background: -webkit-gradient(linear, left top, left bottom, from(#4687AD), to(#366581));
     background:-moz-linear-gradient(top , #4687AD, #366581);
-    border:1px solid #405f71;
-    color:#fff;
 }
-
+button.remove, .remove.button, .remove.button:link, .remove.button:visited {
+    background-color:#DECCCA;
+    background-image:url(images/tableHeaderBackgroundRed.gif);
+    border-color:#d6c9c7;
+    color:#5c3732;
+}
+button.remove:hover, .remove.button:hover,
+button.remove:active, .remove.button:active,
+button.remove:focus, .remove.button:focus {
+    background:#8f7c79;
+    border-color:#6e5551;
+    color:#faedeb;
+}
+button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
+    border-color:#8f7c79;
+}
+.delete.button {
+    float:right;
+}
+input[type="submit"], input[type="reset"], input[type="button"], button, submit, .button, .button:link, .button:visited
+  {
+          color:#333;
+        background:#F5F5F5;
+        border:1px solid #999;
+        cursor:pointer;
+        padding: 0 12px 2px 12px;
+        text-align:center;
+        
+        /*CSS3 properties*/
+        filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f5f5f5',  endColorstr='#cbcbcb');
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#cbcbcb));
+        background: -moz-linear-gradient(top, #f5f5f5, #cbcbcb);
+        box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+        -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3); 
+        -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+        border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+    }
+input[type="submit"]:hover,input[type="reset"]:hover, input[type="button"]:hover, button:hover, .button:hover, .button.primaryAction:hover {
+    text-decoration:none; 
+    background: #ffac40;
+    color:#fff;
+    border:1px solid #bb8b2d;
+    
+    /*CSS3 properties*/    
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffac40',  endColorstr='#f9760d');
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffac40), to(#f9760d));
+    background: -moz-linear-gradient(top, #ffac40, #f9760d);
+}
+input[type="submit"]:active, input[type="reset"]:active, input[type="button"]:active, button:active, .buton:active, .button.primaryAction:active {
+    text-decoration:none; 
+    background: #62a9e2;
+    color:#fff;
+     border:1px solid #bb772d;
+ 
+     /*CSS3 properties*/
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fece3b',  endColorstr='#fe6001');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(#fece3b), to(#fe6001));
+    background: -moz-linear-gradient(top, #fece3b, #fe6001);
+    box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+    -moz-box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+    -webkit-box-shadow: inset 1px 1px 1px rgba(254, 225, 109, 0.6), 1px 1px 1px rgba(102, 102, 102, 0.1);
+}
+input[type="submit"]:focus::-moz-focus-inner, button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
+  border: 1px dotted transparent;
+}
 
 /* Confirmations, Messages and the like
 ***************************************************************/
