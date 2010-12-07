@@ -5,8 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
-using Castle.Core.Logging;
-using Orchard.Environment;
+using Castle.Services.Logging.Log4netIntegration;
 using Module = Autofac.Module;
 
 namespace Orchard.Logging {
@@ -21,16 +20,7 @@ namespace Orchard.Logging {
         protected override void Load(ContainerBuilder moduleBuilder) {
             // by default, use Orchard's logger that delegates to Castle's logger factory
             moduleBuilder.RegisterType<CastleLoggerFactory>().As<ILoggerFactory>().InstancePerLifetimeScope();
-
-            moduleBuilder.Register<Castle.Core.Logging.ILoggerFactory>(componentContext => {
-                    IHostEnvironment host = componentContext.Resolve<IHostEnvironment>();
-                    if (host.IsFullTrust)
-                        return new TraceLoggerFactory();
-                    return new NullLogFactory();
-                })
-                .As<Castle.Core.Logging.ILoggerFactory>()
-                .InstancePerLifetimeScope();
-
+            moduleBuilder.RegisterType<Log4netFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
 
             // call CreateLogger in response to the request for an ILogger implementation
             moduleBuilder.Register(CreateLogger).As<ILogger>().InstancePerDependency();

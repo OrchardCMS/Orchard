@@ -105,7 +105,6 @@ namespace Orchard.Specs.Bindings {
                 else
                     logger.Fatal(loggingEvent.RenderedMessage);
             }
-
         }
 
         [Serializable]
