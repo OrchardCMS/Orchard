@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.UI.Resources {

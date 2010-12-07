@@ -4,7 +4,6 @@ using System.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
-using Orchard.Data;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Services;

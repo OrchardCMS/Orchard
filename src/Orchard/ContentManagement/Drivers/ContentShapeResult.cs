@@ -1,6 +1,5 @@
 ﻿using System;
 using Orchard.ContentManagement.Handlers;
-using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.ContentManagement.Drivers {

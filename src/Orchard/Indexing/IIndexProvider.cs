@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orchard.ContentManagement;
 
 namespace Orchard.Indexing {
     public interface IIndexProvider : ISingletonDependency {

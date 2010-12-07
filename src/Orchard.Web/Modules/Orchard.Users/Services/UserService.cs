@@ -10,7 +10,6 @@ using System.Xml.Linq;
 using Orchard.Services;
 using System.Globalization;
 using System.Text;
-using System.Web.Security;
 using Orchard.Messaging.Services;
 using Orchard.Environment.Configuration;
 

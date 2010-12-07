@@ -1,5 +1,4 @@
 ﻿using Orchard.Data.Migration;
-using Orchard.Environment.Extensions;
 
 namespace Orchard.Packaging {
     public class Migrations: DataMigrationImpl {

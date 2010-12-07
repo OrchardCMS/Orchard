@@ -36,7 +36,6 @@ using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 using Orchard.Settings;
 using Orchard.Core.Settings.Services;
-using Orchard.Environment.Configuration;
 
 namespace Orchard.Tests.Modules.Users.Controllers {
     [TestFixture]

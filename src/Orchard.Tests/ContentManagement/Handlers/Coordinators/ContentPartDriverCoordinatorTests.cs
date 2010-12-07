@@ -10,7 +10,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.Environment.AutofacUtil;
 
 namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
     [TestFixture]

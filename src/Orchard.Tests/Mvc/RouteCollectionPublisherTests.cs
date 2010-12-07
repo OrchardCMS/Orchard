@@ -7,7 +7,6 @@ using Autofac;
 using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.Mvc.Routes;
-using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Mvc {

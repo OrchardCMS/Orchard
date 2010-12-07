@@ -1,10 +1,6 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Autofac;
-using Autofac.Integration.Web;
-using Orchard.Environment;
 using Orchard.Specs.Hosting.Orchard.Web;
 
 namespace Orchard.Specs.Hosting.Simple.Web {

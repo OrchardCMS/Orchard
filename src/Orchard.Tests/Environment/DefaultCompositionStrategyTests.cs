@@ -11,7 +11,6 @@ using Orchard.ContentManagement.Records;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Descriptor;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Tests.Environment.Utility;
 using Orchard.Tests.Records;

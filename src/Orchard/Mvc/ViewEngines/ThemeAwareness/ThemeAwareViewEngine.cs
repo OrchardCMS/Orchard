@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Themes;
 
 namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
     public interface IThemeAwareViewEngine : IDependency {

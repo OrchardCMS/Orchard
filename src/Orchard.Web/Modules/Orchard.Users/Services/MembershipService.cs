@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
-using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.Logging;

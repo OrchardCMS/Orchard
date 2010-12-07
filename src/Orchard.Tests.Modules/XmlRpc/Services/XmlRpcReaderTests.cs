@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Xml.Linq;
 using NUnit.Framework;
 using Orchard.Core.XmlRpc.Models;

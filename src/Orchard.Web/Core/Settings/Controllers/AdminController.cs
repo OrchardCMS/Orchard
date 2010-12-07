@@ -1,10 +1,7 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.ViewModels;
-using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Localization.Services;

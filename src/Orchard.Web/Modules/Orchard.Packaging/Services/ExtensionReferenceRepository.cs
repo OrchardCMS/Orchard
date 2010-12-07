@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 using NuGet;
 using Orchard.Environment.Extensions;
 

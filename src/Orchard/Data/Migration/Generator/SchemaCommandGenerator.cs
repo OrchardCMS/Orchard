@@ -14,7 +14,6 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Environment.State;
 
 namespace Orchard.Data.Migration.Generator {
     public class SchemaCommandGenerator : ISchemaCommandGenerator {

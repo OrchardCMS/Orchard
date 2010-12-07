@@ -12,7 +12,6 @@ using Orchard.Mvc.Spooling;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Resources;
-using TagBuilder = System.Web.Mvc.TagBuilder;
 
 namespace Orchard.Mvc {
     public class ViewPage<TModel> : System.Web.Mvc.ViewPage<TModel>, IOrchardViewPage {

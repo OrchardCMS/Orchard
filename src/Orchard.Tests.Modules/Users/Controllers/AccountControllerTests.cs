@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -37,7 +36,6 @@ using Orchard.Users.Services;
 using Orchard.Settings;
 using Orchard.Core.Settings.Services;
 using Orchard.Tests.Messaging;
-using Orchard.Environment.Configuration;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.Handlers;
 using System.Collections.Specialized;

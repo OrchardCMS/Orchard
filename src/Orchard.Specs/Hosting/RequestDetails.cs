@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orchard.Commands;
 
 namespace Orchard.Specs.Hosting {
     [Serializable]

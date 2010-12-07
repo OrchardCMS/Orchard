@@ -1,8 +1,6 @@
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.ContentManagement.MetaData.Models;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Security;
 using Orchard.Security.Permissions;

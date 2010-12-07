@@ -6,7 +6,6 @@ using System.Text;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
-using Orchard.Collections;
 using Orchard.Localization;
 using Orchard.Settings;
 using Orchard.Utility;

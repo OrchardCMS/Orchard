@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Environment.Extensions;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Mvc.Routes {

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
 using System.IO;
 

@@ -1,5 +1,4 @@
 ﻿using Orchard.ContentManagement;
-using System;
 
 namespace Orchard.Users.Models {
     public class RegistrationSettingsPart : ContentPart<RegistrationSettingsPartRecord> {

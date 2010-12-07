@@ -3,7 +3,6 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
-using Orchard.Mvc;
 using Orchard.Tasks;
 using Orchard.Tests.Utility;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace Orchard.DisplayManagement.Implementation {
     public class DisplayContext  {

@@ -11,7 +11,6 @@ using Orchard.Search.ViewModels;
 using Orchard.Search.Models;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using System.Collections.Generic;
 using Orchard.Collections;
 using Orchard.Themes;
 

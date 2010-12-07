@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading;
 using System.Collections.Generic;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;

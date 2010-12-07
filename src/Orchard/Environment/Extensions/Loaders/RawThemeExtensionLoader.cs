@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;

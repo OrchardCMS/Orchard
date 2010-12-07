@@ -27,7 +27,6 @@ using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Services;
-using Orchard.Environment.Configuration;
 using Orchard.Tests.Messaging;
 
 namespace Orchard.Tests.Modules.Users.Services {

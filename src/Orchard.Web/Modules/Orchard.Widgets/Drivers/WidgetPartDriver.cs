@@ -1,5 +1,4 @@
-﻿using System.Web.Mvc;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Widgets.Models;

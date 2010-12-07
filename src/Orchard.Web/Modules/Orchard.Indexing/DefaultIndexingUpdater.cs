@@ -1,5 +1,4 @@
-﻿using System;
-using Orchard.Environment;
+﻿using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Tasks.Indexing;
 using Orchard.ContentManagement;

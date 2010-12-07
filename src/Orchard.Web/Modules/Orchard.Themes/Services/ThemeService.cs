@@ -10,8 +10,6 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.ContentManagement;
-using Orchard.Themes.Models;
 
 namespace Orchard.Themes.Services {
     public interface IThemeService : IDependency {

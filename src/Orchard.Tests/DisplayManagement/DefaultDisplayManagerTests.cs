@@ -9,7 +9,6 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Themes;
 
 namespace Orchard.Tests.DisplayManagement {
     [TestFixture]

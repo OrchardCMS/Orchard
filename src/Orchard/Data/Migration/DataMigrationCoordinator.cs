@@ -1,5 +1,4 @@
-﻿using System;
-using Orchard.Environment;
+﻿using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Data.Migration {

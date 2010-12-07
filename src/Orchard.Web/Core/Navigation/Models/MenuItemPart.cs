@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using Orchard.ContentManagement;
 
 namespace Orchard.Core.Navigation.Models {

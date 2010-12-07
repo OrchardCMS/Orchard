@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using Orchard.Core.Reports.ViewModels;
-using Orchard.DisplayManagement;
 using Orchard.Reports.Services;
 
 namespace Orchard.Core.Reports.Controllers {

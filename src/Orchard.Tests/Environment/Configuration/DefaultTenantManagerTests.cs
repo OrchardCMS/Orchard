@@ -1,10 +1,7 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Orchard.Environment.Configuration;
-using Orchard.FileSystems.AppData;
-using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Environment.Configuration {

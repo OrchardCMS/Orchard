@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using System.Web.Hosting;
+﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Orchard.Environment;
-using Orchard.Environment.Extensions.Loaders;
 
 namespace Orchard.Web {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
@@ -37,7 +30,6 @@ namespace Orchard.Web {
 
         protected void Application_EndRequest() {
             _host.EndRequest();
-            //GC.Collect();
         }
 
         static void MvcSingletons(ContainerBuilder builder) {

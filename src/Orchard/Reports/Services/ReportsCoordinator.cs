@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orchard.Localization;
 using Orchard.Logging;
 
 namespace Orchard.Reports.Services {

@@ -1,5 +1,4 @@
 ﻿using System;
-using Orchard.Localization;
 
 namespace Orchard.Reports {
     public enum ReportEntryType {

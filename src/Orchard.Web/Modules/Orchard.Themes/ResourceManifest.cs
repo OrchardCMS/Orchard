@@ -1,4 +1,3 @@
-using System;
 using Orchard.UI.Resources;
 
 namespace Orchard.Themes {

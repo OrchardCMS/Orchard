@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
@@ -10,7 +9,6 @@ using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
 using Orchard.Data.Providers;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Tests {

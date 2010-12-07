@@ -6,7 +6,6 @@ using NUnit.Framework;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Tests.Stubs;
-using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Tests.UI.Navigation {

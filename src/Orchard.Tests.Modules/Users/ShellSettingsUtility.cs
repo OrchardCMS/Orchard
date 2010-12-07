@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Orchard.Environment.Configuration;
 using Orchard.Utility.Extensions;
 

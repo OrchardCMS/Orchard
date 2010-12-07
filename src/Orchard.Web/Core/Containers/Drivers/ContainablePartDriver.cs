@@ -6,7 +6,6 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.ViewModels;
-using Orchard.Core.Routable.Models;
 using Orchard.Localization;
 
 namespace Orchard.Core.Containers.Drivers {

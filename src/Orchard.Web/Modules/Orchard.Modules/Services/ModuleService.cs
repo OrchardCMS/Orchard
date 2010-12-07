@@ -6,7 +6,6 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
-using Orchard.Modules.Models;
 using Orchard.Modules.ViewModels;
 using Orchard.UI.Notify;
 

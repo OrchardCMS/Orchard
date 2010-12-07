@@ -2,8 +2,6 @@
 using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
-using Orchard.Environment.Extensions.Models;
-using Orchard.Settings;
 using Orchard.Themes.Models;
 
 namespace Orchard.Themes.Services {

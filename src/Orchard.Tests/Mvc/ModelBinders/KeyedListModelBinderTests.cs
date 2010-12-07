@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using NUnit.Framework;
 using Orchard.Mvc.ModelBinders;
-using Orchard.Utility;
 
 namespace Orchard.Tests.Mvc.ModelBinders {
     [TestFixture]

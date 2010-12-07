@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Routing;
+﻿using System.Web.Routing;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Themes {

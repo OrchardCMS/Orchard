@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Web.Compilation;
+﻿using System.IO;
 using System.Web.Hosting;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
