@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="XmlDelete.cs" />
     <Compile Include="ValidateExtensionProjectFiles.cs" />
     <Compile Include="FileUpdateLines.cs" />
     <Compile Include="FilterModuleBinaries.cs" />

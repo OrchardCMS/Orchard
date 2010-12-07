@@ -134,6 +134,7 @@
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
 
   <Target Name="Package-Stage">
     <CallTarget Targets="CompileMsBuildTasks"/>
@@ -207,6 +208,9 @@
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
 
+    <XmlDelete XmlFileName="$(StageFolder)\web.config"
+      XPath="/configuration/system.web/trust" />
+
     <XmlUpdate XmlFileName="$(StageFolder)\web.config"
       XPath="/configuration/system.web/machineKey/@validationKey"
       Value="AutoGenerate" />
@@ -215,13 +219,13 @@
       XPath="/configuration/system.web/machineKey/@decryptionKey"
       Value="AutoGenerate" />
 
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
+    <!--<XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
       XPath="/system.diagnostics/trace/@autoflush"
       Value="false" />
 
     <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
       XPath="/system.diagnostics/sources/source/@switchValue"
-      Value="Error" />
+      Value="Error" />-->
 
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"
