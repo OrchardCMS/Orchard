@@ -45,7 +45,7 @@ namespace Orchard.Packaging.Services {
         public virtual FrameworkName TargetFramework {
             get {
                 if (_targetFramework == null) {
-                    _targetFramework = new FrameworkName(NetFrameworkIdentifier, typeof(string).Assembly.GetNameSafe().Version);;
+                    _targetFramework = new FrameworkName(NetFrameworkIdentifier, typeof(string).Assembly.GetNameSafe().Version);
                 }
                 return _targetFramework;
             }

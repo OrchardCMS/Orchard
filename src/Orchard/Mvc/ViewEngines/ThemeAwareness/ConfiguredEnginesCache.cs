@@ -10,7 +10,7 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
     }
 
     public class ConfiguredEnginesCache : IConfiguredEnginesCache {
-        IViewEngine _bare = null;
+        IViewEngine _bare;
         readonly ConcurrentDictionary<string, IViewEngine> _shallow = new ConcurrentDictionary<string, IViewEngine>();
         readonly ConcurrentDictionary<string, IViewEngine> _deep = new ConcurrentDictionary<string, IViewEngine>();
 

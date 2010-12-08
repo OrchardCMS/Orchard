@@ -17,7 +17,7 @@ namespace Orchard.Indexing.Settings {
         }
 
         private string _contentTypeName;
-        private bool _tasksCreated = false;
+        private bool _tasksCreated;
 
         public override IEnumerable<TemplateViewModel> TypeEditor(ContentTypeDefinition definition) {
             var model = definition.Settings.GetModel<TypeIndexing>();

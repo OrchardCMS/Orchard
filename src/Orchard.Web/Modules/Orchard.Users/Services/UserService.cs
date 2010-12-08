@@ -23,7 +23,6 @@ namespace Orchard.Users.Services {
         private readonly IMembershipService _membershipService;
         private readonly IClock _clock;
         private readonly IMessageManager _messageManager;
-        private readonly ShellSettings _shellSettings;
         private readonly IEncryptionService _encryptionService;
 
         public UserService(IContentManager contentManager, IMembershipService membershipService, IClock clock, IMessageManager messageManager, ShellSettings shellSettings, IEncryptionService encryptionService) {
@@ -31,7 +30,6 @@ namespace Orchard.Users.Services {
             _membershipService = membershipService;
             _clock = clock;
             _messageManager = messageManager;
-            _shellSettings = shellSettings;
             _encryptionService = encryptionService;
             Logger = NullLogger.Instance;
         }

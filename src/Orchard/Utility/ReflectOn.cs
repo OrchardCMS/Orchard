@@ -4,6 +4,7 @@ using System.Reflection;
 using Orchard.Validation;
 
 namespace Orchard.Utility {
+    /// <summary>
     /// Allows static reflection on members (methods, fields, properties).
     /// This code has been adapted from the following blog post:
     /// http://wekempf.spaces.live.com/blog/cns!D18C3EC06EA971CF!694.entry

@@ -13,7 +13,6 @@ namespace Orchard.Core.Common.Drivers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
-        private readonly IClock _clock;
 
         public CommonPartDriver(
             IOrchardServices services,
@@ -26,7 +25,6 @@ namespace Orchard.Core.Common.Drivers {
             _authenticationService = authenticationService;
             _authorizationService = authorizationService;
             _membershipService = membershipService;
-            _clock = clock;
             T = NullLocalizer.Instance;
             Services = services;
         }

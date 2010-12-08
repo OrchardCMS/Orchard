@@ -5,7 +5,6 @@ using Orchard.Users.Services;
 
 namespace Orchard.Users.Commands {
     public class UserCommands : DefaultOrchardCommandHandler {
-        private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
 
@@ -13,7 +12,6 @@ namespace Orchard.Users.Commands {
             IContentManager contentManager,
             IMembershipService membershipService,
             IUserService userService) {
-            _contentManager = contentManager;
             _membershipService = membershipService;
             _userService = userService;
         }

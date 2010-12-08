@@ -93,7 +93,8 @@ namespace Orchard.Tags.Services {
                 var taggedContentItems = GetTaggedContentItems(tagRecord.Id);
 
                 foreach (var tagContentItem in tagsContentItems) {
-                    if (!taggedContentItems.Any(c => c.ContentItem.Id == tagContentItem.TagsPartRecord.Id)) {
+                    ContentTagRecord item = tagContentItem;
+                    if (!taggedContentItems.Any(c => c.ContentItem.Id == item.TagsPartRecord.Id)) {
                         TagContentItem(tagContentItem.TagsPartRecord, tagName);
                     }
                     _contentTagRepository.Delete(tagContentItem);

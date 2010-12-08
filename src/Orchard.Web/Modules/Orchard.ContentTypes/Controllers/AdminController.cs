@@ -170,7 +170,7 @@ namespace Orchard.ContentTypes.Controllers {
             }
 
             if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel(); ;
+                Services.TransactionManager.Cancel();
                 return AddPartsTo(id);
             }
 

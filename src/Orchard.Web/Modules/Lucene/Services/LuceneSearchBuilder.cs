@@ -49,7 +49,7 @@ namespace Lucene.Services {
         }
 
         public ISearchBuilder Parse(string defaultField, string query) {
-            return Parse(new string[] {defaultField}, query);
+            return Parse(new[] {defaultField}, query);
         }
         
         public ISearchBuilder Parse(string[] defaultFields, string query) {

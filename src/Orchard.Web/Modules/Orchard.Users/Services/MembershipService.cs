@@ -20,13 +20,11 @@ namespace Orchard.Users.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly IMessageManager _messageManager;
         private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
-        private readonly IClock _clock;
 
         public MembershipService(IOrchardServices orchardServices, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers, IClock clock) {
             _orchardServices = orchardServices;
             _messageManager = messageManager;
             _userEventHandlers = userEventHandlers;
-            _clock = clock;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }

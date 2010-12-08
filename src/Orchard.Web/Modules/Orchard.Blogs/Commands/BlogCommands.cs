@@ -106,18 +106,20 @@ namespace Orchard.Blogs.Commands {
             }
 
             foreach ( var item in doc.Descendants("item") ) {
-                string postName = item.Element("title").Value;
+                if (item != null) {
+                    string postName = item.Element("title").Value;
 
-                Context.Output.WriteLine("Adding post: {0}...", postName.Substring(0, Math.Min(postName.Length, 40)));
-                var post = _contentManager.New("BlogPost");
-                post.As<ICommonPart>().Owner = owner;
-                post.As<ICommonPart>().Container = blog;
-                var slug = Slugify(postName);
-                post.As<RoutePart>().Slug = slug;
-                post.As<RoutePart>().Path = post.As<RoutePart>().GetPathWithSlug(slug);
-                post.As<RoutePart>().Title = postName;
-                post.As<BodyPart>().Text = item.Element("description").Value;
-                _contentManager.Create(post);
+                    Context.Output.WriteLine("Adding post: {0}...", postName.Substring(0, Math.Min(postName.Length, 40)));
+                    var post = _contentManager.New("BlogPost");
+                    post.As<ICommonPart>().Owner = owner;
+                    post.As<ICommonPart>().Container = blog;
+                    var slug = Slugify(postName);
+                    post.As<RoutePart>().Slug = slug;
+                    post.As<RoutePart>().Path = post.As<RoutePart>().GetPathWithSlug(slug);
+                    post.As<RoutePart>().Title = postName;
+                    post.As<BodyPart>().Text = item.Element("description").Value;
+                    _contentManager.Create(post);
+                }
             }
 
 

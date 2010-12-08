@@ -11,7 +11,6 @@ using System.Globalization;
 namespace Orchard.PublishLater.Drivers {
     public class PublishLaterPartDriver : ContentPartDriver<PublishLaterPart> {
         private const string TemplateName = "Parts/PublishLater";
-        private readonly ICommonService _commonService;
         private readonly IPublishLaterService _publishLaterService;
         private const string DatePattern = "M/d/yyyy";
         private const string TimePattern = "h:mm tt";
@@ -20,7 +19,6 @@ namespace Orchard.PublishLater.Drivers {
             IOrchardServices services,
             ICommonService commonService,
             IPublishLaterService publishLaterService) {
-            _commonService = commonService;
             _publishLaterService = publishLaterService;
             T = NullLocalizer.Instance;
             Services = services;
