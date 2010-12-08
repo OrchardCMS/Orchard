@@ -44,7 +44,7 @@ namespace Orchard.Roles.Drivers {
 
         protected override DriverResult Editor(UserRolesPart userRolesPart, dynamic shapeHelper) {
             // don't show editor without apply roles permission
-            if (!_authorizationService.TryCheckAccess(Permissions.ApplyRoles, _authenticationService.GetAuthenticatedUser(), userRolesPart))
+            if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, _authenticationService.GetAuthenticatedUser(), userRolesPart))
                 return null;
 
             return ContentShape("Parts_Roles_UserRoles_Edit",
@@ -64,7 +64,7 @@ namespace Orchard.Roles.Drivers {
 
         protected override DriverResult Editor(UserRolesPart userRolesPart, IUpdateModel updater, dynamic shapeHelper) {
             // don't apply editor without apply roles permission
-            if (!_authorizationService.TryCheckAccess(Permissions.ApplyRoles, _authenticationService.GetAuthenticatedUser(), userRolesPart))
+            if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, _authenticationService.GetAuthenticatedUser(), userRolesPart))
                 return null;
 
             var model = BuildEditorViewModel(userRolesPart);
