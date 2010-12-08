@@ -4,12 +4,12 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Contents {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission PublishContent = new Permission { Description = "Publish or unpublish content for others", Name = "PublishContent" };
-        public static readonly Permission PublishOwnContent = new Permission { Description = "Publish or unpublish content", Name = "PublishOwnContent", ImpliedBy = new[] { PublishContent } };
-        public static readonly Permission EditContent = new Permission { Description = "Edit content for others", Name = "EditContent", ImpliedBy = new[] { PublishContent } };
-        public static readonly Permission EditOwnContent = new Permission { Description = "Edit content", Name = "EditOwnContent", ImpliedBy = new[] { EditContent, PublishOwnContent } };
-        public static readonly Permission DeleteContent = new Permission { Description = "Delete content for others", Name = "DeleteContent" };
-        public static readonly Permission DeleteOwnContent = new Permission { Description = "Delete content", Name = "DeleteOwnContent", ImpliedBy = new[] { DeleteContent } };
+        public static readonly Permission PublishOthersContent = new Permission { Description = "Publish or unpublish content for others", Name = "PublishOthersContent" };
+        public static readonly Permission PublishOwnContent = new Permission { Description = "Publish or unpublish own content", Name = "PublishOwnContent", ImpliedBy = new[] { PublishOthersContent } };
+        public static readonly Permission EditOthersContent = new Permission { Description = "Edit content for others", Name = "EditOthersContent", ImpliedBy = new[] { PublishOthersContent } };
+        public static readonly Permission EditOwnContent = new Permission { Description = "Edit own content", Name = "EditOwnContent", ImpliedBy = new[] { EditOthersContent, PublishOwnContent } };
+        public static readonly Permission DeleteOthersContent = new Permission { Description = "Delete content for others", Name = "DeleteOthersContent" };
+        public static readonly Permission DeleteOwnContent = new Permission { Description = "Delete own content", Name = "DeleteOwnContent", ImpliedBy = new[] { DeleteOthersContent } };
 
         public static readonly Permission MetaListContent = new Permission { ImpliedBy = new[] { EditOwnContent, PublishOwnContent, DeleteOwnContent } };
 
@@ -18,11 +18,11 @@ namespace Orchard.Core.Contents {
         public IEnumerable<Permission> GetPermissions() {
             return new [] {
                 EditOwnContent,
-                EditContent,
+                EditOthersContent,
                 PublishOwnContent,
-                PublishContent,
+                PublishOthersContent,
                 DeleteOwnContent,
-                DeleteContent,
+                DeleteOthersContent,
             };
         }
 
@@ -30,15 +30,14 @@ namespace Orchard.Core.Contents {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {PublishContent,EditContent,DeleteContent}
+                    Permissions = new[] {PublishOthersContent,EditOthersContent,DeleteOthersContent}
                 },
                 new PermissionStereotype {
                     Name = "Editor",
-                    Permissions = new[] {PublishContent,EditContent,DeleteContent}
+                    Permissions = new[] {PublishOthersContent,EditOthersContent,DeleteOthersContent}
                 },
                 new PermissionStereotype {
                     Name = "Moderator",
-                    //Permissions = new[] {}
                 },
                 new PermissionStereotype {
                     Name = "Author",

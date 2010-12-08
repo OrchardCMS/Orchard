@@ -29,7 +29,7 @@ namespace Orchard.Blogs.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
@@ -57,7 +57,7 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult CreatePOST(Action<ContentItem> conditionallyPublish) {
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
@@ -81,7 +81,7 @@ namespace Orchard.Blogs.Controllers {
         //todo: the content shape template has extra bits that the core contents module does not (remove draft functionality)
         //todo: - move this extra functionality there or somewhere else that's appropriate?
         public ActionResult Edit(int blogId, int postId) {
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
@@ -113,7 +113,7 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult EditPOST(int blogId, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
@@ -184,7 +184,7 @@ namespace Orchard.Blogs.Controllers {
         [ValidateAntiForgeryTokenOrchard]
         public ActionResult Delete(int blogId, int postId) {
             //refactoring: test PublishBlogPost/PublishOthersBlogPost in addition if published
-            if (!Services.Authorizer.Authorize(Permissions.DeleteBlogPost, T("Couldn't delete blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.DeleteOwnBlogPost, T("Couldn't delete blog post")))
                 return new HttpUnauthorizedResult();
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
@@ -203,7 +203,7 @@ namespace Orchard.Blogs.Controllers {
 
         [ValidateAntiForgeryTokenOrchard]
         public ActionResult Publish(int blogId, int postId) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't publish blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, T("Couldn't publish blog post")))
                 return new HttpUnauthorizedResult();
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
@@ -222,7 +222,7 @@ namespace Orchard.Blogs.Controllers {
 
         [ValidateAntiForgeryTokenOrchard]
         public ActionResult Unpublish(int blogId, int postId) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't unpublish blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, T("Couldn't unpublish blog post")))
                 return new HttpUnauthorizedResult();
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest);

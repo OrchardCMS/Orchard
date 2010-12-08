@@ -9,19 +9,19 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Contents {
     public class DynamicPermissions : IPermissionProvider {
-        private static readonly Permission PublishContent = new Permission { Description = "Publish or unpublish {0} for others", Name = "Publish_{0}", ImpliedBy = new[] { Permissions.PublishContent } };
+        private static readonly Permission PublishContent = new Permission { Description = "Publish or unpublish {0} for others", Name = "Publish_{0}", ImpliedBy = new[] { Permissions.PublishOthersContent } };
         private static readonly Permission PublishOwnContent = new Permission { Description = "Publish or unpublish {0}", Name = "PublishOwn_{0}", ImpliedBy = new[] { PublishContent, Permissions.PublishOwnContent } };
-        private static readonly Permission EditContent = new Permission { Description = "Edit {0} for others", Name = "Edit_{0}", ImpliedBy = new[] { PublishContent, Permissions.PublishContent } };
+        private static readonly Permission EditContent = new Permission { Description = "Edit {0} for others", Name = "Edit_{0}", ImpliedBy = new[] { PublishContent, Permissions.PublishOthersContent } };
         private static readonly Permission EditOwnContent = new Permission { Description = "Edit {0}", Name = "EditOwn_{0}", ImpliedBy = new[] { EditContent, PublishOwnContent, Permissions.EditOwnContent } };
-        private static readonly Permission DeleteContent = new Permission { Description = "Delete {0} for others", Name = "Delete_{0}", ImpliedBy = new[] { Permissions.DeleteContent } };
+        private static readonly Permission DeleteContent = new Permission { Description = "Delete {0} for others", Name = "Delete_{0}", ImpliedBy = new[] { Permissions.DeleteOthersContent } };
         private static readonly Permission DeleteOwnContent = new Permission { Description = "Delete {0}", Name = "DeleteOwn_{0}", ImpliedBy = new[] { DeleteContent, Permissions.DeleteOwnContent } };
 
         public static readonly Dictionary<string, Permission> PermissionTemplates = new Dictionary<string, Permission> {
-            {Permissions.PublishContent.Name, PublishContent},
+            {Permissions.PublishOthersContent.Name, PublishContent},
             {Permissions.PublishOwnContent.Name, PublishOwnContent},
-            {Permissions.EditContent.Name, EditContent},
+            {Permissions.EditOthersContent.Name, EditContent},
             {Permissions.EditOwnContent.Name, EditOwnContent},
-            {Permissions.DeleteContent.Name, DeleteContent},
+            {Permissions.DeleteOthersContent.Name, DeleteContent},
             {Permissions.DeleteOwnContent.Name, DeleteOwnContent}
         };
 

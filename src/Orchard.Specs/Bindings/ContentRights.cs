@@ -94,11 +94,11 @@ namespace Orchard.Specs.Bindings {
         private static Permission GetPermissionForAction(string action) {
             switch ( action ) {
                 case "publish":
-                    return Permissions.PublishContent;
+                    return Permissions.PublishOthersContent;
                 case "edit":
-                    return Permissions.EditContent;
+                    return Permissions.EditOthersContent;
                 case "delete":
-                    return Permissions.DeleteContent;
+                    return Permissions.DeleteOthersContent;
                 default:
                     return null;
             }
