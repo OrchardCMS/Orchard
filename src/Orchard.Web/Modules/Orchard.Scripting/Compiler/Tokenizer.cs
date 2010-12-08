@@ -59,10 +59,10 @@ namespace Orchard.Scripting.Compiler {
                 if (IsDigitCharacter(ch)) {
                     return LexInteger();
                 }
-                else if (IsIdentifierCharacter(ch)) {
+                if (IsIdentifierCharacter(ch)) {
                     return LexIdentifierOrKeyword();
                 }
-                else if (IsWhitespaceCharacter(ch)) {
+                if (IsWhitespaceCharacter(ch)) {
                     NextCharacter();
                     continue;
                 }
@@ -163,18 +163,18 @@ namespace Orchard.Scripting.Compiler {
             }
         }
 
-        private bool IsWhitespaceCharacter(char character) {
+        private static bool IsWhitespaceCharacter(char character) {
             return char.IsWhiteSpace(character);
         }
 
-        private bool IsIdentifierCharacter(char ch) {
+        private static bool IsIdentifierCharacter(char ch) {
             return
                 (ch >= 'a' && ch <= 'z') ||
                 (ch >= 'A' && ch <= 'Z') ||
                 (ch == '_');
         }
 
-        private bool IsDigitCharacter(char ch) {
+        private static bool IsDigitCharacter(char ch) {
             return ch >= '0' && ch <= '9';
         }
 
@@ -193,7 +193,7 @@ namespace Orchard.Scripting.Compiler {
                     return CreateToken(TokenKind.SingleQuotedStringLiteral, _stringBuilder.ToString());
                 }
                 // backslash notation
-                else if (Character() == '\\') {
+                if (Character() == '\\') {
                     NextCharacter();
 
                     if (Eof())
@@ -210,7 +210,7 @@ namespace Orchard.Scripting.Compiler {
                         _stringBuilder.Append(Character());
                     }
                 }
-                // Regular character in string
+                    // Regular character in string
                 else {
                     _stringBuilder.Append(Character());
                 }
@@ -232,7 +232,7 @@ namespace Orchard.Scripting.Compiler {
                     return CreateToken(TokenKind.StringLiteral, _stringBuilder.ToString());
                 }
                 // backslash notation
-                else if (Character() == '\\') {
+                if (Character() == '\\') {
                     NextCharacter();
 
                     if (Eof())
@@ -240,7 +240,7 @@ namespace Orchard.Scripting.Compiler {
 
                     _stringBuilder.Append(Character());
                 }
-                // Regular character in string
+                    // Regular character in string
                 else {
                     _stringBuilder.Append(Character());
                 }

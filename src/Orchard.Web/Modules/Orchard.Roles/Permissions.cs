@@ -12,7 +12,7 @@ namespace Orchard.Roles {
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new Permission[] {
+            return new[] {
                 ManageRoles,
                 ApplyRoles,
             };

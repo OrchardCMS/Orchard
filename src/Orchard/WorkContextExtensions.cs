@@ -52,7 +52,7 @@ namespace Orchard {
             if (controllerContext == null)
                 return null;
 
-            return WorkContextExtensions.GetWorkContext(controllerContext.RequestContext);
+            return GetWorkContext(controllerContext.RequestContext);
         }
 
         public static IWorkContextScope CreateWorkContextScope(this ILifetimeScope lifetimeScope, HttpContextBase httpContext) {

@@ -132,9 +132,8 @@ namespace Orchard.Users.Controllers {
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
                     return Redirect("~/");
                 }
-                else {
-                    ModelState.AddModelError("_FORM", T(ErrorCodeToString(/*createStatus*/MembershipCreateStatus.ProviderError)));
-                }
+                
+                ModelState.AddModelError("_FORM", T(ErrorCodeToString(/*createStatus*/MembershipCreateStatus.ProviderError)));
             }
 
             // If we got this far, something failed, redisplay form
@@ -196,11 +195,10 @@ namespace Orchard.Users.Controllers {
                     _membershipService.SetPassword(validated, newPassword);
                     return RedirectToAction("ChangePasswordSuccess");
                 }
-                else {
-                    ModelState.AddModelError("_FORM",
-                                             T("The current password is incorrect or the new password is invalid."));
-                    return ChangePassword();
-                }
+                
+                ModelState.AddModelError("_FORM",
+                                         T("The current password is incorrect or the new password is invalid."));
+                return ChangePassword();
             }
             catch {
                 ModelState.AddModelError("_FORM", T("The current password is incorrect or the new password is invalid."));

@@ -11,7 +11,7 @@ namespace Orchard.Tags {
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new Permission[] {
+            return new[] {
                 ManageTags,
                 CreateTag,
                 ApplyTag,

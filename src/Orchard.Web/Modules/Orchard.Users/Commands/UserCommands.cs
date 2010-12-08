@@ -1,5 +1,4 @@
 ﻿using Orchard.Commands;
-using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Users.Services;
 
@@ -9,7 +8,6 @@ namespace Orchard.Users.Commands {
         private readonly IUserService _userService;
 
         public UserCommands(
-            IContentManager contentManager,
             IMembershipService membershipService,
             IUserService userService) {
             _membershipService = membershipService;
@@ -43,8 +41,8 @@ namespace Orchard.Users.Commands {
             var user = _membershipService.CreateUser(new CreateUserParams(UserName, Password, Email, null, null, true));
             if (user != null)
                 return T("User created successfully").ToString();
-            else
-                return T("The authentication provider returned an error").ToString();
+            
+            return T("The authentication provider returned an error").ToString();
         }
 
         int MinPasswordLength {

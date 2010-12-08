@@ -33,10 +33,8 @@ namespace Orchard.Commands {
                     throw new OrchardCoreException(T("Multiple commands found matching arguments \"{0}\". Commands available: {1}.",
                                                              commandMatch, commandList));
                 }
-                else {
-                    throw new OrchardCoreException(T("No command found matching arguments \"{0}\". Commands available: {1}.",
-                                                             commandMatch, commandList));
-                }
+                throw new OrchardCoreException(T("No command found matching arguments \"{0}\". Commands available: {1}.",
+                                                 commandMatch, commandList));
             }
         }
 

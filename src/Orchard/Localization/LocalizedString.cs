@@ -22,8 +22,7 @@ namespace Orchard.Localization {
         public static LocalizedString TextOrDefault(string text, LocalizedString defaultValue) {
             if (string.IsNullOrEmpty(text))
                 return defaultValue;
-            else
-                return new LocalizedString(text);
+            return new LocalizedString(text);
         }
 
         public string Scope {

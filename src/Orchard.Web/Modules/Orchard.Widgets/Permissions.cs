@@ -9,7 +9,7 @@ namespace Orchard.Widgets {
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new Permission[] {
+            return new[] {
                 ManageWidgets,
             };
         }

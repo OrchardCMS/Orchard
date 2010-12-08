@@ -107,7 +107,7 @@ namespace Orchard.Data.Migration.Generator {
 
                             
                             if ( columnCopy.IsLengthDefined() 
-                                && new DbType[] { DbType.StringFixedLength, DbType.String, DbType.AnsiString, DbType.AnsiStringFixedLength }.Contains(sqlType.DbType)
+                                && new[] { DbType.StringFixedLength, DbType.String, DbType.AnsiString, DbType.AnsiStringFixedLength }.Contains(sqlType.DbType)
                                 && columnCopy.Length != Column.DefaultLength) {
                                 action.WithLength(columnCopy.Length);
                             }

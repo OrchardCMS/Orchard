@@ -99,7 +99,7 @@ namespace Orchard.Localization.Controllers {
             var model = new AddLocalizationViewModel();
             TryUpdateModel(model);
 
-            ContentItem contentItemTranslation = null;
+            ContentItem contentItemTranslation;
             var existingTranslation = _localizationService.GetLocalizedContentItem(contentItem, model.SelectedCulture);
             if (existingTranslation != null) {
                 // edit existing

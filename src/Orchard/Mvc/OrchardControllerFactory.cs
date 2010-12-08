@@ -45,7 +45,7 @@ namespace Orchard.Mvc {
             return null;
         }
 
-        protected override IController GetControllerInstance(RequestContext requestContext, System.Type controllerType) {
+        protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType) {
             IController controller;
             var workContext = requestContext.GetWorkContext();
             if (TryResolve(workContext, controllerType, out controller)) {

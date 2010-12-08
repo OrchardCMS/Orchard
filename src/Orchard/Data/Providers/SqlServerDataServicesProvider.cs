@@ -20,9 +20,7 @@ namespace Orchard.Data.Providers {
             if (string.IsNullOrEmpty(_connectionString)) {
                 throw new NotImplementedException();
             }
-            else {
-                persistence = persistence.ConnectionString(_connectionString);
-            }
+            persistence = persistence.ConnectionString(_connectionString);
             return persistence;
         }
     }

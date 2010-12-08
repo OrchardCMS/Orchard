@@ -10,7 +10,7 @@ namespace Orchard.Experimental {
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new Permission[] {
+            return new[] {
                 DebugShowAllMenuItems,
             };
         }

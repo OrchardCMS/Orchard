@@ -9,7 +9,7 @@ namespace Orchard.Core.Common {
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new Permission[] {
+            return new[] {
                 ChangeOwner,
             };
         }

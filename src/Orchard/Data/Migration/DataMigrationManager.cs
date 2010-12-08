@@ -166,7 +166,7 @@ namespace Orchard.Data.Migration {
                     .ToList();
 
             foreach (var migration in migrations.OfType<DataMigrationImpl>()) {
-                migration.SchemaBuilder = new SchemaBuilder(_interpreter, migration.Feature.Descriptor.Id, (s) => s.Replace(".", "_") + "_");
+                migration.SchemaBuilder = new SchemaBuilder(_interpreter, migration.Feature.Descriptor.Id, s => s.Replace(".", "_") + "_");
                 migration.ContentDefinitionManager = _contentDefinitionManager;
             }
 

@@ -28,7 +28,7 @@ namespace Orchard.Security {
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new Permission[] {
+            return new[] {
                 AccessAdminPanel,
                 AccessFrontEnd,
             };
