@@ -4,15 +4,13 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Media {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageMediaFiles = new Permission { Description = "Modifying Media Files", Name = "ManageMediaFiles" };
-        public static readonly Permission UploadMediaFiles = new Permission { Description = "Uploading Media Files", Name = "UploadMediaFiles", ImpliedBy = new[] { ManageMediaFiles } };
+        public static readonly Permission ManageMedia = new Permission { Description = "Managing Media Files", Name = "ManageMedia" };
 
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {
-                ManageMediaFiles,
-                UploadMediaFiles,
+                ManageMedia,
             };
         }
 
@@ -20,23 +18,21 @@ namespace Orchard.Media {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {ManageMediaFiles}
+                    Permissions = new[] {ManageMedia}
                 },
                 new PermissionStereotype {
                     Name = "Editor",
-                    Permissions = new[] {ManageMediaFiles}
+                    Permissions = new[] {ManageMedia}
                 },
                 new PermissionStereotype {
                     Name = "Moderator",
-                    //Permissions = new[] {}
                 },
                 new PermissionStereotype {
                     Name = "Author",
-                    Permissions = new[] {ManageMediaFiles}
+                    Permissions = new[] {ManageMedia}
                 },
                 new PermissionStereotype {
                     Name = "Contributor",
-                    Permissions = new[] {UploadMediaFiles}
                 },
             };
         }

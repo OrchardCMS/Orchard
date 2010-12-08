@@ -55,7 +55,7 @@ namespace Orchard.Media.Controllers {
 
         [HttpPost]
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't create media folder")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't create media folder")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new MediaFolderCreateViewModel();
@@ -87,7 +87,7 @@ namespace Orchard.Media.Controllers {
                     if (key.StartsWith("Checkbox.File.") && input[key] == "true") {
                         string fileName = key.Substring("Checkbox.File.".Length);
                         string folderName = input[fileName];
-                        if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media file")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't delete media file")))
                             return new HttpUnauthorizedResult();
                         _mediaService.DeleteFile(fileName, folderName);
 
@@ -96,7 +96,7 @@ namespace Orchard.Media.Controllers {
                     else if (key.StartsWith("Checkbox.Folder.") && input[key] == "true") {
                         string folderName = key.Substring("Checkbox.Folder.".Length);
                         string folderPath = input[folderName];
-                        if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media folder")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't delete media folder")))
                             return new HttpUnauthorizedResult();
                         _mediaService.DeleteFolder(folderPath);
 
@@ -119,7 +119,7 @@ namespace Orchard.Media.Controllers {
         [HttpPost, ActionName("EditProperties")]
         [FormValueRequired("submit.Delete")]
         public ActionResult EditPropertiesDeletePOST() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media folder")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't delete media folder")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new MediaFolderEditPropertiesViewModel();
@@ -140,7 +140,7 @@ namespace Orchard.Media.Controllers {
         [HttpPost, ActionName("EditProperties")]
         [FormValueRequired("submit.Save")]
         public ActionResult EditProperties() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't rename media folder")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't rename media folder")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new MediaFolderEditPropertiesViewModel();
@@ -164,7 +164,7 @@ namespace Orchard.Media.Controllers {
 
         [HttpPost]
         public ActionResult Add() {
-            if (!Services.Authorizer.Authorize(Permissions.UploadMediaFiles, T("Couldn't upload media file")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't upload media file")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new MediaItemAddViewModel();
@@ -203,7 +203,7 @@ namespace Orchard.Media.Controllers {
 
         [HttpPost]
         public ContentResult AddFromClient() {
-            if (!Services.Authorizer.Authorize(Permissions.UploadMediaFiles))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia))
                 return Content(string.Format("<script type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("ERROR: You don't have permission to upload media files")));
 
             var viewModel = new MediaItemAddViewModel();
@@ -247,7 +247,7 @@ namespace Orchard.Media.Controllers {
         [HttpPost, ActionName("EditMedia")]
         [FormValueRequired("submit.Delete")]
         public ActionResult EditMediaDeletePOST(FormCollection input) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media file")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't delete media file")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new MediaItemEditViewModel();
@@ -267,7 +267,7 @@ namespace Orchard.Media.Controllers {
         [HttpPost, ActionName("EditMedia")]
         [FormValueRequired("submit.Save")]
         public ActionResult EditMedia(FormCollection input) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't modify media file")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't modify media file")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new MediaItemEditViewModel();
