@@ -140,13 +140,13 @@ namespace Orchard.Specs.Bindings {
             foreach (var row in table.Rows) {
                 foreach (var name in row["names"].Split(',').Select(x => x.Trim())) {
                     switch (row["extension"]) {
-                        case DefaultExtensionTypes.Core:
+                        case "Core":
                             GivenIHaveCore(name);
                             break;
-                        case DefaultExtensionTypes.Module:
+                        case "Module":
                             GivenIHaveModule(name);
                             break;
-                        case DefaultExtensionTypes.Theme:
+                        case "Theme":
                             GivenIHaveTheme(name);
                             break;
                         default:
