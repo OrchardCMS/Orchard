@@ -171,7 +171,7 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationWithSchemaBuilder : DataMigrationImpl {
             public override Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } }; }
+                get { return new Feature { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } }; }
             }
 
             public int Create() {
@@ -182,13 +182,13 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationFeatureNeedUpdate1 : IDataMigration {
             public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } }; }
             }
         }
 
         public class DataMigrationFeatureNeedUpdate2 : IDataMigration {
             public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature2" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature2", Extension = new ExtensionDescriptor { Id = "Module2" } } }; }
             }
 
             public int Create() {
@@ -198,7 +198,7 @@ namespace Orchard.Tests.DataMigration {
 
         public class DataMigrationFeatureNeedUpdate3 : IDataMigration {
             public Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature3" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature3", Extension = new ExtensionDescriptor { Id = "Module3" } } }; }
             }
 
             public int Create() {
@@ -212,7 +212,7 @@ namespace Orchard.Tests.DataMigration {
         
         public class DataMigrationSimpleBuilder : DataMigrationImpl {
             public override Feature Feature {
-                get { return new Feature() { Descriptor = new FeatureDescriptor() { Id = "Feature1" } }; }
+                get { return new Feature() { Descriptor = new FeatureDescriptor { Id = "Feature1", Extension = new ExtensionDescriptor { Id = "Module1" } } }; }
             }
 
             public int Create() {
