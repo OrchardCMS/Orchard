@@ -8,6 +8,7 @@ namespace Orchard.Security {
     public class StandardPermissions : IPermissionProvider {
         public static readonly Permission AccessAdminPanel = new Permission { Name = "AccessAdminPanel", Description = "Access admin panel" };
         public static readonly Permission AccessFrontEnd = new Permission { Name = "AccessFrontEnd", Description = "Access site front-end" };
+        public static readonly Permission SiteOwner = new Permission { Name = "SiteOwner", Description = "Site Owners Permission" }; 
 
         public Feature Feature {
             get {
@@ -31,6 +32,7 @@ namespace Orchard.Security {
             return new[] {
                 AccessAdminPanel,
                 AccessFrontEnd,
+                SiteOwner
             };
         }
 
@@ -38,7 +40,7 @@ namespace Orchard.Security {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {AccessAdminPanel}
+                    Permissions = new[] {SiteOwner, AccessAdminPanel}
                 },
                 new PermissionStereotype {
                     Name = "Anonymous",
