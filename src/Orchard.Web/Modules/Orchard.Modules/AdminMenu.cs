@@ -1,4 +1,5 @@
 ﻿using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Modules {
@@ -13,7 +14,7 @@ namespace Orchard.Modules {
                     .Add(T("Features"), "0", item => item.Action("Features", "Admin", new { area = "Orchard.Modules" })
                         .Permission(Permissions.ManageFeatures))
                     .Add(T("Modules"), "5", item => item.Action("Index", "Admin", new { area = "Orchard.Modules" })
-                        .Permission(Permissions.ManageModules)));
+                        .Permission(StandardPermissions.SiteOwner)));
         }
     }
 }
