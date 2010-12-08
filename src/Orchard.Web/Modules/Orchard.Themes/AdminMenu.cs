@@ -9,7 +9,6 @@ namespace Orchard.Themes {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Themes"), "25",
                 menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.Themes" })
-                    .Permission(Permissions.ManageThemes)
                     .Permission(Permissions.ApplyTheme)));
         }
     }
