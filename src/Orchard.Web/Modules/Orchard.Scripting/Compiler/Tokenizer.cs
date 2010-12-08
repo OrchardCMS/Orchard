@@ -199,15 +199,17 @@ namespace Orchard.Scripting.Compiler {
                     if (Eof())
                         return CreateToken(TokenKind.Invalid, "Unterminated string literal");
 
-                    if (Character() == '\\') {
-                        _stringBuilder.Append('\\');
-                    }
-                    else if (Character() == '\'') {
-                        _stringBuilder.Append('\'');
-                    }
-                    else {
-                        _stringBuilder.Append('\\');
-                        _stringBuilder.Append(Character());
+                    switch (Character()) {
+                        case '\\':
+                            _stringBuilder.Append('\\');
+                            break;
+                        case '\'':
+                            _stringBuilder.Append('\'');
+                            break;
+                        default:
+                            _stringBuilder.Append('\\');
+                            _stringBuilder.Append(Character());
+                            break;
                     }
                 }
                     // Regular character in string

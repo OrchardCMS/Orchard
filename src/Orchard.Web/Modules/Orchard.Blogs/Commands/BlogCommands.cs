@@ -107,7 +107,7 @@ namespace Orchard.Blogs.Commands {
 
             foreach ( var item in doc.Descendants("item") ) {
                 if (item != null) {
-                    string postName = item.Element("title").Value;
+                    var postName = item.Element("title").Value;
 
                     Context.Output.WriteLine("Adding post: {0}...", postName.Substring(0, Math.Min(postName.Length, 40)));
                     var post = _contentManager.New("BlogPost");

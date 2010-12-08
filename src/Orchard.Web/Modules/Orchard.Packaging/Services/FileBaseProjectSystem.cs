@@ -43,12 +43,7 @@ namespace Orchard.Packaging.Services {
         }
 
         public virtual FrameworkName TargetFramework {
-            get {
-                if (_targetFramework == null) {
-                    _targetFramework = new FrameworkName(NetFrameworkIdentifier, typeof(string).Assembly.GetNameSafe().Version);
-                }
-                return _targetFramework;
-            }
+            get { return _targetFramework ?? (_targetFramework = new FrameworkName(NetFrameworkIdentifier, typeof (string).Assembly.GetNameSafe().Version)); }
         }
 
         public string GetFullPath(string path) {
@@ -114,11 +109,7 @@ namespace Orchard.Packaging.Services {
             }
 
             // Return empty string for the root namespace of this project.
-            if (propertyName.Equals("RootNamespace", StringComparison.OrdinalIgnoreCase)) {
-                return String.Empty;
-            }
-
-            return null;
+            return propertyName.Equals("RootNamespace", StringComparison.OrdinalIgnoreCase) ? String.Empty : null;
         }
 
         public IEnumerable<string> GetFiles(string path) {
@@ -164,10 +155,7 @@ namespace Orchard.Packaging.Services {
         }
 
         public DateTimeOffset GetLastModified(string path) {
-            if (DirectoryExists(path)) {
-                return new DirectoryInfo(GetFullPath(path)).LastWriteTimeUtc;
-            }
-            return new FileInfo(GetFullPath(path)).LastWriteTimeUtc;
+            return DirectoryExists(path) ? new DirectoryInfo(GetFullPath(path)).LastWriteTimeUtc : new FileInfo(GetFullPath(path)).LastWriteTimeUtc;
         }
 
         public bool FileExists(string path) {

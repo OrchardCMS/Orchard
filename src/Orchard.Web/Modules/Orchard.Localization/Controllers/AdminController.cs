@@ -143,10 +143,9 @@ namespace Orchard.Localization.Controllers {
             }
 
             var metadata = _contentManager.GetItemMetadata(model.Content);
-            if (metadata.EditorRouteValues == null)
-                return null; //todo: (heskew) redirect to somewhere better than nowhere
 
-            return RedirectToRoute(metadata.EditorRouteValues);
+            //todo: (heskew) if null, redirect to somewhere better than nowhere
+            return metadata.EditorRouteValues == null ? null : RedirectToRoute(metadata.EditorRouteValues);
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

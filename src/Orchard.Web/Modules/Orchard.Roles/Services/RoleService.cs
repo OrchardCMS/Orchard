@@ -153,9 +153,7 @@ namespace Orchard.Roles.Services {
 
         IEnumerable<string> GetPermissionsForRoleByNameInner(string name) {
             var roleRecord = GetRoleByName(name);
-            if (roleRecord == null)
-                return Enumerable.Empty<string>();
-            return GetPermissionsForRole(roleRecord.Id);
+            return roleRecord == null ? Enumerable.Empty<string>() : GetPermissionsForRole(roleRecord.Id);
         }
 
 

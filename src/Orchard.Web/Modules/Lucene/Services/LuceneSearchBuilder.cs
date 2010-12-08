@@ -314,12 +314,7 @@ namespace Lucene.Services {
             try {
                 var hits = searcher.Search(query, 1);
                 Logger.Information("Search results: {0}", hits.scoreDocs.Length);
-                if ( hits.scoreDocs.Length > 0 ) {
-                    return new LuceneSearchHit(searcher.Doc(hits.scoreDocs[0].doc), hits.scoreDocs[0].score);
-                }
-                else {
-                    return null;
-                }
+                return hits.scoreDocs.Length > 0 ? new LuceneSearchHit(searcher.Doc(hits.scoreDocs[0].doc), hits.scoreDocs[0].score) : null;
             }
             finally {
                 searcher.Close();

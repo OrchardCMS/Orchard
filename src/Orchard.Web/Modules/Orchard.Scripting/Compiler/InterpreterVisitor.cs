@@ -92,7 +92,7 @@ namespace Orchard.Scripting.Compiler {
             return Error(node.Message);
         }
 
-        private EvaluationResult EvaluateEquality(EvaluationResult left, EvaluationResult right, Func<bool, bool> operation) {
+        private static EvaluationResult EvaluateEquality(EvaluationResult left, EvaluationResult right, Func<bool, bool> operation) {
             var type = PrimitiveType.InstanceFor(left.Value);
             var result = type.EqualityOperator(left, right);
             if (result.IsBool)
@@ -100,7 +100,7 @@ namespace Orchard.Scripting.Compiler {
             return result;
         }
 
-        private EvaluationResult EvaluateComparison(EvaluationResult left, EvaluationResult right, Func<int, bool> operation) {
+        private static EvaluationResult EvaluateComparison(EvaluationResult left, EvaluationResult right, Func<int, bool> operation) {
             var type = PrimitiveType.InstanceFor(left.Value);
             var result = type.ComparisonOperator(left, right);
             if (result.IsInt32)

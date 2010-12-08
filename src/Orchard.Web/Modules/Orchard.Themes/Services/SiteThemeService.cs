@@ -28,10 +28,7 @@ namespace Orchard.Themes.Services {
             var site = _workContextAccessor.GetContext().CurrentSite;
             string currentThemeName = site.As<ThemeSiteSettingsPart>().CurrentThemeName;
 
-            if (string.IsNullOrEmpty(currentThemeName)) {
-                return null;
-            }
-            return _extensionManager.GetExtension(currentThemeName);
+            return string.IsNullOrEmpty(currentThemeName) ? null : _extensionManager.GetExtension(currentThemeName);
         }
 
         public void SetSiteTheme(string themeName) {

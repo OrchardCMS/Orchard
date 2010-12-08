@@ -33,10 +33,7 @@ namespace Orchard.Scripting.Compiler {
         public string StringValue { get { return (string)Value; } }
 
         public override string ToString() {
-            if (IsNull)
-                return "<null>";
-
-            return Value.ToString();
+            return IsNull ? "<null>" : Value.ToString();
         }
     }
 

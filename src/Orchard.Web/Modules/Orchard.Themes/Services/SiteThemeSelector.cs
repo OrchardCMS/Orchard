@@ -16,11 +16,7 @@ namespace Orchard.Themes.Services {
         public ThemeSelectorResult GetTheme(RequestContext context) {
             string currentThemeName = _orchardServices.WorkContext.CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
 
-            if (String.IsNullOrEmpty(currentThemeName)) {
-                return null;
-            }
-
-            return new ThemeSelectorResult { Priority = -5, ThemeName = currentThemeName };
+            return String.IsNullOrEmpty(currentThemeName) ? null : new ThemeSelectorResult { Priority = -5, ThemeName = currentThemeName };
         }
     }
 
