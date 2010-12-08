@@ -1,4 +1,5 @@
 ﻿using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Core.Settings {
@@ -9,7 +10,7 @@ namespace Orchard.Core.Settings {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Configuration"), "50",
                 menu => menu.Add(T("Settings"), "10", item => item.Action("Index", "Admin", new { area = "Settings" })
-                    .Permission(Permissions.ManageSettings)));
+                    .Permission(StandardPermissions.SiteOwner)));
         }
     }
 }
