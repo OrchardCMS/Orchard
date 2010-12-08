@@ -105,7 +105,7 @@ Pixels   EMs         Percent    Points
 */
 
 html {
-    background:#2d2f25;
+    background:#fcfcfc;
     color:#333;
 }
 
@@ -201,7 +201,9 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 .wrapper, .sections {
     overflow:hidden;
 }
-
+#footer {
+    border-top:1px solid #d3d3d3;
+}
 
 /* Links
 ***************************************************************/
@@ -922,7 +924,6 @@ fieldset.publish-later-datetime input {
     font-style:italic;
 }
 #orchard-version {
-    color:#FCFCFC;
     float:right;
     padding:.7em 1.4em;
 }
