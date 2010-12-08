@@ -53,11 +53,8 @@ namespace Orchard.UI.Navigation {
             return url;
         }
 
-        private IEnumerable<MenuItem> Crop(IEnumerable<MenuItem> items) {
-            foreach(var item in items) {
-                if (item.Items.Any() || item.RouteValues != null)
-                    yield return item;
-            }
+        private static IEnumerable<MenuItem> Crop(IEnumerable<MenuItem> items) {
+            return items.Where(item => item.Items.Any() || item.RouteValues != null);
         }
 
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {

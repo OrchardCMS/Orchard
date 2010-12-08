@@ -48,7 +48,7 @@ namespace Orchard.Environment {
             return Assembly.Load(fullName);
         }
 
-        private Assembly LookupFusion(string fullName) {
+        private static Assembly LookupFusion(string fullName) {
             try {
                 return Assembly.Load(fullName);
             }

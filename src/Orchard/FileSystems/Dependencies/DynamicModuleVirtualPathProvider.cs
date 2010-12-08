@@ -83,7 +83,7 @@ namespace Orchard.FileSystems.Dependencies {
             return _dependenciesFolder.GetDescriptor(moduleName);
         }
 
-        private string ModuleMatch(string virtualPath, string prefix) {
+        private static string ModuleMatch(string virtualPath, string prefix) {
             var index = virtualPath.IndexOf('/', prefix.Length, virtualPath.Length - prefix.Length);
             if (index < 0)
                 return null;
@@ -92,7 +92,7 @@ namespace Orchard.FileSystems.Dependencies {
             return (string.IsNullOrEmpty(moduleName) ? null : moduleName);
         }
 
-        private string PrefixMatch(string virtualPath, params string[] prefixes) {
+        private static string PrefixMatch(string virtualPath, params string[] prefixes) {
             return prefixes
                 .FirstOrDefault(p => virtualPath.StartsWith(p, StringComparison.OrdinalIgnoreCase));
         }

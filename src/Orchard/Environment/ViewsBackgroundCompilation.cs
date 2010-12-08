@@ -152,7 +152,7 @@ namespace Orchard.Environment {
             return result;
         }
 
-        private void GetViewDirectories(IVirtualPathProvider vpp, string directory, IEnumerable<string> extensions, ICollection<string> files) {
+        private static void GetViewDirectories(IVirtualPathProvider vpp, string directory, IEnumerable<string> extensions, ICollection<string> files) {
             if (vpp.ListFiles(directory).Where(f => extensions.Any(e => f.EndsWith(e, StringComparison.OrdinalIgnoreCase))).Any()) {
                 files.Add(directory);
             }

@@ -358,7 +358,7 @@ namespace Orchard.CodeGeneration.Commands {
             }
         }
 
-        private string CreateProjectItemGroup(string relativeFromPath, HashSet<string> content, HashSet<string> folders) {
+        private static string CreateProjectItemGroup(string relativeFromPath, HashSet<string> content, HashSet<string> folders) {
             var contentInclude = "";
             if (relativeFromPath != null && !relativeFromPath.EndsWith("\\", StringComparison.OrdinalIgnoreCase)) {
                 relativeFromPath += "\\";

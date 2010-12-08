@@ -132,10 +132,7 @@ namespace Orchard.Experimental {
             public void AddTime(long time) { _time += time; }
 
             public override string ToString() {
-                if (_component == null)
-                    return "root";
-
-                return _component.ToString();
+                return _component == null ? "root" : _component.ToString();
             }
 
 
@@ -232,7 +229,7 @@ namespace Orchard.Experimental {
             }
 
             private class TotalVisitor {
-                public Node _totals = new Node(null);
+                public readonly Node _totals = new Node(null);
 
                 public void Visit(Node source) {
                     foreach (var child in source._children) {
@@ -272,7 +269,7 @@ namespace Orchard.Experimental {
                 return target;
             }
 
-            private XElement Write(Node node) {
+            private static XElement Write(Node node) {
                 var elt = new XElement(
                     "Component",
                     new XAttribute("services", node._component != null ? string.Join(",", node._component.Services) : "root"),

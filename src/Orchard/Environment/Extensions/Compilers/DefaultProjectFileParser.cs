@@ -16,7 +16,7 @@ namespace Orchard.Environment.Extensions.Compilers {
             };
         }
 
-        private string GetAssemblyName(XDocument document) {
+        private static string GetAssemblyName(XDocument document) {
             return document
                 .Elements(ns("Project"))
                 .Elements(ns("PropertyGroup"))
@@ -25,7 +25,7 @@ namespace Orchard.Environment.Extensions.Compilers {
                 .Value;
         }
 
-        private IEnumerable<string> GetSourceFilenames(XDocument document) {
+        private static IEnumerable<string> GetSourceFilenames(XDocument document) {
             return document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
@@ -34,7 +34,7 @@ namespace Orchard.Environment.Extensions.Compilers {
                 .Select(c => c.Value);
         }
 
-        private IEnumerable<ReferenceDescriptor> GetReferences(XDocument document) {
+        private static IEnumerable<ReferenceDescriptor> GetReferences(XDocument document) {
             var assemblyReferences = document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
@@ -54,9 +54,7 @@ namespace Orchard.Environment.Extensions.Compilers {
 
         private static string ExtractAssemblyName(string value) {
             int index = value.IndexOf(',');
-            if (index < 0)
-                return value;
-            return value.Substring(0, index);
+            return index < 0 ? value : value.Substring(0, index);
         }
 
         private static XName ns(string name) {
