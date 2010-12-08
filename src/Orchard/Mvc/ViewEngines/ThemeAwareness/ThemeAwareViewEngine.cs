@@ -82,21 +82,18 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                 // 3. Active features from modules in dependency order
 
                 var engines = Enumerable.Empty<IViewEngine>();
-                var themeLocation = theme.Location + "/" + theme.Id;
-
                 // 1. current theme
-                var themeParams = new CreateThemeViewEngineParams { VirtualPath = themeLocation };
-                engines = engines.Concat(_viewEngineProviders.Select(vep => vep.CreateThemeViewEngine(themeParams)));
+                engines = engines.Concat(CreateThemeViewEngines(theme));
 
                 // 2. Base themes of the current theme (in "base" order)
-                var baseThemes = GetBaseThemes(theme);
+                engines = GetBaseThemes(theme).Aggregate(engines, (current, baseTheme) => current.Concat(CreateThemeViewEngines(baseTheme)));
 
                 // 3. Active features from modules in dependency order
                 var enabledModules = _extensionManager.EnabledFeatures(_shellDescriptor)
                     .Reverse()  // reverse from (C <= B <= A) to (A => B => C)
-                    .Where(fd => !DefaultExtensionTypes.IsTheme(fd.Extension.ExtensionType)/*core + modules*/);
+                    .Where(fd => DefaultExtensionTypes.IsModule(fd.Extension.ExtensionType));
 
-                var allLocations = baseThemes.Concat(enabledModules)
+                var allLocations = enabledModules.Concat(enabledModules)
                     .Select(fd => fd.Extension.Location + "/" + fd.Extension.Id)
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToList();
@@ -108,7 +105,13 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             });
         }
 
-        private IEnumerable<FeatureDescriptor> GetBaseThemes(ExtensionDescriptor themeExtension) {
+        private IEnumerable<IViewEngine> CreateThemeViewEngines(ExtensionDescriptor theme) {
+            var themeLocation = theme.Location + "/" + theme.Id;
+            var themeParams = new CreateThemeViewEngineParams {VirtualPath = themeLocation};
+            return _viewEngineProviders.Select(vep => vep.CreateThemeViewEngine(themeParams));
+        }
+
+        private IEnumerable<ExtensionDescriptor> GetBaseThemes(ExtensionDescriptor themeExtension) {
             if (themeExtension.Id.Equals("TheAdmin", StringComparison.OrdinalIgnoreCase)) {
                 // Special case: conceptually, the base themes of "TheAdmin" is the list of all
                 // enabled themes. This is so that any enabled theme can have controller/action/views
@@ -116,11 +119,12 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                 return _extensionManager
                     .EnabledFeatures(_shellDescriptor)
                     .Reverse()  // reverse from (C <= B <= A) to (A => B => C)
-                    .Where(fd => DefaultExtensionTypes.IsTheme(fd.Extension.ExtensionType));
+                    .Select(fd => fd.Extension)
+                    .Where(fd => DefaultExtensionTypes.IsTheme(fd.ExtensionType));
             }
             else {
                 var availableFeatures = _extensionManager.AvailableFeatures();
-                var list = new List<FeatureDescriptor>();
+                var list = new List<ExtensionDescriptor>();
                 while(true) {
                     if (themeExtension == null)
                         break;
@@ -135,12 +139,12 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                     }
 
                     // Protect against potential infinite loop
-                    if (list.Contains(baseFeature)) {
+                    if (list.Contains(baseFeature.Extension)) {
                         Logger.Error("Base theme '{0}' of theme '{1}' ignored, as it seems there is recursion in base themes", themeExtension.BaseTheme, themeExtension.Id);
                         break;
                     }
 
-                    list.Add(baseFeature);
+                    list.Add(baseFeature.Extension);
 
                     themeExtension = baseFeature.Extension;
                 }
