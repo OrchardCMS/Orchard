@@ -136,7 +136,7 @@ namespace Orchard.Widgets.Services {
             return false;
         }
 
-        private int ParsePosition(WidgetPart widgetPart) {
+        private static int ParsePosition(WidgetPart widgetPart) {
             int value;
             if (!int.TryParse(widgetPart.Record.Position, out value))
                 return 0;

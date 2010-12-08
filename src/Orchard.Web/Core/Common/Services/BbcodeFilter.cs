@@ -1,33 +1,25 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Services {
     public class BbcodeFilter : IHtmlFilter {
-        private readonly IVirtualPathProvider _virtualPathProvider;
-
-        public BbcodeFilter(IVirtualPathProvider virtualPathProvider) {
-            _virtualPathProvider = virtualPathProvider;
-        }
-
         public string ProcessContent(string text) {
             return BbcodeReplace(text);
         }
 
         // Can be moved somewhere else once we have IoC enabled body text filters.
-        private string BbcodeReplace(string text) {
+        private static string BbcodeReplace(string text) {
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            Regex urlRegex = new Regex(@"\[url\]([^\]]+)\[\/url\]");
-            Regex urlRegexWithLink = new Regex(@"\[url=([^\]]+)\]([^\]]+)\[\/url\]");
-            Regex imgRegex = new Regex(@"\[img\]([^\]]+)\[\/img\]");
+            var urlRegex = new Regex(@"\[url\]([^\]]+)\[\/url\]");
+            var urlRegexWithLink = new Regex(@"\[url=([^\]]+)\]([^\]]+)\[\/url\]");
+            var imgRegex = new Regex(@"\[img\]([^\]]+)\[\/img\]");
 
             text = urlRegex.Replace(text, "<a href=\"$1\">$1</a>");
             text = urlRegexWithLink.Replace(text, "<a href=\"$1\">$2</a>");
-            //text = imgRegex.Replace(text, "<img src=\"$1\" />");
 
             var matches = imgRegex.Matches(text).OfType<Match>().OrderByDescending(m => m.Groups[0].Index);
             foreach(var match in matches) {

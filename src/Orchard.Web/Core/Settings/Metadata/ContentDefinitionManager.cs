@@ -218,7 +218,8 @@ namespace Orchard.Core.Settings.Metadata {
                 return null;
             }
         }
-        string Compose(XElement map) {
+
+        static string Compose(XElement map) {
             if (map == null)
                 return null;
 

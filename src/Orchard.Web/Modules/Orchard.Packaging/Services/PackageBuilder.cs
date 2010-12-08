@@ -62,7 +62,7 @@ namespace Orchard.Packaging.Services {
             return context.Stream;
         }
         
-        private void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
+        private static void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
             context.Builder.Id = "Orchard." + extensionDescriptor.ExtensionType + "." + extensionDescriptor.Id;
             context.Builder.Version = new Version(extensionDescriptor.Version);
             context.Builder.Title = extensionDescriptor.Name ?? extensionDescriptor.Id;
@@ -74,7 +74,7 @@ namespace Orchard.Packaging.Services {
             }
         }
         
-        private void EmbedProjectFiles(CreateContext context, params string[] itemGroupTypes) {
+        private static void EmbedProjectFiles(CreateContext context, params string[] itemGroupTypes) {
             IEnumerable<XElement> itemGroups = context.Project
                 .Elements(Ns("Project"))
                 .Elements(Ns("ItemGroup"));
@@ -90,7 +90,7 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        private void EmbedReferenceFiles(CreateContext context) {
+        private static void EmbedReferenceFiles(CreateContext context) {
             var entries = context.Project
                 .Elements(Ns("Project"))
                 .Elements(Ns("ItemGroup"))
@@ -113,7 +113,7 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        private void EmbedThemeFiles(CreateContext context) {
+        private static void EmbedThemeFiles(CreateContext context) {
             var basePath = context.SourcePath;
             foreach (var virtualPath in context.SourceFolder.ListFiles(context.SourcePath, true)) {
                 // ignore dlls, etc
@@ -128,7 +128,7 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        private XName Ns(string localName) {
+        private static XName Ns(string localName) {
             return XName.Get(localName, "http://schemas.microsoft.com/developer/msbuild/2003");
         }
 

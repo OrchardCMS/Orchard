@@ -26,7 +26,7 @@ namespace Orchard.Core.XmlRpc.Services {
                         };
         }
 
-        private IDictionary<Type, Func<XRpcData, XElement>> _dispatch;
+        private readonly IDictionary<Type, Func<XRpcData, XElement>> _dispatch;
 
         XElement IMapper<XRpcMethodResponse, XElement>.Map(XRpcMethodResponse source) {
             return new XElement(

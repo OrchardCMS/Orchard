@@ -12,7 +12,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             Logger = NullLogger.Instance;
             RazorCompilationEventsShim.EnsureInitialized();
         }
-        static string[] DisabledFormats = new[] { "~/Disabled" };
+        static readonly string[] DisabledFormats = new[] { "~/Disabled" };
 
         public ILogger Logger { get; set; }
 

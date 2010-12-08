@@ -144,7 +144,7 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        private bool TryGetSolutionPath(string applicationPath, out string parentPath) {
+        private static bool TryGetSolutionPath(string applicationPath, out string parentPath) {
             try {
                 parentPath = Directory.GetParent(applicationPath).Parent.FullName;
                 var solutionPath = Path.Combine(parentPath, SolutionFilename);

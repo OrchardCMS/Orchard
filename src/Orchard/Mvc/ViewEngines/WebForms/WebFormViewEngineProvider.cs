@@ -11,7 +11,7 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
             Logger = NullLogger.Instance;
         }
 
-        static string[] DisabledFormats = new[] { "~/Disabled" };
+        static readonly string[] DisabledFormats = new[] { "~/Disabled" };
 
         public ILogger Logger { get; set; }
 
