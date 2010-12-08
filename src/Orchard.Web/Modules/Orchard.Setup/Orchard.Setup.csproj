@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotations\SetupValidationAttributes.cs" />
     <Compile Include="Annotations\SqlDatabaseConnectionStringAttribute.cs" />
     <Compile Include="Annotations\StringLengthMin.cs" />
     <Compile Include="Commands\SetupCommand.cs" />
