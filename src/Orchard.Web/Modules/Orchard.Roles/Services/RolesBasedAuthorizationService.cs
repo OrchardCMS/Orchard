@@ -114,6 +114,8 @@ namespace Orchard.Roles.Services {
                     }
                 }
             }
+
+            yield return StandardPermissions.SiteOwner.Name;
         }
 
     }

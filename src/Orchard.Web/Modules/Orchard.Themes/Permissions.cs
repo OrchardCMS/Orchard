@@ -4,14 +4,12 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Themes {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageThemes = new Permission { Description = "Manage Themes", Name = "ManageThemes" };
         public static readonly Permission ApplyTheme = new Permission { Description = "Apply a Theme", Name = "ApplyTheme" };
 
         public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {
-                                        ManageThemes,
                                         ApplyTheme,
                                     };
         }
@@ -20,7 +18,7 @@ namespace Orchard.Themes {
             return new[] {
                              new PermissionStereotype {
                                                           Name = "Administrator",
-                                                          Permissions = new[] {ManageThemes, ApplyTheme}
+                                                          Permissions = new[] {ApplyTheme}
                                                       },
                          };
         }

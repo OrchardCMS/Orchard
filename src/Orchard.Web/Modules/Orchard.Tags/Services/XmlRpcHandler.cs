@@ -141,7 +141,6 @@ namespace Orchard.Tags.Services {
 
         private void MetaWeblogUpdateTags(int contentItemId, string appKey, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
             var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(Permissions.ApplyTag, user, null);
 
             var rawTags = content.Optional<string>("mt_keywords");
             if (string.IsNullOrWhiteSpace(rawTags))

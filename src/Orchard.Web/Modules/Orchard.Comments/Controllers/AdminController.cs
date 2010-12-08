@@ -231,7 +231,7 @@ namespace Orchard.Comments.Controllers {
         [HttpPost]
         public ActionResult Close(int commentedItemId, string returnUrl) {
             try {
-                if (!Services.Authorizer.Authorize(Permissions.CloseComment, T("Couldn't close comments")))
+                if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't close comments")))
                     return new HttpUnauthorizedResult();
                 _commentService.CloseCommentsForCommentedContent(commentedItemId);
                 if (!String.IsNullOrEmpty(returnUrl)) {
@@ -251,7 +251,7 @@ namespace Orchard.Comments.Controllers {
         [HttpPost]
         public ActionResult Enable(int commentedItemId, string returnUrl) {
             try {
-                if (!Services.Authorizer.Authorize(Permissions.EnableComment, T("Couldn't enable comments")))
+                if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't enable comments")))
                     return new HttpUnauthorizedResult();
                 _commentService.EnableCommentsForCommentedContent(commentedItemId);
                 if (!String.IsNullOrEmpty(returnUrl)) {

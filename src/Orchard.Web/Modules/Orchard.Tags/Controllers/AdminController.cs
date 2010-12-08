@@ -70,9 +70,6 @@ namespace Orchard.Tags.Controllers {
                 ViewData["CreateTag"] = viewModel;
                 return Index();
             }
-
-            if (!Services.Authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
-                return new HttpUnauthorizedResult();
             
             _tagService.CreateTag(viewModel.TagName);
             

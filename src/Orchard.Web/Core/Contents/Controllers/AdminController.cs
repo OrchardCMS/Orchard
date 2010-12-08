@@ -132,7 +132,7 @@ namespace Orchard.Core.Contents.Controllers {
                         break;
                     case ContentsBulkAction.PublishNow:
                         foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content.")))
+                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishOthersContent, item, T("Couldn't publish selected content.")))
                                 return new HttpUnauthorizedResult();
 
                             accessChecked = true;
@@ -143,7 +143,7 @@ namespace Orchard.Core.Contents.Controllers {
                         break;
                     case ContentsBulkAction.Unpublish:
                         foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content.")))
+                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishOthersContent, item, T("Couldn't unpublish selected content.")))
                                 return new HttpUnauthorizedResult();
 
                             accessChecked = true;
@@ -154,7 +154,7 @@ namespace Orchard.Core.Contents.Controllers {
                         break;
                     case ContentsBulkAction.Remove:
                         foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content.")))
+                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.DeleteOthersContent, item, T("Couldn't remove selected content.")))
                                 return new HttpUnauthorizedResult();
 
                             accessChecked = true;
@@ -187,7 +187,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             var contentItem = _contentManager.New(id);
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Cannot create content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
             dynamic model = _contentManager.BuildEditor(contentItem);
@@ -213,7 +213,7 @@ namespace Orchard.Core.Contents.Controllers {
         private ActionResult CreatePOST(string id, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.New(id);
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't create content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
             _contentManager.Create(contentItem, VersionOptions.Draft);
@@ -239,7 +239,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
 
             dynamic model = _contentManager.BuildEditor(contentItem);
@@ -268,7 +268,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
@@ -293,7 +293,7 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Remove(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
-            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, contentItem, T("Couldn't remove content")))
+            if (!Services.Authorizer.Authorize(Permissions.DeleteOthersContent, contentItem, T("Couldn't remove content")))
                 return new HttpUnauthorizedResult();
 
             if (contentItem != null) {
@@ -315,7 +315,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't publish content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Couldn't publish content")))
                 return new HttpUnauthorizedResult();
 
             _contentManager.Publish(contentItem);
@@ -334,7 +334,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't unpublish content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Couldn't unpublish content")))
                 return new HttpUnauthorizedResult();
 
             _contentManager.Unpublish(contentItem);

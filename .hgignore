@@ -19,3 +19,4 @@ glob:*.orig
 glob:*.suo
 glob:src/Orchard.Web/Modules-temp/*
 glob:*.itrace.csdef
+glob:*.build.csdef

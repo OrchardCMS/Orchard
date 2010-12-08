@@ -65,6 +65,7 @@
     <Compile Include="Drivers\CommentsContainerPartDriver.cs" />
     <Compile Include="Drivers\CommentSettingsPartDriver.cs" />
     <Compile Include="Drivers\CommentsPartDriver.cs" />
+    <Compile Include="Annotations\CommentValidationAttributes.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Models\ClosedCommentsRecord.cs" />

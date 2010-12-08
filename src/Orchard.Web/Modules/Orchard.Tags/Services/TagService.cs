@@ -51,7 +51,6 @@ namespace Orchard.Tags.Services {
         public TagRecord CreateTag(string tagName) {
             var result = _tagRepository.Get(x => x.TagName == tagName);
             if (result == null) {
-                _authorizationService.CheckAccess(Permissions.CreateTag, _orchardServices.WorkContext.CurrentUser, null);
                 result = new TagRecord { TagName = tagName };
                 _tagRepository.Create(result);
             }
@@ -151,14 +150,12 @@ namespace Orchard.Tags.Services {
             if (contentItem.Id == 0)
                 throw new OrchardException(T("Error adding tag to content item: the content item has not been created yet."));
 
-            var tags = tagNamesForContentItem.Select(name => CreateTag(name));
+            var tags = tagNamesForContentItem.Select(CreateTag);
             var newTagsForContentItem = new List<TagRecord>(tags);
             var currentTagsForContentItem = _contentTagRepository.Fetch(x => x.TagsPartRecord.Id == contentItem.Id);
 
             foreach (var tagContentItem in currentTagsForContentItem) {
                 if (!newTagsForContentItem.Contains(tagContentItem.TagRecord)) {
-                    _authorizationService.CheckAccess(Permissions.ApplyTag, _orchardServices.WorkContext.CurrentUser, null);
-
                     _contentTagRepository.Delete(tagContentItem);
                 }
                 else {
@@ -167,8 +164,6 @@ namespace Orchard.Tags.Services {
             }
 
             foreach (var newTagForContentItem in newTagsForContentItem) {
-                _authorizationService.CheckAccess(Permissions.ApplyTag, _orchardServices.WorkContext.CurrentUser, null);
-
                 _contentTagRepository.Create(new ContentTagRecord { TagsPartRecord = contentItem.As<TagsPart>().Record, TagRecord = newTagForContentItem });
             }
         }

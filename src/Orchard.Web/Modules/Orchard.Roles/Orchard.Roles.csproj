@@ -56,7 +56,6 @@
     <Compile Include="DefaultRoleUpdater.cs" />
     <Compile Include="Models\IUserRoles.cs" />
     <Compile Include="Models\UserSimulation.cs" />
-    <Compile Include="Permissions.cs" />
     <Compile Include="Models\PermissionRecord.cs" />
     <Compile Include="Models\RoleRecord.cs" />
     <Compile Include="Models\UserRolesPart.cs" />

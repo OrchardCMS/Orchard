@@ -1,5 +1,6 @@
 ﻿using Orchard.Environment.Configuration;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Orchard.MultiTenancy {
@@ -20,7 +21,7 @@ namespace Orchard.MultiTenancy {
 
             builder.Add(T("Tenants"), "100",
                 menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.MultiTenancy" })
-                    .Permission(Permissions.ManageTenants)));
+                    .Permission(StandardPermissions.SiteOwner)));
         }
     }
 }

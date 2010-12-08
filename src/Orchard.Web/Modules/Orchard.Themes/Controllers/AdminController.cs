@@ -9,6 +9,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Reports.Services;
+using Orchard.Security;
 using Orchard.Themes.Preview;
 using Orchard.Themes.Services;
 using Orchard.Themes.ViewModels;
@@ -164,7 +165,7 @@ namespace Orchard.Themes.Controllers {
 
         [HttpPost]
         public ActionResult Update(string themeName) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageThemes, T("Couldn't update theme")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't update theme")))
                 return new HttpUnauthorizedResult();
 
             if (string.IsNullOrEmpty(themeName))

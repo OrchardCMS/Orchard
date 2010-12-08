@@ -5,6 +5,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.MultiTenancy.Services;
 using Orchard.MultiTenancy.ViewModels;
+using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.MultiTenancy.Controllers {
@@ -29,7 +30,7 @@ namespace Orchard.MultiTenancy.Controllers {
         }
 
         public ActionResult Add() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Cannot create tenant")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Cannot create tenant")))
                 return new HttpUnauthorizedResult();
 
             if ( !EnsureDefaultTenant() )
@@ -41,7 +42,7 @@ namespace Orchard.MultiTenancy.Controllers {
         [HttpPost, ActionName("Add")]
         public ActionResult AddPOST(TenantAddViewModel viewModel) {
             try {
-                if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't create tenant")))
+                if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't create tenant")))
                     return new HttpUnauthorizedResult();
 
                 if ( !EnsureDefaultTenant() )
@@ -67,7 +68,7 @@ namespace Orchard.MultiTenancy.Controllers {
         }
 
         public ActionResult Edit(string name) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Cannot edit tenant")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Cannot edit tenant")))
                 return new HttpUnauthorizedResult();
 
             if ( !EnsureDefaultTenant() )
@@ -91,7 +92,7 @@ namespace Orchard.MultiTenancy.Controllers {
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPost(TenantEditViewModel viewModel) {
             try {
-                if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't edit tenant")))
+                if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't edit tenant")))
                     return new HttpUnauthorizedResult();
 
                 if ( !EnsureDefaultTenant() )
@@ -122,7 +123,7 @@ namespace Orchard.MultiTenancy.Controllers {
 
         [HttpPost]
         public ActionResult Disable(string name) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't disable tenant")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't disable tenant")))
                 return new HttpUnauthorizedResult();
 
             if ( !EnsureDefaultTenant() )
@@ -140,7 +141,7 @@ namespace Orchard.MultiTenancy.Controllers {
 
         [HttpPost]
         public ActionResult Enable(string name) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't enable tenant")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't enable tenant")))
                 return new HttpUnauthorizedResult();
 
             if ( !EnsureDefaultTenant() )

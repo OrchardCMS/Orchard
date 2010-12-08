@@ -63,7 +63,6 @@
     <Compile Include="ViewModels\TenantEditViewModel.cs" />
     <Compile Include="ViewModels\TenantAddViewModel.cs" />
     <Compile Include="ViewModels\TenantsIndexViewModel.cs" />
-    <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
