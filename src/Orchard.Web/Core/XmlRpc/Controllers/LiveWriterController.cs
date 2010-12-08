@@ -23,6 +23,7 @@ namespace Orchard.Core.XmlRpc.Controllers {
 
             var options = new XElement(
                 XName.Get("options", ManifestUri),
+                new XElement(XName.Get("supportsAutoUpdate", ManifestUri), "Yes"),
                 new XElement(XName.Get("clientType", ManifestUri), "Metaweblog"),
                 new XElement(XName.Get("supportsKeywords", ManifestUri), "No"),
                 new XElement(XName.Get("supportsCategories", ManifestUri), "No"),
