@@ -1,20 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Orchard.Comments.Annotations;
 
 namespace Orchard.Comments.ViewModels {
     public class CommentsCreateViewModel {
-        [Required(ErrorMessage="You must provide a Name in order to comment")]
+        [Annotations.Required]
         [StringLength(255)]
         public string Name { get; set; }
 
-        [RegularExpression(@"^[\w-]+@([\w-]+\.)+[\w]{2,4}$", ErrorMessage = "The Email is not valid")]
+        [Annotations.RegularExpression(@"^[\w-]+@([\w-]+\.)+[\w]{2,4}$")]
         [StringLength(255)]
         public string Email { get; set; }
 
         [StringLength(245)]
-        [RegularExpression(@"^(http(s)?://)?([\w-]+\.)+[\S]+$", ErrorMessage = "The Url is not valid")]
+        [Annotations.RegularExpression(@"^(http(s)?://)?([\w-]+\.)+[\S]+$")]
         public string SiteName { get; set; }
-        
-        [Required(ErrorMessage = "You must provide a Comment")]
+
+        [CommentRequired]
         public string CommentText { get; set; }
 
         public int CommentedOn { get; set; }
