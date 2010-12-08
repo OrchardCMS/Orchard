@@ -166,7 +166,7 @@ namespace Orchard.Blogs.Services {
             IEnumerable<IXmlRpcDriver> drivers) {
 
             var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(Permissions.EditBlogPost, user, null);
+            _authorizationService.CheckAccess(Permissions.EditOwnBlogPost, user, null);
 
             var blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
             if (blog == null)
