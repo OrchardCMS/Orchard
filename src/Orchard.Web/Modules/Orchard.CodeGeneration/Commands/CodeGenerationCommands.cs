@@ -254,7 +254,32 @@ namespace Orchard.CodeGeneration.Commands {
             text = text.Replace("$$ModuleName$$", projectName);
             text = text.Replace("$$ModuleProjectGuid$$", projectGuid);
             text = text.Replace("$$FileIncludes$$", itemGroup ?? "");
+            text = text.Replace("$$OrchardReferences$$", GetOrchardReferences());
             return text;
+        }
+
+        private static string GetOrchardReferences() {
+            return IsSourceEnlistment() ? 
+@"<ProjectReference Include=""..\..\..\Orchard\Orchard.Framework.csproj"">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include=""..\..\Core\Orchard.Core.csproj"">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>" :
+@"<Reference Include=""Orchard.Core"">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Orchard.Core.dll</HintPath>
+    </Reference>
+    <Reference Include=""Orchard.Framework"">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Orchard.Framework.dll</HintPath>
+    </Reference>";
+        }
+
+        private static bool IsSourceEnlistment() {
+            return File.Exists(Directory.GetParent(_orchardWebProj).Parent.FullName + "\\Orchard.sln");
         }
 
         private void CreateThemeFromTemplates(TextWriter output, string themeName, string baseTheme, string projectGuid, bool includeInSolution) {
