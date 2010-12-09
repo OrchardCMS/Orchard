@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -99,6 +100,12 @@ namespace Orchard.Commands {
                 return CommandReturnCodes.Retry;
             }
             catch (Exception e) {
+                if (e is TargetInvocationException && 
+                    e.InnerException != null) {
+                    // If this is an exception coming from reflection and there is an innerexception which is the actual one, redirect
+                    e = e.InnerException;
+                }
+
                 OutputException(output, T("Error executing command \"{0}\"", string.Join(" ", args)), e);
                 return CommandReturnCodes.Fail;
             }
@@ -138,7 +145,6 @@ namespace Orchard.Commands {
             // Display header
             output.WriteLine();
             output.WriteLine(T("{0}", title));
-            output.WriteLine(T("--------------------------------------------------------------------------------"));
 
             // Push exceptions in a stack so we display from inner most to outer most
             var errors = new Stack<Exception>();
@@ -148,18 +154,26 @@ namespace Orchard.Commands {
 
             // Display inner most exception details
             exception = errors.Peek();
+            output.WriteLine(T("--------------------------------------------------------------------------------"));
+            output.WriteLine();
             output.WriteLine(T("{0}", exception.Message));
             output.WriteLine();
-            output.WriteLine(T("Exception Details: {0}: {1}", exception.GetType().FullName, exception.Message));
-            output.WriteLine();
-            output.WriteLine(T("Stack Trace:"));
-            output.WriteLine();
 
-            // Display exceptions from inner most to outer most
-            foreach(var error in errors) {
-                output.WriteLine(T("[{0}: {1}]", error.GetType().Name, error.Message));
-                output.WriteLine(T("{0}", error.StackTrace));
+            if (!((exception is OrchardException ||
+                exception is OrchardCoreException) &&
+                exception.InnerException == null)) {
+
+                output.WriteLine(T("Exception Details: {0}: {1}", exception.GetType().FullName, exception.Message));
                 output.WriteLine();
+                output.WriteLine(T("Stack Trace:"));
+                output.WriteLine();
+
+                // Display exceptions from inner most to outer most
+                foreach (var error in errors) {
+                    output.WriteLine(T("[{0}: {1}]", error.GetType().Name, error.Message));
+                    output.WriteLine(T("{0}", error.StackTrace));
+                    output.WriteLine();
+                }
             }
 
             // Display footer

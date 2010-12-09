@@ -333,9 +333,8 @@ namespace Orchard.Users.Controllers {
             if (!validate)
                 return false;
 
-            string userUnicityMessage = _userService.VerifyUserUnicity(userName, email);
-            if (userUnicityMessage != null) {
-                ModelState.AddModelError("userExists", T(userUnicityMessage));
+            if (!_userService.VerifyUserUnicity(userName, email)) {
+                ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
             }
             if (password == null || password.Length < MinPasswordLength) {
                 ModelState.AddModelError("password", T("You must specify a password of {0} or more characters.", MinPasswordLength));

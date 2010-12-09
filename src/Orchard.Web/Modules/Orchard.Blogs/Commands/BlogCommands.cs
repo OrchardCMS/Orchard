@@ -53,12 +53,11 @@ namespace Orchard.Blogs.Commands {
             var owner = _membershipService.GetUser(Owner);
 
             if ( owner == null ) {
-                Context.Output.WriteLine();
-                return T("Invalid username: {0}", Owner).Text;
+                throw new OrchardException(T("Invalid username: {0}", Owner));
             }
 
             if(!IsSlugValid(Slug)) {
-                return "Invalid Slug provided. Blog creation failed.";    
+                throw new OrchardException(T("Invalid Slug provided. Blog creation failed."));
             }
 
             var blog = _contentManager.New("Blog");
@@ -83,8 +82,7 @@ namespace Orchard.Blogs.Commands {
             var owner = _membershipService.GetUser(Owner);
 
             if(owner == null) {
-                Context.Output.WriteLine();
-                return T("Invalid username: {0}", Owner).Text;
+                throw new OrchardException(T("Invalid username: {0}", Owner));
             }
 
             XDocument doc;
@@ -95,14 +93,13 @@ namespace Orchard.Blogs.Commands {
                 Context.Output.WriteLine("Found {0} items", doc.Descendants("item").Count());
             }
             catch ( Exception ex ) {
-                Context.Output.WriteLine(T("An error occured while loading the file: " + ex.Message));
-                return "Import terminated.";
+                throw new OrchardException(T("An error occured while loading the file: {0}", ex.Message));
             }
 
             var blog = _blogService.Get(Slug);
 
             if ( blog == null ) {
-                return "Blog not found at specified slug: " + Slug;
+                throw new OrchardException(T("Blog not found at specified slug: {0}", Slug));
             }
 
             foreach ( var item in doc.Descendants("item") ) {
@@ -121,7 +118,6 @@ namespace Orchard.Blogs.Commands {
                     _contentManager.Create(post);
                 }
             }
-
 
             return "Import feed completed.";
         }
