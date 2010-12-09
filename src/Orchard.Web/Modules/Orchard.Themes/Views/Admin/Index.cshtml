@@ -26,7 +26,12 @@
 <h2>@T("Available Themes")</h2>
 <ul class="templates">
     @foreach (var theme in Model.Themes) {
-        if (Model.CurrentTheme == null || theme.Id != Model.CurrentTheme.Id) {
+		var tags = theme.Descriptor.Tags;
+		bool hidden = false;
+		if (tags != null) {
+			hidden = tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase));
+		}
+        if (!hidden && (Model.CurrentTheme == null || theme.Id != Model.CurrentTheme.Id)) {
             <li>
                 <div>
                     <h3>@theme.Name</h3>
