@@ -20,7 +20,7 @@ namespace Orchard.Packaging {
 
         public void Installed(Feature feature) {
             if (feature.Descriptor.Id == "Gallery") {
-                _packagingSourceManager.AddSource("Orchard Extensions Gallery", "http://feed.nuget.org/ctp2/odata/v1");
+                _packagingSourceManager.AddSource("Orchard Extensions Gallery", "http://orchardproject.net:777/GalleryServer/FeedService.svc");
             }
         }
 
