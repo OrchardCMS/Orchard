@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Web.Mvc;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
@@ -154,6 +156,19 @@ namespace Orchard.Environment.Extensions {
                 .Where(d => DefaultExtensionTypes.IsModule(d.ExtensionType) || DefaultExtensionTypes.IsTheme(d.ExtensionType))
                 .OrderBy(d => d.Id)
                 .ToList();
+
+            // Check there are no duplicates
+            var duplicates = availableExtensions.GroupBy(ed => ed.Id).Where(g => g.Count() >= 2).ToList();
+            if (duplicates.Count() > 0) {
+                var sb = new StringBuilder();
+                sb.Append(T("There are multiple extensions with the same name installed in this instance of Orchard.\r\n"));
+                foreach(var dup in duplicates) {
+                    sb.Append(T("Extension '{0}' has been found from the following locations: {1}.\r\n", dup.Key, string.Join(", ", dup.Select(e => e.Location + "/" + e.Id))));
+                }
+                sb.Append(T("This issue can be usually by solved by removing or renamig the conflicting extension."));
+                Logger.Error(sb.ToString());
+                throw new OrchardException(new LocalizedString(sb.ToString()));
+            }
 
             var previousDependencies = _dependenciesFolder.LoadDescriptors().ToList();
 
