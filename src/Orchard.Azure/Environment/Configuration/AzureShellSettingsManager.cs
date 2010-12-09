@@ -83,32 +83,27 @@ namespace Orchard.Azure.Environment.Configuration {
             }
         }
 
-        class Content {
-            public string Name { get; set; }
-            public string DataProvider { get; set; }
-            public string DataConnectionString { get; set; }
-            public string DataPrefix { get; set; }
-            public string RequestUrlHost { get; set; }
-            public string RequestUrlPrefix { get; set; }
-            public string State { get; set; }
-        }
-
-        static ShellSettings ParseSettings(string text) {
+        static ShellSettings ParseSettings(string text)
+        {
             var shellSettings = new ShellSettings();
-            if ( String.IsNullOrEmpty(text) )
+            if (String.IsNullOrEmpty(text))
                 return shellSettings;
 
             string[] settings = text.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            foreach ( var setting in settings ) {
+            foreach (var setting in settings)
+            {
                 string[] settingFields = setting.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                 int fieldsLength = settingFields.Length;
-                if ( fieldsLength != 2 )
+                if (fieldsLength != 2)
                     continue;
-                for ( int i = 0; i < fieldsLength; i++ ) {
+                for (int i = 0; i < fieldsLength; i++)
+                {
                     settingFields[i] = settingFields[i].Trim();
                 }
-                if ( settingFields[1] != "null" ) {
-                    switch ( settingFields[0] ) {
+                if (settingFields[1] != "null")
+                {
+                    switch (settingFields[0])
+                    {
                         case "Name":
                             shellSettings.Name = settingFields[1];
                             break;
@@ -130,24 +125,38 @@ namespace Orchard.Azure.Environment.Configuration {
                         case "RequestUrlPrefix":
                             shellSettings.RequestUrlPrefix = settingFields[1];
                             break;
+                        case "EncryptionAlgorithm":
+                            shellSettings.EncryptionAlgorithm = settingFields[1];
+                            break;
+                        case "EncryptionKey":
+                            shellSettings.EncryptionKey = settingFields[1];
+                            break;
+                        case "EncryptionIV":
+                            shellSettings.EncryptionIV = settingFields[1];
+                            break;
                     }
                 }
             }
             return shellSettings;
         }
 
-        static string ComposeSettings(ShellSettings settings) {
-            if ( settings == null )
+        static string ComposeSettings(ShellSettings settings)
+        {
+            if (settings == null)
                 return "";
 
-            return string.Format("Name: {0}\r\nDataProvider: {1}\r\nDataConnectionString: {2}\r\nDataPrefix: {3}\r\nRequestUrlHost: {4}\r\nRequestUrlPrefix: {5}\r\nState: {6}\r\n",
+            return string.Format("Name: {0}\r\nDataProvider: {1}\r\nDataConnectionString: {2}\r\nDataPrefix: {3}\r\nRequestUrlHost: {4}\r\nRequestUrlPrefix: {5}\r\nState: {6}\r\nEncryptionAlgorithm: {7}\r\nEncryptionKey: {8}\r\nEncryptionIV: {9}\r\n",
                      settings.Name,
                      settings.DataProvider,
                      settings.DataConnectionString ?? "null",
                      settings.DataTablePrefix ?? "null",
                      settings.RequestUrlHost ?? "null",
                      settings.RequestUrlPrefix ?? "null",
-                     settings.State != null ? settings.State.ToString() : String.Empty);
+                     settings.State != null ? settings.State.ToString() : String.Empty,
+                     settings.EncryptionAlgorithm ?? "null",
+                     settings.EncryptionKey ?? "null",
+                     settings.EncryptionIV ?? "null"
+                     );
         }
     }
 }
