@@ -227,6 +227,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Compile Include="Common\Scheduling\OwnedScheduledTaskHandler.cs" />
     <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.cshtml" />
     <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.cshtml" />
     <Content Include="Common\Views\Fields.Common.Text.cshtml" />
