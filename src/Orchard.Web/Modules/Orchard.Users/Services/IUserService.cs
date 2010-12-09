@@ -2,8 +2,8 @@ using Orchard.Security;
 using System;
 namespace Orchard.Users.Services {
     public interface IUserService : IDependency {
-        string VerifyUserUnicity(string userName, string email);
-        string VerifyUserUnicity(int id, string userName, string email);
+        bool VerifyUserUnicity(string userName, string email);
+        bool VerifyUserUnicity(int id, string userName, string email);
 
         void SendChallengeEmail(IUser user, Func<string, string> createUrl);
         IUser ValidateChallenge(string challengeToken);

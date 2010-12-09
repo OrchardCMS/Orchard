@@ -48,15 +48,14 @@ namespace Orchard.CodeGeneration.Commands {
 
         [CommandHelp("codegen datamigration <feature-name> \r\n\t" + "Create a new Data Migration class")]
         [CommandName("codegen datamigration")]
-        public bool CreateDataMigration(string featureName) {
+        public void CreateDataMigration(string featureName) {
             Context.Output.WriteLine(T("Creating Data Migration for {0}", featureName));
 
             ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(extension => DefaultExtensionTypes.IsModule(extension.ExtensionType) &&
                                                                                                              extension.Features.Any(feature => String.Equals(feature.Id, featureName, StringComparison.OrdinalIgnoreCase)));
 
             if (extensionDescriptor == null) {
-                Context.Output.WriteLine(T("Creating data migration failed: target Feature {0} could not be found.", featureName));
-                return false;
+                throw new OrchardException(T("Creating data migration failed: target Feature {0} could not be found.", featureName));
             }
 
             string dataMigrationFolderPath = HostingEnvironment.MapPath("~/Modules/" + extensionDescriptor.Id + "/");
@@ -69,8 +68,7 @@ namespace Orchard.CodeGeneration.Commands {
             }
 
             if (File.Exists(dataMigrationFilePath)) {
-                Context.Output.WriteLine(T("Data migration already exists in target Module {0}.", extensionDescriptor.Id));
-                return false;
+                throw new OrchardException(T("Data migration already exists in target Module {0}.", extensionDescriptor.Id));
             }
 
             List<SchemaCommand> commands = _schemaCommandGenerator.GetCreateFeatureCommands(featureName, false).ToList();
@@ -104,25 +102,20 @@ namespace Orchard.CodeGeneration.Commands {
             File.WriteAllText(moduleCsProjPath, projectFileText);
             TouchSolution(Context.Output);
             Context.Output.WriteLine(T("Data migration created successfully in Module {0}", extensionDescriptor.Id));
-
-            return true;
         }
 
         [CommandHelp("codegen module <module-name> [/IncludeInSolution:true|false]\r\n\t" + "Create a new Orchard module")]
         [CommandName("codegen module")]
         [OrchardSwitches("IncludeInSolution")]
-        public bool CreateModule(string moduleName) {
+        public void CreateModule(string moduleName) {
             Context.Output.WriteLine(T("Creating Module {0}", moduleName));
 
             if ( _extensionManager.AvailableExtensions().Any(extension => String.Equals(moduleName, extension.Name, StringComparison.OrdinalIgnoreCase)) ) {
-                Context.Output.WriteLine(T("Creating Module {0} failed: a module of the same name already exists", moduleName));
-                return false;
+                throw new OrchardException(T("Creating Module {0} failed: a module of the same name already exists", moduleName));
             }
 
             IntegrateModule(moduleName);
             Context.Output.WriteLine(T("Module {0} created successfully", moduleName));
-
-            return true;
         }
 
         [CommandName("codegen theme")]
@@ -131,20 +124,18 @@ namespace Orchard.CodeGeneration.Commands {
         public void CreateTheme(string themeName) {
             Context.Output.WriteLine(T("Creating Theme {0}", themeName));
             if (_extensionManager.AvailableExtensions().Any(extension => String.Equals(themeName, extension.Id, StringComparison.OrdinalIgnoreCase))) {
-                Context.Output.WriteLine(T("Creating Theme {0} failed: an extention of the same name already exists", themeName));
+                throw new OrchardException(T("Creating Theme {0} failed: an extention of the same name already exists", themeName));
             }
-            else {
-                if (!string.IsNullOrEmpty(BasedOn)) {
-                    if (!_extensionManager.AvailableExtensions().Any(extension =>
-                        string.Equals(extension.ExtensionType, DefaultExtensionTypes.Theme, StringComparison.OrdinalIgnoreCase) &&
-                        string.Equals(BasedOn, extension.Id, StringComparison.OrdinalIgnoreCase))) {
-                        Context.Output.WriteLine(T("Creating Theme {0} failed: base theme named {1} was not found.", themeName, BasedOn));
-                        return;
-                    }
+
+            if (!string.IsNullOrEmpty(BasedOn)) {
+                if (!_extensionManager.AvailableExtensions().Any(extension =>
+                    string.Equals(extension.ExtensionType, DefaultExtensionTypes.Theme, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(BasedOn, extension.Id, StringComparison.OrdinalIgnoreCase))) {
+                    throw new OrchardException(T("Creating Theme {0} failed: base theme named {1} was not found.", themeName, BasedOn));
                 }
-                IntegrateTheme(themeName, BasedOn);
-                Context.Output.WriteLine(T("Theme {0} created successfully", themeName));
             }
+            IntegrateTheme(themeName, BasedOn);
+            Context.Output.WriteLine(T("Theme {0} created successfully", themeName));
         }
 
         [CommandHelp("codegen controller <module-name> <controller-name>\r\n\t" + "Create a new Orchard controller in a module")]
@@ -156,8 +147,7 @@ namespace Orchard.CodeGeneration.Commands {
                                                                                                              string.Equals(moduleName, extension.Name, StringComparison.OrdinalIgnoreCase));
 
             if (extensionDescriptor == null) {
-                Context.Output.WriteLine(T("Creating Controller {0} failed: target Module {1} could not be found.", controllerName, moduleName));
-                return;
+                throw new OrchardException(T("Creating Controller {0} failed: target Module {1} could not be found.", controllerName, moduleName));
             }
 
             string moduleControllersPath = HostingEnvironment.MapPath("~/Modules/" + extensionDescriptor.Id + "/Controllers/");
@@ -169,8 +159,7 @@ namespace Orchard.CodeGeneration.Commands {
                 Directory.CreateDirectory(moduleControllersPath);
             }
             if (File.Exists(controllerPath)) {
-                Context.Output.WriteLine(T("Controller {0} already exists in target Module {1}.", controllerName, moduleName));
-                return;
+                throw new OrchardException(T("Controller {0} already exists in target Module {1}.", controllerName, moduleName));
             }
 
             string controllerText = File.ReadAllText(templatesPath + "Controller.txt");

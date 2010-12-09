@@ -36,7 +36,7 @@ namespace Orchard.Users.Services {
 
         public ILogger Logger { get; set; }
 
-        public string VerifyUserUnicity(string userName, string email) {
+        public bool VerifyUserUnicity(string userName, string email) {
             string normalizedUserName = userName.ToLower();
 
             if (_contentManager.Query<UserPart, UserPartRecord>()
@@ -44,13 +44,13 @@ namespace Orchard.Users.Services {
                                           user.NormalizedUserName == normalizedUserName || 
                                           user.Email == email)
                                    .List().Any()) {
-                return "User with that username and/or email already exists.";
+                return false;
             }
 
-            return null;
+            return true;
         }
 
-        public string VerifyUserUnicity(int id, string userName, string email) {
+        public bool VerifyUserUnicity(int id, string userName, string email) {
             string normalizedUserName = userName.ToLower();
 
             if (_contentManager.Query<UserPart, UserPartRecord>()
@@ -58,10 +58,10 @@ namespace Orchard.Users.Services {
                                           user.NormalizedUserName == normalizedUserName ||
                                           user.Email == email)
                                    .List().Any(user => user.Id != id)) {
-                return "User with that username and/or email already exists.";
+                return false;
             }
 
-            return null;
+            return true;
         }
 
         public string CreateNonce(IUser user, TimeSpan delay) {
