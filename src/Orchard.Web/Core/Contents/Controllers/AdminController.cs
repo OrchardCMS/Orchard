@@ -207,6 +207,9 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.PublishOwnContent, T("Couldn't create content")))
+                return new HttpUnauthorizedResult();
+
             return CreatePOST(id, contentItem => _contentManager.Publish(contentItem));
         }
 
@@ -259,6 +262,14 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Publish")]
         public ActionResult EditAndPublishPOST(int id, string returnUrl) {
+            var content = _contentManager.Get(id, VersionOptions.DraftRequired);
+
+            if (content == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, content, T("Couldn't publish content")))
+                return new HttpUnauthorizedResult();
+
             return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
