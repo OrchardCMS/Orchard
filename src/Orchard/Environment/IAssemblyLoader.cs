@@ -26,31 +26,39 @@ namespace Orchard.Environment {
                 return _loadedAssemblies.GetOrAdd(this.ExtractAssemblyShortName(assemblyName), shortName => LoadWorker(shortName, assemblyName));
             }
             catch (Exception e) {
-                Logger.Warning(e, "Error loading assembly '{0}'", assemblyName);
+                Logger.Error(e, "Error loading assembly '{0}'", assemblyName);
                 return null;
             }
         }
 
         private Assembly LoadWorker(string shortName, string fullName) {
-            // Try loading the assembly with regular fusion rules first (common case)
-            Assembly result = LookupFusion(fullName);
+            Assembly result;
+
+            // Try loading with full name first (if there is a full name)
+            if (fullName != shortName) {
+                result = LookupFusion(shortName);
+                if (result != null)
+                    return result;
+            }
+
+            // Try loading with short name
+            result = LookupFusion(shortName);
             if (result != null)
                 return result;
 
-            // If short assembly name, try to figure out the full assembly name using 
-            // a policy compatible with Medium Trust.
-            if (shortName == fullName) {
-                var resolvedName = _assemblyNameResolvers.Select(r => r.Resolve(shortName)).Where(f => f != null).FirstOrDefault();
-                if (resolvedName != null)
-                    return Assembly.Load(resolvedName);
+            // Try resolving the short name to a full name
+            var resolvedName = _assemblyNameResolvers.Select(r => r.Resolve(shortName)).Where(f => f != null).FirstOrDefault();
+            if (resolvedName != null) {
+                return Assembly.Load(resolvedName);
             }
 
+            // Try again so that we get the exception this time
             return Assembly.Load(fullName);
         }
 
-        private static Assembly LookupFusion(string fullName) {
+        private static Assembly LookupFusion(string name) {
             try {
-                return Assembly.Load(fullName);
+                return Assembly.Load(name);
             }
             catch {
                 return null;
