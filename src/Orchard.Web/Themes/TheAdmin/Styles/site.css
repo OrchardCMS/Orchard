@@ -865,18 +865,17 @@ table.items th, table.items td {
     padding:0;
 }
 
-fieldset.publish-button {
+fieldset.publish-button, fieldset.delete-button, fieldset.save-button { 
     clear:none;
     float:left;
+}
+fieldset.publish-button {
     margin: 0 12px;
     padding: 0 12px;
     border-left:1px solid #ccc;
 }
-fieldset.save-button {
-    clear:none;
-    float:left;
-    padding-right:0;
-    width:auto;
+fieldset.delete-button {
+    margin: 0 0 0 12px;
 }
 fieldset.publish-later-datetime {
     float:left;
