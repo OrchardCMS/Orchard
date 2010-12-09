@@ -94,7 +94,7 @@ namespace Orchard.Packaging.Services {
             {
                 ExtensionName = package.Title ?? package.Id,
                 ExtensionVersion = package.Version.ToString(),
-                ExtensionType = package.Id.StartsWith(PackagingSourceManager.ThemesFilter) ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module,
+                ExtensionType = package.Id.StartsWith(PackagingSourceManager.ThemesPrefix) ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module,
                 ExtensionPath = applicationPath
             };
         }
@@ -129,9 +129,9 @@ namespace Orchard.Packaging.Services {
             } else {
                 // otherwise delete the folder
 
-                string extensionPath = packageId.StartsWith(PackagingSourceManager.ThemesFilter)
-                                           ? "~/Themes/" + packageId.Substring(PackagingSourceManager.ThemesFilter.Length)
-                                           : "~/Modules/" + packageId.Substring(PackagingSourceManager.ModulesFilter.Length);
+                string extensionPath = packageId.StartsWith(PackagingSourceManager.ThemesPrefix)
+                                           ? "~/Themes/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length)
+                                           : "~/Modules/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length);
 
                 string extensionFullPath = HostingEnvironment.MapPath(extensionPath);
 

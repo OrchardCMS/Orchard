@@ -46,7 +46,7 @@ namespace Orchard.Packaging.Controllers {
 
         [HttpPost, ActionName("RemoveTheme")]
         public ActionResult RemoveThemePOST(string themeId, string returnUrl, string retryUrl) {
-            return UninstallPackage(PackagingSourceManager.ThemesFilter + themeId, returnUrl, retryUrl);
+            return UninstallPackage(PackagingSourceManager.ThemesPrefix + themeId, returnUrl, retryUrl);
         }
 
         public ActionResult AddModule(string returnUrl) {
