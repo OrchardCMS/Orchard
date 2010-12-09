@@ -27,8 +27,12 @@ namespace Orchard.Widgets.Drivers {
         public Localizer T { get; set; }
 
         protected override DriverResult Editor(LayerPart layerPart, dynamic shapeHelper) {
-            return ContentShape("Parts_Widgets_LayerPart",
-                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.LayerPart", Model: layerPart, Prefix: Prefix));
+            return Combined(
+                ContentShape("Parts_Widgets_LayerPart",
+                    () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.LayerPart", Model: layerPart, Prefix: Prefix)),
+                ContentShape("Widget_DeleteButton",
+                    deleteButton => deleteButton)
+                );
         }
 
         protected override DriverResult Editor(LayerPart layerPart, IUpdateModel updater, dynamic shapeHelper) {

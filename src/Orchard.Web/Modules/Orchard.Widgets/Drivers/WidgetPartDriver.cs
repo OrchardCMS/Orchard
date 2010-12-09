@@ -18,8 +18,12 @@ namespace Orchard.Widgets.Drivers {
             widgetPart.AvailableZones = _widgetsService.GetZones();
             widgetPart.AvailableLayers = _widgetsService.GetLayers();
 
-            return ContentShape("Parts_Widgets_WidgetPart",
-                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix));
+            return Combined(
+                ContentShape("Parts_Widgets_WidgetPart",
+                    () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix)),
+                ContentShape("Widget_DeleteButton",
+                    deleteButton => deleteButton)
+                );
         }
 
         protected override DriverResult Editor(WidgetPart widgetPart, IUpdateModel updater, dynamic shapeHelper) {
