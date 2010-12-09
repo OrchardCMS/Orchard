@@ -38,7 +38,7 @@ namespace Orchard.ContentTypes.Services {
         public Localizer T { get; set; }
 
         public IEnumerable<EditTypeViewModel> GetTypes() {
-            return _contentDefinitionManager.ListTypeDefinitions().Select(ctd => new EditTypeViewModel(ctd));
+            return _contentDefinitionManager.ListTypeDefinitions().Select(ctd => new EditTypeViewModel(ctd)).OrderBy(m=>m.Name);
         }
 
         public EditTypeViewModel GetType(string name) {
