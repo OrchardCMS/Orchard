@@ -146,6 +146,12 @@ namespace Orchard.Azure {
             }
         }
 
+        public void TryCreateFolder(string path)
+        {
+            EnsurePathIsRelative(path);
+            CreateFile(Combine(path, FolderEntry));
+        }
+
         public void CreateFolder(string path)
         {
             EnsurePathIsRelative(path);

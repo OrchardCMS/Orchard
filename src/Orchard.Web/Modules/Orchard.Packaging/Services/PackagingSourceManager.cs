@@ -4,14 +4,16 @@ using System.Linq;
 using NuGet;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
+using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
     [OrchardFeature("Gallery")]
     public class PackagingSourceManager : IPackagingSourceManager {
-        public const string ModulesFilter = "Orchard.Module.";
-        public const string ThemesFilter = "Orchard.Theme.";
+        public const string ThemesPrefix = "Orchard.Themes.";
+        public const string ModulesPrefix = "Orchard.Modules.";
 
         private readonly IRepository<PackagingSource> _packagingSourceRecordRepository;
 
@@ -41,32 +43,35 @@ namespace Orchard.Packaging.Services {
         }
 
         public IEnumerable<PackagingEntry> GetModuleList(PackagingSource packagingSource = null) {
-            return GetExtensionList(ModulesFilter, packagingSource);
+            return GetExtensionList(DefaultExtensionTypes.Module, packagingSource);
         }
         public IEnumerable<PackagingEntry> GetThemeList(PackagingSource packagingSource = null) {
-            return GetExtensionList(ThemesFilter, packagingSource);
+            return GetExtensionList(DefaultExtensionTypes.Theme, packagingSource);
         }
 
         private IEnumerable<PackagingEntry> GetExtensionList(string filter = null, PackagingSource packagingSource = null) {
-            return ( packagingSource == null ? GetSources() : new[] { packagingSource } )
+            return (packagingSource == null ? GetSources() : new[] {packagingSource})
                 .SelectMany(
                     source =>
-                    new DataServicePackageRepository(new Uri(source.FeedUrl))
-                        .GetPackages()
-                        .Where(p => p.Id.StartsWith(filter ?? String.Empty))
+                        new GalleryFeedContext(new Uri(source.FeedUrl)).Packages
+                        .Where(p => p.PackageType == filter)
                         .ToList()
-                        .Select(p => new PackagingEntry {
-                            Title = String.IsNullOrWhiteSpace(p.Title) ? p.Id : p.Title,
-                            PackageId = p.Id,
-                            PackageStreamUri = p.ProjectUrl != null ? p.ProjectUrl.ToString() : String.Empty,
-                            Source = source,
-                            Version = p.Version != null ? p.Version.ToString() : String.Empty,
-                            Description = p.Description,
-                            Authors = p.Authors != null ? String.Join(", ", p.Authors) : String.Empty,
-                        })
+                        .Select(p => CreatePackageEntry(p, packagingSource))
                 ).ToArray();
         }
 
+        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source) {
+            return new PackagingEntry {
+                Title = String.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
+                PackageId = package.Id,
+                PackageStreamUri = package.ProjectUrl != null ? package.ProjectUrl.ToString() : String.Empty,
+                Source = source,
+                Version = package.Version ?? String.Empty,
+                Description = package.Description,
+                Authors = package.Authors,
+                LastUpdated = package.LastUpdated
+            };
+        }
         #endregion
 
     }

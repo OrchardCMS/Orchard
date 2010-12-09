@@ -6,6 +6,7 @@ namespace Orchard.FileSystems.Media {
         IStorageFile GetFile(string path);
         IEnumerable<IStorageFile> ListFiles(string path);
         IEnumerable<IStorageFolder> ListFolders(string path);
+        void TryCreateFolder(string path);
         void CreateFolder(string path);
         void DeleteFolder(string path);
         void RenameFolder(string path, string newPath);

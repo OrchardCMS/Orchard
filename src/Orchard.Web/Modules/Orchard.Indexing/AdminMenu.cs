@@ -1,4 +1,5 @@
 ﻿using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Indexing {
@@ -9,7 +10,7 @@ namespace Orchard.Indexing {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Configuration"), "50",
                 menu => menu.Add(T("Search Index"), "15", item => item.Action("Index", "Admin", new {area = "Orchard.Indexing"})
-                    .Permission(Permissions.ManageSearchIndex)));
+                    .Permission(StandardPermissions.SiteOwner)));
         }
     }
 }

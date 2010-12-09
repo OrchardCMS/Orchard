@@ -189,7 +189,7 @@ namespace Orchard.Media.Controllers {
                 // then save them
                 foreach (string fileName in Request.Files) {
                     HttpPostedFileBase file = Request.Files[fileName];
-                    _mediaService.UploadMediaFile(viewModel.MediaPath, file);
+                    _mediaService.UploadMediaFile(viewModel.MediaPath, file, viewModel.ExtractZip);
                 }
 
                 Services.Notifier.Information(T("Media file(s) uploaded"));
@@ -222,7 +222,7 @@ namespace Orchard.Media.Controllers {
                 }
 
                 var file = Request.Files[0];
-                var publicUrl = _mediaService.UploadMediaFile(viewModel.MediaPath, file);
+                var publicUrl = _mediaService.UploadMediaFile(viewModel.MediaPath, file, viewModel.ExtractZip);
 
                 return Content(string.Format("<script type=\"text/javascript\">var result = {{ url: \"{0}\" }};</script>", publicUrl));
             }

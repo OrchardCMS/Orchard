@@ -57,7 +57,7 @@ namespace Orchard.Core.Common.Drivers {
 
         DriverResult OwnerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, part)) {
+            if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, currentUser, part)) {
                 return null;
             }
 
@@ -86,7 +86,7 @@ namespace Orchard.Core.Common.Drivers {
 
         DriverResult ContainerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, part)) {
+            if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, currentUser, part)) {
                 return null;
             }
 

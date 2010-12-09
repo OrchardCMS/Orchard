@@ -40,6 +40,7 @@
       <HintPath>..\..\..\..\lib\nuget\NuGet.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -66,6 +67,11 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\PackagingSource.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Service References\GalleryServer\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.datasvcmap</DependentUpon>
+    </Compile>
     <Compile Include="Services\AtomExtensions.cs" />
     <Compile Include="Services\ExtensionReferenceRepository.cs" />
     <Compile Include="Services\FileBaseProjectSystem.cs" />
@@ -88,6 +94,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Service References\GalleryServer\Reference.datasvcmap">
+      <Generator>DataServiceClientGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </Content>
     <Content Include="Styles\orchard-packaging-admin.css" />
     <Content Include="Views\Gallery\AddSource.cshtml" />
     <Content Include="Views\Gallery\Modules.cshtml" />
@@ -123,6 +133,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\PackagingServices\AddTheme.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ServiceReferenceMetadataStorage Include="Service References\GalleryServer\">
+      <Type>datasvcmap</Type>
+    </ServiceReferenceMetadataStorage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Service References\GalleryServer\service.edmx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

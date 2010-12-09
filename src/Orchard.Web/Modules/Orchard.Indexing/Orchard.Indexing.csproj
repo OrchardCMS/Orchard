@@ -55,7 +55,6 @@
     <Compile Include="Handlers\InfosetFieldIndexingHandler.cs" />
     <Compile Include="Models\IndexingTask.cs" />
     <Compile Include="Models\IndexingTaskRecord.cs" />
-    <Compile Include="Permissions.cs" />
     <Compile Include="Services\IndexServiceNotificationProvider.cs" />
     <Compile Include="Services\IndexingBackgroundTask.cs" />
     <Compile Include="Services\IndexingTaskExecutor.cs" />

@@ -10,6 +10,7 @@ using Orchard.Localization;
 using Orchard.Modules.Services;
 using Orchard.Modules.ViewModels;
 using Orchard.Reports.Services;
+using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Modules.Controllers {
@@ -44,7 +45,7 @@ namespace Orchard.Modules.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult Index() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageModules, T("Not allowed to manage modules")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage modules")))
                 return new HttpUnauthorizedResult();
 
             var modules = _extensionManager.AvailableExtensions().Where(x => DefaultExtensionTypes.IsModule(x.ExtensionType));

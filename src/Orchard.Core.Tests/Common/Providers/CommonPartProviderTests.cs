@@ -157,7 +157,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             var user = contentManager.New<IUser>("User");
             _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
-            _authz.Setup(x => x.TryCheckAccess(Permissions.ChangeOwner, user, item)).Returns(true);
+            _authz.Setup(x => x.TryCheckAccess(StandardPermissions.SiteOwner, user, item)).Returns(true);
 
             item.Owner = user;
 
@@ -175,7 +175,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             
             var user = contentManager.New<IUser>("User");
             _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
-            _authz.Setup(x => x.TryCheckAccess(Permissions.ChangeOwner, user, item)).Returns(true);
+            _authz.Setup(x => x.TryCheckAccess(StandardPermissions.SiteOwner, user, item)).Returns(true);
 
             item.Owner = user;
 

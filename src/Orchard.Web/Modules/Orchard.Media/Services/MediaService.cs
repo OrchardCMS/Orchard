@@ -91,21 +91,41 @@ namespace Orchard.Media.Services {
             _storageProvider.RenameFile(_storageProvider.Combine(folderName, name), _storageProvider.Combine(folderName, newName));
         }
 
-        public string UploadMediaFile(string folderName, HttpPostedFileBase postedFile) {
-            if (postedFile.FileName.EndsWith(".zip")) {
-                UnzipMediaFileArchive(folderName, postedFile);
-                // Don't save the zip file.
-                return _storageProvider.GetPublicUrl(folderName);
-            }
-            if (FileAllowed(postedFile) && postedFile.ContentLength > 0) {
-                var filePath = Path.Combine(folderName, Path.GetFileName(postedFile.FileName));
-                var inputStream = postedFile.InputStream;
+        public string UploadMediaFile(string folderName, HttpPostedFileBase postedFile, bool extractZip) {
+            var postedFileLength = postedFile.ContentLength;
+            var postedFileStream = postedFile.InputStream;
+            var postedFileData = new byte[postedFileLength];
+            postedFileStream.Read(postedFileData, 0, postedFileLength);
 
-                SaveStream(filePath, inputStream);
+            return UploadMediaFile(folderName, postedFile.FileName, postedFileData, extractZip);
+        }
+
+        public string UploadMediaFile(string folderPath, string fileName, byte [] bytes, bool extractZip) {
+            if (extractZip && fileName.EndsWith(".zip")) {
+                UnzipMediaFileArchive(folderPath, bytes);
+                // Don't save the zip file.
+                return _storageProvider.GetPublicUrl(folderPath);
+            }
+
+            if (FileAllowed(fileName, true) && bytes.Length > 0) {
+                string filePath = Path.Combine(folderPath, Path.GetFileName(fileName));
+                _storageProvider.TryCreateFolder(folderPath);
+                IStorageFile file = _storageProvider.CreateFile(filePath);
+                using(var stream = file.OpenWrite()) {
+                    stream.Write(bytes, 0, bytes.Length);
+                }
+
                 return _storageProvider.GetPublicUrl(filePath);
             }
 
             return null;
+        }
+
+        public bool FileAllowed(HttpPostedFileBase postedFile) {
+            if (postedFile == null) {
+                return false;
+            }
+            return FileAllowed(postedFile.FileName, true);
         }
 
         private bool FileAllowed(string name, bool allowZip) {
@@ -138,13 +158,6 @@ namespace Orchard.Media.Services {
             return true;
         }
 
-        public bool FileAllowed(HttpPostedFileBase postedFile) {
-            if (postedFile == null) {
-                return false;
-            }
-            return FileAllowed(postedFile.FileName, true);
-        }
-
         private void SaveStream(string filePath, Stream inputStream) {
             var file = _storageProvider.CreateFile(filePath);
             var outputStream = file.OpenWrite();
@@ -165,6 +178,10 @@ namespace Orchard.Media.Services {
             var postedFileData = new byte[postedFileLength];
             postedFileStream.Read(postedFileData, 0, postedFileLength);
 
+            UnzipMediaFileArchive(targetFolder, postedFileData);
+        }
+
+        private void UnzipMediaFileArchive(string targetFolder, byte [] postedFileData) {
             using (var memoryStream = new MemoryStream(postedFileData)) {
                 var fileInflater = new ZipInputStream(memoryStream);
                 ZipEntry entry;
@@ -182,13 +199,7 @@ namespace Orchard.Media.Services {
 
                         // skip disallowed files
                         if (FileAllowed(entry.Name, false)) {
-                            try {
-                                _storageProvider.CreateFolder(directoryName);
-                            }
-                            catch {
-                                // no handling needed - this is to force the folder to exist if it doesn't
-                            }
-
+                            _storageProvider.TryCreateFolder(directoryName);
                             SaveStream(entryName, fileInflater);
                         }
                     }
