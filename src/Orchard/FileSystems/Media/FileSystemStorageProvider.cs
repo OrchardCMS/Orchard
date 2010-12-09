@@ -94,12 +94,16 @@ namespace Orchard.FileSystems.Media {
             return (di.Attributes & FileAttributes.Hidden) != 0;
         }
 
+        public void TryCreateFolder(string path) {
+            Directory.CreateDirectory(Map(path));
+        }
+
         public void CreateFolder(string path) {
             if (Directory.Exists(Map(path))) {
                 throw new ArgumentException(T("Directory {0} already exists", path).ToString());
             }
 
-            Directory.CreateDirectory(Map(path));
+            TryCreateFolder(Map(path));
         }
 
         public void DeleteFolder(string path) {
