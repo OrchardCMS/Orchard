@@ -859,21 +859,6 @@ table.items th, table.items td {
 }
 /* Core Contents and Orchard.PublishLater */
 
-
-.edit-item-sidebar 
-{
-    border:1px solid #d3d3d3;
-    padding:8px;
-    
-    /*CSS3 properties*/
-        filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f7f7f7', endColorstr='#f5f5f5');
-        background: -webkit-gradient(linear, 0 0, 0 100%, from(#f7f7f7), to(#f5f5f5));
-        background: -moz-linear-gradient(top, #f7f7f7, #f5f5f5);
-        border-radius: 3px;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-}
-
 .edit-item-sidebar fieldset {
     margin:0;
     padding:0;
