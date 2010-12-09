@@ -77,9 +77,8 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             if (!string.IsNullOrEmpty(createModel.UserName)) {
-                string userExistsMessage = _userService.VerifyUserUnicity(createModel.UserName, createModel.Email);
-                if (userExistsMessage != null) {
-                    AddModelError("NotUniqueUserName", T(userExistsMessage));
+                if (!_userService.VerifyUserUnicity(createModel.UserName, createModel.Email)) {
+                    AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
             }
 
@@ -139,9 +138,8 @@ namespace Orchard.Users.Controllers {
 
             var editModel = new UserEditViewModel {User = user};
             if (TryUpdateModel(editModel)) {
-                string userExistsMessage = _userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email);
-                if (userExistsMessage != null) {
-                    AddModelError("NotUniqueUserName", T(userExistsMessage));
+                if (!_userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email)) {
+                    AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
                 else {
                     // also update the Super user if this is the renamed account

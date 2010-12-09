@@ -28,8 +28,7 @@ namespace Orchard.Packaging.Commands {
         public void CreatePackage(string extensionName, string path) {
             var packageData = _packageManager.Harvest(extensionName);
             if (packageData == null) {
-                Context.Output.WriteLine(T("Module or Theme \"{0}\" does not exist in this Orchard installation.", extensionName));
-                return;
+                throw new OrchardException(T("Module or Theme \"{0}\" does not exist in this Orchard installation.", extensionName));
             }
 
             // append "Orchard.[ExtensionType]" to prevent conflicts with other packages (e.g, TinyMce, jQuery, ...)
@@ -79,7 +78,7 @@ namespace Orchard.Packaging.Commands {
             }
             catch(Exception e) {
                 // Exceptions area thrown by NuGet as error messages
-                Context.Output.WriteLine(HttpUtility.HtmlDecode(T("Could not unintall the package: {0}", e.Message).Text));
+                throw new OrchardException(T(HttpUtility.HtmlDecode(T("Could not unintall the package: {0}", e.Message).Text)));
             }
 
         }

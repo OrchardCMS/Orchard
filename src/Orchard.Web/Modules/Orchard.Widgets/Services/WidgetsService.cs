@@ -43,7 +43,7 @@ namespace Orchard.Widgets.Services {
         public IEnumerable<string> GetZones() {
             return _featureManager.GetEnabledFeatures()
                 .Select(x => x.Extension)
-                .Where(x => DefaultExtensionTypes.IsTheme(x.ExtensionType))
+                .Where(x => DefaultExtensionTypes.IsTheme(x.ExtensionType) && x.Zones != null)
                 .SelectMany(x => x.Zones.Split(','))
                 .Distinct()
                 .Select(x => x.Trim())

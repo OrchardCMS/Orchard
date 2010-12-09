@@ -69,7 +69,7 @@ namespace Orchard.Experimental.Commands {
             for (int i = 0; i < 1000; i++) {
                 var user = _membershipService.CreateUser(new CreateUserParams("user" + i, "1234567", "user" + i + "@orchardproject.net", null, null, true));
                 if (user == null)
-                    return "The authentication provider returned an error";
+                    throw new OrchardException(T("The authentication provider returned an error"));
 
             }
             return "Success";
