@@ -748,6 +748,7 @@ table.items th, table.items td {
     margin:0;
     overflow:hidden;
     padding:0 1.4em .8em;
+    border-bottom:1px solid #eaeaea;
 }
 .contentItems li.last {
     border-bottom:none;
