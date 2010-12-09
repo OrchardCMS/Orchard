@@ -41,6 +41,10 @@ namespace Orchard.Tests.Environment {
                 .Returns(() => _extensionDescriptors);
 
             _container.Mock<IExtensionManager>()
+                .Setup(x => x.AvailableFeatures())
+                .Returns(() => _extensionDescriptors.SelectMany(ext => ext.Features));
+
+            _container.Mock<IExtensionManager>()
                 .Setup(x => x.LoadFeatures(It.IsAny<IEnumerable<FeatureDescriptor>>()))
                 .Returns((IEnumerable<FeatureDescriptor> x) => StubLoadFeatures(x));
         }
