@@ -19,7 +19,7 @@ namespace Orchard.Environment {
         public string Resolve(string shortName) {
             return AppDomain.CurrentDomain
                 .GetAssemblies()
-                .Where(a => StringComparer.OrdinalIgnoreCase.Equals(shortName, AssemblyLoaderExtensions.ExtractAssemblyName(a.FullName)))
+                .Where(a => StringComparer.OrdinalIgnoreCase.Equals(shortName, AssemblyLoaderExtensions.ExtractAssemblyShortName(a.FullName)))
                 .Select(a => a.FullName)
                 .SingleOrDefault();
         }
@@ -40,7 +40,7 @@ namespace Orchard.Environment {
             var orchardFrameworkReferences = _cacheManager.Get(typeof(IAssemblyLoader), ctx =>
                             ctx.Key.Assembly
                             .GetReferencedAssemblies()
-                            .GroupBy(n => AssemblyLoaderExtensions.ExtractAssemblyName(n.FullName), StringComparer.OrdinalIgnoreCase)
+                            .GroupBy(n => AssemblyLoaderExtensions.ExtractAssemblyShortName(n.FullName), StringComparer.OrdinalIgnoreCase)
                             .ToDictionary(n => n.Key /*short assembly name*/, g => g.OrderBy(n => n.Version).Last() /* highest assembly version */, StringComparer.OrdinalIgnoreCase));
 
             AssemblyName assemblyName;
@@ -73,7 +73,7 @@ namespace Orchard.Environment {
                 .Select(s => TrimProcessorArchitecture(s))
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(s => AssemblyLoaderExtensions.ExtractAssemblyName(s), StringComparer.OrdinalIgnoreCase));
+                .ToDictionary(s => AssemblyLoaderExtensions.ExtractAssemblyShortName(s), StringComparer.OrdinalIgnoreCase));
 
             string fullName;
             if (lookup.TryGetValue(shortName, out fullName)) {

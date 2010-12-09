@@ -23,7 +23,7 @@ namespace Orchard.Environment {
 
         public Assembly Load(string assemblyName) {
             try {
-                return _loadedAssemblies.GetOrAdd(this.ExtractAssemblyName(assemblyName), shortName => LoadWorker(shortName, assemblyName));
+                return _loadedAssemblies.GetOrAdd(this.ExtractAssemblyShortName(assemblyName), shortName => LoadWorker(shortName, assemblyName));
             }
             catch (Exception e) {
                 Logger.Warning(e, "Error loading assembly '{0}'", assemblyName);
@@ -59,11 +59,11 @@ namespace Orchard.Environment {
     }
 
     public static class AssemblyLoaderExtensions {
-        public static string ExtractAssemblyName(this IAssemblyLoader assemblyLoader, string fullName) {
-            return ExtractAssemblyName(fullName);
+        public static string ExtractAssemblyShortName(this IAssemblyLoader assemblyLoader, string fullName) {
+            return ExtractAssemblyShortName(fullName);
         }
 
-        public static string ExtractAssemblyName(string fullName) {
+        public static string ExtractAssemblyShortName(string fullName) {
             int index = fullName.IndexOf(',');
             if (index < 0)
                 return fullName;
