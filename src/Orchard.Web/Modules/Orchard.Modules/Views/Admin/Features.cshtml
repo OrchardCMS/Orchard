@@ -25,7 +25,7 @@
         }
 
         //temporarily "disable" actions on core features
-        var showActions = categoryName.ToString() != "Core";
+        bool showActions;
     <li class="@categoryClassName">
         <h2>@categoryName</h2>
         <ul>@{
@@ -46,9 +46,7 @@
                                     select (from f in Model.Features where f.Descriptor.Id == d select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);                
                 var missingDependencies = feature.Descriptor.Dependencies
                     .Where(d => !Model.Features.Any(f => f.Descriptor.Id == d));
-                if (showActions) {
-                    showActions = missingDependencies.Count() == 0;
-                }
+                showActions = categoryName.ToString() != "Core" && missingDependencies.Count() == 0;
             <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
                 <div class="summary">
                     <div class="properties">
