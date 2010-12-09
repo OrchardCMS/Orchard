@@ -53,6 +53,9 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST() {
+            if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, T("Couldn't create blog post")))
+                return new HttpUnauthorizedResult();
+
             return CreatePOST(contentItem => Services.ContentManager.Publish(contentItem));
         }
 
@@ -109,6 +112,18 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Publish")]
         public ActionResult EditAndPublishPOST(int blogId, int postId, string returnUrl) {
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
+            if (blog == null)
+                return HttpNotFound();
+
+            // Get draft (create a new version if needed)
+            var blogPost = _blogPostService.Get(postId, VersionOptions.DraftRequired);
+            if (blogPost == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, blogPost, T("Couldn't publish blog post")))
+                return new HttpUnauthorizedResult();
+
             return EditPOST(blogId, postId, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
         }
 
