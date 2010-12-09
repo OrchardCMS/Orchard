@@ -32,7 +32,7 @@ namespace Orchard.Comments {
                 },
                 new PermissionStereotype {
                     Name = "Moderator",
-                    Permissions = new[] {AddComment}
+                    Permissions = new[] {ManageComments, AddComment}
                 },
                 new PermissionStereotype {
                     Name = "Author",
