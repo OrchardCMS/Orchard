@@ -1,4 +1,4 @@
-﻿Name: Code generation
+﻿Name: Code Generation
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
