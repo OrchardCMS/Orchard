@@ -15,8 +15,7 @@ namespace Orchard.Core.Settings.ViewModels {
             get { return Site.ContentItem.Id; }
         }
 
-        public string PageTitleSeparator
-        {
+        public string PageTitleSeparator {
             get { return Site.Record.PageTitleSeparator; }
             set { Site.Record.PageTitleSeparator = value; }
         }
@@ -39,6 +38,11 @@ namespace Orchard.Core.Settings.ViewModels {
         public ResourceDebugMode ResourceDebugMode {
             get { return Site.As<SiteSettingsPart>().ResourceDebugMode; }
             set { Site.As<SiteSettingsPart>().ResourceDebugMode = value; }
+        }
+
+        public int PageSize {
+            get { return Site.As<SiteSettingsPart>().PageSize; }
+            set { Site.As<SiteSettingsPart>().PageSize = value; }
         }
     }
 }

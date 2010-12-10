@@ -17,6 +17,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
+using Orchard.Settings;
 
 namespace Orchard.Core.Contents.Controllers {
     [ValidateInput(false)]
@@ -24,17 +25,20 @@ namespace Orchard.Core.Contents.Controllers {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
+        private readonly ISiteService _siteService;
 
         public AdminController(
             IOrchardServices orchardServices,
             IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
             ITransactionManager transactionManager,
+            ISiteService siteService,
             IShapeFactory shapeFactory) {
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _transactionManager = transactionManager;
+            _siteService = siteService;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
@@ -45,7 +49,8 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult List(ListContentsViewModel model, Pager pager) {
+        public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
+            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             if (model.ContainerId != null && _contentManager.GetLatest((int)model.ContainerId) == null)
                 return HttpNotFound();
 

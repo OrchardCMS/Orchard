@@ -15,6 +15,8 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
+    using Orchard.Settings;
+
     [ValidateInput(false), Admin]
     public class BlogAdminController : Controller, IUpdateModel {
         private readonly IBlogService _blogService;
@@ -22,6 +24,7 @@ namespace Orchard.Blogs.Controllers {
         private readonly IContentManager _contentManager;
         private readonly ITransactionManager _transactionManager;
         private readonly IBlogSlugConstraint _blogSlugConstraint;
+        private readonly ISiteService _siteService;
 
         public BlogAdminController(
             IOrchardServices services,
@@ -30,6 +33,7 @@ namespace Orchard.Blogs.Controllers {
             IContentManager contentManager,
             ITransactionManager transactionManager,
             IBlogSlugConstraint blogSlugConstraint,
+            ISiteService siteService,
             IShapeFactory shapeFactory) {
             Services = services;
             _blogService = blogService;
@@ -37,6 +41,7 @@ namespace Orchard.Blogs.Controllers {
             _contentManager = contentManager;
             _transactionManager = transactionManager;
             _blogSlugConstraint = blogSlugConstraint;
+            _siteService = siteService;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
@@ -147,7 +152,8 @@ namespace Orchard.Blogs.Controllers {
             return View((object)viewModel);
         }
 
-        public ActionResult Item(int blogId, Pager pager) {
+        public ActionResult Item(int blogId, PagerParameters pagerParameters) {
+            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             BlogPart blogPart = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
 
             if (blogPart == null)

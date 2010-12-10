@@ -36,4 +36,9 @@
         @Html.DropDownList("ResourceDebugMode", resourceDebugMode)
         <span class="hint">@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</span>
     </div>
+    <div>
+        <label for="DefaultPageSize">@T("Default number of items per page")</label>
+        @Html.TextBoxFor(m => m.PageSize, new { @class = "textMedium" })
+        <span class="hint">@T("Determines the default number of items that are shown per page.")</span>
+    </div>
 </fieldset>

@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Settings;
 using Orchard.Tags.Services;
 using Orchard.Tags.ViewModels;
 using Orchard.Themes;
@@ -14,14 +15,17 @@ namespace Orchard.Tags.Controllers {
     public class HomeController : Controller {
         private readonly ITagService _tagService;
         private readonly IContentManager _contentManager;
+        private readonly ISiteService _siteService;
         private readonly dynamic _shapeFactory;
 
         public HomeController(
-            ITagService tagService, 
-            IContentManager contentManager, 
+            ITagService tagService,
+            IContentManager contentManager,
+            ISiteService siteService,
             IShapeFactory shapeFactory) {
             _tagService = tagService;
             _contentManager = contentManager;
+            _siteService = siteService;
             _shapeFactory = shapeFactory;
             T = NullLocalizer.Instance;
         }
@@ -35,7 +39,9 @@ namespace Orchard.Tags.Controllers {
             return View(model);
         }
 
-        public ActionResult Search(string tagName, Pager pager) {
+        public ActionResult Search(string tagName, PagerParameters pagerParameters) {
+            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+
             var tag = _tagService.GetTagByName(tagName);
 
             if (tag == null) {

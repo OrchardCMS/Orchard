@@ -14,12 +14,20 @@ using Orchard.Comments.ViewModels;
 using Orchard.Comments.Services;
 
 namespace Orchard.Comments.Controllers {
+    using Orchard.Settings;
+
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly ICommentService _commentService;
+        private readonly ISiteService _siteService;
 
-        public AdminController(IOrchardServices services, ICommentService commentService, IShapeFactory shapeFactory) {
+        public AdminController(
+            IOrchardServices services, 
+            ICommentService commentService, 
+            ISiteService siteService,
+            IShapeFactory shapeFactory) {
             _commentService = commentService;
+            _siteService = siteService;
             Services = services;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -31,7 +39,9 @@ namespace Orchard.Comments.Controllers {
         public Localizer T { get; set; }
         dynamic Shape { get; set; }
 
-        public ActionResult Index(CommentIndexOptions options, Pager pager) {
+        public ActionResult Index(CommentIndexOptions options, PagerParameters pagerParameters) {
+            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+
             // Default options
             if (options == null)
                 options = new CommentIndexOptions();

@@ -188,6 +188,7 @@
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="UI\FlatPositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
+    <Compile Include="UI\Navigation\PagerParameters.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
     <Compile Include="UI\Resources\ResourceManifestBuilder.cs" />
     <Compile Include="UI\Zones\LayoutWorkContext.cs" />
