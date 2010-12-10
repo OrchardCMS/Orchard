@@ -732,7 +732,6 @@ table.items th, table.items td {
     border-spacing:0px;
     display:table-cell;
     padding:8px 12px;
-    vertical-align:middle;
 }
 
 /* Content item lists
