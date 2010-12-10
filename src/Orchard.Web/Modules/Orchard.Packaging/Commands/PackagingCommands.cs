@@ -23,7 +23,13 @@ namespace Orchard.Packaging.Commands {
         [OrchardSwitch]
         public string Version { get; set; }
 
-        [CommandHelp("package create <extensionName> <path> \r\n\t" + "Create a package for the module <moduleName>. The default filename is Orchard.<extension>.<extensionName>.<moduleVersion>.nupkg.")]
+        [CommandHelp(@"package create <extensionName> <path>
+    Create a package for the extension <extensionName>
+    (an extension being a module or a theme).
+    The package will be output at the <path> specified.
+    The default filename is Orchard.[Module|Theme].<extensionName>.<extensionVersion>.nupkg.
+    For example, ""package create SampleModule c:\temp"" will create the package
+    ""c:\temp\Orchard.Module.SampleModule.1.0.0.nupkg"".")]
         [CommandName("package create")]
         public void CreatePackage(string extensionName, string path) {
             var packageData = _packageManager.Harvest(extensionName);
