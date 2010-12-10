@@ -16,12 +16,17 @@ namespace Orchard.Core.Common.Drivers {
             return part.PartDefinition.Name + "." + field.Name;
         }
 
+        private string GetDifferentiator(TextField field, ContentPart part) {
+            return field.Name;
+        }
+
         protected override DriverResult Display(ContentPart part, TextField field, string displayType, dynamic shapeHelper) {
-            return ContentShape("Fields_Common_Text", () => shapeHelper.Fields_Common_Text(ContentField: field, Name: field.Name, Value: field.Value));
+            return ContentShape("Fields_Common_Text", GetDifferentiator(field, part), 
+                () => shapeHelper.Fields_Common_Text(ContentField: field, Name: field.Name, Value: field.Value));
         }
 
         protected override DriverResult Editor(ContentPart part, TextField field, dynamic shapeHelper) {
-            return ContentShape("Fields_Common_Text_Edit",
+            return ContentShape("Fields_Common_Text_Edit", GetDifferentiator(field, part),
                 () => shapeHelper.EditorTemplate(TemplateName: "Fields.Common.Text.Edit", Model: field, Prefix: GetPrefix(field, part)));
         }
 

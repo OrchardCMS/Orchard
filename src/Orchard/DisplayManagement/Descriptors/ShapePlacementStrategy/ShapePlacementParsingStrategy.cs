@@ -54,14 +54,28 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                 var shapeLocation = entry.Item1;
                 var matches = entry.Item2;
 
-                Func<ShapePlacementContext, bool> predicate = ctx => true;
+                string shapeType;
+                string differentiator;
+                GetShapeType(shapeLocation, out shapeType, out differentiator);
+
+                Func<ShapePlacementContext, bool> predicate = ctx => (ctx.Differentiator ?? "") == differentiator;
                 if (matches.Any()) {
                     predicate = matches.SelectMany(match => match.Terms).Aggregate(predicate, BuildPredicate);
                 }
 
-                builder.Describe(shapeLocation.ShapeType)
+                builder.Describe(shapeType)
                     .From(feature)
                     .Placement(predicate, shapeLocation.Location);
+            }
+        }
+
+        private void GetShapeType(PlacementShapeLocation shapeLocation, out string shapeType, out string differentiator) {
+            differentiator = "";
+            shapeType = shapeLocation.ShapeType;
+            var dashIndex = shapeType.LastIndexOf('-');
+            if (dashIndex > 0 && dashIndex < shapeType.Length - 1) {
+                differentiator = shapeType.Substring(dashIndex + 1);
+                shapeType = shapeType.Substring(0, dashIndex);
             }
         }
 

@@ -49,15 +49,23 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) { return null; }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
-            return ContentShapeImplementation(shapeType, ctx => factory());
+            return ContentShapeImplementation(shapeType, null, ctx => factory());
+        }
+
+        public ContentShapeResult ContentShape(string shapeType, string differentiator, Func<dynamic> factory) {
+            return ContentShapeImplementation(shapeType, differentiator, ctx => factory());
         }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory) {
-            return ContentShapeImplementation(shapeType, ctx=>factory(CreateShape(ctx, shapeType)));
+            return ContentShapeImplementation(shapeType, null, ctx => factory(CreateShape(ctx, shapeType)));
         }
 
-        private ContentShapeResult ContentShapeImplementation(string shapeType, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, shapeBuilder);
+        public ContentShapeResult ContentShape(string shapeType, string differentiator, Func<dynamic, dynamic> factory) {
+            return ContentShapeImplementation(shapeType, differentiator, ctx => factory(CreateShape(ctx, shapeType)));
+        }
+
+        private ContentShapeResult ContentShapeImplementation(string shapeType, string differentiator, Func<BuildShapeContext, object> shapeBuilder) {
+            return new ContentShapeResult(shapeType, Prefix, shapeBuilder).Differentiator(differentiator);
         }
 
         private object CreateShape(BuildShapeContext context, string shapeType) {

@@ -95,19 +95,38 @@ namespace Orchard.ContentManagement {
         }
 
         private void BindPlacement(BuildShapeContext context, string displayType) {
-            context.FindPlacement = (partShapeType, defaultLocation) => {
+            context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
                 //var workContext = _workContextAccessor.GetContext();
                 //var theme = workContext.CurrentTheme;
                 var theme = _themeService.Value.GetRequestTheme(_requestContext);
                 var shapeTable = _shapeTableManager.GetShapeTable(theme.Id);
+
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
-                    var placementContext = new ShapePlacementContext {
+                    ShapePlacementContext placementContext;
+                    string location;
+
+                    // First, look up placement with differentiator
+                    if (!string.IsNullOrEmpty(differentiator)) {
+                        placementContext = new ShapePlacementContext {
+                            ContentType = context.ContentItem.ContentType,
+                            DisplayType = displayType,
+                            Differentiator = differentiator,
+                        };
+                        location = descriptor.Placement(placementContext);
+                        if (!string.IsNullOrEmpty(location))
+                            return location;
+                    }
+
+                    // Then fallback to placement without differentiator
+                    placementContext = new ShapePlacementContext {
                         ContentType = context.ContentItem.ContentType,
-                        DisplayType = displayType
+                        DisplayType = displayType,
+                        Differentiator = null,
                     };
-                    var location = descriptor.Placement(placementContext);
-                    return location ?? defaultLocation;
+                    location = descriptor.Placement(placementContext);
+                    if (!string.IsNullOrEmpty(location))
+                        return location;
                 }
                 return defaultLocation;
             };

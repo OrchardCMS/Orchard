@@ -7,13 +7,13 @@ namespace Orchard.ContentManagement.Handlers {
             Shape = shape;
             ContentItem = content.ContentItem;
             New = shapeFactory;
-            FindPlacement = (partType, defaultLocation) => defaultLocation;
+            FindPlacement = (partType, differentiator, defaultLocation) => defaultLocation;
         }
 
         public dynamic Shape { get; private set; }
         public ContentItem ContentItem { get; private set; }
         public dynamic New { get; private set; }
 
-        public Func<string, string, string> FindPlacement { get; set; }
+        public Func<string, string, string, string> FindPlacement { get; set; }
     }
 }

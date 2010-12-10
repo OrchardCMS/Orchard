@@ -5,6 +5,7 @@ using Orchard.DisplayManagement.Shapes;
 namespace Orchard.ContentManagement.Drivers {
     public class ContentShapeResult : DriverResult {
         private string _defaultLocation;
+        private string _differentiator;
         private readonly string _shapeType;
         private readonly string _prefix;
         private readonly Func<BuildShapeContext, dynamic> _shapeBuilder;
@@ -24,7 +25,7 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private void ApplyImplementation(BuildShapeContext context, string displayType) {
-            var location = context.FindPlacement(_shapeType, _defaultLocation);
+            var location = context.FindPlacement(_shapeType, _differentiator, _defaultLocation);
             if (string.IsNullOrEmpty(location) || location == "-")
                 return;
 
@@ -47,6 +48,10 @@ namespace Orchard.ContentManagement.Drivers {
 
         public ContentShapeResult Location(string zone) {
             _defaultLocation = zone;
+            return this;
+        }
+        public ContentShapeResult Differentiator(string differentiator) {
+            _differentiator = differentiator;
             return this;
         }
     }
