@@ -8,36 +8,35 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
     [TestFixture]
     public class AzureShellSettingsManagerTests : AzureVirtualEnvironmentTest {
 
-        protected IShellSettingsManager Loader;
+        protected CloudStorageAccount DevAccount;
+        protected IShellSettingsManager ShellSettingsManager;
 
         protected override void OnInit() {
-            CloudStorageAccount devAccount;
-            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out devAccount);
-
-            Loader = new AzureShellSettingsManager(devAccount, new Moq.Mock<IShellSettingsManagerEventHandler>().Object);
+            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out DevAccount);
+            ShellSettingsManager = new AzureShellSettingsManager(DevAccount, new Moq.Mock<IShellSettingsManagerEventHandler>().Object);
         }
 
         [SetUp]
         public void Setup() {
             // ensure default container is empty before running any test
-            DeleteAllBlobs( ((AzureShellSettingsManager)Loader).Container);
+            DeleteAllBlobs(AzureShellSettingsManager.ContainerName, DevAccount);
         }
 
         [TearDown]
         public void TearDown() {
             // ensure default container is empty after running tests
-            DeleteAllBlobs(( (AzureShellSettingsManager)Loader ).Container);
+            DeleteAllBlobs(AzureShellSettingsManager.ContainerName, DevAccount);
         }
 
         [Test]
         public void SingleSettingsFileShouldComeBackAsExpected() {
 
-            Loader.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "something else" });
+            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
 
-            var settings = Loader.LoadSettings().Single();
+            var settings = ShellSettingsManager.LoadSettings().Single();
             Assert.That(settings, Is.Not.Null);
             Assert.That(settings.Name, Is.EqualTo("Default"));
-            Assert.That(settings.DataProvider, Is.EqualTo("SQLite"));
+            Assert.That(settings.DataProvider, Is.EqualTo("SQLCe"));
             Assert.That(settings.DataConnectionString, Is.EqualTo("something else"));
         }
 
@@ -45,37 +44,37 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
         [Test]
         public void MultipleFilesCanBeDetected() {
 
-            Loader.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "something else" });
-            Loader.SaveSettings(new ShellSettings { Name = "Another", DataProvider = "SQLite2", DataConnectionString = "something else2" });
+            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
+            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Another", DataProvider = "SQLCe2", DataConnectionString = "something else2" });
 
-            var settings = Loader.LoadSettings();
+            var settings = ShellSettingsManager.LoadSettings();
             Assert.That(settings.Count(), Is.EqualTo(2));
 
             var def = settings.Single(x => x.Name == "Default");
             Assert.That(def.Name, Is.EqualTo("Default"));
-            Assert.That(def.DataProvider, Is.EqualTo("SQLite"));
+            Assert.That(def.DataProvider, Is.EqualTo("SQLCe"));
             Assert.That(def.DataConnectionString, Is.EqualTo("something else"));
 
             var alt = settings.Single(x => x.Name == "Another");
             Assert.That(alt.Name, Is.EqualTo("Another"));
-            Assert.That(alt.DataProvider, Is.EqualTo("SQLite2"));
+            Assert.That(alt.DataProvider, Is.EqualTo("SQLCe2"));
             Assert.That(alt.DataConnectionString, Is.EqualTo("something else2"));
         }
 
         [Test]
         public void NewSettingsCanBeStored() {
-            Loader.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "something else" });
+            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "something else" });
 
             var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux" };
 
-            Assert.That(Loader.LoadSettings().Count(), Is.EqualTo(1));
-            Loader.SaveSettings(foo);
-            Assert.That(Loader.LoadSettings().Count(), Is.EqualTo(2));
+            Assert.That(ShellSettingsManager.LoadSettings().Count(), Is.EqualTo(1));
+            ShellSettingsManager.SaveSettings(foo);
+            Assert.That(ShellSettingsManager.LoadSettings().Count(), Is.EqualTo(2));
 
-            var text = ( (AzureShellSettingsManager)Loader ).Container.GetBlockBlobReference("Foo/Settings.txt").DownloadText();
-            Assert.That(text, Is.StringContaining("Foo"));
-            Assert.That(text, Is.StringContaining("Bar"));
-            Assert.That(text, Is.StringContaining("Quux"));
+            foo = ShellSettingsManager.LoadSettings().Where(s => s.Name == "Foo").Single();
+            Assert.That(foo.Name, Is.StringContaining("Foo"));
+            Assert.That(foo.DataProvider, Is.StringContaining("Bar"));
+            Assert.That(foo.DataConnectionString, Is.StringContaining("Quux"));
         }
     }
 }

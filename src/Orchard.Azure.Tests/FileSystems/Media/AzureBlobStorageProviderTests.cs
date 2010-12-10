@@ -10,19 +10,19 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
     [TestFixture]
     public class AzureBlobStorageProviderTests : AzureVirtualEnvironmentTest {
 
+        CloudStorageAccount DevAccount;
         private AzureBlobStorageProvider _azureBlobStorageProvider;
 
         protected override void OnInit() {
-            CloudStorageAccount devAccount;
-            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out devAccount);
+            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out DevAccount);
 
-            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, devAccount);
+            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, DevAccount);
         }
 
         [SetUp]
         public void Setup() {
             // ensure default container is empty before running any test
-            DeleteAllBlobs(_azureBlobStorageProvider.Container);
+            DeleteAllBlobs(_azureBlobStorageProvider.Container.Name, DevAccount);
         }
 
         [Test]
