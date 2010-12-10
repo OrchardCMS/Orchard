@@ -49,16 +49,5 @@ namespace Orchard.ContentManagement.Drivers {
             _defaultLocation = zone;
             return this;
         }
-
-        public ContentShapeResult Location(string zone, string position) {
-            _defaultLocation = zone + ":" + position;
-            return this;
-        }
-
-        public ContentShapeResult Location(ContentLocation location) {
-            return location.Position == null
-                ? Location(location.Zone)
-                : Location(location.Zone, location.Position);
-        }
     }
 }

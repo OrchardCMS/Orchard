@@ -7,7 +7,7 @@ namespace Orchard.Search.Drivers {
 
         protected override DriverResult Display(SearchFormPart part, string displayType, dynamic shapeHelper) {
             var model = new SearchViewModel();
-            return ContentShape("Parts_Search_SearchForm", "Content:1",
+            return ContentShape("Parts_Search_SearchForm",
                                 () => {
                                     var shape = shapeHelper.Parts_Search_SearchForm();
                                     shape.ContentPart = part;
