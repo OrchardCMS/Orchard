@@ -8,6 +8,7 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc.Extensions;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Comments.ViewModels;
@@ -244,18 +245,11 @@ namespace Orchard.Comments.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't close comments")))
                     return new HttpUnauthorizedResult();
                 _commentService.CloseCommentsForCommentedContent(commentedItemId);
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Closing Comments failed: " + exception.Message));
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index");
             }
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
         [HttpPost]
@@ -264,18 +258,11 @@ namespace Orchard.Comments.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't enable comments")))
                     return new HttpUnauthorizedResult();
                 _commentService.EnableCommentsForCommentedContent(commentedItemId);
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Enabling Comments failed: " + exception.Message));
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index");
             }
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
         public ActionResult Edit(int id) {
@@ -324,17 +311,12 @@ namespace Orchard.Comments.Controllers {
                 int commentedOn = _commentService.GetComment(id).Record.CommentedOn;
                 _commentService.ApproveComment(id);
 
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Details", new { id = commentedOn });
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Approving comment failed: " + exception.Message));
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index");
+
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
             }
         }
 
@@ -347,17 +329,11 @@ namespace Orchard.Comments.Controllers {
                 int commentedOn = _commentService.GetComment(id).Record.CommentedOn;
                 _commentService.UnapproveComment(id);
 
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Details", new { id = commentedOn });
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Unapproving comment failed: " + exception.Message));
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index");
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
             }
         }
 
@@ -370,17 +346,11 @@ namespace Orchard.Comments.Controllers {
                 int commentedOn = _commentService.GetComment(id).Record.CommentedOn;
                 _commentService.MarkCommentAsSpam(id);
 
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Details", new { id = commentedOn });
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Marking comment as spam failed: " + exception.Message));
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index");
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
             }
         }
 
@@ -393,17 +363,11 @@ namespace Orchard.Comments.Controllers {
                 int commentedOn = _commentService.GetComment(id).Record.CommentedOn;
                 _commentService.DeleteComment(id);
 
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Details", new { id = commentedOn });
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Deleting comment failed: " + exception.Message));
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index");
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
             }
         }
 

@@ -71,19 +71,13 @@ namespace Orchard.Users.Controllers {
 
             _authenticationService.SignIn(user, false);
 
-            if (string.IsNullOrEmpty(returnUrl))
-                return new RedirectResult("~/");
-
-            return new RedirectResult(returnUrl);
+            return this.RedirectLocal(returnUrl);
         }
 
         public ActionResult LogOff(string returnUrl) {
             _authenticationService.SignOut();
 
-            if (string.IsNullOrEmpty(returnUrl))
-                return new RedirectResult("~/");
-
-            return new RedirectResult(returnUrl);
+            return this.RedirectLocal(returnUrl);
         }
 
         int MinPasswordLength {

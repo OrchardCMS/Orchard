@@ -6,6 +6,7 @@ using Orchard.Comments.Services;
 using Orchard.Comments.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Mvc.Extensions;
 using Orchard.UI.Notify;
 
 namespace Orchard.Comments.Controllers {
@@ -26,9 +27,7 @@ namespace Orchard.Comments.Controllers {
         [HttpPost, ValidateInput(false)]
         public ActionResult Create(string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
-                return !String.IsNullOrEmpty(returnUrl)
-                    ? Redirect(returnUrl)
-                    : Redirect("~/");
+                return this.RedirectLocal(returnUrl, "~/");
             
             var viewModel = new CommentsCreateViewModel();
 
@@ -73,10 +72,7 @@ namespace Orchard.Comments.Controllers {
                 TempData["CreateCommentContext.SiteName"] = context.SiteName;
             }
 
-            return !String.IsNullOrEmpty(returnUrl)
-                ? Redirect(returnUrl)
-                : Redirect("~/");
-            
+            return this.RedirectLocal(returnUrl, "~/");
         }
     }
 }
