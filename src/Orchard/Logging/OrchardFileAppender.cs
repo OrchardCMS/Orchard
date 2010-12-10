@@ -11,7 +11,7 @@ namespace Orchard.Logging {
         public RollingStyleFrequencyMode RollingStyleFrequency { get; set; }
 
         public bool RollSize {
-            get { return (RollingStyle == RollingMode.Once || RollingStyle == RollingMode.Size); }
+            get { return (RollingStyle == RollingMode.Composite || RollingStyle == RollingMode.Size); }
         }
 
         protected override void AdjustFileBeforeAppend() {
@@ -19,7 +19,7 @@ namespace Orchard.Logging {
                 RollingStyleFrequency == RollingStyleFrequencyMode.Continuous) {
                 base.AdjustFileBeforeAppend();
             }
-            else if (RollSize && ((File != null) && (((CountingQuietTextWriter)base.QuietWriter).Count >= MaxFileSize))) {
+            else if (RollSize && ((File != null) && (((CountingQuietTextWriter) QuietWriter).Count >= MaxFileSize))) {
                 RollOverSize();
             }
         }
