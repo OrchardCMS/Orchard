@@ -56,7 +56,7 @@ namespace Orchard.Roles.Services {
                 if (!context.Granted) {
 
                     // determine which set of permissions would satisfy the access check
-                    var grantingNames = PermissionNames(context.Permission, Enumerable.Empty<string>()).ToArray();
+                    var grantingNames = PermissionNames(context.Permission, Enumerable.Empty<string>()).Distinct().ToArray();
 
                     // determine what set of roles should be examined by the access check
                     IEnumerable<string> rolesToExamine;
