@@ -2,7 +2,7 @@
 
 namespace Orchard.Settings {
     /// <summary>
-    /// Interface provided by the "settings" model. 
+    /// Interface provided by the "settings" model.
     /// </summary>
     public interface ISite : IContent {
         string PageTitleSeparator { get; }
@@ -12,5 +12,6 @@ namespace Orchard.Settings {
         string HomePage { get; set; }
         string SiteCulture { get; set; }
         ResourceDebugMode ResourceDebugMode { get; set; }
+        int PageSize { get; set; }
     }
 }

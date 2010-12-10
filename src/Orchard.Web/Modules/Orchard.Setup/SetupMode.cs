@@ -8,6 +8,7 @@ using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Settings.Models;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
 using Orchard.Data.Migration;
@@ -170,6 +171,11 @@ namespace Orchard.Setup {
 
             public ResourceDebugMode ResourceDebugMode {
                 get { return ResourceDebugMode.FromAppSetting; }
+                set { throw new NotImplementedException(); }
+            }
+
+            public int PageSize {
+                get { return SiteSettingsPartRecord.DefaultPageSize; }
                 set { throw new NotImplementedException(); }
             }
         }

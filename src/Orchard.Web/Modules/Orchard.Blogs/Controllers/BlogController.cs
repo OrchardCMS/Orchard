@@ -13,6 +13,8 @@ using Orchard.Themes;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Blogs.Controllers {
+    using Orchard.Settings;
+
     [Themed]
     public class BlogController : Controller {
         private readonly IOrchardServices _services;
@@ -22,6 +24,7 @@ namespace Orchard.Blogs.Controllers {
         private readonly IFeedManager _feedManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IHomePageProvider _routableHomePageProvider;
+        private readonly ISiteService _siteService;
 
         public BlogController(
             IOrchardServices services, 
@@ -31,13 +34,15 @@ namespace Orchard.Blogs.Controllers {
             IFeedManager feedManager, 
             IShapeFactory shapeFactory,
             IWorkContextAccessor workContextAccessor,
-            IEnumerable<IHomePageProvider> homePageProviders) {
+            IEnumerable<IHomePageProvider> homePageProviders,
+            ISiteService siteService) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
             _blogSlugConstraint = blogSlugConstraint;
             _feedManager = feedManager;
             _workContextAccessor = workContextAccessor;
+            _siteService = siteService;
             _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
@@ -59,7 +64,8 @@ namespace Orchard.Blogs.Controllers {
             return View((object)viewModel);
         }
 
-        public ActionResult Item(string blogSlug, Pager pager) {
+        public ActionResult Item(string blogSlug, PagerParameters pagerParameters) {
+            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var correctedSlug = _blogSlugConstraint.FindSlug(blogSlug);
             if (correctedSlug == null)
                 return HttpNotFound();
