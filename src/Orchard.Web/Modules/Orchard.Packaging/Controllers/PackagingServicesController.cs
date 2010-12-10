@@ -7,6 +7,7 @@ using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
+using Orchard.Mvc.Extensions;
 using Orchard.Packaging.Services;
 using Orchard.Security;
 using Orchard.Themes;
@@ -101,7 +102,7 @@ namespace Orchard.Packaging.Controllers {
                     }
                 }
 
-                return Redirect(returnUrl);
+                return this.RedirectLocal(returnUrl, "~/");
             } catch (Exception exception) {
                 for (Exception scan = exception; scan != null; scan = scan.InnerException) {
                     _notifier.Error(T("Uploading module package failed: {0}", exception.Message));
@@ -120,7 +121,7 @@ namespace Orchard.Packaging.Controllers {
 
                 _notifier.Information(T("Uninstalled package \"{0}\"", id));
 
-                return Redirect(returnUrl);
+                return this.RedirectLocal(returnUrl, "~/");
             } catch (Exception exception) {
                 for (Exception scan = exception; scan != null; scan = scan.InnerException) {
                     _notifier.Error(T("Uninstall failed: {0}", exception.Message));

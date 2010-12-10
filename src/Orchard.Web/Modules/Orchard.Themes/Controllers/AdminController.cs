@@ -8,6 +8,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
+using Orchard.Mvc.Extensions;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Themes.Preview;
@@ -85,7 +86,7 @@ namespace Orchard.Themes.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
                     return new HttpUnauthorizedResult();
                 _previewTheme.SetPreviewTheme(themeName);
-                return Redirect(returnUrl ?? "~/");
+                return this.RedirectLocal(returnUrl, "~/");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Previewing theme failed: " + exception.Message));

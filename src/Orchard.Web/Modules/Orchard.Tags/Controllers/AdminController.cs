@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.ContentManagement;
+using Orchard.Mvc.Extensions;
 using Orchard.Tags.Models;
 using Orchard.Tags.ViewModels;
 using Orchard.Tags.Services;
@@ -120,10 +121,7 @@ namespace Orchard.Tags.Controllers {
 
             _tagService.DeleteTag(id);
 
-            if (!string.IsNullOrWhiteSpace(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("Index");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
         private static TagEntry CreateTagEntry(TagRecord tagRecord) {

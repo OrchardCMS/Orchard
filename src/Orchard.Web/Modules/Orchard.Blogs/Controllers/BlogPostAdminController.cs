@@ -9,6 +9,7 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
+using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Admin;
@@ -153,10 +154,7 @@ namespace Orchard.Blogs.Controllers {
 
             Services.Notifier.Information(T("Your {0} has been saved.", blogPost.TypeDefinition.DisplayName));
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return Redirect(Url.BlogPostEdit(blogPost));
+            return this.RedirectLocal(returnUrl, Url.BlogPostEdit(blogPost));
         }
 
         [ValidateAntiForgeryTokenOrchard]

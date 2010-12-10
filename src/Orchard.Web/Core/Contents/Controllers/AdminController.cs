@@ -15,6 +15,7 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc.Extensions;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Settings;
@@ -173,10 +174,7 @@ namespace Orchard.Core.Contents.Controllers {
                 }
             }
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("List");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
         ActionResult CreatableTypeList() {
@@ -300,10 +298,7 @@ namespace Orchard.Core.Contents.Controllers {
                 ? T("Your content has been saved.")
                 : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
         }
 
         public ActionResult Remove(int id, string returnUrl) {
@@ -319,10 +314,7 @@ namespace Orchard.Core.Contents.Controllers {
                     : T("That {0} has been removed.", contentItem.TypeDefinition.DisplayName));
             }
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("List");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
         [HttpPost]
@@ -338,10 +330,7 @@ namespace Orchard.Core.Contents.Controllers {
             Services.ContentManager.Flush();
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been published.") : T("That {0} has been published.", contentItem.TypeDefinition.DisplayName));
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("List");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
         [HttpPost]
@@ -357,10 +346,7 @@ namespace Orchard.Core.Contents.Controllers {
             Services.ContentManager.Flush();
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("List");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
