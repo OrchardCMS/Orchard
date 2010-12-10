@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -27,14 +29,28 @@ namespace Orchard.Core.Routable.Services {
             }
         }
 
+        public static string RemoveDiacritics(string slug) {
+            string stFormD = slug.Normalize(NormalizationForm.FormD);
+            StringBuilder sb = new StringBuilder();
+
+            for (int ich = 0; ich < stFormD.Length; ich++) {
+                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(stFormD[ich]);
+                if (uc != UnicodeCategory.NonSpacingMark) {
+                    sb.Append(stFormD[ich]);
+                }
+            }
+
+            return (sb.ToString().Normalize(NormalizationForm.FormC));
+        }
+
         public void FillSlugFromTitle<TModel>(TModel model) where TModel : IRoutableAspect {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
                 return;
 
             var slug = model.Title;
-            var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>]+");
+            var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>]+");
 
-            slug = dissallowed.Replace(slug, "-");
+            slug = disallowed.Replace(slug, "-");
             slug = slug.Trim('-');
 
             if (slug.Length > 1000)
@@ -42,8 +58,7 @@ namespace Orchard.Core.Routable.Services {
 
             // dots are not allowed at the begin and the end of routes
             slug = slug.Trim('.');
-
-            model.Slug = slug.ToLowerInvariant();
+            model.Slug = RemoveDiacritics(slug.ToLower());
         }
 
         public string GenerateUniqueSlug(IRoutableAspect part, IEnumerable<string> existingPaths) {
