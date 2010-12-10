@@ -1,6 +1,8 @@
-﻿using System.Configuration;
+﻿using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
 using NUnit.Framework;
 
@@ -35,7 +37,11 @@ namespace Orchard.Azure.Tests {
                 _dsService.Close();
         }
 
-        protected void DeleteAllBlobs(CloudBlobContainer container) {
+        protected void DeleteAllBlobs(string containerName, CloudStorageAccount account)
+        {
+            var blobClient = account.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference(containerName);
+
             foreach ( var blob in container.ListBlobs() ) {
                 if ( blob is CloudBlob ) {
                     ( (CloudBlob)blob ).DeleteIfExists();
