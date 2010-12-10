@@ -131,7 +131,7 @@
     <Content Include="Views\EditorTemplates\Parts.Widgets.WidgetPart.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Widget.DeleteButton.cshtml" />
+    <Content Include="Views\Widget.DeleteButton.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
