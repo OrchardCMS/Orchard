@@ -165,7 +165,7 @@ namespace Orchard.Environment.Extensions {
                 foreach(var dup in duplicates) {
                     sb.Append(T("Extension '{0}' has been found from the following locations: {1}.\r\n", dup.Key, string.Join(", ", dup.Select(e => e.Location + "/" + e.Id))));
                 }
-                sb.Append(T("This issue can be usually by solved by removing or renamig the conflicting extension."));
+                sb.Append(T("This issue can be usually by solved by removing or renaming the conflicting extension."));
                 Logger.Error(sb.ToString());
                 throw new OrchardException(new LocalizedString(sb.ToString()));
             }

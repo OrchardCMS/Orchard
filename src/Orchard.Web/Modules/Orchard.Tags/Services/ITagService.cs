@@ -9,6 +9,10 @@ namespace Orchard.Tags.Services {
         TagRecord GetTagByName(string tagName);
         IEnumerable<IContent> GetTaggedContentItems(int tagId);
         IEnumerable<IContent> GetTaggedContentItems(int tagId, VersionOptions options);
+        IEnumerable<IContent> GetTaggedContentItems(int tagId, int skip, int count);
+        IEnumerable<IContent> GetTaggedContentItems(int tagId, int skip, int count, VersionOptions versionOptions);
+        int GetTaggedContentItemCount(int tagId);
+        int GetTaggedContentItemCount(int tagId, VersionOptions versionOptions);
 
         TagRecord CreateTag(string tagName);
 

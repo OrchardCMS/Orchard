@@ -9,6 +9,8 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
+using Orchard.Security;
+using Orchard.Security.Permissions;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
@@ -84,9 +86,6 @@ namespace Orchard.Blogs.Controllers {
         //todo: the content shape template has extra bits that the core contents module does not (remove draft functionality)
         //todo: - move this extra functionality there or somewhere else that's appropriate?
         public ActionResult Edit(int blogId, int postId) {
-            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Couldn't edit blog post")))
-                return new HttpUnauthorizedResult();
-
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
@@ -94,6 +93,9 @@ namespace Orchard.Blogs.Controllers {
             var post = _blogPostService.Get(postId, VersionOptions.Latest);
             if (post == null)
                 return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersBlogPost, post.ContentItem, T("Couldn't edit blog post")))
+                return new HttpUnauthorizedResult();
 
             dynamic model = Services.ContentManager.BuildEditor(post);
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.

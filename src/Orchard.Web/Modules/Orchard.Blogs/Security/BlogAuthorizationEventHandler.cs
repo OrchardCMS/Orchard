@@ -1,0 +1,49 @@
+﻿using JetBrains.Annotations;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
+using Orchard.Security;
+using Orchard.Security.Permissions;
+
+namespace Orchard.Blogs.Security {
+    [UsedImplicitly]
+    public class BlogAuthorizationEventHandler : IAuthorizationServiceEventHandler {
+        public void Checking(CheckAccessContext context) { }
+        public void Complete(CheckAccessContext context) { }
+
+        public void Adjust(CheckAccessContext context) {
+            if (!context.Granted &&
+                context.Content.Is<ICommonPart>()) {
+                if (OwnerVariationExists(context.Permission) &&
+                    HasOwnership(context.User, context.Content)) {
+                    context.Adjusted = true;
+                    context.Permission = GetOwnerVariation(context.Permission);
+                }
+            }
+        }
+
+        private static bool HasOwnership(IUser user, IContent content) {
+            if (user == null || content == null)
+                return false;
+
+            var common = content.As<ICommonPart>();
+            if (common == null || common.Owner == null)
+                return false;
+
+            return user.Id == common.Owner.Id;
+        }
+
+        private static bool OwnerVariationExists(Permission permission) {
+            return GetOwnerVariation(permission) != null;
+        }
+
+        private static Permission GetOwnerVariation(Permission permission) {
+            if (permission.Name == Permissions.PublishOthersBlogPost.Name)
+                return Permissions.PublishOwnBlogPost;
+            if (permission.Name == Permissions.EditOthersBlogPost.Name)
+                return Permissions.EditOwnBlogPost;
+            if (permission.Name == Permissions.DeleteOthersBlogPost.Name)
+                return Permissions.DeleteOwnBlogPost;
+            return null;
+        }
+    }
+}

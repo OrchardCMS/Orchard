@@ -25,7 +25,7 @@ namespace Orchard.Blogs {
             var singleBlog = blogCount == 1 ? blogs.ElementAt(0) : null;
 
             if (blogCount > 0 && singleBlog == null) {
-                menu.Add(T("List"), "3",
+                menu.Add(T("Manage Blogs"), "3",
                          item => item.Action("List", "BlogAdmin", new {area = "Orchard.Blogs"}).Permission(Permissions.MetaListOwnBlogs));
             }
             else if (singleBlog != null)

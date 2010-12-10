@@ -119,6 +119,27 @@ namespace Orchard.Tags.Services {
                 .Where(c => c != null);
         }
 
+        public IEnumerable<IContent> GetTaggedContentItems(int tagId, int skip, int take) {
+            return GetTaggedContentItems(tagId, skip, take, VersionOptions.Published);
+        }
+
+        public IEnumerable<IContent> GetTaggedContentItems(int tagId, int skip, int take, VersionOptions options) {
+            return _contentTagRepository
+                .Fetch(x => x.TagRecord.Id == tagId)
+                .Skip(skip)
+                .Take(take)
+                .Select(t => _orchardServices.ContentManager.Get(t.TagsPartRecord.Id, options))
+                .Where(c => c != null);
+        }
+
+        public int GetTaggedContentItemCount(int tagId) {
+            return GetTaggedContentItemCount(tagId, VersionOptions.Published);
+        }
+
+        public int GetTaggedContentItemCount(int tagId, VersionOptions options) {
+            return GetTaggedContentItems(tagId, options).Count();
+        }
+
         private void TagContentItem(TagsPartRecord tagsPartRecord, string tagName) {
             var tagRecord = GetTagByName(tagName);
             var tagsContentItems = new ContentTagRecord { TagsPartRecord = tagsPartRecord, TagRecord = tagRecord };

@@ -82,6 +82,7 @@
     <Compile Include="Routing\IsArchiveConstraint.cs" />
     <Compile Include="Routing\BlogSlugConstraint.cs" />
     <Compile Include="Routing\BlogSlugConstraintUpdator.cs" />
+    <Compile Include="Security\BlogAuthorizationEventHandler.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Models\BlogPart.cs" />

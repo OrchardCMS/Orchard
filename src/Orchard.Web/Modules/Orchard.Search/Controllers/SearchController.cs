@@ -15,19 +15,24 @@ using Orchard.Collections;
 using Orchard.Themes;
 
 namespace Orchard.Search.Controllers {
+    using Orchard.Settings;
+
     [ValidateInput(false), Themed]
     public class SearchController : Controller {
         private readonly ISearchService _searchService;
         private readonly IContentManager _contentManager;
+        private readonly ISiteService _siteService;
 
         public SearchController(
             IOrchardServices services,
-            ISearchService searchService, 
-            IContentManager contentManager, 
+            ISearchService searchService,
+            IContentManager contentManager,
+            ISiteService siteService,
             IShapeFactory shapeFactory) {
              Services = services;
             _searchService = searchService;
             _contentManager = contentManager;
+            _siteService = siteService;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -39,7 +44,8 @@ namespace Orchard.Search.Controllers {
         public ILogger Logger { get; set; }
         dynamic Shape { get; set; }
 
-        public ActionResult Index(Pager pager, string q = "") {
+        public ActionResult Index(PagerParameters pagerParameters, string q = "") {
+            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
             IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });

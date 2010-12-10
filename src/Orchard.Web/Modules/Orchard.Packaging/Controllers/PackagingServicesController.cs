@@ -8,6 +8,7 @@ using Orchard.Environment.Extensions;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Packaging.Services;
+using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
@@ -25,40 +26,61 @@ namespace Orchard.Packaging.Controllers {
         public PackagingServicesController(
             IPackageManager packageManager,
             INotifier notifier,
-            IAppDataFolderRoot appDataFolderRoot) {
+            IAppDataFolderRoot appDataFolderRoot,
+            IOrchardServices services) {
             _packageManager = packageManager;
             _notifier = notifier;
             _appDataFolderRoot = appDataFolderRoot;
+            Services = services;
 
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
+        public IOrchardServices Services { get; set; }
 
         public ActionResult AddTheme(string returnUrl) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add themes")))
+                return new HttpUnauthorizedResult();
+
             return View();
         }
 
         [HttpPost, ActionName("AddTheme")]
         public ActionResult AddThemePOST(string returnUrl) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add themes")))
+                return new HttpUnauthorizedResult();
+
             return InstallPackage(returnUrl, Request.RawUrl);
         }
 
         [HttpPost, ActionName("RemoveTheme")]
         public ActionResult RemoveThemePOST(string themeId, string returnUrl, string retryUrl) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove themes")))
+                return new HttpUnauthorizedResult();
+
             return UninstallPackage(PackagingSourceManager.ThemesPrefix + themeId, returnUrl, retryUrl);
         }
 
         public ActionResult AddModule(string returnUrl) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add modules")))
+                return new HttpUnauthorizedResult();
+
             return View();
         }
 
         [HttpPost, ActionName("AddModule")]
         public ActionResult AddModulePOST(string returnUrl) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add modules")))
+                return new HttpUnauthorizedResult();
+
             return InstallPackage(returnUrl, Request.RawUrl);
         }
 
         public ActionResult InstallPackage(string returnUrl, string retryUrl) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to install packages")))
+                return new HttpUnauthorizedResult();
+
             try {
                 if (Request.Files != null &&
                     Request.Files.Count > 0 &&
@@ -90,6 +112,9 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult UninstallPackage(string id, string returnUrl, string retryUrl) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to uninstall packages")))
+                return new HttpUnauthorizedResult();
+
             try {
                 _packageManager.Uninstall(id, HostingEnvironment.MapPath("~/"));
 

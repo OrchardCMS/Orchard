@@ -5,7 +5,7 @@ namespace Orchard.Blogs {
     public class Migrations : DataMigrationImpl {
 
         public int Create() {
-            SchemaBuilder.CreateTable("BlogPartArchiveRecord", 
+            SchemaBuilder.CreateTable("BlogPartArchiveRecord",
                 table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<int>("Year")
@@ -14,21 +14,21 @@ namespace Orchard.Blogs {
                     .Column<int>("BlogPart_id")
                 );
 
-            SchemaBuilder.CreateTable("BlogPartRecord", 
+            SchemaBuilder.CreateTable("BlogPartRecord",
                 table => table
                     .ContentPartRecord()
                     .Column<string>("Description", c => c.Unlimited())
                     .Column<int>("PostCount")
                 );
 
-            SchemaBuilder.CreateTable("RecentBlogPostsPartRecord", 
+            SchemaBuilder.CreateTable("RecentBlogPostsPartRecord",
                 table => table
                     .ContentPartRecord()
                     .Column<string>("BlogSlug")
                     .Column<int>("Count")
                 );
 
-            SchemaBuilder.CreateTable("BlogArchivesPartRecord", 
+            SchemaBuilder.CreateTable("BlogArchivesPartRecord",
                 table => table
                     .ContentPartRecord()
                     .Column<string>("BlogSlug", c => c.WithLength(255))

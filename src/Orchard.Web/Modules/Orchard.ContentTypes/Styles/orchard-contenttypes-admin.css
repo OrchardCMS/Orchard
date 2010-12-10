@@ -1,5 +1,6 @@
 ﻿.orchard-contenttypes #main h2 {
     margin:1.5em 0 0;
+    border-bottom:1px solid #ccc;
 }
 
 #main .properties p {
