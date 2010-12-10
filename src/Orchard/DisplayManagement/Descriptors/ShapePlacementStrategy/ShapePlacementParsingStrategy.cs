@@ -58,7 +58,11 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                 string differentiator;
                 GetShapeType(shapeLocation, out shapeType, out differentiator);
 
-                Func<ShapePlacementContext, bool> predicate = ctx => (ctx.Differentiator ?? "") == differentiator;
+                Func<ShapePlacementContext, bool> predicate = ctx => true;
+                if (differentiator != "") {
+                    predicate = ctx => (ctx.Differentiator ?? "") == differentiator;
+                }
+
                 if (matches.Any()) {
                     predicate = matches.SelectMany(match => match.Terms).Aggregate(predicate, BuildPredicate);
                 }

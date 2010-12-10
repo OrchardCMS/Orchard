@@ -103,30 +103,13 @@ namespace Orchard.ContentManagement {
 
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
-                    ShapePlacementContext placementContext;
-                    string location;
-
-                    // First, look up placement with differentiator
-                    if (!string.IsNullOrEmpty(differentiator)) {
-                        placementContext = new ShapePlacementContext {
-                            ContentType = context.ContentItem.ContentType,
-                            DisplayType = displayType,
-                            Differentiator = differentiator,
-                        };
-                        location = descriptor.Placement(placementContext);
-                        if (!string.IsNullOrEmpty(location))
-                            return location;
-                    }
-
-                    // Then fallback to placement without differentiator
-                    placementContext = new ShapePlacementContext {
+                    var placementContext = new ShapePlacementContext {
                         ContentType = context.ContentItem.ContentType,
                         DisplayType = displayType,
-                        Differentiator = null,
+                        Differentiator = differentiator,
                     };
-                    location = descriptor.Placement(placementContext);
-                    if (!string.IsNullOrEmpty(location))
-                        return location;
+                    var location = descriptor.Placement(placementContext);
+                    return location ?? defaultLocation;
                 }
                 return defaultLocation;
             };
