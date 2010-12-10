@@ -292,6 +292,8 @@ namespace Orchard.CodeGeneration.Commands {
             createdFiles.Add(themePath + "Scripts\\Web.config");
             File.WriteAllText(themePath + "Styles\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
             createdFiles.Add(themePath + "Styles\\Web.config");
+            File.WriteAllText(themePath + "Content\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
+            createdFiles.Add(themePath + "Content\\Web.config");
 
             var templateText = File.ReadAllText(_codeGenTemplatePath + "\\ThemeManifest.txt").Replace("$$ThemeName$$", themeName);
             if (string.IsNullOrEmpty(baseTheme)) {
