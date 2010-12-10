@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Widgets.Models;
@@ -18,12 +19,16 @@ namespace Orchard.Widgets.Drivers {
             widgetPart.AvailableZones = _widgetsService.GetZones();
             widgetPart.AvailableLayers = _widgetsService.GetLayers();
 
-            return Combined(
+            var results = new List<DriverResult> {
                 ContentShape("Parts_Widgets_WidgetPart",
-                    () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix)),
-                ContentShape("Widget_DeleteButton",
-                    deleteButton => deleteButton)
-                );
+                             () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.WidgetPart", Model: widgetPart, Prefix: Prefix))
+            };
+
+            if (widgetPart.Id > 0)
+                results.Add(ContentShape("Widget_DeleteButton",
+                    deleteButton => deleteButton));
+
+            return Combined(results.ToArray());
         }
 
         protected override DriverResult Editor(WidgetPart widgetPart, IUpdateModel updater, dynamic shapeHelper) {

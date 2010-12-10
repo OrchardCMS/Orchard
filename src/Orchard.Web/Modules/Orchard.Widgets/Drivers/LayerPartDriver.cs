@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
@@ -27,12 +28,16 @@ namespace Orchard.Widgets.Drivers {
         public Localizer T { get; set; }
 
         protected override DriverResult Editor(LayerPart layerPart, dynamic shapeHelper) {
-            return Combined(
+            var results = new List<DriverResult> {
                 ContentShape("Parts_Widgets_LayerPart",
-                    () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.LayerPart", Model: layerPart, Prefix: Prefix)),
-                ContentShape("Widget_DeleteButton",
-                    deleteButton => deleteButton)
-                );
+                             () => shapeHelper.EditorTemplate(TemplateName: "Parts.Widgets.LayerPart", Model: layerPart, Prefix: Prefix))
+            };
+
+            if (layerPart.Id > 0)
+                results.Add(ContentShape("Widget_DeleteButton",
+                    deleteButton => deleteButton));
+
+            return Combined(results.ToArray());
         }
 
         protected override DriverResult Editor(LayerPart layerPart, IUpdateModel updater, dynamic shapeHelper) {
