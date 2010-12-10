@@ -7,14 +7,17 @@ using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Events;
 using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Routable.Services {
     public class RoutableService : IRoutableService {
         private readonly IContentManager _contentManager;
+        private readonly IEnumerable<ISlugEventHandler> _slugEventHandlers;
 
-        public RoutableService(IContentManager contentManager) {
+        public RoutableService(IContentManager contentManager, IEnumerable<ISlugEventHandler> slugEventHandlers) {
             _contentManager = contentManager;
+            _slugEventHandlers = slugEventHandlers;
         }
 
         public void FixContainedPaths(IRoutableAspect part) {
@@ -47,18 +50,29 @@ namespace Orchard.Core.Routable.Services {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
                 return;
 
-            var slug = model.Title;
-            var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>]+");
+            FillSlugContext slugContext = new FillSlugContext(model.Title);
 
-            slug = disallowed.Replace(slug, "-");
-            slug = slug.Trim('-');
+            foreach(ISlugEventHandler slugEventHandler in _slugEventHandlers) {
+                slugEventHandler.FillingSlugFromTitle(slugContext);
+            }
 
-            if (slug.Length > 1000)
-                slug = slug.Substring(0, 1000);
+            if (!slugContext.Adjusted) {
+                var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>]+");
 
-            // dots are not allowed at the begin and the end of routes
-            slug = slug.Trim('.');
-            model.Slug = RemoveDiacritics(slug.ToLower());
+                slugContext.Slug = disallowed.Replace(slugContext.Slug, "-").Trim('-');
+
+                if (slugContext.Slug.Length > 1000)
+                    slugContext.Slug = slugContext.Slug.Substring(0, 1000);
+
+                // dots are not allowed at the begin and the end of routes
+                slugContext.Slug = RemoveDiacritics(slugContext.Slug.Trim('.').ToLower());
+            }
+
+            foreach (ISlugEventHandler slugEventHandler in _slugEventHandlers) {
+                slugEventHandler.FilledSlugFromTitle(slugContext);
+            }
+
+            model.Slug = slugContext.Slug;
         }
 
         public string GenerateUniqueSlug(IRoutableAspect part, IEnumerable<string> existingPaths) {
