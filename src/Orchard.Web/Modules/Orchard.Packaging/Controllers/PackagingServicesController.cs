@@ -31,6 +31,7 @@ namespace Orchard.Packaging.Controllers {
             _packageManager = packageManager;
             _notifier = notifier;
             _appDataFolderRoot = appDataFolderRoot;
+            Services = services;
 
             T = NullLocalizer.Instance;
         }
