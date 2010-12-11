@@ -13,6 +13,7 @@ using Orchard.Core.Routable.Services;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Security;
@@ -41,9 +42,11 @@ namespace Orchard.Blogs.Services {
             _routableService = routableService;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public void SetCapabilities(XElement options) {
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
@@ -122,17 +125,20 @@ namespace Orchard.Blogs.Services {
             string userName,
             string password) {
 
-            var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(Permissions.EditOthersBlogPost, user, null);
+            IUser user = ValidateUser(userName, password);
 
-            var array = new XRpcArray();
-            foreach (var blog in _blogService.Get()) {
-                var thisBlog = blog;
+            // User needs to at least have permission to edit its own blog posts to access the service
+            _authorizationService.CheckAccess(Permissions.EditOwnBlogPost, user, null);
+
+            XRpcArray array = new XRpcArray();
+            foreach (BlogPart blog in _blogService.Get()) {
+                BlogPart blogPart = blog;
                 array.Add(new XRpcStruct()
-                              .Set("url", urlHelper.AbsoluteAction(() => urlHelper.Blog(thisBlog)))
-                              .Set("blogid", blog.Id)
-                              .Set("blogName", blog.Name));
+                                .Set("url", urlHelper.AbsoluteAction(() => urlHelper.Blog(blogPart)))
+                                .Set("blogid", blog.Id)
+                                .Set("blogName", blog.Name));
             }
+
             return array;
         }
 
@@ -143,12 +149,15 @@ namespace Orchard.Blogs.Services {
             string password,
             int numberOfPosts) {
 
-            var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(Permissions.EditOthersBlogPost, user, null);
+            IUser user = ValidateUser(userName, password);
 
-            var blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
-            if (blog == null)
+            // User needs to at least have permission to edit its own blog posts to access the service
+            _authorizationService.CheckAccess(Permissions.EditOwnBlogPost, user, null);
+
+            BlogPart blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
+            if (blog == null) {
                 throw new ArgumentException();
+            }
 
             var array = new XRpcArray();
             foreach (var blogPost in _blogPostService.Get(blog, 0, numberOfPosts, VersionOptions.Latest)) {
@@ -165,10 +174,12 @@ namespace Orchard.Blogs.Services {
             bool publish,
             IEnumerable<IXmlRpcDriver> drivers) {
 
-            var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(publish ? Permissions.PublishOthersBlogPost : Permissions.EditOthersBlogPost, user, null);
+            IUser user = ValidateUser(userName, password);
 
-            var blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
+            // User needs permission to edit or publish its own blog posts
+            _authorizationService.CheckAccess(publish ? Permissions.PublishOwnBlogPost : Permissions.EditOwnBlogPost, user, null);
+
+            BlogPart blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
             if (blog == null)
                 throw new ArgumentException();
 
@@ -215,12 +226,12 @@ namespace Orchard.Blogs.Services {
             string password,
             IEnumerable<IXmlRpcDriver> drivers) {
 
-            var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(Permissions.EditOthersBlogPost, user, null);
-
+            IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(postId, VersionOptions.Latest);
             if (blogPost == null)
                 throw new ArgumentException();
+
+            _authorizationService.CheckAccess(Permissions.EditOthersBlogPost, user, blogPost);
 
             var postStruct = CreateBlogStruct(blogPost, urlHelper);
 
@@ -231,12 +242,12 @@ namespace Orchard.Blogs.Services {
         }
 
         private bool MetaWeblogEditPost(int postId, string userName, string password, XRpcStruct content, bool publish, IEnumerable<IXmlRpcDriver> drivers) {
-            var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(publish ? Permissions.PublishOthersBlogPost : Permissions.EditOthersBlogPost, user, null);
-
+            IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(postId, VersionOptions.DraftRequired);
             if (blogPost == null)
                 throw new ArgumentException();
+
+            _authorizationService.CheckAccess(publish ? Permissions.PublishOthersBlogPost : Permissions.EditOthersBlogPost, user, blogPost);
 
             var title = content.Optional<string>("title");
             var description = content.Optional<string>("description");
@@ -256,18 +267,27 @@ namespace Orchard.Blogs.Services {
         }
 
         private bool MetaWeblogDeletePost(string appkey, string postId, string userName, string password, bool publish, IEnumerable<IXmlRpcDriver> drivers) {
-            var user = _membershipService.ValidateUser(userName, password);
-            _authorizationService.CheckAccess(Permissions.DeleteOthersBlogPost, user, null);
-
+            IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(Convert.ToInt32(postId), VersionOptions.Latest);
             if (blogPost == null)
                 throw new ArgumentException();
+
+            _authorizationService.CheckAccess(Permissions.DeleteOthersBlogPost, user, blogPost);
 
             foreach (var driver in drivers)
                 driver.Process(blogPost.Id);
 
             _blogPostService.Delete(blogPost);
             return true;
+        }
+
+        private IUser ValidateUser(string userName, string password) {
+            IUser user = _membershipService.ValidateUser(userName, password);
+            if (user == null) {
+                throw new OrchardCoreException(T("The username or e-mail or password provided is incorrect."));
+            }
+
+            return user;
         }
 
         private static XRpcStruct CreateBlogStruct(BlogPostPart blogPostPart, UrlHelper urlHelper) {
