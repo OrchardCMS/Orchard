@@ -100,5 +100,22 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             VerifyShapeType("Views", "Parts.Common.Body.Summary", "Parts_Common_Body_Summary");
             VerifyShapeType("Views", "Parts.Localization.ContentTranslations.Summary", "Parts_Localization_ContentTranslations_Summary");
         }
+
+        [Test]
+        public void FieldNamesMayBeInSubfolderOrPrefixed() {
+            VerifyShapeType("Views/Fields", "Common.Text", "Fields_Common_Text");
+            VerifyShapeType("Views", "Fields.Common.Text", "Fields_Common_Text");
+        }
+
+        [Test]
+        public void FieldNamesMayHaveLongOrShortAlternates() {
+            VerifyShapeType("Views/Fields", "Common.Text-FirstName", "Fields_Common_Text__FirstName");
+            VerifyShapeType("Views/Fields", "Common.Text-FirstName.SpecialCase", "Fields_Common_Text_SpecialCase__FirstName");
+            VerifyShapeType("Views/Fields", "Common.Text-FirstName-MyContentType", "Fields_Common_Text__FirstName__MyContentType");
+
+            VerifyShapeType("Views", "Fields.Common.Text-FirstName", "Fields_Common_Text__FirstName");
+            VerifyShapeType("Views", "Fields.Common.Text-FirstName.SpecialCase", "Fields_Common_Text_SpecialCase__FirstName");
+            VerifyShapeType("Views", "Fields.Common.Text-FirstName-MyContentType", "Fields_Common_Text__FirstName__MyContentType");
+        }
     }
 }

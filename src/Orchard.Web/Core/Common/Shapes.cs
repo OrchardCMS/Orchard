@@ -20,11 +20,6 @@ namespace Orchard.Core.Common {
                     string flavor = displaying.Shape.EditorFlavor;
                     displaying.ShapeMetadata.Alternates.Add("Body_Editor__" + flavor);
                 });
-            builder.Describe("Fields_Common_Text")
-                .OnDisplaying(displaying => {
-                    string textFieldName = displaying.Shape.Name;
-                    displaying.ShapeMetadata.Alternates.Add("Fields_Common_Text__" + textFieldName);
-                });
         }
 
         [Shape]

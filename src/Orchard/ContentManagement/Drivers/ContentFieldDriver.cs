@@ -4,6 +4,7 @@ using System.Linq;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new() {
@@ -65,7 +66,30 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private ContentShapeResult ContentShapeImplementation(string shapeType, string differentiator, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, shapeBuilder).Differentiator(differentiator);
+            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), differentiator)).Differentiator(differentiator);
+        }
+
+        private object AddAlternates(dynamic shape, string differentiator) {
+            // automatically add shape alternates for shapes added by fields
+            // [ShapeType__FieldName] for ShapeType-FieldName templates
+            // [ShapeType__Part] for ShapeType-Part templates
+            // [ShapeType__Part_FieldName] for ShapeType-FieldName.Part templates
+
+            // for fields on dynamic parts the part name is the same as the content type name
+            // ex. Fields/Common.Text-Something.FirstName
+
+            ShapeMetadata metadata = shape.Metadata;
+            if (!string.IsNullOrEmpty(differentiator))
+                metadata.Alternates.Add(metadata.Type + "__" + differentiator);
+
+            ContentPart part = shape.ContentPart;
+            if (part != null) {
+                metadata.Alternates.Add(metadata.Type + "__" + part.PartDefinition.Name);
+                if (!string.IsNullOrEmpty(differentiator))
+                    metadata.Alternates.Add(metadata.Type + "__" + part.PartDefinition.Name + "__" + differentiator);
+            }
+
+            return shape;
         }
 
         private object CreateShape(BuildShapeContext context, string shapeType) {
@@ -90,4 +114,4 @@ namespace Orchard.ContentManagement.Drivers {
             return new CombinedResult(results);
         }
     }
-} 
+}

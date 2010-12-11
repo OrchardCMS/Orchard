@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Logging;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
     public class ShapeTemplateBindingStrategy : IShapeTableProvider {
@@ -38,7 +40,10 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             _virtualPathMonitor = virtualPathMonitor;
             _virtualPathProvider = virtualPathProvider;
             _shapeTemplateViewEngines = shapeTemplateViewEngines;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         private static IEnumerable<ExtensionDescriptor> Once(IEnumerable<FeatureDescriptor> featureDescriptors) {
             var once = new ConcurrentDictionary<string, object>();
@@ -91,7 +96,12 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                 // templates are always associated with the namesake feature of module or theme
                 var hit = iter;
                 var featureDescriptors = iter.extensionDescriptor.Features.Where(fd => fd.Id == hit.extensionDescriptor.Id);
-                foreach (var featureDescriptor in featureDescriptors) {
+                foreach (var featureDescriptor in featureDescriptors) {                    
+                    Logger.Debug("Binding {0} as shape [{1}] for feature {2}", 
+                        hit.shapeContext.harvestShapeInfo.TemplateVirtualPath,
+                        iter.shapeContext.harvestShapeHit.ShapeType,
+                        featureDescriptor.Id);
+
                     builder.Describe(iter.shapeContext.harvestShapeHit.ShapeType)
                         .From(new Feature { Descriptor = featureDescriptor })
                         .BoundAs(

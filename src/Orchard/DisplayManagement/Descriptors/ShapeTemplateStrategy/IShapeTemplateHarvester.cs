@@ -17,8 +17,9 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
         }
 
         public IEnumerable<HarvestShapeHit> HarvestShape(HarvestShapeInfo info) {
+            var lastDash = info.FileName.LastIndexOf('-');
             var lastDot = info.FileName.LastIndexOf('.');
-            if (lastDot <= 0) {
+            if (lastDot <= 0 || lastDot < lastDash) {
                 yield return new HarvestShapeHit {
                     ShapeType = Adjust(info.SubPath, info.FileName, null)
                 };
