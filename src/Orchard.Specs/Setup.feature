@@ -9,7 +9,7 @@ Scenario: Root request shows setup form
             | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
             | Core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc  |
             | Theme | SafeMode |
-    When I go to "/Default.aspx"
+    When I go to "/"
     Then I should see "Welcome to Orchard"
         And I should see "Finish Setup"
         And the status should be 200 "OK"
@@ -49,6 +49,6 @@ Scenario: Calling setup on a brand new install
             | AdminPassword | 6655321 |
             | ConfirmPassword | 6655321 |
         And I hit "Finish Setup"
-        And I go to "/Default.aspx"
+        And I go to "/"
     Then I should see "My Site"
         And I should see "Welcome, <strong>admin</strong>!"

@@ -50,7 +50,7 @@ Scenario: A new page marked to be the home page and publish does take over the h
             | Body.Text | This is a draft of the new home page. |
             | Routable.PromoteToHomePage | true |
         And I hit "Publish Now"
-        And I go to "/Default.aspx"
+        And I go to "/"
     Then I should see "<h1>Super Duper</h1>"
     When I go to "super-duper"
     Then the status should be 404 "Not Found"
@@ -64,5 +64,5 @@ Scenario: A new page marked to be the home page but only saved as draft does not
             | Body.Text | This is a draft of the new home page. |
             | Routable.PromoteToHomePage | true |
         And I hit "Save"
-        And I go to "/Default.aspx"
+        And I go to "/"
     Then I should see "<h1>Welcome to Orchard!</h1>"

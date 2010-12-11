@@ -195,7 +195,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 52
         testRunner.And("I hit \"Publish Now\"");
 #line 53
-        testRunner.And("I go to \"/Default.aspx\"");
+        testRunner.And("I go to \"/\"");
 #line 54
     testRunner.Then("I should see \"<h1>Super Duper</h1>\"");
 #line 55
@@ -237,7 +237,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 66
         testRunner.And("I hit \"Save\"");
 #line 67
-        testRunner.And("I go to \"/Default.aspx\"");
+        testRunner.And("I go to \"/\"");
 #line 68
     testRunner.Then("I should see \"<h1>Welcome to Orchard!</h1>\"");
 #line hidden

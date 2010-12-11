@@ -15,13 +15,15 @@ namespace Orchard.Specs.Hosting {
 
             var physicalPath = Bleroy.FluentPath.Path.Get(webHost.PhysicalDirectory);
 
-            urlPath = StripVDir(urlPath, webHost.VirtualDirectory);
+            bool isHomepage = urlPath == "/";
+
+            if (!isHomepage)
+                urlPath = StripVDir(urlPath, webHost.VirtualDirectory);
+
             var details = new RequestDetails {
                 HostName = webHost.HostName,
                 UrlPath = urlPath,
-                Page = physicalPath
-                    .Combine(urlPath.TrimStart('/', '\\'))
-                    .GetRelativePath(physicalPath)
+                Page = (isHomepage ? "" : physicalPath.Combine(urlPath.TrimStart('/', '\\')).GetRelativePath(physicalPath).ToString())
             };
 
             if (!string.IsNullOrEmpty(webHost.Cookies)) {

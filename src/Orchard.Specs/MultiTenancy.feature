@@ -89,7 +89,7 @@ Scenario: A new tenant runs the setup
             | AdminPassword | 6655321 |
             | ConfirmPassword | 6655321 |
         And I hit "Finish Setup"
-            And I go to "/Default.aspx"
+            And I go to "/"
     Then I should see "Scott Site"
         And I should see "Welcome"
         
