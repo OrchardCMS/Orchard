@@ -136,7 +136,7 @@
   <Target Name="Package-Stage">
  
     <Exec 
-      Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(ServiceFolder)\ServiceDefinition.build.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;" 
+      Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(ServiceFolder)\ServiceDefinition.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;" 
       WorkingDirectory="$(CloudRootFolder)" 
     />
 

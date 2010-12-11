@@ -20,11 +20,13 @@ namespace Orchard.Users.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly IMessageManager _messageManager;
         private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
+        private readonly IEncryptionService _encryptionService;
 
-        public MembershipService(IOrchardServices orchardServices, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers, IClock clock) {
+        public MembershipService(IOrchardServices orchardServices, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers, IClock clock, IEncryptionService encryptionService) {
             _orchardServices = orchardServices;
             _messageManager = messageManager;
             _userEventHandlers = userEventHandlers;
+            _encryptionService = encryptionService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -208,13 +210,13 @@ namespace Orchard.Users.Services {
             return partRecord.Password == Convert.ToBase64String(hashBytes);
         }
 
-        private static void SetPasswordEncrypted(UserPartRecord partRecord, string password) {
-            throw new NotImplementedException();
+        private void SetPasswordEncrypted(UserPartRecord partRecord, string password) {
+            partRecord.Password = Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(password))); 
+            partRecord.PasswordSalt = null; 
         }
 
-        private static bool ValidatePasswordEncrypted(UserPartRecord partRecord, string password) {
-            throw new NotImplementedException();
+        private bool ValidatePasswordEncrypted(UserPartRecord partRecord, string password) {
+            return String.Equals(password, Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(partRecord.Password))), StringComparison.Ordinal);
         }
-
     }
 }

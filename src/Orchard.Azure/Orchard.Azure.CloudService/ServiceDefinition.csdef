@@ -2,11 +2,10 @@
 <ServiceDefinition name="OrchardCloudService" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
   <WebRole name="Orchard.Azure.Web">
     <ConfigurationSettings>
-      <Setting name="DiagnosticsConnectionString" />
       <Setting name="DataConnectionString" />
     </ConfigurationSettings>
-    <Endpoints>
+    <InputEndpoints>
       <InputEndpoint name="HttpIn" protocol="http" port="80" />
-    </Endpoints>
+    </InputEndpoints>
   </WebRole>
 </ServiceDefinition>
