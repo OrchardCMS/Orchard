@@ -36,6 +36,7 @@
                 <ul class="pageStatus">
                     <li>@T("Last Updated: {0}", DateTime.Now.ToLocalTime())</li>
                     <li>&nbsp;&#124;&nbsp;@T("Author: {0}", item.Authors)</li>
+                    <li>&nbsp;&#124;&nbsp;@T("Project Url: ")<a href="@item.ProjectUrl">@item.ProjectUrl</a></li>
                 </ul>
            </div>
         </li>}

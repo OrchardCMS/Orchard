@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Services.Client;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Mvc;

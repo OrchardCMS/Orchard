@@ -52,19 +52,22 @@ namespace Orchard.Packaging.Services {
         private IEnumerable<PackagingEntry> GetExtensionList(string filter = null, PackagingSource packagingSource = null) {
             return (packagingSource == null ? GetSources() : new[] {packagingSource})
                 .SelectMany(
-                    source =>
-                        new GalleryFeedContext(new Uri(source.FeedUrl)).Packages
-                        .Where(p => p.PackageType == filter)
-                        .ToList()
-                        .Select(p => CreatePackageEntry(p, packagingSource))
+                    source => {
+                        GalleryFeedContext galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl));
+                        return galleryFeedContext.Packages
+                            .Where(p => p.PackageType == filter)
+                            .ToList()
+                            .Select(p => CreatePackageEntry(p, packagingSource, galleryFeedContext.GetReadStreamUri(p)));
+                    }
                 ).ToArray();
         }
 
-        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source) {
+        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source, Uri downloadUri) {
             return new PackagingEntry {
                 Title = String.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
                 PackageId = package.Id,
-                PackageStreamUri = package.ProjectUrl != null ? package.ProjectUrl.ToString() : String.Empty,
+                PackageStreamUri = downloadUri.ToString(),
+                ProjectUrl = package.ProjectUrl,
                 Source = source,
                 Version = package.Version ?? String.Empty,
                 Description = package.Description,
