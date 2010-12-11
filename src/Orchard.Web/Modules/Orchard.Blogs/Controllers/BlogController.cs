@@ -95,5 +95,6 @@ namespace Orchard.Blogs.Controllers {
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)blog);
         }
+        }
     }
 }

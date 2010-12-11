@@ -1,5 +1,4 @@
-﻿
-namespace Orchard.Environment {
+﻿namespace Orchard.Environment {
     /// <summary>
     /// Abstraction of the running environment
     /// </summary>
@@ -10,5 +9,4 @@ namespace Orchard.Environment {
         bool IsAssemblyLoaded(string name);
 
         void RestartAppDomain();
-    }
 }

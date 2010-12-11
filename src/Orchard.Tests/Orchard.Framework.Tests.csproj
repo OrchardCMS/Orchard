@@ -272,7 +272,6 @@
     <Compile Include="Environment\Extensions\ExtensionTypes\StubTypes.cs" />
     <Compile Include="Localization\NullLocalizerTests.cs" />
     <Compile Include="Logging\LoggingModuleTests.cs" />
-    <Compile Include="Mvc\ModelBinders\KeyedListModelBinderTests.cs" />
     <Compile Include="Mvc\OrchardControllerFactoryTests.cs" />
     <Compile Include="Mvc\RouteCollectionPublisherTests.cs" />
     <Compile Include="Mvc\Routes\StandardExtensionRouteProviderTests.cs" />

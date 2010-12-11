@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security;
+using System.Web;
 using System.Web.Compilation;
 using System.Web.Hosting;
 using Orchard.Host;

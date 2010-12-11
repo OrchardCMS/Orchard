@@ -1,3 +1,4 @@
+using System.Reflection;
 using Orchard.Environment;
 using Orchard.Localization;
 
