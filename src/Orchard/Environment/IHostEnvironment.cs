@@ -9,4 +9,5 @@
         bool IsAssemblyLoaded(string name);
 
         void RestartAppDomain();
+    }
 }
