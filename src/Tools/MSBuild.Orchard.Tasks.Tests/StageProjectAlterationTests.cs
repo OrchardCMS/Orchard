@@ -75,7 +75,7 @@ namespace MSBuild.Orchard.Tasks.Tests {
             var result = _task.Execute();
             Assert.That(result, Is.True);
 
-            Assert.That(_task.ExtraFiles.Count(), Is.EqualTo(5));
+            Assert.That(_task.ExtraFiles.Count(), Is.EqualTo(4));
         }
 
         [Test]
