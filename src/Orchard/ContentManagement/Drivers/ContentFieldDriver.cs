@@ -71,9 +71,9 @@ namespace Orchard.ContentManagement.Drivers {
 
         private object AddAlternates(dynamic shape, string differentiator) {
             // automatically add shape alternates for shapes added by fields
-            // [ShapeType__FieldName] for ShapeType-FieldName templates
-            // [ShapeType__Part] for ShapeType-Part templates
-            // [ShapeType__Part_FieldName] for ShapeType-FieldName.Part templates
+            // [ShapeType__FieldName] for ShapeType-FieldName.cshtml templates
+            // [ShapeType__PartName] for ShapeType-PartName.cshtml templates
+            // [ShapeType__PartName__FieldName] for ShapeType-PartName-FieldName.cshtml templates
 
             // for fields on dynamic parts the part name is the same as the content type name
             // ex. Fields/Common.Text-Something.FirstName
