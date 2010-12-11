@@ -7,12 +7,12 @@ namespace Orchard.Comments.ViewModels {
         [StringLength(255)]
         public string Name { get; set; }
 
-        [Annotations.RegularExpression(@"^[\w-]+@([\w-]+\.)+[\w]{2,4}$")]
+        [Annotations.RegularExpression(@"^[^@\s]+@[^@\s]+$")]
         [StringLength(255)]
         public string Email { get; set; }
 
         [StringLength(245)]
-        [Annotations.RegularExpression(@"^(http(s)?://)?([\w-]+\.)+[\S]+$")]
+        [Annotations.RegularExpression(@"^(http(s)?://)?([a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}[\S]+$")]
         public string SiteName { get; set; }
 
         [CommentRequired]
