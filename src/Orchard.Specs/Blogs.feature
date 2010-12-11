@@ -184,7 +184,7 @@ Scenario: I set my blog to be the content for the home page and the posts for th
             | Body.Text | Hi there. |
         And I hit "Publish Now"
         And I am redirected
-        And I go to "/Default.aspx"
+        And I go to "/"
     Then I should see "<h1>My Blog</h1>"
     When I go to "/my-blog"
     Then the status should be 404 "Not Found"

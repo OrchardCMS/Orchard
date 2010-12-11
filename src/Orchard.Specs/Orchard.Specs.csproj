@@ -203,9 +203,6 @@
     <Compile Include="Hosting\WebHostAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bindings\SanityCheck.cs" />
-    <Compile Include="Hosting\Orchard.Web\_Default.aspx.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="WebHosting.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -330,9 +327,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Hosting\Simple.Web\Content\Static.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Hosting\Orchard.Web\Default.aspx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Hosting\Orchard.Web\Global.asax">

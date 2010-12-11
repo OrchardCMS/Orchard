@@ -74,6 +74,9 @@ namespace Orchard.Specs.Hosting {
         }
 
         private static string StripVDir(string urlPath, string virtualDirectory) {
+            if (urlPath == "/")
+                return urlPath;
+
             return urlPath.StartsWith(virtualDirectory, StringComparison.OrdinalIgnoreCase)
                 ? urlPath.Substring(virtualDirectory.Length)
                 : urlPath;
