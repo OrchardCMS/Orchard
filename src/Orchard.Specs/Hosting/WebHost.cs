@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Web;
@@ -14,33 +16,55 @@ namespace Orchard.Specs.Hosting {
         private Path _tempSite;
         private Path _orchardWebPath;
         private Path _codeGenDir;
+        private IEnumerable<string> _knownModules;
+        private IEnumerable<string> _knownThemes;
+        private IEnumerable<string> _knownBinAssemblies;
 
         public WebHost(Path orchardTemp) {
             _orchardTemp = orchardTemp;
         }
 
         public void Initialize(string templateName, string virtualDirectory) {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             var baseDir = Path.Get(AppDomain.CurrentDomain.BaseDirectory);
 
-            _tempSite = Path.Get(_orchardTemp).Combine(System.IO.Path.GetRandomFileName());
+            _tempSite = _orchardTemp.Combine(System.IO.Path.GetRandomFileName());
             try { _tempSite.Delete(); }
             catch { }
-
             // Trying the two known relative paths to the Orchard.Web directory.
             // The second one is for the target "spec" in orchard.proj.
             _orchardWebPath = baseDir.Up(3).Combine("Orchard.Web");
             if (!_orchardWebPath.Exists) {
                 _orchardWebPath = baseDir.Parent.Combine("stage");
             }
+            Log("Initialization of ASP.NET host for template web site \"{0}\":", templateName);
+            Log(" Source location: \"{0}\"", _orchardWebPath);
+            Log(" Temporary location: \"{0}\"", _tempSite);
 
+            _knownModules = _orchardWebPath.Combine("Modules").Directories.Where(d => d.Combine("module.txt").Exists).Select(d => d.FileName).ToList();
+            foreach (var filename in _knownModules)
+                Log("Available Module: \"{0}\"", filename);
+
+            _knownThemes = _orchardWebPath.Combine("Themes").Directories.Where(d => d.Combine("theme.txt").Exists).Select(d => d.FileName).ToList();
+            foreach (var filename in _knownThemes)
+                Log("Available Theme: \"{0}\"", filename);
+
+            _knownBinAssemblies = _orchardWebPath.Combine("bin").GetFiles("*.dll").Select(f => f.FileNameWithoutExtension);
+            foreach (var filename in _knownBinAssemblies)
+                Log("Assembly in ~/bin: \"{0}\"", filename);
+
+            Log("Copy files from template \"{0}\"", templateName);
             baseDir.Combine("Hosting").Combine(templateName)
                 .DeepCopy(_tempSite);
 
+            Log("Copy binaries of the \"Orchard.Web\" project");
             _orchardWebPath.Combine("bin")
                 .ShallowCopy("*.dll", _tempSite.Combine("bin"))
                 .ShallowCopy("*.pdb", _tempSite.Combine("bin"));
 
-            // Copy SqlCe binaries
+            Log("Copy SqlCe binaries");
             if (_orchardWebPath.Combine("bin").Combine("x86").IsDirectory) {
                 _orchardWebPath.Combine("bin").Combine("x86")
                     .ShallowCopy("*.dll", _tempSite.Combine("bin").Combine("x86"))
@@ -53,11 +77,16 @@ namespace Orchard.Specs.Hosting {
                     .ShallowCopy("*.pdb", _tempSite.Combine("bin").Combine("amd64"));
             }
 
+            // Copy binaries of this project, so that remote execution of lambda
+            // can be achieved through serialization to the ASP.NET appdomain
+            // (see Execute(Action) method)
+            Log("Copy Orchard.Specflow test project binaries");
             baseDir
                 .ShallowCopy("*.dll", _tempSite.Combine("bin"))
                 .ShallowCopy("*.exe", _tempSite.Combine("bin"))
                 .ShallowCopy("*.pdb", _tempSite.Combine("bin"));
 
+            Log("Starting up ASP.NET host");
             HostName = "localhost";
             PhysicalDirectory = _tempSite;
             VirtualDirectory = virtualDirectory;
@@ -70,6 +99,8 @@ namespace Orchard.Specs.Hosting {
             // ASP.NET folder seems to be always nested into an empty directory
             _codeGenDir = shuttle.CodeGenDir;
             _codeGenDir = _codeGenDir.Parent;
+            Log("ASP.NET CodeGenDir: \"{0}\"", _codeGenDir);
+            Log("ASP.NET host initialization completed in {0} sec", stopwatch.Elapsed.TotalSeconds);
         }
 
         [Serializable]
@@ -85,39 +116,45 @@ namespace Orchard.Specs.Hosting {
             Clean();
         }
 
+        private void Log(string format, params object[] args) {
+            Trace.WriteLine(string.Format(format, args));
+        }
+
         public void Clean() {
             // Try to delete temporary files for up to ~1.2 seconds.
             for (int i = 0; i < 4; i++) {
-                Trace.WriteLine("Waiting 300msec before trying to delete temporary files");
+                Log("Waiting 300msec before trying to delete temporary files");
                 Thread.Sleep(300);
 
-                if (TryDeleteTempFiles()) {
-                    Trace.WriteLine("Successfully deleted all temporary files");
+                if (TryDeleteTempFiles(i == 4)) {
+                    Log("Successfully deleted all temporary files");
                     break;
                 }
             }
         }
 
-        private bool TryDeleteTempFiles() {
+        private bool TryDeleteTempFiles(bool lastTry) {
             var result = true;
             if (_codeGenDir != null && _codeGenDir.Exists) {
-                Trace.WriteLine(string.Format("Trying to delete temporary files at '{0}", _codeGenDir));
+                Log("Trying to delete temporary files at \"{0}\"", _codeGenDir);
                 try {
                     _codeGenDir.Delete(true); // <- clean as much as possible
                 }
                 catch(Exception e) {
-                    Trace.WriteLine(string.Format("failure: '{0}", e));
+                    if (lastTry)
+                        Log("Failure: \"{0}\"", e);
                     result = false;
                 }
             }
 
             if (_tempSite != null && _tempSite.Exists)
             try {
-                Trace.WriteLine(string.Format("Trying to delete temporary files at '{0}", _tempSite));
+                Log("Trying to delete temporary files at \"{0}\"", _tempSite);
                 _tempSite.Delete(true); // <- progressively clean as much as possible
             }
             catch (Exception e) {
-                Trace.WriteLine(string.Format("failure: '{0}", e));
+                if (lastTry)
+                    Log("failure: \"{0}\"", e);
                 result = false;
             }
 
@@ -125,6 +162,7 @@ namespace Orchard.Specs.Hosting {
         }
 
         public void CopyExtension(string extensionFolder, string extensionName, ExtensionDeploymentOptions deploymentOptions) {
+            Log("Copy extension \"{0}\\{1}\" (options={2})", extensionFolder, extensionName, deploymentOptions);
             var sourceModule = _orchardWebPath.Combine(extensionFolder).Combine(extensionName);
             var targetModule = _tempSite.Combine(extensionFolder).Combine(extensionName);
 
@@ -145,20 +183,31 @@ namespace Orchard.Specs.Hosting {
         }
 
         private bool IsExtensionBinaryFile(Path path, string extensionName, ExtensionDeploymentOptions deploymentOptions) {
-            bool isValidExtension =
-                StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".exe") ||
-                StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".dll") ||
-                StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".pdb");
-
+            bool isValidExtension = IsAssemblyFile(path);
             if (!isValidExtension)
                 return false;
 
-            bool isExtensionAssembly = StringComparer.OrdinalIgnoreCase.Equals(path.FileNameWithoutExtension, extensionName);
+            bool isAssemblyInWebAppBin = _knownBinAssemblies.Contains(path.FileNameWithoutExtension, StringComparer.OrdinalIgnoreCase);
+            if (isAssemblyInWebAppBin)
+                return false;
+
+            bool isExtensionAssembly = IsOrchardExtensionFile(path);
             bool copyExtensionAssembly = (deploymentOptions & ExtensionDeploymentOptions.CompiledAssembly) == ExtensionDeploymentOptions.CompiledAssembly;
             if (isExtensionAssembly && !copyExtensionAssembly)
                 return false;
 
             return true;
+        }
+
+        private bool IsAssemblyFile(Path path) {
+            return StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".exe") ||
+                   StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".dll") ||
+                   StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".pdb");
+        }
+
+        private bool IsOrchardExtensionFile(Path path) {
+            return _knownModules.Where(name => StringComparer.OrdinalIgnoreCase.Equals(name, path.FileNameWithoutExtension)).Any() ||
+                   _knownThemes.Where(name => StringComparer.OrdinalIgnoreCase.Equals(name, path.FileNameWithoutExtension)).Any();
         }
 
         public string HostName { get; set; }
