@@ -147,7 +147,7 @@ namespace Orchard.Users.Services {
             }
         }
 
-        private static bool ValidatePassword(UserPartRecord partRecord, string password) {
+        private bool ValidatePassword(UserPartRecord partRecord, string password) {
             // Note - the password format stored with the record is used
             // otherwise changing the password format on the site would invalidate
             // all logins
