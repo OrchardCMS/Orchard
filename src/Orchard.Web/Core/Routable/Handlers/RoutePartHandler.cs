@@ -52,11 +52,15 @@ namespace Orchard.Core.Routable.Handlers {
             Action<PublishContentContext, RoutePart> handler = (context, route) => {
                 FinalizePath(route, context, processSlug);
 
-                if (route.Id != 0 && route.PromoteToHomePage && _routableHomePageProvider != null) {
-                    var homePageSetting = _workContextAccessor.GetContext().CurrentSite.HomePage;
-                    var currentHomePageId = !string.IsNullOrWhiteSpace(homePageSetting)
-                                                ? _routableHomePageProvider.GetHomePageId(homePageSetting)
-                                                : 0;
+                if (_routableHomePageProvider == null)
+                    return;
+
+                var homePageSetting = _workContextAccessor.GetContext().CurrentSite.HomePage;
+                var currentHomePageId = !string.IsNullOrWhiteSpace(homePageSetting)
+                                            ? _routableHomePageProvider.GetHomePageId(homePageSetting)
+                                            : 0;
+
+                if (route.Id != 0 && (route.Id == currentHomePageId || route.PromoteToHomePage)) {
 
                     if (currentHomePageId != route.Id) {
                         // reset the path on the current home page
