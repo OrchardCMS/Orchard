@@ -43,13 +43,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (Disabled)
                 return null;
 
-            //Logger.Information("Loading extension \"{0}\"", descriptor.Name);
-
             var assembly = _assemblyLoader.Load(CoreAssemblyName);
             if (assembly == null) {
                 Logger.Error("Core modules cannot be activated because assembly '{0}' could not be loaded", CoreAssemblyName);
                 return null;
             }
+
+            Logger.Information("Loaded core module \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,

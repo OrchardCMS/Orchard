@@ -40,7 +40,6 @@ namespace Orchard.Environment.Extensions.Loaders {
                 if ( _virtualPathProvider.FileExists(assemblyPath) )
                     return null;
 
-
                 return new ExtensionProbeEntry {
                     Descriptor = descriptor,
                     LastWriteTimeUtc = DateTime.MinValue,
@@ -54,6 +53,8 @@ namespace Orchard.Environment.Extensions.Loaders {
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
             if (Disabled)
                 return null;
+
+            Logger.Information("Loaded no-code theme \"{0}\"", descriptor.Name);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,

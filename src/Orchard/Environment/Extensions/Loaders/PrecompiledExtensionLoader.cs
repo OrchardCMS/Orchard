@@ -197,7 +197,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (assembly == null)
                 return null;
 
-            //Logger.Information("Loading extension \"{0}\"", descriptor.Name);
+            Logger.Information("Loaded pre-compiled extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,

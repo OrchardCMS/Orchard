@@ -173,7 +173,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             var assembly = _buildManager.GetCompiledAssembly(projectPath);
             if (assembly == null)
                 return null;
-            //Logger.Information("Loading extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.GetName().Name);
+
+            Logger.Information("Loaded dynamic extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,

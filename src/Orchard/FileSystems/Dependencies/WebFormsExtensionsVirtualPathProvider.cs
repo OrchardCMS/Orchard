@@ -34,7 +34,7 @@ namespace Orchard.FileSystems.Dependencies {
 
         public override string GetFileHash(string virtualPath, IEnumerable virtualPathDependencies) {
             var result = GetFileHashWorker(virtualPath, virtualPathDependencies);
-            Logger.Information("GetFileHash(\"{0}\"): {1}", virtualPath, result);
+            Logger.Debug("GetFileHash(\"{0}\"): {1}", virtualPath, result);
             return result;
         }
 
