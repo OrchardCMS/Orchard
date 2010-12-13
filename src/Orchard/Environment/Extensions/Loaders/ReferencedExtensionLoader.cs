@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Web.Hosting;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
@@ -22,6 +21,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public ILogger Logger { get; set; }
+        public bool Disabled { get; set; }
 
         public override int Order { get { return 20; } }
 
@@ -46,7 +46,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
-            if (HostingEnvironment.IsHosted == false)
+            if (Disabled)
                 return null;
 
             var assembly = _buildManager.GetReferencedAssembly(descriptor.Id);
@@ -62,7 +62,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
-            if (HostingEnvironment.IsHosted == false)
+            if (Disabled)
                 return null;
 
             var assembly = _buildManager.GetReferencedAssembly(descriptor.Id);

@@ -20,10 +20,14 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public ILogger Logger { get; set; }
+        public bool Disabled { get; set; }
 
         public override int Order { get { return 10; } }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+            if (Disabled)
+                return null;
+
             if (descriptor.Location == "~/Core") {
                 return new ExtensionProbeEntry {
                     Descriptor = descriptor,
@@ -36,6 +40,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+            if (Disabled)
+                return null;
+
             //Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
             var assembly = _assemblyLoader.Load(CoreAssemblyName);

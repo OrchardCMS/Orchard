@@ -16,11 +16,15 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public ILogger Logger { get; set; }
+        public bool Disabled { get; set; }
 
         public override int Order { get { return 10; } }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
-            if ( descriptor.Location == "~/Themes") {
+            if (Disabled)
+                return null;
+
+            if (descriptor.Location == "~/Themes") {
                 string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
                                            descriptor.Id + ".csproj");
 
@@ -48,6 +52,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+            if (Disabled)
+                return null;
+
             return new ExtensionEntry {
                 Descriptor = descriptor,
                 Assembly = GetType().Assembly,
