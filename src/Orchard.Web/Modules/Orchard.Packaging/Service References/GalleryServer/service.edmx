@@ -19,7 +19,7 @@
         <Property Name="PackageHash" Type="Edm.String" Nullable="true" />
         <Property Name="PackageSize" Type="Edm.Int64" Nullable="false" />
         <Property Name="Rating" Type="Edm.Double" Nullable="false" />
-        <Property Name="RatingCount" Type="Edm.Int32" Nullable="false" />
+        <Property Name="RatingsCount" Type="Edm.Int32" Nullable="false" />
         <Property Name="Price" Type="Edm.Decimal" Nullable="false" />
         <Property Name="RequireLicenseAcceptance" Type="Edm.Boolean" Nullable="false" />
         <Property Name="IsLatestVersion" Type="Edm.Boolean" Nullable="false" />
