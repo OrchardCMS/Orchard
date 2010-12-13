@@ -122,6 +122,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Content Include="Config\log4net.config" />
+    <Content Include="Config\Sample.HostComponents.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Media\web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

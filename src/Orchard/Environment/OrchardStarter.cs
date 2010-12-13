@@ -108,6 +108,10 @@ namespace Orchard.Environment {
             if (File.Exists(optionalHostConfig))
                 builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalHostConfig));
 
+            var optionalComponentsConfig = HostingEnvironment.MapPath("~/Config/HostComponents.config");
+            if (File.Exists(optionalComponentsConfig))
+                builder.RegisterModule(new HostComponentsConfigModule(optionalComponentsConfig));
+
 
             var container = builder.Build();
 
