@@ -80,9 +80,18 @@ namespace Orchard.Environment.Extensions {
 
             ExtensionEntry extensionEntry;
             try {
-                extensionEntry = _cacheManager.Get(extensionId, ctx => BuildEntry(extensionDescriptor));
+                extensionEntry = _cacheManager.Get(extensionId, ctx => {
+                    var entry = BuildEntry(extensionDescriptor);
+                    if (entry != null) {
+                        foreach (var loader in _loaders) {
+                            loader.Monitor(entry.Descriptor, (token) => ctx.Monitor(token));
+                        }
+                    }
+                    return entry;
+                });
             }
             catch (Exception ex) {
+                Logger.Error(ex, "Error loading extension '{0}'", extensionId);
                 throw new OrchardException(T("Error while loading extension '{0}'.", extensionId), ex);
             }
             if (extensionEntry == null) {
