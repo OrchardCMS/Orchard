@@ -41,6 +41,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public ILogger Logger { get; set; }
+        public bool Disabled { get; set; }
 
         public override int Order { get { return 100; } }
 
@@ -146,6 +147,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+            if (Disabled)
+                return null;
+
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
                 return null;
@@ -159,6 +163,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+            if (Disabled)
+                return null;
+
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
                 return null;
