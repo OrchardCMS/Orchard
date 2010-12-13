@@ -231,6 +231,24 @@
       XPath="/log4net/root/priority/@value"
       Value="ERROR" />
 
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/appender[@name='debug-file']" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/appender[@name='debugger']" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/appender[@name='error-file']/filter" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/logger[@name='Orchard.Localization']" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/logger[@name='Orchard']" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/root/appender-ref[@ref='debug-file']" />
+
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"
         DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>

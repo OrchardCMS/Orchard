@@ -9,9 +9,9 @@ using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
+using Orchard.Settings;
 
 namespace Orchard.Core.Containers.Controllers {
-    using Orchard.Settings;
 
     public class ItemController : Controller {
         private readonly IContentManager _contentManager;
