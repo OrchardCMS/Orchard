@@ -11,9 +11,9 @@ using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
+using Orchard.Settings;
 
 namespace Orchard.Blogs.Controllers {
-    using Orchard.Settings;
 
     [Themed]
     public class BlogController : Controller {

@@ -3,19 +3,19 @@
 
 <!-- Initialization -->
 
-	<PropertyGroup>
-		<LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
-		<SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
-		<BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
-		<ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts\Azure</ArtifactsFolder>
-		
-		<CompileFolder>$(BuildFolder)\Compile</CompileFolder>
-		<ServiceFolder>$(CompileFolder)\Orchard.Azure.CloudService.csx</ServiceFolder>
-		<CloudRootFolder>$(ServiceFolder)\roles\Orchard.Azure.Web\approot</CloudRootFolder>
-		<WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
-		<StageFolder>$(BuildFolder)\Stage</StageFolder>
-		
-	</PropertyGroup>
+  <PropertyGroup>
+    <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
+    <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
+    <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+    <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
+    <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts\Azure</ArtifactsFolder>
+
+    <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
+    <ServiceFolder>$(CompileFolder)\Orchard.Azure.CloudService.csx</ServiceFolder>
+    <CloudRootFolder>$(ServiceFolder)\roles\Orchard.Azure.Web\approot</CloudRootFolder>
+    <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
+    <StageFolder>$(BuildFolder)\Stage</StageFolder>
+  </PropertyGroup>
   
   <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Cloud Service\1.0\Visual Studio 10.0\Microsoft.CloudService.targets" />
@@ -39,10 +39,10 @@
 
 <!-- Building -->
 
-	<Target Name="Clean">
-		<MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln" Targets="Clean" />
-		<RemoveDir Directories="$(BuildFolder)" />
-	</Target>
+  <Target Name="Clean">
+    <MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln" Targets="Clean" />
+    <RemoveDir Directories="$(BuildFolder)" />
+  </Target>
 
   <Target Name ="Compile">
     <MSBuild
@@ -62,17 +62,18 @@
 <!-- Testing - Azure only -->
 
   <Target Name ="Test">
-    
-		<CreateItem Include="$(CompileFolder)\*Azure.Tests.*dll">
-			<Output TaskParameter="Include" ItemName="TestAssemblies" />
-		</CreateItem>
 
-		<NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" />
+    <CreateItem Include="$(CompileFolder)\*Azure.Tests.*dll">
+      <Output TaskParameter="Include" ItemName="TestAssemblies" />
+    </CreateItem>
 
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" />
   </Target>
 
 <!-- Packaging -->
-  
+
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
+
   <Target Name="Package-ForCloud">
     
     <ItemGroup>
@@ -112,6 +113,24 @@
       XPath="/log4net/root/priority/@value"
       Value="ERROR" />
 
+    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/appender[@name='debug-file']" />
+
+    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/appender[@name='debugger']" />
+
+    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/appender[@name='error-file']/filter" />
+
+    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/logger[@name='Orchard.Localization']" />
+
+    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/logger[@name='Orchard']" />
+
+    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/root/appender-ref[@ref='debug-file']" />
+
     <Copy 
         SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceConfiguration.cscfg" 
         DestinationFolder="$(StageFolder)" 
@@ -148,6 +167,6 @@
     </ItemGroup>
     
     <MakeDir Directories="$(ArtifactsFolder)" />
-		<Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(ArtifactsFolder)\AzurePackage.zip" />
+    <Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(ArtifactsFolder)\AzurePackage.zip" />
   </Target>
 </Project>

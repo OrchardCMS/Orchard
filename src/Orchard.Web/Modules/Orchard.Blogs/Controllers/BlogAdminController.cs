@@ -14,9 +14,9 @@ using Orchard.Localization;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
+using Orchard.Settings;
 
 namespace Orchard.Blogs.Controllers {
-    using Orchard.Settings;
 
     [ValidateInput(false), Admin]
     public class BlogAdminController : Controller, IUpdateModel {

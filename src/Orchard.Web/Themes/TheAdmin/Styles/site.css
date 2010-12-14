@@ -872,9 +872,9 @@ fieldset.save-button {
     clear:left;
 }
 fieldset.publish-button {
-    margin: 0 12px;
+    margin: 0 12px 0 0;
     padding: 0 12px;
-    border-left:1px solid #ccc;
+    border-right:1px solid #ccc;
 }
 fieldset.delete-button {
     margin: 0 0 0 12px;

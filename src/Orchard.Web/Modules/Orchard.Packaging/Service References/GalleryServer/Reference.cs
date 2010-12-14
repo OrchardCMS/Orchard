@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Original file name:
-// Generation date: 12/8/2010 3:18:34 PM
+// Generation date: 12/13/2010 12:55:40 PM
 namespace Orchard.Packaging.GalleryServer
 {
     
@@ -127,7 +127,7 @@ namespace Orchard.Packaging.GalleryServer
         /// <param name="downloadCount">Initial value of DownloadCount.</param>
         /// <param name="packageSize">Initial value of PackageSize.</param>
         /// <param name="rating">Initial value of Rating.</param>
-        /// <param name="ratingCount">Initial value of RatingCount.</param>
+        /// <param name="ratingsCount">Initial value of RatingsCount.</param>
         /// <param name="price">Initial value of Price.</param>
         /// <param name="requireLicenseAcceptance">Initial value of RequireLicenseAcceptance.</param>
         /// <param name="isLatestVersion">Initial value of IsLatestVersion.</param>
@@ -135,7 +135,7 @@ namespace Orchard.Packaging.GalleryServer
         /// <param name="lastUpdated">Initial value of LastUpdated.</param>
         /// <param name="published">Initial value of Published.</param>
         [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        public static PublishedPackage CreatePublishedPackage(string ID, string version, int downloadCount, long packageSize, double rating, int ratingCount, decimal price, bool requireLicenseAcceptance, bool isLatestVersion, global::System.DateTime created, global::System.DateTime lastUpdated, global::System.DateTime published)
+        public static PublishedPackage CreatePublishedPackage(string ID, string version, int downloadCount, long packageSize, double rating, int ratingsCount, decimal price, bool requireLicenseAcceptance, bool isLatestVersion, global::System.DateTime created, global::System.DateTime lastUpdated, global::System.DateTime published)
         {
             PublishedPackage publishedPackage = new PublishedPackage();
             publishedPackage.Id = ID;
@@ -143,7 +143,7 @@ namespace Orchard.Packaging.GalleryServer
             publishedPackage.DownloadCount = downloadCount;
             publishedPackage.PackageSize = packageSize;
             publishedPackage.Rating = rating;
-            publishedPackage.RatingCount = ratingCount;
+            publishedPackage.RatingsCount = ratingsCount;
             publishedPackage.Price = price;
             publishedPackage.RequireLicenseAcceptance = requireLicenseAcceptance;
             publishedPackage.IsLatestVersion = isLatestVersion;
@@ -426,26 +426,26 @@ namespace Orchard.Packaging.GalleryServer
         partial void OnRatingChanging(double value);
         partial void OnRatingChanged();
         /// <summary>
-        /// There are no comments for Property RatingCount in the schema.
+        /// There are no comments for Property RatingsCount in the schema.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        public int RatingCount
+        public int RatingsCount
         {
             get
             {
-                return this._RatingCount;
+                return this._RatingsCount;
             }
             set
             {
-                this.OnRatingCountChanging(value);
-                this._RatingCount = value;
-                this.OnRatingCountChanged();
+                this.OnRatingsCountChanging(value);
+                this._RatingsCount = value;
+                this.OnRatingsCountChanged();
             }
         }
         [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        private int _RatingCount;
-        partial void OnRatingCountChanging(int value);
-        partial void OnRatingCountChanged();
+        private int _RatingsCount;
+        partial void OnRatingsCountChanging(int value);
+        partial void OnRatingsCountChanged();
         /// <summary>
         /// There are no comments for Property Price in the schema.
         /// </summary>
