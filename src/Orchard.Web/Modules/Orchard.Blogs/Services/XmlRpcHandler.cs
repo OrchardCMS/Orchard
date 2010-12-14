@@ -294,7 +294,7 @@ namespace Orchard.Blogs.Services {
             var url = urlHelper.AbsoluteAction(() => urlHelper.BlogPost(blogPostPart));
             return new XRpcStruct()
                 .Set("postid", blogPostPart.Id)
-                .Set("dateCreated", blogPostPart.CreatedUtc)
+                .Set("dateCreated", blogPostPart.PublishedUtc)
                 .Set("title", blogPostPart.Title)
                 .Set("wp_slug", blogPostPart.Slug)
                 .Set("description", blogPostPart.Text)
