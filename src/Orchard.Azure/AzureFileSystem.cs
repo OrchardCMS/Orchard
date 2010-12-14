@@ -29,7 +29,7 @@ namespace Orchard.Azure {
             _storageAccount = storageAccount;
             ContainerName = containerName;
             _root = String.IsNullOrEmpty(root) ? "": root + "/";
-            _absoluteRoot = _storageAccount.BlobEndpoint.AbsoluteUri + "/" + containerName + "/" + root;
+            _absoluteRoot = Combine(Combine(_storageAccount.BlobEndpoint.AbsoluteUri, containerName), root);
 
             using ( new HttpContextWeaver() ) {
 
