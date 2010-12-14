@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -24,8 +25,8 @@ namespace Orchard.Specs.Hosting {
             _orchardTemp = orchardTemp;
         }
 
-        public void Initialize(string templateName, string virtualDirectory) {
-            Stopwatch stopwatch = new Stopwatch();
+        public void Initialize(string templateName, string virtualDirectory, DynamicComilationOption dynamicCompilationOption) {
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             var baseDir = Path.Get(AppDomain.CurrentDomain.BaseDirectory);
@@ -59,6 +60,19 @@ namespace Orchard.Specs.Hosting {
             baseDir.Combine("Hosting").Combine(templateName)
                 .DeepCopy(_tempSite);
 
+            if (dynamicCompilationOption != DynamicComilationOption.Enabled) {
+                var sourceConfig = baseDir.Combine("Hosting").Combine("TemplateConfigs");
+                var siteConfig = _tempSite.Combine("Config");
+                switch (dynamicCompilationOption) {
+                    case DynamicComilationOption.Disabled:
+                        File.Copy(sourceConfig.Combine("DisableDynamicCompilation.HostComponents.config"), siteConfig.Combine("HostComponents.config"));
+                        break;
+                    case DynamicComilationOption.Force:
+                        File.Copy(sourceConfig.Combine("ForceDynamicCompilation.HostComponents.config"), siteConfig.Combine("HostComponents.config"));
+                        break;
+                }
+            }
+
             Log("Copy binaries of the \"Orchard.Web\" project");
             _orchardWebPath.Combine("bin")
                 .ShallowCopy("*.dll", _tempSite.Combine("bin"))
@@ -81,17 +95,23 @@ namespace Orchard.Specs.Hosting {
             // can be achieved through serialization to the ASP.NET appdomain
             // (see Execute(Action) method)
             Log("Copy Orchard.Specflow test project binaries");
-            baseDir
-                .ShallowCopy("*.dll", _tempSite.Combine("bin"))
-                .ShallowCopy("*.exe", _tempSite.Combine("bin"))
-                .ShallowCopy("*.pdb", _tempSite.Combine("bin"));
+            baseDir.ShallowCopy(
+                path => IsSpecFlowTestAssembly(path) && !_tempSite.Combine("bin").Combine(path.FileName).Exists, 
+                _tempSite.Combine("bin"));
 
+            StartAspNetHost(virtualDirectory);
+
+            Log("ASP.NET host initialization completed in {0} sec", stopwatch.Elapsed.TotalSeconds);
+        }
+
+        private void StartAspNetHost(string virtualDirectory) {
             Log("Starting up ASP.NET host");
             HostName = "localhost";
             PhysicalDirectory = _tempSite;
             VirtualDirectory = virtualDirectory;
 
             _webHostAgent = (WebHostAgent)ApplicationHost.CreateApplicationHost(typeof(WebHostAgent), VirtualDirectory, PhysicalDirectory);
+
 
             var shuttle = new Shuttle();
             Execute(() => { shuttle.CodeGenDir = HttpRuntime.CodegenDir; });
@@ -100,11 +120,10 @@ namespace Orchard.Specs.Hosting {
             _codeGenDir = shuttle.CodeGenDir;
             _codeGenDir = _codeGenDir.Parent;
             Log("ASP.NET CodeGenDir: \"{0}\"", _codeGenDir);
-            Log("ASP.NET host initialization completed in {0} sec", stopwatch.Elapsed.TotalSeconds);
         }
 
         [Serializable]
-        class Shuttle {
+        public class Shuttle {
             public string CodeGenDir;
         }
 
@@ -140,7 +159,7 @@ namespace Orchard.Specs.Hosting {
                 try {
                     _codeGenDir.Delete(true); // <- clean as much as possible
                 }
-                catch(Exception e) {
+                catch (Exception e) {
                     if (lastTry)
                         Log("Failure: \"{0}\"", e);
                     result = false;
@@ -148,15 +167,15 @@ namespace Orchard.Specs.Hosting {
             }
 
             if (_tempSite != null && _tempSite.Exists)
-            try {
-                Log("Trying to delete temporary files at \"{0}\"", _tempSite);
-                _tempSite.Delete(true); // <- progressively clean as much as possible
-            }
-            catch (Exception e) {
-                if (lastTry)
-                    Log("failure: \"{0}\"", e);
-                result = false;
-            }
+                try {
+                    Log("Trying to delete temporary files at \"{0}\"", _tempSite);
+                    _tempSite.Delete(true); // <- progressively clean as much as possible
+                }
+                catch (Exception e) {
+                    if (lastTry)
+                        Log("failure: \"{0}\"", e);
+                    result = false;
+                }
 
             return result;
         }
@@ -194,6 +213,16 @@ namespace Orchard.Specs.Hosting {
             bool isExtensionAssembly = IsOrchardExtensionFile(path);
             bool copyExtensionAssembly = (deploymentOptions & ExtensionDeploymentOptions.CompiledAssembly) == ExtensionDeploymentOptions.CompiledAssembly;
             if (isExtensionAssembly && !copyExtensionAssembly)
+                return false;
+
+            return true;
+        }
+
+        private bool IsSpecFlowTestAssembly(Path path) {
+            if (!IsAssemblyFile(path))
+                return false;
+
+            if (IsOrchardExtensionFile(path))
                 return false;
 
             return true;

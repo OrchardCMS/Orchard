@@ -107,7 +107,7 @@
     </Reference>
     <Reference Include="System.Web.Routing">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -249,6 +249,14 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ContentTypes.feature.cs</LastGenOutput>
     </None>
+    <Content Include="Hosting\TemplateConfigs\DisableDynamicCompilation.HostComponents.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\TemplateConfigs\ForceDynamicCompilation.HostComponents.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="SiteCompilation.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>SiteCompilation.feature.cs</LastGenOutput>

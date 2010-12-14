@@ -21,6 +21,7 @@ namespace Orchard.Specs.Bindings {
         private MessageSink _messages;
         private static readonly Path _orchardTemp = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Specs");
         private ExtensionDeploymentOptions _moduleDeploymentOptions = ExtensionDeploymentOptions.CompiledAssembly;
+        private DynamicComilationOption _dynamicCompilationOption = DynamicComilationOption.Enabled;
 
         public WebHost Host {
             get { return _webHost; }
@@ -70,6 +71,17 @@ namespace Orchard.Specs.Bindings {
             _moduleDeploymentOptions = ExtensionDeploymentOptions.SourceCode;
         }
 
+        [Given(@"I have chosen to load modules using dymamic compilation only")]
+        public void GivenIHaveChosenToLoadModulesUsingDynamicComilationOnly() {
+            _moduleDeploymentOptions = ExtensionDeploymentOptions.SourceCode;
+            _dynamicCompilationOption = DynamicComilationOption.Force;
+        }
+
+        [Given(@"I have chosen to load modules with dynamic compilation disabled")]
+        public void GivenIHaveChosenToLoadModulesAsSourceFilesOnly() {
+            _dynamicCompilationOption = DynamicComilationOption.Disabled;
+        }
+
         [Given(@"I have a clean site based on (.*)")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
             GivenIHaveACleanSiteBasedOn(siteFolder, "/");
@@ -78,7 +90,7 @@ namespace Orchard.Specs.Bindings {
         [Given(@"I have a clean site based on (.*) at ""(.*)""")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder, string virtualDirectory) {
             _webHost = new WebHost(_orchardTemp);
-            Host.Initialize(siteFolder, virtualDirectory ?? "/");
+            Host.Initialize(siteFolder, virtualDirectory ?? "/", _dynamicCompilationOption);
             var shuttle = new Shuttle();
             Host.Execute(() => {
                 log4net.Config.BasicConfigurator.Configure(new CastleAppender());
