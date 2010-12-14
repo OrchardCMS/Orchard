@@ -1,9 +1,9 @@
-Name: Pages
+﻿Name: Pages
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.8.0
-OrchardVersion: 0.8.0
+Version: 0.9.0
+OrchardVersion: 0.9.0
 Description: Introduces a preconfigured page content type.
 Features:
     Orchard.Pages:
