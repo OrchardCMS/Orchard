@@ -72,8 +72,6 @@
 
 <!-- Packaging -->
 
-  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
-
   <Target Name="Package-ForCloud">
     
     <ItemGroup>
@@ -113,24 +111,6 @@
       XPath="/log4net/root/priority/@value"
       Value="ERROR" />
 
-    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
-      XPath="/log4net/appender[@name='debug-file']" />
-
-    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
-      XPath="/log4net/appender[@name='debugger']" />
-
-    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
-      XPath="/log4net/appender[@name='error-file']/filter" />
-
-    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
-      XPath="/log4net/logger[@name='Orchard.Localization']" />
-
-    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
-      XPath="/log4net/logger[@name='Orchard']" />
-
-    <XmlDelete XmlFileName="$(CloudRootFolder)\Config\log4net.config"
-      XPath="/log4net/root/appender-ref[@ref='debug-file']" />
-
     <Copy 
         SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceConfiguration.cscfg" 
         DestinationFolder="$(StageFolder)" 
@@ -155,7 +135,7 @@
   <Target Name="Package-Stage">
  
     <Exec 
-      Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(ServiceFolder)\ServiceDefinition.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;" 
+      Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(ServiceFolder)\ServiceDefinition.build.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;" 
       WorkingDirectory="$(CloudRootFolder)" 
     />
 
