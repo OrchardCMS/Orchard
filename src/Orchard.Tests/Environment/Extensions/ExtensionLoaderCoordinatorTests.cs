@@ -102,7 +102,6 @@ namespace Orchard.Tests.Environment.Extensions {
             }
 
             public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) {
-                throw new NotImplementedException();
             }
 
             public string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
