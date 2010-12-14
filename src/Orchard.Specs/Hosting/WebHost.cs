@@ -25,7 +25,7 @@ namespace Orchard.Specs.Hosting {
             _orchardTemp = orchardTemp;
         }
 
-        public void Initialize(string templateName, string virtualDirectory, DynamicComilationOption dynamicCompilationOption) {
+        public void Initialize(string templateName, string virtualDirectory, DynamicCompilationOption dynamicCompilationOption) {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -60,14 +60,14 @@ namespace Orchard.Specs.Hosting {
             baseDir.Combine("Hosting").Combine(templateName)
                 .DeepCopy(_tempSite);
 
-            if (dynamicCompilationOption != DynamicComilationOption.Enabled) {
+            if (dynamicCompilationOption != DynamicCompilationOption.Enabled) {
                 var sourceConfig = baseDir.Combine("Hosting").Combine("TemplateConfigs");
                 var siteConfig = _tempSite.Combine("Config");
                 switch (dynamicCompilationOption) {
-                    case DynamicComilationOption.Disabled:
+                    case DynamicCompilationOption.Disabled:
                         File.Copy(sourceConfig.Combine("DisableDynamicCompilation.HostComponents.config"), siteConfig.Combine("HostComponents.config"));
                         break;
-                    case DynamicComilationOption.Force:
+                    case DynamicCompilationOption.Force:
                         File.Copy(sourceConfig.Combine("ForceDynamicCompilation.HostComponents.config"), siteConfig.Combine("HostComponents.config"));
                         break;
                 }

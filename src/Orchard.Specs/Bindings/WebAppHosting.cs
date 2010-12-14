@@ -21,7 +21,7 @@ namespace Orchard.Specs.Bindings {
         private MessageSink _messages;
         private static readonly Path _orchardTemp = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Specs");
         private ExtensionDeploymentOptions _moduleDeploymentOptions = ExtensionDeploymentOptions.CompiledAssembly;
-        private DynamicComilationOption _dynamicCompilationOption = DynamicComilationOption.Enabled;
+        private DynamicCompilationOption _dynamicCompilationOption = DynamicCompilationOption.Enabled;
 
         public WebHost Host {
             get { return _webHost; }
@@ -74,12 +74,12 @@ namespace Orchard.Specs.Bindings {
         [Given(@"I have chosen to load modules using dymamic compilation only")]
         public void GivenIHaveChosenToLoadModulesUsingDynamicComilationOnly() {
             _moduleDeploymentOptions = ExtensionDeploymentOptions.SourceCode;
-            _dynamicCompilationOption = DynamicComilationOption.Force;
+            _dynamicCompilationOption = DynamicCompilationOption.Force;
         }
 
         [Given(@"I have chosen to load modules with dynamic compilation disabled")]
         public void GivenIHaveChosenToLoadModulesAsSourceFilesOnly() {
-            _dynamicCompilationOption = DynamicComilationOption.Disabled;
+            _dynamicCompilationOption = DynamicCompilationOption.Disabled;
         }
 
         [Given(@"I have a clean site based on (.*)")]

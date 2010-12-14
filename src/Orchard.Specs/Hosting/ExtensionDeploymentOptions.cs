@@ -7,7 +7,7 @@ namespace Orchard.Specs.Hosting {
         SourceCode = 0x02,
     }
 
-    public enum DynamicComilationOption {
+    public enum DynamicCompilationOption {
         Enabled,        // Allow compiling of csproj files as needed
         Disabled,       // Never compile csproj files
         Force           // Force loading modules by compiling csproj files
