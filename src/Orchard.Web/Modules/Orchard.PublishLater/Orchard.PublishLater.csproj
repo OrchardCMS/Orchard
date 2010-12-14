@@ -44,6 +44,8 @@
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drivers\PublishLaterPartDriver.cs" />
@@ -59,6 +61,7 @@
     <Compile Include="Services\IPublishLaterService.cs" />
     <Compile Include="Services\PublishingTaskManager.cs" />
     <Compile Include="Services\PublishLaterService.cs" />
+    <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="ViewModels\PublishLaterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
