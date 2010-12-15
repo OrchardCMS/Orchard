@@ -23,8 +23,14 @@ namespace Orchard.Specs.Hosting {
             var details = new RequestDetails {
                 HostName = webHost.HostName,
                 UrlPath = urlPath,
-                Page = (isHomepage ? "" : physicalPath.Combine(urlPath.TrimStart('/', '\\')).GetRelativePath(physicalPath).ToString())
             };
+
+            int queryIndex = urlPath.IndexOf('?');
+            if (queryIndex >= 0) {
+                details.UrlPath = urlPath.Substring(0, queryIndex);
+                details.Query = HttpUtility.UrlDecode(urlPath.Substring(queryIndex + 1));
+            }
+            details.Page = (isHomepage ? "" : physicalPath.Combine(details.UrlPath.TrimStart('/', '\\')).GetRelativePath(physicalPath).ToString());
 
             if (!string.IsNullOrEmpty(webHost.Cookies)) {
                 details.RequestHeaders.Add("Cookie", webHost.Cookies);
@@ -123,7 +129,7 @@ namespace Orchard.Specs.Hosting {
                     if (_details.RequestHeaders.TryGetValue("Cookie", out value))
                         return value;
                 }
-                else if (index==HeaderHost) {
+                else if (index == HeaderHost) {
                     return _details.HostName;
                 }
                 return base.GetKnownRequestHeader(index);

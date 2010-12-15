@@ -132,6 +132,7 @@
     <Compile Include="Bindings\CommandLine.cs" />
     <Compile Include="Bindings\ContentRights.cs" />
     <Compile Include="Bindings\OrchardSiteFactory.cs" />
+    <Compile Include="Bindings\UsersPermissionsAndRoles.cs" />
     <Compile Include="Blogs.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -179,6 +180,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Pages.feature</DependentUpon>
+    </Compile>
+    <Compile Include="PermissionModel.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PermissionModel.feature</DependentUpon>
     </Compile>
     <Compile Include="Setup.feature.cs">
       <AutoGen>True</AutoGen>
@@ -248,6 +254,10 @@
     <None Include="ContentTypes.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ContentTypes.feature.cs</LastGenOutput>
+    </None>
+    <None Include="PermissionModel.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>PermissionModel.feature.cs</LastGenOutput>
     </None>
     <Content Include="Hosting\TemplateConfigs\DisableDynamicCompilation.HostComponents.config">
       <SubType>Designer</SubType>
