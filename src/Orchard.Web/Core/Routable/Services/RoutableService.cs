@@ -13,11 +13,11 @@ using Orchard.Core.Routable.Models;
 namespace Orchard.Core.Routable.Services {
     public class RoutableService : IRoutableService {
         private readonly IContentManager _contentManager;
-        private readonly ISlugEventHandler _slugEventHandler;
+        private readonly IEnumerable<ISlugEventHandler> _slugEventHandlers;
 
-        public RoutableService(IContentManager contentManager, ISlugEventHandler slugEventHandler) {
+        public RoutableService(IContentManager contentManager, IEnumerable<ISlugEventHandler> slugEventHandlers) {
             _contentManager = contentManager;
-            _slugEventHandler = slugEventHandler;
+            _slugEventHandlers = slugEventHandlers;
         }
 
         public void FixContainedPaths(IRoutableAspect part) {
@@ -51,7 +51,10 @@ namespace Orchard.Core.Routable.Services {
                 return;
 
             FillSlugContext slugContext = new FillSlugContext(model.Title);
-            _slugEventHandler.FillingSlugFromTitle(slugContext);
+
+            foreach (ISlugEventHandler slugEventHandler in _slugEventHandlers) {
+                slugEventHandler.FillingSlugFromTitle(slugContext);
+            }
 
             if (!slugContext.Adjusted) {
                 var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>]+");
@@ -65,7 +68,10 @@ namespace Orchard.Core.Routable.Services {
                 slugContext.Slug = RemoveDiacritics(slugContext.Slug.Trim('.').ToLower());
             }
 
-            _slugEventHandler.FilledSlugFromTitle(slugContext);
+            foreach (ISlugEventHandler slugEventHandler in _slugEventHandlers) {
+                slugEventHandler.FilledSlugFromTitle(slugContext);
+            }
+
             model.Slug = slugContext.Slug;
         }
 
