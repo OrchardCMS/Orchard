@@ -70,7 +70,8 @@ namespace Orchard.Blogs.Services {
                     Convert.ToString(context.Request.Params[0].Value),
                     Convert.ToString(context.Request.Params[1].Value),
                     Convert.ToString(context.Request.Params[2].Value),
-                    Convert.ToInt32(context.Request.Params[3].Value));
+                    Convert.ToInt32(context.Request.Params[3].Value),
+                    context._drivers);
 
                 context.Response = new XRpcMethodResponse().Add(result);
             }
@@ -147,7 +148,8 @@ namespace Orchard.Blogs.Services {
             string blogId,
             string userName,
             string password,
-            int numberOfPosts) {
+            int numberOfPosts,
+            IEnumerable<IXmlRpcDriver> drivers) {
 
             IUser user = ValidateUser(userName, password);
 
@@ -161,7 +163,12 @@ namespace Orchard.Blogs.Services {
 
             var array = new XRpcArray();
             foreach (var blogPost in _blogPostService.Get(blog, 0, numberOfPosts, VersionOptions.Latest)) {
-                array.Add(CreateBlogStruct(blogPost, urlHelper));
+                var postStruct = CreateBlogStruct(blogPost, urlHelper);
+
+                foreach (var driver in drivers)
+                    driver.Process(postStruct);
+
+                array.Add(postStruct);
             }
             return array;
         }
@@ -210,7 +217,8 @@ namespace Orchard.Blogs.Services {
 
             _contentManager.Create(blogPost.ContentItem, VersionOptions.Draft);
 
-            if (publish)
+            var publishedUtc = content.Optional<DateTime?>("dateCreated");
+            if (publish && (publishedUtc == null || publishedUtc <= DateTime.UtcNow))
                 _blogPostService.Publish(blogPost);
 
             foreach (var driver in drivers)
@@ -253,11 +261,21 @@ namespace Orchard.Blogs.Services {
             var description = content.Optional<string>("description");
             var slug = content.Optional<string>("wp_slug");
 
-            blogPost.Title = title;
-            blogPost.Slug = slug;
-            blogPost.Text = description;
+            // BodyPart
+            if (blogPost.Is<BodyPart>()) {
+                blogPost.As<BodyPart>().Text = description;
+            }
 
-            if (publish)
+            //RoutePart
+            if (blogPost.Is<RoutePart>()) {
+                blogPost.As<RoutePart>().Title = title;
+                blogPost.As<RoutePart>().Slug = slug;
+                _routableService.FillSlugFromTitle(blogPost.As<RoutePart>());
+                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathWithSlug(blogPost.As<RoutePart>().Slug);
+            }
+
+            var publishedUtc = content.Optional<DateTime?>("dateCreated");
+            if (publish && (publishedUtc == null || publishedUtc <= DateTime.UtcNow))
                 _blogPostService.Publish(blogPost);
 
             foreach (var driver in drivers)
@@ -292,14 +310,20 @@ namespace Orchard.Blogs.Services {
 
         private static XRpcStruct CreateBlogStruct(BlogPostPart blogPostPart, UrlHelper urlHelper) {
             var url = urlHelper.AbsoluteAction(() => urlHelper.BlogPost(blogPostPart));
-            return new XRpcStruct()
+            var blogStruct = new XRpcStruct()
                 .Set("postid", blogPostPart.Id)
-                .Set("dateCreated", blogPostPart.CreatedUtc)
                 .Set("title", blogPostPart.Title)
                 .Set("wp_slug", blogPostPart.Slug)
                 .Set("description", blogPostPart.Text)
                 .Set("link", url)
                 .Set("permaLink", url);
+
+            if (blogPostPart.PublishedUtc != null) {
+                blogStruct.Set("dateCreated", blogPostPart.PublishedUtc);
+                blogStruct.Set("date_created_gmt", blogPostPart.PublishedUtc);
+            }
+
+            return blogStruct;
         }
     }
 }

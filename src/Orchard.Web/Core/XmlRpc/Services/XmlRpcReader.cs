@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.Core.XmlRpc.Models;
@@ -23,7 +24,9 @@ namespace Orchard.Core.XmlRpc.Services {
                             {"double", x=>new XRpcData<double> { Value = (double)x }}, 
                             {"dateTime.iso8601", x=> {
                                                      DateTime parsedDateTime;
-                                                     if(!DateTime.TryParse(x.Value, out parsedDateTime)) {
+                                                     // try parsing a "normal" datetime string then try what live writer gives us
+                                                     if(!DateTime.TryParse(x.Value, out parsedDateTime)
+                                                         && !DateTime.TryParseExact(x.Value, "yyyyMMddTHH:mm:ss", DateTimeFormatInfo.CurrentInfo, DateTimeStyles.None, out parsedDateTime)) {
                                                          parsedDateTime = DateTime.Now;
                                                      }
                                                      return new XRpcData<DateTime> {Value = parsedDateTime};

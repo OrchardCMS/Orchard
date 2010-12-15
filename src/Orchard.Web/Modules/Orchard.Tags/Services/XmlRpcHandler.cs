@@ -41,7 +41,7 @@ namespace Orchard.Tags.Services {
             switch (context.Request.MethodName) {
                 case "metaWeblog.getCategories": // hack... because live writer still asks for it...
                     if (context.Response == null)
-                        context.Response = new XRpcMethodResponse();
+                        context.Response = new XRpcMethodResponse().Add(new XRpcArray());
                     break;
                 case "wp.getTags":
                     var tags = MetaWeblogGetTags(

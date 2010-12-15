@@ -27,7 +27,8 @@ namespace Orchard.Core.XmlRpc.Controllers {
                 new XElement(XName.Get("clientType", ManifestUri), "Metaweblog"),
                 new XElement(XName.Get("supportsKeywords", ManifestUri), "No"),
                 new XElement(XName.Get("supportsCategories", ManifestUri), "No"),
-                new XElement(XName.Get("supportsFileUpload", ManifestUri), "No"));
+                new XElement(XName.Get("supportsFileUpload", ManifestUri), "No"),
+                new XElement(XName.Get("supportsCustomDate", ManifestUri), "No"));
 
             foreach (var handler in _xmlRpcHandlers)
                 handler.SetCapabilities(options);
