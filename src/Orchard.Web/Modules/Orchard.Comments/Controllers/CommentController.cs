@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
 using Orchard.Comments.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Mvc.Extensions;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Comments.Controllers {
     public class CommentController : Controller {
@@ -23,47 +24,55 @@ namespace Orchard.Comments.Controllers {
 
         public Localizer T { get; set; }
 
-        [HttpPost]
+        [HttpPost, ValidateInput(false)]
         public ActionResult Create(string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
-                return !String.IsNullOrEmpty(returnUrl)
-                    ? Redirect(returnUrl)
-                    : Redirect("~/");
+                return this.RedirectLocal(returnUrl, "~/");
             
             var viewModel = new CommentsCreateViewModel();
-            try {
 
-                // UpdateModel(viewModel);
+            TryUpdateModel(viewModel);
+            
+            var context = new CreateCommentContext {
+                Author = viewModel.Name,
+                CommentText = viewModel.CommentText,
+                Email = viewModel.Email,
+                SiteName = viewModel.SiteName,
+                CommentedOn = viewModel.CommentedOn
+            };
 
-                if(!TryUpdateModel(viewModel)) {
-                    if (Request.Form["Name"].IsNullOrEmptyTrimmed()) {
-                        _notifier.Error(T("You must provide a Name in order to comment"));
-                    }
-                    return Redirect(returnUrl);
+
+            if (ModelState.IsValid) {
+                if (!String.IsNullOrEmpty(context.SiteName) && !context.SiteName.StartsWith("http://") && !context.SiteName.StartsWith("https://")) {
+                    context.SiteName = "http://" + context.SiteName;
                 }
-
-                var context = new CreateCommentContext {
-                                                           Author = viewModel.Name,
-                                                           CommentText = viewModel.CommentText,
-                                                           Email = viewModel.Email,
-                                                           SiteName = viewModel.SiteName,
-                                                           CommentedOn = viewModel.CommentedOn
-                                                       };
 
                 CommentPart commentPart = _commentService.CreateComment(context, Services.WorkContext.CurrentSite.As<CommentSettingsPart>().Record.ModerateComments);
 
-                if (commentPart.Record.Status == CommentStatus.Pending)
-                    Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
+                if (commentPart.Record.Status == CommentStatus.Pending) {
+                    // if the user who submitted the comment has the right to moderate, don't make this comment moderated
+                    if (Services.Authorizer.Authorize(Permissions.ManageComments)) {
+                        commentPart.Record.Status = CommentStatus.Approved;
+                    }
+                    else {
+                        Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
+                    }
+                }
+            }
+            else {
+                foreach (var error in ModelState.Values.SelectMany(m => m.Errors).Select( e=> e.ErrorMessage)) {
+                    _notifier.Error(T(error));
+                }
+            }
 
-                return !String.IsNullOrEmpty(returnUrl)
-                    ? Redirect(returnUrl)
-                    : Redirect("~/");
+            if(!ModelState.IsValid) {
+                TempData["CreateCommentContext.Name"] = context.Author;
+                TempData["CreateCommentContext.CommentText"] = context.CommentText;
+                TempData["CreateCommentContext.Email"] = context.Email;
+                TempData["CreateCommentContext.SiteName"] = context.SiteName;
             }
-            catch (Exception exception) {
-                _notifier.Error(T("Creating Comment failed: " + exception.Message));
-                // return View(viewModel);
-                return Redirect(returnUrl);
-            }
+
+            return this.RedirectLocal(returnUrl, "~/");
         }
     }
 }

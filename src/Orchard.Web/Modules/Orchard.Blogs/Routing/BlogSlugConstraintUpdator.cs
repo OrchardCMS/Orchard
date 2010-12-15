@@ -1,6 +1,8 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Blogs.Services;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Environment;
 using Orchard.Tasks;
 
@@ -27,7 +29,7 @@ namespace Orchard.Blogs.Routing {
         }
 
         private void Refresh() {
-            _blogSlugConstraint.SetSlugs(_blogService.Get().Select(b => b.Slug));
+            _blogSlugConstraint.SetSlugs(_blogService.Get().Select(b => b.As<IRoutableAspect>().Path));
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Timers;
-using Autofac;
 using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Logging;

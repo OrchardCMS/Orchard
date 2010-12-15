@@ -2,10 +2,11 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.8.0
-OrchardVersion: 0.8.0
+Version: 0.9.0
+OrchardVersion: 0.9.0
 Description: The themes module makes it possible for Orchard applications to customize the look and feel of an Orchard web site.
 Features:
     Orchard.Themes:
+        Name: Themes
         Description: Basic theming capability.
         Category: Core

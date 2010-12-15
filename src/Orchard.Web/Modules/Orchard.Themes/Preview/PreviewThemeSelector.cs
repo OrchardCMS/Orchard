@@ -10,10 +10,7 @@ namespace Orchard.Themes.Preview {
 
         public ThemeSelectorResult GetTheme(RequestContext context) {
             var previewThemeName = _previewTheme.GetPreviewTheme();
-            if (string.IsNullOrEmpty(previewThemeName))
-                return null;
-
-            return new ThemeSelectorResult { Priority = 90, ThemeName = previewThemeName };
+            return string.IsNullOrEmpty(previewThemeName) ? null : new ThemeSelectorResult { Priority = 90, ThemeName = previewThemeName };
         }
     }
 }

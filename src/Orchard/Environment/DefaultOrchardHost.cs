@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading;
 using System.Collections.Generic;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
@@ -147,6 +146,8 @@ namespace Orchard.Environment {
         }
 
         private void DisposeShellContext() {
+            Logger.Information("Disposing active shell contexts");
+
             if (_current != null) {
                 foreach (var shellContext in _current) {
                     shellContext.Shell.Terminate();
@@ -160,24 +161,13 @@ namespace Orchard.Environment {
             BuildCurrent();
         }
 
-
-        // the exit gate is temporary, until better control strategy is in place
-        private readonly ManualResetEvent _exitGate = new ManualResetEvent(true);
-
         protected virtual void EndRequest() {
-            if (_processingEngine.AreTasksPending()) {
-                _exitGate.Reset();
-                ThreadPool.QueueUserWorkItem(state => {
-                    while (_processingEngine.AreTasksPending()) {
-                        _processingEngine.ExecuteNextTask();
-                        if (!_processingEngine.AreTasksPending()) {
-                            _exitGate.Set();
-                        }
-                    }
-                });
+            // Synchronously process all pending tasks. It's safe to do this at this point
+            // of the pipeline, as the request transaction has been closed, so creating a new
+            // environment and transaction for these tasks will behave as expected.
+            while (_processingEngine.AreTasksPending()) {
+                _processingEngine.ExecuteNextTask();
             }
-
-            _exitGate.WaitOne(250);
         }
 
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {

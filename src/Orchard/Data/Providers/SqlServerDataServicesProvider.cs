@@ -18,11 +18,9 @@ namespace Orchard.Data.Providers {
         public override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
             var persistence = MsSqlConfiguration.MsSql2008;
             if (string.IsNullOrEmpty(_connectionString)) {
-                throw new NotImplementedException();
+                throw new ArgumentException("The connection string is empty");
             }
-            else {
-                persistence = persistence.ConnectionString(_connectionString);
-            }
+            persistence = persistence.ConnectionString(_connectionString);
             return persistence;
         }
     }

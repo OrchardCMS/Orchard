@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
-using NHibernate;
 using NHibernate.Criterion;
 using NHibernate.Tool.hbm2ddl;
 using NUnit.Framework;

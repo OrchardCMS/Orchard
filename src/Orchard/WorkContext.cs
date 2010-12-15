@@ -2,7 +2,6 @@
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security;
 using Orchard.Settings;
-using Orchard.Themes;
 
 namespace Orchard {
     public abstract class WorkContext {
@@ -35,6 +34,11 @@ namespace Orchard {
         public ExtensionDescriptor CurrentTheme {
             get { return GetState<ExtensionDescriptor>("CurrentTheme"); }
             set { SetState("CurrentTheme", value); }
+        }
+
+        public string CurrentCulture {
+            get { return GetState<string>("CurrentCulture"); }
+            set { SetState("CurrentCulture", value); }
         }
     }
 }

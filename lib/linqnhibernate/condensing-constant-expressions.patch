@@ -1,0 +1,156 @@
+Index: src/NHibernate.Linq/src/NHibernate.Linq/Visitors/Evaluator.cs
+===================================================================
+--- src/NHibernate.Linq/src/NHibernate.Linq/Visitors/Evaluator.cs	(revision 1432)
++++ src/NHibernate.Linq/src/NHibernate.Linq/Visitors/Evaluator.cs	(working copy)
+@@ -2,6 +2,7 @@
+ using System.Collections.Generic;
+ using System.Linq;
+ using System.Linq.Expressions;
++using System.Reflection;
+ 
+ namespace NHibernate.Linq.Visitors
+ {
+@@ -76,12 +77,143 @@
+ 				if (e.NodeType == ExpressionType.Lambda)
+ 					return e;
+ 
++			    Expression condensed = new Condensor().Visit(e);
++                if (condensed.NodeType == ExpressionType.Constant)
++                    return condensed;
++
+ 				LambdaExpression lambda = Expression.Lambda(e);
+ 				Delegate fn = lambda.Compile();
+ 				return Expression.Constant(fn.DynamicInvoke(null), e.Type);
+ 			}
+ 		}
+ 
++        /// <summary>
++        /// Brings certain basic expression patterns closer to the surface to
++        /// avoid a lambda compile and dynamic invoke in simple cases
++        /// </summary>
++        class Condensor : ExpressionVisitor
++        {
++            protected override Expression VisitMemberAccess(MemberExpression m) 
++            {                
++			    Expression exp = Visit(m.Expression);
++
++                object constant;
++                if (m.NodeType== ExpressionType.MemberAccess && TryGetConstant(exp, out constant))
++                {
++                    if (m.Member.MemberType == MemberTypes.Field)
++                    {
++                        FieldInfo field = (FieldInfo) m.Member;
++                        object value = field.GetValue(constant);
++                        return Expression.Constant(value, m.Type);
++                    }
++                }
++
++                if (exp != m.Expression)
++			    {
++				    return Expression.MakeMemberAccess(exp, m.Member);
++			    }
++			    return m;
++            }
++
++
++            protected override Expression VisitUnary(UnaryExpression u) {
++                Expression operand = Visit(u.Operand);
++
++                object constant;
++                if (u.NodeType== ExpressionType.Convert && TryGetConstant(operand, out constant))
++                {
++                    if (u.Method == null)
++                    {
++                        Func<object, object> converter = BindConverter(operand.Type, u.Type);
++                        object value = converter(constant);
++                        return Expression.Constant(value, u.Type);
++                    }
++                }
++
++                if (operand != u.Operand) {
++                    return Expression.MakeUnary(u.NodeType, operand, u.Type, u.Method);
++                }
++                return u;
++            }
++
++            private static bool TryGetConstant(Expression expression, out object constant) {
++                if (expression == null) {
++                    constant = null;
++                    return true;
++                }
++
++                if (expression.NodeType == ExpressionType.Constant) {
++                    constant = ((ConstantExpression)expression).Value;
++                    return true;
++                }
++
++                if (expression.NodeType == ExpressionType.New) {
++                    NewExpression nex = (NewExpression)expression;
++                    object[] constants;
++                    if (nex.Members == null && TryGetConstants(nex.Arguments, out constants)) {
++                        constant = nex.Constructor.Invoke(constants);
++                        return true;
++                    }
++                }
++
++                constant = null;
++                return false;
++            }
++
++            private static bool TryGetConstants(IList<Expression> expressions, out object[] constants) {
++                if (expressions == null) {
++                    constants = null;
++                    return false;
++                }
++
++                object[] results = new object[expressions.Count];
++                for (int index = 0; index != expressions.Count; ++index) {
++                    if (!TryGetConstant(expressions[index], out results[index])) {
++                        constants = null;
++                        return false;
++                    }
++                }
++
++                constants = results;
++                return true;
++            }
++
++
++            private static readonly IDictionary<System.Type, IDictionary<System.Type, Func<object, object>>> _converterGroups = new Dictionary<System.Type, IDictionary<System.Type, Func<object, object>>>();
++
++            private static Func<object,object> BindConverter(System.Type inType, System.Type outType)
++            {
++                IDictionary<System.Type, Func<object, object>> converterGroup;
++                lock(_converterGroups)
++                {
++                    if (!_converterGroups.TryGetValue(inType, out converterGroup))
++                    {
++                        converterGroup = new Dictionary<System.Type, Func<object, object>>();
++                        _converterGroups[inType] = converterGroup;
++                    }
++                }
++
++                Func<object, object> converter;
++                lock (converterGroup)
++                {
++                    if (!converterGroup.TryGetValue(outType, out converter))
++                    {
++                        var arg0 = Expression.Parameter(typeof(object), "arg0");
++                        var lambda = Expression.Lambda<Func<object, object>>(
++                            Expression.ConvertChecked(
++                                Expression.Convert(
++                                    Expression.ConvertChecked(arg0, inType), 
++                                    outType), 
++                                typeof(object)),
++                            arg0);
++                        converter = lambda.Compile();
++                        converterGroup[outType] = converter;
++                    }
++                }
++                return converter;
++            }
++        }
++
+ 		/// <summary>
+ 		/// Performs bottom-up analysis to determine which nodes can possibly
+ 		/// be part of an evaluated sub-tree.

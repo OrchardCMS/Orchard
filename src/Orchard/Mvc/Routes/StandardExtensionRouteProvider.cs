@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Environment.Extensions;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Mvc.Routes {
@@ -17,7 +15,7 @@ namespace Orchard.Mvc.Routes {
         public IEnumerable<RouteDescriptor> GetRoutes() {
             var displayNamesPerArea = _blueprint.Controllers.GroupBy(
                 x => x.AreaName,
-                x => x.Feature.Descriptor.Extension.DisplayName);
+                x => x.Feature.Descriptor.Extension.Name);
 
             foreach (var item in displayNamesPerArea) {
                 var areaName = item.Key;

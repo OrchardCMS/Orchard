@@ -1,32 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
-using Orchard.Logging;
+using Orchard.Localization;
 using Orchard.Media.Models;
-using Orchard.Security;
-using Orchard.Settings;
 
 namespace Orchard.Media.Services {
     [UsedImplicitly]
     public class MediaService : IMediaService {
         private readonly IStorageProvider _storageProvider;
+        private readonly IOrchardServices _orchardServices;
 
-        public MediaService(
-            IStorageProvider storageProvider) {
+        public MediaService(IStorageProvider storageProvider, IOrchardServices orchardServices) {
             _storageProvider = storageProvider;
-            Logger = NullLogger.Instance;
+            _orchardServices = orchardServices;
+
+            T = NullLocalizer.Instance;
         }
 
-        public ILogger Logger { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
-        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
-
+        public Localizer T { get; set; }
 
         public string GetPublicUrl(string path) {
             return _storageProvider.GetPublicUrl(path);
@@ -71,7 +67,7 @@ namespace Orchard.Media.Services {
                 _storageProvider.CreateFolder(name);
                 return;
             }
-            _storageProvider.CreateFolder(mediaPath + "\\" + name);
+            _storageProvider.CreateFolder(_storageProvider.Combine(mediaPath, name));
         }
 
         public void DeleteFolder(string name) {
@@ -84,44 +80,68 @@ namespace Orchard.Media.Services {
         }
 
         public void DeleteFile(string name, string folderName) {
-            _storageProvider.DeleteFile(folderName + "\\" + name);
+            _storageProvider.DeleteFile(_storageProvider.Combine(folderName, name));
         }
 
         public void RenameFile(string name, string newName, string folderName) {
-            if (FileAllowed(newName, false)) {
-                _storageProvider.RenameFile(folderName + "\\" + name, folderName + "\\" + newName);
+            if (!FileAllowed(newName, false)) {
+                throw new ArgumentException(T("New file name {0} not allowed", newName).ToString());
             }
+
+            _storageProvider.RenameFile(_storageProvider.Combine(folderName, name), _storageProvider.Combine(folderName, newName));
         }
 
-        public string UploadMediaFile(string folderName, HttpPostedFileBase postedFile) {
-            if (postedFile.FileName.EndsWith(".zip")) {
-                UnzipMediaFileArchive(folderName, postedFile);
-                // Don't save the zip file.
-                return _storageProvider.GetPublicUrl(folderName);
-            }
-            if (FileAllowed(postedFile) && postedFile.ContentLength > 0) {
-                var filePath = Path.Combine(folderName, Path.GetFileName(postedFile.FileName));
-                var inputStream = postedFile.InputStream;
+        public string UploadMediaFile(string folderName, HttpPostedFileBase postedFile, bool extractZip) {
+            var postedFileLength = postedFile.ContentLength;
+            var postedFileStream = postedFile.InputStream;
+            var postedFileData = new byte[postedFileLength];
+            postedFileStream.Read(postedFileData, 0, postedFileLength);
 
-                SaveStream(filePath, inputStream);
+            return UploadMediaFile(folderName, postedFile.FileName, postedFileData, extractZip);
+        }
+
+        public string UploadMediaFile(string folderPath, string fileName, byte [] bytes, bool extractZip) {
+            if (extractZip && fileName.EndsWith(".zip")) {
+                UnzipMediaFileArchive(folderPath, bytes);
+                // Don't save the zip file.
+                return _storageProvider.GetPublicUrl(folderPath);
+            }
+
+            if (FileAllowed(fileName, true) && bytes.Length > 0) {
+                string filePath = Path.Combine(folderPath, Path.GetFileName(fileName));
+                _storageProvider.TryCreateFolder(folderPath);
+                IStorageFile file = _storageProvider.CreateFile(filePath);
+                using(var stream = file.OpenWrite()) {
+                    stream.Write(bytes, 0, bytes.Length);
+                }
+
                 return _storageProvider.GetPublicUrl(filePath);
             }
 
             return null;
         }
 
+        public bool FileAllowed(HttpPostedFileBase postedFile) {
+            if (postedFile == null) {
+                return false;
+            }
+            return FileAllowed(postedFile.FileName, true);
+        }
+
         private bool FileAllowed(string name, bool allowZip) {
             if (string.IsNullOrWhiteSpace(name)) {
                 return false;
             }
-            var mediaSettings = CurrentSite.As<MediaSettingsPart>();
+            var currentSite = _orchardServices.WorkContext.CurrentSite;
+            var mediaSettings = currentSite.As<MediaSettingsPart>();
             var allowedExtensions = mediaSettings.UploadAllowedFileTypeWhitelist.ToUpperInvariant().Split(' ');
             var ext = (Path.GetExtension(name) ?? "").TrimStart('.').ToUpperInvariant();
             if (string.IsNullOrWhiteSpace(ext)) {
                 return false;
             }
             // whitelist does not apply to the superuser
-            if (CurrentUser == null || !CurrentSite.SuperUser.Equals(CurrentUser.UserName, StringComparison.Ordinal)) {
+            var currentUser = _orchardServices.WorkContext.CurrentUser;
+            if (currentUser == null || !currentSite.SuperUser.Equals(currentUser.UserName, StringComparison.Ordinal)) {
                 // zip files at the top level are allowed since this is how you upload multiple files at once.
                 if (allowZip && ext.Equals("zip", StringComparison.OrdinalIgnoreCase)) {
                     return true;
@@ -136,13 +156,6 @@ namespace Orchard.Media.Services {
                 return false;
             }
             return true;
-        }
-
-        public bool FileAllowed(HttpPostedFileBase postedFile) {
-            if (postedFile == null) {
-                return false;
-            }
-            return FileAllowed(postedFile.FileName, true);
         }
 
         private void SaveStream(string filePath, Stream inputStream) {
@@ -165,6 +178,10 @@ namespace Orchard.Media.Services {
             var postedFileData = new byte[postedFileLength];
             postedFileStream.Read(postedFileData, 0, postedFileLength);
 
+            UnzipMediaFileArchive(targetFolder, postedFileData);
+        }
+
+        private void UnzipMediaFileArchive(string targetFolder, byte [] postedFileData) {
             using (var memoryStream = new MemoryStream(postedFileData)) {
                 var fileInflater = new ZipInputStream(memoryStream);
                 ZipEntry entry;
@@ -182,13 +199,7 @@ namespace Orchard.Media.Services {
 
                         // skip disallowed files
                         if (FileAllowed(entry.Name, false)) {
-                            try {
-                                _storageProvider.CreateFolder(directoryName);
-                            }
-                            catch {
-                                // no handling needed - this is to force the folder to exist if it doesn't
-                            }
-
+                            _storageProvider.TryCreateFolder(directoryName);
                             SaveStream(entryName, fileInflater);
                         }
                     }
@@ -196,14 +207,14 @@ namespace Orchard.Media.Services {
             }
         }
 
-        private static string RenameFolderPath(string path, string newName) {
-            var lastIndex = path.LastIndexOf("\\");
+        private string RenameFolderPath(string path, string newName) {
+            var lastIndex = Math.Max(path.LastIndexOf(Path.DirectorySeparatorChar), path.LastIndexOf(Path.AltDirectorySeparatorChar));
 
             if (lastIndex == -1) {
                 return newName;
             }
 
-            return path.Substring(0, lastIndex) + "\\" + newName;
+            return _storageProvider.Combine(path.Substring(0, lastIndex), newName);
         }
     }
 }

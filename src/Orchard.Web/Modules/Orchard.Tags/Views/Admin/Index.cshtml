@@ -12,7 +12,7 @@
     @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: View.CreateTag != null ? View.CreateTag : new TagsAdminCreateViewModel())
 </div>
 @using(Html.BeginFormAntiForgeryPost()) {
-	<fieldset class="bulk-actions">
+    <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)">
             @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action...").ToString())
@@ -28,12 +28,12 @@
                 <col id="Edit" />
             </colgroup>
             <thead>
-				    <th scope="col">&nbsp;&darr;@*todo: (heskew) something more appropriate for "this applies to the bulk actions*@</th>
-				    <th scope="col">@T("Name")</th>
-				    <th scope="col"></th>
+                    <th scope="col">&nbsp;&darr;@*todo: (heskew) something more appropriate for "this applies to the bulk actions*@</th>
+                    <th scope="col">@T("Name")</th>
+                    <th scope="col"></th>
             </thead>
-			@{var tagIndex = 0;}
-			@foreach (var tagEntry in Model.Tags) { 
+            @{var tagIndex = 0;}
+            @foreach (var tagEntry in Model.Tags) { 
             <tr>
                 <td>
                     <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.NameOf(m => m.Tags[tagIndex].Tag.Id)"/>
@@ -48,7 +48,7 @@
                 </td>
             </tr>
             tagIndex = tagIndex + 1;
-			}
+            }
         </table>
     </fieldset>
 }

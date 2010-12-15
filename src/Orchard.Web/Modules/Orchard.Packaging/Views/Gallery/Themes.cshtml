@@ -17,18 +17,17 @@
         <button type="submit">@T("Apply")</button>
     </fieldset>
 }
-    
 
 @if (Model.Extensions.Count() > 0) {
     <ul class="contentItems">
     @foreach (var item in Model.Extensions) {
-        <li> 
+        <li>
             <div class="moduleName">
                 <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
             </div>
 
             <div class="related">
-                @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"SyndicationId", item.PackageId},{"cameFrom", "Modules"}})@T(" | ")
+                @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"packageId", item.PackageId}, {"version", item.Version}, {"sourceId", item.Source.Id}, {"cameFrom", "Modules"}})@T(" | ")
                 <a href="@item.PackageStreamUri">@T("Download")</a>
              </div>
 
@@ -37,8 +36,9 @@
                 <ul class="pageStatus">
                     <li>@T("Last Updated: {0}", DateTime.Now.ToLocalTime())</li>
                     <li>&nbsp;&#124;&nbsp;@T("Author: {0}", item.Authors)</li>
+                    <li>&nbsp;&#124;&nbsp;@T("Project Url: ")<a href="@item.ProjectUrl">@item.ProjectUrl</a></li>
                 </ul>
-           </div>   
+           </div>
         </li>}
     </ul>
 }

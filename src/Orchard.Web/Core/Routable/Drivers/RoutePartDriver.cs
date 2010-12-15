@@ -8,23 +8,29 @@ using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Services;
-using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Routable.Drivers {
     public class RoutePartDriver : ContentPartDriver<RoutePart> {
         private readonly IOrchardServices _services;
         private readonly IRoutableService _routableService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHomePageProvider _routableHomePageProvider;
 
-        public RoutePartDriver(IOrchardServices services, IRoutableService routableService, IEnumerable<IHomePageProvider> homePageProviders) {
+        public RoutePartDriver(IOrchardServices services,
+            IRoutableService routableService,
+            IEnumerable<IHomePageProvider> homePageProviders,
+            IHttpContextAccessor httpContextAccessor) {
             _services = services;
             _routableService = routableService;
-            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name); ;
+            _httpContextAccessor = httpContextAccessor;
+            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             T = NullLocalizer.Instance;
         }
 
-        private const string TemplateName = "Parts/Routable.RoutePart";
+        private const string TemplateName = "Parts.Routable.RoutePart";
 
         public Localizer T { get; set; }
 
@@ -41,8 +47,14 @@ namespace Orchard.Core.Routable.Drivers {
         }
 
         protected override DriverResult Display(RoutePart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_RoutableTitle", 
-                () => shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title, Path: part.Path));
+            return Combined(
+                ContentShape("Parts_RoutableTitle",
+                    () => shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title, Path: part.Path)),
+                ContentShape("Parts_RoutableTitle_Summary",
+                    () => shapeHelper.Parts_RoutableTitle_Summary(ContentPart: part, Title: part.Title, Path: part.Path)),
+                ContentShape("Parts_RoutableTitle_SummaryAdmin",
+                    () => shapeHelper.Parts_RoutableTitle_SummaryAdmin(ContentPart: part, Title: part.Title, Path: part.Path))
+                );
         }
 
         protected override DriverResult Editor(RoutePart part, dynamic shapeHelper) {
@@ -54,52 +66,29 @@ namespace Orchard.Core.Routable.Drivers {
                 ContainerId = GetContainerId(part),
             };
 
-            // TEMP: path format patterns replaces this logic
-            var path = part.Path;
-            var slug = part.Slug ?? "";
-            if (path != null && path.EndsWith(slug)) {
-                model.DisplayLeadingPath = path.Substring(0, path.Length - slug.Length);
-            }
-            else {
-                var containerPath = part.GetContainerPath();
-                model.DisplayLeadingPath = !string.IsNullOrWhiteSpace(containerPath)
-                    ? string.Format("{0}/", containerPath)
-                    : "";
-            }
+            var request = _httpContextAccessor.Current().Request;
+            var containerUrl = new UriBuilder(request.ToRootUrlString()) { Path = (request.ApplicationPath ?? "").TrimEnd('/') + "/" + (part.GetContainerPath() ?? "") };
+            model.ContainerAbsoluteUrl = containerUrl.Uri.ToString().TrimEnd('/');
 
-            model.PromoteToHomePage = model.Id != 0 && part.Path != null && _routableHomePageProvider != null && _services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
+            model.PromoteToHomePage = model.Id != 0 && _routableHomePageProvider != null && _services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
             return ContentShape("Parts_Routable_Edit",
                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(RoutePart part, IUpdateModel updater, dynamic shapeHelper) {
-
             var model = new RoutableEditorViewModel();
             updater.TryUpdateModel(model, Prefix, null, null);
+
             part.Title = model.Title;
             part.Slug = model.Slug;
+            part.PromoteToHomePage = model.PromoteToHomePage;
 
             if ( !_routableService.IsSlugValid(part.Slug) ) {
                 var slug = (part.Slug ?? String.Empty);
-                if ( slug.StartsWith(".") || slug.EndsWith(".") ) {
+                if ( slug.StartsWith(".") || slug.EndsWith(".") )
                     updater.AddModelError("Routable.Slug", T("The \".\" can't be used around routes."));
-                }
-                else {
-                    updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."));
-                }
-            }
-
-            string originalSlug = part.Slug;
-            if (!_routableService.ProcessSlug(part)) {
-                _services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
-                    originalSlug, part.Slug, part.ContentItem.ContentType));
-            }
-
-            // TEMP: path format patterns replaces this logic
-            part.Path = part.GetPathWithSlug(part.Slug);
-
-            if (part.ContentItem.Id != 0 && model.PromoteToHomePage && _routableHomePageProvider != null) {
-                _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
+                else
+                    updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\". No spaces are allowed (please use dashes or underscores instead)."));
             }
 
             return Editor(part, shapeHelper);

@@ -7,8 +7,8 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
 using Orchard.UI.Admin;
-using Orchard.UI.Widgets;
 using Orchard.Widgets.Models;
+using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Filters {
     public class WidgetFilter : FilterProvider, IResultFilter {

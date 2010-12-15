@@ -3,40 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.DisplayManagement.Descriptors {
     [TestFixture]
     public class DefaultShapeTableManagerTests : ContainerTestBase {
-        protected override void Register(Autofac.ContainerBuilder builder) {
+        protected override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
 
             var features = new [] {
                 new FeatureDescriptor {
-                    Name = "Theme1",
+                    Id = "Theme1",
                     Extension = new ExtensionDescriptor {
-                        Name = "Theme1",
-                        ExtensionType = "Theme"
+                        Id = "Theme1",
+                        ExtensionType = DefaultExtensionTypes.Theme
                     }
                 },
                 new FeatureDescriptor {
-                    Name = "DerivedTheme",
+                    Id = "DerivedTheme",
                     Extension = new ExtensionDescriptor {
-                        Name = "DerivedTheme",
-                        ExtensionType = "Theme",
+                        Id = "DerivedTheme",
+                        ExtensionType = DefaultExtensionTypes.Theme,
                         BaseTheme = "BaseTheme"
                     }
                 },
                 new FeatureDescriptor {
-                    Name = "BaseTheme",
+                    Id = "BaseTheme",
                     Extension = new ExtensionDescriptor {
-                        Name = "BaseTheme",
-                        ExtensionType = "Theme"
+                        Id = "BaseTheme",
+                        ExtensionType = DefaultExtensionTypes.Theme
                     }
                 }
             };
@@ -65,11 +67,11 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         static Feature TestFeature() {
             return new Feature {
                 Descriptor = new FeatureDescriptor {
-                    Name = "Testing",
+                    Id = "Testing",
                     Dependencies = Enumerable.Empty<string>(),
                     Extension = new ExtensionDescriptor {
-                        Name = "Testing",
-                        ExtensionType = "Module",
+                        Id = "Testing",
+                        ExtensionType = DefaultExtensionTypes.Module,
                     }
                 }
             };
@@ -107,7 +109,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             void IShapeTableProvider.Discover(ShapeTableBuilder builder) {
                 foreach (var pair in FeatureShapes) {
                     foreach (var shape in pair.Value) {
-                        builder.Describe(shape).From(pair.Key).BoundAs(pair.Key.Descriptor.Name, null);
+                        builder.Describe(shape).From(pair.Key).BoundAs(pair.Key.Descriptor.Id, null);
                     }
                 }
                 Discover(builder);

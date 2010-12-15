@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.ViewModels;
@@ -12,10 +13,12 @@ using Orchard.UI.Notify;
 namespace Orchard.ContentTypes.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentDefinitionService _contentDefinitionService;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public AdminController(IOrchardServices orchardServices, IContentDefinitionService contentDefinitionService) {
+        public AdminController(IOrchardServices orchardServices, IContentDefinitionService contentDefinitionService, IContentDefinitionManager contentDefinitionManager) {
             Services = orchardServices;
             _contentDefinitionService = contentDefinitionService;
+            _contentDefinitionManager = contentDefinitionManager;
             T = NullLocalizer.Instance;
         }
 
@@ -33,7 +36,7 @@ namespace Orchard.ContentTypes.Controllers {
         }
 
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content type.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to create a content type.")))
                 return new HttpUnauthorizedResult();
 
             return View(new CreateTypeViewModel());
@@ -41,31 +44,44 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST(CreateTypeViewModel viewModel) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content type.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to create a content type.")))
                 return new HttpUnauthorizedResult();
 
-            if(String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
-                ModelState.AddModelError("DisplayName", T("The Content Type name can't be empty.").ToString());
+            viewModel.DisplayName = viewModel.DisplayName ?? String.Empty;
+            viewModel.Name = viewModel.Name ?? String.Empty;
+
+            if (String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
+                ModelState.AddModelError("DisplayName", T("The Display Name name can't be empty.").ToString());
+            }
+            
+            if ( _contentDefinitionService.GetTypes().Any(t => String.Equals(t.Name.Trim(), viewModel.Name.Trim(), StringComparison.OrdinalIgnoreCase)) ) {
+                ModelState.AddModelError("Name", T("A type with the same Id already exists.").ToString());
             }
 
-            if(_contentDefinitionService.GetTypes().Any(t => t.DisplayName == viewModel.DisplayName)) {
-                ModelState.AddModelError("DisplayName", T("A type with the same name already exists.").ToString());
+            if ( _contentDefinitionService.GetTypes().Any(t => String.Equals(t.DisplayName.Trim(), viewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase)) ) {
+                ModelState.AddModelError("DisplayName", T("A type with the same Name already exists.").ToString());
             }
-
-            var typeViewModel = _contentDefinitionService.AddType(viewModel);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(viewModel);
             }
 
+            var contentTypeDefinition = _contentDefinitionService.AddType(viewModel.Name, viewModel.DisplayName);
+            var typeViewModel = new EditTypeViewModel(contentTypeDefinition);
+
+
             Services.Notifier.Information(T("The \"{0}\" content type has been created.", typeViewModel.DisplayName));
 
             return RedirectToAction("Edit", new { id = typeViewModel.Name });
         }
 
+        public ActionResult ContentTypeName(string displayName) {
+            return Json(_contentDefinitionService.GenerateName(displayName));
+        }
+
         public ActionResult Edit(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
                 return new HttpUnauthorizedResult();
 
             var typeViewModel = _contentDefinitionService.GetType(id);
@@ -78,7 +94,7 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
                 return new HttpUnauthorizedResult();
 
             var typeViewModel = _contentDefinitionService.GetType(id);
@@ -90,8 +106,17 @@ namespace Orchard.ContentTypes.Controllers {
             TryUpdateModel(edited);
             typeViewModel.DisplayName = edited.DisplayName;
 
+            if ( String.IsNullOrWhiteSpace(typeViewModel.DisplayName) ) {
+                ModelState.AddModelError("DisplayName", T("The Content Type name can't be empty.").ToString());
+            }
+
+            if ( _contentDefinitionService.GetTypes().Any(t => String.Equals(t.DisplayName.Trim(), typeViewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase) && !String.Equals(t.Name, id)) ) {
+                ModelState.AddModelError("DisplayName", T("A type with the same name already exists.").ToString());
+            }
+
             if (!ModelState.IsValid)
                 return View(typeViewModel);
+
 
             _contentDefinitionService.AlterType(typeViewModel, this);
 
@@ -106,7 +131,7 @@ namespace Orchard.ContentTypes.Controllers {
         }
 
         public ActionResult AddPartsTo(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
                 return new HttpUnauthorizedResult();
 
             var typeViewModel = _contentDefinitionService.GetType(id);
@@ -126,7 +151,7 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("AddPartsTo")]
         public ActionResult AddPartsToPOST(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
                 return new HttpUnauthorizedResult();
 
             var typeViewModel = _contentDefinitionService.GetType(id);
@@ -145,7 +170,7 @@ namespace Orchard.ContentTypes.Controllers {
             }
 
             if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel(); ;
+                Services.TransactionManager.Cancel();
                 return AddPartsTo(id);
             }
 
@@ -153,7 +178,7 @@ namespace Orchard.ContentTypes.Controllers {
         }
 
         public ActionResult RemovePartFrom(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
                 return new HttpUnauthorizedResult();
 
             var typeViewModel = _contentDefinitionService.GetType(id);
@@ -170,7 +195,7 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("RemovePartFrom")]
         public ActionResult RemovePartFromPOST(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
                 return new HttpUnauthorizedResult();
 
             var typeViewModel = _contentDefinitionService.GetType(id);
@@ -200,12 +225,13 @@ namespace Orchard.ContentTypes.Controllers {
 
         public ActionResult ListParts() {
             return View(new ListContentPartsViewModel {
-                Parts = _contentDefinitionService.GetParts()
+                // only user-defined parts (not code as they are not configurable)
+                Parts = _contentDefinitionManager.ListPartDefinitions().Select(cpd => new EditPartViewModel(cpd))
             });
         }
 
         public ActionResult CreatePart() {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content part.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to create a content part.")))
                 return new HttpUnauthorizedResult();
 
             return View(new CreatePartViewModel());
@@ -213,21 +239,25 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("CreatePart")]
         public ActionResult CreatePartPOST(CreatePartViewModel viewModel) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content part.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to create a content part.")))
                 return new HttpUnauthorizedResult();
-
-            var partViewModel = _contentDefinitionService.AddPart(viewModel);
 
             if (!ModelState.IsValid)
                 return View(viewModel);
 
-            Services.Notifier.Information(T("The \"{0}\" content part has been created.", partViewModel.Name));
+            var partViewModel = _contentDefinitionService.AddPart(viewModel);
 
+            if (partViewModel == null) {
+                Services.Notifier.Information(T("The content part could not be created."));
+                return View(viewModel);
+            }
+
+            Services.Notifier.Information(T("The \"{0}\" content part has been created.", partViewModel.Name));
             return RedirectToAction("EditPart", new { id = partViewModel.Name });
         }
 
         public ActionResult EditPart(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var partViewModel = _contentDefinitionService.GetPart(id);
@@ -240,7 +270,7 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("EditPart")]
         public ActionResult EditPartPOST(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var partViewModel = _contentDefinitionService.GetPart(id);
@@ -264,7 +294,7 @@ namespace Orchard.ContentTypes.Controllers {
         }
 
         public ActionResult AddFieldTo(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var partViewModel = _contentDefinitionService.GetPart(id);
@@ -288,7 +318,7 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("AddFieldTo")]
         public ActionResult AddFieldToPOST(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var partViewModel = _contentDefinitionService.GetPart(id);
@@ -296,8 +326,8 @@ namespace Orchard.ContentTypes.Controllers {
             if (partViewModel == null) {
                 //id passed in might be that of a type w/ no implicit field
                 if (typeViewModel != null) {
-                    partViewModel = new EditPartViewModel { Name = typeViewModel.Name };
-                    _contentDefinitionService.AddPart(new CreatePartViewModel { Name = partViewModel.Name });
+                    partViewModel = new EditPartViewModel {Name = typeViewModel.Name};
+                    _contentDefinitionService.AddPart(new CreatePartViewModel {Name = partViewModel.Name});
                     _contentDefinitionService.AddPartToType(partViewModel.Name, typeViewModel.Name);
                 }
                 else {
@@ -311,7 +341,14 @@ namespace Orchard.ContentTypes.Controllers {
                 return AddFieldTo(id);
             }
 
-            _contentDefinitionService.AddFieldToPart(viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
+            try {
+                _contentDefinitionService.AddFieldToPart(viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
+            }
+            catch (Exception ex) {
+                Services.Notifier.Information(T("The \"{0}\" field was not added. {1}", viewModel.DisplayName, ex.Message));
+                Services.TransactionManager.Cancel();
+                return AddFieldTo(id);
+            }
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -328,7 +365,7 @@ namespace Orchard.ContentTypes.Controllers {
 
 
         public ActionResult RemoveFieldFrom(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var partViewModel = _contentDefinitionService.GetPart(id);
@@ -345,7 +382,7 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("RemoveFieldFrom")]
         public ActionResult RemoveFieldFromPOST(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var partViewModel = _contentDefinitionService.GetPart(id);

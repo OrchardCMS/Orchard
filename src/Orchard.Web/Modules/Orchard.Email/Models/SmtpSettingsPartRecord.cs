@@ -1,6 +1,4 @@
-using System.Net.Mail;
 using Orchard.ContentManagement.Records;
-using System.ComponentModel.DataAnnotations;
 
 namespace Orchard.Email.Models {
     public class SmtpSettingsPartRecord : ContentPartRecord {

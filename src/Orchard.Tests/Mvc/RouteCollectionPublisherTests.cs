@@ -7,7 +7,6 @@ using Autofac;
 using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.Mvc.Routes;
-using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Mvc {
@@ -101,13 +100,13 @@ namespace Orchard.Tests.Mvc {
             });
 
             Assert.That(where, Is.EqualTo("init"));
-            var async = action.BeginInvoke(null, null);
+            var asyncResult = action.BeginInvoke(null, null);
             Thread.Sleep(75);
             Assert.That(where, Is.EqualTo("before"));
             readLock.Dispose();
             Thread.Sleep(75);
             Assert.That(where, Is.EqualTo("after"));
-            action.EndInvoke(async);
+            action.EndInvoke(asyncResult);
         }
     }
 }

@@ -8,18 +8,19 @@ namespace Orchard.Security {
     public class StandardPermissions : IPermissionProvider {
         public static readonly Permission AccessAdminPanel = new Permission { Name = "AccessAdminPanel", Description = "Access admin panel" };
         public static readonly Permission AccessFrontEnd = new Permission { Name = "AccessFrontEnd", Description = "Access site front-end" };
+        public static readonly Permission SiteOwner = new Permission { Name = "SiteOwner", Description = "Site Owners Permission" }; 
 
         public Feature Feature {
             get {
                 // This is a lie, but it enables the permissions and stereotypes to be created
                 return new Feature {
                     Descriptor = new FeatureDescriptor {
-                        Name = "Orchard.Framework",
+                        Id = "Orchard.Framework",
                         Category = "Core",
                         Dependencies = Enumerable.Empty<string>(),
                         Description = "",
                         Extension = new ExtensionDescriptor {
-                            Name = "Orchard.Framework"
+                            Id = "Orchard.Framework"
                         }
                     },
                     ExportedTypes = Enumerable.Empty<Type>()
@@ -28,9 +29,10 @@ namespace Orchard.Security {
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new Permission[] {
+            return new[] {
                 AccessAdminPanel,
                 AccessFrontEnd,
+                SiteOwner
             };
         }
 
@@ -38,7 +40,7 @@ namespace Orchard.Security {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {AccessAdminPanel}
+                    Permissions = new[] {SiteOwner, AccessAdminPanel}
                 },
                 new PermissionStereotype {
                     Name = "Anonymous",

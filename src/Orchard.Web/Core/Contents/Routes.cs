@@ -5,8 +5,6 @@ using Orchard.Mvc.Routes;
 
 namespace Orchard.Core.Contents {
     public class Routes : IRouteProvider {
-        #region IRouteProvider Members
-
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
             foreach (RouteDescriptor routeDescriptor in GetRoutes()) {
                 routes.Add(routeDescriptor);
@@ -24,7 +22,28 @@ namespace Orchard.Core.Contents {
                             {"controller", "Admin"},
                             {"action", "List"}
                         },
-                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"id", @"\w+"},
+                            {"containerId", @"\d+"}
+                        },
+                        new RouteValueDictionary {
+                            {"area", "Contents"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 5,
+                    Route = new Route(
+                        "Admin/Contents/List/InContainer/{containerId}",
+                        new RouteValueDictionary {
+                            {"area", "Contents"},
+                            {"controller", "Admin"},
+                            {"action", "List"},
+                            {"id", ""}
+                        },
+                        new RouteValueDictionary{
+                            {"containerId", @"\d+"}
+                        },
                         new RouteValueDictionary {
                             {"area", "Contents"}
                         },
@@ -32,7 +51,5 @@ namespace Orchard.Core.Contents {
                 }
             };
         }
-
-        #endregion
     }
 }

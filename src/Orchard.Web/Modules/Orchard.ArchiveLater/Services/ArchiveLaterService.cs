@@ -2,6 +2,8 @@
 using System.Linq;
 using Orchard.ArchiveLater.Models;
 using Orchard.ContentManagement;
+using Orchard.Core.Contents;
+using Orchard.Localization;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.ArchiveLater.Services {
@@ -10,11 +12,21 @@ namespace Orchard.ArchiveLater.Services {
 
         private readonly IScheduledTaskManager _scheduledTaskManager;
 
-        public ArchiveLaterService(IScheduledTaskManager scheduledTaskManager) {
+        public ArchiveLaterService(
+            IOrchardServices services,
+            IScheduledTaskManager scheduledTaskManager) {
+            Services = services;
             _scheduledTaskManager = scheduledTaskManager;
+            T = NullLocalizer.Instance;
         }
 
+        public IOrchardServices Services { get; set; }
+        public Localizer T { get; set; }
+
         void IArchiveLaterService.ArchiveLater(ContentItem contentItem, DateTime scheduledArchiveUtc) {
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Couldn't archive selected content.")))
+                return;
+
             RemoveArchiveLaterTasks(contentItem);
             _scheduledTaskManager.CreateTask(UnpublishTaskType, scheduledArchiveUtc, contentItem);
         }

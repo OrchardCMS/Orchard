@@ -11,7 +11,6 @@ using Orchard.ContentManagement.Records;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Descriptor;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Tests.Environment.Utility;
 using Orchard.Tests.Records;
@@ -42,6 +41,10 @@ namespace Orchard.Tests.Environment {
                 .Returns(() => _extensionDescriptors);
 
             _container.Mock<IExtensionManager>()
+                .Setup(x => x.AvailableFeatures())
+                .Returns(() => _extensionDescriptors.SelectMany(ext => ext.Features));
+
+            _container.Mock<IExtensionManager>()
                 .Setup(x => x.LoadFeatures(It.IsAny<IEnumerable<FeatureDescriptor>>()))
                 .Returns((IEnumerable<FeatureDescriptor> x) => StubLoadFeatures(x));
         }
@@ -49,7 +52,7 @@ namespace Orchard.Tests.Environment {
         private IEnumerable<Feature> StubLoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
             return featureDescriptors.Select(featureDescriptor => new Feature {
                 Descriptor = featureDescriptor,
-                ExportedTypes = _featureTypes[featureDescriptor.Name]
+                ExportedTypes = _featureTypes[featureDescriptor.Id]
             });
         }
 
@@ -88,11 +91,11 @@ namespace Orchard.Tests.Environment {
 
             var foo = blueprint.Dependencies.SingleOrDefault(t => t.Type == typeof(FooService1));
             Assert.That(foo, Is.Not.Null);
-            Assert.That(foo.Feature.Descriptor.Name, Is.EqualTo("Foo"));
+            Assert.That(foo.Feature.Descriptor.Id, Is.EqualTo("Foo"));
 
             var bar = blueprint.Dependencies.SingleOrDefault(t => t.Type == typeof(BarService1));
             Assert.That(bar, Is.Not.Null);
-            Assert.That(bar.Feature.Descriptor.Name, Is.EqualTo("Bar"));
+            Assert.That(bar.Feature.Descriptor.Id, Is.EqualTo("Bar"));
         }
 
         public interface IFooService : IDependency {
@@ -149,8 +152,8 @@ namespace Orchard.Tests.Environment {
             var alpha = blueprint.Dependencies.Single(x => x.Type == typeof(AlphaModule));
             var beta = blueprint.Dependencies.Single(x => x.Type == typeof(BetaModule));
 
-            Assert.That(alpha.Feature.Descriptor.Name, Is.EqualTo("Foo"));
-            Assert.That(beta.Feature.Descriptor.Name, Is.EqualTo("Bar"));
+            Assert.That(alpha.Feature.Descriptor.Id, Is.EqualTo("Foo"));
+            Assert.That(beta.Feature.Descriptor.Id, Is.EqualTo("Bar"));
         }
 
         public class AlphaModule : Module {
@@ -183,15 +186,15 @@ namespace Orchard.Tests.Environment {
             var delta = blueprint.Controllers.Single(x => x.Type == typeof(DeltaController));
             var epsilon = blueprint.Controllers.Single(x => x.Type == typeof(EpsilonController));
 
-            Assert.That(gamma.Feature.Descriptor.Name, Is.EqualTo("Foo Plus"));
+            Assert.That(gamma.Feature.Descriptor.Id, Is.EqualTo("Foo Plus"));
             Assert.That(gamma.AreaName, Is.EqualTo("MyCompany.Foo"));
             Assert.That(gamma.ControllerName, Is.EqualTo("Gamma"));
 
-            Assert.That(delta.Feature.Descriptor.Name, Is.EqualTo("Bar Minus"));
+            Assert.That(delta.Feature.Descriptor.Id, Is.EqualTo("Bar Minus"));
             Assert.That(delta.AreaName, Is.EqualTo("Bar"));
             Assert.That(delta.ControllerName, Is.EqualTo("Delta"));
 
-            Assert.That(epsilon.Feature.Descriptor.Name, Is.EqualTo("Bar Minus"));
+            Assert.That(epsilon.Feature.Descriptor.Id, Is.EqualTo("Bar Minus"));
             Assert.That(epsilon.AreaName, Is.EqualTo("Bar"));
             Assert.That(epsilon.ControllerName, Is.EqualTo("Epsilon"));
         }
@@ -233,10 +236,10 @@ namespace Orchard.Tests.Environment {
             var foo = blueprint.Records.Single(x => x.Type == typeof(FooRecord));
             var bar = blueprint.Records.Single(x => x.Type == typeof(BarRecord));
 
-            Assert.That(foo.Feature.Descriptor.Name, Is.EqualTo("Foo Plus"));
+            Assert.That(foo.Feature.Descriptor.Id, Is.EqualTo("Foo Plus"));
             Assert.That(foo.TableName, Is.EqualTo("MyCompany_Foo_FooRecord"));
 
-            Assert.That(bar.Feature.Descriptor.Name, Is.EqualTo("Bar"));
+            Assert.That(bar.Feature.Descriptor.Id, Is.EqualTo("Bar"));
             Assert.That(bar.TableName, Is.EqualTo("Bar_BarRecord"));
         }
 
@@ -251,13 +254,13 @@ namespace Orchard.Tests.Environment {
             var ci = blueprint.Records.Single(x => x.Type == typeof(ContentItemRecord));
             var civ = blueprint.Records.Single(x => x.Type == typeof(ContentItemVersionRecord));
 
-            Assert.That(ct.Feature.Descriptor.Name, Is.EqualTo("Orchard.Framework"));
+            Assert.That(ct.Feature.Descriptor.Id, Is.EqualTo("Orchard.Framework"));
             Assert.That(ct.TableName, Is.EqualTo("Orchard_Framework_ContentTypeRecord"));
 
-            Assert.That(ci.Feature.Descriptor.Name, Is.EqualTo("Orchard.Framework"));
+            Assert.That(ci.Feature.Descriptor.Id, Is.EqualTo("Orchard.Framework"));
             Assert.That(ci.TableName, Is.EqualTo("Orchard_Framework_ContentItemRecord"));
 
-            Assert.That(civ.Feature.Descriptor.Name, Is.EqualTo("Orchard.Framework"));
+            Assert.That(civ.Feature.Descriptor.Id, Is.EqualTo("Orchard.Framework"));
             Assert.That(civ.TableName, Is.EqualTo("Orchard_Framework_ContentItemVersionRecord"));
         }
 
@@ -283,10 +286,10 @@ namespace Orchard.Tests.Environment {
             var foo = blueprint.Records.Single(x => x.Type == typeof(FooRecord));
             var bar = blueprint.Records.Single(x => x.Type == typeof(BarRecord));
 
-            Assert.That(foo.Feature.Descriptor.Name, Is.EqualTo("Foo Plus"));
+            Assert.That(foo.Feature.Descriptor.Id, Is.EqualTo("Foo Plus"));
             Assert.That(foo.TableName, Is.EqualTo("Yadda_MyCompany_Foo_FooRecord"));
 
-            Assert.That(bar.Feature.Descriptor.Name, Is.EqualTo("Bar"));
+            Assert.That(bar.Feature.Descriptor.Id, Is.EqualTo("Bar"));
             Assert.That(bar.TableName, Is.EqualTo("Yadda_Bar_BarRecord"));
         }
 

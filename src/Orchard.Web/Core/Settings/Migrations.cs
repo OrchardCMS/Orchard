@@ -90,6 +90,7 @@ namespace Orchard.Core.Settings {
                     .Column<string>("HomePage")
                     .Column<string>("SiteCulture")
                     .Column<string>("ResourceDebugMode", c => c.WithDefault("FromAppSetting"))
+                    .Column<int>("PageSize")
                 );
 
             return 1;

@@ -2,16 +2,16 @@
 using System.Web;
 
 namespace Orchard {
-    public interface IWorkContextAccessor : ISingletonDependency {
+    public interface IWorkContextAccessor {
         WorkContext GetContext(HttpContextBase httpContext);
         IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext);
 
         WorkContext GetContext();
         IWorkContextScope CreateWorkContextScope();
     }
-    
+
     public interface IWorkContextStateProvider : IDependency {
-        Func<T> Get<T>(string name);
+        Func<WorkContext, T> Get<T>(string name);
     }
 
     public interface IWorkContextScope : IDisposable {

@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.Core.Settings.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Security;
@@ -9,21 +10,27 @@ using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 using Orchard.Mvc.Extensions;
+using System;
+using Orchard.Settings;
 
 namespace Orchard.Users.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
+        private readonly ISiteService _siteService;
 
         public AdminController(
             IOrchardServices services,
             IMembershipService membershipService,
             IUserService userService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            ISiteService siteService) {
             Services = services;
             _membershipService = membershipService;
             _userService = userService;
+            _siteService = siteService;
+
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
@@ -33,7 +40,7 @@ namespace Orchard.Users.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to list users")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list users")))
                 return new HttpUnauthorizedResult();
 
             var users = Services.ContentManager
@@ -51,7 +58,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.New<IUser>("User");
@@ -60,18 +67,18 @@ namespace Orchard.Users.Controllers {
             dynamic model = Services.ContentManager.BuildEditor(user);
             model.Content.Add(editor);
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST(UserCreateViewModel createModel) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             if (!string.IsNullOrEmpty(createModel.UserName)) {
-                string userExistsMessage = _userService.VerifyUserUnicity(createModel.UserName, createModel.Email);
-                if (userExistsMessage != null) {
-                    AddModelError("NotUniqueUserName", T(userExistsMessage));
+                if (!_userService.VerifyUserUnicity(createModel.UserName, createModel.Email)) {
+                    AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
             }
 
@@ -97,6 +104,7 @@ namespace Orchard.Users.Controllers {
                 editor.Metadata.Position = "2";
                 model.Content.Add(editor);
 
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
 
@@ -105,7 +113,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get<UserPart>(id);
@@ -114,26 +122,32 @@ namespace Orchard.Users.Controllers {
             dynamic model = Services.ContentManager.BuildEditor(user);
             model.Content.Add(editor);
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.Get(id);
+            var user = Services.ContentManager.Get<UserPart>(id);
+            string previousName = user.UserName;
+
             dynamic model = Services.ContentManager.UpdateEditor(user, this);
 
             var editModel = new UserEditViewModel {User = user};
-            TryUpdateModel(editModel);
+            if (TryUpdateModel(editModel)) {
+                if (!_userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email)) {
+                    AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
+                }
+                else {
+                    // also update the Super user if this is the renamed account
+                    if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, previousName, StringComparison.OrdinalIgnoreCase)) {
+                        _siteService.GetSiteSettings().As<SiteSettingsPart>().SuperUser = editModel.UserName;
+                    }
 
-            if (ModelState.IsValid) {
-                ((IContent)model.ContentItem).As<UserPart>().NormalizedUserName = editModel.UserName.ToLower();
-
-                string userExistsMessage = _userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email);
-                if (userExistsMessage != null) {
-                    AddModelError("NotUniqueUserName", T(userExistsMessage));
+                    user.NormalizedUserName = editModel.UserName.ToLower();
                 }
             }
 
@@ -144,6 +158,7 @@ namespace Orchard.Users.Controllers {
                 editor.Metadata.Position = "2";
                 model.Content.Add(editor);
 
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
 
@@ -152,24 +167,35 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Delete(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            Services.ContentManager.Remove(Services.ContentManager.Get(id));
+            var user = Services.ContentManager.Get<IUser>(id);
 
-            Services.Notifier.Information(T("User deleted"));
+            if (user != null) {
+                if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                    Services.Notifier.Error(T("The Super user can't be removed. Please disable this account or specify another Super user account"));
+                }
+                else if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                    Services.Notifier.Error(T("You can't remove your own account. Please log in with another account"));
+                }
+                else{
+                    Services.ContentManager.Remove(user.ContentItem);
+                    Services.Notifier.Information(T("User deleted"));
+                }
+            }
+
             return RedirectToAction("Index");
         }
 
         public ActionResult SendChallengeEmail(int id) {
-            if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get(id);
 
             if ( user != null ) {
-                string challengeToken = _membershipService.GetEncryptedChallengeToken(user.As<UserPart>());
-                _membershipService.SendChallengeEmail(user.As<UserPart>(), Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", token = challengeToken})));
+                _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", nonce = nonce})));
             }
 
             Services.Notifier.Information(T("Challenge email sent"));
@@ -178,7 +204,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Approve(int id) {
-            if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.Get(id);
@@ -192,18 +218,18 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Moderate(int id) {
-            if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.Get(id);
+            var user = Services.ContentManager.Get<IUser>(id);
 
-            if ( user != null ) {
-                if (Services.WorkContext.CurrentSite.SuperUser.Equals(user.As<UserPart>().UserName) ) {
-                    Services.Notifier.Error(T("Super user can't be moderated"));
+            if (user != null) {
+                if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                    Services.Notifier.Error(T("You can't disable your own account. Please log in with another account"));
                 }
                 else {
                     user.As<UserPart>().RegistrationStatus = UserStatus.Pending;
-                    Services.Notifier.Information(T("User moderated"));
+                    Services.Notifier.Information(T("User {0} disabled", user.UserName));
                 }
             }
 

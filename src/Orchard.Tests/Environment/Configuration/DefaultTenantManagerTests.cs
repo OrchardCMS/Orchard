@@ -1,10 +1,7 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Orchard.Environment.Configuration;
-using Orchard.FileSystems.AppData;
-using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Environment.Configuration {
@@ -58,7 +55,7 @@ namespace Orchard.Tests.Environment.Configuration {
             _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
 
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
-            var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux" };
+            var foo = new ShellSettings {Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux"};
 
             Assert.That(loader.LoadSettings().Count(), Is.EqualTo(1));
             loader.SaveSettings(foo);
@@ -68,6 +65,20 @@ namespace Orchard.Tests.Environment.Configuration {
             Assert.That(text, Is.StringContaining("Foo"));
             Assert.That(text, Is.StringContaining("Bar"));
             Assert.That(text, Is.StringContaining("Quux"));
+        }
+
+        [Test]
+        public void EncryptionSettingsAreStoredAndReadable() {
+            IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
+            var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux", EncryptionAlgorithm = "AES", EncryptionKey = "ABCDEFG", EncryptionIV= "HIJKL" };
+            loader.SaveSettings(foo);
+            Assert.That(loader.LoadSettings().Count(), Is.EqualTo(1));
+
+            var settings = loader.LoadSettings().First();
+
+            Assert.That(settings.EncryptionAlgorithm, Is.EqualTo("AES"));
+            Assert.That(settings.EncryptionKey, Is.EqualTo("ABCDEFG"));
+            Assert.That(settings.EncryptionIV, Is.EqualTo("HIJKL"));
         }
     }
 }

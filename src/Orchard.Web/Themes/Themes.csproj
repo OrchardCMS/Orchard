@@ -40,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
@@ -49,10 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Primus\Theme.png" />
-    <Content Include="Primus\Theme.txt" />
-    <Content Include="Secundus\Theme.png" />
-    <Content Include="Secundus\Theme.txt" />
     <Content Include="TheAdmin\Scripts\admin.js" />
     <Content Include="TheAdmin\Styles\ie.css" />
     <Content Include="TheAdmin\Styles\images\menuClosed.gif" />
@@ -70,9 +66,9 @@
     </Content>
     <Content Include="TheAdmin\Views\Pager.cshtml" />
     <Content Include="TheAdmin\Views\OrchardVersion.cshtml" />
-    <None Include="Web.config">
+    <Content Include="Web.config">
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <Content Include="TheAdmin\Views\Menu.cshtml" />
     <Content Include="TheThemeMachine\Views\Branding.cshtml" />
     <Content Include="TheThemeMachine\Views\BadgeOfHonor.cshtml" />

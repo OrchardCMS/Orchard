@@ -19,17 +19,17 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
     public class ShapeAttributeBindingStrategyTests : ContainerTestBase {
         private Feature _testFeature;
 
-        protected override void Register([NotNull] Autofac.ContainerBuilder builder) {
+        protected override void Register([NotNull] ContainerBuilder builder) {
             if (builder == null) {
                 throw new ArgumentNullException("builder");
             }
             builder.RegisterAutoMocking();
             _testFeature = new Feature {
                 Descriptor = new FeatureDescriptor {
-                    Name = "Testing",
+                    Id = "Testing",
                     Extension = new ExtensionDescriptor {
-                        Name = "Testing",
-                        ExtensionType = "Module",
+                        Id = "Testing",
+                        ExtensionType = DefaultExtensionTypes.Module,
                     }
                 }
             };
@@ -39,7 +39,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 
-        protected override void Resolve(IContainer container) {
+        protected override void Resolve(ILifetimeScope container) {
             // implementation resorts to orchard host to resolve "current scope" services
             container.Resolve<Mock<IOrchardHostContainer>>()
                 .Setup(x => x.Resolve<IComponentContext>())

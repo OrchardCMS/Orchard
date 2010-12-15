@@ -9,7 +9,6 @@ using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Security.Permissions;
-using Orchard.Settings;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;

@@ -75,6 +75,7 @@
     @Zone(Model.BeforeMain)
 </div>
 }
+<div id="layout-main-container">
 <div id="layout-main" class="group">
     @if (Model.AsideFirst != null) {
     <aside id="aside-first" class="aside-first group">
@@ -110,12 +111,14 @@
     </aside>
     }
 </div>
+</div>
 @if (Model.AfterMain != null) {
 <div id="layout-after-main" class="group">
     @Zone(Model.AfterMain)
 </div>
 }
 @if (Model.TripelFirst != null || Model.TripelSecond != null || Model.TripelThird != null) {
+<div id="layout-tripel-container">
 <div id="layout-tripel" class="group">@* as in beer *@
     @if (Model.TripelFirst != null) {
     <div id="tripel-first">
@@ -132,6 +135,7 @@
         @Zone(Model.TripelThird)
     </div>
     }
+</div>
 </div>
 }
 <div id="layout-footer" class="group">

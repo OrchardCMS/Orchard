@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using JetBrains.Annotations;
-using Orchard.Blogs.Extensions;
+﻿using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
@@ -65,7 +63,7 @@ namespace Orchard.Blogs.Drivers {
 
         protected override DriverResult Editor(BlogPart blogPart, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_Blog_Fields",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Blogs.Blog.Fields", Model: blogPart, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.Blog.Fields", Model: blogPart, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BlogPart blogPart, IUpdateModel updater, dynamic shapeHelper) {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using NUnit.Framework;
 using Orchard.Commands;
@@ -74,6 +73,14 @@ namespace Orchard.Tests.Commands {
             var commandContext = CreateCommandContext("Foo");
             Assert.That(commandContext.CommandDescriptor.HelpText, Is.EqualTo(string.Empty));
         }
+
+        [Test]
+        public void TestCaseInsensitiveForCommand() {
+            var commandContext = CreateCommandContext("BAZ", new Dictionary<string, string> { { "VERBOSE", "true" } });
+            _handler.Execute(commandContext);
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo("Command Baz Called : This was a test"));
+        }
+
 
         [Test]
         public void TestBooleanSwitchForCommand() {

@@ -1,6 +1,4 @@
-﻿using System;
-using FluentNHibernate.Cfg.Db;
-using NHibernate;
+﻿using FluentNHibernate.Cfg.Db;
 using Orchard.Data.Providers;
 
 namespace Orchard.Specs.Hosting {

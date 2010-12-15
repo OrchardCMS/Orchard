@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Autofac.Integration.Web;
 using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
@@ -36,7 +33,8 @@ namespace Orchard.Tests.Mvc.Routes {
             rootBuilder.Register(ctx => _routes);
             rootBuilder.RegisterType<ShellRoute>().InstancePerDependency();
             rootBuilder.RegisterType<RunningShellTable>().As<IRunningShellTable>().SingleInstance();
-            rootBuilder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
+            rootBuilder.RegisterModule(new WorkContextModule());
+            rootBuilder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
             rootBuilder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>();
 
             _rootContainer = rootBuilder.Build();

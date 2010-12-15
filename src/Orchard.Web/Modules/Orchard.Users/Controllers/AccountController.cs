@@ -12,6 +12,7 @@ using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
+using Orchard.UI.Notify;
 
 namespace Orchard.Users.Controllers {
     [HandleError, Themed]
@@ -56,33 +57,27 @@ namespace Orchard.Users.Controllers {
             if (_authenticationService.GetAuthenticatedUser() != null)
                 return Redirect("~/");
 
-            return View(new LogOnViewModel {Title = "Log On"});
+            return View(new LogOnViewModel { Title = T("Log On").Text });
         }
 
         [HttpPost]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
-        public ActionResult LogOn(string userNameOrEmail, string password, bool rememberMe, string returnUrl) {
+        public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl) {
             var user = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
-                return View(new LogOnViewModel {Title = "Log On"});
+                return View(new LogOnViewModel { Title = T("Log On").Text });
             }
 
-            _authenticationService.SignIn(user, rememberMe);
+            _authenticationService.SignIn(user, false);
 
-            if (string.IsNullOrEmpty(returnUrl))
-                return new RedirectResult("~/");
-
-            return new RedirectResult(returnUrl);
+            return this.RedirectLocal(returnUrl);
         }
 
         public ActionResult LogOff(string returnUrl) {
             _authenticationService.SignOut();
 
-            if (string.IsNullOrEmpty(returnUrl))
-                return new RedirectResult("~/");
-
-            return new RedirectResult(returnUrl);
+            return this.RedirectLocal(returnUrl);
         }
 
         int MinPasswordLength {
@@ -119,8 +114,7 @@ namespace Orchard.Users.Controllers {
 
                 if (user != null) {
                     if ( user.As<UserPart>().EmailStatus == UserStatus.Pending ) {
-                        string challengeToken = _membershipService.GetEncryptedChallengeToken(user.As<UserPart>());
-                        _membershipService.SendChallengeEmail(user.As<UserPart>(), Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", token = challengeToken })));
+                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
 
                         return RedirectToAction("ChallengeEmailSent");
                     }
@@ -132,13 +126,42 @@ namespace Orchard.Users.Controllers {
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
                     return Redirect("~/");
                 }
-                else {
-                    ModelState.AddModelError("_FORM", T(ErrorCodeToString(/*createStatus*/MembershipCreateStatus.ProviderError)));
-                }
+                
+                ModelState.AddModelError("_FORM", T(ErrorCodeToString(/*createStatus*/MembershipCreateStatus.ProviderError)));
             }
 
             // If we got this far, something failed, redisplay form
             return Register();
+        }
+
+        public ActionResult RequestLostPassword() {
+            // ensure users can request lost password
+            var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
+            if ( !registrationSettings.EnableLostPassword ) {
+                return HttpNotFound();
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult RequestLostPassword(string username) {
+            // ensure users can request lost password
+            var registrationSettings = _orchardServices.WorkContext.CurrentSite.As<RegistrationSettingsPart>();
+            if ( !registrationSettings.EnableLostPassword ) {
+                return HttpNotFound();
+            }
+
+            if(String.IsNullOrWhiteSpace(username)){
+                _orchardServices.Notifier.Error(T("Invalid username or E-mail"));
+                return View();
+            }
+
+            _userService.SendLostPasswordEmail(username, nonce => Url.AbsoluteAction(() => Url.Action("ValidateLostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce })));
+
+            _orchardServices.Notifier.Information(T("Check your e-mail for the confirmation link."));
+
+            return RedirectToAction("LogOn");
         }
 
         [Authorize]
@@ -155,22 +178,21 @@ namespace Orchard.Users.Controllers {
         public ActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword) {
             ViewData["PasswordLength"] = MinPasswordLength;
 
-            if (!ValidateChangePassword(currentPassword, newPassword, confirmPassword)) {
+            if ( !ValidateChangePassword(currentPassword, newPassword, confirmPassword) ) {
                 return View();
             }
 
             try {
                 var validated = _membershipService.ValidateUser(User.Identity.Name, currentPassword);
 
-                if (validated != null) {
+                if ( validated != null ) {
                     _membershipService.SetPassword(validated, newPassword);
                     return RedirectToAction("ChangePasswordSuccess");
                 }
-                else {
-                    ModelState.AddModelError("_FORM",
-                                             T("The current password is incorrect or the new password is invalid."));
-                    return ChangePassword();
-                }
+                
+                ModelState.AddModelError("_FORM",
+                                         T("The current password is incorrect or the new password is invalid."));
+                return ChangePassword();
             }
             catch {
                 ModelState.AddModelError("_FORM", T("The current password is incorrect or the new password is invalid."));
@@ -178,11 +200,46 @@ namespace Orchard.Users.Controllers {
             }
         }
 
-        public ActionResult RegistrationPending() {
+        public ActionResult LostPassword(string nonce) {
+            if ( _userService.ValidateLostPassword(nonce) == null ) {
+                return RedirectToAction("LogOn");
+            }
+
+            ViewData["PasswordLength"] = MinPasswordLength;
+
             return View();
         }
 
+        [HttpPost]
+        public ActionResult LostPassword(string nonce, string newPassword, string confirmPassword) {
+            IUser user;
+            if ( (user = _userService.ValidateLostPassword(nonce)) == null ) {
+                return Redirect("~/");
+            }
+
+            ViewData["PasswordLength"] = MinPasswordLength;
+
+            if (newPassword == null || newPassword.Length < MinPasswordLength) {
+                ModelState.AddModelError("newPassword", T("You must specify a new password of {0} or more characters.", MinPasswordLength));
+            }
+
+            if (!String.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
+                ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
+            }
+
+            if (!ModelState.IsValid) {
+                return View();
+            }
+
+            _membershipService.SetPassword(user, newPassword);
+            return RedirectToAction("ChangePasswordSuccess");
+        }
+
         public ActionResult ChangePasswordSuccess() {
+            return View();
+        }
+
+        public ActionResult RegistrationPending() {
             return View();
         }
 
@@ -198,8 +255,8 @@ namespace Orchard.Users.Controllers {
             return View();
         }
 
-        public ActionResult ChallengeEmail(string token) {
-            var user = _membershipService.ValidateChallengeToken(token);
+        public ActionResult ChallengeEmail(string nonce) {
+            var user = _userService.ValidateChallenge(nonce);
 
             if ( user != null ) {
                 _authenticationService.SignIn(user, false /* createPersistentCookie */);
@@ -211,26 +268,26 @@ namespace Orchard.Users.Controllers {
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext) {
             if (filterContext.HttpContext.User.Identity is WindowsIdentity) {
-                throw new InvalidOperationException("Windows authentication is not supported.");
+                throw new InvalidOperationException(T("Windows authentication is not supported.").ToString());
             }
         }
 
         #region Validation Methods
-
         private bool ValidateChangePassword(string currentPassword, string newPassword, string confirmPassword) {
-            if (String.IsNullOrEmpty(currentPassword)) {
+            if ( String.IsNullOrEmpty(currentPassword) ) {
                 ModelState.AddModelError("currentPassword", T("You must specify a current password."));
             }
-            if (newPassword == null || newPassword.Length < MinPasswordLength) {
+            if ( newPassword == null || newPassword.Length < MinPasswordLength ) {
                 ModelState.AddModelError("newPassword", T("You must specify a new password of {0} or more characters.", MinPasswordLength));
             }
 
-            if (!String.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
+            if ( !String.Equals(newPassword, confirmPassword, StringComparison.Ordinal) ) {
                 ModelState.AddModelError("_FORM", T("The new password and confirmation password do not match."));
             }
 
             return ModelState.IsValid;
         }
+
 
         private IUser ValidateLogOn(string userNameOrEmail, string password) {
             bool validate = true;
@@ -270,9 +327,8 @@ namespace Orchard.Users.Controllers {
             if (!validate)
                 return false;
 
-            string userUnicityMessage = _userService.VerifyUserUnicity(userName, email);
-            if (userUnicityMessage != null) {
-                ModelState.AddModelError("userExists", T(userUnicityMessage));
+            if (!_userService.VerifyUserUnicity(userName, email)) {
+                ModelState.AddModelError("userExists", T("User with that username and/or email already exists."));
             }
             if (password == null || password.Length < MinPasswordLength) {
                 ModelState.AddModelError("password", T("You must specify a password of {0} or more characters.", MinPasswordLength));

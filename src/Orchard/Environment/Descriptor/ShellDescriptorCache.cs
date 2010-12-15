@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization;
+using System.Linq;
+using System.Text;
 using System.Xml;
-using Orchard.Caching;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
@@ -49,15 +49,13 @@ namespace Orchard.Environment.Descriptor {
         public ShellDescriptor Fetch(string name) {
             VerifyCacheFile();
             var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
-            XmlDocument xmlDocument = new XmlDocument();
+            var xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(text);
             XmlNode rootNode = xmlDocument.DocumentElement;
-            foreach (XmlNode tenantNode in rootNode.ChildNodes) {
-                if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
-                    var serializer = new DataContractSerializer(typeof(ShellDescriptor));
-                    var reader = new StringReader(tenantNode.InnerText);
-                    using (var xmlReader = XmlReader.Create(reader)) {
-                        return (ShellDescriptor)serializer.ReadObject(xmlReader, true);
+            if (rootNode != null) {
+                foreach (XmlNode tenantNode in rootNode.ChildNodes) {
+                    if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                        return GetShellDecriptorForCacheText(tenantNode.InnerText);
                     }
                 }
             }
@@ -71,30 +69,22 @@ namespace Orchard.Environment.Descriptor {
             var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
             bool tenantCacheUpdated = false;
             var saveWriter = new StringWriter();
-            XmlDocument xmlDocument = new XmlDocument();
+            var xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(text);
             XmlNode rootNode = xmlDocument.DocumentElement;
-            foreach (XmlNode tenantNode in rootNode.ChildNodes) {
-                if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
-                    var serializer = new DataContractSerializer(typeof(ShellDescriptor));
-                    var writer = new StringWriter();
-                    using (var xmlWriter = XmlWriter.Create(writer)) {
-                        serializer.WriteObject(xmlWriter, descriptor);
+            if (rootNode != null) {
+                foreach (XmlNode tenantNode in rootNode.ChildNodes) {
+                    if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                        tenantNode.InnerText = GetCacheTextForShellDescriptor(descriptor);
+                        tenantCacheUpdated = true;
+                        break;
                     }
-                    tenantNode.InnerText = writer.ToString();
-                    tenantCacheUpdated = true;
-                    break;
                 }
-            }
-            if (!tenantCacheUpdated) {
-                XmlElement newTenant = xmlDocument.CreateElement(name);
-                var serializer = new DataContractSerializer(typeof(ShellDescriptor));
-                var writer = new StringWriter();
-                using (var xmlWriter = XmlWriter.Create(writer)) {
-                    serializer.WriteObject(xmlWriter, descriptor);
+                if (!tenantCacheUpdated) {
+                    XmlElement newTenant = xmlDocument.CreateElement(name);
+                    newTenant.InnerText = GetCacheTextForShellDescriptor(descriptor);
+                    rootNode.AppendChild(newTenant);
                 }
-                newTenant.InnerText = writer.ToString();
-                rootNode.AppendChild(newTenant);
             }
 
             xmlDocument.Save(saveWriter);
@@ -102,6 +92,32 @@ namespace Orchard.Environment.Descriptor {
         }
 
         #endregion
+
+        private static string GetCacheTextForShellDescriptor(ShellDescriptor descriptor) {
+            var sb = new StringBuilder();
+            sb.Append(descriptor.SerialNumber + "|");
+            foreach (var feature in descriptor.Features) {
+                sb.Append(feature.Name + ";");
+            }
+            sb.Append("|");
+            foreach (var parameter in descriptor.Parameters) {
+                sb.Append(parameter.Component + "," + parameter.Name + "," + parameter.Value);
+                sb.Append(";");
+            }
+
+            return sb.ToString();
+        }
+
+        private static ShellDescriptor GetShellDecriptorForCacheText(string p) {
+            string[] fields = p.Trim().Split(new[] { "|" }, StringSplitOptions.None);
+            var shellDescriptor = new ShellDescriptor {SerialNumber = Convert.ToInt32(fields[0])};
+            string[] features = fields[1].Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            shellDescriptor.Features = features.Select(feature => new ShellFeature { Name = feature }).ToList();
+            string[] parameters = fields[2].Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            shellDescriptor.Parameters = parameters.Select(parameter => parameter.Split(new[] { "," }, StringSplitOptions.None)).Select(parameterFields => new ShellParameter { Component = parameterFields[0], Name = parameterFields[1], Value = parameterFields[2] }).ToList();
+
+            return shellDescriptor;
+        }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void VerifyCacheFile() {

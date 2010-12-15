@@ -15,20 +15,19 @@ namespace Orchard.Core.Settings.ViewModels {
             get { return Site.ContentItem.Id; }
         }
 
-        public string PageTitleSeparator
-        {
-            get { return Site.As<SiteSettingsPart>().Record.PageTitleSeparator; }
-            set { Site.As<SiteSettingsPart>().Record.PageTitleSeparator = value; }
+        public string PageTitleSeparator {
+            get { return Site.Record.PageTitleSeparator; }
+            set { Site.Record.PageTitleSeparator = value; }
         }
 
         public string SiteName {
-            get { return Site.As<SiteSettingsPart>().Record.SiteName; }
-            set { Site.As<SiteSettingsPart>().Record.SiteName = value; }
+            get { return Site.Record.SiteName; }
+            set { Site.Record.SiteName = value; }
         }
 
         public string SiteCulture {
-            get { return Site.As<SiteSettingsPart>().Record.SiteCulture; }
-            set { Site.As<SiteSettingsPart>().Record.SiteCulture = value; }
+            get { return Site.Record.SiteCulture; }
+            set { Site.Record.SiteCulture = value; }
         }
 
         public string SuperUser {
@@ -39,6 +38,11 @@ namespace Orchard.Core.Settings.ViewModels {
         public ResourceDebugMode ResourceDebugMode {
             get { return Site.As<SiteSettingsPart>().ResourceDebugMode; }
             set { Site.As<SiteSettingsPart>().ResourceDebugMode = value; }
+        }
+
+        public int PageSize {
+            get { return Site.As<SiteSettingsPart>().PageSize; }
+            set { Site.As<SiteSettingsPart>().PageSize = value; }
         }
     }
 }

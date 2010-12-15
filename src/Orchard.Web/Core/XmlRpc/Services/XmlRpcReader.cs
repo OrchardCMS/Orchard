@@ -22,7 +22,15 @@ namespace Orchard.Core.XmlRpc.Services {
                             {"boolean", x=>new XRpcData<bool> { Value = ((string)x=="1") }}, 
                             {"string", x=>new XRpcData<string> { Value = (string)x }}, 
                             {"double", x=>new XRpcData<double> { Value = (double)x }}, 
-                            {"dateTime.iso8601", x=>new XRpcData<DateTime> { Value = DateTime.Parse((string)x, null, DateTimeStyles.RoundtripKind) }}, 
+                            {"dateTime.iso8601", x=> {
+                                                     DateTime parsedDateTime;
+                                                     // try parsing a "normal" datetime string then try what live writer gives us
+                                                     if(!DateTime.TryParse(x.Value, out parsedDateTime)
+                                                         && !DateTime.TryParseExact(x.Value, "yyyyMMddTHH:mm:ss", DateTimeFormatInfo.CurrentInfo, DateTimeStyles.None, out parsedDateTime)) {
+                                                         parsedDateTime = DateTime.Now;
+                                                     }
+                                                     return new XRpcData<DateTime> {Value = parsedDateTime};
+                                                 }},
                             {"base64", x=>new XRpcData<byte[]> { Value = Convert.FromBase64String((string)x) }}, 
                             {"struct", x=>XRpcData.For(Map<XRpcStruct>(x))} , 
                             {"array", x=>XRpcData.For(Map<XRpcArray>(x))} , 
@@ -46,7 +54,7 @@ namespace Orchard.Core.XmlRpc.Services {
         XRpcMethodCall IMapper<XElement, XRpcMethodCall>.Map(XElement source) {
             return new XRpcMethodCall {
                 MethodName = (string)source.Element("methodName"),
-                Params = source.Elements("params").Elements("param").Select(x => Map<XRpcData>(x)).ToList()
+                Params = source.Elements("params").Elements("param").Select(Map<XRpcData>).ToList()
             };
         }
 

@@ -12,6 +12,7 @@
     @Html.EditorFor(m => m.ScheduledPublishDate)
     <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("ScheduledPublishTime")">@T("Time")</label>
     @Html.EditorFor(m => m.ScheduledPublishTime)
+	<button type="submit" name="submit.Save" value="submit.PublishLater">@T("Publish Later")</button>
 </fieldset>
 @using(Script.Foot()) {
 <script type="text/javascript">

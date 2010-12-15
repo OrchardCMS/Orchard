@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
@@ -13,18 +14,15 @@ namespace Orchard.Core.Routable.Services {
         public const string Name = "RoutableHomePageProvider";
 
         public RoutableHomePageProvider(
-            IOrchardServices services, 
             IContentManager contentManager,
             IShapeFactory shapeFactory) {
             _contentManager = contentManager;
-            Services = services;
-            T = NullLocalizer.Instance;
             Shape = shapeFactory;
+            T = NullLocalizer.Instance;
         }
 
-        dynamic Shape { get; set; }
-        public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
+        dynamic Shape { get; set; }
 
         public string GetProviderName() {
             return Name;
@@ -34,16 +32,27 @@ namespace Orchard.Core.Routable.Services {
             return GetProviderName() + ";" + id;
         }
 
-        public ActionResult GetHomePage(int itemId) {
-            var contentItem = _contentManager.Get(itemId, VersionOptions.Published);
+        public int GetHomePageId(string value) {
+            int id;
+
+            if (string.IsNullOrWhiteSpace(value) || !int.TryParse(value.Substring(Name.Length + 1), out id))
+                throw new ApplicationException(T("Invalid home page setting value for {0}: {1}", Name, value).Text);
+
+            return id;
+        }
+
+        public ActionResult GetHomePage(int id) {
+            var contentItem = _contentManager.Get(id, VersionOptions.Published);
             if (contentItem == null || !contentItem.Is<RoutePart>())
                 return new HttpNotFoundResult();
 
-            var model = _contentManager.BuildDisplay(contentItem);
+            // get the display metadata for the home page item
+            var displayRouteValues = _contentManager.GetItemMetadata(contentItem).DisplayRouteValues;
 
-            return new ViewResult {
+            var model = Shape.ViewModel(RouteValues: displayRouteValues);
+            return new PartialViewResult {
                 ViewName = "Routable.HomePage",
-                ViewData = new ViewDataDictionary<dynamic>(model)
+                ViewData = new ViewDataDictionary<object>(model)
             };
         }
     }

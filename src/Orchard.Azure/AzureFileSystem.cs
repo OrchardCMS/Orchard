@@ -28,8 +28,8 @@ namespace Orchard.Azure {
             // Setup the connection to custom storage accountm, e.g. Development Storage
             _storageAccount = storageAccount;
             ContainerName = containerName;
-            _root = String.IsNullOrEmpty(root) || root == "/" ? String.Empty : root + "/";
-            _absoluteRoot = _storageAccount.BlobEndpoint.AbsoluteUri + containerName + "/" + root + "/";
+            _root = String.IsNullOrEmpty(root) ? "": root + "/";
+            _absoluteRoot = Combine(Combine(_storageAccount.BlobEndpoint.AbsoluteUri, containerName), root);
 
             using ( new HttpContextWeaver() ) {
 
@@ -40,19 +40,50 @@ namespace Orchard.Azure {
 
                 Container.CreateIfNotExist();
 
-                if (isPrivate) {
-                    Container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off });
-                }
-                else {
-                    Container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Container });
-                }
+                Container.SetPermissions(isPrivate
+                                             ? new BlobContainerPermissions
+                                                   {PublicAccess = BlobContainerPublicAccessType.Off}
+                                             : new BlobContainerPermissions
+                                                   {PublicAccess = BlobContainerPublicAccessType.Container});
             }
 
         }
 
         private static void EnsurePathIsRelative(string path) {
-            if (path.StartsWith("/") || path.StartsWith("http://"))
+            if ( path.StartsWith("/") || path.StartsWith("http://") || path.StartsWith("https://") )
                 throw new ArgumentException("Path must be relative");
+        }
+
+        public string Combine(string path1, string path2) {
+            if ( path1 == null) {
+                throw new ArgumentNullException("path1");
+            }
+
+            if ( path2 == null ) {
+                throw new ArgumentNullException("path2");
+            }
+
+            if ( String.IsNullOrEmpty(path2) ) {
+                return path1;
+            }
+
+            if ( String.IsNullOrEmpty(path1) ) {
+                return path2;
+            }
+
+            if ( path2.StartsWith("http://") || path2.StartsWith("https://") )
+            {
+                return path2;
+            }
+
+            var ch = path1[path1.Length - 1];
+
+            if (ch != '/')
+            {
+                return (path1.TrimEnd('/') + '/' + path2.TrimStart('/'));
+            }
+
+            return (path1 + path2);
         }
 
         public IStorageFile GetFile(string path) {
@@ -75,7 +106,7 @@ namespace Orchard.Azure {
             
             EnsurePathIsRelative(path);
 
-            string prefix = String.Concat(Container.Name, "/", _root, path);
+            string prefix = Combine(Combine(Container.Name, _root), path);
             
             if ( !prefix.EndsWith("/") )
                 prefix += "/";
@@ -96,7 +127,16 @@ namespace Orchard.Azure {
 
             EnsurePathIsRelative(path);
             using ( new HttpContextWeaver() ) {
-                if ( !Container.DirectoryExists(String.Concat(_root, path)) ) {
+
+                // return root folders
+                if (String.Concat(_root, path) == String.Empty) {
+                    return Container.ListBlobs()
+                        .OfType<CloudBlobDirectory>()
+                        .Select<CloudBlobDirectory, IStorageFolder>(d => new AzureBlobFolderStorage(d, _absoluteRoot))
+                        .ToList();
+                }
+
+                if (!Container.DirectoryExists(String.Concat(_root, path)) ) {
                     try {
                         CreateFolder(String.Concat(_root, path));
                     }
@@ -114,14 +154,18 @@ namespace Orchard.Azure {
             }
         }
 
-        public void CreateFolder(string path)
-        {
+        public void TryCreateFolder(string path) {
+            EnsurePathIsRelative(path);
+            CreateFile(Combine(path, FolderEntry));
+        }
+
+        public void CreateFolder(string path) {
             EnsurePathIsRelative(path);
             using (new HttpContextWeaver()) {
                 Container.EnsureDirectoryDoesNotExist(String.Concat(_root, path));
 
                 // Creating a virtually hidden file to make the directory an existing concept
-                CreateFile(path + "/" + FolderEntry);
+                CreateFile(Combine(path, FolderEntry));
             }
         }
 
@@ -224,7 +268,7 @@ namespace Orchard.Azure {
             }
 
             public string GetPath() {
-                return _blob.Uri.ToString().Substring(_rootPath.Length+1);
+                return _blob.Uri.ToString().Substring(_rootPath.Length).Trim('/');
             }
 
             public string GetName() {
@@ -263,11 +307,12 @@ namespace Orchard.Azure {
             }
 
             public string GetName() {
-                return Path.GetDirectoryName(GetPath() + "/");
+                var path = GetPath();
+                return path.Substring(path.LastIndexOf('/') +1 );
             }
 
             public string GetPath() {
-                return _blob.Uri.ToString().Substring(_rootPath.Length + 1).TrimEnd('/');
+                return _blob.Uri.ToString().Substring(_rootPath.Length).Trim('/');
             }
 
             public long GetSize() {

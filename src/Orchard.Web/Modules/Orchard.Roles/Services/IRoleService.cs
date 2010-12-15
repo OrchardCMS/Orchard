@@ -13,5 +13,7 @@ namespace Orchard.Roles.Services {
         void DeleteRole(int id);
         IDictionary<string, IEnumerable<Permission>> GetInstalledPermissions();
         IEnumerable<string> GetPermissionsForRole(int id);
+
+        IEnumerable<string> GetPermissionsForRoleByName(string name);
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -16,6 +17,17 @@ using Orchard.Logging;
 using Orchard.Tasks;
 
 namespace Orchard.Commands {
+    
+    /// <summary>
+    /// Different return codes for a command execution.
+    /// </summary>
+    public enum CommandReturnCodes
+    {
+        Ok = 0,
+        Fail = 5,
+        Retry = 240
+    }
+
     /// <summary>
     /// This is the guy instantiated by the orchard.exe host. It is reponsible for
     /// executing a single command.
@@ -32,19 +44,19 @@ namespace Orchard.Commands {
         public ILogger Logger { get; set; }
 
 
-        public int RunSingleCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
-            int result = StartHost(input, output);
-            if (result != 0)
+        public CommandReturnCodes RunSingleCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
+            CommandReturnCodes result = StartHost(input, output);
+            if (result != CommandReturnCodes.Ok)
                 return result;
 
             result = RunCommand(input, output, tenant, args, switches);
-            if (result != 0)
+            if (result != CommandReturnCodes.Ok)
                 return result;
 
             return StopHost(input, output);
         }
 
-        public int RunCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
+        public CommandReturnCodes RunCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
             try {
                 tenant = tenant ?? "Default";
 
@@ -80,59 +92,93 @@ namespace Orchard.Commands {
                 while (processingEngine.AreTasksPending())
                     processingEngine.ExecuteNextTask();
 
-                return 0;
+                return CommandReturnCodes.Ok;
             }
             catch (OrchardCommandHostRetryException e) {
                 // Special "Retry" return code for our host
-                output.WriteLine("{0} (Retrying...)", e.Message);
-                return 240;
+                output.WriteLine(T("{0} (Retrying...)", e.Message));
+                return CommandReturnCodes.Retry;
             }
             catch (Exception e) {
-                for (int i = 0; e != null; e = e.InnerException, i++) {
-                    if (i > 0) {
-                        output.WriteLine("-------------------------------------------------------------------");
-                    }
-                    output.WriteLine("Error: {0}", e.Message);
-                    output.WriteLine("{0}", e.StackTrace);
+                if (e is TargetInvocationException && 
+                    e.InnerException != null) {
+                    // If this is an exception coming from reflection and there is an innerexception which is the actual one, redirect
+                    e = e.InnerException;
                 }
-                return 5;
+
+                OutputException(output, T("Error executing command \"{0}\"", string.Join(" ", args)), e);
+                return CommandReturnCodes.Fail;
             }
         }
 
-        public int StartHost(TextReader input, TextWriter output) {
+        public CommandReturnCodes StartHost(TextReader input, TextWriter output) {
             try {
                 _hostContainer = CreateHostContainer();
-                return 0;
+                return CommandReturnCodes.Ok;
             }
             catch (OrchardCommandHostRetryException e) {
                 // Special "Retry" return code for our host
-                output.WriteLine("{0} (Retrying...)", e.Message);
-                return 240;
+                output.WriteLine(T("{0} (Retrying...)", e.Message));
+                return CommandReturnCodes.Retry;
             }
             catch (Exception e) {
-                for (; e != null; e = e.InnerException) {
-                    output.WriteLine("Error: {0}", e.Message);
-                    output.WriteLine("{0}", e.StackTrace);
-                }
-                return 5;
+                OutputException(output, T("Error starting up Orchard command line host"), e);
+                return CommandReturnCodes.Fail;
             }
         }
 
-        public int StopHost(TextReader input, TextWriter output) {
+        public CommandReturnCodes StopHost(TextReader input, TextWriter output) {
             try {
                 if (_hostContainer != null) {
                     _hostContainer.Dispose();
                     _hostContainer = null;
                 }
-                return 0;
+                return CommandReturnCodes.Ok;
             }
             catch (Exception e) {
-                for (; e != null; e = e.InnerException) {
-                    output.WriteLine("Error: {0}", e.Message);
-                    output.WriteLine("{0}", e.StackTrace);
-                }
-                return 5;
+                OutputException(output, T("Error shutting down Orchard command line host"), e);
+                return CommandReturnCodes.Fail;
             }
+        }
+
+        private void OutputException(TextWriter output, LocalizedString title, Exception exception) {
+            // Display header
+            output.WriteLine();
+            output.WriteLine(T("{0}", title));
+
+            // Push exceptions in a stack so we display from inner most to outer most
+            var errors = new Stack<Exception>();
+            for (var scan = exception; scan != null; scan = scan.InnerException) {
+                errors.Push(scan);
+            }
+
+            // Display inner most exception details
+            exception = errors.Peek();
+            output.WriteLine(T("--------------------------------------------------------------------------------"));
+            output.WriteLine();
+            output.WriteLine(T("{0}", exception.Message));
+            output.WriteLine();
+
+            if (!((exception is OrchardException ||
+                exception is OrchardCoreException) &&
+                exception.InnerException == null)) {
+
+                output.WriteLine(T("Exception Details: {0}: {1}", exception.GetType().FullName, exception.Message));
+                output.WriteLine();
+                output.WriteLine(T("Stack Trace:"));
+                output.WriteLine();
+
+                // Display exceptions from inner most to outer most
+                foreach (var error in errors) {
+                    output.WriteLine(T("[{0}: {1}]", error.GetType().Name, error.Message));
+                    output.WriteLine(T("{0}", error.StackTrace));
+                    output.WriteLine();
+                }
+            }
+
+            // Display footer
+            output.WriteLine("--------------------------------------------------------------------------------");
+            output.WriteLine();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]

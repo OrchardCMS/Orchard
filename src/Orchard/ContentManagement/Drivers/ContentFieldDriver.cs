@@ -4,6 +4,7 @@ using System.Linq;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new() {
@@ -52,20 +53,43 @@ namespace Orchard.ContentManagement.Drivers {
             return ContentShapeImplementation(shapeType, null, ctx => factory());
         }
 
-        public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic> factory) {
-            return ContentShapeImplementation(shapeType, defaultLocation, ctx => factory());
+        public ContentShapeResult ContentShape(string shapeType, string differentiator, Func<dynamic> factory) {
+            return ContentShapeImplementation(shapeType, differentiator, ctx => factory());
         }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory) {
-            return ContentShapeImplementation(shapeType, null, ctx=>factory(CreateShape(ctx, shapeType)));
+            return ContentShapeImplementation(shapeType, null, ctx => factory(CreateShape(ctx, shapeType)));
         }
 
-        public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic, dynamic> factory) {
-            return ContentShapeImplementation(shapeType, defaultLocation, factory);
+        public ContentShapeResult ContentShape(string shapeType, string differentiator, Func<dynamic, dynamic> factory) {
+            return ContentShapeImplementation(shapeType, differentiator, ctx => factory(CreateShape(ctx, shapeType)));
         }
 
-        private ContentShapeResult ContentShapeImplementation(string shapeType, string defaultLocation, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, shapeBuilder).Location(defaultLocation);
+        private ContentShapeResult ContentShapeImplementation(string shapeType, string differentiator, Func<BuildShapeContext, object> shapeBuilder) {
+            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), differentiator)).Differentiator(differentiator);
+        }
+
+        private object AddAlternates(dynamic shape, string differentiator) {
+            // automatically add shape alternates for shapes added by fields
+            // [ShapeType__FieldName] for ShapeType-FieldName.cshtml templates
+            // [ShapeType__PartName] for ShapeType-PartName.cshtml templates
+            // [ShapeType__PartName__FieldName] for ShapeType-PartName-FieldName.cshtml templates
+
+            // for fields on dynamic parts the part name is the same as the content type name
+            // ex. Fields/Common.Text-Something.FirstName
+
+            ShapeMetadata metadata = shape.Metadata;
+            if (!string.IsNullOrEmpty(differentiator))
+                metadata.Alternates.Add(metadata.Type + "__" + differentiator);
+
+            ContentPart part = shape.ContentPart;
+            if (part != null) {
+                metadata.Alternates.Add(metadata.Type + "__" + part.PartDefinition.Name);
+                if (!string.IsNullOrEmpty(differentiator))
+                    metadata.Alternates.Add(metadata.Type + "__" + part.PartDefinition.Name + "__" + differentiator);
+            }
+
+            return shape;
         }
 
         private object CreateShape(BuildShapeContext context, string shapeType) {
@@ -90,4 +114,4 @@ namespace Orchard.ContentManagement.Drivers {
             return new CombinedResult(results);
         }
     }
-} 
+}

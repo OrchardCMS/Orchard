@@ -1,0 +1,13 @@
+﻿table.items .actions {
+    white-space:nowrap;   
+}
+table.items tr {
+    background:#fff;   
+}
+table.items tr.anonymous {
+    background:#fff;   
+}
+.anonymous-commenter-id,
+.authenticated-commenter-id {
+    font-style:italic;
+}

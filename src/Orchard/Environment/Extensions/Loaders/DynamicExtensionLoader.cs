@@ -41,6 +41,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public ILogger Logger { get; set; }
+        public bool Disabled { get; set; }
 
         public override int Order { get { return 100; } }
 
@@ -76,24 +77,14 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
-            // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
-            // that a new site compilation is needed (since ascx files may be referencing
-            // this now removed extension).
-            Logger.Information("ExtensionRemoved: Module \"{0}\" has been removed, forcing site recompilation", dependency.Name);
-            ctx.ResetSiteCompilation = true;
         }
 
         public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
-            // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
-            // that a new site compilation is needed (since ascx files may be referencing
-            // this now removed extension).
-            Logger.Information("ExtensionDeactivated: Module \"{0}\" has been de-activated, forcing site recompilation", extension.Name);
-            ctx.ResetSiteCompilation = true;
         }
 
         public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
             if (_reloadWorkaround.AppDomainRestartNeeded) {
-                Logger.Information("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Name);
+                Logger.Information("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Id);
                 ctx.RestartAppDomain = _reloadWorkaround.AppDomainRestartNeeded;
             }
         }
@@ -109,8 +100,8 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
                     Descriptor = descriptor,
                     Loader = this,
-                    Name = r.AssemblyName,
-                    VirtualPath = GetReferenceVirtualPath(projectPath, r.AssemblyName)
+                    Name = r.SimpleName,
+                    VirtualPath = GetReferenceVirtualPath(projectPath, r.SimpleName)
                 });
             }
         }
@@ -156,6 +147,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+            if (Disabled)
+                return null;
+
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
                 return null;
@@ -169,6 +163,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+            if (Disabled)
+                return null;
+
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
                 return null;
@@ -176,7 +173,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             var assembly = _buildManager.GetCompiledAssembly(projectPath);
             if (assembly == null)
                 return null;
-            //Logger.Information("Loading extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.GetName().Name);
+
+            Logger.Information("Loaded dynamic extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,
@@ -200,8 +198,8 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         private string GetProjectPath(ExtensionDescriptor descriptor) {
-            string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name,
-                                                       descriptor.Name + ".csproj");
+            string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
+                                                       descriptor.Id + ".csproj");
 
             if (!_virtualPathProvider.FileExists(projectPath)) {
                 return null;

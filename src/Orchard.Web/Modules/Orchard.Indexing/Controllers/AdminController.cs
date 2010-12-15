@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using Orchard.Indexing.Services;
 using Orchard.Localization;
+using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Indexing.ViewModels;
 
@@ -28,7 +29,7 @@ namespace Orchard.Indexing.Controllers {
 
         [HttpPost]
         public ActionResult Update() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageSearchIndex, T("Not allowed to manage the search index.")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
             _indexingService.UpdateIndex();
@@ -38,7 +39,7 @@ namespace Orchard.Indexing.Controllers {
 
         [HttpPost]
         public ActionResult Rebuild() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageSearchIndex, T("Not allowed to manage the search index.")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
             _indexingService.RebuildIndex();

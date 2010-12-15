@@ -1,5 +1,4 @@
 using System;
-using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
@@ -52,33 +51,8 @@ namespace Orchard.Blogs.Models {
             }
         }
 
-        public DateTime? CreatedUtc {
-            get { return this.As<ICommonPart>().CreatedUtc; }
-        }
-
-        public DateTime? ScheduledPublishUtc { get; set; }
-
-        private string _scheduledPublishUtcDate;
-
-        public string ScheduledPublishUtcDate
-        {
-            get {
-                return !HasPublished && !string.IsNullOrEmpty(_scheduledPublishUtcDate) || !ScheduledPublishUtc.HasValue
-                           ? _scheduledPublishUtcDate
-                           : ScheduledPublishUtc.Value.ToShortDateString();
-            }
-            set { _scheduledPublishUtcDate = value; }
-        }
-
-        private string _scheduledPublishUtcTime;
-
-        public string ScheduledPublishUtcTime {
-            get {
-                return !HasPublished && !string.IsNullOrEmpty(_scheduledPublishUtcTime) || !ScheduledPublishUtc.HasValue
-                           ? _scheduledPublishUtcTime
-                           : ScheduledPublishUtc.Value.ToShortTimeString();
-            }
-            set { _scheduledPublishUtcTime = value; }
+        public DateTime? PublishedUtc {
+            get { return this.As<ICommonPart>().PublishedUtc; }
         }
     }
 }

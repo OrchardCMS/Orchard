@@ -1,0 +1,12 @@
+﻿.breadCrumbs {
+    float:left;
+    margin:-2em 0 0;
+}
+.folderProperties {
+    float:right;
+    margin:-5em 0 0;
+}
+.previewImage {
+    max-height:640px;
+    max-width:640px;
+}

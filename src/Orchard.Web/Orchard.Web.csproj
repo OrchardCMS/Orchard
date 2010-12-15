@@ -28,6 +28,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\OrchardBasicCorrectness.ruleset</CodeAnalysisRuleSet>
+    <FilesToIncludeForPublish>AllFilesInProjectFolder</FilesToIncludeForPublish>
+    <PackageAsSingleFile>false</PackageAsSingleFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -51,21 +53,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.Integration.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="IronRuby, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\dlr\IronRuby.dll</HintPath>
-    </Reference>
-    <Reference Include="IronRuby.Libraries, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Dynamic, Version=1.1.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\dlr\Microsoft.Dynamic.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting, Version=1.1.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\dlr\Microsoft.Scripting.dll</HintPath>
+      <HintPath>..\..\lib\aspnetmvc\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -86,7 +77,6 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -128,18 +118,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Content Include="Config\log4net.config" />
+    <Content Include="Config\Sample.HostComponents.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Media\web.config" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Media\OrchardLogo.png" />
     <Content Include="Refresh.html" />
@@ -160,11 +149,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Config\Diagnostics.config">
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Sample.Host.config" />

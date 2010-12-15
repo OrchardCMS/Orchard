@@ -228,11 +228,11 @@ namespace Orchard.ContentManagement {
                 PublishingItemVersionRecord = null
             };
 
-            Handlers.Invoke(handler => handler.Publishing(context), Logger);
+            Handlers.Invoke(handler => handler.Unpublishing(context), Logger);
 
             publishedItem.VersionRecord.Published = false;
 
-            Handlers.Invoke(handler => handler.Published(context), Logger);
+            Handlers.Invoke(handler => handler.Unpublished(context), Logger);
         }
 
         public virtual void Remove(ContentItem contentItem) {
@@ -350,20 +350,10 @@ namespace Orchard.ContentManagement {
         public ContentItemMetadata GetItemMetadata(IContent content) {
             var context = new GetContentItemMetadataContext {
                 ContentItem = content.ContentItem,
-                Metadata = new ContentItemMetadata(content)
+                Metadata = new ContentItemMetadata()
             };
 
             Handlers.Invoke(handler => handler.GetContentItemMetadata(context), Logger);
-            //-- was - from ContentItemDriver --
-            //void IContentItemDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
-            //  var item = context.ContentItem.As<TContent>();
-            //  if (item != null) {
-            //    context.Metadata.DisplayText = GetDisplayText(item) ?? context.Metadata.DisplayText;
-            //    context.Metadata.DisplayRouteValues = GetDisplayRouteValues(item) ?? context.Metadata.DisplayRouteValues;
-            //    context.Metadata.EditorRouteValues = GetEditorRouteValues(item) ?? context.Metadata.EditorRouteValues;
-            //    context.Metadata.CreateRouteValues = GetCreateRouteValues(item) ?? context.Metadata.CreateRouteValues;
-            //  }
-            //}
 
             return context.Metadata;
         }

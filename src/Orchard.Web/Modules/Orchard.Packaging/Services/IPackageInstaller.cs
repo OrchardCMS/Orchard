@@ -1,3 +1,5 @@
+using NuGet;
+
 namespace Orchard.Packaging.Services {
     public class PackageInfo {
         public string ExtensionName { get; set; }
@@ -7,6 +9,7 @@ namespace Orchard.Packaging.Services {
     }
 
     public interface IPackageInstaller : IDependency {
+        PackageInfo Install(IPackage package, string location, string applicationPath);
         PackageInfo Install(string packageId, string version, string location, string applicationFolder);
         void Uninstall(string packageId, string applicationFolder);
     }

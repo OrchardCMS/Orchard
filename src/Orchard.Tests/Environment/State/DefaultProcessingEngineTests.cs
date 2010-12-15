@@ -23,7 +23,8 @@ namespace Orchard.Tests.Environment.State {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultProcessingEngine>().As<IProcessingEngine>();
-            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterModule(new WorkContextModule());
+            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking();
             _container = builder.Build();
 

@@ -1,0 +1,17 @@
+﻿Name: Scripting
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.9.0
+OrchardVersion: 0.9.0
+Description: The scripting module enables the possibility to execute scripts using a simple custom scripting language.
+Features:
+    Orchard.Scripting:
+        Name: Scripting
+        Description: Scripting support.
+        Category: Scripting
+    Orchard.Scripting.Lightweight:
+        Name: Lightweight scripting
+        Description: Custom lightweight and simple scripting language.
+        Dependencies: Orchard.Scripting
+        Category: Scripting

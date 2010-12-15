@@ -88,6 +88,18 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
         }
 
         [Test]
+        public void StructShouldMapDefaultDateTimeWithBadFormat() {
+            var source = XElement.Parse(@"
+<struct>
+    <member><name>seven</name><value><dateTime.iso8601>FOO</dateTime.iso8601></value></member>
+</struct>");
+
+            var xmlStruct = _structMapper.Map(source);
+            Assert.That(xmlStruct["seven"], Is.GreaterThan(DateTime.Now.AddSeconds(-1)));
+            Assert.That(xmlStruct["seven"], Is.LessThan(DateTime.Now.AddSeconds(1)));
+        }
+
+        [Test]
         public void ArrayShouldBringDataItemsWithCorrectType() {
             var source = XElement.Parse(@"
 <array>

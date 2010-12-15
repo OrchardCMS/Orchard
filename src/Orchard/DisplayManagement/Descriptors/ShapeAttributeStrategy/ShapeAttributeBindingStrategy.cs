@@ -12,10 +12,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Core;
-using ClaySharp.Implementation;
 using Microsoft.CSharp.RuntimeBinder;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.DisplayManagement.Shapes;
 using Orchard.Mvc.Spooling;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {

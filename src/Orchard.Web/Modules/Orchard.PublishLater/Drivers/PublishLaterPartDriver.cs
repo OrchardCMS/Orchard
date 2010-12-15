@@ -2,6 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Services;
+using Orchard.Mvc;
 using Orchard.PublishLater.Models;
 using Orchard.PublishLater.Services;
 using Orchard.PublishLater.ViewModels;
@@ -11,7 +12,6 @@ using System.Globalization;
 namespace Orchard.PublishLater.Drivers {
     public class PublishLaterPartDriver : ContentPartDriver<PublishLaterPart> {
         private const string TemplateName = "Parts/PublishLater";
-        private readonly ICommonService _commonService;
         private readonly IPublishLaterService _publishLaterService;
         private const string DatePattern = "M/d/yyyy";
         private const string TimePattern = "h:mm tt";
@@ -20,7 +20,6 @@ namespace Orchard.PublishLater.Drivers {
             IOrchardServices services,
             ICommonService commonService,
             IPublishLaterService publishLaterService) {
-            _commonService = commonService;
             _publishLaterService = publishLaterService;
             T = NullLocalizer.Instance;
             Services = services;
@@ -60,21 +59,23 @@ namespace Orchard.PublishLater.Drivers {
 
             updater.TryUpdateModel(model, Prefix, null, null);
 
-            if (!string.IsNullOrWhiteSpace(model.ScheduledPublishDate) && !string.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
-                DateTime scheduled;
-                string parseDateTime = String.Concat(model.ScheduledPublishDate, " ", model.ScheduledPublishTime);
+            if (Services.WorkContext.Resolve<IHttpContextAccessor>().Current().Request.Form["submit.Save"] == "submit.PublishLater") {
+                if (!string.IsNullOrWhiteSpace(model.ScheduledPublishDate) && !string.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
+                    DateTime scheduled;
+                    string parseDateTime = String.Concat(model.ScheduledPublishDate, " ", model.ScheduledPublishTime);
 
-                // use an english culture as it is the one used by jQuery.datepicker by default
-                if (DateTime.TryParse(parseDateTime, CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AssumeLocal, out scheduled)) {
-                    model.ScheduledPublishUtc = part.ScheduledPublishUtc.Value = scheduled.ToUniversalTime();
-                    _publishLaterService.Publish(model.ContentItem, model.ScheduledPublishUtc.Value);
+                    // use an english culture as it is the one used by jQuery.datepicker by default
+                    if (DateTime.TryParse(parseDateTime, CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AssumeLocal, out scheduled)) {
+                        model.ScheduledPublishUtc = part.ScheduledPublishUtc.Value = scheduled.ToUniversalTime();
+                        _publishLaterService.Publish(model.ContentItem, model.ScheduledPublishUtc.Value);
+                    }
+                    else {
+                        updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));
+                    }
                 }
-                else {
-                    updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));
+                else if (!string.IsNullOrWhiteSpace(model.ScheduledPublishDate) || !string.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
+                    updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then click Save or Publish Now."));
                 }
-            }
-            else if (!string.IsNullOrWhiteSpace(model.ScheduledPublishDate) || !string.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
-                updater.AddModelError(Prefix, T("Both the date and time need to be specified for when this is to be published. If you don't want to schedule publishing then clear both the date and time fields."));
             }
 
             return ContentShape("Parts_PublishLater_Edit",

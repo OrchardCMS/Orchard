@@ -1,0 +1,11 @@
+﻿@{
+    <h1>@Html.TitleForPage(T("Install a Theme").ToString())</h1>
+    using (Html.BeginFormAntiForgeryPost(Url.Action("AddTheme", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request["returnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+        Html.ValidationSummary();
+        <fieldset>
+            <label for="ModulePackage">@T("Theme Package")</label>
+            <input type="file" id="ThemePackage" size="64" name="ThemePackage" />
+        </fieldset>
+        <button type="submit" class="primaryAction">@T("Install")</button>
+    }
+}

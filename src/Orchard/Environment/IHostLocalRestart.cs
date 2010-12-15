@@ -45,7 +45,7 @@ namespace Orchard.Environment {
                 _appDataFolder.CreateFile(fileName, "Host Restart");
             }
             catch(Exception e) {
-                Logger.Warning("Error updateting file '{0}': {1}", fileName, e.Message);
+                Logger.Warning(e, "Error updating file '{0}'", fileName);
             }
         }
     }

@@ -36,37 +36,16 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.ComponentModel.DataAnnotations">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drivers\PublishLaterPartDriver.cs" />
@@ -82,6 +61,7 @@
     <Compile Include="Services\IPublishLaterService.cs" />
     <Compile Include="Services\PublishingTaskManager.cs" />
     <Compile Include="Services\PublishLaterService.cs" />
+    <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="ViewModels\PublishLaterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +86,7 @@
     <Content Include="Content\Admin\images\published.gif" />
     <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Module.txt" />
-    <Content Include="Styles\datetime.css" />
+    <Content Include="Styles\orchard-publishlater-datetime.css" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts\PublishLater.cshtml" />

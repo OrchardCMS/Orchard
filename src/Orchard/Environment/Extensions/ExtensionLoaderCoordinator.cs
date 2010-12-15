@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Web.Mvc;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
@@ -74,11 +76,6 @@ namespace Orchard.Environment.Extensions {
             Logger.Information("Done loading extensions...");
 
             // Very last step: Notify the host environment to restart the AppDomain if needed
-            if (context.ResetSiteCompilation) {
-                Logger.Information("Reset site compilation state required.");
-                _hostEnvironment.ResetSiteCompilation();
-            }
-
             if (context.RestartAppDomain) {
                 Logger.Information("AppDomain restart required.");
                 _hostEnvironment.RestartAppDomain();
@@ -87,12 +84,12 @@ namespace Orchard.Environment.Extensions {
 
         private void ProcessExtension(ExtensionLoadingContext context, ExtensionDescriptor extension) {
 
-            var extensionProbes = context.AvailableExtensionsProbes.ContainsKey(extension.Name) ?
-                context.AvailableExtensionsProbes[extension.Name] :
+            var extensionProbes = context.AvailableExtensionsProbes.ContainsKey(extension.Id) ?
+                context.AvailableExtensionsProbes[extension.Id] :
                 Enumerable.Empty<ExtensionProbeEntry>();
 
             if (Logger.IsEnabled(LogLevel.Debug)) {
-                Logger.Debug("Loaders for extension \"{0}\": ", extension.Name);
+                Logger.Debug("Loaders for extension \"{0}\": ", extension.Id);
                 foreach (var probe in extensionProbes) {
                     Logger.Debug("  Loader: {0}", probe.Loader.Name);
                     Logger.Debug("    VirtualPath: {0}", probe.VirtualPath);
@@ -103,14 +100,14 @@ namespace Orchard.Environment.Extensions {
             var moduleReferences =
                 context.AvailableExtensions
                     .Where(e =>
-                           context.ReferencesByModule.ContainsKey(extension.Name) &&
-                           context.ReferencesByModule[extension.Name].Any(r => StringComparer.OrdinalIgnoreCase.Equals(e.Name, r.Name)))
+                           context.ReferencesByModule.ContainsKey(extension.Id) &&
+                           context.ReferencesByModule[extension.Id].Any(r => StringComparer.OrdinalIgnoreCase.Equals(e.Id, r.Name)))
                     .ToList();
 
             var processedModuleReferences =
                 moduleReferences
-                .Where(e => context.ProcessedExtensions.ContainsKey(e.Name))
-                .Select(e => context.ProcessedExtensions[e.Name])
+                .Where(e => context.ProcessedExtensions.ContainsKey(e.Id))
+                .Select(e => context.ProcessedExtensions[e.Id])
                 .ToList();
 
             var activatedExtension = extensionProbes
@@ -119,18 +116,18 @@ namespace Orchard.Environment.Extensions {
 
             var previousDependency = context
                 .PreviousDependencies
-                .Where(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, extension.Name))
+                .Where(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, extension.Id))
                 .FirstOrDefault();
 
             if (activatedExtension == null) {
-                Logger.Warning("No loader found for extension \"{0}\"!", extension.Name);
+                Logger.Warning("No loader found for extension \"{0}\"!", extension.Id);
             }
 
             var references = ProcessExtensionReferences(context, activatedExtension);
 
             foreach (var loader in _loaders) {
                 if (activatedExtension != null && activatedExtension.Loader.Name == loader.Name) {
-                    Logger.Information("Activating extension \"{0}\" with loader \"{1}\"", activatedExtension.Descriptor.Name, loader.Name);
+                    Logger.Information("Activating extension \"{0}\" with loader \"{1}\"", activatedExtension.Descriptor.Id, loader.Name);
                     loader.ExtensionActivated(context, extension);
                 }
                 else if (previousDependency != null && previousDependency.LoaderName == loader.Name) {
@@ -141,7 +138,7 @@ namespace Orchard.Environment.Extensions {
 
             if (activatedExtension != null) {
                 context.NewDependencies.Add(new DependencyDescriptor {
-                    Name = extension.Name,
+                    Name = extension.Id,
                     LoaderName = activatedExtension.Loader.Name,
                     VirtualPath = activatedExtension.VirtualPath,
                     References = references
@@ -150,28 +147,41 @@ namespace Orchard.Environment.Extensions {
 
             // Keep track of which loader we use for every extension
             // This will be needed for processing references from other dependent extensions
-            context.ProcessedExtensions.Add(extension.Name, activatedExtension);
+            context.ProcessedExtensions.Add(extension.Id, activatedExtension);
         }
 
         private ExtensionLoadingContext CreateLoadingContext() {
             var availableExtensions = _extensionManager
                 .AvailableExtensions()
-                .Where(d => d.ExtensionType == "Module" || d.ExtensionType == "Theme")
-                .OrderBy(d => d.Name)
+                .Where(d => DefaultExtensionTypes.IsModule(d.ExtensionType) || DefaultExtensionTypes.IsTheme(d.ExtensionType))
+                .OrderBy(d => d.Id)
                 .ToList();
+
+            // Check there are no duplicates
+            var duplicates = availableExtensions.GroupBy(ed => ed.Id).Where(g => g.Count() >= 2).ToList();
+            if (duplicates.Count() > 0) {
+                var sb = new StringBuilder();
+                sb.Append(T("There are multiple extensions with the same name installed in this instance of Orchard.\r\n"));
+                foreach(var dup in duplicates) {
+                    sb.Append(T("Extension '{0}' has been found from the following locations: {1}.\r\n", dup.Key, string.Join(", ", dup.Select(e => e.Location + "/" + e.Id))));
+                }
+                sb.Append(T("This issue can be usually solved by removing or renaming the conflicting extension."));
+                Logger.Error(sb.ToString());
+                throw new OrchardException(new LocalizedString(sb.ToString()));
+            }
 
             var previousDependencies = _dependenciesFolder.LoadDescriptors().ToList();
 
             var availableExtensionsProbes = availableExtensions.SelectMany(extension => _loaders
                                                                                             .Select(loader => loader.Probe(extension))
                                                                                             .Where(probe => probe != null))
-                .GroupBy(e => e.Descriptor.Name)
+                .GroupBy(e => e.Descriptor.Id)
                 .ToDictionary(g => g.Key, g => g.AsEnumerable()
                                                    .OrderByDescending(probe => probe.LastWriteTimeUtc)
                                                    .ThenBy(probe => probe.Loader.Order), StringComparer.OrdinalIgnoreCase);
 
             var deletedDependencies = previousDependencies
-                .Where(e => !availableExtensions.Any(e2 => StringComparer.OrdinalIgnoreCase.Equals(e2.Name, e.Name)))
+                .Where(e => !availableExtensions.Any(e2 => StringComparer.OrdinalIgnoreCase.Equals(e2.Id, e.Name)))
                 .ToList();
 
             // Collect references for all modules
@@ -181,7 +191,7 @@ namespace Orchard.Environment.Extensions {
                     .ToList();
 
             var referencesByModule = references
-                .GroupBy(entry => entry.Descriptor.Name, StringComparer.OrdinalIgnoreCase)
+                .GroupBy(entry => entry.Descriptor.Id, StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(g => g.Key, g => g.AsEnumerable(), StringComparer.OrdinalIgnoreCase);
 
             var referencesByName = references
@@ -190,8 +200,8 @@ namespace Orchard.Environment.Extensions {
 
             var sortedAvailableExtensions =
                 availableExtensions.OrderByDependencies(
-                    (item, dep) => referencesByModule.ContainsKey(item.Name) &&
-                                   referencesByModule[item.Name].Any(r => StringComparer.OrdinalIgnoreCase.Equals(dep.Name, r.Name)))
+                    (item, dep) => referencesByModule.ContainsKey(item.Id) &&
+                                   referencesByModule[item.Id].Any(r => StringComparer.OrdinalIgnoreCase.Equals(dep.Id, r.Name)))
                     .ToList();
 
             return new ExtensionLoadingContext {
@@ -208,8 +218,8 @@ namespace Orchard.Environment.Extensions {
             if (activatedExtension == null)
                 return Enumerable.Empty<DependencyReferenceDescriptor>();
 
-            var referenceNames = (context.ReferencesByModule.ContainsKey(activatedExtension.Descriptor.Name) ?
-                context.ReferencesByModule[activatedExtension.Descriptor.Name] :
+            var referenceNames = (context.ReferencesByModule.ContainsKey(activatedExtension.Descriptor.Id) ?
+                context.ReferencesByModule[activatedExtension.Descriptor.Id] :
                 Enumerable.Empty<ExtensionReferenceProbeEntry>())
                 .Select(r => r.Name)
                 .Distinct(StringComparer.OrdinalIgnoreCase);
@@ -227,6 +237,24 @@ namespace Orchard.Environment.Extensions {
             string referenceName,
             IList<DependencyReferenceDescriptor> activatedReferences) {
 
+            // If the reference is an extension has been processed already, use the same loader as 
+            // that extension, since a given extension should be loaded with a unique loader for the 
+            // whole application
+            var bestExtensionReference = context.ProcessedExtensions.ContainsKey(referenceName) ?
+                context.ProcessedExtensions[referenceName] :
+                null;
+
+            // Activated the extension reference
+            if (bestExtensionReference != null) {
+                activatedReferences.Add(new DependencyReferenceDescriptor {
+                    LoaderName = bestExtensionReference.Loader.Name,
+                    Name = referenceName,
+                    VirtualPath = bestExtensionReference.VirtualPath
+                });
+
+                return;
+            }
+
             // Skip references from "~/bin"
             if (_buildManager.HasReferencedAssembly(referenceName))
                 return;
@@ -243,20 +271,6 @@ namespace Orchard.Environment.Extensions {
                 .ThenBy(e => e.Entry.Name)
                 .FirstOrDefault();
 
-            var bestExtensionReference = context.ProcessedExtensions.ContainsKey(referenceName) ?
-                context.ProcessedExtensions[referenceName] :
-                null;
-
-            // Pick the best one of module vs binary
-            if (bestExtensionReference != null && bestBinaryReference != null) {
-                if (bestExtensionReference.LastWriteTimeUtc >= bestBinaryReference.LastWriteTimeUtc) {
-                    bestBinaryReference = null;
-                }
-                else {
-                    bestExtensionReference = null;
-                }
-            }
-
             // Activate the binary ref
             if (bestBinaryReference != null) {
                 if (!context.ProcessedReferences.Contains(bestBinaryReference.Entry.Name)) {
@@ -269,15 +283,6 @@ namespace Orchard.Environment.Extensions {
                     VirtualPath = bestBinaryReference.Entry.VirtualPath
                 });
                 return;
-            }
-
-            // Activated the module ref
-            if (bestExtensionReference != null) {
-                activatedReferences.Add(new DependencyReferenceDescriptor {
-                    LoaderName = bestExtensionReference.Loader.Name,
-                    Name = referenceName,
-                    VirtualPath = bestExtensionReference.VirtualPath
-                });
             }
         }
 
@@ -298,7 +303,7 @@ namespace Orchard.Environment.Extensions {
             monitor(_virtualPathMonitor.WhenPathChanges("~/Themes"));
 
             // Give loaders a chance to monitor any additional changes
-            var extensions = _extensionManager.AvailableExtensions().Where(d => d.ExtensionType == "Module" || d.ExtensionType == "Theme").ToList();
+            var extensions = _extensionManager.AvailableExtensions().Where(d => DefaultExtensionTypes.IsModule(d.ExtensionType) || DefaultExtensionTypes.IsTheme(d.ExtensionType)).ToList();
             foreach (var extension in extensions) {
                 foreach (var loader in _loaders) {
                     loader.Monitor(extension, monitor);

@@ -1,0 +1,112 @@
+﻿.orchard-contenttypes #main h2 {
+    margin:1.5em 0 0;
+    border-bottom:1px solid #ccc;
+}
+
+#main .properties p {
+    margin:0;
+}
+
+.manage.add-to-type {
+    margin-top:-3.1em;
+}
+.manage-part {
+    margin-bottom:1em;
+}
+.manage-part h3,
+.manage-field h3 {
+    border-bottom:1px solid #EAEAEA;
+    display:relative;
+    line-height:1.4em;
+    padding-bottom:0;
+    padding-top:0;
+}
+.manage-part h3,
+.manage-field h3,
+.manage-part h4,
+.manage-type .manage-field .details,
+.manage-type .manage-part .manage-field,
+.manage-type .manage-part .settings {
+    padding-left:20px;
+}
+.manage-type .manage-field .settings {
+    padding-bottom:10px;
+    padding-left:0;
+}
+.manage-part h4 {
+    padding-left:0;
+}
+.manage-part .manage-field h4 {
+    line-height:1.8em;
+    padding-bottom:0;
+    padding-left:15px;
+}
+.manage-type .manage-part .manage,
+.manage-type .manage-field .manage,
+.manage-part .manage-field .manage {
+    margin-top:-2.4em;
+}
+.manage-field .details,
+.manage-part .details {
+    overflow:auto;
+}
+.manage-part .manage.minor {
+    margin:0 0 -1.2em;
+}
+.manage-part label,
+.manage-field label {
+    font-weight:normal;
+}
+.manage-field fieldset,
+.manage-part fieldset {
+    margin:.5em 0 1em;
+    padding:0;
+}
+.manage-field .settings {
+    margin:0 0 0 15px;
+    padding-left:0;
+}
+.manage-part .settings {
+    overflow:auto;
+}
+.manage-part .settings fieldset {
+    padding-left:0;
+}
+
+fieldset.action {
+    margin-top:2em;
+}
+
+/* should pull this back into the base admin theme css, w/out the .manage-part of course */
+.manage-part dl {
+    margin:0 0 1em;
+    overflow:auto;
+    padding:6px 0 0;
+}
+.manage-part dt,
+.manage-part dd {
+    float:left;
+}
+.manage-part dt {
+    clear:left;
+}
+.manage-part dt::after {
+    content:":";
+}
+.manage-part dd {
+    font-style:italic;
+    padding-left:.5em;
+}
+.manage-part dl dl {
+    font-size:1em;
+    margin:0;
+    padding:0;
+}
+.manage-part dd dt {
+    clear:left;
+    float:left;
+}
+.manage-part dd dd {
+    float:left;
+    padding-left:.5em;
+}

@@ -124,32 +124,12 @@ namespace Orchard.ContentManagement {
             }
         }
 
-
         private IEnumerable<ContentItem> Slice(int skip, int count) {
             var criteria = BindItemVersionCriteria();
-            if (_versionOptions == null) {
-                criteria.Add(Restrictions.Eq("Published", true));
-            }
-            else if (_versionOptions.IsPublished) {
-                criteria.Add(Restrictions.Eq("Published", true));
-            }
-            else if (_versionOptions.IsLatest) {
-                criteria.Add(Restrictions.Eq("Latest", true));
-            }
-            else if (_versionOptions.IsDraft) {
-                criteria.Add(Restrictions.And(
-                                 Restrictions.Eq("Latest", true),
-                                 Restrictions.Eq("Published", false)));
-            }
-            else if (_versionOptions.IsAllVersions) {
-                // no-op... all versions will be returned by default
-            }
-            else {
-                throw new ApplicationException("Invalid VersionOptions for content query");
-            }
+            
+            criteria.ApplyVersionOptionsRestrictions(_versionOptions);
 
             // TODO: put 'removed false' filter in place
-
             if (skip != 0) {
                 criteria = criteria.SetFirstResult(skip);
             }
@@ -160,6 +140,15 @@ namespace Orchard.ContentManagement {
                 .List<ContentItemVersionRecord>()
                 .Select(x => ContentManager.Get(x.Id, VersionOptions.VersionRecord(x.Id)))
                 .ToReadOnlyCollection();
+        }
+
+        int Count() {
+            var criteria = (ICriteria)BindItemVersionCriteria().Clone();
+            criteria.ClearOrders();
+
+            criteria.ApplyVersionOptionsRestrictions(_versionOptions);
+
+            return criteria.SetProjection(Projections.RowCount()).UniqueResult<Int32>();
         }
 
         IContentQuery<TPart> IContentQuery.ForPart<TPart>() {
@@ -195,14 +184,12 @@ namespace Orchard.ContentManagement {
                 return _query.Slice(0, 0).AsPart<T>();
             }
 
-            int IContentQuery<T>.Count() {
-                var criteria = (ICriteria)_query.BindItemVersionCriteria().Clone();
-                criteria.ClearOrders();
-                return criteria.SetProjection( Projections.RowCount() ).UniqueResult<Int32>();  
-            }
-
             IEnumerable<T> IContentQuery<T>.Slice(int skip, int count) {
                 return _query.Slice(skip, count).AsPart<T>();
+            }
+
+            int IContentQuery<T>.Count() {
+                return _query.Count();
             }
 
             IContentQuery<T, TRecord> IContentQuery<T>.Join<TRecord>() {
@@ -255,5 +242,30 @@ namespace Orchard.ContentManagement {
             }
         }
 
+    }
+
+    internal static class CriteriaExtensions {
+        internal static void ApplyVersionOptionsRestrictions(this ICriteria criteria, VersionOptions versionOptions) {
+            if (versionOptions == null) {
+                criteria.Add(Restrictions.Eq("Published", true));
+            }
+            else if (versionOptions.IsPublished) {
+                criteria.Add(Restrictions.Eq("Published", true));
+            }
+            else if (versionOptions.IsLatest) {
+                criteria.Add(Restrictions.Eq("Latest", true));
+            }
+            else if (versionOptions.IsDraft) {
+                criteria.Add(Restrictions.And(
+                    Restrictions.Eq("Latest", true),
+                    Restrictions.Eq("Published", false)));
+            }
+            else if (versionOptions.IsAllVersions) {
+                // no-op... all versions will be returned by default
+            }
+            else {
+                throw new ApplicationException("Invalid VersionOptions for content query");
+            }
+        }
     }
 }

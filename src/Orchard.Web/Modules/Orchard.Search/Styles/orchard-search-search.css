@@ -1,0 +1,27 @@
+﻿form.search {
+    float:left;
+}
+form.search input {
+    display:inline;
+    width:20em;
+}
+.search-summary {
+    float:right;
+    font-style:italic;
+    margin-top:0;
+}
+.search-summary em {
+    font-weight:bold;
+}
+.search-results {
+    clear:both;
+}
+
+.search-form input[type="text"] { float: left; }
+.search-form button[type="submit"] { float: left; margin: 0; margin-left: 6px; }
+
+/*Search widget styles. More syles could be added here to target specific zones.*/
+.widget-search-form {
+    float:right;
+ }
+

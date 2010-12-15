@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Web.Compilation;
-using System.Web.Hosting;
+﻿using System.IO;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
@@ -26,11 +21,12 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public ILogger Logger { get; set; }
+        public bool Disabled { get; set; }
 
         public override int Order { get { return 20; } }
 
         public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
-            DeleteAssembly(ctx, extension.Name);
+            DeleteAssembly(ctx, extension.Id);
         }
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
@@ -50,10 +46,10 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
-            if (HostingEnvironment.IsHosted == false)
+            if (Disabled)
                 return null;
 
-            var assembly = _buildManager.GetReferencedAssembly(descriptor.Name);
+            var assembly = _buildManager.GetReferencedAssembly(descriptor.Id);
             if (assembly == null)
                 return null;
 
@@ -61,19 +57,19 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Descriptor = descriptor,
                 LastWriteTimeUtc = File.GetLastWriteTimeUtc(assembly.Location),
                 Loader = this,
-                VirtualPath = _virtualPathProvider.Combine("~/bin", descriptor.Name + ".dll")
+                VirtualPath = _virtualPathProvider.Combine("~/bin", descriptor.Id + ".dll")
             };
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
-            if (HostingEnvironment.IsHosted == false)
+            if (Disabled)
                 return null;
 
-            var assembly = _buildManager.GetReferencedAssembly(descriptor.Name);
+            var assembly = _buildManager.GetReferencedAssembly(descriptor.Id);
             if (assembly == null)
                 return null;
 
-            //Logger.Information("Loading extension \"{0}\"", descriptor.Name);
+            Logger.Information("Loaded referenced extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,

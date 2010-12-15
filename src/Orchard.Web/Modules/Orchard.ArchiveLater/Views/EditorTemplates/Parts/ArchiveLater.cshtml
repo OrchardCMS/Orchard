@@ -8,7 +8,7 @@
     Script.Require("jQueryUtils_TimePicker");
 }
 
-<fieldset>
+<fieldset class="archive-later-datetime">
     <legend>@T("Archive Settings")</legend>
     <div>
         @Html.CheckBox("ArchiveLater", Model.ScheduledArchiveUtc.HasValue, new { id = ViewData.TemplateInfo.GetFullHtmlFieldId("Command_ArchiveLater") })

@@ -60,6 +60,11 @@ namespace Orchard.Tests.Stubs {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
+
+                public int PageSize {
+                    get { throw new NotImplementedException(); }
+                    set { throw new NotImplementedException(); }
+                }
             }
 
             public class StubUser : IUser {

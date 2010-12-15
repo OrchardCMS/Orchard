@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Blogs.Models;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Routable.Models;
+using Orchard.Core.Routable.Services;
 using Orchard.Data;
 using Orchard.Tasks.Scheduling;
 
@@ -27,8 +29,9 @@ namespace Orchard.Blogs.Services {
         }
 
         public BlogPostPart Get(BlogPart blogPart, string slug, VersionOptions versionOptions) {
+            var postSlug = blogPart.As<IRoutableAspect>().GetChildPath(slug);
             return
-                _contentManager.Query(versionOptions, "BlogPost").Join<RoutePartRecord>().Where(rr => rr.Slug == slug).
+                _contentManager.Query(versionOptions, "BlogPost").Join<RoutePartRecord>().Where(rr => rr.Path == postSlug).
                     Join<CommonPartRecord>().Where(cr => cr.Container == blogPart.Record.ContentItemRecord).List().
                     SingleOrDefault().As<BlogPostPart>();
         }

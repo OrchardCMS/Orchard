@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Localization;
+using Orchard.Mvc.Extensions;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
@@ -33,7 +33,7 @@ namespace Orchard.Roles.Controllers {
 
 
         public ActionResult Index() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
             var model = new RolesIndexViewModel { Rows = _roleService.GetRoles().ToList() };
@@ -43,7 +43,7 @@ namespace Orchard.Roles.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
             try {
@@ -62,7 +62,7 @@ namespace Orchard.Roles.Controllers {
         }
 
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
             var model = new RoleCreateViewModel { FeaturePermissions = _roleService.GetInstalledPermissions() };
@@ -71,7 +71,7 @@ namespace Orchard.Roles.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new RoleCreateViewModel();
@@ -94,7 +94,7 @@ namespace Orchard.Roles.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
             var role = _roleService.GetRole(id);
@@ -120,7 +120,7 @@ namespace Orchard.Roles.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
         public ActionResult EditSavePOST(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new RoleEditViewModel();
@@ -153,7 +153,7 @@ namespace Orchard.Roles.Controllers {
 
         [HttpPost]
         public ActionResult Delete(int id, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
             try {
@@ -161,10 +161,7 @@ namespace Orchard.Roles.Controllers {
 
                 Services.Notifier.Information(T("Role was successfully deleted."));
 
-                if (!string.IsNullOrWhiteSpace(returnUrl))
-                    return Redirect(returnUrl);
-
-                return RedirectToAction("Index");
+                return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
             } catch (Exception exception) {
                 Services.Notifier.Error(T("Editing Role failed: {0}", exception.Message));
                 return RedirectToAction("Edit", id);

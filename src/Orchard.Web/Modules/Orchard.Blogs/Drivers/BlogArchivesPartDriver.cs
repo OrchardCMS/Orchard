@@ -24,12 +24,12 @@ namespace Orchard.Blogs.Drivers {
                                         return null;
 
                                     return shapeHelper.Parts_Blogs_BlogArchives(ContentItem: part.ContentItem, Blog: blog, Archives: _blogPostService.GetArchives(blog));
-                                }).Location("Content");
+                                });
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_BlogArchives_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Blogs.BlogArchives", Model: part, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.BlogArchives", Model: part, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, IUpdateModel updater, dynamic shapeHelper) {

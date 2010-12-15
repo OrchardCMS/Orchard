@@ -19,7 +19,7 @@ namespace Orchard.Tests.UI {
 
         protected override void Register(ContainerBuilder builder) {
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>();
-            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<LayoutWorkContext>().As<IWorkContextStateProvider>();
@@ -29,7 +29,7 @@ namespace Orchard.Tests.UI {
             throw new NotImplementedException("this test fixture needs to move to modules tests now");
         }
 
-        protected override void Resolve(IContainer container) {
+        protected override void Resolve(ILifetimeScope container) {
             _workContext = container.Resolve<IWorkContextAccessor>().CreateWorkContextScope().WorkContext;
         }
 

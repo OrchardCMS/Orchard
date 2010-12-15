@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Mvc.Routes;
 
@@ -19,7 +18,7 @@ namespace Orchard.Tests.Mvc.Routes {
                         Feature =new Feature {
                             Descriptor=new FeatureDescriptor {
                                 Extension=new ExtensionDescriptor {
-                                    DisplayName="Foo"
+                                    Name="Foo"
                                 }
                             }
                         }
@@ -29,7 +28,7 @@ namespace Orchard.Tests.Mvc.Routes {
                         Feature =new Feature {
                             Descriptor=new FeatureDescriptor {
                                 Extension=new ExtensionDescriptor {
-                                    DisplayName="Bar"
+                                    Name="Bar"
                                 }
                             }
                         }

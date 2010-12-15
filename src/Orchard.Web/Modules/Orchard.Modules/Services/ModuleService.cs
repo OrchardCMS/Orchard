@@ -6,7 +6,6 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
-using Orchard.Modules.Models;
 using Orchard.Modules.ViewModels;
 using Orchard.UI.Notify;
 
@@ -19,20 +18,16 @@ namespace Orchard.Modules.Services {
     }
 
     public class ModuleService : IModuleService {
-        private const string ModuleExtensionType = "module";
         private readonly IExtensionManager _extensionManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
-        private readonly IWorkContextAccessor _workContextAccessor;
 
         public ModuleService(
                 IOrchardServices orchardServices, 
                 IExtensionManager extensionManager,
-                IShellDescriptorManager shellDescriptorManager,
-                IWorkContextAccessor workContextAccessor) {
+                IShellDescriptorManager shellDescriptorManager) {
             Services = orchardServices;
             _extensionManager = extensionManager;
             _shellDescriptorManager = shellDescriptorManager;
-            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
 
@@ -53,7 +48,7 @@ namespace Orchard.Modules.Services {
             return _extensionManager.AvailableExtensions()
                 .SelectMany(m => _extensionManager.LoadFeatures(m.Features))
                 .Select(f => AssembleModuleFromDescriptor(f, enabledFeatures
-                    .FirstOrDefault(sf => string.Equals(sf.Name, f.Descriptor.Name, StringComparison.OrdinalIgnoreCase)) != null));
+                    .FirstOrDefault(sf => string.Equals(sf.Name, f.Descriptor.Id, StringComparison.OrdinalIgnoreCase)) != null));
         }
 
         public void EnableFeatures(IEnumerable<string> featureNames) {
@@ -111,10 +106,10 @@ namespace Orchard.Modules.Services {
             var getDisabledDependencies =
                 new Func<string, IEnumerable<ModuleFeature>, IEnumerable<ModuleFeature>>(
                     (n, fs) => {
-                        var feature = fs.Single(f => f.Descriptor.Name == n);
+                        var feature = fs.Single(f => f.Descriptor.Id == n);
                         return feature.Descriptor.Dependencies != null
                                    ? feature.Descriptor.Dependencies.Select(
-                                       fn => fs.Single(f => f.Descriptor.Name == fn)).Where(f => !f.IsEnabled)
+                                       fn => fs.Single(f => f.Descriptor.Id == fn)).Where(f => !f.IsEnabled)
                                    : Enumerable.Empty<ModuleFeature>();
                     });
 
@@ -152,7 +147,7 @@ namespace Orchard.Modules.Services {
             var dependencies = new List<string> {featureName};
 
             foreach (var dependency in getAffectedDependencies(featureName, features))
-                dependencies.AddRange(GetAffectedFeatures(dependency.Descriptor.Name, features, getAffectedDependencies));
+                dependencies.AddRange(GetAffectedFeatures(dependency.Descriptor.Id, features, getAffectedDependencies));
 
             return dependencies;
         }
@@ -175,40 +170,6 @@ namespace Orchard.Modules.Services {
                                                    : "{0}, "), fn).ToString()).ToArray())
                     : featuresInQuestion.First()));
         }
-
-        private static string TryLocalize(string key, string original, Localizer localizer) {
-            var localized = localizer(key).Text;
-
-            if(key == localized) {
-                // no specific localization available
-                return original;
-            }
-
-            return localized;
-        }
-
-        //private IModule AssembleModuleFromDescriptor(ExtensionDescriptor extensionDescriptor) {
-
-        //    var localizer = LocalizationUtilities.Resolve(_workContextAccessor.GetContext(), String.Concat(extensionDescriptor.Location, "/", extensionDescriptor.Name, "/Module.txt"));
-
-        //    return new Module {
-        //        //ModuleName = extensionDescriptor.Name,
-        //        //DisplayName = TryLocalize("Name", extensionDescriptor.DisplayName, localizer),
-        //        //Description = TryLocalize("Description", extensionDescriptor.Description, localizer),
-        //        //Version = extensionDescriptor.Version,
-        //        //Author = TryLocalize("Author", extensionDescriptor.Author, localizer),
-        //        //HomePage = TryLocalize("Website", extensionDescriptor.WebSite, localizer),
-        //        //Tags = TryLocalize("Tags", extensionDescriptor.Tags, localizer),
-        //        //Features = extensionDescriptor.Features.Select(f => new FeatureDescriptor {
-        //        //    Category = TryLocalize(f.Name + " Category", f.Category, localizer),
-        //        //    Dependencies = f.Dependencies,
-        //        //    Description = TryLocalize(f.Name + " Description", f.Description, localizer),
-        //        //    DisplayName = TryLocalize(f.Name + " Name", f.DisplayName, localizer),
-        //        //    Extension = f.Extension,
-        //        //    Name = f.Name,
-        //        //})
-        //    };
-        //}
 
         private static ModuleFeature AssembleModuleFromDescriptor(Feature feature, bool isEnabled) {
             return new ModuleFeature {

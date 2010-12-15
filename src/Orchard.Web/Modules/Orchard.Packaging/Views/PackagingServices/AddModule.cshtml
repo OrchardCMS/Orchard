@@ -1,0 +1,11 @@
+﻿@{
+    <h1>@Html.TitleForPage(T("Install a Module").ToString())</h1>
+    using (Html.BeginFormAntiForgeryPost(Url.Action("AddModule", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request["returnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
+        Html.ValidationSummary();
+        <fieldset>
+            <label for="ModulePackage">@T("Module Package")</label>
+            <input type="file" id="ModulePackage" size="64" name="ModulePackage" />
+        </fieldset>
+        <button type="submit" class="primaryAction">@T("Install")</button>
+    }
+}

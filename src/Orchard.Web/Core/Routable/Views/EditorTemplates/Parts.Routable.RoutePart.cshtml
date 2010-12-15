@@ -1,0 +1,37 @@
+﻿@model Orchard.Core.Routable.ViewModels.RoutableEditorViewModel
+@using Orchard.Utility.Extensions;
+@{ Script.Require("Slugify"); }
+
+<fieldset>
+    @Html.LabelFor(m => m.Title, T("Title"))
+    @Html.TextBoxFor(m => m.Title, new { @class = "large text" })
+</fieldset>
+<fieldset class="permalink">
+    <label class="sub" for="Slug">@T("Permalink")<br /><span>@Model.ContainerAbsoluteUrl/</span></label>
+    <span>@Html.TextBoxFor(m => m.Slug, new { @class = "text" })</span>
+    <span class="checkbox-and-label">
+        @Html.EditorFor(m => m.PromoteToHomePage)
+        <label for="@ViewData.TemplateInfo.GetFullHtmlFieldId("PromoteToHomePage")" class="forcheckbox">@T("Set as home page")</label>
+    </span>
+</fieldset>
+@using(Script.Foot()){
+<script type="text/javascript">
+//<![CDATA[
+    $(function(){
+        //pull slug input from tab order
+        $("#@Html.FieldIdFor(m=>m.Slug)").attr("tabindex",-1);
+        $("#@Html.FieldIdFor(m=>m.Title)").blur(function(){
+            var slug = $("#@Html.FieldIdFor(m=>m.Slug)");
+            if (slug.val()) { return true; }
+            $(this).slugify({
+                target:slug,
+                contentType:"@Model.ContentType",
+                id:"@Model.Id",
+                @if (Model.ContainerId != null) {<text>containerId:@Model.ContainerId,</text>}
+                url:"@Url.Action("Slugify","Item",new RouteValueDictionary{{"Area","Routable"}})"
+            })
+        })
+    })
+//]]>
+</script>
+}

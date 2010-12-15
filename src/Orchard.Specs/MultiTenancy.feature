@@ -89,7 +89,7 @@ Scenario: A new tenant runs the setup
             | AdminPassword | 6655321 |
             | ConfirmPassword | 6655321 |
         And I hit "Finish Setup"
-            And I go to "/Default.aspx"
+            And I go to "/"
     Then I should see "Scott Site"
         And I should see "Welcome"
         
@@ -163,7 +163,7 @@ Scenario: A running tenant which is disabled can be enabled
         And I hit "Resume"
         And I am redirected
     Then I should see "<form action="/Admin/MultiTenancy/disable""
-    
+
 Scenario: Listing tenants from command line
     Given I have installed Orchard
         And I have installed "Orchard.MultiTenancy"

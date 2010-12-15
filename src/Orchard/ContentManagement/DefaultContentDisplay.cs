@@ -95,16 +95,18 @@ namespace Orchard.ContentManagement {
         }
 
         private void BindPlacement(BuildShapeContext context, string displayType) {
-            context.FindPlacement = (partShapeType, defaultLocation) => {
+            context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
                 //var workContext = _workContextAccessor.GetContext();
                 //var theme = workContext.CurrentTheme;
                 var theme = _themeService.Value.GetRequestTheme(_requestContext);
-                var shapeTable = _shapeTableManager.GetShapeTable(theme.Name);
+                var shapeTable = _shapeTableManager.GetShapeTable(theme.Id);
+
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
                     var placementContext = new ShapePlacementContext {
                         ContentType = context.ContentItem.ContentType,
-                        DisplayType = displayType
+                        DisplayType = displayType,
+                        Differentiator = differentiator,
                     };
                     var location = descriptor.Placement(placementContext);
                     return location ?? defaultLocation;

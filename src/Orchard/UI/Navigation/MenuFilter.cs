@@ -21,6 +21,10 @@ namespace Orchard.UI.Navigation {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+            // should only run on a full view rendering result
+            if (!(filterContext.Result is ViewResult))
+                return;
+
             var workContext = _workContextAccessor.GetContext(filterContext);
 
             var menuName = "main";
@@ -41,6 +45,7 @@ namespace Orchard.UI.Navigation {
                 var menuItemShape = shapeFactory.MenuItem()
                     .Text(menuItem.Text)
                     .Href(menuItem.Href)
+                    .LinkToFirstChild(menuItem.LinkToFirstChild)
                     .RouteValues(menuItem.RouteValues)
                     .Item(menuItem)
                     .Menu(menu)

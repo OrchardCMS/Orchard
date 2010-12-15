@@ -1,59 +1,55 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Orchard.Localization;
 using Orchard.Scripting;
-using Orchard.UI.Widgets;
+using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.RuleEngine {
     public class RuleManager : IRuleManager {
         private readonly IEnumerable<IRuleProvider> _ruleProviders;
-        private readonly IScriptingManager _scriptingManager;
+        private readonly IEnumerable<IScriptExpressionEvaluator> _evaluators;
 
-        public RuleManager(IEnumerable<IRuleProvider> ruleProviders, IScriptingManager scriptingManager) {
+        public RuleManager(IEnumerable<IRuleProvider> ruleProviders, IEnumerable<IScriptExpressionEvaluator> evaluators) {
             _ruleProviders = ruleProviders;
-            _scriptingManager = scriptingManager;
+            _evaluators = evaluators;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public bool Matches(string expression) {
-            object execContextType = _scriptingManager.ExecuteExpression(@"
-                                        class ExecContext
-	                                        def execute(callbacks, text)
-		                                        @callbacks = callbacks;
-		                                        temp = instance_eval(text.to_s);
-		                                        @callbacks = 0;
-                                                return temp;
-	                                        end
+            var evaluator = _evaluators.FirstOrDefault();
+            if (evaluator == null) {
+                throw new OrchardException(T("There are currently not scripting engine enabled"));
+            }
 
-	                                        def method_missing(name, *args, &block)
-		                                        @callbacks.send(name, args, &block);
-                                            end
-                                        end
-                                        ExecContext
-                                        ");
-
-            object execContext = _scriptingManager.ExecuteOperation(ops => ops.CreateInstance(execContextType));
-            return _scriptingManager.ExecuteOperation(ops => ops.InvokeMember(execContext, "execute", new CallbackApi(this), expression));
+            var result = evaluator.Evaluate(expression, new List<IGlobalMethodProvider> { new GlobalMethodProvider(this) });
+            if (!(result is bool)) {
+                throw new OrchardException(T("Expression is not a boolean value"));
+            }
+            return (bool)result;
         }
 
-        public class CallbackApi {
+        private class GlobalMethodProvider : IGlobalMethodProvider {
             private readonly RuleManager _ruleManager;
 
-            public CallbackApi(RuleManager ruleManager) {
+            public GlobalMethodProvider(RuleManager ruleManager) {
                 _ruleManager = ruleManager;
             }
 
-            public object send(string name, IList<object> args) {
-                return _ruleManager.Evaluate(name, args);
+            public void Process(GlobalMethodContext context) {
+                var ruleContext = new RuleContext {
+                    FunctionName = context.FunctionName,
+                    Arguments = context.Arguments.ToArray(),
+                    Result = context.Result
+                };
+
+                foreach(var ruleProvider in _ruleManager._ruleProviders) {
+                    ruleProvider.Process(ruleContext);
+                }
+
+                context.Result = ruleContext.Result;
             }
-        }
-
-        private object Evaluate(string name, IList<object> args) {
-            RuleContext ruleContext = new RuleContext { FunctionName = name, Arguments = args.ToArray() };
-
-            foreach (var ruleProvider in _ruleProviders) {
-                ruleProvider.Process(ruleContext);
-            }
-
-            return ruleContext.Result;
         }
     }
 }

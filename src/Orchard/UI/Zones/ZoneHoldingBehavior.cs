@@ -2,8 +2,6 @@
 using System.Linq;
 using ClaySharp;
 using ClaySharp.Behaviors;
-using ClaySharp.Implementation;
-using Orchard.DisplayManagement;
 
 namespace Orchard.UI.Zones {
     /// <summary>

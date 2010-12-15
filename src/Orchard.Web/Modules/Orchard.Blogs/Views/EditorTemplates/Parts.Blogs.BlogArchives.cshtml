@@ -1,0 +1,8 @@
+﻿@model Orchard.Blogs.Models.BlogArchivesPart
+<fieldset>
+    <div>
+        @Html.LabelFor(m => m.ForBlog, T("For Blog"))
+        @Html.TextBoxFor(m => m.ForBlog)
+        <span class="hint">@T("Show the archives for which blog? Note: specify the blog's slug.")</span>
+    </div>
+</fieldset>

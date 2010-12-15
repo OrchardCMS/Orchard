@@ -8,7 +8,7 @@ namespace Orchard.PublishLater.Handlers {
     public class PublishingTaskHandler : IScheduledTaskHandler {
         private readonly IContentManager _contentManager;
 
-        public PublishingTaskHandler(IContentManager contentManager) {
+        public PublishingTaskHandler(IContentManager contentManager, IOrchardServices orchardServices) {
             _contentManager = contentManager;
             Logger = NullLogger.Instance;
         }

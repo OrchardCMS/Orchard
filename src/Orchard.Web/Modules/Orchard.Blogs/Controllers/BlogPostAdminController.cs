@@ -1,11 +1,17 @@
+using System;
+using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
+using Orchard.Mvc.Extensions;
+using Orchard.Security;
+using Orchard.Security.Permissions;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
@@ -26,7 +32,7 @@ namespace Orchard.Blogs.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
@@ -34,12 +40,30 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             dynamic model = Services.ContentManager.BuildEditor(blogPost);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
         [HttpPost, ActionName("Create")]
+        [FormValueRequired("submit.Save")]
         public ActionResult CreatePOST() {
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
+            return CreatePOST(contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    Services.ContentManager.Publish(contentItem);
+            });
+        }
+
+        [HttpPost, ActionName("Create")]
+        [FormValueRequired("submit.Publish")]
+        public ActionResult CreateAndPublishPOST() {
+            if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, T("Couldn't create blog post")))
+                return new HttpUnauthorizedResult();
+
+            return CreatePOST(contentItem => Services.ContentManager.Publish(contentItem));
+        }
+
+        public ActionResult CreatePOST(Action<ContentItem> conditionallyPublish) {
+            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
@@ -54,20 +78,16 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
-            if (!blogPost.Has<IPublishingControlAspect>())
-                Services.ContentManager.Publish(blogPost.ContentItem);
+            conditionallyPublish(blogPost.ContentItem);
 
             Services.Notifier.Information(T("Your {0} has been created.", blogPost.TypeDefinition.DisplayName));
-            return Redirect(Url.BlogPostEdit((string)model.Blog.Slug, (int)model.ContentItem.Id));
+            return Redirect(Url.BlogPostEdit(blogPost));
         }
 
         //todo: the content shape template has extra bits that the core contents module does not (remove draft functionality)
         //todo: - move this extra functionality there or somewhere else that's appropriate?
-        public ActionResult Edit(string blogSlug, int postId) {
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
-                return new HttpUnauthorizedResult();
-
-            var blog = _blogService.Get(blogSlug);
+        public ActionResult Edit(int blogId, int postId) {
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -75,16 +95,27 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return HttpNotFound();
 
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersBlogPost, post, T("Couldn't edit blog post")))
+                return new HttpUnauthorizedResult();
+
             dynamic model = Services.ContentManager.BuildEditor(post);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST(string blogSlug, int postId) {
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
-                return new HttpUnauthorizedResult();
+        [FormValueRequired("submit.Save")]
+        public ActionResult EditPOST(int blogId, int postId, string returnUrl) {
+            return EditPOST(blogId, postId, returnUrl, contentItem => {
+                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                    Services.ContentManager.Publish(contentItem);
+            });
+        }
 
-            var blog = _blogService.Get(blogSlug);
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Publish")]
+        public ActionResult EditAndPublishPOST(int blogId, int postId, string returnUrl) {
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -93,6 +124,25 @@ namespace Orchard.Blogs.Controllers {
             if (blogPost == null)
                 return HttpNotFound();
 
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersBlogPost, blogPost, T("Couldn't publish blog post")))
+                return new HttpUnauthorizedResult();
+
+            return EditPOST(blogId, postId, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
+        }
+
+        public ActionResult EditPOST(int blogId, int postId, string returnUrl, Action<ContentItem> conditionallyPublish) {
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
+            if (blog == null)
+                return HttpNotFound();
+
+            // Get draft (create a new version if needed)
+            var blogPost = _blogPostService.Get(postId, VersionOptions.DraftRequired);
+            if (blogPost == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersBlogPost, blogPost, T("Couldn't edit blog post")))
+                return new HttpUnauthorizedResult();
+
             // Validate form input
             var model = Services.ContentManager.UpdateEditor(blogPost, this);
             if (!ModelState.IsValid) {
@@ -100,8 +150,11 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
+            conditionallyPublish(blogPost.ContentItem);
+
             Services.Notifier.Information(T("Your {0} has been saved.", blogPost.TypeDefinition.DisplayName));
-            return Redirect(Url.BlogPostEdit((BlogPostPart)model.ContentItem.Get(typeof(BlogPostPart))));
+
+            return this.RedirectLocal(returnUrl, Url.BlogPostEdit(blogPost));
         }
 
         [ValidateAntiForgeryTokenOrchard]
@@ -140,54 +193,52 @@ namespace Orchard.Blogs.Controllers {
         ActionResult RedirectToEdit(IContent item) {
             if (item == null || item.As<BlogPostPart>() == null)
                 return HttpNotFound();
-            return RedirectToAction("Edit", new { BlogSlug = item.As<BlogPostPart>().BlogPart.Slug, PostId = item.ContentItem.Id });
+            return RedirectToAction("Edit", new { BlogId = item.As<BlogPostPart>().BlogPart.Id, PostId = item.ContentItem.Id });
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Delete(string blogSlug, int postId) {
+        public ActionResult Delete(int blogId, int postId) {
             //refactoring: test PublishBlogPost/PublishOthersBlogPost in addition if published
-            if (!Services.Authorizer.Authorize(Permissions.DeleteBlogPost, T("Couldn't delete blog post")))
-                return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
             var post = _blogPostService.Get(postId, VersionOptions.Latest);
             if (post == null)
                 return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.DeleteOthersBlogPost, post, T("Couldn't delete blog post")))
+                return new HttpUnauthorizedResult();
 
             _blogPostService.Delete(post);
             Services.Notifier.Information(T("Blog post was successfully deleted"));
 
-            return Redirect(Url.BlogForAdmin(blogSlug));
+            return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Publish(string blogSlug, int postId) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't publish blog post")))
-                return new HttpUnauthorizedResult();
-
-            var blog = _blogService.Get(blogSlug);
+        public ActionResult Publish(int blogId, int postId) {
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
             var post = _blogPostService.Get(postId, VersionOptions.Latest);
             if (post == null)
                 return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersBlogPost, post, T("Couldn't publish blog post")))
+                return new HttpUnauthorizedResult();
 
             _blogPostService.Publish(post);
             Services.Notifier.Information(T("Blog post successfully published."));
 
-            return Redirect(Url.BlogForAdmin(blog.Slug));
+            return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Unpublish(string blogSlug, int postId) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't unpublish blog post")))
-                return new HttpUnauthorizedResult();
-
-            var blog = _blogService.Get(blogSlug);
+        public ActionResult Unpublish(int blogId, int postId) {
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -195,10 +246,13 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return HttpNotFound();
 
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersBlogPost, post, T("Couldn't unpublish blog post")))
+                return new HttpUnauthorizedResult();
+
             _blogPostService.Unpublish(post);
             Services.Notifier.Information(T("Blog post successfully unpublished."));
 
-            return Redirect(Url.BlogForAdmin(blog.Slug));
+            return Redirect(Url.BlogForAdmin(blog.As<BlogPart>()));
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
@@ -207,6 +261,19 @@ namespace Orchard.Blogs.Controllers {
 
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
+        }
+    }
+
+    public class FormValueRequiredAttribute : ActionMethodSelectorAttribute {
+        private readonly string _submitButtonName;
+
+        public FormValueRequiredAttribute(string submitButtonName) {
+            _submitButtonName = submitButtonName;
+        }
+
+        public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
+            var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
+            return !string.IsNullOrEmpty(value);
         }
     }
 }

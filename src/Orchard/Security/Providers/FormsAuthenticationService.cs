@@ -70,7 +70,7 @@ namespace Orchard.Security.Providers {
                 return _signedInUser;
 
             var httpContext = _httpContextAccessor.Current();
-            if (!httpContext.Request.IsAuthenticated || !(httpContext.User.Identity is FormsIdentity)) {
+            if (httpContext == null || !httpContext.Request.IsAuthenticated || !(httpContext.User.Identity is FormsIdentity)) {
                 return null;
             }
 

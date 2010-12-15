@@ -1,4 +1,3 @@
-using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
 
 namespace Orchard.Tests.ContentManagement.Records {

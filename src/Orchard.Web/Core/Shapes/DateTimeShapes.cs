@@ -22,7 +22,7 @@ namespace Orchard.Core.Shapes {
             var time = _clock.UtcNow - dateTimeUtc;
 
             if (time.TotalDays > 7)
-                return Html.DateTime(dateTimeUtc, T("'on' MMM d yyyy 'at' h:mm tt"));
+                return Html.DateTime(dateTimeUtc.ToLocalTime(), T("'on' MMM d yyyy 'at' h:mm tt"));
             if (time.TotalHours > 24)
                 return T.Plural("1 day ago", "{0} days ago", time.Days);
             if (time.TotalMinutes > 60)

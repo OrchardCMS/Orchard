@@ -1,7 +1,5 @@
-﻿using Orchard.ContentManagement.FieldStorage.InfosetStorage;
-using Orchard.ContentManagement.Handlers;
+﻿using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Tasks.Indexing;
 using System.Collections.Generic;
 
@@ -23,6 +21,7 @@ namespace Orchard.Indexing.Handlers {
             _indexNotifierHandlers = indexNotifierHandlers;
 
             OnPublished<ContentPart>(CreateIndexingTask);
+            OnUnpublished<ContentPart>(CreateIndexingTask);
             OnRemoved<ContentPart>(RemoveIndexingTask);
         }
 

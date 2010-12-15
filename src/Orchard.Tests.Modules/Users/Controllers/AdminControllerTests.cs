@@ -7,10 +7,10 @@ using System.Xml.Linq;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
-using Orchard.Core.Messaging.Services;
 using Orchard.Core.Settings.Metadata;
 using Orchard.Data;
 using Orchard.DisplayManagement;
@@ -26,6 +26,7 @@ using Orchard.Messaging.Events;
 using Orchard.Messaging.Services;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.Security.Providers;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.Users.Controllers;
@@ -33,6 +34,8 @@ using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
+using Orchard.Settings;
+using Orchard.Core.Settings.Services;
 
 namespace Orchard.Tests.Modules.Users.Controllers {
     [TestFixture]
@@ -42,6 +45,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<AdminController>().SingleInstance();
+            builder.RegisterType<SiteService>().As<ISiteService>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType(typeof(SettingsFormatter))
                 .As(typeof(IMapper<XElement, SettingsDictionary>))
@@ -62,6 +67,11 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
+            builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
+            builder.RegisterInstance(ShellSettingsUtility.CreateEncryptionEnabled());
+
             _authorizer = new Mock<IAuthorizer>();
             builder.RegisterInstance(_authorizer.Object);
         }

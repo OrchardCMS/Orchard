@@ -1,6 +1,5 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Widgets.Models;
 
@@ -58,15 +57,6 @@ namespace Orchard.Widgets {
                     .WithPart("BodyPart")
                     .WithPart("CommonPart")
                     .WithSetting("Stereotype", "Widget")
-                );
-
-            ContentDefinitionManager.AlterTypeDefinition("WidgetPage",
-                cfg => cfg
-                    .WithPart("CommonPart")
-                    .WithPart("RoutePart")
-                    .WithPart("WidgetBagPart")
-                    .WithPart("MenuPart")
-                    .Creatable()
                 );
 
             return 1;

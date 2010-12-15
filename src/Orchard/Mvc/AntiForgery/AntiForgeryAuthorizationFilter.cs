@@ -43,7 +43,7 @@ namespace Orchard.Mvc.AntiForgery {
             string currentModule = context.RouteData.Values["area"].ToString();
             if (!String.IsNullOrEmpty(currentModule)) {
                 foreach (var descriptor in _extensionManager.AvailableExtensions()) {
-                    if (String.Equals(descriptor.Name, currentModule, StringComparison.OrdinalIgnoreCase)) {
+                    if (String.Equals(descriptor.Id, currentModule, StringComparison.OrdinalIgnoreCase)) {
                         if (String.Equals(descriptor.AntiForgery, "enabled", StringComparison.OrdinalIgnoreCase)) {
                             return true;
                         }

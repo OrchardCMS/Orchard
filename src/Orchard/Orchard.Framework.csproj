@@ -77,6 +77,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Services.Logging.Log4netIntegration">
+      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
+    </Reference>
     <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\claysharp\ClaySharp.dll</HintPath>
@@ -89,19 +92,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\sharpziplib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="IronRuby">
-      <HintPath>..\..\lib\dlr\IronRuby.dll</HintPath>
-    </Reference>
-    <Reference Include="IronRuby.Libraries">
-      <HintPath>..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\fluentnhibernate\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Dynamic">
-      <HintPath>..\..\lib\dlr\Microsoft.Dynamic.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting">
-      <HintPath>..\..\lib\dlr\Microsoft.Scripting.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure">
       <HintPath>..\..\lib\aspnetmvc\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -128,9 +123,6 @@
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -147,22 +139,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages.Razor">
+      <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Yaml, Version=1.0.3370.39839, Culture=neutral, PublicKeyToken=187a3d240e44a135, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\yaml\Yaml.dll</HintPath>
-    </Reference>
-    <Reference Include="YamlSerializer, Version=0.9.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\yaml\YamlSerializer.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentManagement\DefaultContentDisplay.cs" />
     <Compile Include="ContentManagement\Drivers\ContentShapeResult.cs" />
     <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
+    <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlteration.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlterationBuilder.cs" />
@@ -174,28 +162,38 @@
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Environment\IAssemblyNameResolver.cs" />
+    <Compile Include="Environment\Extensions\Models\DefaultExtensionTypes.cs" />
+    <Compile Include="Environment\HostEnvironment.cs" />
     <Compile Include="Environment\DefaultHostEnvironment.cs" />
     <Compile Include="Environment\Extensions\Loaders\RawThemeExtensionLoader.cs" />
     <Compile Include="Environment\Features\FeatureManager.cs" />
+    <Compile Include="Environment\IAssemblyLoader.cs" />
+    <Compile Include="Environment\HostComponentsConfigModule.cs" />
+    <Compile Include="Environment\ViewsBackgroundCompilation.cs" />
+    <Compile Include="Environment\WorkContextImplementation.cs" />
+    <Compile Include="Environment\WorkContextModule.cs" />
+    <Compile Include="Environment\WorkContextProperty.cs" />
+    <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
+    <Compile Include="Logging\OrchardFileAppender.cs" />
+    <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
+    <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
-    <Compile Include="Scripting\IScriptingManager.cs" />
-    <Compile Include="Scripting\IScriptingRuntime.cs" />
-    <Compile Include="Scripting\ScriptingManager.cs" />
-    <Compile Include="Scripting\ScriptingRuntime.cs" />
+    <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
+    <Compile Include="Security\IEncryptionService.cs" />
     <Compile Include="Security\CurrentUserWorkContext.cs" />
+    <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="UI\FlatPositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
+    <Compile Include="UI\Navigation\PagerParameters.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
     <Compile Include="UI\Resources\ResourceManifestBuilder.cs" />
-    <Compile Include="UI\Widgets\IRuleManager.cs" />
-    <Compile Include="UI\Widgets\IRuleProvider.cs" />
-    <Compile Include="UI\Widgets\RuleContext.cs" />
     <Compile Include="UI\Zones\LayoutWorkContext.cs" />
     <Compile Include="UI\Zones\ZoneHoldingBehavior.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ConfiguredEnginesCache.cs" />
@@ -329,7 +327,6 @@
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\SaveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\StorageFilter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -442,7 +439,7 @@
     <Compile Include="DisplayManagement\Implementation\IDisplayManager.cs" />
     <Compile Include="DisplayManagement\IShapeFactory.cs" />
     <Compile Include="DisplayManagement\Descriptors\Interfaces.cs" />
-    <Compile Include="Environment\DefaultWorkContextAccessor.cs" />
+    <Compile Include="Environment\WorkContextAccessor.cs" />
     <Compile Include="Environment\IHostLocalRestart.cs" />
     <Compile Include="Environment\IShellContainerRegistrations.cs" />
     <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />
@@ -553,9 +550,7 @@
     <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\Dependencies\IDependenciesFolder.cs" />
     <Compile Include="Environment\Extensions\Compilers\IExtensionCompiler.cs" />
-    <Compile Include="Environment\Extensions\Compilers\CSharpExtensionDirectoryCompiler.cs" />
     <Compile Include="Environment\Extensions\Compilers\DefaultExtensionCompiler.cs" />
-    <Compile Include="Environment\Extensions\Compilers\CSharpProjectFullTrustCompiler.cs" />
     <Compile Include="Environment\Extensions\Compilers\DefaultProjectFileParser.cs" />
     <Compile Include="Environment\IAssemblyBuilder.cs" />
     <Compile Include="Environment\IBuildManager.cs" />
@@ -662,9 +657,7 @@
     <Compile Include="Events\EventsRegistrationSource.cs" />
     <Compile Include="Environment\Configuration\IShellSettingsManagerEventHandler.cs" />
     <Compile Include="Events\IEventBus.cs" />
-    <Compile Include="Environment\Extensions\Folders\AreaFolders.cs" />
     <Compile Include="Environment\Extensions\Folders\ExtensionFolders.cs" />
-    <Compile Include="Environment\Extensions\Loaders\AreaExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Models\Feature.cs" />
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />

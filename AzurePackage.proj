@@ -3,19 +3,19 @@
 
 <!-- Initialization -->
 
-	<PropertyGroup>
-		<LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
-		<SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
-		<BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
-		<ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts\Azure</ArtifactsFolder>
-		
-		<CompileFolder>$(BuildFolder)\Compile</CompileFolder>
-		<ServiceFolder>$(CompileFolder)\Orchard.Azure.CloudService.csx</ServiceFolder>
-		<CloudRootFolder>$(ServiceFolder)\roles\Orchard.Azure.Web\approot</CloudRootFolder>
-		<WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
-		<StageFolder>$(BuildFolder)\Stage</StageFolder>
-		
-	</PropertyGroup>
+  <PropertyGroup>
+    <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
+    <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
+    <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+    <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
+    <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts\Azure</ArtifactsFolder>
+
+    <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
+    <ServiceFolder>$(CompileFolder)\Orchard.Azure.CloudService.csx</ServiceFolder>
+    <CloudRootFolder>$(ServiceFolder)\roles\Orchard.Azure.Web\approot</CloudRootFolder>
+    <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
+    <StageFolder>$(BuildFolder)\Stage</StageFolder>
+  </PropertyGroup>
   
   <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Cloud Service\1.0\Visual Studio 10.0\Microsoft.CloudService.targets" />
@@ -39,20 +39,20 @@
 
 <!-- Building -->
 
-	<Target Name="Clean">
-		<MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService.sln" Targets="Clean" />
-		<RemoveDir Directories="$(BuildFolder)" />
-	</Target>
+  <Target Name="Clean">
+    <MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln" Targets="Clean" />
+    <RemoveDir Directories="$(BuildFolder)" />
+  </Target>
 
   <Target Name ="Compile">
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService.sln"
+      Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln"
       Targets="Build"
       Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64;DefineConstants=AZURE" 
        />      
 
     <MSBuild
-      Projects="$(SrcFolder)\Orchard.Azure.sln"
+      Projects="$(SrcFolder)\Orchard.Azure.Tests\Orchard.Azure.Tests.sln"
       Targets="Build"
       Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64" />      
     
@@ -62,17 +62,16 @@
 <!-- Testing - Azure only -->
 
   <Target Name ="Test">
-    
-		<CreateItem Include="$(CompileFolder)\*Azure.Tests.*dll">
-			<Output TaskParameter="Include" ItemName="TestAssemblies" />
-		</CreateItem>
 
-		<NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" />
+    <CreateItem Include="$(CompileFolder)\*Azure.Tests.*dll">
+      <Output TaskParameter="Include" ItemName="TestAssemblies" />
+    </CreateItem>
 
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" />
   </Target>
 
 <!-- Packaging -->
-  
+
   <Target Name="Package-ForCloud">
     
     <ItemGroup>
@@ -99,15 +98,19 @@
     <XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
-    
-    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\Diagnostics.config"
-      XPath="/system.diagnostics/trace/@autoflush"
+
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/appender/immediateFlush/@value"
       Value="false" />
 
-    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\Diagnostics.config"
-      XPath="/system.diagnostics/sources/source/@switchValue"
-      Value="Error" />
-    
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/logger/priority/@value"
+      Value="ERROR" />
+
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+      XPath="/log4net/root/priority/@value"
+      Value="ERROR" />
+
     <Copy 
         SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceConfiguration.cscfg" 
         DestinationFolder="$(StageFolder)" 
@@ -132,7 +135,7 @@
   <Target Name="Package-Stage">
  
     <Exec 
-      Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(ServiceFolder)\ServiceDefinition.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;" 
+      Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(ServiceFolder)\ServiceDefinition.build.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;" 
       WorkingDirectory="$(CloudRootFolder)" 
     />
 
@@ -144,6 +147,6 @@
     </ItemGroup>
     
     <MakeDir Directories="$(ArtifactsFolder)" />
-		<Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(ArtifactsFolder)\AzurePackage.zip" />
+    <Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(ArtifactsFolder)\AzurePackage.zip" />
   </Target>
 </Project>

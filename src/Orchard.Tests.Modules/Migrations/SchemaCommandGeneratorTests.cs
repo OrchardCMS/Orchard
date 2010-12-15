@@ -30,6 +30,10 @@ using Orchard.Tests.ContentManagement;
 using Orchard.Data.Providers;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Modules.Migrations.Orchard.Tests.DataMigration.Records;
+using Path = Bleroy.FluentPath.Path;
+using Orchard.Tests.Stubs;
+using Orchard.Tests.Environment;
+using Orchard.Environment;
 
 namespace Orchard.Tests.Modules.Migrations {
     [TestFixture]
@@ -37,9 +41,10 @@ namespace Orchard.Tests.Modules.Migrations {
         private IContainer _container;
         private StubFolders _folders;
         private ISchemaCommandGenerator _generator;
-
         private ISessionFactory _sessionFactory;
         private ISession _session;
+        private readonly Path _tempFixtureFolderName = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Tests.Modules.Migrations");
+        private Path _tempFolderName;
 
         [TestFixtureSetUp]
         public void CreateDb() {
@@ -51,9 +56,13 @@ namespace Orchard.Tests.Modules.Migrations {
                 typeof(ContentItemRecord),
                 typeof(ContentTypeRecord)};
 
-            var databaseFileName = System.IO.Path.GetTempFileName();
+            _tempFolderName = _tempFixtureFolderName.Combine(System.IO.Path.GetRandomFileName());
+            try {
+                _tempFixtureFolderName.Delete(true);
+            } catch {}
+            _tempFixtureFolderName.CreateDirectory();
             _sessionFactory = DataUtility.CreateSessionFactory(
-                databaseFileName, types);
+                _tempFolderName, types);
 
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
@@ -65,7 +74,7 @@ namespace Orchard.Tests.Modules.Migrations {
             });
 
             builder.RegisterInstance(new ShellSettings { Name = "Default", DataTablePrefix = "TEST", DataProvider = "SqlCe" });
-            builder.RegisterInstance(AppDataFolderTests.CreateAppDataFolder(Path.GetDirectoryName(databaseFileName))).As<IAppDataFolder>();
+            builder.RegisterInstance(AppDataFolderTests.CreateAppDataFolder(_tempFixtureFolderName)).As<IAppDataFolder>();
             builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>();
             builder.RegisterType<SqlCeDataServicesProvider>().As<IDataServicesProvider>();
             builder.RegisterInstance(manager).As<IDataServicesProviderFactory>();
@@ -77,6 +86,9 @@ namespace Orchard.Tests.Modules.Migrations {
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SchemaCommandGenerator>().As<ISchemaCommandGenerator>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
+
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
 
@@ -90,9 +102,15 @@ Name: Module1
 Version: 0.1
 OrchardVersion: 1
 Features:
-  Feature1: 
-    Description: Feature
+    Feature1: 
+        Description: Feature
 ");
+        }
+
+        [TestFixtureTearDown]
+        public void Term() {
+            try { _tempFixtureFolderName.Delete(true); }
+            catch { }
         }
 
         public class StubFolders : IExtensionFolders {
@@ -103,16 +121,15 @@ Features:
             public IDictionary<string, string> Manifests { get; set; }
 
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                foreach ( var e in Manifests ) {
+                foreach (var e in Manifests) {
                     string name = e.Key;
-                    var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
+                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, DefaultExtensionTypes.Module, Manifests[name]);
                 }
             }
         }
 
         public class StubLoaders : IExtensionLoader {
-#region Implementation of IExtensionLoader
+            #region Implementation of IExtensionLoader
 
             public int Order {
                 get { return 1; }
@@ -163,7 +180,6 @@ Features:
             }
 
             public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) {
-                throw new NotImplementedException();
             }
 
             public string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {

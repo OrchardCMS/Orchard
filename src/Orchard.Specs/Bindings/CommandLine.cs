@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.Parameters;
@@ -18,7 +17,7 @@ namespace Orchard.Specs.Bindings {
                 var agent = new CommandHostAgent();
                 var input = new StringReader("");
                 var output = new StringWriter();
-                details.StatusCode = agent.RunSingleCommand(
+                details.StatusCode = (int)agent.RunSingleCommand(
                     input,
                     output,
                     "Default",

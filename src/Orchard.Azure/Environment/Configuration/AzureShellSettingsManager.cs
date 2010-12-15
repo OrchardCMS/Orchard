@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Yaml.Serialization;
-using JetBrains.Annotations;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.StorageClient;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 
@@ -14,114 +11,120 @@ namespace Orchard.Azure.Environment.Configuration {
 
     public class AzureShellSettingsManager : IShellSettingsManager {
         public const string ContainerName = "sites"; // container names must be lower cased
+        public const string SettingsFilename = "Settings.txt";
+
         private readonly IShellSettingsManagerEventHandler _events;
+        private readonly AzureFileSystem _fileSystem;
 
-        private readonly CloudStorageAccount _storageAccount;
-        public CloudBlobClient BlobClient { get; private set; }
-        public CloudBlobContainer Container { get; private set; }
-
-        Localizer T { get; [UsedImplicitly]
-        set; }
+        Localizer T { get; set; }
 
         public AzureShellSettingsManager(IShellSettingsManagerEventHandler events)
-            : this(CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString")), events)
-        {
-        }
+            : this(CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString")), events) {}
 
-        public AzureShellSettingsManager(CloudStorageAccount storageAccount, IShellSettingsManagerEventHandler events)
-        {
-            // Setup the connection to custom storage accountm, e.g. Development Storage
-            _storageAccount = storageAccount;
+        public AzureShellSettingsManager(CloudStorageAccount storageAccount, IShellSettingsManagerEventHandler events) {
             _events = events;
-
-            using ( new HttpContextWeaver() ) {
-                BlobClient = _storageAccount.CreateCloudBlobClient();
-
-                // Get and create the container if it does not exist
-                // The container is named with DNS naming restrictions (i.e. all lower case)
-                Container = new CloudBlobContainer(ContainerName, BlobClient);
-                Container.CreateIfNotExist();
-
-                // Tenant settings are protected by default
-                Container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off });
-            }
-
+            _fileSystem = new AzureFileSystem(ContainerName, String.Empty, true, storageAccount);
         }
 
         IEnumerable<ShellSettings> IShellSettingsManager.LoadSettings() {
-            return LoadSettings().ToArray();
+            var settings = LoadSettings().ToArray();
+            return settings;
         }
 
         void IShellSettingsManager.SaveSettings(ShellSettings settings) {
-            if ( settings == null )
-                throw new ArgumentException(T("There are no settings to save.").ToString());
-            
-            if ( string.IsNullOrEmpty(settings.Name) )
-                throw new ArgumentException(T("Settings \"Name\" is not set.").ToString());
+            var content = ComposeSettings(settings);
+            var filePath = String.Concat(settings.Name, "/", SettingsFilename);
+            var file = _fileSystem.CreateFile(filePath);
 
-            using ( new HttpContextWeaver() ) {
-                var filePath = String.Concat(settings.Name, "/", "Settings.txt");
-                var blob = Container.GetBlockBlobReference(filePath);
-                blob.UploadText(ComposeSettings(settings));
+            using (var stream = file.OpenWrite()) {
+                using (var writer = new StreamWriter(stream)) {
+                    writer.Write(content);
+                }
             }
 
             _events.Saved(settings);
         }
 
         IEnumerable<ShellSettings> LoadSettings() {
+            foreach (var folder in _fileSystem.ListFolders(null))
+                foreach (var file in _fileSystem.ListFiles(folder.GetPath())) {
+                    if (!String.Equals(file.GetName(), SettingsFilename))
+                        continue;
 
-            using ( new HttpContextWeaver() ) {
-                var settingsBlobs =
-                    BlobClient.ListBlobsWithPrefix(Container.Name + "/").OfType<CloudBlobDirectory>()
-                        .SelectMany(directory => directory.ListBlobs()).OfType<CloudBlockBlob>()
-                        .Where(
-                            blob =>
-                            string.Equals(Path.GetFileName(blob.Uri.ToString()),
-                                          "Settings.txt",
-                                          StringComparison.OrdinalIgnoreCase));
-
-                return settingsBlobs.Select(settingsBlob => ParseSettings(settingsBlob.DownloadText())).ToList();
-            }
-        }
-
-        class Content {
-            public string Name { get; set; }
-            public string DataProvider { get; set; }
-            public string DataConnectionString { get; set; }
-            public string DataPrefix { get; set; }
-            public string RequestUrlHost { get; set; }
-            public string RequestUrlPrefix { get; set; }
-            public string State { get; set; }
+                    using (var stream = file.OpenRead())
+                    using (var reader = new StreamReader(stream))
+                        yield return ParseSettings(reader.ReadToEnd());
+                }
         }
 
         static ShellSettings ParseSettings(string text) {
-            var ser = new YamlSerializer();
-            var content = ser.Deserialize(text, typeof(Content)).Cast<Content>().Single();
-            return new ShellSettings {
-                Name = content.Name,
-                DataProvider = content.DataProvider,
-                DataConnectionString = content.DataConnectionString,
-                DataTablePrefix = content.DataPrefix,
-                RequestUrlHost = content.RequestUrlHost,
-                RequestUrlPrefix = content.RequestUrlPrefix,
-                State = new TenantState(content.State)
-            };
+            var shellSettings = new ShellSettings();
+            if (String.IsNullOrEmpty(text))
+                return shellSettings;
+
+            string[] settings = text.Split(new[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var setting in settings) {
+                string[] settingFields = setting.Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries);
+                int fieldsLength = settingFields.Length;
+                if (fieldsLength != 2)
+                    continue;
+                for (int i = 0; i < fieldsLength; i++) {
+                    settingFields[i] = settingFields[i].Trim();
+                }
+                if (settingFields[1] != "null") {
+                    switch (settingFields[0]) {
+                        case "Name":
+                            shellSettings.Name = settingFields[1];
+                            break;
+                        case "DataProvider":
+                            shellSettings.DataProvider = settingFields[1];
+                            break;
+                        case "State":
+                            shellSettings.State = new TenantState(settingFields[1]);
+                            break;
+                        case "DataConnectionString":
+                            shellSettings.DataConnectionString = settingFields[1];
+                            break;
+                        case "DataPrefix":
+                            shellSettings.DataTablePrefix = settingFields[1];
+                            break;
+                        case "RequestUrlHost":
+                            shellSettings.RequestUrlHost = settingFields[1];
+                            break;
+                        case "RequestUrlPrefix":
+                            shellSettings.RequestUrlPrefix = settingFields[1];
+                            break;
+                        case "EncryptionAlgorithm":
+                            shellSettings.EncryptionAlgorithm = settingFields[1];
+                            break;
+                        case "EncryptionKey":
+                            shellSettings.EncryptionKey = settingFields[1];
+                            break;
+                        case "EncryptionIV":
+                            shellSettings.EncryptionIV = settingFields[1];
+                            break;
+                    }
+                }
+            }
+            return shellSettings;
         }
 
         static string ComposeSettings(ShellSettings settings) {
-            if ( settings == null )
+            if (settings == null)
                 return "";
 
-            var ser = new YamlSerializer();
-            return ser.Serialize(new Content {
-                Name = settings.Name,
-                DataProvider = settings.DataProvider,
-                DataConnectionString = settings.DataConnectionString,
-                DataPrefix = settings.DataTablePrefix,
-                RequestUrlHost = settings.RequestUrlHost,
-                RequestUrlPrefix = settings.RequestUrlPrefix,
-                State = settings.State != null ? settings.State.ToString() : String.Empty
-            });
+            return string.Format("Name: {0}\r\nDataProvider: {1}\r\nDataConnectionString: {2}\r\nDataPrefix: {3}\r\nRequestUrlHost: {4}\r\nRequestUrlPrefix: {5}\r\nState: {6}\r\nEncryptionAlgorithm: {7}\r\nEncryptionKey: {8}\r\nEncryptionIV: {9}\r\n",
+                                 settings.Name,
+                                 settings.DataProvider,
+                                 settings.DataConnectionString ?? "null",
+                                 settings.DataTablePrefix ?? "null",
+                                 settings.RequestUrlHost ?? "null",
+                                 settings.RequestUrlPrefix ?? "null",
+                                 settings.State != null ? settings.State.ToString() : String.Empty,
+                                 settings.EncryptionAlgorithm ?? "null",
+                                 settings.EncryptionKey ?? "null",
+                                 settings.EncryptionIV ?? "null"
+                );
         }
     }
 }

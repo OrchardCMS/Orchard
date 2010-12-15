@@ -34,23 +34,17 @@ namespace Orchard.Tags.Drivers {
         }
 
         protected override DriverResult Editor(TagsPart part, dynamic shapeHelper) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, _orchardServices.WorkContext.CurrentUser, part))
-                return null;
-
             return ContentShape("Parts_Tags_Edit",
                     () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: BuildEditorViewModel(part), Prefix: Prefix));
         }
 
         protected override DriverResult Editor(TagsPart part, IUpdateModel updater, dynamic shapeHelper) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, _orchardServices.WorkContext.CurrentUser, part))
-                return null;
-
             var model = new EditTagsViewModel();
             updater.TryUpdateModel(model, Prefix, null, null);
 
             var tagNames = TagHelpers.ParseCommaSeparatedTagNames(model.Tags);
             if (part.ContentItem.Id != 0) {
-                _tagService.UpdateTagsForContentItem(part.ContentItem.Id, tagNames);
+                _tagService.UpdateTagsForContentItem(part.ContentItem, tagNames);
             }
 
             return ContentShape("Parts_Tags_Edit",

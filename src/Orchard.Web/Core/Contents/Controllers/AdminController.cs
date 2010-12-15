@@ -8,7 +8,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
-using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
@@ -16,8 +15,10 @@ using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc.Extensions;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
+using Orchard.Settings;
 
 namespace Orchard.Core.Contents.Controllers {
     [ValidateInput(false)]
@@ -25,17 +26,20 @@ namespace Orchard.Core.Contents.Controllers {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
+        private readonly ISiteService _siteService;
 
         public AdminController(
             IOrchardServices orchardServices,
             IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
             ITransactionManager transactionManager,
+            ISiteService siteService,
             IShapeFactory shapeFactory) {
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _transactionManager = transactionManager;
+            _siteService = siteService;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
@@ -46,7 +50,8 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ActionResult List(ListContentsViewModel model, Pager pager) {
+        public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
+            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             if (model.ContainerId != null && _contentManager.GetLatest((int)model.ContainerId) == null)
                 return HttpNotFound();
 
@@ -62,9 +67,10 @@ namespace Orchard.Core.Contents.Controllers {
                                             : contentTypeDefinition.Name;
                 query = query.ForType(model.TypeName);
             }
-
-            if (model.ContainerId != null)
+            
+            if (model.ContainerId != null) {
                 query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
+            }
 
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
@@ -97,6 +103,7 @@ namespace Orchard.Core.Contents.Controllers {
                 .Options(model.Options)
                 .TypeDisplayName(model.TypeDisplayName ?? "");
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);
         }
 
@@ -131,7 +138,7 @@ namespace Orchard.Core.Contents.Controllers {
                         break;
                     case ContentsBulkAction.PublishNow:
                         foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content.")))
+                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishOthersContent, item, T("Couldn't publish selected content.")))
                                 return new HttpUnauthorizedResult();
 
                             accessChecked = true;
@@ -142,7 +149,7 @@ namespace Orchard.Core.Contents.Controllers {
                         break;
                     case ContentsBulkAction.Unpublish:
                         foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content.")))
+                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishOthersContent, item, T("Couldn't unpublish selected content.")))
                                 return new HttpUnauthorizedResult();
 
                             accessChecked = true;
@@ -153,7 +160,7 @@ namespace Orchard.Core.Contents.Controllers {
                         break;
                     case ContentsBulkAction.Remove:
                         foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content.")))
+                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.DeleteOthersContent, item, T("Couldn't remove selected content.")))
                                 return new HttpUnauthorizedResult();
 
                             accessChecked = true;
@@ -167,15 +174,13 @@ namespace Orchard.Core.Contents.Controllers {
                 }
             }
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("List");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
         ActionResult CreatableTypeList() {
             dynamic viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes());
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View("CreatableTypeList", (object)viewModel);
         }
 
@@ -185,10 +190,11 @@ namespace Orchard.Core.Contents.Controllers {
 
             var contentItem = _contentManager.New(id);
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Cannot create content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
             dynamic model = _contentManager.BuildEditor(contentItem);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -204,23 +210,24 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.PublishOwnContent, T("Couldn't create content")))
+                return new HttpUnauthorizedResult();
+
             return CreatePOST(id, contentItem => _contentManager.Publish(contentItem));
         }
 
         private ActionResult CreatePOST(string id, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.New(id);
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't create content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            var isDraftable = contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable;
-            _contentManager.Create(
-                contentItem,
-                isDraftable ? VersionOptions.Draft : VersionOptions.Published);
+            _contentManager.Create(contentItem, VersionOptions.Draft);
 
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
 
@@ -238,10 +245,11 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
 
             dynamic model = _contentManager.BuildEditor(contentItem);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -257,6 +265,14 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Publish")]
         public ActionResult EditAndPublishPOST(int id, string returnUrl) {
+            var content = _contentManager.Get(id, VersionOptions.DraftRequired);
+
+            if (content == null)
+                return HttpNotFound();
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, content, T("Couldn't publish content")))
+                return new HttpUnauthorizedResult();
+
             return EditPOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
@@ -266,12 +282,13 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View("Edit", (object)model);
             }
 
@@ -281,16 +298,13 @@ namespace Orchard.Core.Contents.Controllers {
                 ? T("Your content has been saved.")
                 : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
         }
 
         public ActionResult Remove(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
-            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, contentItem, T("Couldn't remove content")))
+            if (!Services.Authorizer.Authorize(Permissions.DeleteOthersContent, contentItem, T("Couldn't remove content")))
                 return new HttpUnauthorizedResult();
 
             if (contentItem != null) {
@@ -300,10 +314,7 @@ namespace Orchard.Core.Contents.Controllers {
                     : T("That {0} has been removed.", contentItem.TypeDefinition.DisplayName));
             }
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("List");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
         [HttpPost]
@@ -312,17 +323,14 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't publish content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Couldn't publish content")))
                 return new HttpUnauthorizedResult();
 
             _contentManager.Publish(contentItem);
             Services.ContentManager.Flush();
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been published.") : T("That {0} has been published.", contentItem.TypeDefinition.DisplayName));
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("List");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
         [HttpPost]
@@ -331,17 +339,14 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't unpublish content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Couldn't unpublish content")))
                 return new HttpUnauthorizedResult();
 
             _contentManager.Unpublish(contentItem);
             Services.ContentManager.Flush();
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
 
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("List");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

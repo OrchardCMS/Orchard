@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Orchard.Environment;
 using Orchard.Environment.Configuration;
 
 namespace Orchard.MultiTenancy.Services {

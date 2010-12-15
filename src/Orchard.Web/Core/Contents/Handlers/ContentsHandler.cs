@@ -7,8 +7,9 @@ namespace Orchard.Core.Contents.Handlers {
             if (context.Metadata.CreateRouteValues == null) {
                 context.Metadata.CreateRouteValues = new RouteValueDictionary {
                     {"Area", "Contents"},
-                    {"Controller", "Item"},
-                    {"Action", "Create"}
+                    {"Controller", "Admin"},
+                    {"Action", "Create"},
+                    {"Id", context.ContentItem.ContentType}
                 };
             }
             if (context.Metadata.EditorRouteValues == null) {
@@ -30,8 +31,9 @@ namespace Orchard.Core.Contents.Handlers {
             if (context.Metadata.RemoveRouteValues == null) {
                 context.Metadata.RemoveRouteValues = new RouteValueDictionary {
                     {"Area", "Contents"},
-                    {"Controller", "Item"},
-                    {"Action", "Remove"}
+                    {"Controller", "Admin"},
+                    {"Action", "Remove"},
+                    {"Id", context.ContentItem.Id}
                 };
             }
         }

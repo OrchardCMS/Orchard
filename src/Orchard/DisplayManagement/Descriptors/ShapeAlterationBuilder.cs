@@ -110,6 +110,6 @@ namespace Orchard.DisplayManagement.Descriptors {
     public class ShapePlacementContext {
         public string ContentType { get; set; }
         public string DisplayType { get; set; }
-
+        public string Differentiator { get; set; }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Routing;
 using Autofac;
 using JetBrains.Annotations;
+using Orchard.Caching;
 using Orchard.Commands;
 using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Settings.Models;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
 using Orchard.Data.Migration;
@@ -45,6 +46,9 @@ namespace Orchard.Setup {
             // standard services needed in setup mode
             builder.RegisterModule(new MvcModule());
             builder.RegisterModule(new CommandModule());
+            builder.RegisterModule(new WorkContextModule());
+            builder.RegisterModule(new CacheModule());
+
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
             builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().InstancePerLifetimeScope();
@@ -58,7 +62,7 @@ namespace Orchard.Setup {
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
-            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
+            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
             builder.RegisterType<ResourceManifest>().As<IResourceManifestProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
@@ -103,8 +107,8 @@ namespace Orchard.Setup {
         [UsedImplicitly]
         class SafeModeThemeService : IThemeManager {
             private readonly ExtensionDescriptor _theme = new ExtensionDescriptor {
+                Id = "SafeMode",
                 Name = "SafeMode",
-                DisplayName = "SafeMode",
                 Location = "~/Themes",
             };
 
@@ -113,10 +117,10 @@ namespace Orchard.Setup {
 
         [UsedImplicitly]
         class SafeModeSiteWorkContextProvider : IWorkContextStateProvider {
-            public Func<T> Get<T>(string name) {
+            public Func<WorkContext, T> Get<T>(string name) {
                 if (name == "CurrentSite") {
                     ISite safeModeSite = new SafeModeSite();
-                    return () => (T)safeModeSite;
+                    return ctx => (T)safeModeSite;
                 }
                 return null;
             }
@@ -167,6 +171,11 @@ namespace Orchard.Setup {
 
             public ResourceDebugMode ResourceDebugMode {
                 get { return ResourceDebugMode.FromAppSetting; }
+                set { throw new NotImplementedException(); }
+            }
+
+            public int PageSize {
+                get { return SiteSettingsPartRecord.DefaultPageSize; }
                 set { throw new NotImplementedException(); }
             }
         }

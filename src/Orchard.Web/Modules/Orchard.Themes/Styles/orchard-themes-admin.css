@@ -1,0 +1,32 @@
+﻿#main .templates p {
+    margin:0 0 .3em 0;
+}
+.templates li {
+    margin:.8em;
+    width:30%;
+    display: -moz-inline-stack;
+    display:inline-block;
+    vertical-align:top;
+    zoom:1;
+    *display: inline;
+}
+.templates p {
+    overflow:hidden;
+}
+.templates img, .themePreviewImage {
+    border:1px solid #e8e8e8;
+    height:200px;
+    margin:.27em 0 .93em 0;
+    display:block;
+}
+.previewImage {
+    border:1px solid #525e50;
+    height:50%;
+    width:50%;
+}
+.themes #main h2 {
+    margin:1em 0 0 0;
+}
+.themePreviewImage {
+    height:300px;
+}

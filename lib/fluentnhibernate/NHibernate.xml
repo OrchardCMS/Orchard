@@ -11831,6 +11831,14 @@
             Comes into play whenever the user specifies the "identity" generator.
             </remarks>
         </member>
+        <member name="P:NHibernate.Dialect.Dialect.SupportsSqlBatches">
+            <summary>
+            Supports splitting batches using GO T-SQL command
+            </summary>
+            <remarks>
+            Batches http://msdn.microsoft.com/en-us/library/ms175502.aspx
+            </remarks>
+        </member>
         <member name="T:NHibernate.Exceptions.IViolatedConstraintNameExtracter">
             <summary> 
             Defines a contract for implementations that can extract the name of a violated
@@ -24756,13 +24764,6 @@
             </summary>
             <returns>The clone of the root criteria.</returns>
         </member>
-        <member name="P:NHibernate.Impl.CurrentSessionIdLoggingContext.SessionId">
-            <summary>
-            Error handling in this case will only kick in if we cannot set values on the TLS
-            this is usally the case if we are called from the finalizer, since this is something
-            that we do only for logging, we ignore the error.
-            </summary>
-        </member>
         <member name="T:NHibernate.Impl.DbCommandSet`2">
             <summary>
             Expose the batch functionality in ADO.Net 2.0
@@ -33947,6 +33948,12 @@
         </member>
         <member name="M:NHibernate.Tool.hbm2ddl.SchemaValidator.Validate">
             Perform the validations.
+        </member>
+        <member name="M:NHibernate.Tool.hbm2ddl.ScriptReader.ReadNextSection">
+            <summary>
+            This acts as a template method. Specific Reader instances 
+            override the component methods.
+            </summary>
         </member>
         <member name="T:NHibernate.Tool.hbm2ddl.SuppliedConnectionHelper">
             <summary>

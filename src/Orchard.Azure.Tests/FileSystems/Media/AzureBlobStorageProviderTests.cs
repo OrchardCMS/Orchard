@@ -10,19 +10,19 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
     [TestFixture]
     public class AzureBlobStorageProviderTests : AzureVirtualEnvironmentTest {
 
+        CloudStorageAccount DevAccount;
         private AzureBlobStorageProvider _azureBlobStorageProvider;
 
         protected override void OnInit() {
-            CloudStorageAccount devAccount;
-            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out devAccount);
+            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out DevAccount);
 
-            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, devAccount);
+            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, DevAccount);
         }
 
         [SetUp]
         public void Setup() {
             // ensure default container is empty before running any test
-            DeleteAllBlobs(_azureBlobStorageProvider.Container);
+            DeleteAllBlobs(_azureBlobStorageProvider.Container.Name, DevAccount);
         }
 
         [Test]
@@ -42,6 +42,18 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         [ExpectedException(typeof(ArgumentException))]
         public void DeleteFileThatDoesNotExistShouldThrow() {
             _azureBlobStorageProvider.DeleteFile("notexisting");
+        }
+
+        [Test]
+        public void RootFolderAreNotCropped() {
+            _azureBlobStorageProvider.CreateFolder("default");
+            _azureBlobStorageProvider.CreateFolder("foo");
+
+            var folders = _azureBlobStorageProvider.ListFolders("");
+
+            Assert.That(folders.Count(), Is.EqualTo(2));
+            Assert.That(folders.Any(f => f.GetName() == "default"), Is.True);
+            Assert.That(folders.Any(f => f.GetName() == "foo"), Is.True);
         }
 
         [Test]
@@ -103,6 +115,17 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
             Assert.AreEqual(1, _azureBlobStorageProvider.ListFolders(null).Count());
             Assert.AreEqual("folder", _azureBlobStorageProvider.ListFolders(null).First().GetName());
             Assert.AreEqual("folder", _azureBlobStorageProvider.ListFolders(null).First().GetPath());
+        }
+
+        [Test]
+        public void CreateFolderWithSubFolder() {
+            _azureBlobStorageProvider.CreateFolder("folder");
+            Assert.AreEqual(0, _azureBlobStorageProvider.ListFolders("folder").Count());
+
+            _azureBlobStorageProvider.CreateFolder("folder/folder");
+            Assert.AreEqual(1, _azureBlobStorageProvider.ListFolders("folder").Count());
+            Assert.AreEqual(0, _azureBlobStorageProvider.ListFiles("folder/folder").Count());
+            Assert.AreEqual("folder", _azureBlobStorageProvider.ListFolders("folder").First().GetName());
         }
 
         [Test]

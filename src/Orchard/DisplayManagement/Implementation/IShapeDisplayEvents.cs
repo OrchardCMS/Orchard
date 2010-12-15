@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement.Implementation {

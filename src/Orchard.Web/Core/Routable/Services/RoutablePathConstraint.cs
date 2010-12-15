@@ -45,7 +45,8 @@ namespace Orchard.Core.Routable.Services {
 
         public void RemovePath(string path) {
             lock (_syncLock) {
-                _paths.Remove(path);
+                if (path != null && _paths.ContainsKey(path))
+                    _paths.Remove(path);
             }
         }
 

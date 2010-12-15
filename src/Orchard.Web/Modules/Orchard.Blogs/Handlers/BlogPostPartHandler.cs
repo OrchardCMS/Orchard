@@ -6,18 +6,15 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Localization;
+using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPostPartHandler : ContentHandler {
         private readonly IBlogPostService _blogPostService;
-        private readonly IOrchardServices _orchardServices;
 
-        public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, IOrchardServices orchardServices, RequestContext requestContext) {
+        public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, RequestContext requestContext) {
             _blogPostService = blogPostService;
-            _orchardServices = orchardServices;
-            T = NullLocalizer.Instance;
 
             Action<BlogPart> updateBlogPostCount =
                 (blog => {
@@ -33,9 +30,10 @@ namespace Orchard.Blogs.Handlers {
             OnUpdateEditorShape<BlogPostPart>(SetModelProperties);
 
             OnInitializing<BlogPostPart>((context, bp) => {
-                var blogSlug = requestContext.RouteData.Values.ContainsKey("blogSlug") ? requestContext.RouteData.Values["blogSlug"] as string : null;
-                if (!string.IsNullOrEmpty(blogSlug)) {
-                    bp.BlogPart = blogService.Get(blogSlug);
+                var blogId = requestContext.RouteData.Values.ContainsKey("blogId") ? requestContext.RouteData.Values["blogId"] as string : null;
+                if (!string.IsNullOrEmpty(blogId)) {
+                    var blog = blogService.Get(int.Parse(blogId), VersionOptions.Latest);
+                    bp.BlogPart = blog.As<BlogPart>();
                     return;
                 }
 
@@ -52,7 +50,8 @@ namespace Orchard.Blogs.Handlers {
             });
             OnCreated<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
             OnPublished<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
-            OnVersioned<BlogPostPart>((context, bp1, bp2) => updateBlogPostCount(bp2.BlogPart));
+            OnUnpublished<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
+            OnVersioned<BlogPostPart>((context, bp1, bp2) => updateBlogPostCount(bp1.BlogPart));
             OnRemoved<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
 
             OnRemoved<BlogPart>(
@@ -65,6 +64,32 @@ namespace Orchard.Blogs.Handlers {
             context.Shape.Blog = blogPost.BlogPart;
         }
 
-        Localizer T { get; set; }
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            var blogPost = context.ContentItem.As<BlogPostPart>();
+            
+            if (blogPost == null)
+                return;
+
+            context.Metadata.CreateRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "BlogPostAdmin"},
+                {"Action", "Create"},
+                {"blogId", blogPost.BlogPart.Id}
+            };
+            context.Metadata.EditorRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "BlogPostAdmin"},
+                {"Action", "Edit"},
+                {"postId", context.ContentItem.Id},
+                {"blogId", blogPost.BlogPart.Id}
+            };
+            context.Metadata.RemoveRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "BlogPostAdmin"},
+                {"Action", "Delete"},
+                {"postId", context.ContentItem.Id},
+                {"blogSlug", blogPost.BlogPart.As<RoutePart>().Slug}
+            };
+        }
     }
 }

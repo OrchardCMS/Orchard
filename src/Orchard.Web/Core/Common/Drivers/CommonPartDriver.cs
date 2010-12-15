@@ -13,7 +13,6 @@ namespace Orchard.Core.Common.Drivers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
-        private readonly IClock _clock;
 
         public CommonPartDriver(
             IOrchardServices services,
@@ -26,7 +25,6 @@ namespace Orchard.Core.Common.Drivers {
             _authenticationService = authenticationService;
             _authorizationService = authorizationService;
             _membershipService = membershipService;
-            _clock = clock;
             T = NullLocalizer.Instance;
             Services = services;
         }
@@ -51,19 +49,15 @@ namespace Orchard.Core.Common.Drivers {
                 ContainerEditor(part, null, shapeHelper));
         }
 
-        protected override DriverResult Editor(CommonPart instance, IUpdateModel updater, dynamic shapeHelper) {
-            // this event is hooked so the modified timestamp is changed when an edit-post occurs.            
-            instance.ModifiedUtc = _clock.UtcNow;
-            instance.VersionModifiedUtc = _clock.UtcNow;
-
+        protected override DriverResult Editor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             return Combined(
-                OwnerEditor(instance, updater, shapeHelper),
-                ContainerEditor(instance, updater, shapeHelper));
+                OwnerEditor(part, updater, shapeHelper),
+                ContainerEditor(part, updater, shapeHelper));
         }
 
         DriverResult OwnerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, part)) {
+            if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, currentUser, part)) {
                 return null;
             }
 
@@ -87,12 +81,12 @@ namespace Orchard.Core.Common.Drivers {
             }
 
             return ContentShape("Parts_Common_Owner_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Common.Owner", Model: model, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Common.Owner", Model: model, Prefix: Prefix));
         }
 
         DriverResult ContainerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, part)) {
+            if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, currentUser, part)) {
                 return null;
             }
 
@@ -116,7 +110,7 @@ namespace Orchard.Core.Common.Drivers {
             }
 
             return ContentShape("Parts_Common_Container_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Common.Container", Model: model, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Common.Container", Model: model, Prefix: Prefix));
         }
     }
 }

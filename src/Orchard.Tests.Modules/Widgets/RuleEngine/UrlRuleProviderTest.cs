@@ -2,8 +2,8 @@
 using NUnit.Framework;
 using Orchard.Mvc;
 using Orchard.Tests.Stubs;
-using Orchard.UI.Widgets;
 using Orchard.Widgets.RuleEngine;
+using Orchard.Widgets.Services;
 
 namespace Orchard.Tests.Modules.Widgets.RuleEngine {
     [TestFixture]
@@ -57,6 +57,14 @@ namespace Orchard.Tests.Modules.Widgets.RuleEngine {
         [Test]
         public void UrlForAboutPageMatchesDifferentCasedAboutPagePath() {
             _stubContextAccessor.StubContext = new StubHttpContext("~/About");
+            var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/about" } };
+            _urlRuleProvider.Process(context);
+            Assert.That(context.Result, Is.True);
+        }
+
+        [Test]
+        public void UrlForAboutPageWithEndingSlashMatchesAboutPagePath() {
+            _stubContextAccessor.StubContext = new StubHttpContext("~/About/");
             var context = new RuleContext { FunctionName = "url", Arguments = new[] { "~/about" } };
             _urlRuleProvider.Process(context);
             Assert.That(context.Result, Is.True);

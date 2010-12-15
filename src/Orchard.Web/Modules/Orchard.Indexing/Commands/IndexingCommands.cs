@@ -38,7 +38,7 @@ namespace Orchard.Indexing.Commands {
         [OrchardSwitches("IndexName")]
         public string Update() {
             if ( !_indexManager.HasIndexProvider() ) {
-                return "No index available";
+                throw new OrchardException(T("No index available"));
             }
             
             var indexName = String.IsNullOrWhiteSpace(IndexName) ? SearchIndexName : IndexName;
@@ -54,7 +54,7 @@ namespace Orchard.Indexing.Commands {
         [OrchardSwitches("IndexName")]
         public string Rebuild() {
             if ( !_indexManager.HasIndexProvider() ) {
-                return "No index available";
+                throw new OrchardException(T("No index available"));
             }
 
             var indexName = String.IsNullOrWhiteSpace(IndexName) ? SearchIndexName : IndexName;
@@ -71,7 +71,7 @@ namespace Orchard.Indexing.Commands {
         [OrchardSwitches("Query,IndexName")]
         public string Search() {
             if ( !_indexManager.HasIndexProvider() ) {
-                return "No index available";
+                throw new OrchardException(T("No index available"));
             }
             var indexName = String.IsNullOrWhiteSpace(IndexName) ? SearchIndexName : IndexName;
             var searchBuilder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(indexName);
@@ -99,7 +99,7 @@ namespace Orchard.Indexing.Commands {
         [OrchardSwitches("IndexName")]
         public string Stats() {
             if ( !_indexManager.HasIndexProvider() ) {
-                return "No index available";
+                throw new OrchardException(T("No index available"));
             }
             var indexName = String.IsNullOrWhiteSpace(IndexName) ? SearchIndexName : IndexName;
             Context.Output.WriteLine("Number of indexed documents: {0}", _indexManager.GetSearchIndexProvider().NumDocs(indexName));
@@ -107,15 +107,15 @@ namespace Orchard.Indexing.Commands {
         }
 
         [CommandName("index refresh")]
-        [CommandHelp("index refresh /ContenItem:<content item id> \r\n\t" + "Refreshes the index for the specifed <content item id>")]
+        [CommandHelp("index refresh /ContentItemId:<content item id> \r\n\t" + "Refreshes the index for the specifed <content item id>")]
         [OrchardSwitches("ContentItem")]
         public string Refresh() {
-            int contenItemId;
-            if ( !int.TryParse(ContentItemId, out contenItemId) ) {
-                return "Invalid content item id. Not an integer.";
+            int contentItemId;
+            if ( !int.TryParse(ContentItemId, out contentItemId) ) {
+                throw new OrchardException(T("Invalid content item id. Not an integer."));
             }
 
-            var contentItem = _contentManager.Get(contenItemId);
+            var contentItem = _contentManager.Get(contentItemId);
             _indexingTaskManager.CreateUpdateIndexTask(contentItem);
 
             return "Content Item marked for reindexing";
@@ -127,7 +127,7 @@ namespace Orchard.Indexing.Commands {
         public string Delete() {
             int contenItemId;
             if(!int.TryParse(ContentItemId, out contenItemId)) {
-                return "Invalid content item id. Not an integer.";
+                throw new OrchardException(T("Invalid content item id. Not an integer."));
             }
             
             var contentItem = _contentManager.Get(contenItemId);

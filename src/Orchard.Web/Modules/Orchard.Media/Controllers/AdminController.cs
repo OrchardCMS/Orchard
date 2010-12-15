@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using JetBrains.Annotations;
-using Orchard.ContentManagement;
+using Orchard.Core.Contents.Controllers;
 using Orchard.Localization;
 using Orchard.Media.Models;
 using Orchard.Media.Services;
 using Orchard.Media.ViewModels;
-using Orchard.Settings;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Media.Controllers {
     [ValidateInput(false)]
@@ -21,6 +18,8 @@ namespace Orchard.Media.Controllers {
         public AdminController(IOrchardServices services, IMediaService mediaService) {
             Services = services;
             _mediaService = mediaService;
+
+            T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; set;}
@@ -56,12 +55,16 @@ namespace Orchard.Media.Controllers {
 
         [HttpPost]
         public ActionResult Create() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't create media folder")))
+                return new HttpUnauthorizedResult();
+
             var viewModel = new MediaFolderCreateViewModel();
             try {
                 UpdateModel(viewModel);
-                if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't create media folder")))
-                    return new HttpUnauthorizedResult();
+
                 _mediaService.CreateFolder(viewModel.MediaPath, viewModel.Name);
+
+                Services.Notifier.Information(T("Media folder created"));
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
@@ -84,16 +87,20 @@ namespace Orchard.Media.Controllers {
                     if (key.StartsWith("Checkbox.File.") && input[key] == "true") {
                         string fileName = key.Substring("Checkbox.File.".Length);
                         string folderName = input[fileName];
-                        if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media file")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't delete media file")))
                             return new HttpUnauthorizedResult();
                         _mediaService.DeleteFile(fileName, folderName);
+
+                        Services.Notifier.Information(T("Media file deleted"));
                     }
                     else if (key.StartsWith("Checkbox.Folder.") && input[key] == "true") {
                         string folderName = key.Substring("Checkbox.Folder.".Length);
                         string folderPath = input[folderName];
-                        if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media folder")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't delete media folder")))
                             return new HttpUnauthorizedResult();
                         _mediaService.DeleteFolder(folderPath);
+
+                        Services.Notifier.Information(T("Media folder deleted"));
                     }
                 }
                 return RedirectToAction("Index");
@@ -109,29 +116,43 @@ namespace Orchard.Media.Controllers {
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult EditProperties() {
+        [HttpPost, ActionName("EditProperties")]
+        [FormValueRequired("submit.Delete")]
+        public ActionResult EditPropertiesDeletePOST() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't delete media folder")))
+                return new HttpUnauthorizedResult();
+
             var viewModel = new MediaFolderEditPropertiesViewModel();
             try {
                 UpdateModel(viewModel);
-                //TODO: There may be better ways to do this.
-                // Delete
-                if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Delete"])) {
-                    if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media folder")))
-                        return new HttpUnauthorizedResult();
-                    _mediaService.DeleteFolder(viewModel.MediaPath);
-                }
-                // Save
-                else {
-                    if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't rename media folder")))
-                        return new HttpUnauthorizedResult();
-                    _mediaService.RenameFolder(viewModel.MediaPath, viewModel.Name);
-                }
 
+                _mediaService.DeleteFolder(viewModel.MediaPath);
+
+                Services.Notifier.Information(T("Media folder deleted"));
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error(T("Modifying Folder Properties failed: {0}", exception.Message));
+                Services.Notifier.Error(T("Deleting media folder failed: {0}", exception.Message));
+                return View(viewModel);
+            }
+        }
+
+        [HttpPost, ActionName("EditProperties")]
+        [FormValueRequired("submit.Save")]
+        public ActionResult EditProperties() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't rename media folder")))
+                return new HttpUnauthorizedResult();
+
+            var viewModel = new MediaFolderEditPropertiesViewModel();
+            try {
+                UpdateModel(viewModel);
+
+                _mediaService.RenameFolder(viewModel.MediaPath, viewModel.Name);
+
+                Services.Notifier.Information(T("Media folder properties modified"));
+                return RedirectToAction("Index");
+            } catch (Exception exception) {
+                Services.Notifier.Error(T("Modifying media folder properties failed: {0}", exception.Message));
                 return View(viewModel);
             }
         }
@@ -143,13 +164,14 @@ namespace Orchard.Media.Controllers {
 
         [HttpPost]
         public ActionResult Add() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't upload media file")))
+                return new HttpUnauthorizedResult();
+
             var viewModel = new MediaItemAddViewModel();
             try {
                 UpdateModel(viewModel);
-                if (!Services.Authorizer.Authorize(Permissions.UploadMediaFiles, T("Couldn't upload media file")))
-                    return new HttpUnauthorizedResult();
 
-                if(Request.Files[0].FileName.IsNullOrEmptyTrimmed()) {
+                if(String.IsNullOrWhiteSpace(Request.Files[0].FileName)) {
                     ModelState.AddModelError("File", T("Select a file to upload").ToString());
                 }
 
@@ -167,9 +189,10 @@ namespace Orchard.Media.Controllers {
                 // then save them
                 foreach (string fileName in Request.Files) {
                     HttpPostedFileBase file = Request.Files[fileName];
-                    _mediaService.UploadMediaFile(viewModel.MediaPath, file);
+                    _mediaService.UploadMediaFile(viewModel.MediaPath, file, viewModel.ExtractZip);
                 }
 
+                Services.Notifier.Information(T("Media file(s) uploaded"));
                 return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
             }
             catch (Exception exception) {
@@ -180,11 +203,12 @@ namespace Orchard.Media.Controllers {
 
         [HttpPost]
         public ContentResult AddFromClient() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia))
+                return Content(string.Format("<script type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("ERROR: You don't have permission to upload media files")));
+
             var viewModel = new MediaItemAddViewModel();
             try {
                 UpdateModel(viewModel);
-                if (!Services.Authorizer.Authorize(Permissions.UploadMediaFiles))
-                    return Content(string.Format("<script type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("ERROR: You don't have permission to upload media files")));
 
                 if (Request.Files.Count < 1 || Request.Files[0].ContentLength == 0)
                     return Content(string.Format("<script type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("HEY: You didn't give me a file to upload")));
@@ -198,7 +222,7 @@ namespace Orchard.Media.Controllers {
                 }
 
                 var file = Request.Files[0];
-                var publicUrl = _mediaService.UploadMediaFile(viewModel.MediaPath, file);
+                var publicUrl = _mediaService.UploadMediaFile(viewModel.MediaPath, file, viewModel.ExtractZip);
 
                 return Content(string.Format("<script type=\"text/javascript\">var result = {{ url: \"{0}\" }};</script>", publicUrl));
             }
@@ -220,32 +244,45 @@ namespace Orchard.Media.Controllers {
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult EditMedia(FormCollection input) {
+        [HttpPost, ActionName("EditMedia")]
+        [FormValueRequired("submit.Delete")]
+        public ActionResult EditMediaDeletePOST(FormCollection input) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't delete media file")))
+                return new HttpUnauthorizedResult();
+
             var viewModel = new MediaItemEditViewModel();
             try {
                 UpdateModel(viewModel);
-                if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't modify media file")))
-                    return new HttpUnauthorizedResult();
-                // Delete
-                if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Delete"])) {
-                    if (!Services.Authorizer.Authorize(Permissions.ManageMediaFiles, T("Couldn't delete media file")))
-                        return new HttpUnauthorizedResult();
-                    _mediaService.DeleteFile(viewModel.Name, viewModel.MediaPath);
-                    return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
-                }
-                // Save and Rename
+
+                _mediaService.DeleteFile(viewModel.Name, viewModel.MediaPath);
+
+                Services.Notifier.Information(T("Media deleted"));
+                return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
+            } catch (Exception exception) {
+                Services.Notifier.Error(T("Removing media file failed: {0}", exception.Message));
+                return View(viewModel);
+            }
+        }
+
+        [HttpPost, ActionName("EditMedia")]
+        [FormValueRequired("submit.Save")]
+        public ActionResult EditMedia(FormCollection input) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't modify media file")))
+                return new HttpUnauthorizedResult();
+
+            var viewModel = new MediaItemEditViewModel();
+            try {
+                UpdateModel(viewModel);
+                string viewModelName = viewModel.Name;
+
+                // Rename
                 if (!String.Equals(viewModel.Name, input["NewName"], StringComparison.OrdinalIgnoreCase)) {
                     _mediaService.RenameFile(viewModel.Name, input["NewName"], viewModel.MediaPath);
-                    return RedirectToAction("EditMedia", new { name = input["NewName"],
-                                                               caption = viewModel.Caption,
-                                                               lastUpdated = viewModel.LastUpdated,
-                                                               size = viewModel.Size,
-                                                               folderName = viewModel.FolderName,
-                                                               mediaPath = viewModel.MediaPath });
+                    viewModelName = input["NewName"];
                 }
-                // Save
-                return RedirectToAction("EditMedia", new { name = viewModel.Name, 
+
+                Services.Notifier.Information(T("Media information updated"));
+                return RedirectToAction("EditMedia", new { name = viewModelName, 
                                                            caption = viewModel.Caption, 
                                                            lastUpdated = viewModel.LastUpdated, 
                                                            size = viewModel.Size,

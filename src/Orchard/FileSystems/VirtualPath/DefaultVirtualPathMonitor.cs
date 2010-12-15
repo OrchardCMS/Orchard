@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Caching;
 using System.Web.Hosting;
 using Orchard.Caching;
+using Orchard.Logging;
 using Orchard.Services;
 
 namespace Orchard.FileSystems.VirtualPath {
@@ -15,13 +17,24 @@ namespace Orchard.FileSystems.VirtualPath {
         public DefaultVirtualPathMonitor(IClock clock) {
             _clock = clock;
             _thunk = new Thunk(this);
+            Logger = NullLogger.Instance;
         }
 
+        ILogger Logger { get; set; }
+
         public IVolatileToken WhenPathChanges(string virtualPath) {
-            // Fix this to monitor first existing parent directory.
-            var token = BindToken(virtualPath);
-            BindSignal(virtualPath);
-            return token;
+            try {
+                var token = BindToken(virtualPath);
+                BindSignal(virtualPath);
+                return token;
+            }
+            catch (HttpException e) {
+                // This exception happens if trying to monitor a directory or file
+                // inside a directory which doesn't exist
+                Logger.Warning(e, "Error monitor file changes on virtual path '{0}'", virtualPath);
+                // Fix this to monitor first existing parent directory.
+                return new Token(virtualPath);
+            }
         }
 
         private Token BindToken(string virtualPath) {
@@ -89,6 +102,10 @@ namespace Orchard.FileSystems.VirtualPath {
             }
             public bool IsCurrent { get; set; }
             public string VirtualPath { get; private set; }
+
+            public override string ToString() {
+                return string.Format("IsCurrent: {0}, VirtualPath: \"{1}\"", IsCurrent, VirtualPath);
+            }
         }
 
         class Thunk {
@@ -104,6 +121,5 @@ namespace Orchard.FileSystems.VirtualPath {
                     provider.Signal(key, value, reason);
             }
         }
-
     }
 }

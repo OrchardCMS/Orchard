@@ -1,4 +1,5 @@
 using System.Linq;
+using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
@@ -21,16 +22,21 @@ namespace Orchard.Packaging.Services {
         #region IPackageManager Members
 
         public PackageData Harvest(string extensionName) {
-            ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(x => x.Name == extensionName);
+            ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(x => x.Id == extensionName);
             if (extensionDescriptor == null) {
                 return null;
             }
             return new PackageData {
                 ExtensionType = extensionDescriptor.ExtensionType,
-                ExtensionName = extensionDescriptor.Name,
+                ExtensionName = extensionDescriptor.Id,
                 ExtensionVersion = extensionDescriptor.Version,
                 PackageStream = _packageBuilder.BuildPackage(extensionDescriptor),
             };
+        }
+
+        public PackageInfo Install(IPackage package, string location, string applicationPath)
+        {
+            return _packageExpander.Install(package, location, applicationPath);
         }
 
         public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
@@ -40,6 +46,7 @@ namespace Orchard.Packaging.Services {
         public void Uninstall(string packageId, string applicationPath) {
             _packageExpander.Uninstall(packageId, applicationPath);
         }
+
         #endregion
     }
 }

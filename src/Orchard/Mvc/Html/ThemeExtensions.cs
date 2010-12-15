@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
-using System.Web.UI;
-using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Themes;
 using Orchard.Validation;
@@ -23,7 +21,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static string ThemePath(this HtmlHelper helper, ExtensionDescriptor theme, string path) {
-            return theme.Location + "/" + theme.Name + path;
+            return theme.Location + "/" + theme.Id + path;
         }
     }
 }

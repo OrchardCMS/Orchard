@@ -12,7 +12,9 @@
     <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
     <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
     <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
+    <GalleryArtifactFolder>$(ArtifactsFolder)\Gallery</GalleryArtifactFolder>
     <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
+    <OrchardCoreSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Core</OrchardCoreSrcFolder>
     <ThemesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Themes</ThemesSrcFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
@@ -20,6 +22,7 @@
     <StageFolder>$(BuildFolder)\Stage</StageFolder>
     <MsDeployFolder>$(BuildFolder)\MsDeploy</MsDeployFolder>
     <ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
+    <GalleryFolder>$(BuildFolder)\Gallery</GalleryFolder>
 
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
     <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
@@ -39,6 +42,22 @@
     <CallTarget Targets="Package"/>
   </Target>
 
+  <Target Name="FullBuild">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Test"/>
+    <CallTarget Targets="Package"/>
+    <CallTarget Targets="Gallery"/>
+    <CallTarget Targets="Spec"/> <!-- Note: move to the end until SpecFlow test are more reliable -->
+  </Target>
+
+  <Target Name="FastPackage">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package"/>
+    <CallTarget Targets="Gallery"/>
+  </Target>
+
   <Target Name="Package">
     <CallTarget Targets="Package-Stage"/>
     <CallTarget Targets="Package-MsDeploy"/>
@@ -53,12 +72,16 @@
     <CallTarget Targets="Profiling-Setup"/>
   </Target>
 
+  <Target Name="Gallery">
+    <CallTarget Targets="Gallery-Stage"/>
+    <CallTarget Targets="Gallery-Setup"/>
+  </Target>
 
   <!-- Building -->
 
   <Target Name="Clean">
     <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
-    <RemoveDir Directories="$(BuildFolder)" />
+    <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true"/>
     <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
 
@@ -110,10 +133,13 @@
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.StageProjectAlteration" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.XmlDelete" />
 
   <Target Name="Package-Stage">
     <CallTarget Targets="CompileMsBuildTasks"/>
-    
+    <CallTarget Targets="ValidateProjectFiles"/>
+
     <ItemGroup>
       <SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\*"/>
       <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\*"/>
@@ -124,8 +150,8 @@
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
-	  <Stage-Themes Include="$(ThemesSrcFolder)\**\*" Exclude="@(Stage-Bin-Exclude);$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\bin\**;$(ThemesSrcFolder)\obj\**;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\Properties\**" />
-	  <Stage-Themes-Binaries Include="$(ThemesSrcFolder)\*\**\bin\*" />
+      <Stage-Themes Include="$(ThemesSrcFolder)\**\*" Exclude="@(Stage-Bin-Exclude);$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\bin\**;$(ThemesSrcFolder)\obj\**;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\Properties\**" />
+      <Stage-Themes-Binaries Include="$(ThemesSrcFolder)\*\**\bin\*" />
 
       <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);@(Stage-Themes);$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
 
@@ -182,21 +208,46 @@
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
 
+    <XmlDelete XmlFileName="$(StageFolder)\web.config"
+      XPath="/configuration/system.web/trust" />
+
     <XmlUpdate XmlFileName="$(StageFolder)\web.config"
       XPath="/configuration/system.web/machineKey/@validationKey"
       Value="AutoGenerate" />
-    
+
     <XmlUpdate XmlFileName="$(StageFolder)\web.config"
       XPath="/configuration/system.web/machineKey/@decryptionKey"
       Value="AutoGenerate" />
-    
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
-      XPath="/system.diagnostics/trace/@autoflush"
+
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/appender/immediateFlush/@value"
       Value="false" />
 
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
-      XPath="/system.diagnostics/sources/source/@switchValue"
-      Value="Error" />
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/logger/priority/@value"
+      Value="ERROR" />
+
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/root/priority/@value"
+      Value="ERROR" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/appender[@name='debug-file']" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/appender[@name='debugger']" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/appender[@name='error-file']/filter" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/logger[@name='Orchard.Localization']" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/logger[@name='Orchard']" />
+
+    <XmlDelete XmlFileName="$(StageFolder)\Config\log4net.config"
+      XPath="/log4net/root/appender-ref[@ref='debug-file']" />
 
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"
@@ -208,7 +259,23 @@
   <Target Name="Package-MsDeploy">
     <ItemGroup>
       <!--<MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />-->
-      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml" />
+
+      <MsDeploy-Exclude-Modules Include="
+        $(StageFolder)\**\Modules\Orchard.Localization\**;
+        $(StageFolder)\**\Modules\Orchard.Messaging\**;
+        $(StageFolder)\**\Modules\Lucene\**;
+        $(StageFolder)\**\Modules\Orchard.ArchiveLater\**;
+        $(StageFolder)\**\Modules\Orchard.CodeGeneration\**;
+        $(StageFolder)\**\Modules\Orchard.Email\**;
+        $(StageFolder)\**\Modules\Orchard.Experimental\**;
+        $(StageFolder)\**\Modules\Orchard.Indexing\**;
+        $(StageFolder)\**\Modules\Orchard.Migrations\**;
+        $(StageFolder)\**\Modules\Orchard.MultiTenancy\**;
+        $(StageFolder)\**\Modules\Orchard.Scripting.Dlr\**;
+        $(StageFolder)\**\Modules\Orchard.Search\**;
+        " />
+
+      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;@(MsDeploy-Exclude-Modules)" />
       <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml;$(LibFolder)\msdeploy\*.sql"/>
     </ItemGroup>
 
@@ -264,18 +331,64 @@
 
     <Copy SourceFiles="@(Profiling-Web)" DestinationFolder="$(ProfilingFolder)\%(RecursiveDir)"/>
 
+    <XmlUpdate XmlFileName="$(ProfilingFolder)\web.config"
+      XPath="/configuration/system.web/trust/@level"
+      Value="Full" />
+
   </Target>
 
   <Target Name="Profiling-Setup">
-    <Exec Command="$(ProfilingFolder)\bin\Orchard.exe @$(SrcFolder)\Orchard.Profile\profiling-setup-commands.txt" WorkingDirectory="$(ProfilingFolder)"/>
+    <ReadLinesFromFile File="$(SrcFolder)\Orchard.Profile\profiling-setup-commands.txt">
+      <Output TaskParameter="Lines" ItemName="ProfilingSetupCommands"/>
+    </ReadLinesFromFile>
+
+    <Exec Command="$(ProfilingFolder)\bin\Orchard.exe %(ProfilingSetupCommands.Identity)" WorkingDirectory="$(ProfilingFolder)"/>
   </Target>
 
+  <!-- Gallery Packaging -->
 
-  <!-- Version -->
+  <Target Name="Gallery-Stage">
+    <ItemGroup>
+      <Gallery-Web Include="$(StageFolder)\**\*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Gallery-Web)" DestinationFolder="$(GalleryFolder)\%(RecursiveDir)"/>
+  </Target>
+
+  <Target Name="Gallery-Setup">
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; setup /SiteName:Gallery /AdminUsername:admin /AdminPassword:gallery-secret /DatabaseProvider:SqlCe" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; feature enable Orchard.Packaging" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Localization &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Messaging &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Lucene &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.ArchiveLater &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.CodeGeneration &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Email &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Experimental &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Indexing &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Migrations &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.MultiTenancy &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Scripting.Dlr &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Search &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+  </Target>
+
+  <!-- ValidateProjectFiles-->
+  <Target Name="ValidateProjectFiles">
+    <CallTarget Targets="CompileMsBuildTasks"/>
+
+    <ItemGroup>
+      <Validate-ProjectFiles Include="$(ModulesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.csproj;$(OrchardCoreSrcFolder)\Orchard.Core.csproj"/>
+    </ItemGroup>
+
+    <ValidateExtensionProjectFiles Files="@(Validate-ProjectFiles)"/>
+
+  </Target>
+
+  <!-- SetVersion -->
   <!-- Update all AssemblyInfo.cs and module.txt files to contain $(Version) -->
   <Target Name="SetVersion" Condition="$(Version) != ''">
     <CallTarget Targets="CompileMsBuildTasks"/>
-    
+
     <ItemGroup>
       <Version-AssemblyInfos Include="$(SrcFolder)\**\AssemblyInfo.cs" />
       <Version-Modules Include="$(SrcFolder)\**\Module.txt" />
@@ -287,10 +400,10 @@
         ReplacementText="${1}${2}:${3}$(Version)"
         IgnoreCase="True"/>
 
-	<FileUpdateLines Files="@(Version-Themes)"
-        Regex="^(orchardversion|version)(\s*):(\s*)(.*)"
-        ReplacementText="${1}${2}:${3}$(Version)"
-        IgnoreCase="True"/>
+    <FileUpdateLines Files="@(Version-Themes)"
+          Regex="^(orchardversion|version)(\s*):(\s*)(.*)"
+          ReplacementText="${1}${2}:${3}$(Version)"
+          IgnoreCase="True"/>
 
     <FileUpdateLines Files="@(Version-AssemblyInfos)"
         Regex="^\[assembly:(\s)*(AssemblyVersion|AssemblyFileVersion)(\s)*\(&quot;(.*)&quot;\)(\s)*\]"

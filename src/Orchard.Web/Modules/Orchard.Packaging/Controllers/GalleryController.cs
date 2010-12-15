@@ -1,16 +1,20 @@
 using System;
+using System.Collections.Generic;
+using System.Data.Services.Client;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
+using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
-using System.Xml.XPath;
+using IPackageManager = Orchard.Packaging.Services.IPackageManager;
 
 namespace Orchard.Packaging.Controllers {
     [OrchardFeature("Gallery")]
@@ -19,48 +23,62 @@ namespace Orchard.Packaging.Controllers {
 
         private readonly IPackageManager _packageManager;
         private readonly IPackagingSourceManager _packagingSourceManager;
-        private readonly IExtensionManager _extensionManager;
         private readonly INotifier _notifier;
 
         public GalleryController(
             IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
-            IExtensionManager extensionManager,
-            INotifier notifier) {
+            INotifier notifier,
+            IOrchardServices services) {
             _packageManager = packageManager;
             _packagingSourceManager = packagingSourceManager;
-            _extensionManager = extensionManager;
             _notifier = notifier;
+            Services = services;
+
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
-        Localizer T { get; set; }
+        public IOrchardServices Services { get; set; }
+        public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Sources() {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list sources")))
+                return new HttpUnauthorizedResult();
+
             return View(new PackagingSourcesViewModel {
                 Sources = _packagingSourceManager.GetSources(),
             });
         }
 
         public ActionResult Remove(int id) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove sources")))
+                return new HttpUnauthorizedResult();
+
             _packagingSourceManager.RemoveSource(id);
             _notifier.Information(T("The feed has been removed successfully."));
             return RedirectToAction("Sources");
         }
 
         public ActionResult AddSource() {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
+                return new HttpUnauthorizedResult();
+
             return View(new PackagingAddSourceViewModel());
         }
 
         [HttpPost]
         public ActionResult AddSource(string url) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
+                return new HttpUnauthorizedResult();
+
             try {
-                if ( !String.IsNullOrEmpty(url) ) {
+                if (!String.IsNullOrEmpty(url)) {
                     if (!url.StartsWith("http")) {
                         ModelState.AddModelError("Url", T("The Url is not valid").Text);
                     }
-                }
-                else if ( String.IsNullOrWhiteSpace(url)) {
+                } else if (String.IsNullOrWhiteSpace(url)) {
                     ModelState.AddModelError("Url", T("Url is required").Text);
                 }
 
@@ -68,51 +86,66 @@ namespace Orchard.Packaging.Controllers {
                 // try to load the feed
                 try {
 
-                    XNamespace atomns = "http://www.w3.org/2005/Atom" ;
+                    XNamespace atomns = "http://www.w3.org/2005/Atom";
                     var feed = XDocument.Load(url, LoadOptions.PreserveWhitespace);
                     var titleNode = feed.Descendants(atomns + "title").FirstOrDefault();
-                    if ( titleNode != null )
+                    if (titleNode != null)
                         title = titleNode.Value;
 
-                    if(String.IsNullOrWhiteSpace(title)) {
+                    if (String.IsNullOrWhiteSpace(title)) {
                         ModelState.AddModelError("Url", T("The feed has no title.").Text);
                     }
-                }
-                catch {
+                } catch {
                     ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
                 }
 
-                if ( !ModelState.IsValid )
+                if (!ModelState.IsValid)
                     return View(new PackagingAddSourceViewModel { Url = url });
 
                 _packagingSourceManager.AddSource(title, url);
                 _notifier.Information(T("The feed has been added successfully."));
 
                 return RedirectToAction("Sources");
-            }
-            catch ( Exception exception ) {
+            } catch (Exception exception) {
                 _notifier.Error(T("Adding feed failed: {0}", exception.Message));
                 return View(new PackagingAddSourceViewModel { Url = url });
             }
         }
 
-
         public ActionResult Modules(int? sourceId) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list modules")))
+                return new HttpUnauthorizedResult();
+
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-            var sources = selectedSource != null 
-                ? new [] { selectedSource }
+            var sources = selectedSource != null
+                ? new[] { selectedSource }
                 : _packagingSourceManager.GetSources()
             ;
 
+            IEnumerable<PackagingEntry> extensions = null;
+            foreach (var source in sources) {
+                try {
+                    var sourceExtensions = _packagingSourceManager.GetModuleList(source).ToArray();
+                    extensions = extensions == null ? sourceExtensions : extensions.Concat(sourceExtensions);
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message);
+                    _notifier.Error(T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message));
+                }
+            }
+
             return View("Modules", new PackagingExtensionsViewModel {
-                Extensions = sources.SelectMany(source => _packagingSourceManager.GetModuleList(source)),
+                Extensions = extensions ?? new PackagingEntry[] {},
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 SelectedSource = selectedSource
             });
         }
 
         public ActionResult Themes(int? sourceId) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list themes")))
+                return new HttpUnauthorizedResult();
+
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
             var sources = selectedSource != null
@@ -128,9 +161,12 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult Install(string packageId, string version, int sourceId, string redirectTo) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to install packages")))
+                return new HttpUnauthorizedResult();
+
             var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
-            if(source == null) {
+            if (source == null) {
                 return HttpNotFound();
             }
 

@@ -4,12 +4,12 @@
 @using Orchard.Mvc.Html;
 @using Orchard.Utility.Extensions;
 @{
-    Style.Include("admin.css");
+    Style.Require("Admin");
     Script.Require("ShapesBase");
 }
 <h1>@Html.TitleForPage(T("Manage Comments").ToString())</h1>
 @using(Html.BeginFormAntiForgeryPost()) { 
-	@Html.ValidationSummary() 
+    @Html.ValidationSummary() 
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
@@ -32,28 +32,32 @@
         <button type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
     <fieldset>
-	    <table class="items" summary="@T("This is a table of the comments in your application")">
-		    <colgroup>
-			    <col id="Col1" />
-			    <col id="Col2" />
-			    <col id="Col3" />
-			    <col id="Col4" />
-			    <col id="Col5" />
-			    <col id="Col6" />
-		    </colgroup>
-		    <thead>
-			    <tr>
-				    <th scope="col">&nbsp;&darr;</th>
-				    <th scope="col">@T("Status")</th>
-				    <th scope="col">@T("Author")</th>
-				    <th scope="col">@T("Comment")</th>
-				    <th scope="col">@T("Commented On")</th>
-			        <th scope="col">@T("Actions")</th>
-			    </tr>
-		    </thead>
+        <table class="items" summary="@T("This is a table of the comments in your application")">
+            <colgroup>
+                <col id="Col1" />
+                <col id="Col2" />
+                <col id="Col3" />
+                <col id="Col4" />
+                <col id="Col5" />
+                <col id="Col6" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col">&nbsp;&darr;</th>
+                    <th scope="col">@T("Status")</th>
+                    <th scope="col">@T("Author")</th>
+                    <th scope="col">@T("Comment")</th>
+                    <th scope="col">@T("Commented On")</th>
+                    <th scope="col">@T("Actions")</th>
+                </tr>
+            </thead>
             @{var commentIndex = 0;}
             @foreach (var commentEntry in Model.Comments) {
-            <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment">
+                var commentClass = "";
+                if (!HasText(commentEntry.Comment.UserName)) {
+                    commentClass = "anonymous";
+                }
+            <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
                 <td>
                     <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.NameOf(m => m.Comments[commentIndex].Comment.Id)"/>
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"/>
@@ -63,7 +67,12 @@
                     else if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending") } 
                     else { @T("Approved") }
                 </td>
-                <td>@commentEntry.Comment.UserName</td>
+                <td>
+                    <div>@commentEntry.Comment.Author</div>
+                    @if (HasText(commentEntry.Comment.UserName) && commentEntry.Comment.Author != commentEntry.Comment.UserName) {
+                        <div class="authenticated-commenter-id">@commentEntry.Comment.UserName</div>
+                    }
+                </td>
                 <td>
                     @* would ideally have permalinks for individual comments *@
                     <p><a href="@Url.ItemDisplayUrl(commentEntry.CommentedOn)#comments"><time>@Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>

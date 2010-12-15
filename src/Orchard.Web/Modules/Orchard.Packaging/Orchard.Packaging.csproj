@@ -35,55 +35,43 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NuGet.Core, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NuGet.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\nuget\NuGet.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Data.Services.Client" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\PackagingCommands.cs" />
+    <Compile Include="Controllers\PackagingServicesController.cs" />
     <Compile Include="Controllers\DownloadStreamResult.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="DefaultPackagingUpdater.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\PackagingSource.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Service References\GalleryServer\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.datasvcmap</DependentUpon>
+    </Compile>
     <Compile Include="Services\AtomExtensions.cs" />
     <Compile Include="Services\ExtensionReferenceRepository.cs" />
     <Compile Include="Services\FileBaseProjectSystem.cs" />
@@ -106,13 +94,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Styles\admin.css" />
+    <Content Include="Service References\GalleryServer\Reference.datasvcmap">
+      <Generator>DataServiceClientGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </Content>
+    <Content Include="Styles\orchard-packaging-admin.css" />
     <Content Include="Views\Gallery\AddSource.cshtml" />
     <Content Include="Views\Gallery\Modules.cshtml" />
     <Content Include="Views\Gallery\Sources.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\PackagingServices\AddModule.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
@@ -136,6 +130,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Gallery\Themes.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PackagingServices\AddTheme.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ServiceReferenceMetadataStorage Include="Service References\GalleryServer\">
+      <Type>datasvcmap</Type>
+    </ServiceReferenceMetadataStorage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Service References\GalleryServer\service.edmx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.Mvc.ViewEngines.WebForms {
     public class WebFormViewEngineProvider : IViewEngineProvider, IShapeTemplateViewEngine {
-        private readonly IVirtualPathProvider _virtualPathProvider;
-
-        public WebFormViewEngineProvider(IVirtualPathProvider virtualPathProvider) {
-            _virtualPathProvider = virtualPathProvider;
+        public WebFormViewEngineProvider() {
             Logger = NullLogger.Instance;
         }
 
-        static string[] DisabledFormats = new[] { "~/Disabled" };
+        static readonly string[] DisabledFormats = new[] { "~/Disabled" };
 
         public ILogger Logger { get; set; }
 
@@ -109,14 +104,9 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
             };
         }
 
-        public IEnumerable<string> DetectTemplateFileNames(string virtualPath) {
-            var fileNames = _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
-            foreach (var fileName in fileNames) {
-                if (fileName.EndsWith(".aspx", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".ascx", StringComparison.OrdinalIgnoreCase)) {
-                    yield return fileName;
-                }
-            }
-        }    
+        public IEnumerable<string> DetectTemplateFileNames(IEnumerable<string> fileNames) {
+            return fileNames.Where(fileName => fileName.EndsWith(".aspx", StringComparison.OrdinalIgnoreCase) ||
+                                               fileName.EndsWith(".ascx", StringComparison.OrdinalIgnoreCase));
+        }
     }
 }

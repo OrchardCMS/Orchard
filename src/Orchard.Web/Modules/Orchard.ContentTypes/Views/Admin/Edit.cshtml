@@ -1,7 +1,7 @@
 @model Orchard.ContentTypes.ViewModels.EditTypeViewModel
 @{
     Style.Require("ContentTypesAdmin");
-	Script.Require("jQuery");
+    Script.Require("jQuery");
     Script.Include("admin.js");
 }
 <h1>@Html.TitleForPage(T("Edit Content Type").ToString())</h1>
@@ -13,10 +13,11 @@
         <fieldset>
             <label for="DisplayName">@T("Display Name")</label>
             @Html.TextBoxFor(m => m.DisplayName, new { @class = "textMedium" })
+            <span class="hint">@T("Content Type Id: {0}", Model.Name)</span>
             @* todo: if we continue to go down the midrodata route, some helpers would be nice *@
             <meta itemprop="DisplayName" content="@Model.DisplayName" />
             @* has unintended consequences (renamging the type) - changing the name creates a new type of that name *@
-            <meta itemprop="Name" content="@Model.Name" />
+            <meta itemprop="Id" content="@Model.Name" />
             @Html.HiddenFor(m => m.Name)
         </fieldset>
         @{ Html.RenderTemplates(Model.Templates); }

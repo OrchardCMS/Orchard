@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Hosting;
-using HtmlAgilityPack;
 using Orchard.Specs.Util;
 
 namespace Orchard.Specs.Hosting {
@@ -15,12 +15,15 @@ namespace Orchard.Specs.Hosting {
 
             var physicalPath = Bleroy.FluentPath.Path.Get(webHost.PhysicalDirectory);
 
+            bool isHomepage = urlPath == "/";
+
+            if (!isHomepage)
+                urlPath = StripVDir(urlPath, webHost.VirtualDirectory);
+
             var details = new RequestDetails {
                 HostName = webHost.HostName,
                 UrlPath = urlPath,
-                Page = physicalPath
-                    .Combine(urlPath.TrimStart('/', '\\'))
-                    .GetRelativePath(physicalPath),
+                Page = (isHomepage ? "" : physicalPath.Combine(urlPath.TrimStart('/', '\\')).GetRelativePath(physicalPath).ToString())
             };
 
             if (!string.IsNullOrEmpty(webHost.Cookies)) {
@@ -45,10 +48,40 @@ namespace Orchard.Specs.Hosting {
             string setCookie;
             if (details.ResponseHeaders.TryGetValue("Set-Cookie", out setCookie)) {
                 Trace.WriteLine(string.Format("Set-Cookie: {0}", setCookie));
-                webHost.Cookies = (webHost.Cookies + ';' + setCookie.Split(';').FirstOrDefault()).Trim(';');
+                var cookieName = setCookie.Split(';')[0].Split('=')[0];
+                DateTime expires;
+                if (!string.IsNullOrEmpty(webHost.Cookies)
+                    && setCookie.Contains("expires=")
+                    && DateTime.TryParse(setCookie.Split(new[] { "expires=" }, 2, StringSplitOptions.None)[1].Split(';')[0], out expires)
+                    && expires < DateTime.Now) {
+                    // remove
+                    Trace.WriteLine(string.Format("Removing cookie: {0}", cookieName));
+                    webHost.Cookies = Regex.Replace(webHost.Cookies, string.Format("{0}=[^;]*;?", cookieName), "");
+                }
+                else if (!string.IsNullOrEmpty(webHost.Cookies)
+                    && Regex.IsMatch(webHost.Cookies, string.Format("\b{0}=", cookieName))) {
+                    // replace
+                    Trace.WriteLine(string.Format("Replacing cookie: {0}", cookieName));
+                    webHost.Cookies = Regex.Replace(webHost.Cookies, string.Format("{0}=[^;]*(;?)", cookieName), string.Format("{0}$1", setCookie.Split(';')[0]));
+                }
+                else {
+                    // add
+                    Trace.WriteLine(string.Format("Adding cookie: {0}", cookieName));
+                    webHost.Cookies = (webHost.Cookies + ';' + setCookie.Split(';').FirstOrDefault()).Trim(';');
+                }
+                Trace.WriteLine(string.Format("Cookie jar: {0}", webHost.Cookies));
             }
 
             return details;
+        }
+
+        private static string StripVDir(string urlPath, string virtualDirectory) {
+            if (urlPath == "/")
+                return urlPath;
+
+            return urlPath.StartsWith(virtualDirectory, StringComparison.OrdinalIgnoreCase)
+                ? urlPath.Substring(virtualDirectory.Length)
+                : urlPath;
         }
 
         public static RequestDetails SendRequest(this WebHost webHost, string urlPath) {
@@ -112,14 +145,19 @@ namespace Orchard.Specs.Hosting {
             }
 
             public override void SendKnownResponseHeader(int index, string value) {
-                if (index == HeaderSetCookie) {
-                    _details.ResponseHeaders.Add("Set-Cookie", value);
-                }
-                else if (index == HeaderLocation) {
-                    _details.ResponseHeaders.Add("Location", value);
-                }
-                else {
-                    _details.ResponseHeaders.Add("known header #" + index, value);
+                switch (index) {
+                    case HeaderSetCookie:
+                        _details.ResponseHeaders.Add("Set-Cookie", value);
+                        break;
+                    case HeaderLocation:
+                        _details.ResponseHeaders.Add("Location", value);
+                        break;
+                    case HeaderContentType:
+                        _details.ResponseHeaders.Add("Content-Type", value);
+                        break;
+                    default:
+                        _details.ResponseHeaders.Add("known header #" + index, value);
+                        break;
                 }
                 base.SendKnownResponseHeader(index, value);
             }

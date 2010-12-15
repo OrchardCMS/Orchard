@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac.Features.Metadata;
+using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Utility;
@@ -12,18 +12,19 @@ namespace Orchard.DisplayManagement.Descriptors {
     public class DefaultShapeTableManager : IShapeTableManager {
         private readonly IEnumerable<Meta<IShapeTableProvider>> _bindingStrategies;
         private readonly IExtensionManager _extensionManager;
+        private readonly ICacheManager _cacheManager;
 
         public DefaultShapeTableManager(
             IEnumerable<Meta<IShapeTableProvider>> bindingStrategies,
-            IExtensionManager extensionManager) {
+            IExtensionManager extensionManager,
+            ICacheManager cacheManager) {
             _extensionManager = extensionManager;
+            _cacheManager = cacheManager;
             _bindingStrategies = bindingStrategies;
         }
 
-        readonly ConcurrentDictionary<string, ShapeTable> _tables = new ConcurrentDictionary<string, ShapeTable>();
-
         public ShapeTable GetShapeTable(string themeName) {
-            return _tables.GetOrAdd(themeName ?? "", x => {
+            return _cacheManager.Get(themeName ?? "", x => {
                 var builderFactory = new ShapeTableBuilderFactory();
                 foreach (var bindingStrategy in _bindingStrategies) {
                     Feature strategyDefaultFeature = bindingStrategy.Metadata.ContainsKey("Feature") ?
@@ -66,14 +67,13 @@ namespace Orchard.DisplayManagement.Descriptors {
             }
 
             var extensionType = alteration.Feature.Descriptor.Extension.ExtensionType;
-
-            if (extensionType == "Module") {
+            if (DefaultExtensionTypes.IsModule(extensionType)) {
                 return true;
             }
 
-            if (extensionType == "Theme") {
+            if (DefaultExtensionTypes.IsTheme(extensionType)) {
                 // alterations from themes must be from the given theme or a base theme
-                var featureName = alteration.Feature.Descriptor.Name;
+                var featureName = alteration.Feature.Descriptor.Id;
                 return featureName == themeName || IsBaseTheme(featureName, themeName);
             }
 
@@ -84,7 +84,7 @@ namespace Orchard.DisplayManagement.Descriptors {
             // determine if the given feature is a base theme of the given theme
             var availableFeatures = _extensionManager.AvailableFeatures();
 
-            var themeFeature = availableFeatures.SingleOrDefault(fd => fd.Name == themeName);
+            var themeFeature = availableFeatures.SingleOrDefault(fd => fd.Id == themeName);
             while(themeFeature != null) {
                 var baseTheme = themeFeature.Extension.BaseTheme;
                 if (String.IsNullOrEmpty(baseTheme)) {
@@ -93,7 +93,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                 if (featureName == baseTheme) {
                     return true;
                 }
-                themeFeature = availableFeatures.SingleOrDefault(fd => fd.Name == baseTheme);
+                themeFeature = availableFeatures.SingleOrDefault(fd => fd.Id == baseTheme);
             }
             return false;
         }

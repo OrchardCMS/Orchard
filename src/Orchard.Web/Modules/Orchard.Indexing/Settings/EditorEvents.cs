@@ -14,10 +14,10 @@ namespace Orchard.Indexing.Settings {
         public EditorEvents(IIndexingTaskManager indexingTaskManager, IContentManager contentManager){
             _indexingTaskManager = indexingTaskManager;
             _contentManager = contentManager;
-	    }
+        }
 
         private string _contentTypeName;
-        private bool _tasksCreated = false;
+        private bool _tasksCreated;
 
         public override IEnumerable<TemplateViewModel> TypeEditor(ContentTypeDefinition definition) {
             var model = definition.Settings.GetModel<TypeIndexing>();

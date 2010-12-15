@@ -8,7 +8,7 @@ namespace Orchard.Blogs.Drivers {
     [OrchardFeature("Orchard.Blogs.RemotePublishing")]
     public class RemoteBlogPublishingDriver : ContentPartDriver<BlogPart> {
         protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper) {
-            return ContentShape("Parts_Blogs_RemotePublishing", shape => shape.Slug(part.Slug));
+            return ContentShape("Parts_Blogs_RemotePublishing", shape => shape.Blog(part));
         }
     }
 }

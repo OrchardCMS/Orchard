@@ -1,18 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Tags.Models {
-    public class TagsPart : ContentPart {
-        public TagsPart() {
-            AllTags = new List<Tag>();
-            CurrentTags = new List<Tag>();
-        }
-
-        public readonly LazyField<IList<Tag>> _allTags = new LazyField<IList<Tag>>();
-        public readonly LazyField<IList<Tag>> _currentTags = new LazyField<IList<Tag>>();
-
-        public IList<Tag> AllTags { get { return _allTags.Value; } set { _allTags.Value = value; } }
-        public IList<Tag> CurrentTags { get { return _currentTags.Value; } set { _currentTags.Value = value; } }
+    public class TagsPart : ContentPart<TagsPartRecord> {
+        public IEnumerable<TagRecord> CurrentTags { get { return Record.Tags.Select(t => t.TagRecord); } }
     }
 }

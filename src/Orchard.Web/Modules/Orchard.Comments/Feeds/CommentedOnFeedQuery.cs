@@ -3,7 +3,6 @@ using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Models;
-using Orchard.Data;
 
 namespace Orchard.Comments.Feeds {
     [UsedImplicitly]

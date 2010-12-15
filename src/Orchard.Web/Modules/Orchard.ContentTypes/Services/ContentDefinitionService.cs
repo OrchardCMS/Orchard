@@ -6,10 +6,8 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
-using Orchard.ContentTypes.Extensions;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Extensions;
-using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 
 namespace Orchard.ContentTypes.Services {
@@ -65,18 +63,24 @@ namespace Orchard.ContentTypes.Services {
             return viewModel;
         }
 
-        public EditTypeViewModel AddType(CreateTypeViewModel typeViewModel) {
-            var name = GenerateName(typeViewModel.DisplayName);
+        public ContentTypeDefinition AddType(string name, string displayName) {
+            if(String.IsNullOrWhiteSpace(displayName)) {
+                throw new ArgumentException("displayName");
+            }
 
-            while (_contentDefinitionManager.GetTypeDefinition(name) != null)
+            if(String.IsNullOrWhiteSpace(name)) {
+                name = GenerateName(displayName);
+            }
+
+            while ( _contentDefinitionManager.GetTypeDefinition(name) != null )
                 name = VersionName(name);
 
-            var contentTypeDefinition = new ContentTypeDefinition(name, typeViewModel.DisplayName);
+            var contentTypeDefinition = new ContentTypeDefinition(name, displayName);
             _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
             _contentDefinitionManager.AlterTypeDefinition(name,
                 cfg => cfg.Creatable().Draftable());
 
-            return new EditTypeViewModel(contentTypeDefinition);
+            return contentTypeDefinition;
         }
 
         public void AlterType(EditTypeViewModel typeViewModel, IUpdateModel updateModel) {
@@ -178,10 +182,13 @@ namespace Orchard.ContentTypes.Services {
             while (_contentDefinitionManager.GetPartDefinition(name) != null)
                 name = VersionName(name);
 
-            var contentPartDefinition = new ContentPartDefinition(name);
-            _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
+            if (!String.IsNullOrEmpty(name)) {
+                var contentPartDefinition = new ContentPartDefinition(name);
+                _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
+                return new EditPartViewModel(contentPartDefinition);
+            }
 
-            return new EditPartViewModel(contentPartDefinition);
+            return null;
         }
 
         public void AlterPart(EditPartViewModel partViewModel, IUpdateModel updateModel) {
@@ -200,29 +207,38 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public void AddFieldToPart(string fieldName, string fieldTypeName, string partName) {
-            _contentDefinitionManager.AlterPartDefinition(partName, partBuilder => 
-                partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName))
-            );
+            fieldName = SafeName(fieldName);
+            if (string.IsNullOrEmpty(fieldName)) {
+                throw new OrchardException(T("Fields must have a name containing no spaces or symbols."));
+            }
+            _contentDefinitionManager.AlterPartDefinition(partName,
+                partBuilder => partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName)));
         }
 
         public void RemoveFieldFromPart(string fieldName, string partName) {
             _contentDefinitionManager.AlterPartDefinition(partName, typeBuilder => typeBuilder.RemoveField(fieldName));
         }
 
-        //gratuitously stolen from the RoutableService
-        private static string GenerateName(string displayName) {
-            if (string.IsNullOrWhiteSpace(displayName))
-                return "";
+        private static string SafeName(string name) {
+            if (string.IsNullOrWhiteSpace(name))
+                return String.Empty;
 
-            var name = displayName;
-            //todo: might need to be made more restrictive depending on how name is used (like as an XML node name, for instance)
-            var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s]+");
+            var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""<>]+");
 
-            name = dissallowed.Replace(name, "-");
-            name = name.Trim('-');
+            name = dissallowed.Replace(name, String.Empty);
+            name = name.Trim();
 
             if (name.Length > 128)
                 name = name.Substring(0, 128);
+            return name;
+        }
+
+        //gratuitously stolen from the RoutableService
+        public string GenerateName(string name) {
+            name = SafeName(name);
+
+            while ( _contentDefinitionManager.GetTypeDefinition(name) != null )
+                name = VersionName(name);
 
             return name;
         }

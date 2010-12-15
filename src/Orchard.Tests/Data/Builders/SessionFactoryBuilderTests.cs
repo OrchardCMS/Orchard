@@ -1,13 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.IO;
-using Autofac.Features.Metadata;
-using NHibernate.Tool.hbm2ddl;
-using NUnit.Framework;
-using Orchard.Data.Providers;
-using Orchard.Environment.Configuration;
-using Orchard.Environment.Descriptor;
-using Orchard.Environment.Descriptor.Models;
+﻿using NUnit.Framework;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Tests.Records;
 

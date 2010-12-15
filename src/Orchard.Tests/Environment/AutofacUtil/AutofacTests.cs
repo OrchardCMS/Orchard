@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
-using Autofac.Core.Activators.Delegate;
-using Autofac.Core.Lifetime;
-using Autofac.Core.Registration;
 using NUnit.Framework;
 
 namespace Orchard.Tests.Environment.AutofacUtil {

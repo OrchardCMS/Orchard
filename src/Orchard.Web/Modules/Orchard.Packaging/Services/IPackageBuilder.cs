@@ -1,5 +1,4 @@
 using System.IO;
-using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Packaging.Services {

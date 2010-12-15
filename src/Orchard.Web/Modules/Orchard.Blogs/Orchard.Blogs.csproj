@@ -41,32 +41,20 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.Web.Mobile" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\RemoteBlogPublishingController.cs" />
     <Compile Include="Drivers\BlogArchivesPartDriver.cs" />
     <Compile Include="Drivers\RemoteBlogPublishingDriver.cs" />
     <Compile Include="Drivers\RecentBlogPostsPartDriver.cs" />
@@ -94,6 +82,7 @@
     <Compile Include="Routing\IsArchiveConstraint.cs" />
     <Compile Include="Routing\BlogSlugConstraint.cs" />
     <Compile Include="Routing\BlogSlugConstraintUpdator.cs" />
+    <Compile Include="Security\BlogAuthorizationEventHandler.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Models\BlogPart.cs" />
@@ -115,9 +104,9 @@
     <Content Include="Content\Admin\images\published.gif" />
     <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Module.txt" />
-    <Content Include="Scripts\archives.js" />
-    <Content Include="Styles\admin.css" />
-    <Content Include="Styles\archives.css" />
+    <Content Include="Scripts\orchard-blogs-archives.js" />
+    <Content Include="Styles\orchard-blogs-admin.css" />
+    <Content Include="Styles\orchard-blogs-archives.css" />
     <Content Include="Views\BlogAdmin\Create.cshtml" />
     <Content Include="Views\BlogAdmin\Edit.cshtml" />
     <Content Include="Views\BlogAdmin\Item.cshtml" />
@@ -128,13 +117,13 @@
     <Content Include="Views\BlogPost\ListByArchive.cshtml" />
     <Content Include="Views\Blog\Item.cshtml" />
     <Content Include="Views\Blog\List.cshtml" />
-    <Content Include="Views\Parts\Blogs.Blog.Manage.cshtml" />
-    <Content Include="Views\Parts\Blogs.Blog.Description.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Blogs.Blog.Fields.cshtml" />
-    <Content Include="Views\Parts\Blogs.BlogPost.ListAdmin.cshtml">
+    <Content Include="Views\Parts.Blogs.Blog.Manage.cshtml" />
+    <Content Include="Views\Parts.Blogs.Blog.Description.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Blogs.Blog.Fields.cshtml" />
+    <Content Include="Views\Parts.Blogs.BlogPost.ListAdmin.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Items\Content-Blog.SummaryAdmin.cshtml" />
+    <Content Include="Views\Content-Blog.SummaryAdmin.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -148,19 +137,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Data\Localization\fr-FR\orchard.module.po" />
     <Content Include="Placement.info">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Parts\Blogs.RemotePublishing.cshtml" />
-    <Content Include="Views\Parts\Blogs.BlogArchives.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Blogs.RecentBlogPosts.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Blogs.BlogArchives.cshtml" />
-    <Content Include="Views\Items\Content-Blog.DetailAdmin.cshtml" />
-    <Content Include="Views\Items\Content-Blog.Edit.cshtml" />
-    <Content Include="Views\Parts\Blogs.BlogPost.List.cshtml" />
-    <Content Include="Views\Parts\Blogs.RecentBlogPosts.cshtml" />
-    <Content Include="Views\Parts\Blogs.Blog.BlogPostCount.cshtml" />
+    <Content Include="Views\Parts.Blogs.RemotePublishing.cshtml" />
+    <Content Include="Views\Parts.Blogs.BlogArchives.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Blogs.RecentBlogPosts.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts.Blogs.BlogArchives.cshtml" />
+    <Content Include="Views\Content-Blog.DetailAdmin.cshtml" />
+    <Content Include="Views\Content-Blog.Edit.cshtml" />
+    <Content Include="Views\Parts.Blogs.BlogPost.List.cshtml" />
+    <Content Include="Views\Parts.Blogs.RecentBlogPosts.cshtml" />
+    <Content Include="Views\Parts.Blogs.Blog.BlogPostCount.cshtml" />
     <Content Include="Scripts\Web.config">
       <SubType>Designer</SubType>
     </Content>

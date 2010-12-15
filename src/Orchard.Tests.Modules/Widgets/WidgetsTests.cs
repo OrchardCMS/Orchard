@@ -1,10 +1,11 @@
 ﻿using System;
-using System.IO;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Scripting;
-using Orchard.UI.Widgets;
+using Orchard.Caching;
+using Orchard.Tests.Stubs;
 using Orchard.Widgets.RuleEngine;
+using Orchard.Widgets.Services;
 
 namespace Orchard.Tests.Modules.Widgets {
     [TestFixture]
@@ -15,10 +16,11 @@ namespace Orchard.Tests.Modules.Widgets {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterType<ScriptingRuntime>().As<IScriptingRuntime>();
-            builder.RegisterType<ScriptingManager>().As<IScriptingManager>();
+            builder.RegisterType<ScriptExpressionEvaluator>().As<IScriptExpressionEvaluator>();
             builder.RegisterType<AlwaysTrueRuleProvider>().As<IRuleProvider>();
             builder.RegisterType<RuleManager>().As<IRuleManager>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+
             _container = builder.Build();
             _ruleManager = _container.Resolve<IRuleManager>();
         }

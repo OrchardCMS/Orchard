@@ -6,7 +6,6 @@ using System.Text;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
-using Orchard.Collections;
 using Orchard.Localization;
 using Orchard.Settings;
 using Orchard.Utility;
@@ -66,74 +65,6 @@ namespace Orchard.Mvc.Html {
 
             return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
         }
-
-        #region Pager
-
-        public static IHtmlString Pager<T>(this HtmlHelper html, IPageOfItems<T> pageOfItems, int currentPage, int defaultPageSize, object values = null, string previousText = "<", string nextText = ">", bool alwaysShowPreviousAndNext = false) {
-            if (pageOfItems.TotalPageCount < 2)
-                return new HtmlString(string.Empty);
-
-            var sb = new StringBuilder(75);
-            var rvd = new RouteValueDictionary {{"q", ""},{"page", 0}};
-            var viewContext = html.ViewContext;
-            var urlHelper = new UrlHelper(viewContext.RequestContext);
-
-            if (pageOfItems.PageSize != defaultPageSize)
-                rvd.Add("pagesize", pageOfItems.PageSize);
-
-            foreach (var item in viewContext.RouteData.Values) {
-                rvd.Add(item.Key, item.Value);
-            }
-
-
-            if (values != null) {
-                var rvd2 = new RouteValueDictionary(values);
-
-                foreach (var item in rvd2) {
-                    rvd[item.Key] = item.Value;
-                }
-            }
-
-            sb.Append("<p class=\"pager\">");
-
-            if (currentPage > 1 || alwaysShowPreviousAndNext) {
-                if (currentPage == 2)
-                    rvd.Remove("page");
-                else
-                    rvd["page"] = currentPage - 1;
-
-                sb.AppendFormat(" <a href=\"{1}\" class=\"previous\">{0}</a>", previousText,
-                                urlHelper.RouteUrl(rvd));
-            }
-
-            //todo: when there are many pages (> 15?) maybe do something like 1 2 3...6 7 8...13 14 15
-            for (var p = 1; p <= pageOfItems.TotalPageCount; p++) {
-                if (p == currentPage) {
-                    sb.AppendFormat(" <span>{0}</span>", p);
-                }
-                else {
-                    if (p == 1)
-                        rvd.Remove("page");
-                    else
-                        rvd["page"] = p;
-
-                    sb.AppendFormat(" <a href=\"{1}\">{0}</a>", p,
-                                    urlHelper.RouteUrl(rvd));
-                }
-            }
-
-            if (currentPage < pageOfItems.TotalPageCount || alwaysShowPreviousAndNext) {
-                rvd["page"] = currentPage + 1;
-                sb.AppendFormat("<a href=\"{1}\" class=\"next\">{0}</a>", nextText,
-                                urlHelper.RouteUrl(rvd));
-            }
-
-            sb.Append("</p>");
-
-            return new HtmlString(sb.ToString());
-        }
-
-        #endregion
 
         #region UnorderedList
 
@@ -226,7 +157,7 @@ namespace Orchard.Mvc.Html {
 
         public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime value) {
             //TODO: (erikpo) This default format should come from a site setting
-            return htmlHelper.DateTime(value, new LocalizedString("MMM d yyyy h:mm tt")); //todo: above comment and get rid of just wrapping this as a localized string
+            return htmlHelper.DateTime(value.ToLocalTime(), new LocalizedString("MMM d yyyy h:mm tt")); //todo: above comment and get rid of just wrapping this as a localized string
         }
 
         public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime value, LocalizedString customFormat) {
@@ -336,6 +267,14 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod, IDictionary<string, object> htmlAttributes) {
+            // Force the browser not to cache protected forms, and to reload them if needed.
+            var response = htmlHelper.ViewContext.HttpContext.Response;
+            response.Cache.SetExpires(System.DateTime.UtcNow.AddDays(-1));
+            response.Cache.SetValidUntilExpires(false);
+            response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
+            response.Cache.SetCacheability(HttpCacheability.NoCache);
+            response.Cache.SetNoStore();
+
             var tagBuilder = new TagBuilder("form");
 
             tagBuilder.MergeAttributes(htmlAttributes);
@@ -346,7 +285,6 @@ namespace Orchard.Mvc.Html {
 
             return new MvcFormAntiForgeryPost(htmlHelper);
         }
-
         #endregion
 
         #region AntiForgeryTokenOrchard
@@ -357,7 +295,7 @@ namespace Orchard.Mvc.Html {
             try {
                 return htmlHelper.AntiForgeryToken(siteSalt);
             }
-            catch(System.Web.Mvc.HttpAntiForgeryException) {
+            catch(HttpAntiForgeryException) {
                 // Work-around an issue in MVC 2:  If the browser sends a cookie that is not
                 // coming from this server (this can happen if the user didn't close their browser
                 // while the application server configuration changed), clear it up

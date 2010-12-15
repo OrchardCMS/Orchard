@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Orchard.Environment.Configuration;
+using Orchard.Localization;
 
 namespace Orchard.FileSystems.Media {
     public class FileSystemStorageProvider : IStorageProvider {
@@ -28,7 +29,11 @@ namespace Orchard.FileSystems.Media {
                 appPath = '/' + appPath;
 
             _publicPath = appPath + "Media/" + settings.Name + "/";
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         string Map(string path) {
             return string.IsNullOrEmpty(path) ? _storagePath : Path.Combine(_storagePath, path);
@@ -51,14 +56,14 @@ namespace Orchard.FileSystems.Media {
 
         public IStorageFile GetFile(string path) {
             if (!File.Exists(Map(path))) {
-                throw new ArgumentException("File " + path + " does not exist");
+                throw new ArgumentException(T("File {0} does not exist", path).ToString());
             }
             return new FileSystemStorageFile(Fix(path), new FileInfo(Map(path)));
         }
 
         public IEnumerable<IStorageFile> ListFiles(string path) {
             if (!Directory.Exists(Map(path))) {
-                throw new ArgumentException("Directory " + path + " does not exist");
+                throw new ArgumentException(T("Directory {0} does not exist", path).ToString());
             }
 
             return new DirectoryInfo(Map(path))
@@ -74,7 +79,7 @@ namespace Orchard.FileSystems.Media {
                     Directory.CreateDirectory(Map(path));
                 }
                 catch (Exception ex) {
-                    throw new ArgumentException(string.Format("The folder could not be created at path: {0}. {1}", path, ex));
+                    throw new ArgumentException(T("The folder could not be created at path: {0}. {1}", path, ex).ToString());
                 }
             }
 
@@ -89,17 +94,21 @@ namespace Orchard.FileSystems.Media {
             return (di.Attributes & FileAttributes.Hidden) != 0;
         }
 
+        public void TryCreateFolder(string path) {
+            Directory.CreateDirectory(Map(path));
+        }
+
         public void CreateFolder(string path) {
             if (Directory.Exists(Map(path))) {
-                throw new ArgumentException("Directory " + path + " already exists");
+                throw new ArgumentException(T("Directory {0} already exists", path).ToString());
             }
 
-            Directory.CreateDirectory(Map(path));
+            TryCreateFolder(Map(path));
         }
 
         public void DeleteFolder(string path) {
             if (!Directory.Exists(Map(path))) {
-                throw new ArgumentException("Directory " + path + " does not exist");
+                throw new ArgumentException(T("Directory {0} does not exist", path).ToString());
             }
 
             Directory.Delete(Map(path), true);
@@ -107,11 +116,11 @@ namespace Orchard.FileSystems.Media {
 
         public void RenameFolder(string path, string newPath) {
             if (!Directory.Exists(Map(path))) {
-                throw new ArgumentException("Directory " + path + "does not exist");
+                throw new ArgumentException(T("Directory {0} does not exist", path).ToString());
             }
 
             if (Directory.Exists(Map(newPath))) {
-                throw new ArgumentException("Directory " + newPath + " already exists");
+                throw new ArgumentException(T("Directory {0} already exists", newPath).ToString());
             }
 
             Directory.Move(Map(path), Map(newPath));
@@ -119,7 +128,7 @@ namespace Orchard.FileSystems.Media {
 
         public IStorageFile CreateFile(string path) {
             if (File.Exists(Map(path))) {
-                throw new ArgumentException("File " + path + " already exists");
+                throw new ArgumentException(T("File {0} already exists", path).ToString());
             }
 
             var fileInfo = new FileInfo(Map(path));
@@ -130,7 +139,7 @@ namespace Orchard.FileSystems.Media {
 
         public void DeleteFile(string path) {
             if (!File.Exists(Map(path))) {
-                throw new ArgumentException("File " + path + " does not exist");
+                throw new ArgumentException(T("File {0} does not exist", path).ToString());
             }
 
             File.Delete(Map(path));
@@ -138,14 +147,18 @@ namespace Orchard.FileSystems.Media {
 
         public void RenameFile(string path, string newPath) {
             if (!File.Exists(Map(path))) {
-                throw new ArgumentException("File " + path + " does not exist");
+                throw new ArgumentException(T("File {0} does not exist", path).ToString());
             }
 
             if (File.Exists(Map(newPath))) {
-                throw new ArgumentException("File " + newPath + " already exists");
+                throw new ArgumentException(T("File {0} already exists", newPath).ToString());
             }
 
             File.Move(Map(path), Map(newPath));
+        }
+
+        public string Combine(string path1, string path2) {
+            return Path.Combine(path1, path2);
         }
 
         #endregion
@@ -199,7 +212,11 @@ namespace Orchard.FileSystems.Media {
             public FileSystemStorageFolder(string path, DirectoryInfo directoryInfo) {
                 _path = path;
                 _directoryInfo = directoryInfo;
+
+                T = NullLocalizer.Instance;
             }
+
+            public Localizer T { get; set; }
 
             #region Implementation of IStorageFolder
 
@@ -223,7 +240,7 @@ namespace Orchard.FileSystems.Media {
                 if (_directoryInfo.Parent != null) {
                     return new FileSystemStorageFolder(Path.GetDirectoryName(_path), _directoryInfo.Parent);
                 }
-                throw new ArgumentException("Directory " + _directoryInfo.Name + " does not have a parent directory");
+                throw new ArgumentException(T("Directory {0} does not have a parent directory", _directoryInfo.Name).ToString());
             }
 
             #endregion

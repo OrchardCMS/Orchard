@@ -7,7 +7,6 @@ using Orchard.DisplayManagement;
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
         protected virtual string Prefix { get { return ""; } }
-        protected virtual string Zone { get { return "Content"; } }
 
         DriverResult IContentPartDriver.BuildDisplay(BuildDisplayContext context) {
             var part = context.ContentItem.As<TContent>();
@@ -30,27 +29,19 @@ namespace Orchard.ContentManagement.Drivers {
 
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {
-            return ContentShapeImplementation(shape.Metadata.Type, Zone, ctx => shape);
+            return ContentShapeImplementation(shape.Metadata.Type, ctx => shape).Location("Content");
         }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
-            return ContentShapeImplementation(shapeType, null, ctx => factory());
-        }
-
-        public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic> factory) {
-            return ContentShapeImplementation(shapeType, defaultLocation, ctx => factory());
+            return ContentShapeImplementation(shapeType, ctx => factory());
         }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic, dynamic> factory) {
-            return ContentShapeImplementation(shapeType, null, ctx => factory(CreateShape(ctx, shapeType)));
+            return ContentShapeImplementation(shapeType, ctx => factory(CreateShape(ctx, shapeType)));
         }
 
-        public ContentShapeResult ContentShape(string shapeType, string defaultLocation, Func<dynamic, dynamic> factory) {
-            return ContentShapeImplementation(shapeType, defaultLocation, ctx => factory(CreateShape(ctx, shapeType)));
-        }
-
-        private ContentShapeResult ContentShapeImplementation(string shapeType, string defaultLocation, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, shapeBuilder).Location(defaultLocation);
+        private ContentShapeResult ContentShapeImplementation(string shapeType, Func<BuildShapeContext, object> shapeBuilder) {
+            return new ContentShapeResult(shapeType, Prefix, shapeBuilder);
         }
 
         private object CreateShape(BuildShapeContext context, string shapeType) {

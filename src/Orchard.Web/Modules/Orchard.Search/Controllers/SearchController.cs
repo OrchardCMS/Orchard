@@ -1,54 +1,64 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Indexing;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
 using Orchard.Search.Models;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using System.Collections.Generic;
 using Orchard.Collections;
 using Orchard.Themes;
 
 namespace Orchard.Search.Controllers {
+    using Orchard.Settings;
+
     [ValidateInput(false), Themed]
     public class SearchController : Controller {
         private readonly ISearchService _searchService;
         private readonly IContentManager _contentManager;
+        private readonly ISiteService _siteService;
 
         public SearchController(
             IOrchardServices services,
-            ISearchService searchService, 
-            IContentManager contentManager, 
+            ISearchService searchService,
+            IContentManager contentManager,
+            ISiteService siteService,
             IShapeFactory shapeFactory) {
              Services = services;
             _searchService = searchService;
             _contentManager = contentManager;
+            _siteService = siteService;
 
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
             Shape = shapeFactory;
         }
 
         private IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
         dynamic Shape { get; set; }
 
-        public ActionResult Index(Pager pager, string q = "") {
+        public ActionResult Index(PagerParameters pagerParameters, string q = "") {
+            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var searchFields = Services.WorkContext.CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
-            IPageOfItems<ISearchHit> searchHits;
-            if (q.Trim().StartsWith("?") || q.Trim().StartsWith("*")) {
-                searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
-                Services.Notifier.Error(T("'*' or '?' not allowed as first character in WildcardQuery"));
-            } 
-            else {
+            IPageOfItems<ISearchHit> searchHits = new PageOfItems<ISearchHit>(new ISearchHit[] { });
+            try {
+
                 searchHits = _searchService.Query(q, pager.Page, pager.PageSize,
-                                                      Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
-                                                      searchFields,
-                                                      searchHit => searchHit);
+                                                  Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
+                                                  searchFields,
+                                                  searchHit => searchHit);
+            }
+            catch(Exception e) {
+                Services.Notifier.Error(T("Invalid search query: {0}", q));
+                Logger.Error(e, "Invalid search query: " + q);
             }
 
             var list = Shape.List();

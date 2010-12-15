@@ -1,0 +1,44 @@
+﻿@model Orchard.Core.Settings.ViewModels.SiteSettingsPartViewModel
+@using Orchard.Settings;
+@{
+    var resourceDebugMode = new SelectList(new object[] {
+        new { Id = (int)ResourceDebugMode.FromAppSetting, Text = "Use web.config setting" },
+        new { Id = (int)ResourceDebugMode.Enabled, Text = "Enabled" },
+        new { Id = (int)ResourceDebugMode.Disabled, Text = "Disabled" },
+    }, "Id", "Text", (int)Model.ResourceDebugMode);
+}
+<fieldset>
+    <legend>@T("Global Settings")</legend>
+    <div>
+        <label for="SiteName">@T("Site name")</label>
+        @Html.EditorFor(m => m.SiteName)
+        @Html.ValidationMessage("SiteName", "*")
+    </div>
+    <div>
+        <label for="SiteCulture">@T("Default Site Culture")</label>
+        @Html.DropDownList("SiteCulture", new SelectList(Model.SiteCultures, Model.SiteCulture))
+        @Html.ValidationMessage("SiteCulture", "*")
+        <p>@Html.ActionLink(T("Add or remove supported cultures for the site.").ToString(), "Culture")</p>
+    </div>
+    <div>
+        <label for="PageTitleSeparator">@T("Page title separator")</label>
+        @Html.EditorFor(x => x.PageTitleSeparator)
+        @Html.ValidationMessage("PageTitleSeparator", "*")
+    </div>
+    <div>
+        <label for="SuperUser">@T("Super user")</label>
+        @Html.EditorFor(x=>x.SuperUser)
+        @Html.ValidationMessage("SuperUser", "*")
+        <span class="hint">@T("Enter an existing account name, or nothing if you don't want a Super user account")</span>
+    </div>
+    <div>
+        <label for="SiteDebugMode">@T("Resource Debug Mode")</label>
+        @Html.DropDownList("ResourceDebugMode", resourceDebugMode)
+        <span class="hint">@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</span>
+    </div>
+    <div>
+        <label for="DefaultPageSize">@T("Default number of items per page")</label>
+        @Html.TextBoxFor(m => m.PageSize, new { @class = "textMedium" })
+        <span class="hint">@T("Determines the default number of items that are shown per page.")</span>
+    </div>
+</fieldset>

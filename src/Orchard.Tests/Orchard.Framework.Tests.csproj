@@ -90,6 +90,10 @@
     <Reference Include="IronRuby.Libraries">
       <HintPath>..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\fluentnhibernate\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Dynamic, Version=1.1.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -130,6 +134,7 @@
     <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -151,10 +156,6 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="Yaml, Version=1.0.3370.39839, Culture=neutral, PublicKeyToken=187a3d240e44a135, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\yaml\Yaml.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +216,7 @@
     <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
     <Compile Include="ContainerTestBase.cs" />
     <Compile Include="DisplayManagement\Descriptors\BasicShapeTemplateHarvesterTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\StylesheetBindingStrategyTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableManagerTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\InMemoryWebSiteFolder.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementFileParserTests.cs" />
@@ -229,6 +231,7 @@
     <Compile Include="Environment\Extensions\ExtensionLoaderCoordinatorTests.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngineTests.cs" />
     <Compile Include="Environment\RunningShellTableTests.cs" />
+    <Compile Include="Environment\StubHostEnvironment.cs" />
     <Compile Include="Environment\Utility\Build.cs" />
     <Compile Include="FileSystems\AppData\AppDataFolderTests.cs" />
     <Compile Include="Environment\Configuration\DefaultTenantManagerTests.cs" />
@@ -241,11 +244,12 @@
     <Compile Include="FileSystems\Dependencies\AssemblyProbingFolderTests.cs" />
     <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
+    <Compile Include="Messaging\MessagingChannelStub.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensionsTests.cs" />
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
     <Compile Include="Records\BigRecord.cs" />
-    <Compile Include="Scripting\ScriptingTests.cs" />
+    <Compile Include="Security\DefaultEncryptionServiceTests.cs" />
     <Compile Include="Stubs\InMemoryWebSiteFolder.cs" />
     <Compile Include="Stubs\StubHttpContextAccessor.cs" />
     <Compile Include="Stubs\StubWorkContextAccessor.cs" />

@@ -1,28 +1,26 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security;
-using System.Security.Permissions;
 using Autofac;
 using Autofac.Core;
-using Castle.Core.Logging;
+using Castle.Services.Logging.Log4netIntegration;
 using Module = Autofac.Module;
 
 namespace Orchard.Logging {
 
     public class LoggingModule : Module {
+        private readonly IDictionary<string, ILogger> _loggerCache;
+
+        public LoggingModule() {
+            _loggerCache = new ConcurrentDictionary<string, ILogger>();
+        }
+
         protected override void Load(ContainerBuilder moduleBuilder) {
             // by default, use Orchard's logger that delegates to Castle's logger factory
             moduleBuilder.RegisterType<CastleLoggerFactory>().As<ILoggerFactory>().InstancePerLifetimeScope();
-
-            // Register logger type
-            if (AppDomain.CurrentDomain.IsHomogenous && AppDomain.CurrentDomain.IsFullyTrusted) {
-                moduleBuilder.RegisterType<TraceLoggerFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
-            } else {
-                // if security model does not allow it, fall back to null logger factory
-                moduleBuilder.RegisterType<NullLogFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
-            }
+            moduleBuilder.RegisterType<Log4netFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
 
             // call CreateLogger in response to the request for an ILogger implementation
             moduleBuilder.Register(CreateLogger).As<ILogger>().InstancePerDependency();
@@ -64,8 +62,15 @@ namespace Orchard.Logging {
                 var propertyInfo = entry.PropertyInfo;
 
                 yield return (ctx, instance) => {
-                    var propertyValue = ctx.Resolve<ILogger>(new TypedParameter(typeof(Type), componentType));
-                    propertyInfo.SetValue(instance, propertyValue, null);
+                    string component = componentType.ToString();
+                    if (_loggerCache.ContainsKey(component)) {
+                        propertyInfo.SetValue(instance, _loggerCache[component], null);
+                    }
+                    else {
+                        var propertyValue = ctx.Resolve<ILogger>(new TypedParameter(typeof(Type), componentType));
+                        _loggerCache.Add(component, propertyValue);
+                        propertyInfo.SetValue(instance, propertyValue, null);
+                    }
                 };
             }
         }

@@ -1,6 +1,5 @@
 ﻿using System.Web;
 using Autofac;
-using Autofac.Core.Registration;
 using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
@@ -21,7 +20,8 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
-            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterModule(new WorkContextModule());
+            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking(Moq.MockBehavior.Strict);
             _container = builder.Build();
         }

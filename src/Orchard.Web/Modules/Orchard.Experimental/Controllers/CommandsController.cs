@@ -1,21 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Commands;
 using Orchard.Experimental.ViewModels;
 using Orchard.Environment.Extensions;
+using Orchard.Localization;
 using Orchard.Themes;
 using Orchard.UI.Admin;
+using Orchard.UI.Notify;
 
 namespace Orchard.Experimental.Controllers {
     [Themed, Admin, OrchardFeature("Orchard.Experimental.WebCommandLine")]
     public class CommandsController : Controller {
         private readonly ICommandManager _commandManager;
 
-        public CommandsController(ICommandManager commandManager) {
+        public CommandsController(ICommandManager commandManager, IOrchardServices services) {
             _commandManager = commandManager;
+            Services = services;
+            T = NullLocalizer.Instance;
         }
+
+        public IOrchardServices Services { get; set; }
+        public Localizer T { get; set; }
 
         public ActionResult Index() {
             return Execute();
@@ -27,16 +35,22 @@ namespace Orchard.Experimental.Controllers {
 
         [HttpPost]
         public ActionResult Execute(CommandsExecuteViewModel model) {
-            using (var writer = new StringWriter()) {
-                var commandLine = model.CommandLine.Trim();
-                CommandParameters parameters = GetCommandParameters(commandLine, writer);
+            try {
+                using (var writer = new StringWriter()) {
+                    var commandLine = model.CommandLine.Trim();
+                    CommandParameters parameters = GetCommandParameters(commandLine, writer);
 
-                _commandManager.Execute(parameters);
-                model.History = (model.History ?? Enumerable.Empty<string>())
-                    .Concat(new[] { model.CommandLine })
-                    .Distinct()
-                    .ToArray();
-                model.Results = writer.ToString();
+                    _commandManager.Execute(parameters);
+                    model.History = (model.History ?? Enumerable.Empty<string>())
+                        .Concat(new[] {model.CommandLine})
+                        .Distinct()
+                        .ToArray();
+                    model.Results = writer.ToString();
+                }
+            }
+            catch(Exception exception) {
+                Services.Notifier.Error(T("Error executing command: {0}", exception.Message));
+                Services.TransactionManager.Cancel();
             }
             return View(model);
         }

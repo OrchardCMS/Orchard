@@ -37,9 +37,8 @@ namespace Orchard.Core.Containers.Drivers {
                     if (updater != null) {
                         var oldContainerId = model.ContainerId;
                         updater.TryUpdateModel(model, "Containable", null, null);
-                        if (oldContainerId != model.ContainerId) {
+                        if (oldContainerId != model.ContainerId)
                             commonPart.Container = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
-                        }
                     }
 
                     var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).List();

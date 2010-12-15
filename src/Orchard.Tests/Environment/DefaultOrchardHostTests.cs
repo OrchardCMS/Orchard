@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -9,7 +8,6 @@ using Autofac.Integration.Web;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.Environment;
-using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
@@ -19,7 +17,6 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.VirtualPath;
-using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Tests.Environment.TestDependencies;
@@ -90,8 +87,8 @@ namespace Orchard.Tests.Environment {
             }
 
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                var ext = new ExtensionDescriptor { Name = "Orchard.Framework" };
-                ext.Features = new[] { new FeatureDescriptor { Extension = ext, Name = ext.Name } };
+                var ext = new ExtensionDescriptor { Id = "Orchard.Framework" };
+                ext.Features = new[] { new FeatureDescriptor { Extension = ext, Id = ext.Id } };
                 yield return ext;
             }
 
@@ -102,7 +99,7 @@ namespace Orchard.Tests.Environment {
 
             public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
                 foreach (var descriptor in featureDescriptors) {
-                    if (descriptor.Name == "Orchard.Framework") {
+                    if (descriptor.Id == "Orchard.Framework") {
                         yield return FrameworkFeature(descriptor);
                     }
                 }

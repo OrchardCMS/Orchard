@@ -37,9 +37,8 @@ namespace Orchard.ArchiveLater.Drivers {
         }
 
         protected override DriverResult Editor(ArchiveLaterPart part, dynamic shapeHelper) {
-            var model = new ArchiveLaterViewModel(part);
+            var model = new ArchiveLaterViewModel(part) {ScheduledArchiveUtc = part.ScheduledArchiveUtc.Value};
 
-            model.ScheduledArchiveUtc = part.ScheduledArchiveUtc.Value;
             model.ArchiveLater = model.ScheduledArchiveUtc.HasValue;
             model.ScheduledArchiveDate = model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value.ToLocalTime().ToString(DatePattern, CultureInfo.InvariantCulture) : String.Empty;
             model.ScheduledArchiveTime = model.ScheduledArchiveUtc.HasValue ? model.ScheduledArchiveUtc.Value.ToLocalTime().ToString(TimePattern, CultureInfo.InvariantCulture) : String.Empty;
@@ -54,7 +53,7 @@ namespace Orchard.ArchiveLater.Drivers {
             if (updater.TryUpdateModel(model, Prefix, null, null) ) {
                 if ( model.ArchiveLater ) {
                     DateTime scheduled;
-                    string parseDateTime = String.Concat(model.ScheduledArchiveDate, " ", model.ScheduledArchiveTime);
+                    var parseDateTime = String.Concat(model.ScheduledArchiveDate, " ", model.ScheduledArchiveTime);
 
                     // use an english culture as it is the one used by jQuery.datepicker by default
                     if (DateTime.TryParse(parseDateTime, CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AssumeLocal, out scheduled)) {

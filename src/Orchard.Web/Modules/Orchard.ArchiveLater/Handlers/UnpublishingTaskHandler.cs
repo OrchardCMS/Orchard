@@ -8,7 +8,7 @@ namespace Orchard.ArchiveLater.Handlers {
     public class UnpublishingTaskHandler : IScheduledTaskHandler {
         private readonly IContentManager _contentManager;
 
-        public UnpublishingTaskHandler(IContentManager contentManager) {
+        public UnpublishingTaskHandler(IContentManager contentManager, IOrchardServices orchardServices) {
             _contentManager = contentManager;
             Logger = NullLogger.Instance;
         }

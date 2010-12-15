@@ -9,22 +9,31 @@ using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
+using Orchard.Settings;
 
 namespace Orchard.Core.Containers.Controllers {
+
     public class ItemController : Controller {
         private readonly IContentManager _contentManager;
         private readonly IContainersPathConstraint _containersPathConstraint;
+        private readonly ISiteService _siteService;
 
-        public ItemController(IContentManager contentManager, IContainersPathConstraint containersPathConstraint, IShapeFactory shapeFactory) {
+        public ItemController(
+            IContentManager contentManager, 
+            IContainersPathConstraint containersPathConstraint, 
+            IShapeFactory shapeFactory,
+            ISiteService siteService) {
+
             _contentManager = contentManager;
             _containersPathConstraint = containersPathConstraint;
+            _siteService = siteService;
             Shape = shapeFactory;
         }
 
         dynamic Shape { get; set; }
 
         [Themed]
-        public ActionResult Display(string path, Pager pager) {
+        public ActionResult Display(string path, PagerParameters pagerParameters) {
             var matchedPath = _containersPathConstraint.FindPath(path);
             if (string.IsNullOrEmpty(matchedPath)) {
                 throw new ApplicationException("404 - should not have passed path constraint");
@@ -51,7 +60,8 @@ namespace Orchard.Core.Containers.Controllers {
             var descendingOrder = container.As<ContainerPart>().Record.OrderByDirection == (int) OrderByDirection.Descending;
             query = query.OrderBy(container.As<ContainerPart>().Record.OrderByProperty, descendingOrder);
 
-            pager.PageSize = pager.PageSize != Pager.PageSizeDefault && container.As<ContainerPart>().Record.Paginated
+            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            pager.PageSize = pagerParameters.PageSize != null && container.As<ContainerPart>().Record.Paginated
                                ? pager.PageSize
                                : container.As<ContainerPart>().Record.PageSize;
             var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
@@ -67,6 +77,7 @@ namespace Orchard.Core.Containers.Controllers {
                 .Pager(pagerShape)
                 .ShowPager(container.As<ContainerPart>().Record.Paginated);
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);
         }
     }

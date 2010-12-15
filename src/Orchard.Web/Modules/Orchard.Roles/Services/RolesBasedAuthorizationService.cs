@@ -56,7 +56,7 @@ namespace Orchard.Roles.Services {
                 if (!context.Granted) {
 
                     // determine which set of permissions would satisfy the access check
-                    var grantingNames = PermissionNames(context.Permission, Enumerable.Empty<string>()).ToArray();
+                    var grantingNames = PermissionNames(context.Permission, Enumerable.Empty<string>()).Distinct().ToArray();
 
                     // determine what set of roles should be examined by the access check
                     IEnumerable<string> rolesToExamine;
@@ -71,10 +71,7 @@ namespace Orchard.Roles.Services {
                     }
 
                     foreach (var role in rolesToExamine) {
-                        RoleRecord roleRecord = _roleService.GetRoleByName(role);
-                        if ( roleRecord == null )
-                            continue;
-                        foreach (var permissionName in _roleService.GetPermissionsForRole(roleRecord.Id)) {
+                        foreach (var permissionName in _roleService.GetPermissionsForRoleByName(role)) {
                             string possessedName = permissionName;
                             if (grantingNames.Any(grantingName => String.Equals(possessedName, grantingName, StringComparison.OrdinalIgnoreCase))) {
                                 context.Granted = true;
@@ -117,6 +114,8 @@ namespace Orchard.Roles.Services {
                     }
                 }
             }
+
+            yield return StandardPermissions.SiteOwner.Name;
         }
 
     }

@@ -1,0 +1,8 @@
+﻿@using Orchard.Blogs.Extensions;
+@using Orchard.Blogs.Models;
+@using Orchard.UI.Resources;
+@{
+    BlogPart blog = Model.Blog;
+    RegisterLink(new LinkEntry { Rel = "wlwmanifest", Type = "application/wlwmanifest+xml", Href = Url.BlogLiveWriterManifest(blog) });
+    RegisterLink(new LinkEntry { Rel = "EditURI", Type = "application/rsd+xml", Title = "RSD", Href = Url.BlogRsd(blog) });
+}

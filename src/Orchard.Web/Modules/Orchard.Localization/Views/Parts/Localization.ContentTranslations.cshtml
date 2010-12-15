@@ -1,0 +1,13 @@
+﻿@using Orchard.Localization.Models;
+@{
+    Style.Require("Localization");
+    IEnumerable<LocalizationPart> localizations = Model.Localizations;
+}
+@if (localizations != null && localizations.Count() > 0) {
+<div class="content-localization">
+    <div class="content-localizations">
+        <h4>@T("Translations:")</h4>
+        @Html.UnorderedList(localizations, (c, i) => Html.ItemDisplayLink(c.Culture.Culture, c), "localizations")
+    </div>
+</div>
+}

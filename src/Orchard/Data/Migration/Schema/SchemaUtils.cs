@@ -6,7 +6,7 @@ namespace Orchard.Data.Migration.Schema {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Enum.TryParse<System.Data.DbType>(System.String,System.Boolean,System.Data.DbType@)")]
         public static DbType ToDbType(Type type) {
             DbType dbType;
-            switch ( System.Type.GetTypeCode(type) ) {
+            switch ( Type.GetTypeCode(type) ) {
                 case TypeCode.String:
                     dbType = DbType.String;
                     break;

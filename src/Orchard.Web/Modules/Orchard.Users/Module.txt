@@ -2,11 +2,12 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.8.0
-OrchardVersion: 0.8.0
+Version: 0.9.0
+OrchardVersion: 0.9.0
 Description: The users module enables user management.
 Features:
     Orchard.Users:
+        Name: Users
         Description: Standard users.
-        Dependencies: Messaging
         Category: Core
+        Dependencies: Settings

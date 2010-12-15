@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
+﻿using System.Web;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Environment;
@@ -22,11 +18,12 @@ namespace Orchard.Tests.Environment {
         }
 
         protected override void Register(ContainerBuilder builder) {
-            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterModule(new WorkContextModule());
+            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking();
         }
 
-        protected override void Resolve(IContainer container) {
+        protected override void Resolve(ILifetimeScope container) {
             container.Mock<IHttpContextAccessor>()
                 .Setup(x => x.Current())
                 .Returns(() => _httpContextCurrent);

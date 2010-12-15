@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Data;
 using NHibernate;
 using NHibernate.SqlCommand;
 using NHibernate.Type;
@@ -21,7 +20,6 @@ namespace Orchard.Data {
         }
 
         public ILogger Logger { get; set; }
-
 
         public ISession For(Type entityType) {
             Logger.Debug("Acquiring session for {0}", entityType);

@@ -13,7 +13,7 @@ namespace Orchard.Email.Services {
     public class EmailMessagingChannel : IMessagingChannel {
         private readonly IOrchardServices _orchardServices;
 
-        public const string EmailService = "Email";
+        public const string EmailService = "email";
 
         public EmailMessagingChannel(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;

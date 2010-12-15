@@ -2,8 +2,4 @@
     @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     @Display(Model)
-
-    <fieldset>
-        <button type="submit" name="submit.Delete" value="@T("Delete")">@T("Delete")</button>
-    </fieldset>
 }

@@ -16,7 +16,7 @@ namespace Orchard.Environment.Extensions.Compilers {
             };
         }
 
-        private string GetAssemblyName(XDocument document) {
+        private static string GetAssemblyName(XDocument document) {
             return document
                 .Elements(ns("Project"))
                 .Elements(ns("PropertyGroup"))
@@ -25,7 +25,7 @@ namespace Orchard.Environment.Extensions.Compilers {
                 .Value;
         }
 
-        private IEnumerable<string> GetSourceFilenames(XDocument document) {
+        private static IEnumerable<string> GetSourceFilenames(XDocument document) {
             return document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
@@ -34,29 +34,27 @@ namespace Orchard.Environment.Extensions.Compilers {
                 .Select(c => c.Value);
         }
 
-        private IEnumerable<ReferenceDescriptor> GetReferences(XDocument document) {
+        private static IEnumerable<ReferenceDescriptor> GetReferences(XDocument document) {
             var assemblyReferences = document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
                 .Elements(ns("Reference"))
                 .Attributes("Include")
-                .Select(c => new ReferenceDescriptor { AssemblyName = ExtractAssemblyName(c.Value) });
+                .Select(c => new ReferenceDescriptor { SimpleName = ExtractAssemblyName(c.Value), FullName = c.Value });
 
             var projectReferences = document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
                 .Elements(ns("ProjectReference"))
                 .Attributes("Include")
-                .Select(c => new ReferenceDescriptor { AssemblyName = Path.GetFileNameWithoutExtension(c.Value) });
+                .Select(c => new ReferenceDescriptor { SimpleName = Path.GetFileNameWithoutExtension(c.Value), FullName = Path.GetFileNameWithoutExtension(c.Value) });
 
             return assemblyReferences.Union(projectReferences);
         }
 
         private static string ExtractAssemblyName(string value) {
             int index = value.IndexOf(',');
-            if (index < 0)
-                return value;
-            return value.Substring(0, index);
+            return index < 0 ? value : value.Substring(0, index);
         }
 
         private static XName ns(string name) {

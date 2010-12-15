@@ -19,13 +19,13 @@
     } 
 </div>
 @using(Html.BeginFormAntiForgeryPost()) { 
-	@Html.ValidationSummary()
+    @Html.ValidationSummary()
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Approve, T("Approve").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Pend, T("Pend").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Unapprove, T("Unapprove").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.MarkAsSpam, T("Mark as Spam").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, T("Remove").ToString())
         </select>
@@ -42,25 +42,25 @@
         <button type="submit" name="submit.Filter" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
     <fieldset>
-		<table class="items" summary="@T("This is a table of the comments for the content item")">
-			<colgroup>
-				<col id="Col1" />
-				<col id="Col2" />
-				<col id="Col3" />
-				<col id="Col4" />
-				<col id="Col5" />
-				<col id="Col6" />
-			</colgroup>
-			<thead>
-				<tr>
-					<th scope="col">&nbsp;&darr;</th>
-				    <th scope="col">@T("Status")</th>
-				    <th scope="col">@T("Author")</th>
-				    <th scope="col">@T("Comment")</th>
-				    <th scope="col">@T("Date")</th>
-					<th scope="col"></th>
-				</tr>
-			</thead>
+        <table class="items" summary="@T("This is a table of the comments for the content item")">
+            <colgroup>
+                <col id="Col1" />
+                <col id="Col2" />
+                <col id="Col3" />
+                <col id="Col4" />
+                <col id="Col5" />
+                <col id="Col6" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col">&nbsp;&darr;</th>
+                    <th scope="col">@T("Status")</th>
+                    <th scope="col">@T("Author")</th>
+                    <th scope="col">@T("Comment")</th>
+                    <th scope="col">@T("Date")</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
             @{var commentIndex = 0;}
             @foreach (var commentEntry in Model.Comments) {
             <tr>

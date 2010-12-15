@@ -7,11 +7,11 @@
         @Html.ValidationSummary()
         <ul>
             @for (int index = 0; index != (Model.History ?? new string[0]).Length; ++index) {
-				<li>
-					@Model.History[index]
-					@Html.HiddenFor(m => m.History[index])
-				</li>
-			}
+                <li>
+                    @Model.History[index]
+                    @Html.HiddenFor(m => m.History[index])
+                </li>
+            }
         </ul>
         @Html.LabelFor(m => m.CommandLine, T("Command Line"))
         @Html.TextBoxFor(m => m.CommandLine, new { style = "width:100%;" })

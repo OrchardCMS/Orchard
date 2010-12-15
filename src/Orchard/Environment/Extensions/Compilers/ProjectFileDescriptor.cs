@@ -7,6 +7,7 @@ namespace Orchard.Environment.Extensions.Compilers {
         public IEnumerable<ReferenceDescriptor> References { get; set; }
     }
     public class ReferenceDescriptor {
-        public string AssemblyName { get; set; }
+        public string SimpleName { get; set; }
+        public string FullName { get; set; }
     }
 }

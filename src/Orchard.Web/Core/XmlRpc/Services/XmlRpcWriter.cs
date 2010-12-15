@@ -18,15 +18,15 @@ namespace Orchard.Core.XmlRpc.Services {
                             {typeof(bool), p=>new XElement("boolean", (bool)p.Value?"1":"0")},
                             {typeof(string), p=>new XElement("string", p.Value)},
                             {typeof(double), p=>new XElement("double", (double)p.Value)},
-                            {typeof(DateTime), p=>new XElement("dateTime.iso8601", ((DateTime)p.Value).ToString("o"))},
-                            {typeof(DateTime?), p=>new XElement("dateTime.iso8601", ((DateTime?)p.Value).Value.ToString("o"))},
+                            {typeof(DateTime), p=>new XElement("dateTime.iso8601", ((DateTime)p.Value).ToString("yyyyMMddTHH:mm:ssZ"))},
+                            {typeof(DateTime?), p=>new XElement("dateTime.iso8601", ((DateTime?)p.Value).Value.ToString("yyyyMMddTHH:mm:ssZ"))},
                             {typeof(byte[]), p=>new XElement("base64", Convert.ToBase64String((byte[])p.Value))},
                             {typeof(XRpcStruct), p=>Map((XRpcStruct)p.Value)},
                             {typeof(XRpcArray), p=>Map((XRpcArray)p.Value)},
                         };
         }
 
-        private IDictionary<Type, Func<XRpcData, XElement>> _dispatch;
+        private readonly IDictionary<Type, Func<XRpcData, XElement>> _dispatch;
 
         XElement IMapper<XRpcMethodResponse, XElement>.Map(XRpcMethodResponse source) {
             return new XElement(

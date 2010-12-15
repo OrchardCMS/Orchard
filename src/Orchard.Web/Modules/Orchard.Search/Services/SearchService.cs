@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using Orchard.Collections;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
-using Orchard.ContentManagement;
 
 namespace Orchard.Search.Services {
     public class SearchService : ISearchService {

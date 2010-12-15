@@ -6,7 +6,6 @@ using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
@@ -47,7 +46,7 @@ namespace Orchard.Core.Tests.Routable.Services {
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
             builder.RegisterType<StubHttpContextAccessor>().As<IHttpContextAccessor>();
-            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
 
             builder.RegisterType<ThingHandler>().As<IContentHandler>();
@@ -73,12 +72,12 @@ namespace Orchard.Core.Tests.Routable.Services {
 
             var thing = contentManager.Create<Thing>("thing", t => {
                 t.As<RoutePart>().Record = new RoutePartRecord();
-                t.Title = "Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\"";
+                t.Title = "Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \"\"\", \"<\", \">\"";
             });
 
             _routableService.FillSlugFromTitle(thing.As<RoutePart>());
 
-            Assert.That(thing.Slug, Is.EqualTo("please-do-not-use-any-of-the-following-characters-in-your-slugs-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\""));
+            Assert.That(thing.Slug, Is.EqualTo("please-do-not-use-any-of-the-following-characters-in-your-slugs"));
         }
 
         [Test]
@@ -110,14 +109,13 @@ namespace Orchard.Core.Tests.Routable.Services {
             }
         }
 
-
         [Test]
         public void VeryLongStringTruncatedTo1000Chars() {
             var veryVeryLongTitle = "this is a very long title...";
             for (var i = 0; i < 100; i++)
                 veryVeryLongTitle += "aaaaaaaaaa";
 
-            var thing = CreateRoutePart(veryVeryLongTitle);
+            var thing = CreateRoutePartFromScratch(veryVeryLongTitle);
             _routableService.FillSlugFromTitle(thing);
 
             Assert.That(veryVeryLongTitle.Length, Is.AtLeast(1001));
@@ -126,72 +124,111 @@ namespace Orchard.Core.Tests.Routable.Services {
 
         [Test]
         public void NoExistingLikeSlugsGeneratesSameSlug() {
-            string slug = _routableService.GenerateUniqueSlug(CreateRoutePart("woohoo"), null);
+            string slug = _routableService.GenerateUniqueSlug(CreateRoutePartFromScratch("woohoo"), null);
             Assert.That(slug, Is.EqualTo("woohoo"));
         }
 
         [Test]
         public void ExistingSingleLikeSlugThatsAConflictGeneratesADash2() {
-            string slug = _routableService.GenerateUniqueSlug(CreateRoutePart("woohoo"), new List<string> { "woohoo" });
+            string slug = _routableService.GenerateUniqueSlug(CreateRoutePartFromScratch("woohoo"), new List<string> { "woohoo" });
             Assert.That(slug, Is.EqualTo("woohoo-2"));
         }
 
         [Test]
         public void ExistingSingleLikeSlugThatsNotAConflictGeneratesSameSlug() {
-            string slug = _routableService.GenerateUniqueSlug(CreateRoutePart("woohoo"), new List<string> { "woohoo-2" });
+            string slug = _routableService.GenerateUniqueSlug(CreateRoutePartFromScratch("woohoo"), new List<string> { "woohoo-2" });
             Assert.That(slug, Is.EqualTo("woohoo"));
         }
 
         [Test]
         public void ExistingLikeSlugsWithAConflictGeneratesADashVNext() {
-            string slug = _routableService.GenerateUniqueSlug(CreateRoutePart("woohoo"), new List<string> { "woohoo", "woohoo-2" });
+            string slug = _routableService.GenerateUniqueSlug(CreateRoutePartFromScratch("woohoo"), new List<string> { "woohoo", "woohoo-2" });
             Assert.That(slug, Is.EqualTo("woohoo-3"));
         }
 
         [Test]
         public void ExistingSlugsWithVersionGapsAndNoMatchGeneratesSameSlug() {
-            string slug = _routableService.GenerateUniqueSlug(CreateRoutePart("woohoo"), new List<string> { "woohoo-2", "woohoo-4", "woohoo-5" });
+            string slug = _routableService.GenerateUniqueSlug(CreateRoutePartFromScratch("woohoo"), new List<string> { "woohoo-2", "woohoo-4", "woohoo-5" });
             Assert.That(slug, Is.EqualTo("woohoo"));
         }
 
         [Test]
         public void ExistingSlugsWithVersionGapsAndAMatchGeneratesADash2() {
-            string slug = _routableService.GenerateUniqueSlug(CreateRoutePart("woohoo-2"), new List<string> { "woohoo-2", "woohoo-4", "woohoo-5" });
+            string slug = _routableService.GenerateUniqueSlug(CreateRoutePartFromScratch("woohoo-2"), new List<string> { "woohoo-2", "woohoo-4", "woohoo-5" });
             Assert.That(slug, Is.EqualTo("woohoo-2-2"));
         }
 
         [Test]
-        public void GeneratedSlugIsLowerCased() {
-            var thing = CreateRoutePart("This Is Some Interesting Title");
-
+        public void SlugIsGeneratedLowerCased() {
+            var thing = CreateRoutePartFromScratch("This Is Some Interesting Title");
             _routableService.FillSlugFromTitle(thing);
-
             Assert.That(thing.Slug, Is.EqualTo("this-is-some-interesting-title"));
         }
 
         [Test]
         public void SlugInConflictWithAnExistingItemsPathIsVersioned() {
-            var thing1 = CreateRoutePart("bar", "bar", "foo");
-            var thing2 = CreateRoutePart("fooslashbar", "foo/bar");
-
-            Assert.That(thing2.Slug, Is.EqualTo("foo/bar-2"));
+            CreateRoutePartFromScratch("bar", "bar", "foo");
+            var thing2 = CreateRoutePartFromScratch("fooslashbar", "foo/bar");
+            Assert.That(thing2.Path, Is.EqualTo("foo/bar-2"));
         }
 
-        private RoutePart CreateRoutePart(string title, string slug = "", string containerPath = "") {
+        [Test]
+        public void GeneratedSlugInConflictInSameContaierPathIsVersioned() {
+            var thing1 = CreateRoutePartFromScratch("Foo", "", "bar");
+            var thing2 = CreateRoutePartWithExistingContainer("Foo", thing1.As<ICommonPart>().Container);
+            Assert.That(thing2.Path, Is.EqualTo("bar/foo-2"));
+            Assert.That(thing2.Slug, Is.EqualTo("foo-2"));
+        }
+
+        [Test]
+        public void GivenSlugInConflictInSameContaierPathIsVersioned() {
+            var thing1 = CreateRoutePartFromScratch("Hi", "foo", "bar");
+            var thing2 = CreateRoutePartWithExistingContainer("There", thing1.As<ICommonPart>().Container, "foo");
+            Assert.That(thing2.Path, Is.EqualTo("bar/foo-2"));
+            Assert.That(thing2.Slug, Is.EqualTo("foo-2"));
+        }
+
+        [Test]
+        public void GeneratedSlugInConflictInDifferentContaierPathIsNotVersioned() {
+            var thing1 = CreateRoutePartFromScratch("Foo", "", "rab");
+            var thing2 = CreateRoutePartFromScratch("Foo", "", "bar");
+            Assert.That(thing1.Path, Is.EqualTo("rab/foo"));
+            Assert.That(thing2.Path, Is.EqualTo("bar/foo"));
+            Assert.That(thing1.Slug, Is.EqualTo("foo"));
+            Assert.That(thing2.Slug, Is.EqualTo("foo"));
+        }
+
+        private RoutePart CreateRoutePartWithExistingContainer(string title, IContent container, string slug = "") {
             var contentManager = _container.Resolve<IContentManager>();
             return contentManager.Create<Thing>("thing", t => {
-                                                                                       t.As<RoutePart>().Record = new RoutePartRecord();
-                                                                                       if (!string.IsNullOrWhiteSpace(slug))
-                                                                                           t.As<RoutePart>().Slug = slug;
-                                                                                       t.Title = title;
-                                                                                       if (!string.IsNullOrWhiteSpace(containerPath)) {
-                                                                                           t.As<ICommonPart>().Container = contentManager.Create<Thing>("thing", tt => {
-                                                                                                                                                                                          tt.As<RoutePart>().Path = containerPath;
-                                                                                                                                                                                          tt.As<RoutePart>().Slug = containerPath;
-                                                                                                                                                                                      });
-                                                                                       }
-                                                                                   })
-                .As<RoutePart>();
+                t.As<RoutePart>().Record = new RoutePartRecord();
+                t.Title = title;
+
+                if (!string.IsNullOrWhiteSpace(slug))
+                    t.As<RoutePart>().Slug = slug;
+
+                if (container != null)
+                    t.As<ICommonPart>().Container = container;
+            }).As<RoutePart>();
+        }
+
+        private RoutePart CreateRoutePartFromScratch(string title, string slug = "", string containerPath = "") {
+            var contentManager = _container.Resolve<IContentManager>();
+            return contentManager.Create<Thing>("thing", t => {
+                t.As<RoutePart>().Record = new RoutePartRecord();
+
+                if (!string.IsNullOrWhiteSpace(slug))
+                    t.As<RoutePart>().Slug = slug;
+
+                t.Title = title;
+                if (!string.IsNullOrWhiteSpace(containerPath)) {
+                    t.As<ICommonPart>().Container = contentManager.Create<Thing>("thing", tt => {
+                        tt.As<RoutePart>().Path = containerPath;
+                        tt.As<RoutePart>().Slug = containerPath;
+                        tt.As<RoutePart>().Title = "Test Container";
+                    });
+                }
+            }).As<RoutePart>();
         }
 
 

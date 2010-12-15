@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -25,10 +26,10 @@ using Orchard.Localization.Services;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
-using Orchard.Themes;
 using Orchard.Environment.State;
 using Orchard.Data.Migration;
 using Orchard.Themes.Services;
+using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
 using Orchard.Widgets;
 
@@ -67,41 +68,49 @@ namespace Orchard.Setup.Services {
             // The vanilla Orchard distibution has the following features enabled.
             if (context.EnabledFeatures == null || context.EnabledFeatures.Count() == 0) {
                 string[] hardcoded = {
+                    // Framework
                     "Orchard.Framework",
+
+                    // Core
                     "Common",
-                    "Shapes",
+                    "Containers",
                     "Contents",
                     "Dashboard",
-                    "Reports",
                     "Feeds",
                     "HomePage",
                     "Navigation",
-                    "Scheduling",
-                    "Indexing",
-                    "Localization",
+                    "Reports",
                     "Routable",
+                    "Scheduling",
                     "Settings",
-                    "Messaging",
-                    "Orchard.Users",
-                    "Orchard.Roles",
-                    "TinyMce",
-                    "PackagingServices",
-                    "Orchard.Modules",
-                    "Orchard.Themes",
-                    "Orchard.PublishLater",
+                    "Shapes",
+
+                    // Other
+                    "Orchard.PublishLater", // todo: (sebros) remove
                     "Orchard.Blogs",
                     "Orchard.Comments",
-                    "Orchard.Tags",
-                    "Orchard.Media",
-                    "Orchard.Widgets",
+                    "Orchard.ContentTypes",
                     "Orchard.jQuery",
+                    "Orchard.Lists",
+                    "Orchard.Media",
+                    "Orchard.Modules",
+                    "Orchard.Pages",
+                    "Orchard.Roles",
+                    "Orchard.Tags",
+                    "Orchard.Themes",
+                    "Orchard.Users",
+                    "Orchard.Scripting",
+                    "Orchard.Scripting.Lightweight",
+                    "Orchard.Widgets",
+                    "TinyMce",
+
+                    // Themes
                     "TheThemeMachine",
                 };
 
                 context.EnabledFeatures = hardcoded;
             }
 
-            
             var shellSettings = new ShellSettings(_shellSettings);
 
             if (string.IsNullOrEmpty(shellSettings.DataProvider)) {
@@ -109,6 +118,21 @@ namespace Orchard.Setup.Services {
                 shellSettings.DataConnectionString = context.DatabaseConnectionString;
                 shellSettings.DataTablePrefix = context.DatabaseTablePrefix;
             }
+
+            #region Encryption Settings
+
+            // generate random keys for encryption
+            var key = new byte[32];
+            var iv = new byte[16];
+            using ( var random = new RNGCryptoServiceProvider() ) {
+                random.GetBytes(key);
+                random.GetBytes(iv);
+            }
+            
+            shellSettings.EncryptionAlgorithm = "AES";
+            shellSettings.EncryptionKey = key.ToHexString();
+            shellSettings.EncryptionIV = iv.ToHexString();
+            #endregion
 
             var shellDescriptor = new ShellDescriptor {
                 Features = context.EnabledFeatures.Select(name => new ShellFeature { Name = name })
@@ -213,7 +237,7 @@ namespace Orchard.Setup.Services {
             //hackInstallationGenerator.GenerateInstallEvents();
 
             var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-            //todo: (heskew) pull these definitions (and initial content creation) out into more appropriate modules
+            //todo: (heskew) pull these definitions (and initial content creation) out into a distribution configuration when we have that capability
             contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
                 .WithPart("CommentsPart")
                 .WithPart("TagsPart")
@@ -222,13 +246,8 @@ namespace Orchard.Setup.Services {
                 .Indexed()
                 );
             contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
-                .WithPart("CommonPart")
-                .WithPart("PublishLaterPart")
-                .WithPart("RoutePart")
-                .WithPart("BodyPart")
                 .WithPart("TagsPart")
                 .WithPart("LocalizationPart")
-                .Creatable()
                 .Draftable()
                 .Indexed()
                 );
@@ -238,19 +257,19 @@ namespace Orchard.Setup.Services {
             // If "Orchard.Widgets" is enabled, setup default layers and widgets
             var extensionManager = environment.Resolve<IExtensionManager>();
             var shellDescriptor = environment.Resolve<ShellDescriptor>();
-            if (extensionManager.EnabledFeatures(shellDescriptor).Where(d => d.Name == "Orchard.Widgets").Any()) {
+            if (extensionManager.EnabledFeatures(shellDescriptor).Where(d => d.Id == "Orchard.Widgets").Any()) {
                 // Create default layers
                 var layerInitializer = environment.Resolve<IDefaultLayersInitializer>();
                 layerInitializer.CreateDefaultLayers();
 
                 // add a layer for the homepage
-                var homepageLayer = contentManager.Create("Layer");
+                var homepageLayer = contentManager.Create("Layer", VersionOptions.Draft);
                 homepageLayer.As<LayerPart>().Name = "TheHomepage";
                 homepageLayer.As<LayerPart>().LayerRule = "url \"~/\"";
                 contentManager.Publish(homepageLayer);
 
                 // and three more for the tripel...really need this elsewhere...
-                var tripelFirst = contentManager.Create("HtmlWidget");
+                var tripelFirst = contentManager.Create("HtmlWidget", VersionOptions.Draft);
                 tripelFirst.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
                 tripelFirst.As<WidgetPart>().Title = T("First Leader Aside").Text;
                 tripelFirst.As<WidgetPart>().Zone = "TripelFirst";
@@ -258,7 +277,7 @@ namespace Orchard.Setup.Services {
                 tripelFirst.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
                 contentManager.Publish(tripelFirst);
 
-                var tripelSecond = contentManager.Create("HtmlWidget");
+                var tripelSecond = contentManager.Create("HtmlWidget", VersionOptions.Draft);
                 tripelSecond.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
                 tripelSecond.As<WidgetPart>().Title = T("Second Leader Aside").Text;
                 tripelSecond.As<WidgetPart>().Zone = "TripelSecond";
@@ -266,7 +285,7 @@ namespace Orchard.Setup.Services {
                 tripelSecond.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
                 contentManager.Publish(tripelSecond);
 
-                var tripelThird = contentManager.Create("HtmlWidget");
+                var tripelThird = contentManager.Create("HtmlWidget", VersionOptions.Draft);
                 tripelThird.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
                 tripelThird.As<WidgetPart>().Title = T("Third Leader Aside").Text;
                 tripelThird.As<WidgetPart>().Zone = "TripelThird";
@@ -276,12 +295,32 @@ namespace Orchard.Setup.Services {
             }
 
             // create a welcome page that's promoted to the home page
-            var page = contentManager.Create("Page");
+            var page = contentManager.Create("Page", VersionOptions.Draft);
             page.As<RoutePart>().Title = T("Welcome to Orchard!").Text;
-            page.As<BodyPart>().Text = "<p>You’ve successfully setup your Orchard Site and this is the homepage of your new site. Here are a few things you can look at to get familiar with the application. Once you feel confident you don’t need this anymore, you can <a href=\"/Admin/Contents/Edit/7\">remove this by going into editing mode</a> and replacing it with whatever you want.</p><p>First things first - You’ll probably want to <a href=\"Admin/Settings\">manage your settings</a> and configure Orchard to your liking. After that, you can head over to <a href=\"Admin/Themes\">manage themes to change or install new themes</a> and really make it your own. Once you’re happy with a look and feel, it’s time for some content. You can start creating new custom content types or start with some built-in ones by <a href=\"Admin/Pages/Create\">adding a page</a>, <a href=\"Admin/Blogs/Create\">creating a blog</a> or <a href=\"Admin/Navigation\">managing your menus.</a></p><p>Finally, Orchard has been designed to be extended. It comes with a few built-in modules such as pages and blogs or themes. If you’re looking to add additional functionality, you can do so by creating your own module or installing a new one that someone has made. Modules are created by other users of Orchard just like you so if you feel up to it, <a href=\"http://www.orchardproject.net/\">please consider participating</a>. XOXO – The Orchard Team </p>";
+            page.As<RoutePart>().Path = "welcome-to-orchard";
+            page.As<RoutePart>().Slug = "welcome-to-orchard";
+            page.As<RoutePart>().PromoteToHomePage = true;
+            page.As<BodyPart>().Text = T(
+@"<p>You've successfully setup your Orchard Site and this is the homepage of your new site.
+Here are a few things you can look at to get familiar with the application.
+Once you feel confident you don't need this anymore, you can
+<a href=""Admin/Contents/Edit/{0}"">remove it by going into editing mode</a>
+and replacing it with whatever you want.</p>
+<p>First things first - You'll probably want to <a href=""Admin/Settings"">manage your settings</a>
+and configure Orchard to your liking. After that, you can head over to
+<a href=""Admin/Themes"">manage themes to change or install new themes</a>
+and really make it your own. Once you're happy with a look and feel, it's time for some content.
+You can start creating new custom content types or start from the built-in ones by
+<a href=""Admin/Pages/Create"">adding a page</a>, <a href=""Admin/Blogs/Create"">creating a blog</a>
+or <a href=""Admin/Navigation"">managing your menus.</a></p>
+<p>Finally, Orchard has been designed to be extended. It comes with a few built-in
+modules such as pages and blogs or themes. If you're looking to add additional functionality,
+you can do so by creating your own module or by installing one that somebody else built.
+Modules are created by other users of Orchard just like you so if you feel up to it,
+<a href=""http://orchardproject.net/contribution"">please consider participating</a>.</p>
+<p>Thanks for using Orchard – The Orchard Team </p>", page.Id).Text;
 
             contentManager.Publish(page);
-            siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
 
             // add a menu item for the shiny new home page
             var menuItem = contentManager.Create("MenuItem");

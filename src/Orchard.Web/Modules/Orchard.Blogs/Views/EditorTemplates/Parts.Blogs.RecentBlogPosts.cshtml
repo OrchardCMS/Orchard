@@ -1,0 +1,11 @@
+﻿@model Orchard.Blogs.Models.RecentBlogPostsPart
+<fieldset>
+    <div>
+        @Html.LabelFor(m => m.ForBlog, T("For Blog"))
+        @Html.TextBoxFor(m => m.ForBlog)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Count, T("Count"))
+        @Html.TextBoxFor(m => m.Count)
+    </div>
+</fieldset>

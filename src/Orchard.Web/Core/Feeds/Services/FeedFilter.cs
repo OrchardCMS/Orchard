@@ -21,6 +21,10 @@ namespace Orchard.Core.Feeds.Services {
         dynamic Shape { get; set; }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+            // should only run on a full view rendering result
+            if (!(filterContext.Result is ViewResult))
+                return;
+
             var layout = _workContextAccessor.GetContext(filterContext).Layout;
             var feed = Shape.Feed()
                 .FeedManager(_feedManager);

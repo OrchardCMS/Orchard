@@ -3,18 +3,21 @@ using System.IO;
 using Autofac;
 using Autofac.Features.Metadata;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.CodeGeneration.Commands;
 using Orchard.Commands;
 using Orchard.Data;
 using Orchard.Data.Migration.Generator;
 using Orchard.Data.Providers;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
-using Orchard.Localization;
+using Orchard.Tests.Environment;
 using Orchard.Tests.FileSystems.AppData;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Modules.CodeGeneration.Commands {
     [TestFixture]
@@ -46,6 +49,8 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
             builder.RegisterType<CompositionStrategy>().As<ICompositionStrategy>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SchemaCommandGenerator>().As<ISchemaCommandGenerator>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
 
             _container = builder.Build();
             _extensionManager = _container.Resolve<IExtensionManager>();
@@ -53,16 +58,14 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
         }
 
         [Test]
+        [ExpectedException(typeof(OrchardException))]
         public void CreateDataMigrationTestNonExistentFeature() {
-            CodeGenerationCommands codeGenerationCommands = new CodeGenerationCommands(_extensionManager, 
+            CodeGenerationCommands codeGenerationCommands = new CodeGenerationCommands(_extensionManager,
                 _schemaCommandGenerator);
 
             TextWriter textWriterOutput = new StringWriter();
             codeGenerationCommands.Context = new CommandContext { Output = textWriterOutput };
-            bool result = codeGenerationCommands.CreateDataMigration("feature");
-
-            Assert.That(result, Is.False);
-            Assert.That(textWriterOutput.ToString(), Is.EqualTo("Creating Data Migration for feature\r\nCreating data migration failed: target Feature feature could not be found.\r\n"));
+            codeGenerationCommands.CreateDataMigration("feature");
         }
     }
 }

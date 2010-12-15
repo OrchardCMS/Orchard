@@ -2,14 +2,15 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.8.0
-OrchardVersion: 0.8.0
-Description: 
+Version: 0.9.0
+OrchardVersion: 0.9.0
+Description: Data migration commands.
 Features:
     Orchard.Migrations:
+        Name: Migrations
         Description: Data migration commands.
         Category: Developer
     DatabaseUpdate:
-        Description: Automatically updates database schema.
-        Dependencies: Orchard.Migrations
+        Name: Database Update
+        Description: Commands for updating the database schema according to the definition of the "Record" classes in code.
         Category: Developer

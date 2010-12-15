@@ -7,8 +7,10 @@ using HtmlAgilityPack;
 using log4net.Appender;
 using log4net.Core;
 using NUnit.Framework;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Specs.Hosting;
 using TechTalk.SpecFlow;
+using Path = Bleroy.FluentPath.Path;
 
 namespace Orchard.Specs.Bindings {
     [Binding]
@@ -17,9 +19,9 @@ namespace Orchard.Specs.Bindings {
         private RequestDetails _details;
         private HtmlDocument _doc;
         private MessageSink _messages;
-
-        public WebAppHosting() {
-        }
+        private static readonly Path _orchardTemp = Path.Get(System.IO.Path.GetTempPath()).Combine("Orchard.Specs");
+        private ExtensionDeploymentOptions _moduleDeploymentOptions = ExtensionDeploymentOptions.CompiledAssembly;
+        private DynamicCompilationOption _dynamicCompilationOption = DynamicCompilationOption.Enabled;
 
         public WebHost Host {
             get { return _webHost; }
@@ -30,24 +32,65 @@ namespace Orchard.Specs.Bindings {
             set { _details = value; }
         }
 
-        [AfterScenario]
-        public void AfterScenario() {
+        [BeforeTestRun]
+        public static void BeforeTestRun() {
+            try { _orchardTemp.Delete(true).CreateDirectory(); }
+            catch { }
+        }
+
+        [AfterTestRun]
+        public static void AfterTestRun() {
+            try {
+                _orchardTemp.Delete(true); // <- try to clear any stragglers on the way out
+            }
+            catch { }
+        }
+
+        [BeforeScenario]
+        public void CleanOutTheOldWebHost() {
             if (_webHost != null) {
-                _webHost.Dispose();
+                _webHost.Clean();
                 _webHost = null;
             }
         }
 
-        [Given(@"I have a clean site")]
-        public void GivenIHaveACleanSite() {
-            GivenIHaveACleanSiteBasedOn("Orchard.Web");
+        [AfterScenario]
+        public void AfterScenario() {
+            if (_webHost != null) {
+                _webHost.Dispose();
+            }
         }
 
+        [Given(@"I have a clean site")]
+        public void GivenIHaveACleanSite(string virtualDirectory = "/") {
+            GivenIHaveACleanSiteBasedOn("Orchard.Web", virtualDirectory);
+        }
+
+        [Given(@"I have chosen to deploy modules as source files only")]
+        public void GivenIHaveChosenToDeployModulesAsSourceFilesOnly() {
+            _moduleDeploymentOptions = ExtensionDeploymentOptions.SourceCode;
+        }
+
+        [Given(@"I have chosen to load modules using dymamic compilation only")]
+        public void GivenIHaveChosenToLoadModulesUsingDynamicComilationOnly() {
+            _moduleDeploymentOptions = ExtensionDeploymentOptions.SourceCode;
+            _dynamicCompilationOption = DynamicCompilationOption.Force;
+        }
+
+        [Given(@"I have chosen to load modules with dynamic compilation disabled")]
+        public void GivenIHaveChosenToLoadModulesAsSourceFilesOnly() {
+            _dynamicCompilationOption = DynamicCompilationOption.Disabled;
+        }
 
         [Given(@"I have a clean site based on (.*)")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
-            _webHost = new WebHost();
-            Host.Initialize(siteFolder, "/");
+            GivenIHaveACleanSiteBasedOn(siteFolder, "/");
+        }
+
+        [Given(@"I have a clean site based on (.*) at ""(.*)""")]
+        public void GivenIHaveACleanSiteBasedOn(string siteFolder, string virtualDirectory) {
+            _webHost = new WebHost(_orchardTemp);
+            Host.Initialize(siteFolder, virtualDirectory ?? "/", _dynamicCompilationOption);
             var shuttle = new Shuttle();
             Host.Execute(() => {
                 log4net.Config.BasicConfigurator.Configure(new CastleAppender());
@@ -74,7 +117,6 @@ namespace Orchard.Specs.Bindings {
                 else
                     logger.Fatal(loggingEvent.RenderedMessage);
             }
-
         }
 
         [Serializable]
@@ -85,32 +127,38 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have module ""(.*)""")]
         public void GivenIHaveModule(string moduleName) {
-            Host.CopyExtension("Modules", moduleName);
+            Host.CopyExtension("Modules", moduleName, _moduleDeploymentOptions);
         }
 
         [Given(@"I have theme ""(.*)""")]
         public void GivenIHaveTheme(string themeName) {
-            Host.CopyExtension("Themes", themeName);
+            Host.CopyExtension("Themes", themeName, ExtensionDeploymentOptions.CompiledAssembly);
         }
 
         [Given(@"I have core ""(.*)""")]
         public void GivenIHaveCore(string moduleName) {
-            Host.CopyExtension("Core", moduleName);
+            Host.CopyExtension("Core", moduleName, ExtensionDeploymentOptions.CompiledAssembly);
         }
 
         [Given(@"I have a clean site with")]
         public void GivenIHaveACleanSiteWith(Table table) {
-            GivenIHaveACleanSite();
+            GivenIHaveACleanSiteWith("/", table);
+        }
+
+
+        [Given(@"I have a clean site at ""(.*)"" with")]
+        public void GivenIHaveACleanSiteWith(string virtualDirectory, Table table) {
+            GivenIHaveACleanSite(virtualDirectory);
             foreach (var row in table.Rows) {
                 foreach (var name in row["names"].Split(',').Select(x => x.Trim())) {
                     switch (row["extension"]) {
-                        case "core":
+                        case "Core":
                             GivenIHaveCore(name);
                             break;
-                        case "module":
+                        case "Module":
                             GivenIHaveModule(name);
                             break;
-                        case "theme":
+                        case "Theme":
                             GivenIHaveTheme(name);
                             break;
                         default:
@@ -145,8 +193,10 @@ namespace Orchard.Specs.Bindings {
         [When(@"I follow ""(.*)""")]
         public void WhenIFollow(string linkText) {
             var link = _doc.DocumentNode
-                .SelectNodes("//a")
-                .Single(elt => elt.InnerText == linkText);
+                            .SelectNodes("//a")
+                            .SingleOrDefault(elt => elt.InnerText == linkText)
+                       ?? _doc.DocumentNode
+                            .SelectSingleNode(string.Format("//a[@title='{0}']", linkText));
 
             var urlPath = link.Attributes["href"].Value;
 
@@ -156,7 +206,7 @@ namespace Orchard.Specs.Bindings {
         [When(@"I fill in")]
         public void WhenIFillIn(Table table) {
             var inputs = _doc.DocumentNode
-                .SelectNodes("//input") ?? Enumerable.Empty<HtmlNode>();
+                .SelectNodes("(//input|//textarea)") ?? Enumerable.Empty<HtmlNode>();
 
             foreach (var row in table.Rows) {
                 var r = row;
@@ -176,6 +226,23 @@ namespace Orchard.Specs.Bindings {
                                 radio.Attributes.Remove("checked");
                         }
                         break;
+                    case "checkbox":
+                        if (string.Equals(row["value"], "true", StringComparison.OrdinalIgnoreCase)) {
+                            input.Attributes.Add("checked", "checked");
+                        }
+                        else {
+                            input.Attributes.Remove("checked");
+                        }
+
+                        var hiddenForCheckbox = inputs.Where(
+                            x =>
+                            x.GetAttributeValue("type", "") == "hidden" &&
+                            x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]
+                            ).FirstOrDefault();
+                        if (hiddenForCheckbox != null)
+                            hiddenForCheckbox.Attributes.Add("value", row["value"]);
+
+                        break;
                     default:
                         input.Attributes.Add("value", row["value"]);
                         break;
@@ -191,11 +258,14 @@ namespace Orchard.Specs.Bindings {
             var form = Form.LocateAround(submit);
             var urlPath = form.Start.GetAttributeValue("action", Details.UrlPath);
             var inputs = form.Children
-                    .SelectMany(elt => elt.DescendantsAndSelf("input"))
+                    .SelectMany(elt => elt.DescendantsAndSelf("input").Concat(elt.Descendants("textarea")))
                     .Where(node => !((node.GetAttributeValue("type", "") == "radio" || node.GetAttributeValue("type", "") == "checkbox") && node.GetAttributeValue("checked", "") != "checked"))
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
                     .Where(g => !string.IsNullOrEmpty(g.Key))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
+
+            if (submit.Attributes.Contains("name"))
+                inputs.Add(submit.GetAttributeValue("name", ""), new[] {submit.GetAttributeValue("value", "yes")});
 
             Details = Host.SendRequest(urlPath, inputs);
             _doc = new HtmlDocument();
@@ -219,9 +289,14 @@ namespace Orchard.Specs.Bindings {
             Assert.That(Details.StatusDescription, Is.EqualTo(statusDescription));
         }
 
+        [Then(@"the content type should be ""(.*)""")]
+        public void ThenTheContentTypeShouldBe(string contentType) {
+            Assert.That(Details.ResponseHeaders["Content-Type"], Is.StringMatching(contentType));
+        }
+
         [Then(@"I should see ""(.*)""")]
         public void ThenIShouldSee(string text) {
-            Assert.That(Details.ResponseText, Is.StringContaining(text));
+            Assert.That(Details.ResponseText, Is.StringMatching(text));
         }
 
         [Then(@"I should not see ""(.*)""")]

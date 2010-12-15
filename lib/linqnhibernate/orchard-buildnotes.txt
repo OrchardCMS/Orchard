@@ -1,0 +1,5 @@
+
+https://nhcontrib.svn.sourceforge.net/svnroot/nhcontrib/trunk/src/NHibernate.Linq
+at revision #1432
+applied condensing-constant-expressions.patch
+nant -D:project.config=release

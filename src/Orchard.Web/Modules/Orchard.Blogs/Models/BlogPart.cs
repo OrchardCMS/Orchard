@@ -1,4 +1,3 @@
-using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Routable.Models;
 
@@ -7,11 +6,6 @@ namespace Orchard.Blogs.Models {
         public string Name {
             get { return this.As<RoutePart>().Title; }
             set { this.As<RoutePart>().Title = value; }
-        }
-
-        public string Slug {
-            get { return this.As<RoutePart>().Slug; }
-            set { this.As<RoutePart>().Slug = value; }
         }
 
         public string Description {

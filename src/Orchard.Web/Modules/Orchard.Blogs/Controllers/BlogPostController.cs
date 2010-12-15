@@ -51,7 +51,7 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             dynamic model = _services.ContentManager.BuildDisplay(postPart);
-
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
@@ -77,6 +77,7 @@ namespace Orchard.Blogs.Controllers {
             //todo: (heskew) add back
             //.ArchiveData(archive) <-- ??
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);
         }
     }

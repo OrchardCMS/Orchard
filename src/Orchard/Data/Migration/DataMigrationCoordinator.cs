@@ -21,19 +21,31 @@ namespace Orchard.Data.Migration {
             _dataMigrationManager = dataMigrationManager;
         }
 
-        public void Install(Feature feature) {
-            var featureName = feature.Descriptor.Name;
+        public void Installing(Feature feature) {
+            var featureName = feature.Descriptor.Id;
             _dataMigrationManager.Update(featureName);
         }
 
-        public void Enable(Feature feature) {
+        public void Installed(Feature feature) {
         }
 
-        public void Disable(Feature feature) {
+        public void Enabling(Feature feature) {
         }
 
-        public void Uninstall(Feature feature) {
-            var featureName = feature.Descriptor.Name;
+        public void Enabled(Feature feature) {
+        }
+
+        public void Disabling(Feature feature) {
+        }
+
+        public void Disabled(Feature feature) {
+        }
+
+        public void Uninstalling(Feature feature) {
+        }
+
+        public void Uninstalled(Feature feature) {
+            var featureName = feature.Descriptor.Id;
             if ( _dataMigrationManager.IsFeatureAlreadyInstalled(featureName) ) {
                 _dataMigrationManager.Uninstall(featureName);
             }

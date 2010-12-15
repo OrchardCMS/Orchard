@@ -9,7 +9,6 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Themes;
 
 namespace Orchard.Tests.DisplayManagement {
     [TestFixture]
@@ -23,7 +22,7 @@ namespace Orchard.Tests.DisplayManagement {
                 Bindings = new Dictionary<string, ShapeBinding>(StringComparer.OrdinalIgnoreCase)
             };
             _workContext = new TestWorkContext {
-                CurrentTheme = new ExtensionDescriptor { Name = "Hello" }
+                CurrentTheme = new ExtensionDescriptor { Id = "Hello" }
             };
 
 

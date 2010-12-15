@@ -34,7 +34,7 @@ namespace Orchard.FileSystems.Dependencies {
 
         public override string GetFileHash(string virtualPath, IEnumerable virtualPathDependencies) {
             var result = GetFileHashWorker(virtualPath, virtualPathDependencies);
-            Logger.Information("GetFileHash(\"{0}\"): {1}", virtualPath, result);
+            Logger.Debug("GetFileHash(\"{0}\"): {1}", virtualPath, result);
             return result;
         }
 
@@ -160,7 +160,7 @@ namespace Orchard.FileSystems.Dependencies {
             };
         }
 
-        private string ModuleMatch(string virtualPath, string prefix) {
+        private static string ModuleMatch(string virtualPath, string prefix) {
             var index = virtualPath.IndexOf('/', prefix.Length, virtualPath.Length - prefix.Length);
             if (index < 0)
                 return null;
@@ -169,12 +169,12 @@ namespace Orchard.FileSystems.Dependencies {
             return (string.IsNullOrEmpty(moduleName) ? null : moduleName);
         }
 
-        private string ExtensionMatch(string virtualPath, params string[] extensions) {
+        private static string ExtensionMatch(string virtualPath, params string[] extensions) {
             return extensions
                 .FirstOrDefault(e => virtualPath.EndsWith(e, StringComparison.OrdinalIgnoreCase));
         }
 
-        private string PrefixMatch(string virtualPath, params string[] prefixes) {
+        private static string PrefixMatch(string virtualPath, params string[] prefixes) {
             return prefixes
                 .FirstOrDefault(p => virtualPath.StartsWith(p, StringComparison.OrdinalIgnoreCase));
         }

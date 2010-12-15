@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.DisplayManagement.Descriptors {

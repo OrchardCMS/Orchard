@@ -207,27 +207,21 @@ namespace Orchard.Tests.Events {
         }
         public class StubEventHandler2 : ITestEventHandler {
             public void Increment() {
-                throw new NotImplementedException();
             }
 
             public void Sum(int a) {
-                throw new NotImplementedException();
             }
 
             public void Sum(int a, int b) {
-                throw new NotImplementedException();
             }
 
             public void Sum(int a, int b, int c) {
-                throw new NotImplementedException();
             }
 
             public void Substract(int a, int b) {
-                throw new NotImplementedException();
             }
 
             public void Concat(string a, string b, string c) {
-                throw new NotImplementedException();
             }
 
             public IEnumerable<string> Gather(int a, string b) {

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.ContentManagement;
+using Orchard.Mvc.Extensions;
 using Orchard.Tags.Models;
 using Orchard.Tags.ViewModels;
 using Orchard.Tags.Services;
@@ -25,7 +26,7 @@ namespace Orchard.Tags.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            IEnumerable<Tag> tags = _tagService.GetTags();
+            IEnumerable<TagRecord> tags = _tagService.GetTags();
             var entries = tags.Select(CreateTagEntry).ToList();
             var model = new TagsAdminIndexViewModel { Tags = entries };
             return View(model);
@@ -70,9 +71,6 @@ namespace Orchard.Tags.Controllers {
                 ViewData["CreateTag"] = viewModel;
                 return Index();
             }
-
-            if (!Services.Authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
-                return new HttpUnauthorizedResult();
             
             _tagService.CreateTag(viewModel.TagName);
             
@@ -80,18 +78,18 @@ namespace Orchard.Tags.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            Tag tag = _tagService.GetTag(id);
+            TagRecord tagRecord = _tagService.GetTag(id);
 
-            if(tag == null) {
+            if(tagRecord == null) {
                 return RedirectToAction("Index");
             }
 
             var viewModel = new TagsAdminEditViewModel {
-                Id = tag.Id,
-                TagName = tag.TagName,
+                Id = tagRecord.Id,
+                TagName = tagRecord.TagName,
             };
 
-            ViewData["ContentItems"] = _tagService.GetTaggedContentItems(id).ToList();
+            ViewData["ContentItems"] = _tagService.GetTaggedContentItems(id, VersionOptions.Latest).ToList();
 
             return View(viewModel);
         }
@@ -116,22 +114,19 @@ namespace Orchard.Tags.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't remove tag")))
                 return new HttpUnauthorizedResult();
 
-            Tag tag = _tagService.GetTag(id);
+            TagRecord tagRecord = _tagService.GetTag(id);
 
-            if (tag == null)
+            if (tagRecord == null)
                 return new HttpNotFoundResult();
 
             _tagService.DeleteTag(id);
 
-            if (!string.IsNullOrWhiteSpace(returnUrl))
-                return Redirect(returnUrl);
-
-            return RedirectToAction("Index");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
-        private static TagEntry CreateTagEntry(Tag tag) {
+        private static TagEntry CreateTagEntry(TagRecord tagRecord) {
             return new TagEntry {
-                Tag = tag,
+                Tag = tagRecord,
                 IsChecked = false,
             };
         }

@@ -15,10 +15,10 @@ namespace Orchard.Core.Common {
         public Localizer T { get; set; }
 
         public void Discover(ShapeTableBuilder builder) {
-            builder.Describe("Fields_Common_Text")
+            builder.Describe("Body_Editor")
                 .OnDisplaying(displaying => {
-                    string textFieldName = displaying.Shape.Name;
-                    displaying.ShapeMetadata.Alternates.Add("Fields_Common_Text__" + textFieldName);
+                    string flavor = displaying.Shape.EditorFlavor;
+                    displaying.ShapeMetadata.Alternates.Add("Body_Editor__" + flavor);
                 });
         }
 

@@ -3,23 +3,33 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Autofac.Features.Metadata;
-using Orchard.DisplayManagement.Descriptors;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.UI.Resources {
     public class ResourceManager : IResourceManager {
         private readonly Dictionary<Tuple<String, String>, RequireSettings> _required = new Dictionary<Tuple<String, String>, RequireSettings>();
         private readonly List<LinkEntry> _links = new List<LinkEntry>();
-        private readonly Dictionary<string, MetaEntry> _metas = new Dictionary<string, MetaEntry>();
+        private readonly Dictionary<string, MetaEntry> _metas = new Dictionary<string, MetaEntry> {
+            { "generator", new MetaEntry { Content = "Orchard", Name = "generator" } }
+        };
         private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>(StringComparer.OrdinalIgnoreCase);
         private readonly IEnumerable<Meta<IResourceManifestProvider>> _providers;
         private ResourceManifest _dynamicManifest;
         private List<String> _headScripts;
         private List<String> _footScripts;
         private IEnumerable<IResourceManifest> _manifests;
+
+        private static string ToAppRelativePath(string resourcePath) {
+            if (!String.IsNullOrEmpty(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
+                resourcePath = VirtualPathUtility.ToAppRelative(resourcePath);
+            }
+            return resourcePath;
+        }
 
         private static string FixPath(string resourcePath, string relativeFromPath) {
             if (!String.IsNullOrEmpty(resourcePath) && !VirtualPathUtility.IsAbsolute(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
@@ -30,6 +40,30 @@ namespace Orchard.UI.Resources {
                 resourcePath = VirtualPathUtility.ToAbsolute(VirtualPathUtility.Combine(relativeFromPath, resourcePath));
             }
             return resourcePath;
+        }
+
+        private static TagBuilder GetTagBuilder(ResourceDefinition resource, string url) {
+            var tagBuilder = new TagBuilder(resource.TagName);
+            tagBuilder.MergeAttributes(resource.TagBuilder.Attributes);
+            if (!String.IsNullOrEmpty(resource.FilePathAttributeName)) {
+                if (!String.IsNullOrEmpty(url)) {
+                    if (VirtualPathUtility.IsAppRelative(url)) {
+                        url = VirtualPathUtility.ToAbsolute(url);
+                    }
+                    tagBuilder.MergeAttribute(resource.FilePathAttributeName, url, true);
+                }
+            }
+            return tagBuilder;
+        }
+
+        public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition) {
+            if (!string.IsNullOrEmpty(condition)) {
+                writer.WriteLine("<!--[if " + condition + "]>");
+            }
+            writer.WriteLine(GetTagBuilder(resource, url).ToString(resource.TagRenderMode));
+            if (!string.IsNullOrEmpty(condition)) {
+                writer.WriteLine("<![endif]-->");
+            }
         }
 
         public ResourceManager(IEnumerable<Meta<IResourceManifestProvider>> resourceProviders) {
@@ -93,7 +127,7 @@ namespace Orchard.UI.Resources {
             }
             resourcePath = FixPath(resourcePath, relativeFromPath);
             resourceDebugPath = FixPath(resourceDebugPath, relativeFromPath);
-            return Require(resourceType, resourcePath).Define(d => d.SetUrl(resourcePath, resourceDebugPath));
+            return Require(resourceType, ToAppRelativePath(resourcePath)).Define(d => d.SetUrl(resourcePath, resourceDebugPath));
         }
 
         public virtual void RegisterHeadScript(string script) {
@@ -128,16 +162,16 @@ namespace Orchard.UI.Resources {
             // return the resource with the greatest version number.
             // If not found and an inlineDefinition is given, define the resource on the fly
             // using the action.
-            var name = settings.Name;
+            var name = settings.Name ?? "";
             var type = settings.Type;
             var resource = (from p in ResourceProviders
                             from r in p.GetResources(type)
-                            where r.Key == name
+                            where name.Equals(r.Key, StringComparison.OrdinalIgnoreCase)
                             orderby r.Value.Version descending
                             select r.Value).FirstOrDefault();
             if (resource == null && _dynamicManifest != null) {
                 resource = (from r in _dynamicManifest.GetResources(type)
-                            where r.Key == name
+                            where name.Equals(r.Key, StringComparison.OrdinalIgnoreCase)
                             orderby r.Value.Version descending
                             select r.Value).FirstOrDefault();
             }

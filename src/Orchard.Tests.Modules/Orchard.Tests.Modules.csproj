@@ -59,11 +59,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL" />
-    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ClaySharp">
+      <HintPath>..\..\lib\claysharp\ClaySharp.dll</HintPath>
+    </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.593, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentPath">
+      <HintPath>..\..\lib\fluentpath\FluentPath.dll</HintPath>
     </Reference>
     <Reference Include="IronRuby, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -72,6 +79,7 @@
     <Reference Include="IronRuby.Libraries">
       <HintPath>..\..\lib\dlr\IronRuby.Libraries.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Dynamic, Version=1.1.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\dlr\Microsoft.Dynamic.dll</HintPath>
@@ -104,6 +112,7 @@
     <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions">
@@ -126,6 +135,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
+    <Compile Include="Comments\Services\CommentServiceTests.cs" />
+    <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
+    <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
+    <Compile Include="Scripting\EvaluatorTests.cs" />
+    <Compile Include="Scripting\ParserTests.cs" />
+    <Compile Include="Scripting\TokenizerTests.cs" />
+    <Compile Include="Scripting\SimpleScriptingTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="Media\Extensions\LongExtensionsTests.cs" />
     <EmbeddedResource Include="Packaging\HelloDriver.cs.txt" />
@@ -135,14 +151,20 @@
     <Compile Include="Roles\Controllers\AdminControllerTests.cs" />
     <Compile Include="Roles\Services\RoleServiceTests.cs" />
     <Compile Include="Migrations\SchemaCommandGeneratorTests.cs" />
+    <Compile Include="Scripting.Dlr\ScriptingTests.cs" />
     <Compile Include="Settings\Blueprint\ShellDescriptorManagerTests.cs" />
+    <Compile Include="Tags\Services\TagsServiceTests.cs" />
     <Compile Include="Themes\Services\ThemeServiceTests.cs" />
+    <Compile Include="Users\Controllers\AccountControllerTests.cs" />
+    <Compile Include="Users\Services\UserServiceTests.cs" />
+    <Compile Include="Users\ShellSettingsUtility.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="Users\Controllers\AdminControllerTests.cs" />
     <Compile Include="Users\Services\MembershipServiceTests.cs" />
     <Compile Include="Widgets\RuleEngine\UrlRuleProviderTest.cs" />
     <Compile Include="Widgets\Services\WidgetsServiceTest.cs" />
     <Compile Include="Widgets\WidgetsTests.cs" />
+    <Compile Include="XmlRpc\Controllers\LiveWriterControllerTests.cs" />
     <Compile Include="XmlRpc\Controllers\HomeControllerTests.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcReaderTests.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcWriterTests.cs" />
@@ -156,13 +178,29 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Lucene\Lucene.csproj">
+      <Project>{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}</Project>
+      <Name>Lucene</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.CodeGeneration\Orchard.CodeGeneration.csproj">
       <Project>{C0C45321-B51D-4D8D-9B7B-AA4C2E0B2962}</Project>
       <Name>Orchard.CodeGeneration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj">
+      <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
+      <Name>Orchard.Comments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Indexing\Orchard.Indexing.csproj">
+      <Project>{EA2B9121-EF54-40A6-A53E-6593C86EE696}</Project>
+      <Name>Orchard.Indexing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Messaging\Orchard.Messaging.csproj">
+      <Project>{085948FF-0E9B-4A9A-B564-F8B8B4BDDDBC}</Project>
+      <Name>Orchard.Messaging</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Modules\Orchard.Modules.csproj">
       <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>
@@ -176,9 +214,21 @@
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj">
+      <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
+      <Name>Orchard.Scripting.Dlr</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Scripting\Orchard.Scripting.csproj">
+      <Project>{99002B65-86F7-415E-BF4A-381AA8AB9CCC}</Project>
+      <Name>Orchard.Scripting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Setup\Orchard.Setup.csproj">
       <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
       <Name>Orchard.Setup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Tags\Orchard.Tags.csproj">
+      <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
+      <Name>Orchard.Tags</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
@@ -217,6 +267,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Packaging\Hello.World.csproj.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

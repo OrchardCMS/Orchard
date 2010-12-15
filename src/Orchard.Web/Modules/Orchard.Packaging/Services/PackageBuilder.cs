@@ -38,16 +38,15 @@ namespace Orchard.Packaging.Services {
             var context = new CreateContext();
             BeginPackage(context);
             try {
-                EstablishPaths(context, _webSiteFolder, extensionDescriptor.Location, extensionDescriptor.Name, extensionDescriptor.ExtensionType);
+                EstablishPaths(context, _webSiteFolder, extensionDescriptor.Location, extensionDescriptor.Id, extensionDescriptor.ExtensionType);
                 SetCoreProperties(context, extensionDescriptor);
 
-                string projectFile = extensionDescriptor.Name + ".csproj";
+                string projectFile = extensionDescriptor.Id + ".csproj";
                 if (LoadProject(context, projectFile)) {
                     EmbedVirtualFile(context, projectFile, MediaTypeNames.Text.Xml);
                     EmbedProjectFiles(context, "Compile", "Content", "None", "EmbeddedResource");
                     EmbedReferenceFiles(context);
-                }
-                else if (extensionDescriptor.ExtensionType == "Theme") {
+                } else if (DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType)) {
                     // this is a simple theme with no csproj
                     EmbedThemeFiles(context);
                 }
@@ -63,10 +62,10 @@ namespace Orchard.Packaging.Services {
             return context.Stream;
         }
         
-        private void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
-            context.Builder.Id = "Orchard." + extensionDescriptor.ExtensionType + "." + extensionDescriptor.Name;
+        private static void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
+            context.Builder.Id = "Orchard." + extensionDescriptor.ExtensionType + "." + extensionDescriptor.Id;
             context.Builder.Version = new Version(extensionDescriptor.Version);
-            context.Builder.Title = extensionDescriptor.DisplayName ?? extensionDescriptor.Name;
+            context.Builder.Title = extensionDescriptor.Name ?? extensionDescriptor.Id;
             context.Builder.Description = extensionDescriptor.Description;
             context.Builder.Authors.Add(extensionDescriptor.Author);
 
@@ -75,7 +74,7 @@ namespace Orchard.Packaging.Services {
             }
         }
         
-        private void EmbedProjectFiles(CreateContext context, params string[] itemGroupTypes) {
+        private static void EmbedProjectFiles(CreateContext context, params string[] itemGroupTypes) {
             IEnumerable<XElement> itemGroups = context.Project
                 .Elements(Ns("Project"))
                 .Elements(Ns("ItemGroup"));
@@ -91,7 +90,7 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        private void EmbedReferenceFiles(CreateContext context) {
+        private static void EmbedReferenceFiles(CreateContext context) {
             var entries = context.Project
                 .Elements(Ns("Project"))
                 .Elements(Ns("ItemGroup"))
@@ -114,7 +113,7 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        private void EmbedThemeFiles(CreateContext context) {
+        private static void EmbedThemeFiles(CreateContext context) {
             var basePath = context.SourcePath;
             foreach (var virtualPath in context.SourceFolder.ListFiles(context.SourcePath, true)) {
                 // ignore dlls, etc
@@ -129,7 +128,7 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        private XName Ns(string localName) {
+        private static XName Ns(string localName) {
             return XName.Get(localName, "http://schemas.microsoft.com/developer/msbuild/2003");
         }
 
@@ -141,7 +140,7 @@ namespace Orchard.Packaging.Services {
 
         private static void EstablishPaths(CreateContext context, IWebSiteFolder webSiteFolder, string locationPath, string moduleName, string moduleType) {
             context.SourceFolder = webSiteFolder;
-            if (moduleType == "Theme") {
+            if (DefaultExtensionTypes.IsTheme(moduleType)) {
                 context.SourcePath = "~/Themes/" + moduleName + "/";
                 context.TargetPath = "\\Content\\Themes\\" + moduleName + "\\";
             }

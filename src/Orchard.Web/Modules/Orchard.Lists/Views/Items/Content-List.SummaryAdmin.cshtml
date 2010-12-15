@@ -1,0 +1,28 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Utility.Extensions;
+@{
+    ContentItem contentItem = Model.ContentItem;
+    string returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    ContentItemMetadata contentItemMetadata = contentItem.ContentManager.GetItemMetadata(contentItem);
+}
+<div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
+    <div class="properties">
+        <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
+        <h3>@Html.Link(contentItemMetadata.DisplayText, Url.Action("List", "Admin", new { area = "Contents", containerId = contentItem.Id, id = "" }))</h3>
+        @if (Model.Header != null) {
+        <div class="header">@Display(Model.Header)</div>
+        }
+        @if (Model.Meta != null) {
+        <div class="metadata">@Display(Model.Meta)</div>
+        }
+    </div>
+    <div class="related">
+        @Display(Model.Actions)
+        @Html.Link(T("List Items").Text, Url.Action("List", "Admin", new { area = "Contents", containerId = contentItem.Id, id = "" }))@T(" | ")
+        @Html.ItemEditLink(T("Edit").Text, contentItem) @T(" | ")
+        @Html.Link(T("Remove").Text, Url.Action("Remove", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+    </div>
+    @if (Model.Content != null) {
+    <div class="primary">@Display(Model.Content)</div>
+    }
+</div>

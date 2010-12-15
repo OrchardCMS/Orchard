@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -7,6 +6,7 @@ using Autofac;
 using Moq;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
@@ -15,6 +15,7 @@ using Orchard.Core.Settings.Metadata;
 using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Data;
 using Orchard.Tests;
+using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Core.Tests.Settings.Metadata {
@@ -47,6 +48,9 @@ namespace Orchard.Core.Tests.Settings.Metadata {
             builder.RegisterType(typeof(SettingsFormatter))
                 .As(typeof(IMapper<XElement, SettingsDictionary>))
                 .As(typeof(IMapper<SettingsDictionary, XElement>));
+            builder.RegisterType<Signals>().As<ISignals>();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+
             _container = builder.Build();
 
             _container.Mock<ISessionLocator>()

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Configuration;
-using System.IO;
-using System.Security.Cryptography;
-using System.Web.Configuration;
 using System.Web.Mvc;
-using System.Linq;
-using System.Xml;
+using Orchard.Environment;
 using Orchard.FileSystems.AppData;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
@@ -17,11 +12,13 @@ namespace Orchard.Setup.Controllers {
     [ValidateInput(false), Themed]
     public class SetupController : Controller {
         private readonly IAppDataFolder _appDataFolder;
+        private readonly IViewsBackgroundCompilation _viewsBackgroundCompilation;
         private readonly INotifier _notifier;
         private readonly ISetupService _setupService;
 
-        public SetupController(INotifier notifier, ISetupService setupService, IAppDataFolder appDataFolder) {
+        public SetupController(INotifier notifier, ISetupService setupService, IAppDataFolder appDataFolder, IViewsBackgroundCompilation viewsBackgroundCompilation) {
             _appDataFolder = appDataFolder;
+            _viewsBackgroundCompilation = viewsBackgroundCompilation;
             _notifier = notifier;
             _setupService = setupService;
             T = NullLocalizer.Instance;
@@ -41,58 +38,30 @@ namespace Orchard.Setup.Controllers {
             return View(model);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "StreamReader closed by XmlTextReader.")]
-        private bool ValidateMachineKey() {
-            // Get the machineKey section.
-            MachineKeySection machineKeySection = null;
-
-            string webConfigFile = Path.Combine(HttpContext.Request.PhysicalApplicationPath, "web.config");
-            using (XmlTextReader webConfigReader = new XmlTextReader(new StreamReader(webConfigFile))) {
-                if (webConfigReader.ReadToFollowing("machineKey")) {
-                    machineKeySection = new MachineKeySection {
-                        DecryptionKey = webConfigReader.GetAttribute("decryptionKey"), 
-                        ValidationKey = webConfigReader.GetAttribute("validationKey")
-                    };
-                }
-            }
-
-            if (machineKeySection == null
-                || machineKeySection.DecryptionKey.Contains("AutoGenerate")
-                || machineKeySection.ValidationKey.Contains("AutoGenerate")) {
-
-                var decryptionData = new byte[32];
-                var validationData = new byte[64];
-
-                using (var rng = new RNGCryptoServiceProvider()) {
-                    rng.GetBytes(decryptionData);
-                    rng.GetBytes(validationData);
-                }
-
-                string decryptionKey = BitConverter.ToString(decryptionData).Replace("-", "");
-                string validationKey = BitConverter.ToString(validationData).Replace("-", "");
-
-                ModelState.AddModelError("MachineKey", T("You need to define a MachineKey value in your web.config file. Here is one for you:\n <machineKey validationKey=\"{0}\" decryptionKey=\"{1}\" validation=\"SHA1\" decryption=\"AES\" />", validationKey, decryptionKey).ToString());
-                return false;
-            }
-
-            return true;
-        }
-
         public ActionResult Index() {
-            ValidateMachineKey();
-
             var initialSettings = _setupService.Prime();
+
+            // On the first time installation of Orchard, the user gets to the setup screen, which
+            // will take a while to finish (user inputting data and the setup process itself).
+            // We use this opportunity to start a background task to "pre-compile" all the known
+            // views in the app folder, so that the application is more reponsive when the user
+            // hits the homepage and admin screens for the first time.
+            if (StringComparer.OrdinalIgnoreCase.Equals(initialSettings.Name, "Default")) {
+                _viewsBackgroundCompilation.Start();
+            }
+
+            //
             return IndexViewResult(new SetupViewModel { AdminUsername = "admin", DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider)});
         }
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(SetupViewModel model) {
-            //HACK: (erikpo) Couldn't get a custom ValidationAttribute to validate two properties
+            //TODO: Couldn't get a custom ValidationAttribute to validate two properties
             if (!model.DatabaseOptions && string.IsNullOrEmpty(model.DatabaseConnectionString))
-                ModelState.AddModelError("DatabaseConnectionString", "A SQL connection string is required");
+                ModelState.AddModelError("DatabaseConnectionString", T("A SQL connection string is required").Text);
 
             if (!String.IsNullOrWhiteSpace(model.ConfirmPassword) && model.AdminPassword != model.ConfirmPassword ) {
-                ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").ToString());
+                ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").Text);
             }
 
             if(!model.DatabaseOptions && !String.IsNullOrWhiteSpace(model.DatabaseTablePrefix)) {
@@ -101,8 +70,6 @@ namespace Orchard.Setup.Controllers {
                     ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter").Text);
                 }
             }
-
-            ValidateMachineKey();
 
             if (!ModelState.IsValid) {
                 return IndexViewResult(model);
@@ -121,6 +88,11 @@ namespace Orchard.Setup.Controllers {
                 };
 
                 _setupService.Setup(setupContext);
+
+                // First time installation if finally done. Tell the background views compilation
+                // process to stop, so that it doesn't interfere with the user (asp.net compilation
+                // uses a "single lock" mechanism for compiling views).
+                _viewsBackgroundCompilation.Stop();
 
                 // redirect to the welcome page.
                 return Redirect("~/");

@@ -8,6 +8,7 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Routable.Models;
+using Orchard.Core.Routable.Services;
 using Orchard.Security;
 using Orchard.Blogs.Services;
 using Orchard.Core.Navigation.Services;
@@ -52,12 +53,11 @@ namespace Orchard.Blogs.Commands {
             var owner = _membershipService.GetUser(Owner);
 
             if ( owner == null ) {
-                Context.Output.WriteLine();
-                return T("Invalid username: {0}", Owner).Text;
+                throw new OrchardException(T("Invalid username: {0}", Owner));
             }
 
             if(!IsSlugValid(Slug)) {
-                return "Invalid Slug provided. Blog creation failed.";    
+                throw new OrchardException(T("Invalid Slug provided. Blog creation failed."));
             }
 
             var blog = _contentManager.New("Blog");
@@ -82,8 +82,7 @@ namespace Orchard.Blogs.Commands {
             var owner = _membershipService.GetUser(Owner);
 
             if(owner == null) {
-                Context.Output.WriteLine();
-                return T("Invalid username: {0}", Owner).Text;
+                throw new OrchardException(T("Invalid username: {0}", Owner));
             }
 
             XDocument doc;
@@ -94,31 +93,31 @@ namespace Orchard.Blogs.Commands {
                 Context.Output.WriteLine("Found {0} items", doc.Descendants("item").Count());
             }
             catch ( Exception ex ) {
-                Context.Output.WriteLine(T("An error occured while loading the file: " + ex.Message));
-                return "Import terminated.";
+                throw new OrchardException(T("An error occured while loading the file: {0}", ex.Message));
             }
 
             var blog = _blogService.Get(Slug);
 
             if ( blog == null ) {
-                return "Blog not found at specified slug: " + Slug;
+                throw new OrchardException(T("Blog not found at specified slug: {0}", Slug));
             }
 
             foreach ( var item in doc.Descendants("item") ) {
-                string postName = item.Element("title").Value;
+                if (item != null) {
+                    var postName = item.Element("title").Value;
 
-                Context.Output.WriteLine("Adding post: {0}...", postName.Substring(0, Math.Min(postName.Length, 40)));
-                var post = _contentManager.New("BlogPost");
-                post.As<ICommonPart>().Owner = owner;
-                post.As<ICommonPart>().Container = blog;
-                var slug = Slugify(postName);
-                post.As<RoutePart>().Slug = slug;
-                post.As<RoutePart>().Path = post.As<RoutePart>().GetPathWithSlug(slug);
-                post.As<RoutePart>().Title = postName;
-                post.As<BodyPart>().Text = item.Element("description").Value;
-                _contentManager.Create(post);
+                    Context.Output.WriteLine("Adding post: {0}...", postName.Substring(0, Math.Min(postName.Length, 40)));
+                    var post = _contentManager.New("BlogPost");
+                    post.As<ICommonPart>().Owner = owner;
+                    post.As<ICommonPart>().Container = blog;
+                    var slug = Slugify(postName);
+                    post.As<RoutePart>().Slug = slug;
+                    post.As<RoutePart>().Path = post.As<RoutePart>().GetPathWithSlug(slug);
+                    post.As<RoutePart>().Title = postName;
+                    post.As<BodyPart>().Text = item.Element("description").Value;
+                    _contentManager.Create(post);
+                }
             }
-
 
             return "Import feed completed.";
         }

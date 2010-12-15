@@ -8,9 +8,8 @@ using System.Security;
 [assembly: AssemblyTitle("Lucene")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("Lucene")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
+[assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,6 +30,6 @@ using System.Security;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("0.8.0")]
-[assembly: AssemblyFileVersion("0.8.0")]
+[assembly: AssemblyVersion("0.9.0")]
+[assembly: AssemblyFileVersion("0.9.0")]
 [assembly: SecurityTransparent]

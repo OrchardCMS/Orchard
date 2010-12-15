@@ -1,0 +1,21 @@
+@model MessageSettingsPartViewModel
+@using Orchard.Messaging.Models;
+@using Orchard.Messaging.ViewModels;
+<fieldset>
+    <legend>@T("Messaging")</legend>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.MessageSettings.DefaultChannelService)">@T("Default channel service for messages")</label>
+        @if ( Model.ChannelServices.Any() ) {
+            <select id="@Html.FieldIdFor(m => m.MessageSettings.DefaultChannelService)" name="@Html.FieldNameFor(m => m.MessageSettings.DefaultChannelService)">
+            @foreach ( var service in Model.ChannelServices ) {
+                <option @if(Model.MessageSettings.DefaultChannelService == service) { <text>selected="selected"</text> } value="@service">@service</option>
+             }
+             </select>
+        }
+        else {
+           <span class="hint">@T("You must enable a messaging channel (e.g., Orchard.Email) before being able to send messages.")</span>
+        }
+
+    </select> 
+    </div>
+</fieldset>

@@ -9,8 +9,8 @@
             var htmlFieldName = string.Format("Settings[{0}]", si++);
             // doesn't gen a similarly sanitized id as the other inputs...*/
             <label for="@ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName + ".Value")">@s.Key</label>
-            Html.Hidden(htmlFieldName + ".Key", s.Key)
-            Html.TextBox(htmlFieldName + ".Value", s.Value)
+            Html.Hidden(htmlFieldName + ".Key", s.Key);
+            Html.TextBox(htmlFieldName + ".Value", s.Value);
         }
     }
     </fieldset>

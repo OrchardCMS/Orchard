@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Orchard.FileSystems.VirtualPath;
-using Orchard.Services;
 
 namespace Orchard.Tests.Stubs {
     public class StubVirtualPathProvider : IVirtualPathProvider {

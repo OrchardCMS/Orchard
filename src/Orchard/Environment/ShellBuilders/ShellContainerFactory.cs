@@ -8,7 +8,6 @@ using Autofac.Builder;
 using Autofac.Configuration;
 using Autofac.Core;
 using Autofac.Features.Indexed;
-using Autofac.Integration.Web.Mvc;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;
@@ -71,6 +70,9 @@ namespace Orchard.Environment.ShellBuilders {
                             registration = registration.As(interfaceType);
                             if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerMatchingLifetimeScope("shell");
+                            } 
+                            else if (typeof(IUnitOfWorkDependency).IsAssignableFrom(interfaceType)) {
+                                registration = registration.InstancePerMatchingLifetimeScope("work");
                             }
                             else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerDependency();

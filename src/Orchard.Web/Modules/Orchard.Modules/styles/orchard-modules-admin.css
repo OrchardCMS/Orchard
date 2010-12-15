@@ -1,0 +1,139 @@
+﻿#main .features h2 {
+    margin-top:0;
+}
+#main .features h3 {
+    padding:0 3em 0 0;
+}
+.features.detail-view .category > ul {
+    border:1px solid #EAEAEA;
+    margin-bottom:2em;
+}
+.features.summary-view .category {
+    overflow:hidden;
+    padding-bottom:1em;
+}
+.features.summary-view .feature {
+    border:1px solid #EAEAEA;
+    display:block;
+    float:left;
+    height:6em;
+    margin:0 .5% 1% .5%;
+    position:relative;
+    width:31.95%;
+}
+.features.summary-view .feature:nth-child(3n+1),
+.features.summary-view .feature:nth-child(3n+2),
+.features.summary-view .feature:nth-child(3n) {
+    width:32.3%;
+}
+.features.summary-view .feature:nth-child(3n+1) {
+    margin-left:0;
+}
+.features.summary-view .feature:nth-child(3n+2) {
+}
+.features.summary-view .feature:nth-child(3n) {
+    margin-right:0;
+}
+
+.features.detail-view .feature {
+    padding:.25em 0;
+}
+.features .enabled.feature {
+    background:#FFF;
+}
+.features.summary-view .enabled.feature {
+    border-color:#CFE493;
+}
+.features .disabled.feature {
+    background:#EAEAEA;
+}
+.features.summary-view .disabled.feature {
+    border-color:#CCC;
+}
+.features .update.feature {
+    background:#ECC;
+}
+.features.summary-view .update.feature {
+    border-color:#E77;
+}
+.features.detail-view .feature {
+    border-bottom:1px solid #CCC;
+}
+.features.detail-view .last.feature {
+    border:0;
+}
+
+.features .feature .summary {
+    overflow:hidden;
+    padding:.4em .5em;
+    position:relative;
+}
+.features.detail-view .feature .summary {
+    overflow:visible;
+}
+#main .features.detail-view .feature {
+    padding-right:5.5em;
+}
+#main .features.detail-view h3 {
+    display:inline;
+    font-size:1.4em;
+    font-weight:bold;
+    padding-right:0;
+}
+#main .features.summary-view .description {
+    display:none;
+}
+#main .features.detail-view .description {
+    display:inline;
+    margin:0 0 1em .5ex;
+}
+.features.detail-view .description::before {
+    content:" - ";
+}
+.features .dependencies {
+    font-size:.9em;
+    margin:.44em 0 0;
+}
+.features .dependencies>* {
+    display:inline;
+}
+.features .dependencies li {
+    display:inline;
+    margin-left:.5em;
+}
+.features .dependencies li::after {
+    content:", ";
+}
+.features .dependencies li:last-child::after {
+    content:"";
+}
+.features .missingdependencies {
+    font-size:.9em;
+    color:Red;
+    margin:.44em 0 0;
+}
+.features .missingdependencies>* {
+    display:inline;
+}
+.features .missingdependencies li {
+    display:inline;
+    margin-left:.5em;
+}
+.features .missingdependencies li::after {
+    content:", ";
+}
+.features .missingdependencies li:last-child::after {
+    content:"";
+}
+.features .feature .actions {
+    position:absolute;
+    right:.4em;
+    top:.4em;
+}
+.features.detail-view .feature .actions {
+    right:-3.5em;
+}
+.features .feature .actions form.inline.link,
+.features .feature .actions a {
+    margin-left:.5em;
+}

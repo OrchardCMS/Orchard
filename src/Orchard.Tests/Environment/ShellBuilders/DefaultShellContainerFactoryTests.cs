@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Core;
@@ -168,7 +165,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                           WithDependency<TestDependency2>());
 
             blueprint.Dependencies.Single().Feature =
-                new Feature { Descriptor = new FeatureDescriptor { Name = "Hello" } };
+                new Feature { Descriptor = new FeatureDescriptor { Id = "Hello" } };
 
             var factory = _container.Resolve<IShellContainerFactory>();
             var shellContainer = factory.CreateContainer(settings, blueprint);
@@ -180,7 +177,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             var testDependency2 = (TestDependency2)testDependency;
             
             Assert.That(testDependency2.Feature.Descriptor, Is.Not.Null);
-            Assert.That(testDependency2.Feature.Descriptor.Name, Is.EqualTo("Hello"));
+            Assert.That(testDependency2.Feature.Descriptor.Id, Is.EqualTo("Hello"));
         }
 
         public class TestDependency2 : ITestDependency {

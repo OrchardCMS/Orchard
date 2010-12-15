@@ -53,11 +53,8 @@ namespace Orchard.UI.Navigation {
             return url;
         }
 
-        private IEnumerable<MenuItem> Crop(IEnumerable<MenuItem> items) {
-            foreach(var item in items) {
-                if (item.Items.Any() || item.RouteValues != null)
-                    yield return item;
-            }
+        private static IEnumerable<MenuItem> Crop(IEnumerable<MenuItem> items) {
+            return items.Where(item => item.Items.Any() || item.RouteValues != null);
         }
 
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {
@@ -73,6 +70,7 @@ namespace Orchard.UI.Navigation {
                         RouteValues = item.RouteValues,
                         Text = item.Text,
                         Url = item.Url,
+                        LinkToFirstChild = item.LinkToFirstChild,
                         Href = item.Href
                     };
                 }
@@ -106,6 +104,7 @@ namespace Orchard.UI.Navigation {
                 Text = items.First().Text,
                 Url = items.First().Url,
                 Href = items.First().Href,
+                LinkToFirstChild = items.First().LinkToFirstChild,
                 RouteValues = items.First().RouteValues,
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),

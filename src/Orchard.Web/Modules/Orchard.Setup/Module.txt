@@ -2,10 +2,11 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.8.0
-OrchardVersion: 0.8.0
+Version: 0.9.0
+OrchardVersion: 0.9.0
 Description: The setup module is creating the application's setup experience.
 Features:
     Orchard.Setup:
+        Name: Setup
         Description: Standard site setup. This feature is disabled automatically once setup is over.
         Category: Core

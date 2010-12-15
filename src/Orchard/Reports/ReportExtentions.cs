@@ -1,5 +1,4 @@
-﻿using Orchard.Localization;
-using Orchard.Reports;
+﻿using Orchard.Reports;
 using Orchard.Reports.Services;
 
 public static class ReportExtentions {

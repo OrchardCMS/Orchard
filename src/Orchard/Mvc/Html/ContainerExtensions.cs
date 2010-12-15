@@ -1,9 +1,8 @@
 using System;
 using System.Web.Mvc;
-using Autofac;
-using Autofac.Integration.Web;
 
 namespace Orchard.Mvc.Html {
+    public interface IFoo{}
     public static class ContainerExtensions {
         /// <summary>
         /// This method performed by Erik Weisz.
@@ -11,13 +10,10 @@ namespace Orchard.Mvc.Html {
         /// <see cref="http://en.wikipedia.org/wiki/Harry_Houdini"/>
         /// <returns>himself</returns>
         public static TService Resolve<TService>(this HtmlHelper html) {
-            var workContextAccessor = html.ViewContext.RouteData.DataTokens["IWorkContextAccessor"] as IWorkContextAccessor;
-            if (workContextAccessor == null)
-                throw new ApplicationException("Unable to resolve");
+            var workContext = html.ViewContext.RequestContext.GetWorkContext();
 
-            var workContext = workContextAccessor.GetContext(html.ViewContext.HttpContext);
             if (workContext == null)
-                throw new ApplicationException("Unable to resolve");
+                throw new ApplicationException(string.Format(@"The WorkContext cannot be found for the request. Unable to resolve '{0}'.", typeof(TService)));
 
             return workContext.Resolve<TService>();
         }

@@ -1,19 +1,20 @@
+using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
-using System.Xml.Linq;
 using Orchard.Blogs.Extensions;
-using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Core.Feeds;
+using Orchard.Core.Routable.Services;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
+using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
+using Orchard.Settings;
 
 namespace Orchard.Blogs.Controllers {
+
     [Themed]
     public class BlogController : Controller {
         private readonly IOrchardServices _services;
@@ -21,22 +22,28 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogPostService _blogPostService;
         private readonly IBlogSlugConstraint _blogSlugConstraint;
         private readonly IFeedManager _feedManager;
-        private readonly RouteCollection _routeCollection;
+        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IHomePageProvider _routableHomePageProvider;
+        private readonly ISiteService _siteService;
 
         public BlogController(
             IOrchardServices services, 
             IBlogService blogService,
             IBlogPostService blogPostService,
             IBlogSlugConstraint blogSlugConstraint,
-            IFeedManager feedManager,
-            RouteCollection routeCollection, 
-            IShapeFactory shapeFactory) {
+            IFeedManager feedManager, 
+            IShapeFactory shapeFactory,
+            IWorkContextAccessor workContextAccessor,
+            IEnumerable<IHomePageProvider> homePageProviders,
+            ISiteService siteService) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
             _blogSlugConstraint = blogSlugConstraint;
             _feedManager = feedManager;
-            _routeCollection = routeCollection;
+            _workContextAccessor = workContextAccessor;
+            _siteService = siteService;
+            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
         }
@@ -53,10 +60,12 @@ namespace Orchard.Blogs.Controllers {
             dynamic viewModel = Shape.ViewModel()
                 .ContentItems(list);
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);
         }
 
-        public ActionResult Item(string blogSlug, Pager pager) {
+        public ActionResult Item(string blogSlug, PagerParameters pagerParameters) {
+            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var correctedSlug = _blogSlugConstraint.FindSlug(blogSlug);
             if (correctedSlug == null)
                 return HttpNotFound();
@@ -64,6 +73,12 @@ namespace Orchard.Blogs.Controllers {
             var blogPart = _blogService.Get(correctedSlug);
             if (blogPart == null)
                 return HttpNotFound();
+
+            // primary action run for a home paged item shall not pass
+            if (!RouteData.DataTokens.ContainsKey("ParentActionViewContext")
+                && blogPart.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)) {
+                return HttpNotFound();
+            }
 
             _feedManager.Register(blogPart);
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
@@ -77,66 +92,8 @@ namespace Orchard.Blogs.Controllers {
             var totalItemCount = _blogPostService.PostCount(blogPart);
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
 
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)blog);
-        }
-
-        public ActionResult LiveWriterManifest(string blogSlug) {
-            Logger.Debug("Live Writer Manifest requested");
-
-            BlogPart blogPart = _blogService.Get(blogSlug);
-
-            if (blogPart == null)
-                return HttpNotFound();
-
-            const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
-
-            var options = new XElement(
-                XName.Get("options", manifestUri),
-                new XElement(XName.Get("clientType", manifestUri), "Metaweblog"),
-                new XElement(XName.Get("supportsSlug", manifestUri), "Yes"),
-                new XElement(XName.Get("supportsKeywords", manifestUri), "Yes"));
-
-
-            var doc = new XDocument(new XElement(
-                                        XName.Get("manifest", manifestUri),
-                                        options));
-
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            return Content(doc.ToString(), "text/xml");
-        }
-
-        public ActionResult Rsd(string blogSlug) {
-            Logger.Debug("RSD requested");
-
-            BlogPart blogPart = _blogService.Get(blogSlug);
-
-            if (blogPart == null)
-                return HttpNotFound();
-
-            const string manifestUri = "http://archipelago.phrasewise.com/rsd";
-
-            var urlHelper = new UrlHelper(ControllerContext.RequestContext, _routeCollection);
-            var url = urlHelper.Action("", "", new { Area = "XmlRpc" });
-
-            var options = new XElement(
-                XName.Get("service", manifestUri),
-                new XElement(XName.Get("engineName", manifestUri), "Orchard CMS"),
-                new XElement(XName.Get("engineLink", manifestUri), "http://orchardproject.net"),
-                new XElement(XName.Get("homePageLink", manifestUri), "http://orchardproject.net"),
-                new XElement(XName.Get("apis", manifestUri),
-                    new XElement(XName.Get("api", manifestUri),
-                        new XAttribute("name", "MetaWeblog"),
-                        new XAttribute("preferred", true),
-                        new XAttribute("apiLink", url),
-                        new XAttribute("blogID", blogPart.Id))));
-
-            var doc = new XDocument(new XElement(
-                                        XName.Get("rsd", manifestUri),
-                                        new XAttribute("version", "1.0"),
-                                        options));
-
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            return Content(doc.ToString(), "text/xml");
         }
     }
 }

@@ -13,19 +13,19 @@ using Orchard.UI.Notify;
 namespace Orchard.Tags.Services {
     [UsedImplicitly]
     public class TagService : ITagService {
-        private readonly IRepository<Tag> _tagRepository;
-        private readonly IRepository<TagsContentItems> _tagsContentItemsRepository;
+        private readonly IRepository<TagRecord> _tagRepository;
+        private readonly IRepository<ContentTagRecord> _contentTagRepository;
         private readonly INotifier _notifier;
         private readonly IAuthorizationService _authorizationService;
         private readonly IOrchardServices _orchardServices;
 
-        public TagService(IRepository<Tag> tagRepository,
-                          IRepository<TagsContentItems> tagsContentItemsRepository,
+        public TagService(IRepository<TagRecord> tagRepository,
+                          IRepository<ContentTagRecord> contentTagRepository,
                           INotifier notifier,
                           IAuthorizationService authorizationService,
                           IOrchardServices orchardServices) {
             _tagRepository = tagRepository;
-            _tagsContentItemsRepository = tagsContentItemsRepository;
+            _contentTagRepository = contentTagRepository;
             _notifier = notifier;
             _authorizationService = authorizationService;
             _orchardServices = orchardServices;
@@ -36,113 +36,156 @@ namespace Orchard.Tags.Services {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        public IEnumerable<Tag> GetTags() {
+        public IEnumerable<TagRecord> GetTags() {
             return _tagRepository.Table.ToList();
         }
 
-        public Tag GetTag(int id) {
-            return _tagRepository.Get(x => x.Id == id);
+        public TagRecord GetTag(int tagId) {
+            return _tagRepository.Get(x => x.Id == tagId);
         }
 
-        public Tag GetTagByName(string tagName) {
+        public TagRecord GetTagByName(string tagName) {
             return _tagRepository.Get(x => x.TagName == tagName);
         }
 
-        public void CreateTag(string tagName) {
-            if (_tagRepository.Get(x => x.TagName == tagName) == null) {
-                _authorizationService.CheckAccess(Permissions.CreateTag, _orchardServices.WorkContext.CurrentUser, null);
+        public TagRecord CreateTag(string tagName) {
+            var result = _tagRepository.Get(x => x.TagName == tagName);
+            if (result == null) {
+                result = new TagRecord { TagName = tagName };
+                _tagRepository.Create(result);
+            }
 
-                Tag tag = new Tag { TagName = tagName };
-                _tagRepository.Create(tag);
-            }
-            else {
-                _notifier.Warning(T("The tag {0} already exists", tagName));
-            }
+            return result;
         }
 
-        public void DeleteTag(int id) {
-            _tagRepository.Delete(GetTag(id));
-            IEnumerable<TagsContentItems> tagsContentItems = _tagsContentItemsRepository.Fetch(x => x.TagId == id);
-            foreach (var tagContentItem in tagsContentItems) {
-                _tagsContentItemsRepository.Delete(tagContentItem);
+        public void DeleteTag(int tagId) {
+            _authorizationService.CheckAccess(Permissions.ManageTags, _orchardServices.WorkContext.CurrentUser, null);
+
+            var tag = GetTag(tagId);
+            if (tag == null)
+                return;
+
+            // Delete associations to content items
+            foreach (var tagContentItem in _contentTagRepository.Fetch(x => x.TagRecord == tag)) {
+                _contentTagRepository.Delete(tagContentItem);
             }
+
+            // Delete tag entity
+            _tagRepository.Delete(tag);
         }
 
-        public void UpdateTag(int id, string tagName) {
-            if ( String.IsNullOrEmpty(tagName) ) {
+        public void UpdateTag(int tagId, string tagName) {
+            _authorizationService.CheckAccess(Permissions.ManageTags, _orchardServices.WorkContext.CurrentUser, null);
+
+            if (String.IsNullOrEmpty(tagName)) {
                 _notifier.Warning(T("Couldn't rename tag: name was empty"));
                 return;
             }
 
-            Tag tag = GetTagByName(tagName);
-            if(tag != null) {
-                // new tag name already existing => merge
-                IEnumerable<TagsContentItems> tagsContentItems = _tagsContentItemsRepository.Fetch(x => x.TagId == id);
-                
+            var tagRecord = GetTagByName(tagName);
+
+            // new tag name already existing => merge
+            if (tagRecord != null) {
+                var tagsContentItems = _contentTagRepository.Fetch(x => x.TagRecord.Id == tagId);
+
                 // get contentItems already tagged with the existing one
-                var taggedContentItems = GetTaggedContentItems(tag.Id);
+                var taggedContentItems = GetTaggedContentItems(tagRecord.Id);
 
-                foreach ( var tagContentItem in tagsContentItems ) {
-                    var tagContentItemId = tagContentItem.ContentItemId;
-                    if ( !taggedContentItems.Any(c => c.ContentItem.Id == tagContentItemId) ) {
-                        TagContentItem(tagContentItem.ContentItemId, tagName);
+                foreach (var tagContentItem in tagsContentItems) {
+                    ContentTagRecord item = tagContentItem;
+                    if (!taggedContentItems.Any(c => c.ContentItem.Id == item.TagsPartRecord.Id)) {
+                        TagContentItem(tagContentItem.TagsPartRecord, tagName);
                     }
-                    _tagsContentItemsRepository.Delete(tagContentItem);
+                    _contentTagRepository.Delete(tagContentItem);
                 }
 
-                _tagRepository.Delete(GetTag(id));
+                _tagRepository.Delete(GetTag(tagId));
+                return;
             }
-            else {
-                tag = _tagRepository.Get(id);
-                tag.TagName = tagName;
-            }
+
+            // Create new tag
+            tagRecord = _tagRepository.Get(tagId);
+            tagRecord.TagName = tagName;
         }
 
-        public IEnumerable<IContent> GetTaggedContentItems(int id) {
-            return _tagsContentItemsRepository
-                .Fetch(x => x.TagId == id)
-                .Select(t =>_orchardServices.ContentManager.Get(t.ContentItemId))
-                .Where(c => c!= null);
+        public IEnumerable<IContent> GetTaggedContentItems(int tagId) {
+            return GetTaggedContentItems(tagId, VersionOptions.Published);
         }
 
-        public void TagContentItem(int contentItemId, string tagName) {
-            Tag tag = GetTagByName(tagName);
-            TagsContentItems tagsContentItems = new TagsContentItems { ContentItemId = contentItemId, TagId = tag.Id };
-            _tagsContentItemsRepository.Create(tagsContentItems);
+        public IEnumerable<IContent> GetTaggedContentItems(int tagId, VersionOptions options) {
+            return _contentTagRepository
+                .Fetch(x => x.TagRecord.Id == tagId)
+                .Select(t => _orchardServices.ContentManager.Get(t.TagsPartRecord.Id, options))
+                .Where(c => c != null);
         }
 
-        public void UpdateTagsForContentItem(int contentItemId, IEnumerable<string> tagNamesForContentItem) {
-            List<int> tags = new List<int>();
-            foreach (var tagName in tagNamesForContentItem) {
-                Tag tag = GetTagByName(tagName);
-                if (tag == null) {
-                    CreateTag(tagName);
-                    tag = GetTagByName(tagName);
+        public IEnumerable<IContent> GetTaggedContentItems(int tagId, int skip, int take) {
+            return GetTaggedContentItems(tagId, skip, take, VersionOptions.Published);
+        }
+
+        public IEnumerable<IContent> GetTaggedContentItems(int tagId, int skip, int take, VersionOptions options) {
+            return _contentTagRepository
+                .Fetch(x => x.TagRecord.Id == tagId)
+                .Skip(skip)
+                .Take(take)
+                .Select(t => _orchardServices.ContentManager.Get(t.TagsPartRecord.Id, options))
+                .Where(c => c != null);
+        }
+
+        public int GetTaggedContentItemCount(int tagId) {
+            return GetTaggedContentItemCount(tagId, VersionOptions.Published);
+        }
+
+        public int GetTaggedContentItemCount(int tagId, VersionOptions options) {
+            return GetTaggedContentItems(tagId, options).Count();
+        }
+
+        private void TagContentItem(TagsPartRecord tagsPartRecord, string tagName) {
+            var tagRecord = GetTagByName(tagName);
+            var tagsContentItems = new ContentTagRecord { TagsPartRecord = tagsPartRecord, TagRecord = tagRecord };
+            _contentTagRepository.Create(tagsContentItems);
+        }
+
+        public void RemoveTagsForContentItem(ContentItem contentItem) {
+            if (contentItem.Id == 0)
+                throw new OrchardException(T("Error removing tag to content item: the content item has not been created yet."));
+
+            _contentTagRepository.Flush();
+
+            var tagsPart = contentItem.As<TagsPart>();
+
+            // delete orphan tags (for each tag, if there is no other contentItem than the one being deleted, it's an orphan)
+            foreach (var tag in tagsPart.CurrentTags) {
+                if (_contentTagRepository.Count(x => x.TagsPartRecord.Id != contentItem.Id) == 0) {
+                    _tagRepository.Delete(tag);
                 }
-                tags.Add(tag.Id);
             }
-            ModifyTagsForContentItem(contentItemId, tags);
+
+            // delete tag links with this contentItem (ContentTagRecords)
+            foreach (var record in _contentTagRepository.Fetch(x => x.TagsPartRecord.Id == contentItem.Id)) {
+                _contentTagRepository.Delete(record);
+            }
         }
 
-        private void ModifyTagsForContentItem(int contentItemId, IEnumerable<int> tagsForContentItem) {
-            List<int> newTagsForContentItem = new List<int>(tagsForContentItem);
-            IEnumerable<TagsContentItems> currentTagsForContentItem = _tagsContentItemsRepository.Fetch(x => x.ContentItemId == contentItemId);
+        public void UpdateTagsForContentItem(ContentItem contentItem, IEnumerable<string> tagNamesForContentItem) {
+            if (contentItem.Id == 0)
+                throw new OrchardException(T("Error adding tag to content item: the content item has not been created yet."));
+
+            var tags = tagNamesForContentItem.Select(CreateTag);
+            var newTagsForContentItem = new List<TagRecord>(tags);
+            var currentTagsForContentItem = _contentTagRepository.Fetch(x => x.TagsPartRecord.Id == contentItem.Id);
 
             foreach (var tagContentItem in currentTagsForContentItem) {
-                if (!newTagsForContentItem.Contains(tagContentItem.TagId)) {
-                    _authorizationService.CheckAccess(Permissions.ApplyTag, _orchardServices.WorkContext.CurrentUser, null);
-
-                    _tagsContentItemsRepository.Delete(tagContentItem);
+                if (!newTagsForContentItem.Contains(tagContentItem.TagRecord)) {
+                    _contentTagRepository.Delete(tagContentItem);
                 }
                 else {
-                    newTagsForContentItem.Remove(tagContentItem.TagId);
+                    newTagsForContentItem.Remove(tagContentItem.TagRecord);
                 }
             }
 
             foreach (var newTagForContentItem in newTagsForContentItem) {
-                _authorizationService.CheckAccess(Permissions.ApplyTag, _orchardServices.WorkContext.CurrentUser, null);
-
-                _tagsContentItemsRepository.Create(new TagsContentItems { ContentItemId = contentItemId, TagId = newTagForContentItem });
+                _contentTagRepository.Create(new ContentTagRecord { TagsPartRecord = contentItem.As<TagsPart>().Record, TagRecord = newTagForContentItem });
             }
         }
     }

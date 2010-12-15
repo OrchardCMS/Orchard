@@ -14,7 +14,7 @@ namespace Orchard.Core.Common.ViewModels {
             set { BodyPart.Record.Format = value; }
         }
 
-        public string TextEditorTemplate { get; set; }
+        public string EditorFlavor { get; set; }
         public string AddMediaPath { get; set; }
     }
 }

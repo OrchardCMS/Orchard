@@ -24,21 +24,36 @@ namespace Orchard.Roles {
 
         public ILogger Logger { get; set; }
 
-        void IFeatureEventHandler.Install(Feature feature) {
+        void IFeatureEventHandler.Installing(Feature feature) {
             AddDefaultRolesForFeature(feature);
         }
 
-        void IFeatureEventHandler.Enable(Feature feature) {}
+        void IFeatureEventHandler.Installed(Feature feature) {
+        }
 
-        void IFeatureEventHandler.Disable(Feature feature) {}
+        void IFeatureEventHandler.Enabling(Feature feature) {
+        }
 
-        void IFeatureEventHandler.Uninstall(Feature feature) {}
+        void IFeatureEventHandler.Enabled(Feature feature) {
+        }
+
+        void IFeatureEventHandler.Disabling(Feature feature) {
+        }
+
+        void IFeatureEventHandler.Disabled(Feature feature) {
+        }
+
+        void IFeatureEventHandler.Uninstalling(Feature feature) {
+        }
+
+        void IFeatureEventHandler.Uninstalled(Feature feature) {
+        }
 
         public void AddDefaultRolesForFeature(Feature feature) {
-            var featureName = feature.Descriptor.Name;
+            var featureName = feature.Descriptor.Id;
 
             // when another module is being enabled, locate matching permission providers
-            var providersForEnabledModule = _permissionProviders.Where(x => x.Feature.Descriptor.Name == featureName);
+            var providersForEnabledModule = _permissionProviders.Where(x => x.Feature.Descriptor.Id == featureName);
 
             if (providersForEnabledModule.Any()) {
                 Logger.Debug("Configuring default roles for module {0}", featureName);

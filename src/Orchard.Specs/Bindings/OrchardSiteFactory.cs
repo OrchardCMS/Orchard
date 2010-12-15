@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Specs.Hosting.Orchard.Web;
 using TechTalk.SpecFlow;
 
@@ -12,13 +11,19 @@ namespace Orchard.Specs.Bindings {
     public class OrchardSiteFactory : BindingBase {
         [Given(@"I have installed Orchard")]
         public void GivenIHaveInstalledOrchard() {
+            GivenIHaveInstalledOrchard("/");
+        }
 
+        [Given(@"I have installed Orchard at ""(.*)\""")]
+        public void GivenIHaveInstalledOrchard(string virtualDirectory) {
             var webApp = Binding<WebAppHosting>();
 
-            webApp.GivenIHaveACleanSiteWith(TableData(
-                new { extension = "module", names = "Orchard.Setup, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Widgets, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce" },
-                new { extension = "core", names = "Common, Dashboard, Feeds, HomePage, Messaging, Navigation, Contents, Routable, Scheduling, Settings, Shapes, XmlRpc" },
-                new { extension = "theme", names = "SafeMode, TheAdmin, TheThemeMachine" }));
+            webApp.GivenIHaveACleanSiteWith(
+                virtualDirectory,
+                TableData(
+                new { extension = "Module", names = "Orchard.Setup, Orchard.Pages, Orchard.Blogs, Orchard.Messaging, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce" },
+                new { extension = "Core", names = "Common, Dashboard, Feeds, HomePage, Navigation, Contents, Routable, Scheduling, Settings, Shapes, XmlRpc" },
+                new { extension = "Theme", names = "SafeMode, TheAdmin, TheThemeMachine" }));
 
             webApp.WhenIGoTo("Setup");
 
@@ -34,9 +39,7 @@ namespace Orchard.Specs.Bindings {
         public void GivenIHaveInstalled(string name) {
             var webApp = Binding<WebAppHosting>();
             webApp.GivenIHaveModule(name);
-            webApp.Host.Execute(() => {
-                MvcApplication.ReloadExtensions();
-            });
+            webApp.Host.Execute(MvcApplication.ReloadExtensions);
 
             GivenIHaveEnabled(name);
         }
@@ -56,7 +59,6 @@ namespace Orchard.Specs.Bindings {
             });
 
         }
-
 
         [Given(@"I have tenant ""(.*)\"" on ""(.*)\"" as ""(.*)\""")]
         public void GivenIHaveTenantOnSiteAsName(string shellName, string hostName, string siteName) {
