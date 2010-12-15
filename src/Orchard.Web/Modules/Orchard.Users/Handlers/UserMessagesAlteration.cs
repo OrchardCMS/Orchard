@@ -20,6 +20,9 @@ namespace Orchard.Users.Handlers {
         public Localizer T { get; set; }
 
         public void Sending(MessageContext context) {
+            if (context.MessagePrepared)
+                return;
+
             var contentItem = _contentManager.Get(context.Recipient.Id);
             if ( contentItem == null )
                 return;
@@ -51,6 +54,7 @@ namespace Orchard.Users.Handlers {
             }
 
             FormatEmailBody(context);
+            context.MessagePrepared = true;
         }
 
         private static void FormatEmailBody(MessageContext context) {

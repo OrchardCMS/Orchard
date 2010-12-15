@@ -9,6 +9,7 @@ namespace Orchard.Messaging.Models {
         public string Service { get; set; }
         public ContentItemRecord Recipient { get; set; }
         public Dictionary<string, string> Properties { get; private set; }
+        public bool MessagePrepared { get; set; }
 
         public MessageContext() {
             Properties = new Dictionary<string, string>();
