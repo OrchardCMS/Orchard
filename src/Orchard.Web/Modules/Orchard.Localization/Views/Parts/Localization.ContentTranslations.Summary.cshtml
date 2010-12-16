@@ -1,6 +1,6 @@
 ﻿@using Orchard.Core.Contents;
 @using Orchard.Localization.Models;
-@if (AuthorizedFor(Permissions.PublishOthersContent)) {
+@if (AuthorizedFor(Permissions.PublishContent)) {
 Style.Require("LocalizationAdmin");
 IEnumerable<LocalizationPart> localizations  = Model.Localizations;
 var localizationLinks = Html.UnorderedList(localizations, (c, i) => Html.ItemEditLink(c.Culture.Culture, c), "localizations");
