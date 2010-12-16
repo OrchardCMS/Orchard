@@ -197,5 +197,13 @@ namespace Orchard.Packaging.Services {
             }
             return path;
         }
+
+        public DateTimeOffset GetCreated(string path) {
+            if (this.DirectoryExists(path)) {
+                return Directory.GetCreationTimeUtc(this.GetFullPath(path));
+            }
+
+            return File.GetCreationTimeUtc(this.GetFullPath(path));
+        }
     }
 }
