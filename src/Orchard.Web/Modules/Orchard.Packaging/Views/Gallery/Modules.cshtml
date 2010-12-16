@@ -27,7 +27,7 @@
             </div>
 
             <div class="related">
-                @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"packageId", item.PackageId}, {"version", item.Version}, {"sourceId", item.Source.Id}, {"cameFrom", "Modules"}})@T(" | ")
+                @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"packageId", item.PackageId}, {"version", item.Version}, {"sourceId", item.Source.Id}, {"redirectTo", "Modules"}})@T(" | ")
                 <a href="@item.PackageStreamUri">@T("Download")</a>
              </div>
 
