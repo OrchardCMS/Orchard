@@ -239,7 +239,7 @@ namespace Orchard.Blogs.Services {
             if (blogPost == null)
                 throw new ArgumentException();
 
-            _authorizationService.CheckAccess(Permissions.EditOthersBlogPost, user, blogPost);
+            _authorizationService.CheckAccess(Permissions.EditBlogPost, user, blogPost);
 
             var postStruct = CreateBlogStruct(blogPost, urlHelper);
 
@@ -255,7 +255,7 @@ namespace Orchard.Blogs.Services {
             if (blogPost == null)
                 throw new ArgumentException();
 
-            _authorizationService.CheckAccess(publish ? Permissions.PublishOthersBlogPost : Permissions.EditOthersBlogPost, user, blogPost);
+            _authorizationService.CheckAccess(publish ? Permissions.PublishBlogPost : Permissions.EditBlogPost, user, blogPost);
 
             var title = content.Optional<string>("title");
             var description = content.Optional<string>("description");
@@ -290,7 +290,7 @@ namespace Orchard.Blogs.Services {
             if (blogPost == null)
                 throw new ArgumentException();
 
-            _authorizationService.CheckAccess(Permissions.DeleteOthersBlogPost, user, blogPost);
+            _authorizationService.CheckAccess(Permissions.DeleteBlogPost, user, blogPost);
 
             foreach (var driver in drivers)
                 driver.Process(blogPost.Id);
