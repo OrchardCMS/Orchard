@@ -128,11 +128,12 @@ namespace Orchard.Blogs.Services {
 
             IUser user = ValidateUser(userName, password);
 
-            // User needs to at least have permission to edit its own blog posts to access the service
-            _authorizationService.CheckAccess(Permissions.EditOwnBlogPost, user, null);
 
             XRpcArray array = new XRpcArray();
             foreach (BlogPart blog in _blogService.Get()) {
+                // User needs to at least have permission to edit its own blog posts to access the service
+                _authorizationService.CheckAccess(Permissions.EditBlogPost, user, blog);
+
                 BlogPart blogPart = blog;
                 array.Add(new XRpcStruct()
                                 .Set("url", urlHelper.AbsoluteAction(() => urlHelper.Blog(blogPart)))
@@ -154,7 +155,7 @@ namespace Orchard.Blogs.Services {
             IUser user = ValidateUser(userName, password);
 
             // User needs to at least have permission to edit its own blog posts to access the service
-            _authorizationService.CheckAccess(Permissions.EditOwnBlogPost, user, null);
+            _authorizationService.CheckAccess(Permissions.EditBlogPost, user, null);
 
             BlogPart blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
             if (blog == null) {
@@ -184,7 +185,7 @@ namespace Orchard.Blogs.Services {
             IUser user = ValidateUser(userName, password);
 
             // User needs permission to edit or publish its own blog posts
-            _authorizationService.CheckAccess(publish ? Permissions.PublishOwnBlogPost : Permissions.EditOwnBlogPost, user, null);
+            _authorizationService.CheckAccess(publish ? Permissions.PublishBlogPost : Permissions.EditBlogPost, user, null);
 
             BlogPart blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
             if (blog == null)

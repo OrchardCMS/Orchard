@@ -32,7 +32,7 @@ namespace Orchard.Blogs.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Not allowed to create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
@@ -56,14 +56,14 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST() {
-            if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, T("Couldn't create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
             return CreatePOST(contentItem => Services.ContentManager.Publish(contentItem));
         }
 
         public ActionResult CreatePOST(Action<ContentItem> conditionallyPublish) {
-            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Couldn't create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
