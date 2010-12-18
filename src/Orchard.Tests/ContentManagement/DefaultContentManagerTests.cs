@@ -13,6 +13,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Environment.Extensions;
+using Orchard.Tests.ContentManagement.Handlers;
 using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
 using Orchard.DisplayManagement.Descriptors;
@@ -49,11 +50,6 @@ namespace Orchard.Tests.ContentManagement {
                 typeof(MegaRecord));
         }
 
-        [TestFixtureTearDown]
-        public void TermFixture() {
-
-        }
-
         [SetUp]
         public void Init() {
             _contentDefinitionManager = new Mock<IContentDefinitionManager>();
@@ -64,12 +60,12 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterInstance(_contentDefinitionManager.Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 
-            builder.RegisterType<AlphaHandler>().As<IContentHandler>();
-            builder.RegisterType<BetaHandler>().As<IContentHandler>();
-            builder.RegisterType<GammaHandler>().As<IContentHandler>();
-            builder.RegisterType<DeltaHandler>().As<IContentHandler>();
-            builder.RegisterType<EpsilonHandler>().As<IContentHandler>();
-            builder.RegisterType<FlavoredHandler>().As<IContentHandler>();
+            builder.RegisterType<AlphaPartHandler>().As<IContentHandler>();
+            builder.RegisterType<BetaPartHandler>().As<IContentHandler>();
+            builder.RegisterType<GammaPartHandler>().As<IContentHandler>();
+            builder.RegisterType<DeltaPartHandler>().As<IContentHandler>();
+            builder.RegisterType<EpsilonPartHandler>().As<IContentHandler>();
+            builder.RegisterType<FlavoredPartHandler>().As<IContentHandler>();
             builder.RegisterType<StyledHandler>().As<IContentHandler>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
@@ -102,33 +98,33 @@ namespace Orchard.Tests.ContentManagement {
         public void AlphaDriverShouldWeldItsPart() {
             var foo = _manager.New(DefaultAlphaName);
 
-            Assert.That(foo.Is<Alpha>(), Is.True);
-            Assert.That(foo.As<Alpha>(), Is.Not.Null);
-            Assert.That(foo.Is<Beta>(), Is.False);
-            Assert.That(foo.As<Beta>(), Is.Null);
+            Assert.That(foo.Is<AlphaPart>(), Is.True);
+            Assert.That(foo.As<AlphaPart>(), Is.Not.Null);
+            Assert.That(foo.Is<BetaPart>(), Is.False);
+            Assert.That(foo.As<BetaPart>(), Is.Null);
         }
 
         [Test]
         public void StronglyTypedNewShouldTypeCast() {
-            var foo = _manager.New<Alpha>(DefaultAlphaName);
+            var foo = _manager.New<AlphaPart>(DefaultAlphaName);
             Assert.That(foo, Is.Not.Null);
-            Assert.That(foo.GetType(), Is.EqualTo(typeof(Alpha)));
+            Assert.That(foo.GetType(), Is.EqualTo(typeof(AlphaPart)));
         }
 
         [Test, ExpectedException(typeof(InvalidCastException))]
         public void StronglyTypedNewShouldThrowCastExceptionIfNull() {
-            _manager.New<Beta>(DefaultAlphaName);
+            _manager.New<BetaPart>(DefaultAlphaName);
         }
 
         [Test]
         public void AlphaIsFlavoredAndStyledAndBetaIsFlavoredOnly() {
-            var alpha = _manager.New<Alpha>(DefaultAlphaName);
-            var beta = _manager.New<Beta>(DefaultBetaName);
+            var alpha = _manager.New<AlphaPart>(DefaultAlphaName);
+            var beta = _manager.New<BetaPart>(DefaultBetaName);
 
-            Assert.That(alpha.Is<Flavored>(), Is.True);
-            Assert.That(alpha.Is<Styled>(), Is.True);
-            Assert.That(beta.Is<Flavored>(), Is.True);
-            Assert.That(beta.Is<Styled>(), Is.False);
+            Assert.That(alpha.Is<FlavoredPart>(), Is.True);
+            Assert.That(alpha.Is<StyledPart>(), Is.True);
+            Assert.That(beta.Is<FlavoredPart>(), Is.True);
+            Assert.That(beta.Is<StyledPart>(), Is.False);
         }
 
         [Test]
@@ -165,9 +161,9 @@ namespace Orchard.Tests.ContentManagement {
 
             Assert.That(model.ContentType, Is.EqualTo(DefaultGammaName));
             Assert.That(model.Id, Is.EqualTo(modelRecord.Id));
-            Assert.That(model.Is<Gamma>(), Is.True);
-            Assert.That(model.As<Gamma>().Record, Is.Not.Null);
-            Assert.That(model.As<Gamma>().Record.ContentItemRecord.Id, Is.EqualTo(model.Id));
+            Assert.That(model.Is<GammaPart>(), Is.True);
+            Assert.That(model.As<GammaPart>().Record, Is.Not.Null);
+            Assert.That(model.As<GammaPart>().Record.ContentItemRecord.Id, Is.EqualTo(model.Id));
 
         }
 
@@ -253,7 +249,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void InitialVersionShouldBeOne() {
-            var gamma1 = _manager.Create<Gamma>(DefaultGammaName);
+            var gamma1 = _manager.Create<GammaPart>(DefaultGammaName);
             Assert.That(gamma1.ContentItem.Record, Is.Not.Null);
             Assert.That(gamma1.ContentItem.VersionRecord, Is.Not.Null);
             Assert.That(gamma1.ContentItem.Version, Is.EqualTo(1));
@@ -263,7 +259,7 @@ namespace Orchard.Tests.ContentManagement {
             _session.Clear();
             Trace.WriteLine("session flushed");
 
-            var gamma2 = _manager.Get<Gamma>(gamma1.ContentItem.Id);
+            var gamma2 = _manager.Get<GammaPart>(gamma1.ContentItem.Id);
             Assert.That(gamma2.ContentItem.Record, Is.Not.Null);
             Assert.That(gamma2.ContentItem.VersionRecord, Is.Not.Null);
             Assert.That(gamma2.ContentItem.Version, Is.EqualTo(1));
@@ -279,7 +275,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void InitialVersionCanBeSpecifiedAndIsPublished() {
-            var gamma1 = _manager.Create<Gamma>(DefaultGammaName, VersionOptions.Number(4));
+            var gamma1 = _manager.Create<GammaPart>(DefaultGammaName, VersionOptions.Number(4));
 
             Assert.That(gamma1.ContentItem.Version, Is.EqualTo(4));
             Assert.That(gamma1.ContentItem.VersionRecord.Published, Is.True);
@@ -406,9 +402,9 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void NonVersionedPartsAreBoundToSameRecord() {
             Trace.WriteLine("gamma1");
-            var gamma1 = _manager.Create<Gamma>(DefaultGammaName, VersionOptions.Published, init => init.Record.Frap = "version one");
+            var gamma1 = _manager.Create<GammaPart>(DefaultGammaName, VersionOptions.Published, init => init.Record.Frap = "version one");
             Trace.WriteLine("gamma2");
-            var gamma2 = _manager.Get<Gamma>(gamma1.ContentItem.Id, VersionOptions.DraftRequired);
+            var gamma2 = _manager.Get<GammaPart>(gamma1.ContentItem.Id, VersionOptions.DraftRequired);
             Assert.That(gamma1.Record.Frap, Is.EqualTo("version one"));
             Assert.That(gamma2.Record.Frap, Is.EqualTo("version one"));
             gamma2.Record.Frap = "version two";
@@ -420,9 +416,9 @@ namespace Orchard.Tests.ContentManagement {
             _session.Clear();
 
             Trace.WriteLine("gamma1B");
-            var gamma1B = _manager.Get<Gamma>(gamma1.ContentItem.Id, VersionOptions.Published);
+            var gamma1B = _manager.Get<GammaPart>(gamma1.ContentItem.Id, VersionOptions.Published);
             Trace.WriteLine("gamma2B");
-            var gamma2B = _manager.Get<Gamma>(gamma1.ContentItem.Id, VersionOptions.Draft);
+            var gamma2B = _manager.Get<GammaPart>(gamma1.ContentItem.Id, VersionOptions.Draft);
             Assert.That(gamma1B.Record, Is.SameAs(gamma2B.Record));
             Assert.That(gamma1B.Record.Frap, Is.EqualTo("version two"));
             Assert.That(gamma2B.Record.Frap, Is.EqualTo("version two"));
@@ -441,12 +437,12 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void VersionedPartsShouldBeDifferentRecordsWithClonedData() {
-            var gamma1 = _manager.Create<Gamma>(DefaultGammaName, VersionOptions.Published, init => init.Record.Frap = "version one");
-            var epsilon1 = gamma1.As<Epsilon>();
+            var gamma1 = _manager.Create<GammaPart>(DefaultGammaName, VersionOptions.Published, init => init.Record.Frap = "version one");
+            var epsilon1 = gamma1.As<EpsilonPart>();
             epsilon1.Record.Quad = "epsilon one";
 
-            var gamma2 = _manager.Get<Gamma>(gamma1.ContentItem.Id, VersionOptions.DraftRequired);
-            var epsilon2 = gamma2.As<Epsilon>();
+            var gamma2 = _manager.Get<GammaPart>(gamma1.ContentItem.Id, VersionOptions.DraftRequired);
+            var epsilon2 = gamma2.As<EpsilonPart>();
 
             Assert.That(epsilon1.Record.Quad, Is.EqualTo("epsilon one"));
             Assert.That(epsilon2.Record.Quad, Is.EqualTo("epsilon one"));
@@ -458,10 +454,10 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
             _session.Clear();
 
-            var gamma1B = _manager.Get<Gamma>(gamma1.ContentItem.Id, VersionOptions.Published);
-            var epsilon1B = gamma1B.As<Epsilon>();
-            var gamma2B = _manager.Get<Gamma>(gamma1.ContentItem.Id, VersionOptions.Draft);
-            var epsilon2B = gamma2B.As<Epsilon>();
+            var gamma1B = _manager.Get<GammaPart>(gamma1.ContentItem.Id, VersionOptions.Published);
+            var epsilon1B = gamma1B.As<EpsilonPart>();
+            var gamma2B = _manager.Get<GammaPart>(gamma1.ContentItem.Id, VersionOptions.Draft);
+            var epsilon2B = gamma2B.As<EpsilonPart>();
             Assert.That(gamma1B.Record, Is.SameAs(gamma2B.Record));
             Assert.That(epsilon1B.Record, Is.Not.SameAs(epsilon2B.Record));
             Assert.That(epsilon1B.Record.Quad, Is.EqualTo("epsilon one"));
@@ -554,7 +550,7 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(contentItem.TypeDefinition, Is.Not.Null);
             Assert.That(contentItem.TypeDefinition, Is.SameAs(alphaType));
 
-            var flavored = contentItem.As<Flavored>();
+            var flavored = contentItem.As<FlavoredPart>();
             Assert.That(flavored, Is.Not.Null);
             Assert.That(flavored.TypePartDefinition, Is.Not.Null);
             Assert.That(flavored.TypePartDefinition.Settings["spin"], Is.EqualTo("clockwise"));
@@ -563,7 +559,7 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void FieldsCanBeWeldIntoParts() {
             var contentItem = _manager.New(DefaultAlphaName);
-            var part = contentItem.As<Flavored>();
+            var part = contentItem.As<FlavoredPart>();
             var field = new Phi();
             part.Weld(field);
             Assert.That(part.Has(typeof(Phi), "Phi"));
@@ -572,7 +568,7 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void PartGetReturnsFieldWithName() {
             var contentItem = _manager.New(DefaultAlphaName);
-            var part = contentItem.As<Flavored>();
+            var part = contentItem.As<FlavoredPart>();
             var field = new Phi();
             part.Weld(field);
             var phi = part.Get(typeof(Phi), "Phi");

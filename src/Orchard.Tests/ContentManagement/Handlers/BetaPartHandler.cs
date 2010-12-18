@@ -1,10 +1,11 @@
 ﻿using Orchard.ContentManagement.Handlers;
+using Orchard.Tests.ContentManagement.Models;
 
-namespace Orchard.Tests.ContentManagement.Models {
-    public class BetaHandler : ContentHandler {
+namespace Orchard.Tests.ContentManagement.Handlers {
+    public class BetaPartHandler : ContentHandler {
         protected override void Activating(ActivatingContentContext context) {
             if (context.ContentType == "beta") {
-                context.Builder.Weld<Beta>();
+                context.Builder.Weld<BetaPart>();
             }
         }
     }
