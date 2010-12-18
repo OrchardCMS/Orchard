@@ -19,6 +19,5 @@ namespace Orchard.Roles.Handlers {
                                         .Select(x => x.Role.Name).ToList();
                                 });
         }
-
     }
 }

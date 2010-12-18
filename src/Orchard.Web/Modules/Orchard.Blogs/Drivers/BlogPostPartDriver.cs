@@ -6,7 +6,7 @@ using Orchard.Core.Feeds;
 using Orchard.Localization;
 
 namespace Orchard.Blogs.Drivers {
-    [UsedImplicitly]                                                                                                                                                                                        
+    [UsedImplicitly]
     public class BlogPostPartDriver : ContentPartDriver<BlogPostPart> {
         private readonly IFeedManager _feedManager;
         public IOrchardServices Services { get; set; }
