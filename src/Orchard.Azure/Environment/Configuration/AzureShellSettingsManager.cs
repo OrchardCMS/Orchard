@@ -5,18 +5,17 @@ using System.Linq;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Orchard.Environment.Configuration;
-using Orchard.Localization;
 
 namespace Orchard.Azure.Environment.Configuration {
 
     public class AzureShellSettingsManager : IShellSettingsManager {
         public const string ContainerName = "sites"; // container names must be lower cased
         public const string SettingsFilename = "Settings.txt";
+        public const char Separator = ':';
+        public const string EmptyValue = "null";
 
         private readonly IShellSettingsManagerEventHandler _events;
         private readonly AzureFileSystem _fileSystem;
-
-        Localizer T { get; set; }
 
         public AzureShellSettingsManager(IShellSettingsManagerEventHandler events)
             : this(CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString")), events) {}
@@ -33,7 +32,7 @@ namespace Orchard.Azure.Environment.Configuration {
 
         void IShellSettingsManager.SaveSettings(ShellSettings settings) {
             var content = ComposeSettings(settings);
-            var filePath = String.Concat(settings.Name, "/", SettingsFilename);
+            var filePath = _fileSystem.Combine(settings.Name, SettingsFilename);
             var file = _fileSystem.CreateFile(filePath);
 
             using (var stream = file.OpenWrite()) {
@@ -62,50 +61,51 @@ namespace Orchard.Azure.Environment.Configuration {
             if (String.IsNullOrEmpty(text))
                 return shellSettings;
 
-            string[] settings = text.Split(new[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            var settings = text.Split(new[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var setting in settings) {
-                string[] settingFields = setting.Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries);
-                int fieldsLength = settingFields.Length;
-                if (fieldsLength != 2)
+                var separatorIndex = setting.IndexOf(Separator);
+                if(separatorIndex == -1) {
                     continue;
-                for (int i = 0; i < fieldsLength; i++) {
-                    settingFields[i] = settingFields[i].Trim();
                 }
-                if (settingFields[1] != "null") {
-                    switch (settingFields[0]) {
+                string key = setting.Substring(0, separatorIndex).Trim();
+                string value = setting.Substring(separatorIndex + 1).Trim();
+
+                if (value != EmptyValue) {
+                    switch (key) {
                         case "Name":
-                            shellSettings.Name = settingFields[1];
+                            shellSettings.Name = value;
                             break;
                         case "DataProvider":
-                            shellSettings.DataProvider = settingFields[1];
+                            shellSettings.DataProvider = value;
                             break;
                         case "State":
-                            shellSettings.State = new TenantState(settingFields[1]);
+                            shellSettings.State = new TenantState(value);
                             break;
                         case "DataConnectionString":
-                            shellSettings.DataConnectionString = settingFields[1];
+                            shellSettings.DataConnectionString = value;
                             break;
                         case "DataPrefix":
-                            shellSettings.DataTablePrefix = settingFields[1];
+                            shellSettings.DataTablePrefix = value;
                             break;
                         case "RequestUrlHost":
-                            shellSettings.RequestUrlHost = settingFields[1];
+                            shellSettings.RequestUrlHost = value;
                             break;
                         case "RequestUrlPrefix":
-                            shellSettings.RequestUrlPrefix = settingFields[1];
+                            shellSettings.RequestUrlPrefix = value;
                             break;
                         case "EncryptionAlgorithm":
-                            shellSettings.EncryptionAlgorithm = settingFields[1];
+                            shellSettings.EncryptionAlgorithm = value;
                             break;
                         case "EncryptionKey":
-                            shellSettings.EncryptionKey = settingFields[1];
+                            shellSettings.EncryptionKey = value;
                             break;
                         case "EncryptionIV":
-                            shellSettings.EncryptionIV = settingFields[1];
+                            shellSettings.EncryptionIV = value;
                             break;
                     }
                 }
             }
+
             return shellSettings;
         }
 
@@ -116,14 +116,14 @@ namespace Orchard.Azure.Environment.Configuration {
             return string.Format("Name: {0}\r\nDataProvider: {1}\r\nDataConnectionString: {2}\r\nDataPrefix: {3}\r\nRequestUrlHost: {4}\r\nRequestUrlPrefix: {5}\r\nState: {6}\r\nEncryptionAlgorithm: {7}\r\nEncryptionKey: {8}\r\nEncryptionIV: {9}\r\n",
                                  settings.Name,
                                  settings.DataProvider,
-                                 settings.DataConnectionString ?? "null",
-                                 settings.DataTablePrefix ?? "null",
-                                 settings.RequestUrlHost ?? "null",
-                                 settings.RequestUrlPrefix ?? "null",
+                                 settings.DataConnectionString ?? EmptyValue,
+                                 settings.DataTablePrefix ?? EmptyValue,
+                                 settings.RequestUrlHost ?? EmptyValue,
+                                 settings.RequestUrlPrefix ?? EmptyValue,
                                  settings.State != null ? settings.State.ToString() : String.Empty,
-                                 settings.EncryptionAlgorithm ?? "null",
-                                 settings.EncryptionKey ?? "null",
-                                 settings.EncryptionIV ?? "null"
+                                 settings.EncryptionAlgorithm ?? EmptyValue,
+                                 settings.EncryptionKey ?? EmptyValue,
+                                 settings.EncryptionIV ?? EmptyValue
                 );
         }
     }

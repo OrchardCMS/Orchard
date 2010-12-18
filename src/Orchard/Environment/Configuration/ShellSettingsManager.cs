@@ -9,6 +9,8 @@ namespace Orchard.Environment.Configuration {
     public class ShellSettingsManager : IShellSettingsManager {
         private readonly IAppDataFolder _appDataFolder;
         private readonly IShellSettingsManagerEventHandler _events;
+        public const char Separator = ':';
+        public const string EmptyValue = "null";
 
         Localizer T { get; set; }
         
@@ -47,74 +49,81 @@ namespace Orchard.Environment.Configuration {
             }
         }
 
-        static ShellSettings ParseSettings(string text) {
+        static ShellSettings ParseSettings(string text)
+        {
             var shellSettings = new ShellSettings();
             if (String.IsNullOrEmpty(text))
                 return shellSettings;
 
-            string[] settings = text.Split(new[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var setting in settings) {
-                string[] settingFields = setting.Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries);
-                int fieldsLength = settingFields.Length;
-                if (fieldsLength != 2)
+            var settings = text.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var setting in settings)
+            {
+                var separatorIndex = setting.IndexOf(Separator);
+                if (separatorIndex == -1)
+                {
                     continue;
-                for (int i = 0; i < fieldsLength; i++) {
-                    settingFields[i] = settingFields[i].Trim();
                 }
-                if (settingFields[1] != "null") {
-                    switch (settingFields[0]) {
+                string key = setting.Substring(0, separatorIndex).Trim();
+                string value = setting.Substring(separatorIndex + 1).Trim();
+
+                if (value != EmptyValue)
+                {
+                    switch (key)
+                    {
                         case "Name":
-                            shellSettings.Name = settingFields[1];
+                            shellSettings.Name = value;
                             break;
                         case "DataProvider":
-                            shellSettings.DataProvider = settingFields[1];
+                            shellSettings.DataProvider = value;
                             break;
                         case "State":
-                            shellSettings.State = new TenantState(settingFields[1]);
+                            shellSettings.State = new TenantState(value);
                             break;
                         case "DataConnectionString":
-                            shellSettings.DataConnectionString = settingFields[1];
+                            shellSettings.DataConnectionString = value;
                             break;
                         case "DataPrefix":
-                            shellSettings.DataTablePrefix = settingFields[1];
+                            shellSettings.DataTablePrefix = value;
                             break;
                         case "RequestUrlHost":
-                            shellSettings.RequestUrlHost = settingFields[1];
+                            shellSettings.RequestUrlHost = value;
                             break;
                         case "RequestUrlPrefix":
-                            shellSettings.RequestUrlPrefix = settingFields[1];
+                            shellSettings.RequestUrlPrefix = value;
                             break;
                         case "EncryptionAlgorithm":
-                            shellSettings.EncryptionAlgorithm = settingFields[1];
+                            shellSettings.EncryptionAlgorithm = value;
                             break;
                         case "EncryptionKey":
-                            shellSettings.EncryptionKey = settingFields[1];
+                            shellSettings.EncryptionKey = value;
                             break;
                         case "EncryptionIV":
-                            shellSettings.EncryptionIV = settingFields[1];
+                            shellSettings.EncryptionIV = value;
                             break;
                     }
                 }
             }
+
             return shellSettings;
         }
 
-        static string ComposeSettings(ShellSettings settings) {
+        static string ComposeSettings(ShellSettings settings)
+        {
             if (settings == null)
                 return "";
 
             return string.Format("Name: {0}\r\nDataProvider: {1}\r\nDataConnectionString: {2}\r\nDataPrefix: {3}\r\nRequestUrlHost: {4}\r\nRequestUrlPrefix: {5}\r\nState: {6}\r\nEncryptionAlgorithm: {7}\r\nEncryptionKey: {8}\r\nEncryptionIV: {9}\r\n",
-                     settings.Name,
-                     settings.DataProvider,
-                     settings.DataConnectionString ?? "null",
-                     settings.DataTablePrefix ?? "null",
-                     settings.RequestUrlHost ?? "null",
-                     settings.RequestUrlPrefix ?? "null",
-                     settings.State != null ? settings.State.ToString() : String.Empty,
-                     settings.EncryptionAlgorithm ?? "null",
-                     settings.EncryptionKey ?? "null",
-                     settings.EncryptionIV ?? "null"
-                     );
+                                 settings.Name,
+                                 settings.DataProvider,
+                                 settings.DataConnectionString ?? EmptyValue,
+                                 settings.DataTablePrefix ?? EmptyValue,
+                                 settings.RequestUrlHost ?? EmptyValue,
+                                 settings.RequestUrlPrefix ?? EmptyValue,
+                                 settings.State != null ? settings.State.ToString() : String.Empty,
+                                 settings.EncryptionAlgorithm ?? EmptyValue,
+                                 settings.EncryptionKey ?? EmptyValue,
+                                 settings.EncryptionIV ?? EmptyValue
+                );
         }
     }
 }

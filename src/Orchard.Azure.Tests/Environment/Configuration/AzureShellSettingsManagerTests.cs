@@ -76,5 +76,13 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
             Assert.That(foo.DataProvider, Is.StringContaining("Bar"));
             Assert.That(foo.DataConnectionString, Is.StringContaining("Quux"));
         }
+
+        [Test]
+        public void SettingsCanContainSeparatorChar() {
+            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLite", DataConnectionString = "Server=tcp:tjyptm5sfc.database.windows.net;Database=orchard;User ID=foo@bar;Password=foo;Trusted_Connection=False;Encrypt=True;" });
+
+            var settings = ShellSettingsManager.LoadSettings().Where(s => s.Name == "Default").Single();
+            Assert.That(settings.DataConnectionString, Is.EqualTo("Server=tcp:tjyptm5sfc.database.windows.net;Database=orchard;User ID=foo@bar;Password=foo;Trusted_Connection=False;Encrypt=True;"));
+        }
     }
 }
