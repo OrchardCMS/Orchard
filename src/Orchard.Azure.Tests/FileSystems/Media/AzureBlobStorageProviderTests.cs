@@ -166,6 +166,21 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CannotCreateAlreadyExistingFolders()
+        {
+            _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
+            _azureBlobStorageProvider.CreateFolder("folder1");
+        }
+
+        [Test]
+        public void CanCreateAlreadyExistingFolder()
+        {
+            _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
+            _azureBlobStorageProvider.TryCreateFolder("folder1");
+        }
+
+        [Test]
         public void ShouldReadWriteFiles() {
             const string teststring = "This is a test string.";
 
