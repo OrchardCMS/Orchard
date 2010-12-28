@@ -532,13 +532,13 @@ namespace Orchard.Tests.ContentManagement {
         }
 
 
-        [Test, Ignore("Fix pending")]
+        [Test]
         public void ExistingTypeAndPartDefinitionShouldBeUsed() {
             var alphaType = new ContentTypeDefinitionBuilder()
                 .Named(DefaultAlphaName)
                 .WithSetting("x", "1")
                 .WithPart("foo")
-                .WithPart("Flavored", part => part.WithSetting("spin", "clockwise"))
+                .WithPart("FlavoredPart", part => part.WithSetting("spin", "clockwise"))
                 .Build();
 
             _contentDefinitionManager

@@ -25,7 +25,6 @@ namespace Orchard.Tests.DisplayManagement {
                 CurrentTheme = new ExtensionDescriptor { Id = "Hello" }
             };
 
-
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
             builder.RegisterType<TestShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<TestWorkContextAccessor>().As<IWorkContextAccessor>();

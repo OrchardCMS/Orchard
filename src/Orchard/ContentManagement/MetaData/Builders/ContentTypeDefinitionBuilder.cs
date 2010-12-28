@@ -27,10 +27,6 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             }
         }
 
-        private void Init(ContentTypeDefinition existing) {
-
-        }
-
         public ContentTypeDefinition Build() {
             return new ContentTypeDefinition(_name, _displayName, _parts, _settings);
         }
@@ -92,6 +88,5 @@ namespace Orchard.ContentManagement.MetaData.Builders {
                 return new ContentTypePartDefinition(_partDefinition, _settings);
             }
         }
-
     }
 }

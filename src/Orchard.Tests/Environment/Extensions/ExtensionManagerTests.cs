@@ -309,10 +309,12 @@ Features:
             }
         }
 
-        [Test, Ignore("This assertion appears to be inconsistent with the comment in extension manager - an empty feature is returned")]
-        public void ExtensionManagerShouldThrowIfFeatureDoesNotExist() {
-            var featureDescriptor = new FeatureDescriptor { Id = "NoSuchFeature", Extension = new ExtensionDescriptor { Name = "NoSuchFeature" } };
-            Assert.Throws<ArgumentException>(() => _manager.LoadFeatures(new[] { featureDescriptor }));
+        [Test]
+        public void ExtensionManagerShouldReturnEmptyFeatureIfFeatureDoesNotExist() {
+            var featureDescriptor = new FeatureDescriptor { Id = "NoSuchFeature", Extension = new ExtensionDescriptor { Id = "NoSuchFeature" } };
+            Feature feature = _manager.LoadFeatures(new[] { featureDescriptor }).First();
+            Assert.AreEqual(featureDescriptor, feature.Descriptor);
+            Assert.AreEqual(0, feature.ExportedTypes.Count());
         }
 
         [Test]
