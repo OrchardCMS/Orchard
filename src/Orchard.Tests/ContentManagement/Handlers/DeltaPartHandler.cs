@@ -6,7 +6,7 @@ using Orchard.Tests.ContentManagement.Records;
 namespace Orchard.Tests.ContentManagement.Handlers {
     public class DeltaPartHandler : ContentHandler {
         public DeltaPartHandler(IRepository<DeltaRecord> repository) {
-            Filters.Add(new ActivatingFilter<DeltaPart>(x => x == "delta"));
+            Filters.Add(new ActivatingFilter<DeltaPart>("delta"));
             Filters.Add(StorageFilter.For(repository));
         }
     }

@@ -6,7 +6,7 @@ using Orchard.Tests.ContentManagement.Records;
 namespace Orchard.Tests.ContentManagement.Handlers {
     class GammaPartHandler : ContentHandler {
         public GammaPartHandler(IRepository<GammaRecord> repository) {
-            Filters.Add(new ActivatingFilter<GammaPart>(x => x == "gamma"));
+            Filters.Add(new ActivatingFilter<GammaPart>("gamma"));
             Filters.Add(StorageFilter.For(repository));
         }
     }
