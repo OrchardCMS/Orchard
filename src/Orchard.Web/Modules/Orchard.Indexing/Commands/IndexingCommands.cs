@@ -31,7 +31,7 @@ namespace Orchard.Indexing.Commands {
         public string Query { get; set; }
 
         [OrchardSwitch]
-        public string ContentItemId { get; set; }
+        public string ContentItem { get; set; }
 
         [CommandName("index update")]
         [CommandHelp("index update [/IndexName:<index name>]\r\n\t" + "Updates the index with the specified <index name>, or the search index if not specified")]
@@ -107,11 +107,11 @@ namespace Orchard.Indexing.Commands {
         }
 
         [CommandName("index refresh")]
-        [CommandHelp("index refresh /ContentItemId:<content item id> \r\n\t" + "Refreshes the index for the specifed <content item id>")]
+        [CommandHelp("index refresh /ContentItem:<content item id> \r\n\t" + "Refreshes the index for the specifed <content item id>")]
         [OrchardSwitches("ContentItem")]
         public string Refresh() {
             int contentItemId;
-            if ( !int.TryParse(ContentItemId, out contentItemId) ) {
+            if ( !int.TryParse(ContentItem, out contentItemId) ) {
                 throw new OrchardException(T("Invalid content item id. Not an integer."));
             }
 
@@ -122,15 +122,15 @@ namespace Orchard.Indexing.Commands {
         }
 
         [CommandName("index delete")]
-        [CommandHelp("index delete /ContenItem:<content item id>\r\n\t" + "Deletes the specifed <content item id> from the index")]
+        [CommandHelp("index delete /ContentItem:<content item id>\r\n\t" + "Deletes the specifed <content item id> from the index")]
         [OrchardSwitches("ContentItem")]
         public string Delete() {
-            int contenItemId;
-            if(!int.TryParse(ContentItemId, out contenItemId)) {
+            int contentItemId;
+            if(!int.TryParse(ContentItem, out contentItemId)) {
                 throw new OrchardException(T("Invalid content item id. Not an integer."));
             }
             
-            var contentItem = _contentManager.Get(contenItemId);
+            var contentItem = _contentManager.Get(contentItemId);
             _indexingTaskManager.CreateDeleteIndexTask(contentItem);
 
             return "Content Item marked for deletion";
