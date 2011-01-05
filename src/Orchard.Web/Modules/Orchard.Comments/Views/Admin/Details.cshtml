@@ -71,9 +71,9 @@
                     <input type="hidden" value="@Model.CommentedItemId" name="CommentedItemId" />
                 </td>
                 <td>
-                @if (commentEntry.Comment.Status == CommentStatus.Spam) { T("Spam"); } 
-                       else if (commentEntry.Comment.Status == CommentStatus.Pending) { T("Pending"); } 
-                       else { T("Approved"); } 
+                    @if (commentEntry.Comment.Status == CommentStatus.Spam) { @T("Spam"); } 
+                    else if (commentEntry.Comment.Status == CommentStatus.Pending) { @T("Pending"); } 
+                    else { @T("Approved"); } 
                 </td>
                 <td>@commentEntry.Comment.UserName</td>
                 <td>
