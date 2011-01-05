@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement.Aspects;
@@ -10,16 +11,13 @@ using Orchard.Services;
 namespace Orchard.Comments.Services {
     [UsedImplicitly]
     public class CommentService : ICommentService {
-        private readonly IRepository<ClosedCommentsRecord> _closedCommentsRepository;
         private readonly IClock _clock;
         private readonly ICommentValidator _commentValidator;
         private readonly IOrchardServices _orchardServices;
 
-        public CommentService(IRepository<ClosedCommentsRecord> closedCommentsRepository,
-                              IClock clock,
+        public CommentService(IClock clock,
                               ICommentValidator commentValidator,
                               IOrchardServices orchardServices) {
-            _closedCommentsRepository = closedCommentsRepository;
             _clock = clock;
             _commentValidator = commentValidator;
             _orchardServices = orchardServices;
@@ -120,21 +118,16 @@ namespace Orchard.Comments.Services {
             _orchardServices.ContentManager.Remove(_orchardServices.ContentManager.Get(commentId));
         }
 
-        public bool CommentsClosedForCommentedContent(int id) {
-            return _closedCommentsRepository.Fetch(x => x.ContentItemId == id).Count() >= 1;
+        public bool CommentsDisabledForCommentedContent(int id) {
+            return !_orchardServices.ContentManager.Get<CommentsPart>(id).CommentsActive;
         }
 
-        public void CloseCommentsForCommentedContent(int id) {
-            if (CommentsClosedForCommentedContent(id))
-                return;
-            _closedCommentsRepository.Create(new ClosedCommentsRecord { ContentItemId = id });
+        public void DisableCommentsForCommentedContent(int id) {
+            _orchardServices.ContentManager.Get<CommentsPart>(id).CommentsActive = false;
         }
 
         public void EnableCommentsForCommentedContent(int id) {
-            var closedComments = _closedCommentsRepository.Fetch(x => x.ContentItemId == id);
-            foreach (var c in closedComments) {
-                _closedCommentsRepository.Delete(c);
-            }
+            _orchardServices.ContentManager.Get<CommentsPart>(id).CommentsActive = true;
         }
     }
 }

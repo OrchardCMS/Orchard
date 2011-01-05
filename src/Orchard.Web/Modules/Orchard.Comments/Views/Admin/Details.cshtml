@@ -11,9 +11,9 @@
     </fieldset>
         }
     } else {
-        using (Html.BeginFormAntiForgeryPost(Url.Action("Close", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { 
+        using (Html.BeginFormAntiForgeryPost(Url.Action("Disable", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { 
     <fieldset>
-        <button type="submit" class="primaryAction" title="@T("Close Comments")">@T("Close Comments")</button>
+        <button type="submit" class="primaryAction" title="@T("Disable Comments")">@T("Disable Comments")</button>
     </fieldset>
         }
     } 
@@ -106,9 +106,9 @@
     </fieldset>
         }
     } else {
-        using (Html.BeginFormAntiForgeryPost(Url.Action("Close", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { 
+        using (Html.BeginFormAntiForgeryPost(Url.Action("Disable", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { 
     <fieldset>
-        <button type="submit" class="primaryAction" title="@T("Close Comments")">@T("Close Comments")</button>
+        <button type="submit" class="primaryAction" title="@T("Disable Comments")">@T("Disable Comments")</button>
     </fieldset>
         }
     } 
