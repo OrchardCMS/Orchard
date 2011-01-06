@@ -5,11 +5,11 @@ using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Security;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Themes;
 using Orchard.Users.Services;
-using Orchard.Users.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
 using Orchard.UI.Notify;
@@ -44,7 +44,8 @@ namespace Orchard.Users.Controllers {
 
             if (currentUser == null) {
                 Logger.Information("Access denied to anonymous request on {0}", returnUrl);
-                return View("LogOn", new LogOnViewModel {Title = "Access Denied"});
+                var shape = _orchardServices.New.LogOn().Title(T("Access Denied").Text);
+                return new ShapeResult(shape); 
             }
 
             //TODO: (erikpo) Add a setting for whether or not to log access denieds since these can fill up a database pretty fast from bots on a high traffic site
@@ -57,7 +58,8 @@ namespace Orchard.Users.Controllers {
             if (_authenticationService.GetAuthenticatedUser() != null)
                 return Redirect("~/");
 
-            return View(new LogOnViewModel { Title = T("Log On").Text });
+            var shape = _orchardServices.New.LogOn().Title(T("Log On").Text);
+            return new ShapeResult(shape);
         }
 
         [HttpPost]
@@ -66,7 +68,8 @@ namespace Orchard.Users.Controllers {
         public ActionResult LogOn(string userNameOrEmail, string password, string returnUrl) {
             var user = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
-                return View(new LogOnViewModel { Title = T("Log On").Text });
+                var shape = _orchardServices.New.LogOn().Title(T("Log On").Text);
+                return new ShapeResult(shape);
             }
 
             _authenticationService.SignIn(user, false);
