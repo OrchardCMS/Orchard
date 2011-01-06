@@ -101,7 +101,7 @@ namespace Orchard.Indexing.Services {
                 // retrieve not yet processed tasks
                 var taskRecords = lastIndexUtc == null
                     ? _repository.Fetch(x => true).ToArray()
-                    : _repository.Fetch(x => x.CreatedUtc > lastIndexUtc).ToArray();
+                    : _repository.Fetch(x => x.CreatedUtc >= lastIndexUtc).ToArray(); // CreatedUtc and lastIndexUtc might be equal if a content item is created in a background task
 
 
                 // nothing to do ?
