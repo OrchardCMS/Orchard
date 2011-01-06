@@ -104,12 +104,20 @@ namespace Orchard.Data {
         private Hash ComputeHash() {
             var hash = new Hash();
 
+            // Shell settings physical location
+            //   The nhibernate configuration stores the physical path to the SqlCe database
+            //   so we need to include the physical location as part of the hash key, so that
+            //   xcopy migrations work as expected.
+            var pathName = GetPathName(_shellSettings.Name);
+            hash.AddString(_appDataFolder.MapPath(pathName).ToLowerInvariant());
+
+            // Shell settings data
             hash.AddString(_shellSettings.DataProvider);
             hash.AddString(_shellSettings.DataTablePrefix);
             hash.AddString(_shellSettings.DataConnectionString);
             hash.AddString(_shellSettings.Name);
 
-            // We need to hash the assemnly names, record names and property names
+            // Assembly names, record names and property names
             foreach (var tableName in _shellBlueprint.Records.Select(x => x.TableName)) {
                 hash.AddString(tableName);
             }
