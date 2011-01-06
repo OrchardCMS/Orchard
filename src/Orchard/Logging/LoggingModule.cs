@@ -11,7 +11,7 @@ using Module = Autofac.Module;
 namespace Orchard.Logging {
 
     public class LoggingModule : Module {
-        private readonly IDictionary<string, ILogger> _loggerCache;
+        private readonly ConcurrentDictionary<string, ILogger> _loggerCache;
 
         public LoggingModule() {
             _loggerCache = new ConcurrentDictionary<string, ILogger>();
@@ -63,14 +63,8 @@ namespace Orchard.Logging {
 
                 yield return (ctx, instance) => {
                     string component = componentType.ToString();
-                    if (_loggerCache.ContainsKey(component)) {
-                        propertyInfo.SetValue(instance, _loggerCache[component], null);
-                    }
-                    else {
-                        var propertyValue = ctx.Resolve<ILogger>(new TypedParameter(typeof(Type), componentType));
-                        _loggerCache.Add(component, propertyValue);
-                        propertyInfo.SetValue(instance, propertyValue, null);
-                    }
+                    var logger = _loggerCache.GetOrAdd(component, key => ctx.Resolve<ILogger>(new TypedParameter(typeof(Type), componentType)));
+                    propertyInfo.SetValue(instance, logger, null);
                 };
             }
         }
