@@ -63,7 +63,11 @@ namespace Orchard.Packaging.Services {
         }
         
         private static void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
-            context.Builder.Id = "Orchard." + extensionDescriptor.ExtensionType + "." + extensionDescriptor.Id;
+            string idPrefix = DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType) ?
+                PackagingSourceManager.ThemesPrefix :
+                PackagingSourceManager.ModulesPrefix;
+
+            context.Builder.Id = idPrefix + extensionDescriptor.Id;
             context.Builder.Version = new Version(extensionDescriptor.Version);
             context.Builder.Title = extensionDescriptor.Name ?? extensionDescriptor.Id;
             context.Builder.Description = extensionDescriptor.Description;

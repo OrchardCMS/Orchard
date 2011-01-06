@@ -90,8 +90,7 @@ namespace Orchard.Packaging.Services {
             // add the package to the project
             projectManager.AddPackageReference(package.Id, package.Version);
 
-            return new PackageInfo
-            {
+            return new PackageInfo {
                 ExtensionName = package.Title ?? package.Id,
                 ExtensionVersion = package.Version.ToString(),
                 ExtensionType = package.Id.StartsWith(PackagingSourceManager.ThemesPrefix) ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module,
@@ -104,43 +103,54 @@ namespace Orchard.Packaging.Services {
             var logger = new NugetLogger(_notifier);
 
             string solutionPath;
+
             // if we can access the parent directory, and the solution is inside, NuGet-uninstall the package here
             if (TryGetSolutionPath(applicationPath, out solutionPath)) {
                 var installedPackagesPath = Path.Combine(solutionPath, PackagesPath);
                 var sourcePackageRepository = new LocalPackageRepository(installedPackagesPath);
-                var project = new FileBasedProjectSystem(applicationPath) { Logger = logger };
-                var projectManager = new ProjectManager(
-                    sourcePackageRepository,
-                    new DefaultPackagePathResolver(installedPackagesPath),
-                    project,
-                    new ExtensionReferenceRepository(project, sourcePackageRepository, _extensionManager)
-                    ) { Logger = logger };
 
-                // add the package to the project
-                projectManager.RemovePackageReference(packageId);
+                try {
+                    var project = new FileBasedProjectSystem(applicationPath) {Logger = logger};
+                    var projectManager = new ProjectManager(
+                        sourcePackageRepository,
+                        new DefaultPackagePathResolver(installedPackagesPath),
+                        project,
+                        new ExtensionReferenceRepository(project, sourcePackageRepository, _extensionManager)
+                        ) {Logger = logger};
 
-                var packageManager = new NuGetPackageManager(
-                    sourcePackageRepository,
-                    new DefaultPackagePathResolver(applicationPath),
-                    new PhysicalFileSystem(installedPackagesPath) { Logger = logger }
-                    ) { Logger = logger };
-
-                packageManager.UninstallPackage(packageId);
-            } else {
-                // otherwise delete the folder
-
-                string extensionPath = packageId.StartsWith(PackagingSourceManager.ThemesPrefix)
-                                           ? "~/Themes/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length)
-                                           : "~/Modules/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length);
-
-                string extensionFullPath = HostingEnvironment.MapPath(extensionPath);
-
-                if (Directory.Exists(extensionFullPath)) {
-                    Directory.Delete(extensionFullPath, true);
+                    // add the package to the project
+                    projectManager.RemovePackageReference(packageId);
                 }
-                else {
-                    throw new OrchardException(T("Package not found: ", packageId));
+                catch {
+                    // Uninstalling the package at the solution level failed
                 }
+
+                try {
+                    var packageManager = new NuGetPackageManager(
+                        sourcePackageRepository,
+                        new DefaultPackagePathResolver(applicationPath),
+                        new PhysicalFileSystem(installedPackagesPath) {Logger = logger}
+                        ) {Logger = logger};
+
+                    packageManager.UninstallPackage(packageId);
+                }
+                catch {
+                    // Package doesnt exist anymore
+                }
+            }
+
+            // Make sure folder is deleted (themes scenario where there is no project)
+            string extensionPath = packageId.StartsWith(PackagingSourceManager.ThemesPrefix)
+                                        ? "~/Themes/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length)
+                                        : "~/Modules/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length);
+
+            string extensionFullPath = HostingEnvironment.MapPath(extensionPath);
+
+            if (Directory.Exists(extensionFullPath)) {
+                Directory.Delete(extensionFullPath, true);
+            }
+            else {
+                throw new OrchardException(T("Package not found: ", packageId));
             }
         }
 

@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Hosting;
 using Orchard.Commands;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Packaging.Services;
 using Orchard.UI.Notify;
 
@@ -38,7 +39,11 @@ namespace Orchard.Packaging.Commands {
             }
 
             // append "Orchard.[ExtensionType]" to prevent conflicts with other packages (e.g, TinyMce, jQuery, ...)
-            var filename = string.Format("Orchard.{0}.{1}.{2}.nupkg", packageData.ExtensionType, packageData.ExtensionName, packageData.ExtensionVersion);
+            string extensionPrefix = DefaultExtensionTypes.IsTheme(packageData.ExtensionType) ?
+                PackagingSourceManager.ThemesPrefix :
+                PackagingSourceManager.ModulesPrefix;
+
+            var filename = string.Format("{0}{1}.{2}.nupkg", extensionPrefix, packageData.ExtensionName, packageData.ExtensionVersion);
 
             if ( !Directory.Exists(path) ) {
                 Directory.CreateDirectory(path);
