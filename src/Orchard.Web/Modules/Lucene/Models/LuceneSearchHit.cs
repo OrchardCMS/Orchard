@@ -1,4 +1,5 @@
-﻿using Lucene.Net.Documents;
+﻿using System;
+using Lucene.Net.Documents;
 using System.Globalization;
 using Lucene.Net.Util;
 using Orchard.Indexing;
@@ -18,23 +19,28 @@ namespace Lucene.Models {
         public int ContentItemId { get { return int.Parse(GetString("id")); } }
 
         public int GetInt(string name) {
-            return NumericUtils.PrefixCodedToInt(_doc.GetField(name).StringValue());
+            var field = _doc.GetField(name);
+            return field == null ? 0 : NumericUtils.PrefixCodedToInt(field.StringValue());
         }
 
         public float GetFloat(string name) {
-            return float.Parse(_doc.GetField(name).StringValue(), CultureInfo.InvariantCulture);
+            var field = _doc.GetField(name);
+            return field == null ? 0 : float.Parse(field.StringValue(), CultureInfo.InvariantCulture);
         }
 
         public bool GetBoolean(string name) {
-            return bool.Parse(_doc.GetField(name).StringValue());
+            var field = _doc.GetField(name);
+            return field == null ? false : bool.Parse(field.StringValue());
         }
 
         public string GetString(string name) {
-            return _doc.GetField(name).StringValue();
+            var field = _doc.GetField(name);
+            return field == null ? null : field.StringValue();
         }
 
-        public System.DateTime GetDateTime(string name) {
-            return DateTools.StringToDate(_doc.GetField(name).StringValue());
+        public DateTime GetDateTime(string name) {
+            var field = _doc.GetField(name);
+            return field == null ? DateTime.MinValue : DateTools.StringToDate(field.StringValue());
         }
     }
 }
