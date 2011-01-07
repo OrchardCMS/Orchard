@@ -160,7 +160,7 @@ namespace Orchard.Users.Controllers {
                 return View();
             }
 
-            _userService.SendLostPasswordEmail(username, nonce => Url.AbsoluteAction(() => Url.Action("ValidateLostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce })));
+            _userService.SendLostPasswordEmail(username, nonce => Url.AbsoluteAction(() => Url.Action("LostPassword", "Account", new { Area = "Orchard.Users", nonce = nonce })));
 
             _orchardServices.Notifier.Information(T("Check your e-mail for the confirmation link."));
 
