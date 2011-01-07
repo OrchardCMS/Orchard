@@ -46,9 +46,7 @@ namespace Orchard.Core.Common.Handlers {
             OnVersioned<ContentPart<CommonPartVersionRecord>>(AssignVersioningDates);
 
             OnPublishing<CommonPart>(AssignPublishingDates);
-            OnUnpublishing<CommonPart>(AssignPublishingDates);
             OnPublishing<ContentPart<CommonPartVersionRecord>>(AssignPublishingDates);
-            OnUnpublishing<ContentPart<CommonPartVersionRecord>>(AssignPublishingDates);
 
             OnIndexing<CommonPart>((context, commonPart) => context.DocumentIndex
                                                     .Add("type", commonPart.ContentItem.ContentType).Store()
@@ -114,21 +112,13 @@ namespace Orchard.Core.Common.Handlers {
         }
 
         protected void AssignPublishingDates(PublishContentContext context, CommonPart part) {
-            // don't assign dates when unpublishing
-            if (context.PublishingItemVersionRecord == null)
-                return;
-            
-            // set the initial published date
-            part.PublishedUtc = part.PublishedUtc ?? _clock.UtcNow;
+            // The non-versioned publish date is always the last publish date
+            part.PublishedUtc = _clock.UtcNow;
         }
 
         protected void AssignPublishingDates(PublishContentContext context, ContentPart<CommonPartVersionRecord> part) {
-            // don't assign dates when unpublishing
-            if (context.PublishingItemVersionRecord == null)
-                return;
-
             // assign the version's published date
-            part.Record.PublishedUtc = part.Record.PublishedUtc ?? _clock.UtcNow;
+            part.Record.PublishedUtc = _clock.UtcNow;
         }
 
         protected void LazyLoadHandlers(CommonPart part) {
