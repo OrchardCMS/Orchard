@@ -43,7 +43,7 @@ namespace Orchard.Tests.Modules.Packaging {
 
             var package = Package.Open(stream);
             Assert.That(package, Is.Not.Null);
-            Assert.That(package.PackageProperties.Identifier, Is.EqualTo(PackagingSourceManager.ModulesPrefix + PackageIdentifier));
+            Assert.That(package.PackageProperties.Identifier, Is.EqualTo(PackageBuilder.BuildPackageId(PackageIdentifier, DefaultExtensionTypes.Module)));
         }
 
         [Test]

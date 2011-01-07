@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NuGet;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
