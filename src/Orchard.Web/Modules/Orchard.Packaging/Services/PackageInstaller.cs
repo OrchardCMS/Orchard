@@ -99,6 +99,8 @@ namespace Orchard.Packaging.Services {
         }
 
         public void Uninstall(string packageId, string applicationPath) {
+            bool removed = false;
+
             // this logger is used to render NuGet's log on the notifier
             var logger = new NugetLogger(_notifier);
 
@@ -133,24 +135,37 @@ namespace Orchard.Packaging.Services {
                         ) {Logger = logger};
 
                     packageManager.UninstallPackage(packageId);
+                    removed = true;
                 }
                 catch {
                     // Package doesnt exist anymore
                 }
             }
 
-            // Make sure folder is deleted (themes scenario where there is no project)
-            string extensionPath = packageId.StartsWith(PackagingSourceManager.ThemesPrefix)
-                                        ? "~/Themes/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length)
-                                        : "~/Modules/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length);
+            // If the package was not installed through nuget we still need to try to uninstall it by removing its directory
 
-            string extensionFullPath = HostingEnvironment.MapPath(extensionPath);
+            // Remove theme if found
+            string extensionFullPath = packageId.StartsWith(PackagingSourceManager.ThemesPrefix) 
+                ? HostingEnvironment.MapPath("~/Themes/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length))
+                : HostingEnvironment.MapPath("~/Themes/" + packageId);
 
             if (Directory.Exists(extensionFullPath)) {
                 Directory.Delete(extensionFullPath, true);
+                removed = true;
             }
-            else {
-                throw new OrchardException(T("Package not found: ", packageId));
+
+            // Remove module if found
+            extensionFullPath = packageId.StartsWith(PackagingSourceManager.ModulesPrefix)
+                ? HostingEnvironment.MapPath("~/Modules/" + packageId.Substring(PackagingSourceManager.ModulesPrefix.Length))
+                : HostingEnvironment.MapPath("~/Modules/" + packageId);
+
+            if (Directory.Exists(extensionFullPath)) {
+                Directory.Delete(extensionFullPath, true);
+                removed = true;
+            }
+
+            if (!removed) {
+                throw new OrchardException(T("Package not found: {0}", packageId));
             }
         }
 

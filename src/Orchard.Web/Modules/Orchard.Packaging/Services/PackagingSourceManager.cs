@@ -15,6 +15,17 @@ namespace Orchard.Packaging.Services {
         public const string ThemesPrefix = "Orchard.Themes.";
         public const string ModulesPrefix = "Orchard.Modules.";
 
+        public static string GetExtensionPrefix(string extensionType) {
+            switch (extensionType) {
+                case DefaultExtensionTypes.Theme:
+                    return ThemesPrefix;
+                case DefaultExtensionTypes.Module:
+                    return ModulesPrefix;
+                default:
+                    throw new ArgumentException();
+            }
+        }
+
         private readonly IRepository<PackagingSource> _packagingSourceRecordRepository;
 
         public PackagingSourceManager(IRepository<PackagingSource> packagingSourceRecordRepository) {

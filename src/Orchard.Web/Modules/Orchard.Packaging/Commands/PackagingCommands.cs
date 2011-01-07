@@ -39,11 +39,10 @@ namespace Orchard.Packaging.Commands {
             }
 
             // append "Orchard.[ExtensionType]" to prevent conflicts with other packages (e.g, TinyMce, jQuery, ...)
-            string extensionPrefix = DefaultExtensionTypes.IsTheme(packageData.ExtensionType) ?
-                PackagingSourceManager.ThemesPrefix :
-                PackagingSourceManager.ModulesPrefix;
-
-            var filename = string.Format("{0}{1}.{2}.nupkg", extensionPrefix, packageData.ExtensionName, packageData.ExtensionVersion);
+            var filename = string.Format("{0}{1}.{2}.nupkg",
+                PackagingSourceManager.GetExtensionPrefix(packageData.ExtensionType),
+                packageData.ExtensionName,
+                packageData.ExtensionVersion);
 
             if ( !Directory.Exists(path) ) {
                 Directory.CreateDirectory(path);
