@@ -15,7 +15,8 @@ Scenario: Login can be automated
 			| password | qwerty123! |
 		And I hit "Sign In"
 		And I am redirected
-	Then I should see "Welcome, <strong>bob</strong>!"
+	Then I should see "Welcome"
+		And I should see "bob"
 
 @security
 Scenario: Anonymous user can see the home page but not the dashboard
