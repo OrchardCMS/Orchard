@@ -32,8 +32,8 @@ namespace Orchard.Users.Handlers {
                 return;
 
             if ( context.Type == MessageTypes.Moderation ) {
-                context.MailMessage.Subject = T("User needs moderation").Text;
-                context.MailMessage.Body = T("The following user account needs to be moderated: {0}", recipient.UserName).Text;
+                context.MailMessage.Subject = T("New account").Text;
+                context.MailMessage.Body = T("The user <b>{0}</b> with email <b>{1}</b> has requested a new account. This user won't be able to log while his account has not been approved.", context.Properties["UserName"], context.Properties["Email"]).Text;
             }
 
             if (context.Type == MessageTypes.Validation) {
