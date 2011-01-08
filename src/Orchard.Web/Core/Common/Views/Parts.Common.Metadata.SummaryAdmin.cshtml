@@ -11,5 +11,5 @@
     <li>@if (modifiedUtc.HasValue) {
         @T("Last modified: {0}", Display.DateTimeRelative(dateTimeUtc: modifiedUtc.Value))}&nbsp;&#124;&nbsp;
     </li>
-    <li>@T("By {0}", owner.UserName)</li>
+    <li>@T("By {0}", owner == null ? "<null>" : owner.UserName)</li>
     </ul>
