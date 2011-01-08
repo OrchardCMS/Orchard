@@ -55,14 +55,17 @@ namespace Orchard.Comments.Services {
         }
 
         public ContentItemMetadata GetDisplayForCommentedContent(int id) {
-            var content = _orchardServices.ContentManager.Get(id);
+            var content = GetCommentedContent(id);
             if (content == null)
                 return null;
             return _orchardServices.ContentManager.GetItemMetadata(content);
         }
 
         public ContentItem GetCommentedContent(int id) {
-            return _orchardServices.ContentManager.Get(id);
+            var result = _orchardServices.ContentManager.Get(id, VersionOptions.Published);
+            if (result == null)
+                result = _orchardServices.ContentManager.Get(id, VersionOptions.Draft);
+            return result;
         }
 
         public CommentPart CreateComment(CreateCommentContext context, bool moderateComments) {
@@ -119,15 +122,15 @@ namespace Orchard.Comments.Services {
         }
 
         public bool CommentsDisabledForCommentedContent(int id) {
-            return !_orchardServices.ContentManager.Get<CommentsPart>(id).CommentsActive;
+            return !_orchardServices.ContentManager.Get<CommentsPart>(id, VersionOptions.Latest).CommentsActive;
         }
 
         public void DisableCommentsForCommentedContent(int id) {
-            _orchardServices.ContentManager.Get<CommentsPart>(id).CommentsActive = false;
+            _orchardServices.ContentManager.Get<CommentsPart>(id, VersionOptions.Latest).CommentsActive = false;
         }
 
         public void EnableCommentsForCommentedContent(int id) {
-            _orchardServices.ContentManager.Get<CommentsPart>(id).CommentsActive = true;
+            _orchardServices.ContentManager.Get<CommentsPart>(id, VersionOptions.Latest).CommentsActive = true;
         }
     }
 }
