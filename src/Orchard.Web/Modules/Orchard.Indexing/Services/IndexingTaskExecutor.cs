@@ -136,14 +136,10 @@ namespace Orchard.Indexing.Services {
                     if (!settings.Included)
                         continue;
 
-                    // skip items which already are in updateIndexDocuments
-                    if (addedContentItemIds.Contains(task.ContentItem.Id.ToString()))
-                        continue;
-
                     try {
                         var documentIndex = _indexProvider.New(task.ContentItem.Id);
                         _contentManager.Index(task.ContentItem, documentIndex);
-                        if (documentIndex.IsDirty) {
+                        if (!addedContentItemIds.Contains(task.ContentItem.Id.ToString()) && documentIndex.IsDirty) {
                             updateIndexDocuments.Add(documentIndex);
                         }
 
