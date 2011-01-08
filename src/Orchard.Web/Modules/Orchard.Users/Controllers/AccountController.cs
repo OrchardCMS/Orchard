@@ -262,7 +262,6 @@ namespace Orchard.Users.Controllers {
             var user = _userService.ValidateChallenge(nonce);
 
             if ( user != null ) {
-                _authenticationService.SignIn(user, false /* createPersistentCookie */);
                 return RedirectToAction("ChallengeEmailSuccess");
             }
 
