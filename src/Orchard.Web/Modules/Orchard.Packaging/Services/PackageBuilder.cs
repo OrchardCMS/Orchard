@@ -20,6 +20,7 @@ namespace Orchard.Packaging.Services {
         private static readonly string[] _ignoredThemeExtensions = new[] {
             "obj", "pdb", "exclude"
         };
+
         private static readonly string[] _ignoredThemePaths = new[] {
             "/obj/"
         };
@@ -61,13 +62,13 @@ namespace Orchard.Packaging.Services {
 
             return context.Stream;
         }
-        
-        private static void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
-            string idPrefix = DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType) ?
-                PackagingSourceManager.ThemesPrefix :
-                PackagingSourceManager.ModulesPrefix;
 
-            context.Builder.Id = idPrefix + extensionDescriptor.Id;
+        public static string BuildPackageId(string extensionName, string extensionType) {
+            return PackagingSourceManager.GetExtensionPrefix(extensionType) + extensionName;
+        }
+
+        private static void SetCoreProperties(CreateContext context, ExtensionDescriptor extensionDescriptor) {
+            context.Builder.Id = BuildPackageId(extensionDescriptor.Id, extensionDescriptor.ExtensionType);
             context.Builder.Version = new Version(extensionDescriptor.Version);
             context.Builder.Title = extensionDescriptor.Name ?? extensionDescriptor.Id;
             context.Builder.Description = extensionDescriptor.Description;

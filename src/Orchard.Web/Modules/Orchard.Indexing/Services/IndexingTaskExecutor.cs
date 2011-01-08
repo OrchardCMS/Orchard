@@ -103,8 +103,7 @@ namespace Orchard.Indexing.Services {
                     ? _repository.Fetch(x => true).ToArray()
                     : _repository.Fetch(x => x.CreatedUtc >= lastIndexUtc).ToArray(); // CreatedUtc and lastIndexUtc might be equal if a content item is created in a background task
 
-
-                // nothing to do ?
+                // nothing to do ?)))
                 if (taskRecords.Length + updateIndexDocuments.Count == 0) {
                     Logger.Information("Index update requested, nothing to do");
                     return;
@@ -140,7 +139,7 @@ namespace Orchard.Indexing.Services {
                     try {
                         var documentIndex = _indexProvider.New(task.ContentItem.Id);
                         _contentManager.Index(task.ContentItem, documentIndex);
-                        if (documentIndex.IsDirty) {
+                        if (!addedContentItemIds.Contains(task.ContentItem.Id.ToString()) && documentIndex.IsDirty) {
                             updateIndexDocuments.Add(documentIndex);
                         }
 

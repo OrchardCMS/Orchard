@@ -6,8 +6,10 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
 using Orchard.Security;
@@ -113,7 +115,15 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult Modules(int? sourceId) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list modules")))
+            return ListExtensions(sourceId, DefaultExtensionTypes.Module, "Modules", source => _packagingSourceManager.GetModuleList(source).ToArray());
+        }
+
+        public ActionResult Themes(int? sourceId) {
+            return ListExtensions(sourceId, DefaultExtensionTypes.Theme, "Themes", source => _packagingSourceManager.GetThemeList(source).ToArray());
+        }
+
+        protected ActionResult ListExtensions(int? sourceId, string extensionType, string returnView, Func<PackagingSource, PackagingEntry[]> getList) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list {0}", extensionType)))
                 return new HttpUnauthorizedResult();
 
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
@@ -126,35 +136,16 @@ namespace Orchard.Packaging.Controllers {
             IEnumerable<PackagingEntry> extensions = null;
             foreach (var source in sources) {
                 try {
-                    var sourceExtensions = _packagingSourceManager.GetModuleList(source).ToArray();
+                    var sourceExtensions = getList(source);
                     extensions = extensions == null ? sourceExtensions : extensions.Concat(sourceExtensions);
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     Logger.Error(ex, "Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message);
                     _notifier.Error(T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message));
                 }
             }
 
-            return View("Modules", new PackagingExtensionsViewModel {
-                Extensions = extensions ?? new PackagingEntry[] {},
-                Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
-                SelectedSource = selectedSource
-            });
-        }
-
-        public ActionResult Themes(int? sourceId) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list themes")))
-                return new HttpUnauthorizedResult();
-
-            var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
-
-            var sources = selectedSource != null
-                ? new[] { selectedSource }
-                : _packagingSourceManager.GetSources()
-            ;
-
-            return View("Themes", new PackagingExtensionsViewModel {
-                Extensions = sources.SelectMany(source => _packagingSourceManager.GetThemeList(source)),
+            return View(returnView, new PackagingExtensionsViewModel {
+                Extensions = extensions ?? new PackagingEntry[] { },
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 SelectedSource = selectedSource
             });

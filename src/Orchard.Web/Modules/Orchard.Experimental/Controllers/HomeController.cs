@@ -84,25 +84,25 @@ namespace Orchard.Experimental.Controllers {
 
         public ActionResult UsingShapes() {
 
-            ViewModel.Page = Shape.Page()
+            ViewBag.Page = Shape.Page()
                 .Main(Shape.Zone(typeof (Array), Name: "Main"))
                 .Messages(Shape.Zone(typeof (Array), Name: "Messages"))
                 .Sidebar(Shape.Zone(typeof (Array), Name: "Sidebar"));
 
             //ViewModel.Page.Add("Messages:5", New.Message(Content: T("This is a test"), Severity: "Really bad!!!"));
 
-            ViewModel.Page.Messages.Add(
+            ViewBag.Page.Messages.Add(
                 Shape.Message(Content: T("This is a test"), Severity: "Really bad!!!"));
 
-            ViewModel.Page.Sidebar.Add(
+            ViewBag.Page.Sidebar.Add(
                 Shape.Link(Url: "http://orchard.codeplex.com", Content: Shape.Image(Url: "http://orchardproject.net/Content/images/orchardLogo.jpg").Attributes(new { @class = "bigredborderfromabadclassname" })));
 
             var model = Shape.Message(
                 Content: Shape.Explosion(Height: 100, Width: 200),
                 Severity: "Meh");
 
-            ViewModel.Page.Messages.Add(new HtmlString("<hr/>abuse<hr/>"));
-            ViewModel.Page.Messages.Add("<hr/>encoded<hr/>");
+            ViewBag.Page.Messages.Add(new HtmlString("<hr/>abuse<hr/>"));
+            ViewBag.Page.Messages.Add("<hr/>encoded<hr/>");
 
             return View(model);
         }

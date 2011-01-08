@@ -93,19 +93,33 @@ namespace Orchard.Packaging.Services {
             return new PackageInfo {
                 ExtensionName = package.Title ?? package.Id,
                 ExtensionVersion = package.Version.ToString(),
-                ExtensionType = package.Id.StartsWith(PackagingSourceManager.ThemesPrefix) ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module,
+                ExtensionType = package.Id.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme)) ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module,
                 ExtensionPath = applicationPath
             };
         }
 
         public void Uninstall(string packageId, string applicationPath) {
-            // this logger is used to render NuGet's log on the notifier
-            var logger = new NugetLogger(_notifier);
-
             string solutionPath;
+            string extensionFullPath = string.Empty;
+
+            if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
+                extensionFullPath = HostingEnvironment.MapPath("~/Themes/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme).Length));
+            } else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
+                extensionFullPath = HostingEnvironment.MapPath("~/Modules/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length));
+            }
+
+            if (string.IsNullOrEmpty(extensionFullPath) ||
+                !Directory.Exists(extensionFullPath)) {
+
+                throw new OrchardException(T("Package not found: {0}", packageId));
+            }
 
             // if we can access the parent directory, and the solution is inside, NuGet-uninstall the package here
             if (TryGetSolutionPath(applicationPath, out solutionPath)) {
+
+                // this logger is used to render NuGet's log on the notifier
+                var logger = new NugetLogger(_notifier);
+
                 var installedPackagesPath = Path.Combine(solutionPath, PackagesPath);
                 var sourcePackageRepository = new LocalPackageRepository(installedPackagesPath);
 
@@ -139,18 +153,9 @@ namespace Orchard.Packaging.Services {
                 }
             }
 
-            // Make sure folder is deleted (themes scenario where there is no project)
-            string extensionPath = packageId.StartsWith(PackagingSourceManager.ThemesPrefix)
-                                        ? "~/Themes/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length)
-                                        : "~/Modules/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length);
-
-            string extensionFullPath = HostingEnvironment.MapPath(extensionPath);
-
-            if (Directory.Exists(extensionFullPath)) {
+            // If the package was not installed through nuget we still need to try to uninstall it by removing its directory
+            if(Directory.Exists(extensionFullPath)) {
                 Directory.Delete(extensionFullPath, true);
-            }
-            else {
-                throw new OrchardException(T("Package not found: ", packageId));
             }
         }
 

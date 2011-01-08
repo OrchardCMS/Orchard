@@ -139,6 +139,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.WebPages.Razor">
       <HintPath>..\..\lib\aspnetmvc\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
@@ -181,6 +185,7 @@
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
+    <Compile Include="Mvc\ShapeResult.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
     <Compile Include="Security\IEncryptionService.cs" />

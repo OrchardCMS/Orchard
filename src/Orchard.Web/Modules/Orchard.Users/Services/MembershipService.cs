@@ -89,7 +89,7 @@ namespace Orchard.Users.Services {
                     }
                     var recipient = GetUser(userName);
                     if (recipient != null)
-                        _messageManager.Send(recipient.ContentItem.Record, MessageTypes.Moderation, "email");
+                        _messageManager.Send(recipient.ContentItem.Record, MessageTypes.Moderation, "email" , new Dictionary<string, string> { { "UserName", createUserParams.Username}, { "Email" , createUserParams.Email } });
                 }
             }
 
