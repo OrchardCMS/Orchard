@@ -12,5 +12,9 @@ namespace Orchard.Packaging.Services {
         public DateTime LastUpdated { get; set; }
         public string Authors { get; set; }
         public string Description { get; set; }
+        public string FirstScreenshot { get; set; }
+        public string IconUrl { get; set; }
+        public double Rating { get; set; }
+        public int RatingsCount { get; set; }
     }
 }

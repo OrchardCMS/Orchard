@@ -63,19 +63,25 @@ namespace Orchard.Packaging.Services {
         }
 
         private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source, Uri downloadUri) {
+            PublishedScreenshot firstScreenshot = package.Screenshots.FirstOrDefault();
+
             return new PackagingEntry {
-                Title = String.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
+                Title = string.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
                 PackageId = package.Id,
                 PackageStreamUri = downloadUri.ToString(),
                 ProjectUrl = package.ProjectUrl,
                 Source = source,
-                Version = package.Version ?? String.Empty,
+                Version = package.Version ?? string.Empty,
                 Description = package.Description,
                 Authors = package.Authors,
-                LastUpdated = package.LastUpdated
+                LastUpdated = package.LastUpdated,
+                IconUrl = package.IconUrl,
+                FirstScreenshot = firstScreenshot != null ? firstScreenshot.ScreenshotUri : string.Empty,
+                Rating = package.Rating,
+                RatingsCount = package.RatingsCount
             };
         }
-        #endregion
 
+        #endregion
     }
 }

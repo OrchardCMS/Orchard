@@ -93,6 +93,9 @@
     <Compile Include="ViewModels\PackagingSourcesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\moduleDefaultIcon.png" />
+    <Content Include="Content\Images\packageDefaultIcon.png" />
+    <Content Include="Content\Images\themeDefaultIcon.png" />
     <Content Include="Module.txt" />
     <Content Include="Service References\GalleryServer\Reference.datasvcmap">
       <Generator>DataServiceClientGenerator</Generator>
