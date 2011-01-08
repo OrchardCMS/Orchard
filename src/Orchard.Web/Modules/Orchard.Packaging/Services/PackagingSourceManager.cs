@@ -65,6 +65,19 @@ namespace Orchard.Packaging.Services {
         private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source, Uri downloadUri) {
             PublishedScreenshot firstScreenshot = package.Screenshots.FirstOrDefault();
 
+            Uri iconUrl = null;
+            if (!string.IsNullOrEmpty(package.IconUrl)) {
+                if (!Uri.TryCreate(package.IconUrl, UriKind.Absolute, out iconUrl)) {
+                    Uri.TryCreate(
+                        new Uri(string.Format("{0}://{1}:{2}/",
+                            downloadUri.Scheme,
+                            downloadUri.Host,
+                            downloadUri.Port)),
+                        package.IconUrl,
+                        out iconUrl);
+                }
+            }
+
             return new PackagingEntry {
                 Title = string.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
                 PackageId = package.Id,
@@ -75,7 +88,7 @@ namespace Orchard.Packaging.Services {
                 Description = package.Description,
                 Authors = package.Authors,
                 LastUpdated = package.LastUpdated,
-                IconUrl = package.IconUrl,
+                IconUrl = iconUrl != null ? iconUrl.ToString() : string.Empty,
                 FirstScreenshot = firstScreenshot != null ? firstScreenshot.ScreenshotUri : string.Empty,
                 Rating = package.Rating,
                 RatingsCount = package.RatingsCount
