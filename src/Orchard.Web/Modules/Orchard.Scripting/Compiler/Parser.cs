@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Scripting.Ast;
 
 namespace Orchard.Scripting.Compiler {
     public class Parser {
         private readonly string _expression;
         private readonly Lexer _lexer;
-        private readonly List<string> _errors = new List<string>();
+        private bool _parsingMethodCall = false;
 
         public Parser(string expression) {
             _expression = expression;
@@ -14,6 +15,9 @@ namespace Orchard.Scripting.Compiler {
 
         public AbstractSyntaxTree Parse() {
             var node = ParseExpression();
+            if (_lexer.Token().Kind != TokenKind.Eof) {
+                node = UnexpectedTokenError();
+            }
             return new AbstractSyntaxTree { Root = node };
         }
 
@@ -24,11 +28,13 @@ namespace Orchard.Scripting.Compiler {
         private AstNode ParseKeywordLogicalExpression() {
             var expr = ParseKeywordNotExpression();
 
+        again:
             var token = IsMatch(TokenKind.Or, TokenKind.And);
             if (token != null) {
-                var right = ParseKeywordLogicalExpression();
+                var right = ParseKeywordNotExpression();
 
                 expr = new BinaryAstNode(expr, token, right);
+                goto again;
             }
 
             return expr;
@@ -42,11 +48,42 @@ namespace Orchard.Scripting.Compiler {
                 return new UnaryAstNode(token, expr);
             }
 
-            return ParseEqualityExpression();
+            return ParseLogicalOrExpression();
         }
 
+        private AstNode ParseLogicalOrExpression() {
+            var expr = ParseLogicalAndExpression();
+
+        again:
+            var token = IsMatch(TokenKind.OrSign);
+            if (token != null) {
+                var right = ParseLogicalAndExpression();
+
+                expr = new BinaryAstNode(expr, token, right);
+                goto again;
+            }
+
+            return expr;
+        }
+
+        private AstNode ParseLogicalAndExpression() {
+            var expr = ParseEqualityExpression();
+
+        again:
+            var token = IsMatch(TokenKind.AndSign);
+            if (token != null) {
+                var right = ParseEqualityExpression();
+
+                expr = new BinaryAstNode(expr, token, right);
+                goto again;
+            }
+
+            return expr;
+        }
+
+
         private AstNode ParseEqualityExpression() {
-            var expr = ParseRelationalExpression();
+            var expr = ParseComparisonExpression();
 
             var token = IsMatch(TokenKind.EqualEqual, TokenKind.NotEqual);
             if (token != null) {
@@ -58,14 +95,14 @@ namespace Orchard.Scripting.Compiler {
             return expr;
         }
 
-        private AstNode ParseRelationalExpression() {
+        private AstNode ParseComparisonExpression() {
             var expr = ParseAdditiveExpression();
 
-            var token = 
+            var token =
                 IsMatch(TokenKind.LessThan, TokenKind.LessThanEqual) ??
                 IsMatch(TokenKind.GreaterThan, TokenKind.GreaterThanEqual);
             if (token != null) {
-                var right = ParseRelationalExpression();
+                var right = ParseComparisonExpression();
 
                 expr = new BinaryAstNode(expr, token, right);
             }
@@ -76,11 +113,13 @@ namespace Orchard.Scripting.Compiler {
         private AstNode ParseAdditiveExpression() {
             var expr = ParseMultiplicativeExpression();
 
+        again:
             var token = IsMatch(TokenKind.Plus, TokenKind.Minus);
             if (token != null) {
-                var right = ParseAdditiveExpression();
+                var right = ParseMultiplicativeExpression();
 
                 expr = new BinaryAstNode(expr, token, right);
+                goto again;
             }
 
             return expr;
@@ -89,11 +128,13 @@ namespace Orchard.Scripting.Compiler {
         private AstNode ParseMultiplicativeExpression() {
             var expr = ParseUnaryExpression();
 
+        again:
             var token = IsMatch(TokenKind.Mul, TokenKind.Div);
             if (token != null) {
-                var right = ParseMultiplicativeExpression();
+                var right = ParseUnaryExpression();
 
                 expr = new BinaryAstNode(expr, token, right);
+                goto again;
             }
 
             return expr;
@@ -125,14 +166,25 @@ namespace Orchard.Scripting.Compiler {
                 case TokenKind.Identifier:
                     return ParseMethodCallExpression();
                 default:
-                    return ProduceError(token);
+                    return UnexpectedTokenError();
             }
         }
 
+        private AstNode ParseIndentifier(Token identifier) {
+            return new MethodCallAstNode(identifier, new List<AstNode>());
+        }
+
         private AstNode ParseParenthesizedExpression() {
-            Match(TokenKind.OpenParen);
+            // '('
+            _lexer.NextToken();
+
             var expr = ParseExpression();
-            Match(TokenKind.CloseParen);
+
+            // ')'
+            if (IsMatch(TokenKind.CloseParen) == null) {
+                return ExpectedTokenError(TokenKind.CloseParen);
+            }
+
             return expr;
         }
 
@@ -142,27 +194,84 @@ namespace Orchard.Scripting.Compiler {
 
             bool isParenthesizedCall = (IsMatch(TokenKind.OpenParen) != null);
 
-            var arguments = new List<AstNode>();
-            while (true) {
-                // Special case: we might reach the end of the token stream
-                if (_lexer.Token().Kind == TokenKind.Eof)
-                    break;
-
-                // Special case: we must support "foo()"
-                if (isParenthesizedCall && _lexer.Token().Kind == TokenKind.CloseParen)
-                    break;
-
-                var argument = ParseExpression();
-                arguments.Add(argument);
-
-                if (IsMatch(TokenKind.Comma) == null)
-                    break;
+            // This is to avoid parsing method calls within method calls that have no
+            // parenthesis (language ambiguity)
+            if (!isParenthesizedCall && _parsingMethodCall) {
+                return ParseIndentifier(target);
             }
 
-            if (isParenthesizedCall)
-                Match(TokenKind.CloseParen);
+            // Detect tokens that can't be a function argument start token
+            if (!IsValidMethodArgumentToken(isParenthesizedCall)) {
+                return ParseIndentifier(target);
+            }
 
-            return new MethodCallAstNode(target, arguments);
+            _parsingMethodCall = true;
+            try {
+
+                var arguments = new List<AstNode>();
+                while (true) {
+                    // Special case: we might reach the end of the token stream
+                    if (_lexer.Token().Kind == TokenKind.Eof)
+                        break;
+
+                    // Special case: we must support "foo()"
+                    if (isParenthesizedCall && _lexer.Token().Kind == TokenKind.CloseParen)
+                        break;
+
+                    // Special case: for non parenthized calls, some tokens mark the end of the call
+                    if (!isParenthesizedCall) {
+                        bool endOfMethodCall = false;
+                        switch (_lexer.Token().Kind) {
+                            case TokenKind.And:
+                            case TokenKind.Or:
+                            case TokenKind.Not:
+                                endOfMethodCall = true;
+                                break;
+                        }
+                        if (endOfMethodCall)
+                            break;
+                    }
+
+                    var argument = ParseExpression();
+                    arguments.Add(argument);
+
+                    if (IsMatch(TokenKind.Comma) == null)
+                        break;
+                }
+
+                if (isParenthesizedCall) {
+                    // ')'
+                    if (IsMatch(TokenKind.CloseParen) == null) {
+                        return ExpectedTokenError(TokenKind.CloseParen);
+                    }
+                }
+
+                return new MethodCallAstNode(target, arguments);
+            }
+            finally {
+                _parsingMethodCall = false;
+            }
+        }
+
+        private bool IsValidMethodArgumentToken(bool isParenthesizedCall) {
+            switch(_lexer.Token().Kind) {
+                case TokenKind.OpenParen:
+                case TokenKind.StringLiteral:
+                case TokenKind.SingleQuotedStringLiteral:
+                case TokenKind.Identifier:
+                case TokenKind.Integer:
+                case TokenKind.NotSign:
+                case TokenKind.NullLiteral:
+                case TokenKind.Minus:
+                case TokenKind.Plus:
+                case TokenKind.True:
+                case TokenKind.False:
+                    return true;
+                case TokenKind.CloseParen:
+                    return isParenthesizedCall;
+                default:
+                    return false;
+            }
         }
 
         private AstNode ProduceConstant(Token token) {
@@ -170,18 +279,15 @@ namespace Orchard.Scripting.Compiler {
             return new ConstantAstNode(token);
         }
 
-        private AstNode ProduceError(Token token) {
+        private AstNode UnexpectedTokenError() {
+            var token = _lexer.Token();
             _lexer.NextToken();
-            return new ErrorAstNode(token, string.Format("Unexptected Token in primary expression ({0})", token));
+            return new ErrorAstNode(token, string.Format("Unexpected token in primary expression ({0})", token));
         }
 
-        private void Match(TokenKind kind) {
+        private AstNode ExpectedTokenError(TokenKind tokenKind) {
             var token = _lexer.Token();
-            if (token.Kind == kind) {
-                _lexer.NextToken();
-                return;
-            }
-            AddError(token, string.Format("Expected Token {0}", kind));
+            return new ErrorAstNode(token, string.Format("Expected token {0}", tokenKind));
         }
 
         private Token IsMatch(TokenKind kind) {
@@ -200,10 +306,6 @@ namespace Orchard.Scripting.Compiler {
                 return token;
             }
             return null;
-        }
-
-        private void AddError(Token token, string message) {
-            _errors.Add(message);
         }
     }
 }

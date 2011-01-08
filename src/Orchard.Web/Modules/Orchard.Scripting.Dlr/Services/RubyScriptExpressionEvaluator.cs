@@ -41,6 +41,12 @@ ExecContext
             var ops = _cacheManager.Get("----", ctx => (ObjectOperations)_scriptingManager.ExecuteOperation(x => x));
             object execContext = _cacheManager.Get(expression, ctx => (object)ops.InvokeMember(execContextType, "alloc", expression));
             dynamic result = ops.InvokeMember(execContext, "evaluate", new CallbackApi(this, providers));
+            return ConvertRubyValue(result);
+        }
+
+        private object ConvertRubyValue(object result) {
+            if (result is IronRuby.Builtins.MutableString)
+                return result.ToString();
             return result;
         }
 
@@ -58,8 +64,11 @@ ExecContext
             }
         }
 
-        private object Evaluate(IEnumerable<IGlobalMethodProvider> providers, string name, IList<object> args) {
-            GlobalMethodContext ruleContext = new GlobalMethodContext { FunctionName = name, Arguments = args.ToArray() };
+        private object Evaluate(IEnumerable<IGlobalMethodProvider> providers, string name, IEnumerable<object> args) {
+            var ruleContext = new GlobalMethodContext {
+                FunctionName = name, 
+                Arguments = args.Select(v => ConvertRubyValue(v)).ToArray()
+            };
 
             foreach (var ruleProvider in providers) {
                 ruleProvider.Process(ruleContext);
