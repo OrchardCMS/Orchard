@@ -93,9 +93,6 @@
     <Compile Include="ViewModels\PackagingSourcesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\moduleDefaultIcon.png" />
-    <Content Include="Content\Images\packageDefaultIcon.png" />
-    <Content Include="Content\Images\themeDefaultIcon.png" />
     <Content Include="Module.txt" />
     <Content Include="Service References\GalleryServer\Reference.datasvcmap">
       <Generator>DataServiceClientGenerator</Generator>
@@ -147,6 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Service References\GalleryServer\service.edmx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
