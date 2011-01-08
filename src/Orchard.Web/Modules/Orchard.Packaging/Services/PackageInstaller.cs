@@ -93,7 +93,7 @@ namespace Orchard.Packaging.Services {
             return new PackageInfo {
                 ExtensionName = package.Title ?? package.Id,
                 ExtensionVersion = package.Version.ToString(),
-                ExtensionType = package.Id.StartsWith(PackagingSourceManager.ThemesPrefix) ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module,
+                ExtensionType = package.Id.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme)) ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module,
                 ExtensionPath = applicationPath
             };
         }
@@ -102,10 +102,10 @@ namespace Orchard.Packaging.Services {
             string solutionPath;
             string extensionFullPath = string.Empty;
 
-            if (packageId.StartsWith(PackagingSourceManager.ThemesPrefix)) {
-                extensionFullPath = HostingEnvironment.MapPath("~/Themes/" + packageId.Substring(PackagingSourceManager.ThemesPrefix.Length));
-            } else if (packageId.StartsWith(PackagingSourceManager.ModulesPrefix)) {
-                extensionFullPath = HostingEnvironment.MapPath("~/Modules/" + packageId.Substring(PackagingSourceManager.ModulesPrefix.Length));
+            if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
+                extensionFullPath = HostingEnvironment.MapPath("~/Themes/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme).Length));
+            } else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
+                extensionFullPath = HostingEnvironment.MapPath("~/Modules/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length));
             }
 
             if (string.IsNullOrEmpty(extensionFullPath) ||

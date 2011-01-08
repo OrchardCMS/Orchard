@@ -11,18 +11,8 @@ using Orchard.Packaging.Models;
 namespace Orchard.Packaging.Services {
     [OrchardFeature("Gallery")]
     public class PackagingSourceManager : IPackagingSourceManager {
-        public const string ThemesPrefix = "Orchard.Themes.";
-        public const string ModulesPrefix = "Orchard.Modules.";
-
         public static string GetExtensionPrefix(string extensionType) {
-            switch (extensionType) {
-                case DefaultExtensionTypes.Theme:
-                    return ThemesPrefix;
-                case DefaultExtensionTypes.Module:
-                    return ModulesPrefix;
-                default:
-                    throw new ArgumentException();
-            }
+            return string.Format("Orchard.{0}.", extensionType);
         }
 
         private readonly IRepository<PackagingSource> _packagingSourceRecordRepository;
