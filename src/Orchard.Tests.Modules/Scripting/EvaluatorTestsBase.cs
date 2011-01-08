@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Orchard.Scripting.Compiler;
 
 namespace Orchard.Tests.Modules.Scripting {
-    [TestFixture]
     public abstract class EvaluatorTestsBase {
         [Test]
         public void EvaluateSimpleConstant() {
