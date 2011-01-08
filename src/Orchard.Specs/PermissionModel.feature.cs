@@ -63,13 +63,13 @@ namespace Orchard.Specs
 #line 7
 this.ScenarioSetup(scenarioInfo);
 #line 8
- testRunner.Given("I have installed Orchard");
+    testRunner.Given("I have installed Orchard");
 #line 9
-  testRunner.And("I have a user \"bob\" with permissions \"AccessFrontEnd\"");
+        testRunner.And("I have a user \"bob\" with permissions \"AccessFrontEnd\"");
 #line 10
- testRunner.When("I go to \"users/account/logoff\"");
+    testRunner.When("I go to \"users/account/logoff\"");
 #line 11
-  testRunner.And("I go to \"users/account/logon\"");
+        testRunner.And("I go to \"users/account/logon\"");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -81,15 +81,15 @@ this.ScenarioSetup(scenarioInfo);
                         "password",
                         "qwerty123!"});
 #line 12
-  testRunner.And("I fill in", ((string)(null)), table1);
+        testRunner.And("I fill in", ((string)(null)), table1);
 #line 16
-  testRunner.And("I hit \"Sign In\"");
+        testRunner.And("I hit \"Sign In\"");
 #line 17
-  testRunner.And("I am redirected");
+        testRunner.And("I am redirected");
 #line 18
- testRunner.Then("I should see \"Welcome\"");
+    testRunner.Then("I should see \"Welcome\"");
 #line 19
-  testRunner.And("I should see \"bob\"");
+        testRunner.And("I should see \"bob\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
@@ -104,15 +104,17 @@ this.ScenarioSetup(scenarioInfo);
 #line 22
 this.ScenarioSetup(scenarioInfo);
 #line 23
- testRunner.Given("I have installed Orchard");
+    testRunner.Given("I have installed Orchard");
 #line 24
- testRunner.And("I have a user \"bob\" with permissions \"AccessFrontEnd\"");
+    testRunner.And("I have a user \"bob\" with permissions \"AccessFrontEnd\"");
 #line 25
- testRunner.When("I sign in as \"bob\"");
+    testRunner.When("I sign in as \"bob\"");
 #line 26
- testRunner.Then("I should see \"this is the homepage of your new site\" when I go to \"/\"");
+     testRunner.And("I go to \"/\"");
 #line 27
-  testRunner.And("I should be denied access when I go to \"admin\"");
+    testRunner.Then("I should see \"this is the homepage of your new site\"");
+#line 28
+     testRunner.And("I should be denied access when I go to \"admin\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
