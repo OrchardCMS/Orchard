@@ -104,7 +104,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             var edited = new EditTypeViewModel();
             TryUpdateModel(edited);
-            typeViewModel.DisplayName = edited.DisplayName;
+            typeViewModel.DisplayName = edited.DisplayName ?? string.Empty;
 
             if ( String.IsNullOrWhiteSpace(typeViewModel.DisplayName) ) {
                 ModelState.AddModelError("DisplayName", T("The Content Type name can't be empty.").ToString());
