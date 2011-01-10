@@ -82,7 +82,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 13
     testRunner.Given("I have installed Orchard");
 #line 14
-    testRunner.When("I have a role \"CustomRole\" with permissions \"EditOthersContent, DeleteOthersConte" +
+    testRunner.When("I have a role \"CustomRole\" with permissions \"EditContent, DeleteConte" +
                     "nt\"");
 #line 15
         testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
@@ -106,7 +106,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 21
     testRunner.Given("I have installed Orchard");
 #line 22
-    testRunner.When("I have a role \"CustomRole\" with permissions \"PublishOthersContent\"");
+    testRunner.When("I have a role \"CustomRole\" with permissions \"PublishContent\"");
 #line 23
         testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
 #line 24
@@ -179,7 +179,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 46
     testRunner.Given("I have installed Orchard");
 #line 47
-    testRunner.When("I have a role \"CustomRole\" with permissions \"DeleteOthersContent\"");
+    testRunner.When("I have a role \"CustomRole\" with permissions \"DeleteContent\"");
 #line 48
         testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
 #line 49

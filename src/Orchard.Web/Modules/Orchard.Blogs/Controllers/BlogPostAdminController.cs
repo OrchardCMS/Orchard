@@ -30,7 +30,7 @@ namespace Orchard.Blogs.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Create(int blogId) {
-            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Not allowed to create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
@@ -57,14 +57,14 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(int blogId) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, T("Couldn't create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
             return CreatePOST(blogId, contentItem => Services.ContentManager.Publish(contentItem));
         }
 
         private ActionResult CreatePOST(int blogId, Action<ContentItem> conditionallyPublish) {
-            if (!Services.Authorizer.Authorize(Permissions.EditOwnBlogPost, T("Couldn't create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
@@ -99,7 +99,7 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditOthersBlogPost, post, T("Couldn't edit blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, post, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
             dynamic model = Services.ContentManager.BuildEditor(post);
@@ -128,7 +128,7 @@ namespace Orchard.Blogs.Controllers {
             if (blogPost == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishOthersBlogPost, blogPost, T("Couldn't publish blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, blogPost, T("Couldn't publish blog post")))
                 return new HttpUnauthorizedResult();
 
             return EditPOST(blogId, postId, returnUrl, contentItem => Services.ContentManager.Publish(contentItem));
@@ -144,7 +144,7 @@ namespace Orchard.Blogs.Controllers {
             if (blogPost == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.EditOthersBlogPost, blogPost, T("Couldn't edit blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
             // Validate form input
@@ -171,7 +171,7 @@ namespace Orchard.Blogs.Controllers {
             }
 
             // check edit permission
-            if (!Services.Authorizer.Authorize(Permissions.EditOthersBlogPost, draft, T("Couldn't discard blog post draft")))
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, draft, T("Couldn't discard blog post draft")))
                 return new HttpUnauthorizedResult();
 
             // locate the published revision to revert onto
@@ -202,7 +202,7 @@ namespace Orchard.Blogs.Controllers {
 
         [ValidateAntiForgeryTokenOrchard]
         public ActionResult Delete(int blogId, int postId) {
-            //refactoring: test PublishBlogPost/PublishOthersBlogPost in addition if published
+            //refactoring: test PublishBlogPost/PublishBlogPost in addition if published
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
@@ -212,7 +212,7 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.DeleteOthersBlogPost, post, T("Couldn't delete blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.DeleteBlogPost, post, T("Couldn't delete blog post")))
                 return new HttpUnauthorizedResult();
 
             _blogPostService.Delete(post);
@@ -231,7 +231,7 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishOthersBlogPost, post, T("Couldn't publish blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, post, T("Couldn't publish blog post")))
                 return new HttpUnauthorizedResult();
 
             _blogPostService.Publish(post);
@@ -250,7 +250,7 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return HttpNotFound();
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishOthersBlogPost, post, T("Couldn't unpublish blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, post, T("Couldn't unpublish blog post")))
                 return new HttpUnauthorizedResult();
 
             _blogPostService.Unpublish(post);

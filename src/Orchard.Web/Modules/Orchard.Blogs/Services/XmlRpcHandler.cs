@@ -126,8 +126,9 @@ namespace Orchard.Blogs.Services {
 
             XRpcArray array = new XRpcArray();
             foreach (BlogPart blog in _blogService.Get()) {
-                // Check if user has permissions for each specific blog
-                if (_authorizationService.TryCheckAccess(Permissions.EditOthersBlogPost, user, blog)) {
+                // User needs to at least have permission to edit its own blog posts to access the service
+                if (_authorizationService.TryCheckAccess(Permissions.EditBlogPost, user, blog)) {
+
                     BlogPart blogPart = blog;
                     array.Add(new XRpcStruct()
                                   .Set("url", urlHelper.AbsoluteAction(() => urlHelper.Blog(blogPart)))
@@ -150,7 +151,7 @@ namespace Orchard.Blogs.Services {
             IUser user = ValidateUser(userName, password);
 
             // User needs to at least have permission to edit its own blog posts to access the service
-            _authorizationService.CheckAccess(Permissions.EditOwnBlogPost, user, null);
+            _authorizationService.CheckAccess(Permissions.EditBlogPost, user, null);
 
             BlogPart blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
             if (blog == null) {
@@ -180,7 +181,7 @@ namespace Orchard.Blogs.Services {
             IUser user = ValidateUser(userName, password);
 
             // User needs permission to edit or publish its own blog posts
-            _authorizationService.CheckAccess(publish ? Permissions.PublishOwnBlogPost : Permissions.EditOwnBlogPost, user, null);
+            _authorizationService.CheckAccess(publish ? Permissions.PublishBlogPost : Permissions.EditBlogPost, user, null);
 
             BlogPart blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
             if (blog == null)
@@ -235,7 +236,7 @@ namespace Orchard.Blogs.Services {
             if (blogPost == null)
                 throw new ArgumentException();
 
-            _authorizationService.CheckAccess(Permissions.EditOthersBlogPost, user, blogPost);
+            _authorizationService.CheckAccess(Permissions.EditBlogPost, user, blogPost);
 
             var postStruct = CreateBlogStruct(blogPost, urlHelper);
 
@@ -258,7 +259,7 @@ namespace Orchard.Blogs.Services {
             if (blogPost == null)
                 throw new ArgumentException();
 
-            _authorizationService.CheckAccess(publish ? Permissions.PublishOthersBlogPost : Permissions.EditOthersBlogPost, user, blogPost);
+            _authorizationService.CheckAccess(publish ? Permissions.PublishBlogPost : Permissions.EditBlogPost, user, blogPost);
 
             var title = content.Optional<string>("title");
             var description = content.Optional<string>("description");
@@ -298,7 +299,7 @@ namespace Orchard.Blogs.Services {
             if (blogPost == null)
                 throw new ArgumentException();
 
-            _authorizationService.CheckAccess(Permissions.DeleteOthersBlogPost, user, blogPost);
+            _authorizationService.CheckAccess(Permissions.DeleteBlogPost, user, blogPost);
 
             foreach (var driver in drivers)
                 driver.Process(blogPost.Id);

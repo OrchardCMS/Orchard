@@ -54,11 +54,11 @@ namespace Orchard.Core.Contents.Security
         }
 
         private static Permission GetOwnerVariation(Permission permission) {
-            if (permission.Name == Permissions.PublishOthersContent.Name)
+            if (permission.Name == Permissions.PublishContent.Name)
                 return Permissions.PublishOwnContent;
-            if (permission.Name == Permissions.EditOthersContent.Name)
+            if (permission.Name == Permissions.EditContent.Name)
                 return Permissions.EditOwnContent;
-            if (permission.Name == Permissions.DeleteOthersContent.Name)
+            if (permission.Name == Permissions.DeleteContent.Name)
                 return Permissions.DeleteOwnContent;
             return null;
         }

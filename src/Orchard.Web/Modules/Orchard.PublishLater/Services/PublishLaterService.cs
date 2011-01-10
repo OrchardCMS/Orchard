@@ -21,7 +21,7 @@ namespace Orchard.PublishLater.Services {
         public Localizer T { get; set; }
 
         void IPublishLaterService.Publish(ContentItem contentItem, DateTime scheduledPublishUtc) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Couldn't publish selected content.")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't publish selected content.")))
                 return;
 
             _publishingTaskManager.Publish(contentItem, scheduledPublishUtc);

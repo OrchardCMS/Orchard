@@ -37,11 +37,11 @@ namespace Orchard.Blogs.Security {
         }
 
         private static Permission GetOwnerVariation(Permission permission) {
-            if (permission.Name == Permissions.PublishOthersBlogPost.Name)
+            if (permission.Name == Permissions.PublishBlogPost.Name)
                 return Permissions.PublishOwnBlogPost;
-            if (permission.Name == Permissions.EditOthersBlogPost.Name)
+            if (permission.Name == Permissions.EditBlogPost.Name)
                 return Permissions.EditOwnBlogPost;
-            if (permission.Name == Permissions.DeleteOthersBlogPost.Name)
+            if (permission.Name == Permissions.DeleteBlogPost.Name)
                 return Permissions.DeleteOwnBlogPost;
             return null;
         }

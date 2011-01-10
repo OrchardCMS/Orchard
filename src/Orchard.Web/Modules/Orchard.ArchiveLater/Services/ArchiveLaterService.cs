@@ -24,7 +24,7 @@ namespace Orchard.ArchiveLater.Services {
         public Localizer T { get; set; }
 
         void IArchiveLaterService.ArchiveLater(ContentItem contentItem, DateTime scheduledArchiveUtc) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishOthersContent, contentItem, T("Couldn't archive selected content.")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't archive selected content.")))
                 return;
 
             RemoveArchiveLaterTasks(contentItem);
