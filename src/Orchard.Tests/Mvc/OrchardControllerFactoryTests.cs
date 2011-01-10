@@ -25,6 +25,7 @@ namespace Orchard.Tests.Mvc {
                 .Keyed<IController>(typeof(FooController))
                 .WithMetadata("ControllerType", typeof(FooController))
                 .InstancePerDependency();
+
             builder.RegisterType<BarController>()
                 .Keyed<IController>("/bar")
                 .Keyed<IController>(typeof(BarController))
@@ -59,8 +60,7 @@ namespace Orchard.Tests.Mvc {
             Assert.That(controller, Is.TypeOf<ReplacementFooController>());
         }
 
-        [Test]
-        [Ignore("OrchardControllerFactory depends on metadata, calling base when no context is causing errors.")]
+        [Test, Ignore("OrchardControllerFactory depends on metadata, calling base when no context is causing errors.")]
         public void WhenNullOrMissingContainerNormalControllerFactoryRulesShouldBeUsedAsFallback() {
             var requestContext = GetRequestContext(null);
             var controller = _controllerFactory.CreateController(requestContext, "foo");

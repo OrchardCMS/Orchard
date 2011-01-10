@@ -5,8 +5,7 @@ using Orchard.UI.Notify;
 
 namespace Orchard.Indexing.Services
 {
-    public class IndexingService : IIndexingService
-    {
+    public class IndexingService : IIndexingService {
         private const string SearchIndexName = "Search";
         private readonly IIndexManager _indexManager;
         private readonly IEnumerable<IIndexNotifierHandler> _indexNotifierHandlers;

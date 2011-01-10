@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NuGet;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -12,8 +11,9 @@ using Orchard.Packaging.Models;
 namespace Orchard.Packaging.Services {
     [OrchardFeature("Gallery")]
     public class PackagingSourceManager : IPackagingSourceManager {
-        public const string ThemesPrefix = "Orchard.Themes.";
-        public const string ModulesPrefix = "Orchard.Modules.";
+        public static string GetExtensionPrefix(string extensionType) {
+            return string.Format("Orchard.{0}.", extensionType);
+        }
 
         private readonly IRepository<PackagingSource> _packagingSourceRecordRepository;
 
@@ -63,19 +63,38 @@ namespace Orchard.Packaging.Services {
         }
 
         private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source, Uri downloadUri) {
+            PublishedScreenshot firstScreenshot = package.Screenshots.FirstOrDefault();
+
+            Uri iconUrl = null;
+            if (!string.IsNullOrEmpty(package.IconUrl)) {
+                if (!Uri.TryCreate(package.IconUrl, UriKind.Absolute, out iconUrl)) {
+                    Uri.TryCreate(
+                        new Uri(string.Format("{0}://{1}:{2}/",
+                            downloadUri.Scheme,
+                            downloadUri.Host,
+                            downloadUri.Port)),
+                        package.IconUrl,
+                        out iconUrl);
+                }
+            }
+
             return new PackagingEntry {
-                Title = String.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
+                Title = string.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
                 PackageId = package.Id,
                 PackageStreamUri = downloadUri.ToString(),
                 ProjectUrl = package.ProjectUrl,
                 Source = source,
-                Version = package.Version ?? String.Empty,
+                Version = package.Version ?? string.Empty,
                 Description = package.Description,
                 Authors = package.Authors,
-                LastUpdated = package.LastUpdated
+                LastUpdated = package.LastUpdated,
+                IconUrl = iconUrl != null ? iconUrl.ToString() : string.Empty,
+                FirstScreenshot = firstScreenshot != null ? firstScreenshot.ScreenshotUri : string.Empty,
+                Rating = package.Rating,
+                RatingsCount = package.RatingsCount
             };
         }
-        #endregion
 
+        #endregion
     }
 }

@@ -311,7 +311,7 @@ and configure Orchard to your liking. After that, you can head over to
 <a href=""Admin/Themes"">manage themes to change or install new themes</a>
 and really make it your own. Once you're happy with a look and feel, it's time for some content.
 You can start creating new custom content types or start from the built-in ones by
-<a href=""Admin/Pages/Create"">adding a page</a>, <a href=""Admin/Blogs/Create"">creating a blog</a>
+<a href=""Admin/Contents/Create/Page"">adding a page</a>, <a href=""Admin/Blogs/Create"">creating a blog</a>
 or <a href=""Admin/Navigation"">managing your menus.</a></p>
 <p>Finally, Orchard has been designed to be extended. It comes with a few built-in
 modules such as pages and blogs or themes. If you're looking to add additional functionality,

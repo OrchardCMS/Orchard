@@ -58,7 +58,6 @@ namespace Orchard.Blogs.Services {
 
             if (context.Request.MethodName == "blogger.getUsersBlogs") {
                 var result = MetaWeblogGetUserBlogs(urlHelper,
-                    Convert.ToString(context.Request.Params[0].Value),
                     Convert.ToString(context.Request.Params[1].Value),
                     Convert.ToString(context.Request.Params[2].Value));
 
@@ -111,34 +110,31 @@ namespace Orchard.Blogs.Services {
 
             if (context.Request.MethodName == "blogger.deletePost") {
                 var result = MetaWeblogDeletePost(
-                    Convert.ToString(context.Request.Params[0].Value),
                     Convert.ToString(context.Request.Params[1].Value),
                     Convert.ToString(context.Request.Params[2].Value),
                     Convert.ToString(context.Request.Params[3].Value),
-                    Convert.ToBoolean(context.Request.Params[4].Value),
                     context._drivers);
                 context.Response = new XRpcMethodResponse().Add(result);
             }
         }
 
         private XRpcArray MetaWeblogGetUserBlogs(UrlHelper urlHelper,
-            string appkey,
             string userName,
             string password) {
 
             IUser user = ValidateUser(userName, password);
 
-
             XRpcArray array = new XRpcArray();
             foreach (BlogPart blog in _blogService.Get()) {
                 // User needs to at least have permission to edit its own blog posts to access the service
-                _authorizationService.CheckAccess(Permissions.EditBlogPost, user, blog);
+                if (_authorizationService.TryCheckAccess(Permissions.EditBlogPost, user, blog)) {
 
-                BlogPart blogPart = blog;
-                array.Add(new XRpcStruct()
-                                .Set("url", urlHelper.AbsoluteAction(() => urlHelper.Blog(blogPart)))
-                                .Set("blogid", blog.Id)
-                                .Set("blogName", blog.Name));
+                    BlogPart blogPart = blog;
+                    array.Add(new XRpcStruct()
+                                  .Set("url", urlHelper.AbsoluteAction(() => urlHelper.Blog(blogPart)))
+                                  .Set("blogid", blog.Id)
+                                  .Set("blogName", blog.Name));
+                }
             }
 
             return array;
@@ -216,7 +212,7 @@ namespace Orchard.Blogs.Services {
                 blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathWithSlug(blogPost.As<RoutePart>().Slug);
             }
 
-            _contentManager.Create(blogPost.ContentItem, VersionOptions.Draft);
+            _contentManager.Create(blogPost, VersionOptions.Draft);
 
             var publishedUtc = content.Optional<DateTime?>("dateCreated");
             if (publish && (publishedUtc == null || publishedUtc <= DateTime.UtcNow))
@@ -250,7 +246,14 @@ namespace Orchard.Blogs.Services {
             return postStruct;
         }
 
-        private bool MetaWeblogEditPost(int postId, string userName, string password, XRpcStruct content, bool publish, IEnumerable<IXmlRpcDriver> drivers) {
+        private bool MetaWeblogEditPost(
+            int postId,
+            string userName,
+            string password,
+            XRpcStruct content,
+            bool publish,
+            IEnumerable<IXmlRpcDriver> drivers) {
+
             IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(postId, VersionOptions.DraftRequired);
             if (blogPost == null)
@@ -285,7 +288,12 @@ namespace Orchard.Blogs.Services {
             return true;
         }
 
-        private bool MetaWeblogDeletePost(string appkey, string postId, string userName, string password, bool publish, IEnumerable<IXmlRpcDriver> drivers) {
+        private bool MetaWeblogDeletePost(
+            string postId,
+            string userName,
+            string password,
+            IEnumerable<IXmlRpcDriver> drivers) {
+
             IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(Convert.ToInt32(postId), VersionOptions.Latest);
             if (blogPost == null)
@@ -309,7 +317,10 @@ namespace Orchard.Blogs.Services {
             return user;
         }
 
-        private static XRpcStruct CreateBlogStruct(BlogPostPart blogPostPart, UrlHelper urlHelper) {
+        private static XRpcStruct CreateBlogStruct(
+            BlogPostPart blogPostPart,
+            UrlHelper urlHelper) {
+
             var url = urlHelper.AbsoluteAction(() => urlHelper.BlogPost(blogPostPart));
             var blogStruct = new XRpcStruct()
                 .Set("postid", blogPostPart.Id)

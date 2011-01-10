@@ -31,30 +31,42 @@ namespace Orchard.Users.Handlers {
             if ( recipient == null )
                 return;
 
-            if ( context.Type == MessageTypes.Moderation ) {
-                context.MailMessage.Subject = T("User needs moderation").Text;
-                context.MailMessage.Body = T("The following user account needs to be moderated: {0}", recipient.UserName).Text;
+            switch (context.Type) {
+                case MessageTypes.Moderation:
+                    context.MailMessage.Subject = T("New account").Text;
+                    context.MailMessage.Body =
+                        T("The user <b>{0}</b> with email <b>{1}</b> has requested a new account. This user won't be able to log while his account has not been approved.",
+                            context.Properties["UserName"], context.Properties["Email"]).Text;
+                    FormatEmailBody(context);
+                    context.MessagePrepared = true;
+                    break;
+
+                case MessageTypes.Validation:
+                    var registeredWebsite = _siteService.GetSiteSettings().As<RegistrationSettingsPart>().ValidateEmailRegisteredWebsite;
+                    var contactEmail = _siteService.GetSiteSettings().As<RegistrationSettingsPart>().ValidateEmailContactEMail;
+                    context.MailMessage.Subject = T("Verification E-Mail").Text;
+                    context.MailMessage.Body =
+                        T("Thank you for registering with {0}.<br/><br/><br/><b>Final Step</b><br/>To verify that you own this e-mail address, please click the following link:<br/><a href=\"{1}\">{1}</a><br/><br/><b>Troubleshooting:</b><br/>If clicking on the link above does not work, try the following:<br/><br/>Select and copy the entire link.<br/>Open a browser window and paste the link in the address bar.<br/>Click <b>Go</b> or, on your keyboard, press <b>Enter</b> or <b>Return</b>.",
+                            registeredWebsite, context.Properties["ChallengeUrl"]).Text;
+
+                    if (!String.IsNullOrWhiteSpace(contactEmail)) {
+                        context.MailMessage.Body +=
+                            T("<br/><br/>If you continue to have access problems or want to report other issues, please <a href=\"mailto:{0}\">Contact Us</a>.",
+                                contactEmail).Text;
+                    }
+                    FormatEmailBody(context);
+                    context.MessagePrepared = true;
+                    break;
+
+                case MessageTypes.LostPassword:
+                    context.MailMessage.Subject = T("Lost password").Text;
+                    context.MailMessage.Body =
+                        T("Dear {0}, please <a href=\"{1}\">click here</a> to change your password.", recipient.UserName,
+                          context.Properties["LostPasswordUrl"]).Text;
+                    FormatEmailBody(context);
+                    context.MessagePrepared = true;
+                    break;
             }
-
-            if (context.Type == MessageTypes.Validation) {
-                var registeredWebsite = _siteService.GetSiteSettings().As<RegistrationSettingsPart>().ValidateEmailRegisteredWebsite;
-                var contactEmail = _siteService.GetSiteSettings().As<RegistrationSettingsPart>().ValidateEmailContactEMail;
-                context.MailMessage.Subject = T("Verification E-Mail").Text;
-                context.MailMessage.Body =
-                    T("Thank you for registering with {0}.<br/><br/><br/><b>Final Step</b><br/>To verify that you own this e-mail address, please click the following link:<br/><a href=\"{1}\">{1}</a><br/><br/><b>Troubleshooting:</b><br/>If clicking on the link above does not work, try the following:<br/><br/>Select and copy the entire link.<br/>Open a browser window and paste the link in the address bar.<br/>Click <b>Go</b> or, on your keyboard, press <b>Enter</b> or <b>Return</b>.", registeredWebsite, context.Properties["ChallengeUrl"]).Text;
-
-                if (!String.IsNullOrWhiteSpace(contactEmail)) {
-                    context.MailMessage.Body += T("<br/><br/>If you continue to have access problems or want to report other issues, please <a href=\"mailto:{0}\">Contact Us</a>.", contactEmail).Text;
-                }
-            }
-
-            if (context.Type == MessageTypes.LostPassword) {
-                context.MailMessage.Subject = T("Lost password").Text;
-                context.MailMessage.Body = T("Dear {0}, please <a href=\"{1}\">click here</a> to change your password.", recipient.UserName, context.Properties["LostPasswordUrl"]).Text;
-            }
-
-            FormatEmailBody(context);
-            context.MessagePrepared = true;
         }
 
         private static void FormatEmailBody(MessageContext context) {

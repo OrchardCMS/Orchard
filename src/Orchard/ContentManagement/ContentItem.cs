@@ -10,7 +10,6 @@ namespace Orchard.ContentManagement {
             _parts = new List<ContentPart>();
         }
 
-
         private readonly IList<ContentPart> _parts;
         ContentItem IContent.ContentItem { get { return this; } }
 

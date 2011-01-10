@@ -138,6 +138,8 @@
     <Compile Include="Comments\Services\CommentServiceTests.cs" />
     <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
     <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
+    <Compile Include="Scripting.Dlr\EvaluatorTests.cs" />
+    <Compile Include="Scripting\EvaluatorTestsBase.cs" />
     <Compile Include="Scripting\EvaluatorTests.cs" />
     <Compile Include="Scripting\ParserTests.cs" />
     <Compile Include="Scripting\TokenizerTests.cs" />

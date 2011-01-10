@@ -59,9 +59,11 @@ namespace Orchard.Scripting.Compiler {
                 case TokenKind.Div:
                     return EvaluateArithmetic(left, right, (a, b) => b.Int32Value == 0 ? Error("Attempted to divide by zero.") : Result(a.Int32Value / b.Int32Value));
                 case TokenKind.And:
-                    return EvaluateLogical(left, right, (a, b) => Result(a.BoolValue && b.BoolValue));
+                case TokenKind.AndSign:
+                    return EvaluateLogicalAnd(left, right);
                 case TokenKind.Or:
-                    return EvaluateLogical(left, right, (a, b) => Result(a.BoolValue || b.BoolValue));
+                case TokenKind.OrSign:
+                    return EvaluateLogicalOr(left, right);
                 case TokenKind.EqualEqual:
                     return EvaluateEquality(left, right, v => v);
                 case TokenKind.NotEqual:
@@ -122,17 +124,14 @@ namespace Orchard.Scripting.Compiler {
             return operation(leftValue, rightValue);
         }
 
-        private static EvaluationResult EvaluateLogical(EvaluationResult left, EvaluationResult right,
-            Func<EvaluationResult, EvaluationResult, EvaluationResult> operation) {
-            var leftValue = ConvertToBool(left);
-            if (leftValue.IsError)
-                return leftValue;
+        private EvaluationResult EvaluateLogicalAnd(EvaluationResult left, EvaluationResult right) {
+            var type = PrimitiveType.InstanceFor(left.Value);
+            return type.LogicalAnd(left, right);
+        }
 
-            var rightValue = ConvertToBool(right);
-            if (rightValue.IsError)
-                return rightValue;
-
-            return operation(leftValue, rightValue);
+        private EvaluationResult EvaluateLogicalOr(EvaluationResult left, EvaluationResult right) {
+            var type = PrimitiveType.InstanceFor(left.Value);
+            return type.LogicalOr(left, right);
         }
 
         private static EvaluationResult ConvertToInt(EvaluationResult value) {

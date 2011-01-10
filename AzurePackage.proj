@@ -124,7 +124,7 @@
   </Target>
   
   <Target Name="Package-SqlCe">
-      <ItemGroup>
+    <ItemGroup>
       <SqlCeBinariesx86 Include="$(LibFolder)\sqlce\x86\*.*" />
       <SqlCeBinariesx64 Include="$(LibFolder)\sqlce\amd64\*.*" />
     </ItemGroup>
@@ -133,12 +133,10 @@
   </Target>
   
   <Target Name="Package-Stage">
- 
-    <Exec 
-      Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(ServiceFolder)\ServiceDefinition.build.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;" 
-      WorkingDirectory="$(CloudRootFolder)" 
-    />
-
+    <Exec
+        Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceDefinition.build.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /sites:Orchard.Azure.Web;Web;&quot;$(CloudRootFolder)&quot; /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;"
+        WorkingDirectory="$(CloudRootFolder)" 
+      />
   </Target>
 
   <Target Name="Package-Zip">

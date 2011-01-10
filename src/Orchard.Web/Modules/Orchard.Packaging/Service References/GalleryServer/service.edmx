@@ -13,16 +13,19 @@
         <Property Name="PackageType" Type="Edm.String" Nullable="true" />
         <Property Name="Summary" Type="Edm.String" Nullable="true" m:FC_TargetPath="SyndicationSummary" m:FC_ContentKind="text" m:FC_KeepInContent="true" />
         <Property Name="Description" Type="Edm.String" Nullable="true" />
-        <Property Name="DownloadCount" Type="Edm.Int32" Nullable="false" />
         <Property Name="Copyright" Type="Edm.String" Nullable="true" />
         <Property Name="PackageHashAlgorithm" Type="Edm.String" Nullable="true" />
         <Property Name="PackageHash" Type="Edm.String" Nullable="true" />
         <Property Name="PackageSize" Type="Edm.Int64" Nullable="false" />
-        <Property Name="Rating" Type="Edm.Double" Nullable="false" />
-        <Property Name="RatingsCount" Type="Edm.Int32" Nullable="false" />
         <Property Name="Price" Type="Edm.Decimal" Nullable="false" />
         <Property Name="RequireLicenseAcceptance" Type="Edm.Boolean" Nullable="false" />
         <Property Name="IsLatestVersion" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Rating" Type="Edm.Double" Nullable="false" />
+        <Property Name="RatingsCount" Type="Edm.Int32" Nullable="false" />
+        <Property Name="DownloadCount" Type="Edm.Int32" Nullable="false" />
+        <Property Name="VersionRating" Type="Edm.Double" Nullable="false" />
+        <Property Name="VersionRatingsCount" Type="Edm.Int32" Nullable="false" />
+        <Property Name="VersionDownloadCount" Type="Edm.Int32" Nullable="false" />
         <Property Name="Created" Type="Edm.DateTime" Nullable="false" />
         <Property Name="LastUpdated" Type="Edm.DateTime" Nullable="false" m:FC_TargetPath="SyndicationUpdated" m:FC_ContentKind="text" m:FC_KeepInContent="true" />
         <Property Name="Published" Type="Edm.DateTime" Nullable="false" />

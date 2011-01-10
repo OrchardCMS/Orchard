@@ -1,8 +1,11 @@
 ﻿@model Orchard.ContentTypes.ViewModels.EditTypePartViewModel
+@using Orchard.Core.Contents.Settings;
     <fieldset class="manage-part" itemscope="itemscope" itemid="@Model.PartDefinition.Name" itemtype="http://orchardproject.net/data/ContentTypePart">
         <h3 itemprop="Name">@Model.PartDefinition.DisplayName</h3>
         <div class="manage">
-            @Html.ActionLink(T("Remove").Text, "RemovePartFrom", new { area = "Orchard.ContentTypes", id = Model.Type.Name, Model.PartDefinition.Name }, new { itemprop = "RemoveUrl UnsafeUrl" }) @* <- some experimentation *@
+            @if (Model.PartDefinition.Settings.GetModel<ContentPartSettings>().Attachable) {
+                @Html.ActionLink(T("Remove").Text, "RemovePartFrom", new { area = "Orchard.ContentTypes", id = Model.Type.Name, Model.PartDefinition.Name }, new { itemprop = "RemoveUrl UnsafeUrl" });
+            }
         </div>
         <div class="details">@Html.EditorFor(m => m.PartDefinition.Fields, "TypePartFields", "PartDefinition")
         @if (Model.Templates.Any()) {

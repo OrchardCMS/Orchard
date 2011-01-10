@@ -24,13 +24,13 @@ namespace Orchard.Tests.ContentManagement.Handlers {
         [Test]
         public void WeldShouldAddPartToModel() {
             var builder = new ContentItemBuilder(new ContentTypeDefinitionBuilder().Named("foo").Build());
-            builder.Weld<Alpha>();
+            builder.Weld<AlphaPart>();
             var model = builder.Build();
 
-            Assert.That(model.Is<Alpha>(), Is.True);
-            Assert.That(model.As<Alpha>(), Is.Not.Null);
-            Assert.That(model.Is<Beta>(), Is.False);
-            Assert.That(model.As<Beta>(), Is.Null);
+            Assert.That(model.Is<AlphaPart>(), Is.True);
+            Assert.That(model.As<AlphaPart>(), Is.Not.Null);
+            Assert.That(model.Is<BetaPart>(), Is.False);
+            Assert.That(model.As<BetaPart>(), Is.Null);
         }
     }
 }

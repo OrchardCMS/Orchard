@@ -1,17 +1,22 @@
-﻿.moduleName {
+﻿.extensionName {
     float:left;
-    }
-    
+}
 .contentItems .related {
-    padding:1.2em 0.4em 0.5em
+    padding: 1.2em 0.4em 0.5em
 }
-
 .contentItems .properties {
-    float:none;
-    clear:both;
+    float:left;
 }
-
 .contentItems .pageStatus {
     margin:.8em 0;
     color:#666;
+}
+.thumbnail {
+    float: left;
+    padding: 1.2em 1.2em 0.5em 0em;
+    width: 10%;
+}
+.extensionDetails {
+    float: left;
+    width: 85%;
 }

@@ -68,7 +68,6 @@
     <Compile Include="Annotations\CommentValidationAttributes.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Shapes.cs" />
-    <Compile Include="Models\ClosedCommentsRecord.cs" />
     <Compile Include="Models\CommentPart.cs" />
     <Compile Include="Handlers\CommentPartHandler.cs" />
     <Compile Include="Models\CommentStatus.cs" />
