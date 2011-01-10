@@ -45,7 +45,7 @@ namespace Orchard.Users.Controllers {
             if (currentUser == null) {
                 Logger.Information("Access denied to anonymous request on {0}", returnUrl);
                 var shape = _orchardServices.New.LogOn().Title(T("Access Denied").Text);
-                return new ShapeResult(shape); 
+                return new ShapeResult(this, shape); 
             }
 
             //TODO: (erikpo) Add a setting for whether or not to log access denieds since these can fill up a database pretty fast from bots on a high traffic site
@@ -59,7 +59,7 @@ namespace Orchard.Users.Controllers {
                 return Redirect("~/");
 
             var shape = _orchardServices.New.LogOn().Title(T("Log On").Text);
-            return new ShapeResult(shape);
+            return new ShapeResult(this, shape); 
         }
 
         [HttpPost]
@@ -69,7 +69,7 @@ namespace Orchard.Users.Controllers {
             var user = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
                 var shape = _orchardServices.New.LogOn().Title(T("Log On").Text);
-                return new ShapeResult(shape);
+                return new ShapeResult(this, shape); 
             }
 
             _authenticationService.SignIn(user, false);
