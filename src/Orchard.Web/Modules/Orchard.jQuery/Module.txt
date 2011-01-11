@@ -9,4 +9,4 @@ Features:
     Orchard.jQuery:
         Name: jQuery
         Description: A common location for jQuery and related script libraries.
-        Category: Resources
+        Category: Core
