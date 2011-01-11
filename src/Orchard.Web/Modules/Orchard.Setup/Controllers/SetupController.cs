@@ -97,19 +97,5 @@ namespace Orchard.Setup.Controllers {
                 return IndexViewResult(model);
             }
         }
-
-        bool CanWriteToAppDataFolder(out string message) {
-            try {
-                _appDataFolder.CreateFile("_systemcheck.txt", "Communicator check one two one two");
-                _appDataFolder.DeleteFile("_systemcheck.txt");
-
-                message = "";
-                return true;
-            }
-            catch (Exception ex) {
-                message = ex.Message.Replace("_systemcheck.txt", "");
-                return false;
-            }
-        }
     }
 }
