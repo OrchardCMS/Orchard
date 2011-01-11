@@ -231,14 +231,14 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
             _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Analyze().Add("title", "Soap opera").Analyze());
 
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen").Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen bertrand").Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen +bertrand").Count(), Is.EqualTo(1));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "+kitchen +bertrand").Count(), Is.EqualTo(0));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit").Count(), Is.EqualTo(0));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit*").Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap").Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap").Search().First().ContentItemId, Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen", false).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen bertrand", false).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen +bertrand", false).Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "+kitchen +bertrand", false).Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit", false).Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit*", false).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap", false).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap", false).Search().First().ContentItemId, Is.EqualTo(2));
         }
 
         [Test]
@@ -306,6 +306,14 @@ namespace Orchard.Tests.Modules.Indexing {
 
             Assert.That(_searchBuilder.Parse("title", "home").Count(), Is.EqualTo(1));
             Assert.That(_searchBuilder.Parse("title", "home").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ParsedTextShouldBeEscapedByDefault() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "foo.bar").Analyze());
+
+            Assert.That(_searchBuilder.Parse("body", "*@!woo*@!").Count(), Is.EqualTo(0));
         }
 
         [Test]
