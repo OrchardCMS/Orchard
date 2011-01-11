@@ -27,14 +27,6 @@ namespace Orchard.Setup.Controllers {
         public Localizer T { get; set; }
 
         private ActionResult IndexViewResult(SetupViewModel model) {
-            string message;
-            if (!CanWriteToAppDataFolder(out message)) {
-                _notifier.Error(
-                    T(
-                        "Hey, it looks like I can't write to the App_Data folder in the root of this application and that's where I need to save some of the information you're about to enter.\r\n\r\nPlease give me (the machine account this application is running under) write access to App_Data so I can get this app all set up for you.\r\n\r\nThanks!\r\n\r\n----\r\n{0}",
-                        message));
-            }
-
             return View(model);
         }
 
