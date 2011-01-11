@@ -8,10 +8,10 @@
         </Key>
         <Property Name="Id" Type="Edm.String" Nullable="false" />
         <Property Name="Version" Type="Edm.String" Nullable="false" />
-        <Property Name="Title" Type="Edm.String" Nullable="true" m:FC_TargetPath="SyndicationTitle" m:FC_ContentKind="text" m:FC_KeepInContent="true" />
-        <Property Name="Authors" Type="Edm.String" Nullable="true" m:FC_TargetPath="SyndicationAuthorName" m:FC_ContentKind="text" m:FC_KeepInContent="true" />
+        <Property Name="Title" Type="Edm.String" Nullable="true" />
+        <Property Name="Authors" Type="Edm.String" Nullable="true" />
         <Property Name="PackageType" Type="Edm.String" Nullable="true" />
-        <Property Name="Summary" Type="Edm.String" Nullable="true" m:FC_TargetPath="SyndicationSummary" m:FC_ContentKind="text" m:FC_KeepInContent="true" />
+        <Property Name="Summary" Type="Edm.String" Nullable="true" />
         <Property Name="Description" Type="Edm.String" Nullable="true" />
         <Property Name="Copyright" Type="Edm.String" Nullable="true" />
         <Property Name="PackageHashAlgorithm" Type="Edm.String" Nullable="true" />
@@ -20,24 +20,25 @@
         <Property Name="Price" Type="Edm.Decimal" Nullable="false" />
         <Property Name="RequireLicenseAcceptance" Type="Edm.Boolean" Nullable="false" />
         <Property Name="IsLatestVersion" Type="Edm.Boolean" Nullable="false" />
-        <Property Name="Rating" Type="Edm.Double" Nullable="false" />
-        <Property Name="RatingsCount" Type="Edm.Int32" Nullable="false" />
-        <Property Name="DownloadCount" Type="Edm.Int32" Nullable="false" />
         <Property Name="VersionRating" Type="Edm.Double" Nullable="false" />
         <Property Name="VersionRatingsCount" Type="Edm.Int32" Nullable="false" />
         <Property Name="VersionDownloadCount" Type="Edm.Int32" Nullable="false" />
         <Property Name="Created" Type="Edm.DateTime" Nullable="false" />
-        <Property Name="LastUpdated" Type="Edm.DateTime" Nullable="false" m:FC_TargetPath="SyndicationUpdated" m:FC_ContentKind="text" m:FC_KeepInContent="true" />
+        <Property Name="LastUpdated" Type="Edm.DateTime" Nullable="false" />
         <Property Name="Published" Type="Edm.DateTime" Nullable="false" />
         <Property Name="ExternalPackageUrl" Type="Edm.String" Nullable="true" />
         <Property Name="ProjectUrl" Type="Edm.String" Nullable="true" />
         <Property Name="LicenseUrl" Type="Edm.String" Nullable="true" />
         <Property Name="IconUrl" Type="Edm.String" Nullable="true" />
-        <Property Name="ReportAbuseUrl" Type="Edm.String" Nullable="true" />
+        <Property Name="Rating" Type="Edm.Double" Nullable="false" />
+        <Property Name="RatingsCount" Type="Edm.Int32" Nullable="false" />
+        <Property Name="DownloadCount" Type="Edm.Int32" Nullable="false" />
         <NavigationProperty Name="Screenshots" Relationship="Gallery.Infrastructure.FeedModels.PublishedPackage_Screenshots" FromRole="PublishedPackage" ToRole="Screenshots" />
         <Property Name="Categories" Type="Edm.String" Nullable="true" />
         <Property Name="Tags" Type="Edm.String" Nullable="true" />
         <Property Name="Dependencies" Type="Edm.String" Nullable="true" />
+        <Property Name="ReportAbuseUrl" Type="Edm.String" Nullable="true" />
+        <Property Name="GalleryDetailsUrl" Type="Edm.String" Nullable="true" />
       </EntityType>
       <EntityType Name="PublishedScreenshot">
         <Key>

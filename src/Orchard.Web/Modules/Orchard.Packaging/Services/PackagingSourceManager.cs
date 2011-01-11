@@ -83,6 +83,7 @@ namespace Orchard.Packaging.Services {
                 PackageId = package.Id,
                 PackageStreamUri = downloadUri.ToString(),
                 ProjectUrl = package.ProjectUrl,
+                GalleryDetailsUrl = package.GalleryDetailsUrl,
                 Source = source,
                 Version = package.Version ?? string.Empty,
                 Description = package.Description,

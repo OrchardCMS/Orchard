@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Original file name:
-// Generation date: 12/16/2010 1:21:46 AM
+// Generation date: 1/10/2011 10:36:55 PM
 namespace Orchard.Packaging.GalleryServer
 {
     
@@ -128,17 +128,17 @@ namespace Orchard.Packaging.GalleryServer
         /// <param name="price">Initial value of Price.</param>
         /// <param name="requireLicenseAcceptance">Initial value of RequireLicenseAcceptance.</param>
         /// <param name="isLatestVersion">Initial value of IsLatestVersion.</param>
-        /// <param name="rating">Initial value of Rating.</param>
-        /// <param name="ratingsCount">Initial value of RatingsCount.</param>
-        /// <param name="downloadCount">Initial value of DownloadCount.</param>
         /// <param name="versionRating">Initial value of VersionRating.</param>
         /// <param name="versionRatingsCount">Initial value of VersionRatingsCount.</param>
         /// <param name="versionDownloadCount">Initial value of VersionDownloadCount.</param>
         /// <param name="created">Initial value of Created.</param>
         /// <param name="lastUpdated">Initial value of LastUpdated.</param>
         /// <param name="published">Initial value of Published.</param>
+        /// <param name="rating">Initial value of Rating.</param>
+        /// <param name="ratingsCount">Initial value of RatingsCount.</param>
+        /// <param name="downloadCount">Initial value of DownloadCount.</param>
         [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        public static PublishedPackage CreatePublishedPackage(string ID, string version, long packageSize, decimal price, bool requireLicenseAcceptance, bool isLatestVersion, double rating, int ratingsCount, int downloadCount, double versionRating, int versionRatingsCount, int versionDownloadCount, global::System.DateTime created, global::System.DateTime lastUpdated, global::System.DateTime published)
+        public static PublishedPackage CreatePublishedPackage(string ID, string version, long packageSize, decimal price, bool requireLicenseAcceptance, bool isLatestVersion, double versionRating, int versionRatingsCount, int versionDownloadCount, global::System.DateTime created, global::System.DateTime lastUpdated, global::System.DateTime published, double rating, int ratingsCount, int downloadCount)
         {
             PublishedPackage publishedPackage = new PublishedPackage();
             publishedPackage.Id = ID;
@@ -147,15 +147,15 @@ namespace Orchard.Packaging.GalleryServer
             publishedPackage.Price = price;
             publishedPackage.RequireLicenseAcceptance = requireLicenseAcceptance;
             publishedPackage.IsLatestVersion = isLatestVersion;
-            publishedPackage.Rating = rating;
-            publishedPackage.RatingsCount = ratingsCount;
-            publishedPackage.DownloadCount = downloadCount;
             publishedPackage.VersionRating = versionRating;
             publishedPackage.VersionRatingsCount = versionRatingsCount;
             publishedPackage.VersionDownloadCount = versionDownloadCount;
             publishedPackage.Created = created;
             publishedPackage.LastUpdated = lastUpdated;
             publishedPackage.Published = published;
+            publishedPackage.Rating = rating;
+            publishedPackage.RatingsCount = ratingsCount;
+            publishedPackage.DownloadCount = downloadCount;
             return publishedPackage;
         }
         /// <summary>
@@ -453,69 +453,6 @@ namespace Orchard.Packaging.GalleryServer
         partial void OnIsLatestVersionChanging(bool value);
         partial void OnIsLatestVersionChanged();
         /// <summary>
-        /// There are no comments for Property Rating in the schema.
-        /// </summary>
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        public double Rating
-        {
-            get
-            {
-                return this._Rating;
-            }
-            set
-            {
-                this.OnRatingChanging(value);
-                this._Rating = value;
-                this.OnRatingChanged();
-            }
-        }
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        private double _Rating;
-        partial void OnRatingChanging(double value);
-        partial void OnRatingChanged();
-        /// <summary>
-        /// There are no comments for Property RatingsCount in the schema.
-        /// </summary>
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        public int RatingsCount
-        {
-            get
-            {
-                return this._RatingsCount;
-            }
-            set
-            {
-                this.OnRatingsCountChanging(value);
-                this._RatingsCount = value;
-                this.OnRatingsCountChanged();
-            }
-        }
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        private int _RatingsCount;
-        partial void OnRatingsCountChanging(int value);
-        partial void OnRatingsCountChanged();
-        /// <summary>
-        /// There are no comments for Property DownloadCount in the schema.
-        /// </summary>
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        public int DownloadCount
-        {
-            get
-            {
-                return this._DownloadCount;
-            }
-            set
-            {
-                this.OnDownloadCountChanging(value);
-                this._DownloadCount = value;
-                this.OnDownloadCountChanged();
-            }
-        }
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        private int _DownloadCount;
-        partial void OnDownloadCountChanging(int value);
-        partial void OnDownloadCountChanged();
-        /// <summary>
         /// There are no comments for Property VersionRating in the schema.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
@@ -726,26 +663,68 @@ namespace Orchard.Packaging.GalleryServer
         partial void OnIconUrlChanging(string value);
         partial void OnIconUrlChanged();
         /// <summary>
-        /// There are no comments for Property ReportAbuseUrl in the schema.
+        /// There are no comments for Property Rating in the schema.
         /// </summary>
         [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        public string ReportAbuseUrl
+        public double Rating
         {
             get
             {
-                return this._ReportAbuseUrl;
+                return this._Rating;
             }
             set
             {
-                this.OnReportAbuseUrlChanging(value);
-                this._ReportAbuseUrl = value;
-                this.OnReportAbuseUrlChanged();
+                this.OnRatingChanging(value);
+                this._Rating = value;
+                this.OnRatingChanged();
             }
         }
         [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
-        private string _ReportAbuseUrl;
-        partial void OnReportAbuseUrlChanging(string value);
-        partial void OnReportAbuseUrlChanged();
+        private double _Rating;
+        partial void OnRatingChanging(double value);
+        partial void OnRatingChanged();
+        /// <summary>
+        /// There are no comments for Property RatingsCount in the schema.
+        /// </summary>
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
+        public int RatingsCount
+        {
+            get
+            {
+                return this._RatingsCount;
+            }
+            set
+            {
+                this.OnRatingsCountChanging(value);
+                this._RatingsCount = value;
+                this.OnRatingsCountChanged();
+            }
+        }
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
+        private int _RatingsCount;
+        partial void OnRatingsCountChanging(int value);
+        partial void OnRatingsCountChanged();
+        /// <summary>
+        /// There are no comments for Property DownloadCount in the schema.
+        /// </summary>
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
+        public int DownloadCount
+        {
+            get
+            {
+                return this._DownloadCount;
+            }
+            set
+            {
+                this.OnDownloadCountChanging(value);
+                this._DownloadCount = value;
+                this.OnDownloadCountChanged();
+            }
+        }
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
+        private int _DownloadCount;
+        partial void OnDownloadCountChanging(int value);
+        partial void OnDownloadCountChanged();
         /// <summary>
         /// There are no comments for Property Categories in the schema.
         /// </summary>
@@ -809,6 +788,48 @@ namespace Orchard.Packaging.GalleryServer
         private string _Dependencies;
         partial void OnDependenciesChanging(string value);
         partial void OnDependenciesChanged();
+        /// <summary>
+        /// There are no comments for Property ReportAbuseUrl in the schema.
+        /// </summary>
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
+        public string ReportAbuseUrl
+        {
+            get
+            {
+                return this._ReportAbuseUrl;
+            }
+            set
+            {
+                this.OnReportAbuseUrlChanging(value);
+                this._ReportAbuseUrl = value;
+                this.OnReportAbuseUrlChanged();
+            }
+        }
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
+        private string _ReportAbuseUrl;
+        partial void OnReportAbuseUrlChanging(string value);
+        partial void OnReportAbuseUrlChanged();
+        /// <summary>
+        /// There are no comments for Property GalleryDetailsUrl in the schema.
+        /// </summary>
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
+        public string GalleryDetailsUrl
+        {
+            get
+            {
+                return this._GalleryDetailsUrl;
+            }
+            set
+            {
+                this.OnGalleryDetailsUrlChanging(value);
+                this._GalleryDetailsUrl = value;
+                this.OnGalleryDetailsUrlChanged();
+            }
+        }
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Services.Design", "1.0.0")]
+        private string _GalleryDetailsUrl;
+        partial void OnGalleryDetailsUrlChanging(string value);
+        partial void OnGalleryDetailsUrlChanged();
         /// <summary>
         /// There are no comments for Screenshots in the schema.
         /// </summary>

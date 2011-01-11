@@ -38,7 +38,13 @@
             <div class="@extensionClass">
                 <div class="extensionDetails column">
                     <div class="extensionName">
-                        <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
+                        @if (!string.IsNullOrWhiteSpace(item.GalleryDetailsUrl)) {
+                            <a href="@item.GalleryDetailsUrl">
+                                <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
+                            </a>
+                        } else {
+                            <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
+                        }
                     </div>
 
                     <div class="related">
