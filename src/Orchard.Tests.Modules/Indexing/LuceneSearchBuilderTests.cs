@@ -287,13 +287,13 @@ namespace Orchard.Tests.Modules.Indexing {
         [Test]
         public void FiltersShouldNotAlterResults() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped by Mirosoft in C#").Analyze().Add("culture", 1033));
-            _provider.Store("default", _provider.New(2).Add("body", "Windows a été développé par Mirosoft en C++").Analyze().Add("culture", 1036));
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped by Microsoft in C#").Analyze().Add("culture", 1033));
+            _provider.Store("default", _provider.New(2).Add("body", "Windows a été développé par Microsoft en C++").Analyze().Add("culture", 1036));
             _provider.Store("default", _provider.New(3).Add("title", "Home").Analyze().Add("culture", 1033));
 
-            Assert.That(_searchBuilder.WithField("body", "Mirosoft").Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.WithField("body", "Mirosoft").WithField("culture", 1033).Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.WithField("body", "Mirosoft").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("body", "Microsoft").Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "Microsoft").WithField("culture", 1033).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.WithField("body", "Microsoft").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(1));
             
             Assert.That(_searchBuilder.WithField("body", "Orchard").WithField("culture", 1036).Count(), Is.EqualTo(2));
             Assert.That(_searchBuilder.WithField("body", "Orchard").WithField("culture", 1036).AsFilter().Count(), Is.EqualTo(0));
