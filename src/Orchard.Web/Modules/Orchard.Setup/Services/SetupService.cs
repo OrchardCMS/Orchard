@@ -104,6 +104,11 @@ namespace Orchard.Setup.Services {
                     "Orchard.Widgets",
                     "TinyMce",
 
+                    // Gallery/Packaging
+                    "PackagingServices",
+                    "Orchard.Packaging",
+                    "Gallery",
+
                     // Themes
                     "TheThemeMachine",
                 };
