@@ -24,7 +24,7 @@ ASP.NET MVC
 Website:      http://aspnet.codeplex.com/wikipage?title=MVC&referringTitle=Home
 Copyright:    Copyright (c) 2008-2011 Microsoft Corporation
 License:      MICROSOFT ASP.NET MODEL VIEW CONTROLLER 3 EULA
-              http://www.microsoft.com/web/webpi/eula/aspnetmvc3-eula.htm
+              http://go.microsoft.com/fwlink/?LinkID=207621
 
 Autofac
 -----
