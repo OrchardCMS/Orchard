@@ -26,7 +26,7 @@
                 string extensionClass = "iconThumbnail";
                 string iconUrl = @item.IconUrl;
                 if (!string.IsNullOrWhiteSpace(@item.FirstScreenshot)) {
-                    iconUrl = Href(@item.FirstScreenshot);
+                    iconUrl = @item.FirstScreenshot;
                     extensionClass = "screenshotThumbnail";
                 }
                 else if (string.IsNullOrWhiteSpace(iconUrl)) {

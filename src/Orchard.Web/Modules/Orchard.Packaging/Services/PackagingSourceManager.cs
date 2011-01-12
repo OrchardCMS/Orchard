@@ -57,26 +57,25 @@ namespace Orchard.Packaging.Services {
                         return galleryFeedContext.Packages
                             .Where(p => p.PackageType == filter)
                             .ToList()
-                            .Select(p => CreatePackageEntry(p, packagingSource, galleryFeedContext.GetReadStreamUri(p)));
+                            .Select(p => {
+                                    PublishedScreenshot firstScreenshot = galleryFeedContext.Screenshots
+                                        .Where(s => s.PublishedPackageId == p.Id && s.PublishedPackageVersion == p.Version)
+                                        .ToList()
+                                        .FirstOrDefault();
+                                    return CreatePackageEntry(p, firstScreenshot, packagingSource, galleryFeedContext.GetReadStreamUri(p));
+                                });
                     }
                 ).ToArray();
         }
 
-        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source, Uri downloadUri) {
-            PublishedScreenshot firstScreenshot = package.Screenshots.FirstOrDefault();
+        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PublishedScreenshot screenshot, PackagingSource source, Uri downloadUri) {
+            Uri baseUri = new Uri(string.Format("{0}://{1}:{2}/",
+                                                downloadUri.Scheme,
+                                                downloadUri.Host,
+                                                downloadUri.Port));
 
-            Uri iconUrl = null;
-            if (!string.IsNullOrEmpty(package.IconUrl)) {
-                if (!Uri.TryCreate(package.IconUrl, UriKind.Absolute, out iconUrl)) {
-                    Uri.TryCreate(
-                        new Uri(string.Format("{0}://{1}:{2}/",
-                            downloadUri.Scheme,
-                            downloadUri.Host,
-                            downloadUri.Port)),
-                        package.IconUrl,
-                        out iconUrl);
-                }
-            }
+            string iconUrl = GetAbsoluteUri(package.IconUrl, baseUri);
+            string firstScreenshot = screenshot != null ? GetAbsoluteUri(screenshot.ScreenshotUri, baseUri) : string.Empty;
 
             return new PackagingEntry {
                 Title = string.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
@@ -89,11 +88,26 @@ namespace Orchard.Packaging.Services {
                 Description = package.Description,
                 Authors = package.Authors,
                 LastUpdated = package.LastUpdated,
-                IconUrl = iconUrl != null ? iconUrl.ToString() : string.Empty,
-                FirstScreenshot = firstScreenshot != null ? firstScreenshot.ScreenshotUri : string.Empty,
+                IconUrl = iconUrl,
+                FirstScreenshot = firstScreenshot,
                 Rating = package.Rating,
                 RatingsCount = package.RatingsCount
             };
+        }
+
+        protected static string GetAbsoluteUri(string url, Uri baseUri) {
+            Uri uri = null;
+            if (!string.IsNullOrEmpty(url))
+            {
+                if (!Uri.TryCreate(url, UriKind.Absolute, out uri))
+                {
+                    Uri.TryCreate(baseUri,
+                        url,
+                        out uri);
+                }
+            }
+
+            return uri != null ? uri.ToString() : string.Empty;
         }
 
         #endregion
