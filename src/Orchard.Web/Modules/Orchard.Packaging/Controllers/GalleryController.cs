@@ -167,6 +167,13 @@ namespace Orchard.Packaging.Controllers {
 
             try {
                 _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
+
+                if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
+                    _notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
+                }
+                else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
+                    _notifier.Information(T("The module has been successfully installed. Its features can be enabled in the \"Configuration | Features\" page accessible from the menu."));
+                }
             }
             catch (Exception exception) {
                 _notifier.Error(T("Package installation failed."));
