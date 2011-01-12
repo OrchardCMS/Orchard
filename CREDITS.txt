@@ -1,9 +1,9 @@
 Orchard Project
-ASP.NET Open Source Gallery at CodePlex Foundation
-Copyright 2009 CodePlex Foundation
+ASP.NET Open Source Gallery at Outercurve Foundation
+Copyright 2009-2011 Outercurve Foundation
 
 This product includes software developed at
-The CodePlex Foundation (http://www.codeplex.org/).
+The Outercurce Foundation (http://www.outercurve.org/).
 
 Orchard includes or is derivative of works distributed under the licenses listed below. The full text for most of the licenses listed below can be found in the LICENSE.txt file accompanying each work. The original copyright notices have been preserved within the respective files and or packages. Please refer to the specific files and/or packages for more detailed information about the authors, copyright notices, and licenses.
 
@@ -22,7 +22,7 @@ License:      New BSD
 ASP.NET MVC
 -----
 Website:      http://aspnet.codeplex.com/wikipage?title=MVC&referringTitle=Home
-Copyright:    Copyright (c) 2008-2009 Microsoft Corporation
+Copyright:    Copyright (c) 2008-2011 Microsoft Corporation
 License:      Microsoft Source License for ASP.NET pre-release components
               http://aspnet.codeplex.com/license
 
@@ -66,7 +66,7 @@ License:      New BSD
 FluentPath
 -----
 Website:      http://fluentpath.codeplex.com/
-Copyright:    Copyright (c) 2010 Bertrand Le Roy
+Copyright:    Copyright (c) 2011 Bertrand Le Roy
 License:      MS-PL
 
 Html Agility Pack
@@ -137,8 +137,8 @@ License:      LGPL 2.1
 
 NuGet
 -----
-Website:      http://www.nuget.org/nuget.codeplex.com
-Copyright:    Copyright 2010 Outercurve Foundation
+Website:      http://nuget.codeplex.com
+Copyright:    Copyright 2010-2011 Outercurve Foundation
 License:      Apache Software Foundation License 2.0
 
 nUnit
@@ -160,11 +160,11 @@ Website:      http://www.specflow.org/
 Copyright:    Copyright (c) 2009 TechTalk
 License:      New BSD
 
-SQLite
+Microsoft SQL Server Compact 4.0
 -----
-Website:      http://www.sqlite.org
-Copyright:    Public domain http://www.sqlite.org/copyright.html
-License:      Public domain
+Website:      http://www.microsoft.com
+Copyright:    Copyright (c) 2011 Microsoft Corporation
+License:      Custom EULA - http://www.microsoft.com/web/webpi/eula/SQLCE_EULA_ENU.rtf
 
 TinyMCE
 -----
@@ -177,12 +177,6 @@ WCat
 WebSite:      http://www.iis.net/community/default.aspx?tabid=34&i=1466&g=6
 Copyright:    Copyright (c) 2007 Microsoft
 License:      "Free"
-
-Yamlnet
------
-Website:      http://code.google.com/p/yamlnet/
-Copyright:    Copyright (c) 2009, apolanski
-License:      Apache Software Foundation License 2.0
 
 YUI
 -----
