@@ -80,7 +80,8 @@ namespace Orchard.Packaging.Controllers {
                     if (!url.StartsWith("http")) {
                         ModelState.AddModelError("Url", T("The Url is not valid").Text);
                     }
-                } else if (String.IsNullOrWhiteSpace(url)) {
+                }
+                else if (String.IsNullOrWhiteSpace(url)) {
                     ModelState.AddModelError("Url", T("Url is required").Text);
                 }
 
@@ -97,7 +98,8 @@ namespace Orchard.Packaging.Controllers {
                     if (String.IsNullOrWhiteSpace(title)) {
                         ModelState.AddModelError("Url", T("The feed has no title.").Text);
                     }
-                } catch {
+                }
+                catch {
                     ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
                 }
 
@@ -108,7 +110,8 @@ namespace Orchard.Packaging.Controllers {
                 _notifier.Information(T("The feed has been added successfully."));
 
                 return RedirectToAction("Sources");
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 _notifier.Error(T("Adding feed failed: {0}", exception.Message));
                 return View(new PackagingAddSourceViewModel { Url = url });
             }
@@ -138,7 +141,8 @@ namespace Orchard.Packaging.Controllers {
                 try {
                     var sourceExtensions = getList(source);
                     extensions = extensions == null ? sourceExtensions : extensions.Concat(sourceExtensions);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     Logger.Error(ex, "Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message);
                     _notifier.Error(T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message));
                 }
@@ -161,7 +165,15 @@ namespace Orchard.Packaging.Controllers {
                 return HttpNotFound();
             }
 
-            _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
+            try {
+                _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Package installation failed."));
+                for (Exception scan = exception; scan != null; scan = scan.InnerException) {
+                    _notifier.Error(T("{0}", scan.Message));
+                }
+            }
 
             return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
         }
