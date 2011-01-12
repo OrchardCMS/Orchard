@@ -203,7 +203,7 @@ namespace Lucene.Services {
         }
 
         public ISearchBuilder CreateSearchBuilder(string indexName) {
-            return new LuceneSearchBuilder(GetDirectory(indexName));
+            return new LuceneSearchBuilder(GetDirectory(indexName)) { Logger = Logger };
         }
 
         private string GetSettingsFileName(string indexName) {
