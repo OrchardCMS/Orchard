@@ -217,29 +217,37 @@ namespace Lucene.Services {
         private Query CreateQuery() {
             CreatePendingClause();
 
-            var query = new BooleanQuery();
+            var booleanQuery = new BooleanQuery();
+            Query resultQuery = booleanQuery;
 
-            foreach( var clause in _clauses)
-                query.Add(clause);
-           
+            if (_clauses.Count == 0) {
+                if (_filters.Count > 0) { // only filters applieds => transform to a boolean query
+                    foreach (var clause in _filters) {
+                        booleanQuery.Add(clause);
+                    }
 
-            if ( query.Clauses().Count == 0 ) { // get all documents ?
-                query.Add(new TermRangeQuery("id", "0", "9", true, true), BooleanClause.Occur.SHOULD);
+                    resultQuery = booleanQuery;
+                }
+                else { // search all documents, without filter or clause
+                    resultQuery = new MatchAllDocsQuery(null); 
+                }
+            }
+            else {
+                foreach (var clause in _clauses)
+                    booleanQuery.Add(clause);
+
+                if (_filters.Count > 0) {
+                    var filter = new BooleanQuery();
+                    foreach (var clause in _filters)
+                        filter.Add(clause);
+                    var queryFilter = new QueryWrapperFilter(filter);
+
+                    resultQuery = new FilteredQuery(booleanQuery, queryFilter);
+                }
             }
 
-            Query finalQuery = query;
-
-            if(_filters.Count > 0) {
-                var filter = new BooleanQuery();
-                foreach( var clause in _filters)
-                    filter.Add(clause);
-                var queryFilter = new QueryWrapperFilter(filter);
-
-                finalQuery = new FilteredQuery(query, queryFilter);
-            }
-
-            Logger.Debug("New search query: {0}", finalQuery.ToString());
-            return finalQuery;
+            Logger.Debug("New search query: {0}", resultQuery.ToString());
+            return resultQuery;
         }
 
         public IEnumerable<ISearchHit> Search() {
