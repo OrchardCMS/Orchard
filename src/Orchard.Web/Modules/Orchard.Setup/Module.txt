@@ -1,8 +1,8 @@
 ﻿Name: Setup
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.9.0
-OrchardVersion: 0.9.0
+Version: 1.0.0
+OrchardVersion: 1.0.0
 Description: The setup module is creating the application's setup experience.
 Features:
     Orchard.Setup:

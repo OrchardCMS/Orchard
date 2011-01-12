@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.9.0
-OrchardVersion: 0.9.0
+Version: 1.0.0
+OrchardVersion: 1.0.0
 Description: The HomePage module enables the promotion of a content item or container to be the home page of the site.
 Features:
     HomePage:

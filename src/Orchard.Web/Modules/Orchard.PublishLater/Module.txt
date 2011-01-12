@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.9.0
-OrchardVersion: 0.9.0
+Version: 1.0.0
+OrchardVersion: 1.0.0
 Description: The PublishLater module introduces draft creation and scheduled publishing functionality.
 Features:
     Orchard.PublishLater:

@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.9.0
-OrchardVersion: 0.9.0
+Version: 1.0.0
+OrchardVersion: 1.0.0
 Description: The jQuery module contains the jQuery and related script libraries.
 Features:
     Orchard.jQuery:
