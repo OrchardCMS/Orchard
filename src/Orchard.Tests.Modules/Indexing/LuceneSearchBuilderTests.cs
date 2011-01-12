@@ -341,5 +341,32 @@ namespace Orchard.Tests.Modules.Indexing {
 
             Assert.That(_searchBuilder.WithField("tag-value", "tag").Count(), Is.EqualTo(1));
         }
+
+
+        [Test]
+        public void ShouldReturnAllDocuments() {
+            _provider.CreateIndex("default");
+            for(var i = 1; i<100;i++) {
+                _provider.Store("default", _provider.New(i).Add("term-id", i).Store());
+            }
+
+            Assert.That(_searchBuilder.Count(), Is.EqualTo(99));
+        }
+
+        [Test]
+        public void NoClauseButAFilter() {
+            _provider.CreateIndex("default");
+            for (var i = 1; i < 50; i++) {
+                _provider.Store("default", _provider.New(i).Add("term-id", i / 10).Store());
+            }
+
+            Assert.That(_searchBuilder.Count(), Is.EqualTo(49));
+            Assert.That(_searchBuilder.WithField("term-id", 0).ExactMatch().AsFilter().Count(), Is.EqualTo(9));
+            Assert.That(_searchBuilder.WithField("term-id", 1).ExactMatch().AsFilter().Count(), Is.EqualTo(10));
+            Assert.That(_searchBuilder.WithField("term-id", 2).ExactMatch().AsFilter().Count(), Is.EqualTo(10));
+            Assert.That(_searchBuilder.WithField("term-id", 3).ExactMatch().AsFilter().Count(), Is.EqualTo(10));
+            Assert.That(_searchBuilder.WithField("term-id", 4).ExactMatch().AsFilter().Count(), Is.EqualTo(10));
+        }
+
     }
 }
