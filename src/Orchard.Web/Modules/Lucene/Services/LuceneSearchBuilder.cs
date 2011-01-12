@@ -48,11 +48,11 @@ namespace Lucene.Services {
             InitPendingClause();
         }
 
-        public ISearchBuilder Parse(string defaultField, string query) {
-            return Parse(new[] {defaultField}, query);
+        public ISearchBuilder Parse(string defaultField, string query, bool escape, bool mandatory) {
+            return Parse(new[] {defaultField}, query, escape, mandatory);
         }
         
-        public ISearchBuilder Parse(string[] defaultFields, string query) {
+        public ISearchBuilder Parse(string[] defaultFields, string query, bool escape, bool mandatory) {
             if ( defaultFields.Length == 0 ) {
                 throw new ArgumentException("Default field can't be empty");
             }
@@ -61,9 +61,13 @@ namespace Lucene.Services {
                 throw new ArgumentException("Query can't be empty");
             }
 
+            if (escape) {
+                query = QueryParser.Escape(query);
+            }
+
             var analyzer = LuceneIndexProvider.CreateAnalyzer();
             foreach ( var defaultField in defaultFields ) {
-                var clause = new BooleanClause(new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query), BooleanClause.Occur.SHOULD);
+                var clause = new BooleanClause(new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query), mandatory ? BooleanClause.Occur.MUST : BooleanClause.Occur.SHOULD);
                 _clauses.Add(clause);
             }
             
