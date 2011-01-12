@@ -278,11 +278,11 @@
   -->
   <Target Name="CopySqlCeBinaries">
     <ItemGroup>
-      <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\*.*" />
-      <SqlCeBinariesx64 Include="$(ProjectDir)..\..\lib\sqlce\amd64\*.*" />
+      <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\**\*" />
+      <SqlCeBinariesx64 Include="$(ProjectDir)..\..\lib\sqlce\amd64\**\*" />
     </ItemGroup>
-    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
   <Target Name="AfterBuild">
     <CallTarget Targets="CopySqlCeBinaries" />
