@@ -24,7 +24,7 @@ ASP.NET MVC
 Website:      http://aspnet.codeplex.com/wikipage?title=MVC&referringTitle=Home
 Copyright:    Copyright (c) 2008-2011 Microsoft Corporation
 License:      Microsoft Source License for ASP.NET pre-release components
-              http://aspnet.codeplex.com/license
+              http://www.microsoft.com/web/webpi/eula/AspNetMvc3-RC2-EULA.htm
 
 Autofac
 -----
