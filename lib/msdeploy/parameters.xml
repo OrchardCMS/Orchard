@@ -13,14 +13,6 @@
 		<parameterEntry type="ProviderPath" scope="setAcl" match="Orchard/Media" /> 
 	</parameter>
 
-	<parameter name="SetAclParameter3" description="Hidden - automatically sets write access for the app" defaultValue="{Application Path}/Modules" tags="Hidden">
-		<parameterEntry type="ProviderPath" scope="setAcl" match="Orchard/Modules" /> 
-	</parameter>
-
-	<parameter name="SetAclParameter4" description="Hidden - automatically sets write access for the app" defaultValue="{Application Path}/Themes" tags="Hidden">
-		<parameterEntry type="ProviderPath" scope="setAcl" match="Orchard/Themes" /> 
-	</parameter>
-
    	<!-- Prompts for database server name, this is used in the connection string parameter later -->
 	<parameter name="Database Server" description="Location of your database server (i.e. server name, IP address, or server\instance)" defaultValue=".\SQLEXPRESS" tags="SQL, dbServer">
 	</parameter>
