@@ -79,7 +79,8 @@ namespace Orchard.Blogs.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                return View(model);
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                return View((object)model);
             }
 
             conditionallyPublish(blogPost.ContentItem);
@@ -151,7 +152,8 @@ namespace Orchard.Blogs.Controllers {
             var model = Services.ContentManager.UpdateEditor(blogPost, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                return View(model);
+                // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                return View((object)model);
             }
 
             conditionallyPublish(blogPost.ContentItem);
