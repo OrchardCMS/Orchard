@@ -18,7 +18,8 @@
             RequestUrlPrefix = settings.RequestUrlPrefix;
             EncryptionAlgorithm = settings.EncryptionAlgorithm;
             EncryptionKey = settings.EncryptionKey;
-            EncryptionIV = settings.EncryptionIV;
+            HashAlgorithm = settings.HashAlgorithm;
+            HashKey = settings.HashKey;
             State = settings.State;
         }
 
@@ -33,7 +34,9 @@
 
         public string EncryptionAlgorithm { get; set; }
         public string EncryptionKey { get; set; }
-        public string EncryptionIV { get; set; }
+
+        public string HashAlgorithm { get; set; }
+        public string HashKey { get; set; }
 
         public TenantState State { get; set; }
     }

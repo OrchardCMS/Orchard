@@ -70,7 +70,7 @@ namespace Orchard.Tests.Environment.Configuration {
         [Test]
         public void EncryptionSettingsAreStoredAndReadable() {
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
-            var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux", EncryptionAlgorithm = "AES", EncryptionKey = "ABCDEFG", EncryptionIV= "HIJKL" };
+            var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux", EncryptionAlgorithm = "AES", EncryptionKey = "ABCDEFG", HashAlgorithm = "HMACSHA256", HashKey = "HIJKLMN" };
             loader.SaveSettings(foo);
             Assert.That(loader.LoadSettings().Count(), Is.EqualTo(1));
 
@@ -78,7 +78,8 @@ namespace Orchard.Tests.Environment.Configuration {
 
             Assert.That(settings.EncryptionAlgorithm, Is.EqualTo("AES"));
             Assert.That(settings.EncryptionKey, Is.EqualTo("ABCDEFG"));
-            Assert.That(settings.EncryptionIV, Is.EqualTo("HIJKL"));
+            Assert.That(settings.HashAlgorithm, Is.EqualTo("HMACSHA256"));
+            Assert.That(settings.HashKey, Is.EqualTo("HIJKLMN"));
         }
     }
 }

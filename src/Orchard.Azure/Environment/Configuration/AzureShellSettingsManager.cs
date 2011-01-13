@@ -99,8 +99,11 @@ namespace Orchard.Azure.Environment.Configuration {
                         case "EncryptionKey":
                             shellSettings.EncryptionKey = value;
                             break;
-                        case "EncryptionIV":
-                            shellSettings.EncryptionIV = value;
+                        case "HashAlgorithm":
+                            shellSettings.HashAlgorithm = value;
+                            break;
+                        case "HashKey":
+                            shellSettings.HashKey = value;
                             break;
                     }
                 }
@@ -113,7 +116,7 @@ namespace Orchard.Azure.Environment.Configuration {
             if (settings == null)
                 return "";
 
-            return string.Format("Name: {0}\r\nDataProvider: {1}\r\nDataConnectionString: {2}\r\nDataPrefix: {3}\r\nRequestUrlHost: {4}\r\nRequestUrlPrefix: {5}\r\nState: {6}\r\nEncryptionAlgorithm: {7}\r\nEncryptionKey: {8}\r\nEncryptionIV: {9}\r\n",
+            return string.Format("Name: {0}\r\nDataProvider: {1}\r\nDataConnectionString: {2}\r\nDataPrefix: {3}\r\nRequestUrlHost: {4}\r\nRequestUrlPrefix: {5}\r\nState: {6}\r\nEncryptionAlgorithm: {7}\r\nEncryptionKey: {8}\r\nHashAlgorithm: {9}\r\nHashKey: {10}\r\n",
                                  settings.Name,
                                  settings.DataProvider,
                                  settings.DataConnectionString ?? EmptyValue,
@@ -123,7 +126,8 @@ namespace Orchard.Azure.Environment.Configuration {
                                  settings.State != null ? settings.State.ToString() : String.Empty,
                                  settings.EncryptionAlgorithm ?? EmptyValue,
                                  settings.EncryptionKey ?? EmptyValue,
-                                 settings.EncryptionIV ?? EmptyValue
+                                 settings.HashAlgorithm ?? EmptyValue,
+                                 settings.HashKey ?? EmptyValue
                 );
         }
     }
