@@ -126,17 +126,14 @@ namespace Orchard.Setup.Services {
 
             #region Encryption Settings
 
-            // generate random keys for encryption
-            var key = new byte[32];
-            var iv = new byte[16];
-            using ( var random = new RNGCryptoServiceProvider() ) {
-                random.GetBytes(key);
-                random.GetBytes(iv);
-            }
-            
             shellSettings.EncryptionAlgorithm = "AES";
-            shellSettings.EncryptionKey = key.ToHexString();
-            shellSettings.EncryptionIV = iv.ToHexString();
+            // randomly generated key
+            shellSettings.EncryptionKey = SymmetricAlgorithm.Create(shellSettings.EncryptionAlgorithm).Key.ToHexString();
+
+            shellSettings.HashAlgorithm = "HMACSHA256";
+            // randomly generated key
+            shellSettings.HashKey = HMAC.Create(shellSettings.HashAlgorithm).Key.ToHexString();
+            
             #endregion
 
             var shellDescriptor = new ShellDescriptor {
