@@ -196,6 +196,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SiteCompilation.feature</DependentUpon>
     </Compile>
+    <Compile Include="Users.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Users.feature</DependentUpon>
+    </Compile>
     <Compile Include="UsingSpecFlow.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -295,6 +300,10 @@
     <None Include="Pages.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Pages.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Users.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Users.feature.cs</LastGenOutput>
     </None>
     <None Include="WebHosting.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
