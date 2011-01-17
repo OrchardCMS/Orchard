@@ -133,7 +133,7 @@ namespace Orchard.Users.Controllers {
                     break;
             }
 
-            return RedirectToAction("Index");
+            return Index(viewModel.Options, new PagerParameters());
         }
 
         public ActionResult Create() {
