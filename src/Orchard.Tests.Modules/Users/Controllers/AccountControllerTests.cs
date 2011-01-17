@@ -153,6 +153,41 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         }
 
         [Test]
+        public void UsersShouldNotBeAbleToRegisterIfInvalidEmail()
+        {
+
+            var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
+            registrationSettings.UsersCanRegister = true;
+            registrationSettings.UsersAreModerated = false;
+            registrationSettings.UsersMustValidateEmail = false;
+
+            _session.Flush();
+
+            _controller.ModelState.Clear();
+            var result = _controller.Register("bar", "notanemailaddress", "66554321", "66554321");
+ 
+            Assert.That(((ViewResult)result).ViewData.ModelState.Count == 1,"Invalid email address.");
+        }
+
+        [Test]
+        public void UsersShouldBeAbleToRegisterIfValidEmail()
+        {
+
+            var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
+            registrationSettings.UsersCanRegister = true;
+            registrationSettings.UsersAreModerated = false;
+            registrationSettings.UsersMustValidateEmail = false;
+
+            _session.Flush();
+
+            _controller.ModelState.Clear();
+            var result = _controller.Register("bar", "t@t.com", "password", "password");
+
+            Assert.That(result, Is.TypeOf<RedirectResult>());
+            Assert.That(((RedirectResult)result).Url, Is.EqualTo("~/"));
+        }
+
+        [Test]
         public void RegisteredUserShouldBeRedirectedToHomePage() {
 
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
