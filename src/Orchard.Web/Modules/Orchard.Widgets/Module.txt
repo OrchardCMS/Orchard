@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.0.0
-OrchardVersion: 1.0.0
+Version: 1.0.20
+OrchardVersion: 1.0.20
 Description: An implementation of widgets for Orchard.
 Features:
     Orchard.Widgets:
