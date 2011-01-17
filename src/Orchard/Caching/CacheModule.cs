@@ -17,7 +17,7 @@ namespace Orchard.Caching {
                     .Any(xx => xx.ParameterType == typeof(ICacheManager)));
 
             if (needsCacheManager) {
-                registration.Preparing += (sender, e) => {                    
+                registration.Preparing += (sender, e) => {
                     var parameter = new TypedParameter(
                         typeof(ICacheManager),
                         e.Context.Resolve<ICacheManager>(new TypedParameter(typeof(Type), registration.Activator.LimitType)));

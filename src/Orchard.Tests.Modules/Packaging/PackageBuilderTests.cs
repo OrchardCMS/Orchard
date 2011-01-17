@@ -11,6 +11,8 @@ using Orchard.Tests.Stubs;
 namespace Orchard.Tests.Modules.Packaging {
     [TestFixture]
     public class PackageBuilderTests : ContainerTestBase {
+        private const string PackageIdentifier = "Hello.World";
+
         protected override void Register(Autofac.ContainerBuilder builder) {
             builder.RegisterType<PackageBuilder>().As<IPackageBuilder>();
             builder.RegisterType<InMemoryWebSiteFolder>().As<IWebSiteFolder>()
@@ -27,7 +29,7 @@ namespace Orchard.Tests.Modules.Packaging {
             
             return packageBuilder.BuildPackage(new ExtensionDescriptor {
                 ExtensionType = DefaultExtensionTypes.Module,
-                Id = "Hello.World",
+                Id = PackageIdentifier,
                 Version = "1.0",
                 Description = "a",
                 Author = "b"
@@ -41,7 +43,7 @@ namespace Orchard.Tests.Modules.Packaging {
 
             var package = Package.Open(stream);
             Assert.That(package, Is.Not.Null);
-            Assert.That(package.PackageProperties.Identifier, Is.EqualTo("Orchard.Module.Hello.World"));
+            Assert.That(package.PackageProperties.Identifier, Is.EqualTo(PackageBuilder.BuildPackageId(PackageIdentifier, DefaultExtensionTypes.Module)));
         }
 
         [Test]

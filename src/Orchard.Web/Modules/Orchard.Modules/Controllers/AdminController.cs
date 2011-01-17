@@ -52,7 +52,8 @@ namespace Orchard.Modules.Controllers {
 
             return View(new ModulesIndexViewModel { 
                 Modules = modules,
-                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null
+                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
+                BrowseToGallery = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "Gallery") != null
             });
         }
 

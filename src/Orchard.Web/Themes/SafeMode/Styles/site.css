@@ -217,7 +217,7 @@ input[type="submit"]:focus::-moz-focus-inner, button:focus::-moz-focus-inner, .b
 }
 #throbber .curtain 
 {
-    position:absolute;
+    position:fixed;
     left:0;
     top:0;
     width:100%;
@@ -239,7 +239,6 @@ input[type="submit"]:focus::-moz-focus-inner, button:focus::-moz-focus-inner, .b
     padding:250px;
     color:White;
 }
-
 .message, .validation-summary-errors {
     margin:10px 0 4px 0;
     padding:4px;

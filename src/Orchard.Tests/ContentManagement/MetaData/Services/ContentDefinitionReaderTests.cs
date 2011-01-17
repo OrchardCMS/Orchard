@@ -23,7 +23,6 @@ namespace Orchard.Tests.ContentManagement.MetaData.Services {
             Assert.That(type.Name, Is.EqualTo("foo"));
         }
 
-
         [Test]
         public void AttributesAreAppliedAsSettings() {
             var builder = new ContentTypeDefinitionBuilder();
@@ -41,9 +40,18 @@ namespace Orchard.Tests.ContentManagement.MetaData.Services {
             Assert.That(type.Parts.Single().Settings["y"], Is.EqualTo("2"));
         }
 
-        [Test, Ignore("Parts can be removed by name")]
+        [Test]
         public void PartsCanBeRemovedByNameWhenImporting() {
-            Assert.Fail();
+            const string partToBeRemoved = "alpha";
+
+            var builder = new ContentTypeDefinitionBuilder();
+            _reader.Merge(new XElement("foo", 
+                new XElement(partToBeRemoved),
+                new XElement("remove", new XAttribute("name", partToBeRemoved))
+                ), builder);
+            var type = builder.Build();
+
+            Assert.That(type.Parts.FirstOrDefault(part => part.PartDefinition.Name == partToBeRemoved), Is.Null);
         }
     }
 }

@@ -5,22 +5,20 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Tests.Modules.Users {
     public class ShellSettingsUtility {
         public static ShellSettings CreateEncryptionEnabled() {
-            // generate random keys for encryption
-            var key = new byte[32];
-            var iv = new byte[16];
-            using ( var random = new RNGCryptoServiceProvider() ) {
-                random.GetBytes(key);
-                random.GetBytes(iv);
-            }
+
+            const string encryptionAlgorithm = "AES";
+            const string hashAlgorithm = "HMACSHA256";
 
             return new ShellSettings {
                 Name = "Alpha",
                 RequestUrlHost = "wiki.example.com",
                 RequestUrlPrefix = "~/foo",
-                EncryptionAlgorithm = "AES",
-                EncryptionKey = key.ToHexString(),
-                EncryptionIV = iv.ToHexString()
+                EncryptionAlgorithm = encryptionAlgorithm,
+                EncryptionKey = SymmetricAlgorithm.Create(encryptionAlgorithm).Key.ToHexString(),
+                HashAlgorithm = hashAlgorithm,
+                HashKey = HMAC.Create(hashAlgorithm).Key.ToHexString()
             };
+
         }
     }
 }

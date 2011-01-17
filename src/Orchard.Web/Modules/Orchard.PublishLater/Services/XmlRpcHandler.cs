@@ -122,7 +122,7 @@ namespace Orchard.PublishLater.Services {
                 if (contentItem == null || !contentItem.Is<PublishLaterPart>())
                     return;
 
-                _authorizationService.CheckAccess(Permissions.PublishOthersContent, user, null);
+                _authorizationService.CheckAccess(Permissions.PublishContent, user, null);
 
                 contentItem.As<PublishLaterPart>().ScheduledPublishUtc.Value = publishedUtc;
                 _publishingTaskManager.Publish(contentItem, (DateTime)publishedUtc);

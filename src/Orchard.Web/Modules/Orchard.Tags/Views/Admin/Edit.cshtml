@@ -16,7 +16,7 @@
     </fieldset>
 }
 <h2>@T("Content items tagged with {0}", Model.TagName)</h2>
-@if (View.ContentItems == null) {
+@if (ViewData["ContentItems"] == null) {
     <p>@T("There is nothing tagged with {0}", Model.TagName)</p>
 }
 else {
@@ -31,7 +31,7 @@ else {
                 <th scope="co2">@T("Name")</th>
             </tr>
         </thead>
-        @foreach (IContent content in View.ContentItems) { 
+        @foreach (IContent content in (IEnumerable<IContent>)ViewData["ContentItems"]) { 
         <tr>
             <td>@content.ContentItem.ContentType.CamelFriendly()</td>
             <td>@Html.ItemEditLink(content.ContentItem)</td>

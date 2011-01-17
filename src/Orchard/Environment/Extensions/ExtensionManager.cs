@@ -73,7 +73,6 @@ namespace Orchard.Environment.Extensions {
         }
 
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
-            
             var extensionDescriptor = featureDescriptor.Extension;
             var featureId = featureDescriptor.Id;
             var extensionId = extensionDescriptor.Id;
@@ -94,6 +93,7 @@ namespace Orchard.Environment.Extensions {
                 Logger.Error(ex, "Error loading extension '{0}'", extensionId);
                 throw new OrchardException(T("Error while loading extension '{0}'.", extensionId), ex);
             }
+
             if (extensionEntry == null) {
                 // If the feature could not be compiled for some reason,
                 // return a "null" feature, i.e. a feature with no exported types.

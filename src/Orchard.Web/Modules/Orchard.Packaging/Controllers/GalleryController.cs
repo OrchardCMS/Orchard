@@ -6,8 +6,10 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
 using Orchard.Security;
@@ -78,7 +80,8 @@ namespace Orchard.Packaging.Controllers {
                     if (!url.StartsWith("http")) {
                         ModelState.AddModelError("Url", T("The Url is not valid").Text);
                     }
-                } else if (String.IsNullOrWhiteSpace(url)) {
+                }
+                else if (String.IsNullOrWhiteSpace(url)) {
                     ModelState.AddModelError("Url", T("Url is required").Text);
                 }
 
@@ -95,7 +98,8 @@ namespace Orchard.Packaging.Controllers {
                     if (String.IsNullOrWhiteSpace(title)) {
                         ModelState.AddModelError("Url", T("The feed has no title.").Text);
                     }
-                } catch {
+                }
+                catch {
                     ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
                 }
 
@@ -106,14 +110,23 @@ namespace Orchard.Packaging.Controllers {
                 _notifier.Information(T("The feed has been added successfully."));
 
                 return RedirectToAction("Sources");
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 _notifier.Error(T("Adding feed failed: {0}", exception.Message));
                 return View(new PackagingAddSourceViewModel { Url = url });
             }
         }
 
         public ActionResult Modules(int? sourceId) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list modules")))
+            return ListExtensions(sourceId, DefaultExtensionTypes.Module, "Modules", source => _packagingSourceManager.GetModuleList(source).ToArray());
+        }
+
+        public ActionResult Themes(int? sourceId) {
+            return ListExtensions(sourceId, DefaultExtensionTypes.Theme, "Themes", source => _packagingSourceManager.GetThemeList(source).ToArray());
+        }
+
+        protected ActionResult ListExtensions(int? sourceId, string extensionType, string returnView, Func<PackagingSource, PackagingEntry[]> getList) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list {0}", extensionType)))
                 return new HttpUnauthorizedResult();
 
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
@@ -126,7 +139,7 @@ namespace Orchard.Packaging.Controllers {
             IEnumerable<PackagingEntry> extensions = null;
             foreach (var source in sources) {
                 try {
-                    var sourceExtensions = _packagingSourceManager.GetModuleList(source).ToArray();
+                    var sourceExtensions = getList(source);
                     extensions = extensions == null ? sourceExtensions : extensions.Concat(sourceExtensions);
                 }
                 catch (Exception ex) {
@@ -135,26 +148,8 @@ namespace Orchard.Packaging.Controllers {
                 }
             }
 
-            return View("Modules", new PackagingExtensionsViewModel {
-                Extensions = extensions ?? new PackagingEntry[] {},
-                Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
-                SelectedSource = selectedSource
-            });
-        }
-
-        public ActionResult Themes(int? sourceId) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list themes")))
-                return new HttpUnauthorizedResult();
-
-            var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
-
-            var sources = selectedSource != null
-                ? new[] { selectedSource }
-                : _packagingSourceManager.GetSources()
-            ;
-
-            return View("Themes", new PackagingExtensionsViewModel {
-                Extensions = sources.SelectMany(source => _packagingSourceManager.GetThemeList(source)),
+            return View(returnView, new PackagingExtensionsViewModel {
+                Extensions = extensions ?? new PackagingEntry[] { },
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
                 SelectedSource = selectedSource
             });
@@ -170,7 +165,22 @@ namespace Orchard.Packaging.Controllers {
                 return HttpNotFound();
             }
 
-            _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
+            try {
+                _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
+
+                if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
+                    _notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
+                }
+                else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
+                    _notifier.Information(T("The module has been successfully installed. Its features can be enabled in the \"Configuration | Features\" page accessible from the menu."));
+                }
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Package installation failed."));
+                for (Exception scan = exception; scan != null; scan = scan.InnerException) {
+                    _notifier.Error(T("{0}", scan.Message));
+                }
+            }
 
             return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
         }

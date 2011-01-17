@@ -11,7 +11,6 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Drivers.Coordinators;
 using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Common;
 using Orchard.Core.Common.Drivers;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;
@@ -97,7 +96,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
         class TestUser : ContentPart, IUser {
             public new int Id { get { return 6655321; } }
-            public string UserName {get { return "x"; }}
+            public string UserName { get { return "x"; } }
             public string Email { get { return "y"; } }
         }
 
@@ -112,8 +111,7 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void PublishingShouldFailIfOwnerIsUnknown()
-        {
+        public void PublishingShouldFailIfOwnerIsUnknown() {
             var contentManager = _container.Resolve<IContentManager>();
             var updateModel = new Mock<IUpdateModel>();
 
@@ -131,13 +129,12 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             ModelStateDictionary _modelState = new ModelStateDictionary();
 
-            public ModelStateDictionary ModelErrors
-            {
+            public ModelStateDictionary ModelErrors {
                 get { return _modelState; }
             }
-           
+
             public string Owner { get; set; }
-            
+
             public bool TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) where TModel : class {
                 (model as OwnerEditorViewModel).Owner = Owner;
                 return true;
@@ -149,8 +146,7 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void PublishingShouldNotThrowExceptionIfOwnerIsNull()
-        {
+        public void PublishingShouldNotThrowExceptionIfOwnerIsNull() {
             var contentManager = _container.Resolve<IContentManager>();
 
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
@@ -167,19 +163,18 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void PublishingShouldFailIfOwnerIsEmpty()
-        {
+        public void PublishingShouldFailIfOwnerIsEmpty() {
             var contentManager = _container.Resolve<IContentManager>();
 
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
-            
+
             var user = contentManager.New<IUser>("User");
             _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
             _authz.Setup(x => x.TryCheckAccess(StandardPermissions.SiteOwner, user, item)).Returns(true);
 
             item.Owner = user;
 
-            var updater = new UpdatModelStub() {Owner = ""};
+            var updater = new UpdatModelStub() { Owner = "" };
 
             contentManager.UpdateEditor(item.ContentItem, updater);
 
@@ -187,14 +182,26 @@ namespace Orchard.Core.Tests.Common.Providers {
         }
 
         [Test]
-        public void PublishingShouldSetPublishUtc()
-        {
+        public void CreatingShouldSetCreatedAndModifiedUtc() {
             var contentManager = _container.Resolve<IContentManager>();
 
             var createUtc = _clock.UtcNow;
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
 
             Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.PublishedUtc, Is.Null);
+        }
+
+        [Test]
+        public void PublishingShouldSetPublishUtcAndShouldNotChangeModifiedUtc() {
+            var contentManager = _container.Resolve<IContentManager>();
+
+            var createUtc = _clock.UtcNow;
+            var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
+
+            Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
             Assert.That(item.PublishedUtc, Is.Null);
 
             _clock.Advance(TimeSpan.FromMinutes(1));
@@ -203,9 +210,92 @@ namespace Orchard.Core.Tests.Common.Providers {
             contentManager.Publish(item.ContentItem);
 
             Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
             Assert.That(item.PublishedUtc, Is.EqualTo(publishUtc));
         }
 
+        [Test]
+        public void PublishingTwiceShouldKeepSettingPublishUtcAndShouldNotChangeModifiedUtc() {
+            var contentManager = _container.Resolve<IContentManager>();
+
+            var createUtc = _clock.UtcNow;
+            var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
+
+            Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.PublishedUtc, Is.Null);
+
+            _clock.Advance(TimeSpan.FromMinutes(1));
+            var publishUtc1 = _clock.UtcNow;
+
+            contentManager.Publish(item.ContentItem);
+
+            Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.PublishedUtc, Is.EqualTo(publishUtc1));
+
+            contentManager.Unpublish(item.ContentItem);
+
+            _clock.Advance(TimeSpan.FromMinutes(1));
+            var publishUtc2 = _clock.UtcNow;
+
+            contentManager.Publish(item.ContentItem);
+
+            Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.PublishedUtc, Is.EqualTo(publishUtc2));
+        }
+
+        [Test]
+        public void UnpublishingShouldNotChangePublishUtcAndModifiedUtc() {
+            var contentManager = _container.Resolve<IContentManager>();
+
+            var createUtc = _clock.UtcNow;
+            var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
+
+            Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.PublishedUtc, Is.Null);
+
+            _clock.Advance(TimeSpan.FromMinutes(1));
+            var publishUtc = _clock.UtcNow;
+
+            contentManager.Publish(item.ContentItem);
+
+            Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.PublishedUtc, Is.EqualTo(publishUtc));
+
+            contentManager.Unpublish(item.ContentItem);
+
+            Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.PublishedUtc, Is.EqualTo(publishUtc));
+        }
+
+        [Test]
+        public void EditingShouldSetModifiedUtc() {
+            var contentManager = _container.Resolve<IContentManager>();
+
+            var createUtc = _clock.UtcNow;
+            var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
+            contentManager.Publish(item.ContentItem);
+
+            Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.PublishedUtc, Is.EqualTo(createUtc));
+
+            _clock.Advance(TimeSpan.FromMinutes(1));
+            var editUtc = _clock.UtcNow;
+
+            var updater = new UpdatModelStub() { Owner = "" };
+            contentManager.UpdateEditor(item.ContentItem, updater);
+
+            Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
+            Assert.That(item.ModifiedUtc, Is.EqualTo(editUtc));
+            Assert.That(item.PublishedUtc, Is.EqualTo(createUtc));
+            Assert.That(updater.ModelErrors.Count, Is.EqualTo(0));
+        }
 
         [Test]
         public void VersioningItemShouldCreatedAndPublishedUtcValuesPerVersion() {
@@ -236,9 +326,9 @@ namespace Orchard.Core.Tests.Common.Providers {
             Assert.That(item1.CreatedUtc, Is.EqualTo(createUtc));
             Assert.That(item2.CreatedUtc, Is.EqualTo(createUtc));
 
-            // both instances non-versioned dates show the earliest publish date
-            Assert.That(item1.PublishedUtc, Is.EqualTo(publish1Utc));
-            Assert.That(item2.PublishedUtc, Is.EqualTo(publish1Utc));
+            // both instances non-versioned dates show the most recent publish
+            Assert.That(item1.PublishedUtc, Is.EqualTo(publish2Utc));
+            Assert.That(item2.PublishedUtc, Is.EqualTo(publish2Utc));
 
             // version1 versioned dates show create was upfront and publish was oldest
             Assert.That(item1.VersionCreatedUtc, Is.EqualTo(createUtc));
@@ -271,8 +361,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             contentManager.Unpublish(item.ContentItem);
 
             // db records need to be updated before seeking by published flags
-            _session.Flush();
-            _session.Clear();
+            ClearSession();
 
             var publishedItem = contentManager.Get<ICommonPart>(item.ContentItem.Id, VersionOptions.Published);
             var latestItem = contentManager.Get<ICommonPart>(item.ContentItem.Id, VersionOptions.Latest);

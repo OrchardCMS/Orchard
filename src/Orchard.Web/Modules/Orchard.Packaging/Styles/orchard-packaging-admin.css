@@ -1,17 +1,49 @@
-﻿.moduleName {
+﻿.extensionName {
     float:left;
-    }
-    
+}
 .contentItems .related {
-    padding:1.2em 0.4em 0.5em
+    padding: 1.2em 0.4em 0.5em
 }
-
 .contentItems .properties {
-    float:none;
-    clear:both;
+    float: left;
+    clear: both;
 }
-
 .contentItems .pageStatus {
-    margin:.8em 0;
-    color:#666;
+    margin: .8em 0;
+    color: #666;
+}
+.iconThumbnail {
+    padding-left: 70px;
+}
+.screenshotThumbnail {
+    padding-left: 191px;
+}
+.column {
+    float: left;
+    position: relative;
+}
+.extensionThumbnail {
+    margin-left: -100%;
+    padding-top: 20px;
+}
+.iconThumbnail .extensionThumbnail {
+    width: 70px;
+    right: 70px;
+    height: 50px;
+}
+.screenshotThumbnail .extensionThumbnail {
+    width: 191px;
+    right: 191px;
+    height: 128px;
+}
+.extensionDetails {
+    width: 100%;
+}
+.iconThumbnail .thumbnail {
+    width: 50px; 
+    height: 50px;
+}
+.screenshotThumbnail .thumbnail {
+    width: 171px; 
+    height: 128px;
 }

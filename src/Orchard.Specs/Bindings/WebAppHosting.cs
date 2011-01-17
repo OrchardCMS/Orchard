@@ -294,29 +294,22 @@ namespace Orchard.Specs.Bindings {
             Assert.That(Details.ResponseHeaders["Content-Type"], Is.StringMatching(contentType));
         }
 
-        [Then(@"I should see ""([^""]*)""")]
+        [Then(@"I should see ""(.*)""")]
         public void ThenIShouldSee(string text) {
             Assert.That(Details.ResponseText, Is.StringMatching(text));
         }
 
-        [Then(@"I should not see ""([^""]*)""")]
+        [Then(@"I should not see ""(.*)""")]
         public void ThenIShouldNotSee(string text) {
             Assert.That(Details.ResponseText, Is.Not.StringContaining(text));
         }
 
-        [Then(@"the title contains ""([^""]*)""")]
+        [Then(@"the title contains ""(.*)""")]
         public void ThenTheTitleContainsText(string text) {
             ScenarioContext.Current.Pending();
         }
 
-
-        [Then(@"I should see ""([^""]*)"" when I go to ""([^""]*)""")]
-        public void ThenIShouldSeeWhenIGoTo(string text, string urlPath) {
-            WhenIGoTo(urlPath);
-            ThenIShouldSee(text);
-        }
-
-        [Then(@"I should be denied access when I go to ""([^""]*)""")]
+        [Then(@"I should be denied access when I go to ""(.*)""")]
         public void ThenIShouldBeDeniedAccessWhenIGoTo(string urlPath) {
             WhenIGoTo(urlPath);
             WhenIAmRedirected();

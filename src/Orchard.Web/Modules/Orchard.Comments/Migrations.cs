@@ -7,11 +7,6 @@ namespace Orchard.Comments {
     public class Migrations : DataMigrationImpl {
     
         public int Create() {
-            SchemaBuilder.CreateTable("ClosedCommentsRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<int>("ContentItemId")
-                );
-
             SchemaBuilder.CreateTable("CommentPartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("Author")

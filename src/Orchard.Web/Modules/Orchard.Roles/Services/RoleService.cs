@@ -84,8 +84,8 @@ namespace Orchard.Roles.Services {
                 }
                 PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permission);
                 roleRecord.RolesPermissions.Add(new RolesPermissionsRecord { Permission = permissionRecord, Role = roleRecord });
-                TriggerSignal();
             }
+            TriggerSignal();
         }
 
         private string GetFeatureName(string permissionName) {

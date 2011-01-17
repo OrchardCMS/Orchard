@@ -71,7 +71,8 @@ namespace Orchard.Themes.Controllers {
 
                 return View(new ThemesIndexViewModel {
                     CurrentTheme = currentTheme, Themes = themes,
-                    InstallThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null
+                    InstallThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
+                    BrowseToGallery = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "Gallery") != null
                 });
             }
             catch (Exception exception) {

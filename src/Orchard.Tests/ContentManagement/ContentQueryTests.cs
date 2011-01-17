@@ -11,6 +11,7 @@ using Orchard.ContentManagement.Records;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Environment.Extensions;
+using Orchard.Tests.ContentManagement.Handlers;
 using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
 using Orchard.DisplayManagement.Implementation;
@@ -37,30 +38,23 @@ namespace Orchard.Tests.ContentManagement {
                 typeof(ContentTypeRecord));
         }
 
-        [TestFixtureTearDown]
-        public void TermFixture() {
-
-        }
-
-
-
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            // builder.RegisterModule(new ImplicitCollectionSupportModule());
+
             builder.RegisterModule(new ContentModule());
             builder.RegisterType<DefaultContentManager>().As<IContentManager>().SingleInstance();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
 
-            builder.RegisterType<AlphaHandler>().As<IContentHandler>();
-            builder.RegisterType<BetaHandler>().As<IContentHandler>();
-            builder.RegisterType<GammaHandler>().As<IContentHandler>();
-            builder.RegisterType<DeltaHandler>().As<IContentHandler>();
-            builder.RegisterType<EpsilonHandler>().As<IContentHandler>();
-            builder.RegisterType<FlavoredHandler>().As<IContentHandler>();
-            builder.RegisterType<StyledHandler>().As<IContentHandler>();           
+            builder.RegisterType<AlphaPartHandler>().As<IContentHandler>();
+            builder.RegisterType<BetaPartHandler>().As<IContentHandler>();
+            builder.RegisterType<GammaPartHandler>().As<IContentHandler>();
+            builder.RegisterType<DeltaPartHandler>().As<IContentHandler>();
+            builder.RegisterType<EpsilonPartHandler>().As<IContentHandler>();
+            builder.RegisterType<FlavoredPartHandler>().As<IContentHandler>();
+            builder.RegisterType<StyledHandler>().As<IContentHandler>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
 
@@ -87,10 +81,10 @@ namespace Orchard.Tests.ContentManagement {
         }
 
         private void AddSampleData() {
-            _manager.Create<Alpha>("alpha", init => { });
-            _manager.Create<Beta>("beta", init => { });
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "the frap value"; });
-            _manager.Create<Delta>("delta", init => { init.Record.Quux = "the quux value"; });
+            _manager.Create<AlphaPart>("alpha", init => { });
+            _manager.Create<BetaPart>("beta", init => { });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "the frap value"; });
+            _manager.Create<DeltaPart>("delta", init => { init.Record.Quux = "the quux value"; });
             _session.Flush();
         }
 
@@ -136,10 +130,10 @@ namespace Orchard.Tests.ContentManagement {
             var allItems = _manager.Query().List();
 
             Assert.That(allItems.Count(), Is.EqualTo(4));
-            Assert.That(allItems.Count(x => x.Has<Alpha>()), Is.EqualTo(1));
-            Assert.That(allItems.Count(x => x.Has<Beta>()), Is.EqualTo(1));
-            Assert.That(allItems.Count(x => x.Has<Gamma>()), Is.EqualTo(1));
-            Assert.That(allItems.Count(x => x.Has<Delta>()), Is.EqualTo(1));
+            Assert.That(allItems.Count(x => x.Has<AlphaPart>()), Is.EqualTo(1));
+            Assert.That(allItems.Count(x => x.Has<BetaPart>()), Is.EqualTo(1));
+            Assert.That(allItems.Count(x => x.Has<GammaPart>()), Is.EqualTo(1));
+            Assert.That(allItems.Count(x => x.Has<DeltaPart>()), Is.EqualTo(1));
         }
 
         [Test]
@@ -149,37 +143,37 @@ namespace Orchard.Tests.ContentManagement {
             var alphaBeta = _manager.Query().ForType("alpha", "beta").List();
 
             Assert.That(alphaBeta.Count(), Is.EqualTo(2));
-            Assert.That(alphaBeta.Count(x => x.Has<Alpha>()), Is.EqualTo(1));
-            Assert.That(alphaBeta.Count(x => x.Has<Beta>()), Is.EqualTo(1));
-            Assert.That(alphaBeta.Count(x => x.Has<Gamma>()), Is.EqualTo(0));
-            Assert.That(alphaBeta.Count(x => x.Has<Delta>()), Is.EqualTo(0));
+            Assert.That(alphaBeta.Count(x => x.Has<AlphaPart>()), Is.EqualTo(1));
+            Assert.That(alphaBeta.Count(x => x.Has<BetaPart>()), Is.EqualTo(1));
+            Assert.That(alphaBeta.Count(x => x.Has<GammaPart>()), Is.EqualTo(0));
+            Assert.That(alphaBeta.Count(x => x.Has<DeltaPart>()), Is.EqualTo(0));
 
             var gammaDelta = _manager.Query().ForType("gamma", "delta").List();
 
             Assert.That(gammaDelta.Count(), Is.EqualTo(2));
-            Assert.That(gammaDelta.Count(x => x.Has<Alpha>()), Is.EqualTo(0));
-            Assert.That(gammaDelta.Count(x => x.Has<Beta>()), Is.EqualTo(0));
-            Assert.That(gammaDelta.Count(x => x.Has<Gamma>()), Is.EqualTo(1));
-            Assert.That(gammaDelta.Count(x => x.Has<Delta>()), Is.EqualTo(1));
+            Assert.That(gammaDelta.Count(x => x.Has<AlphaPart>()), Is.EqualTo(0));
+            Assert.That(gammaDelta.Count(x => x.Has<BetaPart>()), Is.EqualTo(0));
+            Assert.That(gammaDelta.Count(x => x.Has<GammaPart>()), Is.EqualTo(1));
+            Assert.That(gammaDelta.Count(x => x.Has<DeltaPart>()), Is.EqualTo(1));
         }
 
         [Test]
         public void WherePredicateRestrictsResults() {
             AddSampleData();
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "one"; });
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "two"; });
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "three"; });
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "four"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
             _session.Flush();
 
-            var twoOrFour = _manager.Query<Gamma, GammaRecord>()
+            var twoOrFour = _manager.Query<GammaPart, GammaRecord>()
                 .Where(x => x.Frap == "one" || x.Frap == "four")
                 .List();
 
             Assert.That(twoOrFour.Count(), Is.EqualTo(2));
-            Assert.That(twoOrFour.Count(x => x.Has<Gamma>()), Is.EqualTo(2));
-            Assert.That(twoOrFour.Count(x => x.Get<Gamma>().Record.Frap == "one"), Is.EqualTo(1));
-            Assert.That(twoOrFour.Count(x => x.Get<Gamma>().Record.Frap == "four"), Is.EqualTo(1));
+            Assert.That(twoOrFour.Count(x => x.Has<GammaPart>()), Is.EqualTo(2));
+            Assert.That(twoOrFour.Count(x => x.Get<GammaPart>().Record.Frap == "one"), Is.EqualTo(1));
+            Assert.That(twoOrFour.Count(x => x.Get<GammaPart>().Record.Frap == "four"), Is.EqualTo(1));
         }
 
 
@@ -191,23 +185,23 @@ namespace Orchard.Tests.ContentManagement {
 
             Assert.That(gammas.Count(), Is.EqualTo(1));
             Assert.That(deltas.Count(), Is.EqualTo(1));
-            Assert.That(gammas.AsPart<Gamma>().Single().Record.Frap, Is.EqualTo("the frap value"));
-            Assert.That(deltas.AsPart<Delta>().Single().Record.Quux, Is.EqualTo("the quux value"));
+            Assert.That(gammas.AsPart<GammaPart>().Single().Record.Frap, Is.EqualTo("the frap value"));
+            Assert.That(deltas.AsPart<DeltaPart>().Single().Record.Quux, Is.EqualTo("the quux value"));
         }
 
         [Test]
         public void OrderMaySortOnJoinedRecord() {
             AddSampleData();
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "one"; });
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "two"; });
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "three"; });
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "four"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
             _session.Flush();
             _session.Clear();
 
             var ascending = _manager.Query("gamma")
                 .OrderBy<GammaRecord, string>(x => x.Frap)
-                .List<Gamma>().ToList();
+                .List<GammaPart>().ToList();
 
             Assert.That(ascending.Count(), Is.EqualTo(5));
             Assert.That(ascending.First().Record.Frap, Is.EqualTo("four"));
@@ -215,7 +209,7 @@ namespace Orchard.Tests.ContentManagement {
 
             _session.Clear();
 
-            var descending = _manager.Query<Gamma, GammaRecord>()
+            var descending = _manager.Query<GammaPart, GammaRecord>()
                 .OrderByDescending(x => x.Frap)
                 .List().ToList();
 
@@ -227,10 +221,10 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void SkipAndTakeProvidePagination() {
             AddSampleData();
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "one"; });
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "two"; });
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "three"; });
-            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "four"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "one"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "two"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "three"; });
+            _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
             _session.Flush();
 
             var reverseById = _manager.Query()
@@ -261,26 +255,26 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void QueryShouldJoinVersionedRecords() {
             AddSampleData();
-            _manager.Create<Gamma>("gamma", init => {
+            _manager.Create<GammaPart>("gamma", init => {
                 init.Record.Frap = "one";
-                init.As<Epsilon>().Record.Quad = "1";
+                init.As<EpsilonPart>().Record.Quad = "1";
             });
-            _manager.Create<Gamma>("gamma", init => {
+            _manager.Create<GammaPart>("gamma", init => {
                 init.Record.Frap = "two";
-                init.As<Epsilon>().Record.Quad = "2";
+                init.As<EpsilonPart>().Record.Quad = "2";
             });
-            _manager.Create<Gamma>("gamma", init => {
+            _manager.Create<GammaPart>("gamma", init => {
                 init.Record.Frap = "three";
-                init.As<Epsilon>().Record.Quad = "3";
+                init.As<EpsilonPart>().Record.Quad = "3";
             });
-            _manager.Create<Gamma>("gamma", init => {
+            _manager.Create<GammaPart>("gamma", init => {
                 init.Record.Frap = "four";
-                init.As<Epsilon>().Record.Quad = "4";
+                init.As<EpsilonPart>().Record.Quad = "4";
             });
             _session.Flush();
             _session.Clear();
 
-            var results = _manager.Query<Epsilon, EpsilonRecord>()
+            var results = _manager.Query<EpsilonPart, EpsilonRecord>()
                 .Where(x => x.Quad == "2" || x.Quad == "3")
                 .OrderByDescending(x => x.Quad)
                 .List();
@@ -293,21 +287,21 @@ namespace Orchard.Tests.ContentManagement {
 
         private void AddGammaVersions() {
             var gamma1 = _manager.Create<ContentItem>("gamma", init => {
-                init.As<Gamma>().Record.Frap = "one";
-                init.As<Epsilon>().Record.Quad = "v1";
+                init.As<GammaPart>().Record.Frap = "one";
+                init.As<EpsilonPart>().Record.Quad = "v1";
             });
             _session.Flush();
             _session.Clear();
 
             var gamma2 = _manager.Get(gamma1.Id, VersionOptions.DraftRequired);
-            gamma2.As<Gamma>().Record.Frap = "two";
-            gamma2.As<Epsilon>().Record.Quad = "v2";
+            gamma2.As<GammaPart>().Record.Frap = "two";
+            gamma2.As<EpsilonPart>().Record.Quad = "v2";
             _session.Flush();
             _session.Clear();
 
             var gamma3 = _manager.Create<ContentItem>("gamma", init => {
-                init.As<Gamma>().Record.Frap = "three";
-                init.As<Epsilon>().Record.Quad = "v3";
+                init.As<GammaPart>().Record.Frap = "three";
+                init.As<EpsilonPart>().Record.Quad = "v3";
             });
             _session.Flush();
             _session.Clear();
@@ -317,27 +311,27 @@ namespace Orchard.Tests.ContentManagement {
         public void QueryShouldOnlyReturnPublishedByDefault() {
             AddGammaVersions();
 
-            var list1 = _manager.Query<Gamma>()
+            var list1 = _manager.Query<GammaPart>()
                 .Where<EpsilonRecord>(x => x.Quad == "v1")
                 .List();
 
-            var list2 = _manager.Query<Gamma>()
+            var list2 = _manager.Query<GammaPart>()
                 .Where<EpsilonRecord>(x => x.Quad == "v2")
                 .List();
 
-            var list3 = _manager.Query<Gamma>()
+            var list3 = _manager.Query<GammaPart>()
                 .Where<EpsilonRecord>(x => x.Quad == "v3")
                 .List();
 
-            var listOne = _manager.Query<Gamma>()
+            var listOne = _manager.Query<GammaPart>()
                 .Where<GammaRecord>(x => x.Frap == "one")
                 .List();
 
-            var listTwo = _manager.Query<Gamma>()
+            var listTwo = _manager.Query<GammaPart>()
                 .Where<GammaRecord>(x => x.Frap == "two")
                 .List();
 
-            var listThree = _manager.Query<Gamma>()
+            var listThree = _manager.Query<GammaPart>()
                 .Where<GammaRecord>(x => x.Frap == "three")
                 .List();
 
@@ -353,27 +347,27 @@ namespace Orchard.Tests.ContentManagement {
         public void QueryForLatestShouldNotReturnEarlierVersions() {
             AddGammaVersions();
 
-            var list1 = _manager.Query<Gamma>(VersionOptions.Latest)
+            var list1 = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<EpsilonRecord>(x => x.Quad == "v1")
                 .List();
 
-            var list2 = _manager.Query<Gamma>(VersionOptions.Latest)
+            var list2 = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<EpsilonRecord>(x => x.Quad == "v2")
                 .List();
 
-            var list3 = _manager.Query<Gamma>(VersionOptions.Latest)
+            var list3 = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<EpsilonRecord>(x => x.Quad == "v3")
                 .List();
 
-            var listOne = _manager.Query<Gamma>(VersionOptions.Latest)
+            var listOne = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<GammaRecord>(x => x.Frap == "one")
                 .List();
 
-            var listTwo = _manager.Query<Gamma>(VersionOptions.Latest)
+            var listTwo = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<GammaRecord>(x => x.Frap == "two")
                 .List();
 
-            var listThree = _manager.Query<Gamma>(VersionOptions.Latest)
+            var listThree = _manager.Query<GammaPart>(VersionOptions.Latest)
                 .Where<GammaRecord>(x => x.Frap == "three")
                 .List();
 
@@ -389,27 +383,27 @@ namespace Orchard.Tests.ContentManagement {
         public void QueryForDraftShouldOnlyReturnLatestThatIsNotPublished() {
             AddGammaVersions();
 
-            var list1 = _manager.Query<Gamma>(VersionOptions.Draft)
+            var list1 = _manager.Query<GammaPart>(VersionOptions.Draft)
                 .Where<EpsilonRecord>(x => x.Quad == "v1")
                 .List();
 
-            var list2 = _manager.Query<Gamma>(VersionOptions.Draft)
+            var list2 = _manager.Query<GammaPart>(VersionOptions.Draft)
                 .Where<EpsilonRecord>(x => x.Quad == "v2")
                 .List();
 
-            var list3 = _manager.Query<Gamma>(VersionOptions.Draft)
+            var list3 = _manager.Query<GammaPart>(VersionOptions.Draft)
                 .Where<EpsilonRecord>(x => x.Quad == "v3")
                 .List();
 
-            var listOne = _manager.Query<Gamma>(VersionOptions.Draft)
+            var listOne = _manager.Query<GammaPart>(VersionOptions.Draft)
                 .Where<GammaRecord>(x => x.Frap == "one")
                 .List();
 
-            var listTwo = _manager.Query<Gamma>(VersionOptions.Draft)
+            var listTwo = _manager.Query<GammaPart>(VersionOptions.Draft)
                 .Where<GammaRecord>(x => x.Frap == "two")
                 .List();
 
-            var listThree = _manager.Query<Gamma>(VersionOptions.Draft)
+            var listThree = _manager.Query<GammaPart>(VersionOptions.Draft)
                 .Where<GammaRecord>(x => x.Frap == "three")
                 .List();
 
@@ -425,27 +419,27 @@ namespace Orchard.Tests.ContentManagement {
         public void QueryForAllShouldReturnMultipleQualifiedVersions() {
             AddGammaVersions();
 
-            var list1 = _manager.Query<Gamma>(VersionOptions.AllVersions)
+            var list1 = _manager.Query<GammaPart>(VersionOptions.AllVersions)
                 .Where<EpsilonRecord>(x => x.Quad == "v1")
                 .List();
 
-            var list2 = _manager.Query<Gamma>(VersionOptions.AllVersions)
+            var list2 = _manager.Query<GammaPart>(VersionOptions.AllVersions)
                 .Where<EpsilonRecord>(x => x.Quad == "v2")
                 .List();
 
-            var list3 = _manager.Query<Gamma>(VersionOptions.AllVersions)
+            var list3 = _manager.Query<GammaPart>(VersionOptions.AllVersions)
                 .Where<EpsilonRecord>(x => x.Quad == "v3")
                 .List();
 
-            var listOne = _manager.Query<Gamma>(VersionOptions.AllVersions)
+            var listOne = _manager.Query<GammaPart>(VersionOptions.AllVersions)
                 .Where<GammaRecord>(x => x.Frap == "one")
                 .List();
 
-            var listTwo = _manager.Query<Gamma>(VersionOptions.AllVersions)
+            var listTwo = _manager.Query<GammaPart>(VersionOptions.AllVersions)
                 .Where<GammaRecord>(x => x.Frap == "two")
                 .List();
 
-            var listThree = _manager.Query<Gamma>(VersionOptions.AllVersions)
+            var listThree = _manager.Query<GammaPart>(VersionOptions.AllVersions)
                 .Where<GammaRecord>(x => x.Frap == "three")
                 .List();
 

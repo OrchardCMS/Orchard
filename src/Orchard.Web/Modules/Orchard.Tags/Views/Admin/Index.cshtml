@@ -9,7 +9,7 @@
 <h1>@Html.TitleForPage(T("Manage Tags").ToString()) </h1>
 @Html.ValidationSummary() 
 <div class="manage">
-    @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: View.CreateTag != null ? View.CreateTag : new TagsAdminCreateViewModel())
+    @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: ViewData["CreateTag"] != null ? ViewData["CreateTag"] : new TagsAdminCreateViewModel())
 </div>
 @using(Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">

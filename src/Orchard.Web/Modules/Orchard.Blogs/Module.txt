@@ -2,14 +2,14 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 0.9.0
-OrchardVersion: 0.9.0
+Version: 1.0.20
+OrchardVersion: 1.0.20
 Description: The Orchard Blogs module is implementing basic blogging features. 
 Features:
     Orchard.Blogs:
         Name: Blogs
         Description: A simple web log.
-        Dependencies: Shapes, Common, Routable, Feeds, Orchard.Widgets, Orchard.jQuery
+        Dependencies: Shapes, Common, Routable, Feeds, Orchard.Widgets, Orchard.jQuery, Orchard.PublishLater
         Category: Content
     Orchard.Blogs.RemotePublishing:
         Name: Remote Blog Publishing

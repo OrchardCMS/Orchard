@@ -37,7 +37,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             var contentItem = _contentManager.Get(id, versionOptions);
 
-            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Cannot edit content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
 
             dynamic model = _contentManager.BuildDisplay(contentItem);

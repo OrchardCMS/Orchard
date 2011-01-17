@@ -15,7 +15,7 @@ namespace Orchard.ContentTypes.Services {
         void RemovePartFromType(string partName, string typeName);
         string GenerateName(string displayName);
 
-        IEnumerable<EditPartViewModel> GetParts();
+        IEnumerable<EditPartViewModel> GetParts(bool metadataPartsOnly);
         EditPartViewModel GetPart(string name);
         EditPartViewModel AddPart(CreatePartViewModel partViewModel);
         void AlterPart(EditPartViewModel partViewModel, IUpdateModel updater);

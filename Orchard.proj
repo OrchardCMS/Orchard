@@ -141,8 +141,8 @@
     <CallTarget Targets="ValidateProjectFiles"/>
 
     <ItemGroup>
-      <SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\*"/>
-      <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\*"/>
+      <SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\**\*"/>
+      <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\**\*"/>
       <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
       <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj;" />
@@ -183,8 +183,8 @@
     <Copy SourceFiles="@(Stage-Web);@(Stage-Web-Config);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Media)" DestinationFolder="$(StageFolder)\Media"/>
     <Copy SourceFiles="@(Stage-PoFiles)" DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
-    <Copy SourceFiles="@(SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86"/>
-    <Copy SourceFiles="@(SqlCe-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64"/>
+    <Copy SourceFiles="@(SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(SqlCe-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Modules-Sources)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>

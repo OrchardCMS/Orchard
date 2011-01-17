@@ -53,13 +53,16 @@ namespace Orchard.Core.Navigation.Controllers {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            foreach (var menuItemEntry in menuItemEntries) {
-                MenuPart menuPart = _menuService.Get(menuItemEntry.MenuItemId);
+            // See http://orchard.codeplex.com/workitem/17116
+            if (menuItemEntries != null) {
+                foreach (var menuItemEntry in menuItemEntries) {
+                    MenuPart menuPart = _menuService.Get(menuItemEntry.MenuItemId);
 
-                menuPart.MenuText = menuItemEntry.MenuItem.Text;
-                menuPart.MenuPosition = menuItemEntry.MenuItem.Position;
-                if (menuPart.Is<MenuItemPart>())
-                    menuPart.As<MenuItemPart>().Url = menuItemEntry.MenuItem.Url;
+                    menuPart.MenuText = menuItemEntry.MenuItem.Text;
+                    menuPart.MenuPosition = menuItemEntry.MenuItem.Position;
+                    if (menuPart.Is<MenuItemPart>())
+                        menuPart.As<MenuItemPart>().Url = menuItemEntry.MenuItem.Url;
+                }
             }
 
             return RedirectToAction("Index");

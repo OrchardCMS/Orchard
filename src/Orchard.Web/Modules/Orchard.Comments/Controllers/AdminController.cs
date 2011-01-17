@@ -173,7 +173,7 @@ namespace Orchard.Comments.Controllers {
                     Options = options,
                     DisplayNameForCommentedItem = _commentService.GetDisplayForCommentedContent(id) == null ? "" : _commentService.GetDisplayForCommentedContent(id).DisplayText,
                     CommentedItemId = id,
-                    CommentsClosedOnItem = _commentService.CommentsClosedForCommentedContent(id),
+                    CommentsClosedOnItem = _commentService.CommentsDisabledForCommentedContent(id),
                 };
                 return View(model);
             }
@@ -240,14 +240,15 @@ namespace Orchard.Comments.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Close(int commentedItemId, string returnUrl) {
+        public ActionResult Disable(int commentedItemId, string returnUrl) {
             try {
-                if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't close comments")))
+                if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't disable comments")))
                     return new HttpUnauthorizedResult();
-                _commentService.CloseCommentsForCommentedContent(commentedItemId);
+
+                _commentService.DisableCommentsForCommentedContent(commentedItemId);
             }
             catch (Exception exception) {
-                Services.Notifier.Error(T("Closing Comments failed: " + exception.Message));
+                Services.Notifier.Error(T("Disabling Comments failed: " + exception.Message));
             }
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
@@ -257,6 +258,7 @@ namespace Orchard.Comments.Controllers {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't enable comments")))
                     return new HttpUnauthorizedResult();
+                
                 _commentService.EnableCommentsForCommentedContent(commentedItemId);
             }
             catch (Exception exception) {

@@ -111,6 +111,30 @@ namespace Orchard.Tests.Modules.Scripting {
         }
 
         [Test]
+        public void ParserShouldUnderstandOperatorPrecedence5() {
+            var tree = new Parser("1+2+3").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.Plus,
+                    "binop", TokenKind.Plus,
+                        "const", 1,
+                        "const", 2,
+                    "const", 3,
+            });
+        }
+
+        [Test]
+        public void ParserShouldUnderstandOperatorPrecedence6() {
+            var tree = new Parser("1+2-3").Parse();
+            CheckTree(tree, new object[] {
+                "binop", TokenKind.Minus,
+                    "binop", TokenKind.Plus,
+                        "const", 1,
+                        "const", 2,
+                    "const", 3,
+            });
+        }
+
+        [Test]
         public void ParserShouldUnderstandRelationalOperators() {
             var tree = new Parser("true == true").Parse();
             CheckTree(tree, new object[] {
@@ -184,14 +208,14 @@ namespace Orchard.Tests.Modules.Scripting {
         public void ParserShouldUnderstandRelationalOperatorPrecedence() {
             var tree = new Parser("1 < 2 or 2 > 3 and !false").Parse();
             CheckTree(tree, new object[] {
-                "binop", TokenKind.Or,
-                  "binop", TokenKind.LessThan,
-                    "const", 1,
-                    "const", 2,
                   "binop", TokenKind.And,
-                    "binop", TokenKind.GreaterThan,
-                      "const", 2,
-                      "const", 3,
+                    "binop", TokenKind.Or,
+                      "binop", TokenKind.LessThan,
+                        "const", 1,
+                        "const", 2,
+                      "binop", TokenKind.GreaterThan,
+                        "const", 2,
+                        "const", 3,
                     "unop", TokenKind.NotSign,
                       "const", false,
             });
@@ -201,14 +225,14 @@ namespace Orchard.Tests.Modules.Scripting {
         public void ParserShouldUnderstandRelationalOperatorPrecedence2() {
             var tree = new Parser("1 < 2 and 2 > 3 or !false").Parse();
             CheckTree(tree, new object[] {
-                "binop", TokenKind.And,
-                  "binop", TokenKind.LessThan,
-                    "const", 1,
-                    "const", 2,
-                  "binop", TokenKind.Or,
-                    "binop", TokenKind.GreaterThan,
-                      "const", 2,
-                      "const", 3,
+                "binop", TokenKind.Or,
+                  "binop", TokenKind.And,
+                    "binop", TokenKind.LessThan,
+                        "const", 1,
+                        "const", 2,
+                      "binop", TokenKind.GreaterThan,
+                        "const", 2,
+                        "const", 3,
                     "unop", TokenKind.NotSign,
                       "const", false,
             });
@@ -234,11 +258,11 @@ namespace Orchard.Tests.Modules.Scripting {
                     "binop", TokenKind.Mul,
                         "const", 1,
                         "binop", TokenKind.Plus,
-                            "binop", TokenKind.Div,
-                                "const", 2,
-                                "binop", TokenKind.Mul,
+                            "binop", TokenKind.Mul,
+                                "binop", TokenKind.Div,
+                                    "const", 2,
                                     "const", 4,
-                                    "const", 6,
+                                "const", 6,
                             "const", 3,
             });
         }
@@ -246,6 +270,14 @@ namespace Orchard.Tests.Modules.Scripting {
         [Test]
         public void ParserShouldContainErrorExpressions() {
             var tree = new Parser("1 + not 3").Parse();
+            CheckTree(tree, new object[] {
+                "error",
+            });
+        }
+
+        [Test]
+        public void ParserShouldContainErrorExpressions2() {
+            var tree = new Parser("1 +").Parse();
             CheckTree(tree, new object[] {
                 "binop", TokenKind.Plus,
                     "const", 1,

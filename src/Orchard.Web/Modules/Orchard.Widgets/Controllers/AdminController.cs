@@ -134,7 +134,8 @@ namespace Orchard.Widgets.Controllers {
                 var model = Services.ContentManager.UpdateEditor(widgetPart, this);
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
-                    return View(model);
+                    // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                    return View((object)model);
                 }
 
                 Services.Notifier.Information(T("Your {0} has been created.", widgetPart.TypeDefinition.DisplayName));
@@ -179,7 +180,8 @@ namespace Orchard.Widgets.Controllers {
 
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
-                    return View(model);
+                    // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                    return View((object)model);
                 }
 
                 Services.Notifier.Information(T("Your {0} has been created.", layerPart.TypeDefinition.DisplayName));
@@ -226,7 +228,8 @@ namespace Orchard.Widgets.Controllers {
 
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
-                    return View(model);
+                    // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                    return View((object)model);
                 }
 
                 Services.Notifier.Information(T("Your {0} has been saved.", layerPart.TypeDefinition.DisplayName));
@@ -297,7 +300,8 @@ namespace Orchard.Widgets.Controllers {
                 var model = Services.ContentManager.UpdateEditor(widgetPart, this);
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
-                    return View(model);
+                    // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+                    return View((object)model);
                 }
 
                 Services.Notifier.Information(T("Your {0} has been saved.", widgetPart.TypeDefinition.DisplayName));

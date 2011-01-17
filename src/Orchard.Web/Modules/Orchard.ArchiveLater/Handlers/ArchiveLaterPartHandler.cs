@@ -1,6 +1,5 @@
 ﻿using Orchard.ArchiveLater.Models;
 using Orchard.ArchiveLater.Services;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.ArchiveLater.Handlers {
@@ -10,7 +9,12 @@ namespace Orchard.ArchiveLater.Handlers {
         public ArchiveLaterPartHandler(IArchiveLaterService archiveLaterService) {
             _archiveLaterService = archiveLaterService;
 
-            OnLoaded<ArchiveLaterPart>((context, archiveLater) => archiveLater.ScheduledArchiveUtc.Loader(delegate { return _archiveLaterService.GetScheduledArchiveUtc(archiveLater.As<ArchiveLaterPart>()); }));
+            OnLoading<ArchiveLaterPart>((context, part) => LazyLoadHandlers(part));
+            OnVersioning<ArchiveLaterPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
+        }
+
+        protected void LazyLoadHandlers(ArchiveLaterPart part) {
+            part.ScheduledArchiveUtc.Loader((value) => _archiveLaterService.GetScheduledArchiveUtc(part));        
         }
     }
 }

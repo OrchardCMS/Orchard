@@ -10,7 +10,7 @@ namespace Orchard.Setup.ViewModels {
         public string SiteName { get; set; }
         [UserNameValid(minimumLength: 3, maximumLength: 25)]
         public string AdminUsername { get; set; }
-        [PasswordValid(minimumLength: 6, maximumLength: 50)]
+        [PasswordValid(minimumLength: 7, maximumLength: 50)]
         public string AdminPassword { get; set; }
         [PasswordConfirmationRequired]
         public string ConfirmPassword { get; set; }
