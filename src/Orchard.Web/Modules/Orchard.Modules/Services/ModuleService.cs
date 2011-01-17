@@ -58,16 +58,18 @@ namespace Orchard.Modules.Services {
         public void EnableFeatures(IEnumerable<string> features, bool force) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
             var enabledFeatures = shellDescriptor.Features.ToList();
+            var availableFeatures = GetAvailableFeatures().ToList();
 
-            var featuresToEnable =
-                features.Select(s => EnableFeature(s, GetAvailableFeatures(), force)).
-                    SelectMany(ies => ies.Select(s => s));
+            var featuresToEnable = features
+                .Select(s => EnableFeature(s, availableFeatures, force)).ToList()
+                .SelectMany(ies => ies.Select(s => s));
 
             if (featuresToEnable.Count() == 0)
                 return;
 
             foreach (var featureToEnable in featuresToEnable) {
-                enabledFeatures.Add(new ShellFeature {Name = featureToEnable});
+                var feature = featureToEnable; 
+                enabledFeatures.Add(new ShellFeature { Name = feature });
                 Services.Notifier.Information(T("{0} was enabled", featureToEnable));
             }
 
@@ -84,9 +86,9 @@ namespace Orchard.Modules.Services {
             var enabledFeatures = shellDescriptor.Features.ToList();
             var availableFeatures = GetAvailableFeatures().ToList();
 
-            var featuresToDisable =
-                features.Select(s => DisableFeature(s, availableFeatures, force)).SelectMany(
-                    ies => ies.Select(s => s));
+            var featuresToDisable = features
+                .Select(s => DisableFeature(s, availableFeatures, force)).ToList()
+                .SelectMany(ies => ies.Select(s => s));
 
             if (featuresToDisable.Count() == 0)
                 return;

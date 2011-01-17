@@ -51,4 +51,4 @@ Scenario: Calling setup on a brand new install
         And I hit "Finish Setup"
         And I go to "/"
     Then I should see "My Site"
-        And I should see "Welcome, <strong>admin</strong>!"
+        And I should see "Welcome, <strong><a href="/Users/Account/ChangePassword">admin</a></strong>!"

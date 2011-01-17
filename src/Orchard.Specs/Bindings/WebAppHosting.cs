@@ -308,6 +308,13 @@ namespace Orchard.Specs.Bindings {
         public void ThenTheTitleContainsText(string text) {
             ScenarioContext.Current.Pending();
         }
+
+        [Then(@"I should be denied access when I go to ""(.*)""")]
+        public void ThenIShouldBeDeniedAccessWhenIGoTo(string urlPath) {
+            WhenIGoTo(urlPath);
+            WhenIAmRedirected();
+            ThenIShouldSee("Access Denied");
+        }
     }
 
     public class Form {

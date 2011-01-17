@@ -72,7 +72,8 @@ namespace Orchard.Experimental.Controllers {
             // get at the first input?
             model.Fieldsets[0][0].Attributes(new {autofocus = "autofocus"}); // <-- could be applied by some other behavior - need to be able to modify attributes instead of clobbering them like this
 
-            return View(model);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)model);
         }
 
         [HttpPost, ActionName("FormShapes")]
@@ -104,7 +105,8 @@ namespace Orchard.Experimental.Controllers {
             ViewBag.Page.Messages.Add(new HtmlString("<hr/>abuse<hr/>"));
             ViewBag.Page.Messages.Add("<hr/>encoded<hr/>");
 
-            return View(model);
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)model);
         }
 
         public static string Break(dynamic view) {

@@ -38,12 +38,39 @@ namespace Orchard.ContentManagement {
     }
 
     public class VersionOptions {
+        /// <summary>
+        /// Gets the latest version.
+        /// </summary>
         public static VersionOptions Latest { get { return new VersionOptions { IsLatest = true }; } }
+
+        /// <summary>
+        /// Gets the latest published version.
+        /// </summary>
         public static VersionOptions Published { get { return new VersionOptions { IsPublished = true }; } }
+
+        /// <summary>
+        /// Gets the latest draft version.
+        /// </summary>
         public static VersionOptions Draft { get { return new VersionOptions { IsDraft = true }; } }
+
+        /// <summary>
+        /// Gets the latest version and creates a new version draft based on it.
+        /// </summary>
         public static VersionOptions DraftRequired { get { return new VersionOptions { IsDraft = true, IsDraftRequired = true }; } }
+
+        /// <summary>
+        /// Gets all versions.
+        /// </summary>
         public static VersionOptions AllVersions { get { return new VersionOptions { IsAllVersions = true }; } }
+
+        /// <summary>
+        /// Gets a specific version based on its number.
+        /// </summary>
         public static VersionOptions Number(int version) { return new VersionOptions { VersionNumber = version }; }
+
+        /// <summary>
+        /// Gets a specific version based on the version record identifier.
+        /// </summary>
         public static VersionOptions VersionRecord(int id) { return new VersionOptions { VersionRecordId = id }; }
 
         public bool IsLatest { get; private set; }

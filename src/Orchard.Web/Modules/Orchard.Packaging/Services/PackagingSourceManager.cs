@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NuGet;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -12,8 +11,9 @@ using Orchard.Packaging.Models;
 namespace Orchard.Packaging.Services {
     [OrchardFeature("Gallery")]
     public class PackagingSourceManager : IPackagingSourceManager {
-        public const string ThemesPrefix = "Orchard.Themes.";
-        public const string ModulesPrefix = "Orchard.Modules.";
+        public static string GetExtensionPrefix(string extensionType) {
+            return string.Format("Orchard.{0}.", extensionType);
+        }
 
         private readonly IRepository<PackagingSource> _packagingSourceRecordRepository;
 
@@ -57,25 +57,59 @@ namespace Orchard.Packaging.Services {
                         return galleryFeedContext.Packages
                             .Where(p => p.PackageType == filter)
                             .ToList()
-                            .Select(p => CreatePackageEntry(p, packagingSource, galleryFeedContext.GetReadStreamUri(p)));
+                            .Select(p => {
+                                    PublishedScreenshot firstScreenshot = galleryFeedContext.Screenshots
+                                        .Where(s => s.PublishedPackageId == p.Id && s.PublishedPackageVersion == p.Version)
+                                        .ToList()
+                                        .FirstOrDefault();
+                                    return CreatePackageEntry(p, firstScreenshot, packagingSource, galleryFeedContext.GetReadStreamUri(p));
+                                });
                     }
                 ).ToArray();
         }
 
-        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source, Uri downloadUri) {
+        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PublishedScreenshot screenshot, PackagingSource source, Uri downloadUri) {
+            Uri baseUri = new Uri(string.Format("{0}://{1}:{2}/",
+                                                downloadUri.Scheme,
+                                                downloadUri.Host,
+                                                downloadUri.Port));
+
+            string iconUrl = GetAbsoluteUri(package.IconUrl, baseUri);
+            string firstScreenshot = screenshot != null ? GetAbsoluteUri(screenshot.ScreenshotUri, baseUri) : string.Empty;
+
             return new PackagingEntry {
-                Title = String.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
+                Title = string.IsNullOrWhiteSpace(package.Title) ? package.Id : package.Title,
                 PackageId = package.Id,
                 PackageStreamUri = downloadUri.ToString(),
                 ProjectUrl = package.ProjectUrl,
+                GalleryDetailsUrl = package.GalleryDetailsUrl,
                 Source = source,
-                Version = package.Version ?? String.Empty,
+                Version = package.Version ?? string.Empty,
                 Description = package.Description,
                 Authors = package.Authors,
-                LastUpdated = package.LastUpdated
+                LastUpdated = package.LastUpdated,
+                IconUrl = iconUrl,
+                FirstScreenshot = firstScreenshot,
+                Rating = package.Rating,
+                RatingsCount = package.RatingsCount
             };
         }
-        #endregion
 
+        protected static string GetAbsoluteUri(string url, Uri baseUri) {
+            Uri uri = null;
+            if (!string.IsNullOrEmpty(url))
+            {
+                if (!Uri.TryCreate(url, UriKind.Absolute, out uri))
+                {
+                    Uri.TryCreate(baseUri,
+                        url,
+                        out uri);
+                }
+            }
+
+            return uri != null ? uri.ToString() : string.Empty;
+        }
+
+        #endregion
     }
 }

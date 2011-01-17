@@ -7,7 +7,7 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace $$FeatureName$$.DataMigrations {
+namespace $$FeatureName$$ {
     public class Migrations : DataMigrationImpl {
 
         public int Create() {

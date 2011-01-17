@@ -104,7 +104,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             var edited = new EditTypeViewModel();
             TryUpdateModel(edited);
-            typeViewModel.DisplayName = edited.DisplayName;
+            typeViewModel.DisplayName = edited.DisplayName ?? string.Empty;
 
             if ( String.IsNullOrWhiteSpace(typeViewModel.DisplayName) ) {
                 ModelState.AddModelError("DisplayName", T("The Content Type name can't be empty.").ToString());
@@ -141,7 +141,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             var viewModel = new AddPartsViewModel {
                 Type = typeViewModel,
-                PartSelections = _contentDefinitionService.GetParts()
+                PartSelections = _contentDefinitionService.GetParts(false/*metadataPartsOnly*/)
                     .Where(cpd => !typeViewModel.Parts.Any(p => p.PartDefinition.Name == cpd.Name) && cpd.Settings.GetModel<ContentPartSettings>().Attachable)
                     .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name, PartDisplayName = cpd.DisplayName })
             };
@@ -226,7 +226,7 @@ namespace Orchard.ContentTypes.Controllers {
         public ActionResult ListParts() {
             return View(new ListContentPartsViewModel {
                 // only user-defined parts (not code as they are not configurable)
-                Parts = _contentDefinitionManager.ListPartDefinitions().Select(cpd => new EditPartViewModel(cpd))
+                Parts = _contentDefinitionService.GetParts(true/*metadataPartsOnly*/)
             });
         }
 

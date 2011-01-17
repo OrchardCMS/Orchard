@@ -39,7 +39,7 @@ namespace Orchard.Packaging.Services {
 
         public override IQueryable<IPackage> GetPackages() {
             IEnumerable<IPackage> packages = from extension in _extensionManager.AvailableExtensions()
-                                   let id = "Orchard." + extension.ExtensionType + "." + extension.Id
+                                   let id = PackageBuilder.BuildPackageId(extension.Id, extension.ExtensionType)
                                    let version = Version.Parse(extension.Version)
                                    let package = SourceRepository.FindPackage(id, version)
                                    where package != null

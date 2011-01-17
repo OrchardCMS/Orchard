@@ -305,12 +305,6 @@ Features:
             }
         }
 
-        [Test, Ignore("This assertion appears to be inconsistent with the comment in extension manager - an empty feature is returned")]
-        public void ExtensionManagerShouldThrowIfFeatureDoesNotExist() {
-            var featureDescriptor = new FeatureDescriptor { Id = "NoSuchFeature" };
-            Assert.Throws<ArgumentException>(() => _manager.LoadFeatures(new[] { featureDescriptor }));
-        }
-
         [Test]
         public void ExtensionManagerTestFeatureAttribute() {
             var extensionLoader = new StubLoaders();

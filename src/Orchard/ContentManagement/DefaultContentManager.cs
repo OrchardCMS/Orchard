@@ -128,7 +128,6 @@ namespace Orchard.ContentManagement {
                 return contentItem;
             }
 
-
             // allocate instance and set record property
             contentItem = New(versionRecord.ContentItemRecord.ContentType.Name);
             contentItem.VersionRecord = versionRecord;
@@ -398,13 +397,8 @@ namespace Orchard.ContentManagement {
 
             Handlers.Invoke(handler => handler.Indexed(indexContentContext), Logger);
         }
-
-        //public ISearchBuilder Search() {
-        //    return _indexManager.HasIndexProvider() 
-        //        ? _indexManager.GetSearchIndexProvider().CreateSearchBuilder("Search") 
-        //        : new NullSearchBuilder();
-        //}
     }
+
     class CallSiteCollection : ConcurrentDictionary<string, CallSite<Func<CallSite, object, object>>> {
         readonly Func<string, CallSite<Func<CallSite, object, object>>> _valueFactory;
 

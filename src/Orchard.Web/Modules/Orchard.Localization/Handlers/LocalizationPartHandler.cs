@@ -19,7 +19,10 @@ namespace Orchard.Localization.Handlers {
 
             Filters.Add(StorageFilter.For(localizedRepository));
 
-            OnInitializing<LocalizationPart>(InitializePart);
+            OnActivated<LocalizationPart>(PropertySetHandlers);
+
+            OnLoading<LocalizationPart>((context, part) => LazyLoadHandlers(part));
+            OnVersioning<LocalizationPart>((context, part, versionedPart) => LazyLoadHandlers(versionedPart));
 
             OnIndexed<LocalizationPart>((context, localized) => context.DocumentIndex
                 .Add("culture", CultureInfo.GetCultureInfo(localized.Culture != null ? localized.Culture.Culture : _cultureManager.GetSiteCulture()).LCID)
@@ -29,16 +32,22 @@ namespace Orchard.Localization.Handlers {
 
         public Localizer T { get; set; }
 
-        void InitializePart(InitializingContentContext context, LocalizationPart localizationPart) {
+        protected static void PropertySetHandlers(ActivatedContentContext context, LocalizationPart localizationPart) {
             localizationPart.CultureField.Setter(cultureRecord => {
                 localizationPart.Record.CultureId = cultureRecord.Id;
                 return cultureRecord;
             });
+            
             localizationPart.MasterContentItemField.Setter(masterContentItem => {
                 localizationPart.Record.MasterContentItemId = masterContentItem.ContentItem.Id;
                 return masterContentItem;
-            });
-            localizationPart.CultureField.Loader(ctx => _cultureManager.GetCultureById(localizationPart.Record.CultureId));
+            });            
+        }
+
+        protected void LazyLoadHandlers(LocalizationPart localizationPart) {
+            localizationPart.CultureField.Loader(ctx => 
+                _cultureManager.GetCultureById(localizationPart.Record.CultureId));
+
             localizationPart.MasterContentItemField.Loader(ctx =>
                 _contentManager.Get(localizationPart.Record.MasterContentItemId, localizationPart.IsPublished() ? VersionOptions.Published : VersionOptions.Latest)); 
         }

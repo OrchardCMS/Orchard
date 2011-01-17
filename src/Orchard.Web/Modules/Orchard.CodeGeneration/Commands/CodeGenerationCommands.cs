@@ -227,7 +227,6 @@ namespace Orchard.CodeGeneration.Commands {
             File.WriteAllText(propertiesPath + "\\AssemblyInfo.cs", templateText);
             content.Add(propertiesPath + "\\AssemblyInfo.cs");
 
-            File.WriteAllText(modulePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleWebConfig.txt"));
             templateText = File.ReadAllText(_codeGenTemplatePath + "ModuleManifest.txt");
             templateText = templateText.Replace("$$ModuleName$$", moduleName);
             File.WriteAllText(modulePath + "Module.txt", templateText);

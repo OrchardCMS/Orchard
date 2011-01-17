@@ -13,6 +13,7 @@ namespace Orchard.Core.Common.Drivers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
+        private readonly IClock _clock;
 
         public CommonPartDriver(
             IOrchardServices services,
@@ -25,6 +26,7 @@ namespace Orchard.Core.Common.Drivers {
             _authenticationService = authenticationService;
             _authorizationService = authorizationService;
             _membershipService = membershipService;
+            _clock = clock;
             T = NullLocalizer.Instance;
             Services = services;
         }
@@ -50,6 +52,10 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Editor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
+            // this event is hooked so the modified timestamp is changed when an edit-post occurs
+            part.ModifiedUtc = _clock.UtcNow;
+            part.VersionModifiedUtc = _clock.UtcNow;
+
             return Combined(
                 OwnerEditor(part, updater, shapeHelper),
                 ContainerEditor(part, updater, shapeHelper));

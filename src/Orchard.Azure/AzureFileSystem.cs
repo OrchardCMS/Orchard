@@ -156,7 +156,13 @@ namespace Orchard.Azure {
 
         public void TryCreateFolder(string path) {
             EnsurePathIsRelative(path);
-            CreateFile(Combine(path, FolderEntry));
+            using (new HttpContextWeaver()) {
+                if (Container.DirectoryExists(String.Concat(_root, path))) {
+                    return;
+                }
+
+                CreateFile(Combine(path, FolderEntry));
+            }
         }
 
         public void CreateFolder(string path) {

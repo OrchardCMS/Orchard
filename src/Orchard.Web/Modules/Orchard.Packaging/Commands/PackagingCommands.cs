@@ -38,7 +38,10 @@ namespace Orchard.Packaging.Commands {
             }
 
             // append "Orchard.[ExtensionType]" to prevent conflicts with other packages (e.g, TinyMce, jQuery, ...)
-            var filename = string.Format("Orchard.{0}.{1}.{2}.nupkg", packageData.ExtensionType, packageData.ExtensionName, packageData.ExtensionVersion);
+            var filename = string.Format("{0}{1}.{2}.nupkg",
+                PackagingSourceManager.GetExtensionPrefix(packageData.ExtensionType),
+                packageData.ExtensionName,
+                packageData.ExtensionVersion);
 
             if ( !Directory.Exists(path) ) {
                 Directory.CreateDirectory(path);
@@ -72,7 +75,11 @@ namespace Orchard.Packaging.Commands {
             }
         }
 
-        [CommandHelp("package uninstall <packageId> \r\n\t" + "Uninstall a module or a theme.")]
+        [CommandHelp(@"package uninstall <packageId>
+    Uninstall a module or a theme.
+    The <packageId> should take the format Orchard.[Module|Theme].<extensionName>.
+    For example, ""package uninstall Orchard.Module.SampleModule"" will uninstall the Module under the ""~/Modules/SampleModule"" directory and
+    ""package uninstall Orchard.Theme.SampleTheme"" will uninstall the Theme under the ""~/Themes/SampleTheme"" directory.")]
         [CommandName("package uninstall")]
         public void UninstallPackage(string packageId) {
             try {

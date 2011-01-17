@@ -19,7 +19,11 @@
     </p>
 
     if (Model.InstallThemes) {
-        @Html.ActionLink(T("Install a new Theme").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })
+        <p>@Html.ActionLink(T("Install a theme").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</p>
+    }
+
+    if (Model.BrowseToGallery) {
+        <p>@Html.ActionLink(T("Install a theme from the Gallery").ToString(), "Themes", "Gallery", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</p>
     }
 }
 

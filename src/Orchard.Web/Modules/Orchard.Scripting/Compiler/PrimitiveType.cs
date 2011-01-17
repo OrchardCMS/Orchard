@@ -11,11 +11,15 @@ namespace Orchard.Scripting.Compiler {
                 return IntegerPrimitiveType.Instance;
             if (value is string)
                 return StringPrimitiveType.Instance;
+            if (value is Error)
+                return ErrorPrimitiveType.Instance;
             throw new InvalidOperationException(string.Format("Scripting engine internal error: no primitive type for value '{0}'", value));
         }
 
         public abstract EvaluationResult EqualityOperator(EvaluationResult value, EvaluationResult other);
         public abstract EvaluationResult ComparisonOperator(EvaluationResult value, EvaluationResult other);
+        public abstract EvaluationResult LogicalAnd(EvaluationResult value, EvaluationResult other);
+        public abstract EvaluationResult LogicalOr(EvaluationResult value, EvaluationResult other);
 
         protected EvaluationResult Result(object value) {
             return EvaluationResult.Result(value);
@@ -42,6 +46,18 @@ namespace Orchard.Scripting.Compiler {
         public override EvaluationResult ComparisonOperator(EvaluationResult value, EvaluationResult other) {
             return Error("Boolean values can only be compared to other boolean values");
         }
+
+        public override EvaluationResult LogicalAnd(EvaluationResult value, EvaluationResult other) {
+            if (!value.BoolValue)
+                return value;
+            return other;
+        }
+
+        public override EvaluationResult LogicalOr(EvaluationResult value, EvaluationResult other) {
+            if (value.BoolValue)
+                return value;
+            return other;
+        }
     }
 
     public class IntegerPrimitiveType : PrimitiveType {
@@ -62,6 +78,14 @@ namespace Orchard.Scripting.Compiler {
                 return Result(value.Int32Value.CompareTo(other.Int32Value));
             return Error("Integer values can only be compared to other integer values");
         }
+
+        public override EvaluationResult LogicalAnd(EvaluationResult value, EvaluationResult other) {
+            return other;
+        }
+
+        public override EvaluationResult LogicalOr(EvaluationResult value, EvaluationResult other) {
+            return value;
+        }
     }
 
     public class StringPrimitiveType : PrimitiveType {
@@ -80,6 +104,14 @@ namespace Orchard.Scripting.Compiler {
         public override EvaluationResult ComparisonOperator(EvaluationResult value, EvaluationResult other) {
             return Error("String values can not be compared");
         }
+
+        public override EvaluationResult LogicalAnd(EvaluationResult value, EvaluationResult other) {
+            return other;
+        }
+
+        public override EvaluationResult LogicalOr(EvaluationResult value, EvaluationResult other) {
+            return value;
+        }
     }
 
     public class NullPrimitiveType : PrimitiveType {
@@ -95,6 +127,38 @@ namespace Orchard.Scripting.Compiler {
 
         public override EvaluationResult ComparisonOperator(EvaluationResult value, EvaluationResult other) {
             return Error("'null' values can not be compared");
+        }
+
+        public override EvaluationResult LogicalAnd(EvaluationResult value, EvaluationResult other) {
+            return value;
+        }
+
+        public override EvaluationResult LogicalOr(EvaluationResult value, EvaluationResult other) {
+            return other;
+        }
+    }
+
+    public class ErrorPrimitiveType : PrimitiveType {
+        private static ErrorPrimitiveType _instance;
+
+        public static ErrorPrimitiveType Instance {
+            get { return _instance ?? (_instance = new ErrorPrimitiveType()); }
+        }
+
+        public override EvaluationResult EqualityOperator(EvaluationResult value, EvaluationResult other) {
+            return value;
+        }
+
+        public override EvaluationResult ComparisonOperator(EvaluationResult value, EvaluationResult other) {
+            return value;
+        }
+
+        public override EvaluationResult LogicalAnd(EvaluationResult value, EvaluationResult other) {
+            return value;
+        }
+
+        public override EvaluationResult LogicalOr(EvaluationResult value, EvaluationResult other) {
+            return value;
         }
     }
 }

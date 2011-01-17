@@ -6,14 +6,14 @@ namespace Orchard.Blogs {
     public class Permissions : IPermissionProvider {
         public static readonly Permission ManageBlogs = new Permission { Description = "Manage blogs", Name = "ManageBlogs" };
 
-        public static readonly Permission PublishOthersBlogPost = new Permission { Description = "Publish or unpublish blog post for others", Name = "PublishOthersBlogPost", ImpliedBy = new[] { ManageBlogs } };
-        public static readonly Permission PublishOwnBlogPost = new Permission { Description = "Publish or unpublish own blog post", Name = "PublishOwnBlogPost", ImpliedBy = new[] { PublishOthersBlogPost } };
-        public static readonly Permission EditOthersBlogPost = new Permission { Description = "Edit any blog posts", Name = "EditOthersBlogPost", ImpliedBy = new[] { PublishOthersBlogPost } };
-        public static readonly Permission EditOwnBlogPost = new Permission { Description = "Edit own blog posts", Name = "EditOwnBlogPost", ImpliedBy = new[] { EditOthersBlogPost, PublishOwnBlogPost } };
-        public static readonly Permission DeleteOthersBlogPost = new Permission { Description = "Delete blog post for others", Name = "DeleteOthersBlogPost", ImpliedBy = new[] { ManageBlogs } };
-        public static readonly Permission DeleteOwnBlogPost = new Permission { Description = "Delete own blog post", Name = "DeleteOwnBlogPost", ImpliedBy = new[] { DeleteOthersBlogPost } };
+        public static readonly Permission PublishBlogPost = new Permission { Description = "Publish or unpublish blog post for others", Name = "PublishBlogPost", ImpliedBy = new[] { ManageBlogs } };
+        public static readonly Permission PublishOwnBlogPost = new Permission { Description = "Publish or unpublish own blog post", Name = "PublishOwnBlogPost", ImpliedBy = new[] { PublishBlogPost } };
+        public static readonly Permission EditBlogPost = new Permission { Description = "Edit any blog posts", Name = "EditBlogPost", ImpliedBy = new[] { PublishBlogPost } };
+        public static readonly Permission EditOwnBlogPost = new Permission { Description = "Edit own blog posts", Name = "EditOwnBlogPost", ImpliedBy = new[] { EditBlogPost, PublishOwnBlogPost } };
+        public static readonly Permission DeleteBlogPost = new Permission { Description = "Delete blog post for others", Name = "DeleteBlogPost", ImpliedBy = new[] { ManageBlogs } };
+        public static readonly Permission DeleteOwnBlogPost = new Permission { Description = "Delete own blog post", Name = "DeleteOwnBlogPost", ImpliedBy = new[] { DeleteBlogPost } };
 
-        public static readonly Permission MetaListOthersBlogs = new Permission { ImpliedBy = new[] { EditOthersBlogPost, PublishOthersBlogPost, DeleteOthersBlogPost } };
+        public static readonly Permission MetaListBlogs = new Permission { ImpliedBy = new[] { EditBlogPost, PublishBlogPost, DeleteBlogPost } };
         public static readonly Permission MetaListOwnBlogs = new Permission { ImpliedBy = new[] { EditOwnBlogPost, PublishOwnBlogPost, DeleteOwnBlogPost } };
 
         public virtual Feature Feature { get; set; }
@@ -22,11 +22,11 @@ namespace Orchard.Blogs {
             return new[] {
                 ManageBlogs,
                 EditOwnBlogPost,
-                EditOthersBlogPost,
+                EditBlogPost,
                 PublishOwnBlogPost,
-                PublishOthersBlogPost,
+                PublishBlogPost,
                 DeleteOwnBlogPost,
-                DeleteOthersBlogPost,
+                DeleteBlogPost,
             };
         }
 
@@ -38,7 +38,7 @@ namespace Orchard.Blogs {
                 },
                 new PermissionStereotype {
                     Name = "Editor",
-                    Permissions = new[] {PublishOthersBlogPost,EditOthersBlogPost,DeleteOthersBlogPost}
+                    Permissions = new[] {PublishBlogPost,EditBlogPost,DeleteBlogPost}
                 },
                 new PermissionStereotype {
                     Name = "Moderator",

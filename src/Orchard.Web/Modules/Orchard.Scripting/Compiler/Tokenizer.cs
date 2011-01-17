@@ -48,6 +48,10 @@ namespace Orchard.Scripting.Compiler {
                         return LexSingleQuotedStringLiteral();
                     case '!':
                         return LexNotSign();
+                    case '|':
+                        return LexOrSign();
+                    case '&':
+                        return LexAndSign();
                     case '=':
                         return LexEqual();
                     case '<':
@@ -67,8 +71,12 @@ namespace Orchard.Scripting.Compiler {
                     continue;
                 }
 
-                return CreateToken(TokenKind.Invalid, "Unrecognized character");
+                return InvalidToken();
             }
+        }
+
+        private Token InvalidToken() {
+            return CreateToken(TokenKind.Invalid, "Unrecognized character");
         }
 
         private Token LexNotSign() {
@@ -79,6 +87,26 @@ namespace Orchard.Scripting.Compiler {
                 return CreateToken(TokenKind.NotEqual);
             }
             return CreateToken(TokenKind.NotSign);
+        }
+
+        private Token LexOrSign() {
+            NextCharacter();
+            char ch = Character();
+            if (ch == '|') {
+                NextCharacter();
+                return CreateToken(TokenKind.OrSign);
+            }
+            return InvalidToken();
+        }
+
+        private Token LexAndSign() {
+            NextCharacter();
+            char ch = Character();
+            if (ch == '&') {
+                NextCharacter();
+                return CreateToken(TokenKind.AndSign);
+            }
+            return InvalidToken();
         }
 
         private Token LexGreaterThan() {

@@ -5,6 +5,7 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using NuGet;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
@@ -14,6 +15,7 @@ using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using IPackageManager = Orchard.Packaging.Services.IPackageManager;
+using PackageBuilder = Orchard.Packaging.Services.PackageBuilder;
 
 namespace Orchard.Packaging.Controllers {
     [OrchardFeature("PackagingServices")]
@@ -60,7 +62,7 @@ namespace Orchard.Packaging.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove themes")))
                 return new HttpUnauthorizedResult();
 
-            return UninstallPackage(PackagingSourceManager.ThemesPrefix + themeId, returnUrl, retryUrl);
+            return UninstallPackage(PackageBuilder.BuildPackageId(themeId, DefaultExtensionTypes.Theme), returnUrl, retryUrl);
         }
 
         public ActionResult AddModule(string returnUrl) {
@@ -96,16 +98,15 @@ namespace Orchard.Packaging.Controllers {
                         file.SaveAs(fullFileName);
                         PackageInfo info = _packageManager.Install(new ZipPackage(fullFileName), _appDataFolderRoot.RootFolder, HostingEnvironment.MapPath("~/"));
                         System.IO.File.Delete(fullFileName);
-
-                        _notifier.Information(T("Installed package \"{0}\", version {1} of type \"{2}\" at location \"{3}\"",
-                            info.ExtensionName, info.ExtensionVersion, info.ExtensionType, info.ExtensionPath));
                     }
                 }
 
                 return this.RedirectLocal(returnUrl, "~/");
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Package uploading and installation failed."));
                 for (Exception scan = exception; scan != null; scan = scan.InnerException) {
-                    _notifier.Error(T("Uploading module package failed: {0}", exception.Message));
+                    _notifier.Error(T("{0}", scan.Message));
                 }
 
                 return Redirect(retryUrl);
@@ -122,7 +123,8 @@ namespace Orchard.Packaging.Controllers {
                 _notifier.Information(T("Uninstalled package \"{0}\"", id));
 
                 return this.RedirectLocal(returnUrl, "~/");
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 for (Exception scan = exception; scan != null; scan = scan.InnerException) {
                     _notifier.Error(T("Uninstall failed: {0}", exception.Message));
                 }

@@ -231,14 +231,14 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
             _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Analyze().Add("title", "Soap opera").Analyze());
 
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen").Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen bertrand").Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen +bertrand").Count(), Is.EqualTo(1));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "+kitchen +bertrand").Count(), Is.EqualTo(0));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit").Count(), Is.EqualTo(0));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit*").Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap").Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap").Search().First().ContentItemId, Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen", false).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen bertrand", false).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen +bertrand", false).Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "+kitchen +bertrand", false).Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit", false).Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit*", false).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap", false).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap", false).Search().First().ContentItemId, Is.EqualTo(2));
         }
 
         [Test]
@@ -287,13 +287,13 @@ namespace Orchard.Tests.Modules.Indexing {
         [Test]
         public void FiltersShouldNotAlterResults() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped by Mirosoft in C#").Analyze().Add("culture", 1033));
-            _provider.Store("default", _provider.New(2).Add("body", "Windows a été développé par Mirosoft en C++").Analyze().Add("culture", 1036));
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped by Microsoft in C#").Analyze().Add("culture", 1033));
+            _provider.Store("default", _provider.New(2).Add("body", "Windows a été développé par Microsoft en C++").Analyze().Add("culture", 1036));
             _provider.Store("default", _provider.New(3).Add("title", "Home").Analyze().Add("culture", 1033));
 
-            Assert.That(_searchBuilder.WithField("body", "Mirosoft").Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.WithField("body", "Mirosoft").WithField("culture", 1033).Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.WithField("body", "Mirosoft").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("body", "Microsoft").Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "Microsoft").WithField("culture", 1033).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.WithField("body", "Microsoft").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(1));
             
             Assert.That(_searchBuilder.WithField("body", "Orchard").WithField("culture", 1036).Count(), Is.EqualTo(2));
             Assert.That(_searchBuilder.WithField("body", "Orchard").WithField("culture", 1036).AsFilter().Count(), Is.EqualTo(0));
@@ -306,6 +306,14 @@ namespace Orchard.Tests.Modules.Indexing {
 
             Assert.That(_searchBuilder.Parse("title", "home").Count(), Is.EqualTo(1));
             Assert.That(_searchBuilder.Parse("title", "home").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ParsedTextShouldBeEscapedByDefault() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "foo.bar").Analyze());
+
+            Assert.That(_searchBuilder.Parse("body", "*@!woo*@!").Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -333,5 +341,32 @@ namespace Orchard.Tests.Modules.Indexing {
 
             Assert.That(_searchBuilder.WithField("tag-value", "tag").Count(), Is.EqualTo(1));
         }
+
+
+        [Test]
+        public void ShouldReturnAllDocuments() {
+            _provider.CreateIndex("default");
+            for(var i = 1; i<100;i++) {
+                _provider.Store("default", _provider.New(i).Add("term-id", i).Store());
+            }
+
+            Assert.That(_searchBuilder.Count(), Is.EqualTo(99));
+        }
+
+        [Test]
+        public void NoClauseButAFilter() {
+            _provider.CreateIndex("default");
+            for (var i = 1; i < 50; i++) {
+                _provider.Store("default", _provider.New(i).Add("term-id", i / 10).Store());
+            }
+
+            Assert.That(_searchBuilder.Count(), Is.EqualTo(49));
+            Assert.That(_searchBuilder.WithField("term-id", 0).ExactMatch().AsFilter().Count(), Is.EqualTo(9));
+            Assert.That(_searchBuilder.WithField("term-id", 1).ExactMatch().AsFilter().Count(), Is.EqualTo(10));
+            Assert.That(_searchBuilder.WithField("term-id", 2).ExactMatch().AsFilter().Count(), Is.EqualTo(10));
+            Assert.That(_searchBuilder.WithField("term-id", 3).ExactMatch().AsFilter().Count(), Is.EqualTo(10));
+            Assert.That(_searchBuilder.WithField("term-id", 4).ExactMatch().AsFilter().Count(), Is.EqualTo(10));
+        }
+
     }
 }

@@ -78,17 +78,15 @@ namespace Orchard.Specs.Hosting {
                 .ShallowCopy("*.dll", _tempSite.Combine("bin"))
                 .ShallowCopy("*.pdb", _tempSite.Combine("bin"));
 
-            Log("Copy SqlCe binaries");
+            Log("Copy SqlCe native binaries");
             if (_orchardWebPath.Combine("bin").Combine("x86").IsDirectory) {
                 _orchardWebPath.Combine("bin").Combine("x86")
-                    .ShallowCopy("*.dll", _tempSite.Combine("bin").Combine("x86"))
-                    .ShallowCopy("*.pdb", _tempSite.Combine("bin").Combine("x86"));
+                    .DeepCopy("*.*", _tempSite.Combine("bin").Combine("x86"));
             }
 
             if (_orchardWebPath.Combine("bin").Combine("amd64").IsDirectory) {
                 _orchardWebPath.Combine("bin").Combine("amd64")
-                    .ShallowCopy("*.dll", _tempSite.Combine("bin").Combine("amd64"))
-                    .ShallowCopy("*.pdb", _tempSite.Combine("bin").Combine("amd64"));
+                    .DeepCopy("*.*", _tempSite.Combine("bin").Combine("amd64"));
             }
 
             // Copy binaries of this project, so that remote execution of lambda

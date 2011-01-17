@@ -152,15 +152,23 @@ namespace Orchard.ContentTypes.Services {
             _contentDefinitionManager.AlterTypeDefinition(typeName, typeBuilder => typeBuilder.RemovePart(partName));
         }
 
-        public IEnumerable<EditPartViewModel> GetParts() {
+        public IEnumerable<EditPartViewModel> GetParts(bool metadataPartsOnly) {
             var typeNames = GetTypes().Select(ctd => ctd.Name);
+
             // user-defined parts
-            var contentParts = _contentDefinitionManager.ListPartDefinitions().Select(cpd => new EditPartViewModel(cpd));
+            // except for those parts with the same name as a type (implicit type's part or a mistake)
+            var userContentParts = _contentDefinitionManager
+                .ListPartDefinitions()
+                .Where(cpd => !typeNames.Contains(cpd.Name))
+                .Select(cpd => new EditPartViewModel(cpd));
+
             // code-defined parts
-            var codeDefinedParts = _contentPartDrivers
-                .SelectMany(d => d.GetPartInfo().Where(cpd => !contentParts.Any(m => m.Name == cpd.PartName)).Select(cpi => new EditPartViewModel { Name = cpi.PartName }));
-            // all together now, except for those parts with the same name as a type (implicit type's part or a mistake)
-            return contentParts.Where(m => !typeNames.Contains(m.Name)).Union(codeDefinedParts).OrderBy(m => m.Name);
+            var codeDefinedParts = metadataPartsOnly ? 
+                Enumerable.Empty<EditPartViewModel>() : 
+                _contentPartDrivers.SelectMany(d => d.GetPartInfo().Where(cpd => !userContentParts.Any(m => m.Name == cpd.PartName)).Select(cpi => new EditPartViewModel { Name = cpi.PartName }));
+
+            // Order by display name
+            return userContentParts.Union(codeDefinedParts).OrderBy(m => m.DisplayName);
         }
 
         public EditPartViewModel GetPart(string name) {
@@ -183,9 +191,8 @@ namespace Orchard.ContentTypes.Services {
                 name = VersionName(name);
 
             if (!String.IsNullOrEmpty(name)) {
-                var contentPartDefinition = new ContentPartDefinition(name);
-                _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
-                return new EditPartViewModel(contentPartDefinition);
+                _contentDefinitionManager.AlterPartDefinition(name, builder => builder.Attachable());
+                return new EditPartViewModel(_contentDefinitionManager.GetPartDefinition(name));
             }
 
             return null;

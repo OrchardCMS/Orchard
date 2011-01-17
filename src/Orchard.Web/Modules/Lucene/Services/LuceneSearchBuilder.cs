@@ -48,11 +48,11 @@ namespace Lucene.Services {
             InitPendingClause();
         }
 
-        public ISearchBuilder Parse(string defaultField, string query) {
-            return Parse(new[] {defaultField}, query);
+        public ISearchBuilder Parse(string defaultField, string query, bool escape, bool mandatory) {
+            return Parse(new[] {defaultField}, query, escape, mandatory);
         }
         
-        public ISearchBuilder Parse(string[] defaultFields, string query) {
+        public ISearchBuilder Parse(string[] defaultFields, string query, bool escape, bool mandatory) {
             if ( defaultFields.Length == 0 ) {
                 throw new ArgumentException("Default field can't be empty");
             }
@@ -61,9 +61,13 @@ namespace Lucene.Services {
                 throw new ArgumentException("Query can't be empty");
             }
 
+            if (escape) {
+                query = QueryParser.Escape(query);
+            }
+
             var analyzer = LuceneIndexProvider.CreateAnalyzer();
             foreach ( var defaultField in defaultFields ) {
-                var clause = new BooleanClause(new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query), BooleanClause.Occur.SHOULD);
+                var clause = new BooleanClause(new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query), mandatory ? BooleanClause.Occur.MUST : BooleanClause.Occur.SHOULD);
                 _clauses.Add(clause);
             }
             
@@ -213,29 +217,37 @@ namespace Lucene.Services {
         private Query CreateQuery() {
             CreatePendingClause();
 
-            var query = new BooleanQuery();
+            var booleanQuery = new BooleanQuery();
+            Query resultQuery = booleanQuery;
 
-            foreach( var clause in _clauses)
-                query.Add(clause);
-           
+            if (_clauses.Count == 0) {
+                if (_filters.Count > 0) { // only filters applieds => transform to a boolean query
+                    foreach (var clause in _filters) {
+                        booleanQuery.Add(clause);
+                    }
 
-            if ( query.Clauses().Count == 0 ) { // get all documents ?
-                query.Add(new TermRangeQuery("id", "0", "9", true, true), BooleanClause.Occur.SHOULD);
+                    resultQuery = booleanQuery;
+                }
+                else { // search all documents, without filter or clause
+                    resultQuery = new MatchAllDocsQuery(null); 
+                }
+            }
+            else {
+                foreach (var clause in _clauses)
+                    booleanQuery.Add(clause);
+
+                if (_filters.Count > 0) {
+                    var filter = new BooleanQuery();
+                    foreach (var clause in _filters)
+                        filter.Add(clause);
+                    var queryFilter = new QueryWrapperFilter(filter);
+
+                    resultQuery = new FilteredQuery(booleanQuery, queryFilter);
+                }
             }
 
-            Query finalQuery = query;
-
-            if(_filters.Count > 0) {
-                var filter = new BooleanQuery();
-                foreach( var clause in _filters)
-                    filter.Add(clause);
-                var queryFilter = new QueryWrapperFilter(filter);
-
-                finalQuery = new FilteredQuery(query, queryFilter);
-            }
-
-            Logger.Debug("New search query: {0}", finalQuery.ToString());
-            return finalQuery;
+            Logger.Debug("New search query: {0}", resultQuery.ToString());
+            return resultQuery;
         }
 
         public IEnumerable<ISearchHit> Search() {

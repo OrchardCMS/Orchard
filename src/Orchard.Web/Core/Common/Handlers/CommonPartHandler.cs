@@ -34,20 +34,19 @@ namespace Orchard.Core.Common.Handlers {
             Filters.Add(StorageFilter.For(commonRepository));
             Filters.Add(StorageFilter.For(commonVersionRepository));
 
-            OnInitializing<CommonPart>(PropertySetHandlers);
+            OnActivated<CommonPart>(PropertySetHandlers);
             OnInitializing<CommonPart>(AssignCreatingOwner);
             OnInitializing<CommonPart>(AssignCreatingDates);
             OnInitializing<ContentPart<CommonPartVersionRecord>>(AssignCreatingDates);
 
-            OnLoaded<CommonPart>(LazyLoadHandlers);
+            OnLoading<CommonPart>((context, part) => LazyLoadHandlers(part));
+            OnVersioning<CommonPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
 
             OnVersioned<CommonPart>(AssignVersioningDates);
             OnVersioned<ContentPart<CommonPartVersionRecord>>(AssignVersioningDates);
 
             OnPublishing<CommonPart>(AssignPublishingDates);
-            OnUnpublishing<CommonPart>(AssignPublishingDates);
             OnPublishing<ContentPart<CommonPartVersionRecord>>(AssignPublishingDates);
-            OnUnpublishing<ContentPart<CommonPartVersionRecord>>(AssignPublishingDates);
 
             OnIndexing<CommonPart>((context, commonPart) => context.DocumentIndex
                                                     .Add("type", commonPart.ContentItem.ContentType).Store()
@@ -65,7 +64,7 @@ namespace Orchard.Core.Common.Handlers {
                 context.Builder.Weld<ContentPart<CommonPartVersionRecord>>();
         }
 
-        bool ContentTypeWithACommonPart(string typeName) {
+        protected bool ContentTypeWithACommonPart(string typeName) {
             //Note: What about content type handlers which activate "CommonPart" in code?
             var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(typeName);
             
@@ -75,26 +74,26 @@ namespace Orchard.Core.Common.Handlers {
             return false;
         }
 
-        void AssignCreatingOwner(InitializingContentContext context, CommonPart part) {
+        protected void AssignCreatingOwner(InitializingContentContext context, CommonPart part) {
             // and use the current user as Owner
             if (part.Record.OwnerId == 0) {
                 part.Owner = _authenticationService.GetAuthenticatedUser();
             }
         }
 
-        void AssignCreatingDates(InitializingContentContext context, CommonPart part) {
+        protected void AssignCreatingDates(InitializingContentContext context, CommonPart part) {
             // assign default create/modified dates
             part.CreatedUtc = _clock.UtcNow;
             part.ModifiedUtc = _clock.UtcNow;
         }
 
-        void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonPartVersionRecord> part) {
+        protected void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonPartVersionRecord> part) {
             // assign default create/modified dates
             part.Record.CreatedUtc = _clock.UtcNow;
             part.Record.ModifiedUtc = _clock.UtcNow;
         }
 
-        void AssignVersioningDates(VersionContentContext context, CommonPart existing, CommonPart building) {
+        protected void AssignVersioningDates(VersionContentContext context, CommonPart existing, CommonPart building) {
             // assign the created
             building.CreatedUtc = existing.CreatedUtc ?? _clock.UtcNow;
             // persist and published dates
@@ -103,7 +102,7 @@ namespace Orchard.Core.Common.Handlers {
             building.ModifiedUtc = _clock.UtcNow;
         }
 
-        void AssignVersioningDates(VersionContentContext context, ContentPart<CommonPartVersionRecord> existing, ContentPart<CommonPartVersionRecord> building) {
+        protected void AssignVersioningDates(VersionContentContext context, ContentPart<CommonPartVersionRecord> existing, ContentPart<CommonPartVersionRecord> building) {
             // assign the created date
             building.Record.CreatedUtc = _clock.UtcNow;
             // assign modified date for the new version
@@ -112,31 +111,23 @@ namespace Orchard.Core.Common.Handlers {
             building.Record.PublishedUtc = null;
         }
 
-        void AssignPublishingDates(PublishContentContext context, CommonPart part) {
-            // don't assign dates when unpublishing
-            if (context.PublishingItemVersionRecord == null)
-                return;
-            
-            // set the initial published date
-            part.PublishedUtc = part.PublishedUtc ?? _clock.UtcNow;
+        protected void AssignPublishingDates(PublishContentContext context, CommonPart part) {
+            // The non-versioned publish date is always the last publish date
+            part.PublishedUtc = _clock.UtcNow;
         }
 
-        void AssignPublishingDates(PublishContentContext context, ContentPart<CommonPartVersionRecord> part) {
-            // don't assign dates when unpublishing
-            if (context.PublishingItemVersionRecord == null)
-                return;
-
+        protected void AssignPublishingDates(PublishContentContext context, ContentPart<CommonPartVersionRecord> part) {
             // assign the version's published date
-            part.Record.PublishedUtc = part.Record.PublishedUtc ?? _clock.UtcNow;
+            part.Record.PublishedUtc = _clock.UtcNow;
         }
 
-        void LazyLoadHandlers(LoadContentContext context, CommonPart part) {
+        protected void LazyLoadHandlers(CommonPart part) {
             // add handlers that will load content for id's just-in-time
             part.OwnerField.Loader(() => _contentManager.Get<IUser>(part.Record.OwnerId));
-            part.ContainerField.Loader(() => part.Record.Container == null ? null : _contentManager.Get(part.Record.Container.Id));
+            part.ContainerField.Loader(() => part.Record.Container == null ? null : _contentManager.Get(part.Record.Container.Id));            
         }
 
-        static void PropertySetHandlers(InitializingContentContext context, CommonPart part) {
+        protected static void PropertySetHandlers(ActivatedContentContext context, CommonPart part) {
             // add handlers that will update records when part properties are set
 
             part.OwnerField.Setter(user => {
