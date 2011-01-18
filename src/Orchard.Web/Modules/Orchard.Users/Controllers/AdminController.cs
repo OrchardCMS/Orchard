@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Controllers;
@@ -95,6 +96,14 @@ namespace Orchard.Users.Controllers {
                     Pager = pagerShape
             };
 
+            // maintain previous route data when generating page links
+            var routeData = new RouteData();
+            routeData.Values.Add("Options.Filter", options.Filter);
+            routeData.Values.Add("Options.Search", options.Search);
+            routeData.Values.Add("Options.Order", options.Order);
+
+            pagerShape.RouteData(routeData);
+            
             return View(model);
         }
 

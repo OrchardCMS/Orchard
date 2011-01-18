@@ -25,6 +25,12 @@
     Model.Classes.Add("pager");
     Model.Classes.Add("group");
     var tag = Tag(Model, "ul");
+
+	if(Model.RouteData != null) {
+        foreach(var rd in Model.RouteData.Values) {
+            routeData[rd.Key] = rd.Value;
+        }		
+	}
 }
 
 @if (Model.TotalItemCount > 1) {

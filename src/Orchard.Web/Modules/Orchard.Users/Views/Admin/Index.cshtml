@@ -36,6 +36,7 @@
             @Html.SelectOption(Model.Options.Order, UsersOrder.Name, T("Name").ToString())
             @Html.SelectOption(Model.Options.Order, UsersOrder.Email, T("Email").ToString())
         </select>
+		<input type="hidden" name="Page" value="1" />
         <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
     </fieldset>
     <fieldset>		
