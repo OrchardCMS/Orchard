@@ -153,8 +153,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         }
 
         [Test]
-        public void UsersShouldNotBeAbleToRegisterIfInvalidEmail()
-        {
+        public void UsersShouldNotBeAbleToRegisterIfInvalidEmail() {
 
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
             registrationSettings.UsersCanRegister = true;
@@ -170,8 +169,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         }
 
         [Test]
-        public void UsersShouldBeAbleToRegisterIfValidEmail()
-        {
+        public void UsersShouldBeAbleToRegisterIfValidEmail() {
 
             var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
             registrationSettings.UsersCanRegister = true;
