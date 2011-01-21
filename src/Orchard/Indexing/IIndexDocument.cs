@@ -10,7 +10,7 @@ namespace Orchard.Indexing {
         IDocumentIndex Add(string name, DateTime value);
         IDocumentIndex Add(string name, int value);
         IDocumentIndex Add(string name, bool value);
-        IDocumentIndex Add(string name, float value);
+        IDocumentIndex Add(string name, double value);
 
         /// <summary>
         /// Stores the original value to the index.

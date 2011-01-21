@@ -15,7 +15,7 @@ namespace Lucene.Models {
         private string _name;
         private string  _stringValue;
         private int _intValue;
-        private float _floatValue;
+        private double _doubleValue;
         private bool _analyze;
         private bool _store;
         private bool _removeTags;
@@ -46,7 +46,7 @@ namespace Lucene.Models {
         }
 
         public IDocumentIndex Add(string name, DateTime value) {
-            return Add(name, DateTools.DateToString(value, DateTools.Resolution.SECOND));
+            return Add(name, DateTools.DateToString(value, DateTools.Resolution.MILLISECOND));
         }
 
         public IDocumentIndex Add(string name, int value) {
@@ -62,10 +62,10 @@ namespace Lucene.Models {
             return Add(name, value.ToString());
         }
 
-        public IDocumentIndex Add(string name, float value) {
+        public IDocumentIndex Add(string name, double value) {
             PrepareForIndexing();
             _name = name;
-            _floatValue = value;
+            _doubleValue = value;
             _typeCode = TypeCode.Single;
             IsDirty = true;
             return this;
@@ -114,7 +114,7 @@ namespace Lucene.Models {
                 case TypeCode.Single:
                     Fields.Add(new NumericField(_name,
                         _store ? Field.Store.YES : Field.Store.NO,
-                        true).SetFloatValue(_floatValue));
+                        true).SetDoubleValue(_doubleValue));
                     break;
                 case TypeCode.Empty:
                     break;
