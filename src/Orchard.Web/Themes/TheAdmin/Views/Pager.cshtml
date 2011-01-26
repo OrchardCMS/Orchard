@@ -34,10 +34,11 @@
 }
 
 @if (Model.TotalItemCount > 1) {
-	<span class="page-results">@T("Showing items {0} - {1} of {2}", (Model.Page-1)*(int)Model.PageSize + 1, Math.Min(Model.TotalItemCount, (Model.Page)*(int)Model.PageSize), Model.TotalItemCount)</span>
+	<span class="page-results">@T("Showing items {0} - {1} of {2}", (Model.Page-1)*(int)Model.PageSize + 1, Model.PageSize == 0 ? Model.TotalItemCount : Math.Min(Model.TotalItemCount, (Model.Page)*(int)Model.PageSize), Model.TotalItemCount)</span>
 }
 
 @if (totalPageCount > 1) {
+	routeData["pageSize"] = Model.PageSize;
     @tag.StartElement
     // first
     if(firstPage > 1) {
