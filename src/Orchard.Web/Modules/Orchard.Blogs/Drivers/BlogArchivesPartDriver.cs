@@ -1,5 +1,7 @@
-﻿using Orchard.Blogs.Models;
+﻿using System.Linq;
+using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
+using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 
@@ -28,12 +30,21 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
+            var viewModel = new BlogArchivesViewModel {
+                Slug = part.ForBlog,
+                Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
+                };
+
             return ContentShape("Parts_Blogs_BlogArchives_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.BlogArchives", Model: part, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.BlogArchives", Model: viewModel, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, null, null);
+            var viewModel = new BlogArchivesViewModel();
+            if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+                part.ForBlog = viewModel.Slug;
+            }
+
             return Editor(part, shapeHelper);
         }
     }
