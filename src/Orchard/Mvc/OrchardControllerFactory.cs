@@ -30,7 +30,7 @@ namespace Orchard.Mvc {
             var routeData = requestContext.RouteData;
 
             // Determine the area name for the request, and fall back to stock orchard controllers
-            var areaName = GetAreaName(routeData);
+            var areaName = routeData.GetAreaName();
 
             // Service name pattern matches the identification strategy
             var serviceKey = (areaName + "/" + controllerName).ToLowerInvariant();
@@ -57,27 +57,5 @@ namespace Orchard.Mvc {
             return null;
         }
 
-        public static string GetAreaName(RouteBase route) {
-            var routeWithArea = route as IRouteWithArea;
-            if (routeWithArea != null) {
-                return routeWithArea.Area;
-            }
-
-            var castRoute = route as Route;
-            if (castRoute != null && castRoute.DataTokens != null) {
-                return castRoute.DataTokens["area"] as string;
-            }
-
-            return null;
-        }
-
-        public static string GetAreaName(RouteData routeData) {
-            object area;
-            if (routeData.DataTokens.TryGetValue("area", out area)) {
-                return area as string;
-            }
-
-            return GetAreaName(routeData.Route);
-        }
     }
 }
