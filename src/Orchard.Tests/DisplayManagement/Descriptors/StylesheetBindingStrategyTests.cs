@@ -25,7 +25,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         protected override void Register(Autofac.ContainerBuilder builder) {
             _descriptor = new ShellDescriptor { };
             _testViewEngine = new TestViewEngine();
-            _testVirtualPathProvider = new TestVirtualPathProvider();
+            _testVirtualPathProvider = new TestVirtualPathProvider { TestViewEngine = _testViewEngine };
 
             builder.Register(ctx => _descriptor);
             builder.RegisterType<StylesheetBindingStrategy>().As<IShapeTableProvider>();
@@ -44,6 +44,8 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         }
 
         public class TestVirtualPathProvider : IVirtualPathProvider {
+            public TestViewEngine TestViewEngine { get; set; }
+
             public string Combine(params string[] paths) {
                 throw new NotImplementedException();
             }
@@ -89,7 +91,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             }
 
             public IEnumerable<string> ListFiles(string path) {
-                return new List<string> {"~/Modules/Alpha/Styles/AlphaStyle.css"};
+                return TestViewEngine.Keys.Select(o => o.ToString());
             }
 
             public IEnumerable<string> ListDirectories(string path) {
@@ -129,6 +131,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             AddEnabledFeature("Alpha");
 
             _testViewEngine.Add("~/Modules/Alpha/Styles/AlphaShape.css", null);
+            _testViewEngine.Add("~/Modules/Alpha/Styles/alpha-shape.css", null);
             var strategy = _container.Resolve<IShapeTableProvider>();
 
             IList<ShapeAlterationBuilder> alterationBuilders = new List<ShapeAlterationBuilder>();
@@ -137,6 +140,15 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             var alterations = alterationBuilders.Select(alterationBuilder=>alterationBuilder.Build());
 
             Assert.That(alterations.Any(alteration => alteration.ShapeType == "Style"));
+
+            var descriptor = new ShapeDescriptor { ShapeType = "Style" };
+            alterations.Aggregate(descriptor, (d, alteration) => {
+                alteration.Alter(d);
+                return d;
+            });
+
+            var keys = descriptor.Bindings.Select(b => b.Key);
+            Assert.That(keys.Count() == keys.Select(k => k.ToLowerInvariant()).Distinct().Count(), "Descriptors should never vary by case only.");
         }
 
     }

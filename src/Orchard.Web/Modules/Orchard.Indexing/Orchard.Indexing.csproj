@@ -86,7 +86,9 @@
     <Content Include="Views\DefinitionTemplates\FieldIndexing.cshtml" />
     <Content Include="Views\DefinitionTemplates\TypeIndexing.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="web.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>
