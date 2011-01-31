@@ -183,7 +183,7 @@
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
     <Compile Include="Logging\OrchardFileAppender.cs" />
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
-    <Compile Include="Mvc\Extensions\RouteExtention.cs" />
+    <Compile Include="Mvc\Extensions\RouteExtension.cs" />
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />

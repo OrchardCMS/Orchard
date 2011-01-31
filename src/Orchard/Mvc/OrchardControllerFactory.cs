@@ -4,6 +4,7 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Core;
 using Autofac.Features.Metadata;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.Mvc {
     public interface IControllerType {

@@ -7,6 +7,7 @@ using System.Web.SessionState;
 using Autofac;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.Mvc.Routes {
 
