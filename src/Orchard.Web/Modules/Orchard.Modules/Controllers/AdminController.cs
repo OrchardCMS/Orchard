@@ -110,7 +110,7 @@ namespace Orchard.Modules.Controllers {
             try {
                 _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
                 _dataMigrationManager.Update(id);
-                Services.Notifier.Information(T("The feature {0} was updated succesfuly", id));
+                Services.Notifier.Information(T("The feature {0} was updated successfully", id));
             }
             catch (Exception ex) {
                 Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, ex.Message));

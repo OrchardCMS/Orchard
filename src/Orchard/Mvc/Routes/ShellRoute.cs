@@ -7,6 +7,7 @@ using System.Web.SessionState;
 using Autofac;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.Mvc.Routes {
 
@@ -25,15 +26,7 @@ namespace Orchard.Mvc.Routes {
             if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix))
                 _urlPrefix = new UrlPrefix(_shellSettings.RequestUrlPrefix);
 
-            var routeWithArea = route as IRouteWithArea;
-            if (routeWithArea != null) {
-                Area = routeWithArea.Area;
-            }
-
-            var routeWithDataTokens = route as Route;
-            if ((routeWithDataTokens != null) && (routeWithDataTokens.DataTokens != null)) {
-                Area = (routeWithDataTokens.DataTokens["area"] as string);
-            }
+            Area = route.GetAreaName();
         }
 
         public string ShellSettingsName { get { return _shellSettings.Name; } }
