@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions; 
 using System.Diagnostics.CodeAnalysis;
 using Orchard.Localization;
 using System.Security.Principal;
@@ -317,12 +318,19 @@ namespace Orchard.Users.Controllers {
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
             bool validate = true;
 
+            Regex isValidEmail = new Regex("^[a-z0-9_\\+-]+(\\.[a-z0-9_\\+-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*\\.([a-z]{2,4})$");
+
             if (String.IsNullOrEmpty(userName)) {
                 ModelState.AddModelError("username", T("You must specify a username."));
                 validate = false;
             }
             if (String.IsNullOrEmpty(email)) {
                 ModelState.AddModelError("email", T("You must specify an email address."));
+                validate = false;
+            }
+
+            if (!isValidEmail.IsMatch(email)) {
+                ModelState.AddModelError("email", T("You must specify a valid email address."));
                 validate = false;
             }
 

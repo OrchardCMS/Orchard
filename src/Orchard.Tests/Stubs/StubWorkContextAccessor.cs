@@ -19,6 +19,8 @@ namespace Orchard.Tests.Stubs {
         public class WorkContextImpl : WorkContext {
             private readonly ILifetimeScope _lifetimeScope;
             private Dictionary<string, object> _contextDictonary;
+            public delegate void MyInitMethod(WorkContextImpl workContextImpl);
+            public static MyInitMethod InitMethod;
 
             public WorkContextImpl(ILifetimeScope lifetimeScope) {
                 _contextDictonary = new Dictionary<string, object>();
@@ -27,9 +29,15 @@ namespace Orchard.Tests.Stubs {
                 ci.Weld(new StubSite());
                 CurrentSite = ci.As<ISite>();
                 _lifetimeScope = lifetimeScope;
+
+                if (InitMethod != null) {
+                    InitMethod(this);
+                }
             }
 
             public class StubSite : ContentPart, ISite {
+                public static string DefaultSuperUser;
+
                 public string PageTitleSeparator {
                     get { throw new NotImplementedException(); }
                 }
@@ -43,7 +51,7 @@ namespace Orchard.Tests.Stubs {
                 }
 
                 public string SuperUser {
-                    get { throw new NotImplementedException(); }
+                    get { return DefaultSuperUser; }
                 }
 
                 public string HomePage {

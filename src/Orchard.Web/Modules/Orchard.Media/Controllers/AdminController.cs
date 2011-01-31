@@ -74,10 +74,16 @@ namespace Orchard.Media.Controllers {
         }
 
         public ActionResult Edit(string name, string mediaPath) {
-            IEnumerable<MediaFile> mediaFiles = _mediaService.GetMediaFiles(mediaPath);
-            IEnumerable<MediaFolder> mediaFolders = _mediaService.GetMediaFolders(mediaPath);
-            var model = new MediaFolderEditViewModel { FolderName = name, MediaFiles = mediaFiles, MediaFolders = mediaFolders, MediaPath = mediaPath };
-            return View(model);
+            try {
+                IEnumerable<MediaFile> mediaFiles = _mediaService.GetMediaFiles(mediaPath);
+                IEnumerable<MediaFolder> mediaFolders = _mediaService.GetMediaFolders(mediaPath);
+                var model = new MediaFolderEditViewModel { FolderName = name, MediaFiles = mediaFiles, MediaFolders = mediaFolders, MediaPath = mediaPath };
+                return View(model);
+            }
+            catch (Exception exception) {
+                Services.Notifier.Error(T("Editing failed: {0}", exception.Message));
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpPost]
@@ -178,18 +184,8 @@ namespace Orchard.Media.Controllers {
                 if (!ModelState.IsValid)
                     return View(viewModel);
 
-                // first validate them all
                 foreach (string fileName in Request.Files) {
-                    HttpPostedFileBase file = Request.Files[fileName];
-                    if (!_mediaService.FileAllowed(file)) {
-                        ModelState.AddModelError("File", T("That file type is not allowed.").ToString());
-                        return View(viewModel);
-                    }
-                }
-                // then save them
-                foreach (string fileName in Request.Files) {
-                    HttpPostedFileBase file = Request.Files[fileName];
-                    _mediaService.UploadMediaFile(viewModel.MediaPath, file, viewModel.ExtractZip);
+                    _mediaService.UploadMediaFile(viewModel.MediaPath, Request.Files[fileName], viewModel.ExtractZip);
                 }
 
                 Services.Notifier.Information(T("Media file(s) uploaded"));
