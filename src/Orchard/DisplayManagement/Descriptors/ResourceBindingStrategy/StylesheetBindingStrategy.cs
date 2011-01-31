@@ -27,7 +27,7 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
         private static string SafeName(string name) {
             if (string.IsNullOrWhiteSpace(name))
                 return String.Empty;
-            return _safeName.Replace(name, String.Empty);
+            return _safeName.Replace(name, String.Empty).ToLowerInvariant();
         }
 
         public static string GetAlternateShapeNameFromFileName(string fileName) {
