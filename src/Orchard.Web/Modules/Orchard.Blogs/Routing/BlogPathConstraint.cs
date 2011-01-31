@@ -8,46 +8,55 @@ using Orchard.Logging;
 
 namespace Orchard.Blogs.Routing {
     [UsedImplicitly]
-    public class BlogSlugConstraint : IBlogSlugConstraint {
+    public class BlogPathConstraint : IBlogPathConstraint {
         /// <summary>
         /// Singleton object, per Orchard Shell instance. We need to protect concurrent access to the dictionary.
         /// </summary>
         private readonly object _syncLock = new object();
-        private IDictionary<string, string> _slugs = new Dictionary<string, string>();
+        private IDictionary<string, string> _paths = new Dictionary<string, string>();
 
-        public BlogSlugConstraint() {
+        public BlogPathConstraint() {
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
-        public void SetSlugs(IEnumerable<string> slugs) {
+        public void SetPaths(IEnumerable<string> paths) {
             // Make a copy to avoid performing potential lazy computation inside the lock
-            var slugsArray = slugs.ToArray();
+            var pathArray = paths.ToArray();
 
             lock (_syncLock) {
-                _slugs = slugsArray.Distinct(StringComparer.OrdinalIgnoreCase).ToDictionary(value => value, StringComparer.OrdinalIgnoreCase);
+                _paths = pathArray.Distinct(StringComparer.OrdinalIgnoreCase).ToDictionary(value => value, StringComparer.OrdinalIgnoreCase);
             }
 
-            Logger.Debug("Blog slugs: {0}", string.Join(", ", slugsArray));
+            Logger.Debug("Blog paths: {0}", string.Join(", ", pathArray));
         }
 
-        public string FindSlug(string slug) {
+        public string FindPath(string path) {
             lock (_syncLock) {
                 string actual;
-                return _slugs.TryGetValue(slug, out actual) ? actual : slug;
+                // path can be null for homepage
+                path = path ?? "";
+
+                return _paths.TryGetValue(path, out actual) ? actual : path;
             }
         }
 
-        public void AddSlug(string slug) {
+        public void AddPath(string path) {
             lock (_syncLock) {
-                _slugs[slug] = slug;
+                // path can be null for homepage
+                path = path ?? "";
+
+                _paths[path] = path;
             }
         }
 
-        public void RemoveSlug(string slug) {
+        public void RemovePath(string path) {
             lock (_syncLock) {
-                _slugs.Remove(slug);
+                // path can be null for homepage
+                path = path ?? "";
+
+                _paths.Remove(path);
             }
         }
 
@@ -60,7 +69,7 @@ namespace Orchard.Blogs.Routing {
                 var parameterValue = Convert.ToString(value);
 
                 lock (_syncLock) {
-                    return _slugs.ContainsKey(parameterValue);
+                    return _paths.ContainsKey(parameterValue);
                 }
             }
 

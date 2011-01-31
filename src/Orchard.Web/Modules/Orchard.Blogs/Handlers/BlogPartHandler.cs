@@ -16,22 +16,22 @@ namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPartHandler : ContentHandler {
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IBlogSlugConstraint _blogSlugConstraint;
+        private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly IHomePageProvider _routableHomePageProvider;
 
-        public BlogPartHandler(IRepository<BlogPartRecord> repository, IWorkContextAccessor workContextAccessor, IEnumerable<IHomePageProvider> homePageProviders, IBlogSlugConstraint blogSlugConstraint) {
+        public BlogPartHandler(IRepository<BlogPartRecord> repository, IWorkContextAccessor workContextAccessor, IEnumerable<IHomePageProvider> homePageProviders, IBlogPathConstraint blogPathConstraint) {
             _workContextAccessor = workContextAccessor;
-            _blogSlugConstraint = blogSlugConstraint;
+            _blogPathConstraint = blogPathConstraint;
             _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             Filters.Add(StorageFilter.For(repository));
 
             Action<PublishContentContext, RoutePart> publishedHandler = (context, route) => {
                 if (route.Is<BlogPart>()) {
                     if (route.ContentItem.Id != 0 && route.PromoteToHomePage)
-                        _blogSlugConstraint.AddSlug("");
+                        _blogPathConstraint.AddPath("");
                 }
                 else if (route.ContentItem.Id != 0 && route.PromoteToHomePage) {
-                    _blogSlugConstraint.RemoveSlug("");
+                    _blogPathConstraint.RemovePath("");
                 }
             };
 
