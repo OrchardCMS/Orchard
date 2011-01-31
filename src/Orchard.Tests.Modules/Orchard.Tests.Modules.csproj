@@ -72,6 +72,10 @@
     <Reference Include="FluentPath">
       <HintPath>..\..\lib\fluentpath\FluentPath.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\sharpziplib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="IronRuby, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\dlr\IronRuby.dll</HintPath>
@@ -138,6 +142,7 @@
     <Compile Include="Comments\Services\CommentServiceTests.cs" />
     <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
     <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
+    <Compile Include="Media\Services\MediaServiceTests.cs" />
     <Compile Include="Scripting.Dlr\EvaluatorTests.cs" />
     <Compile Include="Scripting\EvaluatorTestsBase.cs" />
     <Compile Include="Scripting\EvaluatorTests.cs" />

@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 
 namespace Orchard.Validation {
-    class Argument {
+    public class Argument {
         [AssertionMethod]
         public static void Validate([AssertionCondition(AssertionConditionType.IS_TRUE)] bool condition, [InvokerParameterName]string name) {
             if (!condition) {

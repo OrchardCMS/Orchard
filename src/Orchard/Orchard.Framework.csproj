@@ -181,6 +181,7 @@
     <Compile Include="Environment\WorkContextImplementation.cs" />
     <Compile Include="Environment\WorkContextModule.cs" />
     <Compile Include="Environment\WorkContextProperty.cs" />
+    <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
@@ -459,6 +460,7 @@
     <Compile Include="Messaging\Services\IMessageManager.cs" />
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
+    <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />
@@ -799,7 +801,6 @@
     <Compile Include="Security\Permissions\Permission.cs" />
     <Compile Include="Security\Providers\OrchardRoleProvider.cs" />
     <Compile Include="Services\Clock.cs" />
-    <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
     <Compile Include="FileSystems\Media\IStorageFile.cs" />
     <Compile Include="FileSystems\Media\IStorageFolder.cs" />
     <Compile Include="FileSystems\Media\IStorageProvider.cs" />

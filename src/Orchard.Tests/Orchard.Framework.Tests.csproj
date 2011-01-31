@@ -253,6 +253,7 @@
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
     <Compile Include="Records\BigRecord.cs" />
     <Compile Include="Security\DefaultEncryptionServiceTests.cs" />
+    <Compile Include="Storage\FileSystemStorageProviderTests.cs" />
     <Compile Include="Stubs\InMemoryWebSiteFolder.cs" />
     <Compile Include="Stubs\StubHttpContextAccessor.cs" />
     <Compile Include="Stubs\StubWorkContextAccessor.cs" />
@@ -285,7 +286,6 @@
     <Compile Include="UI\Notify\NotifierTests.cs" />
     <Compile Include="UI\Notify\NotifyFilterTests.cs" />
     <Compile Include="Services\ClockTests.cs" />
-    <Compile Include="Storage\FileSystemStorageProviderTests.cs" />
     <Compile Include="Stubs\StubClock.cs" />
     <Compile Include="Stubs\StubContainerProvider.cs" />
     <Compile Include="FakeTests.cs" />

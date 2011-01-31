@@ -6,6 +6,7 @@ using Orchard.Caching;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Validation;
 
 namespace Orchard.FileSystems.AppData {
     public class AppDataFolder : IAppDataFolder {
@@ -79,8 +80,7 @@ namespace Orchard.FileSystems.AppData {
         /// starting with "_basePath".
         /// </summary>
         private string CombineToPhysicalPath(params string[] paths) {
-            return Path.Combine(RootFolder, Path.Combine(paths))
-                .Replace('/', Path.DirectorySeparatorChar);
+            return PathValidation.ValidatePath(RootFolder, Path.Combine(RootFolder, Path.Combine(paths)).Replace('/', Path.DirectorySeparatorChar));
         }
 
         /// <summary>
