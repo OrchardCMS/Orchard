@@ -221,13 +221,13 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public void Style(TextWriter Output, ResourceDefinition Resource, string Url, string Condition) {
-            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition);
+        public void Style(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
+            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
         }
 
         [Shape]
-        public void Resource(TextWriter Output, ResourceDefinition Resource, string Url, string Condition) {
-            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition);
+        public void Resource(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
+            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
         }
 
         private static void WriteLiteralScripts(TextWriter output, IEnumerable<string> scripts) {
@@ -266,12 +266,13 @@ namespace Orchard.Core.Shapes {
 
                 var path = context.GetResourceUrl(defaultSettings, appPath);
                 var condition = context.Settings.Condition;
+                var attributes = context.Settings.HasAttributes ? context.Settings.Attributes : null;
                 IHtmlString result;
                 if (resourceType == "stylesheet") {
-                    result = Display.Style(Url: path, Condition: condition, Resource: context.Resource);
+                    result = Display.Style(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 else {
-                    result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource);
+                    result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 Output.Write(result);
             }

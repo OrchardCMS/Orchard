@@ -83,7 +83,8 @@ namespace Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy {
                                                    var output = displayContext.ViewContext.Writer;
                                                    ResourceDefinition resource = shape.Resource;
                                                    string condition = shape.Condition;
-                                                   ResourceManager.WriteResource(output, resource, hit.fileVirtualPath, condition);
+                                                   Dictionary<string, string> attributes = shape.TagAttributes;
+                                                   ResourceManager.WriteResource(output, resource, hit.fileVirtualPath, condition, attributes);
                                                    return null;
                                                });
                 }

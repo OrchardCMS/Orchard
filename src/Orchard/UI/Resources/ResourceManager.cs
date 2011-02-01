@@ -56,11 +56,16 @@ namespace Orchard.UI.Resources {
             return tagBuilder;
         }
 
-        public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition) {
+        public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition, Dictionary<string,string> attributes) {
             if (!string.IsNullOrEmpty(condition)) {
                 writer.WriteLine("<!--[if " + condition + "]>");
             }
-            writer.WriteLine(GetTagBuilder(resource, url).ToString(resource.TagRenderMode));
+            var tagBuilder = GetTagBuilder(resource, url);
+            if (attributes != null) {
+                // todo: try null value
+                tagBuilder.MergeAttributes(attributes, true);
+            }
+            writer.WriteLine(tagBuilder.ToString(resource.TagRenderMode));
             if (!string.IsNullOrEmpty(condition)) {
                 writer.WriteLine("<![endif]-->");
             }
