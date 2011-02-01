@@ -48,12 +48,15 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         [Test]
-        public void NamesFromFoldersWithModuleTxtShouldBeListed() {
+        public void IdsFromFoldersWithModuleTxtShouldBeListed() {
             IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
-            var names = folders.AvailableExtensions().Select(d => d.Id);
-            Assert.That(names.Count(), Is.EqualTo(2));
-            Assert.That(names, Has.Some.EqualTo("Sample1"));
-            Assert.That(names, Has.Some.EqualTo("Sample3"));
+            var ids = folders.AvailableExtensions().Select(d => d.Id);
+            Assert.That(ids.Count(), Is.EqualTo(5));
+            Assert.That(ids, Has.Some.EqualTo("Sample1")); // Sample1 - obviously
+            Assert.That(ids, Has.Some.EqualTo("Sample3")); // Sample3
+            Assert.That(ids, Has.Some.EqualTo("Sample4")); // Sample4
+            Assert.That(ids, Has.Some.EqualTo("Sample6")); // Sample6
+            Assert.That(ids, Has.Some.EqualTo("Sample7")); // Sample7
         }
 
         [Test]
@@ -61,7 +64,31 @@ namespace Orchard.Tests.Environment.Extensions {
             IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
             var sample1 = folders.AvailableExtensions().Single(d => d.Id == "Sample1");
             Assert.That(sample1.Id, Is.Not.Empty);
-            Assert.That(sample1.Author, Is.EqualTo("Bertrand Le Roy"));
+            Assert.That(sample1.Author, Is.EqualTo("Bertrand Le Roy")); // Sample1
         }
-   }
+
+        [Test]
+        public void NamesFromFoldersWithModuleTxtShouldFallBackToIdIfNotGiven() {
+            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
+            var names = folders.AvailableExtensions().Select(d => d.Name);
+            Assert.That(names.Count(), Is.EqualTo(5));
+            Assert.That(names, Has.Some.EqualTo("Le plug-in français")); // Sample1
+            Assert.That(names, Has.Some.EqualTo("This is another test.txt")); // Sample3
+            Assert.That(names, Has.Some.EqualTo("Sample4")); // Sample4
+            Assert.That(names, Has.Some.EqualTo("SampleSix")); // Sample6
+            Assert.That(names, Has.Some.EqualTo("Sample7")); // Sample7
+        }
+
+        [Test]
+        public void PathsFromFoldersWithModuleTxtShouldFallBackAppropriatelyIfNotGiven() {
+            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
+            var paths = folders.AvailableExtensions().Select(d => d.Path);
+            Assert.That(paths.Count(), Is.EqualTo(5));
+            Assert.That(paths, Has.Some.EqualTo("Sample1")); // Sample1 - Id, Name invalid URL segment
+            Assert.That(paths, Has.Some.EqualTo("Sample3")); // Sample3 - Id, Name invalid URL segment
+            Assert.That(paths, Has.Some.EqualTo("ThisIs.Sample4")); // Sample4 - Path
+            Assert.That(paths, Has.Some.EqualTo("SampleSix")); // Sample6 - Name, no Path
+            Assert.That(paths, Has.Some.EqualTo("Sample7")); // Sample7 - Id, no Name or Path
+        }
+    }
 }

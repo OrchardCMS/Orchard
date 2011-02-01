@@ -335,7 +335,18 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample4\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample5\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample6\Module.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample7\Module.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Folders {
     public class ExtensionFolders : IExtensionFolders {
@@ -49,8 +51,24 @@ namespace Orchard.Environment.Extensions.Folders {
                         var manifestPath = Path.Combine(subfolderPath, _manifestName);
                         try {
                             var descriptor = GetExtensionDescriptor(path, extensionId, manifestPath);
-                            if (descriptor != null)
-                                localList.Add(descriptor);
+
+                            if (descriptor == null)
+                                continue;
+
+                            if (descriptor.Path != null && !descriptor.Path.IsValidUrlSegment()) {
+                                Logger.Error("The module '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
+                                    extensionId,
+                                    descriptor.Path);
+                                continue;
+                            }
+
+                            if (descriptor.Path == null) {
+                                descriptor.Path = descriptor.Name.IsValidUrlSegment()
+                                    ? descriptor.Name
+                                    : descriptor.Id;
+                            }
+
+                            localList.Add(descriptor);
                         }
                         catch (Exception ex) {
                             // Ignore invalid module manifests
@@ -72,6 +90,7 @@ namespace Orchard.Environment.Extensions.Folders {
                 Id = extensionId,
                 ExtensionType = extensionType,
                 Name = GetValue(manifest, "Name") ?? extensionId,
+                Path = GetValue(manifest, "Path"),
                 Description = GetValue(manifest, "Description"),
                 Version = GetValue(manifest, "Version"),
                 OrchardVersion = GetValue(manifest, "OrchardVersion"),
@@ -124,6 +143,9 @@ namespace Orchard.Environment.Extensions.Folders {
                     switch (field[0]) {
                         case "Name":
                             manifest.Add("Name", field[1]);
+                            break;
+                        case "Path":
+                            manifest.Add("Path", field[1]);
                             break;
                         case "Description":
                             manifest.Add("Description", field[1]);

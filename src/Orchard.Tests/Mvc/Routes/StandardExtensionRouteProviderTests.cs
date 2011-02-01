@@ -18,7 +18,9 @@ namespace Orchard.Tests.Mvc.Routes {
                         Feature =new Feature {
                             Descriptor=new FeatureDescriptor {
                                 Extension=new ExtensionDescriptor {
-                                    Name="Foo"
+                                    Id="Foo",
+                                    Name="A Foo Module",
+                                    Path="Foo"
                                 }
                             }
                         }
@@ -28,7 +30,9 @@ namespace Orchard.Tests.Mvc.Routes {
                         Feature =new Feature {
                             Descriptor=new FeatureDescriptor {
                                 Extension=new ExtensionDescriptor {
-                                    Name="Bar"
+                                    Id="Bar",
+                                    Name="Bar",
+                                    Path="BarBar"
                                 }
                             }
                         }
@@ -46,9 +50,9 @@ namespace Orchard.Tests.Mvc.Routes {
             var fooRoute = routes.Select(x => x.Route).OfType<Route>()
                 .Single(x => x.Url == "Foo/{controller}/{action}/{id}");
             var barAdmin = routes.Select(x => x.Route).OfType<Route>()
-                .Single(x => x.Url == "Admin/Bar/{action}/{id}");
+                .Single(x => x.Url == "Admin/BarBar/{action}/{id}");
             var barRoute = routes.Select(x => x.Route).OfType<Route>()
-                .Single(x => x.Url == "Bar/{controller}/{action}/{id}");
+                .Single(x => x.Url == "BarBar/{controller}/{action}/{id}");
 
             Assert.That(fooAdmin.DataTokens["area"], Is.EqualTo("Long.Name.Foo"));
             Assert.That(fooRoute.DataTokens["area"], Is.EqualTo("Long.Name.Foo"));
