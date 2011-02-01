@@ -99,7 +99,8 @@ namespace Orchard.Users.Controllers {
 
             ViewData["PasswordLength"] = MinPasswordLength;
 
-            return View();
+            var shape = _orchardServices.New.Register();
+            return new ShapeResult(this, shape); 
         }
 
         [HttpPost]
@@ -135,7 +136,8 @@ namespace Orchard.Users.Controllers {
             }
 
             // If we got this far, something failed, redisplay form
-            return Register();
+            var shape = _orchardServices.New.Register();
+            return new ShapeResult(this, shape); 
         }
 
         public ActionResult RequestLostPassword() {

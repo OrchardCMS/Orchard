@@ -1,6 +1,6 @@
 ﻿<h1>@Html.TitleForPage(T("Create a New Account").ToString())</h1>
 <p>@T("Use the form below to create a new account.")</p>
-<p>@T("Passwords are required to be a minimum of {0} characters in length.", ViewData["PasswordLength"] as string)</p>
+<p>@T("Passwords are required to be a minimum of {0} characters in length.", ViewData["PasswordLength"])</p>
 @Html.ValidationSummary(T("Account creation was unsuccessful. Please correct the errors and try again.").ToString()) 
 @using (Html.BeginFormAntiForgeryPost()) { 
     <fieldset>

@@ -89,7 +89,7 @@
     <Content Include="Views\Account\ChallengeEmailSuccess.cshtml" />
     <Content Include="Views\Account\ChallengeEmailSent.cshtml" />
     <Content Include="Views\Account\ChallengeEmailFail.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Register.cshtml" />
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\Create.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
