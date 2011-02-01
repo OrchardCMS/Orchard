@@ -5,7 +5,7 @@ namespace Orchard.Indexing {
         float Score { get; }
 
         int GetInt(string name);
-        float GetFloat(string name);
+        double GetDouble(string name);
         bool GetBoolean(string name);
         string GetString(string name);
         DateTime GetDateTime(string name);

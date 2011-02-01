@@ -29,9 +29,9 @@ namespace Orchard.Blogs.Services {
         }
 
         public BlogPostPart Get(BlogPart blogPart, string slug, VersionOptions versionOptions) {
-            var postSlug = blogPart.As<IRoutableAspect>().GetChildPath(slug);
+            var postPath = blogPart.As<IRoutableAspect>().GetChildPath(slug);
             return
-                _contentManager.Query(versionOptions, "BlogPost").Join<RoutePartRecord>().Where(rr => rr.Path == postSlug).
+                _contentManager.Query(versionOptions, "BlogPost").Join<RoutePartRecord>().Where(rr => rr.Path == postPath).
                     Join<CommonPartRecord>().Where(cr => cr.Container == blogPart.Record.ContentItemRecord).List().
                     SingleOrDefault().As<BlogPostPart>();
         }

@@ -178,6 +178,24 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
+        public void ShouldSortByNumber() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("downloads", 111).Store());
+            _provider.Store("default", _provider.New(2).Add("downloads", 2222).Store());
+            _provider.Store("default", _provider.New(3).Add("downloads", 3).Store());
+
+            var number = _searchBuilder.SortBy("downloads").Search().ToList();
+            Assert.That(number.Count(), Is.EqualTo(3));
+            Assert.That(number[0].GetInt("downloads") > number[1].GetInt("downloads"), Is.True);
+            Assert.That(number[1].GetInt("downloads") > number[2].GetInt("downloads"), Is.True);
+
+            number = _searchBuilder.SortBy("downloads").Ascending().Search().ToList();
+            Assert.That(number.Count(), Is.EqualTo(3));
+            Assert.That(number[0].GetInt("downloads") < number[1].GetInt("downloads"), Is.True);
+            Assert.That(number[1].GetInt("downloads") < number[2].GetInt("downloads"), Is.True);
+        }
+
+        [Test]
         public void ShouldEscapeSpecialChars() {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#").Analyze());

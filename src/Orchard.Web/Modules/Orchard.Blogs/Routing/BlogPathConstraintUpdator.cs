@@ -8,12 +8,12 @@ using Orchard.Tasks;
 
 namespace Orchard.Blogs.Routing {
     [UsedImplicitly]
-    public class BlogSlugConstraintUpdator : IOrchardShellEvents, IBackgroundTask {
-        private readonly IBlogSlugConstraint _blogSlugConstraint;
+    public class BlogPathConstraintUpdator : IOrchardShellEvents, IBackgroundTask {
+        private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly IBlogService _blogService;
 
-        public BlogSlugConstraintUpdator(IBlogSlugConstraint blogSlugConstraint, IBlogService blogService) {
-            _blogSlugConstraint = blogSlugConstraint;
+        public BlogPathConstraintUpdator(IBlogPathConstraint blogPathConstraint, IBlogService blogService) {
+            _blogPathConstraint = blogPathConstraint;
             _blogService = blogService;
         }
         
@@ -29,7 +29,7 @@ namespace Orchard.Blogs.Routing {
         }
 
         private void Refresh() {
-            _blogSlugConstraint.SetSlugs(_blogService.Get().Select(b => b.As<IRoutableAspect>().Path));
+            _blogPathConstraint.SetPaths(_blogService.Get().Select(b => b.As<IRoutableAspect>().Slug));
         }
     }
 }

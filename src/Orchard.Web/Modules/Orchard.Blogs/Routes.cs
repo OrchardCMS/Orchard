@@ -6,10 +6,10 @@ using Orchard.Mvc.Routes;
 
 namespace Orchard.Blogs {
     public class Routes : IRouteProvider {
-        private readonly IBlogSlugConstraint _blogSlugConstraint;
+        private readonly IBlogPathConstraint _blogPathConstraint;
 
-        public Routes(IBlogSlugConstraint blogSlugConstraint) {
-            _blogSlugConstraint = blogSlugConstraint;
+        public Routes(IBlogPathConstraint blogPathConstraint) {
+            _blogPathConstraint = blogPathConstraint;
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
@@ -175,14 +175,31 @@ namespace Orchard.Blogs {
                                                  },
                              new RouteDescriptor {
                                                      Route = new Route(
-                                                         "{blogSlug}/Archive/{*archiveData}",
+                                                         "Archive/{*archiveData}",
+                                                         new RouteValueDictionary {
+                                                                                      {"blogPath", ""},
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "BlogPost"},
+                                                                                      {"action", "ListByArchive"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"archiveData", new IsArchiveConstraint()}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "{blogPath}/Archive/{*archiveData}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "BlogPost"},
                                                                                       {"action", "ListByArchive"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", _blogSlugConstraint},
+                                                                                      {"blogPath", _blogPathConstraint},
                                                                                       {"archiveData", new IsArchiveConstraint()}
                                                                                   },
                                                          new RouteValueDictionary {
@@ -193,14 +210,14 @@ namespace Orchard.Blogs {
                              new RouteDescriptor {
                                                      Priority = 11,
                                                      Route = new Route(
-                                                         "{blogSlug}/rsd",
+                                                         "{blogPath}/rsd",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "RemoteBlogPublishing"},
                                                                                       {"action", "Rsd"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", _blogSlugConstraint}
+                                                                                      {"blogPath", _blogPathConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -210,14 +227,14 @@ namespace Orchard.Blogs {
                              new RouteDescriptor {
                                                      Priority = 11,
                                                      Route = new Route(
-                                                         "{blogSlug}/{postSlug}",
+                                                         "{blogPath}/{postSlug}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "BlogPost"},
                                                                                       {"action", "Item"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", _blogSlugConstraint}
+                                                                                      {"blogPath", _blogPathConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -227,15 +244,15 @@ namespace Orchard.Blogs {
                              new RouteDescriptor {
                                                     Priority = 11,
                                                     Route = new Route(
-                                                         "{blogSlug}",
+                                                         "{blogPath}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "Blog"},
                                                                                       {"action", "Item"},
-                                                                                      {"blogSlug", ""}
+                                                                                      {"blogPath", ""}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", _blogSlugConstraint}
+                                                                                      {"blogPath", _blogPathConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}

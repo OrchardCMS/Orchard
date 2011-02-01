@@ -206,7 +206,7 @@ namespace Orchard.Specs.Bindings {
         [When(@"I fill in")]
         public void WhenIFillIn(Table table) {
             var inputs = _doc.DocumentNode
-                .SelectNodes("(//input|//textarea)") ?? Enumerable.Empty<HtmlNode>();
+                .SelectNodes("(//input|//textarea|//select)") ?? Enumerable.Empty<HtmlNode>();
 
             foreach (var row in table.Rows) {
                 var r = row;
@@ -244,7 +244,19 @@ namespace Orchard.Specs.Bindings {
 
                         break;
                     default:
-                        input.Attributes.Add("value", row["value"]);
+                        if (string.Equals(input.Name, "select", StringComparison.OrdinalIgnoreCase)) {
+                            var options = input.ChildNodes;
+                            foreach (var option in options) {
+                                if (option.GetAttributeValue("value", "") == row["value"])
+                                    option.Attributes.Add("selected", "selected");
+                                else if (option.Attributes.Contains("selected"))
+                                    option.Attributes.Remove("selected");
+                            }
+
+                        }
+                        else {
+                            input.Attributes.Add("value", row["value"]);
+                        }
                         break;
                 }
             }

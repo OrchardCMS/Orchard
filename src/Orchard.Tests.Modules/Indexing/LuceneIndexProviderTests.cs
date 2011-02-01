@@ -119,14 +119,23 @@ namespace Orchard.Tests.Modules.Indexing {
         [Test]
         public void PropertiesShouldNotBeLost() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(42).Add("prop1", "value1").Store());
+            _provider.Store("default", _provider.New(42)
+                .Add("prop1", "value1").Store()
+                .Add("prop2", 123).Store()
+                .Add("prop3", 123.456).Store()
+                .Add("prop4", new DateTime(2001,1,1,1,1,1,1)).Store()
+                .Add("prop5", true).Store()
+            );
 
             var hit = _provider.CreateSearchBuilder("default").Get(42);
             
             Assert.IsNotNull(hit);
             Assert.That(hit.ContentItemId, Is.EqualTo(42));
             Assert.That(hit.GetString("prop1"), Is.EqualTo("value1"));
-            
+            Assert.That(hit.GetInt("prop2"), Is.EqualTo(123));
+            Assert.That(hit.GetDouble("prop3"), Is.EqualTo(123.456));
+            Assert.That(hit.GetDateTime("prop4"), Is.EqualTo(new DateTime(2001, 1, 1, 1, 1, 1, 1)));
+            Assert.That(hit.GetBoolean("prop5"), Is.EqualTo(true));            
         }
         
         [Test]

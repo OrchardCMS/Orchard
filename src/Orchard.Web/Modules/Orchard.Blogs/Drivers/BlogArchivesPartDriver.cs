@@ -1,5 +1,8 @@
-﻿using Orchard.Blogs.Models;
+﻿using System.Linq;
+using Orchard.Blogs.Models;
+using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
+using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 
@@ -7,18 +10,22 @@ namespace Orchard.Blogs.Drivers {
     public class BlogArchivesPartDriver : ContentPartDriver<BlogArchivesPart> {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
+        private readonly IBlogPathConstraint _blogPathConstraint;
 
-        public BlogArchivesPartDriver(IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogArchivesPartDriver(
+            IBlogService blogService, 
+            IBlogPostService blogPostService,
+            IBlogPathConstraint blogPathConstraint) {
             _blogService = blogService;
             _blogPostService = blogPostService;
+            _blogPathConstraint = blogPathConstraint;
         }
 
         protected override DriverResult Display(BlogArchivesPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_BlogArchives",
                                 () => {
-                                    BlogPart blog = null;
-                                    if (!string.IsNullOrWhiteSpace(part.ForBlog))
-                                        blog = _blogService.Get(part.ForBlog);
+                                    var path = _blogPathConstraint.FindPath(part.ForBlog);
+                                    BlogPart blog = _blogService.Get(path);
 
                                     if (blog == null)
                                         return null;
@@ -28,12 +35,21 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
+            var viewModel = new BlogArchivesViewModel {
+                Path = part.ForBlog,
+                Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
+                };
+
             return ContentShape("Parts_Blogs_BlogArchives_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.BlogArchives", Model: part, Prefix: Prefix));
+                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.BlogArchives", Model: viewModel, Prefix: Prefix));
         }
 
         protected override DriverResult Editor(BlogArchivesPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, null, null);
+            var viewModel = new BlogArchivesViewModel();
+            if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
+                part.ForBlog = viewModel.Path;
+            }
+
             return Editor(part, shapeHelper);
         }
     }
