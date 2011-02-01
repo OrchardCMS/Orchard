@@ -47,6 +47,10 @@ namespace Orchard.Indexing {
         ISearchBuilder AsFilter();
 
         ISearchBuilder SortBy(string name);
+        ISearchBuilder SortByInteger(string name);
+        ISearchBuilder SortByString(string name);
+        ISearchBuilder SortByFloat(string name);
+        ISearchBuilder SortByDateTime(string name);
         ISearchBuilder Ascending();
 
         ISearchBuilder Slice(int skip, int count);
