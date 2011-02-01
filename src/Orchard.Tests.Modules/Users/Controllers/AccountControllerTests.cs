@@ -39,6 +39,7 @@ using Orchard.Tests.Messaging;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.Handlers;
 using System.Collections.Specialized;
+using Orchard.Mvc;
 
 namespace Orchard.Tests.Modules.Users.Controllers {
     [TestFixture]
@@ -149,7 +150,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             _session.Flush();
 
             var result = _controller.Register();
-            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That(result, Is.TypeOf<ShapeResult>());
         }
 
         [Test]
