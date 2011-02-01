@@ -61,23 +61,23 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\PackagingCommands.cs" />
     <Compile Include="Controllers\PackagingServicesController.cs" />
-    <Compile Include="Controllers\DownloadStreamResult.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="DefaultPackagingUpdater.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\PackagingSource.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Service References\GalleryServer\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.datasvcmap</DependentUpon>
     </Compile>
-    <Compile Include="Services\AtomExtensions.cs" />
     <Compile Include="Services\ExtensionReferenceRepository.cs" />
     <Compile Include="Services\FileBaseProjectSystem.cs" />
     <Compile Include="Services\IPackageBuilder.cs" />
     <Compile Include="Services\IPackageInstaller.cs" />
     <Compile Include="Services\IPackageManager.cs" />
+    <Compile Include="Services\IPackagingServices.cs" />
     <Compile Include="Services\IPackagingSourceManager.cs" />
     <Compile Include="Services\NugetLogger.cs" />
     <Compile Include="Services\PackageBuilder.cs" />
@@ -85,6 +85,7 @@
     <Compile Include="Services\PackageInstaller.cs" />
     <Compile Include="Services\PackageManager.cs" />
     <Compile Include="Services\PackagingEntry.cs" />
+    <Compile Include="Services\PackagingServices.cs" />
     <Compile Include="Services\PackagingSourceManager.cs" />
     <Compile Include="ViewModels\PackagingAddSourceViewModel.cs" />
     <Compile Include="ViewModels\PackagingHarvestViewModel.cs" />

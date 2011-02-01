@@ -1,11 +1,9 @@
 using System;
 using System.Linq;
-using System.Web.Hosting;
 using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
-using Orchard.UI.Notify;
 
 namespace Orchard.Packaging.Services {
     [OrchardFeature("PackagingServices")]
@@ -13,17 +11,14 @@ namespace Orchard.Packaging.Services {
         private readonly IExtensionManager _extensionManager;
         private readonly IPackageBuilder _packageBuilder;
         private readonly IPackageInstaller _packageExpander;
-        private readonly INotifier _notifier;
 
         public PackageManager(
             IExtensionManager extensionManager,
             IPackageBuilder packageBuilder,
-            IPackageInstaller packageExpander,
-            INotifier notifier) {
+            IPackageInstaller packageExpander) {
             _extensionManager = extensionManager;
             _packageBuilder = packageBuilder;
             _packageExpander = packageExpander;
-            _notifier = notifier;
 
             T = NullLocalizer.Instance;
         }

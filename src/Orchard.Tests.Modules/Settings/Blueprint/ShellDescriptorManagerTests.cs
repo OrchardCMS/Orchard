@@ -26,7 +26,7 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
             public string LastMessageName { get; set; }
             public IDictionary<string, object> LastEventData { get; set; }
 
-            public IEnumerable Notify(string messageName, IDictionary<string, object> eventData) {                
+            public IEnumerable Notify(string messageName, IDictionary<string, object> eventData) {
                 LastMessageName = messageName;
                 LastEventData = eventData;
                 return new object[0];

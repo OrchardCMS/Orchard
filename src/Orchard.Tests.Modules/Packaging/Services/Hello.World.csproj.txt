@@ -72,7 +72,6 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\GalleryCommands.cs" />
     <Compile Include="Commands\PackagingCommands.cs" />
-    <Compile Include="Controllers\DownloadStreamResult.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="DefaultPackagingUpdater.cs" />
     <Compile Include="ResourceManifest.cs" />

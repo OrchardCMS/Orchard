@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using System;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
 
@@ -12,7 +13,7 @@ namespace Orchard.Tests.Storage {
 
         [SetUp]
         public void Init() {
-            _folderPath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media"), "Default");
+            _folderPath = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media"), ShellSettings.DefaultName);
             _filePath = _folderPath + "\\testfile.txt";
 
             if (Directory.Exists(_folderPath)) {
@@ -30,7 +31,7 @@ namespace Orchard.Tests.Storage {
             var subsubfolder1 = Path.Combine(subfolder1, "SubSubfolder1");
             Directory.CreateDirectory(subsubfolder1);
 
-            _storageProvider = new FileSystemStorageProvider(new ShellSettings { Name = "Default" });
+            _storageProvider = new FileSystemStorageProvider(new ShellSettings { Name = ShellSettings.DefaultName });
         }
 
         [TearDown]

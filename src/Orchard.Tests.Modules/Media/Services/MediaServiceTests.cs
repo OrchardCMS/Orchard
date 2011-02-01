@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
 using Orchard.Media.Models;
@@ -31,7 +32,6 @@ namespace Orchard.Tests.Modules.Media.Services {
         private const string NoExtensionFileName = "test";
 
         private const string MediaFolder = "Media";
-        private const string ShellSettingsName = "Default";
 
         private StubOrchardServices OrchardServices { get; set; }
         private StubStorageProvider StorageProvider { get; set; }
@@ -40,15 +40,15 @@ namespace Orchard.Tests.Modules.Media.Services {
         [SetUp]
         public void Setup() {
             OrchardServices = new StubOrchardServices();
-            StorageProvider = new StubStorageProvider(new ShellSettings { Name = ShellSettingsName });
+            StorageProvider = new StubStorageProvider(new ShellSettings { Name = ShellSettings.DefaultName });
             MediaService = new MediaServiceAccessor(StorageProvider, OrchardServices);
         }
 
         [Test]
         public void GetPublicUrlTests() {
             Assert.That(() => MediaService.GetPublicUrl(null), Throws.InstanceOf(typeof(ArgumentException)), "null relative path is invalid");
-            Assert.That(MediaService.GetPublicUrl(TextFileName), Is.EqualTo(string.Format("/{0}/{1}/{2}", MediaFolder, ShellSettingsName, TextFileName)), "base path file");
-            Assert.That(MediaService.GetPublicUrl(string.Format("{0}/{1}", InnerDirectory, TextFileName)), Is.EqualTo(string.Format("/{0}/{1}/{2}/{3}", MediaFolder, ShellSettingsName, InnerDirectory, TextFileName)), "file within directory");
+            Assert.That(MediaService.GetPublicUrl(TextFileName), Is.EqualTo(string.Format("/{0}/{1}/{2}", MediaFolder, ShellSettings.DefaultName, TextFileName)), "base path file");
+            Assert.That(MediaService.GetPublicUrl(string.Format("{0}/{1}", InnerDirectory, TextFileName)), Is.EqualTo(string.Format("/{0}/{1}/{2}/{3}", MediaFolder, ShellSettings.DefaultName, InnerDirectory, TextFileName)), "file within directory");
         }
 
         [Test]

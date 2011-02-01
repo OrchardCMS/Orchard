@@ -1,4 +1,5 @@
-﻿using Orchard.Environment.Configuration;
+﻿using Orchard.Environment;
+using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Navigation;
@@ -16,7 +17,7 @@ namespace Orchard.MultiTenancy {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            if ( _shellSettings.Name != "Default" )
+            if (_shellSettings.Name != ShellSettings.DefaultName)
                 return;
 
             builder.Add(T("Tenants"), "100",

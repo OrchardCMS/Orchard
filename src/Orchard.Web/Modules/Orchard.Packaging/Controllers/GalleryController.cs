@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Services.Client;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Mvc;
@@ -12,7 +11,6 @@ using Orchard.Logging;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
-using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
@@ -23,15 +21,19 @@ namespace Orchard.Packaging.Controllers {
     [Themed, Admin]
     public class GalleryController : Controller {
 
+        private readonly IPackagingServices _packagingServices;
         private readonly IPackageManager _packageManager;
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly INotifier _notifier;
 
         public GalleryController(
+            IPackagingServices packagingServices,
             IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
             INotifier notifier,
             IOrchardServices services) {
+
+            _packagingServices = packagingServices;
             _packageManager = packageManager;
             _packagingSourceManager = packagingSourceManager;
             _notifier = notifier;
@@ -46,7 +48,7 @@ namespace Orchard.Packaging.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Sources() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list sources")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             return View(new PackagingSourcesViewModel {
@@ -55,7 +57,7 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult Remove(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove sources")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             _packagingSourceManager.RemoveSource(id);
@@ -64,7 +66,7 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult AddSource() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             return View(new PackagingAddSourceViewModel());
@@ -72,7 +74,7 @@ namespace Orchard.Packaging.Controllers {
 
         [HttpPost]
         public ActionResult AddSource(string url) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             try {
@@ -126,7 +128,7 @@ namespace Orchard.Packaging.Controllers {
         }
 
         protected ActionResult ListExtensions(int? sourceId, string extensionType, string returnView, Func<PackagingSource, PackagingEntry[]> getList) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list {0}", extensionType)))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
@@ -156,7 +158,7 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult Install(string packageId, string version, int sourceId, string redirectTo) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to install packages")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();

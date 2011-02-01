@@ -39,7 +39,7 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
             var builder = new ContainerBuilder();
 
             builder.RegisterInstance(new ShellBlueprint());
-            builder.RegisterInstance(new ShellSettings { Name = "Default", DataTablePrefix = "Test", DataProvider = "SqlCe" });
+            builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataTablePrefix = "Test", DataProvider = "SqlCe" });
             builder.RegisterInstance(dataServicesProviderFactory).As<IDataServicesProviderFactory>();
             builder.RegisterInstance(AppDataFolderTests.CreateAppDataFolder(Path.GetDirectoryName(databaseFileName))).As<IAppDataFolder>();
 

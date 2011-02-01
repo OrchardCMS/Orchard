@@ -10,7 +10,6 @@ using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Mvc.Extensions;
 using Orchard.Packaging.Services;
-using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
@@ -22,15 +21,19 @@ namespace Orchard.Packaging.Controllers {
     [Themed, Admin]
     public class PackagingServicesController : Controller {
 
+        private readonly IPackagingServices _packagingServices;
         private readonly IPackageManager _packageManager;
         private readonly IAppDataFolderRoot _appDataFolderRoot;
         private readonly INotifier _notifier;
 
         public PackagingServicesController(
+            IPackagingServices packagingServices,
             IPackageManager packageManager,
             INotifier notifier,
             IAppDataFolderRoot appDataFolderRoot,
             IOrchardServices services) {
+
+            _packagingServices = packagingServices;
             _packageManager = packageManager;
             _notifier = notifier;
             _appDataFolderRoot = appDataFolderRoot;
@@ -43,7 +46,7 @@ namespace Orchard.Packaging.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult AddTheme(string returnUrl) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add themes")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             return View();
@@ -51,7 +54,7 @@ namespace Orchard.Packaging.Controllers {
 
         [HttpPost, ActionName("AddTheme")]
         public ActionResult AddThemePOST(string returnUrl) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add themes")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             return InstallPackage(returnUrl, Request.RawUrl);
@@ -59,14 +62,14 @@ namespace Orchard.Packaging.Controllers {
 
         [HttpPost, ActionName("RemoveTheme")]
         public ActionResult RemoveThemePOST(string themeId, string returnUrl, string retryUrl) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove themes")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             return UninstallPackage(PackageBuilder.BuildPackageId(themeId, DefaultExtensionTypes.Theme), returnUrl, retryUrl);
         }
 
         public ActionResult AddModule(string returnUrl) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add modules")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             return View();
@@ -74,14 +77,14 @@ namespace Orchard.Packaging.Controllers {
 
         [HttpPost, ActionName("AddModule")]
         public ActionResult AddModulePOST(string returnUrl) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add modules")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             return InstallPackage(returnUrl, Request.RawUrl);
         }
 
         public ActionResult InstallPackage(string returnUrl, string retryUrl) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to install packages")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             try {
@@ -114,7 +117,7 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult UninstallPackage(string id, string returnUrl, string retryUrl) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to uninstall packages")))
+            if (!_packagingServices.CanManagePackages())
                 return new HttpUnauthorizedResult();
 
             try {

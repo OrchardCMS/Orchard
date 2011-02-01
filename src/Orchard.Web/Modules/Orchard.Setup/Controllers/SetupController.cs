@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using Orchard.Environment;
-using Orchard.FileSystems.AppData;
+using Orchard.Environment.Configuration;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
@@ -11,13 +11,11 @@ using Orchard.UI.Notify;
 namespace Orchard.Setup.Controllers {
     [ValidateInput(false), Themed]
     public class SetupController : Controller {
-        private readonly IAppDataFolder _appDataFolder;
         private readonly IViewsBackgroundCompilation _viewsBackgroundCompilation;
         private readonly INotifier _notifier;
         private readonly ISetupService _setupService;
 
-        public SetupController(INotifier notifier, ISetupService setupService, IAppDataFolder appDataFolder, IViewsBackgroundCompilation viewsBackgroundCompilation) {
-            _appDataFolder = appDataFolder;
+        public SetupController(INotifier notifier, ISetupService setupService, IViewsBackgroundCompilation viewsBackgroundCompilation) {
             _viewsBackgroundCompilation = viewsBackgroundCompilation;
             _notifier = notifier;
             _setupService = setupService;
@@ -38,7 +36,7 @@ namespace Orchard.Setup.Controllers {
             // We use this opportunity to start a background task to "pre-compile" all the known
             // views in the app folder, so that the application is more reponsive when the user
             // hits the homepage and admin screens for the first time.
-            if (StringComparer.OrdinalIgnoreCase.Equals(initialSettings.Name, "Default")) {
+            if (StringComparer.OrdinalIgnoreCase.Equals(initialSettings.Name, ShellSettings.DefaultName)) {
                 _viewsBackgroundCompilation.Start();
             }
 

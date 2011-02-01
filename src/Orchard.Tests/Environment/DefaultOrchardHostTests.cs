@@ -122,7 +122,7 @@ namespace Orchard.Tests.Environment {
         }
 
         public class StubShellSettingsLoader : IShellSettingsManager {
-            private readonly List<ShellSettings> _shellSettings = new List<ShellSettings> { new ShellSettings { Name = "Default" } };
+            private readonly List<ShellSettings> _shellSettings = new List<ShellSettings> { new ShellSettings { Name = ShellSettings.DefaultName } };
 
             public IEnumerable<ShellSettings> LoadSettings() {
                 return _shellSettings.AsEnumerable();
@@ -240,7 +240,7 @@ namespace Orchard.Tests.Environment {
         public static ILifetimeScope CreateShellContainer_Obsolete(this IOrchardHost host) {
             return ((DefaultOrchardHost)host)
                 .Current
-                .Single(x => x.Settings.Name == "Default")
+                .Single(x => x.Settings.Name == ShellSettings.DefaultName)
                 .LifetimeScope;
         }
 

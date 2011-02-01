@@ -93,7 +93,6 @@ namespace Orchard.Packaging.Commands {
                 // Exceptions area thrown by NuGet as error messages
                 throw new OrchardException(T(HttpUtility.HtmlDecode(T("Could not unintall the package: {0}", e.Message).Text)));
             }
-
         }
     }
 }

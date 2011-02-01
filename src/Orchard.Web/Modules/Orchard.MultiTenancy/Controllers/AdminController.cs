@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.MultiTenancy.Services;
@@ -158,7 +159,7 @@ namespace Orchard.MultiTenancy.Controllers {
         }
 
         private bool EnsureDefaultTenant() {
-            return _thisShellSettings.Name == "Default";
+            return _thisShellSettings.Name == ShellSettings.DefaultName;
         }
     }
 }

@@ -73,7 +73,7 @@ namespace Orchard.Tests.Modules.Migrations {
                     new Dictionary<string, object> {{"ProviderName", "SqlCe"}})
             });
 
-            builder.RegisterInstance(new ShellSettings { Name = "Default", DataTablePrefix = "TEST", DataProvider = "SqlCe" });
+            builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataTablePrefix = "TEST", DataProvider = "SqlCe" });
             builder.RegisterInstance(AppDataFolderTests.CreateAppDataFolder(_tempFixtureFolderName)).As<IAppDataFolder>();
             builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>();
             builder.RegisterType<SqlCeDataServicesProvider>().As<IDataServicesProvider>();

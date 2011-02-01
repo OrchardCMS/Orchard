@@ -8,12 +8,12 @@ using Orchard.FileSystems.WebSite;
 using Orchard.Packaging.Services;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Modules.Packaging {
+namespace Orchard.Tests.Modules.Packaging.Services {
     [TestFixture]
     public class PackageBuilderTests : ContainerTestBase {
         private const string PackageIdentifier = "Hello.World";
 
-        protected override void Register(Autofac.ContainerBuilder builder) {
+        protected override void Register(ContainerBuilder builder) {
             builder.RegisterType<PackageBuilder>().As<IPackageBuilder>();
             builder.RegisterType<InMemoryWebSiteFolder>().As<IWebSiteFolder>()
                 .As<InMemoryWebSiteFolder>().InstancePerLifetimeScope();
