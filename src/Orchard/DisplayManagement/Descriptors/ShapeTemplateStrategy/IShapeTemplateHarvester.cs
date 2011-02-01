@@ -44,14 +44,14 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             var shapeType = leader + fileName.Replace("--", "__").Replace("-", "__").Replace('.', '_');
 
             if (string.IsNullOrEmpty(displayType)) {
-                return shapeType;
+                return shapeType.ToLowerInvariant();
             }
             var firstBreakingSeparator = shapeType.IndexOf("__");
             if (firstBreakingSeparator <= 0) {
-                return shapeType + "_" + displayType;
+                return (shapeType + "_" + displayType).ToLowerInvariant();
             }
 
-            return shapeType.Substring(0, firstBreakingSeparator) + "_" + displayType + shapeType.Substring(firstBreakingSeparator);
+            return (shapeType.Substring(0, firstBreakingSeparator) + "_" + displayType + shapeType.Substring(firstBreakingSeparator)).ToLowerInvariant();
         }
     }
 
