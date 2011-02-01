@@ -92,7 +92,24 @@ namespace Orchard.Indexing {
             return this;
         }
 
-        public ISearchBuilder Ascending() {
+        public ISearchBuilder SortByInteger(string name) {
+            return this;
+        }
+
+        public ISearchBuilder SortByString(string name) {
+            return this;
+        }
+
+        public ISearchBuilder SortByFloat(string name) {
+            return this;
+        }
+
+        public ISearchBuilder SortByDateTime(string name) {
+            return this;
+        }
+
+        public ISearchBuilder Ascending()
+        {
             return this;
         }
 

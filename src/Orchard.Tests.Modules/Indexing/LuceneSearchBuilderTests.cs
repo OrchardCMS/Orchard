@@ -166,12 +166,12 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)).Store());
             _provider.Store("default", _provider.New(3).Add("date", new DateTime(2010, 05, 28, 12, 30, 45)).Store());
 
-            var date = _searchBuilder.SortBy("date").Search().ToList();
+            var date = _searchBuilder.SortByDateTime("date").Search().ToList();
             Assert.That(date.Count(), Is.EqualTo(3));
             Assert.That(date[0].GetDateTime("date") > date[1].GetDateTime("date"), Is.True);
             Assert.That(date[1].GetDateTime("date") > date[2].GetDateTime("date"), Is.True);
 
-            date = _searchBuilder.SortBy("date").Ascending().Search().ToList();
+            date = _searchBuilder.SortByDateTime("date").Ascending().Search().ToList();
             Assert.That(date.Count(), Is.EqualTo(3));
             Assert.That(date[0].GetDateTime("date") < date[1].GetDateTime("date"), Is.True);
             Assert.That(date[1].GetDateTime("date") < date[2].GetDateTime("date"), Is.True);
@@ -184,12 +184,12 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(2).Add("downloads", 2222).Store());
             _provider.Store("default", _provider.New(3).Add("downloads", 3).Store());
 
-            var number = _searchBuilder.SortBy("downloads").Search().ToList();
+            var number = _searchBuilder.SortByInteger("downloads").Search().ToList();
             Assert.That(number.Count(), Is.EqualTo(3));
             Assert.That(number[0].GetInt("downloads") > number[1].GetInt("downloads"), Is.True);
             Assert.That(number[1].GetInt("downloads") > number[2].GetInt("downloads"), Is.True);
 
-            number = _searchBuilder.SortBy("downloads").Ascending().Search().ToList();
+            number = _searchBuilder.SortByInteger("downloads").Ascending().Search().ToList();
             Assert.That(number.Count(), Is.EqualTo(3));
             Assert.That(number[0].GetInt("downloads") < number[1].GetInt("downloads"), Is.True);
             Assert.That(number[1].GetInt("downloads") < number[2].GetInt("downloads"), Is.True);
