@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.Data.Migration;
@@ -57,7 +56,7 @@ namespace Orchard.Themes.Commands {
             else {
                 Context.Output.WriteLine(T("Current theme"));
                 Context.Output.WriteLine(T("--------------------------"));
-                WriteThemeLines(new ThemeEntry() {
+                WriteThemeLines(new ThemeEntry {
                     Descriptor = currentTheme,
                     NeedsUpdate = featuresThatNeedUpdate.Contains(currentTheme.Id),
                     Enabled = _shellDescriptor.Features.Any(sf => sf.Name == currentTheme.Id)
