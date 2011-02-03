@@ -62,6 +62,7 @@ namespace Orchard.Setup.Controllers {
             }
 
             if (!ModelState.IsValid) {
+                model.DatabaseIsPreconfigured = !string.IsNullOrEmpty(_setupService.Prime().DataProvider);
                 return IndexViewResult(model);
             }
 
