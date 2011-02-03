@@ -77,6 +77,15 @@ namespace Orchard.Roles.Controllers {
             var viewModel = new RoleCreateViewModel();
             try {
                 UpdateModel(viewModel);
+
+                //check if the role name already exists
+                if (!_roleService.VerifyRoleUnicity(viewModel.Name))
+                {
+                    Services.Notifier.Error(T("Creating Role failed: {0}", "Role with same name already exists"));
+                    
+                    return RedirectToAction("Create");
+                }
+
                 _roleService.CreateRole(viewModel.Name);
                 foreach (string key in Request.Form.Keys) {
                     if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {

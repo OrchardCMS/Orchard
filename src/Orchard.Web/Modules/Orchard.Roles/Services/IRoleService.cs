@@ -15,5 +15,13 @@ namespace Orchard.Roles.Services {
         IEnumerable<string> GetPermissionsForRole(int id);
 
         IEnumerable<string> GetPermissionsForRoleByName(string name);
+
+
+        /// <summary>
+        /// Verify if the role name is unique
+        /// </summary>
+        /// <param name="name">Role name</param>
+        /// <returns>Returns false if a role with the given name already exits</returns>
+        bool VerifyRoleUnicity(string name);
     }
 }

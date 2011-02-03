@@ -151,6 +151,17 @@ namespace Orchard.Roles.Services {
             });
         }
 
+        /// <summary>
+        /// Verify if the role name is unique
+        /// </summary>
+        /// <param name="name">Role name</param>
+        /// <returns>Returns false if a role with the given name already exits</returns>
+        public bool VerifyRoleUnicity(string name) 
+        {
+            return _roleRepository.Get(x => x.Name == name) == null ? true : false;
+        }
+        
+
         IEnumerable<string> GetPermissionsForRoleByNameInner(string name) {
             var roleRecord = GetRoleByName(name);
             return roleRecord == null ? Enumerable.Empty<string>() : GetPermissionsForRole(roleRecord.Id);
