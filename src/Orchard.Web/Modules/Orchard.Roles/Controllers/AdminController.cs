@@ -79,10 +79,8 @@ namespace Orchard.Roles.Controllers {
                 UpdateModel(viewModel);
 
                 //check if the role name already exists
-                if (!_roleService.VerifyRoleUnicity(viewModel.Name))
-                {
-                    Services.Notifier.Error(T("Creating Role failed: {0}", "Role with same name already exists"));
-                    
+                if (!_roleService.VerifyRoleUnicity(viewModel.Name)) {
+                    Services.Notifier.Error(T("Creating Role {0} failed: Role with same name already exists", viewModel.Name));
                     return RedirectToAction("Create");
                 }
 

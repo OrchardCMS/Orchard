@@ -156,9 +156,8 @@ namespace Orchard.Roles.Services {
         /// </summary>
         /// <param name="name">Role name</param>
         /// <returns>Returns false if a role with the given name already exits</returns>
-        public bool VerifyRoleUnicity(string name) 
-        {
-            return _roleRepository.Get(x => x.Name == name) == null ? true : false;
+        public bool VerifyRoleUnicity(string name) {
+            return (_roleRepository.Get(x => x.Name == name) == null);
         }
         
 
