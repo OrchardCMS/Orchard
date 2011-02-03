@@ -50,15 +50,15 @@ namespace Orchard.Blogs.Handlers {
             if (blog == null)
                 return;
 
-            var blogSlug = blog.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)
+            var blogPath = blog.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)
                 ? ""
-                : blog.As<RoutePart>().Slug;
+                : blog.As<RoutePart>().Path;
 
             context.Metadata.DisplayRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "Blog"},
                 {"Action", "Item"},
-                {"blogSlug", blogSlug}
+                {"blogPath", blogPath}
             };
             context.Metadata.CreateRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
