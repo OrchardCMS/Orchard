@@ -60,8 +60,8 @@ namespace Orchard.Blogs.Drivers {
             if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
                 part.ForBlog = viewModel.Path;
                 part.Count = viewModel.Count;
-            } 
-            
+            }
+
             return Editor(part, shapeHelper);
         }
     }
