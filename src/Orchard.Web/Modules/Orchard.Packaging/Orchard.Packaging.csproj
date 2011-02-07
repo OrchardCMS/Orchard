@@ -77,7 +77,6 @@
     <Compile Include="Services\IPackageBuilder.cs" />
     <Compile Include="Services\IPackageInstaller.cs" />
     <Compile Include="Services\IPackageManager.cs" />
-    <Compile Include="Services\IPackagingServices.cs" />
     <Compile Include="Services\IPackagingSourceManager.cs" />
     <Compile Include="Services\NugetLogger.cs" />
     <Compile Include="Services\PackageBuilder.cs" />
@@ -85,7 +84,6 @@
     <Compile Include="Services\PackageInstaller.cs" />
     <Compile Include="Services\PackageManager.cs" />
     <Compile Include="Services\PackagingEntry.cs" />
-    <Compile Include="Services\PackagingServices.cs" />
     <Compile Include="Services\PackagingSourceManager.cs" />
     <Compile Include="ViewModels\PackagingAddSourceViewModel.cs" />
     <Compile Include="ViewModels\PackagingHarvestViewModel.cs" />
@@ -96,6 +94,7 @@
   <ItemGroup>
     <Content Include="Content\Images\imagePlaceholder.png" />
     <Content Include="Content\Images\moduleDefaultIcon.png" />
+    <Content Include="Content\Images\stars.png" />
     <Content Include="Module.txt" />
     <Content Include="Service References\GalleryServer\Reference.datasvcmap">
       <Generator>DataServiceClientGenerator</Generator>

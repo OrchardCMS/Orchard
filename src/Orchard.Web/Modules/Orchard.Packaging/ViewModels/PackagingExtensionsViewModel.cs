@@ -7,5 +7,18 @@ namespace Orchard.Packaging.ViewModels {
         public IEnumerable<PackagingEntry> Extensions { get; set; }
         public IEnumerable<PackagingSource> Sources { get; set; }
         public PackagingSource SelectedSource { get; set; }
+        public PackagingExtensionsOptions Options { get; set; }
+        public dynamic Pager { get; set; }
+    }
+
+    public class PackagingExtensionsOptions {
+        public int? SourceId { get; set; }
+        public PackagingExtensionsOrder Order { get; set; }
+    }
+
+    public enum PackagingExtensionsOrder {
+        Downloads,
+        Ratings,
+        Alphanumeric
     }
 }

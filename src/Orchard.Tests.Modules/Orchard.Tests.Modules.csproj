@@ -143,7 +143,6 @@
     <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
     <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
     <Compile Include="Media\Services\MediaServiceTests.cs" />
-    <Compile Include="Packaging\Services\PackagingServicesTests.cs" />
     <Compile Include="Scripting.Dlr\EvaluatorTests.cs" />
     <Compile Include="Scripting\EvaluatorTestsBase.cs" />
     <Compile Include="Scripting\EvaluatorTests.cs" />

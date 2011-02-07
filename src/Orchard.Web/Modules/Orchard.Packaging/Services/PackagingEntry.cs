@@ -17,5 +17,6 @@ namespace Orchard.Packaging.Services {
         public string IconUrl { get; set; }
         public double Rating { get; set; }
         public int RatingsCount { get; set; }
+        public int DownloadCount { get; set; }
     }
 }
