@@ -200,8 +200,7 @@ namespace Orchard.Users.Controllers {
                 ModelState.AddModelError("_FORM",
                                          T("The current password is incorrect or the new password is invalid."));
                 return ChangePassword();
-            }
-            catch {
+            } catch {
                 ModelState.AddModelError("_FORM", T("The current password is incorrect or the new password is invalid."));
                 return ChangePassword();
             }

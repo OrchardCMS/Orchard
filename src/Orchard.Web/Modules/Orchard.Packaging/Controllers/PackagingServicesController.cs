@@ -15,6 +15,7 @@ using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 using IPackageManager = Orchard.Packaging.Services.IPackageManager;
 using PackageBuilder = Orchard.Packaging.Services.PackageBuilder;
 
@@ -42,10 +43,12 @@ namespace Orchard.Packaging.Controllers {
             Services = services;
 
             T = NullLocalizer.Instance;
+            Logger = Logging.NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
+        public Logging.ILogger Logger { get; set; }
 
         public ActionResult AddTheme(string returnUrl) {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add themes")))
@@ -107,12 +110,8 @@ namespace Orchard.Packaging.Controllers {
                 }
 
                 return this.RedirectLocal(returnUrl, "~/");
-            }
-            catch (Exception exception) {
-                _notifier.Error(T("Package uploading and installation failed."));
-                for (Exception scan = exception; scan != null; scan = scan.InnerException) {
-                    _notifier.Error(T("{0}", scan.Message));
-                }
+            } catch (Exception exception) {
+                this.Error(exception, T("Package uploading and installation failed."), Logger, Services.Notifier);
 
                 return Redirect(retryUrl);
             }
@@ -128,11 +127,8 @@ namespace Orchard.Packaging.Controllers {
                 _notifier.Information(T("Uninstalled package \"{0}\"", id));
 
                 return this.RedirectLocal(returnUrl, "~/");
-            }
-            catch (Exception exception) {
-                for (Exception scan = exception; scan != null; scan = scan.InnerException) {
-                    _notifier.Error(T("Uninstall failed: {0}", exception.Message));
-                }
+            } catch (Exception exception) {
+                this.Error(exception, T("Uninstall failed: {0}", exception.Message), Logger, Services.Notifier);
 
                 return Redirect(retryUrl);
             }

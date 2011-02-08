@@ -19,6 +19,7 @@ using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 using IPackageManager = Orchard.Packaging.Services.IPackageManager;
 
 namespace Orchard.Packaging.Controllers {
@@ -100,8 +101,7 @@ namespace Orchard.Packaging.Controllers {
                     if (String.IsNullOrWhiteSpace(title)) {
                         ModelState.AddModelError("Url", T("The feed has no title.").Text);
                     }
-                }
-                catch {
+                } catch {
                     ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
                 }
 
@@ -112,9 +112,9 @@ namespace Orchard.Packaging.Controllers {
                 Services.Notifier.Information(T("The feed has been added successfully."));
 
                 return RedirectToAction("Sources");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Adding feed failed: {0}", exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Adding feed failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(new PackagingAddSourceViewModel { Url = url });
             }
         }
@@ -198,10 +198,8 @@ namespace Orchard.Packaging.Controllers {
                             extensions = extensions.Take(pager.PageSize);
                         }
                     }
-                }
-                catch (Exception ex) {
-                    Logger.Error(ex, "Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message);
-                    Services.Notifier.Error(T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message));
+                } catch (Exception exception) {
+                    this.Error(exception, T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, exception.Message), Logger, Services.Notifier);
                 }
             }
 
@@ -241,12 +239,8 @@ namespace Orchard.Packaging.Controllers {
                 else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
                     Services.Notifier.Information(T("The module has been successfully installed. Its features can be enabled in the \"Configuration | Features\" page accessible from the menu."));
                 }
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Package installation failed."));
-                for (Exception scan = exception; scan != null; scan = scan.InnerException) {
-                    Services.Notifier.Error(T("{0}", scan.Message));
-                }
+            } catch (Exception exception) {
+                this.Error(exception, T("Package installation failed."), Logger, Services.Notifier);
             }
 
             return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");

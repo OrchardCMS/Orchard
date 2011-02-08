@@ -8,6 +8,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Reports.Services;
 using Orchard.Security;
@@ -15,6 +16,7 @@ using Orchard.Themes.Preview;
 using Orchard.Themes.Services;
 using Orchard.Themes.ViewModels;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Themes.Controllers {
     [ValidateInput(false)]
@@ -50,10 +52,12 @@ namespace Orchard.Themes.Controllers {
             _reportsCoordinator = reportsCoordinator;
 
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Index() {
             try {
@@ -74,9 +78,9 @@ namespace Orchard.Themes.Controllers {
                     InstallThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
                     BrowseToGallery = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "Gallery") != null
                 });
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Listing themes failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Listing themes failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(new ThemesIndexViewModel());
             }
         }
@@ -88,9 +92,9 @@ namespace Orchard.Themes.Controllers {
                     return new HttpUnauthorizedResult();
                 _previewTheme.SetPreviewTheme(themeName);
                 return this.RedirectLocal(returnUrl, "~/");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Previewing theme failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Previewing theme failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return RedirectToAction("Index");
             }
         }
@@ -102,10 +106,10 @@ namespace Orchard.Themes.Controllers {
                     return new HttpUnauthorizedResult();
                 _previewTheme.SetPreviewTheme(null);
                 _siteThemeService.SetSiteTheme(themeName);
+            } catch (Exception exception) {
+                this.Error(exception, T("Previewing theme failed: {0}", exception.Message), Logger, Services.Notifier);
             }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Previewing theme failed: " + exception.Message));
-            }
+
             return RedirectToAction("Index");
         }
 
@@ -115,9 +119,8 @@ namespace Orchard.Themes.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
                     return new HttpUnauthorizedResult();
                 _previewTheme.SetPreviewTheme(null);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Previewing theme failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Previewing theme failed: {0}", exception.Message), Logger, Services.Notifier);
             }
             return RedirectToAction("Index");
         }
@@ -129,9 +132,8 @@ namespace Orchard.Themes.Controllers {
                     return new HttpUnauthorizedResult();
 
                 _themeService.EnableThemeFeatures(themeName);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Enabling theme failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Enabling theme failed: {0}", exception.Message), Logger, Services.Notifier);
             }
             return RedirectToAction("Index");
         }
@@ -143,9 +145,8 @@ namespace Orchard.Themes.Controllers {
                     return new HttpUnauthorizedResult();
 
                 _themeService.DisableThemeFeatures(themeName);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Disabling theme failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Disabling theme failed: {0}", exception.Message), Logger, Services.Notifier);
             }
             return RedirectToAction("Index");
         }
@@ -158,9 +159,8 @@ namespace Orchard.Themes.Controllers {
 
                 _themeService.EnableThemeFeatures(themeName);
                 _siteThemeService.SetSiteTheme(themeName);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Activating theme failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Activating theme failed: {0}", exception.Message), Logger, Services.Notifier);
             }
             return RedirectToAction("Index");
         }
@@ -177,9 +177,8 @@ namespace Orchard.Themes.Controllers {
                 _reportsCoordinator.Register("Data Migration", "Upgrade " + themeName, "Orchard installation");
                 _dataMigrationManager.Update(themeName);
                 Services.Notifier.Information(T("The theme {0} was updated succesfuly", themeName));
-            }
-            catch (Exception ex) {
-                Services.Notifier.Error(T("An error occured while updating the theme {0}: {1}", themeName, ex.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("An error occured while updating the theme {0}: {1}", themeName, exception.Message), Logger, Services.Notifier);
             }
 
             return RedirectToAction("Index");

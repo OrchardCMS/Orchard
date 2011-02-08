@@ -7,9 +7,10 @@ using Orchard.Commands;
 using Orchard.Experimental.ViewModels;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Themes;
 using Orchard.UI.Admin;
-using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Experimental.Controllers {
     [Themed, Admin, OrchardFeature("Orchard.Experimental.WebCommandLine")]
@@ -20,10 +21,12 @@ namespace Orchard.Experimental.Controllers {
             _commandManager = commandManager;
             Services = services;
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Index() {
             return Execute();
@@ -47,9 +50,9 @@ namespace Orchard.Experimental.Controllers {
                         .ToArray();
                     model.Results = writer.ToString();
                 }
-            }
-            catch(Exception exception) {
-                Services.Notifier.Error(T("Error executing command: {0}", exception.Message));
+            } catch(Exception exception) {
+                this.Error(exception, T("Error executing command: {0}", exception.Message), Logger, Services.Notifier);
+
                 Services.TransactionManager.Cancel();
             }
             return View(model);

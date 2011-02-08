@@ -2,11 +2,13 @@
 using System.Web.Mvc;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Logging;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
 using Orchard.Themes;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Setup.Controllers {
     [ValidateInput(false), Themed]
@@ -19,10 +21,13 @@ namespace Orchard.Setup.Controllers {
             _viewsBackgroundCompilation = viewsBackgroundCompilation;
             _notifier = notifier;
             _setupService = setupService;
+
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         private ActionResult IndexViewResult(SetupViewModel model) {
             return View(model);
@@ -87,12 +92,9 @@ namespace Orchard.Setup.Controllers {
 
                 // redirect to the welcome page.
                 return Redirect("~/");
-            }
-            catch (Exception exception) {
-                _notifier.Error(T("Setup failed:"));
-                for (var scan = exception; scan != null; scan = scan.InnerException) {
-                    _notifier.Error(new LocalizedString(scan.Message));
-                }
+            } catch (Exception exception) {
+                this.Error(exception, T("Setup failed:"), Logger, _notifier);
+
                 return IndexViewResult(model);
             }
         }

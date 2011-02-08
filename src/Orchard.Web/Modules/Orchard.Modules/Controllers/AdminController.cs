@@ -7,11 +7,13 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Modules.Services;
 using Orchard.Modules.ViewModels;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Modules.Controllers {
     public class AdminController : Controller {
@@ -39,10 +41,12 @@ namespace Orchard.Modules.Controllers {
             _shellDescriptor = shellDescriptor;
 
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Index() {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage modules")))
@@ -111,9 +115,8 @@ namespace Orchard.Modules.Controllers {
                 _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
                 _dataMigrationManager.Update(id);
                 Services.Notifier.Information(T("The feature {0} was updated successfully", id));
-            }
-            catch (Exception ex) {
-                Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, ex.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("An error occured while updating the feature {0}: {1}", id, exception.Message), Logger, Services.Notifier);
             }
 
             return RedirectToAction("Features");

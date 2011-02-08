@@ -13,6 +13,7 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Comments.ViewModels;
 using Orchard.Comments.Services;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Comments.Controllers {
     using Orchard.Settings;
@@ -80,9 +81,9 @@ namespace Orchard.Comments.Controllers {
                     Pager = pagerShape
                 };
                 return View(model);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Listing comments failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Listing comments failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(new CommentsIndexViewModel());
             }
         }
@@ -134,9 +135,9 @@ namespace Orchard.Comments.Controllers {
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Editing comments failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Editing comments failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return RedirectToAction("Index", "Admin", new { options = viewModel.Options });
             }
 
@@ -176,9 +177,9 @@ namespace Orchard.Comments.Controllers {
                     CommentsClosedOnItem = _commentService.CommentsDisabledForCommentedContent(id),
                 };
                 return View(model);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Listing comments failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Listing comments failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return RedirectToAction("Index");
             }
         }
@@ -230,9 +231,9 @@ namespace Orchard.Comments.Controllers {
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Editing comments failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Editing comments failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return Details(viewModel.CommentedItemId, viewModel.Options);
             }
 
@@ -246,9 +247,8 @@ namespace Orchard.Comments.Controllers {
                     return new HttpUnauthorizedResult();
 
                 _commentService.DisableCommentsForCommentedContent(commentedItemId);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Disabling Comments failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Disabling Comments failed: {0}", exception.Message), Logger, Services.Notifier);
             }
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
@@ -260,9 +260,8 @@ namespace Orchard.Comments.Controllers {
                     return new HttpUnauthorizedResult();
                 
                 _commentService.EnableCommentsForCommentedContent(commentedItemId);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Enabling Comments failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Enabling Comments failed: {0}", exception.Message), Logger, Services.Notifier);
             }
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
@@ -280,9 +279,9 @@ namespace Orchard.Comments.Controllers {
                 };
                 return View(viewModel);
 
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Editing comment failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Editing comment failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return RedirectToAction("Index");
             }
         }
@@ -297,9 +296,9 @@ namespace Orchard.Comments.Controllers {
 
                 _commentService.UpdateComment(viewModel.Id, viewModel.Name, viewModel.Email, viewModel.SiteName, viewModel.CommentText, viewModel.Status);
                 return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Editing Comment failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Editing comment failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(viewModel);
             }
         }
@@ -314,9 +313,8 @@ namespace Orchard.Comments.Controllers {
                 _commentService.ApproveComment(id);
 
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Approving comment failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Approving comment failed: {0}", exception.Message), Logger, Services.Notifier);
 
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
             }
@@ -332,9 +330,9 @@ namespace Orchard.Comments.Controllers {
                 _commentService.UnapproveComment(id);
 
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Unapproving comment failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Unapproving comment failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
             }
         }
@@ -349,9 +347,9 @@ namespace Orchard.Comments.Controllers {
                 _commentService.MarkCommentAsSpam(id);
 
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Marking comment as spam failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Marking comment as spam failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
             }
         }
@@ -366,9 +364,9 @@ namespace Orchard.Comments.Controllers {
                 _commentService.DeleteComment(id);
 
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Details", new { id = commentedOn }));
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Deleting comment failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Deleting comment failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
             }
         }

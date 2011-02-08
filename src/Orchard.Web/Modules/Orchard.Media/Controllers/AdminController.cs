@@ -5,10 +5,12 @@ using System.Web;
 using System.Web.Mvc;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Media.Models;
 using Orchard.Media.Services;
 using Orchard.Media.ViewModels;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Media.Controllers {
     [ValidateInput(false)]
@@ -20,10 +22,12 @@ namespace Orchard.Media.Controllers {
             _mediaService = mediaService;
 
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public IOrchardServices Services { get; set;}
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Index() {
             // Root media folders
@@ -44,7 +48,8 @@ namespace Orchard.Media.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error(T("Deleting Folder failed: {0}", exception.Message));
+                this.Error(exception, T("Deleting Folder failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View();
             }
         }
@@ -68,7 +73,8 @@ namespace Orchard.Media.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error(T("Creating Folder failed: {0}", exception.Message));
+                this.Error(exception, T("Creating Folder failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(viewModel);
             }
         }
@@ -81,7 +87,8 @@ namespace Orchard.Media.Controllers {
                 return View(model);
             }
             catch (Exception exception) {
-                Services.Notifier.Error(T("Editing failed: {0}", exception.Message));
+                this.Error(exception, T("Editing failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return RedirectToAction("Index");
             }
         }
@@ -110,9 +117,9 @@ namespace Orchard.Media.Controllers {
                     }
                 }
                 return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Deleting failed: {0}", exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Deleting failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View();
             }
         }
@@ -136,9 +143,9 @@ namespace Orchard.Media.Controllers {
 
                 Services.Notifier.Information(T("Media folder deleted"));
                 return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Deleting media folder failed: {0}", exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Deleting media folder failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(viewModel);
             }
         }
@@ -158,7 +165,8 @@ namespace Orchard.Media.Controllers {
                 Services.Notifier.Information(T("Media folder properties modified"));
                 return RedirectToAction("Index");
             } catch (Exception exception) {
-                Services.Notifier.Error(T("Modifying media folder properties failed: {0}", exception.Message));
+                this.Error(exception, T("Modifying media folder properties failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(viewModel);
             }
         }
@@ -190,9 +198,9 @@ namespace Orchard.Media.Controllers {
 
                 Services.Notifier.Information(T("Media file(s) uploaded"));
                 return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Uploading media file failed: {0}", exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Uploading media file failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(viewModel);
             }
         }
@@ -255,7 +263,8 @@ namespace Orchard.Media.Controllers {
                 Services.Notifier.Information(T("Media deleted"));
                 return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
             } catch (Exception exception) {
-                Services.Notifier.Error(T("Removing media file failed: {0}", exception.Message));
+                this.Error(exception, T("Removing media file failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(viewModel);
             }
         }
@@ -286,7 +295,8 @@ namespace Orchard.Media.Controllers {
                                                            mediaPath = viewModel.MediaPath });
             }
             catch (Exception exception) {
-                Services.Notifier.Error(T("Editing media file failed: {0}", exception.Message));
+                this.Error(exception, T("Editing media file failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(viewModel);
             }
         }
