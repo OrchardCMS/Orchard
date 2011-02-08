@@ -386,5 +386,35 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_searchBuilder.WithField("term-id", 4).ExactMatch().AsFilter().Count(), Is.EqualTo(10));
         }
 
+        [Test]
+        public void MandatoryCanBeUserMultipleTimes() {
+            _provider.CreateIndex("default");
+            _provider.Store("default",
+                _provider.New(1)
+                    .Add("field1", 1)
+                    .Add("field2", 1)
+                    .Add("field3", 1)
+            );
+
+            _provider.Store("default",
+                _provider.New(2)
+                    .Add("field1", 1)
+                    .Add("field2", 2)
+                    .Add("field3", 2)
+            );
+
+            _provider.Store("default",
+                _provider.New(3)
+                    .Add("field1", 1)
+                    .Add("field2", 2)
+                    .Add("field3", 3)
+            );
+
+
+            Assert.That(_searchBuilder.WithField("field1", 0).Mandatory().Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.WithField("field1", 1).Mandatory().Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.WithField("field1", 1).Mandatory().WithField("field2", 2).Mandatory().Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("field1", 1).Mandatory().WithField("field2", 2).Mandatory().WithField("field3", 3).Mandatory().Count(), Is.EqualTo(1));
+        }
     }
 }
