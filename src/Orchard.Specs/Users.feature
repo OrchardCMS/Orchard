@@ -260,3 +260,30 @@ Scenario: I should be able to filter users by status
 	Then I should see "<a[^>]*>user1</a>"
 		And I should see "<a[^>]*>user2</a>"
 		And I should see "<a[^>]*>admin</a>"
+@email
+Scenario: I should not be able to add users with invalid email addresses
+    Given I have installed Orchard
+    When I go to "admin/users"
+		And I follow "Add a new user"
+	    And I fill in
+        | name | value |
+        | UserName | user1 |
+        | Email | NotAnEmail |
+        | Password | a12345! |
+        | ConfirmPassword | a12345! |
+        And I hit "Save"
+	Then I should see "You must specify a valid email address."
+@email
+Scenario: I should be able to add users with valid email addresses
+    Given I have installed Orchard
+    When I go to "admin/users"
+		And I follow "Add a new user"
+	    And I fill in
+        | name | value |
+        | UserName | user1 |
+        | Email | user1@domain.com |
+        | Password | a12345! |
+        | ConfirmPassword | a12345! |
+        And I hit "Save"
+		And I am redirected
+	Then I should see "User created"

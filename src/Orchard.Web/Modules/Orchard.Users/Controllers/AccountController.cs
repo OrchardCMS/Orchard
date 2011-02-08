@@ -22,6 +22,7 @@ namespace Orchard.Users.Controllers {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
         private readonly IOrchardServices _orchardServices;
+        
 
         public AccountController(
             IAuthenticationService authenticationService, 
@@ -320,18 +321,17 @@ namespace Orchard.Users.Controllers {
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
             bool validate = true;
 
-            Regex isValidEmail = new Regex("^[a-z0-9_\\+-]+(\\.[a-z0-9_\\+-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*\\.([a-z]{2,4})$");
-
             if (String.IsNullOrEmpty(userName)) {
                 ModelState.AddModelError("username", T("You must specify a username."));
                 validate = false;
             }
+
             if (String.IsNullOrEmpty(email)) {
                 ModelState.AddModelError("email", T("You must specify an email address."));
                 validate = false;
             }
-
-            if (!isValidEmail.IsMatch(email)) {
+            else if (!Regex.IsMatch(email, UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+                // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
                 ModelState.AddModelError("email", T("You must specify a valid email address."));
                 validate = false;
             }

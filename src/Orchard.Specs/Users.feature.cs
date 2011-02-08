@@ -30,8 +30,8 @@ namespace Orchard.Specs
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Users", "In order to prevent users module regressions\nAs a site owner\nI want to create, se" +
-                    "arch and modify user accounts", GenerationTargetLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Users", "In order to prevent users module regressions\r\nAs a site owner\r\nI want to create, " +
+                    "search and modify user accounts", GenerationTargetLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -707,6 +707,90 @@ this.ScenarioSetup(scenarioInfo);
   testRunner.And("I should see \"<a[^>]*>user2</a>\"");
 #line 262
   testRunner.And("I should see \"<a[^>]*>admin</a>\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I should not be able to add users with invalid email addresses")]
+        [NUnit.Framework.CategoryAttribute("email")]
+        public virtual void IShouldNotBeAbleToAddUsersWithInvalidEmailAddresses()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I should not be able to add users with invalid email addresses", new string[] {
+                        "email"});
+#line 264
+this.ScenarioSetup(scenarioInfo);
+#line 265
+    testRunner.Given("I have installed Orchard");
+#line 266
+    testRunner.When("I go to \"admin/users\"");
+#line 267
+  testRunner.And("I follow \"Add a new user\"");
+#line hidden
+            TechTalk.SpecFlow.Table table25 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table25.AddRow(new string[] {
+                        "UserName",
+                        "user1"});
+            table25.AddRow(new string[] {
+                        "Email",
+                        "NotAnEmail"});
+            table25.AddRow(new string[] {
+                        "Password",
+                        "a12345!"});
+            table25.AddRow(new string[] {
+                        "ConfirmPassword",
+                        "a12345!"});
+#line 268
+     testRunner.And("I fill in", ((string)(null)), table25);
+#line 274
+        testRunner.And("I hit \"Save\"");
+#line 275
+ testRunner.Then("I should see \"You must specify a valid email address.\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I should be able to add users with valid email addresses")]
+        [NUnit.Framework.CategoryAttribute("email")]
+        public virtual void IShouldBeAbleToAddUsersWithValidEmailAddresses()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I should be able to add users with valid email addresses", new string[] {
+                        "email"});
+#line 277
+this.ScenarioSetup(scenarioInfo);
+#line 278
+    testRunner.Given("I have installed Orchard");
+#line 279
+    testRunner.When("I go to \"admin/users\"");
+#line 280
+  testRunner.And("I follow \"Add a new user\"");
+#line hidden
+            TechTalk.SpecFlow.Table table26 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table26.AddRow(new string[] {
+                        "UserName",
+                        "user1"});
+            table26.AddRow(new string[] {
+                        "Email",
+                        "user1@domain.com"});
+            table26.AddRow(new string[] {
+                        "Password",
+                        "a12345!"});
+            table26.AddRow(new string[] {
+                        "ConfirmPassword",
+                        "a12345!"});
+#line 281
+     testRunner.And("I fill in", ((string)(null)), table26);
+#line 287
+        testRunner.And("I hit \"Save\"");
+#line 288
+  testRunner.And("I am redirected");
+#line 289
+ testRunner.Then("I should see \"User created\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }

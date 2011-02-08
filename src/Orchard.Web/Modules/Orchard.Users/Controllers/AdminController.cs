@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -169,7 +170,12 @@ namespace Orchard.Users.Controllers {
                     AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
             }
-
+            
+            if (!Regex.IsMatch(createModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+                // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
+                ModelState.AddModelError("Email", T("You must specify a valid email address."));
+            }
+            
             if (createModel.Password != createModel.ConfirmPassword) {
                 AddModelError("ConfirmPassword", T("Password confirmation must match"));
             }
@@ -228,6 +234,10 @@ namespace Orchard.Users.Controllers {
             if (TryUpdateModel(editModel)) {
                 if (!_userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email)) {
                     AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
+                }
+                else if (!Regex.IsMatch(editModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+                    // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
+                    ModelState.AddModelError("Email", T("You must specify a valid email address."));
                 }
                 else {
                     // also update the Super user if this is the renamed account
