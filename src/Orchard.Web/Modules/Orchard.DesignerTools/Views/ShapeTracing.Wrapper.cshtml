@@ -1,0 +1,24 @@
+﻿@using Orchard;
+@using Orchard.DisplayManagement.Descriptors;
+@{
+	Script.Require("jQuery");
+	Script.Include("orchard-designertools-shapetracing.js");
+	Style.Include("orchard-designertools-shapetracing.css");
+
+    var workContext = ViewContext.GetWorkContext();
+    var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.Id);
+    var descriptor = shapeTable.Descriptors[Model.Metadata.Type];    
+}
+
+<div class="shapeTracingWrapper" title="@Model.Metadata.Type @descriptor.BindingSource">
+@Display(Model.Metadata.ChildContent)
+
+@foreach(var alternate in Model.Metadata.Alternates) {
+	<div style="color:red">@alternate</div>
+}
+@foreach(var wrapper in Model.Metadata.Wrappers) {
+	if(wrapper != "ShapeTracing_Wrapper") {
+		<div style="color:green">@wrapper</div>
+	}
+}
+</div>
