@@ -98,6 +98,12 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                         return ctx => (ctx.DisplayType ?? "").StartsWith(prefix) && predicate(ctx);
                     }
                     return ctx => (ctx.DisplayType == expression) && predicate(ctx);
+                case "Path":
+                    if (expression.EndsWith("*")) {
+                        var prefix = expression.Substring(0, expression.Length - 1);
+                        return ctx => (ctx.Path ?? "").StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && predicate(ctx);
+                    }
+                    return ctx => (ctx.Path.Equals(expression, StringComparison.OrdinalIgnoreCase)) && predicate(ctx);
             }
             return predicate;
         }
