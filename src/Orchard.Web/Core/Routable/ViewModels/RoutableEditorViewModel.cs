@@ -10,7 +10,6 @@ namespace Orchard.Core.Routable.ViewModels {
         [StringLength(1024)]
         public string Title { get; set; }
         [StringLength(1024)]
-        [Required(AllowEmptyStrings = false)]
         public string Slug { get; set; }
         public int? ContainerId { get; set; }
         public bool PromoteToHomePage { get; set; }
