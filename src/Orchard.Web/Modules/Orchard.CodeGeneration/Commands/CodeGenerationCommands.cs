@@ -312,6 +312,9 @@ namespace Orchard.CodeGeneration.Commands {
             File.WriteAllBytes(themePath + "Theme.png", File.ReadAllBytes(_codeGenTemplatePath + "Theme.png"));
             createdFiles.Add(themePath + "Theme.png");
 
+            File.WriteAllText(themePath + "Placement.info", File.ReadAllText(_codeGenTemplatePath + "Placement.info"));
+            createdFiles.Add(themePath + "Placement.info");
+
             // create new csproj for the theme
             if (projectGuid != null) {
                 var itemGroup = CreateProjectItemGroup(themePath, createdFiles, createdFolders);
