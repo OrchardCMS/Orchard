@@ -191,7 +191,12 @@
     <Compile Include="Mvc\ShapeResult.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
-    <Compile Include="Recipes\IRecipeManager.cs" />
+    <Compile Include="Recipes\Models\Recipe.cs" />
+    <Compile Include="Recipes\Models\RecipeContext.cs" />
+    <Compile Include="Recipes\Models\RecipeStep.cs" />
+    <Compile Include="Recipes\Services\IRecipeHandler.cs" />
+    <Compile Include="Recipes\Services\IRecipeManager.cs" />
+    <Compile Include="Recipes\Services\IRecipeParser.cs" />
     <Compile Include="Security\IEncryptionService.cs" />
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
