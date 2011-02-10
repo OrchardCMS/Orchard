@@ -95,6 +95,7 @@ namespace Orchard.Setup.Services {
                     "Orchard.Media",
                     "Orchard.Modules",
                     "Orchard.Pages",
+                    "Orchard.Recipes",
                     "Orchard.Roles",
                     "Orchard.Tags",
                     "Orchard.Themes",
