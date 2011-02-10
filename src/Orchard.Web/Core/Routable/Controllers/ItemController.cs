@@ -9,6 +9,7 @@ using Orchard.Core.Routable.Services;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Services;
 using Orchard.Themes;
 
@@ -59,8 +60,7 @@ namespace Orchard.Core.Routable.Controllers {
             }
 
             dynamic model = _contentManager.BuildDisplay(hits.Single());
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return new ShapeResult(this, model);
         }
 
         public ActionResult Slugify(string contentType, int? id, int? containerId) {
