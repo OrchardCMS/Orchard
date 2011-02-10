@@ -173,6 +173,7 @@
     </Compile>
     <Compile Include="ContentManagement\Drivers\FieldStorage\FieldStorageProviderSelectorTests.cs" />
     <Compile Include="ContentManagement\Drivers\FieldStorage\InfosetFieldStorageProviderTests.cs" />
+    <Compile Include="ContentManagement\DynamicContentItemTests.cs" />
     <Compile Include="ContentManagement\Handlers\ContentHandlerTests.cs" />
     <Compile Include="ContentManagement\Handlers\DeltaPartHandler.cs" />
     <Compile Include="ContentManagement\Handlers\EpsilonPartHandler.cs" />

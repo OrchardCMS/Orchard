@@ -1,16 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Linq.Expressions;
+using ClaySharp;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.ContentManagement {
-    public class ContentItem : IContent {
+    public class ContentItem : IContent, IContentBehavior, IDynamicMetaObjectProvider {
         public ContentItem() {
+            _behavior = new ClayBehaviorCollection(new[] { new ContentItemBehavior(this) });
             _parts = new List<ContentPart>();
         }
 
         private readonly IList<ContentPart> _parts;
+
         ContentItem IContent.ContentItem { get { return this; } }
 
         public int Id { get { return Record == null ? 0 : Record.Id; } }
@@ -39,5 +44,15 @@ namespace Orchard.ContentManagement {
             part.ContentItem = this;
             _parts.Add(part);
         }
+
+
+        private readonly IClayBehavior _behavior;
+        IClayBehavior IContentBehavior.Behavior {
+            get { return _behavior; }
+        }
+        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter) {
+            return new ClayMetaObject(this, parameter, ex => Expression.Property(Expression.Convert(ex, typeof(IContentBehavior)), "Behavior"));
+        }
+
     }
 }
