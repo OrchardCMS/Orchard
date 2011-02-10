@@ -12,6 +12,15 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         void CodeGenerationCompleted(RazorBuildProvider provider, CodeGenerationCompleteEventArgs e);
     }
 
+    /// <summary>
+    /// The purpose of this class is to notify the Razor View Engine of Module and Theme
+    /// dependencies when compiling Views, so that the Razor Views build provider will add proper 
+    /// assembly references when calling the compiler.
+    /// For example, if Module A depends on Module Bar and some other 3rd party DLL "Foo.dll",
+    /// we will notify the Razor View Engine of the following dependencies:
+    /// * BuildManager.GetCompiledAssembly("~/Modules/Bar/Bar.csproj");
+    /// * Assembly.Load("Foo");
+    /// </summary>
     public class DefaultRazorCompilationEvents : IRazorCompilationEvents {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IBuildManager _buildManager;
