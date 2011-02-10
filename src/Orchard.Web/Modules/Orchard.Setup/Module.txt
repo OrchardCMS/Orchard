@@ -9,3 +9,4 @@ Features:
         Name: Setup
         Description: Standard site setup. This feature is disabled automatically once setup is over.
         Category: Core
+		 
