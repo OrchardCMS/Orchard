@@ -11,16 +11,17 @@ namespace Orchard.Packaging {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Gallery"), "30", menu => menu
-                        .Add(T("Modules"), "1.0", item => item
-                             .Action("Modules", "Gallery", new { area = "Orchard.Packaging" })
-                             .Permission(StandardPermissions.SiteOwner))
-                        .Add(T("Themes"), "2.0", item => item
-                             .Action("Themes", "Gallery", new { area = "Orchard.Packaging" })
-                             .Permission(StandardPermissions.SiteOwner))
-                        .Add(T("Feeds"), "3.0", item => item
-                             .Action("Sources", "Gallery", new { area = "Orchard.Packaging" })
-                             .Permission(StandardPermissions.SiteOwner)));
+            builder.Add(T("Themes"), "25", menu => menu
+                .Add(T("Available"), "1", item => item.Action("Themes", "Gallery", new { area = "Orchard.Packaging" })
+                    .Permission(StandardPermissions.SiteOwner).LocalNav()));
+
+            builder.Add(T("Modules"), "20", menu => menu
+                .Add(T("Available"), "2", item => item.Action("Modules", "Gallery", new { area = "Orchard.Packaging" })
+                    .Permission(StandardPermissions.SiteOwner).LocalNav()));
+
+            builder.Add(T("Settings"), "30", menu => menu
+                .Add(T("Feeds"), "3", item => item.Action("Sources", "Gallery", new { area = "Orchard.Packaging" })
+                    .Permission(StandardPermissions.SiteOwner)));
         }
     }
 }
