@@ -266,6 +266,7 @@
     <Content Include="Shapes\Scripts\base.js" />
     <Content Include="Shapes\Scripts\html5.js" />
     <Content Include="Shapes\Scripts\jquery.switchable.js" />
+    <Content Include="Shapes\Scripts\OpenAjax.js" />
     <Content Include="Shapes\Styles\Images\detail-view-on.gif" />
     <Content Include="Shapes\Styles\Images\detail-view.gif" />
     <Content Include="Shapes\Styles\Images\summary-view-on.gif" />
