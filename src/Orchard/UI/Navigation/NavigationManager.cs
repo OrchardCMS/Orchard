@@ -68,6 +68,7 @@ namespace Orchard.UI.Navigation {
                         Permissions = item.Permissions,
                         Position = item.Position,
                         RouteValues = item.RouteValues,
+                        LocalNav = item.LocalNav,
                         Text = item.Text,
                         Url = item.Url,
                         LinkToFirstChild = item.LinkToFirstChild,
