@@ -1,5 +1,6 @@
 ﻿@model Orchard.Setup.ViewModels.SetupViewModel
 @{
+	Script.Require("jquery").AtFoot();
     Script.Include("setup.js").AtFoot();
 }
 <h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
@@ -48,6 +49,22 @@ if (!Model.DatabaseIsPreconfigured) {
             @Html.EditorFor(svm => svm.DatabaseTablePrefix)
         </div>
     </div>
+</fieldset>
+}
+if (Model.HasRecipes) {
+<fieldset>
+	<legend>@T("Use an Orchard Recipe during setup (Optional)")</legend>
+	<div>@T("Orchard Recipes allow you to setup your site with additional pre-configured options, features and settings out of the box")</div>	
+	<div>
+        <select id="@Html.FieldIdFor(m => m.Recipe)" name="@Html.FieldNameFor(m => m.Recipe)" class="recipe">
+		@Html.SelectOption("", false, "Choose")
+		@Html.SelectOption("", false, "-------------------")
+        @foreach(var recipe in Model.Recipes) {
+            @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, new { recipedescription = recipe.Description })
+        }
+        </select>
+    </div>
+	<div id="recipedescription"></div>
 </fieldset>
 }
 <div id="throbber">

@@ -35,7 +35,7 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
-
+            
             // On the first time installation of Orchard, the user gets to the setup screen, which
             // will take a while to finish (user inputting data and the setup process itself).
             // We use this opportunity to start a background task to "pre-compile" all the known
@@ -46,7 +46,11 @@ namespace Orchard.Setup.Controllers {
             }
 
             //
-            return IndexViewResult(new SetupViewModel { AdminUsername = "admin", DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider)});
+
+            return IndexViewResult(new SetupViewModel {
+                AdminUsername = "admin", 
+                DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider),
+            });
         }
 
         [HttpPost, ActionName("Index")]
@@ -68,6 +72,8 @@ namespace Orchard.Setup.Controllers {
 
             if (!ModelState.IsValid) {
                 model.DatabaseIsPreconfigured = !string.IsNullOrEmpty(_setupService.Prime().DataProvider);
+                // set HasRecipes flag
+                // set recipedescription
                 return IndexViewResult(model);
             }
 

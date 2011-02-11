@@ -23,7 +23,6 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
-using Orchard.Recipes.Services;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
@@ -205,9 +204,6 @@ namespace Orchard.Setup.Services {
         }
 
         private void CreateTenantData(SetupContext context, IWorkContextScope environment) {
-            var recipeManager = environment.Resolve<IRecipeManager>();
-            var setupRecipes = recipeManager.DiscoverRecipes("Orchard.Setup");
-
             // create superuser
             var membershipService = environment.Resolve<IMembershipService>();
             var user =
