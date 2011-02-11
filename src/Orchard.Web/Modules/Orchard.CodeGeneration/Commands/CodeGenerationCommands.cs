@@ -14,7 +14,6 @@ using Orchard.Environment.Extensions.Models;
 namespace Orchard.CodeGeneration.Commands {
 
     public class CodeGenerationCommands : DefaultOrchardCommandHandler {
-
         private readonly IExtensionManager _extensionManager;
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
@@ -30,6 +29,8 @@ namespace Orchard.CodeGeneration.Commands {
         private static readonly string _orchardWebProj = HostingEnvironment.MapPath("~/Orchard.Web.csproj");
         private static readonly string _orchardThemesProj = HostingEnvironment.MapPath("~/Themes/Themes.csproj");
 
+        private bool includeInSolution = true;
+
         public CodeGenerationCommands(
             IExtensionManager extensionManager,
             ISchemaCommandGenerator schemaCommandGenerator) {
@@ -38,7 +39,10 @@ namespace Orchard.CodeGeneration.Commands {
         }
 
         [OrchardSwitch]
-        public bool IncludeInSolution { get; set; }
+        public bool IncludeInSolution {
+            get { return includeInSolution; }
+            set { includeInSolution = value; }
+        }
 
         [OrchardSwitch]
         public bool CreateProject { get; set; }
