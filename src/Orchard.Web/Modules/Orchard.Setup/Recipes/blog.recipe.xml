@@ -1,1 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0"?>
+<Recipe>
+  <Name>blog</Name>
+  <Description>Orchard Blog Recipe</Description>
+  <Author>The Orchard Team</Author>
+  <WebSite>http://orchardproject.net</WebSite>
+  <Tags></Tags>
+  <Version>1.0</Version>
+</Recipe>

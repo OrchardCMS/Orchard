@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
@@ -24,7 +23,6 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
-using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Reports.Services;
 using Orchard.Security;

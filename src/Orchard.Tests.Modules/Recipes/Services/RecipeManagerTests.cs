@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -16,6 +17,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
     public class RecipeManagerTests {
         private IContainer _container;
         private IRecipeManager _recipeManager;
+        private IRecipeParser _recipeParser;
         private IExtensionFolders _folders;
 
         private const string DataPrefix = "Orchard.Tests.Modules.Recipes.Services.FoldersData.";
@@ -67,6 +69,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
             _container = builder.Build();
             _recipeManager = _container.Resolve<IRecipeManager>();
+            _recipeParser = _container.Resolve<IRecipeParser>();
         }
 
         [TearDown]
@@ -85,6 +88,36 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         public void DiscoverRecipesShouldDiscoverRecipeXmlFiles() {
             var recipes = (List<Recipe>)_recipeManager.DiscoverRecipes("Sample1");
             Assert.That(recipes.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ParseRecipeLoadsRecipeMetaDataIntoModel() {
+            var recipes = (List<Recipe>) _recipeManager.DiscoverRecipes("Sample1");
+            Assert.That(recipes.Count, Is.EqualTo(1));
+
+            var sampleRecipe = recipes[0];
+            Assert.That(sampleRecipe.Name, Is.EqualTo("cms"));
+            Assert.That(sampleRecipe.Description, Is.EqualTo("a sample Orchard recipe describing a cms"));
+            Assert.That(sampleRecipe.Author, Is.EqualTo("orchard"));
+            Assert.That(sampleRecipe.Version, Is.EqualTo("1.1"));
+            Assert.That(sampleRecipe.WebSite, Is.EqualTo("http://orchardproject.net"));
+            Assert.That(sampleRecipe.Tags, Is.EqualTo("tag1, tag2"));
+        }
+
+        [Test]
+        public void ParseRecipeLoadsRecipeStepsIntoModel() {
+            var recipes = (List<Recipe>)_recipeManager.DiscoverRecipes("Sample1");
+            Assert.That(recipes.Count, Is.EqualTo(1));
+
+            var sampleRecipe = recipes[0];
+            var recipeSteps = (List<RecipeStep>) sampleRecipe.RecipeSteps;
+
+            Assert.That(recipeSteps.Count, Is.EqualTo(11));
+        }
+
+        [Test]
+        public void ParseRecipeThrowsOnInvalidXml() {
+            Assert.Throws(typeof(XmlException), () => _recipeParser.ParseRecipe("<reipe></recipe>"));
         }
     }
 }

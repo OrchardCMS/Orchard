@@ -1,1 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0"?>
+<Recipe>
+  <Name>minimal</Name>
+  <Description>A minimal recipe for Orchard devs</Description>
+  <Author>The Orchard Team</Author>
+  <WebSite>http://orchardproject.net</WebSite>
+  <Tags>developer</Tags>
+  <Version>1.0</Version>
+</Recipe>
