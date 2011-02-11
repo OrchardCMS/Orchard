@@ -1,5 +1,4 @@
-﻿using System;
-using Orchard.Localization;
+﻿using Orchard.Localization;
 using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
@@ -11,7 +10,7 @@ namespace Orchard.Recipes.Services {
         public Localizer T { get; set; }
 
         public Recipe ParseRecipe(string recipeText) {
-            throw new NotImplementedException();
+            return new Recipe();
         }
     }
 }
