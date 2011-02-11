@@ -77,6 +77,10 @@
     <CallTarget Targets="Gallery-Setup"/>
   </Target>
 
+  <Target Name="Azure">
+    <MSBuild Projects="AzurePackage.proj" Targets="Build">
+    </MSBuild>
+  </Target>
   <!-- Building -->
 
   <Target Name="Clean">
