@@ -29,20 +29,18 @@ namespace Orchard.CodeGeneration.Commands {
         private static readonly string _orchardWebProj = HostingEnvironment.MapPath("~/Orchard.Web.csproj");
         private static readonly string _orchardThemesProj = HostingEnvironment.MapPath("~/Themes/Themes.csproj");
 
-        private bool includeInSolution = true;
-
         public CodeGenerationCommands(
             IExtensionManager extensionManager,
             ISchemaCommandGenerator schemaCommandGenerator) {
             _extensionManager = extensionManager;
             _schemaCommandGenerator = schemaCommandGenerator;
+
+            // Default is to include in the solution when generating modules / themes
+            IncludeInSolution = true;
         }
 
         [OrchardSwitch]
-        public bool IncludeInSolution {
-            get { return includeInSolution; }
-            set { includeInSolution = value; }
-        }
+        public bool IncludeInSolution { get; set; }
 
         [OrchardSwitch]
         public bool CreateProject { get; set; }
@@ -352,9 +350,6 @@ namespace Orchard.CodeGeneration.Commands {
                     solutionText = solutionText.Insert(solutionText.LastIndexOf("EndGlobalSection"), "\t{" + projectGuid + "} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}\r\n\t");
                     File.WriteAllText(solutionPath, solutionText);
                     TouchSolution(output);
-                }
-                else {
-                    output.WriteLine(T("Warning: Solution file could not be found at {0}", solutionPath));
                 }
             }
         }
