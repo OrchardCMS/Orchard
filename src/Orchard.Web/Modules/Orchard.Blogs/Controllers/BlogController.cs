@@ -8,6 +8,7 @@ using Orchard.Core.Feeds;
 using Orchard.Core.Routable.Services;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
@@ -92,8 +93,7 @@ namespace Orchard.Blogs.Controllers {
             var totalItemCount = _blogPostService.PostCount(blogPart);
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)blog);
+            return new ShapeResult(this, blog);
         }
     }
 }

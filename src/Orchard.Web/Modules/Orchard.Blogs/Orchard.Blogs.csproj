@@ -115,9 +115,7 @@
     <Content Include="Views\BlogAdmin\List.cshtml" />
     <Content Include="Views\BlogPostAdmin\Create.cshtml" />
     <Content Include="Views\BlogPostAdmin\Edit.cshtml" />
-    <Content Include="Views\BlogPost\Item.cshtml" />
     <Content Include="Views\BlogPost\ListByArchive.cshtml" />
-    <Content Include="Views\Blog\Item.cshtml" />
     <Content Include="Views\Blog\List.cshtml" />
     <Content Include="Views\Parts.Blogs.Blog.Manage.cshtml" />
     <Content Include="Views\Parts.Blogs.Blog.Description.cshtml" />

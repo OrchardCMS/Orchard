@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Routing;
 using ClaySharp.Implementation;
 using Orchard.ContentManagement.Handlers;
@@ -100,6 +101,7 @@ namespace Orchard.ContentManagement {
                 //var theme = workContext.CurrentTheme;
                 var theme = _themeService.Value.GetRequestTheme(_requestContext);
                 var shapeTable = _shapeTableManager.GetShapeTable(theme.Id);
+                var request = _requestContext.HttpContext.Request;
 
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
@@ -107,6 +109,7 @@ namespace Orchard.ContentManagement {
                         ContentType = context.ContentItem.ContentType,
                         DisplayType = displayType,
                         Differentiator = differentiator,
+                        Path = request.Path.Substring((request.ApplicationPath ?? "").Length)
                     };
                     var location = descriptor.Placement(placementContext);
                     return location ?? defaultLocation;
