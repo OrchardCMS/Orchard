@@ -8,7 +8,9 @@ namespace Orchard.DesignerTools.Services {
         }
 
         public void Created(ShapeCreatedContext context) {
-            if (context.ShapeType != "Layout" && context.ShapeType != "DocumentZone") {
+            if (context.ShapeType != "Layout" 
+                && context.ShapeType != "DocumentZone" 
+                ) {
                 context.Shape.Metadata.Wrappers.Add("ShapeTracing_Wrapper");
             }
         }

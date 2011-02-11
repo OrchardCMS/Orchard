@@ -109,7 +109,7 @@ namespace Orchard.ContentManagement {
                         ContentType = context.ContentItem.ContentType,
                         DisplayType = displayType,
                         Differentiator = differentiator,
-                        Path = request.Path.Substring((request.ApplicationPath ?? "").Length)
+                        Path = request.Path.Substring((request.ApplicationPath ?? "").Length) // get the current app-relative path, i.e. /my-blog
                     };
                     var location = descriptor.Placement(placementContext);
                     return location ?? defaultLocation;

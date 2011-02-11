@@ -109,8 +109,12 @@
     <Content Include="Scripts\orchard-blogs-archives.js" />
     <Content Include="Styles\orchard-blogs-admin.css" />
     <Content Include="Styles\orchard-blogs-archives.css" />
-    <Content Include="Views\BlogAdmin\Create.cshtml" />
-    <Content Include="Views\BlogAdmin\Edit.cshtml" />
+    <Content Include="Views\BlogAdmin\Create.cshtml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\BlogAdmin\Edit.cshtml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\BlogAdmin\Item.cshtml" />
     <Content Include="Views\BlogAdmin\List.cshtml" />
     <Content Include="Views\BlogPostAdmin\Create.cshtml" />
