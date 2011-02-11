@@ -77,10 +77,10 @@ namespace Orchard.Tests.UI.Navigation {
                 menu => menu
                     .Add(new LocalizedString("A"), "0", subMenu => subMenu.Action("Index", "Admin", new { area = "Area" })
                         .Add(new LocalizedString("B"), "0", item => item.Action("Index", "Admin", new { area = "Area" }))
-                        .Add(new LocalizedString("C"), "1", item => item.Action("Index", "Admin", new { area = "Area" }).LocalTask())))
-                    .Add(new LocalizedString("D"), "1", subMenu => subMenu.Action("Index", "Admin", new { area = "Area" }).LocalTask()
+                        .Add(new LocalizedString("C"), "1", item => item.Action("Index", "Admin", new { area = "Area" }).LocalNav())))
+                    .Add(new LocalizedString("D"), "1", subMenu => subMenu.Action("Index", "Admin", new { area = "Area" }).LocalNav()
                         .Add(new LocalizedString("E"), "0", item => item.Action("Index", "Admin", new { area = "Area" }))
-                        .Add(new LocalizedString("F"), "1", item => item.Action("Index", "Admin", new { area = "Area" }).LocalTask()));
+                        .Add(new LocalizedString("F"), "1", item => item.Action("Index", "Admin", new { area = "Area" }).LocalNav()));
 
             return navigationBuilder;
         }
@@ -92,11 +92,11 @@ namespace Orchard.Tests.UI.Navigation {
                     .Add(new LocalizedString("A"), "0", item => item.Action(SecondLevel1Action, "Admin", new { area = "Area" }))
                     .Add(new LocalizedString("B"), "1",
                         subMenu => subMenu
-                            .Add(new LocalizedString("C"), "0", item => item.Action(ThirdLevel1Action, "Admin", new { area = "Area" }).LocalTask())
+                            .Add(new LocalizedString("C"), "0", item => item.Action(ThirdLevel1Action, "Admin", new { area = "Area" }).LocalNav())
                             .Add(new LocalizedString("D"), "1",
-                                subSubMenu => subSubMenu.LocalTask()
-                                    .Add(new LocalizedString("E"), "0", item => item.Action(FourthLevel1Action, "Admin", new { area = "Area" }).LocalTask())
-                                    .Add(new LocalizedString("F"), "1", item => item.Action(FourthLevel2Action, "Admin", new { area = "Area" }).LocalTask())
+                                subSubMenu => subSubMenu.LocalNav()
+                                    .Add(new LocalizedString("E"), "0", item => item.Action(FourthLevel1Action, "Admin", new { area = "Area" }).LocalNav())
+                                    .Add(new LocalizedString("F"), "1", item => item.Action(FourthLevel2Action, "Admin", new { area = "Area" }).LocalNav())
                                     .Add(new LocalizedString("G"), "2", item => item.Action(FourthLevel3Action, "Admin", new { area = "Area" }))
                                     .Add(new LocalizedString("W"), "3", item => item.Action(FourthLevel4Action, "Admin", new { area = "Area" })))));
 

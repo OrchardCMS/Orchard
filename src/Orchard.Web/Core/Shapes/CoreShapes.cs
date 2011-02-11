@@ -85,6 +85,22 @@ namespace Orchard.Core.Shapes {
                     menuItem.Metadata.Alternates.Add("MenuItem__" + menu.MenuName);
                 });
 
+            builder.Describe("LocalMenu")
+                .OnDisplaying(displaying => {
+                    var menu = displaying.Shape;
+                    string menuName = menu.MenuName;
+                    menu.Classes.Add("localmenu-" + menuName.HtmlClassify());
+                    menu.Classes.Add("localmenu");
+                    menu.Metadata.Alternates.Add("LocalMenu__" + menuName);
+                });
+
+            builder.Describe("LocalMenuItem")
+                .OnDisplaying(displaying => {
+                    var menuItem = displaying.Shape;
+                    var menu = menuItem.Menu;
+                    menuItem.Metadata.Alternates.Add("LocalMenuItem__" + menu.MenuName);
+                });
+
             // 'List' shapes start with several empty collections
             builder.Describe("List")
                 .OnCreated(created => {

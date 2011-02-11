@@ -38,7 +38,7 @@ namespace Orchard.UI.Navigation {
             return this;
         }
 
-        public NavigationItemBuilder LocalTask(bool value = true) {
+        public NavigationItemBuilder LocalNav(bool value = true) {
             _item.LocalNav = value;
             return this;
         }

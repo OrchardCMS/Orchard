@@ -46,12 +46,19 @@ namespace Orchard.UI.Navigation {
             workContext.Layout.Navigation.Add(menuShape);
 
             // Populate local nav
-            dynamic localMenuShape = _shapeFactory.Menu().MenuName(string.Format("local_{0}", menuName));
+            dynamic localMenuShape = _shapeFactory.LocalMenu().MenuName(string.Format("local_{0}", menuName));
             PopulateLocalMenu(_shapeFactory, localMenuShape, localMenuShape, selectedPath);
             workContext.Layout.LocalNavigation.Add(localMenuShape);
         }
 
-        private void PopulateMenu(dynamic shapeFactory, dynamic parentShape, dynamic menu, IEnumerable<MenuItem> menuItems) {
+        /// <summary>
+        /// Populates the menu shapes.
+        /// </summary>
+        /// <param name="shapeFactory">The shape factory.</param>
+        /// <param name="parentShape">The menu parent shape.</param>
+        /// <param name="menu">The menu shape.</param>
+        /// <param name="menuItems">The current level to populate.</param>
+        protected void PopulateMenu(dynamic shapeFactory, dynamic parentShape, dynamic menu, IEnumerable<MenuItem> menuItems) {
             foreach (MenuItem menuItem in menuItems) {
                 dynamic menuItemShape = BuildMenuItemShape(shapeFactory, parentShape, menu, menuItem);
 
@@ -75,7 +82,26 @@ namespace Orchard.UI.Navigation {
 
             // find childs tabs and expand them
             if (parentMenuItem != null && parentMenuItem.Items != null && parentMenuItem.Items.Any()) {
-                PopulateMenu(shapeFactory, parentShape, menu, parentMenuItem.Items);
+                PopulateLocalMenu(shapeFactory, parentShape, menu, parentMenuItem.Items);
+            }
+        }
+
+        /// <summary>
+        /// Populates the local menu shapes.
+        /// </summary>
+        /// <param name="shapeFactory">The shape factory.</param>
+        /// <param name="parentShape">The menu parent shape.</param>
+        /// <param name="menu">The menu shape.</param>
+        /// <param name="menuItems">The current level to populate.</param>
+        protected void PopulateLocalMenu(dynamic shapeFactory, dynamic parentShape, dynamic menu, IEnumerable<MenuItem> menuItems) {
+            foreach (MenuItem menuItem in menuItems) {
+                dynamic menuItemShape = BuildLocalMenuItemShape(shapeFactory, parentShape, menu, menuItem);
+
+                if (menuItem.Items != null && menuItem.Items.Any()) {
+                    PopulateLocalMenu(shapeFactory, menuItemShape, menu, menuItem.Items);
+                }
+
+                parentShape.Add(menuItemShape, menuItem.Position);
             }
         }
 
@@ -154,6 +180,27 @@ namespace Orchard.UI.Navigation {
         /// <returns>The menu item shape.</returns>
         protected dynamic BuildMenuItemShape(dynamic shapeFactory, dynamic parentShape, dynamic menu, MenuItem menuItem) {
             return shapeFactory.MenuItem()
+                .Text(menuItem.Text)
+                .Href(menuItem.Href)
+                .LinkToFirstChild(menuItem.LinkToFirstChild)
+                .LocalNav(menuItem.LocalNav)
+                .Selected(menuItem.Selected)
+                .RouteValues(menuItem.RouteValues)
+                .Item(menuItem)
+                .Menu(menu)
+                .Parent(parentShape);
+        }
+
+        /// <summary>
+        /// Builds a local menu item shape.
+        /// </summary>
+        /// <param name="shapeFactory">The shape factory.</param>
+        /// <param name="parentShape">The parent shape.</param>
+        /// <param name="menu">The menu shape.</param>
+        /// <param name="menuItem">The menu item to build the shape for.</param>
+        /// <returns>The menu item shape.</returns>
+        protected dynamic BuildLocalMenuItemShape(dynamic shapeFactory, dynamic parentShape, dynamic menu, MenuItem menuItem) {
+            return shapeFactory.LocalMenuItem()
                 .Text(menuItem.Text)
                 .Href(menuItem.Href)
                 .LinkToFirstChild(menuItem.LinkToFirstChild)

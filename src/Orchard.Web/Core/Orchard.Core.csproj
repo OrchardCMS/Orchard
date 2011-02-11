@@ -372,6 +372,12 @@
   <ItemGroup>
     <Content Include="Shapes\Views\ShapeResult\Display.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\LocalMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shapes\Views\LocalMenuItem.cshtml" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
