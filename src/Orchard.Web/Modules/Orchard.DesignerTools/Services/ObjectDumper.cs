@@ -68,19 +68,14 @@ namespace Orchard.DesignerTools.Services {
         }
 
         private void DumpObject(object o, string name) {
-            if (_parents.Count >= _levels) {
-                _node.Add(
-                    new XElement("div", new XAttribute("class", "name"), name),
-                    new XElement("div", new XAttribute("class", "object last"), o)
-                );
-            
-                return;
-            }
-
             _node.Add(
                 new XElement("div", new XAttribute("class", "name"), name),
                 new XElement("div", new XAttribute("class", "type"), FormatType(o.GetType()))
             );
+
+            if (_parents.Count >= _levels) {
+                return;
+            }
 
             if (o is IDictionary) {
                 DumpDictionary((IDictionary)o);
