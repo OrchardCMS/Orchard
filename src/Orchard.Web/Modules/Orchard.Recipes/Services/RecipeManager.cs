@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Orchard.Environment.Extensions;
@@ -33,7 +32,20 @@ namespace Orchard.Recipes.Services {
         ILogger Logger { get; set; }
 
         public void Execute(Recipe recipe) {
-            throw new NotImplementedException();
+            var recipeContext = new RecipeContext { Recipe = recipe };
+
+            // TODO: Run each step inside a transaction boundary.
+            // TODO: Output should go into a report.
+            foreach (var recipeStep in recipe.RecipeSteps) {
+                recipeContext.RecipeStep = recipeStep;
+                recipeContext.Executed = false;
+                foreach (var handler in _recipeHandlers) {
+                    handler.ExecuteRecipeStep(recipeContext);
+                }
+                if (!recipeContext.Executed) {
+                    Logger.Error("Could not execute recipe step '{0}' because the recipe handler was not found.", recipeContext.RecipeStep.Name);
+                }
+            }
         }
 
         public IEnumerable<Recipe> DiscoverRecipes(string extensionName) {

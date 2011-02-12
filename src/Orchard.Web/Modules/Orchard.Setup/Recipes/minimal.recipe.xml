@@ -6,4 +6,8 @@
   <WebSite>http://orchardproject.net</WebSite>
   <Tags>developer</Tags>
   <Version>1.0</Version>
+
+  <!-- Steps -->
+  
+  <CleanUpInactive />
 </Recipe>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Autofac;
 using NUnit.Framework;
@@ -66,6 +67,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<Environment.Extensions.ExtensionManagerTests.StubLoaders>().As<IExtensionLoader>();
             builder.RegisterType<RecipeParser>().As<IRecipeParser>();
             builder.RegisterType<StubWebSiteFolder>().As<IWebSiteFolder>();
+            builder.RegisterType<CustomRecipeHandler>().As<IRecipeHandler>();
 
             _container = builder.Build();
             _recipeManager = _container.Resolve<IRecipeManager>();
@@ -112,12 +114,36 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             var sampleRecipe = recipes[0];
             var recipeSteps = (List<RecipeStep>) sampleRecipe.RecipeSteps;
 
-            Assert.That(recipeSteps.Count, Is.EqualTo(11));
+            Assert.That(recipeSteps.Count, Is.EqualTo(12));
         }
 
         [Test]
         public void ParseRecipeThrowsOnInvalidXml() {
             Assert.Throws(typeof(XmlException), () => _recipeParser.ParseRecipe("<reipe></recipe>"));
+        }
+
+        [Test]
+        public void ExecuteInvokesHandlersWithSteps() {
+            var recipes = (List<Recipe>)_recipeManager.DiscoverRecipes("Sample1");
+            Assert.That(recipes.Count, Is.EqualTo(1));
+
+            var sampleRecipe = recipes[0];
+            _recipeManager.Execute(sampleRecipe);
+
+            Assert.That(CustomRecipeHandler.AttributeValue == "value1");
+        }
+    }
+
+    public class CustomRecipeHandler : IRecipeHandler {
+        public static string AttributeValue;
+
+        public void ExecuteRecipeStep(RecipeContext recipeContext) {
+            if (recipeContext.RecipeStep.Name == "Custom1") {
+                foreach (var attribute in recipeContext.RecipeStep.Step.Attributes().Where(attribute => attribute.Name == "attr1")) {
+                    AttributeValue = attribute.Value;
+                    recipeContext.Executed = true;
+                }
+            }
         }
     }
 }

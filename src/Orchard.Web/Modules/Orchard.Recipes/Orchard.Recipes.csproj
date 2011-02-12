@@ -52,6 +52,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecipeHandlers\CleanUpInactiveRecipeHandler.cs" />
+    <Compile Include="RecipeHandlers\CommandRecipeHandler.cs" />
+    <Compile Include="RecipeHandlers\FeatureRecipeHandler.cs" />
+    <Compile Include="RecipeHandlers\MetaDataRecipeHandler.cs" />
+    <Compile Include="RecipeHandlers\MigrationRecipeHandler.cs" />
+    <Compile Include="RecipeHandlers\ModuleRecipeHandler.cs" />
+    <Compile Include="RecipeHandlers\SettingsRecipeHandler.cs" />
+    <Compile Include="RecipeHandlers\ThemeRecipeHandler.cs" />
     <Compile Include="Services\RecipeManager.cs" />
     <Compile Include="Services\RecipeParser.cs" />
   </ItemGroup>

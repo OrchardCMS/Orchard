@@ -13,7 +13,7 @@
   
   <Feature disable="f1, f2" enable="f3,f4" />
   
-  <Metadata>
+  <MetaData>
     <Types>
       <Blog creatable="true">
         <Body format="abodyformat"/>
@@ -23,7 +23,7 @@
     </Parts>
     <Fields>
     </Fields>
-  </Metadata>
+  </MetaData>
   
   <Command>
     command1
@@ -40,6 +40,8 @@
   
   <Theme src="source dir" enabled="true" current="true" />
   <Theme name="theme1" repository="somerepo" replace="true" />
+
+  <CleanUpInactive />
   
   <Custom1 attr2="value1" />
   <Custom2 attr2="value2" />
