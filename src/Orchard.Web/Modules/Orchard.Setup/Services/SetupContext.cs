@@ -9,5 +9,6 @@ namespace Orchard.Setup.Services {
         public string DatabaseConnectionString { get; set; }
         public string DatabaseTablePrefix { get; set; }
         public IEnumerable<string> EnabledFeatures { get; set; }
+        public string Recipe { get; set; }
     }
 }

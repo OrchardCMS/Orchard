@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0"?>
-<Recipe>
-  <Name>cms</Name>
-  <Description>Orchard CMS Recipe</Description>
-  <Author>The Orchard Team</Author>
-  <WebSite>http://orchardproject.net</WebSite>
-  <Tags></Tags>
-  <Version>1.0</Version>
-</Recipe>
+<Orchard>
+  <Recipe>
+    <Name>cms</Name>
+    <Description>Orchard CMS Recipe</Description>
+    <Author>The Orchard Team</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags></Tags>
+    <Version>1.0</Version>
+  </Recipe>
+</Orchard>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
@@ -23,6 +24,8 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
+using Orchard.Recipes.Models;
+using Orchard.Recipes.Services;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
@@ -41,6 +44,8 @@ namespace Orchard.Setup.Services {
         private readonly IShellContainerFactory _shellContainerFactory;
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IProcessingEngine _processingEngine;
+        private readonly IRecipeHarvester _recipeHarvester;
+        private readonly IEnumerable<Recipe> _recipes;
 
         public SetupService(
             ShellSettings shellSettings,
@@ -48,13 +53,16 @@ namespace Orchard.Setup.Services {
             IShellSettingsManager shellSettingsManager,
             IShellContainerFactory shellContainerFactory,
             ICompositionStrategy compositionStrategy,
-            IProcessingEngine processingEngine) {
+            IProcessingEngine processingEngine,
+            IRecipeHarvester recipeHarvester) {
             _shellSettings = shellSettings;
             _orchardHost = orchardHost;
             _shellSettingsManager = shellSettingsManager;
             _shellContainerFactory = shellContainerFactory;
             _compositionStrategy = compositionStrategy;
             _processingEngine = processingEngine;
+            _recipeHarvester = recipeHarvester;
+            _recipes = _recipeHarvester.HarvestRecipes("Orchard.Setup");
             T = NullLocalizer.Instance;
         }
 
@@ -62,6 +70,10 @@ namespace Orchard.Setup.Services {
 
         public ShellSettings Prime() {
             return _shellSettings;
+        }
+
+        public IEnumerable<Recipe> Recipes() {
+            return _recipes;
         }
 
         public void Setup(SetupContext context) {

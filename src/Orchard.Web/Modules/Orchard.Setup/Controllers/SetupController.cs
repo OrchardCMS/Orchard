@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
+using Orchard.Recipes.Models;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
@@ -17,7 +20,10 @@ namespace Orchard.Setup.Controllers {
         private readonly INotifier _notifier;
         private readonly ISetupService _setupService;
 
-        public SetupController(INotifier notifier, ISetupService setupService, IViewsBackgroundCompilation viewsBackgroundCompilation) {
+        public SetupController(
+            INotifier notifier, 
+            ISetupService setupService, 
+            IViewsBackgroundCompilation viewsBackgroundCompilation) {
             _viewsBackgroundCompilation = viewsBackgroundCompilation;
             _notifier = notifier;
             _setupService = setupService;
@@ -35,12 +41,13 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
+            var recipes = (List<Recipe>)_setupService.Recipes();
             
             // On the first time installation of Orchard, the user gets to the setup screen, which
             // will take a while to finish (user inputting data and the setup process itself).
             // We use this opportunity to start a background task to "pre-compile" all the known
             // views in the app folder, so that the application is more reponsive when the user
-            // hits the homepage and admin screens for the first time.
+            // hits the homepage and admin screens for the first time.)
             if (StringComparer.OrdinalIgnoreCase.Equals(initialSettings.Name, ShellSettings.DefaultName)) {
                 _viewsBackgroundCompilation.Start();
             }
@@ -48,8 +55,10 @@ namespace Orchard.Setup.Controllers {
             //
 
             return IndexViewResult(new SetupViewModel {
-                AdminUsername = "admin", 
+                AdminUsername = "admin",
                 DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider),
+                HasRecipes = recipes.Count > 0,
+                Recipes = recipes
             });
         }
 
@@ -71,13 +80,20 @@ namespace Orchard.Setup.Controllers {
             }
 
             if (!ModelState.IsValid) {
+                var recipes = (List<Recipe>)_setupService.Recipes();
+                model.HasRecipes = recipes.Count > 0;
+                model.Recipes = recipes;
+                if (!String.IsNullOrEmpty(model.Recipe)) {
+                    foreach (var recipe in recipes.Where(recipe => recipe.Name == model.Recipe)) {
+                        model.RecipeDescription = recipe.Description;
+                    }
+                }
                 model.DatabaseIsPreconfigured = !string.IsNullOrEmpty(_setupService.Prime().DataProvider);
-                //TODO:  set HasRecipes flag and recipedescription
+                
                 return IndexViewResult(model);
             }
 
             try {
-
                 var setupContext = new SetupContext {
                     SiteName = model.SiteName,
                     AdminUsername = model.AdminUsername,
@@ -85,7 +101,8 @@ namespace Orchard.Setup.Controllers {
                     DatabaseProvider = model.DatabaseOptions ? "SqlCe" : "SqlServer",
                     DatabaseConnectionString = model.DatabaseConnectionString,
                     DatabaseTablePrefix = model.DatabaseTablePrefix,
-                    EnabledFeatures = null // default list
+                    EnabledFeatures = null, // default list
+                    Recipe = model.Recipe
                 };
 
                 _setupService.Setup(setupContext);
