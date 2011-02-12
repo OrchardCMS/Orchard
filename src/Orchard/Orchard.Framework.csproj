@@ -195,6 +195,7 @@
     <Compile Include="Recipes\Models\RecipeContext.cs" />
     <Compile Include="Recipes\Models\RecipeStep.cs" />
     <Compile Include="Recipes\Services\IRecipeHandler.cs" />
+    <Compile Include="Recipes\Services\IRecipeHarvester.cs" />
     <Compile Include="Recipes\Services\IRecipeManager.cs" />
     <Compile Include="Recipes\Services\IRecipeParser.cs" />
     <Compile Include="Security\IEncryptionService.cs" />

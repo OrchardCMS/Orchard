@@ -1,19 +1,21 @@
 ﻿<?xml version="1.0"?>
-<Recipe>
-  <Name>cms</Name>
-  <Description>a sample Orchard recipe describing a cms</Description>
-  <Author>orchard</Author>
-  <WebSite>http://orchardproject.net</WebSite>
-  <Tags>tag1, tag2</Tags>
-  <Version>1.1</Version>
-  
+<Orchard>
+  <Recipe>
+    <Name>cms</Name>
+    <Description>a sample Orchard recipe describing a cms</Description>
+    <Author>orchard</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags>tag1, tag2</Tags>
+    <Version>1.1</Version>
+  </Recipe>
+
   <!-- Steps -->
   <Module src="source directory" replace="false" />
   <Module name="module1" repository="somerepo" version="1.1" replace="true" />
-  
+
   <Feature disable="f1, f2" enable="f3,f4" />
-  
-  <MetaData>
+
+  <Metadata>
     <Types>
       <Blog creatable="true">
         <Body format="abodyformat"/>
@@ -23,26 +25,27 @@
     </Parts>
     <Fields>
     </Fields>
-  </MetaData>
-  
+  </Metadata>
+
   <Command>
     command1
     command2
     command3
   </Command>
-  
+
   <Settings>
     <SiteSettingsPart PageSize="30" />
     <CommentSettingsPart enableSpamProtection="true" />
   </Settings>
-  
+
   <Migration feature="f2"/>
-  
+
   <Theme src="source dir" enabled="true" current="true" />
   <Theme name="theme1" repository="somerepo" replace="true" />
 
   <CleanUpInactive />
-  
+
   <Custom1 attr1="value1" />
   <Custom2 attr2="value2" />
-</Recipe>
+</Orchard>
+

@@ -7,6 +7,6 @@ OrchardVersion: 1.0.20
 Description: Provides Orchard Recipes.
 Features:
     Orchard.Recipes:
-		Name: Recipes
+        Name: Recipes
         Description: Implementation of Orchard recipes.
         Category: Core

@@ -26,29 +26,38 @@ namespace Orchard.Recipes.Services {
                 textReader.Close();
 
                 foreach (var element in recipeTree.Elements()) {
-                    switch(element.Name.ToString()) {
-                        case "Name":
-                            recipe.Name = element.Value;
-                            break;
-                        case "Description":
-                            recipe.Description = element.Value;
-                            break;
-                        case "Author":
-                            recipe.Author = element.Value;
-                            break;
-                        case "WebSite":
-                            recipe.WebSite = element.Value;
-                            break;
-                        case "Version":
-                            recipe.Version = element.Value;
-                            break;
-                        case "Tags":
-                            recipe.Tags = element.Value;
-                            break;
-                        default:
-                            var recipeStep = new RecipeStep {Name = element.Name.ToString(), Step = element};
-                            recipeSteps.Add(recipeStep);
-                            break;
+                    // Recipe mETaDaTA
+                    if (element.Name.LocalName == "Recipe") {
+                        foreach (var metadataElement in element.Elements()) {
+                            switch (metadataElement.Name.LocalName) {
+                                case "Name":
+                                    recipe.Name = metadataElement.Value;
+                                    break;
+                                case "Description":
+                                    recipe.Description = metadataElement.Value;
+                                    break;
+                                case "Author":
+                                    recipe.Author = metadataElement.Value;
+                                    break;
+                                case "WebSite":
+                                    recipe.WebSite = metadataElement.Value;
+                                    break;
+                                case "Version":
+                                    recipe.Version = metadataElement.Value;
+                                    break;
+                                case "Tags":
+                                    recipe.Tags = metadataElement.Value;
+                                    break;
+                                default:
+                                    Logger.Error("Unrecognized recipe metadata element {0} encountered. Skipping.", metadataElement.Name.LocalName);
+                                    break;
+                            }
+                        }
+                    }
+                    // Recipe step
+                    else {
+                        var recipeStep = new RecipeStep { Name = element.Name.LocalName, Step = element };
+                        recipeSteps.Add(recipeStep);
                     }
                 }
                 recipe.RecipeSteps = recipeSteps;

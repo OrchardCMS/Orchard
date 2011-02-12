@@ -4,8 +4,8 @@ using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.Recipes.RecipeHandlers {
-    public class MetaDataRecipeHandler : IRecipeHandler {
-        public MetaDataRecipeHandler() {
+    public class MetadataRecipeHandler : IRecipeHandler {
+        public MetadataRecipeHandler() {
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -13,7 +13,7 @@ namespace Orchard.Recipes.RecipeHandlers {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        // handles the <MetaData> step
+        // handles the <Metadata> step
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
         }
     }

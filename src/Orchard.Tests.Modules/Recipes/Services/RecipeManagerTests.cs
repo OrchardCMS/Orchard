@@ -18,6 +18,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
     public class RecipeManagerTests {
         private IContainer _container;
         private IRecipeManager _recipeManager;
+        private IRecipeHarvester _recipeHarvester;
         private IRecipeParser _recipeParser;
         private IExtensionFolders _folders;
 
@@ -61,6 +62,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             var builder = new ContainerBuilder();
             _folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
             builder.RegisterType<RecipeManager>().As<IRecipeManager>();
+            builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
@@ -72,6 +74,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             _container = builder.Build();
             _recipeManager = _container.Resolve<IRecipeManager>();
             _recipeParser = _container.Resolve<IRecipeParser>();
+            _recipeHarvester = _container.Resolve<IRecipeHarvester>();
         }
 
         [TearDown]
@@ -80,21 +83,21 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         }
 
         [Test]
-        public void DiscoverRecipesFailsToFindRecipesWhenCalledWithNotExistingExtension() {
-            var recipes = (List<Recipe>) _recipeManager.DiscoverRecipes("cantfindme");
+        public void HarvestRecipesFailsToFindRecipesWhenCalledWithNotExistingExtension() {
+            var recipes = (List<Recipe>) _recipeHarvester.HarvestRecipes("cantfindme");
 
             Assert.That(recipes.Count, Is.EqualTo(0));
         }
 
         [Test]
-        public void DiscoverRecipesShouldDiscoverRecipeXmlFiles() {
-            var recipes = (List<Recipe>)_recipeManager.DiscoverRecipes("Sample1");
+        public void HarvestRecipesShouldHarvestRecipeXmlFiles() {
+            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
             Assert.That(recipes.Count, Is.EqualTo(1));
         }
 
         [Test]
         public void ParseRecipeLoadsRecipeMetaDataIntoModel() {
-            var recipes = (List<Recipe>) _recipeManager.DiscoverRecipes("Sample1");
+            var recipes = (List<Recipe>) _recipeHarvester.HarvestRecipes("Sample1");
             Assert.That(recipes.Count, Is.EqualTo(1));
 
             var sampleRecipe = recipes[0];
@@ -108,7 +111,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
         [Test]
         public void ParseRecipeLoadsRecipeStepsIntoModel() {
-            var recipes = (List<Recipe>)_recipeManager.DiscoverRecipes("Sample1");
+            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
             Assert.That(recipes.Count, Is.EqualTo(1));
 
             var sampleRecipe = recipes[0];
@@ -124,7 +127,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
         [Test]
         public void ExecuteInvokesHandlersWithSteps() {
-            var recipes = (List<Recipe>)_recipeManager.DiscoverRecipes("Sample1");
+            var recipes = (List<Recipe>)_recipeHarvester.HarvestRecipes("Sample1");
             Assert.That(recipes.Count, Is.EqualTo(1));
 
             var sampleRecipe = recipes[0];
