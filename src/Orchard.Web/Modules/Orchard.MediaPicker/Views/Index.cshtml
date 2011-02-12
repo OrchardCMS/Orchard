@@ -1,0 +1,46 @@
+﻿@model Orchard.Media.ViewModels.MediaFolderEditViewModel
+@using Orchard.Media.Extensions;
+@using Orchard.Media.Helpers;
+@using Orchard.Media.Services;
+@using Orchard.Media.Models;
+@using Orchard.UI.Resources;
+@{
+    Style.Include("~/themes/theadmin/styles/site.css"); // todo: and the IE conditional ones
+	Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("lte IE 8").Define(d => d.SetAttribute("media", "screen, projection"));
+	Style.Include("~/themes/theadmin/styles/ie6.css").UseCondition("lte IE 6").Define(d => d.SetAttribute("media", "screen, projection"));
+	Style.Include("mediapicker.css");
+
+    // these need to be in the head because MediaBrowser.js defines a callback that the thumbnail images call when they load,
+    // which could happen as soon as they render.
+    Style.Require("jQueryUI_Orchard").AtHead();
+    Script.Require("jQueryUI_Tabs").AtHead();
+    Script.Include("MediaBrowser.js").AtHead();
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>@T("Pick Image")</title>
+    @Display.Metas()
+    @Display.HeadScripts()
+    @Display.HeadLinks()
+    @Display.StyleSheetLinks()
+</head>
+<body>
+
+<div id="tabs" style="float:left">
+    <ul>
+        <li><a href="#tab-url" data-edittext="@T("Update/Upload Image")" data-edittext-content="true">@T("Insert/Upload Image")</a></li>
+        <li><a href="#tab-gallery">@T("Browse Gallery")</a></li>
+    </ul>
+    <div id="tab-url">
+@Html.Partial("Tab_Url", Model)
+    </div>
+    <div id="tab-gallery">
+@Html.Partial("Tab_Gallery", Model)
+    </div>
+</div>
+
+
+@Display.FootScripts()
+</body>
+</html>

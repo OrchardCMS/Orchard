@@ -1,0 +1,109 @@
+﻿@model Orchard.Media.ViewModels.MediaFolderEditViewModel
+@using Orchard.Media.Extensions;
+@using Orchard.Media.Helpers;
+@using Orchard.Media.Services;
+@using Orchard.Media.Models;
+@using Orchard.UI.Resources;
+@helper FolderLink(string folderName, string mediaPath) {
+	// querystring values need to persist after a new GET when clicking on the media browser's
+	// folders for navigation.
+    @Html.ActionLink(folderName, "Index", null, null, null, "1", new {
+		upload = Request["upload"],
+		uploadpath = Request["uploadpath"],
+		editmode = Request["editmode"],
+		source = Request["source"],
+		editorId = Request["editorId"],
+		name = folderName,
+		mediaPath = mediaPath }, null);
+}
+        <div style="float:left">
+
+        <div class="breadCrumbs">
+            <p>@FolderLink(T("Media Folders").ToString(), "") 
+                @foreach (var navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {
+                    <text>&#62;</text> @FolderLink(navigation.FolderName, navigation.FolderPath) 
+                }
+            </p>
+        </div>
+        <fieldset>
+            <table class="items" summary="@T("This is a table of the pages currently available for use in your application.")">
+                @foreach (var mediaFolder in Model.MediaFolders) {
+                    <tr>
+                        <td>
+                            <img src="@Href("~/Modules/Orchard.Media/Content/Admin/images/folder.gif")" height="16" width="16" class="mediaTypeIcon" alt="@T("Folder")" />
+                        </td>
+                        <td>
+                            @FolderLink(mediaFolder.Name, mediaFolder.MediaPath)
+                        </td>
+                    </tr>
+                }
+                @foreach (var mediaFile in Model.MediaFiles) {
+                    var src = (((IMediaService)ViewData["Service"]).GetPublicUrl(Path.Combine(Model.MediaPath, mediaFile.Name)));
+                    <tr data-imgsrc="@src" class="media-item">
+                        <td>
+                            <div class="media-thumbnail">
+                                <img alt="" src="@src" onload="jQuery.mediaPicker.scalePreview(this)" />
+                            </div>
+                        </td>
+                        <td>
+                            <ul class="media-summary">
+                                <li><a href="@src" target="_blank">@mediaFile.Name</a></li>
+                                <li>@T("Added on"): @mediaFile.LastUpdated</li>
+                                <li>@T("Size"): @mediaFile.Size.ToFriendlySizeString()</li>
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </fieldset>
+
+        </div>
+        <div style="float:right">
+            <img alt="" id="lib-loader" style="display:none" src="" />
+            <fieldset style="width:200px">
+                <label for="lib-src">@T("URL")</label>
+                <input type="text" id="lib-src" />
+
+                <label for="lib-alt">@T("Alternative Text")</label>
+                <input type="text" id="lib-alt" />
+
+                <label for="lib-class">@T("Class")</label>
+                <input type="text" id="lib-class" />
+
+                <label for="lib-style">@T("Style")</label>
+                <input type="text" id="lib-style" />
+
+                <label for="lib-align">@T("Alignment")</label>
+                <select id="lib-align">
+                    <option value="">None</option>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                    <option value="top">Top</option>
+                    <option value="texttop">Text Top</option>
+                    <option value="middle">Middle</option>
+                    <option value="absmiddle">AbsMiddle</option>
+                    <option value="bottom">Bottom</option>
+                    <option value="absbottom">AbsBottom</option>
+                    <option value="baseline">Baseline</option>
+                </select>
+
+                <label for="lib-width">@T("Width")</label>
+                <input type="text" id="lib-width" />
+                X
+                <label for="lib-height">@T("Height")</label>
+                <input type="text" id="lib-height" />
+
+                <input type="checkbox" id="lib-lock" checked="checked" />
+                <label for="lib-lock">@T("Lock Aspect Ratio")</label>
+
+                <input type="button" id="lib-cancel" value="@T("Cancel")" />
+                <input type="button" id="lib-insert" value="@T("Insert")" class="disabled" data-edittext="@T("Update")" />
+            </fieldset>
+        </div>
+
+
+
+
+
+
+
