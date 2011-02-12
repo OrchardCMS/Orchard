@@ -1,0 +1,25 @@
+﻿input[disabled], input[disabled="disabled"], input.disabled {
+    color: White 
+}
+input[type="file"] {
+    border: 1px solid black;
+}
+.media-largepreview
+{
+    width: 300px;
+    height: 300px;
+}
+.media-thumbnail 
+{
+    width: 200px;
+    height: 200px;
+}
+.media-thumbnail img 
+{
+    text-align: center;
+    vertical-align: middle;
+}
+.selected 
+{
+    background-color: Yellow;
+}

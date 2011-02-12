@@ -115,7 +115,7 @@ namespace Orchard.UI.Resources {
         }
 
         public virtual RequireSettings Include(string resourceType, string resourcePath, string resourceDebugPath) {
-            return Include(resourceType, resourcePath, null);
+            return Include(resourceType, resourcePath, null, null);
         }
 
         public virtual RequireSettings Include(string resourceType, string resourcePath, string resourceDebugPath, string relativeFromPath) {
