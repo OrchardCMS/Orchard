@@ -47,7 +47,7 @@ namespace Orchard.Setup.Controllers {
             // will take a while to finish (user inputting data and the setup process itself).
             // We use this opportunity to start a background task to "pre-compile" all the known
             // views in the app folder, so that the application is more reponsive when the user
-            // hits the homepage and admin screens for the first time.)
+            // hits the homepage and admin screens for the first time.
             if (StringComparer.OrdinalIgnoreCase.Equals(initialSettings.Name, ShellSettings.DefaultName)) {
                 _viewsBackgroundCompilation.Start();
             }

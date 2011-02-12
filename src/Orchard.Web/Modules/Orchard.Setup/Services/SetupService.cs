@@ -216,6 +216,8 @@ namespace Orchard.Setup.Services {
         }
 
         private void CreateTenantData(SetupContext context, IWorkContextScope environment) {
+            var recipeManager = environment.Resolve<IRecipeManager>();
+
             // create superuser
             var membershipService = environment.Resolve<IMembershipService>();
             var user =
