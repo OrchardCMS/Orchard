@@ -72,8 +72,7 @@ namespace Orchard.Setup.Controllers {
 
             if (!ModelState.IsValid) {
                 model.DatabaseIsPreconfigured = !string.IsNullOrEmpty(_setupService.Prime().DataProvider);
-                // set HasRecipes flag
-                // set recipedescription
+                //TODO:  set HasRecipes flag and recipedescription
                 return IndexViewResult(model);
             }
 

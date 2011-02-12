@@ -57,8 +57,8 @@ if (Model.HasRecipes) {
 	<div>@T("Orchard Recipes allow you to setup your site with additional pre-configured options, features and settings out of the box")</div>	
 	<div>
         <select id="@Html.FieldIdFor(m => m.Recipe)" name="@Html.FieldNameFor(m => m.Recipe)" class="recipe">
-		@Html.SelectOption("", false, "Choose")
-		@Html.SelectOption("", false, "-------------------")
+		@Html.SelectOption("", false, T("Choose").ToString(), new { recipedescription = "" })
+		@Html.SelectOption("", false, T("-------------------").ToString(), new { recipedescription = "" })
         @foreach(var recipe in Model.Recipes) {
             @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, new { recipedescription = recipe.Description })
         }
