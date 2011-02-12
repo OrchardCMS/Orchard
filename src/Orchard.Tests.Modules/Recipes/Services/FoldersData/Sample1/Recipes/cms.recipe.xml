@@ -43,6 +43,6 @@
 
   <CleanUpInactive />
   
-  <Custom1 attr2="value1" />
+  <Custom1 attr1="value1" />
   <Custom2 attr2="value2" />
 </Recipe>
