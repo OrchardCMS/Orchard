@@ -165,11 +165,10 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         }
 
         [Test]
-        [Ignore("Needs fixing")]
         public void DescribedPlacementIsReturnedIfNotNull() {
 
             _container.Resolve<TestShapeProvider>().Discover =
-                builder => builder.Describe("Hello")
+                builder => builder.Describe("Hello").From(TestFeature())
                     .Placement(ctx => ctx.DisplayType == "Detail" ? "Main" : null)
                     .Placement(ctx => ctx.DisplayType == "Summary" ? "" : null);
 
@@ -192,11 +191,10 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         }
         
         [Test]
-        [Ignore("Needs fixing")]
         public void TwoArgumentVariationDoesSameThing() {
 
             _container.Resolve<TestShapeProvider>().Discover =
-                builder => builder.Describe("Hello")
+                builder => builder.Describe("Hello").From(TestFeature())
                     .Placement(ctx => ctx.DisplayType == "Detail", "Main")
                     .Placement(ctx => ctx.DisplayType == "Summary", "");
 
