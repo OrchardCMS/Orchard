@@ -18,6 +18,9 @@ namespace Orchard.Recipes.Services {
         ILogger Logger { get; set; }
 
         public void Execute(Recipe recipe) {
+            if (recipe == null)
+                return;
+
             var recipeContext = new RecipeContext { Recipe = recipe };
 
             // TODO: Run each step inside a transaction boundary.

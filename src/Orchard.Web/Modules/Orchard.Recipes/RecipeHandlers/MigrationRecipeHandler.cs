@@ -1,4 +1,7 @@
-﻿using Orchard.Localization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
@@ -13,8 +16,36 @@ namespace Orchard.Recipes.RecipeHandlers {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        // handles the <Migration> step
+        // <Migration features="f1, f2" /> 
+        // <Migration features="*" />
+        // Run migration for features.
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
+            if (!String.Equals(recipeContext.RecipeStep.Name, "Migration", StringComparison.OrdinalIgnoreCase)) {
+                return;
+            }
+
+            bool runAll = false;
+            var features = new List<string>();
+            foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
+                if (String.Equals(attribute.Name.LocalName, "features", StringComparison.OrdinalIgnoreCase)) {
+                    features = ParseFeatures(attribute.Value);
+                    if (features.Contains("*"))
+                        runAll = true;
+                }
+                else {
+                    Logger.Error("Unrecognized attribute {0} encountered in step Migration. Skipping.", attribute.Name.LocalName);
+                }
+            }
+
+            // run migrations
+            recipeContext.Executed = true;
+        }
+
+        private static List<string> ParseFeatures(string csv) {
+            return csv.Split(',')
+                .Select(value => value.Trim())
+                .Where(sanitizedValue => !String.IsNullOrEmpty(sanitizedValue))
+                .ToList();
         }
     }
 }
