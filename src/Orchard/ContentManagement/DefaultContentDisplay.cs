@@ -97,8 +97,7 @@ namespace Orchard.ContentManagement {
 
         private void BindPlacement(BuildShapeContext context, string displayType) {
             context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
-                //var workContext = _workContextAccessor.GetContext();
-                //var theme = workContext.CurrentTheme;
+
                 var theme = _themeService.Value.GetRequestTheme(_requestContext);
                 var shapeTable = _shapeTableManager.GetShapeTable(theme.Id);
                 var request = _requestContext.HttpContext.Request;
@@ -109,7 +108,7 @@ namespace Orchard.ContentManagement {
                         ContentType = context.ContentItem.ContentType,
                         DisplayType = displayType,
                         Differentiator = differentiator,
-                        Path = request.Path.Substring((request.ApplicationPath ?? "").Length)
+                        Path = VirtualPathUtility.AppendTrailingSlash(VirtualPathUtility.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
                     };
                     var location = descriptor.Placement(placementContext);
                     return location ?? defaultLocation;

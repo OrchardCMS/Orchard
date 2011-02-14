@@ -8,6 +8,7 @@ namespace Orchard.UI.Resources {
             manifest.DefineScript("jQueryUtils").SetUrl("jquery.utils.js").SetDependencies("jQuery");
             manifest.DefineScript("jQueryUI_Core").SetUrl("jquery.ui.core.js").SetVersion("1.8b1").SetDependencies("jQuery");
             manifest.DefineScript("jQueryUI_Widget").SetUrl("jquery.ui.widget.js").SetVersion("1.8b1").SetDependencies("jQuery");
+            manifest.DefineScript("jQueryUI_Tabs").SetUrl("jquery.ui.tabs.min.js", "jquery.ui.tabs.js").SetVersion("1.8.9").SetDependencies("jQuery", "jQueryUI_Core", "jQueryUI_Widget");
             manifest.DefineScript("jQueryUI_DatePicker").SetUrl("jquery.ui.datepicker.js").SetVersion("1.8b1").SetDependencies("jQueryUI_Core", "jQueryUI_Widget");
             manifest.DefineScript("jQueryUtils_TimePicker").SetUrl("ui.timepickr.js").SetVersion("0.7.0a").SetDependencies("jQueryUtils", "jQueryUI_Core", "jQueryUI_Widget");
 

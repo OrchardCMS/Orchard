@@ -93,6 +93,7 @@ namespace Orchard.Setup.Services {
                     "Orchard.jQuery",
                     "Orchard.Lists",
                     "Orchard.Media",
+                    "Orchard.MediaPicker",
                     "Orchard.Modules",
                     "Orchard.Pages",
                     "Orchard.Roles",

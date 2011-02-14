@@ -4,8 +4,7 @@ Author: Orchard Team – http://www.orchardproject.net
 Copyright: 2010, Orchard. All Rights Reserved
 */
 
-
-/*  Color Palette
+/* Color Palette
 **************************************************************
 
 Background: #2d2f25
@@ -15,8 +14,6 @@ Secondary Text:
 Main Accent: 
 Links: 1e5d7d
 */
-
-
 
 /* Reset
 ***************************************************************/
@@ -61,8 +58,7 @@ header, footer, aside, nav, article { display: block; }
 /* Clearing Floats
 ***************************************************************/
 
-.group:after 
-{
+.group:after {
     content: ".";
     display: block;
     height: 0;
@@ -109,7 +105,7 @@ html {
     color:#333;
 }
 
-body { 
+body {
   font-size: 81.3%;
   color: #333; 
   background: #fff;
@@ -183,7 +179,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 #header {
     overflow:hidden;
 }
-#content {
+#layout-content {
     overflow:auto;
     padding:1.4em;
     background:#fcfcfc;
@@ -304,6 +300,15 @@ form.link button:hover {
 #menu .menu-admin li.section-dashboard h3 {
     padding:.4em 0 0 .4em;
     font-size:1.308em;
+}
+.localmenu li {
+    display: inline;
+}
+.localmenu li.middle {
+    padding-left: 10px;
+}
+.localmenu li.selected {
+    font-weight: bold;
 }
 .section-new {
     border-top:1px solid #d3d3d3;

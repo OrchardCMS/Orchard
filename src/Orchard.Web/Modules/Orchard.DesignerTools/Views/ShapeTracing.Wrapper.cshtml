@@ -1,24 +1,59 @@
 ﻿@using Orchard;
 @using Orchard.DisplayManagement.Descriptors;
+@using Orchard.DesignerTools.Services;
+@using System.Xml;
+
 @{
-	Script.Require("jQuery");
-	Script.Include("orchard-designertools-shapetracing.js");
-	Style.Include("orchard-designertools-shapetracing.css");
+    Script.Require("jQuery");
+    Script.Include("tooltip.min.js");
+    Script.Include("orchard-designertools-shapetracing.js");
+    Style.Include("orchard-designertools-shapetracing.css");
 
     var workContext = ViewContext.GetWorkContext();
     var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.Id);
-    var descriptor = shapeTable.Descriptors[Model.Metadata.Type];    
+    var descriptor = shapeTable.Descriptors[Model.Metadata.Type];
+}
+@functions {
+    string FormatShape(string type, string themeId) {
+        return "~/Themes/" + themeId + "/Views/" + type.Replace("__", "-").Replace("_", ".") + ".cshtml";
+    }
+
+    string DumpObject(object o) {
+        var dumper = new ObjectDumper(6);
+        var el = dumper.Dump(o, "Model");
+        using(var sw = new StringWriter()) {
+            el.WriteTo(new XmlTextWriter(sw) { Formatting = Formatting.Indented });
+            return sw.ToString();
+        }
+    }
 }
 
-<div class="shapeTracingWrapper" title="@Model.Metadata.Type @descriptor.BindingSource">
-@Display(Model.Metadata.ChildContent)
+<div class="shape-tracing wrapper @Model.Metadata.Type">
+    @Display(Model.Metadata.ChildContent)
 
-@foreach(var alternate in Model.Metadata.Alternates) {
-	<div style="color:red">@alternate</div>
-}
-@foreach(var wrapper in Model.Metadata.Wrappers) {
-	if(wrapper != "ShapeTracing_Wrapper") {
-		<div style="color:green">@wrapper</div>
-	}
-}
+    <div class="shape-tracing meta">
+        <div class="shape">
+            Shape: @Model.Metadata.Type <br />
+            Definition: @descriptor.BindingSource  <br />
+            Display Type: @(Model.Metadata.DisplayType  ?? "n/a")<br />
+            Position: @(Model.Metadata.Position ?? "n/a") <br />
+        </div>
+
+        <div class="alternates">
+            @foreach(var alternate in Model.Metadata.Alternates) {
+                var formatted = @FormatShape(alternate, workContext.CurrentTheme.Id);
+                <div>@formatted</div>
+            }
+        </div>
+        <div class="wrappers">
+            @foreach(var wrapper in Model.Metadata.Wrappers) {
+                if(wrapper != "ShapeTracing_Wrapper") {
+                    <div>@wrapper</div>
+                }
+            }
+        </div>
+        <div class="dump">
+            <pre>@DumpObject((object)Model)</pre>
+        </div>
+    </div>
 </div>

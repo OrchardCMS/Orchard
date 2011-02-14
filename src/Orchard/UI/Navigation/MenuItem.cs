@@ -15,6 +15,8 @@ namespace Orchard.UI.Navigation {
         public string Href { get; set; }
         public string Position { get; set; }
         public bool LinkToFirstChild { get; set; }
+        public bool LocalNav { get; set; }
+        public bool Selected { get; set; }
         public RouteValueDictionary RouteValues { get; set; }
         public IEnumerable<MenuItem> Items { get; set; }
         public IEnumerable<Permission> Permissions { get; set; }

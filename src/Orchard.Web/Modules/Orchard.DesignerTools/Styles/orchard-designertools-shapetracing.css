@@ -16,7 +16,7 @@
     color:yellow;
 }
 #debug-control .debug-active {
-    color:greenyellow;
+    color:Lime;
 }
 #debug-control ul {
     display:none;
@@ -36,11 +36,45 @@
 #debug-control li {
     border-right:1px solid #999;
 }
-html.debug-shape-templates .shapeTracingWrapper {
+
+.debug-shape-templates .shape-tracing .wrapper {
     background:#FFF;
     border:1px dotted #CA7230;
-    padding:5px;
+    padding:2px;
 }
-html.debug-shape-templates .shapeTracingWrapper:hover {
+
+.debug-shape-templates .shape-tracing .wrapper :hover {
     background:#E0E9EE;
+}
+
+.shape-tracing .meta {
+    display:none;
+}
+
+.debug-shape-templates .shape-tracing .meta  {
+    clear:both;
+    display:block;
+    background:#cfc;
+    font-size:9pt;
+    font-family:Segoe;
+    color:black;
+    margin-top:5px;
+}
+
+.debug-shape-zones .shape-tracing .wrapper .zone  {
+    border:1px dotted red;
+    margin:5px;
+    padding:2px;
+}
+
+.meta .shape {
+    color:black;
+}
+
+.meta .alternates {
+    color:red;
+}
+
+.meta .wrappers {
+    color:green;
 }

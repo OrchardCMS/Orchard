@@ -38,6 +38,11 @@ namespace Orchard.UI.Navigation {
             return this;
         }
 
+        public NavigationItemBuilder LocalNav(bool value = true) {
+            _item.LocalNav = value;
+            return this;
+        }
+
         public new IEnumerable<MenuItem> Build() {
             _item.Items = base.Build();
             return new[] { _item };

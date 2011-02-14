@@ -7,33 +7,76 @@
 
 @{
     Style.Include("site.css");
-	Style.Include("ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
-	Style.Include("ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");
+    Style.Include("ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
+    Style.Include("ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");
     Script.Require("jQuery");
+    Script.Require("OpenAjax");
     Script.Require("ShapesBase");
     Script.Include("admin.js");
+    /* Some useful shortcuts or settings    ***************************************************************/    Func<dynamic, dynamic> Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones    /* Inserting some ad hoc shapes    ***************************************************************/
+
     // these are just hacked together to fire existing partials... can change
     Model.Header.Add(Display.Header());
 
-    // experimentation
     var thisUser = Html.Resolve<IAuthenticationService>().GetAuthenticatedUser();
     Model.Header.Add(Display.User(CurrentUser: thisUser));
     Model.Footer.Add(Display.OrchardVersion());
 }
+
+@if (Model.Header != null) {
 <div id="header" role="banner">
-    @Display(Model.Header)</div>
-<div id="content">
+    @Zone(Model.Header)
+</div>
+}
+
+<div id="layout-content">
     <div id="navshortcut">
         <a href="#Menu-admin">
-            @T("Skip to navigation")</a></div>
+            @T("Skip to navigation")
+        </a>
+    </div>
+
     <div id="main" role="main">
+        @if (Model.Messages != null) {
         <div id="messages">
-            @Display(Model.Messages)
+            @Zone(Model.Messages)
         </div>
-        @Display(Model.Content)</div>
+        }
+
+        @if (Model.BeforeContent != null) {
+        <div id="before-content">
+            @Zone(Model.BeforeContent)
+        </div>
+        }
+
+        @if (Model.LocalNavigation != null) {
+        <div id="before-content">
+            @Zone(Model.LocalNavigation)
+        </div>
+        }
+
+        @if (Model.Content != null) {
+        <div id="content">
+            @Zone(Model.Content)
+        </div>
+        }
+
+        @if (Model.AfterContent != null) {
+        <div id="after-content">
+            @Zone(Model.AfterContent)
+        </div>
+        }
+    </div>
+
+    @if (Model.Navigation != null) {
     <div id="menu">
-        @Display(Model.Navigation)</div>
+        @Zone(Model.Navigation)
+    </div>
+    }
 </div>
+
+@if (Model.Footer != null) {
 <div id="footer" role="contentinfo">
-    @Display(Model.Footer)
+    @Zone(Model.Footer)
 </div>
+}
