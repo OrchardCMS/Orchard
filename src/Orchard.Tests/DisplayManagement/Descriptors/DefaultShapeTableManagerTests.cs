@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -215,7 +216,47 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             Assert.That(result5, Is.EqualTo(""));
             Assert.That(result6, Is.EqualTo("Header:5"));
         }
-        
+
+        [Test]
+        public void PathConstraintShouldMatch() {
+
+            // all path have a trailing / as per the current implementation
+            // todo: (sebros) find a way to 'use' the current implementation in DefaultContentDisplay.BindPlacement instead of emulating it
+
+            var rules = new[] {
+                Tuple.Create("~/my-blog", "~/my-blog/", true),
+                Tuple.Create("~/my-blog/", "~/my-blog/", true),
+
+                // star match
+                Tuple.Create("~/my-blog*", "~/my-blog/", true),
+                Tuple.Create("~/my-blog*", "~/my-blog/my-post/", true),
+                Tuple.Create("~/my-blog/*", "~/my-blog/", true),
+                Tuple.Create("~/my-blog/*", "~/my-blog123/", false),
+                Tuple.Create("~/my-blog*", "~/my-blog123/", true)
+            };
+
+            foreach (var rule in rules) {
+                var path = rule.Item1;
+                var context = rule.Item2;
+                var match = rule.Item3;
+
+                _container.Resolve<TestShapeProvider>().Discover =
+                    builder => builder.Describe("Hello").From(TestFeature())
+                                   .Placement(ShapePlacementParsingStrategy.BuildPredicate(c => true, new KeyValuePair<string, string>("Path", path)), "Match");
+
+                var manager = _container.Resolve<IShapeTableManager>();
+                var hello = manager.GetShapeTable(null).Descriptors["Hello"];
+                var result = hello.Placement(new ShapePlacementContext {Path = context});
+
+                if (match) {
+                    Assert.That(result, Is.EqualTo("Match"), String.Format("{0}|{1}", path, context));
+                }
+                else {
+                    Assert.That(result, Is.Null, String.Format("{0}|{1}", path, context));
+                }
+            }
+        }
+
         [Test]
         public void OnlyShapesFromTheGivenThemeAreProvided() {
             _container.Resolve<TestShapeProvider>();
