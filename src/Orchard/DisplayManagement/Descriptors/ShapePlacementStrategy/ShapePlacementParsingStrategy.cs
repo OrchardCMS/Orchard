@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -83,7 +84,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
             }
         }
 
-        private Func<ShapePlacementContext, bool> BuildPredicate(Func<ShapePlacementContext, bool> predicate, KeyValuePair<string, string> term) {
+        public static Func<ShapePlacementContext, bool> BuildPredicate(Func<ShapePlacementContext, bool> predicate, KeyValuePair<string, string> term) {
             var expression = term.Value;
             switch (term.Key) {
                 case "ContentType":
@@ -99,11 +100,17 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                     }
                     return ctx => (ctx.DisplayType == expression) && predicate(ctx);
                 case "Path":
-                    if (expression.EndsWith("*")) {
-                        var prefix = expression.Substring(0, expression.Length - 1);
-                        return ctx => (ctx.Path ?? "").StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && predicate(ctx);
+                    var normalizedPath = VirtualPathUtility.IsAbsolute(expression)
+                                             ? VirtualPathUtility.ToAppRelative(expression)
+                                             : VirtualPathUtility.Combine("~/", expression);
+
+                    if (normalizedPath.EndsWith("*")) {
+                        var prefix = normalizedPath.Substring(0, normalizedPath.Length - 1);
+                        return ctx => VirtualPathUtility.ToAppRelative(ctx.Path ?? "").StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && predicate(ctx);
                     }
-                    return ctx => (ctx.Path.Equals(expression, StringComparison.OrdinalIgnoreCase)) && predicate(ctx);
+
+                    normalizedPath = VirtualPathUtility.AppendTrailingSlash(normalizedPath);
+                    return ctx => (ctx.Path.Equals(normalizedPath, StringComparison.OrdinalIgnoreCase)) && predicate(ctx);
             }
             return predicate;
         }
