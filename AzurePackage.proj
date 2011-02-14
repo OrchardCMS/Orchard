@@ -6,8 +6,7 @@
   <PropertyGroup>
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
     <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
-    <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
-    <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
+    <BuildFolder>$(MSBuildProjectDirectory)\buildazure</BuildFolder>
     <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts\Azure</ArtifactsFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
@@ -41,7 +40,7 @@
 
   <Target Name="Clean">
     <MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln" Targets="Clean" />
-    <RemoveDir Directories="$(BuildFolder)" />
+    <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true" />
   </Target>
 
   <Target Name ="Compile">

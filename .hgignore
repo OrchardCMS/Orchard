@@ -7,6 +7,7 @@ glob:*.user
 glob:*.patch
 glob:*.hg
 glob:build
+glob:buildazure
 glob:buildtasks
 glob:artifacts
 glob:*.sln.cache
@@ -14,7 +15,7 @@ glob:src/Orchard.Web/Media/*
 glob:desktop.ini
 glob:log.xml
 glob:profiling
-glob:src/*.ReSharper
+glob:*.ReSharper
 glob:*.orig
 glob:*.suo
 glob:src/Orchard.Web/Modules-temp/*
