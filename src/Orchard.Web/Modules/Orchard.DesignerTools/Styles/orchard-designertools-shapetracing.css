@@ -37,13 +37,23 @@
     border-right:1px solid #999;
 }
 
-.debug-shape-templates .shape-tracing .wrapper {
+.debug-shapes .shape-tracing .wrapper {
     background:#FFF;
     border:1px dotted #CA7230;
-    padding:2px;
+    margin:5px;
+    padding:0px;
+    display:inline-block;
+
+    /* when there is nothing inside the shape, force to the size of the smart tag */
+    min-width:20px;
+    min-height:20px;
+}
+.debug-shapes  body
+{
+    margin-top:25px;
 }
 
-.debug-shape-templates .shape-tracing .wrapper :hover {
+.debug-shapes .shape-tracing .wrapper :hover {
     background:#E0E9EE;
 }
 
@@ -51,7 +61,7 @@
     display:none;
 }
 
-.debug-shape-templates .shape-tracing .meta  {
+.debug-shapes .shape-tracing .meta  {
     clear:both;
     display:block;
     background:#cfc;
@@ -61,10 +71,21 @@
     margin-top:5px;
 }
 
-.debug-shape-zones .shape-tracing .wrapper .zone  {
-    border:1px dotted red;
+.debug-zones .Zone { 
+    border:1px dashed grey;
     margin:5px;
-    padding:2px;
+    position: relative;
+}
+
+.debug-zones .zone-name {
+    position:absolute; top: 0px; left: 0px;
+    display: block; background-color: #ddd; color: #434343; padding: 3px 6px;
+    filter:alpha(opacity=70);
+    opacity: 0.7;    
+}
+
+.debug-shapes .Zone :hover {
+    background:#E0E9EE;
 }
 
 .meta .shape {

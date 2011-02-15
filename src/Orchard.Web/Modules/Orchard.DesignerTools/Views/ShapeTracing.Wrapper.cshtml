@@ -14,7 +14,7 @@
     var descriptor = shapeTable.Descriptors[Model.Metadata.Type];
 }
 @functions {
-    string FormatShape(string type, string themeId) {
+    string FormatShapeFilename(string type, string themeId) {
         return "~/Themes/" + themeId + "/Views/" + type.Replace("__", "-").Replace("_", ".") + ".cshtml";
     }
 
@@ -41,18 +41,19 @@
 
         <div class="alternates">
             @foreach(var alternate in Model.Metadata.Alternates) {
-                var formatted = @FormatShape(alternate, workContext.CurrentTheme.Id);
+                var formatted = @FormatShapeFilename(alternate, workContext.CurrentTheme.Id);
                 <div>@formatted</div>
             }
         </div>
         <div class="wrappers">
             @foreach(var wrapper in Model.Metadata.Wrappers) {
                 if(wrapper != "ShapeTracing_Wrapper") {
-                    <div>@wrapper</div>
+                    var formatted = @FormatShapeFilename(wrapper, workContext.CurrentTheme.Id);
+                    <div>@formatted</div>
                 }
             }
         </div>
-        <div class="dump">
+        <div class="dump" style="display:none">
             <pre>@DumpObject((object)Model)</pre>
         </div>
     </div>
