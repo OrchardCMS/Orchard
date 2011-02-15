@@ -249,14 +249,29 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
             _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Analyze().Add("title", "Soap opera").Analyze());
 
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen", false).Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen bertrand", false).Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen +bertrand", false).Count(), Is.EqualTo(1));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "+kitchen +bertrand", false).Count(), Is.EqualTo(0));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit", false).Count(), Is.EqualTo(0));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit*", false).Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap", false).Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap", false).Search().First().ContentItemId, Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "kitchen", false).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "kitchen bertrand", false).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "kitchen +bertrand", false).Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "+kitchen +bertrand", false).Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "kit", false).Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "kit*", false).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] {"body", "title"}, "bradley love^3 soap", false).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.Parse(new[] {"body", "title"}, "bradley love^3 soap", false).Search().First().ContentItemId, Is.EqualTo(2));
+
+        }
+        [Test]
+        public void ShouldParseLuceneQueriesWithSpecificFields() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "Bradley is in the kitchen.").Analyze().Add("title", "Beer and takos").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
+            _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Analyze().Add("title", "Soap opera").Analyze());
+
+            // specifying a field to match
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "title:bradley", false).Search().Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "title:s*", false).Search().Count(), Is.EqualTo(1));
+
+            // checking terms fall back to the default fields
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "title:bradley bradley", false).Search().Count(), Is.EqualTo(1));
         }
 
         [Test]
