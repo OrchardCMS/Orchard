@@ -61,8 +61,10 @@
     <Compile Include="RecipeHandlers\SettingsRecipeHandler.cs" />
     <Compile Include="RecipeHandlers\ThemeRecipeHandler.cs" />
     <Compile Include="Services\RecipeHarvester.cs" />
+    <Compile Include="Services\RecipeJournalManager.cs" />
     <Compile Include="Services\RecipeManager.cs" />
     <Compile Include="Services\RecipeParser.cs" />
+    <Compile Include="Services\RecipeScheduler.cs" />
     <Compile Include="Services\RecipeStepExecutor.cs" />
     <Compile Include="Services\RecipeStepQueue.cs" />
   </ItemGroup>

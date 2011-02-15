@@ -191,6 +191,7 @@
     <Compile Include="Mvc\ShapeResult.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
+    <Compile Include="Recipes\Events\IRecipeSchedulerEventHandler.cs" />
     <Compile Include="Recipes\Models\Recipe.cs" />
     <Compile Include="Recipes\Models\RecipeContext.cs" />
     <Compile Include="Recipes\Models\RecipeJournal.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Recipes\Services\IRecipeJournal.cs" />
     <Compile Include="Recipes\Services\IRecipeManager.cs" />
     <Compile Include="Recipes\Services\IRecipeParser.cs" />
+    <Compile Include="Recipes\Services\IRecipeScheduler.cs" />
     <Compile Include="Recipes\Services\IRecipeStepExecutor.cs" />
     <Compile Include="Recipes\Services\IRecipeStepQueue.cs" />
     <Compile Include="Security\IEncryptionService.cs" />

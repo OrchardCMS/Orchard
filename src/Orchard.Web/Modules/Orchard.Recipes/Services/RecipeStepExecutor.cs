@@ -19,8 +19,8 @@ namespace Orchard.Recipes.Services {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        public bool ExecuteNextStep() {
-            var recipeStepWorkItem = _recipeStepQueue.Dequeue();
+        public bool ExecuteNextStep(string executionId) {
+            var recipeStepWorkItem = _recipeStepQueue.Dequeue(executionId);
             if (recipeStepWorkItem == null) {
                 return false;
             }

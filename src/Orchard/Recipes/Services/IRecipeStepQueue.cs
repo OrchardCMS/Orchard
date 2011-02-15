@@ -3,7 +3,7 @@ using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
     public interface IRecipeStepQueue : ISingletonDependency {
-        void Enqueue(RecipeStep step, string executionId);
-        Tuple<RecipeStep, string> Dequeue();
+        void Enqueue(string executionId, RecipeStep step);
+        Tuple<RecipeStep, string> Dequeue(string executionId);
     }
 }

@@ -6,11 +6,11 @@ using Orchard.Recipes.Models;
 namespace Orchard.Recipes.Services {
     public class RecipeManager : IRecipeManager {
         private readonly IRecipeStepQueue _recipeStepQueue;
-        private readonly IRecipeStepExecutor _recipeStepExecutor;
+        private readonly IRecipeScheduler _recipeScheduler;
 
-        public RecipeManager(IRecipeStepQueue recipeStepQueue, IRecipeStepExecutor recipeStepExecutor) {
+        public RecipeManager(IRecipeStepQueue recipeStepQueue, IRecipeScheduler recipeScheduler) {
             _recipeStepQueue = recipeStepQueue;
-            _recipeStepExecutor = recipeStepExecutor;
+            _recipeScheduler = recipeScheduler;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -19,20 +19,18 @@ namespace Orchard.Recipes.Services {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        public void Execute(Recipe recipe) {
+        public string Execute(Recipe recipe) {
             if (recipe == null)
-                return;
+                return null;
 
             var executionId = Guid.NewGuid().ToString("n");
             // TODO: Run each step inside a transaction boundary.
             foreach (var recipeStep in recipe.RecipeSteps) {
-                _recipeStepQueue.Enqueue(recipeStep, executionId);
+                _recipeStepQueue.Enqueue(executionId, recipeStep);
             }
+            _recipeScheduler.ScheduleWork(executionId);
 
-            // TODO: figure out shell settings and shell descriptor for processing engine to run under
-            // Use an event handler instead of directly calling the step executor.
-            // _processingEngine.AddTask(null, null, "IRecipeStepEvents_DoWork", null);
-            while (_recipeStepExecutor.ExecuteNextStep()) {}
+            return executionId;
         }
     }
 }

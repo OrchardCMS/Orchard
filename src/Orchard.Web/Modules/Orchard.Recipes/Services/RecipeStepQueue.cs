@@ -18,11 +18,11 @@ namespace Orchard.Recipes.Services {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        public void Enqueue(RecipeStep step, string executionId) {
+        public void Enqueue(string executionId, RecipeStep step) {
             _stepQueue.Enqueue(new Tuple<RecipeStep, string>(step, executionId));
         }
 
-        public Tuple<RecipeStep, string> Dequeue() {
+        public Tuple<RecipeStep, string> Dequeue(string executionId) {
             return _stepQueue.Count > 0 ? _stepQueue.Dequeue() : null;
         }
     }

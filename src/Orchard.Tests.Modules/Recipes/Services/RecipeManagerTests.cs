@@ -65,6 +65,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>();
             builder.RegisterType<RecipeStepExecutor>().As<IRecipeStepExecutor>();
             builder.RegisterType<RecipeStepQueue>().As<IRecipeStepQueue>().InstancePerLifetimeScope();
+            builder.RegisterType<StubRecipeScheduler>().As<IRecipeScheduler>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
@@ -136,6 +137,18 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             _recipeManager.Execute(sampleRecipe);
 
             Assert.That(CustomRecipeHandler.AttributeValue == "value1");
+        }
+    }
+
+    public class StubRecipeScheduler : IRecipeScheduler {
+        private readonly IRecipeStepExecutor _recipeStepExecutor;
+
+        public StubRecipeScheduler(IRecipeStepExecutor recipeStepExecutor) {
+            _recipeStepExecutor = recipeStepExecutor;
+        }
+
+        public void ScheduleWork(string executionId) {
+            while (_recipeStepExecutor.ExecuteNextStep(executionId)) ;
         }
     }
 
