@@ -81,6 +81,12 @@
     <MSBuild Projects="AzurePackage.proj" Targets="Build">
     </MSBuild>
   </Target>
+
+  <Target Name="AzureCIBuild">
+    <MSBuild Projects="AzurePackage.proj" Targets="CIBuild">
+    </MSBuild>
+  </Target>
+
   <!-- Building -->
 
   <Target Name="Clean">

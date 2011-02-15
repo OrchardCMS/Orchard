@@ -28,6 +28,12 @@
     <CallTarget Targets="Package"/>
   </Target>
 
+  <Target Name ="CIBuild">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package"/>
+  </Target>
+
   <Target Name="Package">
     <CallTarget Targets="Package-ForCloud"/>
     <CallTarget Targets="Package-SqlCe" />    
