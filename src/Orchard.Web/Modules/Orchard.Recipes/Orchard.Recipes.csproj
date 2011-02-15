@@ -63,6 +63,8 @@
     <Compile Include="Services\RecipeHarvester.cs" />
     <Compile Include="Services\RecipeManager.cs" />
     <Compile Include="Services\RecipeParser.cs" />
+    <Compile Include="Services\RecipeStepExecutor.cs" />
+    <Compile Include="Services\RecipeStepQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

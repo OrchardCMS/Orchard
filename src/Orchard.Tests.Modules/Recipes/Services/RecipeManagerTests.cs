@@ -63,6 +63,8 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             _folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
             builder.RegisterType<RecipeManager>().As<IRecipeManager>();
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>();
+            builder.RegisterType<RecipeStepExecutor>().As<IRecipeStepExecutor>();
+            builder.RegisterType<RecipeStepQueue>().As<IRecipeStepQueue>().InstancePerLifetimeScope();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();

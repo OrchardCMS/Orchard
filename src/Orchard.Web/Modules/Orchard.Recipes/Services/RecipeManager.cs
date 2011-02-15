@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
 
 namespace Orchard.Recipes.Services {
     public class RecipeManager : IRecipeManager {
-        private readonly IEnumerable<IRecipeHandler> _recipeHandlers;
+        private readonly IRecipeStepQueue _recipeStepQueue;
+        private readonly IRecipeStepExecutor _recipeStepExecutor;
 
-        public RecipeManager(IEnumerable<IRecipeHandler> recipeHandlers) {
-            _recipeHandlers = recipeHandlers;
+        public RecipeManager(IRecipeStepQueue recipeStepQueue, IRecipeStepExecutor recipeStepExecutor) {
+            _recipeStepQueue = recipeStepQueue;
+            _recipeStepExecutor = recipeStepExecutor;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -23,24 +24,15 @@ namespace Orchard.Recipes.Services {
                 return;
 
             var executionId = Guid.NewGuid().ToString("n");
-            var recipeContext = new RecipeContext { Recipe = recipe };
-
             // TODO: Run each step inside a transaction boundary.
-            // TODO: Enqueue steps for the step executor.
             foreach (var recipeStep in recipe.RecipeSteps) {
-                recipeContext.RecipeStep = recipeStep;
-                recipeContext.Executed = false;
-                foreach (var recipeHandler in _recipeHandlers) {
-                    recipeHandler.ExecuteRecipeStep(recipeContext);
-                }
-                if (!recipeContext.Executed) {
-                    Logger.Error("Could not execute recipe step '{0}' because the recipe handler was not found.", recipeContext.RecipeStep.Name);
-                }
+                _recipeStepQueue.Enqueue(recipeStep, executionId);
             }
 
             // TODO: figure out shell settings and shell descriptor for processing engine to run under
+            // Use an event handler instead of directly calling the step executor.
             // _processingEngine.AddTask(null, null, "IRecipeStepEvents_DoWork", null);
-
+            while (_recipeStepExecutor.ExecuteNextStep()) {}
         }
     }
 }
