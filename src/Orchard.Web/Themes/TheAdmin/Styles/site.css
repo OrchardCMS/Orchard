@@ -181,7 +181,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 }
 #layout-content {
     overflow:auto;
-    padding:1.4em;
+    /*padding:1.4em;*/
     background:#fcfcfc;
 }
 #main {
@@ -190,6 +190,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     width:83.08%;
 }
 #menu .menu-admin {
+    background:#323232;
     display:inline;
     float:left;
     width:15.401%;
@@ -222,8 +223,17 @@ form.link button:hover {
 /* Header - Branding and Login  
 ***************************************************************/
 #header {
-    background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;
+    /*background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;*/
     height:50px;
+    /*background:#323232;*/
+    /*width: 15.401%;*/
+    background:#fcfcfc;
+}
+#branding {
+    background:#323232;
+    width: 15.401%;
+    height:50px;
+    float:left;
 }
 #header #app {
     float:left;
@@ -249,7 +259,6 @@ form.link button:hover {
 }
 
 #login {
-    color:#fff;
     display:block;
     float:right;
     margin:14px 20px 0 0;
@@ -257,7 +266,6 @@ form.link button:hover {
 }
 
 #login a, #login a:link, #login a:visited {
-    color:#fff;
     padding:0;
 }
 
@@ -284,9 +292,10 @@ form.link button:hover {
 }
 #menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
     line-height:1.2em;
+    color:#aec3ce;
 }
 #menu .menu-admin ul a, #menu .menu-admin ul a:link, #menu .menu-admin ul a:visited {
-    color:#2d2f25;
+    color:#aec3ce;
     display:block;
     line-height:1.2em;
     padding:.4em 0 .4em 12px;

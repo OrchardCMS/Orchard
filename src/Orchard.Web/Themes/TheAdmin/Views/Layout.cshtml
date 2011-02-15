@@ -13,7 +13,14 @@
     Script.Require("OpenAjax");
     Script.Require("ShapesBase");
     Script.Include("admin.js");
-    /* Some useful shortcuts or settings    ***************************************************************/    Func<dynamic, dynamic> Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones    /* Inserting some ad hoc shapes    ***************************************************************/
+
+    /* Some useful shortcuts or settings
+    ***************************************************************/
+
+    Func<dynamic, dynamic> Zone = x => Display(x); // Zone as an alias for Display to help make it obvious when we're displaying zones
+
+    /* Inserting some ad hoc shapes
+    ***************************************************************/
 
     // these are just hacked together to fire existing partials... can change
     Model.Header.Add(Display.Header());
