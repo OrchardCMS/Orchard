@@ -281,7 +281,8 @@ form.link button:hover {
     width:0;
 }
 #menu .menu-admin li {
-    margin:5px 0 17px 4px;
+    margin:5px 0 17px 16px;
+    margin:8px 16px;
 }
 #menu .menu-admin ul li {
     border:0;
@@ -302,12 +303,16 @@ form.link button:hover {
     text-decoration:none;
 }
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus {
-    background:#f5f5f5;
-    color: #000;
-    text-decoration:underline;
+    background:#656b55;
+    color: #fff;
+    
+    /*CSS3 properties*/
+     border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
 }
 #menu .menu-admin li.section-dashboard h3 {
-    padding:.4em 0 0 .4em;
+    /*padding:.4em 0 0 .4em;*/
     font-size:1.308em;
 }
 .localmenu li {
@@ -319,10 +324,16 @@ form.link button:hover {
 .localmenu li.selected {
     font-weight: bold;
 }
-.section-new {
-    border-top:1px solid #d3d3d3;
-    border-bottom:1px solid #d3d3d3;
-    padding:12px 0;
+.section-dashboard, .section-new 
+{
+    background:#2b2b2b;
+    border:1px solid #404040;
+    padding:6px 0;
+    
+     /*CSS3 properties*/
+     border-radius: 3px;
+     -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
 }
 /* todo: make generic so all toggles can use this and clean up jQuery */
 .expando-glyph-container {
@@ -339,7 +350,7 @@ form.link button:hover {
     cursor:pointer;
     display:block;
     height:17px;
-    left:-20px;
+    left:180px;
     padding:0 !important;
     position:absolute;
     width:17px;
