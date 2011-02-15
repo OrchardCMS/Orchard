@@ -7,7 +7,8 @@ Copyright: 2010, Orchard. All Rights Reserved
 /* Color Palette
 **************************************************************
 
-Background: #2d2f25
+Old Background: #fcfcfc
+New Background: #f3f4f5
 Borders: 
 Text: #333333
 Secondary Text: 
@@ -101,14 +102,14 @@ Pixels   EMs         Percent    Points
 */
 
 html {
-    background:#fcfcfc;
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
     color:#333;
 }
 
 body {
   font-size: 81.3%;
   color: #333; 
-  background: #fff;
+  background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
   font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
   line-height:1.6em;
   margin:0 auto 1em;  
@@ -182,24 +183,29 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 #layout-content {
     overflow:auto;
     /*padding:1.4em;*/
-    background:#fcfcfc;
+    background:#f3f4f5;
+    margin:0 0 0 260px;
 }
 #main {
-    display:inline;
-    float:right;
-    width:83.08%;
+    /*display:inline;
+    float:right;*/
+    width:96%;
 }
 #menu .menu-admin {
     background:#323232;
-    display:inline;
+    position:absolute;
+    top:50px;
+    left:0;
+    width:240px;
+    /*display:inline;
     float:left;
-    width:15.401%;
+    width:15.401%;*/
 }
 .wrapper, .sections {
     overflow:hidden;
 }
 #footer {
-    border-top:1px solid #d3d3d3;
+    clear:both;
 }
 
 /* Links
@@ -223,15 +229,13 @@ form.link button:hover {
 /* Header - Branding and Login  
 ***************************************************************/
 #header {
-    /*background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;*/
     height:50px;
-    /*background:#323232;*/
-    /*width: 15.401%;*/
-    background:#fcfcfc;
+    background:#f3f4f5;
 }
 #branding {
     background:#323232;
-    width: 15.401%;
+    /*width: 15.401%;*/
+    width: 240px;
     height:50px;
     float:left;
 }
@@ -338,15 +342,15 @@ form.link button:hover {
 .localmenu li.selected a {
     color: #3A822E;
 }
-#layout-content {
-    background-color: #F3F4F5;
-}
 #content {
-    background-color: White;
-    border-color: #E4E5E6;
-    border-style: solid;
-    border-width: thin;
+    background-color: #fff;
     padding: 20px;
+    border: 1px solid #e4e5e6;
+   
+     /*CSS3 properties*/
+     border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
 }
 .section-dashboard, .section-new 
 {
