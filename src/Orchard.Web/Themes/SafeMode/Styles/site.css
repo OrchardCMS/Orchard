@@ -128,8 +128,10 @@ input[type="password"] {
     width:98%;
 }
 
-select  {
-    width:100%; 
+select {
+    padding:3px;
+    border:1px solid #bdbcbc;
+    width:100%;
 }
 
 button.primaryAction, .button.primaryAction, .button.primaryAction:link, .button.primaryAction:visited {

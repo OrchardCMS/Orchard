@@ -216,11 +216,6 @@ namespace Orchard.Setup.Services {
         }
 
         private void CreateTenantData(SetupContext context, IWorkContextScope environment) {
-            var recipeManager = environment.Resolve<IRecipeManager>();
-            if (context.Recipe != null) {
-                recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
-            }
-
             // create superuser
             var membershipService = environment.Resolve<IMembershipService>();
             var user =
@@ -348,6 +343,11 @@ Modules are created by other users of Orchard just like you so if you feel up to
             menuItem.As<MenuPart>().MenuText = T("Home").ToString();
             menuItem.As<MenuPart>().OnMainMenu = true;
             menuItem.As<MenuItemPart>().Url = "";
+
+            var recipeManager = environment.Resolve<IRecipeManager>();
+            if (context.Recipe != null) {
+                recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
+            }
 
             //null check: temporary fix for running setup in command line
             if (HttpContext.Current != null) {

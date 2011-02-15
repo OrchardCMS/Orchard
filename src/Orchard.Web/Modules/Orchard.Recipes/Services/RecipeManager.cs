@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
@@ -21,21 +22,25 @@ namespace Orchard.Recipes.Services {
             if (recipe == null)
                 return;
 
+            var executionId = Guid.NewGuid().ToString("n");
             var recipeContext = new RecipeContext { Recipe = recipe };
 
             // TODO: Run each step inside a transaction boundary.
-            // TODO: Output should go into a report.
-            // TODO: Eventually return a guid.tostring("n") execution id
+            // TODO: Enqueue steps for the step executor.
             foreach (var recipeStep in recipe.RecipeSteps) {
                 recipeContext.RecipeStep = recipeStep;
                 recipeContext.Executed = false;
-                foreach (var handler in _recipeHandlers) {
-                    handler.ExecuteRecipeStep(recipeContext);
+                foreach (var recipeHandler in _recipeHandlers) {
+                    recipeHandler.ExecuteRecipeStep(recipeContext);
                 }
                 if (!recipeContext.Executed) {
                     Logger.Error("Could not execute recipe step '{0}' because the recipe handler was not found.", recipeContext.RecipeStep.Name);
                 }
             }
+
+            // TODO: figure out shell settings and shell descriptor for processing engine to run under
+            // _processingEngine.AddTask(null, null, "IRecipeStepEvents_DoWork", null);
+
         }
     }
 }
