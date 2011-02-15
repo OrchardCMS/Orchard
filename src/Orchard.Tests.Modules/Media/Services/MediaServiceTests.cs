@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
-using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.Media;
 using Orchard.Media.Models;
@@ -145,6 +144,23 @@ namespace Orchard.Tests.Modules.Media.Services {
             Assert.That(StorageProvider.SavedStreams.Count, Is.EqualTo(3));
         }
 
+        [Test]
+        public void WebConfigIsBlackListed() {
+            StorageProvider.SavedStreams.Clear();
+            StubWorkContextAccessor.WorkContextImpl.StubSite.DefaultSuperUser = "myuser";
+
+            MediaSettingsPart mediaSettingsPart = new MediaSettingsPart {
+                Record = new MediaSettingsPartRecord { UploadAllowedFileTypeWhitelist = "txt dll config" }
+            };
+
+            StubWorkContextAccessor.WorkContextImpl.InitMethod = workContext => {
+                workContext.CurrentSite.ContentItem.Weld(mediaSettingsPart);
+            };
+
+            Assert.That(MediaService.FileAllowedAccessor("web.config", true), Is.False);
+            Assert.That(MediaService.FileAllowedAccessor("dummy/web.config", true), Is.False);
+        }
+
         private MemoryStream CreateZipMemoryStream() {
             // Setup memory stream with zip archive for more complex scenarios
             MemoryStream memoryStream = new MemoryStream();
@@ -197,6 +213,10 @@ namespace Orchard.Tests.Modules.Media.Services {
 
             public void UnzipMediaFileArchiveAccessor(string targetFolder, Stream zipStream) {
                 UnzipMediaFileArchive(targetFolder, zipStream);
+            }
+
+            public bool FileAllowedAccessor(string fileName, bool allowZip) {
+                return FileAllowed(fileName, allowZip);
             }
         }
 
