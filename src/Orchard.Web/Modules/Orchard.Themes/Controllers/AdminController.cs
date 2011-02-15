@@ -75,8 +75,7 @@ namespace Orchard.Themes.Controllers {
 
                 return View(new ThemesIndexViewModel {
                     CurrentTheme = currentTheme, Themes = themes,
-                    InstallThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
-                    BrowseToGallery = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "Gallery") != null
+                    InstallThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null
                 });
             } catch (Exception exception) {
                 this.Error(exception, T("Listing themes failed: {0}", exception.Message), Logger, Services.Notifier);

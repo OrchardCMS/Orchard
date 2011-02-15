@@ -1,6 +1,9 @@
 ﻿@model Orchard.Themes.ViewModels.ThemesIndexViewModel
-@{ Style.Require("ThemesAdmin"); }
-<h1>@Html.TitleForPage(T("Manage Themes").ToString())</h1>
+@{
+    Style.Require("ThemesAdmin");
+    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: "Themes"), "5");
+}
+
 @if (Model.CurrentTheme == null) {
     <p>
         @T("There is no current theme in the application. The built-in theme will be used.")<br />
@@ -21,20 +24,16 @@
     if (Model.InstallThemes) {
         <p>@Html.ActionLink(T("Install a theme").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</p>
     }
-
-    if (Model.BrowseToGallery) {
-        <p>@Html.ActionLink(T("Install a theme from the Gallery").ToString(), "Themes", "Gallery", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</p>
-    }
 }
 
 <h2>@T("Available Themes")</h2>
 <ul class="templates">
     @foreach (var theme in Model.Themes) {
-		var tags = theme.Descriptor.Tags;
-		bool hidden = false;
-		if (tags != null) {
-			hidden = tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase));
-		}
+        var tags = theme.Descriptor.Tags;
+        bool hidden = false;
+        if (tags != null) {
+            hidden = tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase));
+        }
         if (!hidden && (Model.CurrentTheme == null || theme.Id != Model.CurrentTheme.Id)) {
             <li>
                 <div>

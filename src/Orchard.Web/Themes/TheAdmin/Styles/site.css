@@ -318,11 +318,35 @@ form.link button:hover {
 .localmenu li {
     display: inline;
 }
-.localmenu li.middle {
+.localmenu li {
+    padding-top: 5px;
+    margin-bottom: 5px;
     padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 5px;
+}
+.localmenu li.middle, .localmenu li.first, .localmenu li.last {
+    border-color: #E4E5E6;
+    border-style: solid;
+    border-left-width: thin;
+    border-right-width: thin;
+    border-top-width: thin;
 }
 .localmenu li.selected {
-    font-weight: bold;
+    background-color: White;
+}
+.localmenu li.selected a {
+    color: #3A822E;
+}
+#layout-content {
+    background-color: #F3F4F5;
+}
+#content {
+    background-color: White;
+    border-color: #E4E5E6;
+    border-style: solid;
+    border-width: thin;
+    padding: 20px;
 }
 .section-dashboard, .section-new 
 {
@@ -387,7 +411,7 @@ form.link button:hover {
 
 /* Content
 ***************************************************************/
-#main h1 {
+#main #content h1 {
     margin:0 0 1em;
 }
 #main h2, #main h3 {

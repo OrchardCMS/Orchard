@@ -8,9 +8,10 @@
     Style.Require("ModulesAdmin");
     Style.Require("Switchable");
     Script.Require("Switchable");
+
+    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: "Modules"), "5");
 }
 
-<h1>@Html.TitleForPage(T("Manage Features").ToString())</h1>
 @if (Model.Features.Count() > 0) {
 <ul class="features summary-view switchable">@{
     var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category);
