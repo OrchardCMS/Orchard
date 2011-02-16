@@ -101,8 +101,10 @@ Pixels   EMs         Percent    Points
 24px     1.846em     184.6%     18pt
 */
 
+html, body { height:100%; }
+
 html {
-    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;  
     color:#333;
 }
 
@@ -112,7 +114,7 @@ body {
   background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
   font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
   line-height:1.6em;
-  margin:0 auto 1em;  
+  margin:0 auto;  
   min-width:74em; /* 946px */
   padding:0;
 }
@@ -181,14 +183,17 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     overflow:hidden;
 }
 #layout-content {
-    overflow:auto;
-    background:#f3f4f5;
+    /*overflow:auto;*/
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
+    min-height:100%;
 }
 #layout-main {
     display:inline;
+    overflow:auto;
     float:right;
     margin-left:-240px;
     width:100%;
+    padding:0 0 74px 0; /*Bottom padding set to footer height*/
 }
 #main {
     margin-left:260px;
@@ -205,6 +210,10 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 }
 #footer {
     clear:both;
+    height:74px;
+    position:relative;
+    margin-top:-74px; /*Top margin set negative px of footer height*/
+    background:url(images/vinesBackgroundBottom.gif) no-repeat bottom left;
 }
 
 /* Links
@@ -953,7 +962,10 @@ fieldset.delete-button {
     color:#ccc;
     font-style:italic;
 }
-#orchard-version {
+#orchard-version 
+{
+    position:relative;
     float:right;
-    padding:.7em 1.4em;
+    top:36px;
+    right:16px;
 }

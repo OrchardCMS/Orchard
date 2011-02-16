@@ -30,13 +30,15 @@
     Model.Footer.Add(Display.OrchardVersion());
 }
 
+
+
+<div id="layout-content">
+
 @if (Model.Header != null) {
 <div id="header" role="banner">
     @Zone(Model.Header)
 </div>
 }
-
-<div id="layout-content">
     <div id="navshortcut">
         <a href="#Menu-admin">
             @T("Skip to navigation")
