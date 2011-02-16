@@ -182,24 +182,23 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 }
 #layout-content {
     overflow:auto;
-    /*padding:1.4em;*/
     background:#f3f4f5;
-    margin:0 0 0 260px;
+}
+#layout-main {
+    display:inline;
+    float:right;
+    margin-left:-240px;
+    width:100%;
 }
 #main {
-    /*display:inline;
-    float:right;*/
-    width:96%;
+    margin-left:260px;
+    margin-right:20px;
 }
-#menu .menu-admin {
+#menu {
     background:#323232;
-    position:absolute;
-    top:50px;
-    left:0;
-    width:240px;
-    /*display:inline;
+    display:inline;
     float:left;
-    width:15.401%;*/
+    width:240px;
 }
 .wrapper, .sections {
     overflow:hidden;

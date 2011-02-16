@@ -43,36 +43,38 @@
         </a>
     </div>
 
-    <div id="main" role="main">
-        @if (Model.Messages != null) {
-        <div id="messages">
-            @Zone(Model.Messages)
-        </div>
-        }
+    <div id="layout-main">
+        <div id="main" role="main">
+            @if (Model.Messages != null) {
+            <div id="messages">
+                @Zone(Model.Messages)
+            </div>
+            }
 
-        @if (Model.BeforeContent != null) {
-        <div id="before-content">
-            @Zone(Model.BeforeContent)
-        </div>
-        }
+            @if (Model.BeforeContent != null) {
+            <div id="before-content">
+                @Zone(Model.BeforeContent)
+            </div>
+            }
 
-        @if (Model.LocalNavigation != null) {
-        <div id="local-navigation">
-            @Zone(Model.LocalNavigation)
-        </div>
-        }
+            @if (Model.LocalNavigation != null) {
+            <div id="local-navigation">
+                @Zone(Model.LocalNavigation)
+            </div>
+            }
 
-        @if (Model.Content != null) {
-        <div id="content">
-            @Zone(Model.Content)
-        </div>
-        }
+            @if (Model.Content != null) {
+            <div id="content">
+                @Zone(Model.Content)
+            </div>
+            }
 
-        @if (Model.AfterContent != null) {
-        <div id="after-content">
-            @Zone(Model.AfterContent)
+            @if (Model.AfterContent != null) {
+            <div id="after-content">
+                @Zone(Model.AfterContent)
+            </div>
+            }
         </div>
-        }
     </div>
 
     @if (Model.Navigation != null) {
