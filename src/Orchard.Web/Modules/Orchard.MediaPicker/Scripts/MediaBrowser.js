@@ -44,12 +44,51 @@
         publishInsertEvent(this);
     });
 
+    $(".media-filename").live("click", function (ev) {
+        // when clicking on a filename in the gallery view,
+        // we interrupt the normal operation and write a <img>
+        // tag into a new window to ensure the image displays in
+        // a new window instead of being 'downloaded' like in Chrome
+        ev.preventDefault();
+        var self = $(this),
+            src = attributeEncode(self.attr("href")),
+            w = window.open("", self.attr("target"));
+        w.document.write("<!DOCTYPE html><html><head><title>" + src + "</title></head><body><img src=\"" + src + "\" alt=\"\" /></body></html>");
+    });
+
+    $("#createFolder").live("click", function () {
+        $.post("MediaPicker/Home/CreateFolder", { path: query("mediaPath"), folderName: $("#folderName").val(), __RequestVerificationToken: $("#__requesttoken").val() },
+            function (response) {
+                if (typeof response === "string") {
+                    alert(response);
+                }
+                else {
+                    location.reload(true);
+                }
+            });
+    });
+
     $(function () {
-        $("#tabs").tabs({ selected: parseInt(location.hash.replace("#", "")) || 0 });
+        $("#tabs").tabs({ selected: parseInt(query("tab", location.hash)) || 0 });
 
         // populate width and height when image loads
         // note: load event does not bubble so cannot be used with .live
         $("#img-loader, #lib-loader").bind("load", syncImage);
+
+        $("#lib-uploadform").bind("uploadComplete", function (ev, url) {
+            // from the libary view, uploading should cause a reload
+            var href = location.href,
+                hashindex = location.href.indexOf("#");
+            if (hashindex !== -1) {
+                href = href.substr(0, hashindex);
+            }
+            location.href = href + "&rl=" + (new Date() - 0) + "#tab=1&select=" + url.substr(url.lastIndexOf("/") + 1);
+        });
+
+        var preselect = query("select", location.hash);
+        if (preselect) {
+            $("img[data-filename=" + preselect + "]").closest(".media-item").trigger("click");
+        }
 
         // edit mode has slightly different wording
         // elements advertise this with data-edittext attributes,
@@ -76,7 +115,13 @@
     });
 
     function selectImage(prefix, src) {
-        $(prefix + "preview").width("").height("").attr("src", src);
+        $(prefix + "preview")
+            .css({
+                display: "none",
+                width: "",
+                height: ""
+            })
+            .attr("src", src);
         $(prefix + "loader").attr("src", src);
         $(prefix + "src").val(src);
 
@@ -150,7 +195,12 @@
             height = maxHeight;
             width = Math.round(width * aspect);
         }
-        self.width(width).height(height);
+
+        self.css({
+            width: width,
+            height: height,
+            display: "inline"
+        });
     }
 
     function syncImage() {
@@ -170,11 +220,15 @@
         suppressResize = false;
     }
 
+    function attributeEncode(value) {
+        return !value ? "" : value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\//g, "&#47;");
+    }
+
     function getAttr(name, value) {
         // get an attribute value, escaping any necessary characters to html entities.
         // not an exhastive list, but should cover all the necessary characters for this UI (e.g. you can't really put in newlines).
         if (!value && name !== "alt") return "";
-        return ' ' + name + '="' + value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + '"';
+        return ' ' + name + '="' + attributeEncode(value) + '"';
     }
 
     function getImageHtml(data) {
@@ -188,21 +242,24 @@
     }
 
     function uploadMedia(form) {
-        var name = "addmedia__" + (new Date()).getTime();
+        var name = "addmedia__" + (new Date()).getTime(),
+            prefix = getIdPrefix(form);
         $("<iframe/>", {
+            id: prefix.substr(1) + "iframe",
             name: name,
             src: "about:blank",
             css: { display: "none" },
             load: iframeLoadHandler
-        }).appendTo(document.body);
+        }).appendTo(form);
         form.target = name;
+        $(prefix + "indicator").show();
     }
 
     // get a querystring value
-    function query(name) {
+    function query(name, querystring) {
         name = name.toLowerCase();
-        var search = location.search;
-        var parts = search.replace("?", "").split("&");
+        var search = querystring || location.search;
+        var parts = search.replace("?", "").replace("#", "").split("&");
         for (var i = 0, l = parts.length; i < l; i++) {
             var part = parts[i];
             var eqIndex = part.indexOf("=");
@@ -216,16 +273,15 @@
     function iframeLoadHandler() {
         try {
             var self = $(this),
+                form = self.closest("form"),
                 frame = window.frames[this.name];
             if (!frame.document || frame.document.URL == "about:blank") {
                 return true;
             }
             var result = frame.result;
             if (result && result.url) {
-                // successfully uploaded image, response by setting the url
-                // to the new image. The change event will respond just as if
-                // the user typed the url.
-                $("#img-src").val(result.url).trigger("change");
+                selectImage(getIdPrefix(this), result.url);
+                form.trigger("uploadComplete", [result.url]);
             }
             else if (result && result.error) {
                 alert(result.error);
@@ -241,7 +297,7 @@
                     alert(somethingPotentiallyHorrible);
                 }
             }
-
+            $(getIdPrefix(form.get(0)) + "indicator").hide();
             //cleanup
             window.setTimeout(function () {
                 self.remove();
