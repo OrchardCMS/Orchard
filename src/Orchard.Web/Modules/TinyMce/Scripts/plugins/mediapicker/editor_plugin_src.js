@@ -48,7 +48,6 @@
                 OpenAjax.hub.publish("orchard.admin.pickimage-open.tinymce", {
                     editorId: ed.id,
                     img: editImage,
-                    uploadMediaAction: ed.getParam("mediapicker_uploadaction"),
                     uploadMediaPath: ed.getParam("mediapicker_uploadpath")
                 });
             });

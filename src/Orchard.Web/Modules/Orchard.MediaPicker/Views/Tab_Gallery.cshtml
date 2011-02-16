@@ -8,7 +8,6 @@
 	// querystring values need to persist after a new GET when clicking on the media browser's
 	// folders for navigation.
     @Html.ActionLink(folderName, "Index", null, null, null, "tab=1", new {
-		upload = Request["upload"],
 		uploadpath = Request["uploadpath"],
 		editmode = Request["editmode"],
 		source = Request["source"],
@@ -17,11 +16,7 @@
 		mediaPath = mediaPath }, null);
 }
 @{
-    // only allow uploading to a local url
-    var uploadAction = Request["upload"];
-    if (!Url.IsLocalUrl(uploadAction)) {
-        uploadAction = "";
-    }
+    var uploadAction = Url.Action("AddFromClient", "Admin", new { area = "Orchard.Media" });
 }
         <div style="float:left">
 
@@ -41,10 +36,8 @@
             <table class="items" summary="@T("This is a table of the images currently available for use in your application.")">
                 @foreach (var mediaFolder in Model.MediaFolders) {
                     <tr>
-                        <td>
+                        <td class="media-folder" colspan="2">
                             <img src="@Href("~/Modules/Orchard.Media/Content/Admin/images/folder.gif")" height="16" width="16" class="mediaTypeIcon" alt="@T("Folder")" />
-                        </td>
-                        <td>
                             @FolderLink(mediaFolder.Name, mediaFolder.MediaPath)
                         </td>
                     </tr>
@@ -52,12 +45,10 @@
                 @foreach (var mediaFile in Model.MediaFiles) {
                     var src = (((IMediaService)ViewData["Service"]).GetPublicUrl(Path.Combine(Model.MediaPath, mediaFile.Name)));
                     <tr data-imgsrc="@src" class="media-item">
-                        <td>
-                            <div class="media-thumbnail">
-                                <img data-filename="@src.Substring(src.LastIndexOf("/") + 1)" alt="" src="@src" onload="jQuery.mediaPicker.scalePreview(this)" />
-                            </div>
+                        <td class="media-thumbnail">
+                            <img data-filename="@src.Substring(src.LastIndexOf("/") + 1)" alt="" src="@src" onload="jQuery.mediaPicker.scalePreview(this)" />
                         </td>
-                        <td>
+                        <td class="media-details">
                             <ul class="media-summary">
                                 <li><a class="media-filename" href="@src" target="_blank">@mediaFile.Name</a></li>
                                 <li>@T("Added on"): @mediaFile.LastUpdated</li>
@@ -123,10 +114,3 @@
                 <input type="button" id="lib-insert" value="@T("Insert")" class="disabled" data-edittext="@T("Update")" />
             </fieldset>
         </div>
-
-
-
-
-
-
-

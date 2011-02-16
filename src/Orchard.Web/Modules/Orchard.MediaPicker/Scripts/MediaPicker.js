@@ -8,7 +8,6 @@
         if (adminIndex === -1) return;
         var url = location.href.substr(0, adminIndex)
             + pickerAction + "?source=" + name.substr(eventPrefix.length)
-            + "&upload=" + (data.uploadMediaAction || "")
             + "&uploadpath=" + (data.uploadMediaPath || "")
             + "&editmode=" + (!!(data.img && data.img.src))
             + "&editorId=" + data.editorId + "&" + (new Date() - 0);
@@ -31,7 +30,6 @@
 //        if (adminIndex === -1) return;
 //        var url = location.href.substr(0, adminIndex)
 //            + "/Orchard.MediaPicker/MediaPicker/Index?source=" + data.source
-//            + "&upload=" + data.uploadMediaAction
 //            + "&editorId=" + data.editorId + "&" + (new Date() - 0);
 //        var w = window.open(url, "Orchard.MediaPicker", data.windowFeatures || "width=600,height=300,status=no,toolbar=no,location=no,menubar=no");
 //        // in case it was already open, bring to the fore

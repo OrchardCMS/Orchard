@@ -8,17 +8,33 @@ input[type="file"] {
 {
     width: 300px;
     height: 300px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;    
 }
 .media-thumbnail 
 {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
 }
 .media-thumbnail img 
 {
-    text-align: center;
-    vertical-align: middle;
     display: none; /*revealed by javascript after scaling*/
+}
+.media-details 
+{
+    vertical-align: middle;
+}
+.media-details ul 
+{
+    list-style-type: none
+}
+.media-folder 
+{
+
 }
 .selected 
 {
