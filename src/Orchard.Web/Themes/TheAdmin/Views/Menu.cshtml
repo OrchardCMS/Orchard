@@ -27,6 +27,10 @@
             firstLevelMenuItem.Classes.Add("last");
         }
 
+        if (firstLevelMenuItem.Selected) {
+            firstLevelMenuItem.Classes.Add("selected");
+        }
+
         firstLevelMenuItem.Classes.Add("section-" + sectionHeaderText.HtmlClassify());
         var firstLevelTag = Tag(firstLevelMenuItem, "li");
         @firstLevelTag.StartElement
@@ -34,9 +38,13 @@
             if (secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav).Count() > 1 || !firstLevelMenuItem.LinkToFirstChild) {
                 <ul class="menuItems">
                 @foreach (var secondLevelMenuItem in secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav)) {
-                    <li>
+                    if (secondLevelMenuItem.Selected) {
+                        secondLevelMenuItem.Classes.Add("selected");
+                    }
+                    var secondLevelTag = Tag(secondLevelMenuItem, "li");
+                    @secondLevelTag.StartElement
                         <a href="@secondLevelMenuItem.Href">@secondLevelMenuItem.Text</a>
-                    </li>
+                    @secondLevelTag.EndElement
                 }
                 </ul>
             }
