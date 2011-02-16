@@ -1,13 +1,17 @@
+using System;
+using System.Web;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard;
 using System.Collections.Generic;
+using Orchard.Media;
 using Orchard.Media.Models;
 using Orchard.Media.ViewModels;
 using Orchard.Media.Services;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.Themes;
+using Orchard.UI.Notify;
 
 namespace Orchard.MediaPicker.Controllers {
     [Themed(false)]
@@ -41,6 +45,24 @@ namespace Orchard.MediaPicker.Controllers {
             var model = new MediaFolderEditViewModel { FolderName = name, MediaFiles = mediaFiles, MediaFolders = mediaFolders, MediaPath = mediaPath };
             ViewData["Service"] = _mediaService;
             return View(model);
+        }
+
+        [HttpPost]
+        public JsonResult CreateFolder(string path, string folderName) {
+            if (!_authorizer.Authorize(StandardPermissions.AccessAdminPanel)) {
+                return Json(T("Can't access the admin").ToString());
+            }
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia)) {
+                return Json(T("Couldn't create media folder").ToString());
+            }
+
+            try {
+                _mediaService.CreateFolder(HttpUtility.UrlDecode(path), folderName);
+                return Json(true);
+            }
+            catch (Exception exception) {
+                return Json(T("Creating Folder failed: {0}", exception.Message).ToString());
+            }
         }
     }
 }

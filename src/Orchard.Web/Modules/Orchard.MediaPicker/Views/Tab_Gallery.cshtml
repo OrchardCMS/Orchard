@@ -7,7 +7,7 @@
 @helper FolderLink(string folderName, string mediaPath) {
 	// querystring values need to persist after a new GET when clicking on the media browser's
 	// folders for navigation.
-    @Html.ActionLink(folderName, "Index", null, null, null, "1", new {
+    @Html.ActionLink(folderName, "Index", null, null, null, "tab=1", new {
 		upload = Request["upload"],
 		uploadpath = Request["uploadpath"],
 		editmode = Request["editmode"],
@@ -15,6 +15,13 @@
 		editorId = Request["editorId"],
 		name = folderName,
 		mediaPath = mediaPath }, null);
+}
+@{
+    // only allow uploading to a local url
+    var uploadAction = Request["upload"];
+    if (!Url.IsLocalUrl(uploadAction)) {
+        uploadAction = "";
+    }
 }
         <div style="float:left">
 
@@ -24,9 +31,14 @@
                     <text>&#62;</text> @FolderLink(navigation.FolderName, navigation.FolderPath) 
                 }
             </p>
+			<fieldset>
+				<input id="__requesttoken" type="hidden" value="@Html.AntiForgeryTokenValueOrchard()" />
+				<input id="folderName" type="text" />
+				<input type="button" id="createFolder" value="@T("Create Folder")" />
+			</fieldset>
         </div>
         <fieldset>
-            <table class="items" summary="@T("This is a table of the pages currently available for use in your application.")">
+            <table class="items" summary="@T("This is a table of the images currently available for use in your application.")">
                 @foreach (var mediaFolder in Model.MediaFolders) {
                     <tr>
                         <td>
@@ -42,12 +54,12 @@
                     <tr data-imgsrc="@src" class="media-item">
                         <td>
                             <div class="media-thumbnail">
-                                <img alt="" src="@src" onload="jQuery.mediaPicker.scalePreview(this)" />
+                                <img data-filename="@src.Substring(src.LastIndexOf("/") + 1)" alt="" src="@src" onload="jQuery.mediaPicker.scalePreview(this)" />
                             </div>
                         </td>
                         <td>
                             <ul class="media-summary">
-                                <li><a href="@src" target="_blank">@mediaFile.Name</a></li>
+                                <li><a class="media-filename" href="@src" target="_blank">@mediaFile.Name</a></li>
                                 <li>@T("Added on"): @mediaFile.LastUpdated</li>
                                 <li>@T("Size"): @mediaFile.Size.ToFriendlySizeString()</li>
                             </ul>
@@ -55,6 +67,17 @@
                     </tr>
                 }
             </table>
+            @if (!String.IsNullOrWhiteSpace(Model.MediaPath)) {
+                using (Html.BeginFormAntiForgeryPost(uploadAction, FormMethod.Post, new { id="lib-uploadform", enctype = "multipart/form-data", onsubmit = "jQuery.mediaPicker.uploadMedia(this)" })) { 
+                <input type="hidden" name="MediaPath" value="@Model.MediaPath" />
+                <label for="fileUpload">@T("Upload an image from your computer")</label>
+                <input type="file" name="fileUpload" id="fileUpload"  />
+                <input type="submit" id="upload" value="Upload" />
+                }
+            }
+			<img id="lib-indicator" src="@Url.Content("~/modules/orchard.mediapicker/content/synchronizing.gif")" alt="" class="throbber" />
+
+
         </fieldset>
 
         </div>

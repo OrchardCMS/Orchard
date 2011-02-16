@@ -25,12 +25,13 @@
                 <input type="text" id="img-src" />
             </div>
             <div>
-                @using(Html.BeginFormAntiForgeryPost(uploadAction, FormMethod.Post, new { enctype = "multipart/form-data", onsubmit="jQuery.mediaPicker.uploadMedia(this)"})) { 
+                @using(Html.BeginFormAntiForgeryPost(uploadAction, FormMethod.Post, new { id = "img-uploadform", enctype = "multipart/form-data", onsubmit="jQuery.mediaPicker.uploadMedia(this)"})) { 
                     <input type="hidden" name="MediaPath" value="@mediaPath" />
                     <label for="fileUpload">@T("Upload an image from your computer")</label>
                     <input type="file" name="fileUpload" id="fileUpload"  />
                     <input type="submit" id="upload" value="Upload" />
                 }
+				<img id="img-indicator" src="@Url.Content("~/modules/orchard.mediapicker/content/synchronizing.gif")" alt="" class="throbber" />
             </div>
 
         </div>

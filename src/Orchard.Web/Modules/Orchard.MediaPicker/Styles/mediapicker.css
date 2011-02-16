@@ -18,8 +18,14 @@ input[type="file"] {
 {
     text-align: center;
     vertical-align: middle;
+    display: none; /*revealed by javascript after scaling*/
 }
 .selected 
 {
     background-color: Yellow;
+}
+
+.throbber 
+{
+    display: none
 }

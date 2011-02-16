@@ -58,6 +58,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\synchronizing.gif" />
     <Content Include="Scripts\MediaBrowser.js" />
     <Content Include="Scripts\MediaPicker.js" />
     <Content Include="Styles\mediapicker.css" />
@@ -96,6 +97,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Tab_Gallery.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
