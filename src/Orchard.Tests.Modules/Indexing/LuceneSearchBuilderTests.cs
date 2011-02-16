@@ -402,7 +402,7 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void MandatoryCanBeUserMultipleTimes() {
+        public void MandatoryCanBeUsedrMultipleTimes() {
             _provider.CreateIndex("default");
             _provider.Store("default",
                 _provider.New(1)
@@ -430,6 +430,35 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_searchBuilder.WithField("field1", 1).Mandatory().Count(), Is.EqualTo(3));
             Assert.That(_searchBuilder.WithField("field1", 1).Mandatory().WithField("field2", 2).Mandatory().Count(), Is.EqualTo(2));
             Assert.That(_searchBuilder.WithField("field1", 1).Mandatory().WithField("field2", 2).Mandatory().WithField("field3", 3).Mandatory().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void SearchQueryCanContainMultipleFilters() {
+            _provider.CreateIndex("default");
+            _provider.Store("default",
+                _provider.New(1)
+                    .Add("field1", 1)
+                    .Add("field2", 1)
+                    .Add("field3", 1)
+            );
+
+            _provider.Store("default",
+                _provider.New(2)
+                    .Add("field1", 1)
+                    .Add("field2", 2)
+                    .Add("field3", 2)
+            );
+
+            _provider.Store("default",
+                _provider.New(3)
+                    .Add("field1", 1)
+                    .Add("field2", 2)
+                    .Add("field3", 3)
+            );
+
+            Assert.That(_searchBuilder.WithField("field1", 1).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.WithField("field1", 1).WithField("field2", 2).AsFilter().Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("field1", 1).WithField("field2", 2).Mandatory().AsFilter().WithField("field3", 3).Mandatory().AsFilter().Count(), Is.EqualTo(1));
         }
     }
 }
