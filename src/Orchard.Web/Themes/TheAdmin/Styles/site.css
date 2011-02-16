@@ -290,10 +290,11 @@ form.link button:hover {
 }
 #menu .menu-admin ul li {
     border:0;
-    margin:0;
+    margin:0 10px 0 10px;
 }
 #menu .menu-admin li h3 {
-    padding:0 0 0 8px;
+    padding:0 0 0 20px;
+    background:url(images/defaultIcon.gif) no-repeat 4px 6px;
 }
 #menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
     line-height:1.2em;
@@ -378,7 +379,7 @@ form.link button:hover {
     cursor:pointer;
     display:block;
     height:17px;
-    left:180px;
+    left:160px;
     padding:0 !important;
     position:absolute;
     width:17px;

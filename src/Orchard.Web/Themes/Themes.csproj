@@ -52,6 +52,7 @@
     <Content Include="TheAdmin\Scripts\admin.js" />
     <Content Include="TheAdmin\Styles\ie.css" />
     <Content Include="TheAdmin\Styles\images\adminNavBackground.gif" />
+    <Content Include="TheAdmin\Styles\images\defaultIcon.gif" />
     <Content Include="TheAdmin\Styles\images\menuClosed.gif" />
     <Content Include="TheAdmin\Styles\images\menuClosedHover.gif" />
     <Content Include="TheAdmin\Styles\images\menuOpen.gif" />
