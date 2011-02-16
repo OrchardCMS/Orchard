@@ -10,10 +10,10 @@ namespace Orchard.Modules {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Modules"), "20", menu => menu
-                .Add(T("Features"), "0", item => item.Action("Features", "Admin", new { area = "Orchard.Modules" })
-                    .Permission(Permissions.ManageFeatures).LocalNav())
                 .Add(T("Installed"), "1", item => item.Action("Index", "Admin", new { area = "Orchard.Modules" })
-                    .Permission(StandardPermissions.SiteOwner).LocalNav()));
+                    .Permission(StandardPermissions.SiteOwner).LocalNav())
+                .Add(T("Features"), "0", item => item.Action("Features", "Admin", new { area = "Orchard.Modules" })
+                    .Permission(Permissions.ManageFeatures).LocalNav()));
         }
     }
 }

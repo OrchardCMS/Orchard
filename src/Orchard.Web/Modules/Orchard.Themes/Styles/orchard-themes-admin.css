@@ -1,6 +1,27 @@
 ﻿#main .templates p {
     margin:0 0 .3em 0;
 }
+#currentTheme .themePreviewImage {
+    float: left;
+    margin-right: 20px;
+}
+#installedBar {
+    clear: both;
+    border-bottom-width: thin;
+    border-bottom-style: solid;
+    border-bottom-color: #E4E5E6;
+    height: 50px;
+    margin: 10px 0 10px 0;
+}
+#installedBar h3 {
+    float: left;
+    padding-top: 10px;
+}
+#installedBar p a {
+    color: #3A822E;
+    float: right;
+    padding-top: 20px;
+}
 .templates li {
     margin:.8em;
     width:30%;

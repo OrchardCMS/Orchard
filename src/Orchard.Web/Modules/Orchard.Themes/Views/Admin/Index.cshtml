@@ -1,4 +1,7 @@
 ﻿@model Orchard.Themes.ViewModels.ThemesIndexViewModel
+@using Orchard.Themes.Models
+@using Orchard.Mvc.Html
+
 @{
     Style.Require("ThemesAdmin");
     WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: "Themes"), "5");
@@ -10,67 +13,82 @@
         @Html.ActionLink(T("Install a new Theme").ToString(), "Install")
     </p>
 } else {
-    <h3>@T("Current Theme") - @Model.CurrentTheme.Name</h3>
+    <h3 id="currentThemeTitle">@T("Current Theme")</h3>
 
-    @Html.Image(Href(Html.ThemePath(Model.CurrentTheme, "/Theme.png")), Html.Encode(Model.CurrentTheme.Name), new { @class = "themePreviewImage" })
-    <h5>@T("By") @Model.CurrentTheme.Author</h5>
-        
-    <p>
-        @T("Version:") @Model.CurrentTheme.Version<br />
-        @Model.CurrentTheme.Description<br />
-        @Model.CurrentTheme.WebSite
-    </p>
+    <div id="currentTheme">
+        @Html.Image(Href(Html.ThemePath(Model.CurrentTheme.Descriptor, "/Theme.png")), Html.Encode(Model.CurrentTheme.Name), new { @class = "themePreviewImage" })
 
-    if (Model.InstallThemes) {
-        <p>@Html.ActionLink(T("Install a theme").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</p>
-    }
+        <div class="details">
+            @Model.CurrentTheme.Name<br />
+            @T("By") @Model.CurrentTheme.Descriptor.Author<br />
+            @T("Version:") @Model.CurrentTheme.Descriptor.Version<br />
+            @if (Model.CurrentTheme.Descriptor.WebSite != null) {
+                <a href="@Model.CurrentTheme.Descriptor.WebSite">@Model.CurrentTheme.Descriptor.WebSite</a><br />
+            }
+            <br />
+            <p>@Model.CurrentTheme.Descriptor.Description</p>
+        </div>
+    </div>
 }
 
-<h2>@T("Available Themes")</h2>
-<ul class="templates">
-    @foreach (var theme in Model.Themes) {
-        var tags = theme.Descriptor.Tags;
-        bool hidden = false;
-        if (tags != null) {
-            hidden = tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase));
-        }
-        if (!hidden && (Model.CurrentTheme == null || theme.Id != Model.CurrentTheme.Id)) {
+<div id="installedBar">
+    <h3>@T("Installed")</h3>
+
+    @if (Model.InstallThemes) {
+        <p>@Html.ActionLink(T("Install theme").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "primaryAction" })</p>
+    }
+</div>
+
+@if (Model.Themes == null || Model.Themes.Count() <= 0) {
+    <p>@T("There are no additional themes installed.")</p>
+} else {
+    <ul class="templates">
+        @foreach (ThemeEntry theme in Model.Themes) {
             <li>
                 <div>
                     <h3>@theme.Name</h3>
-                    @Html.Image(Href(theme.ThemePath("/Theme.png")), Html.Encode(theme.Name), null)
-                    @using (Html.BeginFormAntiForgeryPost(Url.Action(theme.Enabled ? "Disable" : "Enable"), FormMethod.Post, new { @class = "inline" })) {
-                        @Html.Hidden("themeName", theme.Id)
-                        <button type="submit" title="@T(theme.Enabled ? "Disable" : "Enable")">@T(theme.Enabled ? "Disable" : "Enable")</button>
-                    }
+                    @Html.Image(Href(Html.ThemePath(Model.CurrentTheme.Descriptor, "/Theme.png")), Html.Encode(Model.CurrentTheme.Name), null)
+
                     @using (Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" })) {
-                        @Html.Hidden("themeName", theme.Id)
+                        @Html.Hidden("themeName", theme.Descriptor.Id)
                         <button type="submit" title="@T("Activate")">@T("Set Current")</button>
                     }
+
                     @using (Html.BeginFormAntiForgeryPost(Url.Action("Preview"), FormMethod.Post, new { @class = "inline" })) {
-                        @Html.Hidden("themeName", theme.Id)
+                        @Html.Hidden("themeName", theme.Descriptor.Id)
                         <button type="submit" title="@T("Preview")">@T("Preview")</button>
                     }
+
                     <h5>@T("By") @theme.Descriptor.Author</h5>
                     <p>
                         @T("Version:") @theme.Descriptor.Version<br />
                         @theme.Descriptor.Description<br />
-                        @theme.Descriptor.WebSite
+                        @if (theme.Descriptor.WebSite != null) {
+                            <a href="@theme.Descriptor.WebSite">@theme.Descriptor.WebSite</a><br />
+                        }
                     </p>
-                    @if(theme.NeedsUpdate){
+
+                    @if (theme.Enabled) {
+                        using (Html.BeginFormAntiForgeryPost(Url.Action("Disable"), FormMethod.Post, new { @class = "inline link" })) {
+                            @Html.Hidden("themeName", theme.Descriptor.Id)
+                            <button type="submit" title="Disable">@T("Disable")</button>
+                        }
+                    }
+
+                    @if (theme.NeedsUpdate) {
                         using (Html.BeginFormAntiForgeryPost(Url.Action("Update"), FormMethod.Post, new { @class = "inline link" })) {
-                            @Html.Hidden("themeName", theme.Id)
+                            @Html.Hidden("themeName", theme.Descriptor.Id)
                             <button type="submit" class="update">@T("Update")</button> <br/>
                         }
                     }
 
                     @if (Model.InstallThemes) {
-                        using (Html.BeginFormAntiForgeryPost(Url.Action("RemoveTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl, retryUrl = HttpContext.Current.Request.RawUrl, themeId = theme.Id }), FormMethod.Post, new { @class = "inline link" })) {
+                        using (Html.BeginFormAntiForgeryPost(Url.Action("RemoveTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl, retryUrl = HttpContext.Current.Request.RawUrl, themeId = theme.Descriptor.Id }), FormMethod.Post, new { @class = "inline link" })) {
                             <button type="submit" class="uninstall" title="@T("Uninstall")">@T("Uninstall")</button>
                         }
                     }
                 </div>
             </li>
         }
-    }
-</ul>
+    </ul>
+}

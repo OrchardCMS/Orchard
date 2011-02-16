@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
@@ -12,6 +13,7 @@ using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Reports.Services;
 using Orchard.Security;
+using Orchard.Themes.Models;
 using Orchard.Themes.Preview;
 using Orchard.Themes.Services;
 using Orchard.Themes.ViewModels;
@@ -61,20 +63,30 @@ namespace Orchard.Themes.Controllers {
 
         public ActionResult Index() {
             try {
-                var currentTheme = _siteThemeService.GetSiteTheme();
                 var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
-                var themes = _extensionManager.AvailableExtensions()
-                    .Where(d => DefaultExtensionTypes.IsTheme(d.ExtensionType))
-                    .Select(d => new ThemeEntry {
-                        Descriptor = d,
-                        NeedsUpdate = featuresThatNeedUpdate.Contains(d.Id),
-                        Enabled = _shellDescriptor.Features.Any(sf => sf.Name == d.Id)
+                ThemeEntry currentTheme = new ThemeEntry(_siteThemeService.GetSiteTheme());
+                IEnumerable<ThemeEntry> themes = _extensionManager.AvailableExtensions()
+                    .Where(extensionDescriptor => {
+                        bool hidden = false;
+                        string tags = extensionDescriptor.Tags;
+                        if (tags != null) {
+                            hidden = tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase));
+                        }
+
+                        return !hidden &&
+                            DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType) &&
+                            !currentTheme.Descriptor.Id.Equals(extensionDescriptor.Id);
+                    })
+                    .Select(extensionDescriptor => new ThemeEntry(extensionDescriptor) {
+                        NeedsUpdate = featuresThatNeedUpdate.Contains(extensionDescriptor.Id),
+                        Enabled = _shellDescriptor.Features.Any(sf => sf.Name == extensionDescriptor.Id)
                     })
                     .ToArray();
 
                 return View(new ThemesIndexViewModel {
-                    CurrentTheme = currentTheme, Themes = themes,
+                    CurrentTheme = currentTheme,
+                    Themes = themes,
                     InstallThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null
                 });
             } catch (Exception exception) {

@@ -9,10 +9,6 @@
     WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: "Modules"), "5");
 }
 
-@if (Model.BrowseToGallery) {
-    <div class="manage">@Html.ActionLink(T("Install a module from the Gallery").ToString(), "Modules", "Gallery", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
-}
-
 @if (Model.InstallModules) {
     <div class="manage">@Html.ActionLink(T("Install a module").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
 }
