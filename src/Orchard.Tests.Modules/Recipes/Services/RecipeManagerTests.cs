@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -8,9 +9,11 @@ using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
+using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.WebSite;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
+using Orchard.Services;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Modules.Recipes.Services {
@@ -64,9 +67,11 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<RecipeManager>().As<IRecipeManager>();
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>();
             builder.RegisterType<RecipeStepExecutor>().As<IRecipeStepExecutor>();
-            builder.RegisterType<RecipeStepQueue>().As<IRecipeStepQueue>().InstancePerLifetimeScope();
+            builder.RegisterType<StubStepQueue>().As<IRecipeStepQueue>().InstancePerLifetimeScope();
             builder.RegisterType<StubRecipeScheduler>().As<IRecipeScheduler>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
+            builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();
+            builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<Environment.Extensions.ExtensionManagerTests.StubLoaders>().As<IExtensionLoader>();
@@ -137,6 +142,18 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             _recipeManager.Execute(sampleRecipe);
 
             Assert.That(CustomRecipeHandler.AttributeValue == "value1");
+        }
+    }
+
+    public class StubStepQueue : IRecipeStepQueue {
+        readonly Queue<RecipeStep> _queue = new Queue<RecipeStep>();
+
+        public void Enqueue(string executionId, RecipeStep step) {
+            _queue.Enqueue(step);
+        }
+
+        public RecipeStep Dequeue(string executionId) {
+            return _queue.Count == 0 ? null : _queue.Dequeue();
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
@@ -20,14 +21,22 @@ namespace Orchard.Recipes.Services {
         ILogger Logger { get; set; }
 
         public bool ExecuteNextStep(string executionId) {
-            var recipeStepWorkItem = _recipeStepQueue.Dequeue(executionId);
-            if (recipeStepWorkItem == null) {
+            var nextRecipeStep= _recipeStepQueue.Dequeue(executionId);
+            if (nextRecipeStep == null) {
                 return false;
             }
-            var recipeContext = new RecipeContext {RecipeStep = recipeStepWorkItem.Item1, Executed = false};
-            foreach (var recipeHandler in _recipeHandlers) {
-                recipeHandler.ExecuteRecipeStep(recipeContext);
+            var recipeContext = new RecipeContext { RecipeStep = nextRecipeStep, Executed = false };
+            try {
+                foreach (var recipeHandler in _recipeHandlers) {
+                    recipeHandler.ExecuteRecipeStep(recipeContext);
+                }
             }
+            catch(Exception exception) {
+                Logger.Error(exception, "Recipe execution {0} was cancelled because a step failed to execute", executionId);
+                while (_recipeStepQueue.Dequeue(executionId) != null) ;
+                return false;
+            }
+
             if (!recipeContext.Executed) {
                 Logger.Error("Could not execute recipe step '{0}' because the recipe handler was not found.", recipeContext.RecipeStep.Name);
             }

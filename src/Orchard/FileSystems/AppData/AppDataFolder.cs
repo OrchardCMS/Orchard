@@ -36,14 +36,22 @@ namespace Orchard.FileSystems.AppData {
         }
 
         private void MakeDestinationFileNameAvailable(string destinationFileName) {
+            bool isDirectory = Directory.Exists(destinationFileName);
             // Try deleting the destination first
             try {
-                File.Delete(destinationFileName);
+                if (isDirectory)
+                    Directory.Delete(destinationFileName);
+                else 
+                    File.Delete(destinationFileName);
             }
             catch {
                 // We land here if the file is in use, for example. Let's move on.
             }
 
+            if (isDirectory && Directory.Exists(destinationFileName)) {
+                Logger.Warning("Could not delete recipe execution folder {0} under \"App_Data\" folder", destinationFileName);
+                return;
+            }
             // If destination doesn't exist, we are good
             if (!File.Exists(destinationFileName))
                 return;
