@@ -1,5 +1,6 @@
 ﻿@{
-    <h1>@Html.TitleForPage(T("Install a Module").ToString())</h1>
+    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Install a Module").ToString()), "5");
+
     using (Html.BeginFormAntiForgeryPost(Url.Action("AddModule", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request["returnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
         Html.ValidationSummary();
         <fieldset>

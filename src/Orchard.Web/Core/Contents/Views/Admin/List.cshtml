@@ -7,8 +7,10 @@
         pageTitle = T("Manage {0} Content", typeDisplayName);
         createLinkText = T("Create New {0}", typeDisplayName);
     }
+
+    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: pageTitle), "5");
 }
-<h1>@Html.TitleForPage(pageTitle)</h1>
+
 <div class="manage">
     @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
 </div>

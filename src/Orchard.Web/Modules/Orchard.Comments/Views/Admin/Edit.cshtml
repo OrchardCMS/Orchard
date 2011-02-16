@@ -1,7 +1,8 @@
 ﻿@model Orchard.Comments.ViewModels.CommentsEditViewModel
 @using Orchard.Comments.Models;
 
-<h1>@Html.TitleForPage(T("Edit Comment").ToString())</h1>
+@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Edit Comment").ToString()), "5");
+
 @using(Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
     <fieldset class="who">

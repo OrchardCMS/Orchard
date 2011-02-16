@@ -4,7 +4,9 @@
     Script.Require("jQuery");
     Script.Include("admin.js");
 }
-<h1>@Html.TitleForPage(T("Edit Content Type").ToString())</h1>
+
+@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Edit Content Type").ToString()), "5");
+
 <p class="breadcrumb">@Html.ActionLink(T("Content Types").Text, "index")@T(" &#62; ")@T("Edit Content Type")</p>
 @using (Html.BeginFormAntiForgeryPost()) {
     // todo: come up with real itemtype definitions and locations for said definitions

@@ -3,7 +3,8 @@
 @using Orchard.Media.Models;
 @{ Style.Require("MediaAdmin"); }
 
-<h1>@Html.TitleForPage(T("Add a Folder").ToString())</h1>
+@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Add a Folder").ToString()), "5");
+
 <div class="breadCrumbs">
 <p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
         @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) { 

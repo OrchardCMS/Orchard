@@ -3,7 +3,8 @@
 
 @{ Style.Require("MultiTenancyAdmin"); }
 
-<h1>@Html.TitleForPage(T("List of Site's Tenants").ToString())</h1>
+@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("List of Site's Tenants").ToString()), "5");
+
 <div class="manage">@Html.ActionLink(T("Add a Tenant").ToString(), "Add", new {area = "Orchard.MultiTenancy"}, new { @class = "button primaryAction" })</div>
 <ul class="contentItems tenants">
     @foreach (var tenant in Model.TenantSettings) { 

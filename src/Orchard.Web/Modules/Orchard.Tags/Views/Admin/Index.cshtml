@@ -6,7 +6,8 @@
     Style.Require("TagsAdmin");
 }
 
-<h1>@Html.TitleForPage(T("Manage Tags").ToString()) </h1>
+@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Tags").ToString()), "5");
+
 @Html.ValidationSummary() 
 <div class="manage">
     @Display.EditorTemplate(TemplateName: "Parts/CreateTag", Model: ViewData["CreateTag"] != null ? ViewData["CreateTag"] : new TagsAdminCreateViewModel())

@@ -1,6 +1,7 @@
 ﻿@model Orchard.MultiTenancy.ViewModels.TenantAddViewModel
 
-<h1>@Html.TitleForPage(T("Add New Tenant").ToString())</h1> 
+@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Add New Tenant").ToString()), "5");
+
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
     <fieldset>

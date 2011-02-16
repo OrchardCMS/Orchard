@@ -3,16 +3,17 @@
 @using Orchard.Users.ViewModels;
 
 @{
-	var userIndex = 0;
+    var userIndex = 0;
 
-	var pageSizes = new List<int?>() { 10, 50, 100 };
-	var defaultPageSize = WorkContext.CurrentSite.PageSize;
-	if(!pageSizes.Contains(defaultPageSize)) { 
-		pageSizes.Add(defaultPageSize);
-	}
+    var pageSizes = new List<int?>() { 10, 50, 100 };
+    var defaultPageSize = WorkContext.CurrentSite.PageSize;
+    if(!pageSizes.Contains(defaultPageSize)) { 
+        pageSizes.Add(defaultPageSize);
+    }
+
+    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Users").ToString()), "5");
 }
 
-<h1>@Html.TitleForPage(T("Manage Users").ToString()) </h1>
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
     <div class="manage">@Html.ActionLink(T("Add a new user").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
@@ -29,7 +30,7 @@
         <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
     <fieldset class="bulk-actions">
-		@Html.TextBoxFor(m => m.Options.Search, new { @class = "text"})        
+        @Html.TextBoxFor(m => m.Options.Search, new { @class = "text" })        
         <label for="filterResults">@T("Filter:")</label>
         <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)">
             @Html.SelectOption(Model.Options.Filter, UsersFilter.All, T("All Users").ToString())
@@ -37,22 +38,22 @@
             @Html.SelectOption(Model.Options.Filter, UsersFilter.Pending, T("Pending Users").ToString())
             @Html.SelectOption(Model.Options.Filter, UsersFilter.EmailPending, T("Pending Emails").ToString())
         </select>
-		<label for="filterResults">@T("Sort by:")</label>
+        <label for="filterResults">@T("Sort by:")</label>
         <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
             @Html.SelectOption(Model.Options.Order, UsersOrder.Name, T("Name").ToString())
             @Html.SelectOption(Model.Options.Order, UsersOrder.Email, T("Email").ToString())
         </select>
-		<input type="hidden" name="Page" value="1" />
-		<label for="pageSize">@T("Show:")</label>
-		<select id="pageSize" name="PageSize">
-			@Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-			@foreach(int size in pageSizes.OrderBy(p => p)) {
-				@Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
-			}
-		<select>
+        <input type="hidden" name="Page" value="1" />
+        <label for="pageSize">@T("Show:")</label>
+        <select id="pageSize" name="PageSize">
+            @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
+            @foreach (int size in pageSizes.OrderBy(p => p)) {
+                @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
+   }
+        <select>
         <button type="submit" name="submit.Filter" value="@T("Filter")">@T("Filter")</button>
     </fieldset>
-    <fieldset>		
+    <fieldset>        
         <table class="items">
             <thead>
                 <tr>
@@ -63,17 +64,16 @@
                 </tr>
             </thead>
             @foreach (var entry in Model.Users) { 
-			<tr>
+            <tr>
                 <td>
                     <input type="hidden" value="@Model.Users[userIndex].User.Id" name="@Html.NameOf(m => m.Users[userIndex].User.Id)"/>
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.Users[userIndex].IsChecked)"/>
                 </td>
                 <td>
-                    @if(entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved) { 
+                    @if (entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved) { 
                     <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/online.gif") " alt="@T("Approved") " title="@T("User is approved") " /> 
-                    } 
-                    else { 
-                    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if(entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
+                    } else { 
+                    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if (entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
                     } 
                     @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id }) 
                 </td>
@@ -83,19 +83,19 @@
                 <td>
                     @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
                     @Html.ActionLink(T("Remove").ToString(), "Delete", new { entry.User.Id }) |
-                    @if(entry.User.RegistrationStatus == UserStatus.Pending) {
+                    @if (entry.User.RegistrationStatus == UserStatus.Pending) {
                         @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id })
                     } else {
                         @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id })
                     }
-                    @if ( entry.User.EmailStatus == UserStatus.Pending ) { <text>|</text>
+                    @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>
                         @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id })
                     } 
                 </td>
             </tr>
-            userIndex++;
-			}
+                    userIndex++;
+            }
         </table>
-	@Display(Model.Pager)
+    @Display(Model.Pager)
     </fieldset>
 } 

@@ -2,7 +2,8 @@
 @using Orchard.Comments.Models;
 @using Orchard.Comments.ViewModels;
 
-<h1>@Html.TitleForPage(T("Comments for {0}", Model.DisplayNameForCommentedItem).ToString())</h1>
+@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Comments for {0}", Model.DisplayNameForCommentedItem).ToString()), "5");
+
 <div class="manage">
     @if (Model.CommentsClosedOnItem) {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Enable", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) {

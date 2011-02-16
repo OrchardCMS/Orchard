@@ -4,7 +4,7 @@
 
 @{
     Style.Require("ThemesAdmin");
-    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: "Themes"), "5");
+    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Themes").ToString()), "5");
 }
 
 @if (Model.CurrentTheme == null) {

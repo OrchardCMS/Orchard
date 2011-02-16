@@ -5,7 +5,8 @@
     Script.Require("ShapesBase");
 }
 
-<h1>@Html.TitleForPage(T("Manage Roles").ToString())</h1>
+@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Roles").ToString()), "5");
+
 @using(Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
     <fieldset class="bulk-actions">

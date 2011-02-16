@@ -3,7 +3,8 @@
 @using Orchard.Core.Navigation.Models;
 @using Orchard.Core.Navigation.ViewModels;
 
-<h1>@Html.TitleForPage(T("Manage Main Menu").ToString())</h1>
+@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Main Menu").ToString()), "5");
+
 @using (Html.BeginFormAntiForgeryPost()) {
 <table class="items">
     <colgroup>

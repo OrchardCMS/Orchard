@@ -100,9 +100,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\FormShapes.cshtml">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Views\Home\FormShapes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\UsingShapes.cshtml" />
