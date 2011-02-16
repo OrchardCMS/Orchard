@@ -1,17 +1,9 @@
 ﻿(function () {
-    
+
     ////////////////////////////////////////////////////////////////////////
     // NOTE: IF YOU EDIT THIS FILE
     // You must also update editor_plugin.js with a minified version.
     ////////////////////////////////////////////////////////////////////////
-
-    // when the picker selects an image, notice the event and update the editor.
-    OpenAjax.hub.subscribe("orchard.admin.pickimage-picked.tinymce", function (name, data) {
-        var ed = tinyMCE.get(data.editorId);
-        ed.focus();
-        ed.selection.setContent(data.img.html);
-    });
-
     tinymce.create('tinymce.plugins.Orchard.MediaPicker', {
         /**
         * Initializes the plugin, this will be executed after the plugin has been created.
@@ -45,10 +37,13 @@
                         };
                     }
                 }
-                OpenAjax.hub.publish("orchard.admin.pickimage-open.tinymce", {
-                    editorId: ed.id,
+                jQuery("#" + ed.id).trigger("orchard-admin-pickimage-open", {
                     img: editImage,
-                    uploadMediaPath: ed.getParam("mediapicker_uploadpath")
+                    uploadMediaPath: ed.getParam("mediapicker_uploadpath"),
+                    callback: function (data) {
+                        ed.focus();
+                        ed.selection.setContent(data.img.html);
+                    }
                 });
             });
 
@@ -82,7 +77,7 @@
         */
         getInfo: function () {
             return {
-                longname: 'Orchard AddMedia Plugin',
+                longname: 'Orchard MediaPicker Plugin',
                 author: 'Dave Reed',
                 authorurl: 'http://orchardproject.net',
                 infourl: 'http://orchardproject.net',

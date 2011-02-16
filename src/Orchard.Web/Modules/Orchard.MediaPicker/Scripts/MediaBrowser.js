@@ -134,8 +134,6 @@
     }
     function publishInsertEvent(button) {
         var prefix = getIdPrefix(button),
-            editorId = query("editorId"),
-            source = query("source"),
             img = {
                 src: $(prefix + "src").val(),
                 alt: $(prefix + "alt").val(),
@@ -146,10 +144,7 @@
                 height: $(prefix + "height").val()
             };
         img.html = getImageHtml(img);
-        window.opener.OpenAjax.hub.publish("orchard.admin.pickimage-picked." + source, {
-            editorId: editorId,
-            img: img
-        });
+        window.opener.jQuery[query("callback")]({ img: img });      
         window.close();
     }
 

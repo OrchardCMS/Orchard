@@ -15,7 +15,6 @@ namespace Orchard.MediaPicker {
             // should only run on a full view rendering result
             if (!(filterContext.Result is ViewResult) || !Orchard.UI.Admin.AdminFilter.IsApplied(filterContext.RequestContext))
                 return;
-            _resourceManager.Require("script", "OpenAjax");
             _resourceManager.Require("script", "jQuery");
             _resourceManager.Include("script", "~/Modules/Orchard.MediaPicker/Scripts/MediaPicker.js", null);
         }
