@@ -104,14 +104,14 @@ Pixels   EMs         Percent    Points
 html, body { height:100%; }
 
 html {
-    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;  
+    /*background:#f3f4f5 url("images/adminNavBackground.gif") repeat-y top left; */ 
     color:#333;
 }
 
 body {
   font-size: 81.3%;
   color: #333; 
-  background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
+  background:#f3f4f5 url("images/adminNavBackground.gif") repeat-y top left; 
   font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
   line-height:1.6em;
   margin:0 auto;  
@@ -184,7 +184,6 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 }
 #layout-content {
     /*overflow:auto;*/
-    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
     min-height:100%;
 }
 #layout-main {
@@ -200,9 +199,10 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     margin-right:20px;
 }
 #menu {
-    background:#323232;
+    /*background:#323232;*/
     display:inline;
     float:left;
+    z-index:1;
     width:240px;
 }
 .wrapper, .sections {
@@ -238,10 +238,10 @@ form.link button:hover {
 ***************************************************************/
 #header {
     height:50px;
-    background:#f3f4f5;
+    /*background:#f3f4f5;*/
 }
 #branding {
-    background:#323232;
+    /*background:#323232;*/
     /*width: 15.401%;*/
     width: 240px;
     height:50px;
