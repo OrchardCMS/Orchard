@@ -5,11 +5,8 @@
 @using Orchard.Media.Models;
 @using Orchard.UI.Resources;
 @{
-    // only allow uploading to a local url
-    var uploadAction = Request["upload"];
-    if (!Url.IsLocalUrl(uploadAction)) {
-        uploadAction = "";
-    }
+    var uploadAction = Url.Action("AddFromClient", "Admin", new { area = "Orchard.Media" });
+    // media directory to save uploaded files into
     var mediaPath = Request["uploadpath"];
     if (!Url.IsLocalUrl(mediaPath)) {
         mediaPath = "";
