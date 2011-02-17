@@ -51,6 +51,7 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\RecipesController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecipeHandlers\CleanUpInactiveRecipeHandler.cs" />
     <Compile Include="RecipeHandlers\CommandRecipeHandler.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="RecipeHandlers\ModuleRecipeHandler.cs" />
     <Compile Include="RecipeHandlers\SettingsRecipeHandler.cs" />
     <Compile Include="RecipeHandlers\ThemeRecipeHandler.cs" />
+    <Compile Include="Routes.cs" />
     <Compile Include="Services\RecipeHarvester.cs" />
     <Compile Include="Services\RecipeJournalManager.cs" />
     <Compile Include="Services\RecipeManager.cs" />
