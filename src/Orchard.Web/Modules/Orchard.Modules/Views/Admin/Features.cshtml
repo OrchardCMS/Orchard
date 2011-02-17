@@ -43,6 +43,11 @@
                 if (feature == features.Last()) {
                     featureClassName += " last";
                 }
+
+                if (feature.IsRecentlyInstalled) {
+                    featureClassName += " recentlyInstalledFeature";
+                }
+
                 var dependencies = (from d in feature.Descriptor.Dependencies
                                     select (from f in Model.Features where f.Descriptor.Id == d select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);                
                 var missingDependencies = feature.Descriptor.Dependencies

@@ -3,38 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using JetBrains.Annotations;
-using Orchard.Environment.Descriptor;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
 
 namespace Orchard.Themes.Services {
-    public interface IThemeService : IDependency {
-        void DisableThemeFeatures(string themeName);
-        void EnableThemeFeatures(string themeName);
-    }
-
     [UsedImplicitly]
     public class ThemeService : IThemeService {
         private readonly IExtensionManager _extensionManager;
         private readonly IFeatureManager _featureManager;
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
+        private readonly IVirtualPathProvider _virtualPathProvider;
 
         public ThemeService(
-            IShellDescriptorManager shellDescriptorManager,
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
             IEnumerable<IThemeSelector> themeSelectors,
-
-            IWorkContextAccessor workContextAccessor,
-            ShellDescriptor shellDescriptor,
-            IOrchardServices orchardServices) {
+            IVirtualPathProvider virtualPathProvider) {
             _extensionManager = extensionManager;
             _featureManager = featureManager;
             _themeSelectors = themeSelectors;
+            _virtualPathProvider = virtualPathProvider;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -119,6 +111,31 @@ namespace Orchard.Themes.Services {
                 }
             }
             return themes;
+        }
+
+        /// <summary>
+        /// Updates the recently installed flag by using the project's last written time.
+        /// </summary>
+        /// <param name="descriptor">The extension descriptor.</param>
+        public bool UpdateIsRecentlyInstalled(ExtensionDescriptor descriptor) {
+            string projectFile = GetManifestPath(descriptor);
+            if (!string.IsNullOrEmpty(projectFile)) {
+                // If project file was modified less than 24 hours ago, the module was recently deployed
+                return DateTime.UtcNow.Subtract(_virtualPathProvider.GetFileLastWriteTimeUtc(projectFile)) < new TimeSpan(1, 0, 0, 0);
+            }
+
+            return false;
+        }
+
+        private string GetManifestPath(ExtensionDescriptor descriptor) {
+            string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
+                                                       "theme.txt");
+
+            if (!_virtualPathProvider.FileExists(projectPath)) {
+                return null;
+            }
+
+            return projectPath;
         }
     }
 }

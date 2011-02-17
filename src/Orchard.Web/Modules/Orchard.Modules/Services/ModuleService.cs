@@ -5,43 +5,34 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Modules.ViewModels;
 using Orchard.UI.Notify;
 
 namespace Orchard.Modules.Services {
-    public interface IModuleService : IDependency {
-        void EnableFeatures(IEnumerable<string> featureNames);
-        void EnableFeatures(IEnumerable<string> featureNames, bool force);
-        void DisableFeatures(IEnumerable<string> featureNames);
-        void DisableFeatures(IEnumerable<string> featureNames, bool force);
-    }
-
     public class ModuleService : IModuleService {
+        private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IExtensionManager _extensionManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
 
         public ModuleService(
-                IOrchardServices orchardServices, 
+                IOrchardServices orchardServices,
+                IVirtualPathProvider virtualPathProvider,
                 IExtensionManager extensionManager,
                 IShellDescriptorManager shellDescriptorManager) {
+
             Services = orchardServices;
+
+            _virtualPathProvider = virtualPathProvider;
             _extensionManager = extensionManager;
             _shellDescriptorManager = shellDescriptorManager;
+
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
-
-        //public IModule GetModuleByName(string moduleName) {
-        //    return _extensionManager
-        //        .AvailableExtensions()
-        //        .Where(e => string.Equals(e.Name, moduleName, StringComparison.OrdinalIgnoreCase))
-        //        .Where(e => string.Equals(e.ExtensionType, ModuleExtensionType, StringComparison.OrdinalIgnoreCase))
-        //        .Select(descriptor => AssembleModuleFromDescriptor(descriptor))
-        //        .FirstOrDefault();
-        //}
 
         public IEnumerable<ModuleFeature> GetAvailableFeatures() {
             var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().Features;
@@ -101,6 +92,31 @@ namespace Orchard.Modules.Services {
 
             _shellDescriptorManager.UpdateShellDescriptor(shellDescriptor.SerialNumber, enabledFeatures,
                                                           shellDescriptor.Parameters);
+        }
+
+        /// <summary>
+        /// Updates the recently installed flag by using the project's last written time.
+        /// </summary>
+        /// <param name="descriptor">The extension descriptor.</param>
+        public bool UpdateIsRecentlyInstalled(ExtensionDescriptor descriptor) {
+            string projectFile = GetManifestPath(descriptor);
+            if (!string.IsNullOrEmpty(projectFile)) {
+                // If project file was modified less than 24 hours ago, the module was recently deployed
+                return DateTime.UtcNow.Subtract(_virtualPathProvider.GetFileLastWriteTimeUtc(projectFile)) < new TimeSpan(1, 0, 0, 0);
+            }
+
+            return false;
+        }
+
+        private string GetManifestPath(ExtensionDescriptor descriptor) {
+            string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
+                                                       "module.txt");
+
+            if (!_virtualPathProvider.FileExists(projectPath)) {
+                return null;
+            }
+
+            return projectPath;
         }
 
         private IEnumerable<string> EnableFeature(string featureName, IEnumerable<ModuleFeature> features, bool force) {

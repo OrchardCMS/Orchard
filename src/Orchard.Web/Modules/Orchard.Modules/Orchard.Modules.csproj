@@ -57,6 +57,8 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\DoghouseComparer.cs" />
+    <Compile Include="Services\IModuleService.cs" />
+    <Compile Include="ViewModels\Module.cs" />
     <Compile Include="ViewModels\ModuleFeature.cs" />
     <Compile Include="ViewModels\FeaturesViewModel.cs" />
     <Compile Include="Permissions.cs" />

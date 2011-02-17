@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Data.Migration;
@@ -52,12 +53,15 @@ namespace Orchard.Modules.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage modules")))
                 return new HttpUnauthorizedResult();
 
-            var modules = _extensionManager.AvailableExtensions().Where(x => DefaultExtensionTypes.IsModule(x.ExtensionType));
+            IEnumerable<Module> modules = _extensionManager.AvailableExtensions()
+                .Where(x => DefaultExtensionTypes.IsModule(x.ExtensionType))
+                .Select(extensionDescriptor => new Module(extensionDescriptor) {
+                                IsRecentlyInstalled = _moduleService.UpdateIsRecentlyInstalled(extensionDescriptor)
+                            });
 
             return View(new ModulesIndexViewModel { 
                 Modules = modules,
-                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
-                BrowseToGallery = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "Gallery") != null
+                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null
             });
         }
 
@@ -67,12 +71,14 @@ namespace Orchard.Modules.Controllers {
 
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
-            var features = _featureManager.GetAvailableFeatures()
+            IEnumerable<ModuleFeature> features = _featureManager.GetAvailableFeatures()
                 .Where(f => !DefaultExtensionTypes.IsTheme(f.Extension.ExtensionType))
-                .Select(f=>new ModuleFeature{Descriptor=f,
-                IsEnabled=_shellDescriptor.Features.Any(sf=>sf.Name==f.Id),
-                NeedsUpdate=featuresThatNeedUpdate.Contains(f.Id)})
-                .ToList();
+                .Select(f => new ModuleFeature {
+                                Descriptor = f,
+                                IsEnabled = _shellDescriptor.Features.Any(sf => sf.Name == f.Id),
+                                IsRecentlyInstalled = _moduleService.UpdateIsRecentlyInstalled(f.Extension),
+                                NeedsUpdate = featuresThatNeedUpdate.Contains(f.Id)
+                            });
 
             return View(new FeaturesViewModel { Features = features });
         }

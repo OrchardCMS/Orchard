@@ -2,23 +2,26 @@
 
 namespace Orchard.Modules.ViewModels {
     /// <summary>
-    /// Represents a module's feature.
+    /// Represents a module.
     /// </summary>
-    public class ModuleFeature {
+    public class Module {
         /// <summary>
-        /// The feature descriptor.
+        /// Default constructor.
         /// </summary>
-        public FeatureDescriptor Descriptor  { get; set; }
+        public Module() {}
 
         /// <summary>
-        /// Boolean value indicating if the feature is enabled.
+        /// Instantiates a module based on an extension descriptor.
         /// </summary>
-        public bool IsEnabled { get; set; }
+        /// <param name="extensionDescriptor">The extension descriptor.</param>
+        public Module(ExtensionDescriptor extensionDescriptor) {
+            Descriptor = extensionDescriptor;
+        }
 
         /// <summary>
-        /// Boolean value indicating if the feature needs a data update / migration.
+        /// The module's extension descriptor.
         /// </summary>
-        public bool NeedsUpdate { get; set; }
+        public ExtensionDescriptor Descriptor { get; set; }
 
         /// <summary>
         /// Boolean value indicating if the module needs a version update.

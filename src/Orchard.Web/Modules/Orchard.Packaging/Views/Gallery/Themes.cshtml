@@ -71,10 +71,6 @@
                             }
                         </div>
 
-                        <div class="ratings" style="width:@(15*5)px" title="@T("Ratings: {0} ({1})", item.Rating, item.RatingsCount)">
-                            <div class="score" style="width:@(15*(item.Rating))px">&nbsp;</div>
-                        </div>
-
                         <div class="related">
                             @Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"packageId", item.PackageId}, {"version", item.Version}, {"sourceId", item.Source.Id}, {"redirectTo", "Themes"}})@T(" | ")
                             <a href="@item.PackageStreamUri">@T("Download")</a>
@@ -89,6 +85,11 @@
                                 <li>&nbsp;&#124;&nbsp;@T("Website: ")
                                     @if(!string.IsNullOrEmpty(item.ProjectUrl)) { <a href="@item.ProjectUrl">@item.ProjectUrl</a> }
                                     else { @T("Unknown").ToString() }
+                                </li>
+                                <li>&nbsp;&#124;&nbsp;@T("Rating")
+                                    <div class="ratings" style="width:@(15*5)px" title="@T("Ratings: {0} ({1})", item.Rating, item.RatingsCount)">
+                                        <div class="score" style="width:@(15*(item.Rating))px">&nbsp;</div>
+                                    </div>
                                 </li>
                             </ul>
                         </div>

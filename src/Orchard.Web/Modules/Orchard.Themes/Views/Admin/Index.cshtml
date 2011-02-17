@@ -44,7 +44,9 @@
 } else {
     <ul class="templates">
         @foreach (ThemeEntry theme in Model.Themes) {
-            <li>
+            string themeClasses = theme.IsRecentlyInstalled ? "recentlyInstalledTheme" : string.Empty;
+
+            <li class="@themeClasses">
                 <div>
                     <h3>@theme.Name</h3>
                     @Html.Image(Href(Html.ThemePath(Model.CurrentTheme.Descriptor, "/Theme.png")), Html.Encode(Model.CurrentTheme.Name), null)

@@ -137,3 +137,12 @@
 .features .feature .actions a {
     margin-left:.5em;
 }
+.recentlyInstalledFeature {
+    background-color: Green;
+}
+.recentlyInstalledModule {
+    background-color: Green;
+}
+.updateAvailable {
+    background-color: Lime;
+}

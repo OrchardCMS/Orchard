@@ -47,15 +47,11 @@
     width: 171px; 
     height: 128px;
 }
-
 .ratings {
     background:url(../Content/Images/stars.png) repeat-x;
-    position: relative;
     height: 14px;
     width: 75px;
     display: block;
-    float: left;
-    clear: both;
 }
 .score {
     background: url(../Content/Images/stars.png) repeat-x 0 -14px;

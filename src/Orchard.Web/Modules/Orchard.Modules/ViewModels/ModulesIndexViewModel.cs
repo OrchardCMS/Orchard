@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Orchard.Environment.Extensions.Models;
+﻿using System.Collections.Generic;
 
 namespace Orchard.Modules.ViewModels {
     public class ModulesIndexViewModel {
         public bool InstallModules { get; set; }
-        public bool BrowseToGallery { get; set; }
-        public IEnumerable<ExtensionDescriptor> Modules { get; set; }
+        public IEnumerable<Module> Modules { get; set; }
     }
 }

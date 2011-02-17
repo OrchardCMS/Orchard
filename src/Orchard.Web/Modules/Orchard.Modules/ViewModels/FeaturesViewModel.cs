@@ -5,4 +5,3 @@ namespace Orchard.Modules.ViewModels {
         public IEnumerable<ModuleFeature> Features { get; set; }
     }
 }
-
