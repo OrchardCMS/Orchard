@@ -12,16 +12,28 @@ namespace Orchard.Core.Contents {
                 .OnDisplaying(displaying => {
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
-                        //Content-BlogPost
+
+                        var url = string.Empty;
+
+                        // Content__[ContentType] e.g. Content-BlogPost
                         displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.ContentType);
-                        //Content-42
-                        displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.Id);
-                        //Content.Summary
+
+                        // Content__[ContentType]__url__[Url] e.g. Content-BlogPost-url-myBlog
+                        displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.ContentType + "__url__" + url);
+
+                        // Content_[DisplayType] e.g. Content.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType);
-                        //Content-Page.Summary
+
+                        // Content_[DisplayType]__[ContentType] e.g. Content-BlogPost.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType + "__" + contentItem.ContentType);
 
-                        if (!displaying.ShapeMetadata.DisplayType.Contains("Admin"))
+                        // Content__[Id] e.g. Content-42
+                        displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.Id);
+
+                        // Content_[DisplayType]__[Id] e.g. Content-42.Summary
+                        displaying.ShapeMetadata.Alternates.Add("Content_" +  displaying.ShapeMetadata.DisplayType + "__" + contentItem.Id);
+
+                        if ( !displaying.ShapeMetadata.DisplayType.Contains("Admin") )
                             displaying.ShapeMetadata.Wrappers.Add("Content_ControlWrapper");
                     }
                 });
