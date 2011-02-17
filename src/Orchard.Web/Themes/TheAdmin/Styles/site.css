@@ -294,7 +294,6 @@ form.link button:hover {
     width:0;
 }
 #menu .menu-admin li {
-    margin:5px 0 17px 16px;
     margin:8px 16px;
 }
 #menu .menu-admin ul li {
@@ -333,7 +332,7 @@ form.link button:hover {
     transform:rotate(90deg) translate(3px, 3px);
 }
 #menu .menu-admin li h3 {
-    font-size:1.154em;
+    font-size:14px;
     padding:0 0 0 10px;
 }
 #menu .menu-admin li h3 a {
@@ -367,7 +366,7 @@ form.link button:hover {
 #menu .menu-admin .section-users h3 a:hover { background-position:0 -640px; }
 
 #menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
-    line-height:1.2em;
+    line-height:16px;
     color:#aec3ce;
 }
 #menu .menu-admin ul a, #menu .menu-admin ul a:link, #menu .menu-admin ul a:visited {
@@ -387,12 +386,12 @@ form.link button:hover {
 }
 .localmenu li {
     display: inline;
-    font-size:1.308em;
+    font-size:15px;
     line-height:32px;
 }
 .localmenu li {
     margin:0 2px;
-    padding: 8px 16px 6px 16px;
+    padding: 8px 18px;
 }
 .localmenu li.middle, .localmenu li.first, .localmenu li.last {
     border:1px solid #E4E5E6;
@@ -402,6 +401,9 @@ form.link button:hover {
     margin-left:16px;
 }
 .localmenu li.selected {
+    background-color: White;
+}
+.localmenu li.selected, .localmenu li:hover {
     background-color: White;
 }
 .localmenu li.selected a {
@@ -427,6 +429,9 @@ form.link button:hover {
      border-radius: 3px;
      -webkit-border-radius: 3px;
      -moz-border-radius: 3px;
+      box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
+     -webkit-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0); 
+     -moz-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
 }
 /* todo: make generic so all toggles can use this and clean up jQuery */
 .expando-glyph-container {
