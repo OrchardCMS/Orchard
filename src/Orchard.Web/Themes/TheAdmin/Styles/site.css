@@ -229,7 +229,7 @@ form.link button {
 }
 a:hover, a:active, a:focus {
     color:#1e5d7d;
-    text-decoration:underline;
+    text-decoration:none;
 }
 form.link button:hover {
     border-bottom:1px solid #1e5d7d;
@@ -338,6 +338,9 @@ form.link button:hover {
 #menu .menu-admin li h3 a {
     background:url(images/menu-all.png) no-repeat 0 5px;
     padding:0 0 0 16px;
+}
+#menu .menu-admin li h3 a:hover {
+    color:#fff;
 }
 /* todo: (heskew) pull out into the appropriate modules somehow when this is baked */
 #menu .menu-admin .section-dashboard h3 a { background-position:0 -36px; }
