@@ -330,20 +330,19 @@ form.link button:hover {
 }
 .localmenu li {
     display: inline;
+    font-size:1.308em;
+    line-height:32px;
 }
 .localmenu li {
-    padding-top: 5px;
-    margin-bottom: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-left: 5px;
+    margin:0 2px;
+    padding: 8px 16px 5px 16px;
 }
 .localmenu li.middle, .localmenu li.first, .localmenu li.last {
-    border-color: #E4E5E6;
-    border-style: solid;
-    border-left-width: thin;
-    border-right-width: thin;
-    border-top-width: thin;
+    border:1px solid #E4E5E6;
+    border-bottom:none;
+}
+.localmenu li.first {
+    margin-left:16px;
 }
 .localmenu li.selected {
     background-color: White;
