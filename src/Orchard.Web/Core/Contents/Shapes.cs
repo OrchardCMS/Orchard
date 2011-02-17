@@ -25,15 +25,6 @@ namespace Orchard.Core.Contents {
                             displaying.ShapeMetadata.Wrappers.Add("Content_ControlWrapper");
                     }
                 });
-
-            builder.Describe("Content_Edit")
-               .OnDisplaying(displaying => {
-                   ContentItem contentItem = displaying.Shape.ContentItem;
-                   if (contentItem != null) {
-                       //Content-Page.Edit
-                       displaying.ShapeMetadata.Alternates.Add("Content_Edit__" + contentItem.ContentType);
-                   }
-               });
         }
     }
 }
