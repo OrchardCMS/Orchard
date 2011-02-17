@@ -176,7 +176,7 @@ namespace Orchard.Setup.Services {
                     var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
                     dataMigrationManager.Update("Settings");
 
-                    foreach ( var feature in context.EnabledFeatures ) {
+                    foreach (var feature in context.EnabledFeatures) {
                         dataMigrationManager.Update(feature);
                     }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
@@ -65,17 +66,11 @@ namespace Orchard.Recipes.Services {
 
         private int GetFirstStepIndex(string executionId) {
             var stepFiles = new List<string>(_appDataFolder.ListFiles(Path.Combine(_recipeQueueFolder, executionId)));
-            int firstIndex = stepFiles.Count;
-            if (firstIndex == 0)
+            if (stepFiles.Count == 0)
                 return -1;
-            // we always have only a handful of steps.
-            foreach (var stepFile in stepFiles) {
-                int stepOrder = Int32.Parse(stepFile.Substring(stepFile.LastIndexOf('/') + 1));
-                if (firstIndex > stepOrder)
-                    firstIndex = stepOrder;
-            }
-
-            return firstIndex;
+            var currentSteps = stepFiles.Select(stepFile => Int32.Parse(stepFile.Substring(stepFile.LastIndexOf('/') + 1))).ToList();
+            currentSteps.Sort();
+            return currentSteps[0];
         }
 
         private int GetLastStepIndex(string executionId) {
