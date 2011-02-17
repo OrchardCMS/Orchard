@@ -240,18 +240,12 @@ namespace Orchard.Setup.Services {
             var cultureManager = environment.Resolve<ICultureManager>();
             cultureManager.AddCulture("en-US");
 
-            var contentManager = environment.Resolve<IContentManager>();
-
-            // this needs to exit the standalone environment? rework this process entirely?
-            // simulate installation-time module activation events
-            //var hackInstallationGenerator = environment.Resolve<IHackInstallationGenerator>();
-            //hackInstallationGenerator.GenerateInstallEvents();
-
             var recipeManager = environment.Resolve<IRecipeManager>();
             if (context.Recipe != null) {
                 recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
             }
 
+            var contentManager = environment.Resolve<IContentManager>();
             // If "Orchard.Widgets" is enabled, setup default layers and widgets
             var extensionManager = environment.Resolve<IExtensionManager>();
             var shellDescriptor = environment.Resolve<ShellDescriptor>();
