@@ -8,4 +8,21 @@
     <Tags></Tags>
     <Version>1.0</Version>
   </Recipe>
+
+  <Metadata>
+      <Types>
+        <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+          <TagsPart />
+          <LocalizationPart />
+        </Page>
+        <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+          <CommentsPart />
+          <TagsPart />
+          <LocalizationPart />
+        </BlogPost>
+      </Types>
+      <Parts>
+        <BodyPart BodyPartSettings.FlavorDefault="html" />
+      </Parts>
+  </Metadata>
 </Orchard>

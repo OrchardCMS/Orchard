@@ -4,10 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Settings;
-using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Settings.Descriptor.Records;
@@ -21,7 +18,6 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
-using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Recipes.Models;
@@ -251,23 +247,10 @@ namespace Orchard.Setup.Services {
             //var hackInstallationGenerator = environment.Resolve<IHackInstallationGenerator>();
             //hackInstallationGenerator.GenerateInstallEvents();
 
-            var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-            //todo: (heskew) pull these definitions (and initial content creation) out into a distribution configuration when we have that capability
-            contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
-                .WithPart("CommentsPart")
-                .WithPart("TagsPart")
-                .WithPart("LocalizationPart")
-                .Draftable()
-                .Indexed()
-                );
-            contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
-                .WithPart("TagsPart")
-                .WithPart("LocalizationPart")
-                .Draftable()
-                .Indexed()
-                );
-            contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg
-                .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
+            var recipeManager = environment.Resolve<IRecipeManager>();
+            if (context.Recipe != null) {
+                recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
+            }
 
             // If "Orchard.Widgets" is enabled, setup default layers and widgets
             var extensionManager = environment.Resolve<IExtensionManager>();
@@ -343,11 +326,6 @@ Modules are created by other users of Orchard just like you so if you feel up to
             menuItem.As<MenuPart>().MenuText = T("Home").ToString();
             menuItem.As<MenuPart>().OnMainMenu = true;
             menuItem.As<MenuItemPart>().Url = "";
-
-            var recipeManager = environment.Resolve<IRecipeManager>();
-            if (context.Recipe != null) {
-                recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
-            }
 
             //null check: temporary fix for running setup in command line
             if (HttpContext.Current != null) {
