@@ -104,14 +104,14 @@ Pixels   EMs         Percent    Points
 html, body { height:100%; }
 
 html {
-    /*background:#f3f4f5 url("images/adminNavBackground.gif") repeat-y top left; */ 
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;  
     color:#333;
 }
 
 body {
   font-size: 81.3%;
   color: #333; 
-  background:#f3f4f5 url("images/adminNavBackground.gif") repeat-y top left; 
+  background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
   font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
   line-height:1.6em;
   margin:0 auto;  
@@ -184,6 +184,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 }
 #layout-content {
     /*overflow:auto;*/
+    background:#f3f4f5 url(images/adminNavBackground.gif) repeat-y top left;
     min-height:100%;
 }
 #layout-main {
@@ -199,10 +200,10 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     margin-right:20px;
 }
 #menu {
-    /*background:#323232;*/
+    background:#323232;
     display:inline;
     float:left;
-    z-index:1;
+    position:relative;
     width:240px;
 }
 .wrapper, .sections {
@@ -238,10 +239,10 @@ form.link button:hover {
 ***************************************************************/
 #header {
     height:50px;
-    /*background:#f3f4f5;*/
+    background:#f3f4f5;
 }
 #branding {
-    /*background:#323232;*/
+    background:#323232;
     /*width: 15.401%;*/
     width: 240px;
     height:50px;
@@ -300,10 +301,71 @@ form.link button:hover {
     border:0;
     margin:0 10px 0 10px;
 }
-#menu .menu-admin li h3 {
-    padding:0 0 0 20px;
-    background:url(images/defaultIcon.gif) no-repeat 4px 6px;
+#menu .expando-glyph {
+    background:transparent no-repeat 0 -19px;
+    background-image:url(images/menu-glyph.png);
+    left:160px;
 }
+#menu .expando-glyph:hover {
+    background-image:url(images/menu-glyph.png);
+}
+#menu .expando-glyph-container.closed .expando-glyph {
+    background-image:url(images/menu-glyph.png);
+    background-position:0 3px;
+}
+#menu .expando-glyph-container.closed .expando-glyph:hover {
+    background-image:url(images/menu-glyph.png);
+}
+#menu .expando-glyph-container.closing .expando-glyph {
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(-90deg) translate(3px, -3px);
+    -moz-transform:rotate(-90deg) translate(3px, -3px);
+    transform:rotate(-90deg) translate(3px, -3px);
+}
+#menu .expando-glyph-container.opening .expando-glyph {
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(90deg) translate(3px, 3px);
+    -moz-transform:rotate(90deg) translate(3px, 3px);
+    transform:rotate(90deg) translate(3px, 3px);
+}
+#menu .menu-admin li h3 {
+    font-size:1.154em;
+    padding:0 0 0 10px;
+}
+#menu .menu-admin li h3 a {
+    background:url(images/menu-all.png) no-repeat 0 5px;
+    padding:0 0 0 16px;
+}
+/* todo: (heskew) pull out into the appropriate modules somehow when this is baked */
+#menu .menu-admin .section-dashboard h3 a { background-position:0 -36px; }
+#menu .menu-admin .section-dashboard h3 a:hover { background-position:0 -56px; }
+/* todo: need to get the "New" sub items */
+#menu .menu-admin .section-content h3 a { background-position:0 -247px; }
+#menu .menu-admin .section-content h3 a:hover { background-position:0 -268px; }
+/* todo: need an icon for "Blogs" */
+#menu .menu-admin .section-comments h3 a { background-position:0 -539px; }
+#menu .menu-admin .section-comments h3 a:hover { background-position:0 -559px; }
+#menu .menu-admin .section-lists h3 a { background-position:0 -289px; }
+#menu .menu-admin .section-lists h3 a:hover { background-position:0 -310px; }
+#menu .menu-admin .section-widgets h3 a { background-position:0 -413px; }
+#menu .menu-admin .section-widgets h3 a:hover { background-position:0 -433px; }
+#menu .menu-admin .section-media h3 a { background-position:0 -374px; }
+#menu .menu-admin .section-media h3 a:hover { background-position:0 -393px; }
+#menu .menu-admin .section-navigation h3 a { background-position:0 -333px; }
+#menu .menu-admin .section-navigation h3 a:hover { background-position:0 -354px; }
+#menu .menu-admin .section-tags h3 a { background-position:0 -578px; }
+#menu .menu-admin .section-tags h3 a:hover { background-position:0 -598px; }
+#menu .menu-admin .section-modules h3 a { background-position:0 -454px; }
+#menu .menu-admin .section-modules h3 a:hover { background-position:0 -475px; }
+#menu .menu-admin .section-themes h3 a { background-position:0 -498px; }
+#menu .menu-admin .section-themes h3 a:hover { background-position:0 -518px; }
+#menu .menu-admin .section-users h3 a { background-position:0 -619px; }
+#menu .menu-admin .section-users h3 a:hover { background-position:0 -640px; }
+
 #menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
     line-height:1.2em;
     color:#aec3ce;
@@ -318,15 +380,10 @@ form.link button:hover {
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus {
     background:#656b55;
     color: #fff;
-    
     /*CSS3 properties*/
      border-radius: 3px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
-}
-#menu .menu-admin li.section-dashboard h3 {
-    /*padding:.4em 0 0 .4em;*/
-    font-size:1.308em;
 }
 .localmenu li {
     display: inline;
@@ -386,7 +443,7 @@ form.link button:hover {
     cursor:pointer;
     display:block;
     height:17px;
-    left:160px;
+    left:-20px;
     padding:0 !important;
     position:absolute;
     width:17px;

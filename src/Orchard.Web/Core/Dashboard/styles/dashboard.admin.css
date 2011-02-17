@@ -1,0 +1,7 @@
+﻿#menu .menu-admin .section-dashboard h3 a {
+background-image:url(images/menu-dashboard.png);
+background-position:0 5px;
+}
+#menu .menu-admin .section-dashboard h3 a:hover {
+background-position:0 -16px;
+}
