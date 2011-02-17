@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -68,6 +67,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>();
             builder.RegisterType<RecipeStepExecutor>().As<IRecipeStepExecutor>();
             builder.RegisterType<StubStepQueue>().As<IRecipeStepQueue>().InstancePerLifetimeScope();
+            builder.RegisterType<StubRecipeJournal>().As<IRecipeJournal>();
             builder.RegisterType<StubRecipeScheduler>().As<IRecipeScheduler>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();
@@ -145,6 +145,28 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         }
     }
 
+    public class StubRecipeJournal : IRecipeJournal {
+        public void ExecutionStart(string executionId) {
+        }
+
+        public void ExecutionComplete(string executionId) {
+        }
+
+        public void ExecutionFailed(string executionId) {
+        }
+
+        public void WriteJournalEntry(string executionId, string message) {
+        }
+
+        public RecipeJournal GetRecipeJournal(string executionId) {
+            return new RecipeJournal();
+        }
+
+        public RecipeStatus GetRecipeStatus(string executionId) {
+            return RecipeStatus.Complete;
+        }
+    }
+
     public class StubStepQueue : IRecipeStepQueue {
         readonly Queue<RecipeStep> _queue = new Queue<RecipeStep>();
 
@@ -171,8 +193,12 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
     public class CustomRecipeHandler : IRecipeHandler {
         public static string AttributeValue;
+        public string[] _handles = {"Module", "Theme", "Migration", "CleanUpInactive", "Custom1", "Custom2", "Command", "Metadata", "Feature", "Settings"};
 
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
+            if (_handles.Contains(recipeContext.RecipeStep.Name)) {
+                recipeContext.Executed = true;
+            }
             if (recipeContext.RecipeStep.Name == "Custom1") {
                 foreach (var attribute in recipeContext.RecipeStep.Step.Attributes().Where(attribute => attribute.Name == "attr1")) {
                     AttributeValue = attribute.Value;

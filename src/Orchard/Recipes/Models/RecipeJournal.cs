@@ -3,7 +3,7 @@
 namespace Orchard.Recipes.Models {
     public class RecipeJournal {
         public string ExecutionId { get; set; }
-        public RecipeJournalStatus Status { get; set; }
+        public RecipeStatus Status { get; set; }
         public IEnumerable<JournalMessage> Messages { get; set; }
     }
 
@@ -11,8 +11,9 @@ namespace Orchard.Recipes.Models {
         public string Message { get; set; }
     }
 
-    public enum RecipeJournalStatus {
-        Running,
+    public enum RecipeStatus {
+        Unknown,
+        Started,
         Complete,
         Failed
     }

@@ -7,10 +7,12 @@ namespace Orchard.Recipes.Services {
     public class RecipeManager : IRecipeManager {
         private readonly IRecipeStepQueue _recipeStepQueue;
         private readonly IRecipeScheduler _recipeScheduler;
+        private readonly IRecipeJournal _recipeJournal;
 
-        public RecipeManager(IRecipeStepQueue recipeStepQueue, IRecipeScheduler recipeScheduler) {
+        public RecipeManager(IRecipeStepQueue recipeStepQueue, IRecipeScheduler recipeScheduler, IRecipeJournal recipeJournal) {
             _recipeStepQueue = recipeStepQueue;
             _recipeScheduler = recipeScheduler;
+            _recipeJournal = recipeJournal;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -24,7 +26,8 @@ namespace Orchard.Recipes.Services {
                 return null;
 
             var executionId = Guid.NewGuid().ToString("n");
-            // TODO: Run each step inside a transaction boundary.
+            _recipeJournal.ExecutionStart(executionId);
+
             foreach (var recipeStep in recipe.RecipeSteps) {
                 _recipeStepQueue.Enqueue(executionId, recipeStep);
             }
