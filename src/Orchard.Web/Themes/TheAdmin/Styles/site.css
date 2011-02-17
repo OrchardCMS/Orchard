@@ -122,7 +122,7 @@ body {
 /* Headings */
 h1,h2,h3,h4,h5,h6 { font-weight: normal;}
 
-h1 { font-size: 1.692em }
+h1 { font-size: 1.769em; text-shadow: rgba(0,0,0,.1) 0px 0px 1px;}
 h2 { font-size: 1.538em; }
 h3 { font-size: 1.231em; }
 h4 { font-size: 1.154em; }
@@ -130,7 +130,7 @@ h5 { font-size: 1.077em; }
 h6 { font-size: 1em; }
 
 h1, h2, h3, h4, h5, legend {
-    padding:.4em 0;
+    padding:.6px 0;
     font-style: normal;
     font-weight:normal;
 }
@@ -267,8 +267,9 @@ form.link button:hover {
 #site a, #site a:visited, #site a:active {
     color:#fff;
     float:left;
-    line-height:2.6em;
-    position:relative;
+    line-height:50px;
+    position:relative;  
+    text-shadow: rgba(0,0,0,.9) 0px 0px 2px;
 }
 
 #login {
@@ -387,6 +388,7 @@ form.link button:hover {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
 }
+/*Tabs*/
 .localmenu li {
     display: inline;
     font-size:15px;
@@ -394,7 +396,7 @@ form.link button:hover {
 }
 .localmenu li {
     margin:0 2px;
-    padding: 8px 18px;
+    padding: 8px 18px 7px 18px;
 }
 .localmenu li.middle, .localmenu li.first, .localmenu li.last {
     border:1px solid #E4E5E6;
@@ -682,6 +684,7 @@ button.primaryAction, .button.primaryAction, .button.primaryAction:link, .button
     color:#fff;
 
     /*CSS3 properties*/
+    text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#6e7f45',  endColorstr='#6a7b42');
     background: -webkit-gradient(linear, left top, left bottom, from(#6e7f45), to(#6a7b42));
     background:-moz-linear-gradient(top , #6e7f45, #6a7b42);
@@ -715,12 +718,13 @@ input[type="submit"], input[type="reset"], input[type="button"], button, submit,
         text-align:center;
         
         /*CSS3 properties*/
-        filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f5f5f5',  endColorstr='#cbcbcb');
-        background: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#cbcbcb));
-        background: -moz-linear-gradient(top, #f5f5f5, #cbcbcb);
+        text-shadow: rgba(0,0,0,.2) 0px 0px 1px;
+        filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f5f5f5',  endColorstr='#d9d9d9');
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#d9d9d9));
+        background: -moz-linear-gradient(top, #f5f5f5, #d9d9d9);   
         box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
         -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3); 
-        -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
+        -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);     
         border-radius: 3px;
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
@@ -731,7 +735,8 @@ input[type="submit"]:hover,input[type="reset"]:hover, input[type="button"]:hover
     color:#fff;
     border:1px solid #bb8b2d;
     
-    /*CSS3 properties*/    
+    /*CSS3 properties*/
+    text-shadow: rgba(0,0,0,.5) 0px 0px 1px;    
     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffac40',  endColorstr='#f9760d');
     background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffac40), to(#f9760d));
     background: -moz-linear-gradient(top, #ffac40, #f9760d);
