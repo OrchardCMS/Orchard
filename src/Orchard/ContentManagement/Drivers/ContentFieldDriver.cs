@@ -71,23 +71,90 @@ namespace Orchard.ContentManagement.Drivers {
 
         private object AddAlternates(dynamic shape, string differentiator) {
             // automatically add shape alternates for shapes added by fields
-            // [ShapeType__FieldName] for ShapeType-FieldName.cshtml templates
-            // [ShapeType__PartName] for ShapeType-PartName.cshtml templates
             // [ShapeType__PartName__FieldName] for ShapeType-PartName-FieldName.cshtml templates
 
             // for fields on dynamic parts the part name is the same as the content type name
-            // ex. Fields/Common.Text-Something.FirstName
 
             ShapeMetadata metadata = shape.Metadata;
-            if (!string.IsNullOrEmpty(differentiator))
-                metadata.Alternates.Add(metadata.Type + "__" + differentiator);
-
             ContentPart part = shape.ContentPart;
-            if (part != null) {
-                metadata.Alternates.Add(metadata.Type + "__" + part.PartDefinition.Name);
-                if (!string.IsNullOrEmpty(differentiator))
-                    metadata.Alternates.Add(metadata.Type + "__" + part.PartDefinition.Name + "__" + differentiator);
+            var shapeType = metadata.Type;
+            var fieldName = differentiator ?? String.Empty;
+            var partName = part != null ? part.PartDefinition.Name : String.Empty;
+            var contentType = part != null ? part.ContentItem.ContentType : String.Empty;
+            var displayType = metadata.DisplayType ?? String.Empty;
+            var dynamicType = string.Equals(partName, contentType, StringComparison.Ordinal);
+
+            var url = "";
+
+            // [ShapeType__FieldName] e.g. Fields/Common.Text-Teaser
+            if ( !string.IsNullOrEmpty(fieldName) )
+                metadata.Alternates.Add(shapeType + "__" + fieldName);
+
+            // [ShapeType__PartName] e.g. Fields/Common.Text-TeaserPart
+            if ( !string.IsNullOrEmpty(partName) ) {
+                metadata.Alternates.Add(shapeType + "__" + partName);
             }
+
+            // [ShapeType]__[ContentType]__[PartName] e.g. Fields/Common.Text-Blog-TeaserPart
+            if ( !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(contentType) && !dynamicType ) {
+                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName);
+            }
+
+            // [ShapeType]_[DisplayType]__[FieldName] e.g. Fields/Common.Text-Teaser.Summary
+            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(fieldName) ) {
+                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + fieldName);
+            }
+
+            // [ShapeType]__[PartName]__[FieldName] e.g. Fields/Common.Text-TeaserPart-Teaser
+            if ( !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) ) {
+                metadata.Alternates.Add(shapeType + "__" + partName + "__" + fieldName);
+            }
+
+            // [ShapeType]__[ContentType]__[FieldName] e.g. Fields/Common.Text-Blog-Teaser
+            if ( !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(fieldName) ) {
+                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + fieldName);
+            }
+
+            // [ShapeType]__[ContentType]__[PartName]__[FieldName] e.g. Fields/Common.Text-Blog-TeaserPart-Teaser
+            if ( !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) && !dynamicType ) {
+                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName );
+            }
+
+            // [ShapeType]__[ContentType]__[PartName]__[FieldName]__url__[Url] e.g. Fields/Common.Text-Blog-TeaserPart-Teaser-url-myBlog
+            if ( !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) && !dynamicType ) {
+                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName + "__" + fieldName + "__url__" + url);
+            }
+
+            // [ShapeType]_[DisplayType]__[PartName] e.g. Fields/Common.Text-TeaserPart.Summary
+            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(partName) ) {
+                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + partName);
+            }
+
+            // [ShapeType]_[DisplayType]__[ContentType]__[PartName] e.g. Fields/Common.Text-Blog-TeaserPart.Summary
+            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !dynamicType ) {
+                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + contentType + "__" + partName);
+            }
+
+            // [ShapeType]_[DisplayType]__[PartName]__[FieldName] e.g. Fields/Common.Text-TeaserPart-Teaser.Summary
+            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) ) {
+                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + partName + "__" + fieldName);
+            }
+
+            // [ShapeType]_[DisplayType]__[ContentType]__[PartName]__[FieldName] e.g. Fields/Common.Text-Blog-TeaserPart-Teaser.Summary
+            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !dynamicType && !string.IsNullOrEmpty(fieldName) ) {
+                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + contentType + "__" + partName + "__" + fieldName);
+            }
+
+            // [ShapeType]_[DisplayType]__[PartName]__[FieldName]__url__[Url] e.g. Fields/Common.Text-TeaserPart-Teaser-url-myBlog.Summary
+            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) ) {
+                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + partName + "__" + fieldName + "__url__" + url);
+            }
+
+            // [ShapeType]_[DisplayType]__[ContentType]__[PartName]__[FieldName]__url__[Url] e.g. Fields/Common.Text-Blog-TeaserPart-Teaser-url-myBlog.Summary
+            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !dynamicType && !string.IsNullOrEmpty(fieldName) ) {
+                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + contentType + "__" + partName + "__" + fieldName + "__url__" + url);
+            }
+
 
             return shape;
         }
