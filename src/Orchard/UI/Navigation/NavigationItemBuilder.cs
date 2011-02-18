@@ -28,6 +28,11 @@ namespace Orchard.UI.Navigation {
             return this;
         }
 
+        public NavigationItemBuilder Id(string id) {
+            _item.Id = id;
+            return this;
+        }
+
         public NavigationItemBuilder LinkToFirstChild(bool value) {
             _item.LinkToFirstChild = value;
             return this;

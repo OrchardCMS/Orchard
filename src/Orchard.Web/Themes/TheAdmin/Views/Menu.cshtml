@@ -5,6 +5,10 @@
     Script.Include("admin.js");
     IEnumerable<dynamic> firstLevelMenuItems = Model;
 
+    foreach (var imageSet in Model.ImageSets) {
+        RegisterImageSet(imageSet, Model.MenuName /* style */, 16 /* bounding box */);
+    }
+
     Model.Attributes.Add("role", "navigation");
     var tag = Tag(Model, "ul");
 }
@@ -14,11 +18,28 @@
 
         string sectionHeaderText = firstLevelMenuItem.Text;
         var firstOfTheSecond = secondLevelMenuItems.FirstOrDefault();
-        var sectionHeaderMarkup = firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)
-            ? Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href)
-            : firstOfTheSecond != null && firstLevelMenuItem.LinkToFirstChild
-                ? Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href)
-                : new HtmlString(string.Format("<span>{0}</span>", Html.Encode(sectionHeaderText)));
+
+        var imageClassName = "navicon-" + sectionHeaderText.TextHint.HtmlClassify();
+        var imageId = HasText(firstLevelMenuItem.ImageId)
+            ? "navicon-" + firstLevelMenuItem.ImageId
+            : null;
+
+        IHtmlString sectionHeaderMarkup;
+        if (firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)) {
+            sectionHeaderMarkup = HasText(imageId)
+                ? Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href, new { @class = imageClassName, id = imageId })
+                : Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href, new { @class = imageClassName });
+        }
+        else if (firstOfTheSecond != null && firstLevelMenuItem.LinkToFirstChild && (firstOfTheSecond.RouteValues != null || HasText(firstOfTheSecond.Url))) {
+            sectionHeaderMarkup = HasText(imageId)
+                ? Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href, new { @class = imageClassName, id = imageId })
+                : Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href, new { @class = imageClassName });
+        }
+        else {
+            sectionHeaderMarkup = HasText(imageId)
+                ? new HtmlString(string.Format(@"<span class=""{1}"" id=""{2}"">{0}</span>", Html.Encode(sectionHeaderText), Html.Encode(imageClassName), Html.Encode(imageId)))
+                : new HtmlString(string.Format(@"<span class=""{1}"">{0}</span>", Html.Encode(sectionHeaderText), Html.Encode(imageClassName)));
+        }
 
         if (firstLevelMenuItem == firstLevelMenuItems.First()) {
             firstLevelMenuItem.Classes.Add("first");
@@ -26,12 +47,11 @@
         if (firstLevelMenuItem == firstLevelMenuItems.Last()) {
             firstLevelMenuItem.Classes.Add("last");
         }
-
         if (firstLevelMenuItem.Selected) {
             firstLevelMenuItem.Classes.Add("selected");
         }
 
-        firstLevelMenuItem.Classes.Add("section-" + sectionHeaderText.HtmlClassify());
+        firstLevelMenuItem.Classes.Add("section-" + sectionHeaderText.TextHint.HtmlClassify());
         var firstLevelTag = Tag(firstLevelMenuItem, "li");
         @firstLevelTag.StartElement
             <h3>@sectionHeaderMarkup</h3>
@@ -39,7 +59,7 @@
                 <ul class="menuItems">
                 @foreach (var secondLevelMenuItem in secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav)) {
                     if (secondLevelMenuItem.Selected) {
-                        secondLevelMenuItem.Classes.Add("selected");
+                        secondLevelMenuItem.Classes.Add("selected"); 
                     }
                     var secondLevelTag = Tag(secondLevelMenuItem, "li");
                     @secondLevelTag.StartElement

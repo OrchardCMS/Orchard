@@ -9,7 +9,8 @@ namespace Orchard.Core.Navigation {
         public void GetNavigation(NavigationBuilder builder) {
             //todo: - add new menu? and list menus? ...and remove hard-coded menu name here
             builder.Add(T("Navigation"), "8",
-                menu => menu.Add(T("Main Menu"), "0", item => item.Action("Index", "Admin", new { area = "Navigation" })
+                menu => menu
+                    .Add(T("Main Menu"), "0", item => item.Action("Index", "Admin", new { area = "Navigation" })
                     .Permission(Permissions.ManageMainMenu)));
         }
     }

@@ -24,6 +24,10 @@ namespace Orchard.UI.Navigation {
             return FinishMenu(Crop(Reduce(Merge(sources))).ToArray());
         }
 
+        public IEnumerable<string> BuildImageSets(string menuName) {
+            return GetImageSets(menuName).SelectMany(imageSets => imageSets.Distinct()).Distinct();
+        }
+
         private IEnumerable<MenuItem> FinishMenu(IEnumerable<MenuItem> menuItems) {
             foreach (var menuItem in menuItems) {
                 menuItem.Href = GetUrl(menuItem.Url, menuItem.RouteValues);
@@ -71,6 +75,7 @@ namespace Orchard.UI.Navigation {
                         LocalNav = item.LocalNav,
                         Text = item.Text,
                         Url = item.Url,
+                        Id = item.Id,
                         LinkToFirstChild = item.LinkToFirstChild,
                         Href = item.Href
                     };
@@ -84,6 +89,16 @@ namespace Orchard.UI.Navigation {
                     var builder = new NavigationBuilder();
                     provider.GetNavigation(builder);
                     yield return builder.Build();
+                }
+            }
+        }
+
+        private IEnumerable<IEnumerable<string>> GetImageSets(string menuName) {
+            foreach (var provider in _providers) {
+                if (provider.MenuName == menuName) {
+                    var builder = new NavigationBuilder();
+                    provider.GetNavigation(builder);
+                    yield return builder.BuildImageSets();
                 }
             }
         }
@@ -105,8 +120,10 @@ namespace Orchard.UI.Navigation {
                 Text = items.First().Text,
                 Url = items.First().Url,
                 Href = items.First().Href,
+                Id = items.First().Id,
                 LinkToFirstChild = items.First().LinkToFirstChild,
                 RouteValues = items.First().RouteValues,
+                LocalNav = items.Any(x => x.LocalNav),
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),
                 Permissions = items.SelectMany(x => x.Permissions)

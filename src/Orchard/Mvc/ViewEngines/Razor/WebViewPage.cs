@@ -48,6 +48,10 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             }
         }
 
+        public void RegisterImageSet(string imageSet, string style = "", int size = 16) {
+            Style.Include(imageSet + ".css");
+        }
+
         public virtual void RegisterLink(LinkEntry link) {
             Html.Resolve<IResourceManager>().RegisterLink(link);
         }

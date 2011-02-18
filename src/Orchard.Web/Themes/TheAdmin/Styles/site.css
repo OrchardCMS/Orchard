@@ -343,19 +343,20 @@ form.link button:hover {
     padding:0 0 0 10px;
 }
 #menu .menu-admin li h3 a {
-    background:url(images/menu-all.png) no-repeat 0 5px;
+    background:url(images/menu-all.png) no-repeat 0 4px;
     padding:0 0 0 16px;
 }
 #menu .menu-admin li h3 a:hover {
+    background-position:0 -17px;
     color:#fff;
 }
-/* todo: (heskew) pull out into the appropriate modules somehow when this is baked */
+/* todo: (heskew) pull out into the appropriate modules somehow when this is baked * /
 #menu .menu-admin .section-dashboard h3 a { background-position:0 -36px; }
 #menu .menu-admin .section-dashboard h3 a:hover { background-position:0 -56px; }
-/* todo: need to get the "New" sub items */
+/* todo: need to get the "New" sub items * /
 #menu .menu-admin .section-content h3 a { background-position:0 -247px; }
 #menu .menu-admin .section-content h3 a:hover { background-position:0 -268px; }
-/* todo: need an icon for "Blogs" */
+/* todo: need an icon for "Blogs" * /
 #menu .menu-admin .section-comments h3 a { background-position:0 -539px; }
 #menu .menu-admin .section-comments h3 a:hover { background-position:0 -559px; }
 #menu .menu-admin .section-lists h3 a { background-position:0 -289px; }
@@ -374,7 +375,7 @@ form.link button:hover {
 #menu .menu-admin .section-themes h3 a:hover { background-position:0 -518px; }
 #menu .menu-admin .section-users h3 a { background-position:0 -619px; }
 #menu .menu-admin .section-users h3 a:hover { background-position:0 -640px; }
-
+*/
 #menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
     line-height:16px;
     color:#aec3ce;
