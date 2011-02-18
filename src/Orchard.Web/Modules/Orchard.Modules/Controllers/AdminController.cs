@@ -56,7 +56,7 @@ namespace Orchard.Modules.Controllers {
             IEnumerable<Module> modules = _extensionManager.AvailableExtensions()
                 .Where(x => DefaultExtensionTypes.IsModule(x.ExtensionType))
                 .Select(extensionDescriptor => new Module(extensionDescriptor) {
-                                IsRecentlyInstalled = _moduleService.UpdateIsRecentlyInstalled(extensionDescriptor)
+                                IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(extensionDescriptor)
                             });
 
             return View(new ModulesIndexViewModel { 
@@ -76,7 +76,7 @@ namespace Orchard.Modules.Controllers {
                 .Select(f => new ModuleFeature {
                                 Descriptor = f,
                                 IsEnabled = _shellDescriptor.Features.Any(sf => sf.Name == f.Id),
-                                IsRecentlyInstalled = _moduleService.UpdateIsRecentlyInstalled(f.Extension),
+                                IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(f.Extension),
                                 NeedsUpdate = featuresThatNeedUpdate.Contains(f.Id)
                             });
 

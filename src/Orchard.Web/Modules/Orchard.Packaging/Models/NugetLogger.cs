@@ -3,7 +3,7 @@ using NuGet;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 
-namespace Orchard.Packaging.Services {
+namespace Orchard.Packaging.Models {
     public class NugetLogger : ILogger {
         private readonly INotifier _notifier;
 

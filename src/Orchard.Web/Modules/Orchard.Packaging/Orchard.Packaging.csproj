@@ -78,12 +78,12 @@
     <Compile Include="Services\IPackageInstaller.cs" />
     <Compile Include="Services\IPackageManager.cs" />
     <Compile Include="Services\IPackagingSourceManager.cs" />
-    <Compile Include="Services\NugetLogger.cs" />
+    <Compile Include="Models\NugetLogger.cs" />
+    <Compile Include="Models\PackageData.cs" />
     <Compile Include="Services\PackageBuilder.cs" />
-    <Compile Include="Services\PackageData.cs" />
     <Compile Include="Services\PackageInstaller.cs" />
     <Compile Include="Services\PackageManager.cs" />
-    <Compile Include="Services\PackagingEntry.cs" />
+    <Compile Include="Models\PackagingEntry.cs" />
     <Compile Include="Services\PackagingSourceManager.cs" />
     <Compile Include="ViewModels\PackagingAddSourceViewModel.cs" />
     <Compile Include="ViewModels\PackagingHarvestViewModel.cs" />

@@ -1,0 +1,76 @@
+﻿@using Orchard.Modules.Extensions
+@using Orchard.Mvc.Html;
+@using Orchard.PackageManager.ViewModels;
+@using Orchard.Packaging.Services;
+@using Orchard.Packaging.Models;
+@using Orchard.Environment.Extensions.Models;
+@using Orchard.Utility.Extensions;
+@model PackageList
+
+@{ Layout.Title = T("Themes").ToString(); }
+
+@functions {
+    public string InstallAction(PackagingEntry package) {
+        return Url.Action("Install", "Admin", new {
+            area = "Orchard.PackageManager",
+            packageId = package.PackageId,
+            version = package.Version,
+            sourceId = package.Source.Id,
+            returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()
+        });
+    }
+    public string UninstallAction(PackagingEntry package) {
+        return Url.Action("Uninstall", "Admin", new {
+            area = "Orchard.PackageManager",
+            packageId = package.PackageId,
+            returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()
+        });
+    }
+}
+
+@if (Model.Entries.Count() <= 0) {
+    <p>No package updates available.</p>
+} else {
+    <ul class="contentItems">
+        @foreach (var module in Model.Entries) {
+        <li>
+            <div class="summary">
+                <div class="properties">
+                   <h2>@module.ExtensionsDescriptor.Name - @module.ExtensionsDescriptor.Version
+                   @if (module.NewVersionToInstall != null) {
+                       <span>&nbsp;&#124;&nbsp;
+                         <span style="background-color:#ffa0a0">@Html.Link(T("Install Latest").Text, InstallAction(module.NewVersionToInstall))</span>
+                       </span>
+                   } else {
+                       <span>&nbsp;&#124;&nbsp;
+                         <span style="background-color:#a0ffa0; font-size:small">Up-to-date</span>
+                       </span>
+                   }
+                    <span>&nbsp;&#124;&nbsp;
+                        <span style="font-size:small">@Html.Link(T("Uninstall").Text, UninstallAction(module.PackageVersions.First()))</span>
+                    </span>
+                   </h2>
+                    <ul class="pageStatus" style="color:#666; margin:.6em 0 0 0;">
+                        @foreach (var version in module.PackageVersions.OrderByDescending(e => new Version(e.Version))) {
+                            <li style="float:none">
+                                @T("Gallery Version {0} - Last Updated UTC: {1}", version.Version, version.LastUpdated.ToUniversalTime())
+                                @if (!string.IsNullOrWhiteSpace(version.GalleryDetailsUrl)) {
+                                    <text>&nbsp;(</text><a href="@version.GalleryDetailsUrl" target="_blank">@T("details")</a><text>)</text>
+                                }
+
+                                &nbsp;&#124;&nbsp;
+                                @if (new Version(version.Version) == new Version(module.ExtensionsDescriptor.Version)) {
+                                    @Html.Link(T("Install again").Text, InstallAction(version))
+                                } else if (new Version(version.Version) > new Version(module.ExtensionsDescriptor.Version)) {
+                                    @Html.Link(T("Upgrade").Text, InstallAction(version))
+                                } else {
+                                    @Html.Link(T("Downgrade (not recommended)").Text, InstallAction(version))
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </li>}
+    </ul>
+}

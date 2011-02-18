@@ -4,6 +4,7 @@ using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
+using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
     [OrchardFeature("PackagingServices")]

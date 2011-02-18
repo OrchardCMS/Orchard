@@ -10,7 +10,6 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;

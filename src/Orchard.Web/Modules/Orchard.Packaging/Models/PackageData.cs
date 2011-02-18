@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Orchard.Packaging.Services {
+namespace Orchard.Packaging.Models {
     public class PackageData {
         public string ExtensionType { get; set; }
         public string ExtensionName { get; set; }

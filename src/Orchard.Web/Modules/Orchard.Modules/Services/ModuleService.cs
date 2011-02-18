@@ -95,10 +95,10 @@ namespace Orchard.Modules.Services {
         }
 
         /// <summary>
-        /// Updates the recently installed flag by using the project's last written time.
+        /// Determines if a module was recently installed by using the project's last written time.
         /// </summary>
         /// <param name="descriptor">The extension descriptor.</param>
-        public bool UpdateIsRecentlyInstalled(ExtensionDescriptor descriptor) {
+        public bool IsRecentlyInstalled(ExtensionDescriptor descriptor) {
             string projectFile = GetManifestPath(descriptor);
             if (!string.IsNullOrEmpty(projectFile)) {
                 // If project file was modified less than 24 hours ago, the module was recently deployed

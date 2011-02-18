@@ -4,6 +4,6 @@ namespace Orchard.Themes.Services {
     public interface IThemeService : IDependency {
         void DisableThemeFeatures(string themeName);
         void EnableThemeFeatures(string themeName);
-        bool UpdateIsRecentlyInstalled(ExtensionDescriptor module);
+        bool IsRecentlyInstalled(ExtensionDescriptor module);
     }
 }

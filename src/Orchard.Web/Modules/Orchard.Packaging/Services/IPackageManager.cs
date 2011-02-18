@@ -1,4 +1,5 @@
 using NuGet;
+using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
     public interface IPackageManager : IDependency {

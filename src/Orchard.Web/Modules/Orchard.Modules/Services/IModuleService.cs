@@ -7,6 +7,6 @@ namespace Orchard.Modules.Services {
         void EnableFeatures(IEnumerable<string> featureNames, bool force);
         void DisableFeatures(IEnumerable<string> featureNames);
         void DisableFeatures(IEnumerable<string> featureNames, bool force);
-        bool UpdateIsRecentlyInstalled(ExtensionDescriptor module);
+        bool IsRecentlyInstalled(ExtensionDescriptor module);
     }
 }

@@ -27,8 +27,10 @@ namespace Orchard.Reports.Services {
             _reportsManager.Add(_reports[reportKey], type, message);
         }
 
-        public void Register(string reportKey, string activityName, string title) {
-            _reports.Add(reportKey, _reportsManager.CreateReport(title, activityName));
+        public int Register(string reportKey, string activityName, string title) {
+            int reportId = _reportsManager.CreateReport(title, activityName);
+            _reports.Add(reportKey, reportId);
+            return reportId;
         }
     }
 }

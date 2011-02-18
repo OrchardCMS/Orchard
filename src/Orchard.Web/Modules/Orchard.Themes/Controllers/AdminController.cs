@@ -80,7 +80,7 @@ namespace Orchard.Themes.Controllers {
                     })
                     .Select(extensionDescriptor => new ThemeEntry(extensionDescriptor) {
                         NeedsUpdate = featuresThatNeedUpdate.Contains(extensionDescriptor.Id),
-                        IsRecentlyInstalled = _themeService.UpdateIsRecentlyInstalled(extensionDescriptor),
+                        IsRecentlyInstalled = _themeService.IsRecentlyInstalled(extensionDescriptor),
                         Enabled = _shellDescriptor.Features.Any(sf => sf.Name == extensionDescriptor.Id)
                     })
                     .ToArray();

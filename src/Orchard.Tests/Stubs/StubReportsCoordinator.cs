@@ -7,8 +7,8 @@ namespace Orchard.Tests.Stubs {
             
         }
 
-        public void Register(string reportKey, string activityName, string title) {
-            
+        public int Register(string reportKey, string activityName, string title) {
+            return 0;
         }
     }
 }

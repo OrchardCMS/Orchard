@@ -1,7 +1,6 @@
 using System;
-using Orchard.Packaging.Models;
 
-namespace Orchard.Packaging.Services {
+namespace Orchard.Packaging.Models {
     public class PackagingEntry {
         public PackagingSource Source { get; set; }
         public string Title { get; set; }
