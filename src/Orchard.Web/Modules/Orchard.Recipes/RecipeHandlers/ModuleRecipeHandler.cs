@@ -37,7 +37,7 @@ namespace Orchard.Recipes.RecipeHandlers {
                     source = attribute.Value;
                 }
                 else if (String.Equals(attribute.Name.LocalName, "replace", StringComparison.OrdinalIgnoreCase)) {
-                    replace = attribute.Value == "true";
+                    replace = Boolean.Parse(attribute.Value);
                 }
                 else if (String.Equals(attribute.Name.LocalName, "name", StringComparison.OrdinalIgnoreCase)) {
                     name = attribute.Value;
@@ -74,6 +74,7 @@ namespace Orchard.Recipes.RecipeHandlers {
                         }
                         // install.
                         installed = true;
+                        break;
                     }
                 }
 

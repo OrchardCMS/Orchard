@@ -38,7 +38,7 @@
 
   <Migration features="f2,f4"/>
 
-  <Theme src="source dir" enabled="true" current="true" />
+  <Theme src="http://" enable="true" current="true" />
   <Theme name="theme1" repository="somerepo" replace="true" />
 
   <CleanUpInactive />
