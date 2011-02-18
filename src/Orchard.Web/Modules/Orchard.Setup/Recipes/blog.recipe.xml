@@ -9,6 +9,8 @@
     <Version>1.0</Version>
   </Recipe>
 
+  <Feature disable="Orchard.Media" enable="Orchard.Experimental" />
+  
   <Metadata>
       <Types>
         <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
@@ -27,9 +29,8 @@
   </Metadata>
 
   <Command>
-    feature enable Orchard.Experimental
     feature enable Orchard.Experimental.TestingLists
   </Command>
   
-  <Migration features="Orchard.Experimental.TestingLists" />
+  <Migration features="*" />
 </Orchard>
