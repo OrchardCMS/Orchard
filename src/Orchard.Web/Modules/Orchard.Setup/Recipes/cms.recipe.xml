@@ -8,4 +8,38 @@
     <Tags></Tags>
     <Version>1.0</Version>
   </Recipe>
+
+  <Feature enable="Orchard.PublishLater,Orchard.Blogs,Orchard.Comments,Orchard.ContentTypes,
+           Orchard.jQuery,Orchard.Lists,Orchard.Media,
+           Orchard.Tags,Orchard.Scripting,Orchard.Scripting.Lightweight,
+           TinyMce,PackagingServices,Orchard.Packaging,Gallery,TheThemeMachine,Orchard.Experimental" />
+
+  <Metadata>
+    <Types>
+      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+        <TagsPart />
+        <LocalizationPart />
+      </Page>
+      <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+        <CommentsPart />
+        <TagsPart />
+        <LocalizationPart />
+      </BlogPost>
+    </Types>
+    <Parts>
+      <!-- Dynamic part -->
+      <Product ContentTypeSettings.Draftable="True" />
+    </Parts>
+  </Metadata>
+
+  <Settings>
+    <!-- Part settings -->
+    <BodyPart BodyPartSettings.FlavorDefault="html" />
+  </Settings>
+
+  <Command>
+    feature enable Orchard.Experimental.TestingLists
+  </Command>
+
+  <Migration features="*" />
 </Orchard>
