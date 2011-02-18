@@ -5,7 +5,7 @@
         pageTitle = T("Edit {0}", typeDisplayName);
     }
 
-    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: pageTitle), "5");
+    Layout.Title = pageTitle;
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {

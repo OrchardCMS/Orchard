@@ -3,7 +3,8 @@
 @{
     dynamic content = Model.Content;
     content.Zones.Content.Add(New.Partial(TemplateName: "CultureSelection", Model: Model), "0");
-    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Translate Content").ToString()), "5");
+
+    Layout.Title = T("Translate Content").ToString();
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {

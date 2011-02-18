@@ -1,9 +1,10 @@
 ﻿@model Orchard.Media.ViewModels.MediaFolderEditPropertiesViewModel
 @using Orchard.Media.Helpers;
 @using Orchard.Media.Models;
-@{ Style.Require("MediaAdmin"); }
-
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Folder Properties").ToString()), "5");
+@{
+    Style.Require("MediaAdmin");
+    Layout.Title = T("Folder Properties").ToString();
+}
 
 <div class="breadCrumbs">
 <p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 

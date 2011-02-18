@@ -2,7 +2,7 @@
 @using Orchard.Core.Contents.ViewModels;
 @using Orchard.Utility.Extensions;
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Blogs").ToString()), "5");
+@{ Layout.Title = T("Manage Blogs").ToString(); }
 
 @if (Model.ContentItems.Items.Count > 0) { 
 <div class="actions"><a class="add button primaryAction" href="@Url.BlogCreate()">@T("New Blog")</a></div>

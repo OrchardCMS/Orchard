@@ -9,7 +9,7 @@
     Style.Require("Switchable");
     Script.Require("Switchable");
 
-    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: "Modules"), "5");
+    Layout.Title = T("Modules").ToString();
 }
 
 @if (Model.Features.Count() > 0) {

@@ -1,4 +1,4 @@
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Create New Content").ToString()), "5");
+@{ Layout.Title = T("Create New Content").ToString(); }
 
 @foreach (var type in Model.ContentTypes) {
     <p>@Html.ActionLink((string)type.DisplayName, "Create", new { Area = "Contents", Id = (string)type.Name })</p>

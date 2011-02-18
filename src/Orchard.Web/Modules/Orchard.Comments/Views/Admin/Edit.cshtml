@@ -1,7 +1,7 @@
 ﻿@model Orchard.Comments.ViewModels.CommentsEditViewModel
 @using Orchard.Comments.Models;
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Edit Comment").ToString()), "5");
+@{ Layout.Title = T("Edit Comment").ToString(); }
 
 @using(Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()

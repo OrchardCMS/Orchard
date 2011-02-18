@@ -6,9 +6,9 @@
 @{
     Style.Require("Admin");
     Script.Require("ShapesBase");
-}
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Comments").ToString()), "5");
+    Layout.Title = T("Manage Comments").ToString();
+}
 
 @using(Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary() 

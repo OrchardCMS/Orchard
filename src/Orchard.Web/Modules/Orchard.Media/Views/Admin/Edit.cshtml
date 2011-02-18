@@ -2,9 +2,10 @@
 @using Orchard.Media.Extensions;
 @using Orchard.Media.Helpers;
 @using Orchard.Media.Models;
-@{ Style.Require("MediaAdmin"); }
-
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Folder").ToString()), "5");
+@{
+    Style.Require("MediaAdmin");
+    Layout.Title = T("Manage Folder").ToString();
+}
 
 <div class="breadCrumbs">
 <p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 

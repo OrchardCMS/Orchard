@@ -1,7 +1,7 @@
 ﻿@model Orchard.Media.ViewModels.MediaFolderIndexViewModel
 @using Orchard.Media.Extensions;
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Media Folders").ToString()), "5");
+@{ Layout.Title = T("Manage Media Folders").ToString(); }
 
 @Html.ValidationSummary()
 @using (Html.BeginFormAntiForgeryPost()) { 

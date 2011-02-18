@@ -1,5 +1,5 @@
 ﻿@{
-    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Install a Theme").ToString()), "5");
+    Layout.Title = T("Install a Theme").ToString();
 
     using (Html.BeginFormAntiForgeryPost(Url.Action("AddTheme", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request["returnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
         Html.ValidationSummary();

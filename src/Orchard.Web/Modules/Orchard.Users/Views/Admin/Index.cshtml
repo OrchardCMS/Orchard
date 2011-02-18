@@ -11,7 +11,7 @@
         pageSizes.Add(defaultPageSize);
     }
 
-    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Users").ToString()), "5");
+    Layout.Title = T("Manage Users").ToString();
 }
 
 @using (Html.BeginFormAntiForgeryPost()) { 

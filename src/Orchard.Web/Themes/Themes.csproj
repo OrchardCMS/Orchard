@@ -126,7 +126,7 @@
     <Content Include="TheAdmin\Views\LocalMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Views\BeforeContent.cshtml" />
+    <Content Include="TheAdmin\Views\Title.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

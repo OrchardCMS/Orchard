@@ -3,9 +3,9 @@
 @using Orchard.Widgets.ViewModels;
 @{
     Style.Require("WidgetsAdmin");
-}
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Widgets").ToString()), "5");
+    Layout.Title = T("Manage Widgets").ToString();
+}
 
 @using(Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();

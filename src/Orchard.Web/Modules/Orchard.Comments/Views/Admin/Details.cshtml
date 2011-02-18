@@ -2,7 +2,7 @@
 @using Orchard.Comments.Models;
 @using Orchard.Comments.ViewModels;
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Comments for {0}", Model.DisplayNameForCommentedItem).ToString()), "5");
+@{ Layout.Title = T("Comments for {0}", Model.DisplayNameForCommentedItem).ToString(); }
 
 <div class="manage">
     @if (Model.CommentsClosedOnItem) {

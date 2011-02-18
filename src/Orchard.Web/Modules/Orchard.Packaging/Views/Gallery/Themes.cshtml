@@ -11,7 +11,7 @@
         pageSizes.Add(defaultPageSize);
     }
 
-    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: "Themes"), "5");
+    Layout.Title = T("Themes").ToString();
 }
 
 @using ( Html.BeginFormAntiForgeryPost(Url.Action("Themes", "Gallery")) ) {

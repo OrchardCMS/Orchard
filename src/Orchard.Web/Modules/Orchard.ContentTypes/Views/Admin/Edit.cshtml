@@ -3,9 +3,9 @@
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Script.Include("admin.js");
-}
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Edit Content Type").ToString()), "5");
+    Layout.Title = T("Edit Content Type").ToString();
+}
 
 <p class="breadcrumb">@Html.ActionLink(T("Content Types").Text, "index")@T(" &#62; ")@T("Edit Content Type")</p>
 @using (Html.BeginFormAntiForgeryPost()) {

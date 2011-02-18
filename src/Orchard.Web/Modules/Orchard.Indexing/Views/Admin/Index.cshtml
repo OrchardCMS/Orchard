@@ -1,6 +1,6 @@
 ﻿@model Orchard.Indexing.ViewModels.IndexViewModel
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Search Index Management").ToString()), "5");
+@{ Layout.Title = T("Search Index Management").ToString(); }
 
 @using (Html.BeginForm("update", "admin", FormMethod.Post, new {area = "Orchard.Indexing"})) { 
     <fieldset>

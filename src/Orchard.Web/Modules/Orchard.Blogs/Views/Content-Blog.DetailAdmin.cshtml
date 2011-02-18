@@ -1,7 +1,7 @@
 ﻿@using Orchard.Blogs.Extensions;
 @using Orchard.Blogs.Models;
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: (string)Model.Title), "5");
+@{ Layout.Title = (string)Model.Title; }
 
 @Display(Model.Header)
 @Display(Model.Actions)

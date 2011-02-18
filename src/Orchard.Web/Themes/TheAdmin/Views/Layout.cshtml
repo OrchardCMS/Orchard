@@ -6,7 +6,6 @@
 @using Orchard.ContentManagement;
 
 @{
-    SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
     Style.Include("site.css");
     Style.Include("ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
     Style.Include("ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");
@@ -28,6 +27,10 @@
     var thisUser = Html.Resolve<IAuthenticationService>().GetAuthenticatedUser();
     Model.Header.Add(Display.User(CurrentUser: thisUser));
     Model.Footer.Add(Display.OrchardVersion());
+
+    if (Model.Title != null) {
+        Model.Header.Add(Display.Title(Title: Model.Title));
+    }
 }
 
 

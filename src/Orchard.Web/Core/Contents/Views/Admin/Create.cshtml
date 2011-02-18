@@ -2,7 +2,7 @@
     var typeDisplayName = Model.ContentItem.TypeDefinition.DisplayName;
     var pageTitle = T("Create {0}", typeDisplayName);
 
-    WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: (string)pageTitle.Text), "5");
+    Layout.Title = (string)pageTitle.Text;
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {

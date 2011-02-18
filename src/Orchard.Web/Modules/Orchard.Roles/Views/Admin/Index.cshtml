@@ -3,9 +3,9 @@
 @using Orchard.Utility.Extensions;
 @{
     Script.Require("ShapesBase");
-}
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Roles").ToString()), "5");
+    Layout.Title = T("Manage Roles").ToString();
+}
 
 @using(Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();

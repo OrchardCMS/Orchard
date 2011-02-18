@@ -1,7 +1,8 @@
 @model Orchard.ContentTypes.ViewModels.RemovePartViewModel
-@{ Style.Require("ContentTypesAdmin"); }
-
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Remove the \"{0}\" part from  \"{1}\"", Model.Name, Model.Type.DisplayName).ToString()), "5");
+@{
+    Style.Require("ContentTypesAdmin");
+    Layout.Title = T("Remove the \"{0}\" part from  \"{1}\"", Model.Name, Model.Type.DisplayName).ToString();
+}
 
 @using (Html.BeginFormAntiForgeryPost()) {
     <p>@T("Looks like you couldn't use the fancy way to remove the part. Try hitting the button below to force the issue.")</p>

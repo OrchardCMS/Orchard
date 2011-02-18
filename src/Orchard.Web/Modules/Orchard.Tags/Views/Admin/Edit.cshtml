@@ -2,7 +2,7 @@
 @using Orchard.ContentManagement;
 @using Orchard.Utility.Extensions;
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage tag: {0}", Model.TagName).ToString()), "5");
+@{ Layout.Title = T("Manage tag: {0}", Model.TagName).ToString(); }
 
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()  

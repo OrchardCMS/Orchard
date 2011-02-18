@@ -1,7 +1,7 @@
 ﻿@model SiteCulturesViewModel
 @using Orchard.Core.Settings.ViewModels;
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Cultures").ToString()), "5");
+@{ Layout.Title = T("Cultures").ToString(); }
 
 <p class="breadcrumb">@Html.ActionLink(T("Manage Settings").Text, "index")@T(" &#62; ")@T("Supported Cultures")</p>
 <h3>@T("Available Cultures")</h3>

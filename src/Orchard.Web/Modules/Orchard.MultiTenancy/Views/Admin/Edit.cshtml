@@ -1,7 +1,7 @@
 ﻿@model Orchard.MultiTenancy.ViewModels.TenantEditViewModel
 @using Orchard.Environment.Configuration;
 
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Edit Tenant").ToString()), "5");
+@{ Layout.Title = T("Edit Tenant").ToString(); }
 
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()

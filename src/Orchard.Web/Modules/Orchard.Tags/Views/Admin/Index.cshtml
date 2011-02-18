@@ -4,9 +4,8 @@
 @{
     Script.Require("ShapesBase");
     Style.Require("TagsAdmin");
+    Layout.Title = T("Manage Tags").ToString();
 }
-
-@WorkContext.Layout.BeforeContent.Add(New.BeforeContent(Title: T("Manage Tags").ToString()), "5");
 
 @Html.ValidationSummary() 
 <div class="manage">
