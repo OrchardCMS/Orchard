@@ -24,10 +24,16 @@
         </BlogPost>
       </Types>
       <Parts>
-        <BodyPart BodyPartSettings.FlavorDefault="html" />
+        <!-- Dynamic part -->
+        <Product ContentTypeSettings.Draftable="True" />
       </Parts>
   </Metadata>
 
+  <Settings>
+    <!-- Part settings -->
+    <BodyPart BodyPartSettings.FlavorDefault="html" />
+  </Settings>
+  
   <Command>
     feature enable Orchard.Experimental.TestingLists
   </Command>

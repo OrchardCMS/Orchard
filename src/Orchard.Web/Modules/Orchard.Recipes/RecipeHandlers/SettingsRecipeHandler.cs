@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Xml;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
@@ -6,7 +8,12 @@ using Orchard.Recipes.Services;
 
 namespace Orchard.Recipes.RecipeHandlers {
     public class SettingsRecipeHandler : IRecipeHandler {
-        public SettingsRecipeHandler() {
+        private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IContentDefinitionReader _contentDefinitionReader;
+
+        public SettingsRecipeHandler(IContentDefinitionManager contentDefinitionManager, IContentDefinitionReader contentDefinitionReader) {
+            _contentDefinitionManager = contentDefinitionManager;
+            _contentDefinitionReader = contentDefinitionReader;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -27,7 +34,9 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             foreach (var element in recipeContext.RecipeStep.Step.Elements()) {
-                // set part settings.
+                var partElement = element;
+                var partName = XmlConvert.DecodeName(element.Name.LocalName);
+                _contentDefinitionManager.AlterPartDefinition(partName, alteration => _contentDefinitionReader.Merge(partElement, alteration));
             }
 
             recipeContext.Executed = true;
