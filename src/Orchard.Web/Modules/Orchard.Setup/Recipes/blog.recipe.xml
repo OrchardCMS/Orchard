@@ -9,10 +9,12 @@
     <Version>1.0</Version>
   </Recipe>
 
+  <Module name="Bing.Maps" version="0.5.0" replace="false" />
+  
   <Feature enable="Orchard.PublishLater,Orchard.Blogs,Orchard.Comments,Orchard.ContentTypes,
            Orchard.jQuery,Orchard.Lists,Orchard.Media,
            Orchard.Tags,Orchard.Scripting,Orchard.Scripting.Lightweight,
-           TinyMce,PackagingServices,Orchard.Packaging,Gallery,TheThemeMachine,Orchard.Experimental" />
+           TinyMce,TheThemeMachine,Orchard.Experimental" />
 
   <Metadata>
     <Types>

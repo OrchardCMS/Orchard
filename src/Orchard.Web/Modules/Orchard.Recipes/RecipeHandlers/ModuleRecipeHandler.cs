@@ -1,12 +1,19 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Packaging.Models;
+using Orchard.Packaging.Services;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.Recipes.RecipeHandlers {
     public class ModuleRecipeHandler : IRecipeHandler {
-        public ModuleRecipeHandler() {
+        private readonly IPackagingSourceManager _packagingSourceManager;
+
+        public ModuleRecipeHandler(IPackagingSourceManager packagingSourceManager) {
+            _packagingSourceManager = packagingSourceManager;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -23,7 +30,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             bool replace;
-            string source, name, version, repository;
+            string source = null, name = null, version = null, repository = null;
 
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
                 if (String.Equals(attribute.Name.LocalName, "src", StringComparison.OrdinalIgnoreCase)) {
@@ -42,11 +49,39 @@ namespace Orchard.Recipes.RecipeHandlers {
                     repository = attribute.Value;
                 }
                 else {
-                    Logger.Error("Unrecognized attribute {0} encountered in step Module. Skipping.", attribute.Name.LocalName);
+                    throw new InvalidOperationException(string.Format("Unrecognized attribute {0} encountered in step Module.", attribute.Name.LocalName));
                 }
             }
 
-            // download and install module. 
+            if (source != null) {
+            }
+            else {
+                if (name == null) {
+                    throw new InvalidOperationException("Either name or source is required in a Module declaration in a recipe file.");
+                }
+                // download and install module from the orchard feed or a custom feed if repository is specified.
+                bool enforceVersion = version != null;
+                bool installed = false;
+                PackagingSource packagingSource = null;
+                if (repository != null) {
+                    enforceVersion = false;
+                    packagingSource = new PackagingSource {FeedTitle = repository, FeedUrl = repository};
+                }
+                foreach (var packagingEntry in _packagingSourceManager.GetExtensionList(packagingSource)) {
+                    if (String.Equals(packagingEntry.Title, name, StringComparison.OrdinalIgnoreCase)) {
+                        if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
+                            continue;
+                        }
+                        // install.
+                        installed = true;
+                    }
+                }
+
+                if (!installed) {
+                    throw new InvalidOperationException(string.Format("Module {0} was not found in the specified location.", name));
+                }
+                
+            }
 
             recipeContext.Executed = true;
         }

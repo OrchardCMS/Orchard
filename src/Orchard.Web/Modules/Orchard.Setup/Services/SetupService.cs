@@ -100,6 +100,9 @@ namespace Orchard.Setup.Services {
                     "Orchard.Users",
                     "Orchard.Roles",
                     "Orchard.Modules",
+                    "PackagingServices",
+                    "Orchard.Packaging",
+                    "Gallery",
                     "Orchard.Recipes"
                 };
 
