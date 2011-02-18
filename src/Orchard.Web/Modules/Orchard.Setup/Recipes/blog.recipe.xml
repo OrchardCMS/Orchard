@@ -9,8 +9,11 @@
     <Version>1.0</Version>
   </Recipe>
 
-  <Feature disable="Orchard.Media" enable="Orchard.Experimental" />
-  
+  <Feature enable="Orchard.PublishLater,Orchard.Blogs,Orchard.Comments,Orchard.ContentTypes,
+           Orchard.jQuery,Orchard.Lists,Orchard.Media,
+           Orchard.Tags,Orchard.Scripting,Orchard.Scripting.Lightweight,
+           TinyMce,PackagingServices,Orchard.Packaging,Gallery,TheThemeMachine,Orchard.Experimental" />
+
   <Metadata>
       <Types>
         <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">

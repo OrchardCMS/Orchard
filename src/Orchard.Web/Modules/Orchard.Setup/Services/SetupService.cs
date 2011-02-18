@@ -93,34 +93,14 @@ namespace Orchard.Setup.Services {
                     "Scheduling",
                     "Settings",
                     "Shapes",
-
-                    // Other
-                    "Orchard.PublishLater", // todo: (sebros) remove
-                    "Orchard.Blogs",
-                    "Orchard.Comments",
-                    "Orchard.ContentTypes",
-                    "Orchard.jQuery",
-                    "Orchard.Lists",
-                    "Orchard.Media",
-                    "Orchard.Modules",
+                    
                     "Orchard.Pages",
-                    "Orchard.Recipes",
-                    "Orchard.Roles",
-                    "Orchard.Tags",
+                    "Orchard.Widgets",
                     "Orchard.Themes",
                     "Orchard.Users",
-                    "Orchard.Scripting",
-                    "Orchard.Scripting.Lightweight",
-                    "Orchard.Widgets",
-                    "TinyMce",
-
-                    // Gallery/Packaging
-                    "PackagingServices",
-                    "Orchard.Packaging",
-                    "Gallery",
-
-                    // Themes
-                    "TheThemeMachine",
+                    "Orchard.Roles",
+                    "Orchard.Modules",
+                    "Orchard.Recipes"
                 };
 
                 context.EnabledFeatures = hardcoded;
