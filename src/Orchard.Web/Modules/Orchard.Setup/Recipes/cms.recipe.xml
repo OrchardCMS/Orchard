@@ -27,14 +27,15 @@
       </BlogPost>
     </Types>
     <Parts>
+      <BodyPart BodyPartSettings.FlavorDefault="html" />
       <!-- Dynamic part -->
       <Product ContentTypeSettings.Draftable="True" />
     </Parts>
   </Metadata>
 
   <Settings>
-    <!-- Part settings -->
-    <BodyPart BodyPartSettings.FlavorDefault="html" />
+    <SiteSettingsPart PageSize="20" PageTitleSeparator = " - " />
+    <CommentSettingsPart ModerateComments="true" />
   </Settings>
 
   <Command>

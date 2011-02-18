@@ -213,7 +213,6 @@ namespace Orchard.Setup.Services {
             siteSettings.Record.SiteSalt = Guid.NewGuid().ToString("N");
             siteSettings.Record.SiteName = context.SiteName;
             siteSettings.Record.SuperUser = context.AdminUsername;
-            siteSettings.Record.PageTitleSeparator = " - ";
             siteSettings.Record.SiteCulture = "en-US";
 
             // set site theme

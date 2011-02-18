@@ -15,26 +15,27 @@
            TinyMce,PackagingServices,Orchard.Packaging,Gallery,TheThemeMachine,Orchard.Experimental" />
 
   <Metadata>
-      <Types>
-        <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
-          <TagsPart />
-          <LocalizationPart />
-        </Page>
-        <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
-          <CommentsPart />
-          <TagsPart />
-          <LocalizationPart />
-        </BlogPost>
-      </Types>
-      <Parts>
-        <!-- Dynamic part -->
-        <Product ContentTypeSettings.Draftable="True" />
-      </Parts>
+    <Types>
+      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+        <TagsPart />
+        <LocalizationPart />
+      </Page>
+      <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+        <CommentsPart />
+        <TagsPart />
+        <LocalizationPart />
+      </BlogPost>
+    </Types>
+    <Parts>
+      <BodyPart BodyPartSettings.FlavorDefault="html" />
+      <!-- Dynamic part -->
+      <Product ContentTypeSettings.Draftable="True" />
+    </Parts>
   </Metadata>
 
   <Settings>
-    <!-- Part settings -->
-    <BodyPart BodyPartSettings.FlavorDefault="html" />
+    <SiteSettingsPart PageSize="20" PageTitleSeparator = " - " />
+    <CommentSettingsPart ModerateComments="true" />
   </Settings>
   
   <Command>
