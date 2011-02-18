@@ -138,11 +138,11 @@
     margin-left:.5em;
 }
 .recentlyInstalledFeature {
-    background-color: Green;
+    background-color: #d6e0e8;
 }
 .recentlyInstalledModule {
-    background-color: Green;
+    background-color: #d6e0e8;
 }
 .updateAvailable {
-    background-color: Lime;
+    background-color: #f1f0cb;
 }
