@@ -72,7 +72,8 @@ namespace Orchard.Setup.Services {
             return _recipes;
         }
 
-        public void Setup(SetupContext context) {
+        public string Setup(SetupContext context) {
+            string executionId = null;
             // The vanilla Orchard distibution has the following features enabled.
             if (context.EnabledFeatures == null || context.EnabledFeatures.Count() == 0) {
                 string[] hardcoded = {
@@ -200,7 +201,7 @@ namespace Orchard.Setup.Services {
             shellSettings.State = new TenantState("Running");
             using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                 try {
-                    CreateTenantData(context, environment);
+                    executionId = CreateTenantData(context, environment);
                 }
                 catch {
                     environment.Resolve<ITransactionManager>().Cancel();
@@ -209,9 +210,12 @@ namespace Orchard.Setup.Services {
             }
 
             _shellSettingsManager.SaveSettings(shellSettings);
+
+            return executionId;
         }
 
-        private void CreateTenantData(SetupContext context, IWorkContextScope environment) {
+        private string CreateTenantData(SetupContext context, IWorkContextScope environment) {
+            string executionId = null;
             // create superuser
             var membershipService = environment.Resolve<IMembershipService>();
             var user =
@@ -242,7 +246,7 @@ namespace Orchard.Setup.Services {
 
             var recipeManager = environment.Resolve<IRecipeManager>();
             if (context.Recipe != null) {
-                recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
+                executionId = recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
             }
 
             var contentManager = environment.Resolve<IContentManager>();
@@ -325,6 +329,8 @@ Modules are created by other users of Orchard just like you so if you feel up to
             if (HttpContext.Current != null) {
                 authenticationService.SignIn(user, true);
             }
+
+            return executionId;
         }
     }
 }

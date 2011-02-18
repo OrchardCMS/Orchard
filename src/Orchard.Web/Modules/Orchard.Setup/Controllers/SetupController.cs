@@ -105,7 +105,7 @@ namespace Orchard.Setup.Controllers {
                     Recipe = model.Recipe
                 };
 
-                _setupService.Setup(setupContext);
+                string executionId = _setupService.Setup(setupContext);
 
                 // First time installation if finally done. Tell the background views compilation
                 // process to stop, so that it doesn't interfere with the user (asp.net compilation
