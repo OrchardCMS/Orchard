@@ -377,7 +377,7 @@ form.link button:hover {
     color:#aec3ce;
     display:block;
     line-height:1.2em;
-    padding:.4em 0 .4em 12px;
+    padding:6px 0 6px 16px;
     text-decoration:none;
 }
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus {

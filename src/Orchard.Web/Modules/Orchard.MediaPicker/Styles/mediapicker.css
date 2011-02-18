@@ -1,4 +1,6 @@
-﻿input[disabled], input[disabled="disabled"], input.disabled {
+﻿body { background: #ddd; }
+
+input[disabled], input[disabled="disabled"], input.disabled {
     color: White 
 }
 input[type="file"] {
