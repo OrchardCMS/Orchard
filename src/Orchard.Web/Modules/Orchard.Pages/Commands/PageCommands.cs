@@ -46,7 +46,7 @@ namespace Orchard.Pages.Commands {
         [CommandName("page create")]
         [CommandHelp("page create /Slug:<slug> /Title:<title> /Path:<path> [/Text:<text>] [/Owner:<username>] [/Homepage:true|false] [/Publish:true|false] [/UseWelcomeText:true|false]\r\n\t" + "Creates a new page")]
         [OrchardSwitches("Slug,Title,Path,Text,Owner,Homepage,Publish,UseWelcomeText")]
-        public string Create() {
+        public void Create() {
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
             }
@@ -89,7 +89,7 @@ Modules are created by other users of Orchard just like you so if you feel up to
                 _contentManager.Publish(page);
             }
 
-            return "Page created successfully";
+            Context.Output.WriteLine(T("Page Created successfully.").Text);
         }
     }
 }
