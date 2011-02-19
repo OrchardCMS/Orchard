@@ -84,19 +84,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminFilter.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Index.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Tab_Url.cshtml" />
+    <Content Include="Views\Admin\Tab_Url.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Tab_Gallery.cshtml" />
+    <Content Include="Views\Admin\Tab_Gallery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Web.config" />

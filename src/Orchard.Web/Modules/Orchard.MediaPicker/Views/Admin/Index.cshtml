@@ -5,9 +5,9 @@
 @using Orchard.Media.Models;
 @using Orchard.UI.Resources;
 @{
-    Style.Include("~/themes/theadmin/styles/site.css"); // todo: and the IE conditional ones
-	Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("lte IE 8").Define(d => d.SetAttribute("media", "screen, projection"));
-	Style.Include("~/themes/theadmin/styles/ie6.css").UseCondition("lte IE 6").Define(d => d.SetAttribute("media", "screen, projection"));
+    Style.Include("~/themes/theadmin/styles/site.css");
+	Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
+	Style.Include("~/themes/theadmin/styles/ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");
 	Style.Include("mediapicker.css");
 
     // these need to be in the head because MediaBrowser.js defines a callback that the thumbnail images call when they load,

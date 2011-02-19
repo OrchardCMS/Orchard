@@ -57,7 +57,7 @@
     });
 
     $("#createFolder").live("click", function () {
-        $.post("MediaPicker/Home/CreateFolder", { path: query("mediaPath"), folderName: $("#folderName").val(), __RequestVerificationToken: $("#__requesttoken").val() },
+        $.post("MediaPicker/Admin/CreateFolder", { path: query("mediaPath"), folderName: $("#folderName").val(), __RequestVerificationToken: $("#__requesttoken").val() },
             function (response) {
                 if (typeof response === "string") {
                     alert(response);
