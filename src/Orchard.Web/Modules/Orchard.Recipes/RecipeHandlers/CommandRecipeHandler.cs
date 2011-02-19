@@ -56,6 +56,8 @@ namespace Orchard.Recipes.RecipeHandlers  {
     }
 
     // Utility class for parsing lines of commands.
+    // Note: This lexer handles double quotes pretty harshly by design. 
+    // In case you needed them in your arguments, hopefully single quotes work for you as a replacement on the receiving end. 
     class CommandParser {
         public CommandParameters ParseCommandParameters(string command) {
             var args = SplitArgs(command);

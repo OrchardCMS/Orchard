@@ -4,9 +4,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
-using Orchard.Core.Navigation.Models;
-using Orchard.Core.Routable.Models;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
@@ -14,7 +11,6 @@ using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
@@ -29,8 +25,6 @@ using Orchard.Environment.State;
 using Orchard.Data.Migration;
 using Orchard.Themes.Services;
 using Orchard.Utility.Extensions;
-using Orchard.Widgets.Models;
-using Orchard.Widgets;
 
 namespace Orchard.Setup.Services {
     public class SetupService : ISetupService {
@@ -79,31 +73,11 @@ namespace Orchard.Setup.Services {
                 string[] hardcoded = {
                     // Framework
                     "Orchard.Framework",
-
                     // Core
-                    "Common",
-                    "Containers",
-                    "Contents",
-                    "Dashboard",
-                    "Feeds",
-                    "HomePage",
-                    "Navigation",
-                    "Reports",
-                    "Routable",
-                    "Scheduling",
-                    "Settings",
-                    "Shapes",
-                    
-                    "Orchard.Pages",
-                    "Orchard.Widgets",
-                    "Orchard.Themes",
-                    "Orchard.Users",
-                    "Orchard.Roles",
-                    "Orchard.Modules",
-                    "PackagingServices",
-                    "Orchard.Packaging",
-                    "Gallery",
-                    "Orchard.Recipes"
+                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "HomePage", "Navigation", "Reports", "Routable", "Scheduling", "Settings", "Shapes",
+                    // Modules
+                    "Orchard.Pages", "Orchard.Widgets", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules", 
+                    "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes"
                 };
 
                 context.EnabledFeatures = hardcoded;
@@ -175,7 +149,6 @@ namespace Orchard.Setup.Services {
             while ( _processingEngine.AreTasksPending() )
                 _processingEngine.ExecuteNextTask();
 
-
             // creating a standalone environment. 
             // in theory this environment can be used to resolve any normal components by interface, and those
             // components will exist entirely in isolation - no crossover between the safemode container currently in effect
@@ -228,47 +201,6 @@ namespace Orchard.Setup.Services {
 
             var recipeManager = environment.Resolve<IRecipeManager>();
             executionId = recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
-
-            var contentManager = environment.Resolve<IContentManager>();
-            // If "Orchard.Widgets" is enabled, setup default layers and widgets
-            var extensionManager = environment.Resolve<IExtensionManager>();
-            var shellDescriptor = environment.Resolve<ShellDescriptor>();
-            if (extensionManager.EnabledFeatures(shellDescriptor).Where(d => d.Id == "Orchard.Widgets").Any()) {
-                // Create default layers
-                var layerInitializer = environment.Resolve<IDefaultLayersInitializer>();
-                layerInitializer.CreateDefaultLayers();
-
-                // add a layer for the homepage
-                var homepageLayer = contentManager.Create("Layer", VersionOptions.Draft);
-                homepageLayer.As<LayerPart>().Name = "TheHomepage";
-                homepageLayer.As<LayerPart>().LayerRule = "url \"~/\"";
-                contentManager.Publish(homepageLayer);
-
-                // and three more for the tripel...really need this elsewhere...
-                var tripelFirst = contentManager.Create("HtmlWidget", VersionOptions.Draft);
-                tripelFirst.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
-                tripelFirst.As<WidgetPart>().Title = T("First Leader Aside").Text;
-                tripelFirst.As<WidgetPart>().Zone = "TripelFirst";
-                tripelFirst.As<WidgetPart>().Position = "5";
-                tripelFirst.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
-                contentManager.Publish(tripelFirst);
-
-                var tripelSecond = contentManager.Create("HtmlWidget", VersionOptions.Draft);
-                tripelSecond.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
-                tripelSecond.As<WidgetPart>().Title = T("Second Leader Aside").Text;
-                tripelSecond.As<WidgetPart>().Zone = "TripelSecond";
-                tripelSecond.As<WidgetPart>().Position = "5";
-                tripelSecond.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
-                contentManager.Publish(tripelSecond);
-
-                var tripelThird = contentManager.Create("HtmlWidget", VersionOptions.Draft);
-                tripelThird.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
-                tripelThird.As<WidgetPart>().Title = T("Third Leader Aside").Text;
-                tripelThird.As<WidgetPart>().Zone = "TripelThird";
-                tripelThird.As<WidgetPart>().Position = "5";
-                tripelThird.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
-                contentManager.Publish(tripelThird);
-            }
 
             //null check: temporary fix for running setup in command line
             if (HttpContext.Current != null) {
