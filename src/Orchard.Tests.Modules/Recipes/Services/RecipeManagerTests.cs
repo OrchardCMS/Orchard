@@ -125,7 +125,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             var sampleRecipe = recipes[0];
             var recipeSteps = (List<RecipeStep>) sampleRecipe.RecipeSteps;
 
-            Assert.That(recipeSteps.Count, Is.EqualTo(12));
+            Assert.That(recipeSteps.Count, Is.EqualTo(11));
         }
 
         [Test]
@@ -193,7 +193,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
 
     public class CustomRecipeHandler : IRecipeHandler {
         public static string AttributeValue;
-        public string[] _handles = {"Module", "Theme", "Migration", "CleanUpInactive", "Custom1", "Custom2", "Command", "Metadata", "Feature", "Settings"};
+        public string[] _handles = {"Module", "Theme", "Migration", "Custom1", "Custom2", "Command", "Metadata", "Feature", "Settings"};
 
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
             if (_handles.Contains(recipeContext.RecipeStep.Name)) {

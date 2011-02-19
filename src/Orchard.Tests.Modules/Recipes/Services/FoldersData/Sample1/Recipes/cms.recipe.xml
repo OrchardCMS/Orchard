@@ -41,8 +41,6 @@
   <Theme src="http://" enable="true" current="true" />
   <Theme name="theme1" repository="somerepo" replace="true" />
 
-  <CleanUpInactive />
-
   <Custom1 attr1="value1" />
   <Custom2 attr2="value2" />
 </Orchard>

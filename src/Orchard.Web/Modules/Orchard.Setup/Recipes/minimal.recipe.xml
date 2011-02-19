@@ -43,6 +43,4 @@
   </Command>
 
   <Migration features="*" />
-
-  <CleanUpInactive />
 </Orchard>
