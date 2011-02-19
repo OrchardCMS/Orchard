@@ -51,9 +51,8 @@ if (!Model.DatabaseIsPreconfigured) {
     </div>
 </fieldset>
 }
-if (Model.HasRecipes) {
 <fieldset>
-	<legend>@T("Use an Orchard Recipe during setup (Optional)")</legend>
+	<legend>@T("Choose an Orchard Recipe")</legend>
 	<div>@T("Orchard Recipes allow you to setup your site with additional pre-configured options, features and settings out of the box")</div>	
 	<div>
         <select id="@Html.FieldIdFor(m => m.Recipe)" name="@Html.FieldNameFor(m => m.Recipe)" class="recipe">
@@ -66,7 +65,6 @@ if (Model.HasRecipes) {
     </div>
 	<div id="recipedescription">@Model.RecipeDescription</div>
 </fieldset>
-}
 <div id="throbber">
     <div class="curtain"></div>
     <div class="curtain-content">

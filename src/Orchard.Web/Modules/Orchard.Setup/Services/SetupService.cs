@@ -227,9 +227,7 @@ namespace Orchard.Setup.Services {
             cultureManager.AddCulture("en-US");
 
             var recipeManager = environment.Resolve<IRecipeManager>();
-            if (context.Recipe != null) {
-                executionId = recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
-            }
+            executionId = recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
 
             var contentManager = environment.Resolve<IContentManager>();
             // If "Orchard.Widgets" is enabled, setup default layers and widgets

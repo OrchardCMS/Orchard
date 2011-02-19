@@ -22,7 +22,6 @@ namespace Orchard.Setup.ViewModels {
         public string DatabaseTablePrefix { get; set; }
         public bool DatabaseIsPreconfigured { get; set; }
 
-        public bool HasRecipes { get; set; }
         public IEnumerable<Recipe> Recipes { get; set; }
         public string Recipe { get; set; }
         public string RecipeDescription { get; set; }

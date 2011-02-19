@@ -57,7 +57,6 @@ namespace Orchard.Setup.Controllers {
             return IndexViewResult(new SetupViewModel {
                 AdminUsername = "admin",
                 DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider),
-                HasRecipes = recipes.Count > 0,
                 Recipes = recipes
             });
         }
@@ -78,10 +77,12 @@ namespace Orchard.Setup.Controllers {
                     ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter").Text);
                 }
             }
+            if (String.IsNullOrEmpty(model.Recipe)) {
+                ModelState.AddModelError("Recipe", T("You must choose a recipe. Recipes come from the Recipes folder of your Setup module.").Text);
+            }
 
             if (!ModelState.IsValid) {
                 var recipes = (List<Recipe>)_setupService.Recipes();
-                model.HasRecipes = recipes.Count > 0;
                 model.Recipes = recipes;
                 if (!String.IsNullOrEmpty(model.Recipe)) {
                     foreach (var recipe in recipes.Where(recipe => recipe.Name == model.Recipe)) {
