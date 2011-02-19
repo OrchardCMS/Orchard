@@ -412,10 +412,10 @@ form.link button:hover {
     margin-left:16px;
 }
 .localmenu li.selected {
-    background-color: White;
+    background-color: #fff;
 }
 .localmenu li.selected, .localmenu li:hover {
-    background-color: White;
+    background-color: #fff;
 }
 .localmenu li.selected a {
     color: #3A822E;

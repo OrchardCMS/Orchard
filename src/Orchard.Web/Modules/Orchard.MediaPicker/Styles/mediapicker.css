@@ -1,11 +1,38 @@
-﻿body { background: #ddd; }
+﻿/* Clearing Floats
+***************************************************************/
+
+.group:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+
+body {
+  color: #333; 
+  background:#f3f4f5;
+  font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+  line-height:1.6em;
+  padding:12px;
+  width:640px;
+  margin: 0 auto;
+}
+
+#orchardmediapicker * { font:100% normal Segoe UI,Trebuchet,Arial,Sans-Serif; }
+
+#orchardmediapicker #tabs { padding: 0 0 24px 0; }
+
+#orchardmediapicker a, #orchardmediapicker a:link, #orchardmediapicker a:visited, #orchardmediapicker a:hover, #orchardmediapicker a:active, #orchardmediapicker a:focus {
+    color:#1e5d7d;
+    text-decoration:none;
+}
 
 input[disabled], input[disabled="disabled"], input.disabled {
     color: White 
 }
-input[type="file"] {
-    border: 1px solid black;
-}
+
 .media-largepreview
 {
     width: 300px;
@@ -26,24 +53,187 @@ input[type="file"] {
 {
     display: none; /*revealed by javascript after scaling*/
 }
-.media-details 
-{
-    vertical-align: middle;
+.media-details { vertical-align: middle; }
+
+.media-folder {}
+
+/*.media-item:hover, .selected:hover { background-color: #f3f5ef; }*/
+
+.media-item:hover, .selected:hover { cursor:pointer; }
+
+.selected { background: #dee4cf; }
+
+.throbber { display: none }
+
+
+/*jQuery UI overrides
+***************************************************************/
+#orchardmediapicker .ui-corner-all { -moz-border-radius: 2px; }
+
+/* Component containers
+----------------------------------*/
+#orchardmediapicker .ui-widget-header { border: none; border-bottom: 1px solid #e4e5e6; background:#f3f4f5; }
+
+
+/* Interaction states
+----------------------------------*/
+#orchardmediapicker .ui-state-default, #orchardmediapicker .ui-tabs-selected { border:1px solid #f5f5f5; background:none; }
+#orchardmediapicker .ui-tabs-selected, #orchardmediapicker li.ui-state-default:hover { background: #fff; }
+
+
+/* Tabs
+----------------------------------*/
+#orchardmediapicker .ui-tabs .ui-tabs-nav { list-style: none; position: relative; padding: 8px 18px 0px 18px; }
+#orchardmediapicker .ui-tabs .ui-tabs-nav li { position: relative; border:1px solid #e4e5e6; float: left; border-bottom-width: 0 !important; margin: 0 2px -1px 0; padding: 0;  }
+#orchardmediapicker .ui-tabs .ui-tabs-nav li a { float: left; text-decoration: none; padding: 8px 16px; font-size:15px; line-height:22px; }
+#orchardmediapicker .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { color: #3A822E; }
+
+/* Forms
+***************************************************************/
+
+form              { margin: 0; padding: 0; }
+legend            { font-weight: normal; border:none; }
+fieldset          { padding:0; margin: 0; border: 0px solid #dbdbdb; }
+#orchardmediapicker label { font-weight:normal; display:block; padding: 0 0 0 0; margin:10px 0 0 0; }
+#orchardmediapicker label.forcheckbox { display: inline; margin: 10px 0 0 4px; }
+#orchardmediapicker .actions { margin:12px 0 0 0; }
+
+input[type="text"], select, textarea, input.text, input.textMedium, input.text-box {
+    padding:3px;
+    border:1px solid #bdbcbc;
+    width:90%;
 }
-.media-details ul 
-{
-    list-style-type: none
+input[type="checkbox"] {
+    margin: 10px 0 0 0;
+    vertical-align: -1px;
 }
-.media-folder 
-{
+
+form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
+    display:inline;
+}
+form.inline fieldset {
+    margin:0;
+}
+
+input[type="checkbox"]:focus, input[type="radio"]:focus {
+    outline:1px dotted #666d51;
+}
+select {
+    padding:1px;
+}
+select:focus, textarea:focus, input.text:focus, input.text-box:focus {
+    border-color:#666d51;
+}
+input.check-box {
+    margin-left:0;
+    vertical-align:-.1em;
+}
+input.large.text, textarea, fieldset {
+    clear:both;
+}
+fieldset {
+    margin:0 0 1em 0;
+    padding:6px 0 0;
+}
+textarea {
+    min-height:8em;
+}
+
+
+form.link button {
+    background:inherit;
+    border:0;
+    padding:0;
+    width:auto;
+    margin:-2px -3px 0;
+
+    /*Remove CSS3 button properties*/
+    filter:none;
+    background:none;
+    background:none;
+    box-shadow:none;
+    -webkit-box-shadow:none;
+    -moz-box-shadow:none;
+    border-radius:none;
+    -webkit-border-radius:none;
+    -moz-border-radius:none;   
+}
+
+button.remove, .remove.button, .remove.button:link, .remove.button:visited {
+    background-color:#DECCCA;
+    background-image:url(images/tableHeaderBackgroundRed.gif);
+    border-color:#d6c9c7;
+    color:#5c3732;
+}
+button.remove:hover, .remove.button:hover,
+button.remove:active, .remove.button:active,
+button.remove:focus, .remove.button:focus {
+    background:#8f7c79;
+    border-color:#6e5551;
+    color:#faedeb;
+}
+button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
+    border-color:#8f7c79;
+}
+.delete.button {
+    float:right;
+}
+input[type="submit"], input[type="reset"], input[type="button"], button, submit, .button, .button:link, .button:visited {        
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+    cursor:pointer;
+    padding:0 14px 2px 14px;
+    text-align:center;
+    margin:0px;
+
+    /*CSS3 properties*/
+    text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
+    /*In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)*/
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');    
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+    background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
+    
+     box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+     -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+     -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+            
+     border-radius: 2px;
+     -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+
+    }
+input[type="submit"]:hover,input[type="reset"]:hover, input[type="button"]:hover, button:hover, .button:hover, .button.primaryAction:hover {
+    border-color:#3a822e;
+    color:#fff;
+    color:eefcec;
+    text-decoration:none; 
+    background: #809f43;
+    
+    /*CSS3 properties*/  
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+    background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 
 }
-.selected 
-{
-    background-color: Yellow;
+input[type="submit"]:active, input[type="reset"]:active, input[type="button"]:active, button:active, .buton:active, .button.primaryAction:active {
+    text-decoration:none; 
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+
+    /*CSS3 properties*/
+    text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');    
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+    background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
+}
+input[type="submit"]:focus::-moz-focus-inner, button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
+  border: 1px dotted transparent;
 }
 
-.throbber 
-{
-    display: none
+
+
+.clearboth {
+    clear:both;
 }
