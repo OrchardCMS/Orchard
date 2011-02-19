@@ -270,13 +270,6 @@ namespace Orchard.Setup.Services {
                 contentManager.Publish(tripelThird);
             }
 
-            // add a menu item for the shiny new home page
-            var menuItem = contentManager.Create("MenuItem");
-            menuItem.As<MenuPart>().MenuPosition = "1";
-            menuItem.As<MenuPart>().MenuText = T("Home").ToString();
-            menuItem.As<MenuPart>().OnMainMenu = true;
-            menuItem.As<MenuItemPart>().Url = "";
-
             //null check: temporary fix for running setup in command line
             if (HttpContext.Current != null) {
                 authenticationService.SignIn(user, true);

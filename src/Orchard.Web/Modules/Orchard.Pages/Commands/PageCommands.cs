@@ -89,7 +89,7 @@ Modules are created by other users of Orchard just like you so if you feel up to
                 _contentManager.Publish(page);
             }
 
-            Context.Output.WriteLine(T("Page Created successfully.").Text);
+            Context.Output.WriteLine(T("Page created successfully.").Text);
         }
     }
 }
