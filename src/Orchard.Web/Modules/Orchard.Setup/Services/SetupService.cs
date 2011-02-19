@@ -270,34 +270,6 @@ namespace Orchard.Setup.Services {
                 contentManager.Publish(tripelThird);
             }
 
-            // create a welcome page that's promoted to the home page
-            var page = contentManager.Create("Page", VersionOptions.Draft);
-            page.As<RoutePart>().Title = T("Welcome to Orchard!").Text;
-            page.As<RoutePart>().Path = "welcome-to-orchard";
-            page.As<RoutePart>().Slug = "welcome-to-orchard";
-            page.As<RoutePart>().PromoteToHomePage = true;
-            page.As<BodyPart>().Text = T(
-@"<p>You've successfully setup your Orchard Site and this is the homepage of your new site.
-Here are a few things you can look at to get familiar with the application.
-Once you feel confident you don't need this anymore, you can
-<a href=""Admin/Contents/Edit/{0}"">remove it by going into editing mode</a>
-and replacing it with whatever you want.</p>
-<p>First things first - You'll probably want to <a href=""Admin/Settings"">manage your settings</a>
-and configure Orchard to your liking. After that, you can head over to
-<a href=""Admin/Themes"">manage themes to change or install new themes</a>
-and really make it your own. Once you're happy with a look and feel, it's time for some content.
-You can start creating new custom content types or start from the built-in ones by
-<a href=""Admin/Contents/Create/Page"">adding a page</a>, <a href=""Admin/Blogs/Create"">creating a blog</a>
-or <a href=""Admin/Navigation"">managing your menus.</a></p>
-<p>Finally, Orchard has been designed to be extended. It comes with a few built-in
-modules such as pages and blogs or themes. If you're looking to add additional functionality,
-you can do so by creating your own module or by installing one that somebody else built.
-Modules are created by other users of Orchard just like you so if you feel up to it,
-<a href=""http://orchardproject.net/contribution"">please consider participating</a>.</p>
-<p>Thanks for using Orchard – The Orchard Team </p>", page.Id).Text;
-
-            contentManager.Publish(page);
-
             // add a menu item for the shiny new home page
             var menuItem = contentManager.Create("MenuItem");
             menuItem.As<MenuPart>().MenuPosition = "1";

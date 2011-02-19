@@ -37,6 +37,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\PageCommands.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

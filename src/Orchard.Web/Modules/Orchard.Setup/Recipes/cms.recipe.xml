@@ -40,6 +40,7 @@
 
   <Command>
     feature enable Orchard.Experimental.TestingLists
+    page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /UseWelcomeText:true
   </Command>
 
   <Migration features="*" />
