@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Orchard.Packaging.Models;
-using Orchard.Packaging.Services;
 
 namespace Orchard.Packaging.ViewModels {
     public class PackagingExtensionsViewModel {
@@ -13,6 +12,7 @@ namespace Orchard.Packaging.ViewModels {
 
     public class PackagingExtensionsOptions {
         public int? SourceId { get; set; }
+        public string SearchText { get; set; }
         public PackagingExtensionsOrder Order { get; set; }
     }
 

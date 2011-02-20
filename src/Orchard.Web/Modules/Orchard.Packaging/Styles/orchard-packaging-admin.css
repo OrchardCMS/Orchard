@@ -47,7 +47,11 @@
     width: 171px; 
     height: 128px;
 }
+.properties li p {
+    float: left;
+}
 .ratings {
+    float: right;
     background:url(../Content/Images/stars.png) repeat-x;
     height: 14px;
     width: 75px;
@@ -57,4 +61,11 @@
     background: url(../Content/Images/stars.png) repeat-x 0 -14px;
     position: absolute;
     width: 45px;
+}
+.search-actions {
+    float: right;
+    display: inline;
+    height: auto;
+    margin: 0 1.4em 0 0;
+    padding-top: 0;
 }

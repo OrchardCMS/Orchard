@@ -7,7 +7,7 @@
 
     var pageSizes = new List<int?>() { 10, 50, 100 };
     var defaultPageSize = WorkContext.CurrentSite.PageSize;
-    if(!pageSizes.Contains(defaultPageSize)) { 
+    if (!pageSizes.Contains(defaultPageSize)) { 
         pageSizes.Add(defaultPageSize);
     }
 
@@ -24,6 +24,7 @@
             }
         </select>
     </fieldset>
+
     <fieldset class="bulk-actions">
         <label for="filterResults">@T("Sort by:")</label>
         <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
@@ -38,8 +39,14 @@
             @foreach(int size in pageSizes.OrderBy(p => p)) {
                 @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
             }
-        <select>
+        </select>
         <button type="submit">@T("Apply")</button>
+    </fieldset>
+
+    <fieldset class="search-actions">
+        <input type="text" id="searchText" name="@Html.NameOf(m => m.Options.SearchText)" />
+
+        <button type="submit">@T("Search")</button>
     </fieldset>
 
     if (Model.Extensions.Count() > 0) {
@@ -47,10 +54,10 @@
         @foreach (var item in Model.Extensions) {
             <li>
                 @{
-                    string iconUrl = @item.IconUrl;
-                    if (string.IsNullOrWhiteSpace(iconUrl)) {
-                        iconUrl = Href("../../Content/Images/ModuleDefaultIcon.png");
-                    }
+            string iconUrl = @item.IconUrl;
+            if (string.IsNullOrWhiteSpace(iconUrl)) {
+                iconUrl = Href("../../Content/Images/ModuleDefaultIcon.png");
+            }
                 }
 
                 <div class="iconThumbnail">
@@ -79,9 +86,10 @@
                                 <li>&nbsp;&#124;&nbsp;@T("Website: ")
                                     @if (!string.IsNullOrEmpty(item.ProjectUrl)) { <a href="@item.ProjectUrl">@item.ProjectUrl</a> } else { @T("Unknown").ToString() }
                                 </li>
-                                <li>&nbsp;&#124;&nbsp;@T("Rating")
-                                    <div class="ratings" style="width:@(15*5)px" title="@T("Ratings: {0} ({1})", item.Rating, item.RatingsCount)">
-                                        <div class="score" style="width:@(15*(item.Rating))px">&nbsp;</div>
+                                <li><div>&nbsp;&#124;&nbsp;@T("Rating: ")
+                                        <div class="ratings" style="width:@(15 * 5)px" title="@T("Ratings: {0} ({1})", item.Rating, item.RatingsCount)">
+                                            <div class="score" style="width:@(15 * (item.Rating))px">&nbsp;</div>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>
@@ -95,6 +103,6 @@
             </li>}
         </ul>
     }
-    
+
     @Display(Model.Pager)
 }

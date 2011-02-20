@@ -18,8 +18,8 @@ namespace Orchard.Packaging {
                 .Add(T("Available"), "2", item => item.Action("Modules", "Gallery", new { area = "Orchard.Packaging" })
                     .Permission(StandardPermissions.SiteOwner).LocalNav()));
 
-            builder.Add(T("Settings"), "30", menu => menu
-                .Add(T("Feeds"), "3", item => item.Action("Sources", "Gallery", new { area = "Orchard.Packaging" })
+            builder.Add(T("Configuration"), "50", menu => menu
+                .Add(T("Feeds"), "25", item => item.Action("Sources", "Gallery", new { area = "Orchard.Packaging" })
                     .Permission(StandardPermissions.SiteOwner)));
         }
     }
