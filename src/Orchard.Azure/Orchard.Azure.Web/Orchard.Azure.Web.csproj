@@ -321,8 +321,11 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target> -->
-  <Target Name="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+  <Target Name="AfterBuildCompiler" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
+  </Target>
+  <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
+    <MSBuild Projects="CopyModulesAndThemes.proj" Targets="Build" />
   </Target>
   <ProjectExtensions>
     <VisualStudio>
