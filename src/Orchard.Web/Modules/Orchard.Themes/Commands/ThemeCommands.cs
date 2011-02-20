@@ -6,7 +6,7 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Themes.Services;
-using Orchard.Themes.ViewModels;
+using Orchard.Themes.Models;
 
 namespace Orchard.Themes.Commands {
     public class ThemeCommands : DefaultOrchardCommandHandler     {
