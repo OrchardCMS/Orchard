@@ -9,7 +9,7 @@
     <Version>1.0</Version>
   </Recipe>
 
-  <Feature disable="Feeds,Scheduling,Reports,Orchard.Widgets,Containers" 
+  <Feature disable="Feeds,Scheduling,Reports,Containers" 
            enable="Orchard.jQuery,TheThemeMachine" />
   
   <Metadata>

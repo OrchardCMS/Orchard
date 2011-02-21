@@ -99,10 +99,6 @@
       <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
       <Name>Orchard.Themes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Widgets\Orchard.Widgets.csproj">
-      <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>
-      <Name>Orchard.Widgets</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />

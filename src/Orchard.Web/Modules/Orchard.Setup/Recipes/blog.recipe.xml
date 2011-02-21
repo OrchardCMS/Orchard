@@ -13,7 +13,7 @@
 
   <Theme name="People Person" version="1.0" enable="true" current="true" />
   
-  <Feature enable="Orchard.PublishLater,Orchard.Blogs,Orchard.Comments,Orchard.ContentTypes,
+  <Feature enable="Orchard.Widgets,Orchard.PublishLater,Orchard.Blogs,Orchard.Comments,Orchard.ContentTypes,
            Orchard.jQuery,Orchard.Lists,Orchard.Media,
            Orchard.Tags,Orchard.Scripting,Orchard.Scripting.Lightweight,
            TinyMce,TheThemeMachine,Orchard.Experimental" />
