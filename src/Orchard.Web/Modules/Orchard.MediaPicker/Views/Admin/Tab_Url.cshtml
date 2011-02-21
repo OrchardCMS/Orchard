@@ -12,7 +12,7 @@
         mediaPath = "";
     }
 }
-        <div style="float:left;">
+        <div id="image-preview">
             <img alt="" id="img-loader" style="display:none" src="" />
             <div class="media-largepreview">
                 <img alt="@T("Preview of Image")" id="img-preview" src="TODO: some placeholder image" onload="jQuery.mediaPicker.scalePreview(this)" />
@@ -32,8 +32,8 @@
             </div>
 
         </div>
-        <div style="float:right">
-            <fieldset style="width:200px">
+        <div id="file-details">
+            <fieldset style="width:200px;">
                 <label for="img-alt">@T("Alternative Text")</label>
                 <input type="text" id="img-alt" />
 

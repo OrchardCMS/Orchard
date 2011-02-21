@@ -17,7 +17,7 @@
 @{
     var uploadAction = Url.Action("AddFromClient", "Admin", new { area = "Orchard.Media" });
 }
-        <div style="float:left">
+        <div id="gallery">
 
         <div class="breadCrumbs">
             <p>@FolderLink(T("Media Folders").ToString(), "") 
@@ -71,7 +71,7 @@
         </fieldset>
 
         </div>
-        <div style="float:right">
+        <div id="file-details">
             <img alt="" id="lib-loader" style="display:none" src="" />
             <fieldset style="width:200px">
                 <label for="lib-src">@T("URL")</label>
