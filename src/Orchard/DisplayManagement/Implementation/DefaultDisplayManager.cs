@@ -68,9 +68,12 @@ namespace Orchard.DisplayManagement.Implementation {
                 shapeBinding.ShapeDescriptor.Displaying.Invoke(action => action(displayingContext), Logger);
             }
 
+            // invoking ShapeMetadata displaying events
+            shapeMetadata.Displaying.Invoke(action => action(displayingContext), Logger);
+
             // now find the actual binding to render, taking alternates into account
             ShapeBinding actualBinding;
-            if (TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding)) {
+            if (TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding) ) {
                 shape.Metadata.ChildContent = Process(actualBinding, shape, context);
             }
             else {
@@ -107,6 +110,9 @@ namespace Orchard.DisplayManagement.Implementation {
                         displayedContext.ShapeMetadata.ChildContent = displayedContext.ChildContent;
                 }, Logger);
             }
+
+            // invoking ShapeMetadata displayed events
+            shapeMetadata.Displayed.Invoke(action => action(displayedContext), Logger);
 
             return shape.Metadata.ChildContent;
         }

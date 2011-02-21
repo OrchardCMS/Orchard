@@ -44,7 +44,6 @@ namespace Orchard.ContentManagement.Drivers {
             return contentFieldInfo;
         }
 
-
         protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) { return null; }
@@ -69,10 +68,8 @@ namespace Orchard.ContentManagement.Drivers {
             return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), differentiator)).Differentiator(differentiator);
         }
 
-        private object AddAlternates(dynamic shape, string differentiator) {
+        private static object AddAlternates(dynamic shape, string differentiator) {
             // automatically add shape alternates for shapes added by fields
-            // [ShapeType__PartName__FieldName] for ShapeType-PartName-FieldName.cshtml templates
-
             // for fields on dynamic parts the part name is the same as the content type name
 
             ShapeMetadata metadata = shape.Metadata;
@@ -83,8 +80,6 @@ namespace Orchard.ContentManagement.Drivers {
             var contentType = part != null ? part.ContentItem.ContentType : String.Empty;
             var displayType = metadata.DisplayType ?? String.Empty;
             var dynamicType = string.Equals(partName, contentType, StringComparison.Ordinal);
-
-            var url = "";
 
             // [ShapeType__FieldName] e.g. Fields/Common.Text-Teaser
             if ( !string.IsNullOrEmpty(fieldName) )
@@ -119,12 +114,7 @@ namespace Orchard.ContentManagement.Drivers {
             if ( !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) && !dynamicType ) {
                 metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName );
             }
-
-            // [ShapeType]__[ContentType]__[PartName]__[FieldName]__url__[Url] e.g. Fields/Common.Text-Blog-TeaserPart-Teaser-url-myBlog
-            if ( !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) && !dynamicType ) {
-                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName + "__" + fieldName + "__url__" + url);
-            }
-
+            
             // [ShapeType]_[DisplayType]__[PartName] e.g. Fields/Common.Text-TeaserPart.Summary
             if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(partName) ) {
                 metadata.Alternates.Add(shapeType + "_" + displayType + "__" + partName);
@@ -145,21 +135,10 @@ namespace Orchard.ContentManagement.Drivers {
                 metadata.Alternates.Add(shapeType + "_" + displayType + "__" + contentType + "__" + partName + "__" + fieldName);
             }
 
-            // [ShapeType]_[DisplayType]__[PartName]__[FieldName]__url__[Url] e.g. Fields/Common.Text-TeaserPart-Teaser-url-myBlog.Summary
-            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) ) {
-                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + partName + "__" + fieldName + "__url__" + url);
-            }
-
-            // [ShapeType]_[DisplayType]__[ContentType]__[PartName]__[FieldName]__url__[Url] e.g. Fields/Common.Text-Blog-TeaserPart-Teaser-url-myBlog.Summary
-            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !dynamicType && !string.IsNullOrEmpty(fieldName) ) {
-                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + contentType + "__" + partName + "__" + fieldName + "__url__" + url);
-            }
-
-
             return shape;
         }
 
-        private object CreateShape(BuildShapeContext context, string shapeType) {
+        private static object CreateShape(BuildShapeContext context, string shapeType) {
             IShapeFactory shapeFactory = context.New;
             return shapeFactory.Create(shapeType);
         }

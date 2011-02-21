@@ -1,4 +1,7 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using System.Linq;
+using System.Web;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 
 namespace Orchard.Core.Contents {
@@ -12,17 +15,8 @@ namespace Orchard.Core.Contents {
                 .OnDisplaying(displaying => {
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
-
-                        var url = string.Empty;
-
                         // Content__[ContentType] e.g. Content-BlogPost
                         displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.ContentType);
-
-                        // Content__[ContentType]__url__[Url] e.g. Content-BlogPost-url-myBlog
-                        displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.ContentType + "__url__" + url);
-
-                        // Content_[DisplayType] e.g. Content.Summary
-                        displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType);
 
                         // Content_[DisplayType]__[ContentType] e.g. Content-BlogPost.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType + "__" + contentItem.ContentType);
