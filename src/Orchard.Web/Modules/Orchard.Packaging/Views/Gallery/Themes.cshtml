@@ -54,15 +54,15 @@
         @foreach (var item in Model.Extensions) {
             <li>
                 @{
-            string extensionClass = "iconThumbnail";
-            string iconUrl = @item.IconUrl;
-            if (!string.IsNullOrWhiteSpace(@item.FirstScreenshot)) {
-                iconUrl = @item.FirstScreenshot;
-                extensionClass = "screenshotThumbnail";
-            } else if (string.IsNullOrWhiteSpace(iconUrl)) {
-                iconUrl = Href("../../Content/Images/imagePlaceholder.png");
-                extensionClass = "screenshotThumbnail";
-            }
+                    string extensionClass = "iconThumbnail";
+                    string iconUrl = @item.IconUrl;
+                    if (!string.IsNullOrWhiteSpace(@item.FirstScreenshot)) {
+                        iconUrl = @item.FirstScreenshot;
+                        extensionClass = "screenshotThumbnail";
+                    } else if (string.IsNullOrWhiteSpace(iconUrl)) {
+                        iconUrl = Href("../../Content/Images/imagePlaceholder.png");
+                        extensionClass = "screenshotThumbnail";
+                    }
                 }
 
                 <div class="@extensionClass">
@@ -85,7 +85,7 @@
                         <div class="properties">
                             <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
                             <ul class="pageStatus">
-                                <li>@T("Last Updated: {0}", DateTime.Now.ToLocalTime())</li>
+                                <li>@T("Last Updated: {0}", item.LastUpdated)</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(item.Authors) ? item.Authors : T("Unknown").ToString())</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", item.DownloadCount)</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Website: ")
@@ -108,4 +108,6 @@
             </li>}
         </ul>
     }
+
+    @Display(Model.Pager)
 }

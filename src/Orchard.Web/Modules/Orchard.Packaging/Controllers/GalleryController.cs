@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -151,7 +150,8 @@ namespace Orchard.Packaging.Controllers {
                         source,
                         packages => {
                             packages = packages.Where(p => p.PackageType == packageType &&
-                                (string.IsNullOrEmpty(options.SearchText) || p.Id.Contains(options.SearchText)));
+                                p.IsLatestVersion &&
+                                (string.IsNullOrEmpty(options.SearchText) || p.Title.Contains(options.SearchText)));
 
                             switch (options.Order) {
                                 case PackagingExtensionsOrder.Downloads:
@@ -170,14 +170,14 @@ namespace Orchard.Packaging.Controllers {
                             }
 
                             return packages;
-                        }
-                        ).ToArray();
+                        }).ToArray();
 
                     // count packages separately to prevent loading everything just to count
                     totalCount += _packagingSourceManager.GetExtensionCount(
                         source,
                         packages => packages.Where(p => p.PackageType == packageType &&
-                            (string.IsNullOrEmpty(options.SearchText) || p.Id.Contains(options.SearchText)))
+                                p.IsLatestVersion &&
+                                (string.IsNullOrEmpty(options.SearchText) || p.Title.Contains(options.SearchText)))
                         );
 
                     extensions = extensions == null ? sourceExtensions : extensions.Concat(sourceExtensions);

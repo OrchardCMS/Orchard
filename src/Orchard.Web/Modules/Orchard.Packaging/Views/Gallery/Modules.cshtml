@@ -14,11 +14,11 @@
     Layout.Title = T("Modules").ToString();
 }
 
-@using ( Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery")) ) {
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery")) ) {
     <fieldset class="bulk-actions">
         <label for="filterResults" class="bulk-filter">@T("Feed:")</label>
         <select id="sourceId" name="sourceId">
-            @Html.SelectOption("", Model.SelectedSource == null, T("Any (show all feeds)").ToString())
+            @Html.SelectOption("", Model.SelectedSource == null, T("All feeds").ToString())
             @foreach (var source in Model.Sources) {
                 @Html.SelectOption(source.Id, Model.SelectedSource != null && Model.SelectedSource.Id == source.Id, source.FeedTitle)
             }
@@ -36,7 +36,7 @@
         <label for="pageSize">@T("Show:")</label>
         <select id="pageSize" name="PageSize">
             @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-            @foreach(int size in pageSizes.OrderBy(p => p)) {
+            @foreach (int size in pageSizes.OrderBy(p => p)) {
                 @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
             }
         </select>
@@ -44,7 +44,7 @@
     </fieldset>
 
     <fieldset class="search-actions">
-        <input type="text" id="searchText" name="@Html.NameOf(m => m.Options.SearchText)" />
+        <input type="text" id="searchText" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText" />
 
         <button type="submit">@T("Search")</button>
     </fieldset>
@@ -54,10 +54,10 @@
         @foreach (var item in Model.Extensions) {
             <li>
                 @{
-            string iconUrl = @item.IconUrl;
-            if (string.IsNullOrWhiteSpace(iconUrl)) {
-                iconUrl = Href("../../Content/Images/ModuleDefaultIcon.png");
-            }
+                    string iconUrl = @item.IconUrl;
+                    if (string.IsNullOrWhiteSpace(iconUrl)) {
+                        iconUrl = Href("../../Content/Images/ModuleDefaultIcon.png");
+                    }
                 }
 
                 <div class="iconThumbnail">
@@ -80,7 +80,7 @@
                         <div class="properties">
                             <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
                             <ul class="pageStatus">
-                                <li>@T("Last Updated: {0}", DateTime.Now.ToLocalTime())</li>
+                                <li>@T("Last Updated: {0}", item.LastUpdated)</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(item.Authors) ? item.Authors : T("Unknown").ToString())</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", item.DownloadCount)</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Website: ")
