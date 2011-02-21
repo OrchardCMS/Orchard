@@ -2,24 +2,20 @@
 <Orchard>
   <Recipe>
     <Name>Custom Content Site</Name>
-    <Description>A recipe providing an installation profile with the functionality needed to create  content-based custom sites.</Description>
+    <Description>A recipe providing an installation profile with the functionality needed to create content-based custom sites.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
     <Tags></Tags>
     <Version>1.0</Version>
   </Recipe>
 
-  <Feature enable="Orchard.PublishLater,Orchard.Blogs,Orchard.Comments,Orchard.ContentTypes,
-           Orchard.jQuery,Orchard.Lists,Orchard.Media,
-           Orchard.Tags,Orchard.Scripting,Orchard.Scripting.Lightweight,
-           TinyMce,PackagingServices,Orchard.Packaging,Gallery,TheThemeMachine,Orchard.Experimental" />
+  <Feature enable="Orchard.ContentTypes,Orchard.Lists,Orchard.PublishLater,
+                   Orchard.jQuery,TinyMce,Orchard.Media,
+                   PackagingServices,Orchard.Packaging,Gallery,TheThemeMachine" />
 
   <Metadata>
     <Types>
-      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
-        <TagsPart />
-        <LocalizationPart />
-      </Page>
+      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true" />
     </Types>
     <Parts>
       <BodyPart BodyPartSettings.FlavorDefault="html" />

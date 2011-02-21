@@ -31,12 +31,12 @@
     </Types>
     <Parts>
       <BodyPart BodyPartSettings.FlavorDefault="html" />
-      <CommentSettingsPart ModerateComments="true" />
     </Parts>
   </Metadata>
 
   <Settings>
     <SiteSettingsPart PageSize="20" PageTitleSeparator = " - " />
+    <CommentSettingsPart ModerateComments="true" />
   </Settings>
   
   <Command>
