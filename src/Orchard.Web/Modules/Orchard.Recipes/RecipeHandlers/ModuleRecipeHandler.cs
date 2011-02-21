@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Packaging.Models;

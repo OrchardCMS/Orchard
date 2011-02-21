@@ -1,54 +1,30 @@
 ﻿<?xml version="1.0"?>
 <Orchard>
   <Recipe>
-    <Name>minimal</Name>
-    <Description>A minimal recipe for Orchard devs</Description>
+    <Name>Minimal</Name>
+    <Description>A recipe providing the Orchard framework with limited end-user functionality that can be used during development.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
     <Tags>developer</Tags>
     <Version>1.0</Version>
   </Recipe>
 
-  <Feature enable="Orchard.PublishLater,Orchard.Blogs,Orchard.Comments,Orchard.ContentTypes,
-           Orchard.jQuery,Orchard.Lists,Orchard.Media,
-           Orchard.Tags,Orchard.Scripting,Orchard.Scripting.Lightweight,
-           TinyMce,PackagingServices,Orchard.Packaging,Gallery,TheThemeMachine,Orchard.Experimental" />
-
+  <Feature disable="Feeds,Scheduling,Reports,Orchard.Widgets,Containers" 
+           enable="Orchard.jQuery,TheThemeMachine" />
+  
   <Metadata>
     <Types>
-      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
-        <TagsPart />
-        <LocalizationPart />
-      </Page>
-      <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
-        <CommentsPart />
-        <TagsPart />
-        <LocalizationPart />
-      </BlogPost>
+      <Page ContentTypeSettings.Draftable="True" />    
     </Types>
     <Parts>
       <BodyPart BodyPartSettings.FlavorDefault="html" />
-      <!-- Dynamic part -->
-      <Product ContentTypeSettings.Draftable="True" />
     </Parts>
   </Metadata>
 
-  <Settings>
-    <SiteSettingsPart PageSize="20" PageTitleSeparator = " - " />
-    <CommentSettingsPart ModerateComments="true" />
-  </Settings>
+  <Settings />
 
   <Command>
-    feature enable Orchard.Experimental.TestingLists
-    layer create /Name:"Default" /LayerRule:"true"
-    layer create /Name:"Authenticated" /LayerRule:"authenticated"
-    layer create /Name:"Anonymous" /LayerRule:"not authenticated"
-    layer create /Name:"Disabled" /LayerRule:"false"
-    layer create /Name:"TheHomepage" /LayerRule:"url '~/'"
-    page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /UseWelcomeText:true
-    widget create /Type:"HtmlWidget" /Title:"First Leader Aside" /Zone:"TripelFirst" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
-    widget create /Type:"HtmlWidget" /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
-    widget create /Type:"HtmlWidget" /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
+    page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /Text:"Welcome To Orchard!"
     menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
   </Command>
 
