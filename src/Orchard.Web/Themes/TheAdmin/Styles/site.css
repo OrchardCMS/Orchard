@@ -348,38 +348,12 @@ form.link button:hover {
 }
 #menu .menu-admin li h3 a { /* only the h3 gets an icon by default */
     background-image:url(images/menu-default.png);
-    padding:0 0 0 16px;
+    padding:0 0 0 20px;
 }
 #menu .menu-admin a:hover {
     background-position:0 -30px;
     color:#fff;
 }
-/* todo: (heskew) pull out into the appropriate modules somehow when this is baked * /
-#menu .menu-admin .section-dashboard h3 a { background-position:0 -36px; }
-#menu .menu-admin .section-dashboard h3 a:hover { background-position:0 -56px; }
-/* todo: need to get the "New" sub items * /
-#menu .menu-admin .section-content h3 a { background-position:0 -247px; }
-#menu .menu-admin .section-content h3 a:hover { background-position:0 -268px; }
-/* todo: need an icon for "Blogs" * /
-#menu .menu-admin .section-comments h3 a { background-position:0 -539px; }
-#menu .menu-admin .section-comments h3 a:hover { background-position:0 -559px; }
-#menu .menu-admin .section-lists h3 a { background-position:0 -289px; }
-#menu .menu-admin .section-lists h3 a:hover { background-position:0 -310px; }
-#menu .menu-admin .section-widgets h3 a { background-position:0 -413px; }
-#menu .menu-admin .section-widgets h3 a:hover { background-position:0 -433px; }
-#menu .menu-admin .section-media h3 a { background-position:0 -374px; }
-#menu .menu-admin .section-media h3 a:hover { background-position:0 -393px; }
-#menu .menu-admin .section-navigation h3 a { background-position:0 -333px; }
-#menu .menu-admin .section-navigation h3 a:hover { background-position:0 -354px; }
-#menu .menu-admin .section-tags h3 a { background-position:0 -578px; }
-#menu .menu-admin .section-tags h3 a:hover { background-position:0 -598px; }
-#menu .menu-admin .section-modules h3 a { background-position:0 -454px; }
-#menu .menu-admin .section-modules h3 a:hover { background-position:0 -475px; }
-#menu .menu-admin .section-themes h3 a { background-position:0 -498px; }
-#menu .menu-admin .section-themes h3 a:hover { background-position:0 -518px; }
-#menu .menu-admin .section-users h3 a { background-position:0 -619px; }
-#menu .menu-admin .section-users h3 a:hover { background-position:0 -640px; }
-*/
 #menu .menu-admin li h3 a, #menu .menu-admin li h3 span {
     line-height:16px;
     color:#aec3ce;
@@ -388,7 +362,7 @@ form.link button:hover {
     color:#aec3ce;
     display:block;
     line-height:1.2em;
-    padding:6px 0 6px 16px;
+    padding:6px 0 6px 20px;
     text-decoration:none;
 }
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus {
