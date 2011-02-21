@@ -1,22 +1,20 @@
 ﻿<?xml version="1.0"?>
 <Orchard>
   <Recipe>
-    <Name>blog</Name>
-    <Description>Orchard Blog Recipe</Description>
+    <Name>Blog</Name>
+    <Description>A recipe providing an installation profile with the features you need for a personal blog.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
-    <Tags></Tags>
+    <Tags>blog</Tags>
     <Version>1.0</Version>
   </Recipe>
-
-  <Module name="Bing.Maps" version="0.5.0" replace="false" />
-
-  <Theme name="People Person" version="1.0" enable="true" current="true" />
   
-  <Feature enable="Orchard.Widgets,Orchard.PublishLater,Orchard.Blogs,Orchard.Comments,Orchard.ContentTypes,
-           Orchard.jQuery,Orchard.Lists,Orchard.Media,
-           Orchard.Tags,Orchard.Scripting,Orchard.Scripting.Lightweight,
-           TinyMce,TheThemeMachine,Orchard.Experimental" />
+  <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,
+                   XmlRpc,Orchard.Blogs.RemotePublishing,
+                   TinyMce,Orchard.Media,Orchard.PublishLater,
+                   Orchard.jQuery,Orchard.Widgets,
+                   Orchard.Scripting,Orchard.Scripting.Lightweight,
+                   TheThemeMachine" />
 
   <Metadata>
     <Types>
@@ -32,18 +30,15 @@
     </Types>
     <Parts>
       <BodyPart BodyPartSettings.FlavorDefault="html" />
-      <!-- Dynamic part -->
-      <Product ContentTypeSettings.Draftable="True" />
+      <CommentSettingsPart ModerateComments="true" />
     </Parts>
   </Metadata>
 
   <Settings>
     <SiteSettingsPart PageSize="20" PageTitleSeparator = " - " />
-    <CommentSettingsPart ModerateComments="true" />
   </Settings>
   
   <Command>
-    feature enable Orchard.Experimental.TestingLists
     layer create /Name:"Default" /LayerRule:"true"
     layer create /Name:"Authenticated" /LayerRule:"authenticated"
     layer create /Name:"Anonymous" /LayerRule:"not authenticated"
