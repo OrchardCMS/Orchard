@@ -85,7 +85,7 @@
                         <div class="properties">
                             <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
                             <ul class="pageStatus">
-                                <li>@T("Last Updated: {0}", DateTime.Now.ToLocalTime())</li>
+                                <li>@T("Last Updated: {0}", item.LastUpdated)</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(item.Authors) ? item.Authors : T("Unknown").ToString())</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", item.DownloadCount)</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Website: ")
@@ -107,5 +107,9 @@
                 </div>
             </li>}
         </ul>
+    } else {
+        <p>@T("No themes available.").ToString()</p>
     }
+
+    @Display(Model.Pager)
 }

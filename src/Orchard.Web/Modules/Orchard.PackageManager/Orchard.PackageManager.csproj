@@ -81,6 +81,8 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Events\ExtensionDisplayEventHandler.cs" />
+    <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
     <Compile Include="Services\BackgroundPackageUpdateStatus.cs" />
     <Compile Include="Services\BackgroundPackageUpdateTask.cs" />
     <Compile Include="Services\FolderUpdater.cs" />

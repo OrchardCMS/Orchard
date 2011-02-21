@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Themes.Models {
@@ -42,6 +43,16 @@ namespace Orchard.Themes.Models {
         /// Boolean value indicating if the feature was recently installed.
         /// </summary>
         public bool IsRecentlyInstalled { get; set; }
+
+        /// <summary>
+        /// Boolean value indicating if the theme can be uninstalled.
+        /// </summary>
+        public bool CanUninstall { get; set; }
+
+        /// <summary>
+        /// List of theme notifications.
+        /// </summary>
+        public List<string> Notifications { get; set; }
 
         /// <summary>
         /// The theme's name.

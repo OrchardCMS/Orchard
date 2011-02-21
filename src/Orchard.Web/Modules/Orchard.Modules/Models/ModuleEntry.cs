@@ -1,21 +1,16 @@
-﻿using Orchard.Environment.Extensions.Models;
+﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 
-namespace Orchard.Modules.ViewModels {
+namespace Orchard.Modules.Models {
     /// <summary>
     /// Represents a module.
     /// </summary>
-    public class Module {
+    public class ModuleEntry {
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public Module() {}
-
-        /// <summary>
-        /// Instantiates a module based on an extension descriptor.
-        /// </summary>
-        /// <param name="extensionDescriptor">The extension descriptor.</param>
-        public Module(ExtensionDescriptor extensionDescriptor) {
-            Descriptor = extensionDescriptor;
+        public ModuleEntry() {
+            Notifications = new List<string>();
         }
 
         /// <summary>
@@ -32,5 +27,10 @@ namespace Orchard.Modules.ViewModels {
         /// Boolean value indicating if the feature was recently installed.
         /// </summary>
         public bool IsRecentlyInstalled { get; set; }
+
+        /// <summary>
+        /// List of module notifications.
+        /// </summary>
+        public List<string> Notifications { get; set; }
     }
 }

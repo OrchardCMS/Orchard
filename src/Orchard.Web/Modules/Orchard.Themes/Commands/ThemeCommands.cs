@@ -66,7 +66,7 @@ namespace Orchard.Themes.Commands {
                 Context.Output.WriteLine(T("--------------------------"));
                 themes.Where(t => t.Name.Trim().Equals(currentTheme.Name.Trim(), StringComparison.OrdinalIgnoreCase) == false)
                     .ToList()
-                    .ForEach(t => WriteThemeLines(t));
+                    .ForEach(WriteThemeLines);
             }
         }
 

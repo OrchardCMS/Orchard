@@ -12,7 +12,7 @@
         mediaPath = "";
     }
 }
-        <div style="float:left;">
+        <div id="image-preview">
             <img alt="" id="img-loader" style="display:none" src="" />
             <div class="media-largepreview">
                 <img alt="@T("Preview of Image")" id="img-preview" src="TODO: some placeholder image" onload="jQuery.mediaPicker.scalePreview(this)" />
@@ -32,8 +32,8 @@
             </div>
 
         </div>
-        <div style="float:right">
-            <fieldset style="width:200px">
+        <div id="file-details">
+            <fieldset>
                 <label for="img-alt">@T("Alternative Text")</label>
                 <input type="text" id="img-alt" />
 
@@ -64,9 +64,11 @@
                 <input type="text" id="img-height" />
 
                 <input type="checkbox" id="img-lock" checked="checked" />
-                <label for="img-lock">@T("Lock Aspect Ratio")</label>
+                <label class="forcheckbox" for="img-lock">@T("Lock Aspect Ratio")</label>
 
-                <input type="button" id="img-cancel" value="@T("Cancel")" />
+                <div class="actions">
                 <input type="button" id="img-insert" value="@T("Insert")" class="disabled" data-edittext="@T("Update")" />
+                <input type="button" id="img-cancel" value="@T("Cancel")" />
+                </div>
             </fieldset>
         </div>
