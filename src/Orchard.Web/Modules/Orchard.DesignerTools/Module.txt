@@ -11,3 +11,7 @@ Features:
         Category: Designer
         Description: Displays all currently displayed shapes and some information to customize them
         Dependencies: Orchard.jQuery
+    UrlAlternates:
+        Name: Url Alternates
+        Category: Designer
+        Description: Adds shape alternates for specific urls

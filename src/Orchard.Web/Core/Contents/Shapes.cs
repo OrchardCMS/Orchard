@@ -1,4 +1,7 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using System.Linq;
+using System.Web;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 
 namespace Orchard.Core.Contents {
@@ -12,16 +15,19 @@ namespace Orchard.Core.Contents {
                 .OnDisplaying(displaying => {
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
-                        //Content-BlogPost
+                        // Content__[ContentType] e.g. Content-BlogPost
                         displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.ContentType);
-                        //Content-42
-                        displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.Id);
-                        //Content.Summary
-                        displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType);
-                        //Content-Page.Summary
+
+                        // Content_[DisplayType]__[ContentType] e.g. Content-BlogPost.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType + "__" + contentItem.ContentType);
 
-                        if (!displaying.ShapeMetadata.DisplayType.Contains("Admin"))
+                        // Content__[Id] e.g. Content-42
+                        displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.Id);
+
+                        // Content_[DisplayType]__[Id] e.g. Content-42.Summary
+                        displaying.ShapeMetadata.Alternates.Add("Content_" +  displaying.ShapeMetadata.DisplayType + "__" + contentItem.Id);
+
+                        if ( !displaying.ShapeMetadata.DisplayType.Contains("Admin") )
                             displaying.ShapeMetadata.Wrappers.Add("Content_ControlWrapper");
                     }
                 });
