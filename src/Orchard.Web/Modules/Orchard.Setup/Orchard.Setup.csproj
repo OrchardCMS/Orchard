@@ -77,7 +77,7 @@
   <ItemGroup>
     <Content Include="Content\synchronizing.gif" />
     <Content Include="Recipes\blog.recipe.xml" />
-    <Content Include="Recipes\cms.recipe.xml" />
+    <Content Include="Recipes\customcontentsite.recipe.xml" />
     <Content Include="Recipes\minimal.recipe.xml" />
     <Content Include="Scripts\setup.js" />
     <Content Include="Views\Setup\Index.cshtml" />

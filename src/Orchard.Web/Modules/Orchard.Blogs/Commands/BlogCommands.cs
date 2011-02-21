@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Orchard.Blogs.Models;
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -48,14 +49,17 @@ namespace Orchard.Blogs.Commands {
         public string Title { get; set; }
 
         [OrchardSwitch]
+        public string Description { get; set; }
+
+        [OrchardSwitch]
         public string MenuText { get; set; }
 
         [OrchardSwitch]
         public bool Homepage { get; set; }
 
         [CommandName("blog create")]
-        [CommandHelp("blog create /Slug:<slug> /Title:<title> [/Owner:<username>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
-        [OrchardSwitches("Slug,Title,Owner,MenuText,Homepage")]
+        [CommandHelp("blog create /Slug:<slug> /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
+        [OrchardSwitches("Slug,Title,Owner,Description,MenuText,Homepage")]
         public string Create() {
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
@@ -76,6 +80,9 @@ namespace Orchard.Blogs.Commands {
             blog.As<RoutePart>().Path = Slug;
             blog.As<RoutePart>().Title = Title;
             blog.As<RoutePart>().PromoteToHomePage = Homepage;
+            if (!String.IsNullOrEmpty(Description)) {
+                blog.As<BlogPart>().Description = Description;
+            }
             if ( !String.IsNullOrWhiteSpace(MenuText) ) {
                 blog.As<MenuPart>().OnMainMenu = true;
                 blog.As<MenuPart>().MenuPosition = _menuService.Get().Select(menuPart => menuPart.MenuPosition).Max() + 1 + ".0";

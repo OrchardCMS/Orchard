@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0"?>
 <Orchard>
   <Recipe>
-    <Name>CMS</Name>
-    <Description>A recipe providing an installation profile with the functionality for a generic CMS.</Description>
+    <Name>Custom Content Site</Name>
+    <Description>A recipe providing an installation profile with the functionality needed to create  content-based custom sites.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
     <Tags></Tags>
