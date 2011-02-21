@@ -149,3 +149,13 @@
 .updateAvailable {
     background-color: #f1f0cb;
 }
+.search-actions {
+    float: right;
+    display: inline;
+    height: auto;
+    margin: 0 1.4em 0 0;
+    padding-top: 0;
+}
+.manage {
+    float: right;
+}

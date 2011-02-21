@@ -54,15 +54,15 @@
         @foreach (var item in Model.Extensions) {
             <li>
                 @{
-                    string extensionClass = "iconThumbnail";
-                    string iconUrl = @item.IconUrl;
-                    if (!string.IsNullOrWhiteSpace(@item.FirstScreenshot)) {
-                        iconUrl = @item.FirstScreenshot;
-                        extensionClass = "screenshotThumbnail";
-                    } else if (string.IsNullOrWhiteSpace(iconUrl)) {
-                        iconUrl = Href("../../Content/Images/imagePlaceholder.png");
-                        extensionClass = "screenshotThumbnail";
-                    }
+            string extensionClass = "iconThumbnail";
+            string iconUrl = @item.IconUrl;
+            if (!string.IsNullOrWhiteSpace(@item.FirstScreenshot)) {
+                iconUrl = @item.FirstScreenshot;
+                extensionClass = "screenshotThumbnail";
+            } else if (string.IsNullOrWhiteSpace(iconUrl)) {
+                iconUrl = Href("../../Content/Images/imagePlaceholder.png");
+                extensionClass = "screenshotThumbnail";
+            }
                 }
 
                 <div class="@extensionClass">
@@ -107,6 +107,8 @@
                 </div>
             </li>}
         </ul>
+    } else {
+        <p>@T("No themes available.").ToString()</p>
     }
 
     @Display(Model.Pager)
