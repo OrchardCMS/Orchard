@@ -342,12 +342,16 @@ form.link button:hover {
     font-size:14px;
     padding:0 0 0 10px;
 }
-#menu .menu-admin li h3 a {
-    background:url(images/menu-all.png) no-repeat 0 4px;
+#menu .menu-admin a {
+    background-position:0 2px;
+    background-repeat:no-repeat;
+}
+#menu .menu-admin li h3 a { /* only the h3 gets an icon by default */
+    background-image:url(images/menu-default.png);
     padding:0 0 0 16px;
 }
-#menu .menu-admin li h3 a:hover {
-    background-position:0 -17px;
+#menu .menu-admin a:hover {
+    background-position:0 -30px;
     color:#fff;
 }
 /* todo: (heskew) pull out into the appropriate modules somehow when this is baked * /
@@ -388,7 +392,7 @@ form.link button:hover {
     text-decoration:none;
 }
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus {
-    background:#656b55;
+    background-color:#656b55;
     color: #fff;
     /*CSS3 properties*/
      border-radius: 3px;
@@ -444,6 +448,11 @@ form.link button:hover {
       box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
      -webkit-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0); 
      -moz-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
+}
+.section-dashboard h3, .section-new h3,
+.section-dashboard ul, .section-new ul {
+    margin-left:-1px;
+    margin-right:-1px;
 }
 /* todo: make generic so all toggles can use this and clean up jQuery */
 .expando-glyph-container {

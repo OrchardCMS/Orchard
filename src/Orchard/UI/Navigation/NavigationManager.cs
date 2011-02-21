@@ -74,8 +74,9 @@ namespace Orchard.UI.Navigation {
                         RouteValues = item.RouteValues,
                         LocalNav = item.LocalNav,
                         Text = item.Text,
+                        TextHint = item.TextHint,
+                        IdHint = item.IdHint,
                         Url = item.Url,
-                        Id = item.Id,
                         LinkToFirstChild = item.LinkToFirstChild,
                         Href = item.Href
                     };
@@ -118,9 +119,10 @@ namespace Orchard.UI.Navigation {
 
             var joined = new MenuItem {
                 Text = items.First().Text,
+                TextHint = items.First().TextHint,
+                IdHint = items.First().IdHint,
                 Url = items.First().Url,
                 Href = items.First().Href,
-                Id = items.First().Id,
                 LinkToFirstChild = items.First().LinkToFirstChild,
                 RouteValues = items.First().RouteValues,
                 LocalNav = items.Any(x => x.LocalNav),

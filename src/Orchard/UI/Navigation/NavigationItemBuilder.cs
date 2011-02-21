@@ -13,8 +13,10 @@ namespace Orchard.UI.Navigation {
         }
 
         public NavigationItemBuilder Caption(LocalizedString caption) {
-            if (caption != null)
+            if (caption != null) {
                 _item.Text = caption.Text;
+                _item.TextHint = caption.TextHint;
+            }
             return this;
         }
 
@@ -28,8 +30,8 @@ namespace Orchard.UI.Navigation {
             return this;
         }
 
-        public NavigationItemBuilder Id(string id) {
-            _item.Id = id;
+        public NavigationItemBuilder IdHint(string idHint) {
+            _item.IdHint = idHint;
             return this;
         }
 

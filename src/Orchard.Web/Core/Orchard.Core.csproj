@@ -239,8 +239,8 @@
     <Content Include="Contents\Views\Admin\Create.cshtml" />
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\List.cshtml" />
-    <Content Include="Dashboard\styles\dashboard.menu.css" />
-    <Content Include="Dashboard\styles\images\dashboard.menu.png" />
+    <Content Include="Dashboard\styles\menu.dashboard.css" />
+    <Content Include="Dashboard\styles\images\menu.dashboard.png" />
     <Content Include="Feeds\Views\Feed.cshtml" />
     <Content Include="Contents\Views\Parts.Contents.Publish.cshtml" />
     <Content Include="Contents\Views\Parts.Contents.Publish.SummaryAdmin.cshtml" />

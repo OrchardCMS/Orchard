@@ -55,8 +55,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\page.menu.css" />
-    <Content Include="Styles\images\page.menu.png" />
+    <Content Include="Styles\menu.page.css" />
+    <Content Include="Styles\images\menu.page.png" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>

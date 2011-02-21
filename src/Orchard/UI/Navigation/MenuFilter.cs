@@ -43,6 +43,12 @@ namespace Orchard.UI.Navigation {
             // Populate main nav
             dynamic menuShape = _shapeFactory.Menu().MenuName(menuName);
             PopulateMenu(_shapeFactory, menuShape, menuShape, menuItems);
+
+            // Add any know image sets to the main nav
+            IEnumerable<string> menuImageSets = _navigationManager.BuildImageSets(menuName);
+            if (menuImageSets != null && menuImageSets.Count() > 0)
+                menuShape.ImageSets(menuImageSets);
+            
             workContext.Layout.Navigation.Add(menuShape);
 
             // Populate local nav
@@ -181,8 +187,9 @@ namespace Orchard.UI.Navigation {
         protected dynamic BuildMenuItemShape(dynamic shapeFactory, dynamic parentShape, dynamic menu, MenuItem menuItem) {
             return shapeFactory.MenuItem()
                 .Text(menuItem.Text)
+                .TextHint(menuItem.TextHint)
+                .IdHint(menuItem.IdHint)
                 .Href(menuItem.Href)
-                .Id(menuItem.Id)
                 .LinkToFirstChild(menuItem.LinkToFirstChild)
                 .LocalNav(menuItem.LocalNav)
                 .Selected(menuItem.Selected)
@@ -203,8 +210,9 @@ namespace Orchard.UI.Navigation {
         protected dynamic BuildLocalMenuItemShape(dynamic shapeFactory, dynamic parentShape, dynamic menu, MenuItem menuItem) {
             return shapeFactory.LocalMenuItem()
                 .Text(menuItem.Text)
+                .TextHint(menuItem.TextHint)
+                .IdHint(menuItem.IdHint)
                 .Href(menuItem.Href)
-                .Id(menuItem.Id)
                 .LinkToFirstChild(menuItem.LinkToFirstChild)
                 .LocalNav(menuItem.LocalNav)
                 .Selected(menuItem.Selected)

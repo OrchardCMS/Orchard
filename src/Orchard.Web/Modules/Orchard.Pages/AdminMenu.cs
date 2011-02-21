@@ -7,7 +7,7 @@ namespace Orchard.Core.Dashboard {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.AddImageSet("page.menu");
+            builder.AddImageSet("page");
         }
     }
 }
