@@ -1,14 +1,4 @@
-﻿/* Clearing Floats
-***************************************************************/
-
-.group:after {
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
-}
-
+﻿html { background:none !important }
 
 body {
   color: #333; 
