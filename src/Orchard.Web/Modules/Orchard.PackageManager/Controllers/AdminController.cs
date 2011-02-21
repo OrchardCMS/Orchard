@@ -51,7 +51,7 @@ namespace Orchard.PackageManager.Controllers {
         }
 
         public ActionResult ModulesUpdates(int? reportId) {
-            return PackageUpdate("ModulesUpdate", DefaultExtensionTypes.Theme, reportId);
+            return PackageUpdate("ModulesUpdate", DefaultExtensionTypes.Module, reportId);
         }
 
         private ActionResult PackageUpdate(string view, string extensionType, int? reportId) {

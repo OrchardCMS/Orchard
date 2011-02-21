@@ -9,6 +9,8 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Modules.Events;
+using Orchard.Modules.Models;
 using Orchard.Modules.Services;
 using Orchard.Modules.ViewModels;
 using Orchard.Reports.Services;
@@ -18,6 +20,7 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Modules.Controllers {
     public class AdminController : Controller {
+        private readonly IExtensionDisplayEventHandler _extensionDisplayEventHandler;
         private readonly IModuleService _moduleService;
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IReportsCoordinator _reportsCoordinator;
@@ -25,7 +28,9 @@ namespace Orchard.Modules.Controllers {
         private readonly IFeatureManager _featureManager;
         private readonly ShellDescriptor _shellDescriptor;
 
-        public AdminController(IOrchardServices services,
+        public AdminController(
+            IEnumerable<IExtensionDisplayEventHandler> extensionDisplayEventHandlers,
+            IOrchardServices services,
             IModuleService moduleService,
             IDataMigrationManager dataMigrationManager,
             IReportsCoordinator reportsCoordinator,
@@ -34,6 +39,7 @@ namespace Orchard.Modules.Controllers {
             ShellDescriptor shellDescriptor)
         {
             Services = services;
+            _extensionDisplayEventHandler = extensionDisplayEventHandlers.FirstOrDefault();
             _moduleService = moduleService;
             _dataMigrationManager = dataMigrationManager;
             _reportsCoordinator = reportsCoordinator;
@@ -53,11 +59,22 @@ namespace Orchard.Modules.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage modules")))
                 return new HttpUnauthorizedResult();
 
-            IEnumerable<Module> modules = _extensionManager.AvailableExtensions()
+            IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
                 .Where(x => DefaultExtensionTypes.IsModule(x.ExtensionType))
-                .Select(extensionDescriptor => new Module(extensionDescriptor) {
+                .Select(extensionDescriptor => {
+                            ModuleEntry moduleEntry = new ModuleEntry {
+                                Descriptor = extensionDescriptor,
                                 IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(extensionDescriptor)
-                            });
+                            };
+
+                            if (_extensionDisplayEventHandler != null) {
+                                foreach (string notification in _extensionDisplayEventHandler.Displaying(moduleEntry.Descriptor)) {
+                                    moduleEntry.Notifications.Add(notification);
+                                }
+                            }
+
+                            return moduleEntry;
+                        });
 
             return View(new ModulesIndexViewModel { 
                 Modules = modules,

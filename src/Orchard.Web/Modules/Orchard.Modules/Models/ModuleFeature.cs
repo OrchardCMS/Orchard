@@ -1,6 +1,6 @@
 ﻿using Orchard.Environment.Extensions.Models;
 
-namespace Orchard.Modules.ViewModels {
+namespace Orchard.Modules.Models {
     /// <summary>
     /// Represents a module's feature.
     /// </summary>

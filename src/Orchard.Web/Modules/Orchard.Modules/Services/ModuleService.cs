@@ -7,7 +7,7 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
-using Orchard.Modules.ViewModels;
+using Orchard.Modules.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Modules.Services {
