@@ -107,6 +107,8 @@
     <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Module.txt" />
     <Content Include="Scripts\orchard-blogs-archives.js" />
+    <Content Include="Styles\images\menu.blog.png" />
+    <Content Include="Styles\menu.blog.css" />
     <Content Include="Styles\orchard-blogs-admin.css" />
     <Content Include="Styles\orchard-blogs-archives.css" />
     <Content Include="Views\BlogAdmin\Create.cshtml" />

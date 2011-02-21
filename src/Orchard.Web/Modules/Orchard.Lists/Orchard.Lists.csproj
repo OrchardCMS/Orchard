@@ -64,6 +64,8 @@
     <Compile Include="Migrations.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\images\menu.list.png" />
+    <Content Include="Styles\menu.list.css" />
     <Content Include="Views\Items\Content-List.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +73,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
