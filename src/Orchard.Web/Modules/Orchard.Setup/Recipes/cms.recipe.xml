@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0"?>
 <Orchard>
   <Recipe>
-    <Name>cms</Name>
-    <Description>Orchard CMS Recipe</Description>
+    <Name>CMS</Name>
+    <Description>A recipe providing an installation profile with the functionality for a generic CMS.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
     <Tags></Tags>
@@ -20,35 +20,18 @@
         <TagsPart />
         <LocalizationPart />
       </Page>
-      <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
-        <CommentsPart />
-        <TagsPart />
-        <LocalizationPart />
-      </BlogPost>
     </Types>
     <Parts>
       <BodyPart BodyPartSettings.FlavorDefault="html" />
-      <!-- Dynamic part -->
-      <Product ContentTypeSettings.Draftable="True" />
+      <!-- Dynamic parts -->
     </Parts>
   </Metadata>
 
   <Settings>
-    <SiteSettingsPart PageSize="20" PageTitleSeparator = " - " />
-    <CommentSettingsPart ModerateComments="true" />
   </Settings>
 
   <Command>
-    feature enable Orchard.Experimental.TestingLists
-    layer create /Name:"Default" /LayerRule:"true"
-    layer create /Name:"Authenticated" /LayerRule:"authenticated"
-    layer create /Name:"Anonymous" /LayerRule:"not authenticated"
-    layer create /Name:"Disabled" /LayerRule:"false"
-    layer create /Name:"TheHomepage" /LayerRule:"url '~/'"
     page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /UseWelcomeText:true
-    widget create /Type:"HtmlWidget" /Title:"First Leader Aside" /Zone:"TripelFirst" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
-    widget create /Type:"HtmlWidget" /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
-    widget create /Type:"HtmlWidget" /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
     menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
   </Command>
 

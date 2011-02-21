@@ -14,6 +14,7 @@
                    TinyMce,Orchard.Media,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
+                   PackagingServices,Orchard.Packaging,Gallery,
                    TheThemeMachine" />
 
   <Metadata>
@@ -44,7 +45,7 @@
     layer create /Name:"Anonymous" /LayerRule:"not authenticated"
     layer create /Name:"Disabled" /LayerRule:"false"
     layer create /Name:"TheHomepage" /LayerRule:"url '~/'"
-    page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /UseWelcomeText:true
+    blog create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Homepage:true 
     widget create /Type:"HtmlWidget" /Title:"First Leader Aside" /Zone:"TripelFirst" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
     widget create /Type:"HtmlWidget" /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
     widget create /Type:"HtmlWidget" /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
