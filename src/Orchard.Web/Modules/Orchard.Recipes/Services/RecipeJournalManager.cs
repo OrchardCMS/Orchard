@@ -104,6 +104,7 @@ namespace Orchard.Recipes.Services {
             using (var stream = journalFile.OpenWrite()) {
                 using (var tw = new StreamWriter(stream)) {
                     tw.Write(content);
+                    stream.SetLength(stream.Position);
                 }
             }
         }
