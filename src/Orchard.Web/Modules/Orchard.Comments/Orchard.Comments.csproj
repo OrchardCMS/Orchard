@@ -98,6 +98,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Styles\images\menu.comments.png" />
+    <Content Include="Styles\menu.comments.css" />
     <Content Include="Styles\orchard-comments-admin.css" />
     <Content Include="Views\Admin\Details.cshtml" />
     <Content Include="Views\Web.config" />

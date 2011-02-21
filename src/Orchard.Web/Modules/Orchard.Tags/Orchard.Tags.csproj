@@ -78,6 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Styles\images\menu.tags.png" />
+    <Content Include="Styles\menu.tags.css" />
     <Content Include="Styles\orchard-tags-admin.css" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Admin\Edit.cshtml" />

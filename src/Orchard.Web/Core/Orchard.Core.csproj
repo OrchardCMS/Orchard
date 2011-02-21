@@ -250,6 +250,8 @@
     <Content Include="Common\Views\Body.Editor.cshtml" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
+    <Content Include="Navigation\Styles\images\menu.navigation.png" />
+    <Content Include="Navigation\Styles\menu.navigation.css" />
     <Content Include="Reports\Module.txt" />
     <Content Include="Reports\Views\Admin\Display.cshtml" />
     <Content Include="Reports\Views\Admin\Index.cshtml" />
@@ -387,6 +389,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
