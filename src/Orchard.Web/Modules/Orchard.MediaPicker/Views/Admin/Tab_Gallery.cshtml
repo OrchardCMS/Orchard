@@ -32,6 +32,7 @@
 			</fieldset>
         </div>
         <fieldset>
+        <div id="file-list">
             <table class="items" summary="@T("This is a table of the images currently available for use in your application.")">
                 @foreach (var mediaFolder in Model.MediaFolders) {
                     <tr>
@@ -57,6 +58,7 @@
                     </tr>
                 }
             </table>
+            </div>
             @if (!String.IsNullOrWhiteSpace(Model.MediaPath)) {
                 using (Html.BeginFormAntiForgeryPost(uploadAction, FormMethod.Post, new { id="lib-uploadform", enctype = "multipart/form-data", onsubmit = "jQuery.mediaPicker.uploadMedia(this)" })) { 
                 <input type="hidden" name="MediaPath" value="@Model.MediaPath" />
@@ -73,7 +75,7 @@
         </div>
         <div id="file-details">
             <img alt="" id="lib-loader" style="display:none" src="" />
-            <fieldset style="width:200px">
+            <fieldset>
                 <label for="lib-src">@T("URL")</label>
                 <input type="text" id="lib-src" />
 
@@ -107,9 +109,11 @@
                 <input type="text" id="lib-height" />
 
                 <input type="checkbox" id="lib-lock" checked="checked" />
-                <label for="lib-lock">@T("Lock Aspect Ratio")</label>
+                <label class="forcheckbox" for="lib-lock">@T("Lock Aspect Ratio")</label>
 
-                <input type="button" id="lib-cancel" value="@T("Cancel")" />
+                <div class="actions">
                 <input type="button" id="lib-insert" value="@T("Insert")" class="disabled" data-edittext="@T("Update")" />
+                <input type="button" id="lib-cancel" value="@T("Cancel")" />
+                </div>
             </fieldset>
         </div>

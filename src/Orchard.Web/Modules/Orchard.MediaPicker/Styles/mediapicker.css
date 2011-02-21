@@ -20,9 +20,26 @@ body {
     text-decoration:none;
 }
 
-#file-details, #image-preview, #gallery {width:280px; float:left;}
+#file-details, #image-preview, #gallery {
+    /*border:1px solid #ff0000;*/
+    width:340px;
+    min-height:430px;
+    float:left;
+    }
 
-#file-details {float:right;}
+#file-details {
+    float:right;
+    width:220px;
+    }
+
+#file-list {
+    border:1px solid #bdbcbc;
+    height:324px;
+    max-height:324px;
+    overflow:scroll;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    }
 
 input[disabled], input[disabled="disabled"], input.disabled {
     color: White 
@@ -91,7 +108,7 @@ legend            { font-weight: normal; border:none; }
 fieldset          { padding:0; margin: 0; border: 0px solid #dbdbdb; }
 #orchardmediapicker label { font-weight:normal; display:block; padding: 0 0 0 0; margin:10px 0 0 0; }
 #orchardmediapicker label.forcheckbox { display: inline; margin: 10px 0 0 4px; }
-#orchardmediapicker .actions { margin:12px 0 0 0; }
+#orchardmediapicker .actions { margin:12px 0 0 0; clear:both; text-align:left; }
 
 input[type="text"], select, textarea, input.text, input.textMedium, input.text-box {
     padding:3px;
