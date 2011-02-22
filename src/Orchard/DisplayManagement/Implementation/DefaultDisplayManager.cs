@@ -71,13 +71,19 @@ namespace Orchard.DisplayManagement.Implementation {
             // invoking ShapeMetadata displaying events
             shapeMetadata.Displaying.Invoke(action => action(displayingContext), Logger);
 
-            // now find the actual binding to render, taking alternates into account
-            ShapeBinding actualBinding;
-            if (TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding) ) {
-                shape.Metadata.ChildContent = Process(actualBinding, shape, context);
+            // use pre-fectched content if available (e.g. coming from specific cache implmentation)
+            if ( displayingContext.ChildContent != null ) {
+                shape.Metadata.ChildContent = displayingContext.ChildContent;
             }
             else {
-                throw new OrchardException(T("Shape type {0} not found", shapeMetadata.Type));
+                // now find the actual binding to render, taking alternates into account
+                ShapeBinding actualBinding;
+                if ( TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding) ) {
+                    shape.Metadata.ChildContent = Process(actualBinding, shape, context);
+                }
+                else {
+                    throw new OrchardException(T("Shape type {0} not found", shapeMetadata.Type));
+                }
             }
 
             foreach (var frameType in shape.Metadata.Wrappers) {
