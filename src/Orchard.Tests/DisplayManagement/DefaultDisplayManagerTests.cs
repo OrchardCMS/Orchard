@@ -146,6 +146,35 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
+        public void RenderPreCalculatedShape() {
+            var displayManager = _container.Resolve<IDisplayManager>();
+
+            var shape = new Shape {
+                Metadata = new ShapeMetadata {
+                    Type = "Foo"
+                }
+            };
+
+            shape.Metadata.OnDisplaying(
+                context => {
+                    context.ChildContent = new HtmlString("Bar");
+                });
+
+            var descriptor = new ShapeDescriptor {
+                ShapeType = "Foo",
+            };
+            descriptor.Bindings["Foo"] = new ShapeBinding {
+                BindingName = "Foo",
+                Binding = ctx => new HtmlString("Hi there!"),
+            };
+
+            AddShapeDescriptor(descriptor);
+
+            var result = displayManager.Execute(CreateDisplayContext(shape));
+            Assert.That(result.ToString(), Is.EqualTo("Bar"));
+        }
+
+        [Test]
         public void RenderFallbackShape() {
             var displayManager = _container.Resolve<IDisplayManager>();
 
