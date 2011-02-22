@@ -50,6 +50,11 @@ namespace Orchard.UI.Navigation {
             return this;
         }
 
+        public NavigationItemBuilder Default(bool value = true) {
+            _item.Default = value;
+            return this;
+        }
+
         public new IEnumerable<MenuItem> Build() {
             _item.Items = base.Build();
             return new[] { _item };

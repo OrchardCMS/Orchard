@@ -33,21 +33,21 @@
 }
 
 @if (Model.Entries.Count() <= 0) {
-    <p>No package updates available.</p>
+    <p>@T("No theme updates available.").ToString()</p>
 } else {
     <ul class="contentItems theme">
     @foreach (var theme in Model.Entries) {
         <li>
             @{
-        string extensionClass = "iconThumbnail";
-        string iconUrl = @theme.NewVersionToInstall.IconUrl;
-        if (!string.IsNullOrWhiteSpace(@theme.NewVersionToInstall.FirstScreenshot)) {
-            iconUrl = @theme.NewVersionToInstall.FirstScreenshot;
-            extensionClass = "screenshotThumbnail";
-        } else if (string.IsNullOrWhiteSpace(iconUrl)) {
-            iconUrl = Href("../../Content/Images/imagePlaceholder.png");
-            extensionClass = "screenshotThumbnail";
-        }
+                string extensionClass = "iconThumbnail";
+                string iconUrl = @theme.NewVersionToInstall.IconUrl;
+                if (!string.IsNullOrWhiteSpace(@theme.NewVersionToInstall.FirstScreenshot)) {
+                    iconUrl = @theme.NewVersionToInstall.FirstScreenshot;
+                    extensionClass = "screenshotThumbnail";
+                } else if (string.IsNullOrWhiteSpace(iconUrl)) {
+                    iconUrl = Href("../../Content/Images/imagePlaceholder.png");
+                    extensionClass = "screenshotThumbnail";
+                }
             }
 
             <div class="@extensionClass">

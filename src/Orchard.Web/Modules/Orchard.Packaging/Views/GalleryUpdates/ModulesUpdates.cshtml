@@ -33,7 +33,7 @@
 }
 
 @if (Model.Entries.Count() <= 0) {
-    <p>No package updates available.</p>
+    <p>@T("No module updates available.").ToString()</p>
 } else {
     <ul class="contentItems">
     @foreach (var module in Model.Entries) {

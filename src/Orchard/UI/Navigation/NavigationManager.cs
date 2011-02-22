@@ -73,6 +73,7 @@ namespace Orchard.UI.Navigation {
                         Position = item.Position,
                         RouteValues = item.RouteValues,
                         LocalNav = item.LocalNav,
+                        Default = item.Default,
                         Text = item.Text,
                         TextHint = item.TextHint,
                         IdHint = item.IdHint,
@@ -126,6 +127,7 @@ namespace Orchard.UI.Navigation {
                 LinkToFirstChild = items.First().LinkToFirstChild,
                 RouteValues = items.First().RouteValues,
                 LocalNav = items.Any(x => x.LocalNav),
+                Default = items.First().Default,
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),
                 Permissions = items.SelectMany(x => x.Permissions)
