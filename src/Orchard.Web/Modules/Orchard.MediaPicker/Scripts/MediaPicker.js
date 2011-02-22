@@ -16,7 +16,7 @@
         var adminIndex = location.href.toLowerCase().indexOf("/admin/");
         if (adminIndex === -1) return;
         var url = location.href.substr(0, adminIndex)
-            + "/MediaPicker/Admin?uploadpath=" + (data.uploadMediaPath || "")
+            + "/Admin/MediaPicker?uploadpath=" + (data.uploadMediaPath || "")
             + "&callback=" + callbackName
             + "&editmode=" + (!!(data.img && data.img.src))
             + "&" + (new Date() - 0);
