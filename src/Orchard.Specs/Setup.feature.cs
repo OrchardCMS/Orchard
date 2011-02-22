@@ -203,15 +203,18 @@ this.ScenarioSetup(scenarioInfo);
             table5.AddRow(new string[] {
                         "ConfirmPassword",
                         "6655321"});
+            table5.AddRow(new string[] {
+                        "Recipe",
+                        "Minimal"});
 #line 46
     testRunner.When("I fill in", ((string)(null)), table5);
-#line 51
-        testRunner.And("I hit \"Finish Setup\"");
 #line 52
-        testRunner.And("I go to \"/\"");
+        testRunner.And("I hit \"Finish Setup\"");
 #line 53
-    testRunner.Then("I should see \"My Site\"");
+        testRunner.And("I go to \"/\"");
 #line 54
+    testRunner.Then("I should see \"My Site\"");
+#line 55
         testRunner.And("I should see \"Welcome, <strong><a href=\"/Users/Account/ChangePassword\">admin</a><" +
                     "/strong>!\"");
 #line hidden

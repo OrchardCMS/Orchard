@@ -48,6 +48,7 @@ Scenario: Calling setup on a brand new install
             | SiteName | My Site |
             | AdminPassword | 6655321 |
             | ConfirmPassword | 6655321 |
+            | Recipe | Minimal |
         And I hit "Finish Setup"
         And I go to "/"
     Then I should see "My Site"
