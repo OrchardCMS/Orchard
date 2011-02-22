@@ -37,21 +37,18 @@ namespace Orchard.Recipes.RecipeHandlers {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        // <Theme name="theme1" repository="somethemerepo" version="1.1" enable="true" current="true" replace="false" />
+        // <Theme name="theme1" repository="somethemerepo" version="1.1" enable="true" current="true" />
         // install themes from feed.
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
             if (!String.Equals(recipeContext.RecipeStep.Name, "Theme", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
 
-            bool replace, enable = false, current = false;
+            bool enable = false, current = false;
             string name = null, version = null, repository = null;
 
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
-                if (String.Equals(attribute.Name.LocalName, "replace", StringComparison.OrdinalIgnoreCase)) {
-                    replace = Boolean.Parse(attribute.Value);
-                }
-                else if (String.Equals(attribute.Name.LocalName, "enable", StringComparison.OrdinalIgnoreCase)) {
+                if (String.Equals(attribute.Name.LocalName, "enable", StringComparison.OrdinalIgnoreCase)) {
                     enable = Boolean.Parse(attribute.Value);
                 }
                 else if (String.Equals(attribute.Name.LocalName, "current", StringComparison.OrdinalIgnoreCase)) {
@@ -87,13 +84,10 @@ namespace Orchard.Recipes.RecipeHandlers {
                     if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
                         continue;
                     }
-                    // use for replace.
-                    bool themeExists = false;
-                    foreach (var extension in _extensionManager.AvailableExtensions()
-                        .Where(extension =>
-                            DefaultExtensionTypes.IsTheme(extension.ExtensionType) &&
-                            String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase))) {
-                        themeExists = true;
+                    if (_extensionManager.AvailableExtensions().Where(extension => 
+                        DefaultExtensionTypes.IsTheme(extension.ExtensionType) && 
+                        String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase)).Any()) {
+                        throw new InvalidOperationException(string.Format("Theme {0} already exists.", name));
                     }
                     _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
                     if (current) {

@@ -38,21 +38,16 @@ namespace Orchard.Recipes.RecipeHandlers {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        // <Module name="module1" [repository="somerepo"] version="1.1" replace="false" />
+        // <Module name="module1" [repository="somerepo"] version="1.1" />
         // install modules from feed.
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
             if (!String.Equals(recipeContext.RecipeStep.Name, "Module", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
-
-            bool replace;
             string name = null, version = null, repository = null;
 
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
-                if (String.Equals(attribute.Name.LocalName, "replace", StringComparison.OrdinalIgnoreCase)) {
-                    replace = Boolean.Parse(attribute.Value);
-                }
-                else if (String.Equals(attribute.Name.LocalName, "name", StringComparison.OrdinalIgnoreCase)) {
+                if (String.Equals(attribute.Name.LocalName, "name", StringComparison.OrdinalIgnoreCase)) {
                     name = attribute.Value;
                 }
                 else if (String.Equals(attribute.Name.LocalName, "version", StringComparison.OrdinalIgnoreCase)) {
@@ -82,18 +77,22 @@ namespace Orchard.Recipes.RecipeHandlers {
                     if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
                         continue;
                     }
-                    // use for replace.
-                    bool moduleExists = false;
-                    foreach (var extension in _extensionManager.AvailableExtensions()
-                        .Where(extension => 
-                            DefaultExtensionTypes.IsModule(extension.ExtensionType) && 
-                            String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase))) {
-                        moduleExists = true;
+                    var extensions = _extensionManager.AvailableExtensions();
+                    if (extensions.Where(extension => 
+                        DefaultExtensionTypes.IsModule(extension.ExtensionType) && 
+                        String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase)).Any()) {
+                        throw new InvalidOperationException(string.Format("Module {0} already exists.", name));
                     }
                     _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
-                    _moduleService.EnableFeatures(new[] { packagingEntry.Title }, true);
-                    _dataMigrationManager.Update(packagingEntry.Title);
-                    installed = true;
+                    foreach (
+                        var features in 
+                        from extensionDescriptor in extensions 
+                        where String.Equals(extensionDescriptor.Name, packagingEntry.Title, StringComparison.OrdinalIgnoreCase) 
+                        select extensionDescriptor.Features.Select(f => f.Name).ToArray()) {
+                        _moduleService.EnableFeatures(features);
+                        _dataMigrationManager.Update(features);
+                        installed = true;
+                    }
                     break;
                 }
             }
