@@ -38,22 +38,18 @@ namespace Orchard.Recipes.RecipeHandlers {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        // <Module src="http://" replace="false" />
-        // <Module name="module1" [repository="somerepo"] version="1.1" replace="true" />
-        // install modules from url or feed.
+        // <Module name="module1" [repository="somerepo"] version="1.1" replace="false" />
+        // install modules from feed.
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
             if (!String.Equals(recipeContext.RecipeStep.Name, "Module", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
 
             bool replace;
-            string source = null, name = null, version = null, repository = null;
+            string name = null, version = null, repository = null;
 
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
-                if (String.Equals(attribute.Name.LocalName, "src", StringComparison.OrdinalIgnoreCase)) {
-                    source = attribute.Value;
-                }
-                else if (String.Equals(attribute.Name.LocalName, "replace", StringComparison.OrdinalIgnoreCase)) {
+                if (String.Equals(attribute.Name.LocalName, "replace", StringComparison.OrdinalIgnoreCase)) {
                     replace = Boolean.Parse(attribute.Value);
                 }
                 else if (String.Equals(attribute.Name.LocalName, "name", StringComparison.OrdinalIgnoreCase)) {
@@ -70,47 +66,42 @@ namespace Orchard.Recipes.RecipeHandlers {
                 }
             }
 
-            if (source != null) {
+            if (name == null) {
+                throw new InvalidOperationException("Name is required in a Module declaration in a recipe file.");
             }
-            else {
-                if (name == null) {
-                    throw new InvalidOperationException("Either name or source is required in a Module declaration in a recipe file.");
-                }
-                // download and install module from the orchard feed or a custom feed if repository is specified.
-                bool enforceVersion = version != null;
-                bool installed = false;
-                PackagingSource packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
-                if (repository != null) {
-                    enforceVersion = false;
-                    packagingSource = new PackagingSource {FeedTitle = repository, FeedUrl = repository};
-                }
-                foreach (var packagingEntry in _packagingSourceManager.GetExtensionList(packagingSource)) {
-                    if (String.Equals(packagingEntry.Title, name, StringComparison.OrdinalIgnoreCase)) {
-                        if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
-                            continue;
-                        }
-                        // use for replace.
-                        bool moduleExists = false;
-                        foreach (var extension in _extensionManager.AvailableExtensions()
-                            .Where(extension => 
-                                DefaultExtensionTypes.IsModule(extension.ExtensionType) && 
-                                String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase))) {
-                            moduleExists = true;
-                        }
-                        _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
-                        _moduleService.EnableFeatures(new[] { packagingEntry.Title }, true);
-                        _dataMigrationManager.Update(packagingEntry.Title);
-
-                        installed = true;
-                        break;
+            // download and install module from the orchard feed or a custom feed if repository is specified.
+            bool enforceVersion = version != null;
+            bool installed = false;
+            PackagingSource packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
+            if (repository != null) {
+                enforceVersion = false;
+                packagingSource = new PackagingSource {FeedTitle = repository, FeedUrl = repository};
+            }
+            foreach (var packagingEntry in _packagingSourceManager.GetExtensionList(packagingSource)) {
+                if (String.Equals(packagingEntry.Title, name, StringComparison.OrdinalIgnoreCase)) {
+                    if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
+                        continue;
                     }
+                    // use for replace.
+                    bool moduleExists = false;
+                    foreach (var extension in _extensionManager.AvailableExtensions()
+                        .Where(extension => 
+                            DefaultExtensionTypes.IsModule(extension.ExtensionType) && 
+                            String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase))) {
+                        moduleExists = true;
+                    }
+                    _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
+                    _moduleService.EnableFeatures(new[] { packagingEntry.Title }, true);
+                    _dataMigrationManager.Update(packagingEntry.Title);
+                    installed = true;
+                    break;
                 }
-
-                if (!installed) {
-                    throw new InvalidOperationException(string.Format("Module {0} was not found in the specified location.", name));
-                }
-                
             }
+
+            if (!installed) {
+                throw new InvalidOperationException(string.Format("Module {0} was not found in the specified location.", name));
+            }
+                
 
             recipeContext.Executed = true;
         }

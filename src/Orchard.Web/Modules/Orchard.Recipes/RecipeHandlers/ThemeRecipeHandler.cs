@@ -37,22 +37,18 @@ namespace Orchard.Recipes.RecipeHandlers {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        // <Theme src="http://" enable="true" current="true />
-        // <Theme name="theme1" repository="somethemerepo" version="1.1" replace="true" />
-        // install themes from url or feed.
+        // <Theme name="theme1" repository="somethemerepo" version="1.1" enable="true" current="true" replace="false" />
+        // install themes from feed.
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
             if (!String.Equals(recipeContext.RecipeStep.Name, "Theme", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
 
             bool replace, enable = false, current = false;
-            string source = null, name = null, version = null, repository = null;
+            string name = null, version = null, repository = null;
 
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
-                if (String.Equals(attribute.Name.LocalName, "src", StringComparison.OrdinalIgnoreCase)) {
-                    source = attribute.Value;
-                }
-                else if (String.Equals(attribute.Name.LocalName, "replace", StringComparison.OrdinalIgnoreCase)) {
+                if (String.Equals(attribute.Name.LocalName, "replace", StringComparison.OrdinalIgnoreCase)) {
                     replace = Boolean.Parse(attribute.Value);
                 }
                 else if (String.Equals(attribute.Name.LocalName, "enable", StringComparison.OrdinalIgnoreCase)) {
@@ -75,50 +71,46 @@ namespace Orchard.Recipes.RecipeHandlers {
                 }
             }
 
-            if (source != null) {
+            if (name == null) {
+                throw new InvalidOperationException("Name is required in a Theme declaration in a recipe file.");
             }
-            else {
-                if (name == null) {
-                    throw new InvalidOperationException("Either name or source is required in a Theme declaration in a recipe file.");
-                }
-                // download and install theme from the orchard feed or a custom feed if repository is specified.
-                bool enforceVersion = version != null;
-                bool installed = false;
-                PackagingSource packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
-                if (repository != null) {
-                    enforceVersion = false;
-                    packagingSource = new PackagingSource { FeedTitle = repository, FeedUrl = repository };
-                }
-                foreach (var packagingEntry in _packagingSourceManager.GetExtensionList(packagingSource)) {
-                    if (String.Equals(packagingEntry.Title, name, StringComparison.OrdinalIgnoreCase)) {
-                        if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
-                            continue;
-                        }
-                        // use for replace.
-                        bool themeExists = false;
-                        foreach (var extension in _extensionManager.AvailableExtensions()
-                            .Where(extension =>
-                                DefaultExtensionTypes.IsTheme(extension.ExtensionType) &&
-                                String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase))) {
-                            themeExists = true;
-                        }
-                        _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
-                        if (enable) {
-                            _themeService.EnableThemeFeatures(packagingEntry.Title);
-                        }
-                        if (current) {
-                            _siteThemeService.SetSiteTheme(packagingEntry.Title);
-                        }
-
-                        installed = true;
-                        break;
+            // download and install theme from the orchard feed or a custom feed if repository is specified.
+            bool enforceVersion = version != null;
+            bool installed = false;
+            PackagingSource packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
+            if (repository != null) {
+                enforceVersion = false;
+                packagingSource = new PackagingSource { FeedTitle = repository, FeedUrl = repository };
+            }
+            foreach (var packagingEntry in _packagingSourceManager.GetExtensionList(packagingSource)) {
+                if (String.Equals(packagingEntry.Title, name, StringComparison.OrdinalIgnoreCase)) {
+                    if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
+                        continue;
                     }
-                }
+                    // use for replace.
+                    bool themeExists = false;
+                    foreach (var extension in _extensionManager.AvailableExtensions()
+                        .Where(extension =>
+                            DefaultExtensionTypes.IsTheme(extension.ExtensionType) &&
+                            String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase))) {
+                        themeExists = true;
+                    }
+                    _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
+                    if (current) {
+                        _themeService.EnableThemeFeatures(packagingEntry.Title);
+                        _siteThemeService.SetSiteTheme(packagingEntry.Title);
+                    }
+                    else if (enable) {
+                        _themeService.EnableThemeFeatures(packagingEntry.Title);
+                    }
 
-                if (!installed) {
-                    throw new InvalidOperationException(string.Format("Theme {0} was not found in the specified location.", name));
+                    installed = true;
+                    break;
                 }
+            }
 
+            if (!installed) {
+                throw new InvalidOperationException(string.Format("Theme {0} was not found in the specified location.", name));
             }
 
             recipeContext.Executed = true;

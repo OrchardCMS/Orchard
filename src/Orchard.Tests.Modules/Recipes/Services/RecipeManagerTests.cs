@@ -125,7 +125,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             var sampleRecipe = recipes[0];
             var recipeSteps = (List<RecipeStep>) sampleRecipe.RecipeSteps;
 
-            Assert.That(recipeSteps.Count, Is.EqualTo(11));
+            Assert.That(recipeSteps.Count, Is.EqualTo(9));
         }
 
         [Test]
