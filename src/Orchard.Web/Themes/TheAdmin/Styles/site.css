@@ -374,6 +374,8 @@ form.link button:hover {
     -moz-border-radius: 3px;
 }
 /*Tabs*/
+#local-navigation {margin:8px 0 -8px 0;}
+
 .localmenu li {
     display: inline;
     font-size:15px;
