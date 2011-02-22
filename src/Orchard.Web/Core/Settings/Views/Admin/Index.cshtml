@@ -1,4 +1,8 @@
-﻿@{ Layout.Title = T("Manage Settings").ToString(); }
+﻿﻿@using Orchard.ContentManagement
+@{
+    GroupInfo groupInfo = Model.GroupInfo;
+    Layout.Title = (groupInfo != null ? T("Manage Settings for {0}", groupInfo.Name) : T("Manage Settings")).ToString();
+}
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()

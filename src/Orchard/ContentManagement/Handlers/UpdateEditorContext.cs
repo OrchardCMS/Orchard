@@ -2,8 +2,8 @@ using Orchard.DisplayManagement;
 
 namespace Orchard.ContentManagement.Handlers {
     public class UpdateEditorContext : BuildEditorContext {
-        public UpdateEditorContext(IShape model, IContent content, IUpdateModel updater, IShapeFactory shapeFactory)
-            : base(model, content, shapeFactory) {
+        public UpdateEditorContext(IShape model, IContent content, IUpdateModel updater, string groupInfoId, IShapeFactory shapeFactory)
+            : base(model, content, groupInfoId, shapeFactory) {
             Updater = updater;
         }
 

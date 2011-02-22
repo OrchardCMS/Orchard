@@ -15,17 +15,23 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentPartDriver.BuildEditor(BuildEditorContext context) {
             var part = context.ContentItem.As<TContent>();
-            return part == null ? null : Editor(part, context.New);
+            return part == null
+                ? null
+                : !string.IsNullOrWhiteSpace(context.GroupInfoId) ? Editor(part, context.GroupInfoId, context.New) : Editor(part, context.New);
         }
 
         DriverResult IContentPartDriver.UpdateEditor(UpdateEditorContext context) {
             var part = context.ContentItem.As<TContent>();
-            return part == null ? null : Editor(part, context.Updater, context.New);
+            return part == null
+                ? null
+                : !string.IsNullOrWhiteSpace(context.GroupInfoId) ? Editor(part, context.Updater, context.GroupInfoId, context.New) : Editor(part, context.Updater, context.New);
         }
 
         protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, dynamic shapeHelper) { return null; }
+        protected virtual DriverResult Editor(TContent part, string groupInfoId, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater, dynamic shapeHelper) { return null; }
+        protected virtual DriverResult Editor(TContent part, IUpdateModel updater, string groupInfoId, dynamic shapeHelper) { return null; }
 
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {

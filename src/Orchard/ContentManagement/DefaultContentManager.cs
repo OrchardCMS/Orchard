@@ -12,6 +12,7 @@ using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Indexing;
 using Orchard.Logging;
+using Orchard.UI;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentManager : IContentManager {
@@ -357,17 +358,36 @@ namespace Orchard.ContentManagement {
             return context.Metadata;
         }
 
+        public IList<GroupInfo> GetEditorGroupInfos(IContent content) {
+            var metadata = GetItemMetadata(content);
+            // todo: (heskew) dedup and order
+            return metadata.EditorGroupInfo;
+        }
+
+        public IList<GroupInfo> GetDisplayGroupInfos(IContent content) {
+            var metadata = GetItemMetadata(content);
+            // todo: (heskew) dedup and order
+            return metadata.DisplayGroupInfo;
+        }
+
+        public GroupInfo GetEditorGroupInfo(IContent content, string groupInfoId) {
+            return GetEditorGroupInfos(content).FirstOrDefault(gi => string.Equals(gi.Id, groupInfoId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public GroupInfo GetDisplayGroupInfo(IContent content, string groupInfoId) {
+            return GetDisplayGroupInfos(content).FirstOrDefault(gi => string.Equals(gi.Id, groupInfoId, StringComparison.OrdinalIgnoreCase));
+        }
 
         public dynamic BuildDisplay(IContent content, string displayType = "") {
             return _contentDisplay.Value.BuildDisplay(content, displayType);
         }
 
-        public dynamic BuildEditor(IContent content) {
-            return _contentDisplay.Value.BuildEditor(content);
+        public dynamic BuildEditor(IContent content, string groupInfoId = "") {
+            return _contentDisplay.Value.BuildEditor(content, groupInfoId);
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater) {
-            return _contentDisplay.Value.UpdateEditor(content, updater);
+        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId = "") {
+            return _contentDisplay.Value.UpdateEditor(content, updater, groupInfoId);
         }
 
         public IContentQuery<ContentItem> Query() {

@@ -25,16 +25,20 @@ namespace Orchard.ContentManagement {
         IContentQuery<ContentItem> Query();
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
+        IList<GroupInfo> GetEditorGroupInfos(IContent contentItem);
+        IList<GroupInfo> GetDisplayGroupInfos(IContent contentItem);
+        GroupInfo GetEditorGroupInfo(IContent contentItem, string groupInfoId);
+        GroupInfo GetDisplayGroupInfo(IContent contentItem, string groupInfoId);
 
         dynamic BuildDisplay(IContent content, string displayType = "");
-        dynamic BuildEditor(IContent content);
-        dynamic UpdateEditor(IContent content, IUpdateModel updater);
+        dynamic BuildEditor(IContent content, string groupInfoId = "");
+        dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId = "");
     }
 
     public interface IContentDisplay : IDependency {
         dynamic BuildDisplay(IContent content, string displayType = "");
-        dynamic BuildEditor(IContent content);
-        dynamic UpdateEditor(IContent content, IUpdateModel updater);
+        dynamic BuildEditor(IContent content, string groupInfoId = "");
+        dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId = "");
     }
 
     public class VersionOptions {

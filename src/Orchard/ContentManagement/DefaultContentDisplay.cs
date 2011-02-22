@@ -54,7 +54,7 @@ namespace Orchard.ContentManagement {
             return context.Shape;
         }
 
-        public dynamic BuildEditor(IContent content) {
+        public dynamic BuildEditor(IContent content, string groupInfoId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -65,14 +65,15 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
-            var context = new BuildEditorContext(itemShape, content, _shapeFactory);
+            var context = new BuildEditorContext(itemShape, content, groupInfoId, _shapeFactory);
             BindPlacement(context, null);
 
             _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
+
             return context.Shape;
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater) {
+        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -83,10 +84,11 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
-            var context = new UpdateEditorContext(itemShape, content, updater, _shapeFactory);
+            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory);
             BindPlacement(context, null);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);
+            
             return context.Shape;
         }
 
