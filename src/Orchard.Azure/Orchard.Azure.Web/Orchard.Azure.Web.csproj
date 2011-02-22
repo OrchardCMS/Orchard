@@ -249,10 +249,6 @@
       <Project>{72457126-E118-4171-A08F-9A709EE4B7FC}</Project>
       <Name>Orchard.MultiTenancy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.PackageManager\Orchard.PackageManager.csproj">
-      <Project>{E66935C0-830B-466E-A571-4AEED7057CBD}</Project>
-      <Name>Orchard.PackageManager</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Packaging\Orchard.Packaging.csproj">
       <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
       <Name>Orchard.Packaging</Name>
