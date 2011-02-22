@@ -9,35 +9,10 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Packaging.Models;
-using Orchard.Packaging.Services;
 using Orchard.Services;
 using Orchard.UI.Notify;
 
-namespace Orchard.PackageManager.Services {
-    public class PackagesStatusResult {
-        public IEnumerable<UpdatePackageEntry> Entries { get; set; }
-        public IEnumerable<Exception> Errors { get; set; }
-    }
-
-    public class UpdatePackageEntry {
-        public ExtensionDescriptor ExtensionsDescriptor { get; set; }
-        public IList<PackagingEntry> PackageVersions { get; set; }
-
-        /// <summary>
-        /// Return version to install if out-of-date, null otherwise.
-        /// </summary>
-        public PackagingEntry NewVersionToInstall {
-            get {
-                PackagingEntry updateToVersion = null;
-                var latestUpdate = this.PackageVersions.OrderBy(v => new Version(v.Version)).Last();
-                if (new Version(latestUpdate.Version) > new Version(this.ExtensionsDescriptor.Version)) {
-                    updateToVersion = latestUpdate;
-                }
-                return updateToVersion;
-            }
-        }
-    }
-
+namespace Orchard.Packaging.Services {
     public interface IPackageUpdateService : IDependency {
         PackagesStatusResult GetPackagesStatus(IEnumerable<PackagingSource> sources);
         void TriggerRefresh();
@@ -45,6 +20,7 @@ namespace Orchard.PackageManager.Services {
         void Uninstall(string packageId);
     }
 
+    [OrchardFeature("Gallery.Updates")]
     public class PackageUpdateService : IPackageUpdateService {
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IExtensionManager _extensionManager;

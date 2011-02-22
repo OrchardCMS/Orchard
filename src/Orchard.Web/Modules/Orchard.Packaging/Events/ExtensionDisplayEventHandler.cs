@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
-using Orchard.PackageManager.Services;
+using Orchard.PackageManager.Events;
+using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 
-namespace Orchard.PackageManager.Events {
+namespace Orchard.Packaging.Events {
+    [OrchardFeature("Gallery.Updates")]
     public class ExtensionDisplayEventHandler : IExtensionDisplayEventHandler {
         private readonly IBackgroundPackageUpdateStatus _backgroundPackageUpdateStatus;
         private readonly IPackagingSourceManager _packagingSourceManager;

@@ -20,3 +20,8 @@ Features:
         Description: Module gallery management.
         Category: Packaging
         Dependencies: Orchard.Packaging
+    Gallery.Updates
+        Name: Gallery Updates
+        Description: Manages updates for packages.
+        Category: Packaging
+        Dependencies: Gallery

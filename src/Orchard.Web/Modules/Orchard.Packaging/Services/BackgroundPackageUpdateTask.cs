@@ -1,7 +1,7 @@
-﻿using Orchard.Packaging.Services;
+﻿using Orchard.Environment.Extensions;
 using Orchard.Tasks;
 
-namespace Orchard.PackageManager.Services {
+namespace Orchard.Packaging.Services {
     /// <summary>
     /// Background task responsible for fetching feeds from the Gallery into the
     /// BackgroundPackageUpdateStatus singleton dependency.
@@ -11,6 +11,7 @@ namespace Orchard.PackageManager.Services {
     /// only if the user asks for an explicit refresh or after the first background
     /// task sweep.
     /// </summary>
+    [OrchardFeature("Gallery.Updates")]
     public class BackgroundPackageUpdateTask : IBackgroundTask {
         private readonly IPackageUpdateService _packageUpdateService;
         private readonly IPackagingSourceManager _packagingSourceManager;

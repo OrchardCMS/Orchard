@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.UI.Notify;
 
-namespace Orchard.PackageManager.Services {
+namespace Orchard.Packaging.Services {
     public interface IFolderUpdater : IDependency {
         void Backup(DirectoryInfo existingFolder, DirectoryInfo backupfolder);
         void Update(DirectoryInfo destinationFolder, DirectoryInfo newFolder);
     }
 
+    [OrchardFeature("Gallery.Updates")]
     public class FolderUpdater : IFolderUpdater {
         private readonly INotifier _notifier;
 

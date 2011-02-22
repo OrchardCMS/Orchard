@@ -2,19 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.PackageManager.Services;
-using Orchard.PackageManager.ViewModels;
+using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
+using Orchard.Packaging.ViewModels;
 using Orchard.Reports;
 using Orchard.Reports.Services;
 using Orchard.Security;
+using Orchard.Themes;
+using Orchard.UI.Admin;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Orchard.PackageManager.Controllers {
-    public class AdminController : Controller {
+namespace Orchard.Packaging.Controllers {
+    [OrchardFeature("Gallery.Updates")]
+    [Themed, Admin]
+    public class GalleryUpdatesController : Controller {
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly INotifier _notifier;
         private readonly IPackageUpdateService _packageUpdateService;
@@ -22,13 +29,14 @@ namespace Orchard.PackageManager.Controllers {
         private readonly IReportsCoordinator _reportsCoordinator;
         private readonly IReportsManager _reportsManager;
 
-        public AdminController(IOrchardServices services,
+        public GalleryUpdatesController(IOrchardServices services,
             IPackagingSourceManager packagingSourceManager,
             INotifier notifier,
             IPackageUpdateService packageUpdateService,
             IBackgroundPackageUpdateStatus backgroundPackageUpdateStatus,
             IReportsCoordinator reportsCoordinator,
-            IReportsManager reportsManager) {
+            IReportsManager reportsManager,
+            IShapeFactory shapeFactory) {
 
             _packagingSourceManager = packagingSourceManager;
             _notifier = notifier;
@@ -37,6 +45,7 @@ namespace Orchard.PackageManager.Controllers {
             _reportsCoordinator = reportsCoordinator;
             _reportsManager = reportsManager;
             Services = services;
+            Shape = shapeFactory;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -45,25 +54,28 @@ namespace Orchard.PackageManager.Controllers {
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+        public dynamic Shape { get; set; }
 
-        public ActionResult ThemesUpdates(int? reportId) {
-            return PackageUpdate("ThemesUpdate", DefaultExtensionTypes.Theme, reportId);
+        public ActionResult ThemesUpdates(int? reportId, PagerParameters pagerParameters) {
+            return PackageUpdate("ThemesUpdates", DefaultExtensionTypes.Theme, reportId, pagerParameters);
         }
 
-        public ActionResult ModulesUpdates(int? reportId) {
-            return PackageUpdate("ModulesUpdate", DefaultExtensionTypes.Module, reportId);
+        public ActionResult ModulesUpdates(int? reportId, PagerParameters pagerParameters) {
+            return PackageUpdate("ModulesUpdates", DefaultExtensionTypes.Module, reportId, pagerParameters);
         }
 
-        private ActionResult PackageUpdate(string view, string extensionType, int? reportId) {
+        private ActionResult PackageUpdate(string view, string extensionType, int? reportId, PagerParameters pagerParameters) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to install packages")))
                 return new HttpUnauthorizedResult();
+
+            Pager pager = new Pager(Services.WorkContext.CurrentSite, pagerParameters);
 
             if (reportId != null)
                 CreateNotificationsFromReport(reportId.Value);
 
             if (!_packagingSourceManager.GetSources().Any()) {
                 Services.Notifier.Error(T("No Gallery feed configured"));
-                return View(view, new PackageList { Entries = new List<UpdatePackageEntry>() });
+                return View(view, new PackagingListViewModel { Entries = new List<UpdatePackageEntry>() });
             }
 
             // Get status from background task state or directly
@@ -77,22 +89,21 @@ namespace Orchard.PackageManager.Controllers {
                 }
             }
 
-            return View(view, new PackageList {
-                Entries = _backgroundPackageUpdateStatus.Value.Entries
-                .Where(updatePackageEntry => updatePackageEntry.ExtensionsDescriptor.ExtensionType.Equals(extensionType))
+            IEnumerable<UpdatePackageEntry> updatedPackages = _backgroundPackageUpdateStatus.Value.Entries
+                .Where(updatePackageEntry =>
+                       updatePackageEntry.ExtensionsDescriptor.ExtensionType.Equals(extensionType) &&
+                       updatePackageEntry.NewVersionToInstall != null);
+
+            int totalItemCount = updatedPackages.Count();
+
+            if (pager.PageSize != 0) {
+                updatedPackages = updatedPackages.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
+            }
+
+            return View(view, new PackagingListViewModel {
+                Entries = updatedPackages,
+                Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)
             });
-        }
-
-        public ActionResult RefreshThemes() {
-            _packageUpdateService.TriggerRefresh();
-            _backgroundPackageUpdateStatus.Value = null;
-            return RedirectToAction("ThemesUpdates");
-        }
-
-        public ActionResult RefreshModules() {
-            _packageUpdateService.TriggerRefresh();
-            _backgroundPackageUpdateStatus.Value = null;
-            return RedirectToAction("ModulesUpdates");
         }
 
         public ActionResult Install(string packageId, string version, int sourceId, string returnUrl) {
@@ -124,26 +135,6 @@ namespace Orchard.PackageManager.Controllers {
             }
 
             int reportId = CreateReport(T("Package Update"), T("Update of package {0} to version {1}", packageId, version));
-
-            return RedirectToAction(returnUrl, new { reportId });
-        }
-
-        public ActionResult Uninstall(string packageId, string returnUrl) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to install packages")))
-                return new HttpUnauthorizedResult();
-
-            try {
-                _packageUpdateService.Uninstall(packageId);
-            }
-            catch (Exception exception) {
-                Logger.Error(exception, "Error un-installing package {0}", packageId);
-                _notifier.Error(T("Error un-installing package."));
-                for (Exception scan = exception; scan != null; scan = scan.InnerException) {
-                    _notifier.Error(T("{0}", scan.Message));
-                }
-            }
-
-            int reportId = CreateReport(T("Package Uninstall"), T("Un-installation of package {0}", packageId));
 
             return RedirectToAction(returnUrl, new { reportId });
         }
