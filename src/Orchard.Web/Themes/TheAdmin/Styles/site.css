@@ -958,9 +958,35 @@ table.items th, table.items td {
 /* Pager
 ***************************************************************/
 
-.pager { list-style: none; padding: 0; margin: 12px 0 0 0; }
-.pager li { float: left; padding: 0 12px 0 0; margin: 0; }
-.pager a, .pager span { font-size: 1.077em; display: block; background-color: whiteSmoke; padding: 6px 6px; color: #333;}
+.pager { list-style: none; padding: 0; margin: 12px 0 0 0;}
+.pager li 
+{
+    float: left;
+    padding: 0 0 0 0;
+    margin:0 6px 0 0;
+    border: 1px solid #bdbcbc;
+    color: #333333;
+    cursor: pointer;
+    
+
+    /*CSS3 properties*/
+    text-shadow: rgba(0,0,0,.2) 0px 0px 1px;      
+    /*In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)*/
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), rgba((217, 217, 217, 1.0)));    
+    background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
+               
+    box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1);
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1); 
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1); 
+            
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;  
+    }
+
+
+.pager a, .pager span { font-size: 14px; display: block; background: #fff; padding: 2px 8px;}
 .pager a:hover { background-color: #eaeaea; color: #333; }
 .pager span { background-color:inherit; }
 
