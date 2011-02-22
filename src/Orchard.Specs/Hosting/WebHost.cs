@@ -20,6 +20,7 @@ namespace Orchard.Specs.Hosting {
         private IEnumerable<string> _knownModules;
         private IEnumerable<string> _knownThemes;
         private IEnumerable<string> _knownBinAssemblies;
+        private IEnumerable<string> _knownRecipes;
 
         public WebHost(Path orchardTemp) {
             _orchardTemp = orchardTemp;
@@ -96,6 +97,9 @@ namespace Orchard.Specs.Hosting {
             baseDir.ShallowCopy(
                 path => IsSpecFlowTestAssembly(path) && !_tempSite.Combine("bin").Combine(path.FileName).Exists, 
                 _tempSite.Combine("bin"));
+
+            Log("Copy Orchard recipes");
+            _orchardWebPath.Combine("Modules").Combine("Orchard.Setup").Combine("Recipes").DeepCopy("*.xml", _tempSite.Combine("Modules").Combine("Orchard.Setup").Combine("Recipes"));
 
             StartAspNetHost(virtualDirectory);
 

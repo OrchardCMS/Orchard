@@ -19,6 +19,7 @@ namespace Orchard.Setup.Controllers {
         private readonly IViewsBackgroundCompilation _viewsBackgroundCompilation;
         private readonly INotifier _notifier;
         private readonly ISetupService _setupService;
+        private const string DefaultRecipe = "Default";
 
         public SetupController(
             INotifier notifier, 
@@ -41,13 +42,13 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
-            var recipes = (List<Recipe>)_setupService.Recipes();
+            var recipes = _setupService.Recipes().Where(r => r.Name != DefaultRecipe); 
             
             // On the first time installation of Orchard, the user gets to the setup screen, which
             // will take a while to finish (user inputting data and the setup process itself).
             // We use this opportunity to start a background task to "pre-compile" all the known
             // views in the app folder, so that the application is more reponsive when the user
-            // hits the homepage and admin screens for the first time.
+            // hits the homepage and admin screens for the first time.))
             if (StringComparer.OrdinalIgnoreCase.Equals(initialSettings.Name, ShellSettings.DefaultName)) {
                 _viewsBackgroundCompilation.Start();
             }
@@ -77,17 +78,14 @@ namespace Orchard.Setup.Controllers {
                     ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter").Text);
                 }
             }
-            if (String.IsNullOrEmpty(model.Recipe)) {
-                ModelState.AddModelError("Recipe", T("You must choose a recipe. Recipes come from the Recipes folder of your Setup module.").Text);
+            if (model.Recipe == null) {
+                model.Recipe = DefaultRecipe;
             }
-
             if (!ModelState.IsValid) {
-                var recipes = (List<Recipe>)_setupService.Recipes();
+                var recipes = _setupService.Recipes().Where(r => r.Name != DefaultRecipe);
                 model.Recipes = recipes;
-                if (!String.IsNullOrEmpty(model.Recipe)) {
-                    foreach (var recipe in recipes.Where(recipe => recipe.Name == model.Recipe)) {
-                        model.RecipeDescription = recipe.Description;
-                    }
+                foreach (var recipe in recipes.Where(recipe => recipe.Name == model.Recipe)) {
+                    model.RecipeDescription = recipe.Description;
                 }
                 model.DatabaseIsPreconfigured = !string.IsNullOrEmpty(_setupService.Prime().DataProvider);
                 
