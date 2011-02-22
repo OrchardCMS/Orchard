@@ -34,8 +34,9 @@ body {
 
 #file-list {
     border:1px solid #bdbcbc;
-    height:324px;
-    max-height:324px;
+    height:306px;
+    max-height:306px;
+    margin:18px 0 0 0;
     overflow:scroll;
     overflow-y:scroll;
     overflow-x:hidden;
@@ -110,46 +111,10 @@ fieldset          { padding:0; margin: 0; border: 0px solid #dbdbdb; }
 #orchardmediapicker label.forcheckbox { display: inline; margin: 10px 0 0 4px; }
 #orchardmediapicker .actions { margin:12px 0 0 0; clear:both; text-align:left; }
 
-input[type="text"], select, textarea, input.text, input.textMedium, input.text-box {
-    padding:3px;
-    border:1px solid #bdbcbc;
-    width:90%;
-}
-input[type="checkbox"] {
-    margin: 10px 0 0 0;
-    vertical-align: -1px;
-}
+.image-width, .image-height {float:left; width:90px;}
 
-form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
-    display:inline;
-}
-form.inline fieldset {
-    margin:0;
-}
+.image-width .text-box, .image-height .text-box {width:60%;}
 
-input[type="checkbox"]:focus, input[type="radio"]:focus {
-    outline:1px dotted #666d51;
-}
-select {
-    padding:1px;
-}
-select:focus, textarea:focus, input.text:focus, input.text-box:focus {
-    border-color:#666d51;
-}
-input.check-box {
-    margin-left:0;
-    vertical-align:-.1em;
-}
-input.large.text, textarea, fieldset {
-    clear:both;
-}
-fieldset {
-    margin:0 0 1em 0;
-    padding:6px 0 0;
-}
-textarea {
-    min-height:8em;
-}
 
 .clearboth {
     clear:both;

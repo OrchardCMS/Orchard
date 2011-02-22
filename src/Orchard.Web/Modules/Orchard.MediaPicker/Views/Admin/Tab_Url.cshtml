@@ -19,7 +19,7 @@
             </div>
             <div>
                 <label for="img-src">@T("URL for the image resource")</label>
-                <input type="text" id="img-src" />
+                <input class="text-box" type="text" id="img-src" />
             </div>
             <div>
                 @using(Html.BeginFormAntiForgeryPost(uploadAction, FormMethod.Post, new { id = "img-uploadform", enctype = "multipart/form-data", onsubmit="jQuery.mediaPicker.uploadMedia(this)"})) { 
@@ -34,15 +34,23 @@
         </div>
         <div id="file-details">
             <fieldset>
+            <ol>
+                <li>
                 <label for="img-alt">@T("Alternative Text")</label>
-                <input type="text" id="img-alt" />
+                <input class="text-box" type="text" id="img-alt" />
+                </li>
 
+                <li>
                 <label for="img-class">@T("Class")</label>
-                <input type="text" id="img-class" />
+                <input class="text-box" type="text" id="img-class" />
+                </li>
 
+                <li>
                 <label for="img-style">@T("Style")</label>
-                <input type="text" id="img-style" />
+                <input class="text-box" type="text" id="img-style" />
+                </li>
 
+                <li>
                 <label for="img-align">@T("Alignment")</label>
                 <select id="img-align">
                     <option value="">None</option>
@@ -56,19 +64,28 @@
                     <option value="absbottom">AbsBottom</option>
                     <option value="baseline">Baseline</option>
                 </select>
+                </li>
 
-                <label for="img-width">@T("Width")</label>
-                <input type="text" id="img-width" />
-                X
-                <label for="img-height">@T("Height")</label>
-                <input type="text" id="img-height" />
+                <li class="group">
+                <div class="image-width">
+                    <label for="img-width">@T("Width")</label>
+                    <input class="text-box" type="text" id="img-width" />&nbsp;x
+                </div>
+                <div class="image-height">
+                    <label for="img-height">@T("Height")</label>
+                    <input class="text-box" type="text" id="img-height" />
+                </div>
+                </li>
 
+                <li>
                 <input type="checkbox" id="img-lock" checked="checked" />
                 <label class="forcheckbox" for="img-lock">@T("Lock Aspect Ratio")</label>
+                </li>
 
-                <div class="actions">
+                <li class="actions">
                 <input type="button" id="img-insert" value="@T("Insert")" class="disabled" data-edittext="@T("Update")" />
                 <input type="button" id="img-cancel" value="@T("Cancel")" />
-                </div>
+                </li>
+                </ol>
             </fieldset>
         </div>
