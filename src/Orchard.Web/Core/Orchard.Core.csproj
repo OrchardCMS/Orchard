@@ -236,6 +236,7 @@
     <Content Include="Common\Views\Parts.Common.Metadata.cshtml" />
     <Content Include="Common\Views\Parts.Common.Metadata.SummaryAdmin.cshtml" />
     <Content Include="Containers\Module.txt" />
+    <Content Include="Contents\Styles\images\menu.content.png" />
     <Content Include="Contents\Styles\menu.content.css" />
     <Content Include="Contents\Views\Admin\Create.cshtml" />
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
@@ -320,7 +321,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Contents\Styles\images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Contents\Views\Web.config" />
