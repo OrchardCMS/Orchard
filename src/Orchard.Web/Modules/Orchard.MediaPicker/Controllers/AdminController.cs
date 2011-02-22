@@ -30,8 +30,8 @@ namespace Orchard.MediaPicker.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(string name, string mediaPath) {
-            IEnumerable<MediaFile> mediaFiles = _mediaService.GetMediaFiles(mediaPath);
-            IEnumerable<MediaFolder> mediaFolders = _mediaService.GetMediaFolders(mediaPath);
+            var mediaFolders = _mediaService.GetMediaFolders(mediaPath);
+            var mediaFiles = string.IsNullOrEmpty(mediaPath) ? null : _mediaService.GetMediaFiles(mediaPath);
             var model = new MediaFolderEditViewModel { FolderName = name, MediaFiles = mediaFiles, MediaFolders = mediaFolders, MediaPath = mediaPath };
             ViewData["Service"] = _mediaService;
             return View(model);

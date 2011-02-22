@@ -42,8 +42,9 @@
                         </td>
                     </tr>
                 }
-                @foreach (var mediaFile in Model.MediaFiles) {
-                    var src = (((IMediaService)ViewData["Service"]).GetPublicUrl(Path.Combine(Model.MediaPath, mediaFile.Name)));
+                @if (Model.MediaFiles != null) {
+                    foreach (var mediaFile in Model.MediaFiles) {
+                        var src = (((IMediaService)ViewData["Service"]).GetPublicUrl(Path.Combine(Model.MediaPath, mediaFile.Name)));
                     <tr data-imgsrc="@src" class="media-item">
                         <td class="media-thumbnail">
                             <img data-filename="@src.Substring(src.LastIndexOf("/") + 1)" alt="" src="@src" onload="jQuery.mediaPicker.scalePreview(this)" />
@@ -56,6 +57,7 @@
                             </ul>
                         </td>
                     </tr>
+                    }
                 }
             </table>
             </div>
