@@ -51,6 +51,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\ThemeCommands.cs" />
     <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Models\ThemeEntry.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Controllers\AdminController.cs" />
