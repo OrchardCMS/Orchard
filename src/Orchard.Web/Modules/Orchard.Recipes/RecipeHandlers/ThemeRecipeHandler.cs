@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Hosting;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
@@ -13,12 +14,21 @@ using Orchard.Themes.Services;
 namespace Orchard.Recipes.RecipeHandlers {
     public class ThemeRecipeHandler : IRecipeHandler {
         private readonly IPackagingSourceManager _packagingSourceManager;
+        private readonly IPackageManager _packageManager;
         private readonly IExtensionManager _extensionManager;
+        private readonly IThemeService _themeService;
         private readonly ISiteThemeService _siteThemeService;
 
-        public ThemeRecipeHandler(IPackagingSourceManager packagingSourceManager, IExtensionManager extensionManager, ISiteThemeService siteThemeService) {
+        public ThemeRecipeHandler(
+            IPackagingSourceManager packagingSourceManager, 
+            IPackageManager packageManager,
+            IExtensionManager extensionManager,
+            IThemeService themeService,
+            ISiteThemeService siteThemeService) {
             _packagingSourceManager = packagingSourceManager;
+            _packageManager = packageManager;
             _extensionManager = extensionManager;
+            _themeService = themeService;
             _siteThemeService = siteThemeService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -35,7 +45,7 @@ namespace Orchard.Recipes.RecipeHandlers {
                 return;
             }
 
-            bool replace, enable, current;
+            bool replace, enable = false, current = false;
             string source = null, name = null, version = null, repository = null;
 
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
@@ -74,7 +84,7 @@ namespace Orchard.Recipes.RecipeHandlers {
                 // download and install theme from the orchard feed or a custom feed if repository is specified.
                 bool enforceVersion = version != null;
                 bool installed = false;
-                PackagingSource packagingSource = null;
+                PackagingSource packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
                 if (repository != null) {
                     enforceVersion = false;
                     packagingSource = new PackagingSource { FeedTitle = repository, FeedUrl = repository };
@@ -84,6 +94,7 @@ namespace Orchard.Recipes.RecipeHandlers {
                         if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
                             continue;
                         }
+                        // use for replace.
                         bool themeExists = false;
                         foreach (var extension in _extensionManager.AvailableExtensions()
                             .Where(extension =>
@@ -91,7 +102,14 @@ namespace Orchard.Recipes.RecipeHandlers {
                                 String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase))) {
                             themeExists = true;
                         }
-                        // install.
+                        _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
+                        if (enable) {
+                            _themeService.EnableThemeFeatures(packagingEntry.Title);
+                        }
+                        if (current) {
+                            _siteThemeService.SetSiteTheme(packagingEntry.Title);
+                        }
+
                         installed = true;
                         break;
                     }
