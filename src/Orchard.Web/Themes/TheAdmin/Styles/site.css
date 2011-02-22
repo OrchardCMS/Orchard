@@ -402,6 +402,7 @@ form.link button:hover {
 #content {
     background-color: #fff;
     padding: 20px;
+    margin:8px 0 0 0;
     border: 1px solid #e4e5e6;
    
      /*CSS3 properties*/
