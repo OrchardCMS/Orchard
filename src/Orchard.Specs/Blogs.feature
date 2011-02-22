@@ -6,7 +6,7 @@
 Scenario: In the admin (menu) there is a link to create a Blog
     Given I have installed Orchard
     When I go to "admin"
-    Then I should see "<a href="/Admin/Blogs/Create">Blogs</a>"
+    Then I should see "<a[^>]*href="/Admin/Blogs/Create"[^>]*>Blog</a>"
     
 Scenario: I can create a new blog and blog post
     Given I have installed Orchard
