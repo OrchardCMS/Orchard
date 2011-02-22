@@ -9,10 +9,6 @@
     <Version>1.0</Version>
   </Recipe>
 
-  <Module name="Bing.Maps" version="0.5.0" />
- 
-  <Theme name="People Person" version="1.0" enable="true" current="true" />
-
   <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,
                    XmlRpc,Orchard.Blogs.RemotePublishing,
                    TinyMce,Orchard.Media,Orchard.PublishLater,
@@ -20,7 +16,7 @@
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
                    PackagingServices,Orchard.Packaging,Gallery,
                    TheThemeMachine" />
-
+  
   <Metadata>
     <Types>
       <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
