@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Web.Hosting;
+using Orchard.Data.Migration;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Modules.Services;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Recipes.Models;
@@ -9,9 +15,22 @@ using Orchard.Recipes.Services;
 namespace Orchard.Recipes.RecipeHandlers {
     public class ModuleRecipeHandler : IRecipeHandler {
         private readonly IPackagingSourceManager _packagingSourceManager;
+        private readonly IPackageManager _packageManager;
+        private readonly IExtensionManager _extensionManager;
+        private readonly IModuleService _moduleService;
+        private readonly IDataMigrationManager _dataMigrationManager;
 
-        public ModuleRecipeHandler(IPackagingSourceManager packagingSourceManager) {
+        public ModuleRecipeHandler(
+            IPackagingSourceManager packagingSourceManager, 
+            IPackageManager packageManager, 
+            IExtensionManager extensionManager,
+            IModuleService moduleService,
+            IDataMigrationManager dataMigrationManager) {
             _packagingSourceManager = packagingSourceManager;
+            _packageManager = packageManager;
+            _extensionManager = extensionManager;
+            _moduleService = moduleService;
+            _dataMigrationManager = dataMigrationManager;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -60,7 +79,7 @@ namespace Orchard.Recipes.RecipeHandlers {
                 // download and install module from the orchard feed or a custom feed if repository is specified.
                 bool enforceVersion = version != null;
                 bool installed = false;
-                PackagingSource packagingSource = null;
+                PackagingSource packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
                 if (repository != null) {
                     enforceVersion = false;
                     packagingSource = new PackagingSource {FeedTitle = repository, FeedUrl = repository};
@@ -70,7 +89,18 @@ namespace Orchard.Recipes.RecipeHandlers {
                         if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
                             continue;
                         }
-                        // install.
+                        // use for replace.
+                        bool moduleExists = false;
+                        foreach (var extension in _extensionManager.AvailableExtensions()
+                            .Where(extension => 
+                                DefaultExtensionTypes.IsModule(extension.ExtensionType) && 
+                                String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase))) {
+                            moduleExists = true;
+                        }
+                        _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
+                        _moduleService.EnableFeatures(new[] { packagingEntry.Title }, true);
+                        _dataMigrationManager.Update(packagingEntry.Title);
+
                         installed = true;
                         break;
                     }

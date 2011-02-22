@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Packaging.Models;
@@ -10,12 +13,12 @@ using Orchard.Themes.Services;
 namespace Orchard.Recipes.RecipeHandlers {
     public class ThemeRecipeHandler : IRecipeHandler {
         private readonly IPackagingSourceManager _packagingSourceManager;
-        private readonly IThemeService _themeService;
+        private readonly IExtensionManager _extensionManager;
         private readonly ISiteThemeService _siteThemeService;
 
-        public ThemeRecipeHandler(IPackagingSourceManager packagingSourceManager, IThemeService themeService, ISiteThemeService siteThemeService) {
+        public ThemeRecipeHandler(IPackagingSourceManager packagingSourceManager, IExtensionManager extensionManager, ISiteThemeService siteThemeService) {
             _packagingSourceManager = packagingSourceManager;
-            _themeService = themeService;
+            _extensionManager = extensionManager;
             _siteThemeService = siteThemeService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -80,6 +83,13 @@ namespace Orchard.Recipes.RecipeHandlers {
                     if (String.Equals(packagingEntry.Title, name, StringComparison.OrdinalIgnoreCase)) {
                         if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
                             continue;
+                        }
+                        bool themeExists = false;
+                        foreach (var extension in _extensionManager.AvailableExtensions()
+                            .Where(extension =>
+                                DefaultExtensionTypes.IsTheme(extension.ExtensionType) &&
+                                String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase))) {
+                            themeExists = true;
                         }
                         // install.
                         installed = true;
