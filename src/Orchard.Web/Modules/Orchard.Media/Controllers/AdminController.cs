@@ -222,7 +222,7 @@ namespace Orchard.Media.Controllers {
                 }
                 catch //media api needs a little work, like everything else of course ;) <- ;) == my stuff included. to clarify I need a way to know if the path exists or have UploadMediaFile create paths as necessary but there isn't the time to hook that up in the near future
                 {
-                    _mediaService.CreateFolder(viewModel.MediaPath, "");
+                    _mediaService.CreateFolder("", viewModel.MediaPath);
                 }
 
                 var file = Request.Files[0];
