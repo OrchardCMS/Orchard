@@ -69,7 +69,13 @@
     });
 
     $(function () {
-        $("#tabs").tabs({ selected: parseInt(query("tab", location.hash)) || 0 });
+        $("#tabs").tabs({
+            selected: parseInt(query("tab", location.hash)) || 0,
+            select: function (event, ui) {
+                // sync the active tab with the hash value
+                location.hash = "tab=" + ui.index;
+            }
+        });
 
         // populate width and height when image loads
         // note: load event does not bubble so cannot be used with .live
@@ -144,7 +150,7 @@
                 height: $(prefix + "height").val()
             };
         img.html = getImageHtml(img);
-        window.opener.jQuery[query("callback")]({ img: img });      
+        window.opener.jQuery[query("callback")]({ img: img });
         window.close();
     }
 
