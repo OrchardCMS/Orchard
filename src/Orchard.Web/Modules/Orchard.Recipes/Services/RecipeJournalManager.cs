@@ -11,6 +11,22 @@ namespace Orchard.Recipes.Services {
     public class RecipeJournalManager : IRecipeJournal {
         private readonly IStorageProvider _storageProvider;
         private readonly string _recipeJournalFolder = "RecipeJournal" + Path.DirectorySeparatorChar;
+        private const string WebConfig = 
+@"
+<configuration>
+  <system.web>
+    <httpHandlers>
+      <clear />
+      <add path=""*"" verb=""*"" type=""System.Web.HttpNotFoundHandler""/>
+    </httpHandlers>
+  </system.web>
+  <system.webServer>
+    <handlers accessPolicy=""Script"">
+      <clear/>
+      <add name=""NotFound"" path=""*"" verb=""*"" type=""System.Web.HttpNotFoundHandler"" preCondition=""integratedMode"" requireAccess=""Script""/>
+    </handlers>
+  </system.webServer>
+</configuration>";
 
         public RecipeJournalManager(IStorageProvider storageProvider) {
             _storageProvider = storageProvider;
@@ -78,7 +94,11 @@ namespace Orchard.Recipes.Services {
             IStorageFile journalFile;
             var journalPath = Path.Combine(_recipeJournalFolder, executionId);
             try {
-                _storageProvider.TryCreateFolder(_recipeJournalFolder);
+                if (_storageProvider.TryCreateFolder(_recipeJournalFolder)) {
+                    var webConfigPath = Path.Combine(_recipeJournalFolder, "web.config");
+                    var webConfigFile = _storageProvider.CreateFile(webConfigPath);
+                    WriteWebConfig(webConfigFile);
+                }
                 journalFile = _storageProvider.GetFile(journalPath);
             }
             catch (ArgumentException) {
@@ -105,6 +125,14 @@ namespace Orchard.Recipes.Services {
                 using (var tw = new StreamWriter(stream)) {
                     tw.Write(content);
                     stream.SetLength(stream.Position);
+                }
+            }
+        }
+
+        private static void WriteWebConfig(IStorageFile webConfigFile) {
+            using (var stream = webConfigFile.OpenWrite()) {
+                using (var tw = new StreamWriter(stream)) {
+                    tw.Write(WebConfig);
                 }
             }
         }
