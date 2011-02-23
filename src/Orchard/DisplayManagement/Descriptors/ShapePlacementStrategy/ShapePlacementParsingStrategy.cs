@@ -65,12 +65,20 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                 }
 
                 if (matches.Any()) {
-                    predicate = matches.SelectMany(match => match.Terms).Aggregate(predicate, BuildPredicate);
+                    predicate =  matches.SelectMany(match => match.Terms).Aggregate(predicate, BuildPredicate);
                 }
 
                 builder.Describe(shapeType)
                     .From(feature)
-                    .Placement(predicate, shapeLocation.Location);
+                    .Placement(ctx => {
+                                   var hit = predicate(ctx);
+                                   // generate 'debugging' information to trace which file originated the actual location
+                                    if (hit) {
+                                       var virtualPath = featureDescriptor.Extension.Location + "/" + featureDescriptor.Extension.Id + "/Placement.info";
+                                       ctx.Source = virtualPath;
+                                   }
+                                   return hit;
+                               }, shapeLocation.Location);
             }
         }
 
