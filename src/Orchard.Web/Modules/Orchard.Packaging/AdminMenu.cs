@@ -22,11 +22,11 @@ namespace Orchard.Packaging {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Themes"), menu => menu
-                .Add(T("Available"), "1", item => item.Action("Themes", "Gallery", new { area = "Orchard.Packaging" })
+                .Add(T("Gallery"), "1", item => item.Action("Themes", "Gallery", new { area = "Orchard.Packaging" })
                     .Permission(StandardPermissions.SiteOwner).LocalNav()));
 
             builder.Add(T("Modules"), menu => menu
-                .Add(T("Available"), "2", item => item.Action("Modules", "Gallery", new { area = "Orchard.Packaging" })
+                .Add(T("Gallery"), "2", item => item.Action("Modules", "Gallery", new { area = "Orchard.Packaging" })
                     .Permission(StandardPermissions.SiteOwner).LocalNav()));
 
             builder.Add(T("Settings"), menu => menu
