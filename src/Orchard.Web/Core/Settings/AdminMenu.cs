@@ -19,10 +19,10 @@ namespace Orchard.Core.Settings {
         public IOrchardServices Services { get; private set; }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Settings"), "50",
-                menu => menu.LinkToFirstChild(false)
-                    .Add(T("General"), "0", item => item.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Index" })
-                    .Permission(StandardPermissions.SiteOwner)));
+            builder.AddImageSet("settings")
+                .Add(T("Settings"), "99",
+                    menu => menu.Add(T("General"), "0", item => item.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Index" })
+                        .Permission(StandardPermissions.SiteOwner)));
 
             var site = _siteService.GetSiteSettings();
             if (site == null)
@@ -30,7 +30,7 @@ namespace Orchard.Core.Settings {
 
             foreach (var groupInfo in Services.ContentManager.GetEditorGroupInfos(site.ContentItem)) {
                 GroupInfo info = groupInfo;
-                builder.Add(T("Settings"), "50",
+                builder.Add(T("Settings"),
                     menu => menu.Add(info.Name, info.Position, item => item.Action("Index", "Admin", new { area = "Settings", groupInfoId = info.Id })
                         .Permission(StandardPermissions.SiteOwner)));
             }

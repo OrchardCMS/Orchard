@@ -8,7 +8,7 @@ namespace Orchard.Tags {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("tags")
-                .Add(T("Tags"), "20",
+                .Add(T("Tags"), "35",
                     menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.Tags" })
                         .Permission(Permissions.ManageTags)));
         }

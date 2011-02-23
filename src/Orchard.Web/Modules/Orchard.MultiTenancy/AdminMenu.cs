@@ -20,7 +20,7 @@ namespace Orchard.MultiTenancy {
             if (_shellSettings.Name != ShellSettings.DefaultName)
                 return;
 
-            builder.Add(T("Tenants"), "100",
+            builder.Add(T("Tenants"), "90",
                 menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.MultiTenancy" })
                     .Permission(StandardPermissions.SiteOwner)));
         }
