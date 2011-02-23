@@ -39,14 +39,16 @@ namespace Orchard.Recipes.Services {
                 Logger.Error(exception, "Recipe execution {0} was cancelled because a step failed to execute", executionId);
                 while (_recipeStepQueue.Dequeue(executionId) != null) ;
                 _recipeJournal.ExecutionFailed(executionId);
-                return false;
+                throw new OrchardCoreException(T("Recipe execution with id {0} was cancelled because the \"{1}\" step failed to execute. The following exception was thrown: {2}. Refer to the recipe journal for more information.", 
+                    executionId, nextRecipeStep.Name, exception.Message));
             }
 
             if (!recipeContext.Executed) {
                 Logger.Error("Could not execute recipe step '{0}' because the recipe handler was not found.", recipeContext.RecipeStep.Name);
                 while (_recipeStepQueue.Dequeue(executionId) != null) ;
                 _recipeJournal.ExecutionFailed(executionId);
-                return false;
+                throw new OrchardCoreException(T("Recipe execution with id {0} was cancelled because the recipe handler for step \"{1}\" was not found. Refer to the recipe journal for more information.",
+                    executionId, nextRecipeStep.Name));
             }
 
             return true;
