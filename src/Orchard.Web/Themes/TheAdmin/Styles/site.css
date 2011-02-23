@@ -656,10 +656,39 @@ textarea {
 }
 
 /*----buttons----*/
-button, .button {
+button.remove, .remove.button, .remove.button:link, .remove.button:visited {
+    background-color:#DECCCA;
+    background-image:url(images/tableHeaderBackgroundRed.gif);
+    border-color:#d6c9c7;
+    color:#5c3732;
+}
+button.remove:hover, .remove.button:hover,
+button.remove:active, .remove.button:active,
+button.remove:focus, .remove.button:focus {
+    background:#8f7c79;
+    border-color:#6e5551;
+    color:#faedeb;
+}
+button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
+    border-color:#8f7c79;
+}
+.delete.button {
+    float:right;
+}
+.button.disabled, .button.disabled:visited, .button.disabled:hover, .button.disabled:active, .button.disabled:focus {
+	background:#eee;
+	border:1px solid #ababab;
+	color:#ababab;
+	cursor:default;
+	text-shadow: none;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}
+button, .button, a.button {
     background:#6a7b42;
     border:1px solid #487328;
-    color:#fff !important;
+    color:#fff;
     cursor: pointer;
     display: inline-block;
     /*font: 14px/100% Arial,Helvetica,sans-serif;*/
@@ -698,7 +727,7 @@ button, input.button, x:-moz-any-link {
     padding: 2px 14px 2px 14px;
     }
 
-button:hover, .button:hover {
+button:hover, .button:hover, a.button:hover {
     border-color:#3a822e;
     color:#eefcec;
     text-decoration:none; 
@@ -710,7 +739,7 @@ button:hover, .button:hover {
      background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
 }
 
-button:active, .buton:active {
+button:active, .buton:active, a.button:active {
     text-decoration:none; 
     background:#6a7b42;
     border:1px solid #487328;
