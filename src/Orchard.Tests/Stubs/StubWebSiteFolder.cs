@@ -15,7 +15,10 @@ namespace Orchard.Tests.Stubs {
         }
 
         public IEnumerable<string> ListFiles(string path, bool recursive) {
-            throw new NotImplementedException();
+            if (!Directory.Exists(path))
+                return Enumerable.Empty<string>();
+
+            return Directory.GetFiles(path);
         }
 
         public bool FileExists(string virtualPath) {

@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Commands\PageCommands.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

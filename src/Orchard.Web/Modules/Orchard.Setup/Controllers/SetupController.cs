@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
+using Orchard.Recipes.Models;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
@@ -16,8 +19,12 @@ namespace Orchard.Setup.Controllers {
         private readonly IViewsBackgroundCompilation _viewsBackgroundCompilation;
         private readonly INotifier _notifier;
         private readonly ISetupService _setupService;
+        private const string DefaultRecipe = "Default";
 
-        public SetupController(INotifier notifier, ISetupService setupService, IViewsBackgroundCompilation viewsBackgroundCompilation) {
+        public SetupController(
+            INotifier notifier, 
+            ISetupService setupService, 
+            IViewsBackgroundCompilation viewsBackgroundCompilation) {
             _viewsBackgroundCompilation = viewsBackgroundCompilation;
             _notifier = notifier;
             _setupService = setupService;
@@ -35,18 +42,24 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
-
+            var recipes = _setupService.Recipes().Where(r => r.Name != DefaultRecipe); 
+            
             // On the first time installation of Orchard, the user gets to the setup screen, which
             // will take a while to finish (user inputting data and the setup process itself).
             // We use this opportunity to start a background task to "pre-compile" all the known
             // views in the app folder, so that the application is more reponsive when the user
-            // hits the homepage and admin screens for the first time.
+            // hits the homepage and admin screens for the first time.))
             if (StringComparer.OrdinalIgnoreCase.Equals(initialSettings.Name, ShellSettings.DefaultName)) {
                 _viewsBackgroundCompilation.Start();
             }
 
             //
-            return IndexViewResult(new SetupViewModel { AdminUsername = "admin", DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider)});
+
+            return IndexViewResult(new SetupViewModel {
+                AdminUsername = "admin",
+                DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider),
+                Recipes = recipes
+            });
         }
 
         [HttpPost, ActionName("Index")]
@@ -65,14 +78,21 @@ namespace Orchard.Setup.Controllers {
                     ModelState.AddModelError("DatabaseTablePrefix", T("The table prefix must begin with a letter").Text);
                 }
             }
-
+            if (model.Recipe == null) {
+                model.Recipe = DefaultRecipe;
+            }
             if (!ModelState.IsValid) {
+                var recipes = _setupService.Recipes().Where(r => r.Name != DefaultRecipe);
+                model.Recipes = recipes;
+                foreach (var recipe in recipes.Where(recipe => recipe.Name == model.Recipe)) {
+                    model.RecipeDescription = recipe.Description;
+                }
                 model.DatabaseIsPreconfigured = !string.IsNullOrEmpty(_setupService.Prime().DataProvider);
+                
                 return IndexViewResult(model);
             }
 
             try {
-
                 var setupContext = new SetupContext {
                     SiteName = model.SiteName,
                     AdminUsername = model.AdminUsername,
@@ -80,10 +100,11 @@ namespace Orchard.Setup.Controllers {
                     DatabaseProvider = model.DatabaseOptions ? "SqlCe" : "SqlServer",
                     DatabaseConnectionString = model.DatabaseConnectionString,
                     DatabaseTablePrefix = model.DatabaseTablePrefix,
-                    EnabledFeatures = null // default list
+                    EnabledFeatures = null, // default list
+                    Recipe = model.Recipe
                 };
 
-                _setupService.Setup(setupContext);
+                string executionId = _setupService.Setup(setupContext);
 
                 // First time installation if finally done. Tell the background views compilation
                 // process to stop, so that it doesn't interfere with the user (asp.net compilation

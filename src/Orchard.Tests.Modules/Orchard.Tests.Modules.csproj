@@ -143,6 +143,7 @@
     <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
     <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
     <Compile Include="Media\Services\MediaServiceTests.cs" />
+    <Compile Include="Recipes\Services\RecipeManagerTests.cs" />
     <Compile Include="Scripting.Dlr\EvaluatorTests.cs" />
     <Compile Include="Scripting\EvaluatorTestsBase.cs" />
     <Compile Include="Scripting\EvaluatorTests.cs" />
@@ -215,6 +216,10 @@
       <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
       <Name>Orchard.Packaging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Recipes\Orchard.Recipes.csproj">
+      <Project>{FC1D74E8-7A4D-48F4-83DE-95C6173780C4}</Project>
+      <Name>Orchard.Recipes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
@@ -272,7 +277,13 @@
   <ItemGroup>
     <EmbeddedResource Include="Packaging\Services\Hello.World.csproj.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Recipes\Services\FoldersData\Sample1\Module.txt" />
+  </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Recipes\Services\FoldersData\Sample1\Recipes\cms.recipe.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

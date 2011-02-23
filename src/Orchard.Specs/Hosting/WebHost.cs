@@ -97,6 +97,9 @@ namespace Orchard.Specs.Hosting {
                 path => IsSpecFlowTestAssembly(path) && !_tempSite.Combine("bin").Combine(path.FileName).Exists, 
                 _tempSite.Combine("bin"));
 
+            Log("Copy Orchard recipes");
+            _orchardWebPath.Combine("Modules").Combine("Orchard.Setup").Combine("Recipes").DeepCopy("*.xml", _tempSite.Combine("Modules").Combine("Orchard.Setup").Combine("Recipes"));
+
             StartAspNetHost(virtualDirectory);
 
             Log("ASP.NET host initialization completed in {0} sec", stopwatch.Elapsed.TotalSeconds);

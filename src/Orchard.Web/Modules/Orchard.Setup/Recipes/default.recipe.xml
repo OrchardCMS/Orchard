@@ -1,0 +1,52 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>Default</Name>
+    <Description>A recipe providing a default Orchard installation profile.</Description>
+    <Author>The Orchard Team</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags></Tags>
+    <Version>1.0</Version>
+  </Recipe>
+
+  <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,
+                   Orchard.Lists,TinyMce,Orchard.Media,Orchard.PublishLater,
+                   Orchard.jQuery,Orchard.Widgets,Orchard.ContentTypes,
+                   Orchard.Scripting,Orchard.Scripting.Lightweight,
+                   PackagingServices,Orchard.Packaging,Gallery,
+                   TheThemeMachine" />
+  
+  <Metadata>
+    <Types>
+      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+        <TagsPart />
+        <LocalizationPart />
+      </Page>
+      <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+        <CommentsPart />
+        <TagsPart />
+        <LocalizationPart />
+      </BlogPost>
+    </Types>
+    <Parts>
+      <BodyPart BodyPartSettings.FlavorDefault="html" />
+    </Parts>
+  </Metadata>
+
+  <Settings />
+  
+  <Command>
+    layer create /Name:"Default" /LayerRule:"true"
+    layer create /Name:"Authenticated" /LayerRule:"authenticated"
+    layer create /Name:"Anonymous" /LayerRule:"not authenticated"
+    layer create /Name:"Disabled" /LayerRule:"false"
+    layer create /Name:"TheHomepage" /LayerRule:"url '~/'"
+    page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /UseWelcomeText:true
+    widget create /Type:"HtmlWidget" /Title:"First Leader Aside" /Zone:"TripelFirst" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
+    widget create /Type:"HtmlWidget" /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
+    widget create /Type:"HtmlWidget" /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
+    menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
+  </Command>
+  
+  <Migration features="*" />
+</Orchard>

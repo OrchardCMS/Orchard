@@ -104,6 +104,7 @@
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\Shapes.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
+    <Compile Include="Navigation\Commands\MenuCommands.cs" />
     <Compile Include="Navigation\Services\MainMenuNavigationProvider.cs" />
     <Compile Include="Routable\Events\ISlugEventHandler.cs" />
     <Compile Include="Routable\ResourceManifest.cs" />
