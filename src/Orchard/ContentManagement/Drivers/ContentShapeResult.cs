@@ -25,8 +25,8 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private void ApplyImplementation(BuildShapeContext context, string displayType) {
-            var location = context.FindPlacement(_shapeType, _differentiator, _defaultLocation);
-            if (string.IsNullOrEmpty(location) || location == "-")
+            var placement = context.FindPlacement(_shapeType, _differentiator, _defaultLocation);
+            if (string.IsNullOrEmpty(placement.Location) || placement.Location == "-")
                 return;
 
             dynamic parentShape = context.Shape;
@@ -34,14 +34,15 @@ namespace Orchard.ContentManagement.Drivers {
             ShapeMetadata newShapeMetadata = newShape.Metadata;
             newShapeMetadata.Prefix = _prefix;
             newShapeMetadata.DisplayType = displayType;
+            newShapeMetadata.PlacementSource = placement.Source;
 
-            var delimiterIndex = location.IndexOf(':');
+            var delimiterIndex = placement.Location.IndexOf(':');
             if (delimiterIndex < 0) {
-                parentShape.Zones[location].Add(newShape);
+                parentShape.Zones[placement.Location].Add(newShape);
             }
             else {
-                var zoneName = location.Substring(0, delimiterIndex);
-                var position = location.Substring(delimiterIndex + 1);
+                var zoneName = placement.Location.Substring(0, delimiterIndex);
+                var position = placement.Location.Substring(delimiterIndex + 1);
                 parentShape.Zones[zoneName].Add(newShape, position);
             }
         }

@@ -112,5 +112,6 @@ namespace Orchard.DisplayManagement.Descriptors {
         public string DisplayType { get; set; }
         public string Differentiator { get; set; }
         public string Path { get; set; }
+        public string Source { get; set; }
     }
 }

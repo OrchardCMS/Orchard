@@ -16,6 +16,7 @@ namespace Orchard.DisplayManagement.Shapes {
         public string Type { get; set; }
         public string DisplayType { get; set; }
         public string Position { get; set; }
+        public string PlacementSource { get; set; }
         public string Prefix { get; set; }
         public IList<string> Wrappers { get; set; }
         public IList<string> Alternates { get; set; }

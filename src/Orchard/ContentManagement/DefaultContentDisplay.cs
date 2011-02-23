@@ -112,10 +112,19 @@ namespace Orchard.ContentManagement {
                         Differentiator = differentiator,
                         Path = VirtualPathUtility.AppendTrailingSlash(VirtualPathUtility.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
                     };
+
                     var location = descriptor.Placement(placementContext);
-                    return location ?? defaultLocation;
+                    if (location != null) {
+                        return new PlacementInfo {
+                            Location = location,
+                            Source = placementContext.Source
+                        };
+                    }
                 }
-                return defaultLocation;
+                return new PlacementInfo {
+                    Location = defaultLocation,
+                    Source = String.Empty
+                };
             };
         }
     }
