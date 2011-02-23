@@ -77,8 +77,7 @@ namespace Orchard.Setup.Services {
                     "Common", "Containers", "Contents", "Dashboard", "Feeds", "HomePage", "Navigation", "Reports", "Routable", "Scheduling", "Settings", "Shapes",
                     // Modules
                     "Orchard.Pages", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules", 
-                    "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes"
-                    "Orchard.MediaPicker",
+                    "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes",
                 };
 
                 context.EnabledFeatures = hardcoded;

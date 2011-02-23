@@ -10,7 +10,7 @@
   </Recipe>
 
   <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,
-                   Orchard.Lists,TinyMce,Orchard.Media,Orchard.PublishLater,
+                   Orchard.Lists,TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,Orchard.ContentTypes,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
                    PackagingServices,Orchard.Packaging,Gallery,

@@ -8,10 +8,10 @@
     <Tags>blog</Tags>
     <Version>1.0</Version>
   </Recipe>
-
+  
   <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,
                    XmlRpc,Orchard.Blogs.RemotePublishing,
-                   TinyMce,Orchard.Media,Orchard.PublishLater,
+                   TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
                    PackagingServices,Orchard.Packaging,Gallery,

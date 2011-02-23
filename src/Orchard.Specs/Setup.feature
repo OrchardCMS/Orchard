@@ -39,7 +39,7 @@ Scenario: Some of the initial form values are required
 Scenario: Calling setup on a brand new install
     Given I have a clean site with
             | extension | names |
-            | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Lists, Orchard.ContentTypes, Orchard.Messaging, Orchard.Media, Orchard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce, Orchard.Blogs, Orchard.Tags, Orchard.Packaging, Orchard.Recipes |
+            | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Lists, Orchard.ContentTypes, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce, Orchard.Blogs, Orchard.Tags, Orchard.Packaging, Orchard.Recipes |
             | Core | Common, Containers, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc  |
             | Theme | SafeMode, TheThemeMachine |
         And I am on "/Setup"

@@ -10,7 +10,7 @@
   </Recipe>
 
   <Feature enable="Orchard.ContentTypes,Orchard.Lists,Orchard.PublishLater,
-                   Orchard.jQuery,TinyMce,Orchard.Media,
+                   Orchard.jQuery,TinyMce,Orchard.Media,Orchard.MediaPicker,
                    PackagingServices,Orchard.Packaging,Gallery,TheThemeMachine" />
 
   <Metadata>
