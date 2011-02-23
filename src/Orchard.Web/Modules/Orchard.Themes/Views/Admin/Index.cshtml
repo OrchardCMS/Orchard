@@ -20,10 +20,6 @@
 
 <div id="installedBar">
     <h3>@T("Installed")</h3>
-
-    @if (Model.InstallThemes) {
-        <p>@Html.ActionLink(T("Install theme").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "primaryAction" })</p>
-    }
 </div>
 
 @if (Model.Themes == null || Model.Themes.Count() <= 0) {

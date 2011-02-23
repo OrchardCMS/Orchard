@@ -21,17 +21,25 @@ namespace Orchard.Packaging {
         public AdminMenu() {}
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Themes"), "25", menu => menu
+            builder.Add(T("Themes"), menu => menu
                 .Add(T("Available"), "1", item => item.Action("Themes", "Gallery", new { area = "Orchard.Packaging" })
                     .Permission(StandardPermissions.SiteOwner).LocalNav()));
 
-            builder.Add(T("Modules"), "20", menu => menu
+            builder.Add(T("Modules"), menu => menu
                 .Add(T("Available"), "2", item => item.Action("Modules", "Gallery", new { area = "Orchard.Packaging" })
                     .Permission(StandardPermissions.SiteOwner).LocalNav()));
 
-            builder.Add(T("Configuration"), "50", menu => menu
-                .Add(T("Feeds"), "25", item => item.Action("Sources", "Gallery", new { area = "Orchard.Packaging" })
+            builder.Add(T("Settings"), menu => menu
+                .Add(T("Gallery"), "1", item => item.Action("Sources", "Gallery", new { area = "Orchard.Packaging" })
                     .Permission(StandardPermissions.SiteOwner)));
+
+            builder.Add(T("Modules"), menu => menu
+                .Add(T("Install"), "99", item => item.Action("AddModule", "PackagingServices", new { area = "Orchard.Packaging" })
+                    .Permission(StandardPermissions.SiteOwner).LocalNav()));
+
+            builder.Add(T("Themes"), menu => menu
+                .Add(T("Install"), "99", item => item.Action("AddTheme", "PackagingServices", new { area = "Orchard.Packaging" })
+                    .Permission(StandardPermissions.SiteOwner).LocalNav()));
 
             if (_backgroundPackageUpdateStatus != null) {
                 // Only available if feature is enabled

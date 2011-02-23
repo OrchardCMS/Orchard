@@ -103,8 +103,7 @@ namespace Orchard.Themes.Controllers {
 
                 return View(new ThemesIndexViewModel {
                     CurrentTheme = currentTheme,
-                    Themes = themes,
-                    InstallThemes = installThemes
+                    Themes = themes
                 });
             } catch (Exception exception) {
                 this.Error(exception, T("Listing themes failed: {0}", exception.Message), Logger, Services.Notifier);

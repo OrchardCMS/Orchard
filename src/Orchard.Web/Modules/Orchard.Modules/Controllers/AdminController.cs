@@ -93,7 +93,6 @@ namespace Orchard.Modules.Controllers {
 
             return View(new ModulesIndexViewModel {
                 Modules = modules,
-                InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
                 Options = options,
                 Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)
             });
