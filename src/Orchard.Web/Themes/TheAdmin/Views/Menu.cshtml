@@ -69,10 +69,10 @@
                 @foreach (var secondLevelMenuItem in secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav)) {
                     string secondLevelTextHint = secondLevelMenuItem.TextHint;
                     var secondLevelItemClassName = HasText(secondLevelTextHint)
-                        ? "navicon-" + secondLevelTextHint.HtmlClassify()
-                        : "navicon";
+                        ? "subnavicon-" + secondLevelTextHint.HtmlClassify()
+                        : "subnavicon";
                     var secondLevelItemId = HasText(secondLevelMenuItem.IdHint)
-                        ? "navicon-" + secondLevelMenuItem.IdHint
+                        ? "subnavicon-" + secondLevelMenuItem.IdHint
                         : null;
 
                     if (secondLevelMenuItem.Selected) {
