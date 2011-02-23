@@ -88,14 +88,14 @@ namespace Orchard.DisplayManagement.Descriptors {
             });
         }
 
-        public ShapeAlterationBuilder Placement(Func<ShapePlacementContext, string> action) {
+        public ShapeAlterationBuilder Placement(Func<ShapePlacementContext, PlacementInfo> action) {
             return Configure(descriptor => {
                 var next = descriptor.Placement;
                 descriptor.Placement = ctx => action(ctx) ?? next(ctx);
             });
         }
-        
-        public ShapeAlterationBuilder Placement(Func<ShapePlacementContext, bool> predicate, string location) {
+
+        public ShapeAlterationBuilder Placement(Func<ShapePlacementContext, bool> predicate, PlacementInfo location) {
             return Configure(descriptor => {
                 var next = descriptor.Placement;
                 descriptor.Placement = ctx => predicate(ctx) ? location : next(ctx);

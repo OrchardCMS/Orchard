@@ -35,6 +35,21 @@ namespace Orchard.ContentManagement.Drivers {
             newShapeMetadata.Prefix = _prefix;
             newShapeMetadata.DisplayType = displayType;
             newShapeMetadata.PlacementSource = placement.Source;
+            
+            // if a specific shape is provided, remove all previous alternates and wrappers
+            if (!String.IsNullOrEmpty(placement.ShapeType)) {
+                newShapeMetadata.Type = placement.ShapeType;
+                newShapeMetadata.Alternates.Clear();
+                newShapeMetadata.Wrappers.Clear();
+            }
+
+            foreach (var alternate in placement.Alternates) {
+                newShapeMetadata.Alternates.Add(alternate);
+            }
+
+            foreach (var wrapper in placement.Wrappers) {
+                newShapeMetadata.Wrappers.Add(wrapper);
+            }
 
             var delimiterIndex = placement.Location.IndexOf(':');
             if (delimiterIndex < 0) {

@@ -162,7 +162,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             var hello = manager.GetShapeTable(null).Descriptors["Hello"];
             hello.DefaultPlacement = "Header:5";
             var result = hello.Placement(null);
-            Assert.That(result, Is.EqualTo("Header:5"));
+            Assert.That(result.Location, Is.EqualTo("Header:5"));
         }
 
         [Test]
@@ -170,8 +170,8 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
 
             _container.Resolve<TestShapeProvider>().Discover =
                 builder => builder.Describe("Hello").From(TestFeature())
-                    .Placement(ctx => ctx.DisplayType == "Detail" ? "Main" : null)
-                    .Placement(ctx => ctx.DisplayType == "Summary" ? "" : null);
+                    .Placement(ctx => ctx.DisplayType == "Detail" ? new PlacementInfo { Location = "Main" } : null)
+                    .Placement(ctx => ctx.DisplayType == "Summary" ? new PlacementInfo { Location = "" } : null);
 
             var manager = _container.Resolve<IShapeTableManager>();
             var hello = manager.GetShapeTable(null).Descriptors["Hello"];
@@ -183,12 +183,12 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             var result5 = hello.Placement(new ShapePlacementContext { DisplayType = "Summary" });
             var result6 = hello.Placement(new ShapePlacementContext { DisplayType = "Tile" });
             
-            Assert.That(result1, Is.EqualTo("Main"));
-            Assert.That(result2, Is.EqualTo(""));
-            Assert.That(result3, Is.Null);
-            Assert.That(result4, Is.EqualTo("Main"));
-            Assert.That(result5, Is.EqualTo(""));
-            Assert.That(result6, Is.EqualTo("Header:5"));
+            Assert.That(result1.Location, Is.EqualTo("Main"));
+            Assert.That(result2.Location, Is.EqualTo(""));
+            Assert.That(result3.Location, Is.Null);
+            Assert.That(result4.Location, Is.EqualTo("Main"));
+            Assert.That(result5.Location, Is.EqualTo(""));
+            Assert.That(result6.Location, Is.EqualTo("Header:5"));
         }
         
         [Test]
@@ -196,8 +196,8 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
 
             _container.Resolve<TestShapeProvider>().Discover =
                 builder => builder.Describe("Hello").From(TestFeature())
-                    .Placement(ctx => ctx.DisplayType == "Detail", "Main")
-                    .Placement(ctx => ctx.DisplayType == "Summary", "");
+                    .Placement(ctx => ctx.DisplayType == "Detail", new PlacementInfo { Location = "Main" })
+                    .Placement(ctx => ctx.DisplayType == "Summary", new PlacementInfo { Location = "" });
 
             var manager = _container.Resolve<IShapeTableManager>();
             var hello = manager.GetShapeTable(null).Descriptors["Hello"];
@@ -208,13 +208,13 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             var result4 = hello.Placement(new ShapePlacementContext { DisplayType = "Detail" });
             var result5 = hello.Placement(new ShapePlacementContext { DisplayType = "Summary" });
             var result6 = hello.Placement(new ShapePlacementContext { DisplayType = "Tile" });
-            
-            Assert.That(result1, Is.EqualTo("Main"));
-            Assert.That(result2, Is.EqualTo(""));
-            Assert.That(result3, Is.Null);
-            Assert.That(result4, Is.EqualTo("Main"));
-            Assert.That(result5, Is.EqualTo(""));
-            Assert.That(result6, Is.EqualTo("Header:5"));
+
+            Assert.That(result1.Location, Is.EqualTo("Main"));
+            Assert.That(result2.Location, Is.EqualTo(""));
+            Assert.That(result3.Location, Is.Null);
+            Assert.That(result4.Location, Is.EqualTo("Main"));
+            Assert.That(result5.Location, Is.EqualTo(""));
+            Assert.That(result6.Location, Is.EqualTo("Header:5"));
         }
 
         [Test]
@@ -242,17 +242,17 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
 
                 _container.Resolve<TestShapeProvider>().Discover =
                     builder => builder.Describe("Hello").From(TestFeature())
-                                   .Placement(ShapePlacementParsingStrategy.BuildPredicate(c => true, new KeyValuePair<string, string>("Path", path)), "Match");
+                                   .Placement(ShapePlacementParsingStrategy.BuildPredicate(c => true, new KeyValuePair<string, string>("Path", path)), new PlacementInfo { Location = "Match" });
 
                 var manager = _container.Resolve<IShapeTableManager>();
                 var hello = manager.GetShapeTable(null).Descriptors["Hello"];
                 var result = hello.Placement(new ShapePlacementContext {Path = context});
 
                 if (match) {
-                    Assert.That(result, Is.EqualTo("Match"), String.Format("{0}|{1}", path, context));
+                    Assert.That(result.Location, Is.EqualTo("Match"), String.Format("{0}|{1}", path, context));
                 }
                 else {
-                    Assert.That(result, Is.Null, String.Format("{0}|{1}", path, context));
+                    Assert.That(result.Location, Is.Null, String.Format("{0}|{1}", path, context));
                 }
             }
         }

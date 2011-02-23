@@ -68,6 +68,35 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                     predicate =  matches.SelectMany(match => match.Terms).Aggregate(predicate, BuildPredicate);
                 }
 
+                var placement = new PlacementInfo { };
+
+                var segments = shapeLocation.Location.Split(';').Select(s => s.Trim());
+                foreach (var segment in segments) {
+                    if (!segment.Contains('=')) {
+                        placement.Location = segment;
+                    }
+                    else {
+                        var index = segment.IndexOf('=');
+                        var property = segment.Substring(0, index).ToLower();
+                        var value = segment.Substring(index + 1);
+                        switch (property) {
+                            case "shape":
+                                placement.ShapeType = value;
+                                break;
+                            case "alternate":
+                                placement.Alternates = new[] {value};
+                                break;
+                            case "wrapper":
+                                placement.Wrappers = new[] {value};
+                                break;
+                            default:
+                                // ignore unknown properties
+                                // Logger.Warning("Unknown property name [{0}] in {1}", property, placement.Source);
+                                break;
+                        }
+                    }
+                }
+
                 builder.Describe(shapeType)
                     .From(feature)
                     .Placement(ctx => {
@@ -78,7 +107,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                                        ctx.Source = virtualPath;
                                    }
                                    return hit;
-                               }, shapeLocation.Location);
+                               }, placement);
             }
         }
 
