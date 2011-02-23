@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
@@ -47,10 +48,46 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private ContentShapeResult ContentShapeImplementation(string shapeType, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, shapeBuilder);
+            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx)));
         }
 
-        private object CreateShape(BuildShapeContext context, string shapeType) {
+        private static object AddAlternates(dynamic shape) {
+            ShapeMetadata metadata = shape.Metadata;
+            ContentPart part = shape.ContentPart;
+            var id = part != null ? part.ContentItem.Id.ToString() : String.Empty;
+            var shapeType = metadata.Type;
+            var contentType = part != null ? part.ContentItem.ContentType : String.Empty;
+            var displayType = metadata.DisplayType ?? String.Empty;
+
+            // [ShapeType]__[Id] e.g. Parts/Common.Metadata-42
+            if ( !string.IsNullOrEmpty(id) ) {
+                metadata.Alternates.Add(shapeType + "__" + id);
+            }
+
+            // [ShapeType]__[ContentType] e.g. Parts/Common.Metadata-BlogPost
+            if ( !string.IsNullOrEmpty(contentType) ) {
+                metadata.Alternates.Add(shapeType + "__" + contentType);
+            }
+
+            // [ShapeType]_[DisplayType] e.g. Parts/Common.Metadata.Summary
+            if ( !string.IsNullOrEmpty(displayType) ) {
+                metadata.Alternates.Add(shapeType + "_" + displayType);
+            }
+
+            // [ShapeType]_[DisplayType]__[ContentType] e.g. Parts/Common.Metadata-BlogPost.Summary
+            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(contentType) ) {
+                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + contentType);
+            }
+
+            // [ShapeType]_[DisplayType]__[Id] e.g. Parts/Common.Metadata-42.Summary
+            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(id) ) {
+                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + id);
+            }
+
+            return shape;
+        }
+
+        private static object CreateShape(BuildShapeContext context, string shapeType) {
             IShapeFactory shapeFactory = context.New;
             return shapeFactory.Create(shapeType);
         }

@@ -25,8 +25,12 @@ namespace Orchard.Widgets {
                         widget.Classes.Add("widget-" + contentItem.ContentType.HtmlClassify());
 
                         var zoneName = contentItem.As<WidgetPart>().Zone;
-                        displaying.ShapeMetadata.Alternates.Add("Widget__" + contentItem.ContentType);
+
+                        // Widget__[ZoneName] e.g. Widget-SideBar
                         displaying.ShapeMetadata.Alternates.Add("Widget__" + zoneName);
+
+                        // Widget__[ContentType] e.g. Widget-BlogArchive
+                        displaying.ShapeMetadata.Alternates.Add("Widget__" + contentItem.ContentType);
                     }
                 });
         }

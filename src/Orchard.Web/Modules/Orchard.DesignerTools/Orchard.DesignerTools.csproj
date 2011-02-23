@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Services\ObjectDumper.cs" />
     <Compile Include="Services\ShapeTracingFactory.cs" />
+    <Compile Include="Services\UrlAlternatesFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ShapeTracing.Wrapper.cshtml" />
