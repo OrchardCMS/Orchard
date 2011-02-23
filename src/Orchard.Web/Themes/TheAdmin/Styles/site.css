@@ -412,11 +412,12 @@ form.link button:hover {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
 }
-.section-dashboard, .section-new 
-{
+.section-dashboard, .section-new, .section-settings {
+    padding:6px 0;
+}
+.section-dashboard, .section-new {
     background:#2b2b2b;
     border:1px solid #404040;
-    padding:6px 0;
     
      /*CSS3 properties*/
      border-radius: 3px;

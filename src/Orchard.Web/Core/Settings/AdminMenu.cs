@@ -20,7 +20,8 @@ namespace Orchard.Core.Settings {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Settings"), "50",
-                menu => menu.Add(T("General"), "0", item => item.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Index" })
+                menu => menu.LinkToFirstChild(false)
+                    .Add(T("General"), "0", item => item.Action("Index", "Admin", new { area = "Settings", groupInfoId = "Index" })
                     .Permission(StandardPermissions.SiteOwner)));
 
             var site = _siteService.GetSiteSettings();
