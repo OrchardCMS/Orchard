@@ -62,7 +62,7 @@ namespace Orchard.Core.Settings.Controllers {
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings();
-            dynamic model = Services.ContentManager.UpdateEditor(site, this);
+            dynamic model = Services.ContentManager.UpdateEditor(site, this, groupInfoId);
 
             if (model == null) {
                 Services.TransactionManager.Cancel();
