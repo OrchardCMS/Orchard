@@ -25,8 +25,8 @@ namespace Orchard.ContentManagement {
         IContentQuery<ContentItem> Query();
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
-        IList<GroupInfo> GetEditorGroupInfos(IContent contentItem);
-        IList<GroupInfo> GetDisplayGroupInfos(IContent contentItem);
+        IEnumerable<GroupInfo> GetEditorGroupInfos(IContent contentItem);
+        IEnumerable<GroupInfo> GetDisplayGroupInfos(IContent contentItem);
         GroupInfo GetEditorGroupInfo(IContent contentItem, string groupInfoId);
         GroupInfo GetDisplayGroupInfo(IContent contentItem, string groupInfoId);
 

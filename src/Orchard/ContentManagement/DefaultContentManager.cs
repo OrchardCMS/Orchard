@@ -358,16 +358,18 @@ namespace Orchard.ContentManagement {
             return context.Metadata;
         }
 
-        public IList<GroupInfo> GetEditorGroupInfos(IContent content) {
+        public IEnumerable<GroupInfo> GetEditorGroupInfos(IContent content) {
             var metadata = GetItemMetadata(content);
-            // todo: (heskew) dedup and order
-            return metadata.EditorGroupInfo;
+            return metadata.EditorGroupInfo
+                .GroupBy(groupInfo => groupInfo.Id)
+                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new FlatPositionComparer()).FirstOrDefault());
         }
 
-        public IList<GroupInfo> GetDisplayGroupInfos(IContent content) {
+        public IEnumerable<GroupInfo> GetDisplayGroupInfos(IContent content) {
             var metadata = GetItemMetadata(content);
-            // todo: (heskew) dedup and order
-            return metadata.DisplayGroupInfo;
+            return metadata.DisplayGroupInfo
+                .GroupBy(groupInfo => groupInfo.Id)
+                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new FlatPositionComparer()).FirstOrDefault());
         }
 
         public GroupInfo GetEditorGroupInfo(IContent content, string groupInfoId) {
