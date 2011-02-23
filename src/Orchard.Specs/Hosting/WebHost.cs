@@ -20,7 +20,6 @@ namespace Orchard.Specs.Hosting {
         private IEnumerable<string> _knownModules;
         private IEnumerable<string> _knownThemes;
         private IEnumerable<string> _knownBinAssemblies;
-        private IEnumerable<string> _knownRecipes;
 
         public WebHost(Path orchardTemp) {
             _orchardTemp = orchardTemp;
