@@ -1,4 +1,10 @@
-﻿.orchard-packaging #main .contentItems p {
+﻿.custom_details legend {
+    font-size: small;
+}
+.custom_details {
+    padding-left: 30px;
+}
+.orchard-packaging #main .contentItems p {
     margin:0;
 }
 .extensionName {

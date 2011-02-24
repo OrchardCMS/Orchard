@@ -1,15 +1,17 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
+using NuGet;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Features;
 using Orchard.Localization;
-using Orchard.Logging;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
@@ -19,7 +21,9 @@ using Orchard.UI.Admin;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
+using ILogger = Orchard.Logging.ILogger;
 using IPackageManager = Orchard.Packaging.Services.IPackageManager;
+using NullLogger = Orchard.Logging.NullLogger;
 
 namespace Orchard.Packaging.Controllers {
     [OrchardFeature("Gallery")]
@@ -28,15 +32,18 @@ namespace Orchard.Packaging.Controllers {
         private readonly ShellSettings _shellSettings;
         private readonly IPackageManager _packageManager;
         private readonly IPackagingSourceManager _packagingSourceManager;
+        private readonly IFeatureManager _featureManager;
 
         public GalleryController(
             ShellSettings shellSettings,
             IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
+            IFeatureManager featureManager,
             IOrchardServices services) {
             _shellSettings = shellSettings;
             _packageManager = packageManager;
             _packagingSourceManager = packagingSourceManager;
+            _featureManager = featureManager;
             Services = services;
 
             T = NullLocalizer.Instance;
@@ -211,6 +218,7 @@ namespace Orchard.Packaging.Controllers {
             // maintain previous route data when generating page links
             var routeData = new RouteData();
             routeData.Values.Add("Options.Order", options.Order);
+            routeData.Values.Add("Options.SearchText", options.SearchText);
             pagerShape.RouteData(routeData);
 
             return View(packageType == DefaultExtensionTypes.Theme ? "Themes" : "Modules", new PackagingExtensionsViewModel {
@@ -227,25 +235,89 @@ namespace Orchard.Packaging.Controllers {
                 return new HttpUnauthorizedResult();
 
             var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
+            if (source == null) {
+                return HttpNotFound();
+            }
+
+            if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
+                return InstallPOST(packageId, version, sourceId, redirectTo);
+            }
+
+            IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(source.FeedUrl, "Default"));
+
+            IPackage package = packageRepository.FindPackage(packageId);
+            ExtensionDescriptor extensionDescriptor = _packageManager.GetExtensionDescriptor(package);
+
+            List<PackagingInstallFeatureViewModel> features = extensionDescriptor.Features
+                .Select(featureDescriptor => new PackagingInstallFeatureViewModel {
+                    Enable = true, // by default all features are enabled
+                    FeatureDescriptor = featureDescriptor
+                }).ToList();
+
+            return View("InstallModule", new PackagingInstallViewModel {
+                Features = features,
+                ExtensionDescriptor = extensionDescriptor
+            });
+        }
+
+        [HttpPost, ActionName("InstallModule")]
+        public ActionResult InstallModulePOST(PackagingInstallViewModel packagingInstallViewModel, string packageId, string version, int sourceId, string redirectTo) {
+            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
+                return new HttpUnauthorizedResult();
+
+            var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
 
             if (source == null) {
                 return HttpNotFound();
             }
 
-            try {
-                _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
+            PackageInfo packageInfo = InstallPackage(packageId, version, source);
+            if (packagingInstallViewModel.PackagingInstallMode == PackagingInstallMode.Custom) {
+                // Enable selected features
+                _featureManager.EnableFeatures(packagingInstallViewModel.Features
+                                                   .Select(feature => feature.FeatureDescriptor.Id));
+            } else {
+                IEnumerable<FeatureDescriptor> features = _featureManager.GetAvailableFeatures()
+                    .Where(feature => feature.Extension.Id.Equals(packageInfo.ExtensionName) &&
+                                      feature.Extension.Version.Equals(packageInfo.ExtensionVersion));
 
-                if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
+                _featureManager.EnableFeatures(features
+                    .Select(feature => feature.Id));
+            }
+
+            return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
+        }
+
+        [HttpPost, ActionName("Install")]
+        public ActionResult InstallPOST(string packageId, string version, int sourceId, string redirectTo) {
+            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
+                return new HttpUnauthorizedResult();
+
+            var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
+            if (source == null) {
+                return HttpNotFound();
+            }
+
+            InstallPackage(packageId, version, source);
+
+            return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
+        }
+
+        private PackageInfo InstallPackage(string packageId, string version, PackagingSource source) {
+            PackageInfo packageInfo = null;
+            try {
+                packageInfo = _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
+
+                if (DefaultExtensionTypes.IsTheme(packageInfo.ExtensionType)) {
                     Services.Notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
-                }
-                else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
-                    Services.Notifier.Information(T("The module has been successfully installed. Its features can be enabled in the \"Configuration | Features\" page accessible from the menu."));
+                } else if (DefaultExtensionTypes.IsModule(packageInfo.ExtensionType)) {
+                    Services.Notifier.Information(T("The module has been successfully installed."));
                 }
             } catch (Exception exception) {
                 this.Error(exception, T("Package installation failed."), Logger, Services.Notifier);
             }
 
-            return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
+            return packageInfo;
         }
     }
 }

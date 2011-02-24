@@ -1,8 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NuGet;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Packaging.Models;
 
@@ -65,6 +71,17 @@ namespace Orchard.Packaging.Services {
 
         public void Uninstall(string packageId, string applicationPath) {
             _packageExpander.Uninstall(packageId, applicationPath);
+        }
+
+        public ExtensionDescriptor GetExtensionDescriptor(IPackage package) {
+            IPackageFile packageFile = package.GetFiles().FirstOrDefault(file => Path.GetFileName(file.Path).Equals("module.txt", StringComparison.OrdinalIgnoreCase));
+            if (packageFile != null) {
+                using (StreamReader streamReader = new StreamReader(packageFile.GetStream())) {
+                    return ExtensionFolders.GetDescriptorForExtension("", package.Id, DefaultExtensionTypes.Module, streamReader.ReadToEnd());
+                }
+            }
+
+            return null;
         }
 
         #endregion
