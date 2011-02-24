@@ -79,18 +79,18 @@
 
                         <div class="properties">
                             <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
-                            <ul class="pageStatus">
+                            <ul class="pageStatus group">
                                 <li>@T("Last Updated: {0}", item.LastUpdated)</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(item.Authors) ? item.Authors : T("Unknown").ToString())</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", item.DownloadCount)</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Website: ")
                                     @if (!string.IsNullOrEmpty(item.ProjectUrl)) { <a href="@item.ProjectUrl">@item.ProjectUrl</a> } else { @T("Unknown").ToString() }
                                 </li>
-                                <li><div>&nbsp;&#124;&nbsp;@T("Rating: ")
+                                <li>&nbsp;&#124;&nbsp;@T("Rating: ")
                                         <div class="ratings" style="width:@(15 * 5)px" title="@T("Ratings: {0} ({1})", item.Rating, item.RatingsCount)">
                                             <div class="score" style="width:@(15 * (item.Rating))px">&nbsp;</div>
                                         </div>
-                                    </div>
+                                   
                                 </li>
                             </ul>
                         </div>

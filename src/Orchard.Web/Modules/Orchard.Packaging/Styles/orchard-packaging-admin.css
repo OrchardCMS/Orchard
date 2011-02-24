@@ -56,6 +56,7 @@
     height: 14px;
     width: 75px;
     display: block;
+    margin:4px 0 0 4px;
 }
 .score {
     background: url(../Content/Images/stars.png) repeat-x 0 -14px;
