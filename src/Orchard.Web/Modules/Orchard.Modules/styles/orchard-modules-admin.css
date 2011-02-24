@@ -140,17 +140,13 @@
 .features .feature .actions a {
     margin-left:.5em;
 }
-.recentlyInstalledFeature {
-    background-color: #d6e0e8;
-}
-.recentlyInstalledModule {
-    background:#fff url(images/new.gif) no-repeat 0px 5px;
-}
+
+/***Recently installed**/
+.recentlyInstalledFeature { }
+.recentlyInstalledModule {background:#fff url(images/new.gif) no-repeat 0px 5px;}
 h2.recentlyInstalledModule {padding:0 0 0 40px;}
 
-.updateAvailable {
-    background-color: #f1f0cb;
-}
+.updateAvailable {background-color: #f1f0cb;}
 .search-actions {
     float: right;
     display: inline;

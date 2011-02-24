@@ -51,6 +51,7 @@
 .themePreviewImage {
     height:300px;
 }
-.recentlyInstalledTheme {
-    background-color: Gray;
-}
+/***Recently installed**/
+.recentlyInstalledTheme { }
+.recentlyInstalledTheme {background:#fff url(images/new.gif) no-repeat 0px 5px;}
+h3.recentlyInstalledTheme {padding:0 0 0 40px;}
