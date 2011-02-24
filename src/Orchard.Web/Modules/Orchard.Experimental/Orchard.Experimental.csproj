@@ -75,6 +75,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Styles\images\menu.experimental.png" />
+    <Content Include="Styles\menu.experimental.css" />
     <Content Include="Views\Commands\Execute.cshtml" />
     <Content Include="Views\Content\Details.cshtml" />
     <Content Include="Views\Content\Index.cshtml" />
@@ -110,6 +112,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

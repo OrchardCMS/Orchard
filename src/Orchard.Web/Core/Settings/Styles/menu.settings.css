@@ -1,3 +1,9 @@
 ﻿.section-settings {
 padding:12px 0;
 }
+.navicon-settings {
+background-image:url(images/menu.settings.png) !important;
+}
+.navicon-settings:hover {
+background-position:0 -30px !important;
+}

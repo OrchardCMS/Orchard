@@ -265,6 +265,7 @@
     <Content Include="Routable\Views\EditorTemplates\Parts.Routable.RoutePart.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
+    <Content Include="Settings\Styles\images\menu.settings.png" />
     <Content Include="Settings\Styles\menu.settings.css" />
     <Content Include="Settings\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Views\Admin\Culture.cshtml" />
