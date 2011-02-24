@@ -144,8 +144,10 @@
     background-color: #d6e0e8;
 }
 .recentlyInstalledModule {
-    background-color: #d6e0e8;
+    background:#fff url(images/new.gif) no-repeat 0px 5px;
 }
+h2.recentlyInstalledModule {padding:0 0 0 40px;}
+
 .updateAvailable {
     background-color: #f1f0cb;
 }

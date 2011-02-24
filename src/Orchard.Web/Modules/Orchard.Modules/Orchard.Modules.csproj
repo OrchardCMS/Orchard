@@ -71,6 +71,8 @@
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Styles\images\menu.modules.png" />
+    <Content Include="Styles\images\new.gif" />
+    <Content Include="Styles\images\update.gif" />
     <Content Include="Styles\menu.modules.css" />
     <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
