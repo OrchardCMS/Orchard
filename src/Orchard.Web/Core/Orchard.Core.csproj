@@ -256,6 +256,8 @@
     <Content Include="Navigation\Styles\images\menu.navigation.png" />
     <Content Include="Navigation\Styles\menu.navigation.css" />
     <Content Include="Reports\Module.txt" />
+    <Content Include="Reports\Styles\images\menu.reports.png" />
+    <Content Include="Reports\Styles\menu.reports.css" />
     <Content Include="Reports\Views\Admin\Display.cshtml" />
     <Content Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Routable\Module.txt" />
@@ -399,6 +401,9 @@
     <Content Include="Navigation\Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reports\Styles\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
