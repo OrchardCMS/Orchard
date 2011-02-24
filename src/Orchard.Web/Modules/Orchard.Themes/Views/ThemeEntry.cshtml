@@ -19,8 +19,8 @@
         <button type="submit" title="@T("Preview")">@T("Preview")</button>
     }
 
-    <h5>@T("By") @Model.ContentPart.Descriptor.Author</h5>
-    <p>
+    <p class="themeInfo smallText">
+        @T("By") @Model.ContentPart.Descriptor.Author<br />
         @T("Version:") @Model.ContentPart.Descriptor.Version<br />
         @Model.ContentPart.Descriptor.Description<br />
         @if (Model.ContentPart.Descriptor.WebSite != null) {

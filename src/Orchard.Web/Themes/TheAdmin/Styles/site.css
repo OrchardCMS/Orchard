@@ -141,6 +141,8 @@ h4 img, h5 img, h6 img {
   margin: 0;
 }
 
+.smallText {font-size:1em; line-height:1.4em;}
+    
 
 /* Layout
 

@@ -1,7 +1,4 @@
-﻿#main .templates p {
-    margin:0 0 .3em 0;
-}
-#currentTheme .themePreviewImage {
+﻿#currentTheme .themePreviewImage {
     float: left;
     margin-right: 20px;
 }
@@ -51,6 +48,7 @@
 .themePreviewImage {
     height:300px;
 }
+#main .themeInfo {margin:12px 0 0 0;}
 /***Recently installed**/
 .recentlyInstalledTheme { }
 .recentlyInstalledTheme {background:#fff url(images/new.gif) no-repeat 0px 5px;}
