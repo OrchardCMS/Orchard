@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Email.Models;
 using Orchard.Localization;
@@ -19,12 +20,18 @@ namespace Orchard.Email.Drivers {
 
         protected override string Prefix { get { return "SmtpSettings"; } }
 
-        protected override DriverResult Editor(SmtpSettingsPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(SmtpSettingsPart part, string groupInfoId, dynamic shapeHelper) {
+            if (!string.Equals(groupInfoId, "email", StringComparison.OrdinalIgnoreCase))
+                return null;
+
             return ContentShape("Parts_SmtpSettings_Edit",
                     () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
         }
 
-        protected override DriverResult Editor(SmtpSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(SmtpSettingsPart part, IUpdateModel updater, string groupInfoId, dynamic shapeHelper) {
+            if (!string.Equals(groupInfoId, "email", StringComparison.OrdinalIgnoreCase))
+                return null;
+
             var previousPassword = part.Password;
             updater.TryUpdateModel(part, Prefix, null, null);
 

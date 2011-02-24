@@ -18,6 +18,8 @@ namespace Orchard.Media.Handlers {
         public Localizer T { get; set; }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            if (context.ContentItem.ContentType != "Site")
+                return;
             base.GetItemMetadata(context);
             context.Metadata.EditorGroupInfo.Add(new GroupInfo(T("Media")));
         }

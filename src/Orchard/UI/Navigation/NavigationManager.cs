@@ -110,8 +110,14 @@ namespace Orchard.UI.Navigation {
             var orderer = new FlatPositionComparer();
 
             return sources.SelectMany(x => x).ToArray()
+                // group same menus
                 .GroupBy(key => key, (key, items) => Join(items), comparer)
-                .OrderBy(item => item.Position, orderer);
+                // group same position
+                .GroupBy(item => item.Position)
+                // order position groups by position
+                .OrderBy(positionGroup => positionGroup.Key, orderer)
+                // ordered by item text in the postion group
+                .SelectMany(positionGroup => positionGroup.OrderBy(item => item.Text));
         }
 
         static MenuItem Join(IEnumerable<MenuItem> items) {
