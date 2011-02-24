@@ -107,9 +107,6 @@ namespace Orchard.Environment {
                             value = (T)workValues.ComponentContext.Resolve(valueRegistration, p);
                             workValues.Values[w] = value;
                         }
-                        else {
-                            int x = 5;
-                        }
                         return value;
                     });
                 })
