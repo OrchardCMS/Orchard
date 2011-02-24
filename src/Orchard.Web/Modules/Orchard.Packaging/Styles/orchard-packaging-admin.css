@@ -1,4 +1,7 @@
-﻿.extensionName {
+﻿.orchard-packaging #main .contentItems p {
+    margin:0;
+}
+.extensionName {
     float:left;
 }
 .contentItems .related {
@@ -50,13 +53,14 @@
 .properties li p {
     float: left;
 }
+.rating {width:130px;}
 .ratings {
     float: right;
     background:url(../Content/Images/stars.png) repeat-x;
     height: 14px;
     width: 75px;
     display: block;
-    margin:4px 0 0 4px;
+    margin:3px 0 0 0;
 }
 .score {
     background: url(../Content/Images/stars.png) repeat-x 0 -14px;
