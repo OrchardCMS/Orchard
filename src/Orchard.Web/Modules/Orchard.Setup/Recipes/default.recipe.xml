@@ -2,7 +2,7 @@
 <Orchard>
   <Recipe>
     <Name>Default</Name>
-    <Description>A recipe providing a default Orchard installation profile.</Description>
+    <Description>The default recipe for an Orchard site that includes pages, blogs, custom content types, comments, tags, widgets and basic navigation.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
     <Tags></Tags>

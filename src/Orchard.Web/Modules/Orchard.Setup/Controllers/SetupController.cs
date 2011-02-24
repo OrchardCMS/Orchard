@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
+using Orchard.Recipes.Models;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
@@ -40,7 +42,11 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
-            var recipes = _setupService.Recipes().Where(r => r.Name != DefaultRecipe); 
+            var recipes = OrderRecipes(_setupService.Recipes());
+            string recipeDescription = null;
+            if (recipes.Count > 0) {
+                recipeDescription = recipes[0].Description;
+            }
             
             // On the first time installation of Orchard, the user gets to the setup screen, which
             // will take a while to finish (user inputting data and the setup process itself).
@@ -56,12 +62,15 @@ namespace Orchard.Setup.Controllers {
             return IndexViewResult(new SetupViewModel {
                 AdminUsername = "admin",
                 DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider),
-                Recipes = recipes
+                Recipes = recipes,
+                RecipeDescription = recipeDescription
             });
         }
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(SetupViewModel model) {
+            var recipes = OrderRecipes(_setupService.Recipes());
+
             //TODO: Couldn't get a custom ValidationAttribute to validate two properties
             if (!model.DatabaseOptions && string.IsNullOrEmpty(model.DatabaseConnectionString))
                 ModelState.AddModelError("DatabaseConnectionString", T("A SQL connection string is required").Text);
@@ -77,10 +86,14 @@ namespace Orchard.Setup.Controllers {
                 }
             }
             if (model.Recipe == null) {
-                model.Recipe = DefaultRecipe;
+                if (!(recipes.Select(r => r.Name).Contains(DefaultRecipe))) {
+                    ModelState.AddModelError("Recipe", T("No recipes were found in the Setup module").Text);
+                }
+                else {
+                    model.Recipe = DefaultRecipe;
+                }
             }
             if (!ModelState.IsValid) {
-                var recipes = _setupService.Recipes().Where(r => r.Name != DefaultRecipe);
                 model.Recipes = recipes;
                 foreach (var recipe in recipes.Where(recipe => recipe.Name == model.Recipe)) {
                     model.RecipeDescription = recipe.Description;
@@ -116,6 +129,20 @@ namespace Orchard.Setup.Controllers {
 
                 return IndexViewResult(model);
             }
+        }
+
+        private static List<Recipe> OrderRecipes(IEnumerable<Recipe> recipes) {
+            var recipeList = new List<Recipe>();
+            var tempList = new List<Recipe>();
+            foreach (var recipe in recipes) {
+                if (recipe.Name == DefaultRecipe) {
+                    recipeList.Add(recipe);
+                }
+                else {
+                    tempList.Add(recipe);
+                }
+            }
+            return recipeList.Concat(tempList).ToList();
         }
     }
 }
