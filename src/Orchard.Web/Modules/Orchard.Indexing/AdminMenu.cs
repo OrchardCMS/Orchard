@@ -8,9 +8,8 @@ namespace Orchard.Indexing {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.AddImageSet("search")
-                .Add(T("Settings"),
-                    menu => menu.Add(T("Search"), "15", item => item.Action("Index", "Admin", new {area = "Orchard.Indexing"})
+            builder.Add(T("Settings"),
+                menu => menu.Add(T("Search Index"), "5", item => item.Action("Index", "Admin", new {area = "Orchard.Indexing"})
                         .Permission(StandardPermissions.SiteOwner)));
         }
     }

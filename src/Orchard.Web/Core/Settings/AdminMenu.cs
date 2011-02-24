@@ -1,5 +1,4 @@
 ﻿using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Settings;
