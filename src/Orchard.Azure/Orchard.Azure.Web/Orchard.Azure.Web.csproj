@@ -261,6 +261,10 @@
       <Project>{C889167C-E52C-4A65-A419-224B3D1B957D}</Project>
       <Name>Orchard.PublishLater</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Recipes\Orchard.Recipes.csproj">
+      <Project>{FC1D74E8-7A4D-48F4-83DE-95C6173780C4}</Project>
+      <Name>Orchard.Recipes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
