@@ -18,10 +18,7 @@
 
         string sectionHeaderText = firstLevelMenuItem.Text;
         string sectionHeaderTextHint = firstLevelMenuItem.TextHint;
-        var firstOfTheSecond = secondLevelMenuItems.FirstOrDefault(menuItem => menuItem.Default);
-        if (firstOfTheSecond == null) {
-            firstOfTheSecond = secondLevelMenuItems.FirstOrDefault();
-        }
+        var firstOfTheSecond = secondLevelMenuItems.FirstOrDefault();
 
         var itemClassName = HasText(sectionHeaderTextHint)
             ? "navicon-" + sectionHeaderTextHint.HtmlClassify()
