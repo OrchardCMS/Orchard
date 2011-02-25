@@ -56,19 +56,19 @@ namespace Orchard.Tests.UI.Navigation {
             var item2 = menuItems.Skip(1).First();
             var item3 = menuItems.Skip(2).First();
 
-            Assert.That(item1.Text, Is.EqualTo("Foo"));
+            Assert.That(item1.TextHint, Is.EqualTo("Foo"));
             Assert.That(item1.Position, Is.EqualTo("1.0"));
-            Assert.That(item2.Text, Is.EqualTo("Bar"));
+            Assert.That(item2.TextHint, Is.EqualTo("Bar"));
             Assert.That(item2.Position, Is.EqualTo("2.0"));
-            Assert.That(item3.Text, Is.EqualTo("Frap"));
+            Assert.That(item3.TextHint, Is.EqualTo("Frap"));
             Assert.That(item3.Position, Is.EqualTo("3.0"));
 
             Assert.That(item2.Items.Count(), Is.EqualTo(2));
             var subitem1 = item2.Items.First();
             var subitem2 = item2.Items.Last();
-            Assert.That(subitem1.Text, Is.EqualTo("Quad"));
+            Assert.That(subitem1.TextHint, Is.EqualTo("Quad"));
             Assert.That(subitem1.Position, Is.EqualTo("1.a"));
-            Assert.That(subitem2.Text, Is.EqualTo("Frap"));
+            Assert.That(subitem2.TextHint, Is.EqualTo("Frap"));
             Assert.That(subitem2.Position, Is.EqualTo("1.b"));
         }
 
@@ -78,8 +78,8 @@ namespace Orchard.Tests.UI.Navigation {
             public void GetNavigation(NavigationBuilder builder) {
                 var T = NullLocalizer.Instance;
                 builder
-                    .Add(T("Foo"), "1.0", x => x.Action("foo"))
-                    .Add(T("Bar"), "2.0", x => x.Add(T("Frap"), "1.b"));
+                    .Add(new LocalizedString("Foo", "", "Foo", null), "1.0", x => x.Action("foo"))
+                    .Add(new LocalizedString("Bar", "", "Bar", null), "2.0", x => x.Add(new LocalizedString("Frap", "", "Frap", null), "1.b"));
             }
         }
 
@@ -89,8 +89,8 @@ namespace Orchard.Tests.UI.Navigation {
             public void GetNavigation(NavigationBuilder builder) {
                 var T = NullLocalizer.Instance;
                 builder
-                    .Add(T("Frap"), "3.0", x => x.Action("foo"))
-                    .Add(T("Bar"), "4.0", x => x.Add(T("Quad"), "1.a"));
+                    .Add(new LocalizedString("Frap", "", "Frap", null), "3.0", x => x.Action("foo"))
+                    .Add(new LocalizedString("Bar", "", "Bar", null), "4.0", x => x.Add(new LocalizedString("Quad", "", "Quad", null), "1.a"));
             }
         }
     }
