@@ -12,6 +12,7 @@
             delete $[callbackName];
             data.callback(returnData);
         };
+        $[callbackName].data = data;
 
         var adminIndex = location.href.toLowerCase().indexOf("/admin/");
         if (adminIndex === -1) return;
@@ -21,11 +22,5 @@
             + "&editmode=" + (!!(data.img && data.img.src))
             + "&" + (new Date() - 0);
         var w = window.open(url, "_blank", data.windowFeatures || "width=685,height=540,status=no,toolbar=no,location=no,menubar=no,resizable=no");
-        if (w.jQuery && w.jQuery.mediaPicker) {
-            w.jQuery.mediaPicker.init(data);
-        }
-        else {
-            w.mediaPickerData = data;
-        }
     });
 });

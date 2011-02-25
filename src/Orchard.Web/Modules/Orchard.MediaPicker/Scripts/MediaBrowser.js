@@ -5,18 +5,6 @@
 
     $.extend({
         mediaPicker: {
-            init: function (data) {
-                // called by the opener to initiate dialog with existing image data.
-                // todo: data.img may contain existing image data, populate the fields
-                var img = data.img;
-                if (img) {
-                    for (var name in img) {
-                        $("#img-" + name).val(img[name]);
-                    }
-                    suppressResize = true;
-                    $("#img-src").trigger("change");
-                }
-            },
             uploadMedia: uploadMedia,
             scalePreview: scalePreview
         }
@@ -113,10 +101,14 @@
             });
         }
 
-        var data = window.mediaPickerData;
-        if (data) {
-            window.mediaPickerData = null;
-            $.mediaPicker.init(data);
+        var data = window.opener.jQuery[query("callback")].data,
+            img = data ? data.img : null;
+        if (img) {
+            for (var name in img) {
+                $("#img-" + name).val(img[name]);
+            }
+            suppressResize = true;
+            $("#img-src").trigger("change");
         }
     });
 
