@@ -116,9 +116,11 @@ namespace Orchard.ContentManagement {
 
                     var placement = descriptor.Placement(placementContext);
                     if(placement != null) {
+                        placement.Source = placementContext.Source;
                         return placement;
                     }
                 }
+
                 return new PlacementInfo {
                     Location = defaultLocation,
                     Source = String.Empty

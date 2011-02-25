@@ -68,7 +68,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                     predicate =  matches.SelectMany(match => match.Terms).Aggregate(predicate, BuildPredicate);
                 }
 
-                var placement = new PlacementInfo { };
+                var placement = new PlacementInfo();
 
                 var segments = shapeLocation.Location.Split(';').Select(s => s.Trim());
                 foreach (var segment in segments) {
