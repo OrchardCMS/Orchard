@@ -12,7 +12,6 @@
 @using (Html.BeginFormAntiForgeryPost(Url.Action("InstallModule", "Gallery", new { packageId = Request.QueryString["packageId"], version = Request.QueryString["version"], sourceId = Request.QueryString["sourceId"], redirectTo = Request.QueryString["redirectTo"] }))) {
     <h3>@T("Pick the features you want enabled during install").ToString()</h3>
 
-    if (Model.Features.Count > 0) {
     <fieldset>
         @{ var index = 0; }
         @foreach (PackagingInstallFeatureViewModel feature in Model.Features) {
@@ -27,7 +26,6 @@
             </div>
         }
     </fieldset>
-    }
 
     <button class="primaryAction" type="submit">@T("Install")</button>
 }

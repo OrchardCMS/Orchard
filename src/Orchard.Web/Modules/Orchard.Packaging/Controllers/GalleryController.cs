@@ -256,10 +256,14 @@ namespace Orchard.Packaging.Controllers {
                     FeatureDescriptor = featureDescriptor
                 }).ToList();
 
-            return View("InstallModule", new PackagingInstallViewModel {
-                Features = features,
-                ExtensionDescriptor = extensionDescriptor
-            });
+            if (features.Count > 0) {
+                return View("InstallModule", new PackagingInstallViewModel {
+                    Features = features,
+                    ExtensionDescriptor = extensionDescriptor
+                });
+            }
+
+            return InstallPOST(packageId, version, sourceId, redirectTo);
         }
 
         [HttpPost, ActionName("InstallModule")]
