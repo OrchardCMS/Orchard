@@ -23,7 +23,6 @@ namespace Orchard.Indexing.Services {
         private readonly IIndexingTaskManager _indexingTaskManager;
         private readonly IContentManager _contentManager;
         private readonly IIndexSynLock _indexSynLock;
-        private const string SearchIndexName = "Search";
 
         public IndexingTaskExecutor(
             IClock clock,
@@ -44,7 +43,7 @@ namespace Orchard.Indexing.Services {
         public ILogger Logger { get; set; }
 
         public void UpdateIndex(string indexName) {
-            var synLock = _indexSynLock.GetSynLock(SearchIndexName);
+            var synLock = _indexSynLock.GetSynLock(indexName);
 
             if (!System.Threading.Monitor.TryEnter(synLock)) {
                 Logger.Information("Index was requested but was already running");
@@ -63,7 +62,7 @@ namespace Orchard.Indexing.Services {
                 DateTime? lastIndexUtc;
 
                 // Do we need to rebuild the full index (first time module is used, or rebuild index requested) ?
-                if (_indexProvider.IsEmpty(SearchIndexName)) {
+                if (_indexProvider.IsEmpty(indexName)) {
                     Logger.Information("Rebuild index started");
 
                     // mark current last task, as we should process older ones (in case of rebuild index only)
@@ -93,10 +92,10 @@ namespace Orchard.Indexing.Services {
                 }
                 else {
                     // retrieve last processed index time
-                    lastIndexUtc = _indexProvider.GetLastIndexUtc(SearchIndexName);
+                    lastIndexUtc = _indexProvider.GetLastIndexUtc(indexName);
                 }
 
-                _indexProvider.SetLastIndexUtc(SearchIndexName, _clock.UtcNow);
+                _indexProvider.SetLastIndexUtc(indexName, _clock.UtcNow);
 
                 // retrieve not yet processed tasks
                 var taskRecords = lastIndexUtc == null
@@ -111,15 +110,15 @@ namespace Orchard.Indexing.Services {
 
                 Logger.Information("Processing {0} indexing tasks", taskRecords.Length);
 
-                if (!_indexProvider.Exists(SearchIndexName)) {
-                    _indexProvider.CreateIndex(SearchIndexName);
+                if (!_indexProvider.Exists(indexName)) {
+                    _indexProvider.CreateIndex(indexName);
                 }
 
                 // process Delete tasks
                 try {
                     var deleteIds = taskRecords.Where(t => t.Action == IndexingTaskRecord.Delete).Select(t => t.ContentItemRecord.Id).ToArray();
                     if (deleteIds.Length > 0) {
-                        _indexProvider.Delete(SearchIndexName, deleteIds);
+                        _indexProvider.Delete(indexName, deleteIds);
                         Logger.Information("Deleted content items from index: {0}", String.Join(", ", deleteIds));
                     }
                 }
@@ -151,7 +150,7 @@ namespace Orchard.Indexing.Services {
 
                 if (updateIndexDocuments.Count > 0) {
                     try {
-                        _indexProvider.Store(SearchIndexName, updateIndexDocuments);
+                        _indexProvider.Store(indexName, updateIndexDocuments);
                         Logger.Information("Added content items to index: {0}", String.Join(", ", addedContentItemIds));
                     }
                     catch (Exception ex) {

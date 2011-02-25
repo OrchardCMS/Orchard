@@ -68,6 +68,8 @@ namespace Orchard.Indexing.Services {
             foreach (var task in tasks) {
                 _repository.Delete(task);
             }
+
+            _repository.Flush();
         }
     }
 }

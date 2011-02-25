@@ -20,7 +20,7 @@
 
                     for (i = 0; i < classes.length; i++) {
                         if (classes[i].indexOf("zone-") === 0) {
-                            $(this).append('<div class="zone-name">' + classes[i].substr(classes[i].indexOf("-")+1) + '</div>');
+                            $(this).append('<div class="zone-name">' + classes[i].substr(classes[i].indexOf("-") + 1) + '</div>');
                         }
                     }
 
@@ -39,5 +39,43 @@
                 _this.prev().show("fast", function () { _this.addClass(open).html("&laquo;"); });
             }
         });
+
+        $("div.shape-tracing.wrapper").click(function (e) {
+            var _this = $(this);
+            var classes = $(this).attr("class").split(' ');
+            e.stopPropagation();
+            for (i = 0; i < classes.length; i++) {
+                if (classes[i].indexOf("shapeId-") === 0) {
+                    var shapeId = classes[i].substr(classes[i].indexOf("-") + 1);
+                    $("div.shape-tracing.wrapper").toggleClass('selected', false);
+                    _this.toggleClass('selected', true);
+                    $("div.shape-tracing.meta").toggle(false);
+                    $("div.shape-tracing.meta.shapeId-" + shapeId).toggle(true);
+                }
+            }
+        });
+
+        /* tabs */
+        function bindTab(selector) {
+            $('li' + selector).click(function () {
+                var _this = $(this);
+
+                // toggle the selected class on the tab li
+                _this.parent().children('li').toggleClass('selected', false);
+                _this.toggleClass('selected', true);
+
+                // hide all tabs and display the selected one
+                var wrapper = _this.parent().parent().first();
+                wrapper.children('.content').children().toggle(false);
+                wrapper.children('.content').children('div' + selector).toggle(true);
+            });
+        }
+
+        bindTab('.shape');
+        bindTab('.model');
+        bindTab('.placement');
+        bindTab('.templates');
+        bindTab('.source');
+        bindTab('.html');
     });
 })(jQuery);
