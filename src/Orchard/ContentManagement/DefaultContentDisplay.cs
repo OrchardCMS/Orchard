@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using ClaySharp.Implementation;
@@ -113,14 +114,13 @@ namespace Orchard.ContentManagement {
                         Path = VirtualPathUtility.AppendTrailingSlash(VirtualPathUtility.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
                     };
 
-                    var location = descriptor.Placement(placementContext);
-                    if (location != null) {
-                        return new PlacementInfo {
-                            Location = location,
-                            Source = placementContext.Source
-                        };
+                    var placement = descriptor.Placement(placementContext);
+                    if(placement != null) {
+                        placement.Source = placementContext.Source;
+                        return placement;
                     }
                 }
+
                 return new PlacementInfo {
                     Location = defaultLocation,
                     Source = String.Empty
