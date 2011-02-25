@@ -373,7 +373,7 @@ form.link button:hover {
     padding:6px 0 6px 20px;
     text-decoration:none;
 }
-#menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus {
+#menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus, #menu .menu-admin ul .selected a {
     background-color:#656b55;
     color: #fff;
     /*CSS3 properties*/
