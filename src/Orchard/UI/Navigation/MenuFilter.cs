@@ -48,7 +48,7 @@ namespace Orchard.UI.Navigation {
             IEnumerable<string> menuImageSets = _navigationManager.BuildImageSets(menuName);
             if (menuImageSets != null && menuImageSets.Count() > 0)
                 menuShape.ImageSets(menuImageSets);
-            
+
             workContext.Layout.Navigation.Add(menuShape);
 
             // Populate local nav
@@ -118,22 +118,23 @@ namespace Orchard.UI.Navigation {
         /// <param name="currentRouteData">The current route data.</param>
         /// <returns>A stack with the selection path being the last node the currently selected one.</returns>
         protected static Stack<MenuItem> SetSelectedPath(IEnumerable<MenuItem> menuItems, RouteData currentRouteData) {
-            foreach(MenuItem menuItem in menuItems) {
-                if (RouteMatches(menuItem, currentRouteData)) {
-                    menuItem.Selected = true;
+            if (menuItems == null)
+                return null;
 
-                    Stack<MenuItem> selectedPath = new Stack<MenuItem>();
+            foreach (MenuItem menuItem in menuItems) {
+                Stack<MenuItem> selectedPath = SetSelectedPath(menuItem.Items, currentRouteData);
+                if (selectedPath != null) {
+                    menuItem.Selected = true;
                     selectedPath.Push(menuItem);
                     return selectedPath;
                 }
 
-                if (menuItem.Items != null && menuItem.Items.Any()) {
-                    Stack<MenuItem> selectedPath = SetSelectedPath(menuItem.Items, currentRouteData);
-                    if (selectedPath != null) {
-                        menuItem.Selected = true;
-                        selectedPath.Push(menuItem);
-                        return selectedPath;
-                    }
+                if (RouteMatches(menuItem.RouteValues, currentRouteData.Values)) {
+                    menuItem.Selected = true;
+
+                    selectedPath = new Stack<MenuItem>();
+                    selectedPath.Push(menuItem);
+                    return selectedPath;
                 }
             }
 
@@ -166,14 +167,20 @@ namespace Orchard.UI.Navigation {
         /// <summary>
         /// Determines if a menu item corresponds to a given route.
         /// </summary>
-        /// <param name="menuItem">The menu item.</param>
-        /// <param name="currentRouteData">The route data.</param>
+        /// <param name="itemValues">The menu item.</param>
+        /// <param name="requestValues">The route data.</param>
         /// <returns>True if the menu item's action corresponds to the route data; false otherwise.</returns>
-        protected static bool RouteMatches(MenuItem menuItem, RouteData currentRouteData) {
-            return menuItem.RouteValues != null &&
-                   string.Equals((string) menuItem.RouteValues["area"], (string) currentRouteData.Values["area"], StringComparison.OrdinalIgnoreCase) &&
-                   string.Equals((string) menuItem.RouteValues["controller"], (string) currentRouteData.Values["controller"], StringComparison.OrdinalIgnoreCase) &&
-                   string.Equals((string) menuItem.RouteValues["action"], (string) currentRouteData.Values["action"], StringComparison.OrdinalIgnoreCase);
+        protected static bool RouteMatches(RouteValueDictionary itemValues, RouteValueDictionary requestValues) {
+            if (itemValues == null && requestValues == null) {
+                return true;
+            }
+            if (itemValues == null || requestValues == null) {
+                return false;
+            }
+            if (itemValues.Keys.Any(key => requestValues.ContainsKey(key) == false)) {
+                return false;
+            }
+            return itemValues.Keys.All(key => string.Equals(Convert.ToString(itemValues[key]), Convert.ToString(requestValues[key]), StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
