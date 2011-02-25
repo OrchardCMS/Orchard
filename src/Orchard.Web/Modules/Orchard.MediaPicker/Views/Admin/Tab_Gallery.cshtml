@@ -27,8 +27,8 @@
             </p>
 			<fieldset>
 				<input id="__requesttoken" type="hidden" value="@Html.AntiForgeryTokenValueOrchard()" />
-				<input id="folderName" type="text" />
-				<input type="button" id="createFolder" value="@T("Create Folder")" />
+				<input class="text-box" id="folderName" type="text" />
+				<input class="button" type="button" id="createFolder" value="@T("Create Folder")" />
 			</fieldset>
         </div>
         <fieldset>
@@ -66,11 +66,10 @@
                 <input type="hidden" name="MediaPath" value="@Model.MediaPath" />
                 <label for="fileUpload">@T("Upload an image from your computer")</label>
                 <input type="file" name="fileUpload" id="fileUpload"  />
-                <input type="submit" id="upload" value="Upload" />
+                <input class="button" type="submit" id="upload" value="Upload" />
                 }
             }
-			<img id="lib-indicator" src="@Url.Content("~/modules/orchard.mediapicker/content/synchronizing.gif")" alt="" class="throbber" />
-
+            <img id="img-indicator" src="@Url.Content("~/modules/orchard.mediapicker/Styles/images/synchronizing.gif")" alt="" class="throbber" />
 
         </fieldset>
 

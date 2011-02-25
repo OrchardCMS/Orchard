@@ -13,7 +13,7 @@ body {
 
 #orchardmediapicker * { font:100% normal Segoe UI,Trebuchet,Arial,Sans-Serif; }
 
-#orchardmediapicker #tabs { padding: 0 0 24px 0; }
+#orchardmediapicker #tabs { padding: 0 0 12px 0; }
 
 #orchardmediapicker a, #orchardmediapicker a:link, #orchardmediapicker a:visited, #orchardmediapicker a:hover, #orchardmediapicker a:active, #orchardmediapicker a:focus {
     color:#1e5d7d;
@@ -111,9 +111,11 @@ fieldset          { padding:0; margin: 0; border: 0px solid #dbdbdb; }
 #orchardmediapicker label.forcheckbox { display: inline; margin: 10px 0 0 4px; }
 #orchardmediapicker .actions { margin:12px 0 0 0; clear:both; text-align:left; }
 
+#orchardmediapicker .text-box {width:90%;}
+
 .image-width, .image-height {float:left; width:90px;}
 
-.image-width .text-box, .image-height .text-box {width:60%;}
+#orchardmediapicker .image-width .text-box, #orchardmediapicker .image-height .text-box, #orchardmediapicker #folderName {width:60%;}
 
 
 .clearboth {
