@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="AdminMenuGalleryUpdates.cs" />
     <Compile Include="Commands\PackagingCommands.cs" />
     <Compile Include="Controllers\GalleryUpdatesController.cs" />
     <Compile Include="Controllers\PackagingServicesController.cs" />
