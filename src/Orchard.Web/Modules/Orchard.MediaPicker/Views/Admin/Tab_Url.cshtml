@@ -15,7 +15,7 @@
         <div id="image-preview">
             <img alt="" id="img-loader" style="display:none" src="" />
             <div class="media-largepreview">
-                <img alt="@T("Preview of Image")" id="img-preview" src="TODO: some placeholder image" onload="jQuery.mediaPicker.scalePreview(this)" />
+                <img alt="@T("Preview of Image")" id="img-preview" src="@Url.Content("~/modules/orchard.mediapicker/Styles/images/imagepreview.png")" onload="jQuery.mediaPicker.scalePreview(this)" />
             </div>
             <div>
                 <label for="img-src">@T("URL for the image resource")</label>
@@ -26,9 +26,9 @@
                     <input type="hidden" name="MediaPath" value="@mediaPath" />
                     <label for="fileUpload">@T("Upload an image from your computer")</label>
                     <input type="file" name="fileUpload" id="fileUpload"  />
-                    <input type="submit" id="upload" value="Upload" />
+                    <input class="button" type="submit" id="upload" value="Upload" />
                 }
-				<img id="img-indicator" src="@Url.Content("~/modules/orchard.mediapicker/content/synchronizing.gif")" alt="" class="throbber" />
+				<img id="img-indicator" src="@Url.Content("~/modules/orchard.mediapicker/Styles/images/synchronizing.gif")" alt="" class="throbber" />
             </div>
 
         </div>

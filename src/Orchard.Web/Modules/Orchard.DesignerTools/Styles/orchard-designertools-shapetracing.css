@@ -12,9 +12,6 @@
     position:fixed;
     top:0;
 }
-#debug-control :hover {
-    color:yellow;
-}
 #debug-control .debug-active {
     color:Lime;
 }
@@ -48,30 +45,27 @@
     min-width:20px;
     min-height:20px;
 }
-.debug-shapes  body
-{
+
+.debug-shapes  body {
     margin-top:25px;
 }
 
-.debug-shapes .shape-tracing .wrapper :hover {
-    background:#E0E9EE;
-}
-
-.shape-tracing .meta {
-    display:none;
-}
-
-.debug-shapes .shape-tracing .meta  {
+.debug-shapes div.shape-tracing.meta  {
     clear:both;
     display:block;
-    background:#cfc;
+    background:#ccc;
     font-size:9pt;
     font-family:Segoe;
     color:black;
     margin-top:5px;
+    position:fixed;
+    left: 0px;
+    bottom: 0px;
+    width:100%;
+    z-index:999;
 }
 
-.debug-zones .Zone { 
+.debug-zones .shapeType-Zone { 
     border:1px dashed grey;
     margin:5px;
     position: relative;
@@ -84,10 +78,6 @@
     opacity: 0.7;    
 }
 
-.debug-shapes .Zone :hover {
-    background:#E0E9EE;
-}
-
 .meta .shape {
     color:black;
 }
@@ -98,4 +88,53 @@
 
 .meta .wrappers {
     color:green;
+}
+
+.debug-shapes div.wrapper.selected  {
+    background-color:#BAFFC3;
+}
+
+/* tabs */
+
+ul.debuggerMenu { margin:8px 0 -8px 0; }
+
+.debuggerMenu li {
+    color:#4053DE;
+    display: inline;
+    font-size:15px;
+    line-height:32px;
+}
+.debuggerMenu li {
+    margin:0 2px;
+    padding: 8px 18px 7px 18px;
+}
+.debuggerMenu li.middle, .debuggerMenu li.first, .debuggerMenu li.last {
+    border:1px solid #E4E5E6;
+    border-bottom:none;
+    background-color: #F5F5F5;
+}
+.debuggerMenu li.first {
+    margin-left:16px;
+}
+.debuggerMenu li.selected {
+    background-color: #fff;
+}
+.debuggerMenu li.selected, .debuggerMenu li:hover {
+    background-color: #fff;
+}
+.debuggerMenu li.selected a {
+    color: #3A822E;
+}
+
+.debug-shapes div.shape-tracing.meta .content {
+    background-color: #fff;
+    padding: 20px;
+    margin:8px 0 0 0;
+    border: 1px solid #e4e5e6;
+    height:10em;
+    overflow:scroll;
+     /*CSS3 properties*/
+     border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
 }

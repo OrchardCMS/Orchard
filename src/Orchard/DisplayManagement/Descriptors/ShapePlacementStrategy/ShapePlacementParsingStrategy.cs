@@ -127,9 +127,9 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                 case "ContentType":
                     if (expression.EndsWith("*")) {
                         var prefix = expression.Substring(0, expression.Length - 1);
-                        return ctx => (ctx.ContentType ?? "").StartsWith(prefix) && predicate(ctx);
+                        return ctx => ((ctx.ContentType ?? "").StartsWith(prefix) || (ctx.Stereotype ?? "").StartsWith(prefix)) && predicate(ctx);
                     }
-                    return ctx => (ctx.ContentType == expression) && predicate(ctx);
+                    return ctx => ((ctx.ContentType == expression) || (ctx.Stereotype == expression)) && predicate(ctx);
                 case "DisplayType":
                     if (expression.EndsWith("*")) {
                         var prefix = expression.Substring(0, expression.Length - 1);
