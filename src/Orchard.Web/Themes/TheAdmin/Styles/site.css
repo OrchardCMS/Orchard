@@ -141,6 +141,10 @@ h4 img, h5 img, h6 img {
   margin: 0;
 }
 
+strong 
+{
+    font-weight:600;
+}
 .smallText {font-size:1em; line-height:1.4em;}
     
 
@@ -492,9 +496,9 @@ form.link button:hover {
 #main h2, #main h3 {
     margin:.5em 0;
 }
-#main p {
+/*#main p {
     margin:0 0 1.5em;
-}
+}*/
 #main .main.actions {
     margin:0 0 1.4em;
 }
@@ -540,7 +544,7 @@ span.message {
     background:#e68585; /* red */
     color:#fff;
 }
-.message-Information {
+.message-Information, .notifications {
     background:#e6f1c9; /* green */
     border:1px solid #cfe493;
     color:#062232;
@@ -940,9 +944,9 @@ table.items th, table.items td {
 .contentItems .commentcount {
     line-height:2em;
 }
-#main .contentItems p {
+/*#main .contentItems p {
     margin:1em 0 0;
-}
+}*/
 
 
 /* Pager

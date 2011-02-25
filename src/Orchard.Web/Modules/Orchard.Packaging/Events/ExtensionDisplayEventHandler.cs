@@ -37,7 +37,7 @@ namespace Orchard.Packaging.Events {
 
             if (updatePackageEntry != null) {
                 if (updatePackageEntry.NewVersionToInstall != null) {
-                    yield return T("New version available: {0}", updatePackageEntry.NewVersionToInstall.Version).ToString();
+                    yield return T("Version {0} is available.", updatePackageEntry.NewVersionToInstall.Version).ToString();
                 }
             }
         }

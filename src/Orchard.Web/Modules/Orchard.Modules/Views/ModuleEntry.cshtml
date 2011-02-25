@@ -6,17 +6,18 @@
 @{ string moduleClasses = Model.ContentPart.IsRecentlyInstalled ? "recentlyInstalledModule" : string.Empty; }
 
 <div class="summary">
+ @if (Model.ContentPart.Notifications != null && Model.ContentPart.Notifications.Count > 0) {
+            <div class="notifications">
+            @foreach (string notification in Model.ContentPart.Notifications) {
+                <h5>@notification</h5>
+            }
+            </div>
+        }
     <div class="properties">
         <h2 class="@moduleClasses">@Model.ContentPart.Descriptor.Name<span> - @T("Version: {0}", !string.IsNullOrEmpty(Model.ContentPart.Descriptor.Version) ? Model.ContentPart.Descriptor.Version : T("1.0").ToString())</span></h2>       
-        @if (!string.IsNullOrEmpty(Model.ContentPart.Descriptor.Description)) {
-        <p>@Model.ContentPart.Descriptor.Description</p>}
 
-        @if (Model.ContentPart.Notifications != null && Model.ContentPart.Notifications.Count > 0) {
-            <ul class="notifications">
-            @foreach (string notification in Model.ContentPart.Notifications) {
-                <li>@notification</li>
-            }
-            </ul>
+         @if (!string.IsNullOrEmpty(Model.ContentPart.Descriptor.Description)) {
+        <p>@Model.ContentPart.Descriptor.Description</p>
         }
 
         <ul class="pageStatus" style="color:#666; margin:.6em 0 0 0;">
