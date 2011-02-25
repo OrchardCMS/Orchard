@@ -1,15 +1,12 @@
 ﻿@using Orchard.ContentManagement;
 @using Orchard.Core.Common.Models;
-@using Orchard.Security;
 @{
     CommonPart commonPart = Model.ContentPart;
     DateTime? modifiedUtc = commonPart.As<CommonPart>() == null ? null : commonPart.As<CommonPart>().ModifiedUtc;
-    // owner isn't really who last modified this, is it?
-    IUser owner = commonPart.As<CommonPart>() == null ? null : commonPart.As<CommonPart>().Owner;
 }
 <ul class="pageStatus">
     <li>@if (modifiedUtc.HasValue) {
         @T("Last modified: {0}", Display.DateTimeRelative(dateTimeUtc: modifiedUtc.Value))}&nbsp;&#124;&nbsp;
     </li>
-    <li>@T("By {0}", owner == null ? "<null>" : owner.UserName)</li>
+    <li>@Display.CommonMetadataOwner(ContentPart: Model.ContentPart)</li>
     </ul>

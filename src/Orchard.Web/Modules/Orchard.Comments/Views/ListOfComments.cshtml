@@ -4,13 +4,11 @@
 <ul class="comments">
 @foreach (var comment in Model) {
     <li>
-        <article class="comment">
+        <article class="comment" id="comment-@comment.Id">
             <header>
                 <h4>
-                    <span class="who">@Html.LinkOrDefault(comment.Record.Author, comment.Record.SiteName, new { rel = "nofollow" })
-                    </span>
-                    <span class="when">said <time datetime="@comment.Record.CommentDateUtc.GetValueOrDefault()">@Html.Link((string)Display.DateTimeRelative(dateTimeUtc: comment.Record.CommentDateUtc.GetValueOrDefault()).ToString(), "#")</time>
-                    </span>
+                    <span class="who">@Display.CommentAuthor(ContentPart: comment)</span>
+                    <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
                 </h4>
             </header>
             <p class="text">@(new MvcHtmlString(Html.Encode(comment.Record.CommentText).ReplaceNewLinesWith("<br />$1")))</p>
