@@ -273,19 +273,10 @@ namespace Orchard.Packaging.Controllers {
                 return HttpNotFound();
             }
 
-            PackageInfo packageInfo = InstallPackage(packageId, version, source);
-            if (packagingInstallViewModel.PackagingInstallMode == PackagingInstallMode.Custom) {
-                // Enable selected features
-                _featureManager.EnableFeatures(packagingInstallViewModel.Features
-                                                   .Select(feature => feature.FeatureDescriptor.Id));
-            } else {
-                IEnumerable<FeatureDescriptor> features = _featureManager.GetAvailableFeatures()
-                    .Where(feature => feature.Extension.Id.Equals(packageInfo.ExtensionName) &&
-                                      feature.Extension.Version.Equals(packageInfo.ExtensionVersion));
-
-                _featureManager.EnableFeatures(features
-                    .Select(feature => feature.Id));
-            }
+            InstallPackage(packageId, version, source);
+            // Enable selected features
+            _featureManager.EnableFeatures(packagingInstallViewModel.Features
+                                                .Select(feature => feature.FeatureDescriptor.Id));
 
             return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
         }
