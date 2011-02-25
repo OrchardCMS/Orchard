@@ -127,16 +127,16 @@ namespace Orchard.UI.Navigation {
             var joined = new MenuItem {
                 Text = items.First().Text,
                 TextHint = items.First().TextHint,
-                IdHint = items.First().IdHint,
-                Url = items.First().Url,
-                Href = items.First().Href,
+                IdHint = items.Select(x => x.IdHint).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
+                Url = items.Select(x => x.Url).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
+                Href = items.Select(x => x.Href).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
                 LinkToFirstChild = items.First().LinkToFirstChild,
-                RouteValues = items.First().RouteValues,
+                RouteValues = items.Select(x => x.RouteValues).FirstOrDefault(x => x != null),
                 LocalNav = items.Any(x => x.LocalNav),
                 Default = items.First().Default,
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),
-                Permissions = items.SelectMany(x => x.Permissions)
+                Permissions = items.SelectMany(x => x.Permissions).Distinct(),
             };
             return joined;
         }
