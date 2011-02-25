@@ -10,8 +10,9 @@ namespace Orchard.Users {
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("users")
                 .Add(T("Users"), "40",
-                    menu => menu.Add(T("Users"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Users" })
-                        .LocalNav().Default().Permission(StandardPermissions.SiteOwner)));
+                    menu => menu.Action("Index", "Admin", new { area = "Orchard.Users" }).Permission(StandardPermissions.SiteOwner)
+                        .Add(T("Users"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Users" })
+                            .LocalNav().Permission(StandardPermissions.SiteOwner)));
         }
     }
 }
