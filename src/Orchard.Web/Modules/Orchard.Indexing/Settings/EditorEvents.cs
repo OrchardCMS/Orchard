@@ -40,8 +40,7 @@ namespace Orchard.Indexing.Settings {
         /// </summary>
         private void CreateIndexingTasks()
         {
-            if (!_tasksCreated)
-            {
+            if (!_tasksCreated) {
                 CreateTasksForType(_contentTypeName);
                 _tasksCreated = true;
             }

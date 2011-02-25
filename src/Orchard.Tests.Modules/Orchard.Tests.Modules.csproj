@@ -136,6 +136,7 @@
   <ItemGroup>
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
     <Compile Include="Comments\Services\CommentServiceTests.cs" />
+    <Compile Include="Indexing\IndexingTaskExecutorTests.cs" />
     <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
     <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
     <Compile Include="Scripting.Dlr\EvaluatorTests.cs" />
