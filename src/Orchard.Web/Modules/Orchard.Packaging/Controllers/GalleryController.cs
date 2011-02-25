@@ -249,6 +249,8 @@ namespace Orchard.Packaging.Controllers {
             ExtensionDescriptor extensionDescriptor = _packageManager.GetExtensionDescriptor(package);
 
             List<PackagingInstallFeatureViewModel> features = extensionDescriptor.Features
+                .Where(featureDescriptor => !DefaultExtensionTypes.IsTheme(featureDescriptor.Extension.ExtensionType) &&
+                    !featureDescriptor.Id.Equals(featureDescriptor.Extension.Id))
                 .Select(featureDescriptor => new PackagingInstallFeatureViewModel {
                     Enable = true, // by default all features are enabled
                     FeatureDescriptor = featureDescriptor

@@ -50,7 +50,7 @@
                 }
 
                 var dependencies = (from d in feature.Descriptor.Dependencies
-                                    select (from f in Model.Features where f.Descriptor.Id == d select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);                
+                                    select (from f in Model.Features where f.Descriptor.Id == d select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);
                 var missingDependencies = feature.Descriptor.Dependencies
                     .Where(d => !Model.Features.Any(f => f.Descriptor.Id == d));
                 showActions = categoryName.ToString() != "Core" && missingDependencies.Count() == 0;

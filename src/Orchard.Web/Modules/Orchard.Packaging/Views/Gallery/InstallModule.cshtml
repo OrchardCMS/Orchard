@@ -5,6 +5,7 @@
 
 @{
     Style.Require("PackagingAdmin");
+    Script.Require("PackagingModulesAdmin").AtFoot();
 
     Layout.Title = T("{0} - {1} Details", Model.ExtensionDescriptor.Name, Model.ExtensionDescriptor.Version).ToString();
 }
@@ -13,16 +14,16 @@
     <h3>@T("Which type of installation do you want?").ToString()</h3>
 
     <fieldset>
-        @Html.RadioButton("PackagingInstallMode", "All", (Model.PackagingInstallMode == PackagingInstallMode.All), new { id = "PackagingInstallMode_All" })
+        @Html.RadioButton("PackagingInstallMode", "All", (Model.PackagingInstallMode == PackagingInstallMode.All), new { id = "PackagingInstallMode_All", onClick = "checkAll();" })
         <label for="Features_All" class="forcheckbox">@T("Install and enable all features")</label>
     </fieldset>
 
     if (Model.Features.Count > 0) {
     <fieldset>
-        @Html.RadioButton("PackagingInstallMode", "Custom", (Model.PackagingInstallMode == PackagingInstallMode.Custom), new { id = "PackagingInstallMode_Custom" })
+        @Html.RadioButton("PackagingInstallMode", "Custom", (Model.PackagingInstallMode == PackagingInstallMode.Custom), new { id = "PackagingInstallMode_Custom", onClick = "checkCustom();" })
         <label for="Features_Custom" class="forcheckbox">@T("Custom")</label>
 
-        <div class="custom_details">
+        <div class="custom_details" id="custom_features">
             <legend>@T("Pick the features you want enabled during install").ToString()</legend>
 
             @{ var index = 0; }
@@ -32,6 +33,7 @@
                     @Html.HiddenFor(m => m.Features[index].FeatureDescriptor.Name)
 
                     @Html.EditorFor(m => m.Features[index].Enable)
+
                     <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Features[index].Enable)">@feature.FeatureDescriptor.Name</label>
                     @{ index++; }
                 </div>
