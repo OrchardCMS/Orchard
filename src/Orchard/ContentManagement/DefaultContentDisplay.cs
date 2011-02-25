@@ -48,7 +48,7 @@ namespace Orchard.ContentManagement {
             itemShape.Metadata.DisplayType = actualDisplayType;
 
             var context = new BuildDisplayContext(itemShape, content, actualDisplayType, _shapeFactory);
-            BindPlacement(context, actualDisplayType);
+            BindPlacement(context, actualDisplayType, stereotype);
 
             _handlers.Value.Invoke(handler => handler.BuildDisplay(context), Logger);
             return context.Shape;
@@ -66,7 +66,7 @@ namespace Orchard.ContentManagement {
             itemShape.ContentItem = content.ContentItem;
 
             var context = new BuildEditorContext(itemShape, content, groupInfoId, _shapeFactory);
-            BindPlacement(context, null);
+            BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
 
@@ -85,7 +85,7 @@ namespace Orchard.ContentManagement {
             itemShape.ContentItem = content.ContentItem;
 
             var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory);
-            BindPlacement(context, null);
+            BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);
             
@@ -97,7 +97,7 @@ namespace Orchard.ContentManagement {
             return _shapeFactory.Create(actualShapeType, Arguments.Empty(), new[] { zoneHoldingBehavior });
         }
 
-        private void BindPlacement(BuildShapeContext context, string displayType) {
+        private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {
             context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
 
                 var theme = _themeService.Value.GetRequestTheme(_requestContext);
@@ -108,6 +108,7 @@ namespace Orchard.ContentManagement {
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
                     var placementContext = new ShapePlacementContext {
                         ContentType = context.ContentItem.ContentType,
+                        Stereotype = stereotype,
                         DisplayType = displayType,
                         Differentiator = differentiator,
                         Path = VirtualPathUtility.AppendTrailingSlash(VirtualPathUtility.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
