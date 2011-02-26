@@ -239,11 +239,11 @@
     <Content Include="Common\Views\CommonMetadataOwner.cshtml" />
     <Content Include="Containers\Module.txt" />
     <Content Include="Contents\Styles\images\menu.content.png" />
-    <Content Include="Contents\Styles\menu.content.css" />
+    <Content Include="Contents\Styles\menu.content-admin.css" />
     <Content Include="Contents\Views\Admin\Create.cshtml" />
     <Content Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\List.cshtml" />
-    <Content Include="Dashboard\styles\menu.dashboard.css" />
+    <Content Include="Dashboard\styles\menu.dashboard-admin.css" />
     <Content Include="Dashboard\styles\images\menu.dashboard.png" />
     <Content Include="Feeds\Views\Feed.cshtml" />
     <Content Include="Contents\Views\Parts.Contents.Publish.cshtml" />
@@ -254,10 +254,10 @@
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
     <Content Include="Navigation\Styles\images\menu.navigation.png" />
-    <Content Include="Navigation\Styles\menu.navigation.css" />
+    <Content Include="Navigation\Styles\menu.navigation-admin.css" />
     <Content Include="Reports\Module.txt" />
     <Content Include="Reports\Styles\images\menu.reports.png" />
-    <Content Include="Reports\Styles\menu.reports.css" />
+    <Content Include="Reports\Styles\menu.reports-admin.css" />
     <Content Include="Reports\Views\Admin\Display.cshtml" />
     <Content Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Routable\Module.txt" />
@@ -266,7 +266,7 @@
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Styles\images\menu.settings.png" />
-    <Content Include="Settings\Styles\menu.settings.css" />
+    <Content Include="Settings\Styles\menu.settings-admin.css" />
     <Content Include="Settings\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Views\Admin\Culture.cshtml" />
     <Content Include="Contents\Views\Content.Edit.cshtml" />

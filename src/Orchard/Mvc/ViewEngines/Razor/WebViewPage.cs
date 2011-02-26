@@ -49,7 +49,12 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public void RegisterImageSet(string imageSet, string style = "", int size = 16) {
-            Style.Include(imageSet + ".css");
+            // hack to fake the style "alternate" for now so we don't have to change stylesheet names when this is hooked up
+            // todo: (heskew) deal in shapes so we have real alternates 
+            var imageSetStylesheet = !string.IsNullOrWhiteSpace(style)
+                ? string.Format("{0}-{1}.css", imageSet, style)
+                : string.Format("{0}.css", imageSet);
+            Style.Include(imageSetStylesheet);
         }
 
         public virtual void RegisterLink(LinkEntry link) {

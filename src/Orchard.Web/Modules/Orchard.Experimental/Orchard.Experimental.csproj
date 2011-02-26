@@ -76,7 +76,7 @@
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Styles\images\menu.experimental.png" />
-    <Content Include="Styles\menu.experimental.css" />
+    <Content Include="Styles\menu.experimental-admin.css" />
     <Content Include="Views\Commands\Execute.cshtml" />
     <Content Include="Views\Content\Details.cshtml" />
     <Content Include="Views\Content\Index.cshtml" />

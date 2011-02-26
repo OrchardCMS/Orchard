@@ -79,7 +79,7 @@
     <Content Include="Content\Admin\images\movedown.gif" />
     <Content Include="Module.txt" />
     <Content Include="Styles\images\menu.widgets.png" />
-    <Content Include="Styles\menu.widgets.css" />
+    <Content Include="Styles\menu.widgets-admin.css" />
     <Content Include="Styles\orchard-widgets-admin.css" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

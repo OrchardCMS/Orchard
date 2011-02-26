@@ -65,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\images\menu.list.png" />
-    <Content Include="Styles\menu.list.css" />
+    <Content Include="Styles\menu.list-admin.css" />
     <Content Include="Views\Items\Content-List.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>

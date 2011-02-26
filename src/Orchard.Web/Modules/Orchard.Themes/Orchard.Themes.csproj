@@ -76,7 +76,7 @@
     <Content Include="Styles\images\menu.themes.png" />
     <Content Include="Styles\images\new.gif" />
     <Content Include="Styles\images\update.gif" />
-    <Content Include="Styles\menu.themes.css" />
+    <Content Include="Styles\menu.themes-admin.css" />
     <Content Include="Styles\orchard-themes-admin.css" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\ThemePreview.cshtml" />
