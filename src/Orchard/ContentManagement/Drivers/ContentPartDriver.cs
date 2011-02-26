@@ -57,7 +57,6 @@ namespace Orchard.ContentManagement.Drivers {
             var id = part != null ? part.ContentItem.Id.ToString() : String.Empty;
             var shapeType = metadata.Type;
             var contentType = part != null ? part.ContentItem.ContentType : String.Empty;
-            var displayType = metadata.DisplayType ?? String.Empty;
 
             // [ShapeType]__[Id] e.g. Parts/Common.Metadata-42
             if ( !string.IsNullOrEmpty(id) ) {
@@ -67,21 +66,6 @@ namespace Orchard.ContentManagement.Drivers {
             // [ShapeType]__[ContentType] e.g. Parts/Common.Metadata-BlogPost
             if ( !string.IsNullOrEmpty(contentType) ) {
                 metadata.Alternates.Add(shapeType + "__" + contentType);
-            }
-
-            // [ShapeType]_[DisplayType] e.g. Parts/Common.Metadata.Summary
-            if ( !string.IsNullOrEmpty(displayType) ) {
-                metadata.Alternates.Add(shapeType + "_" + displayType);
-            }
-
-            // [ShapeType]_[DisplayType]__[ContentType] e.g. Parts/Common.Metadata-BlogPost.Summary
-            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(contentType) ) {
-                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + contentType);
-            }
-
-            // [ShapeType]_[DisplayType]__[Id] e.g. Parts/Common.Metadata-42.Summary
-            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(id) ) {
-                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + id);
             }
 
             return shape;

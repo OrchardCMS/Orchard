@@ -78,7 +78,6 @@ namespace Orchard.ContentManagement.Drivers {
             var fieldName = differentiator ?? String.Empty;
             var partName = part != null ? part.PartDefinition.Name : String.Empty;
             var contentType = part != null ? part.ContentItem.ContentType : String.Empty;
-            var displayType = metadata.DisplayType ?? String.Empty;
             var dynamicType = string.Equals(partName, contentType, StringComparison.Ordinal);
 
             // [ShapeType__FieldName] e.g. Fields/Common.Text-Teaser
@@ -93,11 +92,6 @@ namespace Orchard.ContentManagement.Drivers {
             // [ShapeType]__[ContentType]__[PartName] e.g. Fields/Common.Text-Blog-TeaserPart
             if ( !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(contentType) && !dynamicType ) {
                 metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName);
-            }
-
-            // [ShapeType]_[DisplayType]__[FieldName] e.g. Fields/Common.Text-Teaser.Summary
-            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(fieldName) ) {
-                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + fieldName);
             }
 
             // [ShapeType]__[PartName]__[FieldName] e.g. Fields/Common.Text-TeaserPart-Teaser
@@ -115,26 +109,6 @@ namespace Orchard.ContentManagement.Drivers {
                 metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName );
             }
             
-            // [ShapeType]_[DisplayType]__[PartName] e.g. Fields/Common.Text-TeaserPart.Summary
-            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(partName) ) {
-                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + partName);
-            }
-
-            // [ShapeType]_[DisplayType]__[ContentType]__[PartName] e.g. Fields/Common.Text-Blog-TeaserPart.Summary
-            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !dynamicType ) {
-                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + contentType + "__" + partName);
-            }
-
-            // [ShapeType]_[DisplayType]__[PartName]__[FieldName] e.g. Fields/Common.Text-TeaserPart-Teaser.Summary
-            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) ) {
-                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + partName + "__" + fieldName);
-            }
-
-            // [ShapeType]_[DisplayType]__[ContentType]__[PartName]__[FieldName] e.g. Fields/Common.Text-Blog-TeaserPart-Teaser.Summary
-            if ( !string.IsNullOrEmpty(displayType) && !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !dynamicType && !string.IsNullOrEmpty(fieldName) ) {
-                metadata.Alternates.Add(shapeType + "_" + displayType + "__" + contentType + "__" + partName + "__" + fieldName);
-            }
-
             return shape;
         }
 
