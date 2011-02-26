@@ -58,11 +58,11 @@
     font-family:Segoe;
     color:black;
     margin-top:5px;
-    position:fixed;
     left: 0px;
     bottom: 0px;
-    width:100%;
+    position:fixed;
     z-index:999;
+    width:100%;
 }
 
 .debug-zones .shapeType-Zone { 

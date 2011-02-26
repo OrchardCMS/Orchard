@@ -59,7 +59,7 @@
         function bindTab(selector) {
             $('li' + selector).click(function () {
                 var _this = $(this);
-
+                
                 // toggle the selected class on the tab li
                 _this.parent().children('li').toggleClass('selected', false);
                 _this.toggleClass('selected', true);

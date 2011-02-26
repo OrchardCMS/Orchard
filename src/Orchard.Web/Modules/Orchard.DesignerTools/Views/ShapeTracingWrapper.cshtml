@@ -1,0 +1,31 @@
+﻿@using Orchard;
+@using Orchard.DisplayManagement.Descriptors;
+@using Orchard.DesignerTools.Services;
+@using System.Xml;
+
+@{
+    Script.Require("jQueryUI_Tabs");
+    Script.Include("orchard-designertools-shapetracing.js");
+    Style.Include("orchard-designertools-shapetracing.css");
+}
+
+<div class="shape-tracing wrapper shapeType-@Model.Metadata.Type shapeId-@Model.GetHashCode() " title="@Model.Metadata.Type">
+	@Display(Model.Metadata.ChildContent)
+	@{
+		Layout.Zones["Tail"].Add(
+			New.ShapeTracingMeta(
+				ShapeType: Model.Metadata.Type, 
+				Definition: Model.Definition, 
+				DefinitionContent: Model.DefinitionContent, 
+				DisplayType: Model.Metadata.DisplayType, 
+				Position: Model.Metadata.Position, 
+				PlacementSource: Model.Metadata.PlacementSource, 
+				Dump: Model.Dump, 
+				PlacementContent: Model.PlacementContent, 
+				Alternates: Model.Metadata.Alternates, 
+				Wrappers: Model.Metadata.Wrappers, 
+				ChildContent: Model.Metadata.ChildContent,
+				ShapeId: Model.GetHashCode()
+		));
+	}
+</div>
