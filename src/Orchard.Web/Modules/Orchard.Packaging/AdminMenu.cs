@@ -15,11 +15,9 @@ namespace Orchard.Packaging {
         public void GetNavigation(NavigationBuilder builder) {
             builder
                 .Add(T("Modules"), menu => menu
-                    .Add(T("Gallery"), "3", item => Describe(item, "Modules", "Gallery", true))
-                    .Add(T("Upload"), "9", item => Describe(item, "AddModule", "PackagingServices", true)))
+                    .Add(T("Gallery"), "3", item => Describe(item, "Modules", "Gallery", true)))
                 .Add(T("Themes"), menu => menu
-                    .Add(T("Gallery"), "3", item => Describe(item, "Themes", "Gallery", true))
-                    .Add(T("Upload"), "9", item => Describe(item, "AddTheme", "PackagingServices", true)))
+                    .Add(T("Gallery"), "3", item => Describe(item, "Themes", "Gallery", true)))
                 .Add(T("Settings"), menu => menu
                     .Add(T("Gallery"), "1", item => Describe(item, "Sources", "Gallery", false)));
         }

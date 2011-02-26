@@ -103,6 +103,7 @@ namespace Orchard.Themes.Controllers {
 
                 return View(new ThemesIndexViewModel {
                     CurrentTheme = currentTheme,
+                    InstallThemes = installThemes,
                     Themes = themes
                 });
             } catch (Exception exception) {

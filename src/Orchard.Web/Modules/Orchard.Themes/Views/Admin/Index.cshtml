@@ -31,3 +31,7 @@
         }
     </ul>
 }
+
+@if (Model.InstallThemes) {
+    <p id="otherActionsBar">@Html.ActionLink(T("Upload a theme").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</p>
+}

@@ -48,3 +48,7 @@
 
     @Display(Model.Pager)
 }
+
+@if (Model.InstallModules) {
+    <p id="otherActionsBar">@Html.ActionLink(T("Upload a module").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</p>
+}
