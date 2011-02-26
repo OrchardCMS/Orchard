@@ -62,15 +62,19 @@ namespace Orchard.DesignerTools.Services {
         private void DumpValue(object o, string name) {
             string formatted = FormatValue(o);
             _node.Add(
-                new XElement("div", new XAttribute("class", "name"), name),
-                new XElement("div", new XAttribute("class", "value"), formatted)
+                new XElement("h3", 
+                    new XElement("div", new XAttribute("class", "name"), name),
+                    new XElement("div", new XAttribute("class", "value"), formatted)
+                    )
                 );
         }
 
         private void DumpObject(object o, string name) {
             _node.Add(
-                new XElement("div", new XAttribute("class", "name"), name),
-                new XElement("div", new XAttribute("class", "type"), FormatType(o.GetType()))
+                new XElement("h3", 
+                    new XElement("div", new XAttribute("class", "name"), name),
+                    new XElement("div", new XAttribute("class", "type"), FormatType(o.GetType()))
+                    )
             );
 
             if (_parents.Count >= _levels) {
@@ -168,6 +172,10 @@ namespace Orchard.DesignerTools.Services {
 
             _node.Add(_node = new XElement("ul"));
             foreach (var key in props.Keys) {
+                // ignore private members (added dynmically by the shape wrapper)
+                if(key.ToString().StartsWith("_")) {
+                    continue;
+                }
                 Dump(props[key], key.ToString());
             }
             _node = _node.Parent;

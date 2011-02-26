@@ -24,7 +24,7 @@
 		</div>
 			
 		<div class="model" style="display:none">
-			<pre>@Model.Dump</pre>
+			@(new MvcHtmlString(@Model.Dump))
 		</div>
 
 		<div class="placement" style="display:none">

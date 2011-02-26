@@ -59,7 +59,7 @@
         function bindTab(selector) {
             $('li' + selector).click(function () {
                 var _this = $(this);
-                
+
                 // toggle the selected class on the tab li
                 _this.parent().children('li').toggleClass('selected', false);
                 _this.toggleClass('selected', true);
@@ -71,11 +71,33 @@
             });
         }
 
+        var glyph = $("<span class=\"expando-glyph-container closed\"><span class=\"expando-glyph\"></span>&#8203;</span>");
+        $('div.model div.type').prev().prepend(glyph);
+
+        $('div.model ul ul').toggle(false);
+
+        $('span.expando-glyph-container').click(function () {
+            var __this = $(this);
+
+            if (__this.hasClass("closed") || __this.hasClass("closing")) {
+                __this.parent().parent().parent().children('ul').slideDown(300, function () { __this.removeClass("opening").removeClass("closed").addClass("open"); });
+                __this.addClass("opening");
+            }
+            else {
+                __this.parent().parent().parent().children('ul').slideUp(300, function () { __this.removeClass("closing").removeClass("open").addClass("closed"); });
+                __this.addClass("closing");
+            }
+
+            return false;
+        });
+
         bindTab('.shape');
         bindTab('.model');
         bindTab('.placement');
         bindTab('.templates');
         bindTab('.source');
         bindTab('.html');
+
+
     });
 })(jQuery);

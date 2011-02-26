@@ -138,3 +138,71 @@ ul.debuggerMenu { margin:8px 0 -8px 0; }
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
 }
+
+.meta .model div.name
+{
+    display:block;
+    float:left;
+    width:30%;
+}
+
+.meta .model ul 
+{
+    padding:0;
+    margin-left:-15px;
+    margin:0;
+    list-style-type:none;
+}
+
+.meta .model ul li
+{
+    padding-left:15px;
+}
+
+.meta .model h3
+{
+    margin:0;
+    padding:0;
+}
+
+h3:hover
+{
+    background-color: #eee;
+}
+
+.expando-glyph {
+    background:transparent no-repeat 0 -19px;
+    background-image:url(images/menu-glyph.png);
+
+    line-height:12px;
+    padding-left:15px;
+    margin-left:-15px;
+}
+
+.expando-glyph:hover {
+    background-image:url(images/menu-glyph.png);
+}
+
+.expando-glyph-container.closed .expando-glyph {
+    background-image:url(images/menu-glyph.png);
+    background-position:0 3px;
+}
+.expando-glyph-container.closed .expando-glyph:hover {
+    background-image:url(images/menu-glyph.png);
+}
+.expando-glyph-container.closing .expando-glyph {
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(-90deg) translate(3px, -3px);
+    -moz-transform:rotate(-90deg) translate(3px, -3px);
+    transform:rotate(-90deg) translate(3px, -3px);
+}
+.expando-glyph-container.opening .expando-glyph {
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(90deg) translate(3px, 3px);
+    -moz-transform:rotate(90deg) translate(3px, 3px);
+    transform:rotate(90deg) translate(3px, 3px);
+}

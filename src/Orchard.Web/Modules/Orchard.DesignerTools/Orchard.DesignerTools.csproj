@@ -60,6 +60,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\images\menu-glyph.png" />
     <Content Include="Scripts\orchard-designertools-shapetracing.js" />
     <Content Include="Styles\orchard-designertools-shapetracing.css" />
     <Content Include="Web.config">
