@@ -63,8 +63,8 @@ namespace Orchard.Tests.UI.Navigation {
         } 
 
         private static Mock<INavigationManager> GetNavigationManager() {
-            var mainMenu = new[] { new MenuItem { Text = "The Main Menu" } };
-            var adminMenu = new[] { new MenuItem { Text = "The Admin Menu" } };
+            var mainMenu = new[] { new MenuItem { Text = new LocalizedString("The Main Menu") } };
+            var adminMenu = new[] { new MenuItem { Text = new LocalizedString("The Admin Menu") } };
             var navigationManager = new Mock<INavigationManager>();
             navigationManager.Setup(x => x.BuildMenu("main")).Returns(mainMenu);
             navigationManager.Setup(x => x.BuildMenu("admin")).Returns(adminMenu);

@@ -194,7 +194,6 @@ namespace Orchard.UI.Navigation {
         protected dynamic BuildMenuItemShape(dynamic shapeFactory, dynamic parentShape, dynamic menu, MenuItem menuItem) {
             return shapeFactory.MenuItem()
                 .Text(menuItem.Text)
-                .TextHint(menuItem.TextHint)
                 .IdHint(menuItem.IdHint)
                 .Href(menuItem.Href)
                 .LinkToFirstChild(menuItem.LinkToFirstChild)
@@ -217,7 +216,6 @@ namespace Orchard.UI.Navigation {
         protected dynamic BuildLocalMenuItemShape(dynamic shapeFactory, dynamic parentShape, dynamic menu, MenuItem menuItem) {
             return shapeFactory.LocalMenuItem()
                 .Text(menuItem.Text)
-                .TextHint(menuItem.TextHint)
                 .IdHint(menuItem.IdHint)
                 .Href(menuItem.Href)
                 .LinkToFirstChild(menuItem.LinkToFirstChild)

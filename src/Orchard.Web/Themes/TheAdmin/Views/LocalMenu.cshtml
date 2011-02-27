@@ -9,7 +9,7 @@
 ﻿@tag.StartElement
     @foreach(var firstLevelMenuItem in Model) {
         if (firstLevelMenuItem.LocalNav) {
-            string sectionHeaderText = firstLevelMenuItem.Text;
+            string sectionHeaderText = firstLevelMenuItem.Text.Text;
 
             var sectionHeaderMarkup = firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)
                 ? Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href)

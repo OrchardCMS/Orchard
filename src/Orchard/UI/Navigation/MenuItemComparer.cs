@@ -4,9 +4,12 @@ using System.Linq;
 namespace Orchard.UI.Navigation {
     public class MenuItemComparer : IEqualityComparer<MenuItem> {
         public bool Equals(MenuItem x, MenuItem y) {
-            if (!string.Equals(x.TextHint, y.TextHint)) {
-                return false;
+            if (x.Text != null && y.Text != null) {
+                if (!string.Equals(x.Text.TextHint, y.Text.TextHint)) {
+                    return false;
+                }
             }
+
             if (!string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(y.Url)) {
                 if (!string.Equals(x.Url, y.Url)) {
                     return false;
@@ -26,13 +29,20 @@ namespace Orchard.UI.Navigation {
                 }
             }
 
+            if (!string.IsNullOrWhiteSpace(x.Url) && y.RouteValues != null) {
+                return false;
+            }
+            if (!string.IsNullOrWhiteSpace(y.Url) && x.RouteValues != null) {
+                return false;
+            }
+
             return true;
         }
 
         public int GetHashCode(MenuItem obj) {
             var hash = 0;
-            if (obj.TextHint != null) {
-                hash ^= obj.TextHint.GetHashCode();
+            if (obj.Text != null && obj.Text.TextHint != null) {
+                hash ^= obj.Text.TextHint.GetHashCode();
             }
             return hash;
         }

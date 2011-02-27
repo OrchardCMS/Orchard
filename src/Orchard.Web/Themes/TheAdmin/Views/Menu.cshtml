@@ -16,8 +16,8 @@
     @foreach(var firstLevelMenuItem in Model) {
         IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
 
-        string sectionHeaderText = firstLevelMenuItem.Text;
-        string sectionHeaderTextHint = firstLevelMenuItem.TextHint;
+        string sectionHeaderText = firstLevelMenuItem.Text.Text;
+        string sectionHeaderTextHint = firstLevelMenuItem.Text.TextHint;
         var firstOfTheSecond = secondLevelMenuItems.FirstOrDefault();
 
         var itemClassName = HasText(sectionHeaderTextHint)
@@ -64,7 +64,7 @@
             if (secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav).Count() > 1 || !firstLevelMenuItem.LinkToFirstChild) {
                 <ul class="menuItems">
                 @foreach (var secondLevelMenuItem in secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav)) {
-                    string secondLevelTextHint = secondLevelMenuItem.TextHint;
+                    string secondLevelTextHint = secondLevelMenuItem.Text.TextHint;
                     var secondLevelItemClassName = HasText(secondLevelTextHint)
                         ? "subnavicon-" + secondLevelTextHint.HtmlClassify()
                         : "subnavicon";

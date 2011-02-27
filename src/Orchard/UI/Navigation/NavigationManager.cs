@@ -74,7 +74,6 @@ namespace Orchard.UI.Navigation {
                         RouteValues = item.RouteValues,
                         LocalNav = item.LocalNav,
                         Text = item.Text,
-                        TextHint = item.TextHint,
                         IdHint = item.IdHint,
                         Url = item.Url,
                         LinkToFirstChild = item.LinkToFirstChild,
@@ -116,7 +115,7 @@ namespace Orchard.UI.Navigation {
                 // order position groups by position
                 .OrderBy(positionGroup => positionGroup.Key, orderer)
                 // ordered by item text in the postion group
-                .SelectMany(positionGroup => positionGroup.OrderBy(item => item.Text));
+                .SelectMany(positionGroup => positionGroup.OrderBy(item => item.Text == null ? "" : item.Text.TextHint));
         }
 
         static MenuItem Join(IEnumerable<MenuItem> items) {
@@ -125,7 +124,6 @@ namespace Orchard.UI.Navigation {
 
             var joined = new MenuItem {
                 Text = items.First().Text,
-                TextHint = items.First().TextHint,
                 IdHint = items.Select(x => x.IdHint).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
                 Url = items.Select(x => x.Url).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
                 Href = items.Select(x => x.Href).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
