@@ -4,10 +4,10 @@ using System.Linq;
 namespace Orchard.UI.Navigation {
     public class MenuItemComparer : IEqualityComparer<MenuItem> {
         public bool Equals(MenuItem x, MenuItem y) {
-            if (x.Text != null && y.Text != null) {
-                if (!string.Equals(x.Text.TextHint, y.Text.TextHint)) {
-                    return false;
-                }
+            var xTextHint = x.Text == null ? null : x.Text.TextHint;
+            var yTextHint = y.Text == null ? null : y.Text.TextHint;
+            if (!string.Equals(xTextHint, yTextHint)) {
+                return false;
             }
 
             if (!string.IsNullOrWhiteSpace(x.Url) && !string.IsNullOrWhiteSpace(y.Url)) {

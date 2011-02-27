@@ -85,23 +85,26 @@ namespace Orchard.Core.Navigation.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Create(CreateMenuItemViewModel model) {
+        public ActionResult Create(NavigationManagementViewModel model) {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
             var menuPart = _services.ContentManager.New<MenuPart>("MenuItem");
-            model.MenuItem = _services.ContentManager.UpdateEditor(menuPart, this);
+            menuPart.OnMainMenu = true;
+            menuPart.MenuText = model.NewMenuItem.Text;
+            menuPart.MenuPosition = model.NewMenuItem.Position;
+            if (string.IsNullOrEmpty(menuPart.MenuPosition))
+                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
+
+            var menuItem = menuPart.As<MenuItemPart>();
+            menuItem.Url = model.NewMenuItem.Url;
 
             if (!ModelState.IsValid) {
                 _services.TransactionManager.Cancel();
-                return Index(new NavigationManagementViewModel { NewMenuItem = model });
+                return View("Index", model);
             }
 
-            if (string.IsNullOrEmpty(menuPart.MenuPosition))
-                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
-            menuPart.OnMainMenu = true;
-
-            _services.ContentManager.Create(model.MenuItem);
+            _services.ContentManager.Create(menuPart);
 
             return RedirectToAction("Index");
         }

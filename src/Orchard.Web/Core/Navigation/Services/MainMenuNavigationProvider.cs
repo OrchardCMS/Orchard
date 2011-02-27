@@ -19,18 +19,13 @@ namespace Orchard.Core.Navigation.Services {
         public void GetNavigation(NavigationBuilder builder) {
             var menuParts = _contentManager.Query<MenuPart, MenuPartRecord>().Where(x => x.OnMainMenu).List();
             foreach (var menuPart in menuParts) {
-                if (menuPart != null ) {
+                if (menuPart != null) {
                     var part = menuPart;
 
                     if (part.Is<MenuItemPart>())
-                        builder.Add(
-                            menu => menu.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, nib => nib.Url(part.As<MenuItemPart>().Url)));
+                        builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, item => item.Url(part.As<MenuItemPart>().Url));
                     else
-                        builder.Add(
-                            menu =>
-                            menu.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition,
-                                     nib =>
-                                     nib.Action(_contentManager.GetItemMetadata(part.ContentItem).DisplayRouteValues)));
+                        builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.MenuText)), part.MenuPosition, item => item.Action(_contentManager.GetItemMetadata(part.ContentItem).DisplayRouteValues));
                 }
             }
         }

@@ -21,7 +21,7 @@ namespace Orchard.UI.Navigation {
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
-            return FinishMenu(Crop(Reduce(Merge(sources))).ToArray());
+            return FinishMenu(Reduce(Merge(sources)).ToArray());
         }
 
         public IEnumerable<string> BuildImageSets(string menuName) {
@@ -57,9 +57,6 @@ namespace Orchard.UI.Navigation {
             return url;
         }
 
-        private static IEnumerable<MenuItem> Crop(IEnumerable<MenuItem> items) {
-            return items.Where(item => item.Items.Any() || item.RouteValues != null);
-        }
 
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);

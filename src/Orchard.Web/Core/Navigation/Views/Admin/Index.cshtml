@@ -52,15 +52,15 @@
         <tr>
             <td>
                 <label for="MenuText">@T("Text")</label>
-                @Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.As<MenuPart>().MenuText)
+                @Html.EditorFor(m => m.NewMenuItem.Text)
             </td>
             <td>
                 <label for="MenuPosition">@T("Position")</label>
-                @Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.As<MenuPart>().MenuPosition)
+                @Html.EditorFor(m => m.NewMenuItem.Position)
             </td>
             <td>
                 <label for="Url">@T("Url")</label>
-                @Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.As<MenuItemPart>().Url)
+                @Html.EditorFor(m => m.NewMenuItem.Url)
             </td>
             <td><button class="add" type="submit">@T("Add")</button></td>
         </tr>
