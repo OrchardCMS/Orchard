@@ -113,6 +113,8 @@ fieldset          { padding:0; margin: 0; border: 0px solid #dbdbdb; }
 
 #orchardmediapicker .text-box {width:90%;}
 
+#orchardmediapicker input[type=checkbox] { clear: both; }
+
 .image-width, .image-height {float:left; width:90px;}
 
 #orchardmediapicker .image-width .text-box, #orchardmediapicker .image-height .text-box, #orchardmediapicker #folderName {width:60%;}
