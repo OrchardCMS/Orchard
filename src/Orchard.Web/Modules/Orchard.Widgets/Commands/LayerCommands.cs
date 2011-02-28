@@ -19,9 +19,6 @@ namespace Orchard.Widgets.Commands {
         }
 
         [OrchardSwitch]
-        public string Name { get; set; }
-
-        [OrchardSwitch]
         public string LayerRule { get; set; }
 
         [OrchardSwitch]
@@ -31,11 +28,13 @@ namespace Orchard.Widgets.Commands {
         public string Owner { get; set; }
 
         [CommandName("layer create")]
-        [CommandHelp("layer create /Name:<name> /LayerRule:<rule> [/Description:<description>] [/Owner:<owner>]\r\n\t" + "Creates a new layer")]
-        [OrchardSwitches("Name,LayerRule,Description,Owner")]
-        public void Create() {
+        [CommandHelp("layer create <name> /LayerRule:<rule> [/Description:<description>] [/Owner:<owner>]\r\n\t" + "Creates a new layer")]
+        [OrchardSwitches("LayerRule,Description,Owner")]
+        public void Create(string name) {
+            Context.Output.WriteLine(T("Creating Layer {0}", name));
+
             IContent layer = _contentManager.Create<LayerPart>("Layer", t => {
-                                                                            t.Record.Name = Name; 
+                                                                            t.Record.Name = name; 
                                                                             t.Record.LayerRule = LayerRule;
                                                                             t.Record.Description = Description ?? String.Empty;
                                                                         });

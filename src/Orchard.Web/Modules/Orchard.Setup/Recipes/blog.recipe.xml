@@ -40,11 +40,11 @@
   </Settings>
   
   <Command>
-    layer create /Name:"Default" /LayerRule:"true"
-    layer create /Name:"Authenticated" /LayerRule:"authenticated"
-    layer create /Name:"Anonymous" /LayerRule:"not authenticated"
-    layer create /Name:"Disabled" /LayerRule:"false"
-    layer create /Name:"TheHomepage" /LayerRule:"url '~/'"
+    layer create Default /LayerRule:"true"
+    layer create Authenticated /LayerRule:"authenticated"
+    layer create Anonymous /LayerRule:"not authenticated"
+    layer create Disabled /LayerRule:"false"
+    layer create TheHomepage /LayerRule:"url '~/'"
     blog create /Slug:"blog" /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
     widget create /Type:"HtmlWidget" /Title:"First Leader Aside" /Zone:"TripelFirst" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
     widget create /Type:"HtmlWidget" /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
