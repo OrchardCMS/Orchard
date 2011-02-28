@@ -23,9 +23,6 @@ namespace Orchard.Widgets.Commands {
         }
 
         [OrchardSwitch]
-        public string Type { get; set; }
-
-        [OrchardSwitch]
         public string Title { get; set; }
 
         [OrchardSwitch]
@@ -50,25 +47,34 @@ namespace Orchard.Widgets.Commands {
         public bool Publish { get; set; }
 
         [CommandName("widget create")]
-        [CommandHelp("widget create /Type:<type> /Title:<title> /Zone:<zone> /Position:<position> /Layer:<layer> [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false]\r\n\t" + "Creates a new html widget")]
-        [OrchardSwitches("Type,Title,Zone,Position,Layer,Owner,Text,UseLoremIpsumText")]
-        public void Create() {
+        [CommandHelp("widget create <type> /Title:<title> /Zone:<zone> /Position:<position> /Layer:<layer> [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false]\r\n\t" + "Creates a new widget")]
+        [OrchardSwitches("Title,Zone,Position,Layer,Owner,Text,UseLoremIpsumText")]
+        public void Create(string type) {
+            var widgetTypes = _widgetsService.GetWidgetTypes();
+            if (!widgetTypes.Contains(type)) {
+                throw new OrchardException(T("Creating widget failed : type {0} was not found. Supported widget types are: {1}.", 
+                    type,
+                    widgetTypes.Aggregate(String.Empty, (current, widgetType) => current + " " + widgetType)));
+            }
+
             var layer = GetLayer(Layer);
             if (layer == null) {
                 throw new OrchardException(T("Creating widget failed : layer {0} was not found.", Layer));
             }
 
-            var widget = _widgetsService.CreateWidget(layer.ContentItem.Id, Type, T(Title).Text, Position, Zone);
+            var widget = _widgetsService.CreateWidget(layer.ContentItem.Id, type, T(Title).Text, Position, Zone);
             var text = String.Empty;
-            if (UseLoremIpsumText) {
-                text = T(LoremIpsum).Text;
-            }
-            else {
-                if (!String.IsNullOrEmpty(Text)) {
-                    text = Text;
+            if (widget.Has<BodyPart>()) {
+                if (UseLoremIpsumText) {
+                    text = T(LoremIpsum).Text;
                 }
+                else {
+                    if (!String.IsNullOrEmpty(Text)) {
+                        text = Text;
+                    }
+                }
+                widget.As<BodyPart>().Text = text;
             }
-            widget.As<BodyPart>().Text = text;
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
             }
