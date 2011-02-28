@@ -109,7 +109,7 @@ namespace Orchard.Tests.UI.Navigation {
             while (remainingItems.Count > 0) {
                 MenuItem currentMenuItem = remainingItems.Dequeue();
 
-                if (currentMenuItem.Text.Equals(text)) {
+                if (currentMenuItem.Text.TextHint.Equals(text)) {
                     return currentMenuItem;
                 }
 
