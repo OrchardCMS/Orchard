@@ -17,6 +17,7 @@ namespace Orchard.Tests.Modules.Media.Services {
         private const string FolderName1 = "Folder1";
         private const string FolderName2 = "Folder2";
         private const string FolderName3 = "Folder3";
+        private const string FolderRecipeJournal = "RecipeJournal";
 
         private const string InnerDirectory = "MyDir";
 
@@ -57,7 +58,7 @@ namespace Orchard.Tests.Modules.Media.Services {
                             ? new[] {new StubStorageFolder(FolderName1)}
                             : string.Equals(path, FolderName1)
                                 ? new[] {new StubStorageFolder(FolderName2), new StubStorageFolder(FolderName3)}
-                                : new StubStorageFolder[] {};
+                                : string.Equals(path, FolderRecipeJournal) ? new[] { new StubStorageFolder(FolderRecipeJournal), new StubStorageFolder(FolderName1) } : new StubStorageFolder[] { };
                 };
 
             IEnumerable<MediaFolder> mediaFolders = MediaService.GetMediaFolders(null);
@@ -71,6 +72,10 @@ namespace Orchard.Tests.Modules.Media.Services {
             Assert.That(mediaFolders.Count(), Is.EqualTo(2), "Folder1 has 2 sub directories");
             Assert.That(mediaFolders.FirstOrDefault(mediaFolder => mediaFolder.Name.Equals(FolderName2)), Is.Not.Null, "Correct sub directory in root path");
             Assert.That(mediaFolders.FirstOrDefault(mediaFolder => mediaFolder.Name.Equals(FolderName3)), Is.Not.Null, "Correct sub directory in root path");
+
+            mediaFolders = MediaService.GetMediaFolders(FolderRecipeJournal);
+            Assert.That(mediaFolders.Count(), Is.EqualTo(1), "Folder that contains RecipeJournal hides the RecipeJournal directory.");
+            Assert.That(mediaFolders.FirstOrDefault(mediaFolder => mediaFolder.Name.Equals(FolderName1)), Is.Not.Null, "Correct sub directory in root path");
         }
 
         [Test]
