@@ -3,18 +3,12 @@
 @using System.Linq;
 
 @{
-    Style.Require("PackagingAdmin"); 
-
-    var pageSizes = new List<int?>() { 10, 50, 100 };
-    var defaultPageSize = WorkContext.CurrentSite.PageSize;
-    if (!pageSizes.Contains(defaultPageSize)) { 
-        pageSizes.Add(defaultPageSize);
-    }
+    Style.Require("PackagingAdmin");
 
     Layout.Title = T("Modules").ToString();
 }
 
-@using (Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery")) ) {
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery"))) {
     <fieldset class="bulk-actions">
         <label for="filterResults" class="bulk-filter">@T("Feed:")</label>
         <select id="sourceId" name="sourceId">
@@ -32,14 +26,7 @@
             @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Ratings, T("Ratings").ToString())
             @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Alphanumeric, T("Alphanumeric").ToString())
         </select>
-        <input type="hidden" name="Page" value="1" />
-        <label for="pageSize">@T("Show:")</label>
-        <select id="pageSize" name="PageSize">
-            @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-            @foreach (int size in pageSizes.OrderBy(p => p)) {
-                @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
-            }
-        </select>
+
         <button type="submit">@T("Apply")</button>
     </fieldset>
 
@@ -54,10 +41,10 @@
         @foreach (var item in Model.Extensions) {
             <li>
                 @{
-                    string iconUrl = @item.IconUrl;
-                    if (string.IsNullOrWhiteSpace(iconUrl)) {
-                        iconUrl = Href("../../Content/Images/ModuleDefaultIcon.png");
-                    }
+            string iconUrl = @item.IconUrl;
+            if (string.IsNullOrWhiteSpace(iconUrl)) {
+                iconUrl = Href("../../Content/Images/ModuleDefaultIcon.png");
+            }
                 }
 
                 <div class="iconThumbnail">

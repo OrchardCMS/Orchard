@@ -952,9 +952,21 @@ table.items th, table.items td {
 /* Pager
 ***************************************************************/
 
+.pager-footer {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.page-size-options {
+    float: left;
+    padding-right: 40px;
+    margin-left: auto;
+}
+.page-size-options select {
+    margin-top: 10px;
+}
 .pager { list-style: none; padding: 0; margin: 12px 0 0 0;}
-.pager li 
-{
+.pager li {
     float: left;
     padding: 0 0 0 0;
     margin:0 6px 0 0;

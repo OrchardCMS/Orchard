@@ -8,43 +8,25 @@
 @{
     Style.Require("ModulesAdmin");
 
-    var pageSizes = new List<int?>() { 10, 50, 100 };
-    var defaultPageSize = WorkContext.CurrentSite.PageSize;
-    if (!pageSizes.Contains(defaultPageSize)) {
-        pageSizes.Add(defaultPageSize);
-    }
-
     Layout.Title = T("Modules").ToString();
 }
 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Admin"))) {
-    <fieldset class="bulk-actions">
-        <input type="hidden" name="Page" value="1" />
-        <label for="pageSize">@T("Show:")</label>
-        <select id="pageSize" name="PageSize">
-            @Html.SelectOption((int)Model.Pager.PageSize, 0, T("All").ToString())
-            @foreach (int size in pageSizes.OrderBy(p => p)) {
-                @Html.SelectOption((int)Model.Pager.PageSize, size, size.ToString())
-            }
-        </select>
-        <button type="submit">@T("Apply")</button>
-    </fieldset>
-
     <fieldset class="search-actions">
         <input type="text" id="searchText" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText" />
 
         <button type="submit">@T("Search").ToString()</button>
     </fieldset>
 
-                         if (Model.Modules.Count() > 0) {
+    if (Model.Modules.Count() > 0) {
         <ul class="contentItems">
             @foreach (ModuleEntry module in Model.Modules.OrderBy(m => m.Descriptor.Name)) {
                 <li>@Display.ModuleEntry(ContentPart: module)</li>
             }
         </ul>
-                         } else {
+    } else {
         <p>@T("No modules available").ToString()</p>
-                         }
+    }
 
     @Display(Model.Pager)
 }
