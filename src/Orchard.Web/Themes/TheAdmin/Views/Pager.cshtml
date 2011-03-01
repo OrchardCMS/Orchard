@@ -53,7 +53,15 @@
                     }
                 </select>
 
+                <script type="text/javascript">
+                    document.write("<div style='display:none'>");
+                </script>
+
                 <button id="submit_pager" type="submit">@T("Apply")</button>
+
+                <script type="text/javascript">
+                    document.write("<\/div>");
+                </script>
             </div>
         }
 
@@ -130,9 +138,6 @@
 <script type="text/javascript">
 //<![CDATA[
     $(function () {
-        // Remove the submit button
-        $("#submit_pager").remove();
-
         // Add the event handler for value change in the select field
         $("#pageSize").change(function () {
             var self = $(this);
