@@ -42,7 +42,7 @@
 @if (Model.TotalItemCount > 1) {
     <div class="pager-footer">
 
-        @if (totalPageCount > 1) {
+        @if (totalPageCount > 1 || Model.PageSize == 0 || Model.PageSize > pageSizes.First()) {
             <div class="page-size-options">
                 <input type="hidden" name="Page" value="1" />
                 <label for="pageSize">@T("Show:")</label>
@@ -53,7 +53,7 @@
                     }
                 </select>
 
-                <button type="submit">@T("Apply")</button>
+                <button id="submit_pager" type="submit">@T("Apply")</button>
             </div>
         }
 
@@ -125,4 +125,26 @@
         }
 
     </div>
+}
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    $(function () {
+        // Remove the submit button
+        $("#submit_pager").remove();
+
+        // Add the event handler for value change in the select field
+        $("#pageSize").change(function () {
+            var self = $(this);
+            var form = self.closest("form");
+
+            // Submit form
+            form.submit();
+
+            // disable button so that no other value can be chosen while the form is submited
+            self.attr("disabled", true);
+        });
+    })
+//]]>
+</script>
 }
