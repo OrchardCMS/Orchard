@@ -157,7 +157,7 @@ namespace Orchard.Media.Services {
             Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
             Argument.ThrowIfNull(postedFile, "postedFile");
 
-            return UploadMediaFile(folderPath, postedFile.FileName, postedFile.InputStream, extractZip);
+            return UploadMediaFile(folderPath, Path.GetFileName(postedFile.FileName), postedFile.InputStream, extractZip);
         }
 
         /// <summary>

@@ -237,13 +237,10 @@
     function uploadMedia(form) {
         var name = "addmedia__" + (new Date()).getTime(),
             prefix = getIdPrefix(form);
-        $("<iframe/>", {
-            id: prefix.substr(1) + "iframe",
-            name: name,
-            src: "about:blank",
-            css: { display: "none" },
-            load: iframeLoadHandler
-        }).appendTo(form);
+        $("<iframe name='" + name + "' src='about:blank' style='display:none'/>")
+            .attr("id", prefix.substr(1) + "iframe")
+            .bind("load", iframeLoadHandler)
+            .appendTo(form);
         form.target = name;
         $(prefix + "indicator").show();
     }
@@ -267,7 +264,7 @@
         try {
             var self = $(this),
                 form = self.closest("form"),
-                frame = window.frames[this.name];
+                frame = this.contentWindow || window.frames[this.name];
             if (!frame.document || frame.document.URL == "about:blank") {
                 return true;
             }
