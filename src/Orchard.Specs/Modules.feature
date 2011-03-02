@@ -13,6 +13,6 @@ Scenario: Installed modules are listed
 Scenario: Features of installed modules are listed
     Given I have installed Orchard
     When I go to "admin/modules/features"
-    Then I should see "<h1>Manage Features</h1>"
-        And I should see "<h3>Common</h3>"
+    Then I should see "<h3>Common</h3>"
+        And I should see "<li class="feature enabled" id="contents-feature"[^>]*>"
         And the status should be 200 "OK"
