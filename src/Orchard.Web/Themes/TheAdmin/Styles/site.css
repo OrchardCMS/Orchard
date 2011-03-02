@@ -965,6 +965,7 @@ table.items th, table.items td {
 .page-size-options select {
     margin-top: 10px;
 }
+html.dyn #submit_pager { display:none; }
 .pager { list-style: none; padding: 0; margin: 12px 0 0 0;}
 .pager li {
     float: left;
