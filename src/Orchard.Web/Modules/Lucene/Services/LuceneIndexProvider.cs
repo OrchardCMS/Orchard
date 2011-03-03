@@ -206,10 +206,6 @@ namespace Lucene.Services {
             return new LuceneSearchBuilder(GetDirectory(indexName)) { Logger = Logger };
         }
 
-        private string GetSettingsFileName(string indexName) {
-            return _appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName + ".settings.xml"));
-        }
-
         public DateTime? GetLastIndexUtc(string indexName) {
             var settingsFileName = GetSettingsFileName(indexName);
 
@@ -253,6 +249,10 @@ namespace Lucene.Services {
             finally {
                 reader.Close();
             }
+        }
+
+        private string GetSettingsFileName(string indexName) {
+            return _appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName + ".settings.xml"));
         }
     }
 }

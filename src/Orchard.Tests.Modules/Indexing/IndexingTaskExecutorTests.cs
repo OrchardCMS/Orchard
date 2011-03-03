@@ -19,12 +19,14 @@ using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.LockFile;
 using Orchard.Indexing;
 using Orchard.Indexing.Handlers;
 using Orchard.Indexing.Models;
 using Orchard.Indexing.Services;
 using Orchard.Logging;
 using Orchard.Security;
+using Orchard.Services;
 using Orchard.Tasks.Indexing;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
@@ -38,10 +40,12 @@ namespace Orchard.Tests.Modules.Indexing {
         private IContentManager _contentManager;
         private Mock<IContentDefinitionManager> _contentDefinitionManager;
         private StubLogger _logger;
-        private const string IndexName = "Search";
+        private ILockFileManager _lockFileManager;
 
+        private const string IndexName = "Search";
         private readonly string _basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        
+
+
         [TestFixtureTearDown]
         public void Clean() {
             if (Directory.Exists(_basePath)) {
@@ -62,7 +66,6 @@ namespace Orchard.Tests.Modules.Indexing {
             builder.RegisterType<IndexingTaskExecutor>().As<IIndexNotifierHandler>();
             builder.RegisterType<DefaultIndexManager>().As<IIndexManager>();
             builder.RegisterType<IndexingTaskManager>().As<IIndexingTaskManager>();
-            builder.RegisterType<IndexSynLock>().As<IIndexSynLock>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(_contentDefinitionManager.Object);
@@ -79,6 +82,9 @@ namespace Orchard.Tests.Modules.Indexing {
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<BodyPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+
+            builder.RegisterType<DefaultLockFileManager>().As<ILockFileManager>();
+            builder.RegisterInstance<IClock>(_clock = new StubClock());
 
             // setting up a ShellSettings instance
             _shellSettings = new ShellSettings { Name = "My Site" };
@@ -100,7 +106,7 @@ namespace Orchard.Tests.Modules.Indexing {
 
         public override void Init() {
             base.Init();
-
+            _lockFileManager = _container.Resolve<ILockFileManager>();
             _provider = _container.Resolve<IIndexProvider>();
             _indexNotifier = _container.Resolve<IIndexNotifierHandler>();
             _contentManager = _container.Resolve<IContentManager>();
@@ -116,10 +122,6 @@ namespace Orchard.Tests.Modules.Indexing {
                 .Returns(thingType);
         }
 
-        private string[] Indexes() {
-            return new DirectoryInfo(Path.Combine(_basePath, "Sites", "My Site", "Indexes")).GetDirectories().Select(d => d.Name).ToArray();
-        }
-
         [Test]
         public void IndexShouldBeEmptyWhenThereIsNoContent() {
             _indexNotifier.UpdateIndex(IndexName);
@@ -130,7 +132,7 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ShouldIngoreNonIndexableContentWhenRebuildingTheIndex() {
+        public void ShouldIgnoreNonIndexableContentWhenRebuildingTheIndex() {
             var alphaType = new ContentTypeDefinitionBuilder()
                 .Named("alpha")
                 .Build();
@@ -193,6 +195,21 @@ namespace Orchard.Tests.Modules.Indexing {
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
             Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
+        }
+
+        [Test]
+        public void IndexingTaskExecutorShouldBeReEntrant() {
+            ILockFile lockFile = null;
+            _lockFileManager.TryAcquireLock("Sites/My Site/Search.settings.xml.lock", ref lockFile);
+            using (lockFile) {
+                _indexNotifier.UpdateIndex(IndexName);
+                Assert.That(_logger.LogEntries.Count, Is.EqualTo(1));
+                Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but was already running"));
+            }
+
+            _logger.LogEntries.Clear();
+            _indexNotifier.UpdateIndex(IndexName);
+            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but was already running"));
         }
 
         [Test]
@@ -293,7 +310,7 @@ namespace Orchard.Tests.Modules.Indexing {
             }
 
             public void Log(LogLevel level, Exception exception, string format, params object[] args) {
-                LogEntries.Add(new LogEntry() {
+                LogEntries.Add(new LogEntry {
                     LogArgs = args,
                     LogException = exception,
                     LogFormat = format,

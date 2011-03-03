@@ -4,6 +4,9 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
+using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.LockFile;
 using Orchard.Indexing.Models;
 using Orchard.Indexing.Settings;
 using Orchard.Logging;
@@ -14,6 +17,10 @@ namespace Orchard.Indexing.Services {
     /// <summary>
     /// Contains the logic which is regularly executed to retrieve index information from multiple content handlers.
     /// </summary>
+    /// <remarks>
+    /// This class is synchronized using a lock file as both command line and web workers can potentially use it,
+    /// and singleton locks would not be shared accross those two.
+    /// </remarks>
     [UsedImplicitly]
     public class IndexingTaskExecutor : IIndexNotifierHandler {
         private readonly IClock _clock;
@@ -22,7 +29,9 @@ namespace Orchard.Indexing.Services {
         private readonly IIndexManager _indexManager;
         private readonly IIndexingTaskManager _indexingTaskManager;
         private readonly IContentManager _contentManager;
-        private readonly IIndexSynLock _indexSynLock;
+        private readonly IAppDataFolder _appDataFolder;
+        private readonly ShellSettings _shellSettings;
+        private readonly ILockFileManager _lockFileManager;
 
         public IndexingTaskExecutor(
             IClock clock,
@@ -30,28 +39,34 @@ namespace Orchard.Indexing.Services {
             IIndexManager indexManager,
             IIndexingTaskManager indexingTaskManager,
             IContentManager contentManager,
-            IIndexSynLock indexSynLock) {
+            IAppDataFolder appDataFolder,
+            ShellSettings shellSettings,
+            ILockFileManager lockFileManager) {
             _clock = clock;
             _repository = repository;
             _indexManager = indexManager;
             _indexingTaskManager = indexingTaskManager;
             _contentManager = contentManager;
-            _indexSynLock = indexSynLock;
+            _appDataFolder = appDataFolder;
+            _shellSettings = shellSettings;
+            _lockFileManager = lockFileManager;
+
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
         public void UpdateIndex(string indexName) {
-            var synLock = _indexSynLock.GetSynLock(indexName);
+            ILockFile lockFile = null;
+            var settingsFilename = GetSettingsFileName(indexName);
+            var lockFilename = settingsFilename + ".lock";
 
-            if (!System.Threading.Monitor.TryEnter(synLock)) {
+            if (!_lockFileManager.TryAcquireLock(lockFilename, ref lockFile)) {
                 Logger.Information("Index was requested but was already running");
                 return;
             }
 
-            try {
-
+            using (lockFile) {
                 if (!_indexManager.HasIndexProvider()) {
                     return;
                 }
@@ -99,8 +114,8 @@ namespace Orchard.Indexing.Services {
 
                 // retrieve not yet processed tasks
                 var taskRecords = lastIndexUtc == null
-                    ? _repository.Fetch(x => true).ToArray()
-                    : _repository.Fetch(x => x.CreatedUtc >= lastIndexUtc).ToArray(); // CreatedUtc and lastIndexUtc might be equal if a content item is created in a background task
+                                      ? _repository.Fetch(x => true).ToArray()
+                                      : _repository.Fetch(x => x.CreatedUtc >= lastIndexUtc).ToArray(); // CreatedUtc and lastIndexUtc might be equal if a content item is created in a background task
 
                 // nothing to do ?)))
                 if (taskRecords.Length + updateIndexDocuments.Count == 0) {
@@ -158,9 +173,6 @@ namespace Orchard.Indexing.Services {
                     }
                 }
             }
-            finally {
-                System.Threading.Monitor.Exit(synLock);
-            }
         }
 
         static TypeIndexing GetTypeIndexingSettings(ContentItem contentItem) {
@@ -170,6 +182,10 @@ namespace Orchard.Indexing.Services {
                 return new TypeIndexing { Included = false };
             }
             return contentItem.TypeDefinition.Settings.GetModel<TypeIndexing>();
+        }
+
+        private string GetSettingsFileName(string indexName) {
+            return _appDataFolder.Combine("Sites", _shellSettings.Name, indexName + ".settings.xml");
         }
     }
 }
