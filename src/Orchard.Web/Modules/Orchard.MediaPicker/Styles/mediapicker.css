@@ -34,9 +34,9 @@ body {
 
 #file-list {
     border:1px solid #bdbcbc;
-    height:306px;
-    max-height:306px;
-    margin:18px 0 0 0;
+    height:325px;
+    max-height:325px;
+    margin:9px 0 0 0;
     overflow:scroll;
     overflow-y:scroll;
     overflow-x:hidden;
@@ -54,13 +54,13 @@ input[disabled], input[disabled="disabled"], input.disabled {
     text-align: center;
     vertical-align: middle;    
 }
-.media-thumbnail 
+table.items td.media-thumbnail
 {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     text-align: center;
     vertical-align: middle;
-    padding: 5px;
+    padding: 2px 2px;
 }
 .media-thumbnail img 
 {
