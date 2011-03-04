@@ -14,7 +14,7 @@
                    TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
-                   PackagingServices,Orchard.Packaging,Gallery,
+                   PackagingServices,Orchard.Packaging,Gallery,Gallery.Updates,
                    TheThemeMachine" />
   
   <Metadata>
@@ -38,7 +38,9 @@
     <SiteSettingsPart PageSize="20" PageTitleSeparator = " - " />
     <CommentSettingsPart ModerateComments="true" />
   </Settings>
-  
+
+  <Migration features="*" />
+
   <Command>
     layer create Default /LayerRule:"true"
     layer create Authenticated /LayerRule:"authenticated"
@@ -51,6 +53,4 @@
     widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
     menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
   </Command>
-  
-  <Migration features="*" />
 </Orchard>

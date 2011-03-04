@@ -8,12 +8,12 @@
     <Tags></Tags>
     <Version>1.0</Version>
   </Recipe>
-
+  
   <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,
                    Orchard.Lists,TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,Orchard.ContentTypes,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
-                   PackagingServices,Orchard.Packaging,Gallery,
+                   PackagingServices,Orchard.Packaging,Gallery,Gallery.Updates,
                    TheThemeMachine" />
   
   <Metadata>
@@ -34,7 +34,9 @@
   </Metadata>
 
   <Settings />
-  
+
+  <Migration features="*" />
+
   <Command>
     layer create Default /LayerRule:"true"
     layer create Authenticated /LayerRule:"authenticated"
@@ -47,6 +49,4 @@
     widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /UseLoremIpsumText:true
     menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
   </Command>
-  
-  <Migration features="*" />
 </Orchard>
