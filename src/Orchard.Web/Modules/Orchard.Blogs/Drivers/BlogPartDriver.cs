@@ -12,6 +12,8 @@ namespace Orchard.Blogs.Drivers {
                              () => shapeHelper.Parts_Blogs_Blog_Manage(ContentPart: part)),
                 ContentShape("Parts_Blogs_Blog_Description",
                              () => shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part, Description: part.Description)),
+                ContentShape("Parts_Blogs_Blog_SummaryAdmin",
+                             () => shapeHelper.Parts_Blogs_Blog_SummaryAdmin(ContentPart: part, ContentItem: part.ContentItem)),
                 ContentShape("Parts_Blogs_Blog_BlogPostCount",
                              () => shapeHelper.Parts_Blogs_Blog_BlogPostCount(ContentPart: part, PostCount: part.PostCount))
                 );

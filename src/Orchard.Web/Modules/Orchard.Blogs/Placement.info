@@ -35,7 +35,8 @@
                    Parts_Blogs_Blog_BlogPostCount="Meta:3"/>
         </Match>
         <Match DisplayType="SummaryAdmin">
-            <Place Parts_Blogs_Blog_Description="Content:before"/>
+          <Place Parts_Blogs_Blog_SummaryAdmin="Actions:10"/>
+          <Place Parts_Blogs_Blog_Description="Content:before"/>
         </Match>
     </Match>
 </Placement>
