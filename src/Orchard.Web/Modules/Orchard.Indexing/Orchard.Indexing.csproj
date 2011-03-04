@@ -41,6 +41,8 @@
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
@@ -55,6 +57,10 @@
     <Compile Include="Handlers\InfosetFieldIndexingHandler.cs" />
     <Compile Include="Models\IndexingTask.cs" />
     <Compile Include="Models\IndexingTaskRecord.cs" />
+    <Compile Include="Models\IndexSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Services\IIndexStatisticsProvider.cs" />
     <Compile Include="Services\IndexServiceNotificationProvider.cs" />
     <Compile Include="Services\IndexingBackgroundTask.cs" />
     <Compile Include="Services\IndexingTaskExecutor.cs" />

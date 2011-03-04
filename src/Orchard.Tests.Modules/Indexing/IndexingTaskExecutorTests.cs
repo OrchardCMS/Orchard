@@ -26,7 +26,6 @@ using Orchard.Indexing.Models;
 using Orchard.Indexing.Services;
 using Orchard.Logging;
 using Orchard.Security;
-using Orchard.Services;
 using Orchard.Tasks.Indexing;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
@@ -84,7 +83,6 @@ namespace Orchard.Tests.Modules.Indexing {
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
 
             builder.RegisterType<DefaultLockFileManager>().As<ILockFileManager>();
-            builder.RegisterInstance<IClock>(_clock = new StubClock());
 
             // setting up a ShellSettings instance
             _shellSettings = new ShellSettings { Name = "My Site" };
@@ -126,9 +124,6 @@ namespace Orchard.Tests.Modules.Indexing {
         public void IndexShouldBeEmptyWhenThereIsNoContent() {
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
-            Assert.That(_logger.LogEntries.Count(), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index update requested, nothing to do"));
         }
 
         [Test]
@@ -145,9 +140,6 @@ namespace Orchard.Tests.Modules.Indexing {
 
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
-            Assert.That(_logger.LogEntries.Count(), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index update requested, nothing to do"));
         }
 
         [Test]
@@ -165,9 +157,6 @@ namespace Orchard.Tests.Modules.Indexing {
 
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
-            Assert.That(_logger.LogEntries.Count(), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index update requested, nothing to do"));
         }
 
         [Test]
@@ -177,10 +166,6 @@ namespace Orchard.Tests.Modules.Indexing {
 
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries.Count(), Is.EqualTo(3));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Processing {0} indexing tasks"));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Added content items to index: {0}"));
         }
 
         [Test]
@@ -188,82 +173,47 @@ namespace Orchard.Tests.Modules.Indexing {
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            _logger.Clear();
+
+            // there should be nothing done
+            _indexNotifier.UpdateIndex(IndexName);
 
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
         }
 
         [Test]
-        public void IndexingTaskExecutorShouldBeReEntrant() {
+        public void IndexingTaskExecutorShouldNotBeReEntrant() {
             ILockFile lockFile = null;
             _lockFileManager.TryAcquireLock("Sites/My Site/Search.settings.xml.lock", ref lockFile);
             using (lockFile) {
                 _indexNotifier.UpdateIndex(IndexName);
                 Assert.That(_logger.LogEntries.Count, Is.EqualTo(1));
-                Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but was already running"));
+                Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but is already running"));
             }
 
             _logger.LogEntries.Clear();
             _indexNotifier.UpdateIndex(IndexName);
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but was already running"));
+            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but is already running"));
         }
 
         [Test]
         public void ShouldUpdateTheIndexWhenContentIsUnPublished() {
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
-            _clock.Advance(TimeSpan.FromSeconds(1));
 
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            _logger.Clear();
 
             var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
             content.Text = "Lorem ipsum";
-            _clock.Advance(TimeSpan.FromSeconds(1));
             
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            _clock.Advance(TimeSpan.FromSeconds(1));
 
             _contentManager.Unpublish(content.ContentItem);
-            _clock.Advance(TimeSpan.FromSeconds(1));
             
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-        }
-
-        [Test]
-        public void ShouldRemoveFromIndexEvenIfPublishedAndUnpublishedInTheSameSecond() {
-            // This test is to ensure that when a task is created, all previous tasks for the same content item
-            // are also removed, and thus that multiple tasks don't conflict while updating the index
-            
-            _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
-            _clock.Advance(TimeSpan.FromSeconds(1));
-
-            _indexNotifier.UpdateIndex(IndexName);
-            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            _logger.Clear();
-
-            var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
-            content.Text = "Lorem ipsum";
-
-            _indexNotifier.UpdateIndex(IndexName);
-            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-
-            _contentManager.Unpublish(content.ContentItem);
-
-            _indexNotifier.UpdateIndex(IndexName);
-            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
         }
 
         #region Stubs

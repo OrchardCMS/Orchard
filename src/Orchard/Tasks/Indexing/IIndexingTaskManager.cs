@@ -17,11 +17,5 @@ namespace Orchard.Tasks.Indexing {
         /// Returns the Date Time of the last task created
         /// </summary>
         DateTime GetLastTaskDateTime();
-
-        /// <summary>
-        /// Deletes all indexing tasks assigned to a specific content item
-        /// </summary>
-        /// <param name="contentItem"></param>
-        void DeleteTasks(ContentItem contentItem);
     }
 }
