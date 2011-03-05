@@ -50,7 +50,7 @@ namespace Orchard.Indexing.Models
                         new XElement(TagMode, Mode),
                         new XElement(TagLastIndexedId, LastIndexedId),
                         new XElement(TagLastContentId, LastContentId),
-                        new XElement(TagLastIndexedUtc, LastIndexedUtc.ToString("s"))
+                        new XElement(TagLastIndexedUtc, LastIndexedUtc.ToString("u"))
             )).ToString();
         }
     }

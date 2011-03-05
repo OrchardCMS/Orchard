@@ -51,9 +51,5 @@ namespace Orchard.Indexing.Services {
             CreateTask(contentItem, IndexingTaskRecord.Delete);
             Logger.Information("Deleting index task created for [{0}:{1}]", contentItem.ContentType, contentItem.Id);
         }
-
-        public DateTime GetLastTaskDateTime() {
-            return _repository.Table.Max(t => t.CreatedUtc) ?? new DateTime(1980, 1, 1);
-        }
     }
 }

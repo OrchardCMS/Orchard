@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Autofac;
 using Lucene.Services;
 using Moq;
@@ -176,6 +175,7 @@ namespace Orchard.Tests.Modules.Indexing {
 
             // there should be nothing done
             _indexNotifier.UpdateIndex(IndexName);
+            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
 
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
             _indexNotifier.UpdateIndex(IndexName);
@@ -214,6 +214,17 @@ namespace Orchard.Tests.Modules.Indexing {
             
             _indexNotifier.UpdateIndex(IndexName);
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
+        }
+
+
+        [Test]
+        public void ShouldIndexAllContentOverTheLoopSize() {
+            for (int i = 0; i < 999; i++) {
+                var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
+                content.Text = "Lorem ipsum " + i;
+            }
+            _indexNotifier.UpdateIndex(IndexName);
+            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(999));
         }
 
         #region Stubs

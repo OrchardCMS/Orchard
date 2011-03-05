@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
@@ -22,7 +23,8 @@ namespace Orchard.Indexing.Services {
     /// </remarks>
     [UsedImplicitly]
     public class IndexingTaskExecutor : IIndexNotifierHandler, IIndexStatisticsProvider {
-        private readonly IRepository<IndexingTaskRecord> _repository;
+        private readonly IRepository<IndexingTaskRecord> _taskRepository;
+        private readonly IRepository<ContentItemVersionRecord> _contentRepository;
         private IIndexProvider _indexProvider;
         private readonly IIndexManager _indexManager;
         private readonly IContentManager _contentManager;
@@ -34,14 +36,16 @@ namespace Orchard.Indexing.Services {
         private IndexingStatus _indexingStatus = IndexingStatus.Idle;
 
         public IndexingTaskExecutor(
-            IRepository<IndexingTaskRecord> repository,
+            IRepository<IndexingTaskRecord> taskRepository,
+            IRepository<ContentItemVersionRecord> contentRepository,
             IIndexManager indexManager,
             IContentManager contentManager,
             IAppDataFolder appDataFolder,
             ShellSettings shellSettings,
             ILockFileManager lockFileManager,
             IClock clock) {
-            _repository = repository;
+            _taskRepository = taskRepository;
+            _contentRepository = contentRepository;
             _indexManager = indexManager;
             _contentManager = contentManager;
             _appDataFolder = appDataFolder;
@@ -54,6 +58,11 @@ namespace Orchard.Indexing.Services {
         public ILogger Logger { get; set; }
 
         public void UpdateIndex(string indexName) {
+            // What to do here to run next batch in a separate transaction
+            while (UpdateIndexBatch(indexName)) {}
+        }
+
+        public bool UpdateIndexBatch(string indexName) {
             ILockFile lockFile = null;
             var settingsFilename = GetSettingsFileName(indexName);
             var lockFilename = settingsFilename + ".lock";
@@ -61,13 +70,12 @@ namespace Orchard.Indexing.Services {
             // acquire a lock file on the index
             if (!_lockFileManager.TryAcquireLock(lockFilename, ref lockFile)) {
                 Logger.Information("Index was requested but is already running");
-                return;
+                return false;
             }
 
-            using (lockFile)
-            {
+            using (lockFile) {
                 if (!_indexManager.HasIndexProvider()) {
-                    return;
+                    return false;
                 }
 
                 // load index settings to know what is the current state of indexing
@@ -79,131 +87,132 @@ namespace Orchard.Indexing.Services {
                 if (!_indexProvider.Exists(indexName)) {
                     _indexProvider.CreateIndex(indexName);
                     indexSettings = new IndexSettings();
+
+                    // mark the last available task at the moment the process is started.
+                    // once the Rebuild is done, Update will start at this point of the table
+                    indexSettings.LastIndexedId = _taskRepository
+                        .Table
+                        .OrderByDescending(x => x.Id)
+                        .Select(x => x.Id)
+                        .FirstOrDefault();
                 }
 
                 // execute indexing commands by batch of [ContentItemsPerLoop] content items
-                for (; ; ){
-                    var addToIndex = new List<IDocumentIndex>();
-                    var deleteFromIndex = new List<int>();
+                return BatchIndex(indexName, settingsFilename, indexSettings);
+            }
+        }
 
-                    // Rebuilding the index ?
-                    if (indexSettings.Mode == IndexingMode.Rebuild) {
-                        Logger.Information("Rebuilding index");
-                        _indexingStatus = IndexingStatus.Rebuilding;
+        /// <summary>
+        /// Indexes a batch of content items
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if there are more items to process; otherwise, <c>false</c>.
+        /// </returns>
+        private bool BatchIndex(string indexName, string settingsFilename, IndexSettings indexSettings) {
+            var addToIndex = new List<IDocumentIndex>();
+            var deleteFromIndex = new List<int>();
 
-                        // store the last inserted task
-                        var lastIndexId = _repository
-                            .Fetch(x => true)
-                            .OrderByDescending(x => x.Id)
-                            .Select(x => x.Id)
-                            .FirstOrDefault();
+            // Rebuilding the index ?
+            if (indexSettings.Mode == IndexingMode.Rebuild) {
+                Logger.Information("Rebuilding index");
+                _indexingStatus = IndexingStatus.Rebuilding;
 
-                        // load all content items
-                        var contentItemIds = _contentManager
-                            .Query(VersionOptions.Published)
-                            .List()
-                            .Where(x => x.Id > indexSettings.LastContentId)
-                            .OrderBy(x => x.Id)
-                            .Select(x => x.Id)
-                            .Distinct()
-                            .Take(ContentItemsPerLoop)
-                            .ToArray();
+                // load all content items
+                var contentItems = _contentRepository
+                    .Fetch(
+                        versionRecord => versionRecord.Published && versionRecord.ContentItemRecord.Id > indexSettings.LastContentId,
+                        order => order.Asc(versionRecord => versionRecord.Id))
+                    .Take(ContentItemsPerLoop)
+                    .Select(versionRecord => _contentManager.Get(versionRecord.ContentItemRecord.Id, VersionOptions.VersionRecord(versionRecord.Id)))
+                    .Distinct()
+                    .ToList();
 
-                        indexSettings.LastIndexedId = lastIndexId;
+                // if no more elements to index, switch to update mode
+                if (contentItems.Count == 0) {
+                    indexSettings.Mode = IndexingMode.Update;
+                }
 
-                        // if no more elements to index, switch to update mode
-                        if (contentItemIds.Length == 0) {
-                            indexSettings.Mode = IndexingMode.Update;
-                        }
-
-                        foreach (var id in contentItemIds) {
-                            try {
-                                IDocumentIndex documentIndex = ExtractDocumentIndex(id);
-
-                                if (documentIndex != null && documentIndex.IsDirty) {
-                                    addToIndex.Add(documentIndex);
-                                }
-
-                                // store the last processed element
-                                indexSettings.LastContentId = contentItemIds.LastOrDefault();
-                            }
-                            catch (Exception ex) {
-                                Logger.Warning(ex, "Unable to index content item #{0} during rebuild", id);
-                            }
-                        }
-                    }
-
-                    if (indexSettings.Mode == IndexingMode.Update) {
-                        Logger.Information("Updating index");
-                        _indexingStatus = IndexingStatus.Updating;
-
-                        // load next content items to index, by filtering and ordering on the task id
-                        var lastIndexId = _repository
-                            .Fetch(x => x.Id > indexSettings.LastIndexedId)
-                            .OrderByDescending(x => x.Id)
-                            .Select(x => x.Id)
-                            .FirstOrDefault();
-
-                        var contentItemIds = _repository
-                            .Fetch(x => x.Id > indexSettings.LastIndexedId)
-                            .OrderBy(x => x.Id)
-                            .Take(ContentItemsPerLoop)
-                            .Select(x => x.ContentItemRecord.Id)
-                            .Distinct() // don't process the same content item twice
-                            .ToArray();
-
-                        indexSettings.LastIndexedId = lastIndexId;
-
-                        foreach (var id in contentItemIds) {
-                            try {
-                                IDocumentIndex documentIndex = ExtractDocumentIndex(id);
-
-                                if (documentIndex == null) {
-                                    deleteFromIndex.Add(id);
-                                }
-                                else if (documentIndex.IsDirty) {
-                                    addToIndex.Add(documentIndex);
-                                }
-                            }
-                            catch (Exception ex) {
-                                Logger.Warning(ex, "Unable to index content item #{0} during rebuild", id);
-                            }
-                        }
-                    }
-
-                    // save current state of the index
-                    indexSettings.LastIndexedUtc = _clock.UtcNow;
-                    _appDataFolder.CreateFile(settingsFilename, indexSettings.ToString());
-
-                    if (deleteFromIndex.Count == 0 && addToIndex.Count == 0) {
-                        // nothing more to do
-                        _indexingStatus = IndexingStatus.Idle;
-                        return;
-                    }
-
-                    // save new and updated documents to the index
+                foreach (var item in contentItems) {
                     try {
-                        if (addToIndex.Count > 0) {
-                            _indexProvider.Store(indexName, addToIndex);
-                            Logger.Information("Added content items to index: {0}", addToIndex.Count);
+                        IDocumentIndex documentIndex = ExtractDocumentIndex(item);
+
+                        if (documentIndex != null && documentIndex.IsDirty) {
+                            addToIndex.Add(documentIndex);
                         }
+
+                        indexSettings.LastContentId = item.VersionRecord.Id;
                     }
                     catch (Exception ex) {
-                        Logger.Warning(ex, "An error occured while adding a document to the index");
-                    }
-
-                    // removing documents from the index
-                    try {
-                        if (deleteFromIndex.Count > 0) {
-                            _indexProvider.Delete(indexName, deleteFromIndex);
-                            Logger.Information("Added content items to index: {0}", addToIndex.Count);
-                        }
-                    }
-                    catch (Exception ex) {
-                        Logger.Warning(ex, "An error occured while removing a document from the index");
+                        Logger.Warning(ex, "Unable to index content item #{0} during rebuild", item.Id);
                     }
                 }
             }
+
+            if (indexSettings.Mode == IndexingMode.Update) {
+                Logger.Information("Updating index");
+                _indexingStatus = IndexingStatus.Updating;
+
+                var contentItems = _taskRepository
+                    .Fetch(x => x.Id > indexSettings.LastIndexedId)
+                    .OrderBy(x => x.Id)
+                    .Take(ContentItemsPerLoop)
+                    .GroupBy(x => x.ContentItemRecord.Id)
+                    .Select(group => new {TaskId = group.Max(task => task.Id), ContentItem = _contentManager.Get(group.Key, VersionOptions.Published)})
+                    .OrderBy(x => x.TaskId)
+                    .ToArray();
+
+                foreach (var item in contentItems) {
+                    try {
+                        IDocumentIndex documentIndex = ExtractDocumentIndex(item.ContentItem);
+
+                        if (documentIndex == null) {
+                            deleteFromIndex.Add(item.ContentItem.Id);
+                        }
+                        else if (documentIndex.IsDirty) {
+                            addToIndex.Add(documentIndex);
+                        }
+
+                        indexSettings.LastIndexedId = item.TaskId;
+                    }
+                    catch (Exception ex) {
+                        Logger.Warning(ex, "Unable to index content item #{0} during update", item.ContentItem.Id);
+                    }
+                }
+            }
+
+            // save current state of the index
+            indexSettings.LastIndexedUtc = _clock.UtcNow;
+            _appDataFolder.CreateFile(settingsFilename, indexSettings.ToString());
+
+            if (deleteFromIndex.Count == 0 && addToIndex.Count == 0) {
+                // nothing more to do
+                _indexingStatus = IndexingStatus.Idle;
+                return false;
+            }
+
+            // save new and updated documents to the index
+            try {
+                if (addToIndex.Count > 0) {
+                    _indexProvider.Store(indexName, addToIndex);
+                    Logger.Information("Added content items to index: {0}", addToIndex.Count);
+                }
+            }
+            catch (Exception ex) {
+                Logger.Warning(ex, "An error occured while adding a document to the index");
+            }
+
+            // removing documents from the index
+            try {
+                if (deleteFromIndex.Count > 0) {
+                    _indexProvider.Delete(indexName, deleteFromIndex);
+                    Logger.Information("Added content items to index: {0}", addToIndex.Count);
+                }
+            }
+            catch (Exception ex) {
+                Logger.Warning(ex, "An error occured while removing a document from the index");
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -224,18 +233,17 @@ namespace Orchard.Indexing.Services {
         /// Creates a IDocumentIndex instance for a specific content item id. If the content 
         /// item is no more published, it returns null.
         /// </summary>
-        private IDocumentIndex ExtractDocumentIndex(int id) {
-            var contentItem = _contentManager.Get(id, VersionOptions.Published);
-
+        private IDocumentIndex ExtractDocumentIndex(ContentItem contentItem) {
             // ignore deleted or unpublished items
-            if(contentItem == null || !contentItem.IsPublished()) {
+            if (contentItem == null || !contentItem.IsPublished()) {
                 return null;
             }
 
             // skip items from types which are not indexed
             var settings = GetTypeIndexingSettings(contentItem);
-            if (!settings.Included)
+            if (!settings.Included) {
                 return null;
+            }
 
             var documentIndex = _indexProvider.New(contentItem.Id);
 
@@ -244,11 +252,11 @@ namespace Orchard.Indexing.Services {
             return documentIndex;
         }
 
-        static TypeIndexing GetTypeIndexingSettings(ContentItem contentItem) {
+        private static TypeIndexing GetTypeIndexingSettings(ContentItem contentItem) {
             if (contentItem == null ||
                 contentItem.TypeDefinition == null ||
                 contentItem.TypeDefinition.Settings == null) {
-                return new TypeIndexing { Included = false };
+                return new TypeIndexing {Included = false};
             }
             return contentItem.TypeDefinition.Settings.GetModel<TypeIndexing>();
         }
