@@ -36,7 +36,7 @@ namespace Orchard.Indexing.Models
                     Mode = (IndexingMode) Enum.Parse(typeof (IndexingMode), doc.Descendants(TagMode).First().Value),
                     LastIndexedId = Int32.Parse(doc.Descendants(TagLastIndexedId).First().Value),
                     LastContentId = Int32.Parse(doc.Descendants(TagLastContentId).First().Value),
-                    LastIndexedUtc = DateTime.Parse(doc.Descendants(TagLastIndexedUtc).First().Value)
+                    LastIndexedUtc = DateTime.Parse(doc.Descendants(TagLastIndexedUtc).First().Value).ToUniversalTime()
                 };
             }
             catch {
@@ -44,7 +44,7 @@ namespace Orchard.Indexing.Models
             }
         }
 
-        public override string ToString() {
+        public string ToXml() {
             return new XDocument(
                     new XElement(TagSettings,
                         new XElement(TagMode, Mode),

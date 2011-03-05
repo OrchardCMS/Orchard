@@ -22,7 +22,8 @@ namespace Orchard.Indexing.Services {
     /// and singleton locks would not be shared accross those two.
     /// </remarks>
     [UsedImplicitly]
-    public class IndexingTaskExecutor : IIndexNotifierHandler, IIndexStatisticsProvider {
+    public class IndexingTaskExecutor : IIndexingTaskExecutor, IIndexStatisticsProvider
+    {
         private readonly IRepository<IndexingTaskRecord> _taskRepository;
         private readonly IRepository<ContentItemVersionRecord> _contentRepository;
         private IIndexProvider _indexProvider;
@@ -32,7 +33,7 @@ namespace Orchard.Indexing.Services {
         private readonly ShellSettings _shellSettings;
         private readonly ILockFileManager _lockFileManager;
         private readonly IClock _clock;
-        private const int ContentItemsPerLoop = 100;
+        private const int ContentItemsPerLoop = 50;
         private IndexingStatus _indexingStatus = IndexingStatus.Idle;
 
         public IndexingTaskExecutor(
@@ -57,9 +58,31 @@ namespace Orchard.Indexing.Services {
 
         public ILogger Logger { get; set; }
 
-        public void UpdateIndex(string indexName) {
-            // What to do here to run next batch in a separate transaction
-            while (UpdateIndexBatch(indexName)) {}
+        public bool DeleteIndex(string indexName) {
+            ILockFile lockFile = null;
+            var settingsFilename = GetSettingsFileName(indexName);
+            var lockFilename = settingsFilename + ".lock";
+
+            // acquire a lock file on the index
+            if (!_lockFileManager.TryAcquireLock(lockFilename, ref lockFile)) {
+                Logger.Information("Could not delete the index. Already in use.");
+                return false;
+            }
+
+            using (lockFile) {
+                if (!_indexManager.HasIndexProvider()) {
+                    return false;
+                }
+
+                var searchProvider = _indexManager.GetSearchIndexProvider();
+                if (searchProvider.Exists(indexName)) {
+                    searchProvider.DeleteIndex(indexName);
+                }
+
+                DeleteSettings(indexName);
+            }
+
+            return true;
         }
 
         public bool UpdateIndexBatch(string indexName) {
@@ -83,10 +106,8 @@ namespace Orchard.Indexing.Services {
 
                 _indexProvider = _indexManager.GetSearchIndexProvider();
 
-                // should the index be rebuilt
-                if (!_indexProvider.Exists(indexName)) {
+                if (indexSettings.Mode == IndexingMode.Rebuild && indexSettings.LastContentId == 0) {
                     _indexProvider.CreateIndex(indexName);
-                    indexSettings = new IndexSettings();
 
                     // mark the last available task at the moment the process is started.
                     // once the Rebuild is done, Update will start at this point of the table
@@ -120,7 +141,7 @@ namespace Orchard.Indexing.Services {
                 // load all content items
                 var contentItems = _contentRepository
                     .Fetch(
-                        versionRecord => versionRecord.Published && versionRecord.ContentItemRecord.Id > indexSettings.LastContentId,
+                        versionRecord => versionRecord.Published && versionRecord.Id > indexSettings.LastContentId,
                         order => order.Asc(versionRecord => versionRecord.Id))
                     .Take(ContentItemsPerLoop)
                     .Select(versionRecord => _contentManager.Get(versionRecord.ContentItemRecord.Id, VersionOptions.VersionRecord(versionRecord.Id)))
@@ -182,7 +203,7 @@ namespace Orchard.Indexing.Services {
 
             // save current state of the index
             indexSettings.LastIndexedUtc = _clock.UtcNow;
-            _appDataFolder.CreateFile(settingsFilename, indexSettings.ToString());
+            _appDataFolder.CreateFile(settingsFilename, indexSettings.ToXml());
 
             if (deleteFromIndex.Count == 0 && addToIndex.Count == 0) {
                 // nothing more to do
@@ -218,15 +239,27 @@ namespace Orchard.Indexing.Services {
         /// <summary>
         /// Loads the settings file or create a new default one if it doesn't exist
         /// </summary>
-        public IndexSettings LoadSettings(string indexName) {
+        public IndexSettings LoadSettings(string indexName)
+        {
             var indexSettings = new IndexSettings();
             var settingsFilename = GetSettingsFileName(indexName);
-            if (_appDataFolder.FileExists(settingsFilename)) {
+            if (_appDataFolder.FileExists(settingsFilename))
+            {
                 var content = _appDataFolder.ReadFile(settingsFilename);
                 indexSettings = IndexSettings.Parse(content);
             }
 
             return indexSettings;
+        }
+
+        /// <summary>
+        /// Deletes the settings file
+        /// </summary>
+        public void DeleteSettings(string indexName) {
+            var settingsFilename = GetSettingsFileName(indexName);
+            if (_appDataFolder.FileExists(settingsFilename)) {
+                _appDataFolder.DeleteFile(settingsFilename);
+            }
         }
 
         /// <summary>

@@ -60,6 +60,9 @@
     <Compile Include="Models\IndexSettings.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Services\UpdateIndexScheduler.cs" />
+    <Compile Include="Services\IIndexingTaskExecutor.cs" />
+    <Compile Include="Services\IUpdateIndexScheduler.cs" />
     <Compile Include="Services\IIndexStatisticsProvider.cs" />
     <Compile Include="Services\IndexServiceNotificationProvider.cs" />
     <Compile Include="Services\IndexingBackgroundTask.cs" />

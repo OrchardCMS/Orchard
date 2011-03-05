@@ -34,7 +34,7 @@ namespace Orchard.Tests.Modules.Indexing {
         private IIndexProvider _provider;
         private IAppDataFolder _appDataFolder;
         private ShellSettings _shellSettings;
-        private IIndexNotifierHandler _indexNotifier;
+        private IIndexingTaskExecutor _indexTaskExecutor;
         private IContentManager _contentManager;
         private Mock<IContentDefinitionManager> _contentDefinitionManager;
         private StubLogger _logger;
@@ -42,7 +42,6 @@ namespace Orchard.Tests.Modules.Indexing {
 
         private const string IndexName = "Search";
         private readonly string _basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-
 
         [TestFixtureTearDown]
         public void Clean() {
@@ -61,7 +60,7 @@ namespace Orchard.Tests.Modules.Indexing {
             
             builder.RegisterType<LuceneIndexProvider>().As<IIndexProvider>();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
-            builder.RegisterType<IndexingTaskExecutor>().As<IIndexNotifierHandler>();
+            builder.RegisterType<IndexingTaskExecutor>().As<IIndexingTaskExecutor>();
             builder.RegisterType<DefaultIndexManager>().As<IIndexManager>();
             builder.RegisterType<IndexingTaskManager>().As<IIndexingTaskManager>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
@@ -105,9 +104,9 @@ namespace Orchard.Tests.Modules.Indexing {
             base.Init();
             _lockFileManager = _container.Resolve<ILockFileManager>();
             _provider = _container.Resolve<IIndexProvider>();
-            _indexNotifier = _container.Resolve<IIndexNotifierHandler>();
+            _indexTaskExecutor = _container.Resolve<IIndexingTaskExecutor>();
             _contentManager = _container.Resolve<IContentManager>();
-            ((IndexingTaskExecutor)_indexNotifier).Logger = _logger = new StubLogger();
+            ((IndexingTaskExecutor)_indexTaskExecutor).Logger = _logger = new StubLogger();
 
             var thingType = new ContentTypeDefinitionBuilder()
                 .Named(ThingDriver.ContentTypeName)
@@ -121,7 +120,7 @@ namespace Orchard.Tests.Modules.Indexing {
 
         [Test]
         public void IndexShouldBeEmptyWhenThereIsNoContent() {
-            _indexNotifier.UpdateIndex(IndexName);
+            while(_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
         }
 
@@ -137,7 +136,7 @@ namespace Orchard.Tests.Modules.Indexing {
 
             _contentManager.Create("alpha");
 
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
         }
 
@@ -154,7 +153,7 @@ namespace Orchard.Tests.Modules.Indexing {
 
             _contentManager.Create("alpha");
 
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
         }
 
@@ -163,22 +162,22 @@ namespace Orchard.Tests.Modules.Indexing {
             var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
             content.Text = "Lorem ipsum";
 
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
         }
 
         [Test]
         public void ShouldUpdateTheIndexWhenContentIsPublished() {
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
 
             // there should be nothing done
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
 
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
         }
 
@@ -187,13 +186,13 @@ namespace Orchard.Tests.Modules.Indexing {
             ILockFile lockFile = null;
             _lockFileManager.TryAcquireLock("Sites/My Site/Search.settings.xml.lock", ref lockFile);
             using (lockFile) {
-                _indexNotifier.UpdateIndex(IndexName);
+                while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
                 Assert.That(_logger.LogEntries.Count, Is.EqualTo(1));
                 Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but is already running"));
             }
 
             _logger.LogEntries.Clear();
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but is already running"));
         }
 
@@ -201,18 +200,18 @@ namespace Orchard.Tests.Modules.Indexing {
         public void ShouldUpdateTheIndexWhenContentIsUnPublished() {
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
 
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
 
             var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
             content.Text = "Lorem ipsum";
-            
-            _indexNotifier.UpdateIndex(IndexName);
+
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
 
             _contentManager.Unpublish(content.ContentItem);
-            
-            _indexNotifier.UpdateIndex(IndexName);
+
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
         }
 
@@ -223,7 +222,7 @@ namespace Orchard.Tests.Modules.Indexing {
                 var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
                 content.Text = "Lorem ipsum " + i;
             }
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(999));
         }
 

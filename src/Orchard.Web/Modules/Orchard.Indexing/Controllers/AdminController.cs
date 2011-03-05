@@ -44,7 +44,6 @@ namespace Orchard.Indexing.Controllers {
                 return new HttpUnauthorizedResult();
 
             _indexingService.RebuildIndex(DefaultIndexName);
-            _indexingService.UpdateIndex(DefaultIndexName);
 
             return RedirectToAction("Index");
         }

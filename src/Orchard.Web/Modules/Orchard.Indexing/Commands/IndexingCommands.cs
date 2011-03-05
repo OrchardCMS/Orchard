@@ -43,7 +43,6 @@ namespace Orchard.Indexing.Commands {
         [CommandHelp("index rebuild \r\n\t" + "Rebuilds the search index")]
         public string Rebuild() {
             _indexingService.RebuildIndex(SearchIndexName);
-            _indexingService.UpdateIndex(SearchIndexName);
 
             return T("Index is now being rebuilt...").Text;
         }
