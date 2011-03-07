@@ -10,11 +10,11 @@
 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery"))) {
     <fieldset class="bulk-actions">
-        <label for="filterResults" class="bulk-filter">@T("Feed:")</label>
-        <select id="sourceId" name="sourceId">
-            @Html.SelectOption("", Model.SelectedSource == null, T("All feeds").ToString())
+        <label for="sourceId">@T("Feed:")</label>
+        <select id="sourceId" name="@Html.NameOf(m => m.Options.SourceId)">
+            @Html.SelectOption(Model.Options.SourceId, null, T("All feeds").ToString())
             @foreach (var source in Model.Sources) {
-                @Html.SelectOption(source.Id, Model.SelectedSource != null && Model.SelectedSource.Id == source.Id, source.FeedTitle)
+                @Html.SelectOption(Model.Options.SourceId, source.Id, source.FeedTitle)
             }
         </select>
     </fieldset>
@@ -27,7 +27,7 @@
             @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Alphanumeric, T("Alphanumeric").ToString())
         </select>
 
-        <button type="submit">@T("Apply")</button>
+        <button id="apply-bulk-actions" type="submit">@T("Apply")</button>
     </fieldset>
 
     <fieldset class="search-actions">

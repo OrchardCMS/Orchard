@@ -219,12 +219,12 @@ namespace Orchard.Packaging.Controllers {
             var routeData = new RouteData();
             routeData.Values.Add("Options.Order", options.Order);
             routeData.Values.Add("Options.SearchText", options.SearchText);
+            routeData.Values.Add("Options.SourceId", options.SourceId);
             pagerShape.RouteData(routeData);
 
             return View(packageType == DefaultExtensionTypes.Theme ? "Themes" : "Modules", new PackagingExtensionsViewModel {
                 Extensions = extensions,
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
-                SelectedSource = selectedSource,
                 Pager = pagerShape,
                 Options = options
             });

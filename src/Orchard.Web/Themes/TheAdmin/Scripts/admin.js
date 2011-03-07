@@ -56,4 +56,16 @@
             return this;
         }
     });
+
+    $(".bulk-actions").each(function () {
+        $("select").each(function () {
+            $(this).change(function () {
+                var self = $(this);
+                var form = self.closest("form");
+
+                // Submit form
+                form.submit();
+            });
+        });
+    });
 })(jQuery);
