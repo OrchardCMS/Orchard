@@ -14,7 +14,7 @@
             </div>
         }
     <div class="properties">
-        <h2 class="@moduleClasses">@Model.ContentPart.Descriptor.Name<span> - @T("Version: {0}", !string.IsNullOrEmpty(Model.ContentPart.Descriptor.Version) ? Model.ContentPart.Descriptor.Version : T("1.0").ToString())</span></h2>       
+        <h2@{ if(!string.IsNullOrEmpty(moduleClasses)) {<text> class="@moduleClasses"</text>}}>@Model.ContentPart.Descriptor.Name<span> - @T("Version: {0}", !string.IsNullOrEmpty(Model.ContentPart.Descriptor.Version) ? Model.ContentPart.Descriptor.Version : T("1.0").ToString())</span></h2>
 
          @if (!string.IsNullOrEmpty(Model.ContentPart.Descriptor.Description)) {
         <p>@Model.ContentPart.Descriptor.Description</p>

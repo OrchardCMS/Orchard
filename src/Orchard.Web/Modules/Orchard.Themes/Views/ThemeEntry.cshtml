@@ -5,8 +5,7 @@
 @{ string themeClasses = Model.ContentPart.IsRecentlyInstalled ? "recentlyInstalledTheme" : string.Empty; }
 
 <div>
-
-    <h3 class="@themeClasses">@Model.ContentPart.Name</h3>
+    <h3@{ if(!string.IsNullOrEmpty(themeClasses)) {<text>  class="@themeClasses"</text>}}>@Model.ContentPart.Name</h3>
 
     @Html.Image(Href(Html.ThemePath((ExtensionDescriptor) Model.ContentPart.Descriptor, "/Theme.png")), Html.Encode((string)Model.ContentPart.Name), null)
     @using (Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" })) {
