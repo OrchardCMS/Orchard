@@ -28,5 +28,19 @@ namespace Orchard.Core.Navigation {
             return 1;
         }
 
+        public int UpdateFrom1() {
+            SchemaBuilder.CreateTable("AdminMenuPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("AdminMenuText")
+                    .Column<string>("AdminMenuPosition")
+                    .Column<bool>("OnAdminMenu")
+                );
+            ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder.Attachable());
+
+            ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("AdminMenuPart"));
+            return 2;
+        }
+
     }
 }

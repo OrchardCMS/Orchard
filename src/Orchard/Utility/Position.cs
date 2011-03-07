@@ -23,7 +23,7 @@ namespace Orchard.Utility {
 
         private static bool PositionHasMojorNumber(MenuItem mi) {
             int foo;
-            var major = mi.Position.Split('.')[0];
+            var major = mi.Position == null ? null : mi.Position.Split('.')[0];
             return !string.IsNullOrEmpty(major) && int.TryParse(major, out foo);
         }
     }

@@ -1,0 +1,16 @@
+﻿@model AdminMenuPart
+@using Orchard.Core.Navigation.Models;
+@{
+    Script.Require("ShapesBase");
+}
+<fieldset>
+    @Html.EditorFor(m => m.OnAdminMenu)
+    <label for="OnAdminMenu" class="forcheckbox">@T("Create an admin menu item to manage this {0}", Model.ContentItem.ContentType)</label>
+    <div data-controllerid="OnAdminMenu" class="">
+        <label for="AdminMenuText">@T("Admin menu text")</label>
+        @Html.TextBoxFor(m => m.AdminMenuText, new { @class = "large text" })
+
+		<label for="AdminMenuPosition">@T("Admin menu position")</label>
+		@Html.TextBoxFor(m => m.AdminMenuPosition)
+    </div>
+</fieldset>
