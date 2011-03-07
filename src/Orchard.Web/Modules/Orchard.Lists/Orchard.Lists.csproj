@@ -66,10 +66,6 @@
   <ItemGroup>
     <Content Include="Styles\images\menu.list.png" />
     <Content Include="Styles\menu.list-admin.css" />
-    <Content Include="Views\Items\Content-List.SummaryAdmin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config" />
@@ -78,6 +74,9 @@
     <Content Include="Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

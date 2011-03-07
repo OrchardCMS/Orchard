@@ -1,7 +1,0 @@
-﻿<Placement>
-    <Match ContentType="List">
-        <Match DisplayType="SummaryAdmin">
-            <Place Parts_Container_Contained_SummaryAdmin="-"/>
-        </Match>
-    </Match>
-</Placement>

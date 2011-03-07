@@ -49,7 +49,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcHtmlString ItemAdminLink(this HtmlHelper html, IContent content) {
-            return ItemEditLink(html, null, content);
+            return ItemAdminLink(html, null, content);
         }
 
         public static MvcHtmlString ItemAdminLink(this HtmlHelper html, string linkText, IContent content) {

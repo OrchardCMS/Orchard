@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -69,6 +70,21 @@ namespace Orchard.Core.Containers.Drivers {
                 part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.PublishedUtc" : "";
                 part.Record.OrderByDirection = (int)OrderByDirection.Descending;
             });
+        }
+
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            var container = context.ContentItem.As<ContainerPart>();
+
+            if (container == null)
+                return;
+
+            // containers link to their contents in admin screens
+            context.Metadata.AdminRouteValues = new RouteValueDictionary {
+                {"Area", "Contents"},
+                {"Controller", "Admin"},
+                {"Action", "List"},
+                {"containerId", container.Id}
+            };
         }
     }
 }
