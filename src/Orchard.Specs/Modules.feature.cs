@@ -80,7 +80,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 14
     testRunner.Then("I should see \"<h1 id=\"page-title\">Modules</h1>\"");
 #line 15
-        testRunner.And("I should see \"<h2>Themes\"");
+        testRunner.And("I should see \"<h2[^>]*>Themes\"");
 #line 16
         testRunner.And("the status should be 200 \"OK\"");
 #line hidden
@@ -101,7 +101,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 21
     testRunner.Then("I should see \"<h3>Common</h3>\"");
 #line 22
-        testRunner.And("I should see \"<li class=\"feature enabled\" id=\"contents-feature\"[^>]*>\"");
+        testRunner.And("I should see \"<li class=\"feature enabled[^\"]*\" id=\"contents-feature\"[^>]*>\"");
 #line 23
         testRunner.And("the status should be 200 \"OK\"");
 #line hidden
