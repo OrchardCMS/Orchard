@@ -20,7 +20,7 @@ namespace Orchard.Logging {
         protected override void Load(ContainerBuilder moduleBuilder) {
             // by default, use Orchard's logger that delegates to Castle's logger factory
             moduleBuilder.RegisterType<CastleLoggerFactory>().As<ILoggerFactory>().InstancePerLifetimeScope();
-            moduleBuilder.RegisterType<Log4netFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
+            moduleBuilder.RegisterType<OrchardLog4netFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
 
             // call CreateLogger in response to the request for an ILogger implementation
             moduleBuilder.Register(CreateLogger).As<ILogger>().InstancePerDependency();
