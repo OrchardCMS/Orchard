@@ -18,6 +18,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,7 +61,16 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Styles\images\menu-glyph.png" />
+    <Content Include="Scripts\CodeMirror\codemirror.js" />
+    <Content Include="Scripts\CodeMirror\css.js" />
+    <Content Include="Scripts\CodeMirror\htmlmixed.js" />
+    <Content Include="Scripts\CodeMirror\javascript.js" />
+    <Content Include="Scripts\CodeMirror\razor.js" />
+    <Content Include="Styles\CodeMirror\codemirror.css" />
+    <Content Include="Styles\CodeMirror\razor.css" />
+    <Content Include="Styles\CodeMirror\css.css" />
+    <Content Include="Styles\CodeMirror\javascript.css" />
+    <Content Include="Styles\Images\menu-glyph.png" />
     <Content Include="Scripts\orchard-designertools-shapetracing.js" />
     <Content Include="Styles\orchard-designertools-shapetracing.css" />
     <Content Include="Web.config">

@@ -5,57 +5,57 @@
 }
 
 <div class="shape-tracing meta shapeId-@Model.ShapeId" style="display:none">
-	<ul class="debuggerMenu">
-		<li class="shape selected first"><a href="#">Shape</a></li>
-		<li class="model middle"><a href="#">Model</a></li>
-		<li class="placement middle"><a href="#">Placement</a></li>
-		<li class="templates middle"><a href="#">Templates</a></li>
-		<li class="source middle"><a href="#">Source</a></li>
-		<li class="html last"><a href="#">HTML</a></li>
-	</ul>
+    <ul class="debuggerMenu">
+        <li class="shape selected first"><a href="#">Shape</a></li>
+        <li class="model middle"><a href="#">Model</a></li>
+        <li class="placement middle"><a href="#">Placement</a></li>
+        <li class="templates middle"><a href="#">Templates</a></li>
+        <li class="source middle"><a href="#">Source</a></li>
+        <li class="html last"><a href="#">HTML</a></li>
+    </ul>
 
-	<div class="content">
-		<div class="shape">
-			Shape: @Model.ShapeType <br />
-			Definition: @Model.Definition  <br />
-			Display Type: @(Model.DisplayType  ?? "n/a")<br />
-			Position: @(Model.Position ?? "n/a") <br />
-			Placement Source: @(Model.PlacementSource ?? "n/a") <br />
-		</div>
-			
-		<div class="model" style="display:none">
-			@(new MvcHtmlString(@Model.Dump))
-		</div>
+    <div class="content">
+        <div class="shape">
+            Shape: @Model.ShapeType <br />
+            Definition: @Model.Definition  <br />
+            Display Type: @(Model.DisplayType  ?? "n/a")<br />
+            Position: @(Model.Position ?? "n/a") <br />
+            Placement Source: @(Model.PlacementSource ?? "n/a") <br />
+        </div>
+            
+        <div class="model" style="display:none">
+            @(new MvcHtmlString(@Model.Dump))
+        </div>
 
-		<div class="placement" style="display:none">
-			<pre>@Model.PlacementContent</pre>
-		</div>
+        <div class="placement" style="display:none">
+            <textarea id="placement-@Model.ShapeId" name="placement-@Model.ShapeId">@Model.PlacementContent</textarea>
+        </div>
 
-		<div class="templates" style="display:none">
-			<div class="alternates">
-				<span>Alternates</span>
-				@foreach(var alternate in Model.Alternates) {
-					var formatted = @FormatShapeFilename(alternate, WorkContext.CurrentTheme.Id);
-					<div>@formatted</div>
-				}
-			</div>
-			<div class="wrappers">
-				<span >Wrappers</span>
-				@foreach(var wrapper in Model.Wrappers) {
-					if(wrapper != "ShapeTracing_Wrapper") {
-						var formatted = @FormatShapeFilename(wrapper, WorkContext.CurrentTheme.Id);
-						<div>@formatted</div>
-					}
-				}
-			</div>
-		</div>
+        <div class="templates" style="display:none">
+            <div class="alternates">
+                <span>Alternates</span>
+                @foreach(var alternate in Model.Alternates) {
+                    var formatted = @FormatShapeFilename(alternate, WorkContext.CurrentTheme.Id);
+                    <div>@formatted</div>
+                }
+            </div>
+            <div class="wrappers">
+                <span >Wrappers</span>
+                @foreach(var wrapper in Model.Wrappers) {
+                    if(wrapper != "ShapeTracing_Wrapper") {
+                        var formatted = @FormatShapeFilename(wrapper, WorkContext.CurrentTheme.Id);
+                        <div>@formatted</div>
+                    }
+                }
+            </div>
+        </div>
 
-		<div class="source" style="display:none">
-			<pre>@Model.DefinitionContent</pre>
-		</div>
+        <div class="source" style="display:none">
+            <textarea id="source-@Model.ShapeId" name="source-@Model.ShapeId">@Model.DefinitionContent</textarea>
+        </div>
 
-		<div class="html" style="display:none">
-			<pre>@HttpUtility.HtmlEncode(Display(Model.ChildContent))</pre>
-		</div>
-	</div>
+        <div class="html" style="display:none">
+            <textarea id="html-@Model.ShapeId" name="html-@Model.ShapeId">@HttpUtility.HtmlEncode(Display(Model.ChildContent))</textarea>
+        </div>
+    </div>
 </div>

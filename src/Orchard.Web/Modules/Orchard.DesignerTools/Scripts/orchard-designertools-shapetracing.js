@@ -68,6 +68,12 @@
                 var wrapper = _this.parent().parent().first();
                 wrapper.children('.content').children().toggle(false);
                 wrapper.children('.content').children('div' + selector).toggle(true);
+
+                if (wrapper.children('.content').children('div' + selector).children('.CodeMirror').length == 0) {
+                    var textArea = wrapper.children('.content').children('div' + selector).children('textarea').get(0);
+                    CodeMirror.fromTextArea(textArea, { mode: "razor", tabMode: "indent", height: "100%" });
+                }
+
             });
         }
 

@@ -46,7 +46,7 @@
     min-height:20px;
 }
 
-.debug-shapes  body {
+.debug-shapes body {
     margin-top:25px;
 }
 
@@ -131,8 +131,8 @@ ul.debuggerMenu { margin:8px 0 -8px 0; }
     padding: 20px;
     margin:8px 0 0 0;
     border: 1px solid #e4e5e6;
-    height:10em;
-    overflow:scroll;
+    height:12em;
+    overflow:auto;
      /*CSS3 properties*/
      border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -205,4 +205,8 @@ h3:hover
     -webkit-transform:rotate(90deg) translate(3px, 3px);
     -moz-transform:rotate(90deg) translate(3px, 3px);
     transform:rotate(90deg) translate(3px, 3px);
+}
+
+.content textarea {
+    height:50%;
 }
