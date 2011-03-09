@@ -5,12 +5,8 @@ using System.Web;
 using System.Web.Hosting;
 
 using Castle.Core.Logging;
-using Castle.Services.Logging.Log4netIntegration;
 
 using log4net;
-using log4net.Config;
-
-using Orchard.Environment.Extensions.Helpers;
 
 namespace Orchard.Logging {
     public class OrchardLog4netFactory : AbstractLoggerFactory {

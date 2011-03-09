@@ -1,30 +1,21 @@
 ﻿using System;
-using System.Xml;
-using System.Collections;
 using System.IO;
 using System.Reflection;
-using System.Threading;
-using System.Net;
+using System.Xml;
 
 using log4net;
-using log4net.Appender;
-using log4net.Util;
 using log4net.Repository;
 using log4net.Repository.Hierarchy;
+using log4net.Util;
 
 namespace Orchard.Logging {
     public class OrchardXmlConfigurator {
-        #region Private Instance Constructors
 
         /// <summary>
         /// Private constructor
         /// </summary>
         private OrchardXmlConfigurator() {
         }
-
-        #endregion Protected Instance Constructors
-
-        #region Configure static methods
 
         /// <summary>
         /// Configures log4net using the specified configuration file.
@@ -76,7 +67,7 @@ namespace Orchard.Logging {
         ///	</configuration>
         /// </code>
         /// </remarks>
-        static public void Configure(string configFilename) {
+        public static void Configure(string configFilename) {
             Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), configFilename);
         }
 
@@ -94,7 +85,7 @@ namespace Orchard.Logging {
         /// Note that this method will NOT close the stream parameter.
         /// </para>
         /// </remarks>
-        static public void Configure(Stream configStream) {
+        public static void Configure(Stream configStream) {
             Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()), configStream);
         }
 
@@ -150,7 +141,7 @@ namespace Orchard.Logging {
         ///	</configuration>
         /// </code>
         /// </remarks>
-        static public void Configure(ILoggerRepository repository, string configFilename) {
+        public static void Configure(ILoggerRepository repository, string configFilename) {
             LogLog.Debug("XmlConfigurator: configuring repository [" + repository.Name + "] using file [" + configFilename + "]");
 
             if (String.IsNullOrWhiteSpace(configFilename)) {
@@ -214,7 +205,7 @@ namespace Orchard.Logging {
         /// Note that this method will NOT close the stream parameter.
         /// </para>
         /// </remarks>
-        static public void Configure(ILoggerRepository repository, Stream configStream) {
+        public static void Configure(ILoggerRepository repository, Stream configStream) {
             LogLog.Debug("XmlConfigurator: configuring repository [" + repository.Name + "] using stream");
 
             if (configStream == null) {
@@ -260,10 +251,6 @@ namespace Orchard.Logging {
             }
         }
 
-        #endregion Configure static methods
-
-        #region Private Static Methods
-
         /// <summary>
         /// Configures the specified repository using a <c>log4net</c> element.
         /// </summary>
@@ -279,7 +266,7 @@ namespace Orchard.Logging {
         /// to load the configuration from an <see cref="XmlElement"/>.
         /// </para>
         /// </remarks>
-        static private void ConfigureFromXml(ILoggerRepository repository, XmlElement element) {
+        private static void ConfigureFromXml(ILoggerRepository repository, XmlElement element) {
             if (element == null) {
                 LogLog.Error("XmlConfigurator: ConfigureFromXml called with null 'element' parameter");
             }
@@ -319,7 +306,5 @@ namespace Orchard.Logging {
                 }
             }
         }
-
-        #endregion Private Static Methods
     }
 }

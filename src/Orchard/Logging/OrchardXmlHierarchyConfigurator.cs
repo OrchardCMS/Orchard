@@ -5,10 +5,10 @@ using System.Reflection;
 using System.Xml;
 
 using log4net.Appender;
-using log4net.Util;
 using log4net.Core;
 using log4net.ObjectRenderer;
 using log4net.Repository.Hierarchy;
+using log4net.Util;
 
 namespace Orchard.Logging {
     /// <summary>
@@ -27,7 +27,50 @@ namespace Orchard.Logging {
             Overwrite
         }
 
-        #region Public Instance Constructors
+        // String constants used while parsing the XML data
+        private const string ConfigurationTag = "log4net";
+        private const string RendererTag = "renderer";
+        private const string AppenderTag = "appender";
+        private const string AppenderRefTag = "appender-ref";
+        private const string ParamTag = "param";
+
+        // TODO: Deprecate use of category tags
+        private const string CategoryTag = "category";
+        // TODO: Deprecate use of priority tag
+        private const string PriorityTag = "priority";
+
+        private const string LoggerTag = "logger";
+        private const string NameAttr = "name";
+        private const string TypeAttr = "type";
+        private const string ValueAttr = "value";
+        private const string RootTag = "root";
+        private const string LevelTag = "level";
+        private const string RefAttr = "ref";
+        private const string AdditivityAttr = "additivity";
+        private const string ThresholdAttr = "threshold";
+        private const string ConfigDebugAttr = "configDebug";
+        private const string InternalDebugAttr = "debug";
+        private const string ConfigUpdateModeAttr = "update";
+        private const string RenderingTypeAttr = "renderingClass";
+        private const string RenderedTypeAttr = "renderedClass";
+
+        // flag used on the level element
+        private const string Inherited = "inherited";
+
+        /// <summary>
+        /// key: appenderName, value: appender.
+        /// </summary>
+        private Hashtable _appenderBag;
+
+        /// <summary>
+        /// The Hierarchy being configured.
+        /// </summary>
+        private readonly Hierarchy _hierarchy;
+
+        /// <summary>
+        /// The snapshot of the environment variables at configuration time, or null if an error has occured during querying them.
+        /// </summary>
+        private IDictionary _environmentVariables;
 
         /// <summary>
         /// Construct the configurator for a hierarchy
@@ -40,13 +83,9 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         public OrchardXmlHierarchyConfigurator(Hierarchy hierarchy) {
-            m_hierarchy = hierarchy;
-            m_appenderBag = new Hashtable();
+            _hierarchy = hierarchy;
+            _appenderBag = new Hashtable();
         }
-
-        #endregion Public Instance Constructors
-
-        #region Public Instance Methods
 
         /// <summary>
         /// Configure the hierarchy by parsing a DOM tree of XML elements.
@@ -58,33 +97,33 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         public void Configure(XmlElement element) {
-            if (element == null || m_hierarchy == null) {
+            if (element == null || _hierarchy == null) {
                 return;
             }
 
             string rootElementName = element.LocalName;
 
-            if (rootElementName != CONFIGURATION_TAG) {
-                LogLog.Error("XmlHierarchyConfigurator: Xml element is - not a <" + CONFIGURATION_TAG + "> element.");
+            if (rootElementName != ConfigurationTag) {
+                LogLog.Error("XmlHierarchyConfigurator: Xml element is - not a <" + ConfigurationTag + "> element.");
                 return;
             }
 
             if (!LogLog.InternalDebugging) {
                 // Look for a debug attribute to enable internal debug
-                string debugAttribute = element.GetAttribute(INTERNAL_DEBUG_ATTR);
-                LogLog.Debug("XmlHierarchyConfigurator: " + INTERNAL_DEBUG_ATTR + " attribute [" + debugAttribute + "].");
+                string debugAttribute = element.GetAttribute(InternalDebugAttr);
+                LogLog.Debug("XmlHierarchyConfigurator: " + InternalDebugAttr + " attribute [" + debugAttribute + "].");
 
                 if (debugAttribute.Length > 0 && debugAttribute != "null") {
                     LogLog.InternalDebugging = OptionConverter.ToBoolean(debugAttribute, true);
                 }
                 else {
-                    LogLog.Debug("XmlHierarchyConfigurator: Ignoring " + INTERNAL_DEBUG_ATTR + " attribute.");
+                    LogLog.Debug("XmlHierarchyConfigurator: Ignoring " + InternalDebugAttr + " attribute.");
                 }
 
-                string confDebug = element.GetAttribute(CONFIG_DEBUG_ATTR);
+                string confDebug = element.GetAttribute(ConfigDebugAttr);
                 if (confDebug.Length > 0 && confDebug != "null") {
-                    LogLog.Warn("XmlHierarchyConfigurator: The \"" + CONFIG_DEBUG_ATTR + "\" attribute is deprecated.");
-                    LogLog.Warn("XmlHierarchyConfigurator: Use the \"" + INTERNAL_DEBUG_ATTR + "\" attribute instead.");
+                    LogLog.Warn("XmlHierarchyConfigurator: The \"" + ConfigDebugAttr + "\" attribute is deprecated.");
+                    LogLog.Warn("XmlHierarchyConfigurator: Use the \"" + InternalDebugAttr + "\" attribute instead.");
                     LogLog.InternalDebugging = OptionConverter.ToBoolean(confDebug, true);
                 }
             }
@@ -93,14 +132,14 @@ namespace Orchard.Logging {
             ConfigUpdateMode configUpdateMode = ConfigUpdateMode.Merge;
 
             // Look for the config update attribute
-            string configUpdateModeAttribute = element.GetAttribute(CONFIG_UPDATE_MODE_ATTR);
+            string configUpdateModeAttribute = element.GetAttribute(ConfigUpdateModeAttr);
             if (configUpdateModeAttribute != null && configUpdateModeAttribute.Length > 0) {
                 // Parse the attribute
                 try {
                     configUpdateMode = (ConfigUpdateMode)OptionConverter.ConvertStringTo(typeof(ConfigUpdateMode), configUpdateModeAttribute);
                 }
                 catch {
-                    LogLog.Error("XmlHierarchyConfigurator: Invalid " + CONFIG_UPDATE_MODE_ATTR + " attribute value [" + configUpdateModeAttribute + "]");
+                    LogLog.Error("XmlHierarchyConfigurator: Invalid " + ConfigUpdateModeAttr + " attribute value [" + configUpdateModeAttribute + "]");
                 }
             }
 
@@ -110,16 +149,16 @@ namespace Orchard.Logging {
             // Only reset configuration if overwrite flag specified
             if (configUpdateMode == ConfigUpdateMode.Overwrite) {
                 // Reset to original unset configuration
-                m_hierarchy.ResetConfiguration();
+                _hierarchy.ResetConfiguration();
                 LogLog.Debug("XmlHierarchyConfigurator: Configuration reset before reading config.");
             }
 
             // Try to retrieve the environment variables
             try {
-                m_environmentVariables = System.Environment.GetEnvironmentVariables();
+                _environmentVariables = System.Environment.GetEnvironmentVariables();
             }
             catch (System.Security.SecurityException) {
-                m_environmentVariables = null;
+                _environmentVariables = null;
 
                 // This security exception will occur if the caller does not have 
                 // unrestricted environment permission. If this occurs the expansion 
@@ -136,37 +175,37 @@ namespace Orchard.Logging {
                 if (currentNode.NodeType == XmlNodeType.Element) {
                     XmlElement currentElement = (XmlElement)currentNode;
 
-                    if (currentElement.LocalName == LOGGER_TAG) {
+                    if (currentElement.LocalName == LoggerTag) {
                         ParseLogger(currentElement);
                     }
-                    else if (currentElement.LocalName == CATEGORY_TAG) {
+                    else if (currentElement.LocalName == CategoryTag) {
                         // TODO: deprecated use of category
                         ParseLogger(currentElement);
                     }
-                    else if (currentElement.LocalName == ROOT_TAG) {
+                    else if (currentElement.LocalName == RootTag) {
                         ParseRoot(currentElement);
                     }
-                    else if (currentElement.LocalName == RENDERER_TAG) {
+                    else if (currentElement.LocalName == RendererTag) {
                         ParseRenderer(currentElement);
                     }
-                    else if (currentElement.LocalName == APPENDER_TAG) {
+                    else if (currentElement.LocalName == AppenderTag) {
                         // We ignore appenders in this pass. They will
                         // be found and loaded if they are referenced.
                     }
                     else {
                         // Read the param tags and set properties on the hierarchy
-                        SetParameter(currentElement, m_hierarchy);
+                        SetParameter(currentElement, _hierarchy);
                     }
                 }
             }
 
             // Lastly set the hierarchy threshold
-            string thresholdStr = element.GetAttribute(THRESHOLD_ATTR);
+            string thresholdStr = element.GetAttribute(ThresholdAttr);
             LogLog.Debug("XmlHierarchyConfigurator: Hierarchy Threshold [" + thresholdStr + "]");
             if (thresholdStr.Length > 0 && thresholdStr != "null") {
                 Level thresholdLevel = (Level)ConvertStringTo(typeof(Level), thresholdStr);
                 if (thresholdLevel != null) {
-                    m_hierarchy.Threshold = thresholdLevel;
+                    _hierarchy.Threshold = thresholdLevel;
                 }
                 else {
                     LogLog.Warn("XmlHierarchyConfigurator: Unable to set hierarchy threshold using value [" + thresholdStr + "] (with acceptable conversion types)");
@@ -175,10 +214,6 @@ namespace Orchard.Logging {
 
             // Done reading config
         }
-
-        #endregion Public Instance Methods
-
-        #region Protected Instance Methods
 
         /// <summary>
         /// Parse appenders by IDREF.
@@ -192,9 +227,9 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         protected IAppender FindAppenderByReference(XmlElement appenderRef) {
-            string appenderName = appenderRef.GetAttribute(REF_ATTR);
+            string appenderName = appenderRef.GetAttribute(RefAttr);
 
-            IAppender appender = (IAppender)m_appenderBag[appenderName];
+            IAppender appender = (IAppender)_appenderBag[appenderName];
             if (appender != null) {
                 return appender;
             }
@@ -203,7 +238,7 @@ namespace Orchard.Logging {
                 XmlElement element = null;
 
                 if (appenderName != null && appenderName.Length > 0) {
-                    foreach (XmlElement curAppenderElement in appenderRef.OwnerDocument.GetElementsByTagName(APPENDER_TAG)) {
+                    foreach (XmlElement curAppenderElement in appenderRef.OwnerDocument.GetElementsByTagName(AppenderTag)) {
                         if (curAppenderElement.GetAttribute("name") == appenderName) {
                             element = curAppenderElement;
                             break;
@@ -218,7 +253,7 @@ namespace Orchard.Logging {
                 else {
                     appender = ParseAppender(element);
                     if (appender != null) {
-                        m_appenderBag[appenderName] = appender;
+                        _appenderBag[appenderName] = appender;
                     }
                     return appender;
                 }
@@ -237,8 +272,8 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         protected IAppender ParseAppender(XmlElement appenderElement) {
-            string appenderName = appenderElement.GetAttribute(NAME_ATTR);
-            string typeName = appenderElement.GetAttribute(TYPE_ATTR);
+            string appenderName = appenderElement.GetAttribute(NameAttr);
+            string typeName = appenderElement.GetAttribute(TypeAttr);
 
             LogLog.Debug("XmlHierarchyConfigurator: Loading Appender [" + appenderName + "] type: [" + typeName + "]");
             try {
@@ -251,8 +286,8 @@ namespace Orchard.Logging {
                         XmlElement currentElement = (XmlElement)currentNode;
 
                         // Look for the appender ref tag
-                        if (currentElement.LocalName == APPENDER_REF_TAG) {
-                            string refName = currentElement.GetAttribute(REF_ATTR);
+                        if (currentElement.LocalName == AppenderRefTag) {
+                            string refName = currentElement.GetAttribute(RefAttr);
 
                             IAppenderAttachable appenderContainer = appender as IAppenderAttachable;
                             if (appenderContainer != null) {
@@ -301,16 +336,16 @@ namespace Orchard.Logging {
         /// </remarks>
         protected void ParseLogger(XmlElement loggerElement) {
             // Create a new log4net.Logger object from the <logger> element.
-            string loggerName = loggerElement.GetAttribute(NAME_ATTR);
+            string loggerName = loggerElement.GetAttribute(NameAttr);
 
             LogLog.Debug("XmlHierarchyConfigurator: Retrieving an instance of log4net.Repository.Logger for logger [" + loggerName + "].");
-            Logger log = m_hierarchy.GetLogger(loggerName) as Logger;
+            Logger log = _hierarchy.GetLogger(loggerName) as Logger;
 
             // Setting up a logger needs to be an atomic operation, in order
             // to protect potential log operations while logger
             // configuration is in progress.
             lock (log) {
-                bool additivity = OptionConverter.ToBoolean(loggerElement.GetAttribute(ADDITIVITY_ATTR), true);
+                bool additivity = OptionConverter.ToBoolean(loggerElement.GetAttribute(AdditivityAttr), true);
 
                 LogLog.Debug("XmlHierarchyConfigurator: Setting [" + log.Name + "] additivity to [" + additivity + "].");
                 log.Additivity = additivity;
@@ -328,7 +363,7 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         protected void ParseRoot(XmlElement rootElement) {
-            Logger root = m_hierarchy.Root;
+            Logger root = _hierarchy.Root;
             // logger configuration needs to be atomic
             lock (root) {
                 ParseChildrenOfLoggerElement(rootElement, root, true);
@@ -355,9 +390,9 @@ namespace Orchard.Logging {
                 if (currentNode.NodeType == XmlNodeType.Element) {
                     XmlElement currentElement = (XmlElement)currentNode;
 
-                    if (currentElement.LocalName == APPENDER_REF_TAG) {
+                    if (currentElement.LocalName == AppenderRefTag) {
                         IAppender appender = FindAppenderByReference(currentElement);
-                        string refName = currentElement.GetAttribute(REF_ATTR);
+                        string refName = currentElement.GetAttribute(RefAttr);
                         if (appender != null) {
                             LogLog.Debug("XmlHierarchyConfigurator: Adding appender named [" + refName + "] to logger [" + log.Name + "].");
                             log.AddAppender(appender);
@@ -366,7 +401,7 @@ namespace Orchard.Logging {
                             LogLog.Error("XmlHierarchyConfigurator: Appender named [" + refName + "] not found.");
                         }
                     }
-                    else if (currentElement.LocalName == LEVEL_TAG || currentElement.LocalName == PRIORITY_TAG) {
+                    else if (currentElement.LocalName == LevelTag || currentElement.LocalName == PriorityTag) {
                         ParseLevel(currentElement, log, isRoot);
                     }
                     else {
@@ -391,8 +426,8 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         protected void ParseRenderer(XmlElement element) {
-            string renderingClassName = element.GetAttribute(RENDERING_TYPE_ATTR);
-            string renderedClassName = element.GetAttribute(RENDERED_TYPE_ATTR);
+            string renderingClassName = element.GetAttribute(RenderingTypeAttr);
+            string renderedClassName = element.GetAttribute(RenderedTypeAttr);
 
             LogLog.Debug("XmlHierarchyConfigurator: Rendering class [" + renderingClassName + "], Rendered class [" + renderedClassName + "].");
             IObjectRenderer renderer = (IObjectRenderer)OptionConverter.InstantiateByClassName(renderingClassName, typeof(IObjectRenderer), null);
@@ -402,7 +437,7 @@ namespace Orchard.Logging {
             }
             else {
                 try {
-                    m_hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true), renderer);
+                    _hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true), renderer);
                 }
                 catch (Exception e) {
                     LogLog.Error("XmlHierarchyConfigurator: Could not find class [" + renderedClassName + "].", e);
@@ -427,10 +462,10 @@ namespace Orchard.Logging {
                 loggerName = "root";
             }
 
-            string levelStr = element.GetAttribute(VALUE_ATTR);
+            string levelStr = element.GetAttribute(ValueAttr);
             LogLog.Debug("XmlHierarchyConfigurator: Logger [" + loggerName + "] Level string is [" + levelStr + "].");
 
-            if (INHERITED == levelStr) {
+            if (Inherited == levelStr) {
                 if (isRoot) {
                     LogLog.Error("XmlHierarchyConfigurator: Root level cannot be inherited. Ignoring directive.");
                 }
@@ -468,10 +503,10 @@ namespace Orchard.Logging {
         /// </remarks>
         protected void SetParameter(XmlElement element, object target) {
             // Get the property name
-            string name = element.GetAttribute(NAME_ATTR);
+            string name = element.GetAttribute(NameAttr);
 
             // If the name attribute does not exist then use the name of the element
-            if (element.LocalName != PARAM_TAG || name == null || name.Length == 0) {
+            if (element.LocalName != ParamTag || name == null || name.Length == 0) {
                 name = element.LocalName;
             }
 
@@ -505,8 +540,8 @@ namespace Orchard.Logging {
             else {
                 string propertyValue = null;
 
-                if (element.GetAttributeNode(VALUE_ATTR) != null) {
-                    propertyValue = element.GetAttribute(VALUE_ATTR);
+                if (element.GetAttributeNode(ValueAttr) != null) {
+                    propertyValue = element.GetAttribute(ValueAttr);
                 }
                 else if (element.HasChildNodes) {
                     // Concatenate the CDATA and Text nodes together
@@ -523,15 +558,15 @@ namespace Orchard.Logging {
                 }
 
                 if (propertyValue != null) {
-                    if (m_environmentVariables != null) {
+                    if (_environmentVariables != null) {
                         // Expand environment variables in the string.
-                        propertyValue = OptionConverter.SubstituteVariables(propertyValue, m_environmentVariables);
+                        propertyValue = OptionConverter.SubstituteVariables(propertyValue, _environmentVariables);
                     }
 
                     Type parsedObjectConversionTargetType = null;
 
                     // Check if a specific subtype is specified on the element using the 'type' attribute
-                    string subTypeString = element.GetAttribute(TYPE_ATTR);
+                    string subTypeString = element.GetAttribute(TypeAttr);
                     if (subTypeString != null && subTypeString.Length > 0) {
                         // Read the explicit subtype
                         try {
@@ -738,7 +773,7 @@ namespace Orchard.Logging {
             // Hack to allow use of Level in property
             if (typeof(Level) == type) {
                 // Property wants a level
-                Level levelValue = m_hierarchy.LevelMap[value];
+                Level levelValue = _hierarchy.LevelMap[value];
 
                 if (levelValue == null) {
                     LogLog.Error("XmlHierarchyConfigurator: Unknown Level Specified [" + value + "]");
@@ -772,7 +807,7 @@ namespace Orchard.Logging {
             Type objectType = null;
 
             // Get the object type
-            string objectTypeString = element.GetAttribute(TYPE_ATTR);
+            string objectTypeString = element.GetAttribute(TypeAttr);
             if (objectTypeString == null || objectTypeString.Length == 0) {
                 if (defaultTargetType == null) {
                     LogLog.Error("XmlHierarchyConfigurator: Object type not specified. Cannot create object of type [" + typeConstraint.FullName + "]. Missing Value or Type.");
@@ -843,60 +878,5 @@ namespace Orchard.Logging {
                 return createdObject;
             }
         }
-
-        #endregion Protected Instance Methods
-
-        #region Private Constants
-
-        // String constants used while parsing the XML data
-        private const string CONFIGURATION_TAG = "log4net";
-        private const string RENDERER_TAG = "renderer";
-        private const string APPENDER_TAG = "appender";
-        private const string APPENDER_REF_TAG = "appender-ref";
-        private const string PARAM_TAG = "param";
-
-        // TODO: Deprecate use of category tags
-        private const string CATEGORY_TAG = "category";
-        // TODO: Deprecate use of priority tag
-        private const string PRIORITY_TAG = "priority";
-
-        private const string LOGGER_TAG = "logger";
-        private const string NAME_ATTR = "name";
-        private const string TYPE_ATTR = "type";
-        private const string VALUE_ATTR = "value";
-        private const string ROOT_TAG = "root";
-        private const string LEVEL_TAG = "level";
-        private const string REF_ATTR = "ref";
-        private const string ADDITIVITY_ATTR = "additivity";
-        private const string THRESHOLD_ATTR = "threshold";
-        private const string CONFIG_DEBUG_ATTR = "configDebug";
-        private const string INTERNAL_DEBUG_ATTR = "debug";
-        private const string CONFIG_UPDATE_MODE_ATTR = "update";
-        private const string RENDERING_TYPE_ATTR = "renderingClass";
-        private const string RENDERED_TYPE_ATTR = "renderedClass";
-
-        // flag used on the level element
-        private const string INHERITED = "inherited";
-
-        #endregion Private Constants
-
-        #region Private Instance Fields
-
-        /// <summary>
-        /// key: appenderName, value: appender.
-        /// </summary>
-        private Hashtable m_appenderBag;
-
-        /// <summary>
-        /// The Hierarchy being configured.
-        /// </summary>
-        private readonly Hierarchy m_hierarchy;
-
-        /// <summary>
-        /// The snapshot of the environment variables at configuration time, or null if an error has occured during querying them.
-        /// </summary>
-        private IDictionary m_environmentVariables;
-
-        #endregion Private Instance Fields
     }
 }
