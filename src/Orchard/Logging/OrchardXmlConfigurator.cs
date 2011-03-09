@@ -155,7 +155,7 @@ namespace Orchard.Logging {
                     FileStream fs = null;
 
                     // Try hard to open the file
-                    for (int retry = 5; --retry >= 0; ) {
+                    for (var retry = 5; --retry >= 0; ) {
                         try {
                             fs = new FileStream(configFilename, FileMode.Open, FileAccess.Read, FileShare.Read);
                             break;
@@ -213,15 +213,13 @@ namespace Orchard.Logging {
             }
             else {
                 // Load the config file into a document
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
                 try {
                     // Create a text reader for the file stream
-                    XmlTextReader xmlReader = new XmlTextReader(configStream);
-                    xmlReader.DtdProcessing = DtdProcessing.Parse;
+                    var xmlReader = new XmlTextReader(configStream) { DtdProcessing = DtdProcessing.Parse };
 
                     // Specify that the reader should not perform validation
-                    XmlReaderSettings settings = new XmlReaderSettings();
-                    settings.ValidationType = ValidationType.None;
+                    var settings = new XmlReaderSettings { ValidationType = ValidationType.None };
 
                     // load the data into the document
                     doc.Load(xmlReader);
@@ -237,7 +235,7 @@ namespace Orchard.Logging {
                     LogLog.Debug("XmlConfigurator: loading XML configuration");
 
                     // Configure using the 'log4net' element
-                    XmlNodeList configNodeList = doc.GetElementsByTagName("log4net");
+                    var configNodeList = doc.GetElementsByTagName("log4net");
                     if (configNodeList.Count == 0) {
                         LogLog.Debug("XmlConfigurator: XML configuration does not contain a <log4net> element. Configuration Aborted.");
                     }
@@ -282,22 +280,22 @@ namespace Orchard.Logging {
                 //
 
                 // Needed to fire configuration changed event
-                LoggerRepositorySkeleton repositorySkeleton = repository as LoggerRepositorySkeleton;
+                var repositorySkeleton = repository as LoggerRepositorySkeleton;
 
                 // Needed to XmlHierarchyConfigurator
-                Hierarchy hierarchy = repository as Hierarchy;
+                var hierarchy = repository as Hierarchy;
 
                 if (repositorySkeleton == null || hierarchy == null) {
                     LogLog.Warn("XmlConfigurator: Repository [" + repository + "] does not support the XmlConfigurator");
                 }
                 else {
-                    OrchardXmlHierarchyConfigurator configurator = new OrchardXmlHierarchyConfigurator(hierarchy);
+                    var configurator = new OrchardXmlHierarchyConfigurator(hierarchy);
 
                     // Copy the xml data into the root of a new document
                     // this isolates the xml config data from the rest of
                     // the document
-                    XmlDocument newDoc = new XmlDocument();
-                    XmlElement newElement = (XmlElement)newDoc.AppendChild(newDoc.ImportNode(element, true));
+                    var newDoc = new XmlDocument();
+                    var newElement = (XmlElement)newDoc.AppendChild(newDoc.ImportNode(element, true));
 
                     // Pass the configurator the config element
                     configurator.Configure(newElement);

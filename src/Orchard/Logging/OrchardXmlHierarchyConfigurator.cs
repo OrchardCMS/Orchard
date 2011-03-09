@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 
@@ -101,7 +102,7 @@ namespace Orchard.Logging {
                 return;
             }
 
-            string rootElementName = element.LocalName;
+            var rootElementName = element.LocalName;
 
             if (rootElementName != ConfigurationTag) {
                 LogLog.Error("XmlHierarchyConfigurator: Xml element is - not a <" + ConfigurationTag + "> element.");
@@ -110,7 +111,7 @@ namespace Orchard.Logging {
 
             if (!LogLog.InternalDebugging) {
                 // Look for a debug attribute to enable internal debug
-                string debugAttribute = element.GetAttribute(InternalDebugAttr);
+                var debugAttribute = element.GetAttribute(InternalDebugAttr);
                 LogLog.Debug("XmlHierarchyConfigurator: " + InternalDebugAttr + " attribute [" + debugAttribute + "].");
 
                 if (debugAttribute.Length > 0 && debugAttribute != "null") {
@@ -120,7 +121,7 @@ namespace Orchard.Logging {
                     LogLog.Debug("XmlHierarchyConfigurator: Ignoring " + InternalDebugAttr + " attribute.");
                 }
 
-                string confDebug = element.GetAttribute(ConfigDebugAttr);
+                var confDebug = element.GetAttribute(ConfigDebugAttr);
                 if (confDebug.Length > 0 && confDebug != "null") {
                     LogLog.Warn("XmlHierarchyConfigurator: The \"" + ConfigDebugAttr + "\" attribute is deprecated.");
                     LogLog.Warn("XmlHierarchyConfigurator: Use the \"" + InternalDebugAttr + "\" attribute instead.");
@@ -129,11 +130,11 @@ namespace Orchard.Logging {
             }
 
             // Default mode is merge
-            ConfigUpdateMode configUpdateMode = ConfigUpdateMode.Merge;
+            var configUpdateMode = ConfigUpdateMode.Merge;
 
             // Look for the config update attribute
-            string configUpdateModeAttribute = element.GetAttribute(ConfigUpdateModeAttr);
-            if (configUpdateModeAttribute != null && configUpdateModeAttribute.Length > 0) {
+            var configUpdateModeAttribute = element.GetAttribute(ConfigUpdateModeAttr);
+            if (!String.IsNullOrEmpty(configUpdateModeAttribute)) {
                 // Parse the attribute
                 try {
                     configUpdateMode = (ConfigUpdateMode)OptionConverter.ConvertStringTo(typeof(ConfigUpdateMode), configUpdateModeAttribute);
@@ -144,7 +145,7 @@ namespace Orchard.Logging {
             }
 
             // IMPL: The IFormatProvider argument to Enum.ToString() is deprecated in .NET 2.0
-            LogLog.Debug("XmlHierarchyConfigurator: Configuration update mode [" + configUpdateMode.ToString() + "].");
+            LogLog.Debug("XmlHierarchyConfigurator: Configuration update mode [" + configUpdateMode + "].");
 
             // Only reset configuration if overwrite flag specified
             if (configUpdateMode == ConfigUpdateMode.Overwrite) {
@@ -173,7 +174,7 @@ namespace Orchard.Logging {
 
             foreach (XmlNode currentNode in element.ChildNodes) {
                 if (currentNode.NodeType == XmlNodeType.Element) {
-                    XmlElement currentElement = (XmlElement)currentNode;
+                    var currentElement = (XmlElement)currentNode;
 
                     if (currentElement.LocalName == LoggerTag) {
                         ParseLogger(currentElement);
@@ -203,7 +204,7 @@ namespace Orchard.Logging {
             string thresholdStr = element.GetAttribute(ThresholdAttr);
             LogLog.Debug("XmlHierarchyConfigurator: Hierarchy Threshold [" + thresholdStr + "]");
             if (thresholdStr.Length > 0 && thresholdStr != "null") {
-                Level thresholdLevel = (Level)ConvertStringTo(typeof(Level), thresholdStr);
+                var thresholdLevel = (Level)ConvertStringTo(typeof(Level), thresholdStr);
                 if (thresholdLevel != null) {
                     _hierarchy.Threshold = thresholdLevel;
                 }
@@ -227,37 +228,34 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         protected IAppender FindAppenderByReference(XmlElement appenderRef) {
-            string appenderName = appenderRef.GetAttribute(RefAttr);
+            var appenderName = appenderRef.GetAttribute(RefAttr);
 
             IAppender appender = (IAppender)_appenderBag[appenderName];
             if (appender != null) {
                 return appender;
             }
-            else {
-                // Find the element with that id
-                XmlElement element = null;
+            // Find the element with that id
+            XmlElement element = null;
 
-                if (appenderName != null && appenderName.Length > 0) {
-                    foreach (XmlElement curAppenderElement in appenderRef.OwnerDocument.GetElementsByTagName(AppenderTag)) {
-                        if (curAppenderElement.GetAttribute("name") == appenderName) {
-                            element = curAppenderElement;
-                            break;
-                        }
+            if (!String.IsNullOrEmpty(appenderName)) {
+                foreach (XmlElement curAppenderElement in appenderRef.OwnerDocument.GetElementsByTagName(AppenderTag)) {
+                    if (curAppenderElement.GetAttribute("name") != appenderName) {
+                        continue;
                     }
-                }
-
-                if (element == null) {
-                    LogLog.Error("XmlHierarchyConfigurator: No appender named [" + appenderName + "] could be found.");
-                    return null;
-                }
-                else {
-                    appender = ParseAppender(element);
-                    if (appender != null) {
-                        _appenderBag[appenderName] = appender;
-                    }
-                    return appender;
+                    element = curAppenderElement;
+                    break;
                 }
             }
+
+            if (element == null) {
+                LogLog.Error("XmlHierarchyConfigurator: No appender named [" + appenderName + "] could be found.");
+                return null;
+            }
+            appender = ParseAppender(element);
+            if (appender != null) {
+                _appenderBag[appenderName] = appender;
+            }
+            return appender;
         }
 
         /// <summary>
@@ -272,28 +270,28 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         protected IAppender ParseAppender(XmlElement appenderElement) {
-            string appenderName = appenderElement.GetAttribute(NameAttr);
-            string typeName = appenderElement.GetAttribute(TypeAttr);
+            var appenderName = appenderElement.GetAttribute(NameAttr);
+            var typeName = appenderElement.GetAttribute(TypeAttr);
 
             LogLog.Debug("XmlHierarchyConfigurator: Loading Appender [" + appenderName + "] type: [" + typeName + "]");
             try {
-                IAppender appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
+                var appender = (IAppender)Activator.CreateInstance(SystemInfo.GetTypeFromString(typeName, true, true));
                 appender.Name = appenderName;
 
                 foreach (XmlNode currentNode in appenderElement.ChildNodes) {
                     /* We're only interested in Elements */
                     if (currentNode.NodeType == XmlNodeType.Element) {
-                        XmlElement currentElement = (XmlElement)currentNode;
+                        var currentElement = (XmlElement)currentNode;
 
                         // Look for the appender ref tag
                         if (currentElement.LocalName == AppenderRefTag) {
-                            string refName = currentElement.GetAttribute(RefAttr);
+                            var refName = currentElement.GetAttribute(RefAttr);
 
-                            IAppenderAttachable appenderContainer = appender as IAppenderAttachable;
+                            var appenderContainer = appender as IAppenderAttachable;
                             if (appenderContainer != null) {
                                 LogLog.Debug("XmlHierarchyConfigurator: Attaching appender named [" + refName + "] to appender named [" + appender.Name + "].");
 
-                                IAppender referencedAppender = FindAppenderByReference(currentElement);
+                                var referencedAppender = FindAppenderByReference(currentElement);
                                 if (referencedAppender != null) {
                                     appenderContainer.AddAppender(referencedAppender);
                                 }
@@ -309,7 +307,7 @@ namespace Orchard.Logging {
                     }
                 }
 
-                IOptionHandler optionHandler = appender as IOptionHandler;
+                var optionHandler = appender as IOptionHandler;
                 if (optionHandler != null) {
                     optionHandler.ActivateOptions();
                 }
@@ -336,16 +334,19 @@ namespace Orchard.Logging {
         /// </remarks>
         protected void ParseLogger(XmlElement loggerElement) {
             // Create a new log4net.Logger object from the <logger> element.
-            string loggerName = loggerElement.GetAttribute(NameAttr);
+            var loggerName = loggerElement.GetAttribute(NameAttr);
 
             LogLog.Debug("XmlHierarchyConfigurator: Retrieving an instance of log4net.Repository.Logger for logger [" + loggerName + "].");
-            Logger log = _hierarchy.GetLogger(loggerName) as Logger;
+            var log = _hierarchy.GetLogger(loggerName) as Logger;
 
             // Setting up a logger needs to be an atomic operation, in order
             // to protect potential log operations while logger
             // configuration is in progress.
+            if (log == null) {
+                return;
+            }
             lock (log) {
-                bool additivity = OptionConverter.ToBoolean(loggerElement.GetAttribute(AdditivityAttr), true);
+                var additivity = OptionConverter.ToBoolean(loggerElement.GetAttribute(AdditivityAttr), true);
 
                 LogLog.Debug("XmlHierarchyConfigurator: Setting [" + log.Name + "] additivity to [" + additivity + "].");
                 log.Additivity = additivity;
@@ -363,7 +364,7 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         protected void ParseRoot(XmlElement rootElement) {
-            Logger root = _hierarchy.Root;
+            var root = _hierarchy.Root;
             // logger configuration needs to be atomic
             lock (root) {
                 ParseChildrenOfLoggerElement(rootElement, root, true);
@@ -388,11 +389,11 @@ namespace Orchard.Logging {
 
             foreach (XmlNode currentNode in catElement.ChildNodes) {
                 if (currentNode.NodeType == XmlNodeType.Element) {
-                    XmlElement currentElement = (XmlElement)currentNode;
+                    var currentElement = (XmlElement)currentNode;
 
                     if (currentElement.LocalName == AppenderRefTag) {
-                        IAppender appender = FindAppenderByReference(currentElement);
-                        string refName = currentElement.GetAttribute(RefAttr);
+                        var appender = FindAppenderByReference(currentElement);
+                        var refName = currentElement.GetAttribute(RefAttr);
                         if (appender != null) {
                             LogLog.Debug("XmlHierarchyConfigurator: Adding appender named [" + refName + "] to logger [" + log.Name + "].");
                             log.AddAppender(appender);
@@ -410,7 +411,7 @@ namespace Orchard.Logging {
                 }
             }
 
-            IOptionHandler optionHandler = log as IOptionHandler;
+            var optionHandler = log as IOptionHandler;
             if (optionHandler != null) {
                 optionHandler.ActivateOptions();
             }
@@ -426,22 +427,20 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         protected void ParseRenderer(XmlElement element) {
-            string renderingClassName = element.GetAttribute(RenderingTypeAttr);
-            string renderedClassName = element.GetAttribute(RenderedTypeAttr);
+            var renderingClassName = element.GetAttribute(RenderingTypeAttr);
+            var renderedClassName = element.GetAttribute(RenderedTypeAttr);
 
             LogLog.Debug("XmlHierarchyConfigurator: Rendering class [" + renderingClassName + "], Rendered class [" + renderedClassName + "].");
-            IObjectRenderer renderer = (IObjectRenderer)OptionConverter.InstantiateByClassName(renderingClassName, typeof(IObjectRenderer), null);
+            var renderer = (IObjectRenderer)OptionConverter.InstantiateByClassName(renderingClassName, typeof(IObjectRenderer), null);
             if (renderer == null) {
                 LogLog.Error("XmlHierarchyConfigurator: Could not instantiate renderer [" + renderingClassName + "].");
                 return;
             }
-            else {
-                try {
-                    _hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true), renderer);
-                }
-                catch (Exception e) {
-                    LogLog.Error("XmlHierarchyConfigurator: Could not find class [" + renderedClassName + "].", e);
-                }
+            try {
+                _hierarchy.RendererMap.Put(SystemInfo.GetTypeFromString(renderedClassName, true, true), renderer);
+            }
+            catch (Exception e) {
+                LogLog.Error("XmlHierarchyConfigurator: Could not find class [" + renderedClassName + "].", e);
             }
         }
 
@@ -457,12 +456,12 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         protected void ParseLevel(XmlElement element, Logger log, bool isRoot) {
-            string loggerName = log.Name;
+            var loggerName = log.Name;
             if (isRoot) {
                 loggerName = "root";
             }
 
-            string levelStr = element.GetAttribute(ValueAttr);
+            var levelStr = element.GetAttribute(ValueAttr);
             LogLog.Debug("XmlHierarchyConfigurator: Logger [" + loggerName + "] Level string is [" + levelStr + "].");
 
             if (Inherited == levelStr) {
@@ -503,22 +502,21 @@ namespace Orchard.Logging {
         /// </remarks>
         protected void SetParameter(XmlElement element, object target) {
             // Get the property name
-            string name = element.GetAttribute(NameAttr);
+            var name = element.GetAttribute(NameAttr);
 
             // If the name attribute does not exist then use the name of the element
-            if (element.LocalName != ParamTag || name == null || name.Length == 0) {
+            if (element.LocalName != ParamTag || String.IsNullOrEmpty(name)) {
                 name = element.LocalName;
             }
 
             // Look for the property on the target object
-            Type targetType = target.GetType();
+            var targetType = target.GetType();
             Type propertyType = null;
 
-            PropertyInfo propInfo = null;
             MethodInfo methInfo = null;
 
             // Try to find a writable property
-            propInfo = targetType.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
+            var propInfo = targetType.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
             if (propInfo != null && propInfo.CanWrite) {
                 // found a property
                 propertyType = propInfo.PropertyType;
@@ -535,7 +533,7 @@ namespace Orchard.Logging {
             }
 
             if (propertyType == null) {
-                LogLog.Error("XmlHierarchyConfigurator: Cannot find Property [" + name + "] to set object on [" + target.ToString() + "]");
+                LogLog.Error("XmlHierarchyConfigurator: Cannot find Property [" + name + "] to set object on [" + target + "]");
             }
             else {
                 string propertyValue = null;
@@ -566,11 +564,11 @@ namespace Orchard.Logging {
                     Type parsedObjectConversionTargetType = null;
 
                     // Check if a specific subtype is specified on the element using the 'type' attribute
-                    string subTypeString = element.GetAttribute(TypeAttr);
-                    if (subTypeString != null && subTypeString.Length > 0) {
+                    var subTypeString = element.GetAttribute(TypeAttr);
+                    if (!String.IsNullOrEmpty(subTypeString)) {
                         // Read the explicit subtype
                         try {
-                            Type subType = SystemInfo.GetTypeFromString(subTypeString, true, true);
+                            var subType = SystemInfo.GetTypeFromString(subTypeString, true, true);
 
                             LogLog.Debug("XmlHierarchyConfigurator: Parameter [" + name + "] specified subtype [" + subType.FullName + "]");
 
@@ -601,7 +599,7 @@ namespace Orchard.Logging {
                     // Now try to convert the string value to an acceptable type
                     // to pass to this property.
 
-                    object convertedValue = ConvertStringTo(propertyType, propertyValue);
+                    var convertedValue = ConvertStringTo(propertyType, propertyValue);
 
                     // Check if we need to do an additional conversion
                     if (convertedValue != null && parsedObjectConversionTargetType != null) {
@@ -612,7 +610,7 @@ namespace Orchard.Logging {
                     if (convertedValue != null) {
                         if (propInfo != null) {
                             // Got a converted result
-                            LogLog.Debug("XmlHierarchyConfigurator: Setting Property [" + propInfo.Name + "] to " + convertedValue.GetType().Name + " value [" + convertedValue.ToString() + "]");
+                            LogLog.Debug("XmlHierarchyConfigurator: Setting Property [" + propInfo.Name + "] to " + convertedValue.GetType().Name + " value [" + convertedValue + "]");
 
                             try {
                                 // Pass to the property
@@ -624,11 +622,11 @@ namespace Orchard.Logging {
                         }
                         else if (methInfo != null) {
                             // Got a converted result
-                            LogLog.Debug("XmlHierarchyConfigurator: Setting Collection Property [" + methInfo.Name + "] to " + convertedValue.GetType().Name + " value [" + convertedValue.ToString() + "]");
+                            LogLog.Debug("XmlHierarchyConfigurator: Setting Collection Property [" + methInfo.Name + "] to " + convertedValue.GetType().Name + " value [" + convertedValue + "]");
 
                             try {
                                 // Pass to the property
-                                methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] { convertedValue }, CultureInfo.InvariantCulture);
+                                methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new[] { convertedValue }, CultureInfo.InvariantCulture);
                             }
                             catch (TargetInvocationException targetInvocationEx) {
                                 LogLog.Error("XmlHierarchyConfigurator: Failed to set parameter [" + name + "] on object [" + target + "] using value [" + convertedValue + "]", targetInvocationEx.InnerException);
@@ -640,7 +638,7 @@ namespace Orchard.Logging {
                     }
                 }
                 else {
-                    object createdObject = null;
+                    object createdObject;
 
                     if (propertyType == typeof(string) && !HasAttributesOrElements(element)) {
                         // If the property is a string and the element is empty (no attributes
@@ -682,7 +680,7 @@ namespace Orchard.Logging {
 
                             try {
                                 // Pass to the property
-                                methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new object[] { createdObject }, CultureInfo.InvariantCulture);
+                                methInfo.Invoke(target, BindingFlags.InvokeMethod, null, new[] { createdObject }, CultureInfo.InvariantCulture);
                             }
                             catch (TargetInvocationException targetInvocationEx) {
                                 LogLog.Error("XmlHierarchyConfigurator: Failed to set parameter [" + methInfo.Name + "] on object [" + target + "] using value [" + createdObject + "]", targetInvocationEx.InnerException);
@@ -698,13 +696,8 @@ namespace Orchard.Logging {
         /// </summary>
         /// <param name="element">the element to inspect</param>
         /// <returns><c>true</c> if the element has any attributes or child elements, <c>false</c> otherwise</returns>
-        private bool HasAttributesOrElements(XmlElement element) {
-            foreach (XmlNode node in element.ChildNodes) {
-                if (node.NodeType == XmlNodeType.Attribute || node.NodeType == XmlNodeType.Element) {
-                    return true;
-                }
-            }
-            return false;
+        private static bool HasAttributesOrElements(XmlElement element) {
+            return element.ChildNodes.Cast<XmlNode>().Any(node => node.NodeType == XmlNodeType.Attribute || node.NodeType == XmlNodeType.Element);
         }
 
         /// <summary>
@@ -714,7 +707,7 @@ namespace Orchard.Logging {
         /// <returns><c>true</c> if the type is creatable using a default constructor, <c>false</c> otherwise</returns>
         private static bool IsTypeConstructible(Type type) {
             if (type.IsClass && !type.IsAbstract) {
-                ConstructorInfo defaultConstructor = type.GetConstructor(new Type[0]);
+                var defaultConstructor = type.GetConstructor(new Type[0]);
                 if (defaultConstructor != null && !defaultConstructor.IsAbstract && !defaultConstructor.IsPrivate) {
                     return true;
                 }
@@ -735,20 +728,20 @@ namespace Orchard.Logging {
         /// The method must take a single parameter.
         /// </para>
         /// </remarks>
-        private MethodInfo FindMethodInfo(Type targetType, string name) {
-            string requiredMethodNameA = name;
-            string requiredMethodNameB = "Add" + name;
+        private static MethodInfo FindMethodInfo(Type targetType, string name) {
+            var requiredMethodNameA = name;
+            var requiredMethodNameB = "Add" + name;
 
-            MethodInfo[] methods = targetType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var methods = targetType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
-            foreach (MethodInfo methInfo in methods) {
+            foreach (var methInfo in methods) {
                 if (!methInfo.IsStatic) {
-                    if (string.Compare(methInfo.Name, requiredMethodNameA, true, System.Globalization.CultureInfo.InvariantCulture) == 0 ||
-                        string.Compare(methInfo.Name, requiredMethodNameB, true, System.Globalization.CultureInfo.InvariantCulture) == 0) {
+                    if (string.Compare(methInfo.Name, requiredMethodNameA, true, CultureInfo.InvariantCulture) == 0 ||
+                        string.Compare(methInfo.Name, requiredMethodNameB, true, CultureInfo.InvariantCulture) == 0) {
                         // Found matching method name
 
                         // Look for version with one arg only
-                        System.Reflection.ParameterInfo[] methParams = methInfo.GetParameters();
+                        var methParams = methInfo.GetParameters();
                         if (methParams.Length == 1) {
                             return methInfo;
                         }
@@ -773,7 +766,7 @@ namespace Orchard.Logging {
             // Hack to allow use of Level in property
             if (typeof(Level) == type) {
                 // Property wants a level
-                Level levelValue = _hierarchy.LevelMap[value];
+                var levelValue = _hierarchy.LevelMap[value];
 
                 if (levelValue == null) {
                     LogLog.Error("XmlHierarchyConfigurator: Unknown Level Specified [" + value + "]");
@@ -804,19 +797,17 @@ namespace Orchard.Logging {
         /// </para>
         /// </remarks>
         protected object CreateObjectFromXml(XmlElement element, Type defaultTargetType, Type typeConstraint) {
-            Type objectType = null;
+            Type objectType;
 
             // Get the object type
-            string objectTypeString = element.GetAttribute(TypeAttr);
-            if (objectTypeString == null || objectTypeString.Length == 0) {
+            var objectTypeString = element.GetAttribute(TypeAttr);
+            if (String.IsNullOrEmpty(objectTypeString)) {
                 if (defaultTargetType == null) {
                     LogLog.Error("XmlHierarchyConfigurator: Object type not specified. Cannot create object of type [" + typeConstraint.FullName + "]. Missing Value or Type.");
                     return null;
                 }
-                else {
-                    // Use the default object type
-                    objectType = defaultTargetType;
-                }
+                // Use the default object type
+                objectType = defaultTargetType;
             }
             else {
                 // Read the explicit object type
@@ -829,7 +820,7 @@ namespace Orchard.Logging {
                 }
             }
 
-            bool requiresConversion = false;
+            var requiresConversion = false;
 
             // Got the object type. Check that it meets the typeConstraint
             if (typeConstraint != null) {
@@ -851,32 +842,23 @@ namespace Orchard.Logging {
                 createdObject = Activator.CreateInstance(objectType);
             }
             catch (Exception createInstanceEx) {
-                LogLog.Error("XmlHierarchyConfigurator: Failed to construct object of type [" + objectType.FullName + "] Exception: " + createInstanceEx.ToString());
+                LogLog.Error("XmlHierarchyConfigurator: Failed to construct object of type [" + objectType.FullName + "] Exception: " + createInstanceEx);
             }
 
             // Set any params on object
-            foreach (XmlNode currentNode in element.ChildNodes) {
-                if (currentNode.NodeType == XmlNodeType.Element) {
-                    SetParameter((XmlElement)currentNode, createdObject);
-                }
+            foreach (var currentNode in element.ChildNodes.Cast<XmlNode>().Where(currentNode => currentNode.NodeType == XmlNodeType.Element)) {
+                SetParameter((XmlElement)currentNode, createdObject);
             }
 
             // Check if we need to call ActivateOptions
-            IOptionHandler optionHandler = createdObject as IOptionHandler;
+            var optionHandler = createdObject as IOptionHandler;
             if (optionHandler != null) {
                 optionHandler.ActivateOptions();
             }
 
             // Ok object should be initialized
 
-            if (requiresConversion) {
-                // Convert the object type
-                return OptionConverter.ConvertTypeTo(createdObject, typeConstraint);
-            }
-            else {
-                // The object is of the correct type
-                return createdObject;
-            }
+            return requiresConversion ? OptionConverter.ConvertTypeTo(createdObject, typeConstraint) : createdObject;
         }
     }
 }
