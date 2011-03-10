@@ -4,9 +4,10 @@
 @using System.Xml;
 
 @{
-    Script.Require("jQueryUI_Tabs");
-    Script.Include("orchard-designertools-shapetracing.js");
-    Style.Include("orchard-designertools-shapetracing.css");
+    Script.Require("jQueryUI_Tabs").AtHead();
+    Script.Require("jQueryUI_Resizable").AtHead();
+    Script.Include("orchard-designertools-shapetracing.js").AtHead();
+    Style.Include("orchard-designertools-shapetracing.css").AtHead();
     
     // Code Mirror
     Script.Include("CodeMirror/codemirror.js");
@@ -20,7 +21,7 @@
     Script.Include("CodeMirror/htmlmixed.js");
 }
 
-<div class="shape-tracing wrapper shapeType-@Model.Metadata.Type shapeId-@Model.GetHashCode() " title="@Model.Metadata.Type">
+<div class="shape-tracing wrapper shapeType-@Model.Metadata.Type shapeId-@Model.GetHashCode()" title="@Model.Metadata.Type">
     @Display(Model.Metadata.ChildContent)
     @{
         Layout.Zones["Tail"].Add(

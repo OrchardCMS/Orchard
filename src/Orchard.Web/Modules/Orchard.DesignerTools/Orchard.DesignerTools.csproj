@@ -72,8 +72,11 @@
     <Content Include="Styles\CodeMirror\css.css" />
     <Content Include="Styles\CodeMirror\javascript.css" />
     <Content Include="Styles\foo_orchard-designertools-shapetracing.css" />
+    <Content Include="Styles\Images\collapse.png" />
+    <Content Include="Styles\Images\expand.png" />
     <Content Include="Styles\Images\menu-glyph.png" />
     <Content Include="Scripts\orchard-designertools-shapetracing.js" />
+    <Content Include="Styles\Images\toolbar-bg.png" />
     <Content Include="Styles\orchard-designertools-shapetracing.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
