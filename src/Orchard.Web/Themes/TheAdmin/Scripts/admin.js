@@ -58,8 +58,6 @@
     });
 
     $(".bulk-actions-auto select").change(function () {
-        // form.submit() would be better as it wouldn't rely on an id,
-        // but the form might rely on knowing which button was clicked.
-        $("#apply-bulk-actions").click();
+        $(this).closest("form").find(".apply-bulk-actions-auto:first").click();
     });
 })(jQuery);
