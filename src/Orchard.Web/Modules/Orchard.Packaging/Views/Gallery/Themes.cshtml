@@ -9,7 +9,7 @@
 }
 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Themes", "Gallery"))) {
-    <fieldset class="bulk-actions">
+    <fieldset class="bulk-actions bulk-actions-auto">
         <label for="sourceId">@T("Show")</label>
         <select id="sourceId" name="@Html.NameOf(m => m.Options.SourceId)">
             @Html.SelectOption(Model.Options.SourceId, null, T("All feeds").ToString())
@@ -27,7 +27,7 @@
             @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Alphanumeric, T("Alphanumeric").ToString())
         </select>
 
-        <button id="apply-bulk-actions" type="submit">@T("Apply")</button>
+        <button id="apply-bulk-actions" class="apply-bulk-actions-auto" type="submit">@T("Apply")</button>
     </fieldset>
 
     <fieldset class="search-actions">
