@@ -19,7 +19,7 @@
             @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Approve, T("Approve").ToString()) 
             @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Unapprove, T("Unapprove").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.MarkAsSpam, T("Mark as Spam").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, T("Remove").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, T("Delete").ToString())
         </select>
         <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
@@ -100,7 +100,7 @@
                             <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@("Unapprove")</a>@T(" | ")
                         }
                         <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>@T(" | ")
-                        <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>
+                        <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
                     </div>
                 </td>
             </tr>

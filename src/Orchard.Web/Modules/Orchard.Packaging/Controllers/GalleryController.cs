@@ -7,11 +7,14 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
 using NuGet;
+using Orchard.Data.Migration;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Features;
+using Orchard.Environment.ShellBuilders;
 using Orchard.Localization;
+using Orchard.Modules.Services;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
@@ -32,18 +35,18 @@ namespace Orchard.Packaging.Controllers {
         private readonly ShellSettings _shellSettings;
         private readonly IPackageManager _packageManager;
         private readonly IPackagingSourceManager _packagingSourceManager;
-        private readonly IFeatureManager _featureManager;
+        private readonly IModuleService _moduleService;
 
         public GalleryController(
             ShellSettings shellSettings,
             IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
-            IFeatureManager featureManager,
+            IModuleService moduleService,
             IOrchardServices services) {
             _shellSettings = shellSettings;
             _packageManager = packageManager;
             _packagingSourceManager = packagingSourceManager;
-            _featureManager = featureManager;
+            _moduleService = moduleService;
             Services = services;
 
             T = NullLocalizer.Instance;
@@ -239,30 +242,29 @@ namespace Orchard.Packaging.Controllers {
                 return HttpNotFound();
             }
 
-            if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
-                return InstallPOST(packageId, version, sourceId, redirectTo);
+            PackageInfo packageInfo = InstallPackage(packageId, version, source);
+            if (DefaultExtensionTypes.IsModule(packageInfo.ExtensionType)) {
+                IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(source.FeedUrl, "Default"));
+
+                IPackage package = packageRepository.FindPackage(packageId);
+                ExtensionDescriptor extensionDescriptor = _packageManager.GetExtensionDescriptor(package);
+
+                List<PackagingInstallFeatureViewModel> features = extensionDescriptor.Features
+                    .Where(featureDescriptor => !DefaultExtensionTypes.IsTheme(featureDescriptor.Extension.ExtensionType))
+                    .Select(featureDescriptor => new PackagingInstallFeatureViewModel {
+                        Enable = true, // by default all features are enabled
+                        FeatureDescriptor = featureDescriptor
+                    }).ToList();
+
+                if (features.Count > 0) {
+                    return View("InstallModule", new PackagingInstallViewModel {
+                        Features = features,
+                        ExtensionDescriptor = extensionDescriptor
+                    });
+                }
             }
 
-            IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(source.FeedUrl, "Default"));
-
-            IPackage package = packageRepository.FindPackage(packageId);
-            ExtensionDescriptor extensionDescriptor = _packageManager.GetExtensionDescriptor(package);
-
-            List<PackagingInstallFeatureViewModel> features = extensionDescriptor.Features
-                .Where(featureDescriptor => !DefaultExtensionTypes.IsTheme(featureDescriptor.Extension.ExtensionType))
-                .Select(featureDescriptor => new PackagingInstallFeatureViewModel {
-                    Enable = true, // by default all features are enabled
-                    FeatureDescriptor = featureDescriptor
-                }).ToList();
-
-            if (features.Count > 0) {
-                return View("InstallModule", new PackagingInstallViewModel {
-                    Features = features,
-                    ExtensionDescriptor = extensionDescriptor
-                });
-            }
-
-            return InstallPOST(packageId, version, sourceId, redirectTo);
+            return RedirectToAction(redirectTo);
         }
 
         [HttpPost, ActionName("InstallModule")]
@@ -276,30 +278,15 @@ namespace Orchard.Packaging.Controllers {
                 return HttpNotFound();
             }
 
-            InstallPackage(packageId, version, source);
-
             // Enable selected features
             if (packagingInstallViewModel.Features.Count > 0) {
-                _featureManager.EnableFeatures(packagingInstallViewModel.Features
-                                                   .Select(feature => feature.FeatureDescriptor.Id));
+                IEnumerable<string> featureIds = packagingInstallViewModel.Features.Select(feature => feature.FeatureDescriptor.Id);
+
+                // Enable the features and its dependencies
+                _moduleService.EnableFeatures(featureIds, true);
             }
 
-            return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
-        }
-
-        [HttpPost, ActionName("Install")]
-        public ActionResult InstallPOST(string packageId, string version, int sourceId, string redirectTo) {
-            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
-                return new HttpUnauthorizedResult();
-
-            var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
-            if (source == null) {
-                return HttpNotFound();
-            }
-
-            InstallPackage(packageId, version, source);
-
-            return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
+            return RedirectToAction(redirectTo);
         }
 
         private PackageInfo InstallPackage(string packageId, string version, PackagingSource source) {

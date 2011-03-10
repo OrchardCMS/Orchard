@@ -1,18 +1,29 @@
-﻿@using Orchard.Core.Contents.ViewModels;
+﻿@using Orchard.Lists.ViewModels;
 @{
-    var typeDisplayName = Model.TypeDisplayName;
-    var pageTitle = T("Manage Content");
-    var createLinkText = T("Create New Content");
-    if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
-        pageTitle = T("Manage {0} Content", typeDisplayName);
-        createLinkText = T("Create New {0}", typeDisplayName);
-    }
+	Script.Include("orchard-lists-admin.js");
 
-    Layout.Title = pageTitle;
+    string createLinkText = string.IsNullOrEmpty(Model.ContainerItemContentType) ? T("Create New Content").ToString() : T("Create New {0}", Model.ContainerItemContentType).ToString();
+    
+    Layout.Title = T("Manage Content for {0}", Model.ContainerDisplayName);
+
+    var lists = ((IEnumerable<dynamic>)Model.OtherLists).Select(
+        contentItem => new SelectListItem {
+            Text = contentItem.ContentType + ": " + contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText,
+            Value = contentItem.Id.ToString(System.Globalization.CultureInfo.InvariantCulture)
+        }).ToList();
+	lists.Insert(0, new SelectListItem { Text = T("Move to...").ToString(), Value = "" });
 }
+<style type="text/css">
+.dyn #TargetContainerId {
+	display: none /* todo: move to css file */
+}
+</style>
+
+<div>&nbsp;</div>
+@Display.Parts_Container_Manage(ContainerDisplayName: Model.ContainerDisplayName, ContainerContentType: Model.ContainerContentType, ContainerId: Model.ContainerId)
 
 <div class="manage">
-    @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
+    @Html.ActionLink(createLinkText, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter, ContainerId = Model.ContainerId, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl }, new { @class = "button primaryAction" })
 </div>
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">
@@ -22,10 +33,14 @@
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.RemoveFromList, T("Remove from List").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.MoveToList, T("Move to List...").ToString())
         </select>
+		@Html.DropDownList("TargetContainerId", lists, new { id = "TargetContainerId" })
         <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
     </fieldset>
     <fieldset class="bulk-actions">
+		@if(!Model.HasRestriction) {
         <label for="filterResults" class="bulk-filter">@T("Show")</label>
         <select id="filterResults" name="Options.SelectedFilter">
             @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
@@ -33,6 +48,7 @@
                 @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
             }
         </select>
+		}
         <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
         <select id="orderResults" name="Options.OrderBy">
             @Html.SelectOption((ContentsOrder)Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())

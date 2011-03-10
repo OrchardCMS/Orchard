@@ -24,7 +24,7 @@
         <tr>
             <td>@item.FeedTitle</td>
             <td>@Html.Link(item.FeedUrl, item.FeedUrl)</td>
-            <td>@Html.ActionLink(T("Remove").ToString(), "Remove", new { id = item.Id })</td>
+            <td>@Html.ActionLink(T("Delete").ToString(), "Remove", new { id = item.Id })</td>
         </tr>
         }
     </table>

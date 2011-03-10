@@ -1,12 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.Settings;
+using Orchard.Core.Containers.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.UI.Notify;
@@ -42,17 +46,31 @@ namespace Orchard.Core.Containers.Drivers {
                 Services.Notifier.Warning(T("There are no content types in the system with a Containable part attached. Consider adding a Containable part to some content type, existing or new, in order to relate items to this (Container enabled) item."));
             }
 
-            return Editor(part, null, shapeHelper);
+            return Editor(part, (IUpdateModel)null, shapeHelper);
         }
 
         protected override DriverResult Editor(ContainerPart part, IUpdateModel updater, dynamic shapeHelper) {
             return ContentShape(
                 "Parts_Container_Edit",
                 () => {
-                    if (updater != null)
-                        updater.TryUpdateModel(part, "Container", null, null);
+                    var model = new ContainerViewModel { Part = part };
+                    // todo: is there a non-string comparison way to find ConaintableParts?
+                    var containables = _contentDefinitionManager.ListTypeDefinitions().Where(td => td.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")).ToList();
+                    var listItems = new[] { new SelectListItem { Text = T("(Any)").Text, Value = "" } }
+                        .Concat(containables.Select(x => new SelectListItem {
+                            Value = Convert.ToString(x.Name),
+                            Text = x.DisplayName,
+                            Selected = x.Name == model.Part.Record.ItemContentType,
+                        }))
+                        .ToList();
 
-                    return shapeHelper.EditorTemplate(TemplateName: "Container", Model: part, Prefix: "Container");
+                    model.AvailableContainables = new SelectList(listItems, "Value", "Text", model.Part.Record.ItemContentType);
+
+                    if (updater != null) {
+                        updater.TryUpdateModel(model, "Container", null, null);
+                    }
+
+                    return shapeHelper.EditorTemplate(TemplateName: "Container", Model: model, Prefix: "Container");
                 });
         }
     }
@@ -70,21 +88,6 @@ namespace Orchard.Core.Containers.Drivers {
                 part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.PublishedUtc" : "";
                 part.Record.OrderByDirection = (int)OrderByDirection.Descending;
             });
-        }
-
-        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
-            var container = context.ContentItem.As<ContainerPart>();
-
-            if (container == null)
-                return;
-
-            // containers link to their contents in admin screens
-            context.Metadata.AdminRouteValues = new RouteValueDictionary {
-                {"Area", "Contents"},
-                {"Controller", "Admin"},
-                {"Action", "List"},
-                {"containerId", container.Id}
-            };
         }
     }
 }
