@@ -7,7 +7,7 @@ using Orchard.Data;
 namespace Orchard.Core.Containers.Drivers {
     public class CustomPropertiesPartDriver : ContentPartDriver<CustomPropertiesPart> {
         protected override DriverResult Editor(CustomPropertiesPart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
+            return Editor(part, (IUpdateModel)null, shapeHelper);
         }
 
         protected override DriverResult Editor(CustomPropertiesPart part, IUpdateModel updater, dynamic shapeHelper) {
