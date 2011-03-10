@@ -45,5 +45,10 @@ namespace Orchard.Core.Containers {
  
             return 1;
         }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable("ContainerPartRecord", table => table.AddColumn<string>("ItemContentType"));
+            return 2;
+        }
     }
 }

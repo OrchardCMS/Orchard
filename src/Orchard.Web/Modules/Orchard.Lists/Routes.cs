@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
 
-namespace Orchard.Core.Contents {
+namespace Orchard.Lists {
     public class Routes : IRouteProvider {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
             foreach (RouteDescriptor routeDescriptor in GetRoutes()) {
@@ -16,36 +16,36 @@ namespace Orchard.Core.Contents {
                 new RouteDescriptor {
                     Priority = 5,
                     Route = new Route(
-                        "Admin/Contents/List/{id}/InContainer/{containerId}",
+                        "Admin/Orchard.Lists/{containerId}/{filterByContentType}",
                         new RouteValueDictionary {
                             {"area", "Contents"},
                             {"controller", "Admin"},
-                            {"action", "List"}
+                            {"action", "List"},
+                            {"filterByContentType", ""}
                         },
-                        new RouteValueDictionary {
-                            {"id", @"\w+"},
+                        new RouteValueDictionary{
+                            {"filterByContentType", @"\w+"},
                             {"containerId", @"\d+"}
                         },
                         new RouteValueDictionary {
-                            {"area", "Contents"}
+                            {"area", "Orchard.Lists"}
                         },
                         new MvcRouteHandler())
                 },
                 new RouteDescriptor {
                     Priority = 5,
                     Route = new Route(
-                        "Admin/Contents/List/InContainer/{containerId}",
+                        "Admin/Orchard.Lists/{containerId}",
                         new RouteValueDictionary {
-                            {"area", "Contents"},
+                            {"area", "Orchard.Lists"},
                             {"controller", "Admin"},
-                            {"action", "List"},
-                            {"id", ""}
+                            {"action", "List"}
                         },
-                        new RouteValueDictionary{
+                        new RouteValueDictionary {
                             {"containerId", @"\d+"}
                         },
                         new RouteValueDictionary {
-                            {"area", "Contents"}
+                            {"area", "Orchard.Lists"}
                         },
                         new MvcRouteHandler())
                 }

@@ -5,5 +5,5 @@
     ContentPart contentPart = Model.ContentPart;
 }
 @if (contentPart.Is<ContainerPart>()) {
-    @Html.Link(T("Contained Items").Text, Url.Action("List", "Admin", new { area = "Contents", containerId = contentPart.Id }))@T(" | ")
+    @Html.Link(T("Contained Items").Text, Url.Action("List", "Admin", new { area = "Orchard.Lists", containerId = contentPart.Id }))@T(" | ")
 }

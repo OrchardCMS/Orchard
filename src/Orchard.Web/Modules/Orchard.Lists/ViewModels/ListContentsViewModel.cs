@@ -1,19 +1,16 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
 
-namespace Orchard.Core.Contents.ViewModels {
+namespace Orchard.Lists.ViewModels {
     public class ListContentsViewModel  {
         public ListContentsViewModel() {
             Options = new ContentOptions();
         }
 
-        public string Id { get; set; }
+        public string FilterByContentType { get; set; }
+        public int? ContainerId { get; set; }
+        public string ContainerDisplayName { get; set; }
 
-        public string TypeName {
-            get { return Id; }
-        }
-
-        public string TypeDisplayName { get; set; }
         public int? Page { get; set; }
         public IList<Entry> Entries { get; set; }
         public ContentOptions Options { get; set; }
@@ -49,6 +46,8 @@ namespace Orchard.Core.Contents.ViewModels {
         None,
         PublishNow,
         Unpublish,
-        Remove
+        Remove,
+        RemoveFromList,
+        MoveToList
     }
 }

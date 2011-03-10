@@ -49,7 +49,7 @@ namespace Orchard.Core.Containers.Drivers {
         }
 
         protected override DriverResult Editor(ContainerWidgetPart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
+            return Editor(part, (IUpdateModel)null, shapeHelper);
         }
 
         protected override DriverResult Editor(ContainerWidgetPart part, IUpdateModel updater, dynamic shapeHelper) {
