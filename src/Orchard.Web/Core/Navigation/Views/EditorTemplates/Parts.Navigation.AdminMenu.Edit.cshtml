@@ -5,12 +5,12 @@
 }
 <fieldset>
     @Html.EditorFor(m => m.OnAdminMenu)
-    <label for="OnAdminMenu" class="forcheckbox">@T("Create an admin menu item to manage this {0}", Model.ContentItem.ContentType)</label>
+    <label for="OnAdminMenu" class="forcheckbox">@T("Show on admin menu")</label>
     <div data-controllerid="OnAdminMenu" class="">
-        <label for="AdminMenuText">@T("Admin menu text")</label>
+        <label for="AdminMenuText">@T("Menu text")</label>
         @Html.TextBoxFor(m => m.AdminMenuText, new { @class = "large text" })
 
-		<label for="AdminMenuPosition">@T("Admin menu position")</label>
+		<label for="AdminMenuPosition">@T("Position")</label>
 		@Html.TextBoxFor(m => m.AdminMenuPosition)
     </div>
 </fieldset>

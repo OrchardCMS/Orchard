@@ -36,8 +36,8 @@
 
 .debug-shapes .shape-tracing .wrapper {
     background:#FFF;
-    border:1px dotted #CA7230;
-    margin:5px;
+    /*border:1px dotted #CA7230;
+    margin:5px;*/
     padding:0px;
     display:inline-block;
 
@@ -139,14 +139,14 @@ ul.debuggerMenu { margin:8px 0 -8px 0; }
     -moz-border-radius: 3px;
 }
 
-.meta .model div.name
+.meta .model div.name, .meta ul.properties div.name
 {
     display:block;
     float:left;
     width:30%;
 }
 
-.meta .model ul 
+.meta .model ul, .meta ul.properties
 {
     padding:0;
     margin-left:-15px;
@@ -154,12 +154,12 @@ ul.debuggerMenu { margin:8px 0 -8px 0; }
     list-style-type:none;
 }
 
-.meta .model ul li
+.meta .model ul li, .meta ul.properties li
 {
     padding-left:15px;
 }
 
-.meta .model h3
+.meta .model h3, .meta ul.properties h3
 {
     margin:0;
     padding:0;
@@ -183,14 +183,18 @@ h3:hover
     background-image:url(images/menu-glyph.png);
 }
 
-.expando-glyph-container.closed .expando-glyph {
+.expando-glyph-container.closed .expando-glyph 
+{
+    background-repeat:none;
     background-image:url(images/menu-glyph.png);
     background-position:0 3px;
 }
 .expando-glyph-container.closed .expando-glyph:hover {
     background-image:url(images/menu-glyph.png);
 }
-.expando-glyph-container.closing .expando-glyph {
+.expando-glyph-container.closing .expando-glyph 
+{
+    background-repeat:none;
     -webkit-transition:all .2s ease-in-out;
     -moz-transition:all .2s ease-in-out;
     transition:all .2s ease-in-out;
@@ -198,7 +202,9 @@ h3:hover
     -moz-transform:rotate(-90deg) translate(3px, -3px);
     transform:rotate(-90deg) translate(3px, -3px);
 }
-.expando-glyph-container.opening .expando-glyph {
+.expando-glyph-container.opening .expando-glyph 
+{
+    background-repeat:none;
     -webkit-transition:all .2s ease-in-out;
     -moz-transition:all .2s ease-in-out;
     transition:all .2s ease-in-out;

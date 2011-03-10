@@ -51,6 +51,12 @@ Website:      http://clay.codeplex.com/
 Copyright:    Copyright (c) 2010 Louis Dejardin
 License:      MS-PL
 
+CodeMirror
+----------
+Website:      http://codemirror.net/2/
+Copyright:    Copyright (C) 2011 by Marijn Haverbeke
+License:      MIT
+
 DLR
 ---
 Website:      http://dlr.codeplex.com

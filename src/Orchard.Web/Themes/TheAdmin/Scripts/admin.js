@@ -57,15 +57,9 @@
         }
     });
 
-    $(".bulk-actions").each(function () {
-        $("select").each(function () {
-            $(this).change(function () {
-                var self = $(this);
-                var form = self.closest("form");
-
-                // Submit form
-                form.submit();
-            });
-        });
+    $(".bulk-actions-auto select").change(function () {
+        // form.submit() would be better as it wouldn't rely on an id,
+        // but the form might rely on knowing which button was clicked.
+        $("#apply-bulk-actions").click();
     });
 })(jQuery);

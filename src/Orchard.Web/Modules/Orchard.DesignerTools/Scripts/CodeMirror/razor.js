@@ -57,11 +57,15 @@ CodeMirror.defineMode("razor", function (config, parserConfig) {
         }
         // text mode
         else if (ch == "@") {
-            state.tokenize = inRazor(inText);
-            return "razor-tag";
+            if (stream.peek() != "@") { // handle @@ escaping
+                state.tokenize = inRazor(inText);
+                return "razor-tag";
+            }
+
+            stream.next()
         }
         else {
-            stream.eatWhile(/[^&<]/);
+            stream.eatWhile(/[^&<@]/);
             return null;
         }
     }
@@ -91,17 +95,25 @@ CodeMirror.defineMode("razor", function (config, parserConfig) {
         return function (stream, state) {
             var razor = false;
             while (!stream.eol()) {
-                if (stream.next() == quote) {
-                    state.tokenize = inTag;
+                if (stream.peek() == "@") {
+                    state.tokenize = inRazorAttribute(quote);
                     break;
                 }
-                else if (stream.peek() == "@") {
-                    state.tokenize = inRazor(inAttribute(quote), "xml-attribute");
+                else if (stream.next() == quote) {
+                    state.tokenize = inTag;
                     break;
                 }
             }
             return "xml-attribute";
         };
+    }
+
+    function inRazorAttribute(quote) {
+        return function (stream, state) {
+            stream.eat("@");
+            state.tokenize = inRazor(inAttribute(quote), "xml-attribute");
+            return "razor-tag";
+        }
     }
 
     function inBlock(style, terminator) {
@@ -128,10 +140,10 @@ CodeMirror.defineMode("razor", function (config, parserConfig) {
                 return "razor-keyword";
             }
             else if (stream.match("{")) {
-                state.tokenize = inRazorBlock();
+                state.tokenize = inRazorBlock(1, nextState);
             }
             else {
-                stream.eatWhile(/[^\s\'\"\<]/);
+                stream.eatWhile(/[^\s\'\"<@]/);
                 state.tokenize = nextState;
             }
 
@@ -156,33 +168,42 @@ CodeMirror.defineMode("razor", function (config, parserConfig) {
         }
     }
 
-    function inRazorBlock(nestedLevel) {
+    function inRazorBlock(nestedLevel, nextState) {
         var nested = nestedLevel || 1;
 
         return function (stream, state) {
             while (!stream.eol()) {
 
                 // identify keywords
-                if (stream.eatWhile(/[a-zA-Z]/)) {
+                if (stream.eatWhile(/\w/)) {
+                    state.tokenize = inRazorBlock(nested, nextState);
+
                     if (keywords[stream.current()]) {
-                        state.tokenize = inRazorBlock(nested);
+                        stream.eatSpace();
                         return "razor-keyword";
                     }
+
+                    stream.next();
+                    break;
+                }
+
+                if (stream.peek() == '"') {
+                    state.tokenize = inRazorString(inRazorBlock(nested, nextState));
+                    break;
                 }
 
                 if (stream.peek() == '{') nested++;
                 if (stream.peek() == '}') nested--;
 
                 if (nested == 0) {
-                    state.tokenize = inRazorBlockEnd;
+                    state.tokenize = inRazorBlockEnd(nextState);
                     break;
                 }
 
-                // eat keywords separators
-                if (stream.eatWhile(/^[a-zA-Z]/)) {
-                    state.tokenize = inRazorBlock(nested);
-                    stream.next();
-                    return "razor";
+                if (stream.eatWhile(/[^\w{}\"]/)) {
+                    stream.eatSpace();
+                    state.tokenize = inRazorBlock(nested, nextState);
+                    break;
                 }
 
                 stream.next();
@@ -192,10 +213,23 @@ CodeMirror.defineMode("razor", function (config, parserConfig) {
         };
     }
 
-    function inRazorBlockEnd(stream, state) {
-        stream.eat("}");
-        state.tokenize = inText;
-        return "razor-tag";
+    function inRazorBlockEnd(nextState) {
+        return function (stream, state) {
+            stream.eat("}");
+            state.tokenize = nextState;
+            return "razor-tag";
+        }
+    }
+
+    function inRazorString(nextState) {
+        return function (stream, state) {
+            // when in this state, the " is not read yet
+            stream.eat('"');
+            stream.eatWhile(/[^"]/);
+            stream.eat('"');
+            state.tokenize = nextState;
+            return "razor-string";
+        }
     }
 
     var curState, setStyle;

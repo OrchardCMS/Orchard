@@ -71,7 +71,9 @@
 
                 if (wrapper.children('.content').children('div' + selector).children('.CodeMirror').length == 0) {
                     var textArea = wrapper.children('.content').children('div' + selector).children('textarea').get(0);
-                    CodeMirror.fromTextArea(textArea, { mode: "razor", tabMode: "indent", height: "100%" });
+                    if (textArea) {
+                        CodeMirror.fromTextArea(textArea, { mode: "razor", tabMode: "indent", height: "100%", readOnly : true });
+                    }
                 }
 
             });

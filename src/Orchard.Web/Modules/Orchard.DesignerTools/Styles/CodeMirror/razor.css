@@ -9,3 +9,11 @@ span.xml-entity {color: #a22;}
 span.razor {background-color: rgb(236, 242, 245)}
 span.razor-tag {background-color: yellow;}
 span.razor-keyword {color: blue; background-color: rgb(236, 242, 245)}
+span.razor-string {color: rgb(163,21,21); background-color: rgb(236, 242, 245)}
+
+.CodeMirror 
+{
+    font-family:Consolas, Monospace;
+    font-size:10pt;
+    line-height:12pt;
+}
