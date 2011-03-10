@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Web;
+﻿using System.IO;
 using System.Xml;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
