@@ -21,7 +21,13 @@
 
                 @Html.EditorFor(m => m.Features[index].Enable)
 
-                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Features[index].Enable)">@feature.FeatureDescriptor.Name</label>
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Features[index].Enable)">
+                    @if (!string.IsNullOrEmpty(@feature.FeatureDescriptor.Name)) {
+                        @feature.FeatureDescriptor.Name
+                    } else {
+                        @feature.FeatureDescriptor.Id
+                    }
+                </label>
                 @{ index++; }
             </div>
         }

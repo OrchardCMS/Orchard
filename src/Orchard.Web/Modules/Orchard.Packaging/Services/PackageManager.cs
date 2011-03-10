@@ -76,8 +76,9 @@ namespace Orchard.Packaging.Services {
         public ExtensionDescriptor GetExtensionDescriptor(IPackage package) {
             IPackageFile packageFile = package.GetFiles().FirstOrDefault(file => Path.GetFileName(file.Path).Equals("module.txt", StringComparison.OrdinalIgnoreCase));
             if (packageFile != null) {
+                string extensionId = Path.GetFileName(Path.GetDirectoryName(packageFile.Path).TrimEnd('/', '\\'));
                 using (StreamReader streamReader = new StreamReader(packageFile.GetStream())) {
-                    return ExtensionFolders.GetDescriptorForExtension("", package.Id, DefaultExtensionTypes.Module, streamReader.ReadToEnd());
+                    return ExtensionFolders.GetDescriptorForExtension("", extensionId, DefaultExtensionTypes.Module, streamReader.ReadToEnd());
                 }
             }
 
