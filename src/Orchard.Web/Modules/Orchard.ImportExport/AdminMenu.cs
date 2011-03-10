@@ -11,7 +11,7 @@ namespace Orchard.ImportExport {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("importexport")
-                .Add(T("Import/Export"), "4", BuildMenu);
+                .Add(T("Import/Export"), "42", BuildMenu);
         }
 
         private void BuildMenu(NavigationItemBuilder menu) {
