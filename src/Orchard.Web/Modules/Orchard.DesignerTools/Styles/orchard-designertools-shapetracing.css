@@ -1,218 +1,40 @@
-﻿#debug-control * {
-    margin:0 !important;
-    padding:0 !important;
-}
-#debug-control {
-    background:#666;    
-    border:1px solid #000;
-    color:#FFF;
-    float:left;
-    font:12px/12px Consolas,"Lucida Console",Monaco,monospace; 
-    left:0;
-    position:fixed;
-    top:0;
-}
-#debug-control .debug-active {
-    color:Lime;
-}
-#debug-control ul {
-    display:none;
-}
-#debug-control ul, #debug-control-toggle {
-    float:left;
-    padding:2px !important;
-}
-#debug-control li, #debug-control-toggle {
-    cursor:pointer;
-    display:inline;
-    list-style-type:none;
-    padding-left:2px !important;
-    padding-right:2px !important;
-    white-space:nowrap;
-}
-#debug-control li {
-    border-right:1px solid #999;
-}
-
-.debug-shapes .shape-tracing .wrapper {
-    background:#FFF;
-    /*border:1px dotted #CA7230;
-    margin:5px;*/
-    padding:0px;
-    display:inline-block;
-
-    /* when there is nothing inside the shape, force to the size of the smart tag */
-    min-width:20px;
-    min-height:20px;
-}
-
-.debug-shapes body {
-    margin-top:25px;
-}
-
-.debug-shapes div.shape-tracing.meta  {
+﻿/* 
+    todo: (sebros) override every css property to reset any value defined in the theme, 
+    which could interfere with the shape-tracing window 
+*/
+#shape-tracing-container {
     clear:both;
     display:block;
-    background:#ccc;
-    font-size:9pt;
+    font-size:10pt;
     font-family:Segoe;
-    color:black;
     margin-top:5px;
     left: 0px;
     bottom: 0px;
     position:fixed;
     z-index:999;
     width:100%;
+    height:100px;
 }
 
-.debug-zones .shapeType-Zone { 
-    border:1px dashed grey;
-    margin:5px;
-    position: relative;
+#shape-tracing-toolbar  {
+    color:white;
+    background-color: #1D1A1A;
+    height:16px;
+    padding: 2px 0px 2px 0px;
 }
 
-.debug-zones .zone-name {
-    position:absolute; top: 0px; left: 0px;
-    display: block; background-color: #ddd; color: #434343; padding: 3px 6px;
-    filter:alpha(opacity=70);
-    opacity: 0.7;    
+#shape-tracing-window  {
+    color:white;
+    background-color: #343131;
+    height:100%;
 }
 
-.meta .shape {
-    color:black;
-}
-
-.meta .alternates {
-    color:red;
-}
-
-.meta .wrappers {
-    color:green;
-}
-
-.debug-shapes div.wrapper.selected  {
-    background-color:#BAFFC3;
-}
-
-/* tabs */
-
-ul.debuggerMenu { margin:8px 0 -8px 0; }
-
-.debuggerMenu li {
-    color:#4053DE;
-    display: inline;
-    font-size:15px;
-    line-height:32px;
-}
-.debuggerMenu li {
-    margin:0 2px;
-    padding: 8px 18px 7px 18px;
-}
-.debuggerMenu li.middle, .debuggerMenu li.first, .debuggerMenu li.last {
-    border:1px solid #E4E5E6;
-    border-bottom:none;
-    background-color: #F5F5F5;
-}
-.debuggerMenu li.first {
-    margin-left:16px;
-}
-.debuggerMenu li.selected {
-    background-color: #fff;
-}
-.debuggerMenu li.selected, .debuggerMenu li:hover {
-    background-color: #fff;
-}
-.debuggerMenu li.selected a {
-    color: #3A822E;
-}
-
-.debug-shapes div.shape-tracing.meta .content {
-    background-color: #fff;
-    padding: 20px;
-    margin:8px 0 0 0;
-    border: 1px solid #e4e5e6;
-    height:12em;
-    overflow:auto;
-     /*CSS3 properties*/
-     border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-}
-
-.meta .model div.name, .meta ul.properties div.name
-{
+/* 
+    this element is behind the stw to ensure the document is bigger and a scrollbar is added on the document
+    so that the stw doesn't hide some content
+*/
+#shape-tracing-container-ghost  {
+    width:100%;
     display:block;
-    float:left;
-    width:30%;
 }
-
-.meta .model ul, .meta ul.properties
-{
-    padding:0;
-    margin-left:-15px;
-    margin:0;
-    list-style-type:none;
-}
-
-.meta .model ul li, .meta ul.properties li
-{
-    padding-left:15px;
-}
-
-.meta .model h3, .meta ul.properties h3
-{
-    margin:0;
-    padding:0;
-}
-
-h3:hover
-{
-    background-color: #eee;
-}
-
-.expando-glyph {
-    background:transparent no-repeat 0 -19px;
-    background-image:url(images/menu-glyph.png);
-
-    line-height:12px;
-    padding-left:15px;
-    margin-left:-15px;
-}
-
-.expando-glyph:hover {
-    background-image:url(images/menu-glyph.png);
-}
-
-.expando-glyph-container.closed .expando-glyph 
-{
-    background-repeat:none;
-    background-image:url(images/menu-glyph.png);
-    background-position:0 3px;
-}
-.expando-glyph-container.closed .expando-glyph:hover {
-    background-image:url(images/menu-glyph.png);
-}
-.expando-glyph-container.closing .expando-glyph 
-{
-    background-repeat:none;
-    -webkit-transition:all .2s ease-in-out;
-    -moz-transition:all .2s ease-in-out;
-    transition:all .2s ease-in-out;
-    -webkit-transform:rotate(-90deg) translate(3px, -3px);
-    -moz-transform:rotate(-90deg) translate(3px, -3px);
-    transform:rotate(-90deg) translate(3px, -3px);
-}
-.expando-glyph-container.opening .expando-glyph 
-{
-    background-repeat:none;
-    -webkit-transition:all .2s ease-in-out;
-    -moz-transition:all .2s ease-in-out;
-    transition:all .2s ease-in-out;
-    -webkit-transform:rotate(90deg) translate(3px, 3px);
-    -moz-transform:rotate(90deg) translate(3px, 3px);
-    transform:rotate(90deg) translate(3px, 3px);
-}
-
-.content textarea {
-    height:50%;
-}
+    
