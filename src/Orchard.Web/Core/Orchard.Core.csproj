@@ -87,6 +87,7 @@
     <Compile Include="Containers\Settings\ContainerSettings.cs" />
     <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
+    <Compile Include="Containers\ViewModels\ContainerViewModel.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
     <Compile Include="Common\Services\ICommonService.cs" />
@@ -99,7 +100,6 @@
     <Compile Include="Contents\Extensions\MetaDataExtensions.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
     <Compile Include="Contents\Permissions.cs" />
-    <Compile Include="Contents\Routes.cs" />
     <Compile Include="Contents\Settings\ContentTypeSettings.cs" />
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\Shapes.cs" />
@@ -382,9 +382,6 @@
     <Content Include="Containers\Views\EditorTemplates\CustomProperties.cshtml" />
     <Content Include="Routable\Views\Parts.RoutableTitle_Summary.cshtml" />
     <Content Include="Routable\Views\Parts.RoutableTitle_SummaryAdmin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Containers\Views\Parts.Container.Contained.SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Shapes\Views\ShapeResult\Display.cshtml" />

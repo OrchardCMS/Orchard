@@ -20,7 +20,7 @@ namespace Orchard.Core.Containers.Drivers {
         public Localizer T { get; set; }
 
         protected override DriverResult Editor(ContainablePart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
+            return Editor(part, (IUpdateModel)null, shapeHelper);
         }
 
         protected override DriverResult Editor(ContainablePart part, IUpdateModel updater, dynamic shapeHelper) {

@@ -6,6 +6,7 @@ namespace Orchard.Core.Containers.Models {
     }
 
     public class ContainerPartRecord : ContentPartRecord {
+        public virtual string ItemContentType { get; set; }
         public virtual bool Paginated { get; set; }
         public virtual int PageSize { get; set; }
         public virtual string OrderByProperty { get; set; }

@@ -9,6 +9,7 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
@@ -52,10 +53,8 @@ namespace Orchard.Core.Contents.Controllers {
 
         public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            if (model.ContainerId != null && _contentManager.GetLatest((int)model.ContainerId) == null)
-                return HttpNotFound();
 
-            var query = _contentManager.Query(VersionOptions.Latest, GetCreatableTypes().Select(ctd => ctd.Name).ToArray());
+            var query = _contentManager.Query(VersionOptions.Latest, GetCreatableTypes(false).Select(ctd => ctd.Name).ToArray());
 
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
@@ -68,10 +67,6 @@ namespace Orchard.Core.Contents.Controllers {
                 query = query.ForType(model.TypeName);
             }
             
-            if (model.ContainerId != null) {
-                query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
-            }
-
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
                     //query = query.OrderByDescending<ContentPartRecord, int>(ci => ci.ContentItemRecord.Versions.Single(civr => civr.Latest).Id);
@@ -87,7 +82,7 @@ namespace Orchard.Core.Contents.Controllers {
             }
 
             model.Options.SelectedFilter = model.TypeName;
-            model.Options.FilterOptions = GetCreatableTypes()
+            model.Options.FilterOptions = GetCreatableTypes(false)
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Key);
 
@@ -107,8 +102,8 @@ namespace Orchard.Core.Contents.Controllers {
             return View((object)viewModel);
         }
 
-        private IEnumerable<ContentTypeDefinition> GetCreatableTypes() {
-            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable);
+        private IEnumerable<ContentTypeDefinition> GetCreatableTypes(bool andContainable) {
+            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable && (!andContainable || ctd.Parts.Any(p => p.PartDefinition.Name == "ContainablePart")) );
         }
 
         [HttpPost, ActionName("List")]
@@ -117,7 +112,7 @@ namespace Orchard.Core.Contents.Controllers {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
                 routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
-                if (GetCreatableTypes().Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
+                if (GetCreatableTypes(false).Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
                     routeValues["id"] = options.SelectedFilter;
                 }
                 else {
@@ -177,21 +172,28 @@ namespace Orchard.Core.Contents.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
 
-        ActionResult CreatableTypeList() {
-            dynamic viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes());
+        ActionResult CreatableTypeList(int? containerId) {
+            dynamic viewModel = Shape.ViewModel(ContentTypes: GetCreatableTypes(containerId.HasValue), ContainerId: containerId);
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View("CreatableTypeList", (object)viewModel);
         }
 
-        public ActionResult Create(string id) {
+        public ActionResult Create(string id, int? containerId) {
             if (string.IsNullOrEmpty(id))
-                return CreatableTypeList();
+                return CreatableTypeList(containerId);
 
             var contentItem = _contentManager.New(id);
 
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
+
+            if (containerId.HasValue && contentItem.Is<ContainablePart>()) {
+                var common = contentItem.As<CommonPart>();
+                if (common != null) {
+                    common.Container = _contentManager.Get(containerId.Value);
+                }
+            }
 
             dynamic model = _contentManager.BuildEditor(contentItem);
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.

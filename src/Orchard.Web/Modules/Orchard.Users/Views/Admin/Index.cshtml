@@ -19,7 +19,7 @@
             @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Approve, T("Approve").ToString()) 
             @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Disable, T("Disable").ToString())
             @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.ChallengeEmail, T("Send challenge E-mail").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Delete, T("Remove").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Delete, T("Delete").ToString())
         </select>
         <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>
@@ -69,7 +69,7 @@
                 </td>
                 <td>
                     @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
-                    @Html.ActionLink(T("Remove").ToString(), "Delete", new { entry.User.Id }) |
+                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }) |
                     @if (entry.User.RegistrationStatus == UserStatus.Pending) {
                         @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id })
                     } else {
