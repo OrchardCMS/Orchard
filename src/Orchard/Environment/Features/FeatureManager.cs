@@ -43,7 +43,7 @@ namespace Orchard.Environment.Features {
             var updatedFeatures = currentShellDescriptor.Features
                 .Union(featureNames
                            .Where(name => !currentShellDescriptor.Features.Any(sf => sf.Name == name))
-                           .Select(name => new ShellFeature {Name = name}));            
+                           .Select(name => new ShellFeature {Name = name}));
 
             _shellDescriptorManager.UpdateShellDescriptor(
                 currentShellDescriptor.SerialNumber,

@@ -249,8 +249,7 @@ namespace Orchard.Packaging.Controllers {
             ExtensionDescriptor extensionDescriptor = _packageManager.GetExtensionDescriptor(package);
 
             List<PackagingInstallFeatureViewModel> features = extensionDescriptor.Features
-                .Where(featureDescriptor => !DefaultExtensionTypes.IsTheme(featureDescriptor.Extension.ExtensionType) &&
-                    !featureDescriptor.Id.Equals(featureDescriptor.Extension.Id))
+                .Where(featureDescriptor => !DefaultExtensionTypes.IsTheme(featureDescriptor.Extension.ExtensionType))
                 .Select(featureDescriptor => new PackagingInstallFeatureViewModel {
                     Enable = true, // by default all features are enabled
                     FeatureDescriptor = featureDescriptor
@@ -278,9 +277,12 @@ namespace Orchard.Packaging.Controllers {
             }
 
             InstallPackage(packageId, version, source);
+
             // Enable selected features
-            _featureManager.EnableFeatures(packagingInstallViewModel.Features
-                                                .Select(feature => feature.FeatureDescriptor.Id));
+            if (packagingInstallViewModel.Features.Count > 0) {
+                _featureManager.EnableFeatures(packagingInstallViewModel.Features
+                                                   .Select(feature => feature.FeatureDescriptor.Id));
+            }
 
             return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
         }
