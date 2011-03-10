@@ -102,7 +102,7 @@ namespace Orchard.Media.Controllers {
                         string folderName = input[fileName];
                         if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't delete media file")))
                             return new HttpUnauthorizedResult();
-                        _mediaService.DeleteFile(fileName, folderName);
+                        _mediaService.DeleteFile(folderName, fileName);
 
                         Services.Notifier.Information(T("Media file deleted"));
                     }
@@ -119,8 +119,7 @@ namespace Orchard.Media.Controllers {
                 return RedirectToAction("Index");
             } catch (Exception exception) {
                 this.Error(exception, T("Deleting failed: {0}", exception.Message), Logger, Services.Notifier);
-
-                return View();
+                return RedirectToAction("Index");
             }
         }
 
