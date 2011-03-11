@@ -23,6 +23,22 @@ namespace Orchard.ContentManagement.Drivers {
             return Process(context.ContentItem, (part, field) => Editor(part, field, context.Updater, context.New));
         }
 
+        void IContentFieldDriver.Importing(ImportContentContext context) {
+            Process(context.ContentItem, (part, field) => Importing(part, field, context));
+        }
+
+        void IContentFieldDriver.Imported(ImportContentContext context) {
+            Process(context.ContentItem, (part, field) => Imported(part, field, context));
+        }
+
+        void IContentFieldDriver.Exporting(ExportContentContext context) {
+            Process(context.ContentItem, (part, field) => Exporting(part, field, context));
+        }
+
+        void IContentFieldDriver.Exported(ExportContentContext context) {
+            Process(context.ContentItem, (part, field) => Exported(part, field, context));
+        }
+
         DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort) {
             var results = item.Parts
                     .SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }))
@@ -47,6 +63,10 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) { return null; }
+        protected virtual DriverResult Importing(ContentPart part, TField field, ImportContentContext context) { return null; }
+        protected virtual DriverResult Imported(ContentPart part, TField field, ImportContentContext context) { return null; }
+        protected virtual DriverResult Exporting(ContentPart part, TField field, ExportContentContext context) { return null; }
+        protected virtual DriverResult Exported(ContentPart part, TField field, ExportContentContext context) { return null; }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
             return ContentShapeImplementation(shapeType, null, ctx => factory());

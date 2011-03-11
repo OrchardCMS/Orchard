@@ -17,6 +17,10 @@
         void Removed(RemoveContentContext context);
         void Indexing(IndexContentContext context);
         void Indexed(IndexContentContext context);
+        void Importing(ImportContentContext context);
+        void Imported(ImportContentContext context);
+        void Exporting(ExportContentContext context);
+        void Exported(ExportContentContext context);
 
         void GetContentItemMetadata(GetContentItemMetadataContext context);
         void BuildDisplay(BuildDisplayContext context);
