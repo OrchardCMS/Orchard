@@ -47,7 +47,6 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminMenu.cs" />
     <Compile Include="Handlers\ContainerPartHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
