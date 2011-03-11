@@ -4,7 +4,7 @@ using Orchard.ImportExport.Models;
 namespace Orchard.ImportExport.Services {
     public interface IImportExportService : IDependency {
         void Import(string recipeText);
-        string Export(IEnumerable<string> contentTypes, DataExportOptions dataExportOptions, bool exportMetadata, bool exportSettings);
+        string Export(IEnumerable<string> contentTypes, ExportOptions exportOptions);
     }
 }
 

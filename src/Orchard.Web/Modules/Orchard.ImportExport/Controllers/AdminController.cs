@@ -69,12 +69,12 @@ namespace Orchard.ImportExport.Controllers {
             try {
                 UpdateModel(viewModel);
                 var contentTypesToExport = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
-                var dataExportOptions = new DataExportOptions();
+                var exportOptions = new ExportOptions { ExportMetadata = viewModel.Metadata, ExportSiteSettings = viewModel.SiteSettings };
                 if (viewModel.Data) {
-                    dataExportOptions.ExportData = true;
-                    dataExportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
+                    exportOptions.ExportData = true;
+                    exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
                 }
-                var exportFile = _importExportService.Export(contentTypesToExport, dataExportOptions, viewModel.Metadata, viewModel.SiteSettings);
+                var exportFile = _importExportService.Export(contentTypesToExport, exportOptions);
                 Services.Notifier.Information(T("Your export file has been created at <a href=\"{0}\" />", exportFile));
 
                 return RedirectToAction("Export");

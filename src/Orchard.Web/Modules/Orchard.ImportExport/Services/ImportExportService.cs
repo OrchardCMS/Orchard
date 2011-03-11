@@ -33,7 +33,7 @@ namespace Orchard.ImportExport.Services {
             UpdateShell();
         }
 
-        public string Export(IEnumerable<string> contentTypes, DataExportOptions dataExportOptions, bool exportMetadata, bool exportSettings) {
+        public string Export(IEnumerable<string> contentTypes, ExportOptions exportOptions) {
             return String.Empty;
         }
 
