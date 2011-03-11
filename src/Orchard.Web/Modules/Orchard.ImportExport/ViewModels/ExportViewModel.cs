@@ -5,6 +5,7 @@ namespace Orchard.ImportExport.ViewModels {
         public IList<ContentTypeEntry> ContentTypes { get; set; }
         public virtual bool Metadata { get; set; }
         public virtual bool Data { get; set; }
+        public virtual string DataImportChoice { get; set; }
         public virtual bool SiteSettings { get; set; }
     }
 

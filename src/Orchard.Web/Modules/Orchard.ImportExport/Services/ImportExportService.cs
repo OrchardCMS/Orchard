@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Orchard.Environment.Descriptor;
+using Orchard.ImportExport.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
@@ -32,7 +33,7 @@ namespace Orchard.ImportExport.Services {
             UpdateShell();
         }
 
-        public string Export(IEnumerable<string> contentTypes, bool exportMetadata, bool exportData, bool exportSettings) {
+        public string Export(IEnumerable<string> contentTypes, DataExportOptions dataExportOptions, bool exportMetadata, bool exportSettings) {
             return String.Empty;
         }
 
