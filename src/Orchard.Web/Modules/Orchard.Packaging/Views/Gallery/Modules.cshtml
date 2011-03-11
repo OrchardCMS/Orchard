@@ -19,7 +19,7 @@
         </select>
     </fieldset>
 
-    <fieldset class="bulk-actions">
+    <fieldset class="bulk-actions bulk-actions-auto">
         <label for="filterResults">@T("Sort by:")</label>
         <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
             @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Downloads, T("Downloads").ToString())
