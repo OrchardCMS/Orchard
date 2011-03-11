@@ -1,7 +1,17 @@
 ﻿/* 
-    todo: (sebros) override every css property to reset any value defined in the theme, 
-    which could interfere with the shape-tracing window 
+    shape tracing container styles reset 
+    must contain all tags used in the container
 */
+
+#shape-tracing-container ul, 
+#shape-tracing-container li {
+    background-color: #fff;
+    margin:0;
+    padding:0;
+    color:#000;
+    font-size:100%;
+}
+
 #shape-tracing-container {
     clear:both;
     display:block;
@@ -21,8 +31,8 @@
 #shape-tracing-toolbar  {
     color:black;
     background: url(images/toolbar-bg.png) repeat-x;
-    height:17px;
-    padding-top:4px; /* total size 21px = height + padding */
+    height:21px;
+    padding-top:4px;
     padding-left:5px;
     padding-right:5px;
 }
@@ -37,11 +47,6 @@
 
 #shape-tracing-toolbar-switch.expanded {
     background: url(images/collapse.png) no-repeat;
-}
-
-#shape-tracing-window  {
-    background-color: #343131;
-    height:100%;
 }
 
 /* 
@@ -63,4 +68,21 @@
 
 .shape-tracing-overlay {
     background-color:#eee;
+    cursor: pointer;
+}
+
+#shape-tracing-window  {
+    background-color: #fff;
+    height:100%;
+}
+
+#shape-tracing-window li
+{
+    list-style-type:inherit;
+}
+
+#shape-tracing-window ul 
+{
+    margin-left:10px;
+    padding-left:10px;
 }

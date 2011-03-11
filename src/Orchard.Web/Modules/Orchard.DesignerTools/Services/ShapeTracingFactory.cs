@@ -29,6 +29,7 @@ namespace Orchard.DesignerTools.Services {
             if (context.ShapeType != "Layout"
                 && context.ShapeType != "DocumentZone"
                 && context.ShapeType != "PlaceChildContent"
+                && context.ShapeType != "ContentZone"
                 && context.ShapeType != "ShapeTracingMeta") {
 
                 var shapeMetadata = (ShapeMetadata)context.Shape.Metadata;

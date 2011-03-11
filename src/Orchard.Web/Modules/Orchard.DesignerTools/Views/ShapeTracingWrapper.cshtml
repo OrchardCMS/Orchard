@@ -7,7 +7,7 @@
     Script.Require("jQueryUI_Tabs").AtHead();
     Script.Require("jQueryUI_Resizable").AtHead();
     Script.Include("orchard-designertools-shapetracing.js").AtHead();
-    Style.Include("orchard-designertools-shapetracing.css").AtHead();
+    Style.Include("orchard-designertools-shapetracing.css");
     
     // Code Mirror
     Script.Include("CodeMirror/codemirror.js");
@@ -21,7 +21,7 @@
     Script.Include("CodeMirror/htmlmixed.js");
 }
 
-<script class="shape-tracing-wrapper shapeType-@Model.Metadata.Type shapeId-@Model.GetHashCode()" shape-id="@Model.GetHashCode()" title="@Model.Metadata.Type" ></script>@Display(Model.Metadata.ChildContent)<script class="shape-tracing-wrapper" end-of="@Model.GetHashCode()"></script>
+<script class="shape-tracing-wrapper" shape-id="@Model.GetHashCode()" shape-type="@Model.Metadata.Type"></script>@Display(Model.Metadata.ChildContent)<script class="shape-tracing-wrapper" end-of="@Model.GetHashCode()"></script>
     @{
         Layout.Zones["Tail"].Add(
             New.ShapeTracingMeta(
