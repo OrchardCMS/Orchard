@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Orchard.Environment.Descriptor;
 using Orchard.Localization;
@@ -29,6 +30,10 @@ namespace Orchard.ImportExport.Services {
             CheckRecipeSteps(recipe);
             _recipeManager.Execute(recipe);
             UpdateShell();
+        }
+
+        public string Export(IEnumerable<string> contentTypes, bool exportMetadata, bool exportData, bool exportSettings) {
+            return String.Empty;
         }
 
         private void CheckRecipeSteps(Recipe recipe) {
