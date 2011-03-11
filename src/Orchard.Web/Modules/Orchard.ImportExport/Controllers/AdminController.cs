@@ -74,9 +74,9 @@ namespace Orchard.ImportExport.Controllers {
                     exportOptions.ExportData = true;
                     exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
                 }
-                var exportFile = _importExportService.Export(contentTypesToExport, exportOptions);
-                Services.Notifier.Information(T("Your export file has been created at <a href=\"{0}\" />", exportFile));
-
+                var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
+                Services.Notifier.Information(T("Your export file has been created at {0}", exportFilePath));
+           
                 return RedirectToAction("Export");
             }
             catch (Exception exception) {
