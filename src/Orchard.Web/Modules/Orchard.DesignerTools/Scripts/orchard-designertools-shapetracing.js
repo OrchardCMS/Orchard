@@ -27,10 +27,11 @@
         var syncResize = function () {
             var _window = $(window);
             var containerHeight = shapeTracingContainer.height();
+            shapeTracingGhost.height(containerHeight);
+
             var windowHeight = _window.height();
             var scrollTop = _window.scrollTop();
 
-            shapeTracingGhost.height(containerHeight);
             shapeTracingContainer.offset({ top: windowHeight - containerHeight + scrollTop, left: 0 });
             shapeTracingContainer.width('100%');
         };
@@ -69,19 +70,17 @@
         shapeTracingWrappers.each(function () {
             var _this = $(this);
             var shapeId = _this.attr('shape-id');
-            // assign the shape-id attribute to all children, except wrappers (it would erase their own shape-id)
-            _this.find(':not(div.shape-tracing-wrapper)').attr('shape-id', shapeId);
+            // assign the shape-id attribute to all elements, except wrappers themselves (it would erase their own shape-id)
+            _this.nextUntil('[end-of="' + shapeId + '"]').find(':not(.shape-tracing-wrapper)').andSelf().attr('shape-id', shapeId);
         });
 
         // removes all wrappers, by unwrapping the first element of each of them
-        shapeTracingWrappers.each(function () {
-            $(this).contents().first().unwrap();
-        });
+        shapeTracingWrappers.remove();
 
-        // create an overlay on shapes' descendants
+        //create an overlay on shapes' descendants
         $('[shape-id]').hover(
             function () {
-                $('*').removeClass('shape-tracing-overlay');
+                $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
                 $(this).addClass('shape-tracing-overlay');
             },
             function () {

@@ -21,8 +21,7 @@
     Script.Include("CodeMirror/htmlmixed.js");
 }
 
-<div class="shape-tracing-wrapper shapeType-@Model.Metadata.Type shapeId-@Model.GetHashCode()" shape-id="@Model.GetHashCode()" title="@Model.Metadata.Type">
-    @Display(Model.Metadata.ChildContent)
+<script class="shape-tracing-wrapper shapeType-@Model.Metadata.Type shapeId-@Model.GetHashCode()" shape-id="@Model.GetHashCode()" title="@Model.Metadata.Type" ></script>@Display(Model.Metadata.ChildContent)<script class="shape-tracing-wrapper" end-of="@Model.GetHashCode()"></script>
     @{
         Layout.Zones["Tail"].Add(
             New.ShapeTracingMeta(
@@ -40,4 +39,3 @@
                 ShapeId: Model.GetHashCode()
         ));
     }
-</div>

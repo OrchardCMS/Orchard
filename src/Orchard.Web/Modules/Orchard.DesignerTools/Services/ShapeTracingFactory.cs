@@ -29,16 +29,6 @@ namespace Orchard.DesignerTools.Services {
             if (context.ShapeType != "Layout"
                 && context.ShapeType != "DocumentZone"
                 && context.ShapeType != "PlaceChildContent"
-                && context.ShapeType != "HeadScripts"
-                && context.ShapeType != "FootScripts"
-                && context.ShapeType != "HeadLinks"
-                && context.ShapeType != "FootLinks"
-                && context.ShapeType != "StylesheeLinks"
-                && context.ShapeType != "Style"
-                && context.ShapeType != "Feed"
-                && context.ShapeType != "Resource"
-                && context.ShapeType != "Meta"
-                // && context.ShapeType != "ContentZone"
                 && context.ShapeType != "ShapeTracingMeta") {
 
                 var shapeMetadata = (ShapeMetadata)context.Shape.Metadata;
