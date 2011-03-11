@@ -42,13 +42,9 @@ namespace Orchard.Core.Containers.Drivers {
                             commonPart.Container = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
                     }
 
-                    // these containers are allowed to contain any content type
-                    var freeContainers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).Where(ctr => ctr.ItemContentType == null).List();
-                    // these containers are allowed to contain any content type (workaround: string.IsNullOrEmpty not functioning)
-                    var freeContainers2 = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).Where(ctr => ctr.ItemContentType == "").List();
-                    // these containers are restricted to contain the content type of this content item
-                    var restrictedContainers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).Where(ctr => ctr.ItemContentType == part.ContentItem.ContentType).List();
-                    var containers = restrictedContainers.Concat(freeContainers).Concat(freeContainers2).OrderByDescending(ctr => ctr.As<CommonPart>().PublishedUtc);
+                    // note: string.isnullorempty not being recognized by linq-to-nhibernate hence the inline or
+                    var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest)
+                        .Where(ctr => ctr.ItemContentType == null || ctr.ItemContentType == "" || ctr.ItemContentType == part.ContentItem.ContentType).List();
 
                     var listItems = new[] { new SelectListItem { Text = T("(None)").Text, Value = "0" } }
                         .Concat(containers.Select(x => new SelectListItem {
