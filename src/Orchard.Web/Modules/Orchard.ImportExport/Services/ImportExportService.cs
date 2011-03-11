@@ -61,7 +61,7 @@ namespace Orchard.ImportExport.Services {
             }
 
             if (exportOptions.ExportSiteSettings) {
-                exportDocument.Element("Orchard").Add(ExportSiteSettings(contentTypes));
+                exportDocument.Element("Orchard").Add(ExportSiteSettings());
             }
 
             if (exportOptions.ExportData) {
@@ -107,8 +107,32 @@ namespace Orchard.ImportExport.Services {
             return new XElement("Metadata", typesElement, partsElement);
         }
 
-        private XElement ExportSiteSettings(IEnumerable<string> contentTypes) {
-            return new XElement("Settings");
+        private XElement ExportSiteSettings() {
+            var settings = new XElement("Settings");
+            var hasSetting = false;
+
+            foreach (var sitePart in _orchardServices.WorkContext.CurrentSite.ContentItem.Parts) {
+                var setting = new XElement(sitePart.PartDefinition.Name);
+
+                foreach (var property in sitePart.GetType().GetProperties()) {
+                    var propertyType = property.PropertyType;
+                    // Supported types (we also know they are not indexed properties).
+                    if (propertyType == typeof(string) || propertyType == typeof(bool) || propertyType == typeof(int)) {
+                        // Exclude read-only properties.
+                        if (property.GetSetMethod() != null) {
+                            setting.SetAttributeValue(property.Name, property.GetValue(sitePart, null));
+                            hasSetting = true;
+                        }
+                    }
+                }
+
+                if (hasSetting) {
+                    settings.Add(setting);
+                    hasSetting = false;
+                }
+            }
+
+            return settings;
         }
 
         private XElement ExportData(IEnumerable<string> contentTypes, VersionHistoryOptions versionHistoryOptions) {
