@@ -60,3 +60,7 @@
     background-color:transparent;
     cursor:n-resize;
 }
+
+.shape-tracing-overlay {
+    background-color:#eee;
+}

@@ -1,14 +1,14 @@
 ﻿(function ($) {
     $(function () {
         // append the shape tracing window container at the end of the document
-        $(  '<div id="shape-tracing-container"> ' +
-                '<div id="shape-tracing-resize-handle" />' +
+        $('<div id="shape-tracing-container"> ' +
+                '<div id="shape-tracing-resize-handle" ></div>' +
                 '<div id="shape-tracing-toolbar">' +
-                    '<div id="shape-tracing-toolbar-switch" />' +
+                    '<div id="shape-tracing-toolbar-switch"></div>' +
                 '</div>' +
                 '<div id="shape-tracing-window">window</div>' +
             '</div>' +
-            '<div id="shape-tracing-container-ghost"/>'
+            '<div id="shape-tracing-container-ghost"></div>'
         ).appendTo('body');
 
         // preload main objects
@@ -56,12 +56,38 @@
                 previousSize = shapeTracingContainer.height();
                 shapeTracingContainer.height(initialContainerSize);
             }
+
             syncResize();
         });
 
         // add a resizable handle to the container
         $('#shape-tracing-resize-handle').addClass('ui-resizable-handle ui-resizable-n');
         shapeTracingContainer.resizable({ handles: { n: '#shape-tracing-resize-handle'} });
+
+        // projects the shape ids to each DOM element
+        var shapeTracingWrappers = $('.shape-tracing-wrapper');
+        shapeTracingWrappers.each(function () {
+            var _this = $(this);
+            var shapeId = _this.attr('shape-id');
+            // assign the shape-id attribute to all children, except wrappers (it would erase their own shape-id)
+            _this.find(':not(div.shape-tracing-wrapper)').attr('shape-id', shapeId);
+        });
+
+        // removes all wrappers, by unwrapping the first element of each of them
+        shapeTracingWrappers.each(function () {
+            $(this).contents().first().unwrap();
+        });
+
+        // create an overlay on shapes' descendants
+        $('[shape-id]').hover(
+            function () {
+                $('*').removeClass('shape-tracing-overlay');
+                $(this).addClass('shape-tracing-overlay');
+            },
+            function () {
+                $(this).removeClass('shape-tracing-overlay');
+            }
+        );
 
     });
 })(jQuery);
