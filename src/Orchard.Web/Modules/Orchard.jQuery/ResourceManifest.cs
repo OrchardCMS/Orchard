@@ -2,7 +2,7 @@ namespace Orchard.UI.Resources {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
-            manifest.DefineScript("jQuery").SetUrl("jquery-1.4.2.min.js", "jquery-1.4.2.js").SetVersion("1.4.2");
+            manifest.DefineScript("jQuery").SetUrl("jquery-1.5.1.min.js", "jquery-1.5.1.js").SetVersion("1.5.1");
 
             // todo: include min versions
             manifest.DefineScript("jQueryUtils").SetUrl("jquery.utils.js").SetDependencies("jQuery");
