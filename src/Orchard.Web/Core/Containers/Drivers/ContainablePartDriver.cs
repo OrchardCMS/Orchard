@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.ViewModels;
 using Orchard.Localization;
@@ -41,7 +42,14 @@ namespace Orchard.Core.Containers.Drivers {
                             commonPart.Container = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
                     }
 
-                    var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).List();
+                    // these containers are allowed to contain any content type
+                    var freeContainers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).Where(ctr => ctr.ItemContentType == null).List();
+                    // these containers are allowed to contain any content type (workaround: string.IsNullOrEmpty not functioning)
+                    var freeContainers2 = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).Where(ctr => ctr.ItemContentType == "").List();
+                    // these containers are restricted to contain the content type of this content item
+                    var restrictedContainers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).Where(ctr => ctr.ItemContentType == part.ContentItem.ContentType).List();
+                    var containers = restrictedContainers.Concat(freeContainers).Concat(freeContainers2).OrderByDescending(ctr => ctr.As<CommonPart>().PublishedUtc);
+
                     var listItems = new[] { new SelectListItem { Text = T("(None)").Text, Value = "0" } }
                         .Concat(containers.Select(x => new SelectListItem {
                             Value = Convert.ToString(x.Id),
