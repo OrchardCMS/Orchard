@@ -59,24 +59,25 @@ namespace Lists.Controllers {
 
         public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var container = _contentManager.GetLatest((int)model.ContainerId);
-            if (container == null) {
+            var container = model.ContainerId.HasValue ? _contentManager.GetLatest((int)model.ContainerId) : null;
+            if (container == null && model.ContainerId.HasValue) {
                 return HttpNotFound();
             }
-            var restrictedContentType = container.As<ContainerPart>().Record.ItemContentType;
+            var restrictedContentType = container == null ? null : container.As<ContainerPart>().Record.ItemContentType;
             var hasRestriction = !string.IsNullOrEmpty(restrictedContentType);
-            
-            var metadata = container.ContentManager.GetItemMetadata(container);
-            model.ContainerDisplayName = metadata.DisplayText;
-            if (string.IsNullOrEmpty(model.ContainerDisplayName)) {
-                model.ContainerDisplayName = container.ContentType;
-            }
-
-            var query = _contentManager.Query(VersionOptions.Latest);
-
             if (hasRestriction) {
                 model.FilterByContentType = restrictedContentType;
             }
+
+            if (container != null) {
+                var metadata = container.ContentManager.GetItemMetadata(container);
+                model.ContainerDisplayName = metadata.DisplayText;
+                if (string.IsNullOrEmpty(model.ContainerDisplayName)) {
+                    model.ContainerDisplayName = container.ContentType;
+                }
+            }
+
+            var query = _contentManager.Query<ContainablePart>(VersionOptions.Latest);
 
             if (!string.IsNullOrEmpty(model.FilterByContentType)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.FilterByContentType);
@@ -119,7 +120,7 @@ namespace Lists.Controllers {
                 .Options(model.Options)
                 .HasRestriction(hasRestriction)
                 .ContainerDisplayName(model.ContainerDisplayName)
-                .ContainerContentType(container.ContentType)
+                .ContainerContentType(container == null ? null : container.ContentType)
                 .ContainerItemContentType(hasRestriction ? restrictedContentType : (model.FilterByContentType ?? ""))
                 .OtherLists(_contentManager.Query<ContainerPart>(VersionOptions.Latest).List()
                     .Select(part => part.ContentItem)
@@ -190,7 +191,7 @@ namespace Lists.Controllers {
                 }
                 // ensure the item can be in that container.
                 if (!string.IsNullOrEmpty(itemContentType) && item.ContentType != itemContentType) {
-                    Services.Notifier.Information(T("One or more items could not be moved to the '{0}' list because it is restricted to containing items of type '{1}'.", _contentManager.GetItemMetadata(item).DisplayText, itemContentType));
+                    Services.Notifier.Information(T("One or more items could not be moved to '{0}' because it is restricted to containing items of type '{1}'.", _contentManager.GetItemMetadata(targetContainer).DisplayText, itemContentType));
                     return true; // todo: transactions
                 }
 

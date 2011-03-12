@@ -1,12 +1,15 @@
 ﻿@using Orchard.Lists.ViewModels;
+@using Orchard.ContentManagement;
 @{
 	Script.Include("orchard-lists-admin.js");
 
+	int? containerId = (int?)Model.ContainerId;
+	
     string createLinkText = string.IsNullOrEmpty(Model.ContainerItemContentType) ? T("Create New Content").ToString() : T("Create New {0}", Model.ContainerItemContentType).ToString();
     
-    Layout.Title = T("Manage Content for {0}", Model.ContainerDisplayName);
+    Layout.Title = containerId.HasValue ? T("Manage Content for {0}", Model.ContainerDisplayName) : T("Orphaned Content Items");
 
-    var lists = ((IEnumerable<dynamic>)Model.OtherLists).Select(
+    var lists = ((IEnumerable<ContentItem>)Model.OtherLists).Select(
         contentItem => new SelectListItem {
             Text = contentItem.ContentType + ": " + contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText,
             Value = contentItem.Id.ToString(System.Globalization.CultureInfo.InvariantCulture)
@@ -20,20 +23,23 @@
 </style>
 
 <div>&nbsp;</div>
-@Display.Parts_Container_Manage(ContainerDisplayName: Model.ContainerDisplayName, ContainerContentType: Model.ContainerContentType, ContainerId: Model.ContainerId)
-
+@Display.Parts_Container_Manage(ContainerDisplayName: Model.ContainerDisplayName, ContainerContentType: Model.ContainerContentType, ContainerId: containerId)
+@if (containerId.HasValue) {
 <div class="manage">
-    @Html.ActionLink(createLinkText, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter, ContainerId = Model.ContainerId, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl }, new { @class = "button primaryAction" })
+    @Html.ActionLink(createLinkText, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter, ContainerId = (int)containerId, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl }, new { @class = "button primaryAction" })
 </div>
+}
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="Options.BulkAction">
+			@if (containerId.HasValue) {
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.RemoveFromList, T("Remove from List").ToString())
+			}
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.MoveToList, T("Move to List...").ToString())
         </select>
 		@Html.DropDownList("TargetContainerId", lists, new { id = "TargetContainerId" })

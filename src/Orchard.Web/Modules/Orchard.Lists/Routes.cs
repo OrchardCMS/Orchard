@@ -16,9 +16,9 @@ namespace Orchard.Lists {
                 new RouteDescriptor {
                     Priority = 5,
                     Route = new Route(
-                        "Admin/Orchard.Lists/{containerId}/{filterByContentType}",
+                        "Admin/Lists/{containerId}/{filterByContentType}",
                         new RouteValueDictionary {
-                            {"area", "Contents"},
+                            {"area", "Orchard.Lists"},
                             {"controller", "Admin"},
                             {"action", "List"},
                             {"filterByContentType", ""}
@@ -35,7 +35,7 @@ namespace Orchard.Lists {
                 new RouteDescriptor {
                     Priority = 5,
                     Route = new Route(
-                        "Admin/Orchard.Lists/{containerId}",
+                        "Admin/Lists/{containerId}",
                         new RouteValueDictionary {
                             {"area", "Orchard.Lists"},
                             {"controller", "Admin"},
@@ -48,7 +48,42 @@ namespace Orchard.Lists {
                             {"area", "Orchard.Lists"}
                         },
                         new MvcRouteHandler())
-                }
+                },
+
+                new RouteDescriptor {
+                    Priority = 5,
+                    Route = new Route(
+                        "Admin/Lists/Orphaned/{filterByContentType}",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Lists"},
+                            {"controller", "Admin"},
+                            {"action", "List"},
+                            {"filterByContentType", ""},
+                        },
+                        new RouteValueDictionary{
+                            {"filterByContentType", @"\w+"},
+                        },
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Lists"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 5,
+                    Route = new Route(
+                        "Admin/Lists/Orphaned",
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Lists"},
+                            {"controller", "Admin"},
+                            {"action", "List"},
+                        },
+                        null,
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Lists"}
+                        },
+                        new MvcRouteHandler())
+                },
+
             };
         }
     }
