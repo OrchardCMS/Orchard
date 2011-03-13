@@ -5,7 +5,6 @@
 
 #shape-tracing-container ul, 
 #shape-tracing-container li {
-    background-color: #fff;
     margin:0;
     padding:0;
     color:#000;
@@ -71,18 +70,97 @@
     cursor: pointer;
 }
 
+.shape-tracing-tree-overlay {
+    background-color:#eee;
+    cursor: pointer;
+}
+
 #shape-tracing-window  {
     background-color: #fff;
     height:100%;
 }
 
-#shape-tracing-window li
-{
-    list-style-type:inherit;
+#shape-tracing-window-tree {
+    display:block;
+    float:left;
+    overflow:auto;
+    width:33%;
+    height:100%;
+    padding:10px;
 }
 
-#shape-tracing-window ul 
-{
+#shape-tracing-window-tree li  {
+    clear:both;
+    line-height:16px;
+}
+
+.shape-tracing-selected {
+    background-color:#FFA20D;
+}
+
+#shape-tracing-window-tree ul {
     margin-left:10px;
     padding-left:10px;
+    list-style-type:none;
+}
+
+#shape-tracing-window-tree li > div {
+}
+
+#shape-tracing-window-content {
+    display:block;
+    float:left;
+    width:66%;
+    background:yellow;
+    height:100%;
+}
+
+#shape-tracing-window-tree .expando-glyph {
+    background:transparent no-repeat 0 -19px;
+    background-image:url(images/menu-glyph.png);
+    padding-left:15px;
+}
+
+#shape-tracing-window-tree .expando-glyph:hover {
+    background-image:url(images/menu-glyph.png);
+}
+
+#shape-tracing-window-tree .expando-glyph-container  {
+    float:left;
+    display:block;
+    width:15px;
+    margin-left:-15px;
+    cursor:default;
+}
+
+#shape-tracing-window-tree .expando-glyph-container.closed .expando-glyph  {
+    background-repeat:no-repeat;
+    background-image:url(images/menu-glyph.png);
+    background-position:0 3px;
+}
+
+#shape-tracing-window-tree .expando-glyph-container.closed .expando-glyph:hover {
+    background-image:url(images/menu-glyph.png);
+}
+
+#shape-tracing-window-tree .expando-glyph-container.closing .expando-glyph 
+{
+    background-repeat:no-repeat;
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(-90deg) translate(3px, -3px);
+    -moz-transform:rotate(-90deg) translate(3px, -3px);
+    transform:rotate(-90deg) translate(3px, -3px);
+}
+
+#shape-tracing-window-tree .expando-glyph-container.opening .expando-glyph 
+{
+    background-repeat:no-repeat;
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(90deg) translate(3px, 3px);
+    -moz-transform:rotate(90deg) translate(3px, 3px);
+    transform:rotate(90deg) translate(3px, 3px);
 }

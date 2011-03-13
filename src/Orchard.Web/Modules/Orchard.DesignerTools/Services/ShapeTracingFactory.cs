@@ -6,6 +6,7 @@ using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.WebSite;
 using Orchard.Themes;
+using Orchard.UI;
 
 namespace Orchard.DesignerTools.Services {
     [OrchardFeature("Orchard.DesignerTools")]
@@ -77,6 +78,11 @@ namespace Orchard.DesignerTools.Services {
 
             if (shapeMetadata.PlacementSource != null && _webSiteFolder.FileExists(shapeMetadata.PlacementSource)) {
                 context.Shape.PlacementContent = _webSiteFolder.ReadFile(shapeMetadata.PlacementSource);
+            }
+
+            // Inject the Zone name
+            if(shapeMetadata.Type == "Zone") {
+                shape.Hint = ((Zone) shape).ZoneName;
             }
         }
 
