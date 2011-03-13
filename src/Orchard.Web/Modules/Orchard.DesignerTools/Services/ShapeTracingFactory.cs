@@ -1,12 +1,15 @@
 ﻿using System.IO;
+using System.Web.Routing;
 using System.Xml;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.WebSite;
+using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI;
+using Orchard.UI.Admin;
 
 namespace Orchard.DesignerTools.Services {
     [OrchardFeature("Orchard.DesignerTools")]
@@ -15,18 +18,42 @@ namespace Orchard.DesignerTools.Services {
         private readonly IShapeTableManager _shapeTableManager;
         private readonly IThemeManager _themeManager;
         private readonly IWebSiteFolder _webSiteFolder;
+        private readonly IAuthorizer _authorizer;
 
-        public ShapeTracingFactory(WorkContext workContext, IShapeTableManager shapeTableManager, IThemeManager themeManager, IWebSiteFolder webSiteFolder) {
+        public ShapeTracingFactory(
+            WorkContext workContext, 
+            IShapeTableManager shapeTableManager, 
+            IThemeManager themeManager, 
+            IWebSiteFolder webSiteFolder,
+            IAuthorizer authorizer
+            ) {
             _workContext = workContext;
             _shapeTableManager = shapeTableManager;
             _themeManager = themeManager;
             _webSiteFolder = webSiteFolder;
+            _authorizer = authorizer;
+        }
+
+        private bool IsActivable() {
+            // activate on front-end only
+            if (AdminFilter.IsApplied(new RequestContext(_workContext.HttpContext, new RouteData())))
+                return false;
+
+            // if not logged as a site owner, still activate if it's a local request (development machine)
+            if (!_authorizer.Authorize(StandardPermissions.SiteOwner))
+                return _workContext.HttpContext.Request.IsLocal;
+
+            return true;
         }
 
         public void Creating(ShapeCreatingContext context) {
         }
 
         public void Created(ShapeCreatedContext context) {
+            if(!IsActivable()) {
+                return;
+            }
+
             if (context.ShapeType != "Layout"
                 && context.ShapeType != "DocumentZone"
                 && context.ShapeType != "PlaceChildContent"
@@ -46,6 +73,10 @@ namespace Orchard.DesignerTools.Services {
         }
 
         public void Displaying(ShapeDisplayingContext context) {
+            if (!IsActivable()) {
+                return;
+            }
+
             var shape = context.Shape;
             var shapeMetadata = (ShapeMetadata) context.Shape.Metadata;
             var currentTheme = _themeManager.GetRequestTheme(_workContext.HttpContext.Request.RequestContext);
