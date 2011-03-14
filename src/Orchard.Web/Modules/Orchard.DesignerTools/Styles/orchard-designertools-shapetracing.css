@@ -23,17 +23,21 @@
     width:100%;
     display:none;
     max-height:66%;
-    height:24px; /* handle + toolbar */
+    height:24px; /* handle (21) + toolbar (3) */
     min-height:24px;
+    padding:0;
+    margin:0;
 }
 
 #shape-tracing-toolbar  {
     color:black;
+    background-color:#fff;
     background: url(images/toolbar-bg.png) repeat-x;
     height:21px;
-    padding-top:4px;
+    padding-top:0;
     padding-left:5px;
     padding-right:5px;
+    margin:0;
 }
 
 #shape-tracing-toolbar-switch  {
@@ -42,6 +46,7 @@
     width:14px;
     height:100%;
     background: url(images/expand.png) no-repeat;
+    margin-top:3px;
 }
 
 #shape-tracing-toolbar-switch.expanded {
@@ -66,7 +71,7 @@
 }
 
 .shape-tracing-overlay {
-    background-color:#eee;
+    background-color:#EBEFF9;
     cursor: pointer;
 }
 
@@ -75,9 +80,8 @@
     cursor: pointer;
 }
 
-#shape-tracing-window  {
+#shape-tracing-window {
     background-color: #fff;
-    height:100%;
 }
 
 #shape-tracing-window-tree {
@@ -85,8 +89,6 @@
     float:left;
     overflow:auto;
     width:33%;
-    height:100%;
-    padding:10px;
 }
 
 #shape-tracing-window-tree li  {
@@ -95,7 +97,11 @@
 }
 
 .shape-tracing-selected {
-    background-color:#FFA20D;
+    background-color: #EBEFF9;
+}
+
+#shape-tracing-window-tree .shape-tracing-selected  {
+    background-color: #4B4FF9;
 }
 
 #shape-tracing-window-tree ul {
@@ -163,4 +169,13 @@
     -webkit-transform:rotate(90deg) translate(3px, 3px);
     -moz-transform:rotate(90deg) translate(3px, 3px);
     transform:rotate(90deg) translate(3px, 3px);
+}
+
+#shape-tracing-overlay  {
+    display:none;
+    background-color:#0015FF;
+    position:absolute;
+    opacity:0.5;
+    filter:alpha(opacity=50);
+    z-index:2;
 }

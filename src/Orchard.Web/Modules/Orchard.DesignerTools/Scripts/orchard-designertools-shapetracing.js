@@ -11,17 +11,20 @@
                     '<div id="shape-tracing-window-content">foo</div>' +
                 '</div>' +
             '</div>' +
-            '<div id="shape-tracing-container-ghost"></div>'
+            '<div id="shape-tracing-container-ghost"></div>' +
+            '<div id="shape-tracing-overlay"></div>'
         ).appendTo('body');
 
         // preload main objects
         var shapeTracingContainer = $('#shape-tracing-container');
+        var shapeTracingResizeHandle = $('#shape-tracing-resize-handle');
         var shapeTracingToolbar = $('#shape-tracing-toolbar');
         var shapeTracingToolbarSwitch = $('#shape-tracing-toolbar-switch');
         var shapeTracingWindow = $('#shape-tracing-window');
         var shapeTracingWindowTree = $('#shape-tracing-window-tree');
         var shapeTracingWindowContent = $('#shape-tracing-window-content');
         var shapeTracingGhost = $('#shape-tracing-container-ghost');
+        var shapeTracingOverlay = $('#shape-tracing-overlay');
 
         // store the size of the container when it is closed (default in css)
         var initialContainerSize = shapeTracingContainer.height();
@@ -31,13 +34,18 @@
         // and the container is always positionned correctly
         var syncResize = function () {
             var _window = $(window);
-            var containerHeight = shapeTracingContainer.height();
+            var containerHeight = shapeTracingContainer.outerHeight();
+            var toolbarHeight = shapeTracingToolbar.outerHeight();
+            var resizeHandleHeight = shapeTracingResizeHandle.outerHeight();
+
             shapeTracingGhost.height(containerHeight);
 
             var windowHeight = _window.height();
             var scrollTop = _window.scrollTop();
 
             shapeTracingContainer.offset({ top: windowHeight - containerHeight + scrollTop, left: 0 });
+            shapeTracingWindow.height(containerHeight - toolbarHeight - resizeHandleHeight);
+            shapeTracingWindowTree.height(containerHeight - toolbarHeight - resizeHandleHeight);
             shapeTracingContainer.width('100%');
         };
 
@@ -88,11 +96,11 @@
             // register the new shape node into the main shape nodes index
             shapeNodes[shapeNode.id] = shapeNode;
 
-            // assign the shape-id attribute to all elements, except wrappers themselves (it would erase their own shape-id)
+            // assign the shape-id attribute to all direct children, except wrappers themselves (it would erase their own shape-id)
             var found = false;
             _this
                 .nextUntil('[end-of="' + shapeNode.id + '"]') // all elements between the script beacons
-                .find(':not(.shape-tracing-wrapper)') // all children but not inner beacons
+                .children(':not(.shape-tracing-wrapper)') // all children but not inner beacons
                 .andSelf() // add the first level items
                 .attr('shape-id', shapeNode.id) // add the shape-id attribute
                 .each(function () {
@@ -174,8 +182,63 @@
             return false;
         });
 
-        //create an overlay on shapes' descendants, and in shape tree
-        $('[shape-id]').add('[tree-shape-id] div').hover(
+        //create an overlay on shapes' descendants
+        var overlayTarget = null;
+        $('[shape-id]').add(shapeTracingOverlay).mousemove(
+            function (event) {
+                event.stopPropagation();
+
+                if ($(this).get(0) == shapeTracingOverlay.get(0)) {
+                    shapeTracingOverlay.hide();
+                }
+
+                var element = document.elementFromPoint(event.pageX - $(window).scrollLeft(), event.pageY - $(window).scrollTop());
+                shapeTracingOverlay.show();
+
+
+                while (element && !element.shapeNode)
+                    element = element.parentNode;
+
+                if (!element || (overlayTarget != null && overlayTarget.get(0) == element)) {
+                    return;
+                }
+
+                element = $(element);
+                shapeTracingOverlay.offset(element.offset());
+                shapeTracingOverlay.width(element.outerWidth()); // include border and padding 
+                shapeTracingOverlay.height(element.outerHeight()); // include border and padding 
+
+                overlayTarget = element;
+            }
+        );
+
+        // selects a specific shape in the tree, highlight its elements, and display the information
+        var selectShape = function (shapeId) {
+            $('.shape-tracing-selected').removeClass('shape-tracing-selected');
+            $('li[tree-shape-id="' + shapeId + '"] > div').add('[shape-id="' + shapeId + '"]').addClass('shape-tracing-selected');
+            shapeTracingOverlay.hide();
+        }
+
+        // select shapes when clicked
+        shapeTracingOverlay.click(function () {
+            var shapeNode = overlayTarget.get(0).shapeNode;
+            selectShape(shapeNode.id);
+
+            var lastExpanded = null;
+            // open the tree until the selected element
+            $('li[tree-shape-id="' + shapeNode.id + '"]').parents('li').andSelf().find('> .expando-glyph-container').each(function () {
+                openExpando($(this));
+            })
+            .last()
+            .each(function () {
+                this.scrollIntoView()
+            });
+
+            return false;
+        });
+
+        //create an overlay on shape tree nodes
+        shapeTracingWindowTree.find('[tree-shape-id] div').hover(
             function () {
                 var _this = $(this);
                 $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
@@ -185,23 +248,6 @@
                 $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
             }
         );
-
-        // select shapes when clicked
-        $('[shape-id]').click(function (event) {
-            selectShape(this.shapeNode.id);
-
-            var lastExpanded = null;
-            // open the tree until the selected element
-            $('li[tree-shape-id="' + this.shapeNode.id + '"]').parents('li').andSelf().find('> .expando-glyph-container').each(function () {
-                openExpando($(lastExpanded = this));
-            });
-
-            if (lastExpanded) {
-                lastExpanded.scrollIntoView();
-            }
-
-            event.stopPropagation();
-        });
 
         // select shape tree elements when clicked
         $('[tree-shape-id] > div').click(function (event) {
@@ -223,7 +269,7 @@
         var node = $('<li></li>');
         node.attr('tree-shape-id', shapeNode.id);
         node.get(0).shapeNode = shapeNode;
-        
+
         var text = shapeNode.type;
         // add the hint to the tree node if available
         if (shapeNode.hint != '') {
@@ -240,12 +286,6 @@
             }
         }
         return node;
-    }
-
-    // select a specific shape in the tree, highlight its elements, and display the information
-    function selectShape(shapeId) {
-        $('.shape-tracing-selected').removeClass('shape-tracing-selected');
-        $('li[tree-shape-id="' + shapeId + '"] > div').add('[shape-id="' + shapeId + '"]').addClass('shape-tracing-selected');
     }
 
 })(jQuery);
