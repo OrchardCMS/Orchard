@@ -150,7 +150,7 @@ namespace Orchard.ImportExport.Services {
                 var type = contentType;
                 var items = contentItems.Where(i => i.ContentType == type);
                 foreach (var contentItem in items) {
-                    var contentItemElement = ExportContentItem(contentItem, options, exportedContentItems);
+                    var contentItemElement = ExportContentItem(contentTypes, contentItem, options, exportedContentItems);
                     if (contentItemElement != null) 
                         data.Add(contentItemElement);
                 }
@@ -159,7 +159,7 @@ namespace Orchard.ImportExport.Services {
             return data;
         }
 
-        private XElement ExportContentItem(ContentItem contentItem, VersionOptions versionOptions, HashSet<ContentItem> exportedContentItems) {
+        private XElement ExportContentItem(IEnumerable<string> contentTypes, ContentItem contentItem, VersionOptions versionOptions, HashSet<ContentItem> exportedContentItems) {
             if (exportedContentItems.Contains(contentItem)) return null;
             exportedContentItems.Add(contentItem);
 
@@ -181,9 +181,11 @@ namespace Orchard.ImportExport.Services {
                 .List();
 
             foreach (var child in children) {
-                var childElement = ExportContentItem(child, versionOptions, exportedContentItems);
-                if (childElement != null) {
-                    element.Add(childElement);
+                if (contentTypes.Contains(child.ContentType)) {
+                    var childElement = ExportContentItem(contentTypes, child, versionOptions, exportedContentItems);
+                    if (childElement != null) {
+                        element.Add(childElement);
+                    }
                 }
             }
 
@@ -194,7 +196,7 @@ namespace Orchard.ImportExport.Services {
             if (_ignoredParts.Contains(part.PartDefinition.Name))
                 return null;
 
-            // call export handler for the part.
+            // Call export handler for the part.
             var element = new XElement(part.PartDefinition.Name);
 
             // Export Fields.
@@ -209,7 +211,7 @@ namespace Orchard.ImportExport.Services {
         }
 
         private XElement ExportField(ContentField field) {
-            // call export handler for the field.
+            // Call export handler for the field.
             var element = new XElement(field.FieldDefinition.Name);
 
             return element;
