@@ -4,9 +4,9 @@ using System.Web.Hosting;
 using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Modules.Services;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Recipes.Models;
@@ -17,20 +17,21 @@ namespace Orchard.Recipes.RecipeHandlers {
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IPackageManager _packageManager;
         private readonly IExtensionManager _extensionManager;
-        private readonly IModuleService _moduleService;
+        private readonly IFeatureManager _featureManager;
         private readonly IDataMigrationManager _dataMigrationManager;
 
         public ModuleRecipeHandler(
             IPackagingSourceManager packagingSourceManager, 
             IPackageManager packageManager, 
             IExtensionManager extensionManager,
-            IModuleService moduleService,
+            IFeatureManager featureManager,
             IDataMigrationManager dataMigrationManager) {
             _packagingSourceManager = packagingSourceManager;
             _packageManager = packageManager;
             _extensionManager = extensionManager;
-            _moduleService = moduleService;
+            _featureManager = featureManager;
             _dataMigrationManager = dataMigrationManager;
+
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -89,7 +90,7 @@ namespace Orchard.Recipes.RecipeHandlers {
                         from extensionDescriptor in extensions 
                         where String.Equals(extensionDescriptor.Name, packagingEntry.Title, StringComparison.OrdinalIgnoreCase) 
                         select extensionDescriptor.Features.Select(f => f.Name).ToArray()) {
-                        _moduleService.EnableFeatures(features);
+                        _featureManager.EnableFeatures(features);
                         _dataMigrationManager.Update(features);
                         installed = true;
                     }
