@@ -39,6 +39,8 @@ namespace Orchard.Blogs {
                     .WithPart("BlogPart")
                     .WithPart("CommonPart")
                     .WithPart("RoutePart")
+                    .WithPart("MenuPart")
+                    .WithPart("AdminMenuPart")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("BlogPost",
@@ -66,7 +68,12 @@ namespace Orchard.Blogs {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("AdminMenuPart"));
+            return 2;
         }
     }
 }

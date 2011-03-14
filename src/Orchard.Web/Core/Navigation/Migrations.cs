@@ -20,7 +20,6 @@ namespace Orchard.Core.Navigation {
                     .Column<bool>("OnMainMenu")
                 );
 
-            ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("MenuPart"));
             ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("MenuPart"));
             ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg.WithPart("MenuPart"));
             ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
@@ -37,8 +36,6 @@ namespace Orchard.Core.Navigation {
                     .Column<bool>("OnAdminMenu")
                 );
             ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder.Attachable());
-
-            ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("AdminMenuPart"));
             return 2;
         }
 
