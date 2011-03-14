@@ -20,20 +20,16 @@ namespace Orchard.Core.Navigation.Services {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            var partDefinition = _contentDefinitionManager.GetPartDefinition("AdminMenuPart");
-            // if the part doesn't even exist, it hasn't been migrated yet... trying to query for AdminMenuPart items would cause an error.
-            if (partDefinition != null) {
-                var menuParts = _contentManager.Query<AdminMenuPart, AdminMenuPartRecord>().Where(x => x.OnAdminMenu).List();
-                foreach (var menuPart in menuParts) {
-                    if (menuPart != null) {
-                        var part = menuPart;
+            var menuParts = _contentManager.Query<AdminMenuPart, AdminMenuPartRecord>().Where(x => x.OnAdminMenu).List();
+            foreach (var menuPart in menuParts) {
+                if (menuPart != null) {
+                    var part = menuPart;
 
-                        builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.AdminMenuText)),
-                                    part.AdminMenuPosition,
-                                    item => item.Action(_contentManager.GetItemMetadata(part.ContentItem).AdminRouteValues));
-                        // todo: somehow determine if they will ultimately have rights to the destination and hide if not. possibly would need to add a Permission to metadata.
-                        // todo: give an iconset somehow (e.g. based on convention, module/content/<content-type>.adminmenu.png).
-                    }
+                    builder.Add(new LocalizedString(HttpUtility.HtmlEncode(part.AdminMenuText)),
+                                part.AdminMenuPosition,
+                                item => item.Action(_contentManager.GetItemMetadata(part.ContentItem).AdminRouteValues));
+                    // todo: somehow determine if they will ultimately have rights to the destination and hide if not. possibly would need to add a Permission to metadata.
+                    // todo: give an iconset somehow (e.g. based on convention, module/content/<content-type>.adminmenu.png).
                 }
             }
         }
