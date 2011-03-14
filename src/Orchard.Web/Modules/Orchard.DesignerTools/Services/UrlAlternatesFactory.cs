@@ -39,7 +39,7 @@ namespace Orchard.DesignerTools.Services {
                     alternate => new [] { alternate }.Union(_urlAlternates.Select(a => alternate + "__url__" + a))
                     ).ToList();
 
-                // appends [ShapeType__url__[Url] alternates
+                // appends [ShapeType]__url__[Url] alternates
                 displayedContext.ShapeMetadata.Alternates = _urlAlternates.Select(url => displayedContext.ShapeMetadata.Type + "__url__" + url)
                     .Union(displayedContext.ShapeMetadata.Alternates)
                     .ToList();
