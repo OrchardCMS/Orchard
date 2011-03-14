@@ -238,7 +238,8 @@ namespace Orchard.Core.Contents.Controllers {
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been created.")
                 : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
-            return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
+            var adminRouteValues = _contentManager.GetItemMetadata(contentItem).AdminRouteValues;
+            return RedirectToRoute(adminRouteValues);
         }
 
         public ActionResult Edit(int id) {
