@@ -24,19 +24,31 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         void IContentFieldDriver.Importing(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => Importing(part, field, context));
+            Process(context.ContentItem, (part, field) => {
+                                             Importing(part, field, context);
+                                             return null;
+                                         });
         }
 
         void IContentFieldDriver.Imported(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => Imported(part, field, context));
+            Process(context.ContentItem, (part, field) => { 
+                                             Imported(part, field, context);
+                                             return null; 
+                                         });
         }
 
         void IContentFieldDriver.Exporting(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => Exporting(part, field, context));
+            Process(context.ContentItem, (part, field) => {
+                                             Exporting(part, field, context);
+                                             return null;
+                                         });
         }
 
         void IContentFieldDriver.Exported(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => Exported(part, field, context));
+            Process(context.ContentItem, (part, field) => {
+                                             Exported(part, field, context);
+                                             return null;
+                                         });
         }
 
         DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort) {
@@ -63,10 +75,10 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) { return null; }
-        protected virtual DriverResult Importing(ContentPart part, TField field, ImportContentContext context) { return null; }
-        protected virtual DriverResult Imported(ContentPart part, TField field, ImportContentContext context) { return null; }
-        protected virtual DriverResult Exporting(ContentPart part, TField field, ExportContentContext context) { return null; }
-        protected virtual DriverResult Exported(ContentPart part, TField field, ExportContentContext context) { return null; }
+        protected virtual void Importing(ContentPart part, TField field, ImportContentContext context) { }
+        protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) { }
+        protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }
+        protected virtual void Exported(ContentPart part, TField field, ExportContentContext context) { }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
             return ContentShapeImplementation(shapeType, null, ctx => factory());
