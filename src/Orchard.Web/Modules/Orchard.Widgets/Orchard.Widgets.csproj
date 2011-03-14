@@ -71,7 +71,6 @@
     <Compile Include="Services\RuleContext.cs" />
     <Compile Include="Services\WidgetsService.cs" />
     <Compile Include="Shapes.cs" />
-    <Compile Include="ViewModels\WidgetsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Admin\images\edit.png" />

@@ -4,14 +4,15 @@ using System.Web.Mvc;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Contents.Controllers;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc.Extensions;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
-using Orchard.Widgets.ViewModels;
 
 namespace Orchard.Widgets.Controllers {
 
@@ -24,57 +25,69 @@ namespace Orchard.Widgets.Controllers {
 
         public AdminController(
             IOrchardServices services,
-            IWidgetsService widgetsService) {
+            IWidgetsService widgetsService,
+            IShapeFactory shapeFactory) {
 
             Services = services;
             _widgetsService = widgetsService;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
+            Shape = shapeFactory;
         }
 
         private IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+        dynamic Shape { get; set; }
 
-        public ActionResult Index(int? id) {
+        public ActionResult Index(int? layerId) {
             IEnumerable<LayerPart> layers = _widgetsService.GetLayers();
 
             LayerPart currentLayer;
-            IEnumerable<WidgetPart> currentLayerWidgets;
+            IEnumerable<WidgetPart> widgets;
 
             if (layers.Count() > 0) {
-                currentLayer = id == null ?
+                currentLayer = layerId == null ?
                                layers.First() :
-                               layers.FirstOrDefault(layer => layer.Id == id);
+                               layers.FirstOrDefault(layer => layer.Id == layerId);
 
                 if (currentLayer == null &&
-                    id != null) {
+                    layerId != null) {
                     // Incorrect layer id passed
-                    Services.Notifier.Error(T("Layer not found: {0}", id));
+                    Services.Notifier.Error(T("Layer not found: {0}", layerId));
                     return RedirectToAction("Index");
                 }
 
-                currentLayerWidgets = _widgetsService.GetWidgets(currentLayer.Id);
+                widgets = _widgetsService.GetWidgets();
             }
             else {
                 currentLayer = null;
-                currentLayerWidgets = new List<WidgetPart>();
+                widgets = new List<WidgetPart>();
             }
 
-            WidgetsIndexViewModel widgetsIndexViewModel = new WidgetsIndexViewModel {
-                WidgetTypes = _widgetsService.GetWidgetTypes(),
-                Layers = layers,
-                Zones = _widgetsService.GetZones(),
-                CurrentLayer = currentLayer,
-                CurrentLayerWidgets = currentLayerWidgets
-            };
+            //WidgetsIndexViewModel widgetsIndexViewModel = new WidgetsIndexViewModel {
+            //    WidgetTypes = _widgetsService.GetWidgetTypes(),
+            //    Layers = layers,
+            //    Zones = _widgetsService.GetZones(),
+            //    CurrentLayer = currentLayer,
+            //    CurrentLayerWidgets = currentLayerWidgets
+            //};
 
-            return View(widgetsIndexViewModel);
+            //return View(widgetsIndexViewModel);
+
+            dynamic viewModel = Shape.ViewModel()
+                .CurrentLayer(currentLayer)
+                .Layers(layers)
+                .Widgets(widgets)
+                .Zones(_widgetsService.GetZones());
+
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)viewModel);
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexWidgetPOST(int? id) {
+        public ActionResult IndexWidgetPOST(int? id, string returnUrl) {
             const string moveDownString = "submit.MoveDown.";
             const string moveUpString = "submit.MoveUp.";
 
@@ -98,7 +111,7 @@ namespace Orchard.Widgets.Controllers {
                 this.Error(exception, T("Moving widget failed: {0}", exception.Message), Logger, Services.Notifier);
             }
 
-            return RedirectToAction("Index", "Admin", new { id });
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
         public ActionResult AddWidget(int layerId, string widgetType) {
@@ -216,7 +229,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("EditLayer")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditLayerSavePOST(int id) {
+        public ActionResult EditLayerSavePOST(int id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -238,7 +251,7 @@ namespace Orchard.Widgets.Controllers {
                 this.Error(exception, T("Editing layer failed: {0}", exception.Message), Logger, Services.Notifier);
             }
 
-            return RedirectToAction("Index", "Admin", new { id });
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
         [HttpPost, ActionName("EditLayer")]
