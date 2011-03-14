@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using JetBrains.Annotations;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Common.Models;
 using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
@@ -11,6 +13,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
+using VersionOptions = Orchard.ContentManagement.VersionOptions;
 
 namespace Orchard.ImportExport.Services {
     [UsedImplicitly]
@@ -23,6 +26,7 @@ namespace Orchard.ImportExport.Services {
         private readonly IRecipeManager _recipeManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private const string ExportsDirectory = "Exports";
+        private static readonly List<string> _ignoredParts = new List<string> { "InfosetPart", "ContentPart`1" };
 
         public ImportExportService(
             IOrchardServices orchardServices,
@@ -136,7 +140,89 @@ namespace Orchard.ImportExport.Services {
         }
 
         private XElement ExportData(IEnumerable<string> contentTypes, VersionHistoryOptions versionHistoryOptions) {
-            return new XElement("Data");
+            var data = new XElement("Data");
+            var options = GetContentExportVersionOptions(versionHistoryOptions);
+
+            var contentItems = _orchardServices.ContentManager.Query(options).List();
+            var exportedContentItems = new HashSet<ContentItem>();
+
+            foreach (var contentType in contentTypes) {
+                var type = contentType;
+                var items = contentItems.Where(i => i.ContentType == type);
+                foreach (var contentItem in items) {
+                    var contentItemElement = ExportContentItem(contentItem, options, exportedContentItems);
+                    if (contentItemElement != null) 
+                        data.Add(contentItemElement);
+                }
+            }
+
+            return data;
+        }
+
+        private XElement ExportContentItem(ContentItem contentItem, VersionOptions versionOptions, HashSet<ContentItem> exportedContentItems) {
+            if (exportedContentItems.Contains(contentItem)) return null;
+            exportedContentItems.Add(contentItem);
+
+            // Call export handler for the item.
+            var element = new XElement(contentItem.ContentType);
+
+            // Export Parts.
+            foreach (var part in contentItem.Parts) {
+                var partElement = ExportPart(part);
+                if (partElement != null) {
+                    element.Add(partElement);
+                }
+            }
+
+            // Export child content items.
+            var children = contentItem.ContentManager
+                .Query(versionOptions)
+                .Where<CommonPartRecord>(r => r.Container == contentItem.Record)
+                .List();
+
+            foreach (var child in children) {
+                var childElement = ExportContentItem(child, versionOptions, exportedContentItems);
+                if (childElement != null) {
+                    element.Add(childElement);
+                }
+            }
+
+            return element;
+        }
+
+        private XElement ExportPart(ContentPart part) {
+            if (_ignoredParts.Contains(part.PartDefinition.Name))
+                return null;
+
+            // call export handler for the part.
+            var element = new XElement(part.PartDefinition.Name);
+
+            // Export Fields.
+            foreach (var field in part.Fields) {
+                var fieldElement = ExportField(field);
+                if (fieldElement != null) {
+                    element.Add(fieldElement);
+                }
+            }
+
+            return element;
+        }
+
+        private XElement ExportField(ContentField field) {
+            // call export handler for the field.
+            var element = new XElement(field.FieldDefinition.Name);
+
+            return element;
+        }
+
+        private static VersionOptions GetContentExportVersionOptions(VersionHistoryOptions versionHistoryOptions) {
+            if (versionHistoryOptions.HasFlag(VersionHistoryOptions.Draft)) {
+                return VersionOptions.Draft;
+            }
+            if (versionHistoryOptions.HasFlag(VersionHistoryOptions.AllVersions)) {
+                return VersionOptions.AllVersions;
+            }
+            return VersionOptions.Published;
         }
 
         private string WriteExportFile(string exportDocument) {
