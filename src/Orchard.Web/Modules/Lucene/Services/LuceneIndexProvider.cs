@@ -9,7 +9,6 @@ using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
-using System.Xml.Linq;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
 using Orchard.Indexing;
@@ -29,8 +28,6 @@ namespace Lucene.Services {
         private readonly Analyzer _analyzer ;
         private readonly string _basePath;
         public static readonly DateTime DefaultMinDateTime = new DateTime(1980, 1, 1);
-        public static readonly string Settings = "Settings";
-        public static readonly string LastIndexUtc = "LastIndexedUtc";
 
         public LuceneIndexProvider(IAppDataFolder appDataFolder, ShellSettings shellSettings) {
             _appDataFolder = appDataFolder;
@@ -123,11 +120,6 @@ namespace Lucene.Services {
         public void DeleteIndex(string indexName) {
             new DirectoryInfo(_appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName)))
                 .Delete(true);
-
-            var settingsFileName = GetSettingsFileName(indexName);
-            if (File.Exists(settingsFileName)) {
-                File.Delete(settingsFileName);
-            }
         }
 
         public void Store(string indexName, IDocumentIndex indexDocument) {
@@ -204,40 +196,6 @@ namespace Lucene.Services {
 
         public ISearchBuilder CreateSearchBuilder(string indexName) {
             return new LuceneSearchBuilder(GetDirectory(indexName)) { Logger = Logger };
-        }
-
-        private string GetSettingsFileName(string indexName) {
-            return _appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName + ".settings.xml"));
-        }
-
-        public DateTime? GetLastIndexUtc(string indexName) {
-            var settingsFileName = GetSettingsFileName(indexName);
-
-            if (!File.Exists(settingsFileName))
-                return null;
-
-            return DateTime.Parse(XDocument.Load(settingsFileName).Descendants(LastIndexUtc).First().Value);
-        }
-
-        public void SetLastIndexUtc(string indexName, DateTime lastIndexUtc) {
-            if ( lastIndexUtc < DefaultMinDateTime ) {
-                lastIndexUtc = DefaultMinDateTime;
-            }
-
-            XDocument doc;
-            var settingsFileName = GetSettingsFileName(indexName);
-            if ( !File.Exists(settingsFileName) ) {
-                EnsureDirectoryExists();
-                doc = new XDocument(
-                        new XElement(Settings,
-                            new XElement(LastIndexUtc, lastIndexUtc.ToString("s"))));
-            }
-            else {
-                doc = XDocument.Load(settingsFileName);
-                doc.Element(Settings).Element(LastIndexUtc).Value = lastIndexUtc.ToString("s");
-            }
-
-            doc.Save(settingsFileName);
         }
 
         public IEnumerable<string> GetFields(string indexName) {

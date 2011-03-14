@@ -30,8 +30,6 @@ namespace Orchard.Indexing.Services {
                 throw new ArgumentNullException("contentItem");
             }
 
-            DeleteTasks(contentItem);
-
             var taskRecord = new IndexingTaskRecord {
                 CreatedUtc = _clock.UtcNow,
                 ContentItemRecord = contentItem.Record,
@@ -52,24 +50,6 @@ namespace Orchard.Indexing.Services {
 
             CreateTask(contentItem, IndexingTaskRecord.Delete);
             Logger.Information("Deleting index task created for [{0}:{1}]", contentItem.ContentType, contentItem.Id);
-        }
-
-        public DateTime GetLastTaskDateTime() {
-            return _repository.Table.Max(t => t.CreatedUtc) ?? new DateTime(1980, 1, 1);
-        }
-
-        /// <summary>
-        /// Removes existing tasks for the specified content item
-        /// </summary>
-        public void DeleteTasks(ContentItem contentItem) {
-            var tasks = _repository
-                .Fetch(x => x.ContentItemRecord.Id == contentItem.Id)
-                .ToArray();
-            foreach (var task in tasks) {
-                _repository.Delete(task);
-            }
-
-            _repository.Flush();
         }
     }
 }

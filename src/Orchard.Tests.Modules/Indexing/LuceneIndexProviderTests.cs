@@ -7,7 +7,6 @@ using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
 using Orchard.Indexing;
-using Orchard.Indexing.Services;
 using Orchard.Tests.FileSystems.AppData;
 
 namespace Orchard.Tests.Modules.Indexing {
@@ -199,18 +198,6 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         [Test]
-        public void ProviderShouldStoreSettings() {
-            _provider.CreateIndex("default");
-            Assert.That(_provider.GetLastIndexUtc("default"), Is.Null);
-
-            _provider.SetLastIndexUtc("default", new DateTime(2010, 1, 1, 1, 1, 1, 1));
-            Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(new DateTime(2010, 1, 1, 1, 1, 1, 0)));
-
-            _provider.SetLastIndexUtc("default", new DateTime(1901, 1, 1, 1, 1, 1, 1));
-            Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(LuceneIndexProvider.DefaultMinDateTime));
-        }
-
-        [Test]
         public void IsEmptyShouldBeTrueForNoneExistingIndexes() {
             _provider.IsEmpty("dummy");
             Assert.That(_provider.IsEmpty("default"), Is.True);
@@ -238,9 +225,7 @@ namespace Orchard.Tests.Modules.Indexing {
 
         [Test]
         public void IsDirtyShouldBeTrueWhenIndexIsModified() {
-            IDocumentIndex doc;
-            
-            doc = _provider.New(1);
+            IDocumentIndex doc = _provider.New(1);
             doc.Add("foo", "value");
             Assert.That(doc.IsDirty, Is.True);
 
@@ -281,7 +266,7 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(searchBuilder.Get(11).ContentItemId, Is.EqualTo(11));
             Assert.That(searchBuilder.Get(111).ContentItemId, Is.EqualTo(111));
 
-            _provider.Delete("default", new int[] {1, 11, 111 });
+            _provider.Delete("default", new [] {1, 11, 111 });
 
             Assert.That(searchBuilder.Get(1), Is.Null);
             Assert.That(searchBuilder.Get(11), Is.Null);
