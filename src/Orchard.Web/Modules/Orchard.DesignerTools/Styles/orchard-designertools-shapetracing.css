@@ -93,7 +93,7 @@
 
 #shape-tracing-window-tree li  {
     clear:both;
-    line-height:16px;
+    line-height:20px;
 }
 
 .shape-tracing-selected {
@@ -101,7 +101,6 @@
 }
 
 #shape-tracing-window-tree .shape-tracing-selected  {
-    /*old color background-color: #4B4FF9;*/
     background:#2c66c3;
     color:#fff;
     
@@ -112,8 +111,8 @@
 }
 
 #shape-tracing-window-tree ul {
-    margin-left:10px;
-    padding-left:10px;
+    margin:0 0 0 18px;
+    padding:0 0 0 10px;
     list-style-type:none;
 }
 
