@@ -29,5 +29,10 @@ namespace Orchard.Comments.Drivers {
             updater.TryUpdateModel(part, Prefix, null, null);
             return Editor(part, shapeHelper);
         }
+
+        protected override void Exporting(CommentsPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsShown", part.CommentsShown);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsActive", part.CommentsActive);
+        }
     }
 }

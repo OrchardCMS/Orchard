@@ -4,6 +4,7 @@ using Orchard.ArchiveLater.Services;
 using Orchard.ArchiveLater.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using System.Globalization;
 
@@ -71,6 +72,10 @@ namespace Orchard.ArchiveLater.Drivers {
 
             return ContentShape("Parts_ArchiveLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+        }
+
+        protected override void Exporting(ArchiveLaterPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ScheduledArchiveUtc", part.ScheduledArchiveUtc.Value);
         }
     }
 }

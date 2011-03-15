@@ -5,6 +5,7 @@ using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 
 namespace Orchard.Blogs.Drivers {
@@ -63,6 +64,11 @@ namespace Orchard.Blogs.Drivers {
             }
 
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Exporting(RecentBlogPostsPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
         }
     }
 }
