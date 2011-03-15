@@ -13,10 +13,12 @@ namespace Orchard.Localization.Drivers {
         private const string TemplatePrefix = "Localization";
         private readonly ICultureManager _cultureManager;
         private readonly ILocalizationService _localizationService;
+        private readonly IContentManager _contentManager;
 
-        public LocalizationPartDriver(ICultureManager cultureManager, ILocalizationService localizationService) {
+        public LocalizationPartDriver(ICultureManager cultureManager, ILocalizationService localizationService, IContentManager contentManager) {
             _cultureManager = cultureManager;
             _localizationService = localizationService;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(LocalizationPart part, string displayType, dynamic shapeHelper) {
@@ -74,6 +76,17 @@ namespace Orchard.Localization.Drivers {
                         localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
                     return c;
                 }).ToList();
+        }
+
+        protected override void Exporting(LocalizationPart part, ContentManagement.Handlers.ExportContentContext context) {
+            if (part.MasterContentItem != null) {
+                var masterContentItemIdentity = _contentManager.GetItemMetadata(part.MasterContentItem).Identity;
+                context.Element(part.PartDefinition.Name).SetAttributeValue("MasterContentItem", masterContentItemIdentity.ToString());
+            }
+
+            if (part.Culture != null) {
+                context.Element(part.PartDefinition.Name).SetAttributeValue("Culture", part.Culture.Culture);
+            }
         }
     }
 }

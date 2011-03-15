@@ -37,7 +37,7 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Exporting(ContentPart part, TextField field, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Text", field.Value);
+            context.Element(field.FieldDefinition.Name).SetAttributeValue("Text", field.Value);
         }
     }
 }
