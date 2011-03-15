@@ -102,6 +102,7 @@
 
 #shape-tracing-window-tree .shape-tracing-selected  {
     background-color: #4B4FF9;
+    color:#fff;
 }
 
 #shape-tracing-window-tree ul {
