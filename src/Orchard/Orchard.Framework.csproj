@@ -160,6 +160,7 @@
     <Compile Include="ContentManagement\Handlers\ExportContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\ImportContentContext.cs" />
     <Compile Include="ContentManagement\IContentBehavior.cs" />
+    <Compile Include="ContentManagement\ImportContentSession.cs" />
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementInfo.cs" />
     <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
