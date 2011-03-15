@@ -64,7 +64,12 @@
         <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
     </fieldset>
     <fieldset class="contentItems bulk-items">
-@Display(Model.ContentItems)
+	@if ((int)Model.ContentItems.Items.Count == 0) {
+		@T("The '{0}' {1} has no content items.", Model.ContainerDisplayName, Model.ContainerContentType)
+	}
+	else {
+		@Display(Model.ContentItems)
+	}
     </fieldset>
 @Display(Model.Pager)
 }
