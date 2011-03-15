@@ -22,6 +22,7 @@ namespace Orchard.ContentManagement {
         void Index(ContentItem contentItem, IDocumentIndex documentIndex);
 
         XElement Export(ContentItem contentItem);
+        void Import(XElement element);
 
         void Flush();
         IContentQuery<ContentItem> Query();

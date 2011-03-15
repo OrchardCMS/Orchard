@@ -6,7 +6,10 @@ using Orchard.Recipes.Services;
 
 namespace Orchard.ImportExport.RecipeHandlers {
     public class DataRecipeHandler : IRecipeHandler {
-        public DataRecipeHandler() {
+        private readonly IOrchardServices _orchardServices;
+
+        public DataRecipeHandler(IOrchardServices orchardServices) {
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -19,6 +22,10 @@ namespace Orchard.ImportExport.RecipeHandlers {
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
             if (!String.Equals(recipeContext.RecipeStep.Name, "Data", StringComparison.OrdinalIgnoreCase)) {
                 return;
+            }
+
+            foreach (var element in recipeContext.RecipeStep.Step.Elements()) {
+                _orchardServices.ContentManager.Import(element);
             }
 
             recipeContext.Executed = true;

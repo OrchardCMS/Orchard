@@ -5,7 +5,6 @@ using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Common.Models;
 using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;
@@ -159,9 +158,7 @@ namespace Orchard.ImportExport.Services {
 
         private XElement ExportContentItem(ContentItem contentItem) {
             // Call export handler for the item.
-            var element = _orchardServices.ContentManager.Export(contentItem);
-
-            return element;
+            return _orchardServices.ContentManager.Export(contentItem);
         }
 
         private static VersionOptions GetContentExportVersionOptions(VersionHistoryOptions versionHistoryOptions) {

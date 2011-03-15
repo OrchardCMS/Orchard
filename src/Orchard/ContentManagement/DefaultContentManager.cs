@@ -414,6 +414,9 @@ namespace Orchard.ContentManagement {
             return context.Data;
         }
 
+        public void Import(XElement element) {
+        }
+
         public void Flush() {
             _contentItemRepository.Flush();
         }
