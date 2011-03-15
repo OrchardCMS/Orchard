@@ -16,7 +16,6 @@ namespace Orchard.Comments.Handlers {
 
             if (part != null) {
                 context.Metadata.Identity.Add("Comment.CommentAuthor", part.Record.Author);
-                context.Metadata.Identity.Add("Comment.CommentDateUtc", part.Record.CommentDateUtc.ToString());
             }
         }
     }
