@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using Autofac;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
@@ -395,6 +396,22 @@ namespace Orchard.ContentManagement {
         public IContentQuery<ContentItem> Query() {
             var query = _context.Resolve<IContentQuery>(TypedParameter.From<IContentManager>(this));
             return query.ForPart<ContentItem>();
+        }
+
+        public XElement Export(ContentItem contentItem) {
+            var context = new ExportContentContext(contentItem, new XElement(contentItem.ContentType));
+
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Exporting(context);
+            }
+
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Exported(context);
+            }
+
+            context.Data.SetAttributeValue("Id", GetItemMetadata(contentItem).Identity.ToString());
+
+            return context.Data;
         }
 
         public void Flush() {

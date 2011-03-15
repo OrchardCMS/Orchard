@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Indexing;
 
@@ -20,6 +21,7 @@ namespace Orchard.ContentManagement {
         void Remove(ContentItem contentItem);
         void Index(ContentItem contentItem, IDocumentIndex documentIndex);
 
+        XElement Export(ContentItem contentItem);
 
         void Flush();
         IContentQuery<ContentItem> Query();

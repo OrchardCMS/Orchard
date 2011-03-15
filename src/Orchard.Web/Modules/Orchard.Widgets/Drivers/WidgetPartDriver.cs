@@ -35,5 +35,11 @@ namespace Orchard.Widgets.Drivers {
             updater.TryUpdateModel(widgetPart, Prefix, null, null);
             return Editor(widgetPart, shapeHelper);
         }
+
+        protected override void Exporting(WidgetPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Position", part.Position);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Zone", part.Zone);
+        }
     }
 }

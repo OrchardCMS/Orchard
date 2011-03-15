@@ -26,7 +26,6 @@ namespace Orchard.ImportExport.Services {
         private readonly IRecipeManager _recipeManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private const string ExportsDirectory = "Exports";
-        private static readonly List<string> _ignoredParts = new List<string> { "InfosetPart", "ContentPart`1" };
 
         public ImportExportService(
             IOrchardServices orchardServices,
@@ -144,13 +143,12 @@ namespace Orchard.ImportExport.Services {
             var options = GetContentExportVersionOptions(versionHistoryOptions);
 
             var contentItems = _orchardServices.ContentManager.Query(options).List();
-            var exportedContentItems = new HashSet<ContentItem>();
 
             foreach (var contentType in contentTypes) {
                 var type = contentType;
                 var items = contentItems.Where(i => i.ContentType == type);
                 foreach (var contentItem in items) {
-                    var contentItemElement = ExportContentItem(contentTypes, contentItem, options, exportedContentItems);
+                    var contentItemElement = ExportContentItem(contentItem);
                     if (contentItemElement != null) 
                         data.Add(contentItemElement);
                 }
@@ -159,60 +157,9 @@ namespace Orchard.ImportExport.Services {
             return data;
         }
 
-        private XElement ExportContentItem(IEnumerable<string> contentTypes, ContentItem contentItem, VersionOptions versionOptions, HashSet<ContentItem> exportedContentItems) {
-            if (exportedContentItems.Contains(contentItem)) return null;
-            exportedContentItems.Add(contentItem);
-
+        private XElement ExportContentItem(ContentItem contentItem) {
             // Call export handler for the item.
-            var element = new XElement(contentItem.ContentType);
-
-            // Export Parts.
-            foreach (var part in contentItem.Parts) {
-                var partElement = ExportPart(part);
-                if (partElement != null) {
-                    element.Add(partElement);
-                }
-            }
-
-            // Export child content items.
-            var children = contentItem.ContentManager
-                .Query(versionOptions)
-                .Where<CommonPartRecord>(r => r.Container == contentItem.Record)
-                .List();
-
-            foreach (var child in children) {
-                if (contentTypes.Contains(child.ContentType)) {
-                    var childElement = ExportContentItem(contentTypes, child, versionOptions, exportedContentItems);
-                    if (childElement != null) {
-                        element.Add(childElement);
-                    }
-                }
-            }
-
-            return element;
-        }
-
-        private XElement ExportPart(ContentPart part) {
-            if (_ignoredParts.Contains(part.PartDefinition.Name))
-                return null;
-
-            // Call export handler for the part.
-            var element = new XElement(part.PartDefinition.Name);
-
-            // Export Fields.
-            foreach (var field in part.Fields) {
-                var fieldElement = ExportField(field);
-                if (fieldElement != null) {
-                    element.Add(fieldElement);
-                }
-            }
-
-            return element;
-        }
-
-        private XElement ExportField(ContentField field) {
-            // Call export handler for the field.
-            var element = new XElement(field.FieldDefinition.Name);
+            var element = _orchardServices.ContentManager.Export(contentItem);
 
             return element;
         }

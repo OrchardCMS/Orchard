@@ -1,6 +1,7 @@
 ﻿using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Services;
 using Orchard.Mvc;
 using Orchard.PublishLater.Models;
@@ -80,6 +81,10 @@ namespace Orchard.PublishLater.Drivers {
 
             return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+        }
+
+        protected override void Exporting(PublishLaterPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ScheduledPublishUtc", part.ScheduledPublishUtc.Value);
         }
     }
 }

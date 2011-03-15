@@ -4,6 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
@@ -62,6 +63,12 @@ namespace Orchard.Widgets.Drivers {
             }
 
             return Editor(layerPart, shapeHelper);
+        }
+
+        protected override void Exporting(LayerPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("LayerRule", part.LayerRule);
         }
     }
 }

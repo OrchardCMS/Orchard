@@ -45,5 +45,11 @@ namespace Orchard.Core.Navigation.Drivers {
 
             return Editor(part, shapeHelper);
         }
+
+        protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("MenuText", part.MenuText);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("MenuPosition", part.MenuPosition);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("OnMainMenu", part.OnMainMenu);
+        }
     }
 }

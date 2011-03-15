@@ -150,6 +150,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentManagement\ContentIdentity.cs" />
     <Compile Include="ContentManagement\ContentItemBehavior.cs" />
     <Compile Include="ContentManagement\ContentPartBehavior.cs" />
     <Compile Include="ContentManagement\DefaultContentDisplay.cs" />

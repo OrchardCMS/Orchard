@@ -5,7 +5,11 @@ namespace Orchard.ContentManagement {
     public class ContentItemMetadata {
         private RouteValueDictionary _adminRouteValues;
 
+        public ContentItemMetadata() {
+            Identity = new ContentIdentity();
+        }
         public string DisplayText { get; set; }
+        public ContentIdentity Identity { get; set; }
         public RouteValueDictionary DisplayRouteValues { get; set; }
         public RouteValueDictionary EditorRouteValues { get; set; }
         public RouteValueDictionary CreateRouteValues { get; set; }

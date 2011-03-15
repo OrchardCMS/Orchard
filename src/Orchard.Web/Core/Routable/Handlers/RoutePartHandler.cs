@@ -89,6 +89,14 @@ namespace Orchard.Core.Routable.Handlers {
             OnIndexing<RoutePart>((context, part) => context.DocumentIndex.Add("title", part.Record.Title).RemoveTags().Analyze());
         }
 
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            var part = context.ContentItem.As<RoutePart>();
+
+            if (part != null) {
+                context.Metadata.Identity.Add("Route.Slug", part.Slug);
+            }
+        }
+
         private void FinalizePath(RoutePart route, PublishContentContext context, Action<RoutePart> processSlug) {
             var path = route.Path;
             route.Path = route.GetPathWithSlug(route.Slug);

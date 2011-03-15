@@ -28,5 +28,10 @@ namespace Orchard.Blogs.Drivers {
             updater.TryUpdateModel(blogPart, Prefix, null, null);
             return Editor(blogPart, shapeHelper);
         }
+
+        protected override void Exporting(BlogPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PostCount", part.PostCount);
+        }
     }
 }

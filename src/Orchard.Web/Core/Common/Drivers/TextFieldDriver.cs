@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Fields;
 
 namespace Orchard.Core.Common.Drivers {
@@ -33,6 +34,10 @@ namespace Orchard.Core.Common.Drivers {
         protected override DriverResult Editor(ContentPart part, TextField field, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(field, GetPrefix(field, part), null, null);
             return Editor(part, field, shapeHelper);
+        }
+
+        protected override void Exporting(ContentPart part, TextField field, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Text", field.Value);
         }
     }
 }

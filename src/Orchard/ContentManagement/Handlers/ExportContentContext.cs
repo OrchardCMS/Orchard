@@ -8,5 +8,14 @@ namespace Orchard.ContentManagement.Handlers {
             : base(contentItem) {
             Data = data;
         }
+
+        public XElement Element(string elementName) {
+            var element = Data.Element(elementName);
+            if (element == null) {
+                element = new XElement(elementName);
+                Data.Add(element);
+            }
+            return element;
+        }
     }
 }

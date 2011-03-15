@@ -1,5 +1,6 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
@@ -117,6 +118,22 @@ namespace Orchard.Core.Common.Drivers {
 
             return ContentShape("Parts_Common_Container_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Common.Container", Model: model, Prefix: Prefix));
+        }
+
+        protected override void Exporting(CommonPart part, ExportContentContext context) {
+            if (part.Owner != null) {
+                var ownerIdentity = _contentManager.GetItemMetadata(part.Owner).Identity;
+                context.Element(part.PartDefinition.Name).SetAttributeValue("Owner", ownerIdentity.ToString());
+            }
+
+            if (part.Container != null) {
+                var containerIdentity = _contentManager.GetItemMetadata(part.Container).Identity;
+                context.Element(part.PartDefinition.Name).SetAttributeValue("Container", containerIdentity.ToString()); 
+            }
+
+            context.Element(part.PartDefinition.Name).SetAttributeValue("CreatedUtc", part.CreatedUtc);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PublishedUtc", part.PublishedUtc);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ModifiedUtc", part.ModifiedUtc);
         }
     }
 }
