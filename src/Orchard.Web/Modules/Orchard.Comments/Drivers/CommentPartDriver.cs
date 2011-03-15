@@ -19,7 +19,7 @@ namespace Orchard.Comments.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("UserName", part.Record.UserName);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Email", part.Record.Email);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Status", part.Record.Status.ToString());
-            context.Element(part.PartDefinition.Name).SetAttributeValue("CommentDataUtc", part.Record.CommentDateUtc.ToString());
+            context.Element(part.PartDefinition.Name).SetAttributeValue("CommentDateUtc", part.Record.CommentDateUtc.ToString());
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentText", part.Record.CommentText);
 
             var commentedOn = _contentManager.Get(part.Record.CommentedOn);
