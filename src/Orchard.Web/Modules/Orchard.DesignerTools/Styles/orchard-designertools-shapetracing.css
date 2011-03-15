@@ -93,7 +93,7 @@
 
 #shape-tracing-window-tree li  {
     clear:both;
-    line-height:16px;
+    line-height:20px;
 }
 
 .shape-tracing-selected {
@@ -101,13 +101,18 @@
 }
 
 #shape-tracing-window-tree .shape-tracing-selected  {
-    background-color: #4B4FF9;
+    background:#2c66c3;
     color:#fff;
+    
+     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff3875d7',  endColorstr='#ff2c66c3');	
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(56, 117, 215, 1.0)), rgba((44, 102, 195, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(56, 117, 215, 1.0), rgba(44, 102, 195, 1.0));
 }
 
 #shape-tracing-window-tree ul {
-    margin-left:10px;
-    padding-left:10px;
+    margin:0 0 0 18px;
+    padding:0 0 0 10px;
     list-style-type:none;
 }
 
