@@ -50,11 +50,11 @@ namespace Orchard.Widgets.Commands {
         [CommandHelp("widget create <type> /Title:<title> /Zone:<zone> /Position:<position> /Layer:<layer> [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false]\r\n\t" + "Creates a new widget")]
         [OrchardSwitches("Title,Zone,Position,Layer,Owner,Text,UseLoremIpsumText")]
         public void Create(string type) {
-            var widgetTypes = _widgetsService.GetWidgetTypes();
-            if (!widgetTypes.Contains(type)) {
+            var widgetTypeNames = _widgetsService.GetWidgetTypeNames();
+            if (!widgetTypeNames.Contains(type)) {
                 throw new OrchardException(T("Creating widget failed : type {0} was not found. Supported widget types are: {1}.", 
                     type,
-                    widgetTypes.Aggregate(String.Empty, (current, widgetType) => current + " " + widgetType)));
+                    widgetTypeNames.Aggregate(String.Empty, (current, widgetType) => current + " " + widgetType)));
             }
 
             var layer = GetLayer(Layer);

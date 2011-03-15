@@ -24,7 +24,7 @@ vertical-align:middle;
 margin-left:10px;
 }
 
-#widgets-zones {
+#widgets-zones, #widgets-available {
 background:#F3F4F5;
 border:1px solid #E4E5E6;
 padding:0 5px;
@@ -32,15 +32,22 @@ padding:0 5px;
 #widgets-zones ol {
 list-style:decimal inside;
 }
-#widgets-zones li {
+#widgets-zones li, #widgets-available li {
 background:#FFF;
 color:#AEC3CE;
 border:1px solid #EAEAEA;
 margin:5px 0;
 padding:0 10px;
+position:relative;
+}
+#widgets-zones li:hover {
+border-color:#bfd3a7;
 }
 #widgets-zones h2 {
 font-size:1.077em;
+}
+#widgets-available h2 {
+font-size:1.231em;
 }
 #widgets-zones h2, #widgets-zones li li {
 color:#333;
@@ -54,4 +61,27 @@ padding:5px 10px 5px 25px;
 #widgets-zones .widgets-mover {
 margin-left:-18px;
 vertical-align:-2px;
+}
+#widgets-zones .widgets-actions {
+position:absolute;
+top:5px;
+right:10px;
+}
+#widgets-available li {
+border:0;
+padding:0;
+}
+#widgets-available li a {
+border:1px solid #EAEAEA;
+display:block;
+padding:5px 10px;
+}
+#widgets-available li a:hover {
+border-color:#bfd3a7;
+}
+#widgets-available a h2, #widgets-available a p {
+color:#333;
+}
+#widgets-available a p {
+margin-top:5px;
 }

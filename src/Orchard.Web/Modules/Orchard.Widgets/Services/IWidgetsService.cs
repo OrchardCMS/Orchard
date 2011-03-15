@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets.Services {
@@ -8,7 +9,8 @@ namespace Orchard.Widgets.Services {
 
         IEnumerable<LayerPart> GetLayers();
 
-        IEnumerable<string> GetWidgetTypes();
+        IEnumerable<Tuple<string, string>> GetWidgetTypes();
+        IEnumerable<string> GetWidgetTypeNames();
         IEnumerable<WidgetPart> GetWidgets();
         IEnumerable<WidgetPart> GetWidgets(int layerId);
 

@@ -35,8 +35,9 @@
                         @foreach (string zone in zones) {
                             <li>
                                 <h2>@zone</h2>
+                                <div class="widgets-actions">@Html.ActionLink(T("Add").Text, "ChooseWidget", new { layerId = Model.CurrentLayer.Id, zone, returnUrl }, new { @class = "button" })</div>
                                 <ul class="widgets-zone-widgets">
-                                    @{
+                                    @{ 
                                         int count = widgets.Where(w => w.Zone == zone).Count() - 1;
                                         int i = 0;
                                     }
@@ -45,11 +46,8 @@
                                             @if (i > 0) {
                                                 <input class="widgets-mover" type="image" name="submit.MoveUp.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/moveup.gif")" alt="Move up" value="@widget.Id" />
                                             }
-                                            @if (i < count) {
+                                            @if (i++ < count) {
                                                 <input class="widgets-mover" type="image" name="submit.MoveDown.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/movedown.gif")" alt="Move down" value="@widget.Id" />
-                                            }
-                                            @{
-                                                i++;
                                             }
                                             @Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id })
                                         </li>
