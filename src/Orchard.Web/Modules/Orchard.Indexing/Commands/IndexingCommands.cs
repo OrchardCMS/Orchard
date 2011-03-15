@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.ContentManagement;
@@ -35,7 +34,7 @@ namespace Orchard.Indexing.Commands {
         [CommandName("index update")]
         [CommandHelp("index update\r\n\t" + "Updates the search index")]
         public string Update() {
-            _indexingService.UpdateIndex();
+            _indexingService.UpdateIndex(SearchIndexName);
 
             return T("Index is now being updated...").Text;
         }
@@ -43,8 +42,7 @@ namespace Orchard.Indexing.Commands {
         [CommandName("index rebuild")]
         [CommandHelp("index rebuild \r\n\t" + "Rebuilds the search index")]
         public string Rebuild() {
-            _indexingService.RebuildIndex();
-            _indexingService.UpdateIndex();
+            _indexingService.RebuildIndex(SearchIndexName);
 
             return T("Index is now being rebuilt...").Text;
         }

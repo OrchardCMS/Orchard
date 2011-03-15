@@ -49,6 +49,9 @@ namespace Orchard.UI.Resources {
             manifest.DefineScript("jQueryUtils_TimePicker").SetUrl("ui.timepickr.js").SetVersion("0.7.0a").SetDependencies("jQueryUtils", "jQueryUI_Core", "jQueryUI_Widget");
 
             manifest.DefineStyle("jQueryUI_Orchard").SetUrl("jquery-ui-1.7.2.custom.css").SetVersion("1.7.2");
+            manifest.DefineStyle("jQueryUI_DatePicker").SetUrl("ui.datepicker.css").SetDependencies("jQueryUI_Orchard").SetVersion("1.7.2");
+            manifest.DefineStyle("jQueryUtils_TimePicker").SetUrl("ui.timepickr.css");
+
         }
     }
 }

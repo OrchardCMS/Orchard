@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Orchard.Indexing {
     public interface IIndexProvider : ISingletonDependency {
@@ -59,16 +58,6 @@ namespace Orchard.Indexing {
         /// </summary>
         /// <returns>A search builder instance</returns>
         ISearchBuilder CreateSearchBuilder(string indexName);
-
-        /// <summary>
-        /// Returns the date and time when the index was last processed, or null if the index doesn't exist
-        /// </summary>
-        DateTime? GetLastIndexUtc(string indexName);
-
-        /// <summary>
-        /// Sets the date and time when the index was last processed
-        /// </summary>
-        void SetLastIndexUtc(string indexName, DateTime lastIndexUtc);
 
         /// <summary>
         /// Returns every field available in the specified index
