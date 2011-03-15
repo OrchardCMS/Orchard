@@ -60,8 +60,7 @@ namespace Orchard.Tags.Drivers {
         }
 
         protected override void Exporting(TagsPart part, ExportContentContext context) {
-            var tags = part.CurrentTags.Aggregate(String.Empty, (current, tag) => current + "," + tag.TagName);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("Tags", tags);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Tags", String.Join(",", part.CurrentTags.Select(t => t.TagName)));
         }
     }
 }
