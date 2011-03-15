@@ -398,6 +398,33 @@ namespace Orchard.ContentManagement {
             return query.ForPart<ContentItem>();
         }
 
+        public void Import(XElement element, ImportContentSession importContentSession) {
+            var elementId = element.Attribute("Id");
+            if (elementId == null)
+                return;
+
+            var identity = elementId.Value;
+            var item = importContentSession.Get(identity);
+            if (item == null) {
+                item = New(element.Name.LocalName);
+                Create(item);
+                importContentSession.Store(identity, item);
+            }
+            else {
+                item = Get(item.Id, VersionOptions.DraftRequired);
+            }
+
+            var context = new ImportContentContext(item, element);
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Importing(context);
+            }
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Imported(context);
+            }
+
+            Publish(item);
+        }
+
         public XElement Export(ContentItem contentItem) {
             var context = new ExportContentContext(contentItem, new XElement(contentItem.ContentType));
 
@@ -409,12 +436,10 @@ namespace Orchard.ContentManagement {
                 contentHandler.Exported(context);
             }
 
+            // Put version information in the id.
             context.Data.SetAttributeValue("Id", GetItemMetadata(contentItem).Identity.ToString());
 
             return context.Data;
-        }
-
-        public void Import(XElement element) {
         }
 
         public void Flush() {
@@ -439,6 +464,39 @@ namespace Orchard.ContentManagement {
 
             Handlers.Invoke(handler => handler.Indexed(indexContentContext), Logger);
         }
+    }
+
+    public class ImportContentSession {
+        private readonly IContentManager _contentManager;
+
+        // order of x500 elements.
+        private readonly Dictionary<string, ContentItem> _dictionary;
+
+        public ImportContentSession(IContentManager contentManager) {
+            _contentManager = contentManager;
+            _dictionary = new Dictionary<string, ContentItem>();
+        }
+
+        // gets a content item for an identity string.
+        public ContentItem Get(string id) {
+            if (_dictionary.ContainsKey(id))
+                return _dictionary[id];
+
+            foreach (var item in _contentManager.Query(VersionOptions.Published).List()) {
+                var identity = _contentManager.GetItemMetadata(item).Identity.ToString();
+                if (identity == id) {
+                    _dictionary.Add(identity, item);
+                    return item;
+                }
+            }
+
+            return null;
+        }
+
+        public void Store(string id, ContentItem item) {
+            _dictionary.Add(id, item);
+        }
+
     }
 
     class CallSiteCollection : ConcurrentDictionary<string, CallSite<Func<CallSite, object, object>>> {

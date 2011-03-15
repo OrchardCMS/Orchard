@@ -1,4 +1,5 @@
 ﻿using System;
+using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;
@@ -24,8 +25,24 @@ namespace Orchard.ImportExport.RecipeHandlers {
                 return;
             }
 
+            var importContentSession = new ImportContentSession(_orchardServices.ContentManager);
             foreach (var element in recipeContext.RecipeStep.Step.Elements()) {
-                _orchardServices.ContentManager.Import(element);
+                var elementId = element.Attribute("Id");
+                if (elementId == null)
+                    continue;
+
+                var identity = elementId.Value;
+
+                var item = importContentSession.Get(identity);
+                if (item == null) {
+                    item = _orchardServices.ContentManager.New(element.Name.LocalName);
+                    _orchardServices.ContentManager.Create(item);
+                    importContentSession.Store(identity, item);
+                }
+            }
+
+            foreach (var element in recipeContext.RecipeStep.Step.Elements()) {
+                _orchardServices.ContentManager.Import(element, importContentSession);
             }
 
             recipeContext.Executed = true;
