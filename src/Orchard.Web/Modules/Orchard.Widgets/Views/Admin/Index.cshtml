@@ -2,6 +2,8 @@
 @using Orchard.Widgets.Models;
 @{
     Style.Require("WidgetsAdmin");
+    Script.Require("Switchable");
+    Style.Require("Switchable");
     Layout.Title = T("Manage Widgets").ToString();
     IEnumerable<LayerPart> layers = Model.Layers;
     IEnumerable<WidgetPart> widgets = Model.Widgets;
@@ -29,28 +31,32 @@
     </div>
     <div id="layout-widgets-placement">
         <div id="widgets-placement">
-            <div id="widgets-layers" class="widgets-container">
+            <div id="widgets-layers" class="widgets-container detail-view switchable">
                 <div id="widgets-zones">
                     <ol>
                         @foreach (string zone in zones) {
-                            <li>
+                            int count = widgets.Where(w => w.Zone == zone).Count();
+                            MvcHtmlString classA = null;
+                            if (count == 0) {
+                                classA = new MvcHtmlString(" class=\"widgets-none\"");
+                            }
+                            <li@(classA)>
                                 <h2>@zone</h2>
                                 <div class="widgets-actions">@Html.ActionLink(T("Add").Text, "ChooseWidget", new { layerId = Model.CurrentLayer.Id, zone, returnUrl }, new { @class = "button" })</div>
                                 <ul class="widgets-zone-widgets">
-                                    @{ 
-                                        int count = widgets.Where(w => w.Zone == zone).Count() - 1;
+                                    @if (count > 0) {
                                         int i = 0;
-                                    }
-                                    @foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
-                                        <li>
-                                            @if (i > 0) {
-                                                <input class="widgets-mover" type="image" name="submit.MoveUp.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/moveup.gif")" alt="Move up" value="@widget.Id" />
-                                            }
-                                            @if (i++ < count) {
-                                                <input class="widgets-mover" type="image" name="submit.MoveDown.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/movedown.gif")" alt="Move down" value="@widget.Id" />
-                                            }
-                                            @Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id })
-                                        </li>
+                                        foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
+                                            <li>
+                                                @if (i > 0) {
+                                                    <input class="widgets-mover" type="image" name="submit.MoveUp.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/moveup.gif")" alt="Move up" value="@widget.Id" />
+                                                }
+                                                @if (++i < count) {
+                                                    <input class="widgets-mover" type="image" name="submit.MoveDown.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/movedown.gif")" alt="Move down" value="@widget.Id" />
+                                                }
+                                                @Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id })
+                                            </li>
+                                        }
                                     }
                                 </ul>
                             </li>

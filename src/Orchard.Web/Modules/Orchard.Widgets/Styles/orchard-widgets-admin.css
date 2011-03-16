@@ -29,9 +29,11 @@ background:#F3F4F5;
 border:1px solid #E4E5E6;
 padding:0 5px;
 }
+/* The number seems slightly meaningless. Leaving it out for now. * /
 #widgets-zones ol {
 list-style:decimal inside;
 }
+*/
 #widgets-zones li, #widgets-available li {
 background:#FFF;
 color:#AEC3CE;
@@ -85,3 +87,12 @@ color:#333;
 #widgets-available a p {
 margin-top:5px;
 }
+
+/* begin: switchable tweaks for admin/widgets */
+#widgets-placement .switch-for-switchable {
+margin:-32px 10px -2px 0;
+}
+#widgets-placement .summary-view .widgets-none {
+display:none;
+}
+/* end: switchable tweaks */
