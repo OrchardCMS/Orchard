@@ -65,6 +65,23 @@ namespace Orchard.Widgets.Drivers {
             return Editor(layerPart, shapeHelper);
         }
 
+        protected override void Importing(LayerPart part, ImportContentContext context) {
+            var name = context.Attribute(part.PartDefinition.Name, "Name");
+            if (name != null) {
+                part.Name = name;
+            }
+
+            var description = context.Attribute(part.PartDefinition.Name, "Description");
+            if (description != null) {
+                part.Description = description;
+            }
+
+            var rule = context.Attribute(part.PartDefinition.Name, "LayerRule");
+            if (rule != null) {
+                part.LayerRule = rule;    
+            }
+        }
+
         protected override void Exporting(LayerPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Description", part.Description);

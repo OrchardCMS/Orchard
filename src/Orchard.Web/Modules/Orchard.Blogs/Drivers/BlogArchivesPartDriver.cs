@@ -54,6 +54,13 @@ namespace Orchard.Blogs.Drivers {
             return Editor(part, shapeHelper);
         }
 
+        protected override void Importing(BlogArchivesPart part, ImportContentContext context) {
+            var blogSlug = context.Attribute(part.PartDefinition.Name, "BlogSlug");
+            if (blogSlug != null) {
+                part.ForBlog = blogSlug;
+            }
+        }
+
         protected override void Exporting(BlogArchivesPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
         }

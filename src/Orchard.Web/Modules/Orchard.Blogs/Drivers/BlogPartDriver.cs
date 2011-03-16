@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -27,6 +28,18 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Editor(BlogPart blogPart, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(blogPart, Prefix, null, null);
             return Editor(blogPart, shapeHelper);
+        }
+
+        protected override void Importing(BlogPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var description = context.Attribute(part.PartDefinition.Name, "Description");
+            if (description != null) {
+                part.Description = description;
+            }
+
+            var postCount = context.Attribute(part.PartDefinition.Name, "PostCount");
+            if (postCount != null) {
+                part.PostCount = Convert.ToInt32(postCount);
+            }
         }
 
         protected override void Exporting(BlogPart part, ContentManagement.Handlers.ExportContentContext context) {

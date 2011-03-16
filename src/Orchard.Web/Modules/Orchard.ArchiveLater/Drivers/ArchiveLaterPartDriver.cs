@@ -75,6 +75,13 @@ namespace Orchard.ArchiveLater.Drivers {
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
+        protected override void Importing(ArchiveLaterPart part, ImportContentContext context) {
+            var scheduledUtc = context.Attribute(part.PartDefinition.Name, "ScheduledArchiveUtc");
+            if (scheduledUtc != null) {
+                part.ScheduledArchiveUtc.Value = XmlConvert.ToDateTime(scheduledUtc, XmlDateTimeSerializationMode.Utc);
+            }
+        }
+
         protected override void Exporting(ArchiveLaterPart part, ExportContentContext context) {
             var scheduled = part.ScheduledArchiveUtc.Value;
             if (scheduled != null) {
