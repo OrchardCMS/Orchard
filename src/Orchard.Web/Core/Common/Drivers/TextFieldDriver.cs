@@ -36,6 +36,13 @@ namespace Orchard.Core.Common.Drivers {
             return Editor(part, field, shapeHelper);
         }
 
+        protected override void Importing(ContentPart part, TextField field, ImportContentContext context) {
+            var element = context.Element(field.FieldDefinition.Name + "." + field.Name);
+            if (element != null) {
+                field.Value = element.Attribute("Text").Value;
+            }
+        }
+
         protected override void Exporting(ContentPart part, TextField field, ExportContentContext context) {
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
         }
