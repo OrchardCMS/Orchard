@@ -5,9 +5,6 @@ Website: http://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.0
 Description: Description for the module
-Features:
-    Orchard.MediaPicker:
-        Name: MediaPicker
-        Dependencies: Orchard.Media, Orchard.jQuery
-        Description: UI for browsing for, uploading, or selecting an image for an HTML editor.
-        Category: Input Editor
+Dependencies: Orchard.Media, Orchard.jQuery
+FeatureDescription: UI for browsing for, uploading, or selecting an image for an HTML editor.
+Category: Input Editor

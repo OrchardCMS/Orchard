@@ -5,9 +5,6 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The Messaging module adds messaging functionalities.
-Features:
-    Orchard.Messaging:
-        Name: Messaging
-        Description: Messaging services.
-        Category: Messaging
-        Dependencies: Settings
+FeatureDescription: Messaging services.
+Category: Messaging
+Dependencies: Settings

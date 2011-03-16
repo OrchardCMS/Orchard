@@ -5,11 +5,9 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: Data migration commands.
+FeatureDescription: Data migration commands.
+Category: Developer
 Features:
-    Orchard.Migrations:
-        Name: Migrations
-        Description: Data migration commands.
-        Category: Developer
     DatabaseUpdate:
         Name: Database Update
         Description: Commands for updating the database schema according to the definition of the "Record" classes in code.

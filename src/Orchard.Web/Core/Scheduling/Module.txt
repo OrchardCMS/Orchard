@@ -5,7 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The scheduling module enables background task scheduling. 
-Features:
-    Scheduling:
-        Description: Scheduled background tasks.
-        Category: Core
+FeatureDescription: Scheduled background tasks.
+Category: Core
