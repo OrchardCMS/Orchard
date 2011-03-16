@@ -33,6 +33,10 @@ namespace Orchard.ContentManagement {
             }
         }
 
+        public string Get(string name) {
+            return _dictionary.ContainsKey(name) ? _dictionary[name] : null;
+        }
+
         public override string ToString() {
             var stringBuilder = new StringBuilder();
             foreach (var key in _dictionary.Keys) {

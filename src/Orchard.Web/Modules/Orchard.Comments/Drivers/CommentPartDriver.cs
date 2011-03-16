@@ -53,7 +53,7 @@ namespace Orchard.Comments.Drivers {
 
             var commentedOn = context.Attribute(part.PartDefinition.Name, "CommentedOn");
             if (commentedOn != null) {
-                var contentItem = context.Session.Get(commentedOn);
+                var contentItem = context.GetItemFromSession(commentedOn);
                 if (contentItem != null) {
                     part.Record.CommentedOn = contentItem.Id;
                 }
@@ -61,7 +61,7 @@ namespace Orchard.Comments.Drivers {
 
             var commentedOnContainer = context.Attribute(part.PartDefinition.Name, "CommentedOnContainer");
             if (commentedOnContainer != null) {
-                var container = context.Session.Get(commentedOnContainer);
+                var container = context.GetItemFromSession(commentedOnContainer);
                 if (container != null) {
                     part.Record.CommentedOnContainer = container.Id;
                 }

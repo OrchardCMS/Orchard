@@ -3,7 +3,7 @@ using System.Xml.Linq;
 namespace Orchard.ContentManagement.Handlers {
     public class ImportContentContext : ContentContextBase {
         public XElement Data { get; set; }
-        public ImportContentSession Session { get; set; }
+        private ImportContentSession Session { get; set; }
 
         public ImportContentContext(ContentItem contentItem, XElement data, ImportContentSession importContentSession)
             : base(contentItem) {

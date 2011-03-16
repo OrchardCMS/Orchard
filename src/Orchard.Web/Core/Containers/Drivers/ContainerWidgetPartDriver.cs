@@ -80,7 +80,7 @@ namespace Orchard.Core.Containers.Drivers {
         protected override void Importing(ContainerWidgetPart part, ImportContentContext context) {
             var containerIdentity = context.Attribute(part.PartDefinition.Name, "Container");
             if (containerIdentity != null) {
-                var container = context.Session.Get(containerIdentity);
+                var container = context.GetItemFromSession(containerIdentity);
                 if (container != null) {
                     part.Record.ContainerId = container.Id;
                 }

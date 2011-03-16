@@ -124,12 +124,13 @@ namespace Orchard.Core.Common.Drivers {
         protected override void Importing(CommonPart part, ImportContentContext context) {
             var owner = context.Attribute(part.PartDefinition.Name, "Owner");
             if (owner != null) {
-                part.Owner = _membershipService.GetUser(owner);
+                var contentIdentity = new ContentIdentity(owner);
+                part.Owner = _membershipService.GetUser(contentIdentity.Get("User.UserName"));
             }
 
             var container = context.Attribute(part.PartDefinition.Name, "Container");
             if (container != null) {
-                part.Container = context.Session.Get(container);
+                part.Container = context.GetItemFromSession(container);
             }
 
             var createdUtc = context.Attribute(part.PartDefinition.Name, "CreatedUtc");

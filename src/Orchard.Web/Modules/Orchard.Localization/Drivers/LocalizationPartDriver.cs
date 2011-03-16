@@ -81,7 +81,7 @@ namespace Orchard.Localization.Drivers {
         protected override void Importing(LocalizationPart part, ContentManagement.Handlers.ImportContentContext context) {
             var masterContentItem = context.Attribute(part.PartDefinition.Name, "MasterContentItem");
             if (masterContentItem != null) {
-                var contentItem = context.Session.Get(masterContentItem);
+                var contentItem = context.GetItemFromSession(masterContentItem);
                 if (contentItem != null) {
                     part.MasterContentItem = contentItem;
                 }
