@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -84,7 +85,11 @@ namespace Orchard.PublishLater.Drivers {
         }
 
         protected override void Exporting(PublishLaterPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ScheduledPublishUtc", part.ScheduledPublishUtc.Value);
+            var scheduled = part.ScheduledPublishUtc.Value;
+            if (scheduled != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("ScheduledPublishUtc", XmlConvert.ToString(scheduled.Value, XmlDateTimeSerializationMode.Utc));
+            }
         }
     }
 }

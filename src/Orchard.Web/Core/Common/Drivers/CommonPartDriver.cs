@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Xml;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
@@ -131,9 +132,18 @@ namespace Orchard.Core.Common.Drivers {
                 context.Element(part.PartDefinition.Name).SetAttributeValue("Container", containerIdentity.ToString()); 
             }
 
-            context.Element(part.PartDefinition.Name).SetAttributeValue("CreatedUtc", part.CreatedUtc);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("PublishedUtc", part.PublishedUtc);
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ModifiedUtc", part.ModifiedUtc);
+            if (part.CreatedUtc != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("CreatedUtc", XmlConvert.ToString(part.CreatedUtc.Value, XmlDateTimeSerializationMode.Utc));
+            }
+            if (part.PublishedUtc != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("PublishedUtc", XmlConvert.ToString(part.PublishedUtc.Value, XmlDateTimeSerializationMode.Utc));
+            }
+            if (part.ModifiedUtc != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("ModifiedUtc", XmlConvert.ToString(part.ModifiedUtc.Value, XmlDateTimeSerializationMode.Utc));
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml;
 using Orchard.ArchiveLater.Models;
 using Orchard.ArchiveLater.Services;
 using Orchard.ArchiveLater.ViewModels;
@@ -75,7 +76,11 @@ namespace Orchard.ArchiveLater.Drivers {
         }
 
         protected override void Exporting(ArchiveLaterPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("ScheduledArchiveUtc", part.ScheduledArchiveUtc.Value);
+            var scheduled = part.ScheduledArchiveUtc.Value;
+            if (scheduled != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("ScheduledArchiveUtc", XmlConvert.ToString(scheduled.Value, XmlDateTimeSerializationMode.Utc));
+            }
         }
     }
 }

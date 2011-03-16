@@ -1,3 +1,4 @@
+using System.Xml;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
@@ -19,7 +20,11 @@ namespace Orchard.Comments.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("UserName", part.Record.UserName);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Email", part.Record.Email);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Status", part.Record.Status.ToString());
-            context.Element(part.PartDefinition.Name).SetAttributeValue("CommentDateUtc", part.Record.CommentDateUtc.ToString());
+
+            if (part.Record.CommentDateUtc != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("CommentDateUtc", XmlConvert.ToString(part.Record.CommentDateUtc.Value, XmlDateTimeSerializationMode.Utc));
+            }
             context.Element(part.PartDefinition.Name).SetAttributeValue("CommentText", part.Record.CommentText);
 
             var commentedOn = _contentManager.Get(part.Record.CommentedOn);
