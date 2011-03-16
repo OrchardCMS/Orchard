@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace Orchard.ContentManagement {
+    // Maps content identities to content items on the importer.
     public class ImportContentSession {
         private readonly IContentManager _contentManager;
 

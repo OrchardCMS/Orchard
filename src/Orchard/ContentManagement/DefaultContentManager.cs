@@ -398,6 +398,8 @@ namespace Orchard.ContentManagement {
             return query.ForPart<ContentItem>();
         }
 
+        // Insert or Update imported data into the content manager.
+        // Call content item handlers.
         public void Import(XElement element, ImportContentSession importContentSession) {
             var elementId = element.Attribute("Id");
             if (elementId == null)

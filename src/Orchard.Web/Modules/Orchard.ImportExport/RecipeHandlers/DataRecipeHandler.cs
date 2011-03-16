@@ -25,6 +25,7 @@ namespace Orchard.ImportExport.RecipeHandlers {
                 return;
             }
 
+            // First pass to resolve content items from content identities for all content items, new and old.
             var importContentSession = new ImportContentSession(_orchardServices.ContentManager);
             foreach (var element in recipeContext.RecipeStep.Step.Elements()) {
                 var elementId = element.Attribute("Id");
@@ -41,6 +42,7 @@ namespace Orchard.ImportExport.RecipeHandlers {
                 }
             }
 
+            // Second pass to import the content items.
             foreach (var element in recipeContext.RecipeStep.Step.Elements()) {
                 _orchardServices.ContentManager.Import(element, importContentSession);
             }
