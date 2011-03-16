@@ -8,7 +8,7 @@ using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
-    [OrchardFeature("Gallery")]
+    [OrchardFeature("PackagingServices")]
     public class PackagingSourceManager : IPackagingSourceManager {
         public static string GetExtensionPrefix(string extensionType) {
             return string.Format("Orchard.{0}.", extensionType);
