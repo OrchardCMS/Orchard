@@ -6,7 +6,6 @@ using Orchard.Core.Routable.Models;
 using Orchard.Environment;
 using Orchard.Logging;
 using Orchard.Tasks;
-using Orchard.UI.Admin;
 
 namespace Orchard.Core.Containers.Services {
     public class ContainersPathConstraintUpdater : IOrchardShellEvents, IBackgroundTask {
