@@ -37,9 +37,9 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Importing(ContentPart part, TextField field, ImportContentContext context) {
-            var element = context.Element(field.FieldDefinition.Name + "." + field.Name);
-            if (element != null) {
-                field.Value = element.Attribute("Text").Value;
+            var importedText = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "Text");
+            if (importedText != null) {
+                field.Value = importedText;
             }
         }
 

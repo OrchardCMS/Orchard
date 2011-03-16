@@ -9,8 +9,16 @@ namespace Orchard.ContentManagement.Handlers {
             Data = data;
         }
 
-        public XElement Element(string elementName) {
-            return Data.Element(elementName);
+        public string Attribute(string elementName, string attributeName) {
+            var element = Data.Element(elementName);
+            if (element != null) {
+                var attribute = element.Attribute(attributeName);
+                if (attribute != null)
+                    return attribute.Value;
+            }
+            return null;
         }
+
+
     }
 }

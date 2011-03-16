@@ -59,9 +59,9 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override void Importing(BodyPart part, ContentManagement.Handlers.ImportContentContext context) {
-            var element = context.Element(part.PartDefinition.Name);
-            if (element != null) {
-                part.Text = element.Attribute("Text").Value;
+            var importedText = context.Attribute(part.PartDefinition.Name, "Text");
+            if (importedText != null) {
+                part.Text = importedText;
             }
         }
 
