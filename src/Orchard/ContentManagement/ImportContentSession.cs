@@ -19,7 +19,8 @@ namespace Orchard.ContentManagement {
 
             foreach (var item in _contentManager.Query(VersionOptions.Published).List()) {
                 var identity = _contentManager.GetItemMetadata(item).Identity;
-                if (identity == contentIdentity) {
+                var equalityComparer = new ContentIdentity.ContentIdentityEqualityComparer();
+                if (equalityComparer.Equals(identity, contentIdentity)) {
                     _dictionary.Add(identity, item);
                     return item;
                 }
