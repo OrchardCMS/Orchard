@@ -59,6 +59,18 @@ namespace Orchard.Tags.Drivers {
             };
         }
 
+        protected override void Importing(TagsPart part, ImportContentContext context) {
+            var tagString = context.Attribute(part.PartDefinition.Name, "Tags");
+            if (tagString != null) {
+                var tags = tagString.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
+                // Merge tags.
+                if (tags.Length > 0) {
+                    var currentTags = part.CurrentTags.Select(t => t.TagName);
+                    _tagService.UpdateTagsForContentItem(context.ContentItem, tags.Concat(currentTags)); 
+                }
+            }
+        }
+
         protected override void Exporting(TagsPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Tags", String.Join(",", part.CurrentTags.Select(t => t.TagName)));
         }

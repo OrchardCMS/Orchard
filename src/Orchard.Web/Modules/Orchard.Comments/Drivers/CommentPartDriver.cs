@@ -1,3 +1,4 @@
+using System;
 using System.Xml;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
@@ -12,6 +13,59 @@ namespace Orchard.Comments.Drivers {
 
         public CommentPartDriver(IContentManager contentManager) {
             _contentManager = contentManager;
+        }
+
+        protected override void Importing(CommentPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var author = context.Attribute(part.PartDefinition.Name, "Author");
+            if (author != null) {
+                part.Record.Author = author;
+            }
+
+            var siteName = context.Attribute(part.PartDefinition.Name, "SiteName");
+            if (siteName != null) {
+                part.Record.SiteName = siteName;
+            }
+
+            var userName = context.Attribute(part.PartDefinition.Name, "UserName");
+            if (userName != null) {
+                part.Record.UserName = userName;
+            }
+
+            var email = context.Attribute(part.PartDefinition.Name, "Email");
+            if (email != null) {
+                part.Record.Email = email;
+            }
+
+            var status = context.Attribute(part.PartDefinition.Name, "Status");
+            if (status != null) {
+                part.Record.Status = (CommentStatus) Enum.Parse(typeof(CommentStatus), status);
+            }
+
+            var commentDate = context.Attribute(part.PartDefinition.Name, "CommentDateUtc");
+            if (commentDate != null) {
+                part.Record.CommentDateUtc = XmlConvert.ToDateTime(commentDate, XmlDateTimeSerializationMode.Utc);
+            }
+
+            var text = context.Attribute(part.PartDefinition.Name, "CommentText");
+            if (text != null) {
+                part.Record.CommentText = text;
+            }
+
+            var commentedOn = context.Attribute(part.PartDefinition.Name, "CommentedOn");
+            if (commentedOn != null) {
+                var contentItem = context.Session.Get(commentedOn);
+                if (contentItem != null) {
+                    part.Record.CommentedOn = contentItem.Id;
+                }
+            }
+
+            var commentedOnContainer = context.Attribute(part.PartDefinition.Name, "CommentedOnContainer");
+            if (commentedOnContainer != null) {
+                var container = context.Session.Get(commentedOnContainer);
+                if (container != null) {
+                    part.Record.CommentedOnContainer = container.Id;
+                }
+            }
         }
 
         protected override void Exporting(CommentPart part, ContentManagement.Handlers.ExportContentContext context) {

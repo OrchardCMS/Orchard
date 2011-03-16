@@ -78,6 +78,27 @@ namespace Orchard.Localization.Drivers {
                 }).ToList();
         }
 
+        protected override void Importing(LocalizationPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var masterContentItem = context.Attribute(part.PartDefinition.Name, "MasterContentItem");
+            if (masterContentItem != null) {
+                var contentItem = context.Session.Get(masterContentItem);
+                if (contentItem != null) {
+                    part.MasterContentItem = contentItem;
+                }
+            }
+
+            var culture = context.Attribute(part.PartDefinition.Name, "Culture");
+            if (culture != null) {
+                var targetCulture = _cultureManager.GetCultureByName(culture);
+                // Add Culture.
+                if (targetCulture == null && _cultureManager.IsValidCulture(culture)) {
+                    _cultureManager.AddCulture(culture);
+                    targetCulture = _cultureManager.GetCultureByName(culture);
+                }
+                part.Culture = targetCulture;
+            }
+        }
+
         protected override void Exporting(LocalizationPart part, ContentManagement.Handlers.ExportContentContext context) {
             if (part.MasterContentItem != null) {
                 var masterContentItemIdentity = _contentManager.GetItemMetadata(part.MasterContentItem).Identity;
