@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Orchard.ContentManagement {
@@ -7,6 +9,19 @@ namespace Orchard.ContentManagement {
 
         public ContentIdentity() {
             _dictionary = new Dictionary<string, string>();
+        }
+
+        public ContentIdentity(string identity) {
+            _dictionary = new Dictionary<string, string>();
+            if (!String.IsNullOrEmpty(identity)) {
+                var identityEntries = identity.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var token in identityEntries) {
+                    var kv = token.Split(new[] {"="}, StringSplitOptions.None);
+                    if (kv.Length == 2) {
+                        _dictionary.Add(kv[0], kv[1]);
+                    }
+                }
+            }
         }
 
         public void Add(string name, string value) {
@@ -25,5 +40,19 @@ namespace Orchard.ContentManagement {
             }
             return stringBuilder.ToString();
         }
+
+        public class ContentIdentityEqualityComparer : IEqualityComparer<ContentIdentity> {
+            public bool Equals(ContentIdentity contentIdentity1, ContentIdentity contentIdentity2) {
+                if (contentIdentity1._dictionary.Keys.Count != contentIdentity2._dictionary.Keys.Count)
+                    return false;
+
+                return contentIdentity1._dictionary.OrderBy(kvp => kvp.Key).SequenceEqual(contentIdentity2._dictionary.OrderBy(kvp => kvp.Key));
+            }
+
+            public int GetHashCode(ContentIdentity contentIdentity) {
+                return contentIdentity.ToString().GetHashCode();
+            }
+        }
+
     }
 }

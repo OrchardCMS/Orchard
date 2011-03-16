@@ -4,22 +4,22 @@ namespace Orchard.ContentManagement {
     public class ImportContentSession {
         private readonly IContentManager _contentManager;
 
-        // order of x500 elements.
-        private readonly Dictionary<string, ContentItem> _dictionary;
+        private readonly Dictionary<ContentIdentity, ContentItem> _dictionary;
 
         public ImportContentSession(IContentManager contentManager) {
             _contentManager = contentManager;
-            _dictionary = new Dictionary<string, ContentItem>();
+            _dictionary = new Dictionary<ContentIdentity, ContentItem>(new ContentIdentity.ContentIdentityEqualityComparer());
         }
 
-        // gets a content item for an identity string.
         public ContentItem Get(string id) {
-            if (_dictionary.ContainsKey(id))
-                return _dictionary[id];
+            var contentIdentity = new ContentIdentity(id);
+
+            if (_dictionary.ContainsKey(contentIdentity))
+                return _dictionary[contentIdentity];
 
             foreach (var item in _contentManager.Query(VersionOptions.Published).List()) {
-                var identity = _contentManager.GetItemMetadata(item).Identity.ToString();
-                if (identity == id) {
+                var identity = _contentManager.GetItemMetadata(item).Identity;
+                if (identity == contentIdentity) {
                     _dictionary.Add(identity, item);
                     return item;
                 }
@@ -29,7 +29,8 @@ namespace Orchard.ContentManagement {
         }
 
         public void Store(string id, ContentItem item) {
-            _dictionary.Add(id, item);
+            var contentIdentity = new ContentIdentity(id);
+            _dictionary.Add(contentIdentity, item);
         }
 
     }
