@@ -3,10 +3,12 @@ using System.Xml.Linq;
 namespace Orchard.ContentManagement.Handlers {
     public class ImportContentContext : ContentContextBase {
         public XElement Data { get; set; }
+        public ImportContentSession Session { get; set; }
 
-        public ImportContentContext(ContentItem contentItem, XElement data)
+        public ImportContentContext(ContentItem contentItem, XElement data, ImportContentSession importContentSession)
             : base(contentItem) {
             Data = data;
+            Session = importContentSession;
         }
 
         public string Attribute(string elementName, string attributeName) {
@@ -19,6 +21,9 @@ namespace Orchard.ContentManagement.Handlers {
             return null;
         }
 
+        public ContentItem GetItemFromSession(string id) {
+            return Session.Get(id);
+        }
 
     }
 }

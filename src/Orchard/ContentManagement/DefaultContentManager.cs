@@ -416,7 +416,7 @@ namespace Orchard.ContentManagement {
                 item = Get(item.Id, VersionOptions.DraftRequired);
             }
 
-            var context = new ImportContentContext(item, element);
+            var context = new ImportContentContext(item, element, importContentSession);
             foreach (var contentHandler in Handlers) {
                 contentHandler.Importing(context);
             }

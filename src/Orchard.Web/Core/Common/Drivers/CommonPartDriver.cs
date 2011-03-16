@@ -121,6 +121,33 @@ namespace Orchard.Core.Common.Drivers {
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Common.Container", Model: model, Prefix: Prefix));
         }
 
+        protected override void Importing(CommonPart part, ImportContentContext context) {
+            var owner = context.Attribute(part.PartDefinition.Name, "Owner");
+            if (owner != null) {
+                part.Owner = _membershipService.GetUser(owner);
+            }
+
+            var container = context.Attribute(part.PartDefinition.Name, "Container");
+            if (container != null) {
+                part.Container = context.Session.Get(container);
+            }
+
+            var createdUtc = context.Attribute(part.PartDefinition.Name, "CreatedUtc");
+            if (createdUtc != null) {
+                part.CreatedUtc = XmlConvert.ToDateTime(createdUtc, XmlDateTimeSerializationMode.Utc);
+            }
+
+            var publishedUtc = context.Attribute(part.PartDefinition.Name, "PublishedUtc");
+            if (publishedUtc != null) {
+                part.PublishedUtc = XmlConvert.ToDateTime(publishedUtc, XmlDateTimeSerializationMode.Utc);
+            }
+
+            var modifiedUtc = context.Attribute(part.PartDefinition.Name, "ModifiedUtc");
+            if (modifiedUtc != null) {
+                part.ModifiedUtc = XmlConvert.ToDateTime(modifiedUtc, XmlDateTimeSerializationMode.Utc);
+            }
+        }
+
         protected override void Exporting(CommonPart part, ExportContentContext context) {
             if (part.Owner != null) {
                 var ownerIdentity = _contentManager.GetItemMetadata(part.Owner).Identity;
