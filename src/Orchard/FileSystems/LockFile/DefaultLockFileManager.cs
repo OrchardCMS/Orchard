@@ -58,8 +58,7 @@ namespace Orchard.FileSystems.LockFile {
                 var content = _appDataFolder.ReadFile(path);
 
                 DateTime creationUtc;
-                if (DateTime.TryParse(content, out creationUtc))
-                {
+                if (DateTime.TryParse(content, out creationUtc)) {
                     // if expired the file is not removed
                     // it should be automatically as there is a finalizer in LockFile
                     // or the next taker can do it, unless it also fails, again

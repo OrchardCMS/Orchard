@@ -71,10 +71,12 @@ namespace Orchard.Tests.Stubs {
                     set { throw new NotImplementedException(); }
                 }
 
-                public int PageSize {
+                public int PageSize{
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
+
+                public string BaseUrl { get; set;}
             }
 
             public class StubUser : IUser {
