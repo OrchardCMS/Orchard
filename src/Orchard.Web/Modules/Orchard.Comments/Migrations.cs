@@ -38,6 +38,7 @@ namespace Orchard.Comments {
                cfg => cfg
                    .WithPart("CommentPart")
                    .WithPart("CommonPart")
+                   .WithPart("IdentityPart")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("Blog",
@@ -47,7 +48,13 @@ namespace Orchard.Comments {
 
             ContentDefinitionManager.AlterPartDefinition("CommentsPart", builder => builder.Attachable());
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("Comment", cfg => cfg.WithPart("IdentityPart"));
+
+            return 2;
         }
     }
 }

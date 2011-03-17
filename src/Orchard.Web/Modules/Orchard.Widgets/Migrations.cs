@@ -56,10 +56,17 @@ namespace Orchard.Widgets {
                     .WithPart("WidgetPart")
                     .WithPart("BodyPart")
                     .WithPart("CommonPart")
+                    .WithPart("IdentityPart")
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 1;
+            return 2;
+        }
+        
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("HtmlWidget", cfg => cfg.WithPart("IdentityPart"));
+
+            return 2;
         }
     }
 }

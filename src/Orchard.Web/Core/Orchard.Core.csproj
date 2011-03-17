@@ -61,7 +61,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Drivers\IdentityPartDriver.cs" />
+    <Compile Include="Common\Handlers\IdentityPartHandler.cs" />
     <Compile Include="Common\Models\CommonPartVersionRecord.cs" />
+    <Compile Include="Common\Models\IdentityPartRecord.cs" />
+    <Compile Include="Common\Models\IdentityPart.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
