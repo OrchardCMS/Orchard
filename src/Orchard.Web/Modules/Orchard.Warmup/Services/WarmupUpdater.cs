@@ -105,7 +105,7 @@ namespace Orchard.Warmup.Services {
                             var download = _webDownloader.Download(url);
 
                             if (download != null && download.StatusCode == HttpStatusCode.OK) {
-                                var filename = WarmupUtility.EncodeUrl(url);
+                                var filename = WarmupUtility.EncodeUrl(url.TrimEnd('/'));
                                 var path = _appDataFolder.Combine(BaseFolder, filename);
                                 _appDataFolder.CreateFile(path, download.Content);
 
@@ -113,7 +113,7 @@ namespace Orchard.Warmup.Services {
 
                                 if (url.StartsWith("http://www.", StringComparison.OrdinalIgnoreCase)) {
                                     url = "http://" + url.Substring("http://www.".Length);
-                                    filename = WarmupUtility.EncodeUrl(url);
+                                    filename = WarmupUtility.EncodeUrl(url.TrimEnd('/'));
                                     path = _appDataFolder.Combine(BaseFolder, filename);
                                     _appDataFolder.CreateFile(path, download.Content);
                                 }

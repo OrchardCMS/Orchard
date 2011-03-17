@@ -116,10 +116,10 @@ namespace Orchard.Tests.Modules.Warmup {
             
             // warmup + content files
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, "warmup.txt")));
-            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About"))));
 
-            var homepageContent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/")));
+            var homepageContent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net")));
             var aboutcontent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About")));
 
             Assert.That(homepageContent, Is.EqualTo("Foo"));
@@ -143,7 +143,7 @@ namespace Orchard.Tests.Modules.Warmup {
 
             // warmup + content file
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, "warmup.txt")));
-            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
             Assert.That(files, Has.None.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About"))));
         }
 
@@ -161,7 +161,7 @@ namespace Orchard.Tests.Modules.Warmup {
             // warmup + content file
             Assert.That(files.Count, Is.EqualTo(2));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, "warmup.txt")));
-            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
         }
 
         [Test]
@@ -245,7 +245,7 @@ namespace Orchard.Tests.Modules.Warmup {
             _settings.Urls = @" /
                                 /About";
 
-            ((StubWorkContextAccessor.WorkContextImpl.StubSite)_orchardServices.WorkContext.CurrentSite).BaseUrl = "http://www.orchardproject.net";
+            ((StubWorkContextAccessor.WorkContextImpl.StubSite)_orchardServices.WorkContext.CurrentSite).BaseUrl = "http://www.orchardproject.net/";
 
             _webDownloader
                 .Setup(w => w.Download("http://www.orchardproject.net/"))
@@ -260,15 +260,15 @@ namespace Orchard.Tests.Modules.Warmup {
             
             // warmup + content files
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, "warmup.txt")));
-            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net/"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net"))));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net/About"))));
-            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About"))));
 
-            var homepageContent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/")));
+            var homepageContent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net")));
             var aboutcontent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About")));
 
-            var wwwhomepageContent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net/")));
+            var wwwhomepageContent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net")));
             var wwwaboutcontent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net/About")));
 
             Assert.That(homepageContent, Is.EqualTo("Foo"));
