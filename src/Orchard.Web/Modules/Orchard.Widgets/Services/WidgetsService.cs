@@ -127,10 +127,20 @@ namespace Orchard.Widgets.Services {
             _contentManager.Remove(GetWidget(widgetId).ContentItem);
         }
 
+        private static int ParsePosition(WidgetPart widgetPart) {
+            int value;
+            if (!int.TryParse(widgetPart.Record.Position, out value))
+                return 0;
+            return value;
+        }
+
+        public bool MoveWidgetUp(int widgetId) {
+            return MoveWidgetUp(GetWidget(widgetId));
+        }
         public bool MoveWidgetUp(WidgetPart widgetPart) {
             int currentPosition = ParsePosition(widgetPart);
 
-            WidgetPart widgetBefore = GetWidgets(widgetPart.LayerPart.Id)
+            WidgetPart widgetBefore = GetWidgets()
                 .Where(widget => widget.Zone == widgetPart.Zone)
                 .OrderByDescending(widget => widget.Position, new UI.FlatPositionComparer())
                 .FirstOrDefault(widget => ParsePosition(widget) < currentPosition);
@@ -144,21 +154,13 @@ namespace Orchard.Widgets.Services {
             return false;
         }
 
-        private static int ParsePosition(WidgetPart widgetPart) {
-            int value;
-            if (!int.TryParse(widgetPart.Record.Position, out value))
-                return 0;
-            return value;
+        public bool MoveWidgetDown(int widgetId) {
+            return MoveWidgetDown(GetWidget(widgetId));
         }
-
-        public bool MoveWidgetUp(int widgetId) {
-            return MoveWidgetUp(GetWidget(widgetId));
-        }
-
         public bool MoveWidgetDown(WidgetPart widgetPart) {
             int currentPosition = ParsePosition(widgetPart);
 
-            WidgetPart widgetAfter = GetWidgets(widgetPart.LayerPart.Id)
+            WidgetPart widgetAfter = GetWidgets()
                 .Where(widget => widget.Zone == widgetPart.Zone)
                 .OrderBy(widget => widget.Position, new UI.FlatPositionComparer())
                 .FirstOrDefault(widget => ParsePosition(widget) > currentPosition);
@@ -172,9 +174,6 @@ namespace Orchard.Widgets.Services {
             return false;
         }
 
-        public bool MoveWidgetDown(int widgetId) {
-            return MoveWidgetDown(GetWidget(widgetId));
-        }
 
         private static void SwitchWidgetPositions(WidgetPart sourceWidget, WidgetPart targetWidget) {
             string tempPosition = sourceWidget.Record.Position;

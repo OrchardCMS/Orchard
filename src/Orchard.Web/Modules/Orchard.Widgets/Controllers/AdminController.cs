@@ -69,27 +69,17 @@ namespace Orchard.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexWidgetPOST(int? id, string returnUrl) {
-            const string moveDownString = "submit.MoveDown.";
-            const string moveUpString = "submit.MoveUp.";
-
+        public ActionResult IndexWidgetPOST(int? moveUp, int? moveDown, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
             try {
-                string moveDownAction = HttpContext.Request.Form.AllKeys.FirstOrDefault(key => key.StartsWith(moveDownString));
-                if (moveDownAction != null) {
-                    moveDownAction = moveDownAction.Substring(moveDownString.Length, moveDownAction.IndexOf(".", moveDownString.Length) - moveDownString.Length);
-                    _widgetsService.MoveWidgetDown(int.Parse(moveDownAction));
-                }
-                else {
-                    string moveUpAction = HttpContext.Request.Form.AllKeys.FirstOrDefault(key => key.StartsWith(moveUpString));
-                    if (moveUpAction != null) {
-                        moveUpAction = moveUpAction.Substring(moveUpString.Length, moveUpAction.IndexOf(".", moveUpString.Length) - moveUpString.Length);
-                        _widgetsService.MoveWidgetUp(int.Parse(moveUpAction));
-                    }
-                }
-            } catch (Exception exception) {
+                if (moveUp.HasValue)
+                    _widgetsService.MoveWidgetUp(moveUp.Value);
+                if (moveDown.HasValue)
+                    _widgetsService.MoveWidgetDown(moveDown.Value);
+            }
+            catch (Exception exception) {
                 this.Error(exception, T("Moving widget failed: {0}", exception.Message), Logger, Services.Notifier);
             }
 
@@ -140,7 +130,7 @@ namespace Orchard.Widgets.Controllers {
                 if (widgetPart == null)
                     return HttpNotFound();
 
-                int widgetPosition = _widgetsService.GetWidgets(layerId).Count() + 1;
+                int widgetPosition = _widgetsService.GetWidgets().Where(widget => widget.Zone == widgetPart.Zone).Count() + 1;
                 widgetPart.Position = widgetPosition.ToString();
                 widgetPart.Zone = zone;
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
