@@ -79,6 +79,7 @@
     <Content Include="Content\Admin\images\moveup.gif" />
     <Content Include="Content\Admin\images\movedown.gif" />
     <Content Include="Module.txt" />
+    <Content Include="Styles\images\arrows.png" />
     <Content Include="Styles\images\menu.widgets.png" />
     <Content Include="Styles\menu.widgets-admin.css" />
     <Content Include="Styles\orchard-widgets-admin.css" />

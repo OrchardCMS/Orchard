@@ -49,13 +49,11 @@
                                         int i = 0;
                                         foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
                                             <li>
-                                                @if (i > 0) {
-                                                    <input class="widgets-mover" type="image" name="moveUp" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/moveup.gif")" alt="Move up" value="@widget.Id" />
-                                                }
-                                                @if (++i < count) {
-                                                    <input class="widgets-mover" type="image" name="moveDown" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/movedown.gif")" alt="Move down" value="@widget.Id" />
-                                                }
-                                                @Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id })
+                                                <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id })</h3>
+                                                <div class="widgets-move-somewhere">
+                                                    <button name="moveUp" value="@widget.Id" @(i == 0 ? "disabled='disabled'" : "") class="widgets-move widgets-move-up" type="submit" title="@T("Move up")">@T("Move up")</button>
+                                                    <button name="moveDown" value="@widget.Id" @(++i == count ? "disabled='disabled'" : "") class="widgets-move widgets-move-down" type="submit" title="@T("Move down")">@T("Move down")</button>
+                                                </div>
                                             </li>
                                         }
                                     }
