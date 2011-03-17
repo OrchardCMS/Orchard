@@ -95,5 +95,14 @@ namespace Orchard.Core.Settings {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable("SiteSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("BaseUrl", c => c.WithLength(255))
+                );
+
+            return 2;
+        }
     }
 }

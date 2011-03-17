@@ -169,6 +169,8 @@
     <Compile Include="Users\ShellSettingsUtility.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="Users\Services\MembershipServiceTests.cs" />
+    <Compile Include="Warmup\WebDownloaderTests.cs" />
+    <Compile Include="Warmup\WarmupUpdaterTests.cs" />
     <Compile Include="Widgets\RuleEngine\UrlRuleProviderTest.cs" />
     <Compile Include="Widgets\Services\WidgetsServiceTest.cs" />
     <Compile Include="Widgets\WidgetsTests.cs" />
@@ -253,6 +255,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.WarmUp\Orchard.Warmup.csproj">
+      <Project>{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}</Project>
+      <Name>Orchard.Warmup</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Widgets\Orchard.Widgets.csproj">
       <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>
