@@ -90,7 +90,7 @@ namespace Orchard.Comments.Drivers {
             var commentedOnContainer = _contentManager.Get(part.Record.CommentedOnContainer);
             if (commentedOnContainer != null) {
                 var commentedOnContainerIdentity = _contentManager.GetItemMetadata(commentedOnContainer).Identity;
-                context.Element(part.PartDefinition.Name).SetAttributeValue("commentedOnContainer", commentedOnContainerIdentity.ToString());
+                context.Element(part.PartDefinition.Name).SetAttributeValue("CommentedOnContainer", commentedOnContainerIdentity.ToString());
             }
         }
     }
