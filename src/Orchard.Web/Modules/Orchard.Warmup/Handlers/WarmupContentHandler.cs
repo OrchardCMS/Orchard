@@ -10,18 +10,19 @@ namespace Orchard.Warmup.Handlers {
     /// </summary>
     public class WarmupContentHandler : ContentHandler {
         private readonly IOrchardServices _orchardServices;
-        private readonly IWarmupUpdater _warmupUpdater;
+        private readonly IWarmupScheduler _warmupScheduler;
 
-        public WarmupContentHandler(IOrchardServices orchardServices, IWarmupUpdater warmupUpdater) {
+        public WarmupContentHandler(IOrchardServices orchardServices, IWarmupScheduler warmupScheduler)
+        {
             _orchardServices = orchardServices;
-            _warmupUpdater = warmupUpdater;
+            _warmupScheduler = warmupScheduler;
 
             OnPublished<ContentPart>(Generate);
         }
 
         void Generate(PublishContentContext context, ContentPart part) {
             if(_orchardServices.WorkContext.CurrentSite.As<WarmupSettingsPart>().OnPublish) {
-                _warmupUpdater.Generate();
+                _warmupScheduler.Schedule(true);
             }
         }
     }

@@ -85,6 +85,8 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\WarmupSettingsPart.cs" />
     <Compile Include="Models\WarmupSettingsPartRecord.cs" />
+    <Compile Include="Services\IWarmupScheduler.cs" />
+    <Compile Include="Services\WarmupScheduler.cs" />
     <Compile Include="Services\WebDownloader.cs" />
     <Compile Include="Services\IWarmupUpdater.cs" />
     <Compile Include="Services\IWebDownloader.cs" />

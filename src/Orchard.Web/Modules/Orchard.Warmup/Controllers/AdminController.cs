@@ -9,10 +9,10 @@ using Orchard.Warmup.Services;
 
 namespace Orchard.Warmup.Controllers {
     public  class AdminController : Controller, IUpdateModel {
-        private readonly IWarmupUpdater _warmupUpdater;
+        private readonly IWarmupScheduler _warmupScheduler;
 
-        public AdminController(IOrchardServices services, IWarmupUpdater warmupUpdater) {
-            _warmupUpdater = warmupUpdater;
+        public AdminController(IOrchardServices services, IWarmupScheduler warmupScheduler) {
+            _warmupScheduler = warmupScheduler;
             Services = services;
 
             T = NullLocalizer.Instance;
@@ -56,8 +56,8 @@ namespace Orchard.Warmup.Controllers {
             var result = IndexPost();
             
             if (ModelState.IsValid) {
-                _warmupUpdater.Generate();
-                Services.Notifier.Information(T("Static pages have been generated."));
+                _warmupScheduler.Schedule(true);
+                Services.Notifier.Information(T("Static pages are currently being generated."));
             }
 
             return result;
