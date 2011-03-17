@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
@@ -22,10 +23,17 @@ namespace Orchard.Widgets.Services {
             _featureManager = featureManager;
         }
 
-        public IEnumerable<string> GetWidgetTypes() {
+        public IEnumerable<Tuple<string, string>> GetWidgetTypes() {
             return _contentManager.GetContentTypeDefinitions()
                 .Where(contentTypeDefinition => contentTypeDefinition.Settings.ContainsKey("Stereotype") && contentTypeDefinition.Settings["Stereotype"] == "Widget")
-                .Select(contentTypeDefinition => contentTypeDefinition.Name);
+                .Select(contentTypeDefinition =>
+                    Tuple.Create(
+                        contentTypeDefinition.Name,
+                        contentTypeDefinition.Settings.ContainsKey("Description") ? contentTypeDefinition.Settings["Description"] : null));
+        }
+
+        public IEnumerable<string> GetWidgetTypeNames() {
+            return GetWidgetTypes().Select(type => type.Item1);
         }
 
         public IEnumerable<LayerPart> GetLayers() {

@@ -1,114 +1,98 @@
-﻿#main #widgets h2 {
-    border-bottom:none;
+﻿#layout-widgets-placement {
+float:left;
+width:65%;
+}
+#widgets-placement { }
+#layout-widgets-assistance {
+float:right;
+width:35%;
+}
+.widgets-container {
+padding:10px;
 }
 
-h4.widgets-layer-header, h4.widgets-zone-header {
-    font-weight:600;
+#widgets-layers-control {
+margin-bottom:-20px;
+}
+#widgets-layers-control form, #widgets-layers-control fieldset {
+display:inline;
+}
+#widgets-layers-control select, #widgets-layers-control a {
+vertical-align:middle;
+}
+#widgets-layers-control a {
+margin-left:10px;
 }
 
-h4.widgets-layer-header {
-    float:left;
-    width:40%;
+#widgets-zones, #widgets-available {
+background:#F3F4F5;
+border:1px solid #E4E5E6;
+padding:0 5px;
+}
+/* The number seems slightly meaningless. Leaving it out for now. * /
+#widgets-zones ol {
+list-style:decimal inside;
+}
+*/
+#widgets-zones li, #widgets-available li {
+background:#FFF;
+color:#AEC3CE;
+border:1px solid #EAEAEA;
+margin:5px 0;
+padding:0 10px;
+position:relative;
+}
+#widgets-zones li:hover {
+border-color:#bfd3a7;
+}
+#widgets-zones h2 {
+font-size:1.077em;
+}
+#widgets-available h2 {
+font-size:1.231em;
+}
+#widgets-zones h2, #widgets-zones li li {
+color:#333;
+}
+#widgets-zones li li {
+background:#F3F4F5;
+border:0;
+margin:10px 0;
+padding:5px 10px 5px 25px;
+}
+#widgets-zones .widgets-mover {
+margin-left:-18px;
+vertical-align:-2px;
+}
+#widgets-zones .widgets-actions {
+position:absolute;
+top:5px;
+right:10px;
+}
+#widgets-available li {
+border:0;
+padding:0;
+}
+#widgets-available li a {
+border:1px solid #EAEAEA;
+display:block;
+padding:5px 10px;
+}
+#widgets-available li a:hover {
+border-color:#bfd3a7;
+}
+#widgets-available a h2, #widgets-available a p {
+color:#333;
+}
+#widgets-available a p {
+margin-top:5px;
 }
 
-
-.widgetsbag-editor h5 {
-    color:#4c4c4c;
-    font-weight:600;
+/* begin: switchable tweaks for admin/widgets */
+#widgets-placement .switch-for-switchable {
+margin:-32px 10px -2px 0;
 }
-
-.widgets-availableWidgets {
-    float: right;
-    float: left;
-    width: 30%;
-    margin: 0 0 0 2em;
+#widgets-placement .summary-view .widgets-none {
+display:none;
 }
-
-.widgets-availableWidgets table.items th
-{
-    background: #f1f1f1;
-    padding:.5em 0 .3em .2em;
-}
-
-.widgets-availableLayers {
-    float: left;
-    margin: 0 0 0 2em;
-    width: 60%;
-    min-width: 40%;
-}
-
-.widgets-layerZones {
-    float: left;
-    float: right;
-    width: 60%;
-    border: 1px solid #eaeaea;
-    border:1px solid #ccc;
-    background: #fcfcfc;
-}
-
-.widgets-layerZones .widgets-zone {
-    background:#f5f5f5;
-    border: 1px solid #f1f1f1;
-    padding: 1em 2em 1em 2em;
-    margin: 0 0 .6em 0;
-}
-
-.widgets-layerZones .widgets-zoneWidget {
-    margin: .6em;
-    padding: 1em 2em 1em 3em;
-    background:#ffffff;
-    border: 1px solid #f1f1f1;
-    vertical-align: middle;
-}
-
-.widgets-availableLayers fieldset 
-{
-    border: 1px solid #eaeaea;
-    background: #f1f1f1;
-    background: -moz-linear-gradient(center top, #f1f1f1, #fcfcfc);
-    padding: .6em;
-}
-
-.widgets-availableWidgets fieldset {
-    padding: 0;
-}
-
-.widgets-layers {
-    border:1px solid #ccc;
-    border-right:none;
-}
-
-.widgets-layers ul {
-    background: #f5f5f5;
-    border: 1px solid #f1f1f1;
-}
-
-.widgets-layers ul li 
-{
-    padding: .6em .4em;
-    border:1px solid #F1F1F1;
-}
-
-.widgets-layers .widgets-currentLayer {
-    background: #c3d9ff;
-}
-
-.widgets-layers .widgets-currentLayer a {
-    color: #333;
-    font-weight: 600;
-}
-
-.widgets-layerZones ul li ul {
-    margin: 0;
-    padding: 0;
-}
-
-.new-layer {
-    padding: .6em;
-    background: #F5F5F5;
-}
-
-.new-layer a {
-    text-decoration: none;
-    font-weight: 600;
-}
+/* end: switchable tweaks */

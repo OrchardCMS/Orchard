@@ -140,8 +140,15 @@ namespace Orchard.Tests.UI.Navigation {
             get { throw new NotImplementedException(); }
         }
 
+        private WorkContext _workContext;
         public WorkContext WorkContext {
-            get { return new StubWorkContextAccessor(_lifetimeScope).GetContext(); }
+            get {
+                if(_workContext == null) {
+                    _workContext = new StubWorkContextAccessor(_lifetimeScope).GetContext(); 
+                }
+
+                return _workContext;
+            }
         }
     }
 }

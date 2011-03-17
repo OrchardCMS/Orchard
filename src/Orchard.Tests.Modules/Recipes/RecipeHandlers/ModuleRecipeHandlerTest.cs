@@ -157,7 +157,7 @@ Features:
             public void Uninstall(string packageId, string applicationPath) {
             }
 
-            public ExtensionDescriptor GetExtensionDescriptor(IPackage package) {
+            public ExtensionDescriptor GetExtensionDescriptor(IPackage package, string extensionType) {
                 throw new NotImplementedException();
             }
         }

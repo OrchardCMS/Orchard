@@ -2,19 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
-using NuGet;
-using Orchard.Data.Migration;
-using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.ShellBuilders;
 using Orchard.Localization;
-using Orchard.Modules.Services;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
@@ -33,20 +27,16 @@ namespace Orchard.Packaging.Controllers {
     [Themed, Admin]
     public class GalleryController : Controller {
         private readonly ShellSettings _shellSettings;
-        private readonly IPackageManager _packageManager;
         private readonly IPackagingSourceManager _packagingSourceManager;
-        private readonly IModuleService _moduleService;
 
         public GalleryController(
             ShellSettings shellSettings,
             IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
-            IModuleService moduleService,
             IOrchardServices services) {
+
             _shellSettings = shellSettings;
-            _packageManager = packageManager;
             _packagingSourceManager = packagingSourceManager;
-            _moduleService = moduleService;
             Services = services;
 
             T = NullLocalizer.Instance;
@@ -231,79 +221,6 @@ namespace Orchard.Packaging.Controllers {
                 Pager = pagerShape,
                 Options = options
             });
-        }
-
-        public ActionResult Install(string packageId, string version, int sourceId, string redirectTo) {
-            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
-                return new HttpUnauthorizedResult();
-
-            var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
-            if (source == null) {
-                return HttpNotFound();
-            }
-
-            PackageInfo packageInfo = InstallPackage(packageId, version, source);
-            if (DefaultExtensionTypes.IsModule(packageInfo.ExtensionType)) {
-                IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(source.FeedUrl, "Default"));
-
-                IPackage package = packageRepository.FindPackage(packageId);
-                ExtensionDescriptor extensionDescriptor = _packageManager.GetExtensionDescriptor(package);
-
-                List<PackagingInstallFeatureViewModel> features = extensionDescriptor.Features
-                    .Where(featureDescriptor => !DefaultExtensionTypes.IsTheme(featureDescriptor.Extension.ExtensionType))
-                    .Select(featureDescriptor => new PackagingInstallFeatureViewModel {
-                        Enable = true, // by default all features are enabled
-                        FeatureDescriptor = featureDescriptor
-                    }).ToList();
-
-                if (features.Count > 0) {
-                    return View("InstallModule", new PackagingInstallViewModel {
-                        Features = features,
-                        ExtensionDescriptor = extensionDescriptor
-                    });
-                }
-            }
-
-            return RedirectToAction(redirectTo);
-        }
-
-        [HttpPost, ActionName("InstallModule")]
-        public ActionResult InstallModulePOST(PackagingInstallViewModel packagingInstallViewModel, string packageId, string version, int sourceId, string redirectTo) {
-            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
-                return new HttpUnauthorizedResult();
-
-            var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
-
-            if (source == null) {
-                return HttpNotFound();
-            }
-
-            // Enable selected features
-            if (packagingInstallViewModel.Features.Count > 0) {
-                IEnumerable<string> featureIds = packagingInstallViewModel.Features.Select(feature => feature.FeatureDescriptor.Id);
-
-                // Enable the features and its dependencies
-                _moduleService.EnableFeatures(featureIds, true);
-            }
-
-            return RedirectToAction(redirectTo);
-        }
-
-        private PackageInfo InstallPackage(string packageId, string version, PackagingSource source) {
-            PackageInfo packageInfo = null;
-            try {
-                packageInfo = _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
-
-                if (DefaultExtensionTypes.IsTheme(packageInfo.ExtensionType)) {
-                    Services.Notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
-                } else if (DefaultExtensionTypes.IsModule(packageInfo.ExtensionType)) {
-                    Services.Notifier.Information(T("The module has been successfully installed."));
-                }
-            } catch (Exception exception) {
-                this.Error(exception, T("Package installation failed."), Logger, Services.Notifier);
-            }
-
-            return packageInfo;
         }
     }
 }
