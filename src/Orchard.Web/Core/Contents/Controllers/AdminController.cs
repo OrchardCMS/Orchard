@@ -202,8 +202,8 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Save")]
-        public ActionResult CreatePOST(string id) {
-            return CreatePOST(id, contentItem => {
+        public ActionResult CreatePOST(string id, string returnUrl) {
+            return CreatePOST(id, returnUrl, contentItem => {
                 if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _contentManager.Publish(contentItem);
             });
@@ -211,14 +211,14 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
-        public ActionResult CreateAndPublishPOST(string id) {
+        public ActionResult CreateAndPublishPOST(string id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            return CreatePOST(id, contentItem => _contentManager.Publish(contentItem));
+            return CreatePOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
         }
 
-        private ActionResult CreatePOST(string id, Action<ContentItem> conditionallyPublish) {
+        private ActionResult CreatePOST(string id, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.New(id);
 
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't create content")))
@@ -238,7 +238,11 @@ namespace Orchard.Core.Contents.Controllers {
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been created.")
                 : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
-            return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
+            if (!string.IsNullOrEmpty(returnUrl)) {
+                return this.RedirectLocal(returnUrl);
+            }
+            var adminRouteValues = _contentManager.GetItemMetadata(contentItem).AdminRouteValues;
+            return RedirectToRoute(adminRouteValues);
         }
 
         public ActionResult Edit(int id) {

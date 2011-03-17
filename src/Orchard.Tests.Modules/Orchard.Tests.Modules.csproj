@@ -104,6 +104,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
+    <Reference Include="NuGet.Core, Version=1.0.11220.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nuget\NuGet.Core.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
@@ -145,6 +149,8 @@
     <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
     <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
     <Compile Include="Media\Services\MediaServiceTests.cs" />
+    <Compile Include="Recipes\RecipeHandlers\ModuleRecipeHandlerTest.cs" />
+    <Compile Include="Recipes\RecipeHandlers\ThemeRecipeHandlerTest.cs" />
     <Compile Include="Recipes\Services\RecipeManagerTests.cs" />
     <Compile Include="Scripting.Dlr\EvaluatorTests.cs" />
     <Compile Include="Scripting\EvaluatorTestsBase.cs" />

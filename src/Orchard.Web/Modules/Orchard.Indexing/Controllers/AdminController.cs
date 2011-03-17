@@ -8,6 +8,7 @@ using Orchard.Indexing.ViewModels;
 namespace Orchard.Indexing.Controllers {
     public class AdminController : Controller {
         private readonly IIndexingService _indexingService;
+        private const string DefaultIndexName = "Search";
 
         public AdminController(IIndexingService indexingService, IOrchardServices services) {
             _indexingService = indexingService;
@@ -19,7 +20,7 @@ namespace Orchard.Indexing.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            var viewModel = new IndexViewModel { IndexEntry = _indexingService.GetIndexEntry() };
+            var viewModel = new IndexViewModel { IndexEntry = _indexingService.GetIndexEntry(DefaultIndexName) };
 
             if (viewModel.IndexEntry == null)
                 Services.Notifier.Information(T("There is no search index to manage for this site."));
@@ -32,7 +33,7 @@ namespace Orchard.Indexing.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
-            _indexingService.UpdateIndex();
+            _indexingService.UpdateIndex(DefaultIndexName);
 
             return RedirectToAction("Index");
         }
@@ -42,8 +43,7 @@ namespace Orchard.Indexing.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
-            _indexingService.RebuildIndex();
-            _indexingService.UpdateIndex();
+            _indexingService.RebuildIndex(DefaultIndexName);
 
             return RedirectToAction("Index");
         }

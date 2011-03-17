@@ -5,8 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The multi-tenancy module enables multiple Orchard sites to run in isolation inside of a single web application, improving site density on a single server or hosted account.
-Features:
-    Orchard.MultiTenancy:
-        Name: Multi Tenancy
-        Description: Configure multiple site tenants.
-        Category: Hosting
+FeatureDescription: Configure multiple site tenants.
+Category: Hosting

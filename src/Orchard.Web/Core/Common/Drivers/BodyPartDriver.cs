@@ -58,6 +58,17 @@ namespace Orchard.Core.Common.Drivers {
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
 
+        protected override void Importing(BodyPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var importedText = context.Attribute(part.PartDefinition.Name, "Text");
+            if (importedText != null) {
+                part.Text = importedText;
+            }
+        }
+
+        protected override void Exporting(BodyPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Text", part.Text);
+        }
+
         private static BodyEditorViewModel BuildEditorViewModel(BodyPart part) {
             return new BodyEditorViewModel {
                 BodyPart = part,

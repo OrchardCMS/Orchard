@@ -37,6 +37,10 @@ namespace Orchard.Widgets.Handlers {
                 {"Action", "EditWidget"},
                 {"Id", context.ContentItem.Id}
             };
+
+            context.Metadata.Identity.Add("Widget.Title", widget.Title);
+            context.Metadata.Identity.Add("Widget.Position", widget.Position);
+            context.Metadata.Identity.Add("Widget.Zone", widget.Zone);
         }
     }
 }

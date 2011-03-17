@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -28,6 +29,23 @@ namespace Orchard.Comments.Drivers {
         protected override DriverResult Editor(CommentsPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(CommentsPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var commentsShown = context.Attribute(part.PartDefinition.Name, "CommentsShown");
+            if (commentsShown != null) {
+                part.CommentsShown = Convert.ToBoolean(commentsShown);
+            }
+
+            var commentsActive = context.Attribute(part.PartDefinition.Name, "CommentsActive");
+            if (commentsActive != null) {
+                part.CommentsActive = Convert.ToBoolean(commentsActive);
+            }
+        }
+
+        protected override void Exporting(CommentsPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsShown", part.CommentsShown);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("CommentsActive", part.CommentsActive);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Navigation.Models;
@@ -45,6 +46,29 @@ namespace Orchard.Core.Navigation.Drivers {
                 part.AdminMenuPosition = Position.GetNext(_navigationManager.BuildMenu("admin"));
 
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(AdminMenuPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var adminMenuText = context.Attribute(part.PartDefinition.Name, "AdminMenuText");
+            if (adminMenuText != null) {
+                part.AdminMenuText = adminMenuText;
+            }
+
+            var position = context.Attribute(part.PartDefinition.Name, "AdminMenuPosition");
+            if (position != null) {
+                part.AdminMenuPosition = position;
+            }
+
+            var onAdminMenu = context.Attribute(part.PartDefinition.Name, "OnAdminMenu");
+            if (onAdminMenu != null) {
+                part.OnAdminMenu = Convert.ToBoolean(onAdminMenu);
+            }
+        }
+
+        protected override void Exporting(AdminMenuPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("AdminMenuText", part.AdminMenuText);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("AdminMenuPosition", part.AdminMenuPosition);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("OnAdminMenu", part.OnAdminMenu);
         }
     }
 }

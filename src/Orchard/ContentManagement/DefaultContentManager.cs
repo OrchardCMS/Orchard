@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using Autofac;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
@@ -395,6 +396,52 @@ namespace Orchard.ContentManagement {
         public IContentQuery<ContentItem> Query() {
             var query = _context.Resolve<IContentQuery>(TypedParameter.From<IContentManager>(this));
             return query.ForPart<ContentItem>();
+        }
+
+        // Insert or Update imported data into the content manager.
+        // Call content item handlers.
+        public void Import(XElement element, ImportContentSession importContentSession) {
+            var elementId = element.Attribute("Id");
+            if (elementId == null)
+                return;
+
+            var identity = elementId.Value;
+            var item = importContentSession.Get(identity);
+            if (item == null) {
+                item = New(element.Name.LocalName);
+                Create(item);
+                importContentSession.Store(identity, item);
+            }
+            else {
+                item = Get(item.Id, VersionOptions.DraftRequired);
+            }
+
+            var context = new ImportContentContext(item, element, importContentSession);
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Importing(context);
+            }
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Imported(context);
+            }
+
+            Publish(item);
+        }
+
+        public XElement Export(ContentItem contentItem) {
+            var context = new ExportContentContext(contentItem, new XElement(contentItem.ContentType));
+
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Exporting(context);
+            }
+
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Exported(context);
+            }
+
+            // Put version information in the id.
+            context.Data.SetAttributeValue("Id", GetItemMetadata(contentItem).Identity.ToString());
+
+            return context.Data;
         }
 
         public void Flush() {

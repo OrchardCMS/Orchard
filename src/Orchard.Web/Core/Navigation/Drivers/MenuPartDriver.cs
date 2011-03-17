@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Navigation.Models;
@@ -44,6 +45,29 @@ namespace Orchard.Core.Navigation.Drivers {
                 updater.AddModelError("MenuText", T("The MenuText field is required"));
 
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(MenuPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var menuText = context.Attribute(part.PartDefinition.Name, "MenuText");
+            if (menuText != null) {
+                part.MenuText = menuText;
+            }
+
+            var position = context.Attribute(part.PartDefinition.Name, "MenuPosition");
+            if (position != null) {
+                part.MenuPosition = position;
+            }
+
+            var onMainMenu = context.Attribute(part.PartDefinition.Name, "OnMainMenu");
+            if (onMainMenu != null) {
+                part.OnMainMenu = Convert.ToBoolean(onMainMenu);
+            }
+        }
+
+        protected override void Exporting(MenuPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("MenuText", part.MenuText);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("MenuPosition", part.MenuPosition);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("OnMainMenu", part.OnMainMenu);
         }
     }
 }

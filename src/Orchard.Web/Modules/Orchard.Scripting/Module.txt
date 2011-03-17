@@ -5,11 +5,9 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The scripting module enables the possibility to execute scripts using a simple custom scripting language.
+FeatureDescription: Scripting support.
+Category: Scripting
 Features:
-    Orchard.Scripting:
-        Name: Scripting
-        Description: Scripting support.
-        Category: Scripting
     Orchard.Scripting.Lightweight:
         Name: Lightweight scripting
         Description: Custom lightweight and simple scripting language.
