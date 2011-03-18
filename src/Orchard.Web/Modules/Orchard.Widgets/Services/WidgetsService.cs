@@ -125,8 +125,8 @@ namespace Orchard.Widgets.Services {
                 .FirstOrDefault(widget => ParsePosition(widget) < currentPosition);
 
             if (widgetBefore != null) {
-                SwitchWidgetPositions(widgetBefore, widgetPart);
-
+                widgetPart.Position = widgetBefore.Position;
+                MakeRoomForWidgetPosition(widgetPart);
                 return true;
             }
 
@@ -145,8 +145,8 @@ namespace Orchard.Widgets.Services {
                 .FirstOrDefault(widget => ParsePosition(widget) > currentPosition);
 
             if (widgetAfter != null) {
-                SwitchWidgetPositions(widgetAfter, widgetPart);
-
+                widgetAfter.Position = widgetPart.Position;
+                MakeRoomForWidgetPosition(widgetAfter);
                 return true;
             }
 
@@ -160,7 +160,7 @@ namespace Orchard.Widgets.Services {
             int targetPosition = ParsePosition(widgetPart);
 
             IEnumerable<WidgetPart> widgetsToMove = GetWidgets()
-                .Where(widget => widget.Zone == widgetPart.Zone && ParsePosition(widget) >= targetPosition)
+                .Where(widget => widget.Zone == widgetPart.Zone && ParsePosition(widget) >= targetPosition && widget.Id != widgetPart.Id)
                 .OrderBy(widget => widget.Position, new UI.FlatPositionComparer()).ToList();
 
             // no need to continue if there are no widgets that will conflict with this widget's position
@@ -177,12 +177,6 @@ namespace Orchard.Widgets.Services {
             if (!int.TryParse(widgetPart.Record.Position, out value))
                 return 0;
             return value;
-        }
-
-        private static void SwitchWidgetPositions(WidgetPart sourceWidget, WidgetPart targetWidget) {
-            string tempPosition = sourceWidget.Record.Position;
-            sourceWidget.Record.Position = targetWidget.Record.Position;
-            targetWidget.Record.Position = tempPosition;
         }
     }
 }
