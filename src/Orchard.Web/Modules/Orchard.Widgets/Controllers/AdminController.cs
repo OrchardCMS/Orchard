@@ -235,7 +235,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("EditLayer")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditLayerSavePOST(int id, string returnUrl) {
+        public ActionResult EditLayerSavePOST(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -257,12 +257,12 @@ namespace Orchard.Widgets.Controllers {
                 this.Error(exception, T("Editing layer failed: {0}", exception.Message), Logger, Services.Notifier);
             }
 
-            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+            return RedirectToAction("Index");
         }
 
         [HttpPost, ActionName("EditLayer")]
         [FormValueRequired("submit.Delete")]
-        public ActionResult EditLayerDeletePOST(int id) {
+        public ActionResult EditLayerDeletePOST(int id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -273,7 +273,7 @@ namespace Orchard.Widgets.Controllers {
                 this.Error(exception, T("Removing Layer failed: {0}", exception.Message), Logger, Services.Notifier);
             }
 
-            return RedirectToAction("Index");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
         public ActionResult EditWidget(int id) {
@@ -304,7 +304,7 @@ namespace Orchard.Widgets.Controllers {
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditWidgetSavePOST(int id, int layerId) {
+        public ActionResult EditWidgetSavePOST(int id, int layerId, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -327,14 +327,12 @@ namespace Orchard.Widgets.Controllers {
                 this.Error(exception, T("Editing widget failed: {0}", exception.Message), Logger, Services.Notifier);
             }
 
-            return widgetPart != null ?
-                RedirectToAction("Index", "Admin", new { id = widgetPart.LayerPart.Id }) :
-                RedirectToAction("Index");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Delete")]
-        public ActionResult EditWidgetDeletePOST(int id) {
+        public ActionResult EditWidgetDeletePOST(int id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -350,9 +348,7 @@ namespace Orchard.Widgets.Controllers {
                 this.Error(exception, T("Removing Widget failed: {0}", exception.Message), Logger, Services.Notifier);
             }
 
-            return widgetPart != null ?
-                RedirectToAction("Index", "Admin", new { id = widgetPart.LayerPart.Id }) : 
-                RedirectToAction("Index");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

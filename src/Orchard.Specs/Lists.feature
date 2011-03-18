@@ -25,9 +25,9 @@ Scenario: I can add content items to a list
     Then I should see "MyList"
 	When I follow "Contained Items"
 	Then I should see "The 'MyList' List has no content items."
-	When I follow "Create New Content" where href has ReturnUrl
+	When I follow "Create New Content" where href has "ReturnUrl"
 	Then I should see "MyType"
-	When I follow "MyType" where href has ReturnUrl
+	When I follow "MyType" where href has "ReturnUrl"
         And I fill in
             | name | value |
             | Routable.Title | MyContentItem |
