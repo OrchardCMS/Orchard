@@ -33,6 +33,9 @@ namespace Orchard.Widgets.Drivers {
 
         protected override DriverResult Editor(WidgetPart widgetPart, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(widgetPart, Prefix, null, null);
+
+            _widgetsService.MakeRoomForWidgetPosition(widgetPart);
+
             return Editor(widgetPart, shapeHelper);
         }
 
@@ -51,7 +54,7 @@ namespace Orchard.Widgets.Drivers {
             if (zone != null) {
                 part.Zone = zone;
             }
-        }
+        }
 
         protected override void Exporting(WidgetPart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);

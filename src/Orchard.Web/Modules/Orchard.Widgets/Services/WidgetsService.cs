@@ -77,13 +77,6 @@ namespace Orchard.Widgets.Services {
             return layerPart;
         }
 
-        public void UpdateLayer(int layerId, string name, string description, string layerRule) {
-            LayerPart layerPart = GetLayer(layerId);
-            layerPart.Record.Name = name;
-            layerPart.Record.Description = description;
-            layerPart.Record.LayerRule = layerRule;
-        }
-
         public void DeleteLayer(int layerId) {
             // Delete widgets in the layer
             foreach (WidgetPart widgetPart in GetWidgets(layerId)) {
@@ -116,22 +109,8 @@ namespace Orchard.Widgets.Services {
             return widgetPart;
         }
 
-        public void UpdateWidget(int widgetId, string title, string position, string zone) {
-            WidgetPart widgetPart = GetWidget(widgetId);
-            widgetPart.Record.Title = title;
-            widgetPart.Record.Position = position;
-            widgetPart.Record.Zone = zone;
-        }
-
         public void DeleteWidget(int widgetId) {
             _contentManager.Remove(GetWidget(widgetId).ContentItem);
-        }
-
-        private static int ParsePosition(WidgetPart widgetPart) {
-            int value;
-            if (!int.TryParse(widgetPart.Record.Position, out value))
-                return 0;
-            return value;
         }
 
         public bool MoveWidgetUp(int widgetId) {
@@ -174,6 +153,31 @@ namespace Orchard.Widgets.Services {
             return false;
         }
 
+        public void MakeRoomForWidgetPosition(int widgetId) {
+            MakeRoomForWidgetPosition(GetWidget(widgetId));
+        }
+        public void MakeRoomForWidgetPosition(WidgetPart widgetPart) {
+            int targetPosition = ParsePosition(widgetPart);
+
+            IEnumerable<WidgetPart> widgetsToMove = GetWidgets()
+                .Where(widget => widget.Zone == widgetPart.Zone && ParsePosition(widget) >= targetPosition)
+                .OrderBy(widget => widget.Position, new UI.FlatPositionComparer()).ToList();
+
+            // no need to continue if there are no widgets that will conflict with this widget's position
+            if (widgetsToMove.Count() == 0 || ParsePosition(widgetsToMove.First()) > targetPosition)
+                return;
+
+            int position = targetPosition;
+            foreach (WidgetPart widget in widgetsToMove)
+                widget.Position = (++position).ToString();
+        }
+
+        private static int ParsePosition(WidgetPart widgetPart) {
+            int value;
+            if (!int.TryParse(widgetPart.Record.Position, out value))
+                return 0;
+            return value;
+        }
 
         private static void SwitchWidgetPositions(WidgetPart sourceWidget, WidgetPart targetWidget) {
             string tempPosition = sourceWidget.Record.Position;
