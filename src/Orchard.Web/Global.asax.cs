@@ -61,7 +61,6 @@ namespace Orchard.Web {
                 var localCopy = HostingEnvironment.MapPath(virtualFileCopy);
 
                 if (File.Exists(localCopy)) {
-
                     // result should not be cached, even on proxies
                     Context.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
                     Context.Response.Cache.SetValidUntilExpires(false);
@@ -69,12 +68,10 @@ namespace Orchard.Web {
                     Context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
                     Context.Response.Cache.SetNoStore();
 
-                    Context.Response.ContentType = "text/html";
-
                     Context.Response.WriteFile(localCopy);
                     Context.Response.End();
                 }
-                else {
+                else if(!File.Exists(Request.PhysicalPath)) {
                     // there is no local copy and the host is not running
                     // wait for the host to initialize
                     _waitHandle.WaitOne();

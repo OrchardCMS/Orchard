@@ -26,7 +26,7 @@
 @Display.Parts_Container_Manage(ContainerDisplayName: Model.ContainerDisplayName, ContainerContentType: Model.ContainerContentType, ContainerId: containerId)
 @if (containerId.HasValue) {
 <div class="manage">
-    @Html.ActionLink(createLinkText, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter, ContainerId = (int)containerId, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl }, new { @class = "button primaryAction" })
+    @Html.ActionLink(createLinkText, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter, ContainerId = (int)containerId, ReturnUrl = Url.Action("List", "Admin", new { Area = "Orchard.Lists", ContainerId = (int)containerId }) }, new { @class = "button primaryAction" })
 </div>
 }
 @using (Html.BeginFormAntiForgeryPost()) {

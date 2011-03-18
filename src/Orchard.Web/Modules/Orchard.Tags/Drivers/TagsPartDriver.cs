@@ -66,7 +66,7 @@ namespace Orchard.Tags.Drivers {
                 // Merge tags.
                 if (tags.Length > 0) {
                     var currentTags = part.CurrentTags.Select(t => t.TagName);
-                    _tagService.UpdateTagsForContentItem(context.ContentItem, tags.Concat(currentTags)); 
+                    _tagService.UpdateTagsForContentItem(context.ContentItem, tags.Concat(currentTags).Distinct()); 
                 }
             }
         }

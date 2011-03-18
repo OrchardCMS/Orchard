@@ -1,4 +1,7 @@
 ﻿using System.Linq;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
@@ -57,6 +60,20 @@ namespace Orchard.Specs.Bindings {
                 }
             });
 
+        }
+
+        [Given(@"I have a containable content type ""(.*)\""")]
+        public void GivenIHaveAContainableContentType(string name) {
+            var webApp = Binding<WebAppHosting>();
+            webApp.Host.Execute(() => {
+                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
+                    var cdm = environment.Resolve<IContentDefinitionManager>();
+
+                    var contentTypeDefinition = new ContentTypeDefinition(name, name);
+                    cdm.StoreTypeDefinition(contentTypeDefinition);
+                    cdm.AlterTypeDefinition(name, cfg => cfg.WithPart("CommonPart").WithPart("BodyPart").WithPart("RoutePart").WithPart("ContainablePart").Creatable().Draftable());
+                }
+            });
         }
 
         [Given(@"I have tenant ""(.*)\"" on ""(.*)\"" as ""(.*)\""")]
