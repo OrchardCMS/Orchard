@@ -115,11 +115,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 27
  testRunner.Then("I should see \"The \'MyList\' List has no content items.\"");
 #line 28
- testRunner.When("I follow \"Create New Content\" where href has ReturnUrl");
+ testRunner.When("I follow \"Create New Content\" where href has \"ReturnUrl\"");
 #line 29
  testRunner.Then("I should see \"MyType\"");
 #line 30
- testRunner.When("I follow \"MyType\" where href has ReturnUrl");
+ testRunner.When("I follow \"MyType\" where href has \"ReturnUrl\"");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",

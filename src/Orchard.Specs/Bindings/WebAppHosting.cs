@@ -191,7 +191,7 @@ namespace Orchard.Specs.Bindings {
             _doc.Load(new StringReader(Details.ResponseText));
         }
 
-        [When(@"I follow ""(.*)""")]
+        [When(@"I follow ""([^""]*)""")]
         public void WhenIFollow(string linkText) {
             var link = _doc.DocumentNode
                             .SelectNodes("//a")
@@ -204,7 +204,7 @@ namespace Orchard.Specs.Bindings {
             WhenIGoTo(urlPath);
         }
 
-        [When(@"I follow ""(.*)"" where href has (.+)$")]
+        [When(@"I follow ""([^""]+)"" where href has ""([^""]+)""")]
         public void WhenIFollow(string linkText, string hrefFilter) {
             var link = _doc.DocumentNode
                             .SelectNodes("//a[@href]").Where(elt =>
