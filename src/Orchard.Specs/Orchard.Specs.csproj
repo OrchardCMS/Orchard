@@ -161,6 +161,11 @@
     <Compile Include="Hosting\RequestExtensions.cs" />
     <Compile Include="Hosting\RequestDetails.cs" />
     <Compile Include="Hosting\Simple.Web\Global.asax.cs" />
+    <Compile Include="Lists.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lists.feature</DependentUpon>
+    </Compile>
     <Compile Include="Media.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -259,6 +264,10 @@
     <None Include="ContentTypes.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ContentTypes.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Lists.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Lists.feature.cs</LastGenOutput>
     </None>
     <None Include="PermissionModel.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
