@@ -33,13 +33,22 @@ namespace Orchard.ImportExport.RecipeHandlers {
                     continue;
 
                 var identity = elementId.Value;
+                var status = element.Attribute("Status");
 
                 var item = importContentSession.Get(identity);
                 if (item == null) {
                     item = _orchardServices.ContentManager.New(element.Name.LocalName);
-                    _orchardServices.ContentManager.Create(item);
-                    importContentSession.Store(identity, item);
+                    if (status != null && status.Value == "Draft") {
+                        _orchardServices.ContentManager.Create(item, VersionOptions.Draft);
+                    }
+                    else {
+                        _orchardServices.ContentManager.Create(item);
+                    }
                 }
+                else {
+                    item = _orchardServices.ContentManager.Get(item.Id, VersionOptions.DraftRequired);
+                }
+                importContentSession.Store(identity, item);
             }
 
             // Second pass to import the content items.

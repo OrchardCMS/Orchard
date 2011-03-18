@@ -18,7 +18,7 @@ namespace Orchard.ContentManagement {
             if (_dictionary.ContainsKey(contentIdentity))
                 return _dictionary[contentIdentity];
 
-            foreach (var item in _contentManager.Query(VersionOptions.Published).List()) {
+            foreach (var item in _contentManager.Query(VersionOptions.Latest).List()) {
                 var identity = _contentManager.GetItemMetadata(item).Identity;
                 var equalityComparer = new ContentIdentity.ContentIdentityEqualityComparer();
                 if (equalityComparer.Equals(identity, contentIdentity)) {
@@ -32,6 +32,9 @@ namespace Orchard.ContentManagement {
 
         public void Store(string id, ContentItem item) {
             var contentIdentity = new ContentIdentity(id);
+            if (_dictionary.ContainsKey(contentIdentity)) {
+                _dictionary.Remove(contentIdentity);
+            }
             _dictionary.Add(contentIdentity, item);
         }
 

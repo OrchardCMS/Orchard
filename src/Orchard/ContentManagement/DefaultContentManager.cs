@@ -24,6 +24,8 @@ namespace Orchard.ContentManagement {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
+        private const string Published = "Published";
+        private const string Draft = "Draft";
 
         public DefaultContentManager(
             IComponentContext context,
@@ -127,6 +129,9 @@ namespace Orchard.ContentManagement {
 
             // return item if obtained earlier in session
             if (session.RecallVersionRecordId(versionRecord.Id, out contentItem)) {
+                if (options.IsDraftRequired && versionRecord.Published) {
+                    return BuildNewVersion(contentItem);
+                }
                 return contentItem;
             }
 
@@ -406,15 +411,22 @@ namespace Orchard.ContentManagement {
                 return;
 
             var identity = elementId.Value;
+            var status = element.Attribute("Status");
+
             var item = importContentSession.Get(identity);
             if (item == null) {
                 item = New(element.Name.LocalName);
-                Create(item);
-                importContentSession.Store(identity, item);
+                if (status != null && status.Value == "Draft") {
+                    Create(item, VersionOptions.Draft);
+                }
+                else {
+                    Create(item);
+                }
             }
             else {
                 item = Get(item.Id, VersionOptions.DraftRequired);
             }
+            importContentSession.Store(identity, item);
 
             var context = new ImportContentContext(item, element, importContentSession);
             foreach (var contentHandler in Handlers) {
@@ -424,7 +436,9 @@ namespace Orchard.ContentManagement {
                 contentHandler.Imported(context);
             }
 
-            Publish(item);
+            if (status == null || status.Value == Published) {
+                Publish(item);
+            }
         }
 
         public XElement Export(ContentItem contentItem) {
@@ -438,8 +452,13 @@ namespace Orchard.ContentManagement {
                 contentHandler.Exported(context);
             }
 
-            // Put version information in the id.
             context.Data.SetAttributeValue("Id", GetItemMetadata(contentItem).Identity.ToString());
+            if (contentItem.IsPublished()) {
+                context.Data.SetAttributeValue("Status", Published);
+            }
+            else {
+                context.Data.SetAttributeValue("Status", Draft);
+            }
 
             return context.Data;
         }
