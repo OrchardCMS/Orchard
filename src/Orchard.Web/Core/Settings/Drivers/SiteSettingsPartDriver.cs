@@ -77,7 +77,7 @@ namespace Orchard.Core.Settings.Drivers {
 
             // ensure the base url is absolute if provided
             if (!String.IsNullOrWhiteSpace(model.Site.BaseUrl)) {
-                if (!model.Site.BaseUrl.ToLower().StartsWith("http")) {
+                if (!Uri.IsWellFormedUriString(model.Site.BaseUrl, UriKind.Absolute)) {
                     updater.AddModelError("BaseUrl", T("The base url must be absolute."));
                 }
                     // if the base url has been modified, try to ping it
