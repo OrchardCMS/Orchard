@@ -11,14 +11,14 @@ namespace Orchard.Users.Events
         void Creating(UserContext context);
 
         /// <summary>
-        /// Called once a user has been created
+        /// Called after a user has been created
         /// </summary>
         void Created(UserContext context);
 
         // NEW BELOW HERE
 
         /// <summary>
-        /// Called once a user has logged in
+        /// Called after a user has logged in
         /// </summary>
         void LoggedIn(IUser user);
 
@@ -33,17 +33,17 @@ namespace Orchard.Users.Events
         void AccessDenied(IUser user);
 
         /// <summary>
-        /// Called once a user has changed password
+        /// Called after a user has changed password
         /// </summary>
         void ChangedPassword(IUser user);
 
         /// <summary>
-        /// Called once a user has confirmed their email address
+        /// Called after a user has confirmed their email address
         /// </summary>
         void SentChallengeEmail(IUser user);
 
         /// <summary>
-        /// Called once a user has confirmed their email address
+        /// Called after a user has confirmed their email address
         /// </summary>
         void ConfirmedEmail(IUser user);
     }

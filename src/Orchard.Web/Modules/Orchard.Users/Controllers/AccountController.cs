@@ -58,8 +58,7 @@ namespace Orchard.Users.Controllers {
             //Suggestion: Could instead use the new AccessDenined IUserEventHandler method and let modules decide if they want to log this event?
             Logger.Information("Access denied to user #{0} '{1}' on {2}", currentUser.Id, currentUser.UserName, returnUrl);
 
-            foreach (var userEventHandler in _userEventHandlers)
-            {
+            foreach (var userEventHandler in _userEventHandlers) {
                 userEventHandler.AccessDenied(currentUser);
             }
 
@@ -85,8 +84,7 @@ namespace Orchard.Users.Controllers {
             }
 
             _authenticationService.SignIn(user, false);
-            foreach (var userEventHandler in _userEventHandlers)
-            {
+            foreach (var userEventHandler in _userEventHandlers) {
                 userEventHandler.LoggedIn(user);
             }
 
@@ -97,8 +95,7 @@ namespace Orchard.Users.Controllers {
             IUser wasLoggedInUser = _authenticationService.GetAuthenticatedUser();
             _authenticationService.SignOut();
             if (wasLoggedInUser != null)
-                foreach (var userEventHandler in _userEventHandlers)
-                {
+                foreach (var userEventHandler in _userEventHandlers) {
                     userEventHandler.LoggedOut(wasLoggedInUser);
                 }
             return this.RedirectLocal(returnUrl);
@@ -142,8 +139,7 @@ namespace Orchard.Users.Controllers {
                     if ( user.As<UserPart>().EmailStatus == UserStatus.Pending ) {
                         _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
 
-                        foreach (var userEventHandler in _userEventHandlers)
-                        {
+                        foreach (var userEventHandler in _userEventHandlers) {
                             userEventHandler.SentChallengeEmail(user);
                         }
                         return RedirectToAction("ChallengeEmailSent");
@@ -218,8 +214,7 @@ namespace Orchard.Users.Controllers {
 
                 if ( validated != null ) {
                     _membershipService.SetPassword(validated, newPassword);
-                    foreach (var userEventHandler in _userEventHandlers)
-                    {
+                    foreach (var userEventHandler in _userEventHandlers) {
                         userEventHandler.ChangedPassword(validated);
                     }
                     return RedirectToAction("ChangePasswordSuccess");
