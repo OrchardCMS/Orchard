@@ -165,9 +165,6 @@ namespace Orchard.ImportExport.Services {
             if (versionHistoryOptions.HasFlag(VersionHistoryOptions.Draft)) {
                 return VersionOptions.Draft;
             }
-            if (versionHistoryOptions.HasFlag(VersionHistoryOptions.AllVersions)) {
-                return VersionOptions.AllVersions;
-            }
             return VersionOptions.Published;
         }
 

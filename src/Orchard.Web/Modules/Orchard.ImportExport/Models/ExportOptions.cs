@@ -9,6 +9,5 @@
     public enum VersionHistoryOptions {
         Published,
         Draft,
-        AllVersions
     }
 }
