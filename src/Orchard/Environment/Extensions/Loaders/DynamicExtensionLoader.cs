@@ -101,7 +101,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                     Descriptor = descriptor,
                     Loader = this,
                     Name = r.SimpleName,
-                    VirtualPath = GetReferenceVirtualPath(projectPath, r.SimpleName)
+                    VirtualPath = GetReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
                 });
             }
         }
@@ -129,11 +129,21 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
-        private string GetReferenceVirtualPath(string projectPath, string referenceName) {
+        private string GetReferenceVirtualPath(string projectPath, string referenceName, string hintPath) {
             var path = _virtualPathProvider.GetDirectoryName(projectPath);
+
+            // Check if hint path is valid
+            if (!string.IsNullOrEmpty(hintPath)) {
+                hintPath = _virtualPathProvider.Combine(path, hintPath);
+                if (_virtualPathProvider.FileExists(hintPath))
+                    return hintPath;
+            }
+
+            // Fall back to bin directory
             path = _virtualPathProvider.Combine(path, "bin", referenceName + ".dll");
             if (_virtualPathProvider.FileExists(path))
                 return path;
+
             return null;
         }
 
@@ -196,7 +206,9 @@ namespace Orchard.Environment.Extensions.Loaders {
 
                 // Add Project and Library References
                 foreach (ReferenceDescriptor referenceDescriptor in projectFile.References.Where(reference => !string.IsNullOrEmpty(reference.Path))) {
-                    string path = _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
+                    string path = referenceDescriptor.ReferenceType == ReferenceType.Library
+                        ? GetReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path) 
+                        : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
 
                     if (_virtualPathProvider.FileExists(path)) {
                         dependencies.Add(path);
