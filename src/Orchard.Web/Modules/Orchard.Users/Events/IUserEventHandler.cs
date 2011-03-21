@@ -1,10 +1,8 @@
 ﻿using Orchard.Events;
 using Orchard.Security;
 
-namespace Orchard.Users.Events
-{
-    public interface IUserEventHandler : IEventHandler
-    {
+namespace Orchard.Users.Events {
+    public interface IUserEventHandler : IEventHandler {
         /// <summary>
         /// Called before a User is created
         /// </summary>
@@ -14,8 +12,6 @@ namespace Orchard.Users.Events
         /// Called after a user has been created
         /// </summary>
         void Created(UserContext context);
-
-        // NEW BELOW HERE
 
         /// <summary>
         /// Called after a user has logged in

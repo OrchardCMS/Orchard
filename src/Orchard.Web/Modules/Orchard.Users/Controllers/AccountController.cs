@@ -92,7 +92,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult LogOff(string returnUrl) {
-            IUser wasLoggedInUser = _authenticationService.GetAuthenticatedUser();
+            var wasLoggedInUser = _authenticationService.GetAuthenticatedUser();
             _authenticationService.SignOut();
             if (wasLoggedInUser != null)
                 foreach (var userEventHandler in _userEventHandlers) {
