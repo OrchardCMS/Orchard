@@ -30,7 +30,7 @@ namespace Orchard.Core.Containers.Drivers {
                     var commonPart = part.As<ICommonPart>();
 
                     var model = new ContainableViewModel();
-                    if (commonPart.Container != null) {
+                    if (commonPart != null && commonPart.Container != null) {
                         model.ContainerId = commonPart.Container.Id;
                     }
 
@@ -38,7 +38,9 @@ namespace Orchard.Core.Containers.Drivers {
                         var oldContainerId = model.ContainerId;
                         updater.TryUpdateModel(model, "Containable", null, null);
                         if (oldContainerId != model.ContainerId)
-                            commonPart.Container = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
+                            if (commonPart != null) {
+                                commonPart.Container = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
+                            }
                     }
 
                     // note: string.isnullorempty not being recognized by linq-to-nhibernate hence the inline or
