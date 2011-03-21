@@ -313,13 +313,13 @@ namespace Orchard.Tests.Environment {
             Assert.That(blueprint.Dependencies.FirstOrDefault(dependency => dependency.Type.Equals(typeof(StubNestedType))), Is.Not.Null);
         }
 
-        [OrchardDependencyReplace("Orchard.Tests.Environment.DefaultCompositionStrategyTests+ReplacedStubNestedType")]
+        [OrchardSuppressDependency("Orchard.Tests.Environment.DefaultCompositionStrategyTests+ReplacedStubNestedType")]
         internal class StubNestedType : IDependency {}
 
         internal class ReplacedStubNestedType : IDependency {}
     }
 
-    [OrchardDependencyReplace("Orchard.Tests.Environment.ReplacedStubType")]
+    [OrchardSuppressDependency("Orchard.Tests.Environment.ReplacedStubType")]
     internal class StubType : IDependency { }
 
     internal class ReplacedStubType : IDependency { }

@@ -77,8 +77,8 @@ namespace Orchard.Environment.ShellBuilders {
             // Identify replaced types
             foreach(Feature feature in features) {
                 foreach (Type type in feature.ExportedTypes) {
-                    foreach (OrchardDependencyReplaceAttribute replacedType in type.GetCustomAttributes(typeof(OrchardDependencyReplaceAttribute), false)) {
-                        excludedTypes.Add(replacedType.Dependency);
+                    foreach (OrchardSuppressDependencyAttribute replacedType in type.GetCustomAttributes(typeof(OrchardSuppressDependencyAttribute), false)) {
+                        excludedTypes.Add(replacedType.FullName);
                     }
                 }
             }
