@@ -6,8 +6,10 @@
 if (!HasText(Model.Text)) {
     @DisplayChildren(Model)
 } else {
-    if (Model.Href.TrimEnd('/').ToUpperInvariant() == Request.Path.TrimEnd('/').ToUpperInvariant()) {
-        Model.Classes.Add("current");
+    string requestUrl = Request.Path.Replace(Request.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
+    string modelUrl = Model.Href.Replace(Request.ApplicationPath, string.Empty).TrimEnd('/').ToUpperInvariant();
+    if ((!string.IsNullOrEmpty(modelUrl) && requestUrl.StartsWith(modelUrl)) || requestUrl == modelUrl) { 
+	    Model.Classes.Add("current");
     }
     var tag = Tag(Model, "li");
     @tag.StartElement
