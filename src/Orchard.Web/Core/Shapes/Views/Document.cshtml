@@ -6,7 +6,7 @@
     Script.Include("html5.js").AtLocation(ResourceLocation.Head);
 
     //a bit opinionated - only the site name on the homepage
-    var title = (Request.Path != Request.ApplicationPath && HasText(Model.Title)
+    var title = (Request.Path.TrimEnd('/') != Request.ApplicationPath && HasText(Model.Title)
                     ? Model.Title + WorkContext.CurrentSite.PageTitleSeparator
                     : "") +
         WorkContext.CurrentSite.SiteName;
