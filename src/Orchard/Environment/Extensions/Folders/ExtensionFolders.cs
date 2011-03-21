@@ -100,6 +100,7 @@ namespace Orchard.Environment.Extensions.Folders {
                 AntiForgery = GetValue(manifest, "AntiForgery"),
                 Zones = GetValue(manifest, "Zones"),
                 BaseTheme = GetValue(manifest, "BaseTheme"),
+                Priority = int.Parse(GetValue(manifest, "Priority") ?? "0")
             };
             extensionDescriptor.Features = GetFeaturesForExtension(manifest, extensionDescriptor);
 
@@ -183,6 +184,9 @@ namespace Orchard.Environment.Extensions.Folders {
                         case "FeatureDescription":
                             manifest.Add("FeatureDescription", field[1]);
                             break;
+                        case "Priority":
+                            manifest.Add("Priority", field[1]);
+                            break;
                         case "Features":
                             manifest.Add("Features", reader.ReadToEnd());
                             break;
@@ -200,6 +204,7 @@ namespace Orchard.Environment.Extensions.Folders {
             FeatureDescriptor defaultFeature = new FeatureDescriptor {
                 Id = extensionDescriptor.Id,
                 Name = extensionDescriptor.Name,
+                Priority = extensionDescriptor.Priority,
                 Description = GetValue(manifest, "FeatureDescription") ?? GetValue(manifest, "Description") ?? string.Empty,
                 Dependencies = ParseFeatureDependenciesEntry(GetValue(manifest, "Dependencies")),
                 Extension = extensionDescriptor,
@@ -229,6 +234,7 @@ namespace Orchard.Environment.Extensions.Folders {
                             if (featureDescriptorId == extensionDescriptor.Id) {
                                 featureDescriptor = defaultFeature;
                                 featureDescriptor.Name = extensionDescriptor.Name;
+                                featureDescriptor.Priority = extensionDescriptor.Priority;
                             }
                             else {
                                 featureDescriptor = new FeatureDescriptor {
@@ -255,6 +261,9 @@ namespace Orchard.Environment.Extensions.Folders {
                                         break;
                                     case "Category":
                                         featureDescriptor.Category = featureField[1];
+                                        break;
+                                    case "Priority":
+                                        featureDescriptor.Priority = int.Parse(featureField[1]);
                                         break;
                                     case "Dependencies":
                                         featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureField[1]);
