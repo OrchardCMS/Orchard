@@ -8,7 +8,7 @@
                 '</div>' +
                 '<div id="shape-tracing-window">' +
                     '<div id="shape-tracing-window-tree"></div>' +
-                    '<div id="shape-tracing-window-content">foo</div>' +
+                    '<div id="shape-tracing-window-content"></div>' +
                 '</div>' +
             '</div>' +
             '<div id="shape-tracing-container-ghost"></div>' +
@@ -46,6 +46,8 @@
             shapeTracingContainer.offset({ top: windowHeight - containerHeight + scrollTop, left: 0 });
             shapeTracingWindow.height(containerHeight - toolbarHeight - resizeHandleHeight);
             shapeTracingWindowTree.height(containerHeight - toolbarHeight - resizeHandleHeight);
+            shapeTracingWindowContent.height(containerHeight - toolbarHeight - resizeHandleHeight);
+            shapeTracingWindowContent.width(shapeTracingContainer.outerWidth - shapeTracingWindowTree.outerWidth);
             shapeTracingContainer.width('100%');
         };
 
@@ -146,7 +148,7 @@
 
         shapeTracingWindowTree.append(shapes);
 
-        // add the expand/collapse logic
+        // add the expand/collapse logic to the shapes tree
         var glyph = $('<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>');
         shapeTracingWindowTree.find('div').parent(':has(li)').prepend(glyph);
 
@@ -168,19 +170,6 @@
                 expando.addClass("closing");
             }
         }
-
-        // automatically expand or collapse shapes in the tree
-        shapeTracingWindowTree.find('.expando-glyph-container').click(function () {
-            var _this = $(this);
-            if (_this.hasClass("closed") || _this.hasClass("closing")) {
-                openExpando(_this);
-            }
-            else {
-                closeExpando(_this);
-            }
-
-            return false;
-        });
 
         //create an overlay on shapes' descendants
         var overlayTarget = null;
@@ -217,6 +206,14 @@
             $('.shape-tracing-selected').removeClass('shape-tracing-selected');
             $('li[tree-shape-id="' + shapeId + '"] > div').add('[shape-id="' + shapeId + '"]').addClass('shape-tracing-selected');
             shapeTracingOverlay.hide();
+
+            // show the properties for the selected shape
+            $('[shape-id-meta]:visible').toggle(false);
+            var target = $('[shape-id-meta="' + shapeId + '"]"');
+            target.toggle(true);
+
+            // enable codemirror for the current tab
+            enableCodeMirror(target);
         }
 
         // select shapes when clicked
@@ -261,6 +258,61 @@
             }
 
             event.stopPropagation();
+        });
+
+        // move all shape tracing meta blocks to the content window
+        $("[shape-id-meta]").detach().prependTo(shapeTracingWindowContent);
+
+        // add the expand/collapse logic to the shape model
+        // var glyph = $('<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>');
+        shapeTracingWindowContent.find('h3').parent(':has(li)').prepend(glyph);
+
+        // collapse all sub uls
+        shapeTracingWindowContent.find('ul ul').toggle(false);
+
+        // tabs events
+        shapeTracingWindowContent.find('.shape-tracing-tabs > li').click(function () {
+            var _this = $(this);
+            var tabName = this.className.split(/\s/)[0];
+
+            // toggle the selected class on the tab li
+            $('.shape-tracing-tabs > li.selected').removeClass('selected');
+            $('.shape-tracing-tabs > li.' + tabName).addClass('selected');
+
+            // hide all tabs and display the selected one
+            $('.shape-tracing-meta-content > div').toggle(false);
+            $('.shape-tracing-meta-content > div.' + tabName).toggle(true);
+
+            // look for the targetted panel
+            var wrapper = _this.parent().parent().first();
+            var panel = wrapper.find('div.' + tabName);
+
+            // enable codemirror for the current tab
+            enableCodeMirror(panel);
+        });
+
+        // activates codemirror on specific textareas
+        var enableCodeMirror = function (target) {
+            // if there is a script, and colorization is not enabled yet, turn it on
+            // code mirror seems to work only if the textarea is visible
+            target.find('textarea:visible').each(function () {
+                if ($(this).next('.CodeMirror').length == 0) {
+                    CodeMirror.fromTextArea(this, { mode: "razor", tabMode: "indent", height: "100%", readOnly: true });
+                }
+            });
+        }
+
+        // automatically expand or collapse shapes in the tree
+        shapeTracingWindow.find('.expando-glyph-container').click(function () {
+            var _this = $(this);
+            if (_this.hasClass("closed") || _this.hasClass("closing")) {
+                openExpando(_this);
+            }
+            else {
+                closeExpando(_this);
+            }
+
+            return false;
         });
     });
 

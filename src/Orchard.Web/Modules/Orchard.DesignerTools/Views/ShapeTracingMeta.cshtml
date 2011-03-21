@@ -1,13 +1,21 @@
-﻿@*
-
-@functions {
+﻿@functions {
     string FormatShapeFilename(string type, string themeId) {
         return "~/Themes/" + themeId + "/Views/" + type.Replace("__", "-").Replace("_", ".") + ".cshtml";
     }
+    
+    string RemoveBeacons(string htmlContent) {
+        var regex = new System.Text.RegularExpressions.Regex(@"<script\sclass=""shape-tracing-wrapper(.*?)</script>");
+        return regex.Replace(htmlContent, String.Empty);
+    }
+
+    string RemoveEmptyLines(string htmlContent) {
+        var regex = new System.Text.RegularExpressions.Regex(@"[\r\n]+");
+        return regex.Replace(htmlContent, System.Environment.NewLine);
+    }
 }
 
-<div class="shape-tracing meta shapeId-@Model.ShapeId" style="display:none">
-    <ul class="debuggerMenu">
+<div class="shape-tracing-meta" shape-id-meta="@Model.ShapeId" style="display:none">
+    <ul class="shape-tracing-tabs">
         <li class="shape selected first"><a href="#">Shape</a></li>
         <li class="model middle"><a href="#">Model</a></li>
         <li class="placement middle"><a href="#">Placement</a></li>
@@ -16,7 +24,7 @@
         <li class="html last"><a href="#">HTML</a></li>
     </ul>
 
-    <div class="content">
+    <div class="shape-tracing-meta-content">
         <div class="shape">
             <ul class="properties">
                 <li>
@@ -84,9 +92,7 @@
         </div>
 
         <div class="html" style="display:none">
-            <textarea id="html-@Model.ShapeId" name="html-@Model.ShapeId">@HttpUtility.HtmlEncode(Display(Model.ChildContent))</textarea>
+            <textarea id="html-@Model.ShapeId" name="html-@Model.ShapeId">@RemoveEmptyLines(RemoveBeacons(Display(Model.ChildContent).ToString()))</textarea>
         </div>
     </div>
 </div>
-
-*@
