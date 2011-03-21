@@ -69,7 +69,10 @@ namespace Orchard.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexWidgetPOST(int? moveUp, int? moveDown, string returnUrl) {
+        public ActionResult IndexWidgetPOST(int? layerId, int? moveUp, int? moveDown, int? moveHere, int? moveOut, string returnUrl) {
+            if (moveOut.HasValue)
+                return DeleteWidget(moveOut.Value, returnUrl);
+
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -78,6 +81,8 @@ namespace Orchard.Widgets.Controllers {
                     _widgetsService.MoveWidgetUp(moveUp.Value);
                 if (moveDown.HasValue)
                     _widgetsService.MoveWidgetDown(moveDown.Value);
+                if (moveHere.HasValue)
+                    _widgetsService.MoveWidgetToLayer(moveHere.Value, layerId);
             }
             catch (Exception exception) {
                 this.Error(exception, T("Moving widget failed: {0}", exception.Message), Logger, Services.Notifier);
@@ -85,6 +90,7 @@ namespace Orchard.Widgets.Controllers {
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
+
 
         public ActionResult ChooseWidget(int layerId, string zone, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
@@ -333,6 +339,9 @@ namespace Orchard.Widgets.Controllers {
         [HttpPost, ActionName("EditWidget")]
         [FormValueRequired("submit.Delete")]
         public ActionResult EditWidgetDeletePOST(int id, string returnUrl) {
+            return DeleteWidget(id, returnUrl);
+        }
+        private ActionResult DeleteWidget(int id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -344,7 +353,8 @@ namespace Orchard.Widgets.Controllers {
 
                 _widgetsService.DeleteWidget(widgetPart.Id);
                 Services.Notifier.Information(T("Widget was successfully deleted"));
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 this.Error(exception, T("Removing Widget failed: {0}", exception.Message), Logger, Services.Notifier);
             }
 

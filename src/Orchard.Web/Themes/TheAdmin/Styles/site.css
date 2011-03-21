@@ -224,18 +224,18 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 /* Links
 ***************************************************************/
 a, a:link, a:visited,
-form.link button {
+form.link button, button.link, button.link:hover {
     color:#1e5d7d;
     text-decoration:none;
 }
-form.link button {
+form.link button, button.link {
     height:1.3em;
 }
 a:hover, a:active, a:focus {
     color:#1e5d7d;
     text-decoration:none;
 }
-form.link button:hover {
+form.link button:hover, button.link:hover {
     border-bottom:1px solid #1e5d7d;
 }
 
@@ -756,6 +756,20 @@ button:active, .buton:active, a.button:active {
 }
 button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
   border: 1px dotted transparent;
+}
+/* and allow all of that button style to be undone and beyond - to look like a link */
+button.link {
+    background:none;
+    border:0;
+    padding:inherit;
+    text-shadow:none;
+    -webkit-box-shadow:none; 
+    -moz-box-shadow:none; 
+    box-shadow:none;
+    filter:none;	
+    -webkit-border-radius:0;
+    -moz-border-radius:0;
+    border-radius:0;
 }
 .cancel {
     margin:0 0 0 .93em;
