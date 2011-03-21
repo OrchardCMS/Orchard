@@ -57,8 +57,15 @@ color:#333;
 #widgets-zones li li {
 background:#F3F4F5;
 border:0;
+border-left:3px solid #EAEAEA;
 margin:10px 0;
-padding:5px 10px 5px 25px;
+padding:5px 100px 5px 25px;
+}
+#widgets-zones li li.widgets-this-layer {
+border-color:#898989;
+}
+#widgets-zones li li.widgets-this-layer:hover {
+border-color:#bfd3a7;
 }
 #widgets-zones .widgets-mover {
 margin-left:-18px;

@@ -26,6 +26,8 @@ namespace Orchard.Widgets.Services {
         bool MoveWidgetUp(WidgetPart widgetPart);
         bool MoveWidgetDown(int widgetId);
         bool MoveWidgetDown(WidgetPart widgetPart);
+        bool MoveWidgetToLayer(int widgetId, int? layerId);
+        bool MoveWidgetToLayer(WidgetPart widgetPart, int? layerId);
         void MakeRoomForWidgetPosition(int widgetId);
         void MakeRoomForWidgetPosition(WidgetPart widgetPart);
     }

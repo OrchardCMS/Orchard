@@ -153,6 +153,22 @@ namespace Orchard.Widgets.Services {
             return false;
         }
 
+        public bool MoveWidgetToLayer(int widgetId, int? layerId) {
+            return MoveWidgetToLayer(GetWidget(widgetId), layerId);
+        }
+        public bool MoveWidgetToLayer(WidgetPart widgetPart, int? layerId) {
+            LayerPart layer = layerId.HasValue
+                ? GetLayer(layerId.Value)
+                : GetLayers().FirstOrDefault();
+
+            if (layer != null) {
+                widgetPart.LayerPart = layer;
+                return true;
+            }
+
+            return false;
+        }
+
         public void MakeRoomForWidgetPosition(int widgetId) {
             MakeRoomForWidgetPosition(GetWidget(widgetId));
         }
