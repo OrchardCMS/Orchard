@@ -28,34 +28,25 @@
         <div class="shape">
             <ul class="properties">
                 <li>
-                    <h3>
                         <div class="name">Shape</div>
                         <div class="value">@Model.ShapeType</div>
-                    </h3>
+                    
                 </li>
                 <li>
-                    <h3>
                         <div class="name">Definition</div>
                         <div class="value">@Model.Definition</div>
-                    </h3>
                 </li>
                 <li>
-                    <h3>
                         <div class="name">Display Type</div>
                         <div class="value">@(String.IsNullOrEmpty((string)Model.DisplayType) ? T("n/a").Text : Model.DisplayType.ToString())</div>
-                    </h3>
                 </li>
                 <li>
-                    <h3>
                         <div class="name">Position</div>
-                        <div class="value">@(String.IsNullOrEmpty((string)Model.Position) ? T("n/a").Text : Model.Position.ToString())</div>
-                    </h3>
+                        <div class="value">@(String.IsNullOrEmpty((string)Model.Position) ? T("n/a").Text : Model.Position.ToString())</div>  
                 </li>
                 <li>
-                    <h3>
                         <div class="name">Placement Source</div>
                         <div class="value">@(String.IsNullOrEmpty((string)Model.PlacementSource) ? T("n/a").Text : Model.PlacementSource.ToString())</div>
-                    </h3>
                 </li>
             </ul>
         </div>

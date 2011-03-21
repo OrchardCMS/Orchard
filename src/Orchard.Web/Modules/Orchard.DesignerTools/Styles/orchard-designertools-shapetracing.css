@@ -9,6 +9,7 @@
     padding:0;
     color:#000;
     font-size:100%;
+    list-style-type:none;
 }
 
 #shape-tracing-container {
@@ -29,6 +30,11 @@
     margin:0;
 }
 
+#shape-tracing-container .shape-tracing-meta-content {
+    padding:0 0 0 30px;
+    margin:8px 0 0 0;
+    border:1px solid #E4E5E6;
+}
 #shape-tracing-toolbar  {
     color:black;
     background-color:#fff;
