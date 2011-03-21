@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Razor.Generator;
 using System.Web.WebPages.Razor;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.Dependencies;
+using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Mvc.ViewEngines.Razor {
     public interface IRazorCompilationEvents {
@@ -27,7 +30,12 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IAssemblyLoader _assemblyLoader;
 
-        public DefaultRazorCompilationEvents(IDependenciesFolder dependenciesFolder, IBuildManager buildManager, IEnumerable<IExtensionLoader> loaders, IAssemblyLoader assemblyLoader) {
+        public DefaultRazorCompilationEvents(
+            IDependenciesFolder dependenciesFolder,
+            IBuildManager buildManager,
+            IEnumerable<IExtensionLoader> loaders,
+            IAssemblyLoader assemblyLoader) {
+
             _dependenciesFolder = dependenciesFolder;
             _buildManager = buildManager;
             _loaders = loaders;
@@ -35,8 +43,25 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public void CodeGenerationStarted(RazorBuildProvider provider) {
-            var descriptors = _dependenciesFolder.LoadDescriptors();
-            var entries = descriptors
+            DependencyDescriptor dependencyDescriptor = GetDependencyDescriptor(provider.VirtualPath);
+
+            IEnumerable<DependencyDescriptor> dependencyDescriptors = _dependenciesFolder.LoadDescriptors();
+            List<DependencyDescriptor> filteredDependencyDescriptors = new List<DependencyDescriptor>();
+            if (dependencyDescriptor != null) {
+                // Add module
+                filteredDependencyDescriptors.Add(dependencyDescriptor);
+
+                // Add module's references
+                filteredDependencyDescriptors.AddRange(dependencyDescriptor.References
+                    .SelectMany(reference => dependencyDescriptors
+                        .Where(dependency => dependency.Name == reference.Name)));
+            }
+            else {
+                // Fall back that shouldn't usually be called
+                filteredDependencyDescriptors = dependencyDescriptors.ToList();
+            }
+
+            var entries = filteredDependencyDescriptors
                 .SelectMany(descriptor => _loaders
                                               .Where(loader => descriptor.LoaderName == loader.Name)
                                               .Select(loader => new {
@@ -68,6 +93,33 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             foreach (var virtualDependency in _dependenciesFolder.GetViewCompilationDependencies()) {
                 provider.AddVirtualPathDependency(virtualDependency);
             }
+        }
+
+        private DependencyDescriptor GetDependencyDescriptor(string virtualPath) {
+            var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
+            var prefix = PrefixMatch(appRelativePath, new [] { "~/Modules/", "~/Themes/", "~/Core/"});
+            if (prefix == null)
+                return null;
+
+            var moduleName = ModuleMatch(appRelativePath, prefix);
+            if (moduleName == null)
+                return null;
+
+            return _dependenciesFolder.GetDescriptor(moduleName);
+        }
+
+        private static string ModuleMatch(string virtualPath, string prefix) {
+            var index = virtualPath.IndexOf('/', prefix.Length, virtualPath.Length - prefix.Length);
+            if (index < 0)
+                return null;
+
+            var moduleName = virtualPath.Substring(prefix.Length, index - prefix.Length);
+            return (string.IsNullOrEmpty(moduleName) ? null : moduleName);
+        }
+
+        private static string PrefixMatch(string virtualPath, params string[] prefixes) {
+            return prefixes
+                .FirstOrDefault(p => virtualPath.StartsWith(p, StringComparison.OrdinalIgnoreCase));
         }
 
         public void CodeGenerationCompleted(RazorBuildProvider provider, CodeGenerationCompleteEventArgs e) {
