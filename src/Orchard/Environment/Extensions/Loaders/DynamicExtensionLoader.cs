@@ -54,13 +54,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             return GetDependencies(dependency.VirtualPath);
         }
 
-        public override IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath){
+        public override IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
             virtualPath = _virtualPathProvider.ToAppRelative(virtualPath);
 
             if (StringComparer.OrdinalIgnoreCase.Equals(virtualPath, dependency.VirtualPath)) {
-                return GetSourceFiles(virtualPath);
+                return GetDependencies(virtualPath);
             }
-            return base.GetFileDependencies(dependency, virtualPath);
+            return base.GetDynamicModuleDependencies(dependency, virtualPath);
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
@@ -184,17 +184,31 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         private IEnumerable<string> GetDependencies(string projectPath) {
-            return new[] {projectPath}.Concat(GetSourceFiles(projectPath));
-        }
+            List<string> dependencies = new[] { projectPath }.ToList();
 
-        private IEnumerable<string> GetSourceFiles(string projectPath) {
             var basePath = _virtualPathProvider.GetDirectoryName(projectPath);
 
             using (var stream = _virtualPathProvider.OpenFile(projectPath)) {
                 var projectFile = _projectFileParser.Parse(stream);
 
-                return projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f));
+                // Add source files
+                dependencies.AddRange(projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f)));
+
+                // Add Project and Library References
+                foreach (ReferenceDescriptor referenceDescriptor in projectFile.References.Where(reference => !string.IsNullOrEmpty(reference.Path))) {
+                    string path = _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
+
+                    if (_virtualPathProvider.FileExists(path)) {
+                        dependencies.Add(path);
+
+                        if (referenceDescriptor.ReferenceType == ReferenceType.Project) {
+                            dependencies.AddRange(GetDependencies(path));
+                        }
+                    }
+                }
             }
+
+            return dependencies;
         }
 
         private string GetProjectPath(ExtensionDescriptor descriptor) {

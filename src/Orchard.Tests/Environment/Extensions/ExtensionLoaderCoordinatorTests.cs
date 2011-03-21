@@ -112,7 +112,7 @@ namespace Orchard.Tests.Environment.Extensions {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath) {
+            public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
                 throw new NotImplementedException();
             }
 
