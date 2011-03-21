@@ -14,7 +14,7 @@
                    TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
-                   PackagingServices,Orchard.Packaging,Gallery,Gallery.Updates,
+                   PackagingServices,Orchard.Packaging,Gallery.Updates,
                    TheThemeMachine" />
   
   <Metadata>
