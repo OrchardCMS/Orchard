@@ -128,11 +128,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Content-WidgetPage.cshtml" />
-    <Content Include="Views\Widget.cshtml" />
-    <Content Include="Views\Widget.Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts.Widgets.LayerPart.cshtml" />
     <Content Include="Views\EditorTemplates\Parts.Widgets.WidgetPart.cshtml" />
   </ItemGroup>
