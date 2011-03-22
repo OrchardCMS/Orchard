@@ -7,9 +7,7 @@ using Autofac;
 using Autofac.Core;
 using Moq;
 using NUnit.Framework;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
-using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -26,7 +24,6 @@ namespace Orchard.Tests.Environment {
 
         private IEnumerable<ExtensionDescriptor> _extensionDescriptors;
         private IDictionary<string, IEnumerable<Type>> _featureTypes;
-
 
         [SetUp]
         public void Init() {

@@ -18,6 +18,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IAssemblyProbingFolder _assemblyProbingFolder;
+        private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IProjectFileParser _projectFileParser;
         private readonly ReloadWorkaround _reloadWorkaround = new ReloadWorkaround();
 
@@ -37,6 +38,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             _hostEnvironment = hostEnvironment;
             _assemblyProbingFolder = assemblyProbingFolder;
             _projectFileParser = projectFileParser;
+            _dependenciesFolder = dependenciesFolder;
 
             Logger = NullLogger.Instance;
         }
@@ -176,34 +178,48 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        private IEnumerable<string> GetDependencies(string projectPath) {
-            List<string> dependencies = new[] { projectPath }.ToList();
+        protected IEnumerable<string> GetDependencies(string projectPath) {
+            HashSet<string> dependencies = new HashSet<string> { projectPath };
 
-            var basePath = _virtualPathProvider.GetDirectoryName(projectPath);
+            AddDependencies(projectPath, dependencies);
+
+            return dependencies;
+        }
+
+        private void AddDependencies(string projectPath, HashSet<string> currentSet) {
+            string basePath = _virtualPathProvider.GetDirectoryName(projectPath);
 
             using (var stream = _virtualPathProvider.OpenFile(projectPath)) {
-                var projectFile = _projectFileParser.Parse(stream);
+                ProjectFileDescriptor projectFile = _projectFileParser.Parse(stream);
 
                 // Add source files
-                dependencies.AddRange(projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f)));
+                currentSet.UnionWith(projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f)));
 
-                // Add Project and Library References
-                foreach (ReferenceDescriptor referenceDescriptor in projectFile.References.Where(reference => !string.IsNullOrEmpty(reference.Path))) {
-                    string path = referenceDescriptor.ReferenceType == ReferenceType.Library
-                        ? _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
-                        : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
+                // Add Project and Library references
+                if (projectFile.References != null) {
+                    foreach (ReferenceDescriptor referenceDescriptor in projectFile.References.Where(reference => !string.IsNullOrEmpty(reference.Path))) {
+                        string path = referenceDescriptor.ReferenceType == ReferenceType.Library
+                                          ? _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
+                                          : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
 
-                    if (_virtualPathProvider.FileExists(path)) {
-                        dependencies.Add(path);
+                        // Attempt to reference the project / library file
+                        if (!currentSet.Contains(path) && _virtualPathProvider.FileExists(path)) {
+                            currentSet.Add(path);
 
-                        if (referenceDescriptor.ReferenceType == ReferenceType.Project) {
-                            dependencies.AddRange(GetDependencies(path));
+                            // In case of project, also reference the source files
+                            if (referenceDescriptor.ReferenceType == ReferenceType.Project) {
+                                AddDependencies(path, currentSet);
+
+                                // Try to also reference any pre-built DLL
+                                DependencyDescriptor dependencyDescriptor = _dependenciesFolder.GetDescriptor(_virtualPathProvider.GetDirectoryName(referenceDescriptor.Path));
+                                if (dependencyDescriptor != null && _virtualPathProvider.FileExists(dependencyDescriptor.VirtualPath)) {
+                                    currentSet.Add(dependencyDescriptor.VirtualPath);
+                                }
+                            }
                         }
                     }
                 }
             }
-
-            return dependencies;
         }
 
         private string GetProjectPath(ExtensionDescriptor descriptor) {
@@ -226,7 +242,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         /// The purpose of this class is to keep track of all .csproj files monitored until
         /// an AppDomain restart.
         /// </summary>
-        class ReloadWorkaround {
+        internal class ReloadWorkaround {
             private readonly List<IVolatileToken> _tokens = new List<IVolatileToken>();
 
             public void Monitor(IVolatileToken whenProjectFileChanges) {

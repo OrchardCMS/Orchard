@@ -235,6 +235,7 @@
     <Compile Include="Environment\DefaultWorkContextAccessorTests.cs" />
     <Compile Include="Environment\Extensions\ExtensionLoaderCoordinatorTests.cs" />
     <Compile Include="Environment\Features\FeatureManagerTests.cs" />
+    <Compile Include="Environment\Loaders\DynamicExtensionLoaderTests.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngineTests.cs" />
     <Compile Include="Environment\RunningShellTableTests.cs" />
     <Compile Include="Environment\StubHostEnvironment.cs" />
