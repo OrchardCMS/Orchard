@@ -100,7 +100,6 @@ namespace Orchard.Environment.Extensions.Folders {
                 AntiForgery = GetValue(manifest, "AntiForgery"),
                 Zones = GetValue(manifest, "Zones"),
                 BaseTheme = GetValue(manifest, "BaseTheme"),
-                Priority = int.Parse(GetValue(manifest, "Priority") ?? "0")
             };
             extensionDescriptor.Features = GetFeaturesForExtension(manifest, extensionDescriptor);
 
@@ -204,7 +203,7 @@ namespace Orchard.Environment.Extensions.Folders {
             FeatureDescriptor defaultFeature = new FeatureDescriptor {
                 Id = extensionDescriptor.Id,
                 Name = extensionDescriptor.Name,
-                Priority = extensionDescriptor.Priority,
+                Priority = GetValue(manifest, "Priority") != null ? int.Parse(GetValue(manifest, "Priority")) : 0,
                 Description = GetValue(manifest, "FeatureDescription") ?? GetValue(manifest, "Description") ?? string.Empty,
                 Dependencies = ParseFeatureDependenciesEntry(GetValue(manifest, "Dependencies")),
                 Extension = extensionDescriptor,
@@ -234,7 +233,6 @@ namespace Orchard.Environment.Extensions.Folders {
                             if (featureDescriptorId == extensionDescriptor.Id) {
                                 featureDescriptor = defaultFeature;
                                 featureDescriptor.Name = extensionDescriptor.Name;
-                                featureDescriptor.Priority = extensionDescriptor.Priority;
                             }
                             else {
                                 featureDescriptor = new FeatureDescriptor {

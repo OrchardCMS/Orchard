@@ -62,19 +62,15 @@ namespace Orchard.DesignerTools.Services {
         private void DumpValue(object o, string name) {
             string formatted = FormatValue(o);
             _node.Add(
-                new XElement("h3", 
-                    new XElement("div", new XAttribute("class", "name"), name),
-                    new XElement("div", new XAttribute("class", "value"), formatted)
-                    )
-                );
+                new XElement("div", new XAttribute("class", "name"), name),
+                new XElement("div", new XAttribute("class", "value"), formatted)
+            );
         }
 
         private void DumpObject(object o, string name) {
             _node.Add(
-                new XElement("h3", 
-                    new XElement("div", new XAttribute("class", "name"), name),
-                    new XElement("div", new XAttribute("class", "type"), FormatType(o.GetType()))
-                    )
+                new XElement("div", new XAttribute("class", "name"), name),
+                new XElement("div", new XAttribute("class", "type"), FormatType(o.GetType()))
             );
 
             if (_parents.Count >= _levels) {

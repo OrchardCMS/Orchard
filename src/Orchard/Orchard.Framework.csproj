@@ -185,6 +185,7 @@
     <Compile Include="Environment\Features\FeatureManager.cs" />
     <Compile Include="Environment\IAssemblyLoader.cs" />
     <Compile Include="Environment\HostComponentsConfigModule.cs" />
+    <Compile Include="Environment\IOrchardFrameworkAssemblies.cs" />
     <Compile Include="Environment\ViewsBackgroundCompilation.cs" />
     <Compile Include="Environment\Warmup\StartupResult.cs" />
     <Compile Include="Environment\Warmup\WarmupUtility.cs" />
@@ -488,6 +489,7 @@
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
     <Compile Include="Utility\Extensions\ControllerExtensions.cs" />
+    <Compile Include="Utility\Extensions\VirtualPathProviderExtensions.cs" />
     <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />

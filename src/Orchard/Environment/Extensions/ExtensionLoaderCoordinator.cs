@@ -202,7 +202,7 @@ namespace Orchard.Environment.Extensions {
                 availableExtensions.OrderByDependenciesAndPriorities(
                     (item, dep) => referencesByModule.ContainsKey(item.Id) &&
                                    referencesByModule[item.Id].Any(r => StringComparer.OrdinalIgnoreCase.Equals(dep.Id, r.Name)),
-                    (item) => item.Priority)
+                    (item) => 0)
                     .ToList();
 
             return new ExtensionLoadingContext {

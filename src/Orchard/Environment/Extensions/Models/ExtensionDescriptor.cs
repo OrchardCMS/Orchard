@@ -29,7 +29,6 @@ namespace Orchard.Environment.Extensions.Models {
         public string AntiForgery { get; set; }
         public string Zones { get; set; }
         public string BaseTheme { get; set; }
-        public int Priority { get; set; }
 
         public IEnumerable<FeatureDescriptor> Features { get; set; }
     }
