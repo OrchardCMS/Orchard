@@ -6,6 +6,7 @@ using System.Net.Mime;
 using System.Reflection;
 using System.Xml.Linq;
 using NuGet;
+using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
@@ -18,6 +19,7 @@ namespace Orchard.Packaging.Services {
     public class PackageBuilder : IPackageBuilder {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IOrchardFrameworkAssemblies _frameworkAssemblies;
 
         private static readonly string[] _ignoredThemeExtensions = new[] {
             "obj", "pdb", "exclude"
@@ -34,9 +36,12 @@ namespace Orchard.Packaging.Services {
         }
 
         public PackageBuilder(IWebSiteFolder webSiteFolder,
-            IVirtualPathProvider virtualPathProvider) {
+            IVirtualPathProvider virtualPathProvider,
+            IOrchardFrameworkAssemblies frameworkAssemblies) {
+
             _webSiteFolder = webSiteFolder;
             _virtualPathProvider = virtualPathProvider;
+            _frameworkAssemblies = frameworkAssemblies;
         }
 
         public Stream BuildPackage(ExtensionDescriptor extensionDescriptor) {
@@ -112,10 +117,14 @@ namespace Orchard.Packaging.Services {
 
             foreach (var entry in entries) {
                 var assemblyName = new AssemblyName(entry.Include.Value);
-                string virtualPath = _virtualPathProvider.GetReferenceVirtualPath(context.SourcePath, assemblyName.Name, entry.HintPath != null ? entry.HintPath.Value : null);
 
-                if (!string.IsNullOrEmpty(virtualPath)) {
-                    EmbedVirtualFile(context, virtualPath, MediaTypeNames.Application.Octet);
+                // If it is not a core assembly
+                if (_frameworkAssemblies.GetFrameworkAssemblies().FirstOrDefault(assembly => assembly.FullName.Equals(assemblyName.FullName)) == null) {
+                    string virtualPath = _virtualPathProvider.GetReferenceVirtualPath(context.SourcePath, assemblyName.Name, entry.HintPath != null ? entry.HintPath.Value : null);
+
+                    if (!string.IsNullOrEmpty(virtualPath)) {
+                        EmbedVirtualFile(context, virtualPath, MediaTypeNames.Application.Octet);
+                    }
                 }
             }
         }

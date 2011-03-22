@@ -7,7 +7,6 @@ using System.Web.WebPages.Razor;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.Dependencies;
-using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Mvc.ViewEngines.Razor {
     public interface IRazorCompilationEvents {
