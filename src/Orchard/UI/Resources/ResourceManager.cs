@@ -11,7 +11,7 @@ using Autofac.Features.Metadata;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.UI.Resources {
-    public class ResourceManager : IResourceManager {
+    public class ResourceManager : IResourceManager, IUnitOfWorkDependency {
         private readonly Dictionary<Tuple<String, String>, RequireSettings> _required = new Dictionary<Tuple<String, String>, RequireSettings>();
         private readonly List<LinkEntry> _links = new List<LinkEntry>();
         private readonly Dictionary<string, MetaEntry> _metas = new Dictionary<string, MetaEntry> {
@@ -234,11 +234,14 @@ namespace Orchard.UI.Resources {
             if (resource == null) {
                 return;
             }
-            if (allResources.Contains(resource)) {
-                settings = ((RequireSettings) allResources[resource]).Combine(settings);
-            }
-            settings.Type = resource.Type;
-            settings.Name = resource.Name;
+            // Settings is given so they can cascade down into dependencies. For example, if Foo depends on Bar, and Foo's required
+            // location is Head, so too should Bar's location.
+            // forge the effective require settings for this resource
+            // (1) If a require exists for the resource, combine with it. Last settings in gets preference for its specified values.
+            // (2) If no require already exists, form a new settings object based on the given one but with its own type/name.
+            settings = allResources.Contains(resource)
+                ? ((RequireSettings)allResources[resource]).Combine(settings)
+                : new RequireSettings { Type = resource.Type, Name = resource.Name }.Combine(settings);
             if (resource.Dependencies != null) {
                 var dependencies = from d in resource.Dependencies
                                    select FindResource(new RequireSettings { Type = resource.Type, Name = d });
