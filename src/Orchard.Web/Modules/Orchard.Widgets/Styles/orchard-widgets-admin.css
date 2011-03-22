@@ -41,7 +41,7 @@ margin:5px 0;
 padding:0 10px;
 position:relative;
 }
-#widgets-zones li:hover {
+#widgets-zones li:hover, #widgets-zones li.on {
 border-color:#bfd3a7;
 }
 #widgets-zones h2 {
@@ -50,20 +50,23 @@ font-size:1.077em;
 #widgets-available h2 {
 font-size:1.231em;
 }
-#widgets-zones h2, #widgets-zones li li {
+#widgets-zones h2, #widgets-zones li li, #widgets-layer-visibility li {
 color:#333;
 }
-#widgets-zones li li {
+#widgets-zones li li, #widgets-layer-visibility li {
 background:#F3F4F5;
 border:0;
 border-left:3px solid #EAEAEA;
 margin:10px 0;
 padding:5px 100px 5px 25px;
 }
-#widgets-zones li li.widgets-this-layer {
+#widgets-layer-visibility li {
+margin:1px 0 0;
+}
+#widgets-zones li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer:hover {
 border-color:#898989;
 }
-#widgets-zones li li.widgets-this-layer:hover {
+#widgets-zones li li.widgets-this-layer:hover, #widgets-layer-visibility li:hover {
 border-color:#bfd3a7;
 }
 #widgets-zones .widgets-mover {
@@ -137,6 +140,19 @@ color:#333;
 }
 #widgets-available a p {
 margin-top:5px;
+}
+
+#widgets-layer-visibility {
+margin-top:20px;
+}
+#widgets-layer-visibility .widgets-other-layer {
+background-image:url(images/eye.png);
+background-position:5px 11px;
+background-repeat:no-repeat;
+cursor:pointer;
+}
+#widgets-layer-visibility .widgets-other-layer.off, #widgets-layer-visibility .widgets-other-layer.off:hover {
+background-position:5px -17px;
 }
 
 /* begin: switchable tweaks for admin/widgets */

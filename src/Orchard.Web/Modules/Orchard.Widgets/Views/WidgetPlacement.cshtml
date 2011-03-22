@@ -24,7 +24,7 @@
                             @if (count > 0) {
                                 int i = 0;
                                 foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
-                                    <li class="widgets-@(widget.LayerId == Model.CurrentLayer.Id ? "this" : "other")-layer">
+                                    <li class="widgets-@(widget.LayerId == Model.CurrentLayer.Id ? "this" : "other")-layer widgets-layer-@widget.LayerId">
                                         <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3>
                                         <div class="widgets-actions">
                                             @if (widget.LayerId != Model.CurrentLayer.Id) {
