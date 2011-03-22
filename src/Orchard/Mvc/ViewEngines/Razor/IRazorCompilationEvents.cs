@@ -42,21 +42,21 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public void CodeGenerationStarted(RazorBuildProvider provider) {
-            DependencyDescriptor dependencyDescriptor = GetDependencyDescriptor(provider.VirtualPath);
+            DependencyDescriptor moduleDependencyDescriptor = GetModuleDependencyDescriptor(provider.VirtualPath);
 
             IEnumerable<DependencyDescriptor> dependencyDescriptors = _dependenciesFolder.LoadDescriptors();
-            List<DependencyDescriptor> filteredDependencyDescriptors = new List<DependencyDescriptor>();
-            if (dependencyDescriptor != null) {
+            List<DependencyDescriptor> filteredDependencyDescriptors;
+            if (moduleDependencyDescriptor != null) {
                 // Add module
-                filteredDependencyDescriptors.Add(dependencyDescriptor);
+                filteredDependencyDescriptors = new List<DependencyDescriptor> { moduleDependencyDescriptor };
 
                 // Add module's references
-                filteredDependencyDescriptors.AddRange(dependencyDescriptor.References
+                filteredDependencyDescriptors.AddRange(moduleDependencyDescriptor.References
                     .SelectMany(reference => dependencyDescriptors
                         .Where(dependency => dependency.Name == reference.Name)));
             }
             else {
-                // Fall back that shouldn't usually be called
+                // Fall back for themes
                 filteredDependencyDescriptors = dependencyDescriptors.ToList();
             }
 
@@ -94,9 +94,9 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             }
         }
 
-        private DependencyDescriptor GetDependencyDescriptor(string virtualPath) {
+        private DependencyDescriptor GetModuleDependencyDescriptor(string virtualPath) {
             var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
-            var prefix = PrefixMatch(appRelativePath, new [] { "~/Modules/", "~/Themes/", "~/Core/"});
+            var prefix = PrefixMatch(appRelativePath, new [] { "~/Modules/", "~/Core/"});
             if (prefix == null)
                 return null;
 
