@@ -488,6 +488,7 @@
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
     <Compile Include="Utility\Extensions\ControllerExtensions.cs" />
+    <Compile Include="Utility\Extensions\VirtualPathProviderExtensions.cs" />
     <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
