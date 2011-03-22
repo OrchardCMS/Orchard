@@ -119,7 +119,7 @@ namespace Orchard.Packaging.Services {
                 var assemblyName = new AssemblyName(entry.Include.Value);
 
                 // If it is not a core assembly
-                if (_frameworkAssemblies.GetFrameworkAssemblies().FirstOrDefault(assembly => assembly.FullName.Equals(assemblyName.FullName)) == null) {
+                if (_frameworkAssemblies.GetFrameworkAssemblies().FirstOrDefault(assembly => assembly.Name.Equals(assemblyName.Name)) == null) {
                     string virtualPath = _virtualPathProvider.GetReferenceVirtualPath(context.SourcePath, assemblyName.Name, entry.HintPath != null ? entry.HintPath.Value : null);
 
                     if (!string.IsNullOrEmpty(virtualPath)) {
