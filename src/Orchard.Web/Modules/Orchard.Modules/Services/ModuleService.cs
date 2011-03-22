@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Descriptor;
@@ -16,19 +17,23 @@ namespace Orchard.Modules.Services {
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IExtensionManager _extensionManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly ICacheManager _cacheManager;
 
         public ModuleService(
                 IFeatureManager featureManager,
                 IOrchardServices orchardServices,
                 IVirtualPathProvider virtualPathProvider,
                 IExtensionManager extensionManager,
-                IShellDescriptorManager shellDescriptorManager) {
+                IShellDescriptorManager shellDescriptorManager,
+                ICacheManager cacheManager) {
+
             Services = orchardServices;
 
             _featureManager = featureManager;
             _virtualPathProvider = virtualPathProvider;
             _extensionManager = extensionManager;
             _shellDescriptorManager = shellDescriptorManager;
+            _cacheManager = cacheManager;
 
             if (_featureManager.FeatureDependencyNotification == null) {
                 _featureManager.FeatureDependencyNotification = GenerateWarning;
@@ -95,13 +100,17 @@ namespace Orchard.Modules.Services {
         /// </summary>
         /// <param name="extensionDescriptor">The extension descriptor.</param>
         public bool IsRecentlyInstalled(ExtensionDescriptor extensionDescriptor) {
-            string projectFile = GetManifestPath(extensionDescriptor);
-            if (!string.IsNullOrEmpty(projectFile)) {
-                // If project file was modified less than 24 hours ago, the module was recently deployed
-                return DateTime.UtcNow.Subtract(_virtualPathProvider.GetFileLastWriteTimeUtc(projectFile)) < new TimeSpan(1, 0, 0, 0);
-            }
+            DateTime lastWrittenUtc = _cacheManager.Get(extensionDescriptor, descriptor => {
+                string projectFile = GetManifestPath(extensionDescriptor);
+                if (!string.IsNullOrEmpty(projectFile)) {
+                    // If project file was modified less than 24 hours ago, the module was recently deployed
+                    return _virtualPathProvider.GetFileLastWriteTimeUtc(projectFile);
+                }
 
-            return false;
+                return DateTime.UtcNow;
+            });
+
+            return DateTime.UtcNow.Subtract(lastWrittenUtc) < new TimeSpan(1, 0, 0, 0);
         }
 
         /// <summary>
@@ -126,6 +135,23 @@ namespace Orchard.Modules.Services {
                                      };
         }
 
-        private void GenerateWarning(string messageFormat, string featureName, IEnumerable<string> featuresInQuestion) {            if (featuresInQuestion.Count() < 1)                return;            Services.Notifier.Warning(T(                messageFormat,                featureName,                featuresInQuestion.Count() > 1                    ? string.Join("",                                  featuresInQuestion.Select(                                      (fn, i) =>                                      T(i == featuresInQuestion.Count() - 1                                            ? "{0}"                                            : (i == featuresInQuestion.Count() - 2                                                   ? "{0} and "                                                   : "{0}, "), fn).ToString()).ToArray())                    : featuresInQuestion.First()));        }
+        private void GenerateWarning(string messageFormat, string featureName, IEnumerable<string> featuresInQuestion) {
+            if (featuresInQuestion.Count() < 1)
+                return;
+
+            Services.Notifier.Warning(T(
+                messageFormat,
+                featureName,
+                featuresInQuestion.Count() > 1
+                    ? string.Join("",
+                                  featuresInQuestion.Select(
+                                      (fn, i) =>
+                                      T(i == featuresInQuestion.Count() - 1
+                                            ? "{0}"
+                                            : (i == featuresInQuestion.Count() - 2
+                                                   ? "{0} and "
+                                                   : "{0}, "), fn).ToString()).ToArray())
+                    : featuresInQuestion.First()));
+        }
     }
 }
