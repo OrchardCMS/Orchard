@@ -23,7 +23,11 @@ namespace Orchard.Data {
         void ITransactionManager.Demand() {
             if (_scope == null) {
                 Logger.Debug("Creating transaction on Demand");
-                _scope = new TransactionScope(TransactionScopeOption.Required);
+                _scope = new TransactionScope(
+                    TransactionScopeOption.Required, 
+                    new TransactionOptions { 
+                        IsolationLevel = IsolationLevel.ReadCommitted 
+                    });
             }
         }
 
