@@ -1,19 +1,29 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Orchard.Environment.Warmup {
     public static class WarmupUtility {
-        private const string EncodingPattern = "[^a-z0-9]";
-
         public static string EncodeUrl(string url) {
             if(String.IsNullOrWhiteSpace(url)) {
                 throw new ArgumentException("url can't be empty");
             }
 
-            return Regex.Replace(url.ToLower(), EncodingPattern, m => "_" + Encoding.UTF8.GetBytes(m.Value).Select(b => b.ToString("X")).Aggregate((a, b) => a + b));
-        }
+            var sb = new StringBuilder();
+            foreach (var c in url.ToLowerInvariant()) {
+                // only accept alphanumeric chars
+                if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) {
+                    sb.Append(c);
+                }
+                // otherwise encode them in UTF8
+                else {
+                    sb.Append("_");
+                    foreach(var b in Encoding.UTF8.GetBytes(new [] {c})) {
+                        sb.Append(b.ToString("X"));
+                    }
+                }
+            }
 
+            return sb.ToString();
+        }
     }
 }

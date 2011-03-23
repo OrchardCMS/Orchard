@@ -4,7 +4,7 @@ using Orchard.Environment.Warmup;
 
 namespace Orchard.Tests.Environment.Warmup {
     [TestFixture]
-    public class WarmUpUtilityTests {
+    public class WarmupUtilityTests {
 
         [Test]
         public void EmptyStringsAreNotAllowed() {

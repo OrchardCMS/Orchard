@@ -21,3 +21,7 @@ Features:
         Description: Adds some content definitions to help test lists
         Dependencies: Orchard.Lists
         Category: Developer
+    Orchard.Experimental.LockLogging:
+        Name: Lock Logging
+        Description: Logs extra diagnostic information for Sql CE if a deadlock timeout occurs
+        Category: Developer

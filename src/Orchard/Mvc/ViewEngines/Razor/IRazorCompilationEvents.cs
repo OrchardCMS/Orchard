@@ -84,13 +84,10 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                             provider.AssemblyBuilder.AddAssemblyReference(assembly);
                     }
                 }
+
                 foreach (var virtualDependency in entry.dependencies) {
                     provider.AddVirtualPathDependency(virtualDependency);
                 }
-            }
-
-            foreach (var virtualDependency in _dependenciesFolder.GetViewCompilationDependencies()) {
-                provider.AddVirtualPathDependency(virtualDependency);
             }
         }
 

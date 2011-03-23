@@ -1,10 +1,7 @@
 ﻿<div class="item-properties actions">
   <p>
-    @Html.ActionLink(T("Show Other Lists").ToString(), "List", new { Area = "Contents", Id = Model.ContainerContentType }) |
-    @Html.ActionLink(T("Show Orphaned Content Items").ToString(), "Orphaned", new { Area = "Orchard.Lists" })
-    @if (((int?)Model.ContainerId).HasValue) {
-      <text>|</text>
-      @Html.ActionLink(T("{0} Properties", (string)Model.ContainerContentType).ToString(), "Edit", new { Area = "Contents", Id = (int)Model.ContainerId })
-    }
+    @Html.ActionLink(T("Choose Items").ToString(), "Choose", new { TargetContainerId = (int)Model.ContainerId, Area = "Orchard.Lists" })
+    <text>|</text>
+    @Html.ActionLink(T("{0} Properties", (string)Model.ContainerContentType).ToString(), "Edit", new { Area = "Contents", Id = (int)Model.ContainerId, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl })
   </p>
 </div>
