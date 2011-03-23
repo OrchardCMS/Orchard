@@ -203,7 +203,9 @@ namespace Orchard.Packaging.Controllers {
 
                 // Enable selected features
                 if (packagingInstallViewModel.Features.Count > 0) {
-                    IEnumerable<string> featureIds = packagingInstallViewModel.Features.Select(feature => feature.FeatureDescriptor.Id);
+                    IEnumerable<string> featureIds = packagingInstallViewModel.Features
+                        .Where(feature => feature.Enable)
+                        .Select(feature => feature.FeatureDescriptor.Id);
 
                     // Enable the features and its dependencies
                     _moduleService.EnableFeatures(featureIds, true);
