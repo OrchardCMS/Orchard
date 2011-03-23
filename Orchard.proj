@@ -293,6 +293,8 @@
         DestinationFolder="$(MsDeployFolder)\Orchard\%(RecursiveDir)"/>
     <Copy SourceFiles="@(MsDeploy-Parameters)"
         DestinationFolder="$(MsDeployFolder)"/>
+
+    <MakeDir Directories="$(MsDeployFolder)\Orchard\bin\HostRestart"/>
   </Target>
 
   <Target Name="Package-Zip">
