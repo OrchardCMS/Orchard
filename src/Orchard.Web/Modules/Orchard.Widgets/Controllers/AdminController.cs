@@ -175,7 +175,7 @@ namespace Orchard.Widgets.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
-        public ActionResult AddLayer() {
+        public ActionResult AddLayer(string name, string description, string layerRule) { // <- hints for a new layer
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -185,6 +185,15 @@ namespace Orchard.Widgets.Controllers {
                     return HttpNotFound();
 
                 dynamic model = Services.ContentManager.BuildEditor(layerPart);
+
+                // only messing with the hints if they're given
+                if (!string.IsNullOrWhiteSpace(name))
+                    model.Name = name;
+                if (!string.IsNullOrWhiteSpace(description))
+                    model.Description = description;
+                if (!string.IsNullOrWhiteSpace(layerRule))
+                    model.LayerRule = layerRule;
+
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             } catch (Exception exception) {
@@ -225,9 +234,8 @@ namespace Orchard.Widgets.Controllers {
 
             try {
                 LayerPart layerPart = _widgetsService.GetLayer(id);
-                if (layerPart == null) {
+                if (layerPart == null)
                     return HttpNotFound();
-                }
 
                 dynamic model = Services.ContentManager.BuildEditor(layerPart);
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
