@@ -24,24 +24,7 @@ namespace Orchard.Lists {
                             {"filterByContentType", ""}
                         },
                         new RouteValueDictionary{
-                            {"filterByContentType", @"\w+"},
-                            {"containerId", @"\d+"}
-                        },
-                        new RouteValueDictionary {
-                            {"area", "Orchard.Lists"}
-                        },
-                        new MvcRouteHandler())
-                },
-                new RouteDescriptor {
-                    Priority = 5,
-                    Route = new Route(
-                        "Admin/Lists/{containerId}",
-                        new RouteValueDictionary {
-                            {"area", "Orchard.Lists"},
-                            {"controller", "Admin"},
-                            {"action", "List"}
-                        },
-                        new RouteValueDictionary {
+                            {"filterByContentType", @"\w*"},
                             {"containerId", @"\d+"}
                         },
                         new RouteValueDictionary {
@@ -53,15 +36,17 @@ namespace Orchard.Lists {
                 new RouteDescriptor {
                     Priority = 5,
                     Route = new Route(
-                        "Admin/Lists/Orphaned/{filterByContentType}",
+                        "Admin/Lists/Choose/From/Orphaned/To/{targetContainerId}/{filterByContentType}",
                         new RouteValueDictionary {
                             {"area", "Orchard.Lists"},
                             {"controller", "Admin"},
-                            {"action", "List"},
+                            {"action", "Choose"},
                             {"filterByContentType", ""},
+                            {"sourceContainerId", "0"}
                         },
                         new RouteValueDictionary{
-                            {"filterByContentType", @"\w+"},
+                            {"filterByContentType", @"\w*"},
+                            {"targetContainerId", @"\d+"},
                         },
                         new RouteValueDictionary {
                             {"area", "Orchard.Lists"}
@@ -71,19 +56,23 @@ namespace Orchard.Lists {
                 new RouteDescriptor {
                     Priority = 5,
                     Route = new Route(
-                        "Admin/Lists/Orphaned",
+                        "Admin/Lists/Choose/From/{sourceContainerId}/To/{targetContainerId}/{filterByContentType}",
                         new RouteValueDictionary {
                             {"area", "Orchard.Lists"},
                             {"controller", "Admin"},
-                            {"action", "List"},
+                            {"action", "Choose"},
+                            {"filterByContentType", ""}
                         },
-                        null,
+                        new RouteValueDictionary{
+                            {"filterByContentType", @"\w*"},
+                            {"sourceContainerId", @"\d+"},
+                            {"targetContainerId", @"\d+"},
+                        },
                         new RouteValueDictionary {
                             {"area", "Orchard.Lists"}
                         },
                         new MvcRouteHandler())
                 },
-
             };
         }
     }

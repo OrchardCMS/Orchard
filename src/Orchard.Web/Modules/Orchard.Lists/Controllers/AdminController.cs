@@ -60,46 +60,25 @@ namespace Lists.Controllers {
         public ActionResult List(ListContentsViewModel model, PagerParameters pagerParameters) {
             var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             var container = model.ContainerId.HasValue ? _contentManager.GetLatest((int)model.ContainerId) : null;
-            if (container == null && model.ContainerId.HasValue) {
+            if (container == null || !container.Has<ContainerPart>()) {
                 return HttpNotFound();
             }
-            var restrictedContentType = container == null ? null : container.As<ContainerPart>().Record.ItemContentType;
+            var restrictedContentType = container.As<ContainerPart>().Record.ItemContentType;
             var hasRestriction = !string.IsNullOrEmpty(restrictedContentType);
             if (hasRestriction) {
                 model.FilterByContentType = restrictedContentType;
             }
-
-            if (container != null) {
-                var metadata = container.ContentManager.GetItemMetadata(container);
-                model.ContainerDisplayName = metadata.DisplayText;
-                if (string.IsNullOrEmpty(model.ContainerDisplayName)) {
-                    model.ContainerDisplayName = container.ContentType;
-                }
-            }
-
-            var query = _contentManager.Query<ContainablePart>(VersionOptions.Latest);
-
-            if (!string.IsNullOrEmpty(model.FilterByContentType)) {
-                var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.FilterByContentType);
-                if (contentTypeDefinition == null)
-                    return HttpNotFound();
-                query = query.ForType(model.FilterByContentType);
-            }
-            query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
-
-            switch (model.Options.OrderBy) {
-                case ContentsOrder.Modified:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
-                    break;
-                case ContentsOrder.Published:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
-                    break;
-                case ContentsOrder.Created:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
-                    break;
-            }
-
             model.Options.SelectedFilter = model.FilterByContentType;
+
+            model.ContainerDisplayName = container.ContentManager.GetItemMetadata(container).DisplayText;
+            if (string.IsNullOrEmpty(model.ContainerDisplayName)) {
+                model.ContainerDisplayName = container.ContentType;
+            }
+
+            var query = GetListContentItemQuery(model);
+            if (query == null) {
+                return new HttpNotFoundResult();
+            }
 
             if (!hasRestriction) {
                 model.Options.FilterOptions = GetContainableTypes()
@@ -120,7 +99,7 @@ namespace Lists.Controllers {
                 .Options(model.Options)
                 .HasRestriction(hasRestriction)
                 .ContainerDisplayName(model.ContainerDisplayName)
-                .ContainerContentType(container == null ? null : container.ContentType)
+                .ContainerContentType(container.ContentType)
                 .ContainerItemContentType(hasRestriction ? restrictedContentType : (model.FilterByContentType ?? ""))
                 .OtherLists(_contentManager.Query<ContainerPart>(VersionOptions.Latest).List()
                     .Select(part => part.ContentItem)
@@ -129,6 +108,32 @@ namespace Lists.Controllers {
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);
+        }
+
+        private IContentQuery<ContainablePart> GetListContentItemQuery(ListContentsViewModel model) {
+            var query = _contentManager.Query<ContainablePart>(VersionOptions.Latest);
+
+            if (!string.IsNullOrEmpty(model.FilterByContentType)) {
+                var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.FilterByContentType);
+                if (contentTypeDefinition == null) {
+                    return null;
+                }
+                query = query.ForType(model.FilterByContentType);
+            }
+            query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
+
+            switch (model.Options.OrderBy) {
+                case ContentsOrder.Modified:
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
+                    break;
+                case ContentsOrder.Published:
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
+                    break;
+                case ContentsOrder.Created:
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
+                    break;
+            }
+            return query;
         }
 
         [HttpPost, ActionName("List")]
@@ -171,6 +176,119 @@ namespace Lists.Controllers {
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
         }
+
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("submit.Filter")]
+        public ActionResult ListFilterPOST(ContentOptions options) {
+            var routeValues = ControllerContext.RouteData.Values;
+            if (options != null) {
+                routeValues["Options.OrderBy"] = options.OrderBy;
+                if (GetContainableTypes().Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
+                    routeValues["filterByContentType"] = options.SelectedFilter;
+                }
+                else {
+                    routeValues.Remove("filterByContentType");
+                }
+            }
+
+            return RedirectToAction("List", routeValues);
+        }
+
+        public ActionResult Choose(ChooseContentsViewModel model, PagerParameters pagerParameters) {
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            var container = model.SourceContainerId == 0 ? null : _contentManager.GetLatest(model.SourceContainerId);
+            if (container == null && model.SourceContainerId != 0) {
+                return HttpNotFound();
+            }
+
+            var query = _contentManager.Query<ContainablePart>(VersionOptions.Latest);
+
+            if (!string.IsNullOrEmpty(model.FilterByContentType)) {
+                var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.FilterByContentType);
+                if (contentTypeDefinition == null) {
+                    return HttpNotFound();
+                }
+                query = query.ForType(model.FilterByContentType);
+            }
+            if (model.SourceContainerId == 0) {
+                query = query.Join<CommonPartRecord>().Where(cr => cr.Container == null);
+            }
+            else {
+                query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.SourceContainerId);
+            }
+
+            switch (model.OrderBy) {
+                case ContentsOrder.Modified:
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
+                    break;
+                case ContentsOrder.Published:
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
+                    break;
+                case ContentsOrder.Created:
+                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
+                    break;
+            }
+
+            model.SelectedFilter = model.FilterByContentType;
+
+            model.FilterOptions = GetContainableTypes()
+                .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
+                .ToList().OrderBy(kvp => kvp.Key);
+
+            var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
+            var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
+
+            var list = Shape.List();
+            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+
+            dynamic viewModel = Shape.ViewModel()
+                .ContentItems(list)
+                .Pager(pagerShape)
+                .SourceContainerId(model.SourceContainerId)
+                .TargetContainerId(model.TargetContainerId)
+                .SelectedFilter(model.SelectedFilter)
+                .FilterOptions(model.FilterOptions)
+                .OrderBy(model.OrderBy)
+                .Containers(_contentManager.Query<ContainerPart>(VersionOptions.Latest).List()
+                    .Select(part => part.ContentItem)
+                    .OrderBy(item => item.As<CommonPart>().VersionPublishedUtc));
+
+            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
+            return View((object)viewModel);
+        }
+
+        [HttpPost, ActionName("Choose")]
+        [FormValueRequired("submit.MoveTo")]
+        public ActionResult ChoosePOST(IEnumerable<int> itemIds, int targetContainerId, string returnUrl) {
+            if (itemIds != null && !BulkMoveToList(itemIds, targetContainerId)) {
+                return new HttpUnauthorizedResult();
+            }
+
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("List", new { ContainerId = targetContainerId }));
+        }
+
+        [HttpPost, ActionName("Choose")]
+        [FormValueRequired("submit.Filter")]
+        public ActionResult ChooseFilterPOST(ChooseContentsViewModel model) {
+            var routeValues = ControllerContext.RouteData.Values;
+            if (GetContainableTypes().Any(ctd => string.Equals(ctd.Name, model.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
+                routeValues["filterByContentType"] = model.SelectedFilter;
+            }
+            else {
+                routeValues.Remove("filterByContentType");
+            }
+            if (model.SourceContainerId == 0) {
+                routeValues.Remove("SourceContainerId");
+            }
+            else {
+                routeValues["SourceContainerId"] = model.SourceContainerId;
+            }
+            routeValues["OrderBy"] = model.OrderBy;
+            routeValues["TargetContainerId"] = model.TargetContainerId;
+
+            return RedirectToAction("Choose", routeValues);
+        }
+
 
         private bool BulkMoveToList(IEnumerable<int> itemIds, int? targetContainerId) {
             if (!targetContainerId.HasValue) {
@@ -247,24 +365,6 @@ namespace Lists.Controllers {
             Services.Notifier.Information(T("Content successfully published."));
             return true;
         }
-
-        [HttpPost, ActionName("List")]
-        [FormValueRequired("submit.Filter")]
-        public ActionResult ListFilterPOST(ContentOptions options) {
-            var routeValues = ControllerContext.RouteData.Values;
-            if (options != null) {
-                routeValues["Options.OrderBy"] = options.OrderBy;
-                if (GetContainableTypes().Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
-                    routeValues["filterByContentType"] = options.SelectedFilter;
-                }
-                else {
-                    routeValues.Remove("filterByContentType");
-                }
-            }
-
-            return RedirectToAction("List", routeValues);
-        }
-
 
     }
 }
