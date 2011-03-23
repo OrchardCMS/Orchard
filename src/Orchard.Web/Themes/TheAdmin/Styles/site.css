@@ -243,6 +243,7 @@ form.link button:hover, button.link:hover {
 ***************************************************************/
 #header {
     height:50px;
+    margin:16px 0 0 0;
     background:#f3f4f5;
 }
 #branding {
