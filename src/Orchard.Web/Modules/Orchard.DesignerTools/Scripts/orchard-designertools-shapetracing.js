@@ -265,10 +265,10 @@
 
         // add the expand/collapse logic to the shape model
         // var glyph = $('<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>');
-        shapeTracingWindowContent.find('h3').parent(':has(li)').prepend(glyph);
+        shapeTracingWindowContent.find('.model li:has(ul)').prepend(glyph);
 
         // collapse all sub uls
-        shapeTracingWindowContent.find('ul ul').toggle(false);
+        shapeTracingWindowContent.find('.model ul ul').toggle(false);
 
         // tabs events
         shapeTracingWindowContent.find('.shape-tracing-tabs > li').click(function () {

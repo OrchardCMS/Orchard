@@ -222,3 +222,24 @@
 #shape-tracing-window-content .shape-tracing-tabs li.selected a {
     color: #3A822E;
 }
+
+#shape-tracing-window-content .model ul ul {
+    margin:0 0 0 18px;
+    padding:0 0 0 10px;
+    list-style-type:none;
+}
+
+#shape-tracing-window-content .model div {
+    float:left;
+    display:block;
+}
+
+#shape-tracing-window-content .model div.type, #shape-tracing-window-content .model div.value {
+    left:300px;
+    position:relative;
+}
+
+
+#shape-tracing-window-content .model li  {
+    clear:both;
+}
