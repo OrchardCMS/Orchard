@@ -127,6 +127,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="WarmupHttpModule.cs" />
     <Content Include="Config\log4net.config" />
     <Content Include="Config\Sample.HostComponents.config">
       <SubType>Designer</SubType>
