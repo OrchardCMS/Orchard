@@ -199,6 +199,12 @@ namespace Lists.Controllers {
             if (container == null && model.SourceContainerId != 0) {
                 return HttpNotFound();
             }
+            if (string.IsNullOrEmpty(model.FilterByContentType)) {
+                var targetContainer = _contentManager.Get<ContainerPart>(model.TargetContainerId);
+                if (targetContainer != null) {
+                    model.FilterByContentType = targetContainer.Record.ItemContentType;
+                }
+            }
 
             var query = _contentManager.Query<ContainablePart>(VersionOptions.Latest);
 
