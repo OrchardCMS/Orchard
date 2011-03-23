@@ -406,7 +406,7 @@ form.link button:hover, button.link:hover {
 }
 #content {
     background-color: #fff;
-    padding: 20px;
+    padding: 0 20px 20px 40px;
     margin:8px 0 0 0;
     border: 1px solid #e4e5e6;
    
@@ -491,17 +491,11 @@ form.link button:hover, button.link:hover {
 #main h2, #main h3 {
     margin:.5em 0;
 }
-/*#main p {
-    margin:0 0 1.5em;
-}*/
 #main .main.actions {
     margin:0 0 1.4em;
 }
 #main .meta {
     margin:-.4em 0 .4em;
-}
-#main form {
-    margin:.345em 0 1.38em;
 }
 #main form.inline {
     margin:0;
