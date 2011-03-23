@@ -10,8 +10,17 @@ width:35%;
 padding:10px;
 }
 
+#widgets-layers-control label, #widgets-zones h2, #widgets-assistance h3 {
+font-size:1.077em;
+padding:2px 2px;
+}
+
+
 #widgets-layers-control {
 margin-bottom:-20px;
+}
+#widgets-layers-control label {
+padding:2px 2px;
 }
 #widgets-layers-control form, #widgets-layers-control fieldset {
 display:inline;
@@ -43,9 +52,6 @@ position:relative;
 }
 #widgets-zones li:hover, #widgets-zones li.on {
 border-color:#bfd3a7;
-}
-#widgets-zones h2 {
-font-size:1.077em;
 }
 #widgets-available h2 {
 font-size:1.231em;
