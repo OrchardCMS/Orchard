@@ -63,6 +63,7 @@ namespace Lists.Controllers {
             if (container == null || !container.Has<ContainerPart>()) {
                 return HttpNotFound();
             }
+
             var restrictedContentType = container.As<ContainerPart>().Record.ItemContentType;
             var hasRestriction = !string.IsNullOrEmpty(restrictedContentType);
             if (hasRestriction) {
@@ -80,11 +81,9 @@ namespace Lists.Controllers {
                 return new HttpNotFoundResult();
             }
 
-            if (!hasRestriction) {
-                model.Options.FilterOptions = GetContainableTypes()
-                    .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
-                    .ToList().OrderBy(kvp => kvp.Key);
-            }
+            model.Options.FilterOptions = GetContainableTypes()
+                .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
+                .ToList().OrderBy(kvp => kvp.Key);
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
@@ -97,8 +96,8 @@ namespace Lists.Controllers {
                 .Pager(pagerShape)
                 .ContainerId(model.ContainerId)
                 .Options(model.Options)
-                .HasRestriction(hasRestriction)
                 .ContainerDisplayName(model.ContainerDisplayName)
+                .HasRestriction(hasRestriction)
                 .ContainerContentType(container.ContentType)
                 .ContainerItemContentType(hasRestriction ? restrictedContentType : (model.FilterByContentType ?? ""))
                 .OtherLists(_contentManager.Query<ContainerPart>(VersionOptions.Latest).List()
@@ -301,6 +300,7 @@ namespace Lists.Controllers {
                 Services.Notifier.Information(T("Please select the list to move the items to."));
                 return true;
             }
+            
             var itemContentType = targetContainer.Record.ItemContentType;
 
             foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
@@ -309,6 +309,7 @@ namespace Lists.Controllers {
                 }
                 // ensure the item can be in that container.
                 if (!string.IsNullOrEmpty(itemContentType) && item.ContentType != itemContentType) {
+                    Services.TransactionManager.Cancel();
                     Services.Notifier.Information(T("One or more items could not be moved to '{0}' because it is restricted to containing items of type '{1}'.", _contentManager.GetItemMetadata(targetContainer).DisplayText, itemContentType));
                     return true; // todo: transactions
                 }
@@ -323,6 +324,7 @@ namespace Lists.Controllers {
         private bool BulkRemoveFromList(IEnumerable<int> itemIds) {
             foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
                 if (!Services.Authorizer.Authorize(Permissions.EditContent, item, T("Couldn't remove selected content from the list."))) {
+                    Services.TransactionManager.Cancel();
                     return false;
                 }
                 item.As<CommonPart>().Record.Container = null;
@@ -334,6 +336,7 @@ namespace Lists.Controllers {
         private bool BulkRemove(IEnumerable<int> itemIds) {
             foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
                 if (!Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content."))) {
+                    Services.TransactionManager.Cancel();
                     return false;
                 }
 
@@ -346,6 +349,7 @@ namespace Lists.Controllers {
         private bool BulkUnpublish(IEnumerable<int> itemIds) {
             foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
                 if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content."))) {
+                    Services.TransactionManager.Cancel();
                     return false;
                 }
 
@@ -357,8 +361,10 @@ namespace Lists.Controllers {
 
         private bool BulkPublishNow(IEnumerable<int> itemIds) {
             foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content.")))
+                if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content."))) {
+                    Services.TransactionManager.Cancel();
                     return false;
+                }
 
                 _contentManager.Publish(item);
             }
