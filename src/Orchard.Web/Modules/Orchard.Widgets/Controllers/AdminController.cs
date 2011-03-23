@@ -8,6 +8,7 @@ using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
+using Orchard.Themes.Services;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
@@ -22,14 +23,17 @@ namespace Orchard.Widgets.Controllers {
         private const string NotAuthorizedManageWidgetsLabel = "Not authorized to manage widgets";
 
         private readonly IWidgetsService _widgetsService;
+        private readonly ISiteThemeService _siteThemeService;
 
         public AdminController(
             IOrchardServices services,
             IWidgetsService widgetsService,
-            IShapeFactory shapeFactory) {
+            IShapeFactory shapeFactory,
+            ISiteThemeService siteThemeService) {
 
             Services = services;
             _widgetsService = widgetsService;
+            _siteThemeService = siteThemeService;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -59,6 +63,7 @@ namespace Orchard.Widgets.Controllers {
             }
 
             dynamic viewModel = Shape.ViewModel()
+                .CurrentTheme(_siteThemeService.GetSiteTheme())
                 .CurrentLayer(currentLayer)
                 .Layers(layers)
                 .Widgets(_widgetsService.GetWidgets())

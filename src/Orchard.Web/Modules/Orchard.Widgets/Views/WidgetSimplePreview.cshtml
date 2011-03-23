@@ -1,1 +1,2 @@
-﻿<p>[[theme preview image]]</p>
+﻿@using Orchard.Environment.Extensions.Models
+<p id="widgets-theme-zone-preview">@Html.Image(Href(Html.ThemePath((ExtensionDescriptor) Model.CurrentTheme, "/ThemeZonePreview.png")), T("{0} zone preview", (string)Model.CurrentTheme.Name).Text, null)</p>

@@ -10,7 +10,7 @@
     <div id="layout-widgets-assistance">
         <div id="widgets-assistance">
             <div class="widgets-container">
-                @Display.WidgetSimplePreview()
+                @Display.WidgetSimplePreview(CurrentTheme: Model.CurrentTheme)
                 @Display.WidgetLayerVisibility(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)
             </div>
         </div>

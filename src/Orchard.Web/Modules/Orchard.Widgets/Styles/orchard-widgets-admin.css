@@ -169,3 +169,8 @@ margin:-32px 10px -2px 0;
 display:none;
 }
 /* end: switchable tweaks */
+
+/* ...and the current state of the theme zone preview */
+#widgets-theme-zone-preview img {
+width:100%;
+}
