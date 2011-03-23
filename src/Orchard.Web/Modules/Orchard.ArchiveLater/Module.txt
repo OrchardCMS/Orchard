@@ -1,4 +1,4 @@
-﻿Name: ArchiveLater
+﻿Name: Archive Later
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net

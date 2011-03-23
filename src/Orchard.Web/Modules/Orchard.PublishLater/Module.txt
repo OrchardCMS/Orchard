@@ -1,4 +1,4 @@
-﻿Name: PublishLater
+﻿Name: Publish Later
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net

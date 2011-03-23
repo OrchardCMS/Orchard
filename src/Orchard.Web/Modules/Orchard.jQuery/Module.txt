@@ -1,4 +1,4 @@
-﻿Name: Orchard.jQuery
+﻿Name: jQuery
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
