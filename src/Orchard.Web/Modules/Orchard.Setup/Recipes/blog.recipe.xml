@@ -12,7 +12,7 @@
   <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,
                    XmlRpc,Orchard.Blogs.RemotePublishing,
                    TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
-                   Orchard.jQuery,Orchard.Widgets,
+                   Orchard.jQuery,Orchard.Widgets,Orchard.Widgets.PageLayerHinting,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
                    PackagingServices,Orchard.Packaging,Gallery.Updates,
                    TheThemeMachine" />
