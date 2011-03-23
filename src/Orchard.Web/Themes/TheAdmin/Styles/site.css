@@ -277,9 +277,10 @@ form.link button:hover, button.link:hover {
     text-shadow: rgba(0,0,0,.9) 0px 0px 2px;
 }
 #page-title {
-    position:relative;
+    /*position:relative;
     top:12px;
-    left:24px;
+    left:24px;*/
+    padding:14px 0 0 260px;
     text-shadow:rgba(0,0,0,.1) 0px 0px 1px;    
 }
 #login {
@@ -291,10 +292,6 @@ form.link button:hover, button.link:hover {
 
 #login a, #login a:link, #login a:visited {
     padding:0;
-}
-
-#login a:hover, #login a:active, #login a:focus {
-    color:#ffea9b;
 }
 
 /* Navigation
@@ -613,6 +610,7 @@ label input {
 }
 /* todo: (heskew) try to get .text on stuff like .text-box */
 select, textarea, input.text, input.textMedium, input.text-box {
+    font-family:inherit;
     padding:3px;
     border:1px solid #bdbcbc;
     font-family:inherit;
