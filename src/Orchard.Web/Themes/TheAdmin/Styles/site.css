@@ -873,7 +873,6 @@ table.items tbody {
 }
 table.items thead, table.items th {
     background:#f5f5f5;
-    font-weight:700;
     overflow:hidden;
     text-align:left;
     white-space:nowrap;
