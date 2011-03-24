@@ -17,8 +17,6 @@ namespace Orchard.Widgets.Handlers {
                 if (!(context.ContentType == "Page" && context.PreviousItemVersionRecord == null && !string.IsNullOrWhiteSpace(part.Path)))
                     return;
 
-
-
                 var urlHelper = new UrlHelper(requestContext);
                 var pathForLayer = "~/" + part.Path;
                 services.Notifier.Information(T("Would you like to <a href=\"{0}\">add a widget layer</a> for \"{1}\"?",
