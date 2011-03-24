@@ -6,7 +6,7 @@ using System.Threading;
 using System.Web;
 using System.Web.Hosting;
 
-namespace Orchard.Web {
+namespace Orchard.Startup {
     public class WarmupHttpModule : IHttpModule {
         private const string WarmupFilesPath = "~/App_Data/Warmup/";
         private HttpApplication _context;
@@ -65,7 +65,7 @@ namespace Orchard.Web {
             return asyncResult;
         }
 
-        private void EndBeginRequest(IAsyncResult ar) {
+        private static void EndBeginRequest(IAsyncResult ar) {
             ((WarmupAsyncResult)ar).Wait();
         }
 
