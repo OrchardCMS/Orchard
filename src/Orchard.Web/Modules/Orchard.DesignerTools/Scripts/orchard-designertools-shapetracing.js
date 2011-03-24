@@ -26,6 +26,8 @@
         var shapeTracingGhost = $('#shape-tracing-container-ghost');
         var shapeTracingOverlay = $('#shape-tracing-overlay');
 
+        var shapeTracingEnabled = false;
+
         // store the size of the container when it is closed (default in css)
         var initialContainerSize = shapeTracingContainer.height();
         var previousSize = 0;
@@ -66,19 +68,33 @@
             _this.toggleClass('expanded');
             if (_this.hasClass('expanded')) {
                 shapeTracingContainer.height(Math.max(previousSize, 100, shapeTracingContainer.height()));
+                enableShapeTracing();
             }
             else {
                 // save previous height
                 previousSize = shapeTracingContainer.height();
                 shapeTracingContainer.height(initialContainerSize);
+                disableShapeTracing();
             }
 
             syncResize();
         });
 
+        var disableShapeTracing = function () {
+            shapeTracingEnabled = false;
+            selectShape();
+        }
+
+        var enableShapeTracing = function () {
+            shapeTracingEnabled = true;
+        }
+
         // add a resizable handle to the container
         $('#shape-tracing-resize-handle').addClass('ui-resizable-handle ui-resizable-n');
-        shapeTracingContainer.resizable({ handles: { n: '#shape-tracing-resize-handle'} });
+        shapeTracingContainer.resizable({
+            handles: { n: '#shape-tracing-resize-handle' },
+            grid: 20 // mitigates the number of calls to syncResize(), and aligns to the line height
+        });
 
         var shapeNodes = {}; // represents the main index of shape nodes, indexed by id
 
@@ -175,6 +191,10 @@
         var overlayTarget = null;
         $('[shape-id]').add(shapeTracingOverlay).mousemove(
             function (event) {
+                if (!shapeTracingEnabled) {
+                    return;
+                }
+
                 event.stopPropagation();
 
                 if ($(this).get(0) == shapeTracingOverlay.get(0)) {
@@ -203,7 +223,15 @@
 
         // selects a specific shape in the tree, highlight its elements, and display the information
         var selectShape = function (shapeId) {
-            $('.shape-tracing-selected').removeClass('shape-tracing-selected');
+            if (!shapeId) {
+                // remove selection ?
+                shapeTracingOverlay.hide();
+                shapeTracingWindowTree.find('.shape-tracing-selected').removeClass('shape-tracing-selected');
+                $('[shape-id-meta]:visible').toggle(false);
+                return;
+            }
+
+            shapeTracingWindowTree.find('.shape-tracing-selected').removeClass('shape-tracing-selected');
             $('li[tree-shape-id="' + shapeId + '"] > div').add('[shape-id="' + shapeId + '"]').addClass('shape-tracing-selected');
             shapeTracingOverlay.hide();
 
@@ -235,7 +263,8 @@
         });
 
         //create an overlay on shape tree nodes
-        shapeTracingWindowTree.find('[tree-shape-id] div').hover(
+        shapeTracingWindowTree.find('[tree-shape-id] > div')
+        .hover(
             function () {
                 var _this = $(this);
                 $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
@@ -243,11 +272,8 @@
             },
             function () {
                 $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
-            }
-        );
-
-        // select shape tree elements when clicked
-        $('[tree-shape-id] > div').click(function (event) {
+            })
+        .click(function (event) {
             var shapeId = $(this).parent().get(0).shapeNode.id;
             selectShape(shapeId);
 
@@ -265,10 +291,10 @@
 
         // add the expand/collapse logic to the shape model
         // var glyph = $('<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>');
-        shapeTracingWindowContent.find('h3').parent(':has(li)').prepend(glyph);
+        shapeTracingWindowContent.find('.model li:has(ul)').prepend(glyph);
 
         // collapse all sub uls
-        shapeTracingWindowContent.find('ul ul').toggle(false);
+        shapeTracingWindowContent.find('.model ul ul').toggle(false);
 
         // tabs events
         shapeTracingWindowContent.find('.shape-tracing-tabs > li').click(function () {
@@ -314,6 +340,39 @@
 
             return false;
         });
+
+        //create an overlay on model nodes
+        shapeTracingWindowContent.find('.model div.name')
+        .hover(
+            function () {
+                var _this = $(this);
+                $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
+                _this.addClass('shape-tracing-overlay');
+            },
+            function () {
+                $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
+            })
+        .click(function (event) {
+            // model node is selected
+            var _this = $(this);
+            shapeTracingWindowContent.find('.shape-tracing-selected').removeClass('shape-tracing-selected');
+            _this.addClass('shape-tracing-selected');
+
+            // display breadcrumb
+            var breadcrumb;
+            _this.parentsUntil('.model').children('.name').each(function () {
+                if (breadcrumb != null) {
+                    breadcrumb = $(this).text() + '.' + breadcrumb;
+                }
+                else {
+                    breadcrumb = $(this).text();
+                }
+            });
+
+            _this.parents('.model').find('.shape-tracing-breadcrumb').text('@' + breadcrumb);
+            event.stopPropagation();
+        });
+
     });
 
     // recursively create a node for the shapes tree
