@@ -39,7 +39,7 @@ namespace Orchard.Recipes.RecipeHandlers {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        // <Theme name="theme1" repository="somethemerepo" version="1.1" enable="true" current="true" />
+        // <Theme packageId="theme1" repository="somethemerepo" version="1.1" enable="true" current="true" />
         // install themes from feed.
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
             if (!String.Equals(recipeContext.RecipeStep.Name, "Theme", StringComparison.OrdinalIgnoreCase)) {
@@ -47,7 +47,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             bool enable = false, current = false;
-            string name = null, version = null, repository = null;
+            string packageId = null, version = null, repository = null;
 
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
                 if (String.Equals(attribute.Name.LocalName, "enable", StringComparison.OrdinalIgnoreCase)) {
@@ -56,8 +56,8 @@ namespace Orchard.Recipes.RecipeHandlers {
                 else if (String.Equals(attribute.Name.LocalName, "current", StringComparison.OrdinalIgnoreCase)) {
                     current = Boolean.Parse(attribute.Value);
                 }
-                else if (String.Equals(attribute.Name.LocalName, "name", StringComparison.OrdinalIgnoreCase)) {
-                    name = attribute.Value;
+                else if (String.Equals(attribute.Name.LocalName, "packageId", StringComparison.OrdinalIgnoreCase)) {
+                    packageId = attribute.Value;
                 }
                 else if (String.Equals(attribute.Name.LocalName, "version", StringComparison.OrdinalIgnoreCase)) {
                     version = attribute.Value;
@@ -70,8 +70,8 @@ namespace Orchard.Recipes.RecipeHandlers {
                 }
             }
 
-            if (name == null) {
-                throw new InvalidOperationException("Name is required in a Theme declaration in a recipe file.");
+            if (packageId == null) {
+                throw new InvalidOperationException("PackageId is required in a Theme declaration in a recipe file.");
             }
 
             // download and install theme from the orchard feed or a custom feed if repository is specified.
@@ -87,7 +87,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             var packagingEntry = _packagingSourceManager.GetExtensionList(packagingSource,
                 packages => packages.Where(package =>
                     package.PackageType.Equals(DefaultExtensionTypes.Theme) &&
-                    package.Id.Equals(name, StringComparison.OrdinalIgnoreCase) &&
+                    package.Id.Equals(packageId, StringComparison.OrdinalIgnoreCase) &&
                     (!enforceVersion || package.Version.Equals(version, StringComparison.OrdinalIgnoreCase))))
                 .FirstOrDefault();
 
@@ -106,7 +106,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             if (!installed) {
-                throw new InvalidOperationException(string.Format("Theme {0} was not found in the specified location.", name));
+                throw new InvalidOperationException(string.Format("Theme {0} was not found in the specified location.", packageId));
             }
 
             recipeContext.Executed = true;
