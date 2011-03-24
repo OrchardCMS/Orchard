@@ -5,12 +5,11 @@ Website: http://orchardproject.net
 Version: 1.0
 OrchardVersion: 1.0
 Description: Contains designer tools to ease the Themes development process
+FeatureName: Shape Tracing
+Category: Designer
+FeatureDescription: Displays all currently displayed shapes and some information to customize them
+Dependencies: Orchard.jQuery
 Features:
-    Orchard.DesignerTools:
-        Name: Shape Tracing
-        Category: Designer
-        Description: Displays all currently displayed shapes and some information to customize them
-        Dependencies: Orchard.jQuery
     UrlAlternates:
         Name: Url Alternates
         Category: Designer

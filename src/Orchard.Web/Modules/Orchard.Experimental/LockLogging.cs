@@ -10,7 +10,6 @@ namespace Orchard.Experimental {
     [OrchardFeature("Orchard.Experimental.LockLogging")]
     public class LockLogging : FilterProvider, IExceptionFilter {
         private readonly Work<ISessionLocator> _sessionLocator;
-        private readonly ITransactionManager _transactionManager;
 
         public LockLogging(Work<ISessionLocator> sessionLocator) {
             _sessionLocator = sessionLocator;
