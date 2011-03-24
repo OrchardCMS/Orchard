@@ -1,4 +1,5 @@
 Name: Media Picker
+Path: MediaPicker
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
