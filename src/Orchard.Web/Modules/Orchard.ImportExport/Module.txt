@@ -1,4 +1,5 @@
 ﻿Name: Import Export
+Path: ImportExport
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net

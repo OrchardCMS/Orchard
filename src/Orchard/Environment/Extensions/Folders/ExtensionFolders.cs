@@ -183,6 +183,9 @@ namespace Orchard.Environment.Extensions.Folders {
                         case "FeatureDescription":
                             manifest.Add("FeatureDescription", field[1]);
                             break;
+                        case "FeatureName":
+                            manifest.Add("FeatureName", field[1]);
+                            break;
                         case "Priority":
                             manifest.Add("Priority", field[1]);
                             break;
@@ -202,7 +205,7 @@ namespace Orchard.Environment.Extensions.Folders {
             // Default feature
             FeatureDescriptor defaultFeature = new FeatureDescriptor {
                 Id = extensionDescriptor.Id,
-                Name = extensionDescriptor.Name,
+                Name = GetValue(manifest, "FeatureName") ?? extensionDescriptor.Name,
                 Priority = GetValue(manifest, "Priority") != null ? int.Parse(GetValue(manifest, "Priority")) : 0,
                 Description = GetValue(manifest, "FeatureDescription") ?? GetValue(manifest, "Description") ?? string.Empty,
                 Dependencies = ParseFeatureDependenciesEntry(GetValue(manifest, "Dependencies")),

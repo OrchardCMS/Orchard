@@ -92,7 +92,7 @@ namespace Orchard.DesignerTools.Services {
             var dumper = new ObjectDumper(6);
             var el = dumper.Dump(context.Shape, "Model");
             using (var sw = new StringWriter()) {
-                el.WriteTo(new XmlTextWriter(sw) {Formatting = Formatting.Indented});
+                el.WriteTo(new XmlTextWriter(sw) {Formatting = Formatting.None});
                 context.Shape._Dump = sw.ToString();
             }
 
