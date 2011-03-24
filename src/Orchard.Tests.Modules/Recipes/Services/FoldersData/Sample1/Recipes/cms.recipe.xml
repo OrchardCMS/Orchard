@@ -10,7 +10,7 @@
   </Recipe>
 
   <!-- Steps -->
-  <Module name="module1" repository="somerepo" version="1.1" />
+  <Module packageId="module1" repository="somerepo" version="1.1" />
 
   <Feature disable="f1, f2" enable="f3,f4" />
 
@@ -37,7 +37,7 @@
 
   <Migration features="f2,f4"/>
 
-  <Theme name="theme1" repository="somerepo" />
+  <Theme packageId="theme1" repository="somerepo" />
 
   <Custom1 attr1="value1" />
   <Custom2 attr2="value2" />
