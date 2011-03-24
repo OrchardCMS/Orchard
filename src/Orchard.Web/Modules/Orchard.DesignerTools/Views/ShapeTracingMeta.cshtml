@@ -41,6 +41,7 @@
         </div>
 
         <div class="placement" style="display:none">
+            <div class="shape-tracing-breadcrumb">@(String.IsNullOrEmpty((string)Model.PlacementSource) ? T("").Text : Model.PlacementSource.ToString())</div>
             <textarea id="placement-@Model.ShapeId" name="placement-@Model.ShapeId">@Model.PlacementContent</textarea>
         </div>
 
