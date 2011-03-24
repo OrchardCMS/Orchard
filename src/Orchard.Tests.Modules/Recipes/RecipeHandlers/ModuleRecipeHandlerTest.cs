@@ -88,9 +88,9 @@ Features:
             Assert.That(enabledFeatures.Count(), Is.EqualTo(0));
             moduleRecipeHandler.ExecuteRecipeStep(recipeContext);
 
-            enabledFeatures = featureManager.GetEnabledFeatures();
-            Assert.That(enabledFeatures.FirstOrDefault(feature => feature.Id.Equals("SuperWiki")), Is.Not.Null);
-            Assert.That(enabledFeatures.Count(), Is.EqualTo(1));
+
+            var availableFeatures = featureManager.GetAvailableFeatures();
+            Assert.That(availableFeatures.Select(feature => feature.Id.Equals("SuperWiki")), Is.Not.Null);
             Assert.That(recipeContext.Executed, Is.True);
         }
 
