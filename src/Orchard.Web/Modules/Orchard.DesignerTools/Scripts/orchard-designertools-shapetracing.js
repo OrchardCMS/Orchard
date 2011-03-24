@@ -292,10 +292,10 @@
 
         // add the expand/collapse logic to the shape model
         // var glyph = $('<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>');
-        shapeTracingWindowContent.find('.model li:has(ul)').prepend(glyph);
+        shapeTracingWindowContent.find('li:has(ul)').prepend(glyph);
 
         // collapse all sub uls
-        shapeTracingWindowContent.find('.model ul ul').toggle(false);
+        shapeTracingWindowContent.find('ul ul').toggle(false);
 
         // tabs events
         shapeTracingWindowContent.find('.shape-tracing-tabs > li').click(function () {
@@ -316,6 +316,11 @@
 
             // enable codemirror for the current tab
             enableCodeMirror(panel);
+        });
+
+        // template link opens template tab
+        shapeTracingWindowContent.find('.sgd-t a').click(function () {
+            $(this).parents('.shape-tracing-meta').find('.shape-tracing-tabs > .template').click()
         });
 
         // activates codemirror on specific textareas
