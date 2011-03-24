@@ -70,28 +70,22 @@ namespace Orchard.Recipes.RecipeHandlers {
             bool enforceVersion = version != null;
             bool installed = false;
 
-            PackagingSource packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
+            var packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
             if (repository != null) {
                 enforceVersion = false;
                 packagingSource = new PackagingSource {FeedTitle = repository, FeedUrl = repository};
             }
 
-            if (_extensionManager.AvailableExtensions().Where(extension =>
-                DefaultExtensionTypes.IsTheme(extension.ExtensionType) &&
-                extension.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).Any()) {
-                    throw new InvalidOperationException(string.Format("Module {0} already exists.", name));
-            }
-
-            PackagingEntry packagingEntry = _packagingSourceManager.GetExtensionList(packagingSource,
+            var packagingEntry = _packagingSourceManager.GetExtensionList(packagingSource,
                 packages => packages.Where(package =>
                     package.PackageType.Equals(DefaultExtensionTypes.Module) &&
-                    package.Title.Equals(name, StringComparison.OrdinalIgnoreCase) &&
+                    package.Id.Equals(name, StringComparison.OrdinalIgnoreCase) &&
                     (!enforceVersion || package.Version.Equals(version, StringComparison.OrdinalIgnoreCase))))
                 .FirstOrDefault();
 
             if (packagingEntry != null) {
-                _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
-                foreach (string[] features in
+                _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/")); 
+                foreach (var features in
                     from extensionDescriptor in _extensionManager.AvailableExtensions()
                     where extensionDescriptor.Name.Equals(packagingEntry.Title, StringComparison.OrdinalIgnoreCase)
                     select extensionDescriptor.Features.Select(f => f.Name).ToArray()) {

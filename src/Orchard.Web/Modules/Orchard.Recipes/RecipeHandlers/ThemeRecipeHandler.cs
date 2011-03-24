@@ -78,22 +78,16 @@ namespace Orchard.Recipes.RecipeHandlers {
             bool enforceVersion = version != null;
             bool installed = false;
 
-            PackagingSource packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
+            var packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
             if (repository != null) {
                 enforceVersion = false;
                 packagingSource = new PackagingSource { FeedTitle = repository, FeedUrl = repository };
             }
 
-            if (_extensionManager.AvailableExtensions().Where(extension =>
-                DefaultExtensionTypes.IsTheme(extension.ExtensionType) &&
-                extension.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).Any()) {
-                    throw new InvalidOperationException(string.Format("Theme {0} already exists.", name));
-            }
-
-            PackagingEntry packagingEntry = _packagingSourceManager.GetExtensionList(packagingSource,
+            var packagingEntry = _packagingSourceManager.GetExtensionList(packagingSource,
                 packages => packages.Where(package =>
                     package.PackageType.Equals(DefaultExtensionTypes.Theme) &&
-                    package.Title.Equals(name, StringComparison.OrdinalIgnoreCase) &&
+                    package.Id.Equals(name, StringComparison.OrdinalIgnoreCase) &&
                     (!enforceVersion || package.Version.Equals(version, StringComparison.OrdinalIgnoreCase))))
                 .FirstOrDefault();
 
