@@ -799,10 +799,11 @@ button.link {
     text-align:right;
 }
 .item-properties.actions {
-    margin-bottom:.5em;
+    /*margin-bottom:.5em;
     margin-top:-5em;
     overflow:hidden;
-    padding:1px;
+    padding:1px;*/
+    float:right;
 }
 .contentItems .actions li {
     background:inherit;
