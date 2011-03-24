@@ -226,12 +226,13 @@
             if (!shapeId) {
                 // remove selection ?
                 shapeTracingOverlay.hide();
+                $('.shape-tracing-selected').removeClass('shape-tracing-selected');
                 shapeTracingWindowTree.find('.shape-tracing-selected').removeClass('shape-tracing-selected');
                 $('[shape-id-meta]:visible').toggle(false);
                 return;
             }
 
-            shapeTracingWindowTree.find('.shape-tracing-selected').removeClass('shape-tracing-selected');
+            $('.shape-tracing-selected').removeClass('shape-tracing-selected');
             $('li[tree-shape-id="' + shapeId + '"] > div').add('[shape-id="' + shapeId + '"]').addClass('shape-tracing-selected');
             shapeTracingOverlay.hide();
 
@@ -359,7 +360,7 @@
             _this.addClass('shape-tracing-selected');
 
             // display breadcrumb
-            var breadcrumb;
+            var breadcrumb = null;
             _this.parentsUntil('.model').children('.name').each(function () {
                 if (breadcrumb != null) {
                     breadcrumb = $(this).text() + '.' + breadcrumb;

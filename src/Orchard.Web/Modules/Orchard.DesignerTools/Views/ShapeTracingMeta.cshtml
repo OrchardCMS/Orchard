@@ -25,34 +25,18 @@
     </ul>
 
     <div class="shape-tracing-meta-content">
-        <div class="shape">
+        <div class="shape grid-display">
             <ul class="properties">
-                <li>
-                        <div class="name">Shape</div>
-                        <div class="value">@Model.ShapeType</div>
-                    
-                </li>
-                <li>
-                        <div class="name">Definition</div>
-                        <div class="value">@Model.Definition</div>
-                </li>
-                <li>
-                        <div class="name">Display Type</div>
-                        <div class="value">@(String.IsNullOrEmpty((string)Model.DisplayType) ? T("n/a").Text : Model.DisplayType.ToString())</div>
-                </li>
-                <li>
-                        <div class="name">Position</div>
-                        <div class="value">@(String.IsNullOrEmpty((string)Model.Position) ? T("n/a").Text : Model.Position.ToString())</div>  
-                </li>
-                <li>
-                        <div class="name">Placement Source</div>
-                        <div class="value">@(String.IsNullOrEmpty((string)Model.PlacementSource) ? T("n/a").Text : Model.PlacementSource.ToString())</div>
-                </li>
+                <li><div class="name">Shape</div><div class="value">@Model.ShapeType</div></li>
+                <li><div class="name">Definition</div><div class="value">@Model.Definition</div></li>
+                <li><div class="name">Display Type</div><div class="value">@(String.IsNullOrEmpty((string)Model.DisplayType) ? T("n/a").Text : Model.DisplayType.ToString())</div></li>
+                <li><div class="name">Position</div><div class="value">@(String.IsNullOrEmpty((string)Model.Position) ? T("n/a").Text : Model.Position.ToString())</div></li>
+                <li><div class="name">Placement Source</div><div class="value">@(String.IsNullOrEmpty((string)Model.PlacementSource) ? T("n/a").Text : Model.PlacementSource.ToString())</div></li>
             </ul>
         </div>
             
-        <div class="model" style="display:none">
-            <div class="shape-tracing-breadcrumb">foo</div>
+        <div class="model grid-display" style="display:none">
+            <div class="shape-tracing-breadcrumb"></div>
             @(new MvcHtmlString(@Model.Dump))
         </div>
 
