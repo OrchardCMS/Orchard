@@ -11,6 +11,7 @@ using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Contents.Settings;
+using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
@@ -294,6 +295,20 @@ namespace Lists.Controllers {
             return RedirectToAction("Choose", routeValues);
         }
 
+        private void FixItemPath(ContentItem item) {
+            // Fixes an Item's path when its container changes.
+
+            // force a publish/unpublish event so RoutePart fixes the content items path
+            // and the paths of any child objects if it is also a container.
+            if (item.VersionRecord.Published) {
+                item.VersionRecord.Published = false;
+                _contentManager.Publish(item);
+            }
+            else {
+                item.VersionRecord.Published = true;
+                _contentManager.Unpublish(item);
+            }
+        }
 
         private bool BulkMoveToList(IEnumerable<int> itemIds, int? targetContainerId) {
             if (!targetContainerId.HasValue) {
@@ -321,6 +336,7 @@ namespace Lists.Controllers {
                 }
 
                 item.As<CommonPart>().Record.Container = targetContainer.ContentItem.Record;
+                FixItemPath(item);
             }
             Services.Notifier.Information(T("Content successfully moved to <a href=\"{0}\">{1}</a>.",
                                             Url.Action("List", new { containerId = targetContainerId }), _contentManager.GetItemMetadata(targetContainer).DisplayText));
@@ -334,6 +350,7 @@ namespace Lists.Controllers {
                     return false;
                 }
                 item.As<CommonPart>().Record.Container = null;
+                FixItemPath(item);
             }
             Services.Notifier.Information(T("Content successfully removed from the list."));
             return true;
