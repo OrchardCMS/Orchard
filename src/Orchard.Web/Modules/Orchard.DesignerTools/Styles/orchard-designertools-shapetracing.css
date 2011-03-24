@@ -106,7 +106,7 @@
     background-color: #EBEFF9;
 }
 
-#shape-tracing-window-tree .shape-tracing-selected  {
+#shape-tracing-window .shape-tracing-selected  {
     background:#2c66c3;
     color:#fff;
     
@@ -235,11 +235,17 @@
 }
 
 #shape-tracing-window-content .model div.type, #shape-tracing-window-content .model div.value {
-    left:300px;
-    position:relative;
+    float:right;
+    display:inline;
+    width:66%;
 }
 
 
 #shape-tracing-window-content .model li  {
     clear:both;
+}
+
+#shape-tracing-window-content .shape-tracing-breadcrumb 
+{
+    margin: 3px 0px;
 }
