@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Routable.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 
-namespace Orchard.Widgets.Drivers {
+namespace Orchard.Widgets.Handlers {
     [OrchardFeature("Orchard.Widgets.PageLayerHinting")]
     public class LayerHintHandler : ContentHandler {
         public LayerHintHandler(IOrchardServices services, RequestContext requestContext) {
             T = NullLocalizer.Instance;
 
             OnPublished<RoutePart>((context, part) => {
-                if (string.IsNullOrWhiteSpace(part.Path)) // only going to help in creating a layer if the content has a path
+                // only going to help in creating a layer if the content is a page with no previous version and a path
+                if (!(context.ContentType == "Page" && context.PreviousItemVersionRecord == null && !string.IsNullOrWhiteSpace(part.Path)))
                     return;
-                
+
 
 
                 var urlHelper = new UrlHelper(requestContext);
