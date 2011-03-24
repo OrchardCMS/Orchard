@@ -19,19 +19,38 @@
         <li class="shape selected first"><a href="#">Shape</a></li>
         <li class="model middle"><a href="#">Model</a></li>
         <li class="placement middle"><a href="#">Placement</a></li>
-        <li class="templates middle"><a href="#">Templates</a></li>
-        <li class="source middle"><a href="#">Source</a></li>
+        <li class="template middle"><a href="#">Template</a></li>
         <li class="html last"><a href="#">HTML</a></li>
     </ul>
 
     <div class="shape-tracing-meta-content">
         <div class="shape grid-display">
             <ul class="properties">
-                <li><div class="name">Shape</div><div class="value">@Model.ShapeType</div></li>
-                <li><div class="name">Definition</div><div class="value">@Model.Definition</div></li>
-                <li><div class="name">Display Type</div><div class="value">@(String.IsNullOrEmpty((string)Model.DisplayType) ? T("n/a").Text : Model.DisplayType.ToString())</div></li>
-                <li><div class="name">Position</div><div class="value">@(String.IsNullOrEmpty((string)Model.Position) ? T("n/a").Text : Model.Position.ToString())</div></li>
-                <li><div class="name">Placement Source</div><div class="value">@(String.IsNullOrEmpty((string)Model.PlacementSource) ? T("n/a").Text : Model.PlacementSource.ToString())</div></li>
+                <li class="sgd-s"><div class="name">Shape</div><div class="value">@Model.ShapeType</div></li>
+                <li class="sgd-t"><div class="name">Template</div><div class="value"><a href="#">@Model.Template</a></div></li>
+                <li class="sgd-d"><div class="name">Display Type</div><div class="value">@(String.IsNullOrEmpty((string)Model.DisplayType) ? T("n/a").Text : Model.DisplayType.ToString())</div></li>
+                <li class="sgd-po"><div class="name">Position</div><div class="value">@(String.IsNullOrEmpty((string)Model.Position) ? T("n/a").Text : Model.Position.ToString())</div></li>
+                <li class="sgd-pl"><div class="name">Placement</div><div class="value">@(String.IsNullOrEmpty((string)Model.PlacementSource) ? T("n/a").Text : Model.PlacementSource.ToString())</div></li>
+                <li class="sgd-a"><div class="name">Alternates (@Model.Alternates.Count)</div>
+                    <div class="value">&nbsp;</div>
+                    <ul>
+                    @foreach(var alternate in Model.Alternates) {
+                        var formatted = @FormatShapeFilename(alternate, WorkContext.CurrentTheme.Id);
+                        <li><div class="name">&nbsp;</div><div class="value">@formatted</div></li>
+                    }                        
+                    </ul>
+                </li>
+                <li class="sgd-w"><div class="name">Wrappers (@Model.Wrappers.Count)</div>
+                    <div class="value">&nbsp;</div>
+                    <ul>
+                    @foreach(var wrapper in Model.Wrappers) {
+                        if(wrapper != "ShapeTracing_Wrapper") {
+                            var formatted = @FormatShapeFilename(wrapper, WorkContext.CurrentTheme.Id);
+                        <li><div class="name">&nbsp;</div><div class="value">@formatted</div></li>
+                        }
+                    }
+                    </ul>
+                </li>
             </ul>
         </div>
             
@@ -45,27 +64,8 @@
             <textarea id="placement-@Model.ShapeId" name="placement-@Model.ShapeId">@Model.PlacementContent</textarea>
         </div>
 
-        <div class="templates" style="display:none">
-            <div class="alternates">
-                <span>Alternates</span>
-                @foreach(var alternate in Model.Alternates) {
-                    var formatted = @FormatShapeFilename(alternate, WorkContext.CurrentTheme.Id);
-                    <div>@formatted</div>
-                }
-            </div>
-            <div class="wrappers">
-                <span >Wrappers</span>
-                @foreach(var wrapper in Model.Wrappers) {
-                    if(wrapper != "ShapeTracing_Wrapper") {
-                        var formatted = @FormatShapeFilename(wrapper, WorkContext.CurrentTheme.Id);
-                        <div>@formatted</div>
-                    }
-                }
-            </div>
-        </div>
-
-        <div class="source" style="display:none">
-            <textarea id="source-@Model.ShapeId" name="source-@Model.ShapeId">@Model.DefinitionContent</textarea>
+        <div class="template" style="display:none">
+            <textarea id="template-@Model.ShapeId" name="template-@Model.ShapeId">@Model.TemplateContent</textarea>
         </div>
 
         <div class="html" style="display:none">

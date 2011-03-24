@@ -96,11 +96,11 @@ namespace Orchard.DesignerTools.Services {
                 context.Shape._Dump = sw.ToString();
             }
 
-            shape._Definition = descriptor.BindingSource;
+            shape.Template = descriptor.BindingSource;
 
             try {
                 if (_webSiteFolder.FileExists(descriptor.BindingSource)) {
-                    shape._DefinitionContent = _webSiteFolder.ReadFile(descriptor.BindingSource);
+                    shape.TemplateContent = _webSiteFolder.ReadFile(descriptor.BindingSource);
                 }
             }
             catch {
