@@ -36,10 +36,10 @@
     }
     </tbody>
 </table>
-<fieldset class="actions"><button type="submit" class="primaryAction">@T("Update All")</button></fieldset>
+<fieldset class="actions"><button type="submit" class="button">@T("Update All")</button></fieldset>
 }
 
-<h2>@T("Add New Item")</h2>
+<h3>@T("Add New Item")</h3>
 @using (Html.BeginFormAntiForgeryPost(Url.Action("create"), FormMethod.Post)) {
 <table class="menu items">
     <colgroup>
