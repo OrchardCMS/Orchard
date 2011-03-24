@@ -113,11 +113,8 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
 
-            LayerPart currentLayer = layerId == null
-                ? layers.First()
-                : layers.FirstOrDefault(layer => layer.Id == layerId);
-
-            if (currentLayer == null && layerId != null) { // Incorrect layer id passed
+            LayerPart currentLayer = layers.FirstOrDefault(layer => layer.Id == layerId);
+            if (currentLayer == null) { // Incorrect layer id passed
                 Services.Notifier.Error(T("Layer not found: {0}", layerId));
                 return RedirectToAction("Index");
             }

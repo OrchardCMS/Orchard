@@ -151,6 +151,9 @@ margin-top:5px;
 #widgets-layer-visibility {
 margin-top:20px;
 }
+#widgets-layer-visibility li {
+cursor:default;
+}
 #widgets-layer-visibility .widgets-other-layer {
 background-image:url(images/eye.png);
 background-position:5px 11px;
