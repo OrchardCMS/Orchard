@@ -696,9 +696,8 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 		
 		/*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
         filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
-		background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to (rgba(217, 217, 217, 1.0)));    
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));   
         background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
-	
 		
 		-webkit-border-radius: 2px;
         -moz-border-radius: 2px;
@@ -732,7 +731,7 @@ button, .button, a.button {
      
     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
      filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 
         
@@ -753,8 +752,8 @@ button:hover, .button:hover, a.button:hover {
     background: #809f43;
     
     /*CSS3 properties*/  
-     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');    
-     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));    
      background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
 }
 
@@ -767,7 +766,7 @@ button:active, .buton:active, a.button:active {
     /*CSS3 properties*/
     text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
      filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 }
 button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
