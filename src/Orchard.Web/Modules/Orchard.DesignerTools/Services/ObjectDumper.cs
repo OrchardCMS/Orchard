@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using ClaySharp;
 using ClaySharp.Behaviors;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 
 namespace Orchard.DesignerTools.Services {
@@ -70,7 +71,7 @@ namespace Orchard.DesignerTools.Services {
         private void DumpObject(object o, string name) {
             _node.Add(
                 new XElement("div", new XAttribute("class", "name"), name),
-                new XElement("div", new XAttribute("class", "type"), FormatType(o.GetType()))
+                new XElement("div", new XAttribute("class", "type"), FormatType(o))
             );
 
             if (_parents.Count >= _levels) {
@@ -88,7 +89,8 @@ namespace Orchard.DesignerTools.Services {
                     DumpEnumerable((IEnumerable) o);
                 }
             }
-            else if (o is IEnumerable) {
+            else if (o is IEnumerable)
+            {
                 DumpEnumerable((IEnumerable)o);
             }
             else {
@@ -109,12 +111,24 @@ namespace Orchard.DesignerTools.Services {
 
             _node.Add(_node = new XElement("ul"));
             foreach (var member in members) {
+                if (o is ContentItem && member.Name == "ContentManager") {
+                    // ignore Content Manager explicitly
+                    continue;
+                }
+
                 try {
                     DumpMember(o, member);
                 }
                 catch {
                 }
             }
+
+            if (o is ContentItem) {
+                foreach(var part in ((ContentItem)o).Parts) {
+                    Dump(part, part.PartDefinition.Name);
+                }
+            }
+
             _node = _node.Parent;
         }
 
@@ -212,17 +226,21 @@ namespace Orchard.DesignerTools.Services {
             return formatted;
         }
 
-        private static string FormatType(Type t) {
-            if(t.IsGenericType) {
-                var genericArguments = String.Join(", ", t.GetGenericArguments().Select(FormatType).ToArray());
-                return String.Format("{0}<{1}>", t.Name.Substring(0, t.Name.IndexOf('`')), genericArguments); 
+        private static string FormatType(object item) {
+            if(item is IShape) {
+                return ((IShape)item).Metadata.Type + " Shape";
             }
 
-            if(typeof(IShape).IsAssignableFrom(t)) {
-                return "Shape";
-            }
+            return FormatType(item.GetType());
+        }
 
-            return t.Name;
+        private static string FormatType(Type type) {
+            if (type.IsGenericType) {
+                var genericArguments = String.Join(", ", type.GetGenericArguments().Select(t => FormatType((Type)t)).ToArray());
+                return String.Format("{0}<{1}>", type.Name.Substring(0, type.Name.IndexOf('`')), genericArguments);
+            }
+            
+            return type.Name;
         }
     }
 }
