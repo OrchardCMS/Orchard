@@ -19,7 +19,7 @@
                     }
                     <li@(classAttr)>
                         <h2>@zone</h2>
-                        <div class="widgets-actions">@Html.ActionLink(T("Add").Text, "ChooseWidget", new { layerId = Model.CurrentLayer.Id, zone, returnUrl }, new { @class = "button" })</div>
+                        <div class="widgets-actions">@Html.ActionLink(T("Add").Text, "ChooseWidget", new { layerId = Model.CurrentLayer.Id, zone, returnUrl }, new { @class = "button grey" })</div>
                         <ul class="widgets-zone-widgets">
                             @if (count > 0) {
                                 int i = 0;
