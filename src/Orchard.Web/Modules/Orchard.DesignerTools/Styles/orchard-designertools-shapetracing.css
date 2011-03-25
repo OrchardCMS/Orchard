@@ -9,10 +9,12 @@
 #shape-tracing-container a, #shape-tracing-container a:link, #shape-tracing-container a:visited {
     color:rgba(0, 94, 153, 0.8);
     text-decoration:none;
+    background-color:transparent;
 }
 #shape-tracing-container a:hover, #shape-tracing-container a:active, #shape-tracing-container a:focus {
     color:rgba(0, 94, 153, 1.0);
     text-decoration:none;
+    background-color:transparent;
 }
 
 #shape-tracing-container ul, 
@@ -44,8 +46,6 @@
 
 #shape-tracing-container .shape-tracing-meta-content {
     padding:0 0 30px 30px;
-    border:1px solid #E4E5E6;
-    border:1px solid #ff0000;
     overflow:auto;
 }
 #shape-tracing-toolbar  {
@@ -148,6 +148,7 @@
 
 #shape-tracing-window-content {
     padding:0 0 0 6px;
+    /*overflow:auto;*/
 }
 
 #shape-tracing-window .expando-glyph {
@@ -222,6 +223,7 @@
 
 #shape-tracing-window-content ul.shape-tracing-tabs {
     padding:8px 0;
+    border-bottom:1px solid rgba(182, 188, 189, 1.0);
     background:rgba(236, 241, 242, 1.0);
     
      /*CSS3 properties*/
