@@ -3,7 +3,7 @@
 <fieldset>
 	@Html.LabelFor(m => m.Part.Record.ItemContentType, T("Contains"))
 	@Html.DropDownListFor(m => m.Part.Record.ItemContentType, Model.AvailableContainables)
-	<span class="hint">@T("Containers can contain content items of containable content types. A content type is made containable by adding the Containable part to it.")</span>
+	<span class="hint">@T("Only types with the Containable part can be contained in a list.")</span>
 </fieldset>
 <fieldset>
     @Html.LabelFor(m => m.Part.Record.OrderByProperty, T("Order by"))
