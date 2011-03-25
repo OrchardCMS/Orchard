@@ -7,11 +7,11 @@
 /* Links
 ***************************************************************/
 #shape-tracing-container a, #shape-tracing-container a:link, #shape-tracing-container a:visited {
-    color:#ff0000;
+    color:rgba(0, 94, 153, 0.8);
     text-decoration:none;
 }
 #shape-tracing-container a:hover, #shape-tracing-container a:active, #shape-tracing-container a:focus {
-    color:#ff0000;
+    color:rgba(0, 94, 153, 1.0);
     text-decoration:none;
 }
 
@@ -249,7 +249,7 @@
     background-color: #fff;
 }
 #shape-tracing-window-content .shape-tracing-tabs li.selected a {
-    color: #3A822E;
+    color:rgba(102, 102, 102, 1.0);
 }
 
 #shape-tracing-window-content .grid-display {
