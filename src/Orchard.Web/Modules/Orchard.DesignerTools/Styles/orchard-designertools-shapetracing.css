@@ -215,10 +215,12 @@
 /*#shape-tracing-window-content ul.shape-tracing-tabs { margin:8px 0 -8px 0; }*/
 
 #shape-tracing-window-content .shape-tracing-tabs li {
-    color:#4053DE;
     display: inline;
     font-size:14px;
     padding: 4px 18px;
+    color:#005e99;
+    color:rgba(0, 94, 153, 0.8);
+    text-decoration:none;
 }
 
 #shape-tracing-window-content ul.shape-tracing-tabs {
@@ -232,29 +234,24 @@
      background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
     }
 
-/*#shape-tracing-window-content .shape-tracing-tabs li {
-    margin:0 2px;
-    padding: 8px 18px 7px 18px;
-}*/
-
 #shape-tracing-window-content .shape-tracing-tabs li.middle, #shape-tracing-window-content .shape-tracing-tabs li.first, #shape-tracing-window-content .shape-tracing-tabs li.last {
     border:1px solid rgba(154,155,157,1.0);
     background-color: #F5F5F5;
 }
 
-/*#shape-tracing-window-content .shape-tracing-tabs li.first {
-    margin-left:16px;
-}*/
+#shape-tracing-window-content .shape-tracing-tabs li:hover {
+    background-color: #fff;
+    color:#005e99;
+    color:rgba(0, 94, 153, 1.0);
+    border:1px solid rgba(0, 94, 153, 1.0);
+    text-decoration:none;
+    cursor:pointer;
+}
 #shape-tracing-window-content .shape-tracing-tabs li.selected {
     background-color: #fff;
-}
-#shape-tracing-window-content .shape-tracing-tabs li.selected, #shape-tracing-window-content .shape-tracing-tabs li:hover {
-    background-color: #fff;
-}
-#shape-tracing-window-content .shape-tracing-tabs li.selected a {
     color:rgba(102, 102, 102, 1.0);
+    border:1px solid rgba(102, 102, 102, 1.0);
 }
-
 #shape-tracing-window-content .grid-display {
     position:relative;
 }
