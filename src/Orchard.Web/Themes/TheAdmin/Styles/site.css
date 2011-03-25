@@ -529,6 +529,14 @@ fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
 label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 
+
+/*label { color: #747874;
+    display: block;
+    font-size: 12px;
+    font-weight:bold;
+    padding: 0 0 2px;
+    }*/
+
 form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
     display:inline;
 }
@@ -577,6 +585,7 @@ select, textarea, input.text, input.textMedium, input.text-box {
 input.text, input.textMedium, input.text-box {
     line-height:1.2em;
 }
+/*Are we using the two classes below?*/
 input.text-small {
     width:4em;
 }
