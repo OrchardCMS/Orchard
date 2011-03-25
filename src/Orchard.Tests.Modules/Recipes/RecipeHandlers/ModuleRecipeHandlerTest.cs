@@ -89,8 +89,8 @@ Features:
             moduleRecipeHandler.ExecuteRecipeStep(recipeContext);
 
 
-            var availableFeatures = featureManager.GetAvailableFeatures();
-            Assert.That(availableFeatures.Select(feature => feature.Id.Equals("SuperWiki")), Is.Not.Null);
+            var availableFeatures = featureManager.GetAvailableFeatures().Where(x => x.Id == "SuperWiki").FirstOrDefault();
+            Assert.That(availableFeatures.Id, Is.EqualTo("SuperWiki"));
             Assert.That(recipeContext.Executed, Is.True);
         }
 
