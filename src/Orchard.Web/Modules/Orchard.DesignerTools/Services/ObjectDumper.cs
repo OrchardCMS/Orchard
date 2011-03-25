@@ -113,7 +113,7 @@ namespace Orchard.DesignerTools.Services {
             }
 
             _node.Add(_node = new XElement("ul"));
-            foreach (var member in members) {
+            foreach (var member in members.OrderBy(m => m.Name)) {
                 if (o is ContentItem && member.Name == "ContentManager") {
                     // ignore Content Manager explicitly
                     continue;
@@ -127,7 +127,6 @@ namespace Orchard.DesignerTools.Services {
                     continue;
                 }
 
-                
                 // process ContentPart.Fields specifically
                 if (o is ContentPart && member.Name == "Fields") {
                     foreach (var field in ((ContentPart)o).Fields) {

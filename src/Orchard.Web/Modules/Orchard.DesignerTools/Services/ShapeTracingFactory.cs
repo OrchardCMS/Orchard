@@ -20,6 +20,7 @@ namespace Orchard.DesignerTools.Services {
         private readonly IThemeManager _themeManager;
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IAuthorizer _authorizer;
+        private int shapeId = 0;
 
         public ShapeTracingFactory(
             WorkContext workContext, 
@@ -132,6 +133,8 @@ namespace Orchard.DesignerTools.Services {
             if(shapeMetadata.Type == "Zone") {
                 shape.Hint = ((Zone) shape).ZoneName;
             }
+
+            shape.ShapeId = shapeId++;
         }
 
 
