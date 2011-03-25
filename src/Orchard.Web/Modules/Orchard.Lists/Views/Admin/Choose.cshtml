@@ -19,7 +19,7 @@
             Value = contentItem.Id.ToString(System.Globalization.CultureInfo.InvariantCulture),
 			Selected = contentItem.Id == sourceContainerId
         }).ToList();
-	sourceContainers.Insert(0, new SelectListItem { Text = T("Orphan items").ToString(), Value = "" });
+	sourceContainers.Insert(0, new SelectListItem { Text = T("No list").ToString(), Value = "" });
 }
 
 @using (Html.BeginFormAntiForgeryPost()) {
