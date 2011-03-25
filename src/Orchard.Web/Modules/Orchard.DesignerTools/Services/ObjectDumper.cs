@@ -126,11 +126,21 @@ namespace Orchard.DesignerTools.Services {
                     }
                     continue;
                 }
+
+                
+                // process ContentPart.Fields specifically
+                if (o is ContentPart && member.Name == "Fields") {
+                    foreach (var field in ((ContentPart)o).Fields) {
+                        Dump(field, field.Name);
+                    }
+                    continue;
+                }
                 
                 try {
                     DumpMember(o, member);
                 }
                 catch {
+                    // ignore members which can't be rendered
                 }
             }
 
@@ -244,7 +254,7 @@ namespace Orchard.DesignerTools.Services {
                 var genericArguments = String.Join(", ", type.GetGenericArguments().Select(t => FormatType((Type)t)).ToArray());
                 return String.Format("{0}<{1}>", type.Name.Substring(0, type.Name.IndexOf('`')), genericArguments);
             }
-            
+
             return type.Name;
         }
     }
