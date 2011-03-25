@@ -1,5 +1,8 @@
 ﻿jQuery(document).ready(function ($) {
     $(function () {
+        // default shape window height when first opened
+        var defaultHeight = 200;
+
         // append the shape tracing window container at the end of the document
         $('<div id="shape-tracing-container"> ' +
                 '<div id="shape-tracing-resize-handle" ></div>' +
@@ -67,7 +70,7 @@
             var _this = $(this);
             _this.toggleClass('expanded');
             if (_this.hasClass('expanded')) {
-                shapeTracingContainer.height(Math.max(previousSize, 100, shapeTracingContainer.height()));
+                shapeTracingContainer.height(Math.max(previousSize, defaultHeight, shapeTracingContainer.height()));
                 enableShapeTracing();
             }
             else {
