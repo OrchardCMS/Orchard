@@ -36,7 +36,7 @@ namespace Orchard.DesignerTools.Controllers
             var alternateFilename = Server.MapPath(Path.Combine(currentTheme.Location, currentTheme.Id, "Views", alternate));
 
             // use same extension as template, or ".cshtml" if it's a code template))
-            if (System.IO.File.Exists(template)) {
+            if (_webSiteFolder.FileExists(template)) {
                 alternateFilename += Path.GetExtension(template);
 
                 using (var stream = System.IO.File.Create(alternateFilename)) {

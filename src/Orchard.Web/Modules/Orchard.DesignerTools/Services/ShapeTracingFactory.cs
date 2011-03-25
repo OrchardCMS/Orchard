@@ -97,7 +97,23 @@ namespace Orchard.DesignerTools.Services {
                 context.Shape._Dump = sw.ToString();
             }
 
-            shape.Template = descriptor.Bindings.Values.FirstOrDefault().BindingSource;
+            shape.Template = null;
+            foreach (var extension in new[] { ".cshtml", ".aspx" }) {
+                foreach (var alternate in shapeMetadata.Alternates.Reverse()) {
+                    var alternateFilename = currentTheme.Location + "/" + currentTheme.Id + "/Views/" + alternate.Replace("__", "-").Replace("_", ".") + extension;
+                    if (_webSiteFolder.FileExists(alternateFilename)) {
+                        shape.Template = alternateFilename;
+                    }
+                }
+            }
+
+            if(shape.Template == null) {
+                shape.Template = descriptor.BindingSource;
+            }
+
+            if(shape.Template == null) {
+                shape.Template = descriptor.Bindings.Values.FirstOrDefault().BindingSource;
+            }
 
             try {
                 if (_webSiteFolder.FileExists(shape.Template)) {
