@@ -100,6 +100,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AlternateController.cs" />
     <Compile Include="Services\ObjectDumper.cs" />
     <Compile Include="Services\ShapeTracingFactory.cs" />
     <Compile Include="Services\UrlAlternatesFactory.cs" />
@@ -108,7 +109,6 @@
     <Content Include="Views\ShapeTracingWrapper.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

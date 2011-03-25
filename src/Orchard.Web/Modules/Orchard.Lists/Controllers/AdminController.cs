@@ -77,9 +77,9 @@ namespace Lists.Controllers {
                 model.ContainerDisplayName = container.ContentType;
             }
 
-            var query = GetListContentItemQuery(model);
+            var query = GetListContentItemQuery(model.ContainerId.Value, model.FilterByContentType, model.Options.OrderBy);
             if (query == null) {
-                return new HttpNotFoundResult();
+                return HttpNotFound();
             }
 
             model.Options.FilterOptions = GetContainableTypes()
@@ -110,19 +110,22 @@ namespace Lists.Controllers {
             return View((object)viewModel);
         }
 
-        private IContentQuery<ContainablePart> GetListContentItemQuery(ListContentsViewModel model) {
-            var query = _contentManager.Query<ContainablePart>(VersionOptions.Latest);
+        private IContentQuery<ContentItem> GetListContentItemQuery(int containerId, string contentType, ContentsOrder orderBy) {
+            var query = _contentManager.Query(VersionOptions.Latest, GetContainableTypes().Select(ctd => ctd.Name).ToArray());
 
-            if (!string.IsNullOrEmpty(model.FilterByContentType)) {
-                var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.FilterByContentType);
+            if (!string.IsNullOrEmpty(contentType)) {
+                var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
                 if (contentTypeDefinition == null) {
                     return null;
                 }
-                query = query.ForType(model.FilterByContentType);
+                query = query.ForType(contentType);
             }
-            query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
 
-            switch (model.Options.OrderBy) {
+            query = containerId == 0
+                ? query.Join<CommonPartRecord>().Where(cr => cr.Container == null)
+                : query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == containerId);
+
+            switch (orderBy) {
                 case ContentsOrder.Modified:
                     query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
                     break;
@@ -207,32 +210,9 @@ namespace Lists.Controllers {
                 }
             }
 
-            var query = _contentManager.Query<ContainablePart>(VersionOptions.Latest);
-
-            if (!string.IsNullOrEmpty(model.FilterByContentType)) {
-                var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.FilterByContentType);
-                if (contentTypeDefinition == null) {
-                    return HttpNotFound();
-                }
-                query = query.ForType(model.FilterByContentType);
-            }
-            if (model.SourceContainerId == 0) {
-                query = query.Join<CommonPartRecord>().Where(cr => cr.Container == null);
-            }
-            else {
-                query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.SourceContainerId);
-            }
-
-            switch (model.OrderBy) {
-                case ContentsOrder.Modified:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
-                    break;
-                case ContentsOrder.Published:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
-                    break;
-                case ContentsOrder.Created:
-                    query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
-                    break;
+            var query = GetListContentItemQuery(model.SourceContainerId, model.FilterByContentType, model.OrderBy);
+            if (query == null) {
+                return HttpNotFound();
             }
 
             model.SelectedFilter = model.FilterByContentType;

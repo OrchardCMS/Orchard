@@ -37,20 +37,23 @@ namespace Orchard.DesignerTools.Services {
             }
 
             _parents.Push(o);
-            // starts a new container
-            _node.Add(_node = new XElement("li"));
+            try {
+                // starts a new container
+                _node.Add(_node = new XElement("li"));
 
-            if(o == null) {
-                DumpValue(null, name);
+                if (o == null) {
+                    DumpValue(null, name);
+                }
+                else if (o.GetType().IsValueType || o is string) {
+                    DumpValue(o, name);
+                }
+                else {
+                    DumpObject(o, name);
+                }
             }
-            else if (o.GetType().IsValueType || o is string) {
-                DumpValue(o, name);
+            finally { 
+                _parents.Pop(); 
             }
-            else {
-                DumpObject(o, name);
-            }
-
-            _parents.Pop();
 
             if(_node.DescendantNodes().Count() == 0) {
                 _node.Remove();
@@ -116,16 +119,28 @@ namespace Orchard.DesignerTools.Services {
                     continue;
                 }
 
+                // process ContentItem.Parts specifically
+                if (o is ContentItem && member.Name == "Parts") {
+                    foreach (var part in ((ContentItem)o).Parts) {
+                        Dump(part, part.PartDefinition.Name);
+                    }
+                    continue;
+                }
+
+                
+                // process ContentPart.Fields specifically
+                if (o is ContentPart && member.Name == "Fields") {
+                    foreach (var field in ((ContentPart)o).Fields) {
+                        Dump(field, field.Name);
+                    }
+                    continue;
+                }
+                
                 try {
                     DumpMember(o, member);
                 }
                 catch {
-                }
-            }
-
-            if (o is ContentItem) {
-                foreach(var part in ((ContentItem)o).Parts) {
-                    Dump(part, part.PartDefinition.Name);
+                    // ignore members which can't be rendered
                 }
             }
 
@@ -239,7 +254,7 @@ namespace Orchard.DesignerTools.Services {
                 var genericArguments = String.Join(", ", type.GetGenericArguments().Select(t => FormatType((Type)t)).ToArray());
                 return String.Format("{0}<{1}>", type.Name.Substring(0, type.Name.IndexOf('`')), genericArguments);
             }
-            
+
             return type.Name;
         }
     }

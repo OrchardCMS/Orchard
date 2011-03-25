@@ -85,16 +85,7 @@ namespace Orchard.Recipes.RecipeHandlers {
 
             if (packagingEntry != null) {
                 _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/")); 
-                foreach (var features in
-                    from extensionDescriptor in _extensionManager.AvailableExtensions()
-                    where extensionDescriptor.Name.Equals(packagingEntry.Title, StringComparison.OrdinalIgnoreCase)
-                    select extensionDescriptor.Features.Select(f => f.Name).ToArray()) {
-
-                    _featureManager.EnableFeatures(features);
-                    _dataMigrationManager.Update(features);
-
-                    installed = true;
-                }
+                installed = true;
             }
 
             if (!installed) {
