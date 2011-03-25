@@ -32,8 +32,9 @@
 
 #shape-tracing-container .shape-tracing-meta-content {
     padding:0 0 30px 30px;
-    margin:8px 0 0 0;
     border:1px solid #E4E5E6;
+    border:1px solid #ff0000;
+    overflow:auto;
 }
 #shape-tracing-toolbar  {
     color:black;
@@ -72,8 +73,10 @@
     width:100%;
     display:block;
     height:5px;
+    heitht:20px;
     background-color:transparent;
     cursor:n-resize;
+    border:1px solid #ff0000;
 }
 
 .shape-tracing-overlay {
@@ -95,6 +98,7 @@
     float:left;
     overflow:auto;
     width:33%;
+    border-right:2px solid #dfdfdf;
 }
 
 #shape-tracing-window-tree li  {
@@ -129,7 +133,7 @@
     display:block;
     float:left;
     width:66%;
-    overflow:auto;
+    /*overflow:auto;*/
 }
 
 #shape-tracing-window .expando-glyph {
@@ -193,29 +197,36 @@
 
 /* tabs */
 
-#shape-tracing-window-content ul.shape-tracing-tabs { margin:8px 0 -8px 0; }
+/*#shape-tracing-window-content ul.shape-tracing-tabs { margin:8px 0 -8px 0; }*/
 
 #shape-tracing-window-content .shape-tracing-tabs li {
     color:#4053DE;
     display: inline;
-    font-size:15px;
-    line-height:32px;
+    font-size:14px;
+    padding: 8px 18px;
+    /*line-height:32px;*/
 }
 
-#shape-tracing-window-content .shape-tracing-tabs li {
+#shape-tracing-window-content ul.shape-tracing-tabs {
+    background:#dfdfdf;
+    padding:8px 0;
+    border:1px solid #ff0000;
+    }
+
+/*#shape-tracing-window-content .shape-tracing-tabs li {
     margin:0 2px;
     padding: 8px 18px 7px 18px;
-}
+}*/
 
 #shape-tracing-window-content .shape-tracing-tabs li.middle, #shape-tracing-window-content .shape-tracing-tabs li.first, #shape-tracing-window-content .shape-tracing-tabs li.last {
     border:1px solid #E4E5E6;
-    border-bottom:none;
+    border:1px solid #ff0000;
     background-color: #F5F5F5;
 }
 
-#shape-tracing-window-content .shape-tracing-tabs li.first {
+/*#shape-tracing-window-content .shape-tracing-tabs li.first {
     margin-left:16px;
-}
+}*/
 #shape-tracing-window-content .shape-tracing-tabs li.selected {
     background-color: #fff;
 }
@@ -262,3 +273,10 @@ button.create-template, background-image :hover {
     border:0;
     display:inline;
 }
+
+/*Added by Jon*/
+
+.shape-tracing-meta {
+    background:#fff;
+    overflow:auto;
+    }
