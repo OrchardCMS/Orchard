@@ -281,7 +281,7 @@ namespace Orchard.Media.Controllers {
 
                 // Rename
                 if (!String.Equals(viewModel.Name, input["NewName"], StringComparison.OrdinalIgnoreCase)) {
-                    _mediaService.RenameFile(viewModel.Name, input["NewName"], viewModel.MediaPath);
+                    _mediaService.RenameFile(viewModel.MediaPath, viewModel.Name, input["NewName"]);
                     viewModelName = input["NewName"];
                 }
 
