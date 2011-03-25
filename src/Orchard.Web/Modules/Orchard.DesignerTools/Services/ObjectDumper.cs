@@ -119,16 +119,18 @@ namespace Orchard.DesignerTools.Services {
                     continue;
                 }
 
+                // process ContentItem.Parts specifically
+                if (o is ContentItem && member.Name == "Parts") {
+                    foreach (var part in ((ContentItem)o).Parts) {
+                        Dump(part, part.PartDefinition.Name);
+                    }
+                    continue;
+                }
+                
                 try {
                     DumpMember(o, member);
                 }
                 catch {
-                }
-            }
-
-            if (o is ContentItem) {
-                foreach(var part in ((ContentItem)o).Parts) {
-                    Dump(part, part.PartDefinition.Name);
                 }
             }
 
