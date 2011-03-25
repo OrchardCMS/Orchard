@@ -37,20 +37,23 @@ namespace Orchard.DesignerTools.Services {
             }
 
             _parents.Push(o);
-            // starts a new container
-            _node.Add(_node = new XElement("li"));
+            try {
+                // starts a new container
+                _node.Add(_node = new XElement("li"));
 
-            if(o == null) {
-                DumpValue(null, name);
+                if (o == null) {
+                    DumpValue(null, name);
+                }
+                else if (o.GetType().IsValueType || o is string) {
+                    DumpValue(o, name);
+                }
+                else {
+                    DumpObject(o, name);
+                }
             }
-            else if (o.GetType().IsValueType || o is string) {
-                DumpValue(o, name);
+            finally { 
+                _parents.Pop(); 
             }
-            else {
-                DumpObject(o, name);
-            }
-
-            _parents.Pop();
 
             if(_node.DescendantNodes().Count() == 0) {
                 _node.Remove();

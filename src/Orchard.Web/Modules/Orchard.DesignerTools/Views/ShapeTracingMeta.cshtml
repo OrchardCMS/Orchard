@@ -1,4 +1,6 @@
-﻿@functions {
+﻿@using Orchard.Utility.Extensions;
+
+@functions {
     string FormatShapeFilename(string type, string themeId) {
         return "~/Themes/" + themeId + "/Views/" + type.Replace("__", "-").Replace("_", ".") + ".cshtml";
     }
@@ -13,7 +15,6 @@
         return regex.Replace(htmlContent, System.Environment.NewLine);
     }
 }
-
 <div class="shape-tracing-meta" shape-id-meta="@Model.ShapeId" style="display:none">
     <ul class="shape-tracing-tabs">
         <li class="shape selected first"><a href="#">Shape</a></li>
@@ -34,17 +35,27 @@
                 <li class="sgd-a"><div class="name">Alternates (@Model.Alternates.Count)</div>
                     <div class="value">&nbsp;</div>
                     <ul>
-                    @foreach(var alternate in Model.Alternates) {
+                    @foreach (var alternate in Model.Alternates) {
                         var formatted = @FormatShapeFilename(alternate, WorkContext.CurrentTheme.Id);
-                        <li><div class="name">&nbsp;</div><div class="value">@formatted</div></li>
-                    }                        
+                        <li>
+                            <div class="name">
+                            @using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Alternate", new { Area = "Orchard.DesignerTools" }), FormMethod.Post, new { @class = "inline link" })) { 
+                                @Html.Hidden("Alternate", (string)alternate)
+                                @Html.Hidden("Template", (string)Model.Template)
+                                @Html.Hidden("ReturnUrl", Context.Request.RawUrl)
+                                <button type="submit" class="create-template">@T("Create").Text</button>
+                            }
+                            </div>
+                            <div class="value">@formatted</div>
+                        </li>
+                    }
                     </ul>
                 </li>
                 <li class="sgd-w"><div class="name">Wrappers (@Model.Wrappers.Count)</div>
                     <div class="value">&nbsp;</div>
                     <ul>
-                    @foreach(var wrapper in Model.Wrappers) {
-                        if(wrapper != "ShapeTracing_Wrapper") {
+                    @foreach (var wrapper in Model.Wrappers) {
+                        if (wrapper != "ShapeTracing_Wrapper") {
                             var formatted = @FormatShapeFilename(wrapper, WorkContext.CurrentTheme.Id);
                         <li><div class="name">&nbsp;</div><div class="value">@formatted</div></li>
                         }
@@ -65,7 +76,16 @@
         </div>
 
         <div class="template" style="display:none">
-            <textarea id="template-@Model.ShapeId" name="template-@Model.ShapeId">@Model.TemplateContent</textarea>
+            <div class="shape-tracing-breadcrumb">@Model.Template</div>
+            @if (String.IsNullOrWhiteSpace((string)Model.TemplateContent)) {
+                if (!String.IsNullOrWhiteSpace((string)Model.Template)) {
+                    @T("Content not available as coming from source code.")
+                }
+            }
+            else {
+                <textarea id="template-@Model.ShapeId" name="template-@Model.ShapeId">@Model.TemplateContent</textarea>
+            }
+            
         </div>
 
         <div class="html" style="display:none">
