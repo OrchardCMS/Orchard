@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Web.Routing;
 using System.Xml;
 using Orchard.DisplayManagement.Descriptors;
@@ -96,11 +97,11 @@ namespace Orchard.DesignerTools.Services {
                 context.Shape._Dump = sw.ToString();
             }
 
-            shape.Template = descriptor.BindingSource;
+            shape.Template = descriptor.Bindings.Values.FirstOrDefault().BindingSource;
 
             try {
-                if (_webSiteFolder.FileExists(descriptor.BindingSource)) {
-                    shape.TemplateContent = _webSiteFolder.ReadFile(descriptor.BindingSource);
+                if (_webSiteFolder.FileExists(shape.Template)) {
+                    shape.TemplateContent = _webSiteFolder.ReadFile(shape.Template);
                 }
             }
             catch {

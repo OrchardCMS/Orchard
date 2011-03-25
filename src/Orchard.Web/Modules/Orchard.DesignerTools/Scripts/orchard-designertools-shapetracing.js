@@ -1,4 +1,4 @@
-﻿(function ($) {
+﻿jQuery(document).ready(function ($) {
     $(function () {
         // append the shape tracing window container at the end of the document
         $('<div id="shape-tracing-container"> ' +
@@ -405,4 +405,4 @@
         return node;
     }
 
-})(jQuery);
+});
