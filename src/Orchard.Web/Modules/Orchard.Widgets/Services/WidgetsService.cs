@@ -4,6 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Widgets.Models;
@@ -13,14 +14,17 @@ namespace Orchard.Widgets.Services {
     [UsedImplicitly]
     public class WidgetsService : IWidgetsService {
         private readonly IFeatureManager _featureManager;
+        private readonly IExtensionManager _extensionManager;
         private readonly IContentManager _contentManager;
 
         public WidgetsService(
             IContentManager contentManager,
-            IFeatureManager featureManager) {
+            IFeatureManager featureManager,
+            IExtensionManager extensionManager) {
 
             _contentManager = contentManager;
             _featureManager = featureManager;
+            _extensionManager = extensionManager;
         }
 
         public IEnumerable<Tuple<string, string>> GetWidgetTypes() {
@@ -56,6 +60,27 @@ namespace Orchard.Widgets.Services {
                 .Distinct()
                 .Select(x => x.Trim())
                 .ToArray();
+        }
+
+        public IEnumerable<string> GetZones(ExtensionDescriptor theme) {
+            IEnumerable<string> zones = new List<string>();
+
+            // get the zones for this theme
+            if (theme.Zones != null)
+                zones = theme.Zones.Split(',')
+                    .Distinct()
+                    .Select(x => x.Trim())
+                    .ToList();
+
+            // add the zones for the base theme
+            if (!string.IsNullOrWhiteSpace(theme.BaseTheme)) {
+                string baseTheme = theme.BaseTheme;
+                theme = _extensionManager.GetExtension(baseTheme);
+                if (theme != null)
+                    zones.Concat(GetZones(theme).Where(z => !zones.Contains(z)));
+            }
+
+            return zones;
         }
 
         public IEnumerable<WidgetPart> GetWidgets(int layerId) {

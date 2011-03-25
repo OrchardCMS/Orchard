@@ -5,6 +5,7 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Contents.Controllers;
 using Orchard.DisplayManagement;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
@@ -62,12 +63,17 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
 
+            ExtensionDescriptor currentTheme = _siteThemeService.GetSiteTheme();
+            IEnumerable<string> allZones = _widgetsService.GetZones();
+            IEnumerable<string> currentThemesZones = _widgetsService.GetZones(currentTheme);
+
             dynamic viewModel = Shape.ViewModel()
-                .CurrentTheme(_siteThemeService.GetSiteTheme())
+                .CurrentTheme(currentTheme)
                 .CurrentLayer(currentLayer)
                 .Layers(layers)
                 .Widgets(_widgetsService.GetWidgets())
-                .Zones(_widgetsService.GetZones());
+                .Zones(currentThemesZones)
+                .OrphanZones(allZones.Except(currentThemesZones));
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);

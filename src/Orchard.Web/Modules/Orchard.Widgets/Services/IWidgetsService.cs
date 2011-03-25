@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Widgets.Models;
 
 namespace Orchard.Widgets.Services {
     public interface IWidgetsService : IDependency {
         
         IEnumerable<string> GetZones();
+        IEnumerable<string> GetZones(ExtensionDescriptor theme);
 
         IEnumerable<LayerPart> GetLayers();
 
