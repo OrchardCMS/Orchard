@@ -40,6 +40,7 @@
         var syncResize = function () {
             var _window = $(window);
             var containerHeight = shapeTracingContainer.outerHeight();
+            var containerWidth = shapeTracingContainer.outerWidth();
             var toolbarHeight = shapeTracingToolbar.outerHeight();
             var resizeHandleHeight = shapeTracingResizeHandle.outerHeight();
 
@@ -47,13 +48,30 @@
 
             var windowHeight = _window.height();
             var scrollTop = _window.scrollTop();
+            var containerWindowHeight = containerHeight - toolbarHeight - resizeHandleHeight;
 
             shapeTracingContainer.offset({ top: windowHeight - containerHeight + scrollTop, left: 0 });
-            shapeTracingWindow.height(containerHeight - toolbarHeight - resizeHandleHeight);
-            shapeTracingWindowTree.height(containerHeight - toolbarHeight - resizeHandleHeight);
-            shapeTracingWindowContent.height(containerHeight - toolbarHeight - resizeHandleHeight);
-            shapeTracingWindowContent.width(shapeTracingContainer.outerWidth - shapeTracingWindowTree.outerWidth);
+            shapeTracingWindow.height(containerWindowHeight);
+            shapeTracingWindowTree.height(containerWindowHeight);
+            shapeTracingWindowContent.height(containerWindowHeight);
             shapeTracingContainer.width('100%');
+
+            syncResizeMeta();
+        };
+
+        // forces the content meta zone's height to enable scrollbar
+        var syncResizeMeta = function () {
+            var containerHeight = shapeTracingContainer.outerHeight();
+            var containerWidth = shapeTracingContainer.outerWidth();
+            var toolbarHeight = shapeTracingToolbar.outerHeight();
+            var resizeHandleHeight = shapeTracingResizeHandle.outerHeight();
+
+            var tabsHeight = $('.shape-tracing-tabs:visible').outerHeight();
+            if (tabsHeight) {
+                var metaContent = $('.shape-tracing-meta-content:visible');
+                padding = parseInt(metaContent.css('padding-bottom') + metaContent.css('padding-top'));
+                metaContent.height(containerHeight - toolbarHeight - resizeHandleHeight - tabsHeight - padding);
+            }
         };
 
         // ensure the size/position is correct whenver the container or the browser is resized
@@ -246,6 +264,8 @@
 
             // enable codemirror for the current tab
             enableCodeMirror(target);
+
+            syncResizeMeta();
         }
 
         // select shapes when clicked
