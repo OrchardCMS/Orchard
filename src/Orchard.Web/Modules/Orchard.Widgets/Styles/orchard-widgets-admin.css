@@ -35,20 +35,35 @@ margin-left:10px;
 #widgets-zones, #widgets-available {
 background:#F3F4F5;
 border:1px solid #E4E5E6;
-padding:0 5px;
+padding:5px;
+}
+#widgets-zones-orphans {
+margin-top:40px;
+}
+#widgets-zones-orphans p {
+margin-bottom:10px;
 }
 /* The number seems slightly meaningless. Leaving it out for now. * /
 #widgets-zones ol {
 list-style:decimal inside;
 }
 */
+#widgets-zones ol {
+
+}
 #widgets-zones li, #widgets-available li {
 background:#FFF;
 color:#AEC3CE;
 border:1px solid #EAEAEA;
-margin:5px 0;
+margin:0 0 5px;
 padding:0 10px;
 position:relative;
+}
+#widgets-available li {
+margin:5px 0;
+}
+#widgets-zones li.last {
+margin:0;
 }
 #widgets-zones li:hover, #widgets-zones li.on {
 border-color:#bfd3a7;

@@ -5,7 +5,7 @@
 <div id="widgets" class="group">
     @Display.WidgetLayersControl(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)
     <div id="layout-widgets-placement">
-        @Display.WidgetPlacement(Widgets: Model.Widgets, Zones: Model.Zones, CurrentLayer: Model.CurrentLayer)
+        @Display.WidgetPlacement(Widgets: Model.Widgets, Zones: Model.Zones, OrphanZones: Model.OrphanZones, CurrentLayer: Model.CurrentLayer)
     </div>
     <div id="layout-widgets-assistance">
         <div id="widgets-assistance">
