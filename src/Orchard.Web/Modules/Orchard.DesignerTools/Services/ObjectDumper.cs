@@ -122,17 +122,25 @@ namespace Orchard.DesignerTools.Services {
                 // process ContentItem.Parts specifically
                 if (o is ContentItem && member.Name == "Parts") {
                     foreach (var part in ((ContentItem)o).Parts) {
-                        Dump(part, part.PartDefinition.Name);
+                        try {
+                            Dump(part, part.PartDefinition.Name);
+                        }
+                        catch{
+                            // ignore dump issues
+                        }
                     }
-                    continue;
                 }
 
                 // process ContentPart.Fields specifically
                 if (o is ContentPart && member.Name == "Fields") {
                     foreach (var field in ((ContentPart)o).Fields) {
-                        Dump(field, field.Name);
+                        try {
+                            Dump(field, field.Name);
+                        }
+                        catch {
+                            // ignore dump issues
+                        }
                     }
-                    continue;
                 }
                 
                 try {

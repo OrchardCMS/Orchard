@@ -99,6 +99,8 @@ namespace Orchard.DesignerTools.Services {
             }
 
             shape.Template = null;
+            shape.OriginalTemplate = descriptor.BindingSource;
+
             foreach (var extension in new[] { ".cshtml", ".aspx" }) {
                 foreach (var alternate in shapeMetadata.Alternates.Reverse()) {
                     var alternateFilename = currentTheme.Location + "/" + currentTheme.Id + "/Views/" + alternate.Replace("__", "-").Replace("_", ".") + extension;
@@ -114,6 +116,10 @@ namespace Orchard.DesignerTools.Services {
 
             if(shape.Template == null) {
                 shape.Template = descriptor.Bindings.Values.FirstOrDefault().BindingSource;
+            }
+
+            if (shape.OriginalTemplate == null) {
+                shape.OriginalTemplate = descriptor.Bindings.Values.FirstOrDefault().BindingSource;
             }
 
             try {
