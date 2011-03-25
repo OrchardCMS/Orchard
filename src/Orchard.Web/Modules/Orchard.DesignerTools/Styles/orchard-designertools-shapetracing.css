@@ -9,10 +9,12 @@
 #shape-tracing-container a, #shape-tracing-container a:link, #shape-tracing-container a:visited {
     color:rgba(0, 94, 153, 0.8);
     text-decoration:none;
+    background-color:transparent;
 }
 #shape-tracing-container a:hover, #shape-tracing-container a:active, #shape-tracing-container a:focus {
     color:rgba(0, 94, 153, 1.0);
     text-decoration:none;
+    background-color:transparent;
 }
 
 #shape-tracing-container ul, 
