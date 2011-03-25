@@ -73,7 +73,6 @@
     <Content Include="Styles\CodeMirror\razor.css" />
     <Content Include="Styles\CodeMirror\css.css" />
     <Content Include="Styles\CodeMirror\javascript.css" />
-    <Content Include="Styles\foo_orchard-designertools-shapetracing.css" />
     <Content Include="Styles\Images\collapse.png" />
     <Content Include="Styles\Images\expand.png" />
     <Content Include="Styles\Images\menu-glyph.png" />
@@ -113,7 +112,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ShapeTracingMeta.cshtml" />
-    <Content Include="Views\_ShapeTracingMeta.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
