@@ -6,6 +6,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Contents.Controllers;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions.Models;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
@@ -25,16 +26,19 @@ namespace Orchard.Widgets.Controllers {
 
         private readonly IWidgetsService _widgetsService;
         private readonly ISiteThemeService _siteThemeService;
+        private readonly IVirtualPathProvider _virtualPathProvider;
 
         public AdminController(
             IOrchardServices services,
             IWidgetsService widgetsService,
             IShapeFactory shapeFactory,
-            ISiteThemeService siteThemeService) {
+            ISiteThemeService siteThemeService,
+            IVirtualPathProvider virtualPathProvider) {
 
             Services = services;
             _widgetsService = widgetsService;
             _siteThemeService = siteThemeService;
+            _virtualPathProvider = virtualPathProvider;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -67,13 +71,17 @@ namespace Orchard.Widgets.Controllers {
             IEnumerable<string> allZones = _widgetsService.GetZones();
             IEnumerable<string> currentThemesZones = _widgetsService.GetZones(currentTheme);
 
+            string zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
+            string zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
+
             dynamic viewModel = Shape.ViewModel()
                 .CurrentTheme(currentTheme)
                 .CurrentLayer(currentLayer)
                 .Layers(layers)
                 .Widgets(_widgetsService.GetWidgets())
                 .Zones(currentThemesZones)
-                .OrphanZones(allZones.Except(currentThemesZones));
+                .OrphanZones(allZones.Except(currentThemesZones))
+                .ZonePreviewImage(zonePreviewImage);
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)viewModel);

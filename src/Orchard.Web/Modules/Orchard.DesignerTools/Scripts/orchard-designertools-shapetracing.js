@@ -121,7 +121,7 @@
             var found = false;
             _this
                 .nextUntil('[end-of="' + shapeNode.id + '"]') // all elements between the script beacons
-                .children(':not(.shape-tracing-wrapper)') // all children but not inner beacons
+                .find(':not(.shape-tracing-wrapper)') // all children but not inner beacons
                 .andSelf() // add the first level items
                 .attr('shape-id', shapeNode.id) // add the shape-id attribute
                 .each(function () {
@@ -142,7 +142,7 @@
         startShapeTracingBeacons.each(function () {
             var _this = $(this);
             var shapeNode = this.shapeNode;
-            var parent = _this.parent('[shape-id!=' + shapeNode.id + ']').get(0);
+            var parent = _this.parents('[shape-id!=' + shapeNode.id + ']').get(0);
 
             shapeNodes[shapeNode.id] = shapeNode;
 

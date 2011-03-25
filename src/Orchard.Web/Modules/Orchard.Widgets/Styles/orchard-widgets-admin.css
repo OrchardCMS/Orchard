@@ -1,9 +1,12 @@
 ﻿#layout-widgets-placement {
+clear:left;
 float:left;
 width:65%;
 }
 #layout-widgets-assistance {
 float:right;
+position:relative;
+top:-30px;
 width:35%;
 }
 .widgets-container {
@@ -17,6 +20,7 @@ padding:2px 2px;
 
 
 #widgets-layers-control {
+float:left;
 margin-bottom:-20px;
 }
 #widgets-layers-control label {
@@ -163,8 +167,12 @@ color:#333;
 margin-top:5px;
 }
 
-#widgets-layer-visibility {
-margin-top:20px;
+#widgets-theme-zone-preview {
+margin:30px 0 20px;
+}
+
+#main #widgets-layer-visibility h3 {
+margin-top:0;
 }
 #widgets-layer-visibility li {
 cursor:default;
