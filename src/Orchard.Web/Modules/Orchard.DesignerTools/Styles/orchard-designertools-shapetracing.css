@@ -3,6 +3,18 @@
     must contain all tags used in the container
 */
 
+
+/* Links
+***************************************************************/
+#shape-tracing-container a, #shape-tracing-container a:link, #shape-tracing-container a:visited {
+    color:#ff0000;
+    text-decoration:none;
+}
+#shape-tracing-container a:hover, #shape-tracing-container a:active, #shape-tracing-container a:focus {
+    color:#ff0000;
+    text-decoration:none;
+}
+
 #shape-tracing-container ul, 
 #shape-tracing-container li {
     margin:0;
@@ -38,13 +50,20 @@
 }
 #shape-tracing-toolbar  {
     color:black;
-    background-color:#fff;
-    background: url(images/toolbar-bg.png) repeat-x;
+    background:rgba(236, 241, 242, 1.0);
+    border:1px solid rgba(182, 188, 189, 1.0);
     height:21px;
     padding-top:0;
     padding-left:5px;
     padding-right:5px;
     margin:0;
+     
+     /*CSS3 properties*/
+     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2',  endColorstr='#ffeffcfc');
+     
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
 }
 
 #shape-tracing-toolbar-switch  {
@@ -75,7 +94,6 @@
     height:5px;
     background-color:transparent;
     cursor:n-resize;
-    border:1px solid #ff0000;
 }
 
 .shape-tracing-overlay {
@@ -89,7 +107,7 @@
 }
 
 #shape-tracing-window {
-    background-color: #fff;
+    background: #fff;
 }
 
 #shape-tracing-window-tree {
@@ -98,6 +116,7 @@
     overflow:auto;
     width:33%;
     border-right:2px solid #dfdfdf;
+    background:#fff;
 }
 
 #shape-tracing-window-tree li  {
@@ -129,9 +148,7 @@
 }
 
 #shape-tracing-window-content {
-    display:block;
-    float:left;
-    width:66%;
+    padding:0 0 0 6px;
     /*overflow:auto;*/
 }
 
@@ -202,14 +219,14 @@
     color:#4053DE;
     display: inline;
     font-size:14px;
-    padding: 8px 18px;
+    padding: 4px 18px;
     /*line-height:32px;*/
 }
 
 #shape-tracing-window-content ul.shape-tracing-tabs {
-    background:#dfdfdf;
+    /*background:#dfdfdf;
+    border:1px solid #ff0000;*/
     padding:8px 0;
-    border:1px solid #ff0000;
     }
 
 /*#shape-tracing-window-content .shape-tracing-tabs li {
@@ -218,8 +235,7 @@
 }*/
 
 #shape-tracing-window-content .shape-tracing-tabs li.middle, #shape-tracing-window-content .shape-tracing-tabs li.first, #shape-tracing-window-content .shape-tracing-tabs li.last {
-    border:1px solid #E4E5E6;
-    border:1px solid #ff0000;
+    border:1px solid rgba(154,155,157,1.0);
     background-color: #F5F5F5;
 }
 
@@ -276,6 +292,5 @@ button.create-template, background-image :hover {
 /*Added by Jon*/
 
 .shape-tracing-meta {
-    background:#fff;
     overflow:auto;
     }
