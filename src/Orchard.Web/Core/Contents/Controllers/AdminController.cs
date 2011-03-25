@@ -127,16 +127,14 @@ namespace Orchard.Core.Contents.Controllers {
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
             if (itemIds != null) {
-                var accessChecked = false;
                 switch (options.BulkAction) {
                     case ContentsBulkAction.None:
                         break;
                     case ContentsBulkAction.PublishNow:
                         foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content.")))
+                            if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content.")))
                                 return new HttpUnauthorizedResult();
 
-                            accessChecked = true;
                             _contentManager.Publish(item);
                             Services.ContentManager.Flush();
                         }
@@ -144,10 +142,9 @@ namespace Orchard.Core.Contents.Controllers {
                         break;
                     case ContentsBulkAction.Unpublish:
                         foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content.")))
+                            if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content.")))
                                 return new HttpUnauthorizedResult();
 
-                            accessChecked = true;
                             _contentManager.Unpublish(item);
                             Services.ContentManager.Flush();
                         }
@@ -155,10 +152,9 @@ namespace Orchard.Core.Contents.Controllers {
                         break;
                     case ContentsBulkAction.Remove:
                         foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!accessChecked && !Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content.")))
+                            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content.")))
                                 return new HttpUnauthorizedResult();
 
-                            accessChecked = true;
                             _contentManager.Remove(item);
                             Services.ContentManager.Flush();
                         }
