@@ -114,7 +114,9 @@
         $('#shape-tracing-resize-handle').addClass('ui-resizable-handle ui-resizable-n');
         shapeTracingContainer.resizable({
             handles: { n: '#shape-tracing-resize-handle' },
-            grid: 20 // mitigates the number of calls to syncResize(), and aligns to the line height
+            grid: 20, // mitigates the number of calls to syncResize(), and aligns to the line height
+            resize: disableShapeTracing,
+            stop: enableShapeTracing
         });
 
         var shapeNodes = {}; // represents the main index of shape nodes, indexed by id
