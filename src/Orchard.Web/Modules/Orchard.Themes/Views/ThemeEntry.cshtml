@@ -49,6 +49,7 @@
 	}
 
     @if (Model.ContentPart.NeedsUpdate) {
+        <span> | </span>
         using (Html.BeginFormAntiForgeryPost(Url.Action("Update"), FormMethod.Post, new { @class = "inline link" })) {
             @Html.Hidden("themeName", (string)Model.ContentPart.Descriptor.Id)
             <button type="submit" class="update">@T("Update")</button> <br/>
@@ -56,6 +57,7 @@
     }
 
     @if (Model.ContentPart.CanUninstall) {
+        <span> | </span>
         using (Html.BeginFormAntiForgeryPost(Url.Action("RemoveTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl, retryUrl = HttpContext.Current.Request.RawUrl, themeId = Model.ContentPart.Descriptor.Id }), FormMethod.Post, new { @class = "inline link" })) {
             <button type="submit" class="uninstall" title="@T("Uninstall")">@T("Uninstall")</button>
         }
