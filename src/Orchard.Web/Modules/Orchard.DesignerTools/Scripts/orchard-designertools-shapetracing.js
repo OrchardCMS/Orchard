@@ -286,6 +286,8 @@
                 this.scrollIntoView()
             });
 
+            refreshBreadcrumb();
+
             return false;
         });
 
@@ -340,33 +342,34 @@
             var wrapper = _this.parent().parent().first();
             var panel = wrapper.find('div.' + tabName);
 
-            var breadcrumb = _this.parent().next();
-            var container = _this.parents('.shape-tracing-meta');
-            if (_this.hasClass('shape')) {
-                breadcrumb.text('');
-            }
-
-            if (_this.hasClass('model')) {
-                breadcrumb.text('');
-            }
-
-            if (_this.hasClass('placement')) {
-                breadcrumb.text(container.find('.sgd-pl').text());
-            }
-
-            if (_this.hasClass('template')) {
-                breadcrumb.text(container.find('.sgd-t').text());
-            }
-
-            if (_this.hasClass('html')) {
-                breadcrumb.text('');
-            }
-
+            refreshBreadcrumb();
             syncResizeMeta();
 
             // enable codemirror for the current tab
             enableCodeMirror(panel);
         });
+
+        var refreshBreadcrumb = function () {
+            var container = shapeTracingWindowContent.find('.shape-tracing-meta:visible');
+            var breadcrumb = container.find('.shape-tracing-breadcrumb');
+            var tab = container.find('.shape-tracing-meta-content > div:visible');
+
+            if (tab.hasClass('shape')) {
+                breadcrumb.text('');
+            }
+            else if (tab.hasClass('model')) {
+                breadcrumb.text('');
+            }
+            else if (tab.hasClass('placement')) {
+                breadcrumb.text(container.find('.sgd-pl > .value').text());
+            }
+            else if (tab.hasClass('template')) {
+                breadcrumb.text(container.find('.sgd-t > .value').text());
+            }
+            else if (tab.hasClass('html')) {
+                breadcrumb.text('');
+            }
+        };
 
         // template link opens template tab
         shapeTracingWindowContent.find('.sgd-t a').click(function () {
