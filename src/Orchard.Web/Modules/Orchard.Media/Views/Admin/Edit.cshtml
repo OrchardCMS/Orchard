@@ -2,9 +2,10 @@
 @using Orchard.Media.Extensions;
 @using Orchard.Media.Helpers;
 @using Orchard.Media.Models;
-@{ Style.Require("MediaAdmin"); }
-
-<h1>@Html.TitleForPage(T("Manage Folder").ToString())</h1>
+@{
+    Style.Require("MediaAdmin");
+    Layout.Title = T("Manage Folder").ToString();
+}
 
 <div class="breadCrumbs">
 <p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
@@ -23,7 +24,7 @@
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="Select1" name="publishActions">
-            <option value="1">@T("Remove")</option>
+            <option value="1">@T("Delete")</option>
         </select>
         <button type="submit">@T("Apply")</button>
     </fieldset>

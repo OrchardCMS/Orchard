@@ -7,8 +7,10 @@
         pageTitle = T("Manage {0} Content", typeDisplayName);
         createLinkText = T("Create New {0}", typeDisplayName);
     }
+
+    Layout.Title = pageTitle;
 }
-<h1>@Html.TitleForPage(pageTitle)</h1>
+
 <div class="manage">
     @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
 </div>
@@ -19,7 +21,7 @@
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Remove").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
         </select>
         <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
     </fieldset>

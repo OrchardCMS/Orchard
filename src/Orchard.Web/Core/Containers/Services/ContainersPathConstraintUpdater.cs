@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Environment;
+using Orchard.Logging;
 using Orchard.Tasks;
 
 namespace Orchard.Core.Containers.Services {
@@ -13,7 +15,10 @@ namespace Orchard.Core.Containers.Services {
         public ContainersPathConstraintUpdater(IContainersPathConstraint containersPathConstraint, IContentManager contentManager) {
             _containersPathConstraint = containersPathConstraint;
             _contentManager = contentManager;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         void IOrchardShellEvents.Activated() {
             Refresh();
@@ -27,8 +32,13 @@ namespace Orchard.Core.Containers.Services {
         }
 
         private void Refresh() {
-            var routeParts = _contentManager.Query<RoutePart, RoutePartRecord>().Join<ContainerPartRecord>().List();
-            _containersPathConstraint.SetPaths(routeParts.Select(x=>x.Path));
+            try {
+                var routeParts = _contentManager.Query<RoutePart, RoutePartRecord>().Join<ContainerPartRecord>().List();
+                _containersPathConstraint.SetPaths(routeParts.Select(x => x.Path));
+            }
+            catch (Exception ex) {
+                Logger.Error(ex, "Error while setting path constraints for containers.");
+            }
         }
     }
 }

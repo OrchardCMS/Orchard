@@ -1,6 +1,10 @@
 @model Orchard.ContentTypes.ViewModels.AddFieldViewModel
-@{ Style.Require("ContentTypesAdmin"); }
-<h1>@Html.TitleForPage(T("Add New Field To \"{0}\"", Model.Part.DisplayName).ToString())</h1>
+@{
+    Style.Require("ContentTypesAdmin");
+
+    Layout.Title = T("Add New Field To \"{0}\"", Model.Part.DisplayName).ToString();
+}
+
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <fieldset>

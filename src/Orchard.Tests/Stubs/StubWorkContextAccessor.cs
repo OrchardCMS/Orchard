@@ -9,7 +9,7 @@ using Orchard.Settings;
 namespace Orchard.Tests.Stubs {
     public class StubWorkContextAccessor : IWorkContextAccessor {
         private readonly ILifetimeScope _lifetimeScope;
-        private WorkContext _workContext;
+        private readonly WorkContext _workContext;
 
         public StubWorkContextAccessor(ILifetimeScope lifetimeScope) {
             _lifetimeScope = lifetimeScope;
@@ -18,7 +18,11 @@ namespace Orchard.Tests.Stubs {
 
         public class WorkContextImpl : WorkContext {
             private readonly ILifetimeScope _lifetimeScope;
-            private Dictionary<string, object> _contextDictonary;
+            private readonly Dictionary<string, object> _contextDictonary;
+
+            public delegate void MyInitMethod(WorkContextImpl workContextImpl);
+
+            public static MyInitMethod _initMethod;
 
             public WorkContextImpl(ILifetimeScope lifetimeScope) {
                 _contextDictonary = new Dictionary<string, object>();
@@ -27,9 +31,15 @@ namespace Orchard.Tests.Stubs {
                 ci.Weld(new StubSite());
                 CurrentSite = ci.As<ISite>();
                 _lifetimeScope = lifetimeScope;
+
+                if (_initMethod != null) {
+                    _initMethod(this);
+                }
             }
 
             public class StubSite : ContentPart, ISite {
+                public static string DefaultSuperUser;
+
                 public string PageTitleSeparator {
                     get { throw new NotImplementedException(); }
                 }
@@ -43,7 +53,7 @@ namespace Orchard.Tests.Stubs {
                 }
 
                 public string SuperUser {
-                    get { throw new NotImplementedException(); }
+                    get { return DefaultSuperUser; }
                 }
 
                 public string HomePage {
@@ -61,10 +71,12 @@ namespace Orchard.Tests.Stubs {
                     set { throw new NotImplementedException(); }
                 }
 
-                public int PageSize {
+                public int PageSize{
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
+
+                public string BaseUrl { get; set;}
             }
 
             public class StubUser : IUser {

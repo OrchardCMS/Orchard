@@ -1,18 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Mvc;
+using ClaySharp;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Utilities;
 using Orchard.UI;
 
 namespace Orchard.ContentManagement {
-    public class ContentPart : IContent {
+    public class ContentPart : IContent, IContentBehavior, IDynamicMetaObjectProvider {
         private readonly IList<ContentField> _fields;
 
         public ContentPart() {
+            _behavior = new ClayBehaviorCollection(new[] { new ContentPartBehavior(this) });
             _fields = new List<ContentField>();
         }
+
 
         public virtual ContentItem ContentItem { get; set; }
 
@@ -22,6 +27,14 @@ namespace Orchard.ContentManagement {
             get {
                 return _zones;
             }
+        }
+
+        private readonly IClayBehavior _behavior;
+        IClayBehavior IContentBehavior.Behavior {
+            get { return _behavior; }
+        }
+        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter) {
+            return new ClayMetaObject(this, parameter, ex => Expression.Property(Expression.Convert(ex, typeof(IContentBehavior)), "Behavior"));
         }
 
         /// <summary>
@@ -51,6 +64,8 @@ namespace Orchard.ContentManagement {
         public void Weld(ContentField field) {
             _fields.Add(field);
         }
+
+
     }
 
     public class ContentPart<TRecord> : ContentPart {

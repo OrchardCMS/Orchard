@@ -3,13 +3,15 @@
 @{
     dynamic content = Model.Content;
     content.Zones.Content.Add(New.Partial(TemplateName: "CultureSelection", Model: Model), "0");
+
+    Layout.Title = T("Translate Content").ToString();
 }
-<h1>@Html.TitleForPage(T("Translate Content").ToString())</h1>
+
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     @Display(Model.Content)
 }
-@using(Script.Foot()){
+@using (Script.Foot()) {
 <script type="text/javascript">
 //<![CDATA[
     (function ($) {

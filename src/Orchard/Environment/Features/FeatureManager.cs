@@ -1,124 +1,202 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Localization;
+using Orchard.Logging;
 
 namespace Orchard.Environment.Features {
-    public interface IFeatureManager : IDependency {
-        IEnumerable<FeatureDescriptor> GetAvailableFeatures();
-        IEnumerable<FeatureDescriptor> GetEnabledFeatures();
-
-        void EnableFeatures(IEnumerable<string> featureNames);
-        void DisableFeatures(IEnumerable<string> featureNames);
-    }
-
     public class FeatureManager : IFeatureManager {
         private readonly IExtensionManager _extensionManager;
-        private readonly ShellDescriptor _shellDescriptor;
         private readonly IShellDescriptorManager _shellDescriptorManager;
+
+        /// <summary>
+        /// Delegate to notify about feature dependencies.
+        /// </summary>
+        public FeatureDependencyNotificationHandler FeatureDependencyNotification { get; set; }
 
         public FeatureManager(
             IExtensionManager extensionManager,
-            ShellDescriptor shellDescriptor,
             IShellDescriptorManager shellDescriptorManager) {
             _extensionManager = extensionManager;
-            _shellDescriptor = shellDescriptor;
             _shellDescriptorManager = shellDescriptorManager;
+
+            T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
+        public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
+
+        /// <summary>
+        /// Retrieves the available features.
+        /// </summary>
+        /// <returns>An enumeration of feature descriptors for the available features.</returns>
         public IEnumerable<FeatureDescriptor> GetAvailableFeatures() {
             return _extensionManager.AvailableFeatures();
         }
 
+        /// <summary>
+        /// Retrieves the enabled features.
+        /// </summary>
+        /// <returns>An enumeration of feature descriptors for the enabled features.</returns>
         public IEnumerable<FeatureDescriptor> GetEnabledFeatures() {
             var currentShellDescriptor = _shellDescriptorManager.GetShellDescriptor();
             return _extensionManager.EnabledFeatures(currentShellDescriptor);
         }
 
-        public void EnableFeatures(IEnumerable<string> featureNames) {
-            var currentShellDescriptor = _shellDescriptorManager.GetShellDescriptor();
-
-            var updatedFeatures = currentShellDescriptor.Features
-                .Union(featureNames
-                           .Where(name => !currentShellDescriptor.Features.Any(sf => sf.Name == name))
-                           .Select(name => new ShellFeature {Name = name}));            
-
-            _shellDescriptorManager.UpdateShellDescriptor(
-                currentShellDescriptor.SerialNumber,
-                updatedFeatures,
-                currentShellDescriptor.Parameters);
+        /// <summary>
+        /// Enables a list of features.
+        /// </summary>
+        /// <param name="featureIds">The IDs for the features to be enabled.</param>
+        public IEnumerable<string> EnableFeatures(IEnumerable<string> featureIds) {
+            return EnableFeatures(featureIds, false);
         }
 
-        public void DisableFeatures(IEnumerable<string> featureNames) {
-            var currentShellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+        /// <summary>
+        /// Enables a list of features.
+        /// </summary>
+        /// <param name="featureIds">The IDs for the features to be enabled.</param>
+        /// <param name="force">Boolean parameter indicating if the feature should enable it's dependencies if required or fail otherwise.</param>
+        public IEnumerable<string> EnableFeatures(IEnumerable<string> featureIds, bool force) {
+            ShellDescriptor shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+            List<ShellFeature> enabledFeatures = shellDescriptor.Features.ToList();
 
-            var updatedFeatures = currentShellDescriptor.Features
-                .Where(sf => !featureNames.Contains(sf.Name));
+            IDictionary<FeatureDescriptor, bool> availableFeatures = GetAvailableFeatures()
+                .ToDictionary(featureDescriptor => featureDescriptor,
+                                featureDescriptor => enabledFeatures.FirstOrDefault(shellFeature => shellFeature.Name == featureDescriptor.Id) != null);
 
-            _shellDescriptorManager.UpdateShellDescriptor(
-                currentShellDescriptor.SerialNumber,
-                updatedFeatures,
-                currentShellDescriptor.Parameters);
+            IEnumerable<string> featuresToEnable = featureIds
+                .Select(featureId => EnableFeature(featureId, availableFeatures, force)).ToList()
+                .SelectMany(ies => ies.Select(s => s));
+
+            if (featuresToEnable.Count() > 0) {
+                foreach (string featureId in featuresToEnable) {
+                    string id = featureId;
+
+                    enabledFeatures.Add(new ShellFeature { Name = id });
+                    Logger.Information(T("{0} was enabled", featureId).ToString());
+                }
+
+                _shellDescriptorManager.UpdateShellDescriptor(shellDescriptor.SerialNumber, enabledFeatures,
+                                                              shellDescriptor.Parameters);
+            }
+
+            return featuresToEnable;
         }
 
+        /// <summary>
+        /// Disables a list of features.
+        /// </summary>
+        /// <param name="featureIds">The IDs for the features to be disabled.</param>
+        /// <returns>An enumeration with the disabled feature IDs.</returns>
+        public IEnumerable<string> DisableFeatures(IEnumerable<string> featureIds) {
+            return DisableFeatures(featureIds, false);
+        }
 
-        //private void DisableThemeFeatures(string themeName) {
-        //    var themes = new Queue<string>();
-        //    while (themeName != null) {
-        //        if (themes.Contains(themeName))
-        //            throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features disabled.", themeName).Text);
-        //        var theme = GetThemeByName(themeName);
-        //        if (theme == null)
-        //            break;
-        //        themes.Enqueue(themeName);
+        /// <summary>
+        /// Disables a list of features.
+        /// </summary>
+        /// <param name="featureIds">The IDs for the features to be disabled.</param>
+        /// <param name="force">Boolean parameter indicating if the feature should disable the features which depend on it if required or fail otherwise.</param>
+        /// <returns>An enumeration with the disabled feature IDs.</returns>
+        public IEnumerable<string> DisableFeatures(IEnumerable<string> featureIds, bool force) {
+            ShellDescriptor shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+            List<ShellFeature> enabledFeatures = shellDescriptor.Features.ToList();
 
-        //        themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
-        //            ? theme.BaseTheme
-        //            : null;
+            IDictionary<FeatureDescriptor, bool> availableFeatures = GetAvailableFeatures()
+                .ToDictionary(featureDescriptor => featureDescriptor,
+                                featureDescriptor => enabledFeatures.FirstOrDefault(shellFeature => shellFeature.Name == featureDescriptor.Id) != null);
 
-        //    }
+            IEnumerable<string> featuresToDisable = featureIds
+                .Select(featureId => DisableFeature(featureId, availableFeatures, force)).ToList()
+                .SelectMany(ies => ies.Select(s => s));
 
-        //    while (themes.Count > 0)
-        //        _moduleService.DisableFeatures(new[] { themes.Dequeue() });
-        //}
+            if (featuresToDisable.Count() > 0) {
+                foreach (string featureId in featuresToDisable) {
+                    string id = featureId;
 
-        //private void EnableThemeFeatures(string themeName) {
-        //    var themes = new Stack<string>();
-        //    while (themeName != null) {
-        //        if (themes.Contains(themeName))
-        //            throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features enabled.", themeName).Text);
-        //        themes.Push(themeName);
+                    enabledFeatures.RemoveAll(shellFeature => shellFeature.Name == id);
+                    Logger.Information(T("{0} was disabled", featureId).ToString());
+                }
 
-        //        var theme = GetThemeByName(themeName);
-        //        themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
-        //            ? theme.BaseTheme
-        //            : null;
-        //    }
+                _shellDescriptorManager.UpdateShellDescriptor(shellDescriptor.SerialNumber, enabledFeatures,
+                                                              shellDescriptor.Parameters);
+            }
 
-        //    while (themes.Count > 0)
-        //        _moduleService.EnableFeatures(new[] { themes.Pop() });
-        //}
+            return featuresToDisable;
+        }
 
-        //private bool DoEnableTheme(string themeName) {
-        //    if (string.IsNullOrWhiteSpace(themeName))
-        //        return false;
+        /// <summary>
+        /// Enables a feature.
+        /// </summary>
+        /// <param name="featureId">The ID of the feature to be enabled.</param>
+        /// <param name="availableFeatures">A dictionary of the available feature descriptors and their current state (enabled / disabled).</param>
+        /// <param name="force">Boolean parameter indicating if the feature should enable it's dependencies if required or fail otherwise.</param>
+        /// <returns>An enumeration of the enabled features.</returns>
+        private IEnumerable<string> EnableFeature(string featureId, IDictionary<FeatureDescriptor, bool> availableFeatures, bool force) {
+            var getDisabledDependencies =
+                new Func<string, IDictionary<FeatureDescriptor, bool>, IDictionary<FeatureDescriptor, bool>>(
+                    (currentFeatureId, featuresState) => {
+                        KeyValuePair<FeatureDescriptor, bool> feature = featuresState.Single(featureState => featureState.Key.Id == currentFeatureId);
 
-        //    //todo: (heskew) need messages given in addition to all of these early returns so something meaningful can be presented to the user
-        //    var themeToEnable = GetThemeByName(themeName);
-        //    if (themeToEnable == null)
-        //        return false;
+                        // Retrieve disabled dependencies for the current feature
+                        return feature.Key.Dependencies
+                            .Select(fId => featuresState.Single(featureState => featureState.Key.Id == fId))
+                            .Where(featureState => !featureState.Value)
+                            .ToDictionary(f => f.Key, f => f.Value);
+                    });
 
-        //    // ensure all base themes down the line are present and accounted for
-        //    //todo: (heskew) dito on the need of a meaningful message
-        //    if (!AllBaseThemesAreInstalled(themeToEnable.BaseTheme))
-        //        return false;
+            IEnumerable<string> featuresToEnable = GetAffectedFeatures(featureId, availableFeatures, getDisabledDependencies);
+            if (featuresToEnable.Count() > 1 && !force) {
+                Logger.Warning(T("Aditional features need to be enabled.").ToString());
+                if (FeatureDependencyNotification != null) {
+                    FeatureDependencyNotification("If {0} is enabled, then you'll also need to enable {1}.", featureId, featuresToEnable.Where(fId => fId != featureId));
+                }
 
-        //    // enable all theme features
-        //    EnableThemeFeatures(themeToEnable.Name);
-        //    return true;
-        //}
+                return Enumerable.Empty<string>();
+            }
 
+            return featuresToEnable;
+        }
+
+        /// <summary>
+        /// Disables a feature.
+        /// </summary>
+        /// <param name="featureId">The ID of the feature to be enabled.</param>
+        /// <param name="availableFeatures"></param>
+        /// <param name="force">Boolean parameter indicating if the feature should enable it's dependencies if required or fail otherwise.</param>
+        /// <returns>An enumeration of the disabled features.</returns>
+        private IEnumerable<string> DisableFeature(string featureId, IDictionary<FeatureDescriptor, bool> availableFeatures, bool force) {
+            var getEnabledDependants =
+                new Func<string, IDictionary<FeatureDescriptor, bool>, IDictionary<FeatureDescriptor, bool>>(
+                    (currentFeatureId, fs) => fs.Where(f => f.Value && f.Key.Dependencies != null && f.Key.Dependencies.Contains(currentFeatureId))
+                    .ToDictionary(f => f.Key, f => f.Value));
+
+            IEnumerable<string> featuresToDisable = GetAffectedFeatures(featureId, availableFeatures, getEnabledDependants);
+            if (featuresToDisable.Count() > 1 && !force) {
+                Logger.Warning(T("Aditional features need to be disabled.").ToString());
+                if (FeatureDependencyNotification != null) {
+                    FeatureDependencyNotification("If {0} is disabled, then you'll also need to disable {1}.", featureId, featuresToDisable.Where(fId => fId != featureId));
+                }
+
+                return Enumerable.Empty<string>();
+            }
+
+            return featuresToDisable;
+        }
+
+        private static IEnumerable<string> GetAffectedFeatures(string featureId, IDictionary<FeatureDescriptor, bool> features, Func<string, IDictionary<FeatureDescriptor, bool>, IDictionary<FeatureDescriptor, bool>> getAffectedDependencies) {
+            var dependencies = new List<string> { featureId };
+
+            foreach (KeyValuePair<FeatureDescriptor, bool> dependency in getAffectedDependencies(featureId, features)) {
+                dependencies.AddRange(GetAffectedFeatures(dependency.Key.Id, features, getAffectedDependencies));
+            }
+
+            return dependencies;
+        }
     }
 }

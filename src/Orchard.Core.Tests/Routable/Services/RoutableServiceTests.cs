@@ -81,6 +81,22 @@ namespace Orchard.Core.Tests.Routable.Services {
         }
 
         [Test]
+        public void SpacesSlugShouldBeTreatedAsEmpty() {
+            var contentManager = _container.Resolve<IContentManager>();
+
+            var thing = contentManager.Create<Thing>("thing", t => {
+                t.As<RoutePart>().Record = new RoutePartRecord();
+                t.Title = "My Title";
+                t.Slug = " ";
+            });
+
+            _routableService.FillSlugFromTitle(thing.As<RoutePart>());
+
+            Assert.That(thing.Slug, Is.EqualTo("my-title"));
+        }
+
+
+        [Test]
         public void SlashInSlugIsAllowed() {
             Assert.That(_routableService.IsSlugValid("some/page"), Is.True);
         }

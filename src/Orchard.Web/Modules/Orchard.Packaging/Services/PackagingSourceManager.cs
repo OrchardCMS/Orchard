@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
-    [OrchardFeature("Gallery")]
+    [OrchardFeature("PackagingServices")]
     public class PackagingSourceManager : IPackagingSourceManager {
         public static string GetExtensionPrefix(string extensionType) {
             return string.Format("Orchard.{0}.", extensionType);
@@ -42,30 +41,42 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        public IEnumerable<PackagingEntry> GetModuleList(PackagingSource packagingSource = null) {
-            return GetExtensionList(DefaultExtensionTypes.Module, packagingSource);
-        }
-        public IEnumerable<PackagingEntry> GetThemeList(PackagingSource packagingSource = null) {
-            return GetExtensionList(DefaultExtensionTypes.Theme, packagingSource);
-        }
-
-        private IEnumerable<PackagingEntry> GetExtensionList(string filter = null, PackagingSource packagingSource = null) {
+        public IEnumerable<PackagingEntry> GetExtensionList(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
             return (packagingSource == null ? GetSources() : new[] {packagingSource})
                 .SelectMany(
                     source => {
-                        GalleryFeedContext galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl));
-                        return galleryFeedContext.Packages
-                            .Where(p => p.PackageType == filter)
-                            .ToList()
-                            .Select(p => {
-                                    PublishedScreenshot firstScreenshot = galleryFeedContext.Screenshots
-                                        .Where(s => s.PublishedPackageId == p.Id && s.PublishedPackageVersion == p.Version)
-                                        .ToList()
-                                        .FirstOrDefault();
-                                    return CreatePackageEntry(p, firstScreenshot, packagingSource, galleryFeedContext.GetReadStreamUri(p));
-                                });
+                        var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl));
+                        IQueryable<PublishedPackage> packages = galleryFeedContext.Packages;
+
+                        if (query != null) {
+                            packages = query(packages);
+                        }
+
+                        return packages.ToList().Select(
+                            p => {
+                                PublishedScreenshot firstScreenshot = galleryFeedContext.Screenshots
+                                    .Where(s => s.PublishedPackageId == p.Id && s.PublishedPackageVersion == p.Version)
+                                    .ToList()
+                                    .FirstOrDefault();
+                                return CreatePackageEntry(p, firstScreenshot, packagingSource, galleryFeedContext.GetReadStreamUri(p));
+                            });
                     }
-                ).ToArray();
+                );
+        }
+
+        public int GetExtensionCount(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
+            return (packagingSource == null ? GetSources() : new[] { packagingSource })
+                .Sum( source => {
+                        var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl));
+                        IQueryable<PublishedPackage> packages = galleryFeedContext.Packages;
+
+                        if (query != null) {
+                            packages = query(packages);
+                        }
+
+                        return packages.Count();
+                    }
+                );
         }
 
         private static PackagingEntry CreatePackageEntry(PublishedPackage package, PublishedScreenshot screenshot, PackagingSource source, Uri downloadUri) {
@@ -91,7 +102,8 @@ namespace Orchard.Packaging.Services {
                 IconUrl = iconUrl,
                 FirstScreenshot = firstScreenshot,
                 Rating = package.Rating,
-                RatingsCount = package.RatingsCount
+                RatingsCount = package.RatingsCount,
+                DownloadCount = package.DownloadCount
             };
         }
 

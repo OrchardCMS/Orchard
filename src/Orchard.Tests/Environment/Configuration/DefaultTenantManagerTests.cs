@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Moq;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Tests.Stubs;
 
@@ -23,7 +24,7 @@ namespace Orchard.Tests.Environment.Configuration {
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var settings = loader.LoadSettings().Single();
             Assert.That(settings, Is.Not.Null);
-            Assert.That(settings.Name, Is.EqualTo("Default"));
+            Assert.That(settings.Name, Is.EqualTo(ShellSettings.DefaultName));
             Assert.That(settings.DataProvider, Is.EqualTo("SqlCe"));
             Assert.That(settings.DataConnectionString, Is.EqualTo("something else"));
         }
@@ -39,8 +40,8 @@ namespace Orchard.Tests.Environment.Configuration {
             var settings = loader.LoadSettings();
             Assert.That(settings.Count(), Is.EqualTo(2));
 
-            var def = settings.Single(x => x.Name == "Default");
-            Assert.That(def.Name, Is.EqualTo("Default"));
+            var def = settings.Single(x => x.Name == ShellSettings.DefaultName);
+            Assert.That(def.Name, Is.EqualTo(ShellSettings.DefaultName));
             Assert.That(def.DataProvider, Is.EqualTo("SqlCe"));
             Assert.That(def.DataConnectionString, Is.EqualTo("something else"));
 

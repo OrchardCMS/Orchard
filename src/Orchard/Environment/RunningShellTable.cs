@@ -65,7 +65,7 @@ namespace Orchard.Environment {
                 // two or more shells had no request criteria. 
                 // this is technically a misconfiguration - so fallback to the default shell
                 // if it's one which will catch all requests
-                _fallback = unqualified.SingleOrDefault(x => x.Name == "Default");
+                _fallback = unqualified.SingleOrDefault(x => x.Name == ShellSettings.DefaultName);
             }
             else {
                 // no shells are unqualified - a request that does not match a shell's spec

@@ -1,0 +1,6 @@
+﻿.navicon-dashboard {
+background-image:url(images/menu.dashboard.png) !important;
+}
+.navicon-dashboard:hover {
+background-position:0 -30px !important;
+}

@@ -1,0 +1,18 @@
+﻿@using Orchard.Themes.Models
+@using Orchard.Mvc.Html
+@using Orchard.Environment.Extensions.Models
+
+<div id="currentTheme">
+    @Html.Image(Href(Html.ThemePath((ExtensionDescriptor)Model.ContentPart.Descriptor, "/Theme.png")), Html.Encode((string)Model.ContentPart.Name), new { @class = "themePreviewImage" })
+
+    <div class="details">
+        <h4>@Model.ContentPart.Name</h4>
+        <h5>@T("By") @Model.ContentPart.Descriptor.Author<br />
+        @T("Version:") @Model.ContentPart.Descriptor.Version<br />
+        @if (Model.ContentPart.Descriptor.WebSite != null) {
+            <a href="@Model.ContentPart.Descriptor.WebSite">@Model.ContentPart.Descriptor.WebSite</a><br />
+        }</h5>
+        
+        <p class="themeInfo">@Model.ContentPart.Descriptor.Description</p>
+    </div>
+</div>

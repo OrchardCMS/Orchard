@@ -76,7 +76,7 @@ namespace Orchard.Blogs.Handlers {
                 {"Controller", "BlogPostAdmin"},
                 {"Action", "Delete"},
                 {"postId", context.ContentItem.Id},
-                {"blogSlug", blogPost.BlogPart.As<RoutePart>().Slug}
+                {"blogPath", blogPost.BlogPart.As<RoutePart>().Path}
             };
         }
     }

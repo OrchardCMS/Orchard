@@ -5,8 +5,6 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The containers module introduces container and containable behaviors for content items.
-Features:
-    Containers:
-        Description: Container and containable parts to enable parent-child relationships between content items.
-        Dependencies: Contents, Routable
-        Category: Content
+FeatureDescription: Container and containable parts to enable parent-child relationships between content items.
+Dependencies: Contents, Routable
+Category: Content

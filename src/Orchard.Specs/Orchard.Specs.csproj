@@ -161,6 +161,11 @@
     <Compile Include="Hosting\RequestExtensions.cs" />
     <Compile Include="Hosting\RequestDetails.cs" />
     <Compile Include="Hosting\Simple.Web\Global.asax.cs" />
+    <Compile Include="Lists.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lists.feature</DependentUpon>
+    </Compile>
     <Compile Include="Media.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -195,6 +200,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SiteCompilation.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Users.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Users.feature</DependentUpon>
     </Compile>
     <Compile Include="UsingSpecFlow.feature.cs">
       <AutoGen>True</AutoGen>
@@ -255,6 +265,10 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ContentTypes.feature.cs</LastGenOutput>
     </None>
+    <None Include="Lists.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Lists.feature.cs</LastGenOutput>
+    </None>
     <None Include="PermissionModel.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>PermissionModel.feature.cs</LastGenOutput>
@@ -295,6 +309,10 @@
     <None Include="Pages.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Pages.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Users.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Users.feature.cs</LastGenOutput>
     </None>
     <None Include="WebHosting.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

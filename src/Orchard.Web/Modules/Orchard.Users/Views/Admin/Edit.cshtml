@@ -1,5 +1,7 @@
-<h1>@Html.TitleForPage(T("Edit User").ToString()) </h1>
+@{ Layout.Title = T("Edit User").ToString(); }
+
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary() 
+    // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
     @Display(Model)
  } 

@@ -5,9 +5,6 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The search module enables the management of the search index and provides the front-end searching user interface.
-Features:
-    Orchard.Search:
-        Name: Search
-        Description: Standard interface to Orchard's built-in search.
-        Category: Search
-        Dependencies: Orchard.Indexing
+FeatureDescription: Standard interface to Orchard's built-in search.
+Category: Search
+Dependencies: Orchard.Indexing

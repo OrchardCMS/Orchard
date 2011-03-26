@@ -1,0 +1,94 @@
+﻿using System;
+using Orchard.Commands;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Models;
+using Orchard.Security;
+using Orchard.Settings;
+
+namespace Orchard.Pages.Commands {
+    public class PageCommands : DefaultOrchardCommandHandler {
+        private readonly IContentManager _contentManager;
+        private readonly IMembershipService _membershipService;
+        private readonly ISiteService _siteService;
+
+        public PageCommands(IContentManager contentManager, IMembershipService membershipService, ISiteService siteService) {
+            _contentManager = contentManager;
+            _membershipService = membershipService;
+            _siteService = siteService;
+        }
+
+        [OrchardSwitch]
+        public string Slug { get; set; }
+
+        [OrchardSwitch]
+        public string Title { get; set; }
+
+        [OrchardSwitch]
+        public string Path { get; set; }
+
+        [OrchardSwitch]
+        public string Text { get; set; }
+
+        [OrchardSwitch]
+        public string Owner { get; set; }
+
+        [OrchardSwitch]
+        public bool Homepage { get; set; }
+
+        [OrchardSwitch]
+        public bool Publish { get; set; }
+
+        [OrchardSwitch]
+        public bool UseWelcomeText { get; set; }
+
+        [CommandName("page create")]
+        [CommandHelp("page create /Slug:<slug> /Title:<title> /Path:<path> [/Text:<text>] [/Owner:<username>] [/Homepage:true|false] [/Publish:true|false] [/UseWelcomeText:true|false]\r\n\t" + "Creates a new page")]
+        [OrchardSwitches("Slug,Title,Path,Text,Owner,Homepage,Publish,UseWelcomeText")]
+        public void Create() {
+            if (String.IsNullOrEmpty(Owner)) {
+                Owner = _siteService.GetSiteSettings().SuperUser;
+            }
+            var owner = _membershipService.GetUser(Owner);
+            var page = _contentManager.Create("Page", VersionOptions.Draft);
+            page.As<RoutePart>().Title = Title;
+            page.As<RoutePart>().Path = Path;
+            page.As<RoutePart>().Slug = Slug;
+            page.As<RoutePart>().PromoteToHomePage = Homepage;
+            page.As<ICommonPart>().Owner = owner;
+            var text = String.Empty;
+            if (UseWelcomeText) {
+                text = T(
+@"<p>You've successfully setup your Orchard Site and this is the homepage of your new site.
+Here are a few things you can look at to get familiar with the application.
+Once you feel confident you don't need this anymore, you can
+<a href=""Admin/Contents/Edit/{0}"">remove it by going into editing mode</a>
+and replacing it with whatever you want.</p>
+<p>First things first - You'll probably want to <a href=""Admin/Settings"">manage your settings</a>
+and configure Orchard to your liking. After that, you can head over to
+<a href=""Admin/Themes"">manage themes to change or install new themes</a>
+and really make it your own. Once you're happy with a look and feel, it's time for some content.
+You can start creating new custom content types or start from the built-in ones by
+<a href=""Admin/Contents/Create/Page"">adding a page</a>, or <a href=""Admin/Navigation"">managing your menus.</a></p>
+<p>Finally, Orchard has been designed to be extended. It comes with a few built-in
+modules such as pages and blogs or themes. If you're looking to add additional functionality,
+you can do so by creating your own module or by installing one that somebody else built.
+Modules are created by other users of Orchard just like you so if you feel up to it,
+<a href=""http://orchardproject.net/contribution"">please consider participating</a>.</p>
+<p>Thanks for using Orchard – The Orchard Team </p>", page.Id).Text;
+            }
+            else {
+                if (!String.IsNullOrEmpty(Text)) {
+                    text = Text;
+                }
+            }
+            page.As<BodyPart>().Text = text;
+            if (Publish) {
+                _contentManager.Publish(page);
+            }
+
+            Context.Output.WriteLine(T("Page created successfully.").Text);
+        }
+    }
+}

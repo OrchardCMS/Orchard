@@ -4,13 +4,15 @@
 @using Orchard.Modules.ViewModels;
 @using Orchard.Utility.Extensions;
 @using Orchard.Modules.Models;
+
 @{
     Style.Require("ModulesAdmin");
     Style.Require("Switchable");
     Script.Require("Switchable");
+
+    Layout.Title = T("Modules").ToString();
 }
 
-<h1>@Html.TitleForPage(T("Manage Features").ToString())</h1>
 @if (Model.Features.Count() > 0) {
 <ul class="features summary-view switchable">@{
     var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category);
@@ -42,8 +44,13 @@
                 if (feature == features.Last()) {
                     featureClassName += " last";
                 }
+
+                if (feature.IsRecentlyInstalled) {
+                    featureClassName += " recentlyInstalledFeature";
+                }
+
                 var dependencies = (from d in feature.Descriptor.Dependencies
-                                    select (from f in Model.Features where f.Descriptor.Id == d select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);                
+                                    select (from f in Model.Features where f.Descriptor.Id == d select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);
                 var missingDependencies = feature.Descriptor.Dependencies
                     .Where(d => !Model.Features.Any(f => f.Descriptor.Id == d));
                 showActions = categoryName.ToString() != "Core" && missingDependencies.Count() == 0;

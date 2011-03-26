@@ -39,15 +39,33 @@ namespace Orchard.Environment.Extensions.Compilers {
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
                 .Elements(ns("Reference"))
-                .Attributes("Include")
-                .Select(c => new ReferenceDescriptor { SimpleName = ExtractAssemblyName(c.Value), FullName = c.Value });
+                .Where(c => c.Attribute("Include") != null)
+                .Select(c => {
+                            string path = null;
+                            XElement attribute = c.Elements(ns("HintPath")).FirstOrDefault();
+                            if (attribute != null) {
+                                path = attribute.Value;
+                            }
+
+                            return new ReferenceDescriptor {
+                                SimpleName = ExtractAssemblyName(c.Attribute("Include").Value),
+                                FullName = c.Attribute("Include").Value,
+                                Path = path,
+                                ReferenceType = ReferenceType.Library
+                            };
+                        });
 
             var projectReferences = document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
                 .Elements(ns("ProjectReference"))
                 .Attributes("Include")
-                .Select(c => new ReferenceDescriptor { SimpleName = Path.GetFileNameWithoutExtension(c.Value), FullName = Path.GetFileNameWithoutExtension(c.Value) });
+                .Select(c => new ReferenceDescriptor {
+                    SimpleName = Path.GetFileNameWithoutExtension(c.Value),
+                    FullName = Path.GetFileNameWithoutExtension(c.Value),
+                    Path = c.Value,
+                    ReferenceType = ReferenceType.Project
+                });
 
             return assemblyReferences.Union(projectReferences);
         }

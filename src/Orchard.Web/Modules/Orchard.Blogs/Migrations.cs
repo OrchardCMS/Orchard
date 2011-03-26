@@ -39,6 +39,8 @@ namespace Orchard.Blogs {
                     .WithPart("BlogPart")
                     .WithPart("CommonPart")
                     .WithPart("RoutePart")
+                    .WithPart("MenuPart")
+                    .WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2"))
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("BlogPost",
@@ -66,7 +68,17 @@ namespace Orchard.Blogs {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 1;
+            return 3;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2")));
+            return 3;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2")));
+            return 3;
         }
     }
 }

@@ -5,6 +5,8 @@
     /// from the App_Data settings.txt files.
     /// </summary>
     public class ShellSettings {
+        public const string DefaultName = "Default";
+
         public ShellSettings() {
             State = new TenantState("Invalid");
         }

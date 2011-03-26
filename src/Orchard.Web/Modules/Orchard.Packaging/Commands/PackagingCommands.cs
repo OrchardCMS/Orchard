@@ -3,12 +3,10 @@ using System.IO;
 using System.Web;
 using System.Web.Hosting;
 using Orchard.Commands;
-using Orchard.Environment.Extensions;
 using Orchard.Packaging.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Packaging.Commands {
-    [OrchardFeature("Orchard.Packaging")]
     public class PackagingCommands : DefaultOrchardCommandHandler {
         private static readonly string ApplicationPath = HostingEnvironment.MapPath("~/");
 
@@ -93,7 +91,6 @@ namespace Orchard.Packaging.Commands {
                 // Exceptions area thrown by NuGet as error messages
                 throw new OrchardException(T(HttpUtility.HtmlDecode(T("Could not unintall the package: {0}", e.Message).Text)));
             }
-
         }
     }
 }

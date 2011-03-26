@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -161,17 +162,16 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             var hello = manager.GetShapeTable(null).Descriptors["Hello"];
             hello.DefaultPlacement = "Header:5";
             var result = hello.Placement(null);
-            Assert.That(result, Is.EqualTo("Header:5"));
+            Assert.That(result.Location, Is.EqualTo("Header:5"));
         }
 
         [Test]
-        [Ignore("Needs fixing")]
         public void DescribedPlacementIsReturnedIfNotNull() {
 
             _container.Resolve<TestShapeProvider>().Discover =
-                builder => builder.Describe("Hello")
-                    .Placement(ctx => ctx.DisplayType == "Detail" ? "Main" : null)
-                    .Placement(ctx => ctx.DisplayType == "Summary" ? "" : null);
+                builder => builder.Describe("Hello").From(TestFeature())
+                    .Placement(ctx => ctx.DisplayType == "Detail" ? new PlacementInfo { Location = "Main" } : null)
+                    .Placement(ctx => ctx.DisplayType == "Summary" ? new PlacementInfo { Location = "" } : null);
 
             var manager = _container.Resolve<IShapeTableManager>();
             var hello = manager.GetShapeTable(null).Descriptors["Hello"];
@@ -183,22 +183,21 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             var result5 = hello.Placement(new ShapePlacementContext { DisplayType = "Summary" });
             var result6 = hello.Placement(new ShapePlacementContext { DisplayType = "Tile" });
             
-            Assert.That(result1, Is.EqualTo("Main"));
-            Assert.That(result2, Is.EqualTo(""));
-            Assert.That(result3, Is.Null);
-            Assert.That(result4, Is.EqualTo("Main"));
-            Assert.That(result5, Is.EqualTo(""));
-            Assert.That(result6, Is.EqualTo("Header:5"));
+            Assert.That(result1.Location, Is.EqualTo("Main"));
+            Assert.That(result2.Location, Is.EqualTo(""));
+            Assert.That(result3.Location, Is.Null);
+            Assert.That(result4.Location, Is.EqualTo("Main"));
+            Assert.That(result5.Location, Is.EqualTo(""));
+            Assert.That(result6.Location, Is.EqualTo("Header:5"));
         }
         
         [Test]
-        [Ignore("Needs fixing")]
         public void TwoArgumentVariationDoesSameThing() {
 
             _container.Resolve<TestShapeProvider>().Discover =
-                builder => builder.Describe("Hello")
-                    .Placement(ctx => ctx.DisplayType == "Detail", "Main")
-                    .Placement(ctx => ctx.DisplayType == "Summary", "");
+                builder => builder.Describe("Hello").From(TestFeature())
+                    .Placement(ctx => ctx.DisplayType == "Detail", new PlacementInfo { Location = "Main" })
+                    .Placement(ctx => ctx.DisplayType == "Summary", new PlacementInfo { Location = "" });
 
             var manager = _container.Resolve<IShapeTableManager>();
             var hello = manager.GetShapeTable(null).Descriptors["Hello"];
@@ -209,15 +208,55 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             var result4 = hello.Placement(new ShapePlacementContext { DisplayType = "Detail" });
             var result5 = hello.Placement(new ShapePlacementContext { DisplayType = "Summary" });
             var result6 = hello.Placement(new ShapePlacementContext { DisplayType = "Tile" });
-            
-            Assert.That(result1, Is.EqualTo("Main"));
-            Assert.That(result2, Is.EqualTo(""));
-            Assert.That(result3, Is.Null);
-            Assert.That(result4, Is.EqualTo("Main"));
-            Assert.That(result5, Is.EqualTo(""));
-            Assert.That(result6, Is.EqualTo("Header:5"));
+
+            Assert.That(result1.Location, Is.EqualTo("Main"));
+            Assert.That(result2.Location, Is.EqualTo(""));
+            Assert.That(result3.Location, Is.Null);
+            Assert.That(result4.Location, Is.EqualTo("Main"));
+            Assert.That(result5.Location, Is.EqualTo(""));
+            Assert.That(result6.Location, Is.EqualTo("Header:5"));
         }
-        
+
+        [Test]
+        public void PathConstraintShouldMatch() {
+
+            // all path have a trailing / as per the current implementation
+            // todo: (sebros) find a way to 'use' the current implementation in DefaultContentDisplay.BindPlacement instead of emulating it
+
+            var rules = new[] {
+                Tuple.Create("~/my-blog", "~/my-blog/", true),
+                Tuple.Create("~/my-blog/", "~/my-blog/", true),
+
+                // star match
+                Tuple.Create("~/my-blog*", "~/my-blog/", true),
+                Tuple.Create("~/my-blog*", "~/my-blog/my-post/", true),
+                Tuple.Create("~/my-blog/*", "~/my-blog/", true),
+                Tuple.Create("~/my-blog/*", "~/my-blog123/", false),
+                Tuple.Create("~/my-blog*", "~/my-blog123/", true)
+            };
+
+            foreach (var rule in rules) {
+                var path = rule.Item1;
+                var context = rule.Item2;
+                var match = rule.Item3;
+
+                _container.Resolve<TestShapeProvider>().Discover =
+                    builder => builder.Describe("Hello").From(TestFeature())
+                                   .Placement(ShapePlacementParsingStrategy.BuildPredicate(c => true, new KeyValuePair<string, string>("Path", path)), new PlacementInfo { Location = "Match" });
+
+                var manager = _container.Resolve<IShapeTableManager>();
+                var hello = manager.GetShapeTable(null).Descriptors["Hello"];
+                var result = hello.Placement(new ShapePlacementContext {Path = context});
+
+                if (match) {
+                    Assert.That(result.Location, Is.EqualTo("Match"), String.Format("{0}|{1}", path, context));
+                }
+                else {
+                    Assert.That(result.Location, Is.Null, String.Format("{0}|{1}", path, context));
+                }
+            }
+        }
+
         [Test]
         public void OnlyShapesFromTheGivenThemeAreProvided() {
             _container.Resolve<TestShapeProvider>();

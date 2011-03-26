@@ -16,7 +16,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void DefaultShellMatchesByDefault() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             table.Add(settings);
             var match = table.Match(new StubHttpContext());
             Assert.That(match, Is.SameAs(settings));
@@ -25,7 +25,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void AnotherShellMatchesByHostHeader() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com" };
             table.Add(settings);
             table.Add(settingsA);
@@ -36,7 +36,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void DefaultStillCatchesWhenOtherShellsMiss() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com" };
             table.Add(settings);
             table.Add(settingsA);
@@ -47,7 +47,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void DefaultWontFallbackIfItHasCriteria() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default", RequestUrlHost = "www.example.com" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com" };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com" };
             table.Add(settings);
             table.Add(settingsA);
@@ -58,7 +58,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void DefaultWillCatchRequestsIfItMatchesCriteria() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default", RequestUrlHost = "www.example.com" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com" };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com" };
             table.Add(settings);
             table.Add(settingsA);
@@ -69,7 +69,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void NonDefaultCatchallWillFallbackIfNothingElseMatches() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default", RequestUrlHost = "www.example.com" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com" };
             var settingsA = new ShellSettings { Name = "Alpha" };
             table.Add(settings);
             table.Add(settingsA);
@@ -80,7 +80,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void DefaultCatchallIsFallbackEvenWhenOthersAreUnqualified() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha" };
             var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "b.example.com" };
             var settingsG = new ShellSettings { Name = "Gamma" };
@@ -95,7 +95,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void ThereIsNoFallbackIfMultipleSitesAreUnqualifiedButDefaultIsNotOneOfThem() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default", RequestUrlHost = "www.example.com" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com" };
             var settingsA = new ShellSettings { Name = "Alpha" };
             var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "b.example.com" };
             var settingsG = new ShellSettings { Name = "Gamma" };
@@ -110,7 +110,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void PathAlsoCausesMatch() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlPrefix = "~/foo" };
             table.Add(settings);
             table.Add(settingsA);
@@ -121,7 +121,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void PathAndHostMustBothMatch() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default", RequestUrlHost = "www.example.com", };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName, RequestUrlHost = "www.example.com", };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "~/foo" };
             var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "wiki.example.com", RequestUrlPrefix = "~/bar" };
             var settingsG = new ShellSettings { Name = "Gamma", RequestUrlHost = "wiki.example.com" };
@@ -161,8 +161,8 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void HostNameMatchesRightmostIfRequestIsLonger() {
             var table = (IRunningShellTable) new RunningShellTable();
-            var settings = new ShellSettings {Name = "Default"};
-            var settingsA = new ShellSettings {Name = "Alpha", RequestUrlHost = "example.com"};
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName };
+            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "example.com" };
             table.Add(settings);
             table.Add(settingsA);
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "www.example.com")), Is.SameAs(settingsA));
@@ -174,10 +174,10 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void LongestMatchingHostHasPriority() {
             var table = (IRunningShellTable) new RunningShellTable();
-            var settings = new ShellSettings {Name = "Default"};
-            var settingsA = new ShellSettings {Name = "Alpha", RequestUrlHost = "www.example.com"};
-            var settingsB = new ShellSettings {Name = "Beta", RequestUrlHost = "example.com"};
-            var settingsG = new ShellSettings {Name = "Gamma", RequestUrlHost = "wiki.example.com"};
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName };
+            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "www.example.com" };
+            var settingsB = new ShellSettings { Name = "Beta", RequestUrlHost = "example.com" };
+            var settingsG = new ShellSettings { Name = "Gamma", RequestUrlHost = "wiki.example.com" };
             table.Add(settings);
             table.Add(settingsA);
             table.Add(settingsB);
@@ -193,7 +193,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void ShellNameUsedToDistinctThingsAsTheyAreAdded() {
             var table = (IRunningShellTable)new RunningShellTable();
-            var settings = new ShellSettings { Name = "Default" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "removed.example.com" };
             var settingsB = new ShellSettings { Name = "Alpha", RequestUrlHost = "added.example.com" };
             table.Add(settings);

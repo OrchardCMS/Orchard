@@ -64,7 +64,7 @@ namespace Orchard.Tests.Environment.State {
         public void CallingAddTaskReturnsResultIdentifierAndCausesPendingToBeTrue() {
             var engine = _container.Resolve<IProcessingEngine>();
             var pending1 = engine.AreTasksPending();
-            var resultId = engine.AddTask(new ShellSettings {Name = "Default"}, null, null, null);
+            var resultId = engine.AddTask(new ShellSettings { Name = ShellSettings.DefaultName }, null, null, null);
             var pending2 = engine.AreTasksPending();
             Assert.That(pending1, Is.False);
             Assert.That(resultId, Is.Not.Null);

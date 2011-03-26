@@ -58,7 +58,12 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         public bool FileExists(string virtualPath) {
-            return HostingEnvironment.VirtualPathProvider.FileExists(virtualPath);
+            try {
+                return HostingEnvironment.VirtualPathProvider.FileExists(virtualPath);
+            } catch {
+                // Medium Trust or invalid mappings that fall outside the app folder
+                return false;
+            }
         }
 
         public bool DirectoryExists(string virtualPath) {

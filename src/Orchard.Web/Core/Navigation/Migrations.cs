@@ -20,12 +20,23 @@ namespace Orchard.Core.Navigation {
                     .Column<bool>("OnMainMenu")
                 );
 
-            ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("MenuPart"));
             ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("MenuPart"));
             ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg.WithPart("MenuPart"));
             ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
             
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.CreateTable("AdminMenuPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("AdminMenuText")
+                    .Column<string>("AdminMenuPosition")
+                    .Column<bool>("OnAdminMenu")
+                );
+            ContentDefinitionManager.AlterPartDefinition("AdminMenuPart", builder => builder.Attachable());
+            return 2;
         }
 
     }

@@ -5,6 +5,7 @@ using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
+using Orchard.Packaging.Models;
 using Orchard.UI.Notify;
 using NuGetPackageManager = NuGet.PackageManager;
 

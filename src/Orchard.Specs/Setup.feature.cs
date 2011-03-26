@@ -176,13 +176,11 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table4.AddRow(new string[] {
                         "Module",
-                        "Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Or" +
-                            "chard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard" +
-                            ".Modules, Orchard.Widgets, Orchard.jQuery, TinyMce"});
+                        @"Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Lists, Orchard.ContentTypes, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce, Orchard.Blogs, Orchard.Tags, Orchard.Packaging, Orchard.Recipes"});
             table4.AddRow(new string[] {
                         "Core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, S" +
-                            "ettings, Shapes, XmlRpc"});
+                        "Common, Containers, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, S" +
+                            "cheduling, Settings, Shapes, XmlRpc"});
             table4.AddRow(new string[] {
                         "Theme",
                         "SafeMode, TheThemeMachine"});

@@ -21,7 +21,7 @@ using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.DataMigration {
     [TestFixture]
-    public class SchemaBuilderTests {
+    public class SchemaBuilderTestsBase {
         private IContainer _container;
         private ISessionFactory _sessionFactory;
         private string _databaseFileName;
@@ -63,8 +63,6 @@ namespace Orchard.Tests.DataMigration {
         [Test]
         public void AllMethodsShouldBeCalledSuccessfully() {
 
-            _schemaBuilder = new SchemaBuilder(new NullInterpreter());
-
             _schemaBuilder
                 .CreateTable("User", table => table
                     .ContentPartRecord()
@@ -75,19 +73,17 @@ namespace Orchard.Tests.DataMigration {
                     .Column("City", DbType.String)
                     .Column("ZIP", DbType.Int32, column => column.Unique())
                     .Column("UserId", DbType.Int32, column => column.NotNull()))
-                .CreateForeignKey("User_Address", "User", new[] { "UserId" }, "User", new[] { "Id" })
+                .CreateForeignKey("User_Address", "Address", new[] { "UserId" }, "User", new[] { "Id" })
                 .AlterTable("User", table => table
                     .AddColumn("Age", DbType.Int32))
                 .AlterTable("User", table => table
                     .DropColumn("Lastname"))
                 .AlterTable("User", table => table
-                    .CreateIndex("IDX_XYZ", "NickName"))
+                    .CreateIndex("IDX_XYZ", "Firstname"))
                 .AlterTable("User", table => table
                     .DropIndex("IDX_XYZ"))
                 .DropForeignKey("Address", "User_Address")
-                .DropTable("Address")
-                .ExecuteSql("drop database", statement => statement.ForProvider("SqlCe"))
-                .ExecuteSql("DROP DATABASE", statement => statement.ForProvider("SQLServer"));
+                .DropTable("Address");
         }
 
         [Test]

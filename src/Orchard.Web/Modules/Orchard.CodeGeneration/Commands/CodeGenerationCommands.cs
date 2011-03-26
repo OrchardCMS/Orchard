@@ -14,7 +14,6 @@ using Orchard.Environment.Extensions.Models;
 namespace Orchard.CodeGeneration.Commands {
 
     public class CodeGenerationCommands : DefaultOrchardCommandHandler {
-
         private readonly IExtensionManager _extensionManager;
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
@@ -35,6 +34,9 @@ namespace Orchard.CodeGeneration.Commands {
             ISchemaCommandGenerator schemaCommandGenerator) {
             _extensionManager = extensionManager;
             _schemaCommandGenerator = schemaCommandGenerator;
+
+            // Default is to include in the solution when generating modules / themes
+            IncludeInSolution = true;
         }
 
         [OrchardSwitch]
@@ -214,6 +216,8 @@ namespace Orchard.CodeGeneration.Commands {
                 }
             }
 
+            File.WriteAllText(modulePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleRootWebConfig.txt"));
+            content.Add(modulePath + "Web.config");
             File.WriteAllText(modulePath + "Views\\Web.config", File.ReadAllText(_codeGenTemplatePath + "ViewsWebConfig.txt"));
             content.Add(modulePath + "Views\\Web.config");
             File.WriteAllText(modulePath + "Scripts\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
@@ -284,6 +288,8 @@ namespace Orchard.CodeGeneration.Commands {
                 }
             }
 
+            File.WriteAllText(themePath + "Web.config", File.ReadAllText(_codeGenTemplatePath + "ModuleRootWebConfig.txt"));
+            createdFiles.Add(themePath + "Web.config");
             var webConfig = themePath + "Views\\Web.config";
             File.WriteAllText(webConfig, File.ReadAllText(_codeGenTemplatePath + "\\ViewsWebConfig.txt"));
             createdFiles.Add(webConfig);
@@ -307,6 +313,9 @@ namespace Orchard.CodeGeneration.Commands {
 
             File.WriteAllBytes(themePath + "Theme.png", File.ReadAllBytes(_codeGenTemplatePath + "Theme.png"));
             createdFiles.Add(themePath + "Theme.png");
+
+            File.WriteAllText(themePath + "Placement.info", File.ReadAllText(_codeGenTemplatePath + "Placement.info"));
+            createdFiles.Add(themePath + "Placement.info");
 
             // create new csproj for the theme
             if (projectGuid != null) {
@@ -341,9 +350,6 @@ namespace Orchard.CodeGeneration.Commands {
                     solutionText = solutionText.Insert(solutionText.LastIndexOf("EndGlobalSection"), "\t{" + projectGuid + "} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}\r\n\t");
                     File.WriteAllText(solutionPath, solutionText);
                     TouchSolution(output);
-                }
-                else {
-                    output.WriteLine(T("Warning: Solution file could not be found at {0}", solutionPath));
                 }
             }
         }

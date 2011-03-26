@@ -126,6 +126,11 @@
                     }
                 });
 
+            //make sure the placeholder value is not taken as the input value when submitting forms
+            $("form").live("submit", function () {
+               $(":input[placeholder].placeholderd").val("");
+            });
+
             return _this;
         },
         toggleWhatYouControl: function () {

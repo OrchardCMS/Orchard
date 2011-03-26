@@ -1,9 +1,11 @@
 ﻿@model Orchard.Media.ViewModels.MediaFolderEditPropertiesViewModel
 @using Orchard.Media.Helpers;
 @using Orchard.Media.Models;
-@{ Style.Require("MediaAdmin"); }
+@{
+    Style.Require("MediaAdmin");
+    Layout.Title = T("Folder Properties").ToString();
+}
 
-<h1>@Html.TitleForPage(T("Folder Properties").ToString())</h1>
 <div class="breadCrumbs">
 <p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
     @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {
@@ -22,6 +24,6 @@
     </fieldset>
     <fieldset>        
         <button class="primaryAction" type="submit" name="submit.Save" value="@T("Save")">@T("Save")</button>
-        <button type="submit" name="submit.Delete" value="@T("Remove")">@T("Remove")</button>
+        <button type="submit" name="submit.Delete" value="@T("Delete")">@T("Delete")</button>
     </fieldset>
 }

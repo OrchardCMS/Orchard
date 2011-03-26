@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Initialization -->
+  
+  <PropertyGroup>
+    <OrchardWebFolder>$(MSBuildProjectDirectory)\..\..\Orchard.Web</OrchardWebFolder>
+    <DestinationFolder>$(MSBuildProjectDirectory)</DestinationFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Excluded Include="$(OrchardWebFolder)\**\bin\**\*;$(OrchardWebFolder)\**\obj\**\*;" />
+    
+    <CoreFiles Include="$(OrchardWebFolder)\Core\**\*" Exclude="@(Excluded)" />
+    <ModulesFiles Include="$(OrchardWebFolder)\Modules\**\*" Exclude="@(Excluded)" />
+    <ThemesFiles Include="$(OrchardWebFolder)\Themes\**\*" Exclude="@(Excluded)" />
+  </ItemGroup>
+  
+  <!-- Coordinating Targets -->
+  
+  <Target Name="Build">
+    <CallTarget Targets="Copyfiles"/>
+  </Target>
+  
+  <Target Name="Clean">
+    <RemoveDir Directories="$(DestinationFolder)\Core;$(DestinationFolder)\Modules;$(DestinationFolder)\Themes" ContinueOnError="true" />
+  </Target>
+  
+  <!-- Work Targets -->
+  
+  <Target Name ="CopyFiles">
+    <Message Text="Copying Core, Modules and Themes folders"/>
+    <Message Text="  Source:      $(OrchardWebFolder)"/>
+    <Message Text="  Destination: $(DestinationFolder)"/>
+    
+    <!-- Note: We use "SkipUnchangedFiles" and "UseHardlinksIfPossible" to try to make things as fast as possible -->
+    <Copy SourceFiles="@(CoreFiles)" DestinationFolder="$(DestinationFolder)\Core\%(RecursiveDir)" SkipUnchangedFiles="True" UseHardlinksIfPossible="True"/>
+    <Copy SourceFiles="@(ModulesFiles)" DestinationFolder="$(DestinationFolder)\Modules\%(RecursiveDir)" SkipUnchangedFiles="True" UseHardlinksIfPossible="True"/>
+    <Copy SourceFiles="@(ThemesFiles)" DestinationFolder="$(DestinationFolder)\Themes\%(RecursiveDir)" SkipUnchangedFiles="True" UseHardlinksIfPossible="True"/>
+    
+    <Message Text="Done copying files."/>
+  </Target>
+  
+</Project>

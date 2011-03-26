@@ -49,7 +49,7 @@ namespace Orchard.Core.Containers.Drivers {
         }
 
         protected override DriverResult Editor(ContainerWidgetPart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
+            return Editor(part, (IUpdateModel)null, shapeHelper);
         }
 
         protected override DriverResult Editor(ContainerWidgetPart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -75,6 +75,67 @@ namespace Orchard.Core.Containers.Drivers {
 
                     return shapeHelper.EditorTemplate(TemplateName: "ContainerWidget", Model: model, Prefix: "ContainerWidget");
                 });
+        }
+
+        protected override void Importing(ContainerWidgetPart part, ImportContentContext context) {
+            var containerIdentity = context.Attribute(part.PartDefinition.Name, "Container");
+            if (containerIdentity != null) {
+                var container = context.GetItemFromSession(containerIdentity);
+                if (container != null) {
+                    part.Record.ContainerId = container.Id;
+                }
+            }
+
+            var pageSize = context.Attribute(part.PartDefinition.Name, "PageSize");
+            if (pageSize != null) {
+                part.Record.PageSize = Convert.ToInt32(pageSize);
+            }
+
+            var orderByProperty = context.Attribute(part.PartDefinition.Name, "OrderByProperty");
+            if (orderByProperty != null) {
+                part.Record.OrderByProperty = orderByProperty;
+            }
+
+            var orderByDirection = context.Attribute(part.PartDefinition.Name, "OrderByDirection");
+            if (orderByDirection != null) {
+                part.Record.OrderByDirection = Convert.ToInt32(orderByDirection);
+            }
+
+            var applyByFilter = context.Attribute(part.PartDefinition.Name, "ApplyFilter");
+            if (applyByFilter != null) {
+                part.Record.ApplyFilter = Convert.ToBoolean(applyByFilter);
+            }
+
+            var filterByProperty = context.Attribute(part.PartDefinition.Name, "FilterByProperty");
+            if (filterByProperty != null) {
+                part.Record.FilterByProperty = filterByProperty;
+            }
+
+            var filterByOperator = context.Attribute(part.PartDefinition.Name, "FilterByOperator");
+            if (filterByOperator != null) {
+                part.Record.FilterByOperator = filterByOperator;
+            }
+
+            var filterByValue = context.Attribute(part.PartDefinition.Name, "FilterByValue");
+            if (filterByValue != null) {
+                part.Record.FilterByValue = filterByValue;
+            }
+        }
+
+        protected override void Exporting(ContainerWidgetPart part, ExportContentContext context) {
+            var container = _contentManager.Get(part.Record.ContainerId);
+            if (container != null) {
+                var containerIdentity = _contentManager.GetItemMetadata(container).Identity;
+                context.Element(part.PartDefinition.Name).SetAttributeValue("Container", containerIdentity.ToString());
+            }
+
+            context.Element(part.PartDefinition.Name).SetAttributeValue("PageSize", part.Record.PageSize);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("OrderByProperty", part.Record.OrderByProperty);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("OrderByDirection", part.Record.OrderByDirection);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("ApplyFilter", part.Record.ApplyFilter);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("FilterByProperty", part.Record.FilterByProperty);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("FilterByOperator", part.Record.FilterByOperator);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("FilterByValue", part.Record.FilterByValue);
         }
     }
 

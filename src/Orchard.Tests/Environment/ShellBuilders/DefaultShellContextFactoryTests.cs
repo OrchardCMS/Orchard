@@ -28,13 +28,13 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void NormalExecutionReturnsExpectedObjects() {
-            var settings = new ShellSettings { Name = "Default" };
+            var settings = new ShellSettings { Name = ShellSettings.DefaultName };
             var descriptor = new ShellDescriptor { SerialNumber = 6655321 };
             var blueprint = new ShellBlueprint();
             var shellLifetimeScope = _container.BeginLifetimeScope("shell");
 
             _container.Mock<IShellDescriptorCache>()
-                .Setup(x => x.Fetch("Default"))
+                .Setup(x => x.Fetch(ShellSettings.DefaultName))
                 .Returns(descriptor);
 
             _container.Mock<ICompositionStrategy>()
@@ -83,7 +83,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                 .Returns(_container.BeginLifetimeScope("shell"));
 
             var factory = _container.Resolve<IShellContextFactory>();
-            var context = factory.CreateSetupContext(new ShellSettings { Name = "Default" });
+            var context = factory.CreateSetupContext(new ShellSettings { Name = ShellSettings.DefaultName });
 
             Assert.That(context.Descriptor.Features, Has.Some.With.Property("Name").EqualTo("Orchard.Setup"));
         }

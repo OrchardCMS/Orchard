@@ -47,7 +47,7 @@ namespace Orchard.Core.Routable.Services {
         }
 
         public void FillSlugFromTitle<TModel>(TModel model) where TModel : IRoutableAspect {
-            if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
+            if ((model.Slug != null && !string.IsNullOrEmpty(model.Slug.Trim())) || string.IsNullOrEmpty(model.Title))
                 return;
 
             FillSlugContext slugContext = new FillSlugContext(model.Title);

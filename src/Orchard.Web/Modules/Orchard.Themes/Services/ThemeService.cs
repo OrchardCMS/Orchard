@@ -3,38 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using JetBrains.Annotations;
-using Orchard.Environment.Descriptor;
-using Orchard.Environment.Descriptor.Models;
+using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
 
 namespace Orchard.Themes.Services {
-    public interface IThemeService : IDependency {
-        void DisableThemeFeatures(string themeName);
-        void EnableThemeFeatures(string themeName);
-    }
-
     [UsedImplicitly]
     public class ThemeService : IThemeService {
         private readonly IExtensionManager _extensionManager;
         private readonly IFeatureManager _featureManager;
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
+        private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly ICacheManager _cacheManager;
 
         public ThemeService(
-            IShellDescriptorManager shellDescriptorManager,
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
             IEnumerable<IThemeSelector> themeSelectors,
+            IVirtualPathProvider virtualPathProvider,
+            ICacheManager cacheManager) {
 
-            IWorkContextAccessor workContextAccessor,
-            ShellDescriptor shellDescriptor,
-            IOrchardServices orchardServices) {
             _extensionManager = extensionManager;
             _featureManager = featureManager;
             _themeSelectors = themeSelectors;
+            _virtualPathProvider = virtualPathProvider;
+            _cacheManager = cacheManager;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -119,6 +116,35 @@ namespace Orchard.Themes.Services {
                 }
             }
             return themes;
+        }
+
+        /// <summary>
+        /// Determines if a theme was recently installed by using the project's last written time.
+        /// </summary>
+        /// <param name="extensionDescriptor">The extension descriptor.</param>
+        public bool IsRecentlyInstalled(ExtensionDescriptor extensionDescriptor) {
+            DateTime lastWrittenUtc = _cacheManager.Get(extensionDescriptor, descriptor => {
+                string projectFile = GetManifestPath(extensionDescriptor);
+                if (!string.IsNullOrEmpty(projectFile)) {
+                    // If project file was modified less than 24 hours ago, the module was recently deployed
+                    return _virtualPathProvider.GetFileLastWriteTimeUtc(projectFile);
+                }
+
+                return DateTime.UtcNow;
+            });
+
+            return DateTime.UtcNow.Subtract(lastWrittenUtc) < new TimeSpan(1, 0, 0, 0);
+        }
+
+        private string GetManifestPath(ExtensionDescriptor descriptor) {
+            string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
+                                                       "theme.txt");
+
+            if (!_virtualPathProvider.FileExists(projectPath)) {
+                return null;
+            }
+
+            return projectPath;
         }
     }
 }

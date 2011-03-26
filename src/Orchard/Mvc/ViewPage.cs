@@ -87,7 +87,7 @@ namespace Orchard.Mvc {
         }
 
         public bool HasText(object thing) {
-            return !string.IsNullOrWhiteSpace(thing as string);
+            return !string.IsNullOrWhiteSpace(Convert.ToString(thing));
         }
 
         public OrchardTagBuilder Tag(dynamic shape, string tagName) {

@@ -140,7 +140,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             strategy.Discover(builder);
             var alterations = alterationBuilders.Select(alterationBuilder=>alterationBuilder.Build());
 
-            Assert.That(alterations.Any(alteration => alteration.ShapeType == "AlphaShape"));
+            Assert.That(alterations.Any(alteration => alteration.ShapeType.Equals("AlphaShape", StringComparison.OrdinalIgnoreCase)));
         }
 
     }

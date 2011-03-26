@@ -23,7 +23,10 @@ namespace Orchard.Search.Drivers {
 
         protected override string Prefix { get { return "SearchSettings"; } }
 
-        protected override DriverResult Editor(SearchSettingsPart part, dynamic shapeHelper) {
+        protected override DriverResult Editor(SearchSettingsPart part, string groupInfoId, dynamic shapeHelper) {
+            if (!string.Equals(groupInfoId, "search", StringComparison.OrdinalIgnoreCase))
+                return null;
+
             SearchSettingsViewModel model = new SearchSettingsViewModel();
             String [] searchedFields = part.SearchedFields;
 
@@ -38,7 +41,10 @@ namespace Orchard.Search.Drivers {
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts/Search.SiteSettings", Model: model, Prefix: Prefix));
         }
 
-        protected override DriverResult Editor(SearchSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
+        protected override DriverResult Editor(SearchSettingsPart part, IUpdateModel updater, string groupInfoId, dynamic shapeHelper) {
+            if (!string.Equals(groupInfoId, "search", StringComparison.OrdinalIgnoreCase))
+                return null;
+
             SearchSettingsViewModel model = new SearchSettingsViewModel();
 
             if (updater.TryUpdateModel(model, Prefix, null, null)) {

@@ -1,6 +1,8 @@
 @model Orchard.ContentTypes.ViewModels.CreateTypeViewModel
 
-<h1>@Html.TitleForPage(T("New Content Type").ToString())</h1>@using (Html.BeginFormAntiForgeryPost()) {
+@{ Layout.Title = T("New Content Type").ToString(); }
+
+@using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <fieldset>
         <label for="DisplayName">@T("Display Name")</label>

@@ -1,0 +1,9 @@
+﻿Name: Recipes
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.0.20
+OrchardVersion: 1.0.20
+Description: Provides Orchard Recipes.
+FeatureDescription: Implementation of Orchard recipes.
+Category: Core

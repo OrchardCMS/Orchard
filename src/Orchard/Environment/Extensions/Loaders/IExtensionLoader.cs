@@ -41,6 +41,6 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         string GetWebFormAssemblyDirective(DependencyDescriptor dependency);
         IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency);
-        IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath);
+        IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath);
     }
 }

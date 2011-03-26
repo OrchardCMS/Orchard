@@ -5,9 +5,6 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The comments system implemented by this module can be applied to arbitrary Orchard content types, such as blogs and pages. It includes comment validation and spam protection through the Akismet service.
-Features:
-    Orchard.Comments:
-        Name: Comments
-        Description: Standard content item comments.
-        Dependencies: Settings
-        Category: Social
+FeatureDescription: Standard content item comments.
+Dependencies: Settings
+Category: Social

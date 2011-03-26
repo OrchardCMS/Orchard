@@ -42,7 +42,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 model = new NavigationManagementViewModel();
 
             if (model.MenuItemEntries == null || model.MenuItemEntries.Count() < 1)
-                model.MenuItemEntries = _menuService.Get().Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.MenuItem.Position, new FlatPositionComparer()).ToList();
+                model.MenuItemEntries = _menuService.Get().Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.Position, new FlatPositionComparer()).ToList();
 
             // need action name as this action is referenced from another action
             return View("Index", model);
@@ -58,10 +58,10 @@ namespace Orchard.Core.Navigation.Controllers {
                 foreach (var menuItemEntry in menuItemEntries) {
                     MenuPart menuPart = _menuService.Get(menuItemEntry.MenuItemId);
 
-                    menuPart.MenuText = menuItemEntry.MenuItem.Text;
-                    menuPart.MenuPosition = menuItemEntry.MenuItem.Position;
+                    menuPart.MenuText = menuItemEntry.Text;
+                    menuPart.MenuPosition = menuItemEntry.Position;
                     if (menuPart.Is<MenuItemPart>())
-                        menuPart.As<MenuItemPart>().Url = menuItemEntry.MenuItem.Url;
+                        menuPart.As<MenuItemPart>().Url = menuItemEntry.Url;
                 }
             }
 
@@ -70,16 +70,14 @@ namespace Orchard.Core.Navigation.Controllers {
 
         private MenuItemEntry CreateMenuItemEntries(MenuPart menuPart) {
             return new MenuItemEntry {
-                                         MenuItem = new MenuItem {
-                                                                                   Text = menuPart.MenuText,
-                                                                                   Position = menuPart.MenuPosition,
-                                                                                   Url = menuPart.Is<MenuItemPart>()
-                                                                                             ? menuPart.As<MenuItemPart>().Url
-                                                                                             : _navigationManager.GetUrl(null, _services.ContentManager.GetItemMetadata(menuPart).DisplayRouteValues)
-                                                                               },
-                                         MenuItemId = menuPart.Id,
-                                         IsMenuItem = menuPart.Is<MenuItemPart>()
-                                     };
+                MenuItemId = menuPart.Id,
+                IsMenuItem = menuPart.Is<MenuItemPart>(),
+                Text = menuPart.MenuText,
+                Position = menuPart.MenuPosition,
+                Url = menuPart.Is<MenuItemPart>()
+                              ? menuPart.As<MenuItemPart>().Url
+                              : _navigationManager.GetUrl(null, _services.ContentManager.GetItemMetadata(menuPart).DisplayRouteValues),
+            };
         }
 
         public ActionResult Create() {
@@ -87,23 +85,26 @@ namespace Orchard.Core.Navigation.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Create(CreateMenuItemViewModel model) {
+        public ActionResult Create(NavigationManagementViewModel model) {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
             var menuPart = _services.ContentManager.New<MenuPart>("MenuItem");
-            model.MenuItem = _services.ContentManager.UpdateEditor(menuPart, this);
+            menuPart.OnMainMenu = true;
+            menuPart.MenuText = model.NewMenuItem.Text;
+            menuPart.MenuPosition = model.NewMenuItem.Position;
+            if (string.IsNullOrEmpty(menuPart.MenuPosition))
+                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
+
+            var menuItem = menuPart.As<MenuItemPart>();
+            menuItem.Url = model.NewMenuItem.Url;
 
             if (!ModelState.IsValid) {
                 _services.TransactionManager.Cancel();
-                return Index(new NavigationManagementViewModel {NewMenuItem = model});
+                return View("Index", model);
             }
 
-            if (string.IsNullOrEmpty(menuPart.MenuPosition))
-                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
-            menuPart.OnMainMenu = true;
-
-            _services.ContentManager.Create(model.MenuItem);
+            _services.ContentManager.Create(menuPart);
 
             return RedirectToAction("Index");
         }

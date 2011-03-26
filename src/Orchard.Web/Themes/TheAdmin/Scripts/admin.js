@@ -56,4 +56,8 @@
             return this;
         }
     });
+
+    $(".bulk-actions-auto select").change(function () {
+        $(this).closest("form").find(".apply-bulk-actions-auto:first").click();
+    });
 })(jQuery);

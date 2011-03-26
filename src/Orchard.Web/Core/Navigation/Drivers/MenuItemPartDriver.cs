@@ -23,5 +23,16 @@ namespace Orchard.Core.Navigation.Drivers {
             updater.TryUpdateModel(itemPart, Prefix, null, null);
             return null;
         }
+
+        protected override void Importing(MenuItemPart part, ContentManagement.Handlers.ImportContentContext context) {
+            var url = context.Attribute(part.PartDefinition.Name, "Url");
+            if (url != null) {
+                part.Url = url;
+            }
+        }
+
+        protected override void Exporting(MenuItemPart part, ContentManagement.Handlers.ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Url", part.Url);
+        }
     }
 }

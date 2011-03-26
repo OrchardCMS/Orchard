@@ -1,0 +1,13 @@
+﻿@*
+    Model:
+      ContentPart
+*@
+
+@using Orchard.Comments.Models;
+@using Orchard.Utility.Extensions;
+
+@{
+    var comment = (Orchard.Comments.Models.CommentPart)Model.ContentPart;
+}
+
+@Html.LinkOrDefault(comment.Record.Author, comment.Record.SiteName, new { rel = "nofollow" })

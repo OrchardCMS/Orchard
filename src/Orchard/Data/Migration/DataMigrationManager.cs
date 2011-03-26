@@ -187,7 +187,7 @@ namespace Orchard.Data.Migration {
             return dataMigration
                 .GetType()
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Select(mi => GetUpdateMethod(mi))
+                .Select(GetUpdateMethod)
                 .Where(tuple => tuple != null)
                 .ToDictionary(tuple => tuple.Item1, tuple => tuple.Item2);
         }

@@ -13,18 +13,18 @@ namespace Orchard.Mvc.Routes {
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
-            var displayNamesPerArea = _blueprint.Controllers.GroupBy(
+            var displayPathsPerArea = _blueprint.Controllers.GroupBy(
                 x => x.AreaName,
-                x => x.Feature.Descriptor.Extension.Name);
+                x => x.Feature.Descriptor.Extension.Path);
 
-            foreach (var item in displayNamesPerArea) {
+            foreach (var item in displayPathsPerArea) {
                 var areaName = item.Key;
-                var displayName = item.Distinct().Single();
+                var displayPath = item.Distinct().Single();
 
                 yield return new RouteDescriptor {
                     Priority = -10,
                     Route = new Route(
-                        "Admin/" + displayName + "/{action}/{id}",
+                        "Admin/" + displayPath + "/{action}/{id}",
                         new RouteValueDictionary {
                             {"area", areaName},
                             {"controller", "admin"},
@@ -40,7 +40,7 @@ namespace Orchard.Mvc.Routes {
                 yield return new RouteDescriptor {
                     Priority = -10,
                     Route = new Route(
-                        displayName + "/{controller}/{action}/{id}",
+                        displayPath + "/{controller}/{action}/{id}",
                         new RouteValueDictionary {
                             {"area", areaName},
                             {"controller", "home"},

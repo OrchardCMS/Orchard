@@ -3,8 +3,10 @@
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Script.Include("admin.js");
+
+    Layout.Title = T("Edit Content Type").ToString();
 }
-<h1>@Html.TitleForPage(T("Edit Content Type").ToString())</h1>
+
 <p class="breadcrumb">@Html.ActionLink(T("Content Types").Text, "index")@T(" &#62; ")@T("Edit Content Type")</p>
 @using (Html.BeginFormAntiForgeryPost()) {
     // todo: come up with real itemtype definitions and locations for said definitions

@@ -9,6 +9,7 @@ using System.Web.Mvc.Html;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy;
+using Orchard.Environment;
 using Orchard.Mvc;
 using Orchard.Settings;
 using Orchard.UI;
@@ -20,21 +21,18 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Shapes {
     public class CoreShapes : IShapeTableProvider {
-        private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly Work<WorkContext> _workContext;
+        private readonly Work<IResourceManager> _resourceManager;
+        private readonly Work<IHttpContextAccessor> _httpContextAccessor;
 
-        public CoreShapes(IWorkContextAccessor workContextAccessor, IHttpContextAccessor httpContextAccessor) {
-            // needed to get CurrentSite.
-            // note that injecting ISiteService here causes a stack overflow in AutoFac!
-            _workContextAccessor = workContextAccessor;
+        public CoreShapes(
+            Work<WorkContext> workContext, 
+            Work<IResourceManager> resourceManager,
+            Work<IHttpContextAccessor> httpContextAccessor
+            ) {
+            _workContext = workContext;
+            _resourceManager = resourceManager;
             _httpContextAccessor = httpContextAccessor;
-        }
-
-        // not injected the usual way because this component is a 'static' dependency and RM is per-request
-        private IResourceManager ResourceManager {
-            get {
-                return _workContextAccessor.GetContext(_httpContextAccessor.Current()).Resolve<IResourceManager>();
-            }
         }
 
         public void Discover(ShapeTableBuilder builder) {
@@ -54,6 +52,7 @@ namespace Orchard.Core.Shapes {
                     layout.Content = created.New.Zone();
                     layout.Content.ZoneName = "Content";
                     layout.Content.Add(created.New.PlaceChildContent(Source: layout));
+
                 });
 
             // 'Zone' shapes are built on the Zone base class
@@ -66,6 +65,8 @@ namespace Orchard.Core.Shapes {
                     string zoneName = zone.ZoneName;
                     zone.Classes.Add("zone-" + zoneName.HtmlClassify());
                     zone.Classes.Add("zone");
+
+                    // Zone__[ZoneName] e.g. Zone-SideBar
                     zone.Metadata.Alternates.Add("Zone__" + zoneName);
                 });
 
@@ -83,6 +84,22 @@ namespace Orchard.Core.Shapes {
                     var menuItem = displaying.Shape;
                     var menu = menuItem.Menu;
                     menuItem.Metadata.Alternates.Add("MenuItem__" + menu.MenuName);
+                });
+
+            builder.Describe("LocalMenu")
+                .OnDisplaying(displaying => {
+                    var menu = displaying.Shape;
+                    string menuName = menu.MenuName;
+                    menu.Classes.Add("localmenu-" + menuName.HtmlClassify());
+                    menu.Classes.Add("localmenu");
+                    menu.Metadata.Alternates.Add("LocalMenu__" + menuName);
+                });
+
+            builder.Describe("LocalMenuItem")
+                .OnDisplaying(displaying => {
+                    var menuItem = displaying.Shape;
+                    var menu = menuItem.Menu;
+                    menuItem.Metadata.Alternates.Add("LocalMenuItem__" + menu.MenuName);
                 });
 
             // 'List' shapes start with several empty collections
@@ -192,25 +209,25 @@ namespace Orchard.Core.Shapes {
         [Shape]
         public void HeadScripts(dynamic Display, TextWriter Output) {
             WriteResources(Display, Output, "script", ResourceLocation.Head, null);
-            WriteLiteralScripts(Output, ResourceManager.GetRegisteredHeadScripts());
+            WriteLiteralScripts(Output, _resourceManager.Value.GetRegisteredHeadScripts());
         }
 
         [Shape]
         public void FootScripts(dynamic Display, TextWriter Output) {
             WriteResources(Display, Output, "script", null, ResourceLocation.Head);
-            WriteLiteralScripts(Output, ResourceManager.GetRegisteredFootScripts());
+            WriteLiteralScripts(Output, _resourceManager.Value.GetRegisteredFootScripts());
         }
 
         [Shape]
         public void Metas(TextWriter Output) {
-            foreach (var meta in ResourceManager.GetRegisteredMetas()) {
+            foreach (var meta in _resourceManager.Value.GetRegisteredMetas() ) {
                 Output.WriteLine(meta.GetTag());
             }
         }
 
         [Shape]
         public void HeadLinks(TextWriter Output) {
-            foreach (var link in ResourceManager.GetRegisteredLinks()) {
+            foreach (var link in _resourceManager.Value.GetRegisteredLinks() ) {
                 Output.WriteLine(link.GetTag());
             }
         }
@@ -221,13 +238,13 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public void Style(TextWriter Output, ResourceDefinition Resource, string Url, string Condition) {
-            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition);
+        public void Style(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
+            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
         }
 
         [Shape]
-        public void Resource(TextWriter Output, ResourceDefinition Resource, string Url, string Condition) {
-            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition);
+        public void Resource(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
+            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
         }
 
         private static void WriteLiteralScripts(TextWriter output, IEnumerable<string> scripts) {
@@ -241,7 +258,7 @@ namespace Orchard.Core.Shapes {
 
         private void WriteResources(dynamic Display, TextWriter Output, string resourceType, ResourceLocation? includeLocation, ResourceLocation? excludeLocation) {
             bool debugMode;
-            var site = _workContextAccessor.GetContext(_httpContextAccessor.Current()).CurrentSite;
+            var site = _workContext.Value.CurrentSite;
             switch (site.ResourceDebugMode) {
                 case ResourceDebugMode.Enabled:
                     debugMode = true;
@@ -251,27 +268,28 @@ namespace Orchard.Core.Shapes {
                     break;
                 default:
                     Debug.Assert(site.ResourceDebugMode == ResourceDebugMode.FromAppSetting, "Unknown ResourceDebugMode value.");
-                    debugMode = _httpContextAccessor.Current().IsDebuggingEnabled;
+                    debugMode = _httpContextAccessor.Value.Current().IsDebuggingEnabled;
                     break;
             }
             var defaultSettings = new RequireSettings {
                 DebugMode = debugMode,
                 Culture = CultureInfo.CurrentUICulture.Name,
             };
-            var requiredResources = ResourceManager.BuildRequiredResources(resourceType);
-            var appPath = _httpContextAccessor.Current().Request.ApplicationPath;
+            var requiredResources = _resourceManager.Value.BuildRequiredResources(resourceType);
+            var appPath = _httpContextAccessor.Value.Current().Request.ApplicationPath;
             foreach (var context in requiredResources.Where(r =>
                 (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
                 (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {
 
                 var path = context.GetResourceUrl(defaultSettings, appPath);
                 var condition = context.Settings.Condition;
+                var attributes = context.Settings.HasAttributes ? context.Settings.Attributes : null;
                 IHtmlString result;
                 if (resourceType == "stylesheet") {
-                    result = Display.Style(Url: path, Condition: condition, Resource: context.Resource);
+                    result = Display.Style(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 else {
-                    result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource);
+                    result = Display.Resource(Url: path, Condition: condition, Resource: context.Resource, TagAttributes: attributes);
                 }
                 Output.Write(result);
             }

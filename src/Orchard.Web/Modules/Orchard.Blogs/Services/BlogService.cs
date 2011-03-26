@@ -11,11 +11,11 @@ namespace Orchard.Blogs.Services {
     [UsedImplicitly]
     public class BlogService : IBlogService {
         private readonly IContentManager _contentManager;
-        private readonly IBlogSlugConstraint _blogSlugConstraint;
+        private readonly IBlogPathConstraint _blogPathConstraint;
 
-        public BlogService(IContentManager contentManager, IBlogSlugConstraint blogSlugConstraint) {
+        public BlogService(IContentManager contentManager, IBlogPathConstraint blogPathConstraint) {
             _contentManager = contentManager;
-            _blogSlugConstraint = blogSlugConstraint;
+            _blogPathConstraint = blogPathConstraint;
         }
 
         public BlogPart Get(string path) {
@@ -39,9 +39,15 @@ namespace Orchard.Blogs.Services {
                 .List();
         }
 
+        public BlogPart GetFromSlug(string slug) {
+            return _contentManager.Query<BlogPart, BlogPartRecord>()
+                .Join<RoutePartRecord>().Where(rr => rr.Slug == slug)
+                .List().FirstOrDefault();
+        }
+
         public void Delete(ContentItem blog) {
             _contentManager.Remove(blog);
-            _blogSlugConstraint.RemoveSlug(blog.As<IRoutableAspect>().Path);
+            _blogPathConstraint.RemovePath(blog.As<IRoutableAspect>().Path);
         }
     }
 }

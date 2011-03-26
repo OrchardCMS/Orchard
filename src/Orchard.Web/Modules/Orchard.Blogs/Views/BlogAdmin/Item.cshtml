@@ -1,4 +1,5 @@
 @{
     Html.AddTitleParts(T("Manage Blog").ToString());
 }
-@Display(Model)
+    @* Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type *@
+    @Display(Model)

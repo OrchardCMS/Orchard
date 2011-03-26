@@ -67,5 +67,20 @@ namespace Orchard.Utility.Extensions {
                 Select(x => Convert.ToByte(hex.Substring(x, 2), 16)).
                 ToArray();
         }
+
+        public static bool IsValidUrlSegment(this string segment) {
+            // valid isegment from rfc3987 - http://tools.ietf.org/html/rfc3987#page-8
+            // the relevant bits:
+            // isegment    = *ipchar
+            // ipchar      = iunreserved / pct-encoded / sub-delims / ":" / "@"
+            // iunreserved = ALPHA / DIGIT / "-" / "." / "_" / "~" / ucschar
+            // pct-encoded = "%" HEXDIG HEXDIG
+            // sub-delims  = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+            // ucschar     = %xA0-D7FF / %xF900-FDCF / %xFDF0-FFEF / %x10000-1FFFD / %x20000-2FFFD / %x30000-3FFFD / %x40000-4FFFD / %x50000-5FFFD / %x60000-6FFFD / %x70000-7FFFD / %x80000-8FFFD / %x90000-9FFFD / %xA0000-AFFFD / %xB0000-BFFFD / %xC0000-CFFFD / %xD0000-DFFFD / %xE1000-EFFFD
+            // 
+            // rough blacklist regex == m/^[^/?#[]@"^{}|\s`<>]+$/ (leaving off % to keep the regex simple)
+
+            return Regex.IsMatch(segment, @"^[^/?#[\]@""^{}|`<>\s]+$");
+        }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Xml;
 using Orchard.ArchiveLater.Models;
 using Orchard.ArchiveLater.Services;
 using Orchard.ArchiveLater.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using System.Globalization;
 
@@ -71,6 +73,21 @@ namespace Orchard.ArchiveLater.Drivers {
 
             return ContentShape("Parts_ArchiveLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+        }
+
+        protected override void Importing(ArchiveLaterPart part, ImportContentContext context) {
+            var scheduledUtc = context.Attribute(part.PartDefinition.Name, "ScheduledArchiveUtc");
+            if (scheduledUtc != null) {
+                part.ScheduledArchiveUtc.Value = XmlConvert.ToDateTime(scheduledUtc, XmlDateTimeSerializationMode.Utc);
+            }
+        }
+
+        protected override void Exporting(ArchiveLaterPart part, ExportContentContext context) {
+            var scheduled = part.ScheduledArchiveUtc.Value;
+            if (scheduled != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("ScheduledArchiveUtc", XmlConvert.ToString(scheduled.Value, XmlDateTimeSerializationMode.Utc));
+            }
         }
     }
 }

@@ -28,6 +28,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.ContentManagement;
 using Orchard.Data.Providers;
+using Orchard.Tests.DataMigration.Utilities;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Modules.Migrations.Orchard.Tests.DataMigration.Records;
 using Path = Bleroy.FluentPath.Path;
@@ -73,7 +74,7 @@ namespace Orchard.Tests.Modules.Migrations {
                     new Dictionary<string, object> {{"ProviderName", "SqlCe"}})
             });
 
-            builder.RegisterInstance(new ShellSettings { Name = "Default", DataTablePrefix = "TEST", DataProvider = "SqlCe" });
+            builder.RegisterInstance(new ShellSettings { Name = ShellSettings.DefaultName, DataTablePrefix = "TEST", DataProvider = "SqlCe" });
             builder.RegisterInstance(AppDataFolderTests.CreateAppDataFolder(_tempFixtureFolderName)).As<IAppDataFolder>();
             builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>();
             builder.RegisterType<SqlCeDataServicesProvider>().As<IDataServicesProvider>();
@@ -190,7 +191,7 @@ Features:
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath) {
+            public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
                 throw new NotImplementedException();
             }
 

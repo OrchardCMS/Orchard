@@ -1,6 +1,6 @@
 ﻿@model Orchard.Packaging.ViewModels.PackagingAddSourceViewModel
-<h1>
-    @Html.TitleForPage(T("Add a Feed").ToString())</h1>
+
+@{ Layout.Title = T("Add a Feed").ToString(); }
 
 @using ( Html.BeginFormAntiForgeryPost(Url.Action("AddSource")) ) {
     @Html.ValidationSummary()

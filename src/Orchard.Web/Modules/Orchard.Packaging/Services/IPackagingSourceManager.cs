@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
@@ -7,7 +10,7 @@ namespace Orchard.Packaging.Services {
         void AddSource(string feedTitle, string feedUrl);
         void RemoveSource(int id);
 
-        IEnumerable<PackagingEntry> GetModuleList(PackagingSource packagingSource = null);
-        IEnumerable<PackagingEntry> GetThemeList(PackagingSource packagingSource = null);
+        IEnumerable<PackagingEntry> GetExtensionList(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null);
+        int GetExtensionCount(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null);
     }
 }

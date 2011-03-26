@@ -4,6 +4,17 @@
 #main .features h3 {
     padding:0 3em 0 0;
 }
+#otherActionsBar {
+    clear: both;
+    border-top-width: thin;
+    border-top-style: solid;
+    border-top-color: #E4E5E6;
+    margin: 10px 0 0;
+    padding: 10px 0 0;
+}
+.pageStatus {
+    clear: both;
+}
 .features.detail-view .category > ul {
     border:1px solid #EAEAEA;
     margin-bottom:2em;
@@ -45,10 +56,10 @@
     border-color:#CFE493;
 }
 .features .disabled.feature {
-    background:#EAEAEA;
+    background:#f3f3f3;
 }
 .features.summary-view .disabled.feature {
-    border-color:#CCC;
+    border-color:#eaeaea;
 }
 .features .update.feature {
     background:#ECC;
@@ -77,7 +88,6 @@
 #main .features.detail-view h3 {
     display:inline;
     font-size:1.4em;
-    font-weight:bold;
     padding-right:0;
 }
 #main .features.summary-view .description {
@@ -136,4 +146,21 @@
 .features .feature .actions form.inline.link,
 .features .feature .actions a {
     margin-left:.5em;
+}
+
+/***Recently installed**/
+.recentlyInstalledFeature { }
+.recentlyInstalledModule {background:#fff url(images/new.gif) no-repeat 0px 5px;}
+h2.recentlyInstalledModule {padding:0 0 0 40px;}
+
+.updateAvailable {background-color: #f1f0cb;}
+.search-actions {
+    float: right;
+    display: inline;
+    height: auto;
+    margin: 0 1.4em 0 0;
+    padding-top: 0;
+}
+.manage {
+    float: right;
 }

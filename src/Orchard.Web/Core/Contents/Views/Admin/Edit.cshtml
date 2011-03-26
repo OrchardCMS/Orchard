@@ -4,9 +4,12 @@
     if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
         pageTitle = T("Edit {0}", typeDisplayName);
     }
+
+    Layout.Title = pageTitle;
 }
-<h1>@Html.TitleForPage(pageTitle)</h1>
+
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
+    // Model is a Shape, calling Display() so that it is rendered using the most specific template for its Shape type
     @Display(Model)
 }

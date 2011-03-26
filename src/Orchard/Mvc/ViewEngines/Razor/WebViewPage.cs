@@ -48,6 +48,15 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             }
         }
 
+        public void RegisterImageSet(string imageSet, string style = "", int size = 16) {
+            // hack to fake the style "alternate" for now so we don't have to change stylesheet names when this is hooked up
+            // todo: (heskew) deal in shapes so we have real alternates 
+            var imageSetStylesheet = !string.IsNullOrWhiteSpace(style)
+                ? string.Format("{0}-{1}.css", imageSet, style)
+                : string.Format("{0}.css", imageSet);
+            Style.Include(imageSetStylesheet);
+        }
+
         public virtual void RegisterLink(LinkEntry link) {
             Html.Resolve<IResourceManager>().RegisterLink(link);
         }
@@ -84,7 +93,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public bool HasText(object thing) {
-            return !string.IsNullOrWhiteSpace(thing as string);
+            return !string.IsNullOrWhiteSpace(Convert.ToString(thing));
         }
 
         public OrchardTagBuilder Tag(dynamic shape, string tagName) {

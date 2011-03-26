@@ -11,12 +11,16 @@
         public virtual void Versioned(VersionContentContext context) {}
         public virtual void Publishing(PublishContentContext context) {}
         public virtual void Published(PublishContentContext context) {}
-        public virtual void Unpublishing(PublishContentContext context) { }
-        public virtual void Unpublished(PublishContentContext context) { }
-        public virtual void Removing(RemoveContentContext context) { }
+        public virtual void Unpublishing(PublishContentContext context) {}
+        public virtual void Unpublished(PublishContentContext context) {}
+        public virtual void Removing(RemoveContentContext context) {}
         public virtual void Removed(RemoveContentContext context) {}
         public virtual void Indexing(IndexContentContext context) {}
         public virtual void Indexed(IndexContentContext context) {}
+        public virtual void Importing(ImportContentContext context) {}
+        public virtual void Imported(ImportContentContext context) {}
+        public virtual void Exporting(ExportContentContext context) {}
+        public virtual void Exported(ExportContentContext context) {}
 
         public virtual void GetContentItemMetadata(GetContentItemMetadataContext context) {}
         public virtual void BuildDisplay(BuildDisplayContext context) {}

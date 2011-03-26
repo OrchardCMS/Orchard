@@ -9,6 +9,15 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.FileSystems.Dependencies {
+    /// <summary>
+    /// The purpose of this class is to insert assembly directives in WebForms views served
+    /// from ~/Modules and ~/Themes. Inserting these directives ensures that the WebForms
+    /// build provider will add proper assembly references when calling the compiler.
+    /// For example, if Module A depends on Module Bar and some other 3rd party DLL "Foo.dll",
+    /// we will insert the following assembly directives to the view file when server:
+    /// &lt;%@ Assembly Src="~/Modules/Bar/Bar.csproj"%&gt;
+    /// &lt;%@ Assembly Name="Foo"%&gt;
+    /// </summary>
     public class WebFormVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;

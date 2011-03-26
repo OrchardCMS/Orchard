@@ -13,8 +13,7 @@ namespace Orchard.UI.Navigation {
         }
 
         public NavigationItemBuilder Caption(LocalizedString caption) {
-            if (caption != null)
-                _item.Text = caption.Text;
+            _item.Text = caption;
             return this;
         }
 
@@ -28,13 +27,23 @@ namespace Orchard.UI.Navigation {
             return this;
         }
 
+        public NavigationItemBuilder IdHint(string idHint) {
+            _item.IdHint = idHint;
+            return this;
+        }
+
         public NavigationItemBuilder LinkToFirstChild(bool value) {
             _item.LinkToFirstChild = value;
             return this;
         }
 
         public NavigationItemBuilder Permission(Permission permission) {
-            _item.Permissions = _item.Permissions.Concat(new[]{permission});
+            _item.Permissions = _item.Permissions.Concat(new[] { permission });
+            return this;
+        }
+
+        public NavigationItemBuilder LocalNav(bool value = true) {
+            _item.LocalNav = value;
             return this;
         }
 
@@ -61,7 +70,7 @@ namespace Orchard.UI.Navigation {
             return Action(actionName, controllerName, new RouteValueDictionary(values));
         }
 
-        public NavigationItemBuilder Action(string actionName, string controllerName, RouteValueDictionary values) {            
+        public NavigationItemBuilder Action(string actionName, string controllerName, RouteValueDictionary values) {
             _item.RouteValues = new RouteValueDictionary(values);
             if (!string.IsNullOrEmpty(actionName))
                 _item.RouteValues["action"] = actionName;

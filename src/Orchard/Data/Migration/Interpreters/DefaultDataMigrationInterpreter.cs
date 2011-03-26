@@ -211,7 +211,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 return;
             }
 
-            builder.AppendFormat("alter table {0} add index {1} ({2}) ",
+            builder.AppendFormat("create index {1} on {0} ({2}) ",
                 _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
                 _dialect.QuoteForColumnName(command.IndexName),
                 String.Join(", ", command.ColumnNames));
@@ -224,7 +224,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 return;
             }
 
-            builder.AppendFormat("alter table {0} drop index {1}",
+            builder.AppendFormat("drop index {0}.{1}",
                 _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
                 _dialect.QuoteForColumnName(command.IndexName));
             _sqlStatements.Add(builder.ToString());

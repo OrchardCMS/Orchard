@@ -78,10 +78,10 @@
     <Compile Include="Handlers\BlogPartArchiveHandler.cs" />
     <Compile Include="Models\BlogPartArchiveRecord.cs" />
     <Compile Include="Permissions.cs" />
-    <Compile Include="Routing\IBlogSlugConstraint.cs" />
+    <Compile Include="Routing\IBlogPathConstraint.cs" />
     <Compile Include="Routing\IsArchiveConstraint.cs" />
-    <Compile Include="Routing\BlogSlugConstraint.cs" />
-    <Compile Include="Routing\BlogSlugConstraintUpdator.cs" />
+    <Compile Include="Routing\BlogPathConstraint.cs" />
+    <Compile Include="Routing\BlogPathConstraintUpdator.cs" />
     <Compile Include="Security\BlogAuthorizationEventHandler.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
@@ -96,6 +96,8 @@
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
+    <Compile Include="ViewModels\BlogArchivesViewModel.cs" />
+    <Compile Include="ViewModels\RecentBlogPostsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Admin\images\draft.gif" />
@@ -105,6 +107,8 @@
     <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Module.txt" />
     <Content Include="Scripts\orchard-blogs-archives.js" />
+    <Content Include="Styles\images\menu.blog.png" />
+    <Content Include="Styles\menu.blog-admin.css" />
     <Content Include="Styles\orchard-blogs-admin.css" />
     <Content Include="Styles\orchard-blogs-archives.css" />
     <Content Include="Views\BlogAdmin\Create.cshtml" />
@@ -113,9 +117,7 @@
     <Content Include="Views\BlogAdmin\List.cshtml" />
     <Content Include="Views\BlogPostAdmin\Create.cshtml" />
     <Content Include="Views\BlogPostAdmin\Edit.cshtml" />
-    <Content Include="Views\BlogPost\Item.cshtml" />
     <Content Include="Views\BlogPost\ListByArchive.cshtml" />
-    <Content Include="Views\Blog\Item.cshtml" />
     <Content Include="Views\Blog\List.cshtml" />
     <Content Include="Views\Parts.Blogs.Blog.Manage.cshtml" />
     <Content Include="Views\Parts.Blogs.Blog.Description.cshtml" />
@@ -123,7 +125,6 @@
     <Content Include="Views\Parts.Blogs.BlogPost.ListAdmin.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Content-Blog.SummaryAdmin.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +159,12 @@
     <Content Include="Content\Web.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts.Blogs.Blog.SummaryAdmin.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -13,6 +13,7 @@ namespace Orchard.Environment.Extensions.Models {
         public string Name { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }
+        public int Priority { get; set; }
         public IEnumerable<string> Dependencies { get; set; }
     }
 }

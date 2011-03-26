@@ -16,7 +16,8 @@ namespace Orchard.Blogs {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Blogs"), "2.5", BuildMenu);
+            builder.AddImageSet("blog")
+                .Add(T("Blog"), "1.5", BuildMenu);
         }
 
         private void BuildMenu(NavigationItemBuilder menu) {

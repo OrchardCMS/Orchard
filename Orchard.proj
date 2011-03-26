@@ -77,6 +77,16 @@
     <CallTarget Targets="Gallery-Setup"/>
   </Target>
 
+  <Target Name="AzureBuild">
+    <MSBuild Projects="AzurePackage.proj" Targets="Build">
+    </MSBuild>
+  </Target>
+
+  <Target Name="AzureCIBuild">
+    <MSBuild Projects="AzurePackage.proj" Targets="CIBuild">
+    </MSBuild>
+  </Target>
+
   <!-- Building -->
 
   <Target Name="Clean">
@@ -283,6 +293,8 @@
         DestinationFolder="$(MsDeployFolder)\Orchard\%(RecursiveDir)"/>
     <Copy SourceFiles="@(MsDeploy-Parameters)"
         DestinationFolder="$(MsDeployFolder)"/>
+
+    <MakeDir Directories="$(MsDeployFolder)\Orchard\bin\HostRestart"/>
   </Target>
 
   <Target Name="Package-Zip">
