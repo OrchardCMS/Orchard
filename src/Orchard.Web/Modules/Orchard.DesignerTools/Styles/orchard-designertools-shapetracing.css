@@ -322,8 +322,10 @@ button.create-template, button.create-template:hover, background-image:hover {
 }
 
 #shape-tracing-window-content .shape-tracing-breadcrumb {
-    background-color:Red;
-    padding: 3px 0;
+    background:rgba(236, 241, 242, 1.0);
+    border-bottom:1px solid rgba(182, 188, 189, 1.0);
+    padding: 3px 0 0 4px;
+    font-weight:700;
     height: 18px; 
 }
 
