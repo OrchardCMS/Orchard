@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
@@ -113,41 +114,32 @@ namespace Orchard.DesignerTools.Services {
             }
 
             _node.Add(_node = new XElement("ul"));
-            foreach (var member in members.OrderBy(m => m.Name)) {
+            foreach (var member in members) {
                 if (o is ContentItem && member.Name == "ContentManager") {
                     // ignore Content Manager explicitly
                     continue;
                 }
 
+                try {
+                    DumpMember(o, member);
+                }
+                catch {
+                    // ignore members which can't be rendered
+                }
+
                 // process ContentItem.Parts specifically
                 if (o is ContentItem && member.Name == "Parts") {
                     foreach (var part in ((ContentItem)o).Parts) {
-                        try {
-                            Dump(part, part.PartDefinition.Name);
-                        }
-                        catch{
-                            // ignore dump issues
-                        }
+                        // Debug.WriteLine(_node.GetHashCode() + " " + o.GetHashCode() + " Parts: " + part.PartDefinition.Name);
+                        Dump(part, part.PartDefinition.Name);
                     }
                 }
 
                 // process ContentPart.Fields specifically
                 if (o is ContentPart && member.Name == "Fields") {
                     foreach (var field in ((ContentPart)o).Fields) {
-                        try {
-                            Dump(field, field.Name);
-                        }
-                        catch {
-                            // ignore dump issues
-                        }
+                        Dump(field, field.Name);
                     }
-                }
-                
-                try {
-                    DumpMember(o, member);
-                }
-                catch {
-                    // ignore members which can't be rendered
                 }
             }
 
