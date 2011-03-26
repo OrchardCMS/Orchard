@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using JetBrains.Annotations;
+using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
@@ -17,16 +18,20 @@ namespace Orchard.Themes.Services {
         private readonly IFeatureManager _featureManager;
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly ICacheManager _cacheManager;
 
         public ThemeService(
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
             IEnumerable<IThemeSelector> themeSelectors,
-            IVirtualPathProvider virtualPathProvider) {
+            IVirtualPathProvider virtualPathProvider,
+            ICacheManager cacheManager) {
+
             _extensionManager = extensionManager;
             _featureManager = featureManager;
             _themeSelectors = themeSelectors;
             _virtualPathProvider = virtualPathProvider;
+            _cacheManager = cacheManager;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -116,15 +121,19 @@ namespace Orchard.Themes.Services {
         /// <summary>
         /// Determines if a theme was recently installed by using the project's last written time.
         /// </summary>
-        /// <param name="descriptor">The extension descriptor.</param>
-        public bool IsRecentlyInstalled(ExtensionDescriptor descriptor) {
-            string projectFile = GetManifestPath(descriptor);
-            if (!string.IsNullOrEmpty(projectFile)) {
-                // If project file was modified less than 24 hours ago, the module was recently deployed
-                return DateTime.UtcNow.Subtract(_virtualPathProvider.GetFileLastWriteTimeUtc(projectFile)) < new TimeSpan(1, 0, 0, 0);
-            }
+        /// <param name="extensionDescriptor">The extension descriptor.</param>
+        public bool IsRecentlyInstalled(ExtensionDescriptor extensionDescriptor) {
+            DateTime lastWrittenUtc = _cacheManager.Get(extensionDescriptor, descriptor => {
+                string projectFile = GetManifestPath(extensionDescriptor);
+                if (!string.IsNullOrEmpty(projectFile)) {
+                    // If project file was modified less than 24 hours ago, the module was recently deployed
+                    return _virtualPathProvider.GetFileLastWriteTimeUtc(projectFile);
+                }
 
-            return false;
+                return DateTime.UtcNow;
+            });
+
+            return DateTime.UtcNow.Subtract(lastWrittenUtc) < new TimeSpan(1, 0, 0, 0);
         }
 
         private string GetManifestPath(ExtensionDescriptor descriptor) {

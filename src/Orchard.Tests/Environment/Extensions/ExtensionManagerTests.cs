@@ -116,7 +116,7 @@ namespace Orchard.Tests.Environment.Extensions {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath) {
+            public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
                 throw new NotImplementedException();
             }
 
@@ -506,9 +506,7 @@ OrchardVersion: 1
 Name: Alpha
 Version: 1.0.3
 OrchardVersion: 1
-Features:
-    Alpha:
-        Dependencies: Gamma
+Dependencies: Gamma
 ");
 
             moduleExtensionFolder.Manifests.Add("Beta", @"
@@ -520,23 +518,139 @@ OrchardVersion: 1
 Name: Gamma
 Version: 1.0.3
 OrchardVersion: 1
-Features:
-    Gamma:
-        Dependencies: Beta
+Dependencies: Beta
 ");
 
             moduleExtensionFolder.Manifests.Add("Classic", @"
 Name: Classic
 Version: 1.0.3
 OrchardVersion: 1
-Features:
-    Classic:
-        Dependencies: Alpha
+Dependencies: Alpha
 ");
 
             IExtensionManager extensionManager = new ExtensionManager(new[] { moduleExtensionFolder, themeExtensionFolder }, new[] { extensionLoader }, new StubCacheManager());
             var features = extensionManager.AvailableFeatures();
             Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo("<Beta<Gamma<Alpha<Classic<"));
+        }
+
+        [Test]
+        public void FeatureDescriptorsAreInDependencyAndPriorityOrder() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            // Check that priorities apply correctly on items on the same level of dependencies and are overwritten by dependencies
+            extensionFolder.Manifests.Add("Alpha", @"
+Name: Alpha
+Version: 1.0.3
+OrchardVersion: 1
+Dependencies: Gamma
+Priority:2"); // More important than Gamma but will get overwritten by the dependency
+
+            extensionFolder.Manifests.Add("Beta", @"
+Name: Beta
+Version: 1.0.3
+OrchardVersion: 1
+Priority:2");
+
+            extensionFolder.Manifests.Add("Foo", @"
+Name: Foo
+Version: 1.0.3
+OrchardVersion: 1
+Priority:1");
+
+            extensionFolder.Manifests.Add("Gamma", @"
+Name: Gamma
+Version: 1.0.3
+OrchardVersion: 1
+Dependencies: Beta, Foo
+Priority:3");
+
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            var features = extensionManager.AvailableFeatures();
+            Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo("<Foo<Beta<Gamma<Alpha<"));
+
+            // Change priorities and see that it reflects properly
+            extensionFolder.Manifests["Foo"] = @"
+Name: Foo
+Version: 1.0.3
+OrchardVersion: 1
+Priority:3";
+
+            extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            features = extensionManager.AvailableFeatures();
+            Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo("<Beta<Foo<Gamma<Alpha<"));
+
+            // Remove dependency on Beta and see that it moves down the list since no one depends on it anymore
+            extensionFolder.Manifests["Gamma"] = @"
+Name: Gamma
+Version: 1.0.3
+OrchardVersion: 1
+Dependencies: Beta
+Priority:3";
+
+            extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            features = extensionManager.AvailableFeatures();
+            Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo("<Beta<Foo<Gamma<Alpha<"));
+
+            // Change Foo to depend on Gamma and see that it moves to a new position (same dependencies as alpha but lower priority)
+            extensionFolder.Manifests["Foo"] = @"
+Name: Foo
+Version: 1.0.3
+OrchardVersion: 1
+Priority:3
+Dependencies: Gamma";
+
+            extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            features = extensionManager.AvailableFeatures();
+            Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo("<Beta<Gamma<Alpha<Foo<"));
+
+            // Update Foo to a higher priority than alpha
+            extensionFolder.Manifests["Foo"] = @"
+Name: Foo
+Version: 1.0.3
+OrchardVersion: 1
+Priority:1
+Dependencies: Gamma";
+
+            extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            features = extensionManager.AvailableFeatures();
+            Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo("<Beta<Gamma<Foo<Alpha<"));
+        }
+
+
+        [Test]
+        public void FeatureDescriptorsAreInPriorityOrder() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            // Check that priorities apply correctly on items on the same level of dependencies and are overwritten by dependencies
+            extensionFolder.Manifests.Add("Alpha", @"
+Name: Alpha
+Version: 1.0.3
+OrchardVersion: 1
+Priority:4"); // More important than Gamma but will get overwritten by the dependency
+
+            extensionFolder.Manifests.Add("Beta", @"
+Name: Beta
+Version: 1.0.3
+OrchardVersion: 1
+Priority:3");
+
+            extensionFolder.Manifests.Add("Foo", @"
+Name: Foo
+Version: 1.0.3
+OrchardVersion: 1
+Priority:1");
+
+            extensionFolder.Manifests.Add("Gamma", @"
+Name: Gamma
+Version: 1.0.3
+OrchardVersion: 1
+Priority:2");
+
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            var features = extensionManager.AvailableFeatures();
+            Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo("<Foo<Gamma<Beta<Alpha<"));
         }
     }
 }

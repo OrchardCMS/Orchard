@@ -35,6 +35,9 @@ namespace Orchard.Widgets.Commands {
         public string Layer { get; set; }
 
         [OrchardSwitch]
+        public string Identity { get; set; }
+
+        [OrchardSwitch]
         public string Owner { get; set; }
 
         [OrchardSwitch]
@@ -47,14 +50,14 @@ namespace Orchard.Widgets.Commands {
         public bool Publish { get; set; }
 
         [CommandName("widget create")]
-        [CommandHelp("widget create <type> /Title:<title> /Zone:<zone> /Position:<position> /Layer:<layer> [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false]\r\n\t" + "Creates a new widget")]
-        [OrchardSwitches("Title,Zone,Position,Layer,Owner,Text,UseLoremIpsumText")]
+        [CommandHelp("widget create <type> /Title:<title> /Zone:<zone> /Position:<position> /Layer:<layer> [/Identity:<identity>] [/Owner:<owner>] [/Text:<text>] [/UseLoremIpsumText:true|false]\r\n\t" + "Creates a new widget")]
+        [OrchardSwitches("Title,Zone,Position,Layer,Identity,Owner,Text,UseLoremIpsumText")]
         public void Create(string type) {
-            var widgetTypes = _widgetsService.GetWidgetTypes();
-            if (!widgetTypes.Contains(type)) {
+            var widgetTypeNames = _widgetsService.GetWidgetTypeNames();
+            if (!widgetTypeNames.Contains(type)) {
                 throw new OrchardException(T("Creating widget failed : type {0} was not found. Supported widget types are: {1}.", 
                     type,
-                    widgetTypes.Aggregate(String.Empty, (current, widgetType) => current + " " + widgetType)));
+                    widgetTypeNames.Aggregate(String.Empty, (current, widgetType) => current + " " + widgetType)));
             }
 
             var layer = GetLayer(Layer);
@@ -80,6 +83,10 @@ namespace Orchard.Widgets.Commands {
             }
             var owner = _membershipService.GetUser(Owner);
             widget.As<ICommonPart>().Owner = owner;
+
+            if (widget.Has<IdentityPart>() && !String.IsNullOrEmpty(Identity)) {
+                widget.As<IdentityPart>().Identifier = Identity;
+            }
 
             Context.Output.WriteLine(T("Widget created successfully.").Text);
         }

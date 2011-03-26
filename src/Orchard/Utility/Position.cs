@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Orchard.UI;
 using Orchard.UI.Navigation;
@@ -8,7 +9,7 @@ namespace Orchard.Utility {
     public static class Position {
         public static string GetNext(IEnumerable<MenuItem> menuItems) {
 
-            var maxMenuItem = menuItems.Where(PositionHasMojorNumber).OrderByDescending(mi => mi.Position, new FlatPositionComparer()).FirstOrDefault();
+            var maxMenuItem = menuItems.Where(mi => PositionHasMajorNumber(mi)).OrderByDescending(mi => mi.Position, new FlatPositionComparer()).FirstOrDefault();
             var positionParts = maxMenuItem.Position.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim().Length > 0);
             if (positionParts.Count() > 0) {
                 int result;
@@ -21,10 +22,34 @@ namespace Orchard.Utility {
             return "1";
         }
 
-        private static bool PositionHasMojorNumber(MenuItem mi) {
-            int foo;
-            var major = mi.Position.Split('.')[0];
-            return !string.IsNullOrEmpty(major) && int.TryParse(major, out foo);
+        public static string GetNextMinor(int major, IEnumerable<MenuItem> menuItems) {
+            var majorStr = major.ToString(CultureInfo.InvariantCulture);
+
+            var allmajors = menuItems.Where(mi => PositionHasMajorNumber(mi, major)).ToArray();
+
+            var maxMenuItem = menuItems.Where(mi => PositionHasMajorNumber(mi, major)).OrderByDescending(mi => mi.Position, new FlatPositionComparer()).FirstOrDefault();
+            var positionParts = maxMenuItem.Position.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim().Length > 0);
+            if (positionParts.Count() > 1) {
+                int result;
+                if (int.TryParse(positionParts.ElementAt(1), out result)) {
+                    return majorStr + "." + (result + 1);
+                }
+            }
+            else if (positionParts.Count() == 1) {
+                return majorStr + ".1";
+            }
+
+            return majorStr;
+        }
+
+        private static bool PositionHasMajorNumber(MenuItem mi, int? position = null) {
+            int menuPosition;
+            var major = mi.Position == null ? null : mi.Position.Split('.')[0];
+            if (string.IsNullOrEmpty(major)) {
+                return false;
+            }
+            var parsed = int.TryParse(major, out menuPosition);
+            return parsed && (!position.HasValue || position.Value == menuPosition);
         }
     }
 }

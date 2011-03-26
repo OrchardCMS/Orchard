@@ -5,8 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The Modules module enables the administrator of the site to manage the installed modules as well as activate and de-activate features.
-Features:
-    Orchard.Modules:
-        Name: Modules
-        Description: Standard module and feature management.
-        Category: Core
+FeatureDescription: Standard module and feature management.
+Category: Core

@@ -48,6 +48,25 @@ namespace Orchard.Mvc.Html {
                 metadata.EditorRouteValues.Merge(additionalRouteValues));
         }
 
+        public static MvcHtmlString ItemAdminLink(this HtmlHelper html, IContent content) {
+            return ItemAdminLink(html, null, content);
+        }
+
+        public static MvcHtmlString ItemAdminLink(this HtmlHelper html, string linkText, IContent content) {
+            return html.ItemAdminLink(linkText, content, null);
+        }
+
+        public static MvcHtmlString ItemAdminLink(this HtmlHelper html, string linkText, IContent content, object additionalRouteValues) {
+            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
+            if (metadata.AdminRouteValues == null)
+                return null;
+
+            return html.ActionLink(
+                NonNullOrEmpty(linkText, metadata.DisplayText, content.ContentItem.TypeDefinition.DisplayName),
+                Convert.ToString(metadata.AdminRouteValues["action"]),
+                metadata.AdminRouteValues.Merge(additionalRouteValues));
+        }
+
         public static string ItemDisplayUrl(this UrlHelper urlHelper, IContent content) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
             if (metadata.DisplayRouteValues == null)

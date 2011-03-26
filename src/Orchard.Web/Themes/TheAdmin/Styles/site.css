@@ -124,7 +124,7 @@ body {
 h1,h2,h3,h4,h5,h6 { font-weight: normal;}
 
 h1 { font-size: 1.769em; }
-h2 { font-size: 1.538em; }
+h2 { font-size: 1.308em; }
 h3 { font-size: 1.231em; }
 h4 { font-size: 1.154em; }
 h5 { font-size: 1.077em; }
@@ -141,48 +141,9 @@ h4 img, h5 img, h6 img {
   margin: 0;
 }
 
-strong 
-{
-    font-weight:600;
-}
+strong {font-weight:600;}
 .smallText {font-size:1em; line-height:1.4em;}
     
-
-/* Layout
-
-number of columns: 24; actual width: 946; column width: 26; gutter width:14
-
-   |     24|     23|     22|     21|     20|     19|     18|     17|     16|     15|     14|     13|     12|     11|     10|      9|      8|      7|      6|      5|      4|      3|      2
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-.5g|  0.759|  0.793|  0.829|  0.870|  0.914|  0.963|  1.017|  1.079|  1.148|  1.226|  1.316|  1.420|  1.542|  1.687|  1.862|  2.077|  2.349|  2.703|  3.182|  3.867|  4.930|  6.796| 10.938
- 24|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 23| 95.770|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 22| 91.540| 95.583|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 21| 87.310| 91.166| 95.379|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 20| 83.080| 86.750| 90.758| 95.155|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 19| 78.850| 82.333| 86.137| 90.311| 94.909|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 18| 74.620| 77.916| 81.517| 85.466| 89.817| 94.635|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 17| 70.390| 73.499| 76.896| 80.621| 84.726| 89.271| 94.331|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 16| 66.161| 69.083| 72.275| 75.776| 79.634| 83.906| 88.663| 93.991|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 15| 61.931| 64.666| 67.654| 70.932| 74.543| 78.542| 82.994| 87.982| 93.607|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 14| 57.701| 60.249| 63.033| 66.087| 69.452| 73.177| 77.326| 81.972| 87.213| 93.170|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 13| 53.471| 55.832| 58.412| 61.242| 64.360| 67.813| 71.657| 75.963| 80.820| 86.340| 92.669|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 12| 49.241| 51.416| 53.791| 56.398| 59.269| 62.448| 65.988| 69.954| 74.426| 79.510| 85.338| 92.089|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 11| 45.011| 46.999| 49.171| 51.553| 54.178| 57.084| 60.320| 63.945| 68.033| 72.680| 78.008| 84.178| 91.410|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
- 10| 40.781| 42.582| 44.550| 46.708| 49.086| 51.719| 54.651| 57.935| 61.639| 65.849| 70.677| 76.268| 82.819| 90.602|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---|    ---
-  9| 36.551| 38.165| 39.929| 41.863| 43.995| 46.355| 48.983| 51.926| 55.246| 59.019| 63.346| 68.357| 74.229| 81.205| 89.628|100.000|    ---|    ---|    ---|    ---|    ---|    ---|    ---
-  8| 32.321| 33.749| 35.308| 37.019| 38.903| 40.990| 43.314| 45.917| 48.852| 52.189| 56.015| 60.446| 65.639| 71.807| 79.255| 88.427|100.000|    ---|    ---|    ---|    ---|    ---|    ---
-  7| 28.091| 29.332| 30.687| 32.174| 33.812| 35.626| 37.645| 39.908| 42.459| 45.359| 48.684| 52.535| 57.048| 62.410| 68.883| 76.855| 86.913|100.000|    ---|    ---|    ---|    ---|    ---
-  6| 23.861| 24.915| 26.066| 27.329| 28.721| 30.261| 31.977| 33.898| 36.066| 38.529| 41.353| 44.625| 48.458| 53.012| 58.511| 65.282| 73.826| 84.942|100.000|    ---|    ---|    ---|    ---
-  5| 19.631| 20.498| 21.445| 22.484| 23.629| 24.897| 26.308| 27.889| 29.672| 31.699| 34.023| 36.714| 39.868| 43.614| 48.138| 53.709| 60.738| 69.884| 82.273|100.000|    ---|    ---|    ---
-  4| 15.401| 16.082| 16.825| 17.640| 18.538| 19.532| 20.640| 21.880| 23.279| 24.869| 26.692| 28.803| 31.278| 34.217| 37.766| 42.136| 47.651| 54.826| 64.545| 78.453|100.000|    ---|    ---
-  3| 11.171| 11.665| 12.204| 12.795| 13.446| 14.168| 14.971| 15.871| 16.885| 18.039| 19.361| 20.892| 22.687| 24.819| 27.394| 30.564| 34.564| 39.768| 46.818| 56.906| 72.535|100.000|    ---
-  2|  6.941|  7.248|  7.583|  7.950|  8.355|  8.803|  9.302|  9.861| 10.492| 11.208| 12.030| 12.982| 14.097| 15.422| 17.021| 18.991| 21.477| 24.710| 29.091| 35.359| 45.070| 62.136|100.000
-  1|  2.711|  2.831|  2.962|  3.106|  3.264|  3.439|  3.634|  3.852|  4.098|  4.378|  4.699|  5.071|  5.507|  6.024|  6.649|  7.418|  8.389|  9.653| 11.364| 13.812| 17.606| 24.272| 39.063
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   |     24|     23|     22|     21|     20|     19|     18|     17|     16|     15|     14|     13|     12|     11|     10|      9|      8|      7|      6|      5|      4|      3|      2
-
-----------------------------------------------------------*/
 #header, #footer {
     width:100%;
 }
@@ -227,18 +188,18 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 /* Links
 ***************************************************************/
 a, a:link, a:visited,
-form.link button {
+form.link button, button.link, button.link:hover {
     color:#1e5d7d;
     text-decoration:none;
 }
-form.link button {
+form.link button, button.link {
     height:1.3em;
 }
 a:hover, a:active, a:focus {
     color:#1e5d7d;
     text-decoration:none;
 }
-form.link button:hover {
+form.link button:hover, button.link:hover {
     border-bottom:1px solid #1e5d7d;
 }
 
@@ -246,6 +207,7 @@ form.link button:hover {
 ***************************************************************/
 #header {
     height:50px;
+    margin:16px 0 0 0;
     background:#f3f4f5;
 }
 #branding {
@@ -279,9 +241,10 @@ form.link button:hover {
     text-shadow: rgba(0,0,0,.9) 0px 0px 2px;
 }
 #page-title {
-    position:relative;
+    /*position:relative;
     top:12px;
-    left:24px;
+    left:24px;*/
+    padding:14px 0 0 260px;
     text-shadow:rgba(0,0,0,.1) 0px 0px 1px;    
 }
 #login {
@@ -293,10 +256,6 @@ form.link button:hover {
 
 #login a, #login a:link, #login a:visited {
     padding:0;
-}
-
-#login a:hover, #login a:active, #login a:focus {
-    color:#ffea9b;
 }
 
 /* Navigation
@@ -411,7 +370,7 @@ form.link button:hover {
 }
 #content {
     background-color: #fff;
-    padding: 20px;
+    padding: 16px 24px;
     margin:8px 0 0 0;
     border: 1px solid #e4e5e6;
    
@@ -496,17 +455,11 @@ form.link button:hover {
 #main h2, #main h3 {
     margin:.5em 0;
 }
-/*#main p {
-    margin:0 0 1.5em;
-}*/
 #main .main.actions {
     margin:0 0 1.4em;
 }
 #main .meta {
     margin:-.4em 0 .4em;
-}
-#main form {
-    margin:.345em 0 1.38em;
 }
 #main form.inline {
     margin:0;
@@ -576,6 +529,14 @@ fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
 label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 
+
+/*label { color: #747874;
+    display: block;
+    font-size: 12px;
+    font-weight:bold;
+    padding: 0 0 2px;
+    }*/
+
 form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
     display:inline;
 }
@@ -615,12 +576,16 @@ label input {
 }
 /* todo: (heskew) try to get .text on stuff like .text-box */
 select, textarea, input.text, input.textMedium, input.text-box {
+    font-family:inherit;
     padding:3px;
     border:1px solid #bdbcbc;
+    font-family:inherit;
+    font-size:inherit;
 }
 input.text, input.textMedium, input.text-box {
     line-height:1.2em;
 }
+/*Are we using the two classes below?*/
 input.text-small {
     width:4em;
 }
@@ -691,6 +656,27 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 }
+.button.grey {
+  		color:#5d615d;
+		background:#f5f5f5;
+		border:1px solid #999;
+
+		/*CSS3 properties*/
+		text-shadow:none;
+		
+		-webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
+        -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0); 
+        box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0);
+		
+		/*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+        filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));   
+        background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
+		
+		-webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+         border-radius: 2px;	
+}
 button, .button, a.button {
     background:#6a7b42;
     border:1px solid #487328;
@@ -719,7 +705,7 @@ button, .button, a.button {
      
     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
      filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 
         
@@ -740,8 +726,8 @@ button:hover, .button:hover, a.button:hover {
     background: #809f43;
     
     /*CSS3 properties*/  
-     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');    
-     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));    
      background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
 }
 
@@ -754,18 +740,31 @@ button:active, .buton:active, a.button:active {
     /*CSS3 properties*/
     text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
      filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 }
 button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
   border: 1px dotted transparent;
+}
+/* and allow all of that button style to be undone and beyond - to look like a link */
+button.link {
+    background:none;
+    border:0;
+    padding:inherit;
+    text-shadow:none;
+    -webkit-box-shadow:none; 
+    -moz-box-shadow:none; 
+    box-shadow:none;
+    filter:none;	
+    -webkit-border-radius:0;
+    -moz-border-radius:0;
+    border-radius:0;
 }
 .cancel {
     margin:0 0 0 .93em;
 }
 .manage {
     float:right;
-    margin:0 0 1em .8em;
 }
 .actions {
     clear:right;
@@ -773,10 +772,11 @@ button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
     text-align:right;
 }
 .item-properties.actions {
-    margin-bottom:.5em;
+    /*margin-bottom:.5em;
     margin-top:-5em;
     overflow:hidden;
-    padding:1px;
+    padding:1px;*/
+    float:right;
 }
 .contentItems .actions li {
     background:inherit;
@@ -848,7 +848,6 @@ table.items tbody {
 }
 table.items thead, table.items th {
     background:#f5f5f5;
-    font-weight:700;
     overflow:hidden;
     text-align:left;
     white-space:nowrap;
@@ -952,11 +951,7 @@ table.items th, table.items td {
 /* Pager
 ***************************************************************/
 
-.pager-footer {
-    width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-}
+.pager-footer { width: 500px; }
 .page-size-options {
     float: left;
     padding-right: 40px;
@@ -965,6 +960,7 @@ table.items th, table.items td {
 .page-size-options select {
     margin-top: 10px;
 }
+html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
 .pager { list-style: none; padding: 0; margin: 12px 0 0 0;}
 .pager li {
     float: left;
@@ -979,7 +975,7 @@ table.items th, table.items td {
     text-shadow: rgba(0,0,0,.2) 0px 0px 1px;      
     /*In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)*/
     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), rgba((217, 217, 217, 1.0)));    
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));    
     background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
                
     box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.1);

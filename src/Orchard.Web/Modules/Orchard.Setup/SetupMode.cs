@@ -182,6 +182,10 @@ namespace Orchard.Setup {
                 get { return SiteSettingsPartRecord.DefaultPageSize; }
                 set { throw new NotImplementedException(); }
             }
+
+            public string BaseUrl {
+                get { return ""; }
+            }
         }
     }
 }

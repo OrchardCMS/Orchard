@@ -4,18 +4,15 @@ using System.Linq;
 using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Modules.Services;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
 namespace Orchard.Recipes.RecipeHandlers {
     public class FeatureRecipeHandler : IRecipeHandler {
         private readonly IFeatureManager _featureManager;
-        private readonly IModuleService _moduleService;
 
-        public FeatureRecipeHandler(IFeatureManager featureManager, IModuleService moduleService) {
+        public FeatureRecipeHandler(IFeatureManager featureManager) {
             _featureManager = featureManager;
-            _moduleService = moduleService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -58,10 +55,10 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             if (featuresToDisable.Count != 0) {
-                _moduleService.DisableFeatures(featuresToDisable, true);
+                _featureManager.DisableFeatures(featuresToDisable, true);
             }
             if (featuresToEnable.Count != 0) {
-                _moduleService.EnableFeatures(featuresToEnable, true);
+                _featureManager.EnableFeatures(featuresToEnable, true);
             }
 
             recipeContext.Executed = true;

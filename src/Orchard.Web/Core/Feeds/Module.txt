@@ -5,7 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The Feeds module is providing RSS feeds to content items.
-Features:
-    Feeds:
-        Description: RSS feeds for content items.
-        Category: Syndication
+FeatureDescription: RSS feeds for content items.
+Category: Syndication

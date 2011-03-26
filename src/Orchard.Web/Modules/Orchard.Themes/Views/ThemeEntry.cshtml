@@ -5,8 +5,7 @@
 @{ string themeClasses = Model.ContentPart.IsRecentlyInstalled ? "recentlyInstalledTheme" : string.Empty; }
 
 <div>
-
-    <h3 class="@themeClasses">@Model.ContentPart.Name</h3>
+    <h3@{ if(!string.IsNullOrEmpty(themeClasses)) {<text>  class="@themeClasses"</text>}}>@Model.ContentPart.Name</h3>
 
     @Html.Image(Href(Html.ThemePath((ExtensionDescriptor) Model.ContentPart.Descriptor, "/Theme.png")), Html.Encode((string)Model.ContentPart.Name), null)
     @using (Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" })) {
@@ -50,6 +49,7 @@
 	}
 
     @if (Model.ContentPart.NeedsUpdate) {
+        <span> | </span>
         using (Html.BeginFormAntiForgeryPost(Url.Action("Update"), FormMethod.Post, new { @class = "inline link" })) {
             @Html.Hidden("themeName", (string)Model.ContentPart.Descriptor.Id)
             <button type="submit" class="update">@T("Update")</button> <br/>
@@ -57,6 +57,7 @@
     }
 
     @if (Model.ContentPart.CanUninstall) {
+        <span> | </span>
         using (Html.BeginFormAntiForgeryPost(Url.Action("RemoveTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl, retryUrl = HttpContext.Current.Request.RawUrl, themeId = Model.ContentPart.Descriptor.Id }), FormMethod.Post, new { @class = "inline link" })) {
             <button type="submit" class="uninstall" title="@T("Uninstall")">@T("Uninstall")</button>
         }

@@ -65,7 +65,9 @@ this.ScenarioSetup(scenarioInfo);
 #line 8
     testRunner.When("I go to \"admin/widgets\"");
 #line 9
-        testRunner.And("I follow \"Edit Default layer\"");
+        testRunner.And("I follow \"Edit\"");
+#line 10
+    testRunner.Then("I should see \"<input[^>]*name=\"Name\"[^>]*value=\"Default\"[^>]*>\"");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -73,17 +75,17 @@ this.ScenarioSetup(scenarioInfo);
             table1.AddRow(new string[] {
                         "Description",
                         "This is the default layer."});
-#line 10
-        testRunner.And("I fill in", ((string)(null)), table1);
-#line 13
-        testRunner.And("I hit \"Save\"");
+#line 11
+    testRunner.When("I fill in", ((string)(null)), table1);
 #line 14
-        testRunner.And("I am redirected");
+        testRunner.And("I hit \"Save\"");
 #line 15
-    testRunner.Then("I should see \"Your Layer has been saved\"");
+        testRunner.And("I am redirected");
 #line 16
-    testRunner.When("I follow \"Edit Default layer\"");
+    testRunner.Then("I should see \"Your Layer has been saved\"");
 #line 17
+    testRunner.When("I follow \"Edit\"");
+#line 18
     testRunner.Then("I should see \"<textarea[^>]*>\\s*This is the default layer.\\s*</textarea>\"");
 #line hidden
             testRunner.CollectScenarioErrors();

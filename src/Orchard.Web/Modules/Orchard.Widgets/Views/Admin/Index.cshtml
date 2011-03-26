@@ -1,101 +1,18 @@
-﻿@model WidgetsIndexViewModel
-@using Orchard.Widgets.Models;
-@using Orchard.Widgets.ViewModels;
-@{
+﻿@{
     Style.Require("WidgetsAdmin");
-
     Layout.Title = T("Manage Widgets").ToString();
 }
-
-@using(Html.BeginFormAntiForgeryPost()) {
-    Html.ValidationSummary();
-
-
-    <div id="widgets" class="group">
-
-        <div class="widgets-availableLayers">
-            <h2>Widgets</h2>
-
-            <fieldset>
-            <h4 class="widgets-layer-header">Layers</h4>
-            <h4 class="widgets-zone-header">Zones</h4>
-                <div>
-                    <ul class="widgets-layerZones">
-                        @foreach (string zone in Model.Zones) {
-                            <li>
-                                <div class="widgets-zone">@zone</div>
-                                <ul>
-                                    @{
-                                        int count = Model.CurrentLayerWidgets.Where(widgetPart => widgetPart.Zone == zone).Count() - 1;
-                                        int i = 0;
-                                    }
-                                    @foreach (WidgetPart widget in Model.CurrentLayerWidgets.Where(widgetPart => widgetPart.Zone == zone).OrderBy(widgetPart => widgetPart.Position, new Orchard.UI.FlatPositionComparer())) {
-                                        <li class="widgets-zoneWidget">
-                                            @if (i > 0) {
-                                                <input type="image" name="submit.MoveUp.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/moveup.gif")" alt="Move up" value="@widget.Id" />
-                                            }
-                                            @if (i < count) {
-                                                <input type="image" name="submit.MoveDown.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/movedown.gif")" alt="Move down" value="@widget.Id" />
-                                            }
-                                            @{
-                                                i++;
-                                            }
-                                            @Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id })
-                                        </li>
-                                    }
-                                </ul>
-                            </li>
-                        }
-                    </ul>
-                </div>
-
-                <div class="widgets-layers">
-                    <ul>
-                        @foreach (var layer in Model.Layers) {
-                            var layerClass = "widgets-editLayer";
-                            if (layer.Id == Model.CurrentLayer.Id) {
-                                layerClass += " widgets-currentLayer";
-                            }
-                            <li class="@layerClass">
-                                <a href="@Url.Action("EditLayer", new { @layer.Id })" title="@T("Edit {0} layer", layer.Name)">
-                                    <img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.png")" />
-                                </a>
-                                @Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
-                            </li>
-                        }
-                    </ul>
-                    <div class="new-layer">
-                    @Html.ActionLink(T("+ Add a layer").ToString(), "AddLayer", new { })
-                   </div>
-                </div>
-            </fieldset>
-        </div>
-
-
-                <div class="widgets-availableWidgets">
-            <h2>Available Widgets</h2>
-
-            <fieldset>
-                <table class="items" summary="@T("This is a table of the widgets currently available for use in your application.")">
-                    <colgroup>
-                        <col id="Col1" />
-                        <col id="Col2" />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th scope="col">@T("Name")</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    @foreach (string widget in Model.WidgetTypes) {
-                        <tr>
-                            <td>@widget</td>
-                            <td>@Html.ActionLink(T("Add to zone").ToString(), "AddWidget", new { layerId = Model.CurrentLayer.Id, widgetType = widget })</td>
-                        </tr>
-                    }
-                </table>
-
-            </fieldset>
+<div id="widgets" class="group">
+    @Display.WidgetLayersControl(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)
+    <div id="layout-widgets-placement">
+        @Display.WidgetPlacement(Widgets: Model.Widgets, Zones: Model.Zones, OrphanZones: Model.OrphanZones, CurrentLayer: Model.CurrentLayer)
+    </div>
+    <div id="layout-widgets-assistance">
+        <div id="widgets-assistance">
+            <div class="widgets-container">
+                @Display.WidgetLayerVisibility(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)
+                @Display.WidgetSimplePreview(ZonePreviewImage: Model.ZonePreviewImage, CurrentTheme: Model.CurrentTheme)
+            </div>
         </div>
     </div>
-}
+</div>

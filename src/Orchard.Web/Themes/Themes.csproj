@@ -70,6 +70,7 @@
     </Content>
     <Content Include="TheAdmin\Views\Pager.cshtml" />
     <Content Include="TheAdmin\Views\OrchardVersion.cshtml" />
+    <Content Include="TheThemeMachine\ThemeZonePreview.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

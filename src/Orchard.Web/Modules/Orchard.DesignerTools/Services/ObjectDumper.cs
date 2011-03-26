@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using ClaySharp;
 using ClaySharp.Behaviors;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 
 namespace Orchard.DesignerTools.Services {
@@ -36,20 +38,23 @@ namespace Orchard.DesignerTools.Services {
             }
 
             _parents.Push(o);
-            // starts a new container
-            _node.Add(_node = new XElement("li"));
+            try {
+                // starts a new container
+                _node.Add(_node = new XElement("li"));
 
-            if(o == null) {
-                DumpValue(null, name);
+                if (o == null) {
+                    DumpValue(null, name);
+                }
+                else if (o.GetType().IsValueType || o is string) {
+                    DumpValue(o, name);
+                }
+                else {
+                    DumpObject(o, name);
+                }
             }
-            else if (o.GetType().IsValueType || o is string) {
-                DumpValue(o, name);
+            finally { 
+                _parents.Pop(); 
             }
-            else {
-                DumpObject(o, name);
-            }
-
-            _parents.Pop();
 
             if(_node.DescendantNodes().Count() == 0) {
                 _node.Remove();
@@ -62,19 +67,15 @@ namespace Orchard.DesignerTools.Services {
         private void DumpValue(object o, string name) {
             string formatted = FormatValue(o);
             _node.Add(
-                new XElement("h3", 
-                    new XElement("div", new XAttribute("class", "name"), name),
-                    new XElement("div", new XAttribute("class", "value"), formatted)
-                    )
-                );
+                new XElement("div", new XAttribute("class", "name"), name),
+                new XElement("div", new XAttribute("class", "value"), formatted)
+            );
         }
 
         private void DumpObject(object o, string name) {
             _node.Add(
-                new XElement("h3", 
-                    new XElement("div", new XAttribute("class", "name"), name),
-                    new XElement("div", new XAttribute("class", "type"), FormatType(o.GetType()))
-                    )
+                new XElement("div", new XAttribute("class", "name"), name),
+                new XElement("div", new XAttribute("class", "type"), FormatType(o))
             );
 
             if (_parents.Count >= _levels) {
@@ -92,7 +93,8 @@ namespace Orchard.DesignerTools.Services {
                     DumpEnumerable((IEnumerable) o);
                 }
             }
-            else if (o is IEnumerable) {
+            else if (o is IEnumerable)
+            {
                 DumpEnumerable((IEnumerable)o);
             }
             else {
@@ -113,12 +115,33 @@ namespace Orchard.DesignerTools.Services {
 
             _node.Add(_node = new XElement("ul"));
             foreach (var member in members) {
+                if (o is ContentItem && member.Name == "ContentManager") {
+                    // ignore Content Manager explicitly
+                    continue;
+                }
+
                 try {
                     DumpMember(o, member);
                 }
                 catch {
+                    // ignore members which can't be rendered
+                }
+
+                // process ContentItem.Parts specifically
+                if (o is ContentItem && member.Name == "Parts") {
+                    foreach (var part in ((ContentItem)o).Parts) {
+                        Dump(part, part.PartDefinition.Name);
+                    }
+                }
+
+                // process ContentPart.Fields specifically
+                if (o is ContentPart && member.Name == "Fields") {
+                    foreach (var field in ((ContentPart)o).Fields) {
+                        Dump(field, field.Name);
+                    }
                 }
             }
+
             _node = _node.Parent;
         }
 
@@ -216,17 +239,21 @@ namespace Orchard.DesignerTools.Services {
             return formatted;
         }
 
-        private static string FormatType(Type t) {
-            if(t.IsGenericType) {
-                var genericArguments = String.Join(", ", t.GetGenericArguments().Select(FormatType).ToArray());
-                return String.Format("{0}<{1}>", t.Name.Substring(0, t.Name.IndexOf('`')), genericArguments); 
+        private static string FormatType(object item) {
+            if(item is IShape) {
+                return ((IShape)item).Metadata.Type + " Shape";
             }
 
-            if(typeof(IShape).IsAssignableFrom(t)) {
-                return "Shape";
+            return FormatType(item.GetType());
+        }
+
+        private static string FormatType(Type type) {
+            if (type.IsGenericType) {
+                var genericArguments = String.Join(", ", type.GetGenericArguments().Select(t => FormatType((Type)t)).ToArray());
+                return String.Format("{0}<{1}>", type.Name.Substring(0, type.Name.IndexOf('`')), genericArguments);
             }
 
-            return t.Name;
+            return type.Name;
         }
     }
 }

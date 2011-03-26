@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NuGet;
-using Orchard.Environment.Descriptor;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Packaging.Models;
 
@@ -73,11 +69,16 @@ namespace Orchard.Packaging.Services {
             _packageExpander.Uninstall(packageId, applicationPath);
         }
 
-        public ExtensionDescriptor GetExtensionDescriptor(IPackage package) {
-            IPackageFile packageFile = package.GetFiles().FirstOrDefault(file => Path.GetFileName(file.Path).Equals("module.txt", StringComparison.OrdinalIgnoreCase));
+        public ExtensionDescriptor GetExtensionDescriptor(IPackage package, string extensionType) {
+            IPackageFile packageFile = package.GetFiles().FirstOrDefault(file =>
+                                                            Path.GetFileName(file.Path).Equals(
+                                                                DefaultExtensionTypes.IsModule(extensionType) ? "module.txt" : "theme.txt",
+                                                                StringComparison.OrdinalIgnoreCase));
+
             if (packageFile != null) {
+                string extensionId = Path.GetFileName(Path.GetDirectoryName(packageFile.Path).TrimEnd('/', '\\'));
                 using (StreamReader streamReader = new StreamReader(packageFile.GetStream())) {
-                    return ExtensionFolders.GetDescriptorForExtension("", package.Id, DefaultExtensionTypes.Module, streamReader.ReadToEnd());
+                    return ExtensionFolders.GetDescriptorForExtension("", extensionId, extensionType, streamReader.ReadToEnd());
                 }
             }
 

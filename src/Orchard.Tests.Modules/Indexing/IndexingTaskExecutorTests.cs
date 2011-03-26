@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Autofac;
 using Lucene.Services;
 using Moq;
@@ -19,6 +18,7 @@ using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.LockFile;
 using Orchard.Indexing;
 using Orchard.Indexing.Handlers;
 using Orchard.Indexing.Models;
@@ -34,14 +34,15 @@ namespace Orchard.Tests.Modules.Indexing {
         private IIndexProvider _provider;
         private IAppDataFolder _appDataFolder;
         private ShellSettings _shellSettings;
-        private IIndexNotifierHandler _indexNotifier;
+        private IIndexingTaskExecutor _indexTaskExecutor;
         private IContentManager _contentManager;
         private Mock<IContentDefinitionManager> _contentDefinitionManager;
         private StubLogger _logger;
-        private const string IndexName = "Search";
+        private ILockFileManager _lockFileManager;
 
+        private const string IndexName = "Search";
         private readonly string _basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        
+
         [TestFixtureTearDown]
         public void Clean() {
             if (Directory.Exists(_basePath)) {
@@ -59,10 +60,9 @@ namespace Orchard.Tests.Modules.Indexing {
             
             builder.RegisterType<LuceneIndexProvider>().As<IIndexProvider>();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
-            builder.RegisterType<IndexingTaskExecutor>().As<IIndexNotifierHandler>();
+            builder.RegisterType<IndexingTaskExecutor>().As<IIndexingTaskExecutor>();
             builder.RegisterType<DefaultIndexManager>().As<IIndexManager>();
             builder.RegisterType<IndexingTaskManager>().As<IIndexingTaskManager>();
-            builder.RegisterType<IndexSynLock>().As<IIndexSynLock>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterInstance(_contentDefinitionManager.Object);
@@ -79,6 +79,8 @@ namespace Orchard.Tests.Modules.Indexing {
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<BodyPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+
+            builder.RegisterType<DefaultLockFileManager>().As<ILockFileManager>();
 
             // setting up a ShellSettings instance
             _shellSettings = new ShellSettings { Name = "My Site" };
@@ -100,11 +102,11 @@ namespace Orchard.Tests.Modules.Indexing {
 
         public override void Init() {
             base.Init();
-
+            _lockFileManager = _container.Resolve<ILockFileManager>();
             _provider = _container.Resolve<IIndexProvider>();
-            _indexNotifier = _container.Resolve<IIndexNotifierHandler>();
+            _indexTaskExecutor = _container.Resolve<IIndexingTaskExecutor>();
             _contentManager = _container.Resolve<IContentManager>();
-            ((IndexingTaskExecutor)_indexNotifier).Logger = _logger = new StubLogger();
+            ((IndexingTaskExecutor)_indexTaskExecutor).Logger = _logger = new StubLogger();
 
             var thingType = new ContentTypeDefinitionBuilder()
                 .Named(ThingDriver.ContentTypeName)
@@ -116,21 +118,14 @@ namespace Orchard.Tests.Modules.Indexing {
                 .Returns(thingType);
         }
 
-        private string[] Indexes() {
-            return new DirectoryInfo(Path.Combine(_basePath, "Sites", "My Site", "Indexes")).GetDirectories().Select(d => d.Name).ToArray();
-        }
-
         [Test]
         public void IndexShouldBeEmptyWhenThereIsNoContent() {
-            _indexNotifier.UpdateIndex(IndexName);
+            while(_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
-            Assert.That(_logger.LogEntries.Count(), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index update requested, nothing to do"));
         }
 
         [Test]
-        public void ShouldIngoreNonIndexableContentWhenRebuildingTheIndex() {
+        public void ShouldIgnoreNonIndexableContentWhenRebuildingTheIndex() {
             var alphaType = new ContentTypeDefinitionBuilder()
                 .Named("alpha")
                 .Build();
@@ -141,11 +136,8 @@ namespace Orchard.Tests.Modules.Indexing {
 
             _contentManager.Create("alpha");
 
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
-            Assert.That(_logger.LogEntries.Count(), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index update requested, nothing to do"));
         }
 
         [Test]
@@ -161,11 +153,8 @@ namespace Orchard.Tests.Modules.Indexing {
 
             _contentManager.Create("alpha");
 
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(0));
-            Assert.That(_logger.LogEntries.Count(), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index update requested, nothing to do"));
         }
 
         [Test]
@@ -173,80 +162,68 @@ namespace Orchard.Tests.Modules.Indexing {
             var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
             content.Text = "Lorem ipsum";
 
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries.Count(), Is.EqualTo(3));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Processing {0} indexing tasks"));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Added content items to index: {0}"));
         }
 
         [Test]
         public void ShouldUpdateTheIndexWhenContentIsPublished() {
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            _logger.Clear();
+
+            // there should be nothing done
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
 
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
+        }
+
+        [Test]
+        public void IndexingTaskExecutorShouldNotBeReEntrant() {
+            ILockFile lockFile = null;
+            _lockFileManager.TryAcquireLock("Sites/My Site/Search.settings.xml.lock", ref lockFile);
+            using (lockFile) {
+                while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+                Assert.That(_logger.LogEntries.Count, Is.EqualTo(1));
+                Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but is already running"));
+            }
+
+            _logger.LogEntries.Clear();
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but is already running"));
         }
 
         [Test]
         public void ShouldUpdateTheIndexWhenContentIsUnPublished() {
             _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
-            _clock.Advance(TimeSpan.FromSeconds(1));
 
-            _indexNotifier.UpdateIndex(IndexName);
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            _logger.Clear();
 
             var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
             content.Text = "Lorem ipsum";
-            _clock.Advance(TimeSpan.FromSeconds(1));
-            
-            _indexNotifier.UpdateIndex(IndexName);
+
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            _clock.Advance(TimeSpan.FromSeconds(1));
 
             _contentManager.Unpublish(content.ContentItem);
-            _clock.Advance(TimeSpan.FromSeconds(1));
-            
-            _indexNotifier.UpdateIndex(IndexName);
+
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
         }
 
+
         [Test]
-        public void ShouldRemoveFromIndexEvenIfPublishedAndUnpublishedInTheSameSecond() {
-            // This test is to ensure that when a task is created, all previous tasks for the same content item
-            // are also removed, and thus that multiple tasks don't conflict while updating the index
-            
-            _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
-            _clock.Advance(TimeSpan.FromSeconds(1));
-
-            _indexNotifier.UpdateIndex(IndexName);
-            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-            _logger.Clear();
-
-            var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
-            content.Text = "Lorem ipsum";
-
-            _indexNotifier.UpdateIndex(IndexName);
-            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
-
-            _contentManager.Unpublish(content.ContentItem);
-
-            _indexNotifier.UpdateIndex(IndexName);
-            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
-            Assert.That(_logger.LogEntries, Has.None.Matches<LogEntry>(entry => entry.LogFormat == "Rebuild index started"));
+        public void ShouldIndexAllContentOverTheLoopSize() {
+            for (int i = 0; i < 999; i++) {
+                var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
+                content.Text = "Lorem ipsum " + i;
+            }
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
+            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(999));
         }
 
         #region Stubs
@@ -293,7 +270,7 @@ namespace Orchard.Tests.Modules.Indexing {
             }
 
             public void Log(LogLevel level, Exception exception, string format, params object[] args) {
-                LogEntries.Add(new LogEntry() {
+                LogEntries.Add(new LogEntry {
                     LogArgs = args,
                     LogException = exception,
                     LogFormat = format,

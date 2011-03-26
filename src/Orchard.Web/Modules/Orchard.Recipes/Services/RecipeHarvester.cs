@@ -29,11 +29,11 @@ namespace Orchard.Recipes.Services {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        public IEnumerable<Recipe> HarvestRecipes(string extensionName) {
+        public IEnumerable<Recipe> HarvestRecipes(string extensionId) {
             var recipes = new List<Recipe>();
-            var extension = _extensionManager.GetExtension(extensionName);
+            var extension = _extensionManager.GetExtension(extensionId);
             if (extension != null) {
-                var recipeLocation = Path.Combine(extension.Location, extensionName, "Recipes");
+                var recipeLocation = Path.Combine(extension.Location, extensionId, "Recipes");
                 var recipeFiles = _webSiteFolder.ListFiles(recipeLocation, true);
                 recipes.AddRange(
                     from recipeFile in recipeFiles
@@ -41,7 +41,7 @@ namespace Orchard.Recipes.Services {
                     select _recipeParser.ParseRecipe(_webSiteFolder.ReadFile(recipeFile)));
             }
             else {
-                Logger.Error("Could not discover recipes because module '{0}' was not found.", extensionName);
+                Logger.Error("Could not discover recipes because module '{0}' was not found.", extensionId);
             }
 
             return recipes;

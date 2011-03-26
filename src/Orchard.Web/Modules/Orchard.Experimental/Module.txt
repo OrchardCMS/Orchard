@@ -5,11 +5,8 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: An assortment of debugging tools.
+Category: Developer
 Features:
-    Orchard.Experimental:
-        Name: Experimental
-        Description: An assortment of debugging tools.
-        Category: Developer
     Profiling:
         Name: Profiling
         Description: Tools to help profile Orchard.
@@ -23,4 +20,8 @@ Features:
         Name: Testing Lists
         Description: Adds some content definitions to help test lists
         Dependencies: Orchard.Lists
+        Category: Developer
+    Orchard.Experimental.LockLogging:
+        Name: Lock Logging
+        Description: Logs extra diagnostic information for Sql CE if a deadlock timeout occurs
         Category: Developer

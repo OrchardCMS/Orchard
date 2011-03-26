@@ -143,7 +143,7 @@ namespace Orchard.Media.Services {
                 throw new ArgumentException(T("New file name {0} is not allowed", newFileName).ToString());
             }
 
-            _storageProvider.RenameFile(_storageProvider.Combine(folderPath, currentFileName), _storageProvider.Combine(Path.GetDirectoryName(folderPath), newFileName));
+            _storageProvider.RenameFile(_storageProvider.Combine(folderPath, currentFileName), _storageProvider.Combine(folderPath, newFileName));
         }
 
         /// <summary>

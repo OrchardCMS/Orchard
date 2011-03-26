@@ -5,7 +5,6 @@ namespace Orchard.Packaging.ViewModels {
     public class PackagingExtensionsViewModel {
         public IEnumerable<PackagingEntry> Extensions { get; set; }
         public IEnumerable<PackagingSource> Sources { get; set; }
-        public PackagingSource SelectedSource { get; set; }
         public PackagingExtensionsOptions Options { get; set; }
         public dynamic Pager { get; set; }
     }

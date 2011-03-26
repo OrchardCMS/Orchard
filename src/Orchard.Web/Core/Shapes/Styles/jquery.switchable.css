@@ -26,7 +26,7 @@
 }
 .switch-for-switchable.summary-switched .summary-view {
 	background:url("images/summary-view-on.gif") no-repeat left top;
-	border-color:#bb8b2d;
+	border-color:#487328;
 	cursor:default;
 }
 .switch-for-switchable .detail-view {
@@ -38,6 +38,6 @@
 }
 .switch-for-switchable.detail-switched .detail-view {
 	background:url("images/detail-view-on.gif") no-repeat left top;
-	border-color:#bb8b2d;
+	border-color:#487328;
 	cursor:default;
 }

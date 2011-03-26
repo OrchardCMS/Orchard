@@ -5,8 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The TinyMCE module enables rich text contents to be created using a "What You See Is What You Get" user interface.
-Features:
-    TinyMce:
-        Name: TinyMce
-        Description: TinyMCE HTML WYSIWYG editor.
-        Category: Input Editor
+FeatureDescription: TinyMCE HTML WYSIWYG editor.
+Category: Input Editor

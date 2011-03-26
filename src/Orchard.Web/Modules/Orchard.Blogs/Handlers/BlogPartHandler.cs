@@ -77,6 +77,12 @@ namespace Orchard.Blogs.Handlers {
                 {"Action", "Remove"},
                 {"blogId", context.ContentItem.Id}
             };
+            context.Metadata.AdminRouteValues = new RouteValueDictionary {
+                {"Area", "Orchard.Blogs"},
+                {"Controller", "BlogAdmin"},
+                {"Action", "Item"},
+                {"blogId", context.ContentItem.Id}
+            };
         }
     }
 }

@@ -1,196 +1,236 @@
-﻿#debug-control * {
-    margin:0 !important;
-    padding:0 !important;
+﻿/* 
+    shape tracing container styles reset 
+    must contain all tags used in the container
+*/
+
+/* Global
+***************************************************************/
+#shape-tracing-container * {
+     -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+      border-radius: 2px;
 }
-#debug-control {
-    background:#666;    
-    border:1px solid #000;
-    color:#FFF;
-    float:left;
-    font:12px/12px Consolas,"Lucida Console",Monaco,monospace; 
-    left:0;
-    position:fixed;
-    top:0;
+
+/* Links
+***************************************************************/
+#shape-tracing-container a, #shape-tracing-container a:link, #shape-tracing-container a:visited {
+    color:rgba(0, 94, 153, 0.8);
+    text-decoration:none;
+    background-color:transparent;
 }
-#debug-control .debug-active {
-    color:Lime;
+#shape-tracing-container a:hover, #shape-tracing-container a:active, #shape-tracing-container a:focus {
+    color:rgba(0, 94, 153, 1.0);
+    text-decoration:none;
+    background-color:transparent;
 }
-#debug-control ul {
-    display:none;
-}
-#debug-control ul, #debug-control-toggle {
-    float:left;
-    padding:2px !important;
-}
-#debug-control li, #debug-control-toggle {
+
+/* Forms
+***************************************************************/
+#shape-tracing-container input[type="submit"],
+#shape-tracing-container input[type="button"],
+#shape-tracing-container button,
+#shape-tracing-container .button {
+    padding:0;
+    margin:0;
+    border:1px solid rgba(182, 188, 189, 1.0);
+    background:rgba(236, 241, 242, 1.0);
+    
+     /*CSS3 properties*/
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2',  endColorstr='#ffeffcfc');   
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
+    }
+
+#shape-tracing-container input[type="submit"]:hover,
+#shape-tracing-container input[type="button"]:hover,
+#shape-tracing-container button:hover,
+#shape-tracing-container .button:hover {
+    background-color:rgba(255, 255, 255, 0.5);
+    color:#005e99;
+    color:rgba(0, 94, 153, 1.0);
+    border:1px solid rgba(0, 94, 153, 1.0);
+    text-decoration:none;
     cursor:pointer;
+    }
+
+
+button.create-template, button.create-template:hover, background-image:hover {
+    background-color:transparent;
+    background-image:none;
     display:inline;
+}
+
+/* Layout
+***************************************************************/
+#shape-tracing-container ul, 
+#shape-tracing-container li {
+    margin:0;
+    padding:0;
+    color:#000;
+    font-size:100%;
     list-style-type:none;
-    padding-left:2px !important;
-    padding-right:2px !important;
-    white-space:nowrap;
-}
-#debug-control li {
-    border-right:1px solid #999;
 }
 
-.debug-shapes .shape-tracing .wrapper {
-    background:#FFF;
-    border:1px dotted #CA7230;
-    margin:5px;
-    padding:0px;
-    display:inline-block;
-
-    /* when there is nothing inside the shape, force to the size of the smart tag */
-    min-width:20px;
-    min-height:20px;
-}
-
-.debug-shapes  body {
-    margin-top:25px;
-}
-
-.debug-shapes div.shape-tracing.meta  {
+#shape-tracing-container {
     clear:both;
     display:block;
-    background:#ccc;
-    font-size:9pt;
+    font-size:10pt;
     font-family:Segoe;
-    color:black;
-    margin-top:5px;
     left: 0px;
     bottom: 0px;
     position:fixed;
     z-index:999;
     width:100%;
+    display:none;
+    max-height:66%;
+    height:24px; /* handle (21) + toolbar (3) */
+    min-height:24px;
+    padding:0;
+    margin:0;
 }
 
-.debug-zones .shapeType-Zone { 
-    border:1px dashed grey;
-    margin:5px;
-    position: relative;
+#shape-tracing-container .shape-tracing-meta-content {
+    padding:0 0 30px 0;
+    overflow:auto;
 }
 
-.debug-zones .zone-name {
-    position:absolute; top: 0px; left: 0px;
-    display: block; background-color: #ddd; color: #434343; padding: 3px 6px;
-    filter:alpha(opacity=70);
-    opacity: 0.7;    
+#shape-tracing-container .model, #shape-tracing-container .shape {
+    padding-left:30px;
 }
 
-.meta .shape {
-    color:black;
-}
-
-.meta .alternates {
-    color:red;
-}
-
-.meta .wrappers {
-    color:green;
-}
-
-.debug-shapes div.wrapper.selected  {
-    background-color:#BAFFC3;
-}
-
-/* tabs */
-
-ul.debuggerMenu { margin:8px 0 -8px 0; }
-
-.debuggerMenu li {
-    color:#4053DE;
-    display: inline;
-    font-size:15px;
-    line-height:32px;
-}
-.debuggerMenu li {
-    margin:0 2px;
-    padding: 8px 18px 7px 18px;
-}
-.debuggerMenu li.middle, .debuggerMenu li.first, .debuggerMenu li.last {
-    border:1px solid #E4E5E6;
-    border-bottom:none;
-    background-color: #F5F5F5;
-}
-.debuggerMenu li.first {
-    margin-left:16px;
-}
-.debuggerMenu li.selected {
-    background-color: #fff;
-}
-.debuggerMenu li.selected, .debuggerMenu li:hover {
-    background-color: #fff;
-}
-.debuggerMenu li.selected a {
-    color: #3A822E;
-}
-
-.debug-shapes div.shape-tracing.meta .content {
-    background-color: #fff;
-    padding: 20px;
-    margin:8px 0 0 0;
-    border: 1px solid #e4e5e6;
-    height:10em;
-    overflow:scroll;
+#shape-tracing-toolbar  {
+    color:#333;
+    background:rgba(236, 241, 242, 1.0);
+    border:1px solid rgba(182, 188, 189, 1.0);
+    height:21px;
+    padding-top:0;
+    padding-left:5px;
+    padding-right:5px;
+    margin:0;
+     
      /*CSS3 properties*/
-     border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
+     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2',  endColorstr='#ffeffcfc');   
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
 }
 
-.meta .model div.name
-{
+#shape-tracing-toolbar-switch  {
+    display:block;
+    float:right;
+    width:14px;
+    height:100%;
+    background: url(images/expand.png) no-repeat;
+    margin-top:3px;
+}
+
+#shape-tracing-toolbar-switch.expanded {
+    background: url(images/collapse.png) no-repeat;
+}
+
+/* 
+    this element is behind the stw to ensure the document is bigger and a scrollbar is added on the document
+    so that the stw doesn't hide some content
+*/
+#shape-tracing-container-ghost  {
+    width:100%;
+    display:block;
+}
+
+#shape-tracing-resize-handle  {
+    width:100%;
+    display:block;
+    height:5px;
+    background-color:transparent;
+    cursor:n-resize;
+}
+
+.shape-tracing-overlay {
+    background-color:#EBEFF9;
+    cursor: pointer;
+}
+
+.shape-tracing-tree-overlay {
+    background-color:#eee;
+    cursor: pointer;
+}
+
+#shape-tracing-window {
+    background: #fff;
+}
+
+#shape-tracing-window-tree {
     display:block;
     float:left;
-    width:30%;
+    overflow:auto;
+    width:33%;
+    border-right:2px solid rgba(182, 188, 189, 0.8);
+    background:#fff;
 }
 
-.meta .model ul 
-{
-    padding:0;
-    margin-left:-15px;
-    margin:0;
+#shape-tracing-window-tree li  {
+    clear:both;
+    line-height:20px;
+}
+
+.shape-tracing-selected {
+    background-color: #EBEFF9;
+}
+
+#shape-tracing-window .shape-tracing-selected  {
+    background:#2c66c3;
+    color:#fff;
+    
+     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff3875d7',  endColorstr='#ff2c66c3')	
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(56, 117, 215, 1.0)), to(rgba(44, 102, 195, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(56, 117, 215, 1.0), rgba(44, 102, 195, 1.0));
+}
+
+#shape-tracing-window-tree ul {
+    margin:0 0 0 18px;
+    padding:0 0 0 4px;
     list-style-type:none;
 }
 
-.meta .model ul li
-{
-    padding-left:15px;
+#shape-tracing-window-tree li > div {
 }
 
-.meta .model h3
-{
-    margin:0;
-    padding:0;
+#shape-tracing-window-content {
+    padding:0 0 0 6px;
 }
 
-h3:hover
-{
-    background-color: #eee;
-}
-
-.expando-glyph {
+#shape-tracing-window .expando-glyph {
     background:transparent no-repeat 0 -19px;
     background-image:url(images/menu-glyph.png);
-
-    line-height:12px;
     padding-left:15px;
-    margin-left:-15px;
 }
 
-.expando-glyph:hover {
+#shape-tracing-window .expando-glyph:hover {
     background-image:url(images/menu-glyph.png);
 }
 
-.expando-glyph-container.closed .expando-glyph {
+#shape-tracing-window .expando-glyph-container  {
+    float:left;
+    display:block;
+    width:15px;
+    margin-left:-15px;
+    cursor:default;
+}
+
+#shape-tracing-window .expando-glyph-container.closed .expando-glyph  {
+    background-repeat:no-repeat;
     background-image:url(images/menu-glyph.png);
     background-position:0 3px;
 }
-.expando-glyph-container.closed .expando-glyph:hover {
+
+#shape-tracing-window .expando-glyph-container.closed .expando-glyph:hover {
     background-image:url(images/menu-glyph.png);
 }
-.expando-glyph-container.closing .expando-glyph {
+
+#shape-tracing-window .expando-glyph-container.closing .expando-glyph 
+{
+    background-repeat:no-repeat;
     -webkit-transition:all .2s ease-in-out;
     -moz-transition:all .2s ease-in-out;
     transition:all .2s ease-in-out;
@@ -198,11 +238,103 @@ h3:hover
     -moz-transform:rotate(-90deg) translate(3px, -3px);
     transform:rotate(-90deg) translate(3px, -3px);
 }
-.expando-glyph-container.opening .expando-glyph {
+
+#shape-tracing-window .expando-glyph-container.opening .expando-glyph 
+{
+    background-repeat:no-repeat;
     -webkit-transition:all .2s ease-in-out;
     -moz-transition:all .2s ease-in-out;
     transition:all .2s ease-in-out;
     -webkit-transform:rotate(90deg) translate(3px, 3px);
     -moz-transform:rotate(90deg) translate(3px, 3px);
     transform:rotate(90deg) translate(3px, 3px);
+}
+
+#shape-tracing-overlay  {
+    display:none;
+    background-color:#0015FF;
+    position:absolute;
+    opacity:0.5;
+    filter:alpha(opacity=50);
+    z-index:2;
+}
+
+/* Tabs
+***************************************************************/
+
+#shape-tracing-window-content .shape-tracing-tabs li {
+    display: inline;
+    font-size:14px;
+    padding: 4px 18px;
+    color:#005e99;
+    color:rgba(0, 94, 153, 0.8);
+    text-decoration:none;
+}
+
+#shape-tracing-window-content ul.shape-tracing-tabs {
+    padding:8px 0;
+    border-bottom:1px solid rgba(182, 188, 189, 1.0);
+    background:rgba(236, 241, 242, 1.0);
+    
+     /*CSS3 properties*/
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2',  endColorstr='#ffeffcfc');   
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
+    }
+
+#shape-tracing-window-content .shape-tracing-tabs li.middle, #shape-tracing-window-content .shape-tracing-tabs li.first, #shape-tracing-window-content .shape-tracing-tabs li.last {
+    border:1px solid rgba(154,155,157,1.0);
+    background-color: #F5F5F5;
+}
+
+#shape-tracing-window-content .shape-tracing-tabs li.first {margin:0 0 0 4px;}
+
+#shape-tracing-window-content .shape-tracing-tabs li:hover {
+    background-color:rgba(255, 255, 255, 0.5);
+    color:#005e99;
+    color:rgba(0, 94, 153, 1.0);
+    border:1px solid rgba(0, 94, 153, 1.0);
+    text-decoration:none;
+    cursor:pointer;
+}
+#shape-tracing-window-content .shape-tracing-tabs li.selected {
+    background-color:rgba(255, 255, 255, 0.9);
+    color:rgba(102, 102, 102, 1.0);
+    border:1px solid rgba(102, 102, 102, 1.0);
+}
+#shape-tracing-window-content .grid-display {
+    position:relative;
+}
+
+#shape-tracing-window-content .grid-display li {
+    clear:both;
+}
+
+#shape-tracing-window-content .grid-display ul ul {
+    margin:0 0 0 18px;
+    padding:0 0 0 10px;
+    list-style-type:none;
+}
+
+#shape-tracing-window-content .grid-display div.name {
+    float:left;
+}
+
+#shape-tracing-window-content .grid-display div.type, #shape-tracing-window-content .grid-display div.value {
+    position:absolute;
+    left:300px;
+    white-space:nowrap;
+}
+
+#shape-tracing-window-content .shape-tracing-breadcrumb {
+    background:rgba(236, 241, 242, 1.0);
+    border-bottom:1px solid rgba(182, 188, 189, 1.0);
+    padding: 3px 0 0 4px;
+    font-weight:700;
+    height: 18px; 
+}
+
+.CodeMirror {
+    height:auto;
+    overflow:hidden !important;
 }

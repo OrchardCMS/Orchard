@@ -21,7 +21,7 @@
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
             @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Remove").ToString())
+            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
         </select>
         <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
     </fieldset>

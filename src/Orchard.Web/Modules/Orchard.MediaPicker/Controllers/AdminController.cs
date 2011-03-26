@@ -14,13 +14,10 @@ namespace Orchard.MediaPicker.Controllers {
     [Themed(false)]
     public class AdminController : Controller {
         private readonly IMediaService _mediaService;
-        private readonly IAuthorizer _authorizer;
 
         public IOrchardServices Services { get; set; }
 
-        public AdminController(IOrchardServices services, IMediaService mediaService, IAuthorizer authorizer) {
-            _authorizer = authorizer;
-
+        public AdminController(IOrchardServices services, IMediaService mediaService) {
             Services = services;
             _mediaService = mediaService;
 

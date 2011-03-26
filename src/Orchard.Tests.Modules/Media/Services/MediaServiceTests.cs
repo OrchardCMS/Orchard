@@ -132,7 +132,7 @@ namespace Orchard.Tests.Modules.Media.Services {
                 Record = new MediaSettingsPartRecord { UploadAllowedFileTypeWhitelist = "txt dll config" }
             };
 
-            StubWorkContextAccessor.WorkContextImpl.InitMethod = workContext => {
+            StubWorkContextAccessor.WorkContextImpl._initMethod = workContext => {
                 workContext.CurrentSite.ContentItem.Weld(mediaSettingsPart);
             };
 
@@ -158,7 +158,7 @@ namespace Orchard.Tests.Modules.Media.Services {
                 Record = new MediaSettingsPartRecord { UploadAllowedFileTypeWhitelist = "txt dll config" }
             };
 
-            StubWorkContextAccessor.WorkContextImpl.InitMethod = workContext => {
+            StubWorkContextAccessor.WorkContextImpl._initMethod = workContext => {
                 workContext.CurrentSite.ContentItem.Weld(mediaSettingsPart);
             };
 

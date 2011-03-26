@@ -36,5 +36,16 @@ namespace Orchard.Core.Common {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.CreateTable("IdentityPartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("Identifier", column => column.Unlimited())
+                );
+            ContentDefinitionManager.AlterPartDefinition("IdentityPart", builder => builder.Attachable());
+
+            return 2;
+        }
     }
 }

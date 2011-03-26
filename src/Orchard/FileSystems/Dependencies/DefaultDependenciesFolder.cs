@@ -24,9 +24,7 @@ namespace Orchard.FileSystems.Dependencies {
         public Localizer T { get; set; }
 
         private string PersistencePath {
-            get {
-                return _appDataFolder.Combine(BasePath, FileName);
-            }
+            get { return _appDataFolder.Combine(BasePath, FileName); }
         }
 
         public DependencyDescriptor GetDescriptor(string moduleName) {
@@ -53,10 +51,6 @@ namespace Orchard.FileSystems.Dependencies {
             if (!newDescriptors.SequenceEqual(existingDescriptors, new DependencyDescriptorComparer())) {
                 WriteDependencies(PersistencePath, dependencyDescriptors);
             }
-        }
-
-        public IEnumerable<string> GetViewCompilationDependencies() {
-            yield return _appDataFolder.GetVirtualPath(this.PersistencePath);
         }
 
         private IEnumerable<DependencyDescriptor> ReadDependencies(string persistancePath) {

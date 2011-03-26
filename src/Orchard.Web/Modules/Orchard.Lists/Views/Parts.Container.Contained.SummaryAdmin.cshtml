@@ -1,0 +1,9 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Core.Containers.Models;
+@using Orchard.Utility.Extensions;
+@{
+    ContentPart contentPart = Model.ContentPart;
+}
+@if (contentPart.Is<ContainerPart>()) {
+    @Html.Link(T("Contained Items").Text, Url.Action("List", "Admin", new { area = "Orchard.Lists", containerId = contentPart.Id }))@T(" | ")
+}

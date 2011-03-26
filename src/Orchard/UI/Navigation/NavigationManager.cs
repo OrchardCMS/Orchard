@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
@@ -17,7 +19,10 @@ namespace Orchard.UI.Navigation {
             _authorizationService = authorizationService;
             _urlHelper = urlHelper;
             _orchardServices = orchardServices;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
@@ -84,8 +89,17 @@ namespace Orchard.UI.Navigation {
             foreach (var provider in _providers) {
                 if (provider.MenuName == menuName) {
                     var builder = new NavigationBuilder();
-                    provider.GetNavigation(builder);
-                    yield return builder.Build();
+                    IEnumerable<MenuItem> items = null;
+                    try {
+                        provider.GetNavigation(builder);
+                        items = builder.Build();
+                    }
+                    catch (Exception ex) {
+                        Logger.Error(ex, "Unexpected error while querying a navigation provider. It was ignored. The menu provided by the provider may not be complete.");
+                    }
+                    if (items != null) {
+                        yield return items;
+                    }
                 }
             }
         }
@@ -94,8 +108,17 @@ namespace Orchard.UI.Navigation {
             foreach (var provider in _providers) {
                 if (provider.MenuName == menuName) {
                     var builder = new NavigationBuilder();
-                    provider.GetNavigation(builder);
-                    yield return builder.BuildImageSets();
+                    IEnumerable<string> imageSets = null;
+                    try {
+                        provider.GetNavigation(builder);
+                        imageSets = builder.BuildImageSets();
+                    }
+                    catch (Exception ex) {
+                        Logger.Error(ex, "Unexpected error while querying a navigation provider. It was ignored. The menu provided by the provider may not be complete.");
+                    }
+                    if (imageSets != null) {
+                        yield return imageSets;
+                    }
                 }
             }
         }

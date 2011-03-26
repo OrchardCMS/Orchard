@@ -10,7 +10,7 @@ namespace Orchard.ContentTypes {
         public void GetNavigation(NavigationBuilder builder) {
 
             builder.Add(T("Content"),
-                        menu => menu.Add(T("Content Types"), "3", item => item.Action("Index", "Admin", new {area = "Orchard.ContentTypes"})));
+                        menu => menu.Add(T("Content Types"), "3", item => item.Action("Index", "Admin", new { area = "Orchard.ContentTypes" }).LocalNav()));
         }
     }
 }

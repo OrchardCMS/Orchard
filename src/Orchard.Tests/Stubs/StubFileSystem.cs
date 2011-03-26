@@ -228,6 +228,8 @@ namespace Orchard.Tests.Stubs {
                 _clock = clock;
             }
 
+            public FileEntry FileEntry { get { return _entry; } }
+
             public override void Flush() {
                 throw new NotImplementedException();
             }

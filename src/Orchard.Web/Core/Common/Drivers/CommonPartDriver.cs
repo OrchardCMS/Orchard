@@ -1,5 +1,7 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Xml;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
@@ -117,6 +119,59 @@ namespace Orchard.Core.Common.Drivers {
 
             return ContentShape("Parts_Common_Container_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: "Parts.Common.Container", Model: model, Prefix: Prefix));
+        }
+
+        protected override void Importing(CommonPart part, ImportContentContext context) {
+            var owner = context.Attribute(part.PartDefinition.Name, "Owner");
+            if (owner != null) {
+                var contentIdentity = new ContentIdentity(owner);
+                part.Owner = _membershipService.GetUser(contentIdentity.Get("User.UserName"));
+            }
+
+            var container = context.Attribute(part.PartDefinition.Name, "Container");
+            if (container != null) {
+                part.Container = context.GetItemFromSession(container);
+            }
+
+            var createdUtc = context.Attribute(part.PartDefinition.Name, "CreatedUtc");
+            if (createdUtc != null) {
+                part.CreatedUtc = XmlConvert.ToDateTime(createdUtc, XmlDateTimeSerializationMode.Utc);
+            }
+
+            var publishedUtc = context.Attribute(part.PartDefinition.Name, "PublishedUtc");
+            if (publishedUtc != null) {
+                part.PublishedUtc = XmlConvert.ToDateTime(publishedUtc, XmlDateTimeSerializationMode.Utc);
+            }
+
+            var modifiedUtc = context.Attribute(part.PartDefinition.Name, "ModifiedUtc");
+            if (modifiedUtc != null) {
+                part.ModifiedUtc = XmlConvert.ToDateTime(modifiedUtc, XmlDateTimeSerializationMode.Utc);
+            }
+        }
+
+        protected override void Exporting(CommonPart part, ExportContentContext context) {
+            if (part.Owner != null) {
+                var ownerIdentity = _contentManager.GetItemMetadata(part.Owner).Identity;
+                context.Element(part.PartDefinition.Name).SetAttributeValue("Owner", ownerIdentity.ToString());
+            }
+
+            if (part.Container != null) {
+                var containerIdentity = _contentManager.GetItemMetadata(part.Container).Identity;
+                context.Element(part.PartDefinition.Name).SetAttributeValue("Container", containerIdentity.ToString()); 
+            }
+
+            if (part.CreatedUtc != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("CreatedUtc", XmlConvert.ToString(part.CreatedUtc.Value, XmlDateTimeSerializationMode.Utc));
+            }
+            if (part.PublishedUtc != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("PublishedUtc", XmlConvert.ToString(part.PublishedUtc.Value, XmlDateTimeSerializationMode.Utc));
+            }
+            if (part.ModifiedUtc != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("ModifiedUtc", XmlConvert.ToString(part.ModifiedUtc.Value, XmlDateTimeSerializationMode.Utc));
+            }
         }
     }
 }

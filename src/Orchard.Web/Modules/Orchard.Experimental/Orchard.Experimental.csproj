@@ -39,10 +39,14 @@
       <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NHibernate">
+      <HintPath>..\..\..\..\lib\fluentnhibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
@@ -62,6 +66,7 @@
     <Compile Include="Controllers\MetadataController.cs" />
     <Compile Include="DebugFilter.cs" />
     <Compile Include="Handlers\DebugLinkHandler.cs" />
+    <Compile Include="LockLogging.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ShowDebugLink.cs" />
     <Compile Include="Models\Simple.cs" />

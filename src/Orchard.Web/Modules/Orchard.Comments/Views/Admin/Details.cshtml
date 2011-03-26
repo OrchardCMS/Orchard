@@ -28,7 +28,7 @@
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Approve, T("Approve").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Unapprove, T("Unapprove").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.MarkAsSpam, T("Mark as Spam").ToString())
-            @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, T("Remove").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, T("Delete").ToString())
         </select>
         <button type="submit" name="submit.BulkEdit" value="@T("Apply")">@T("Apply")</button>
     </fieldset>

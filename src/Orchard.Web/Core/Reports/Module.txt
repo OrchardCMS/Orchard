@@ -5,7 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The dashboard module is providing the reports screen of the application.
-Features:
-    Reports:
-        Description: Reports management.
-        Category: Core
+FeatureDescription: Reports management.
+Category: Core
