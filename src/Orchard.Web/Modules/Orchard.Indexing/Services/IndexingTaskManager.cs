@@ -51,7 +51,5 @@ namespace Orchard.Indexing.Services {
             CreateTask(contentItem, IndexingTaskRecord.Delete);
             Logger.Information("Deleting index task created for [{0}:{1}]", contentItem.ContentType, contentItem.Id);
         }
-
-            _repository.Flush();
     }
 }
