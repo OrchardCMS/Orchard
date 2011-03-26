@@ -3,6 +3,13 @@
     must contain all tags used in the container
 */
 
+/* Global
+***************************************************************/
+#shape-tracing-container * {
+     -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+      border-radius: 2px;
+}
 
 /* Links
 ***************************************************************/
@@ -17,6 +24,44 @@
     background-color:transparent;
 }
 
+/* Forms
+***************************************************************/
+#shape-tracing-container input[type="submit"],
+#shape-tracing-container input[type="button"],
+#shape-tracing-container button,
+#shape-tracing-container .button {
+    padding:0;
+    margin:0;
+    border:1px solid rgba(182, 188, 189, 1.0);
+    background:rgba(236, 241, 242, 1.0);
+    
+     /*CSS3 properties*/
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2',  endColorstr='#ffeffcfc');   
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
+    }
+
+#shape-tracing-container input[type="submit"]:hover,
+#shape-tracing-container input[type="button"]:hover,
+#shape-tracing-container button:hover,
+#shape-tracing-container .button:hover {
+    background-color:rgba(255, 255, 255, 0.5);
+    color:#005e99;
+    color:rgba(0, 94, 153, 1.0);
+    border:1px solid rgba(0, 94, 153, 1.0);
+    text-decoration:none;
+    cursor:pointer;
+    }
+
+
+button.create-template, button.create-template:hover, background-image:hover {
+    background-color:transparent;
+    background-image:none;
+    display:inline;
+}
+
+/* Layout
+***************************************************************/
 #shape-tracing-container ul, 
 #shape-tracing-container li {
     margin:0;
@@ -49,7 +94,7 @@
     overflow:auto;
 }
 #shape-tracing-toolbar  {
-    color:#000;
+    color:#333;
     background:rgba(236, 241, 242, 1.0);
     border:1px solid rgba(182, 188, 189, 1.0);
     height:21px;
@@ -148,7 +193,6 @@
 
 #shape-tracing-window-content {
     padding:0 0 0 6px;
-    /*overflow:auto;*/
 }
 
 #shape-tracing-window .expando-glyph {
@@ -210,9 +254,8 @@
     z-index:2;
 }
 
-/* tabs */
-
-/*#shape-tracing-window-content ul.shape-tracing-tabs { margin:8px 0 -8px 0; }*/
+/* Tabs
+***************************************************************/
 
 #shape-tracing-window-content .shape-tracing-tabs li {
     display: inline;
@@ -239,8 +282,10 @@
     background-color: #F5F5F5;
 }
 
+#shape-tracing-window-content .shape-tracing-tabs li.first {margin:0 0 0 4px;}
+
 #shape-tracing-window-content .shape-tracing-tabs li:hover {
-    background-color: #fff;
+    background-color:rgba(255, 255, 255, 0.5);
     color:#005e99;
     color:rgba(0, 94, 153, 1.0);
     border:1px solid rgba(0, 94, 153, 1.0);
@@ -248,7 +293,7 @@
     cursor:pointer;
 }
 #shape-tracing-window-content .shape-tracing-tabs li.selected {
-    background-color: #fff;
+    background-color:rgba(255, 255, 255, 0.9);
     color:rgba(102, 102, 102, 1.0);
     border:1px solid rgba(102, 102, 102, 1.0);
 }
@@ -278,13 +323,7 @@
 
 #shape-tracing-window-content .shape-tracing-breadcrumb {
     margin: 3px 0px;
+    background:#ff0000;
+    position:fixed;
 }
 
-button.create-template, background-image :hover {
-    padding:0;
-    margin:0;
-    background-color:transparent;
-    background-image:none;
-    border:0;
-    display:inline;
-}
