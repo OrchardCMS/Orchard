@@ -116,8 +116,8 @@
         shapeTracingContainer.resizable({
             handles: { n: '#shape-tracing-resize-handle' },
             grid: 20, // mitigates the number of calls to syncResize(), and aligns to the line height
-            resize: shapeTracingEnabled = false,
-            stop: shapeTracingEnabled = true
+            resize: function () { shapeTracingEnabled = false },
+            stop: function () { shapeTracingEnabled = true }
         });
 
         var shapeNodes = {}; // represents the main index of shape nodes, indexed by id
