@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Services;
 using Orchard.Mvc;
 using Orchard.PublishLater.Models;
@@ -80,6 +82,21 @@ namespace Orchard.PublishLater.Drivers {
 
             return ContentShape("Parts_PublishLater_Edit",
                                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
+        }
+
+        protected override void Importing(PublishLaterPart part, ImportContentContext context) {
+            var scheduledUtc = context.Attribute(part.PartDefinition.Name, "ScheduledPublishUtc");
+            if (scheduledUtc != null) {
+                part.ScheduledPublishUtc.Value = XmlConvert.ToDateTime(scheduledUtc, XmlDateTimeSerializationMode.Utc);
+            }
+        }
+
+        protected override void Exporting(PublishLaterPart part, ExportContentContext context) {
+            var scheduled = part.ScheduledPublishUtc.Value;
+            if (scheduled != null) {
+                context.Element(part.PartDefinition.Name)
+                    .SetAttributeValue("ScheduledPublishUtc", XmlConvert.ToString(scheduled.Value, XmlDateTimeSerializationMode.Utc));
+            }
         }
     }
 }

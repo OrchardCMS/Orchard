@@ -1,3 +1,4 @@
 ﻿<Placement>
-    <Place Parts_Navigation_Menu_Edit="Content:9"/>
+  <Place Parts_Navigation_Menu_Edit="Content:9"/>
+  <Place Parts_Navigation_AdminMenu_Edit="Content:9.1"/>
 </Placement>

@@ -46,6 +46,14 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         [Test]
+        public void NavigationManagerShouldCatchProviderErrors() {
+            var manager = new NavigationManager(new[] { new BrokenProvider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())), new StubOrchardServices());
+
+            var menuItems = manager.BuildMenu("admin");
+            Assert.That(menuItems.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
         public void NavigationManagerShouldMergeAndOrderNavigation() {
             var manager = new NavigationManager(new INavigationProvider[] { new StubProvider(), new Stub2Provider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())), new StubOrchardServices());
 
@@ -80,6 +88,14 @@ namespace Orchard.Tests.UI.Navigation {
                 builder
                     .Add(new LocalizedString("Foo", "", "Foo", null), "1.0", x => x.Action("foo"))
                     .Add(new LocalizedString("Bar", "", "Bar", null), "2.0", x => x.Add(new LocalizedString("Frap", "", "Frap", null), "1.b"));
+            }
+        }
+
+        public class BrokenProvider : INavigationProvider {
+            public string MenuName { get { return "admin"; } }
+
+            public void GetNavigation(NavigationBuilder builder) {
+                throw new NullReferenceException();
             }
         }
 
@@ -124,8 +140,15 @@ namespace Orchard.Tests.UI.Navigation {
             get { throw new NotImplementedException(); }
         }
 
+        private WorkContext _workContext;
         public WorkContext WorkContext {
-            get { return new StubWorkContextAccessor(_lifetimeScope).GetContext(); }
+            get {
+                if(_workContext == null) {
+                    _workContext = new StubWorkContextAccessor(_lifetimeScope).GetContext(); 
+                }
+
+                return _workContext;
+            }
         }
     }
 }

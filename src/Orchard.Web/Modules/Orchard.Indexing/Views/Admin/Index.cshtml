@@ -1,4 +1,5 @@
 ﻿@model Orchard.Indexing.ViewModels.IndexViewModel
+@using Orchard.Indexing.Services;
 
 @{ Layout.Title = T("Search Index Management").ToString(); }
 
@@ -6,7 +7,7 @@
     <fieldset>
         @if (Model.IndexEntry == null) {
             <p>@T("There is currently no search index")</p>
-        } else if (Model.IndexEntry.LastUpdateUtc == null) { 
+        } else if (Model.IndexEntry.LastUpdateUtc == DateTime.MinValue) { 
             <p>@T("The search index has not been built yet.")</p>
         } else { 
             if (Model.IndexEntry.DocumentCount == 0) { 
@@ -21,8 +22,17 @@
                 <p>@T("The search index contains the following fields: {0}.", string.Join(T(", ").Text, Model.IndexEntry.Fields))</p>
             } 
 
-            <p>@T("The search index was last updated {0}.", Display.DateTimeRelative(dateTimeUtc: Model.IndexEntry.LastUpdateUtc.Value))</p>
-        } 
+            <p>@T("The search index was last updated {0}.", Display.DateTimeRelative(dateTimeUtc: Model.IndexEntry.LastUpdateUtc))</p>
+
+            switch(Model.IndexEntry.IndexingStatus) {
+                case IndexingStatus.Rebuilding:
+                    @T("The indexing process is currently being rebuilt."); 
+                    break;
+                case IndexingStatus.Updating:
+                    @T("The indexing process is currently being updated."); 
+                    break;
+            }
+        }
         <p>@T("Update the search index now: ")<button type="submit" title="@T("Update the search index.")" class="primaryAction">@T("Update")</button></p>
         @Html.AntiForgeryTokenOrchard() 
     </fieldset>

@@ -56,10 +56,10 @@
     border-color:#CFE493;
 }
 .features .disabled.feature {
-    background:#EAEAEA;
+    background:#f3f3f3;
 }
 .features.summary-view .disabled.feature {
-    border-color:#CCC;
+    border-color:#eaeaea;
 }
 .features .update.feature {
     background:#ECC;
@@ -88,7 +88,6 @@
 #main .features.detail-view h3 {
     display:inline;
     font-size:1.4em;
-    font-weight:bold;
     padding-right:0;
 }
 #main .features.summary-view .description {

@@ -13,6 +13,10 @@
 		<parameterEntry type="ProviderPath" scope="setAcl" match="Orchard/Media" /> 
 	</parameter>
 
+	<parameter name="SetAclParameter3" description="Hidden - automatically sets write access for the app" defaultValue="{Application Path}/bin/HostRestart" tags="Hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="Orchard/bin/HostRestart" /> 
+	</parameter>
+
        	<!-- Prompts for database server name, this is used in the connection string parameter later -->
 	<parameter name="Database Server" description="Location of your database server (i.e. server name, IP address, or server\instance)" defaultValue=".\SQLEXPRESS" tags="SQL, dbServer">
 	</parameter>

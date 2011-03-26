@@ -1,0 +1,4 @@
+﻿@using Orchard.Environment.Extensions.Models
+@if (HasText(Model.ZonePreviewImage)) {
+<p id="widgets-theme-zone-preview">@Html.Image(Href((string)Model.ZonePreviewImage), T("{0} zone preview", (string)Model.CurrentTheme.Name).Text, null)</p>
+}

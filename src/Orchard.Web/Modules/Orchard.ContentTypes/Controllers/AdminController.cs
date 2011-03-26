@@ -73,7 +73,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             Services.Notifier.Information(T("The \"{0}\" content type has been created.", typeViewModel.DisplayName));
 
-            return RedirectToAction("Edit", new { id = typeViewModel.Name });
+            return RedirectToAction("AddPartsTo", new { id = typeViewModel.Name });
         }
 
         public ActionResult ContentTypeName(string displayName) {

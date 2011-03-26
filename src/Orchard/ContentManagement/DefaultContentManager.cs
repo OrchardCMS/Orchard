@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using Autofac;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
@@ -23,6 +24,8 @@ namespace Orchard.ContentManagement {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
+        private const string Published = "Published";
+        private const string Draft = "Draft";
 
         public DefaultContentManager(
             IComponentContext context,
@@ -126,6 +129,9 @@ namespace Orchard.ContentManagement {
 
             // return item if obtained earlier in session
             if (session.RecallVersionRecordId(versionRecord.Id, out contentItem)) {
+                if (options.IsDraftRequired && versionRecord.Published) {
+                    return BuildNewVersion(contentItem);
+                }
                 return contentItem;
             }
 
@@ -395,6 +401,66 @@ namespace Orchard.ContentManagement {
         public IContentQuery<ContentItem> Query() {
             var query = _context.Resolve<IContentQuery>(TypedParameter.From<IContentManager>(this));
             return query.ForPart<ContentItem>();
+        }
+
+        // Insert or Update imported data into the content manager.
+        // Call content item handlers.
+        public void Import(XElement element, ImportContentSession importContentSession) {
+            var elementId = element.Attribute("Id");
+            if (elementId == null)
+                return;
+
+            var identity = elementId.Value;
+            var status = element.Attribute("Status");
+
+            var item = importContentSession.Get(identity);
+            if (item == null) {
+                item = New(element.Name.LocalName);
+                if (status != null && status.Value == "Draft") {
+                    Create(item, VersionOptions.Draft);
+                }
+                else {
+                    Create(item);
+                }
+            }
+            else {
+                item = Get(item.Id, VersionOptions.DraftRequired);
+            }
+            importContentSession.Store(identity, item);
+
+            var context = new ImportContentContext(item, element, importContentSession);
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Importing(context);
+            }
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Imported(context);
+            }
+
+            if (status == null || status.Value == Published) {
+                Publish(item);
+            }
+        }
+
+        public XElement Export(ContentItem contentItem) {
+            var context = new ExportContentContext(contentItem, new XElement(contentItem.ContentType));
+
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Exporting(context);
+            }
+
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Exported(context);
+            }
+
+            context.Data.SetAttributeValue("Id", GetItemMetadata(contentItem).Identity.ToString());
+            if (contentItem.IsPublished()) {
+                context.Data.SetAttributeValue("Status", Published);
+            }
+            else {
+                context.Data.SetAttributeValue("Status", Draft);
+            }
+
+            return context.Data;
         }
 
         public void Flush() {

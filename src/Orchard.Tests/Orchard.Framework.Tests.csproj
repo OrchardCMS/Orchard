@@ -207,6 +207,7 @@
     <Compile Include="ContentManagement\Records\GammaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="DataMigration\SchemaBuilderTests.cs" />
     <Compile Include="DataMigration\DataMigrationTests.cs" />
     <Compile Include="DataMigration\Utilities\NullInterpreter.cs" />
@@ -233,10 +234,13 @@
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyTests.cs" />
     <Compile Include="Environment\DefaultWorkContextAccessorTests.cs" />
     <Compile Include="Environment\Extensions\ExtensionLoaderCoordinatorTests.cs" />
+    <Compile Include="Environment\Features\FeatureManagerTests.cs" />
+    <Compile Include="Environment\Loaders\DynamicExtensionLoaderTests.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngineTests.cs" />
     <Compile Include="Environment\RunningShellTableTests.cs" />
     <Compile Include="Environment\StubHostEnvironment.cs" />
     <Compile Include="Environment\Utility\Build.cs" />
+    <Compile Include="Environment\Warmup\WarmupUtilityTests.cs" />
     <Compile Include="FileSystems\AppData\AppDataFolderTests.cs" />
     <Compile Include="Environment\Configuration\DefaultTenantManagerTests.cs" />
     <Compile Include="Environment\DefaultCompositionStrategyTests.cs" />
@@ -245,6 +249,7 @@
     <Compile Include="Environment\OrchardStarterTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactoryTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
+    <Compile Include="FileSystems\LockFile\LockFileManagerTests.cs" />
     <Compile Include="FileSystems\Dependencies\AssemblyProbingFolderTests.cs" />
     <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
@@ -304,6 +309,10 @@
     <Compile Include="Utility\ReflectTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>

@@ -9,7 +9,7 @@ using Orchard.Settings;
 namespace Orchard.Tests.Stubs {
     public class StubWorkContextAccessor : IWorkContextAccessor {
         private readonly ILifetimeScope _lifetimeScope;
-        private WorkContext _workContext;
+        private readonly WorkContext _workContext;
 
         public StubWorkContextAccessor(ILifetimeScope lifetimeScope) {
             _lifetimeScope = lifetimeScope;
@@ -18,9 +18,11 @@ namespace Orchard.Tests.Stubs {
 
         public class WorkContextImpl : WorkContext {
             private readonly ILifetimeScope _lifetimeScope;
-            private Dictionary<string, object> _contextDictonary;
+            private readonly Dictionary<string, object> _contextDictonary;
+
             public delegate void MyInitMethod(WorkContextImpl workContextImpl);
-            public static MyInitMethod InitMethod;
+
+            public static MyInitMethod _initMethod;
 
             public WorkContextImpl(ILifetimeScope lifetimeScope) {
                 _contextDictonary = new Dictionary<string, object>();
@@ -30,8 +32,8 @@ namespace Orchard.Tests.Stubs {
                 CurrentSite = ci.As<ISite>();
                 _lifetimeScope = lifetimeScope;
 
-                if (InitMethod != null) {
-                    InitMethod(this);
+                if (_initMethod != null) {
+                    _initMethod(this);
                 }
             }
 
@@ -69,10 +71,12 @@ namespace Orchard.Tests.Stubs {
                     set { throw new NotImplementedException(); }
                 }
 
-                public int PageSize {
+                public int PageSize{
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }
+
+                public string BaseUrl { get; set;}
             }
 
             public class StubUser : IUser {

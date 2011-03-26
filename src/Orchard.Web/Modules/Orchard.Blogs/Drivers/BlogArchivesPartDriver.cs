@@ -5,6 +5,7 @@ using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Blogs.Drivers {
     public class BlogArchivesPartDriver : ContentPartDriver<BlogArchivesPart> {
@@ -51,6 +52,17 @@ namespace Orchard.Blogs.Drivers {
             }
 
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(BlogArchivesPart part, ImportContentContext context) {
+            var blogSlug = context.Attribute(part.PartDefinition.Name, "BlogSlug");
+            if (blogSlug != null) {
+                part.ForBlog = blogSlug;
+            }
+        }
+
+        protected override void Exporting(BlogArchivesPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
         }
     }
 }

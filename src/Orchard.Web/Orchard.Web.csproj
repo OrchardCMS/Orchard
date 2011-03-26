@@ -18,6 +18,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>true</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -142,6 +143,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Orchard.Startup\Orchard.Startup.csproj">
+      <Project>{5C0D5249-AEF5-4BB6-8F5F-057B91AC2D7A}</Project>
+      <Name>Orchard.Startup</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
@@ -199,8 +204,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>30320</DevelopmentServerPort>
           <DevelopmentServerVPath>/OrchardLocal</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost:30320/OrchardLocal</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -59,5 +59,29 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                     result.Apply(context);
             }, Logger);
         }
+
+        public override void Importing(ImportContentContext context) {
+            foreach (var contentPartDriver in _drivers) {
+                contentPartDriver.Importing(context);
+            }
+        }
+
+        public override void Imported(ImportContentContext context) {
+            foreach (var contentPartDriver in _drivers) {
+                contentPartDriver.Imported(context);
+            }
+        }
+
+        public override void Exporting(ExportContentContext context) {
+            foreach (var contentPartDriver in _drivers) {
+                contentPartDriver.Exporting(context);
+            }
+        }
+
+        public override void Exported(ExportContentContext context) {
+            foreach (var contentPartDriver in _drivers) {
+                contentPartDriver.Exported(context);
+            }
+        }
     }
 }

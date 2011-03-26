@@ -5,9 +5,6 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The roles module is adding the ability to assign roles to users. It's also providing a set of default roles for which other modules can define default permissions.
-Features:
-    Orchard.Roles:
-        Name: Roles
-        Description: Standard user roles.
-        Category: Core
-        Dependencies: Orchard.Users
+FeatureDescription: Standard user roles.
+Category: Core
+Dependencies: Orchard.Users

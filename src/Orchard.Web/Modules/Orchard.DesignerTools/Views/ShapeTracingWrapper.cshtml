@@ -4,28 +4,39 @@
 @using System.Xml;
 
 @{
-    Script.Require("jQueryUI_Tabs");
-    Script.Include("orchard-designertools-shapetracing.js");
+    Script.Require("jQueryUI_Tabs").AtHead();
+    Script.Require("jQueryUI_Resizable").AtHead();
+    Script.Include("orchard-designertools-shapetracing.js").AtHead();
     Style.Include("orchard-designertools-shapetracing.css");
+    
+    // Code Mirror
+    Script.Include("CodeMirror/codemirror.js");
+    Style.Include("CodeMirror/codemirror.css");
+    Script.Include("CodeMirror/razor.js");
+    Style.Include("CodeMirror/razor.css");
+    Script.Include("CodeMirror/javascript.js");
+    Style.Include("CodeMirror/javascript.css");
+    Script.Include("CodeMirror/css.js");
+    Style.Include("CodeMirror/css.css");
+    Script.Include("CodeMirror/htmlmixed.js");
 }
 
-<div class="shape-tracing wrapper shapeType-@Model.Metadata.Type shapeId-@Model.GetHashCode() " title="@Model.Metadata.Type">
-	@Display(Model.Metadata.ChildContent)
-	@{
-		Layout.Zones["Tail"].Add(
-			New.ShapeTracingMeta(
-				ShapeType: Model.Metadata.Type, 
-				Definition: Model._Definition, 
-				DefinitionContent: Model._DefinitionContent, 
-				DisplayType: Model.Metadata.DisplayType, 
-				Position: Model.Metadata.Position, 
-				PlacementSource: Model.Metadata.PlacementSource, 
-				Dump: Model._Dump, 
-				PlacementContent: Model.PlacementContent, 
-				Alternates: Model.Metadata.Alternates, 
-				Wrappers: Model.Metadata.Wrappers, 
-				ChildContent: Model.Metadata.ChildContent,
-				ShapeId: Model.GetHashCode()
-		));
-	}
-</div>
+<script class="shape-tracing-wrapper" shape-id="@Model.ShapeId" shape-type="@Model.Metadata.Type" shape-hint="@Model.Hint"></script>@Display(Model.Metadata.ChildContent)<script class="shape-tracing-wrapper" end-of="@Model.ShapeId"></script>
+    @{
+        Layout.Zones["Tail"].Add(
+            New.ShapeTracingMeta(
+                ShapeType: Model.Metadata.Type,
+                Template: Model.Template,
+                OriginalTemplate: Model.OriginalTemplate,
+                TemplateContent: Model.TemplateContent, 
+                DisplayType: Model.Metadata.DisplayType, 
+                Position: Model.Metadata.Position, 
+                PlacementSource: Model.Metadata.PlacementSource, 
+                Dump: Model._Dump, 
+                PlacementContent: Model.PlacementContent, 
+                Alternates: Model.Metadata.Alternates, 
+                Wrappers: Model.Metadata.Wrappers, 
+                ChildContent: Model.Metadata.ChildContent,
+                ShapeId: Model.ShapeId
+        ));
+    }

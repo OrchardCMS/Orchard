@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Razor.Generator;
 using System.Web.WebPages.Razor;
 using Orchard.Environment;
@@ -27,7 +29,12 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IAssemblyLoader _assemblyLoader;
 
-        public DefaultRazorCompilationEvents(IDependenciesFolder dependenciesFolder, IBuildManager buildManager, IEnumerable<IExtensionLoader> loaders, IAssemblyLoader assemblyLoader) {
+        public DefaultRazorCompilationEvents(
+            IDependenciesFolder dependenciesFolder,
+            IBuildManager buildManager,
+            IEnumerable<IExtensionLoader> loaders,
+            IAssemblyLoader assemblyLoader) {
+
             _dependenciesFolder = dependenciesFolder;
             _buildManager = buildManager;
             _loaders = loaders;
@@ -35,8 +42,25 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public void CodeGenerationStarted(RazorBuildProvider provider) {
-            var descriptors = _dependenciesFolder.LoadDescriptors();
-            var entries = descriptors
+            DependencyDescriptor moduleDependencyDescriptor = GetModuleDependencyDescriptor(provider.VirtualPath);
+
+            IEnumerable<DependencyDescriptor> dependencyDescriptors = _dependenciesFolder.LoadDescriptors();
+            List<DependencyDescriptor> filteredDependencyDescriptors;
+            if (moduleDependencyDescriptor != null) {
+                // Add module
+                filteredDependencyDescriptors = new List<DependencyDescriptor> { moduleDependencyDescriptor };
+
+                // Add module's references
+                filteredDependencyDescriptors.AddRange(moduleDependencyDescriptor.References
+                    .SelectMany(reference => dependencyDescriptors
+                        .Where(dependency => dependency.Name == reference.Name)));
+            }
+            else {
+                // Fall back for themes
+                filteredDependencyDescriptors = dependencyDescriptors.ToList();
+            }
+
+            var entries = filteredDependencyDescriptors
                 .SelectMany(descriptor => _loaders
                                               .Where(loader => descriptor.LoaderName == loader.Name)
                                               .Select(loader => new {
@@ -60,14 +84,38 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                             provider.AssemblyBuilder.AddAssemblyReference(assembly);
                     }
                 }
+
                 foreach (var virtualDependency in entry.dependencies) {
                     provider.AddVirtualPathDependency(virtualDependency);
                 }
             }
+        }
 
-            foreach (var virtualDependency in _dependenciesFolder.GetViewCompilationDependencies()) {
-                provider.AddVirtualPathDependency(virtualDependency);
-            }
+        private DependencyDescriptor GetModuleDependencyDescriptor(string virtualPath) {
+            var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
+            var prefix = PrefixMatch(appRelativePath, new [] { "~/Modules/", "~/Core/"});
+            if (prefix == null)
+                return null;
+
+            var moduleName = ModuleMatch(appRelativePath, prefix);
+            if (moduleName == null)
+                return null;
+
+            return _dependenciesFolder.GetDescriptor(moduleName);
+        }
+
+        private static string ModuleMatch(string virtualPath, string prefix) {
+            var index = virtualPath.IndexOf('/', prefix.Length, virtualPath.Length - prefix.Length);
+            if (index < 0)
+                return null;
+
+            var moduleName = virtualPath.Substring(prefix.Length, index - prefix.Length);
+            return (string.IsNullOrEmpty(moduleName) ? null : moduleName);
+        }
+
+        private static string PrefixMatch(string virtualPath, params string[] prefixes) {
+            return prefixes
+                .FirstOrDefault(p => virtualPath.StartsWith(p, StringComparison.OrdinalIgnoreCase));
         }
 
         public void CodeGenerationCompleted(RazorBuildProvider provider, CodeGenerationCompleteEventArgs e) {

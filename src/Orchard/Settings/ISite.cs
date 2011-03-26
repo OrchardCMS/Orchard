@@ -13,5 +13,6 @@ namespace Orchard.Settings {
         string SiteCulture { get; set; }
         ResourceDebugMode ResourceDebugMode { get; set; }
         int PageSize { get; set; }
+        string BaseUrl { get; }
     }
 }

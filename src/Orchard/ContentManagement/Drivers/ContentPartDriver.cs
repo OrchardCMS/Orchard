@@ -28,11 +28,39 @@ namespace Orchard.ContentManagement.Drivers {
                 : !string.IsNullOrWhiteSpace(context.GroupInfoId) ? Editor(part, context.Updater, context.GroupInfoId, context.New) : Editor(part, context.Updater, context.New);
         }
 
+        void IContentPartDriver.Importing(ImportContentContext context) {
+            var part = context.ContentItem.As<TContent>();
+            if (part != null)
+                Importing(part, context);
+        }
+
+        void IContentPartDriver.Imported(ImportContentContext context) {
+            var part = context.ContentItem.As<TContent>();
+            if (part != null)
+                Imported(part, context);
+        }
+
+        void IContentPartDriver.Exporting(ExportContentContext context) {
+            var part = context.ContentItem.As<TContent>();
+            if (part != null)
+                Exporting(part, context);
+        }
+
+        void IContentPartDriver.Exported(ExportContentContext context) {
+            var part = context.ContentItem.As<TContent>();
+            if (part != null)
+                Exported(part, context);
+        }
+
         protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, string groupInfoId, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater, string groupInfoId, dynamic shapeHelper) { return null; }
+        protected virtual void Importing(TContent part, ImportContentContext context) { return; }
+        protected virtual void Imported(TContent part, ImportContentContext context) { return; }
+        protected virtual void Exporting(TContent part, ExportContentContext context) { return; }
+        protected virtual void Exported(TContent part, ExportContentContext context) { return; }
 
         [Obsolete("Provided while transitioning to factory variations")]
         public ContentShapeResult ContentShape(IShape shape) {

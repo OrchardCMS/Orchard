@@ -4,6 +4,7 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
@@ -92,6 +93,29 @@ namespace Orchard.Core.Routable.Drivers {
             }
 
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(RoutePart part, ImportContentContext context) {
+            var title = context.Attribute(part.PartDefinition.Name, "Title");
+            if (title != null) {
+                part.Title = title;
+            }
+
+            var slug = context.Attribute(part.PartDefinition.Name, "Slug");
+            if (slug != null) {
+                part.Slug = slug;
+            }
+
+            var path = context.Attribute(part.PartDefinition.Name, "Path");
+            if (path != null) {
+                part.Path = path;
+            }
+        }
+
+        protected override void Exporting(RoutePart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Slug", part.Slug);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Path", part.Path);
         }
     }
 }

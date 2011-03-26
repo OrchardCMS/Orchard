@@ -28,6 +28,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.ContentManagement;
 using Orchard.Data.Providers;
+using Orchard.Tests.DataMigration.Utilities;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Modules.Migrations.Orchard.Tests.DataMigration.Records;
 using Path = Bleroy.FluentPath.Path;
@@ -190,7 +191,7 @@ Features:
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath) {
+            public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
                 throw new NotImplementedException();
             }
 

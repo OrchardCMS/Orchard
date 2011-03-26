@@ -199,9 +199,10 @@ namespace Orchard.Environment.Extensions {
                 .ToDictionary(g => g.Key, g => g.AsEnumerable(), StringComparer.OrdinalIgnoreCase);
 
             var sortedAvailableExtensions =
-                availableExtensions.OrderByDependencies(
+                availableExtensions.OrderByDependenciesAndPriorities(
                     (item, dep) => referencesByModule.ContainsKey(item.Id) &&
-                                   referencesByModule[item.Id].Any(r => StringComparer.OrdinalIgnoreCase.Equals(dep.Id, r.Name)))
+                                   referencesByModule[item.Id].Any(r => StringComparer.OrdinalIgnoreCase.Equals(dep.Id, r.Name)),
+                    (item) => 0)
                     .ToList();
 
             return new ExtensionLoadingContext {

@@ -61,7 +61,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Drivers\IdentityPartDriver.cs" />
+    <Compile Include="Common\Handlers\IdentityPartHandler.cs" />
     <Compile Include="Common\Models\CommonPartVersionRecord.cs" />
+    <Compile Include="Common\Models\IdentityPartRecord.cs" />
+    <Compile Include="Common\Models\IdentityPart.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
@@ -87,6 +91,7 @@
     <Compile Include="Containers\Settings\ContainerSettings.cs" />
     <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
+    <Compile Include="Containers\ViewModels\ContainerViewModel.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
     <Compile Include="Common\Services\ICommonService.cs" />
@@ -99,13 +104,18 @@
     <Compile Include="Contents\Extensions\MetaDataExtensions.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
     <Compile Include="Contents\Permissions.cs" />
-    <Compile Include="Contents\Routes.cs" />
     <Compile Include="Contents\Settings\ContentTypeSettings.cs" />
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\Shapes.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
     <Compile Include="Navigation\Commands\MenuCommands.cs" />
+    <Compile Include="Navigation\Drivers\AdminMenuPartDriver.cs" />
+    <Compile Include="Navigation\Handlers\AdminMenuPartHandler.cs" />
+    <Compile Include="Navigation\Models\AdminMenuPart.cs" />
+    <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
+    <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\MainMenuNavigationProvider.cs" />
+    <Compile Include="Navigation\Settings\AdminMenuPartTypeSettings.cs" />
     <Compile Include="Routable\Events\ISlugEventHandler.cs" />
     <Compile Include="Routable\ResourceManifest.cs" />
     <Compile Include="Routable\Services\RoutableHomePageProvider.cs" />
@@ -379,9 +389,6 @@
     <Content Include="Routable\Views\Parts.RoutableTitle_SummaryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Containers\Views\Parts.Container.Contained.SummaryAdmin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Shapes\Views\ShapeResult\Display.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -408,6 +415,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Metadata.SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.AdminMenu.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Navigation\Views\DefinitionTemplates\AdminMenuPartTypeSettings.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

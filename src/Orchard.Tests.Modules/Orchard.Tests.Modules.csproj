@@ -104,6 +104,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
+    <Reference Include="NuGet.Core, Version=1.0.11220.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nuget\NuGet.Core.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
@@ -140,10 +144,13 @@
   <ItemGroup>
     <Compile Include="CodeGeneration\Commands\CodeGenerationCommandsTests.cs" />
     <Compile Include="Comments\Services\CommentServiceTests.cs" />
+    <Compile Include="ImportExport\Services\ImportExportServiceTests.cs" />
     <Compile Include="Indexing\IndexingTaskExecutorTests.cs" />
     <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
     <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
     <Compile Include="Media\Services\MediaServiceTests.cs" />
+    <Compile Include="Recipes\RecipeHandlers\ModuleRecipeHandlerTest.cs" />
+    <Compile Include="Recipes\RecipeHandlers\ThemeRecipeHandlerTest.cs" />
     <Compile Include="Recipes\Services\RecipeManagerTests.cs" />
     <Compile Include="Scripting.Dlr\EvaluatorTests.cs" />
     <Compile Include="Scripting\EvaluatorTestsBase.cs" />
@@ -168,6 +175,8 @@
     <Compile Include="Users\ShellSettingsUtility.cs" />
     <Compile Include="Values.cs" />
     <Compile Include="Users\Services\MembershipServiceTests.cs" />
+    <Compile Include="Warmup\WebDownloaderTests.cs" />
+    <Compile Include="Warmup\WarmupUpdaterTests.cs" />
     <Compile Include="Widgets\RuleEngine\UrlRuleProviderTest.cs" />
     <Compile Include="Widgets\Services\WidgetsServiceTest.cs" />
     <Compile Include="Widgets\WidgetsTests.cs" />
@@ -196,6 +205,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj">
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
       <Name>Orchard.Comments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.ImportExport\Orchard.ImportExport.csproj">
+      <Project>{FE5C5947-D2D5-42C5-992A-13D672946135}</Project>
+      <Name>Orchard.ImportExport</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Indexing\Orchard.Indexing.csproj">
       <Project>{EA2B9121-EF54-40A6-A53E-6593C86EE696}</Project>
@@ -248,6 +261,10 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.WarmUp\Orchard.Warmup.csproj">
+      <Project>{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}</Project>
+      <Name>Orchard.Warmup</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Widgets\Orchard.Widgets.csproj">
       <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>

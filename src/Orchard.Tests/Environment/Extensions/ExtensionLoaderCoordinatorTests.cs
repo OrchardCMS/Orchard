@@ -112,7 +112,7 @@ namespace Orchard.Tests.Environment.Extensions {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath) {
+            public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
                 throw new NotImplementedException();
             }
 
@@ -157,6 +157,26 @@ OrchardVersion: 1
 Features:
     SuperWiki: 
         Description: My super wiki module for Orchard.
+");
+
+            var descriptor = _manager.AvailableExtensions().Single();
+            Assert.That(descriptor.Id, Is.EqualTo("SuperWiki"));
+            Assert.That(descriptor.Version, Is.EqualTo("1.0.3"));
+            Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
+            Assert.That(descriptor.Features.Count(), Is.EqualTo(1));
+            Assert.That(descriptor.Features.First().Id, Is.EqualTo("SuperWiki"));
+            Assert.That(descriptor.Features.First().Extension.Id, Is.EqualTo("SuperWiki"));
+            Assert.That(descriptor.Features.First().Description, Is.EqualTo("My super wiki module for Orchard."));
+        }
+
+        [Test]
+        public void ExtensionDescriptorsShouldBeParsedForMinimalModuleTxtWithSimpleFormat() {
+
+            _folders.Manifests.Add("SuperWiki", @"
+Name: SuperWiki
+Version: 1.0.3
+OrchardVersion: 1
+Description: My super wiki module for Orchard.
 ");
 
             var descriptor = _manager.AvailableExtensions().Single();
@@ -242,6 +262,84 @@ Features:
                     // default feature.
                     case "MyCompany.AnotherWiki":
                         Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
+                        break;
+                    default:
+                        Assert.Fail("Features not parsed correctly");
+                        break;
+                }
+            }
+        }
+
+        [Test]
+        public void ExtensionDescriptorsShouldBeParsedForCompleteModuleTxtWithSimpleFormat() {
+
+            _folders.Manifests.Add("AnotherWiki", @"
+Name: AnotherWiki
+Author: Coder Notaprogrammer
+Website: http://anotherwiki.codeplex.com
+Version: 1.2.3
+OrchardVersion: 1
+Description: Module Description
+FeatureDescription: My super wiki module for Orchard.
+Dependencies: Versioning, Search
+Category: Content types
+Features:
+    AnotherWiki Editor:
+        Description: A rich editor for wiki contents.
+        Dependencies: TinyMCE, AnotherWiki
+        Category: Input methods
+    AnotherWiki DistributionList:
+        Description: Sends e-mail alerts when wiki contents gets published.
+        Dependencies: AnotherWiki, Email Subscriptions
+        Category: Email
+    AnotherWiki Captcha:
+        Description: Kills spam. Or makes it zombie-like.
+        Dependencies: AnotherWiki, reCaptcha
+        Category: Spam
+");
+
+            var descriptor = _manager.AvailableExtensions().Single();
+            Assert.That(descriptor.Id, Is.EqualTo("AnotherWiki"));
+            Assert.That(descriptor.Name, Is.EqualTo("AnotherWiki"));
+            Assert.That(descriptor.Author, Is.EqualTo("Coder Notaprogrammer"));
+            Assert.That(descriptor.WebSite, Is.EqualTo("http://anotherwiki.codeplex.com"));
+            Assert.That(descriptor.Version, Is.EqualTo("1.2.3"));
+            Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
+            Assert.That(descriptor.Description, Is.EqualTo("Module Description"));
+            Assert.That(descriptor.Features.Count(), Is.EqualTo(4));
+            foreach (var featureDescriptor in descriptor.Features) {
+                switch (featureDescriptor.Id) {
+                    case "AnotherWiki":
+                        Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
+                        Assert.That(featureDescriptor.Description, Is.EqualTo("My super wiki module for Orchard."));
+                        Assert.That(featureDescriptor.Category, Is.EqualTo("Content types"));
+                        Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
+                        Assert.That(featureDescriptor.Dependencies.Contains("Versioning"));
+                        Assert.That(featureDescriptor.Dependencies.Contains("Search"));
+                        break;
+                    case "AnotherWiki Editor":
+                        Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
+                        Assert.That(featureDescriptor.Description, Is.EqualTo("A rich editor for wiki contents."));
+                        Assert.That(featureDescriptor.Category, Is.EqualTo("Input methods"));
+                        Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
+                        Assert.That(featureDescriptor.Dependencies.Contains("TinyMCE"));
+                        Assert.That(featureDescriptor.Dependencies.Contains("AnotherWiki"));
+                        break;
+                    case "AnotherWiki DistributionList":
+                        Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
+                        Assert.That(featureDescriptor.Description, Is.EqualTo("Sends e-mail alerts when wiki contents gets published."));
+                        Assert.That(featureDescriptor.Category, Is.EqualTo("Email"));
+                        Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
+                        Assert.That(featureDescriptor.Dependencies.Contains("AnotherWiki"));
+                        Assert.That(featureDescriptor.Dependencies.Contains("Email Subscriptions"));
+                        break;
+                    case "AnotherWiki Captcha":
+                        Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
+                        Assert.That(featureDescriptor.Description, Is.EqualTo("Kills spam. Or makes it zombie-like."));
+                        Assert.That(featureDescriptor.Category, Is.EqualTo("Spam"));
+                        Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
+                        Assert.That(featureDescriptor.Dependencies.Contains("AnotherWiki"));
+                        Assert.That(featureDescriptor.Dependencies.Contains("reCaptcha"));
                         break;
                     default:
                         Assert.Fail("Features not parsed correctly");

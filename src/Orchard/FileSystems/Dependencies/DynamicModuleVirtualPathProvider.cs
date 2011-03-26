@@ -47,7 +47,7 @@ namespace Orchard.FileSystems.Dependencies {
                 var loader = _loaders.Where(l => l.Name == desc.LoaderName).FirstOrDefault();
                 if (loader != null) {
 
-                    var otherDependencies = loader.GetFileDependencies(desc, virtualPath);
+                    var otherDependencies = loader.GetDynamicModuleDependencies(desc, virtualPath);
                     if (otherDependencies.Any()) {
 
                         var allDependencies = virtualPathDependencies.OfType<string>().Concat(otherDependencies);

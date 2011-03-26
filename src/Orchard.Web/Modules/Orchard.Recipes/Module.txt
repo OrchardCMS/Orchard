@@ -5,8 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: Provides Orchard Recipes.
-Features:
-    Orchard.Recipes:
-        Name: Recipes
-        Description: Implementation of Orchard recipes.
-        Category: Core
+FeatureDescription: Implementation of Orchard recipes.
+Category: Core

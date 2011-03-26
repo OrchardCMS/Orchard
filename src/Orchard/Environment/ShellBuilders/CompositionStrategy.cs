@@ -72,9 +72,22 @@ namespace Orchard.Environment.ShellBuilders {
             IEnumerable<Feature> features,
             Func<Type, bool> predicate,
             Func<Type, Feature, T> selector) {
+            HashSet<string> excludedTypes = new HashSet<string>();
+
+            // Identify replaced types
+            foreach(Feature feature in features) {
+                foreach (Type type in feature.ExportedTypes) {
+                    foreach (OrchardSuppressDependencyAttribute replacedType in type.GetCustomAttributes(typeof(OrchardSuppressDependencyAttribute), false)) {
+                        excludedTypes.Add(replacedType.FullName);
+                    }
+                }
+            }
+
+            // Load types excluding the replaced types
             return features.SelectMany(
                 feature => feature.ExportedTypes
                                .Where(predicate)
+                               .Where(type => !excludedTypes.Contains(type.FullName))
                                .Select(type => selector(type, feature)))
                 .ToArray();
         }

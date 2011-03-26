@@ -3,7 +3,9 @@ using System.IO;
 using System.IO.Packaging;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 using Orchard.Packaging.Services;
 using Orchard.Tests.Stubs;
@@ -15,6 +17,8 @@ namespace Orchard.Tests.Modules.Packaging.Services {
 
         protected override void Register(ContainerBuilder builder) {
             builder.RegisterType<PackageBuilder>().As<IPackageBuilder>();
+            builder.RegisterType<DefaultVirtualPathProvider>().As<IVirtualPathProvider>();
+            builder.RegisterType<DefaultOrchardFrameworkAssemblies>().As<IOrchardFrameworkAssemblies>();
             builder.RegisterType<InMemoryWebSiteFolder>().As<IWebSiteFolder>()
                 .As<InMemoryWebSiteFolder>().InstancePerLifetimeScope();
         }

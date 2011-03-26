@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using Castle.Core.Logging;
 using HtmlAgilityPack;
 using log4net.Appender;
@@ -190,7 +191,7 @@ namespace Orchard.Specs.Bindings {
             _doc.Load(new StringReader(Details.ResponseText));
         }
 
-        [When(@"I follow ""(.*)""")]
+        [When(@"I follow ""([^""]*)""")]
         public void WhenIFollow(string linkText) {
             var link = _doc.DocumentNode
                             .SelectNodes("//a")
@@ -198,7 +199,24 @@ namespace Orchard.Specs.Bindings {
                        ?? _doc.DocumentNode
                             .SelectSingleNode(string.Format("//a[@title='{0}']", linkText));
 
-            var urlPath = link.Attributes["href"].Value;
+            var urlPath = HttpUtility.HtmlDecode(link.Attributes["href"].Value);
+
+            WhenIGoTo(urlPath);
+        }
+
+        [When(@"I follow ""([^""]+)"" where href has ""([^""]+)""")]
+        public void WhenIFollow(string linkText, string hrefFilter) {
+            var link = _doc.DocumentNode
+                            .SelectNodes("//a[@href]").Where(elt =>
+                                (elt.InnerText == linkText ||
+                                    (elt.Attributes["title"] != null && elt.Attributes["title"].Value == linkText)) &&
+                                 elt.Attributes["href"].Value.IndexOf(hrefFilter, StringComparison.OrdinalIgnoreCase) != -1).SingleOrDefault();
+
+            if (link == null) {
+                throw new InvalidOperationException(string.Format("Could not find an anchor with matching text '{0}' and href '{1}'. Document: {2}", linkText, hrefFilter, _doc.DocumentNode.InnerHtml));
+            }
+            var href = link.Attributes["href"].Value;
+            var urlPath = HttpUtility.HtmlDecode(href);
 
             WhenIGoTo(urlPath);
         }
@@ -269,11 +287,24 @@ namespace Orchard.Specs.Bindings {
 
             var form = Form.LocateAround(submit);
             var urlPath = form.Start.GetAttributeValue("action", Details.UrlPath);
+
+
             var inputs = form.Children
                     .SelectMany(elt => elt.DescendantsAndSelf("input").Concat(elt.Descendants("textarea")))
                     .Where(node => !((node.GetAttributeValue("type", "") == "radio" || node.GetAttributeValue("type", "") == "checkbox") && node.GetAttributeValue("checked", "") != "checked"))
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
                     .Where(g => !string.IsNullOrEmpty(g.Key))
+                    // add values of <select>s
+                    .Concat(
+                        // select all <select> elements
+                        form.Children.SelectMany(elt => elt.DescendantsAndSelf("select")).Where(elt => elt.Name.Equals("select", StringComparison.OrdinalIgnoreCase))
+                        // group them by their name with value that comes from first of:
+                        //  (1) value of option with 'selected' attribute,
+                        //  (2) value of first option (none have 'selected'),
+                        //  (3) empty value (e.g. select with no options)
+                            .GroupBy(
+                                sel => sel.GetAttributeValue("name", sel.GetAttributeValue("id", "")),
+                                sel => (sel.Descendants("option").SingleOrDefault(opt => opt.Attributes["selected"] != null) ?? sel.Descendants("option").FirstOrDefault() ?? new HtmlNode(HtmlNodeType.Element, _doc, 0)).GetAttributeValue("value", "")))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
 
             if (submit.Attributes.Contains("name"))

@@ -1,9 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using System.Net;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.ViewModels;
 using Orchard.Localization.Services;
+using Orchard.Logging;
 using Orchard.Settings;
 using System;
 using Orchard.Security;
@@ -16,16 +18,24 @@ namespace Orchard.Core.Settings.Drivers {
         private readonly ISiteService _siteService;
         private readonly ICultureManager _cultureManager;
         private readonly IMembershipService _membershipService;
+        private readonly INotifier _notifier;
 
-        public SiteSettingsPartDriver(ISiteService siteService, ICultureManager cultureManager, IMembershipService membershipService, INotifier notifier) {
+        public SiteSettingsPartDriver(
+            ISiteService siteService, 
+            ICultureManager cultureManager, 
+            IMembershipService membershipService, 
+            INotifier notifier) {
             _siteService = siteService;
             _cultureManager = cultureManager;
             _membershipService = membershipService;
+            _notifier = notifier;
 
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         protected override string Prefix { get { return "SiteSettings"; } }
 
@@ -48,6 +58,8 @@ namespace Orchard.Core.Settings.Drivers {
                 SiteCultures = _cultureManager.ListCultures()
             };
 
+            var previousBaseUrl = model.Site.BaseUrl;
+
             updater.TryUpdateModel(model, Prefix, null, null);
 
             // ensures the super user is fully empty
@@ -59,6 +71,27 @@ namespace Orchard.Core.Settings.Drivers {
             else {
                 if (_membershipService.GetUser(model.SuperUser) == null) {
                     updater.AddModelError("SuperUser", T("The user {0} was not found", model.SuperUser));
+                }
+            }
+
+
+            // ensure the base url is absolute if provided
+            if (!String.IsNullOrWhiteSpace(model.Site.BaseUrl)) {
+                if (!Uri.IsWellFormedUriString(model.Site.BaseUrl, UriKind.Absolute)) {
+                    updater.AddModelError("BaseUrl", T("The base url must be absolute."));
+                }
+                    // if the base url has been modified, try to ping it
+                else if (!String.Equals(previousBaseUrl, model.Site.BaseUrl, StringComparison.OrdinalIgnoreCase)) {
+                    try {
+                        var request = WebRequest.Create(model.Site.BaseUrl) as HttpWebRequest;
+                        if (request != null) {
+                            using (request.GetResponse() as HttpWebResponse) {}
+                        }
+                    }
+                    catch (Exception e) {
+                        _notifier.Warning(T("The base url you entered could not be requested from current location."));
+                        Logger.Warning(e, "Could not query base url: {0}", model.Site.BaseUrl);
+                    }
                 }
             }
 

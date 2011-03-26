@@ -64,21 +64,25 @@ namespace Orchard.Core.Settings.Controllers {
             var site = _siteService.GetSiteSettings();
             dynamic model = Services.ContentManager.UpdateEditor(site, this, groupInfoId);
 
-            if (model == null) {
-                Services.TransactionManager.Cancel();
-                return HttpNotFound();
-            }
+            GroupInfo groupInfo = null;
 
-            var groupInfo = Services.ContentManager.GetEditorGroupInfo(site, groupInfoId);
-            if (groupInfo == null) {
-                Services.TransactionManager.Cancel();
-                return HttpNotFound();
+            if (!string.IsNullOrWhiteSpace(groupInfoId)) {
+                if (model == null) {
+                    Services.TransactionManager.Cancel();
+                    return HttpNotFound();
+                }
+
+                groupInfo = Services.ContentManager.GetEditorGroupInfo(site, groupInfoId);
+                if (groupInfo == null) {
+                    Services.TransactionManager.Cancel();
+                    return HttpNotFound();
+                }
             }
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 model.GroupInfo = groupInfo;
-                
+
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }

@@ -19,6 +19,7 @@ using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.ContentManagement;
 using Orchard.Data.Providers;
+using Orchard.Tests.DataMigration.Utilities;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.DataMigration {

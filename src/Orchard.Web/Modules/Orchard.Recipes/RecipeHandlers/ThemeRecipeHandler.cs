@@ -25,11 +25,13 @@ namespace Orchard.Recipes.RecipeHandlers {
             IExtensionManager extensionManager,
             IThemeService themeService,
             ISiteThemeService siteThemeService) {
+
             _packagingSourceManager = packagingSourceManager;
             _packageManager = packageManager;
             _extensionManager = extensionManager;
             _themeService = themeService;
             _siteThemeService = siteThemeService;
+
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -37,7 +39,7 @@ namespace Orchard.Recipes.RecipeHandlers {
         public Localizer T { get; set; }
         ILogger Logger { get; set; }
 
-        // <Theme name="theme1" repository="somethemerepo" version="1.1" enable="true" current="true" />
+        // <Theme packageId="theme1" repository="somethemerepo" version="1.1" enable="true" current="true" />
         // install themes from feed.
         public void ExecuteRecipeStep(RecipeContext recipeContext) {
             if (!String.Equals(recipeContext.RecipeStep.Name, "Theme", StringComparison.OrdinalIgnoreCase)) {
@@ -45,7 +47,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             bool enable = false, current = false;
-            string name = null, version = null, repository = null;
+            string packageId = null, version = null, repository = null;
 
             foreach (var attribute in recipeContext.RecipeStep.Step.Attributes()) {
                 if (String.Equals(attribute.Name.LocalName, "enable", StringComparison.OrdinalIgnoreCase)) {
@@ -54,8 +56,8 @@ namespace Orchard.Recipes.RecipeHandlers {
                 else if (String.Equals(attribute.Name.LocalName, "current", StringComparison.OrdinalIgnoreCase)) {
                     current = Boolean.Parse(attribute.Value);
                 }
-                else if (String.Equals(attribute.Name.LocalName, "name", StringComparison.OrdinalIgnoreCase)) {
-                    name = attribute.Value;
+                else if (String.Equals(attribute.Name.LocalName, "packageId", StringComparison.OrdinalIgnoreCase)) {
+                    packageId = attribute.Value;
                 }
                 else if (String.Equals(attribute.Name.LocalName, "version", StringComparison.OrdinalIgnoreCase)) {
                     version = attribute.Value;
@@ -68,43 +70,43 @@ namespace Orchard.Recipes.RecipeHandlers {
                 }
             }
 
-            if (name == null) {
-                throw new InvalidOperationException("Name is required in a Theme declaration in a recipe file.");
+            if (packageId == null) {
+                throw new InvalidOperationException("PackageId is required in a Theme declaration in a recipe file.");
             }
+
             // download and install theme from the orchard feed or a custom feed if repository is specified.
             bool enforceVersion = version != null;
             bool installed = false;
-            PackagingSource packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
+
+            var packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
             if (repository != null) {
                 enforceVersion = false;
                 packagingSource = new PackagingSource { FeedTitle = repository, FeedUrl = repository };
             }
-            foreach (var packagingEntry in _packagingSourceManager.GetExtensionList(packagingSource)) {
-                if (String.Equals(packagingEntry.Title, name, StringComparison.OrdinalIgnoreCase)) {
-                    if (enforceVersion && !String.Equals(packagingEntry.Version, version, StringComparison.OrdinalIgnoreCase)) {
-                        continue;
-                    }
-                    if (_extensionManager.AvailableExtensions().Where(extension => 
-                        DefaultExtensionTypes.IsTheme(extension.ExtensionType) && 
-                        String.Equals(packagingEntry.Title, extension.Name, StringComparison.OrdinalIgnoreCase)).Any()) {
-                        throw new InvalidOperationException(string.Format("Theme {0} already exists.", name));
-                    }
-                    _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
-                    if (current) {
-                        _themeService.EnableThemeFeatures(packagingEntry.Title);
-                        _siteThemeService.SetSiteTheme(packagingEntry.Title);
-                    }
-                    else if (enable) {
-                        _themeService.EnableThemeFeatures(packagingEntry.Title);
-                    }
 
-                    installed = true;
-                    break;
+            var packagingEntry = _packagingSourceManager.GetExtensionList(packagingSource,
+                packages => packages.Where(package =>
+                    package.PackageType.Equals(DefaultExtensionTypes.Theme) &&
+                    package.Id.Equals(packageId, StringComparison.OrdinalIgnoreCase) &&
+                    (!enforceVersion || package.Version.Equals(version, StringComparison.OrdinalIgnoreCase))))
+                .FirstOrDefault();
+
+            if (packagingEntry != null) {
+                _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/"));
+
+                if (current) {
+                    _themeService.EnableThemeFeatures(packagingEntry.Title);
+                    _siteThemeService.SetSiteTheme(packagingEntry.Title);
                 }
+                else if (enable) {
+                    _themeService.EnableThemeFeatures(packagingEntry.Title);
+                }
+
+                installed = true;
             }
 
             if (!installed) {
-                throw new InvalidOperationException(string.Format("Theme {0} was not found in the specified location.", name));
+                throw new InvalidOperationException(string.Format("Theme {0} was not found in the specified location.", packageId));
             }
 
             recipeContext.Executed = true;

@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 
 namespace Orchard.Blogs.Drivers {
@@ -63,6 +65,23 @@ namespace Orchard.Blogs.Drivers {
             }
 
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(RecentBlogPostsPart part, ImportContentContext context) {
+            var blogSlug = context.Attribute(part.PartDefinition.Name, "BlogSlug");
+            if (blogSlug != null) {
+                part.ForBlog = blogSlug;
+            }
+
+            var count = context.Attribute(part.PartDefinition.Name, "Count");
+            if (count != null) {
+                part.Count = Convert.ToInt32(count);
+            }
+        }
+
+        protected override void Exporting(RecentBlogPostsPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
         }
     }
 }
