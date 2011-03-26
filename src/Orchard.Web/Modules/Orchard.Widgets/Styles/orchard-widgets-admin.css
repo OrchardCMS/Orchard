@@ -22,6 +22,7 @@ padding:2px 2px;
 #widgets-layers-control {
 float:left;
 margin-bottom:-20px;
+position:relative;
 }
 #widgets-layers-control label {
 padding:2px 2px;
