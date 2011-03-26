@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using NHibernate.Cfg;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
@@ -14,11 +15,13 @@ namespace Orchard.Data {
         private readonly ShellSettings _shellSettings;
         private readonly ShellBlueprint _shellBlueprint;
         private readonly IAppDataFolder _appDataFolder;
+        private readonly IHostEnvironment _hostEnvironment;
 
-        public SessionConfigurationCache(ShellSettings shellSettings, ShellBlueprint shellBlueprint, IAppDataFolder appDataFolder) {
+        public SessionConfigurationCache(ShellSettings shellSettings, ShellBlueprint shellBlueprint, IAppDataFolder appDataFolder, IHostEnvironment hostEnvironment) {
             _shellSettings = shellSettings;
             _shellBlueprint = shellBlueprint;
             _appDataFolder = appDataFolder;
+            _hostEnvironment = hostEnvironment;
 
             Logger = NullLogger.Instance;
         }
@@ -51,6 +54,9 @@ namespace Orchard.Data {
         }
 
         private void StoreConfiguration(ConfigurationCache cache) {
+            if (!_hostEnvironment.IsFullTrust)
+                return;
+
             var pathName = GetPathName(_shellSettings.Name);
 
             try {
@@ -70,6 +76,9 @@ namespace Orchard.Data {
         }
 
         private ConfigurationCache ReadConfiguration(string hash) {
+            if (!_hostEnvironment.IsFullTrust)
+                return null;
+
             var pathName = GetPathName(_shellSettings.Name);
 
             if (!_appDataFolder.FileExists(pathName))

@@ -223,8 +223,8 @@ namespace Orchard.Azure {
             EnsurePathIsRelative(path);
             
             using ( new HttpContextWeaver() ) {
-                Container.EnsureBlobExists(path);
-                var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
+                Container.EnsureBlobExists(Combine(_root, path));
+                var blob = Container.GetBlockBlobReference(Combine(_root, path));
                 blob.Delete();
             }
         }

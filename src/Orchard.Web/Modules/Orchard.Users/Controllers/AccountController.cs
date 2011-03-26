@@ -14,6 +14,8 @@ using Orchard.Users.Services;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
 using Orchard.UI.Notify;
+using Orchard.Users.Events;
+using System.Collections.Generic;
 
 namespace Orchard.Users.Controllers {
     [HandleError, Themed]
@@ -22,17 +24,19 @@ namespace Orchard.Users.Controllers {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
         private readonly IOrchardServices _orchardServices;
-        
+        private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
 
         public AccountController(
             IAuthenticationService authenticationService, 
             IMembershipService membershipService,
             IUserService userService, 
-            IOrchardServices orchardServices) {
+            IOrchardServices orchardServices,
+            IEnumerable<IUserEventHandler> userEventHandlers) {
             _authenticationService = authenticationService;
             _membershipService = membershipService;
             _userService = userService;
             _orchardServices = orchardServices;
+            _userEventHandlers = userEventHandlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -51,7 +55,12 @@ namespace Orchard.Users.Controllers {
             }
 
             //TODO: (erikpo) Add a setting for whether or not to log access denieds since these can fill up a database pretty fast from bots on a high traffic site
+            //Suggestion: Could instead use the new AccessDenined IUserEventHandler method and let modules decide if they want to log this event?
             Logger.Information("Access denied to user #{0} '{1}' on {2}", currentUser.Id, currentUser.UserName, returnUrl);
+
+            foreach (var userEventHandler in _userEventHandlers) {
+                userEventHandler.AccessDenied(currentUser);
+            }
 
             return View();
         }
@@ -75,13 +84,20 @@ namespace Orchard.Users.Controllers {
             }
 
             _authenticationService.SignIn(user, false);
+            foreach (var userEventHandler in _userEventHandlers) {
+                userEventHandler.LoggedIn(user);
+            }
 
             return this.RedirectLocal(returnUrl);
         }
 
         public ActionResult LogOff(string returnUrl) {
+            var wasLoggedInUser = _authenticationService.GetAuthenticatedUser();
             _authenticationService.SignOut();
-
+            if (wasLoggedInUser != null)
+                foreach (var userEventHandler in _userEventHandlers) {
+                    userEventHandler.LoggedOut(wasLoggedInUser);
+                }
             return this.RedirectLocal(returnUrl);
         }
 
@@ -116,12 +132,16 @@ namespace Orchard.Users.Controllers {
 
             if (ValidateRegistration(userName, email, password, confirmPassword)) {
                 // Attempt to register the user
+                // No need to report this to IUserEventHandler because _membershipService does that for us
                 var user = _membershipService.CreateUser(new CreateUserParams(userName, password, email, null, null, false));
 
                 if (user != null) {
                     if ( user.As<UserPart>().EmailStatus == UserStatus.Pending ) {
                         _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
 
+                        foreach (var userEventHandler in _userEventHandlers) {
+                            userEventHandler.SentChallengeEmail(user);
+                        }
                         return RedirectToAction("ChallengeEmailSent");
                     }
 
@@ -194,6 +214,9 @@ namespace Orchard.Users.Controllers {
 
                 if ( validated != null ) {
                     _membershipService.SetPassword(validated, newPassword);
+                    foreach (var userEventHandler in _userEventHandlers) {
+                        userEventHandler.ChangedPassword(validated);
+                    }
                     return RedirectToAction("ChangePasswordSuccess");
                 }
                 
@@ -265,6 +288,10 @@ namespace Orchard.Users.Controllers {
             var user = _userService.ValidateChallenge(nonce);
 
             if ( user != null ) {
+                foreach (var userEventHandler in _userEventHandlers) {
+                    userEventHandler.ConfirmedEmail(user);
+                }
+
                 return RedirectToAction("ChallengeEmailSuccess");
             }
 
