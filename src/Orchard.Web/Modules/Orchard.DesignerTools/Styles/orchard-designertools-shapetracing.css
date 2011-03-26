@@ -90,9 +90,14 @@ button.create-template, button.create-template:hover, background-image:hover {
 }
 
 #shape-tracing-container .shape-tracing-meta-content {
-    padding:0 0 30px 30px;
+    padding:0 0 30px 0;
     overflow:auto;
 }
+
+#shape-tracing-container .model, #shape-tracing-container .shape {
+    padding-left:30px;
+}
+
 #shape-tracing-toolbar  {
     color:#333;
     background:rgba(236, 241, 242, 1.0);
@@ -329,3 +334,7 @@ button.create-template, button.create-template:hover, background-image:hover {
     height: 18px; 
 }
 
+.CodeMirror {
+    height:auto;
+    overflow:hidden !important;
+}

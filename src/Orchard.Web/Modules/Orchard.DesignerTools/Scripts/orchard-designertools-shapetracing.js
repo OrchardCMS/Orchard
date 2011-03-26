@@ -382,7 +382,7 @@
             // code mirror seems to work only if the textarea is visible
             target.find('textarea:visible').each(function () {
                 if ($(this).next('.CodeMirror').length == 0) {
-                    CodeMirror.fromTextArea(this, { mode: "razor", tabMode: "indent", height: "100%", readOnly: true });
+                    CodeMirror.fromTextArea(this, { mode: "razor", tabMode: "indent", readOnly: true, lineNumbers: true });
                 }
             });
         }
