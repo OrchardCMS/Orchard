@@ -322,8 +322,8 @@ button.create-template, button.create-template:hover, background-image:hover {
 }
 
 #shape-tracing-window-content .shape-tracing-breadcrumb {
-    margin: 3px 0px;
-    background:#ff0000;
-    position:fixed;
+    background-color:Red;
+    padding: 3px 0;
+    height: 18px; 
 }
 

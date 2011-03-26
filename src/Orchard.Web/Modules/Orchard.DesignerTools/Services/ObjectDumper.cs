@@ -130,7 +130,6 @@ namespace Orchard.DesignerTools.Services {
                 // process ContentItem.Parts specifically
                 if (o is ContentItem && member.Name == "Parts") {
                     foreach (var part in ((ContentItem)o).Parts) {
-                        // Debug.WriteLine(_node.GetHashCode() + " " + o.GetHashCode() + " Parts: " + part.PartDefinition.Name);
                         Dump(part, part.PartDefinition.Name);
                     }
                 }

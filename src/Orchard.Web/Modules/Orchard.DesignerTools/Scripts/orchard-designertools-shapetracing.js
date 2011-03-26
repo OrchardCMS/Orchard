@@ -67,10 +67,11 @@
             var resizeHandleHeight = shapeTracingResizeHandle.outerHeight();
 
             var tabsHeight = $('.shape-tracing-tabs:visible').outerHeight();
+            var breadcrumbHeight = $('.shape-tracing-breadcrumb:visible').outerHeight();
             if (tabsHeight) {
                 var metaContent = $('.shape-tracing-meta-content:visible');
                 padding = parseInt(metaContent.css('padding-bottom') + metaContent.css('padding-top'));
-                metaContent.height(containerHeight - toolbarHeight - resizeHandleHeight - tabsHeight - padding);
+                metaContent.height(containerHeight - toolbarHeight - resizeHandleHeight - tabsHeight - breadcrumbHeight - padding);
             }
         };
 
@@ -339,6 +340,30 @@
             var wrapper = _this.parent().parent().first();
             var panel = wrapper.find('div.' + tabName);
 
+            var breadcrumb = _this.parent().next();
+            var container = _this.parents('.shape-tracing-meta');
+            if (_this.hasClass('shape')) {
+                breadcrumb.text('');
+            }
+
+            if (_this.hasClass('model')) {
+                breadcrumb.text('');
+            }
+
+            if (_this.hasClass('placement')) {
+                breadcrumb.text(container.find('.sgd-pl').text());
+            }
+
+            if (_this.hasClass('template')) {
+                breadcrumb.text(container.find('.sgd-t').text());
+            }
+
+            if (_this.hasClass('html')) {
+                breadcrumb.text('');
+            }
+
+            syncResizeMeta();
+
             // enable codemirror for the current tab
             enableCodeMirror(panel);
         });
@@ -400,7 +425,10 @@
                 }
             });
 
-            _this.parents('.model').find('.shape-tracing-breadcrumb').text('@' + breadcrumb);
+            // fix enumerable properties display
+            breadcrumb = breadcrumb.replace('.[', '[');
+
+            _this.parents('.shape-tracing-meta').find('.shape-tracing-breadcrumb').text('@' + breadcrumb);
             event.stopPropagation();
         });
 
