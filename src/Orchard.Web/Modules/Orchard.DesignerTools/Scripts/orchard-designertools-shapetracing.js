@@ -1,5 +1,5 @@
-﻿jQuery(document).ready(function ($) {
-    $(function () {
+﻿(function ($) {
+    $(document).ready(function () {
         // default shape window height when first opened
         var defaultHeight = 200;
 
@@ -461,4 +461,4 @@
         return node;
     }
 
-});
+})(jQuery);
