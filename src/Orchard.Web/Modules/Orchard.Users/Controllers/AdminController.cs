@@ -143,7 +143,7 @@ namespace Orchard.Users.Controllers {
                     break;
             }
 
-            return Index(viewModel.Options, new PagerParameters());
+            return RedirectToAction("Index", ControllerContext.RouteData.Values);
         }
 
         public ActionResult Create() {
