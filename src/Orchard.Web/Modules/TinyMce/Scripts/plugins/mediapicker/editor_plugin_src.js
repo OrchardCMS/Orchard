@@ -39,7 +39,7 @@
                 }
                 jQuery("#" + ed.id).trigger("orchard-admin-pickimage-open", {
                     img: editImage,
-                    uploadMediaPath: ed.getParam("mediapicker_uploadpath"),
+                    uploadMediaPath: jQuery("#" + ed.id).data("mediapicker-uploadpath"), //ed.getParam("mediapicker_uploadpath"),
                     callback: function (data) {
                         ed.focus();
                         ed.selection.setContent(data.img.html);
@@ -49,7 +49,7 @@
 
             // Register media button
             ed.addButton('mediapicker', {
-                title: ed.getParam("mediapicker_title"),
+                title: jQuery("#" + ed.id).data("mediapicker-title"), //ed.getParam("mediapicker_title"),
                 cmd: 'mceMediaPicker',
                 image: url + '/img/picture_add.png'
             });
