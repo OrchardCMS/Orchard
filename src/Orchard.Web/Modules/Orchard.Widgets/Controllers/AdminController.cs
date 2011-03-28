@@ -54,12 +54,11 @@ namespace Orchard.Widgets.Controllers {
             IEnumerable<LayerPart> layers = _widgetsService.GetLayers();
 
             if (layers.Count() == 0) {
-                Services.Notifier.Error(T("Layer not found: {0}", layerId));
-                return RedirectToAction("Index");
+                Services.Notifier.Error(T("There are no widget layers defined. A layer will need to be added in order to add widgets to any part of the site."));
             }
 
             LayerPart currentLayer = layerId == null
-                ? layers.First()
+                ? layers.FirstOrDefault()
                 : layers.FirstOrDefault(layer => layer.Id == layerId);
 
             if (currentLayer == null && layerId != null) { // Incorrect layer id passed
