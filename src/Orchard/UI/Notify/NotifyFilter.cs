@@ -69,16 +69,22 @@ namespace Orchard.UI.Notify {
                 var delimiterIndex = line.IndexOf(':');
                 if (delimiterIndex != -1) {
                     var type = (NotifyType)Enum.Parse(typeof(NotifyType), line.Substring(0, delimiterIndex));
-                    messageEntries.Add(new NotifyEntry {
-                                                           Type = type,
-                                                           Message = new LocalizedString(line.Substring(delimiterIndex + 1))
-                                                       });
+                    var message = new LocalizedString(line.Substring(delimiterIndex + 1));
+                    if (!messageEntries.Any(ne => ne.Message.TextHint == message.TextHint)) {
+                        messageEntries.Add(new NotifyEntry {
+                            Type = type,
+                            Message = message
+                        });
+                    }
                 }
                 else {
-                    messageEntries.Add(new NotifyEntry {
-                                                           Type = NotifyType.Information,
-                                                           Message = new LocalizedString(line.Substring(delimiterIndex + 1))
-                                                       });
+                    var message = new LocalizedString(line.Substring(delimiterIndex + 1));
+                    if (!messageEntries.Any(ne => ne.Message.TextHint == message.TextHint)) {
+                        messageEntries.Add(new NotifyEntry {
+                            Type = NotifyType.Information,
+                            Message = message
+                        });
+                    }
                 }
             }
 
