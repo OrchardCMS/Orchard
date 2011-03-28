@@ -134,7 +134,7 @@ namespace Orchard.Packaging.Controllers {
                 }
 
                 HttpPostedFileBase file = Request.Files.Get(0);
-                string fullFileName = Path.Combine(_appDataFolderRoot.RootFolder, file.FileName + ".nupkg").Replace(Path.DirectorySeparatorChar, '/');
+                string fullFileName = Path.Combine(_appDataFolderRoot.RootFolder, Path.GetFileName(file.FileName)).Replace(Path.DirectorySeparatorChar, '/');
                 file.SaveAs(fullFileName);
                 ZipPackage package = new ZipPackage(fullFileName);
                 PackageInfo packageInfo = _packageManager.Install(package, _appDataFolderRoot.RootFolder, HostingEnvironment.MapPath("~/"));
