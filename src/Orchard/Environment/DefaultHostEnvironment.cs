@@ -52,6 +52,7 @@ namespace Orchard.Environment {
                     httpContext.Response.Redirect(HttpContext.Current.Request.ToUrlString(), true /*endResponse*/);
                 }
                 else {
+                    httpContext.Response.ContentType = "text/html";
                     httpContext.Response.WriteFile(RefreshHtmlPath);
                     httpContext.Response.End();
                 }
