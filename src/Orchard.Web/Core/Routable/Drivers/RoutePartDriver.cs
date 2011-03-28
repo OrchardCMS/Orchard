@@ -110,12 +110,23 @@ namespace Orchard.Core.Routable.Drivers {
             if (path != null) {
                 part.Path = path;
             }
+
+            var promoteToHomePage = context.Attribute(part.PartDefinition.Name, "PromoteToHomePage");
+            if (promoteToHomePage != null) {
+                part.PromoteToHomePage = Convert.ToBoolean(promoteToHomePage);
+                if (part.PromoteToHomePage && _routableHomePageProvider != null) {
+                    _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
+                }
+            }
         }
 
         protected override void Exporting(RoutePart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Slug", part.Slug);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Path", part.Path);
+            if (_services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(part.ContentItem.Id)) {
+                context.Element(part.PartDefinition.Name).SetAttributeValue("PromoteToHomePage", "true");   
+            }
         }
     }
 }
