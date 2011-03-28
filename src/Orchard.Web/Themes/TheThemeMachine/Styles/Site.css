@@ -432,7 +432,7 @@ nav ul
 .widget-control .manage-actions a:hover { background-color: #434343; color: #fff; text-decoration: none; }
 
 /* Content Mode */
-.content-control { position: relative; border: 1px dotted #5f97af; }
+.content-control { border: 1px dotted #5f97af; overflow:auto; position: relative; }
 .content-control .manage-actions { position:absolute; top: 0px; right: 0px; }
 .content-control .manage-actions a { display: block; background-color: #dbdbdb; color: #434343; padding: 3px 6px;  }
 .content-control .manage-actions a:hover { background-color: #434343; color: #fff; text-decoration: none; }
