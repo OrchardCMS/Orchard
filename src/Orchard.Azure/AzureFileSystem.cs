@@ -156,7 +156,9 @@ namespace Orchard.Azure {
 
         public bool TryCreateFolder(string path) {
             try {
-                CreateFolder(path);
+                if (!Container.DirectoryExists(String.Concat(_root, path))) {
+                    CreateFolder(path);
+                }
                 return true;
             }
             catch {
