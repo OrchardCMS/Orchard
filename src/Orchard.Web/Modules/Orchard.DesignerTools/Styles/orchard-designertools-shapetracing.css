@@ -91,8 +91,11 @@ button.create-template, button.create-template:hover, background-image:hover {
 }
 
 #shape-tracing-container .shape-tracing-meta-content {
-    padding:8px 0 30px 0;
     overflow:auto;
+}
+
+#shape-tracing-container .shape, #shape-tracing-container .model {
+    padding:8px 0 30px 0;
 }
 
 #shape-tracing-container .model, #shape-tracing-container .shape {

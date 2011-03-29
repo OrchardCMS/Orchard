@@ -60,7 +60,8 @@ namespace Orchard.DesignerTools.Services {
                 && context.ShapeType != "DocumentZone"
                 && context.ShapeType != "PlaceChildContent"
                 && context.ShapeType != "ContentZone"
-                && context.ShapeType != "ShapeTracingMeta") {
+                && context.ShapeType != "ShapeTracingMeta"
+                && context.ShapeType != "DateTimeRelative") {
 
                 var shapeMetadata = (ShapeMetadata)context.Shape.Metadata;
                 var currentTheme = _themeManager.GetRequestTheme(_workContext.HttpContext.Request.RequestContext);

@@ -161,7 +161,7 @@ strong {font-weight:600;}
     float:right;
     margin-left:-240px;
     width:100%;
-    padding:0 0 74px 0; /*Bottom padding set to footer height*/
+    padding:0 0 70px 0; /*Bottom padding set to footer height*/
 }
 #main {
     margin-left:260px;
@@ -179,9 +179,9 @@ strong {font-weight:600;}
 }
 #footer {
     clear:both;
-    height:74px;
+    height:70px;
     position:relative;
-    margin-top:-74px; /*Top margin set negative px of footer height*/
+    margin-top:-70px; /*Top margin set negative px of footer height*/
     background:url(images/vinesBackgroundBottom.gif) no-repeat bottom left;
 }
 
@@ -329,18 +329,21 @@ form.link button:hover, button.link:hover {
     color:#aec3ce;
     display:block;
     line-height:1.2em;
-    padding:6px 0 6px 20px;
+    padding:4px 0 6px 20px;
     text-decoration:none;
 }
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus, #menu .menu-admin ul .selected a {
-    background-color:#656b55;
+    background-color:rgba(101,107,85,1.0); /*#656b55 at 100%*/
     color: #fff;
     /*CSS3 properties*/
-     border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
 }
-/*Tabs*/
+#menu .menu-admin ul a:hover, #menu .menu-admin ul a:active {background-color:rgba(101,107,85,0.5);}
+ul.menuItems {margin:6px 0 0 0;}
+
+/******Tabs******/
 #local-navigation {margin:8px 0 -8px 0;}
 
 .localmenu li {
@@ -375,9 +378,9 @@ form.link button:hover, button.link:hover {
     border: 1px solid #e4e5e6;
    
      /*CSS3 properties*/
-     border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
 }
 .section-dashboard, .section-new {
     background:#2b2b2b;
@@ -385,9 +388,9 @@ form.link button:hover, button.link:hover {
     padding:6px 0;
     
      /*CSS3 properties*/
-     border-radius: 3px;
-     -webkit-border-radius: 3px;
-     -moz-border-radius: 3px;
+     -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+      border-radius: 2px;
       box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
      -webkit-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0); 
      -moz-box-shadow: inset 0px 0px 1px rgba(64, 64, 64, 1.0), 1px 1px 1px rgba(54, 54, 65, 1.0);
@@ -652,9 +655,9 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 	color:#ababab;
 	cursor:default;
 	text-shadow: none;
-	box-shadow: none;
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
+	box-shadow: none;
 }
 .button.grey {
   		color:#5d615d;
@@ -671,7 +674,6 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 		/*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
         filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fff5f5f5',  endColorstr='#ffd9d9d9');
         background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 1.0)), to(rgba(217, 217, 217, 1.0)));   
-        background: -moz-linear-gradient(top, rgba(245, 245, 245, 1.0), rgba(217, 217, 217, 1.0));
 		
 		-webkit-border-radius: 2px;
         -moz-border-radius: 2px;
@@ -708,6 +710,9 @@ button, .button, a.button {
 	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 
+     /*test - base green in pallet is 155,179,108*/
+     background: -moz-linear-gradient(top, rgba(166, 192, 116, 1.0), rgba(155, 179, 108, 1.0));
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(133, 154, 93, 1.0));
         
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -943,9 +948,6 @@ table.items th, table.items td {
 .contentItems .commentcount {
     line-height:2em;
 }
-/*#main .contentItems p {
-    margin:1em 0 0;
-}*/
 
 
 /* Pager
