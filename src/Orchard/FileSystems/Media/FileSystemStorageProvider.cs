@@ -233,6 +233,11 @@ namespace Orchard.FileSystems.Media {
                 throw new ArgumentException(T("File {0} already exists", fileInfo.Name).ToString());
             }
 
+            // ensure the directory exists
+            var dirName = Path.GetDirectoryName(fileInfo.FullName);
+            if (!Directory.Exists(dirName)) {
+                Directory.CreateDirectory(dirName);
+            }
             File.WriteAllBytes(fileInfo.FullName, new byte[0]);
 
             return new FileSystemStorageFile(Fix(path), fileInfo);
