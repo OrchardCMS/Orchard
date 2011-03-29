@@ -11,6 +11,10 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual string Prefix { get { return ""; } }
         protected virtual string Zone { get { return "Content"; } }
 
+        void IContentFieldDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {            
+            Process(context.ContentItem, (part, field) => GetContentItemMetadata(part, field, context.Metadata));
+        }
+
         DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context) {
             return Process(context.ContentItem, (part, field) => Display(part, field, context.DisplayType, context.New));
         }
@@ -24,31 +28,26 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         void IContentFieldDriver.Importing(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => {
-                                             Importing(part, field, context);
-                                             return null;
-                                         });
+            Process(context.ContentItem, (part, field) => Importing(part, field, context));
         }
 
         void IContentFieldDriver.Imported(ImportContentContext context) {
-            Process(context.ContentItem, (part, field) => { 
-                                             Imported(part, field, context);
-                                             return null; 
-                                         });
+            Process(context.ContentItem, (part, field) => Imported(part, field, context));
         }
 
         void IContentFieldDriver.Exporting(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => {
-                                             Exporting(part, field, context);
-                                             return null;
-                                         });
+            Process(context.ContentItem, (part, field) => Exporting(part, field, context));
         }
 
         void IContentFieldDriver.Exported(ExportContentContext context) {
-            Process(context.ContentItem, (part, field) => {
-                                             Exported(part, field, context);
-                                             return null;
-                                         });
+            Process(context.ContentItem, (part, field) => Exported(part, field, context));
+        }
+
+        void Process(ContentItem item, Action<ContentPart, TField> effort) {
+            var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }));
+            foreach (var occurence in occurences) {
+                effort(occurence.part, occurence.field);
+            }
         }
 
         DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort) {
@@ -72,9 +71,12 @@ namespace Orchard.ContentManagement.Drivers {
             return contentFieldInfo;
         }
 
+        protected virtual void GetContentItemMetadata(ContentPart part, TField field, ContentItemMetadata metadata) { return; }
+
         protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) { return null; }
+        
         protected virtual void Importing(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }

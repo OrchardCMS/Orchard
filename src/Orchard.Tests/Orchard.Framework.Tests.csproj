@@ -165,9 +165,10 @@
     <Compile Include="Commands\CommandHandlerDescriptorBuilderTests.cs" />
     <Compile Include="Commands\CommandHandlerTests.cs" />
     <Compile Include="Commands\CommandManagerTests.cs" />
-    <Compile Include="ContentManagement\ContentQueryTests.cs">
+    <Compile Include="ContentManagement\ContentIdentityTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\ContentQueryTests.cs" />
     <Compile Include="ContentManagement\DefaultContentManagerTests.cs">
       <SubType>Code</SubType>
     </Compile>

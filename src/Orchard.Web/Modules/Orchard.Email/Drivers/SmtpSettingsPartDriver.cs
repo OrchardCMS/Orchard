@@ -20,28 +20,24 @@ namespace Orchard.Email.Drivers {
 
         protected override string Prefix { get { return "SmtpSettings"; } }
 
-        protected override DriverResult Editor(SmtpSettingsPart part, string groupInfoId, dynamic shapeHelper) {
-            if (!string.Equals(groupInfoId, "email", StringComparison.OrdinalIgnoreCase))
-                return null;
-
+        protected override DriverResult Editor(SmtpSettingsPart part, dynamic shapeHelper) {
             return ContentShape("Parts_SmtpSettings_Edit",
-                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
+                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix))
+                    .OnGroup("email");
         }
 
-        protected override DriverResult Editor(SmtpSettingsPart part, IUpdateModel updater, string groupInfoId, dynamic shapeHelper) {
-            if (!string.Equals(groupInfoId, "email", StringComparison.OrdinalIgnoreCase))
-                return null;
+        protected override DriverResult Editor(SmtpSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
+            return ContentShape("Parts_SmtpSettings_Edit", () => {
+                    var previousPassword = part.Password;
+                    updater.TryUpdateModel(part, Prefix, null, null);
 
-            var previousPassword = part.Password;
-            updater.TryUpdateModel(part, Prefix, null, null);
-
-            // restore password if the input is empty, meaning it has not been reseted
-            if (string.IsNullOrEmpty(part.Password)) { 
-                part.Password = previousPassword;
-            }
-            
-            return ContentShape("Parts_SmtpSettings_Edit",
-                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
+                    // restore password if the input is empty, meaning it has not been reseted
+                    if (string.IsNullOrEmpty(part.Password)) {
+                        part.Password = previousPassword;
+                    }
+                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix);
+                })
+                .OnGroup("email");
         }
     }
 }
