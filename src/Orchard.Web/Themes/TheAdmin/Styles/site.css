@@ -329,10 +329,9 @@ form.link button:hover, button.link:hover {
     color:#aec3ce;
     display:block;
     line-height:1.2em;
-    padding:6px 0 6px 20px;
+    padding:4px 0 6px 20px;
     text-decoration:none;
 }
-
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active, #menu .menu-admin ul a:focus, #menu .menu-admin ul .selected a {
     background-color:rgba(101,107,85,1.0); /*#656b55 at 100%*/
     color: #fff;
@@ -342,7 +341,9 @@ form.link button:hover, button.link:hover {
      border-radius: 2px;
 }
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active {background-color:rgba(101,107,85,0.5);}
-/*Tabs*/
+ul.menuItems {margin:4px 0 0 0;}
+
+/******Tabs******/
 #local-navigation {margin:8px 0 -8px 0;}
 
 .localmenu li {
