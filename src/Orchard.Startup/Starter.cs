@@ -57,6 +57,12 @@ namespace Orchard.Startup {
                         // Execute pending actions as the host is available
                         WarmupHttpModule.Signal();
                     }
+
+                    // initialize shells to speed up the first dynamic query
+                    if (_host != null) {
+                        _host.BeginRequest();
+                        _host.EndRequest();
+                    }
                 });
         }
     }
