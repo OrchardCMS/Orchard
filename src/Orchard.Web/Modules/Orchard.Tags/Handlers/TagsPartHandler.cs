@@ -13,8 +13,12 @@ namespace Orchard.Tags.Handlers {
             OnRemoved<TagsPart>((context, tags) => 
                 tagService.RemoveTagsForContentItem(context.ContentItem));
 
-            OnIndexing<TagsPart>((context, tagsPart) => 
-                context.DocumentIndex.Add("tags", String.Join(", ", tagsPart.CurrentTags.Select(t => t.TagName))).Analyze());
+            OnIndexing<TagsPart>(
+                (context, tagsPart) => {
+                    foreach (var tag in tagsPart.CurrentTags) {
+                        context.DocumentIndex.Add("tags", tag.TagName).Analyze();
+                    }
+                });
         }
     }
 }
