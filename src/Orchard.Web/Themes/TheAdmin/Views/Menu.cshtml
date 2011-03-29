@@ -39,6 +39,11 @@
                 : Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href, new { @class = itemClassName });
         }
         else {
+            // if the header isn't linked and there are no children there's no reason for this item in the menu other than to look pretty
+            if (secondLevelMenuItems.Count() == 0) {
+                continue;
+            }
+        
             sectionHeaderMarkup = HasText(itemId)
                 ? new HtmlString(string.Format(@"<span class=""{1}"" id=""{2}"">{0}</span>", Html.Encode(sectionHeaderText), Html.Encode(itemClassName), Html.Encode(itemId)))
                 : new HtmlString(string.Format(@"<span class=""{1}"">{0}</span>", Html.Encode(sectionHeaderText), Html.Encode(itemClassName)));
