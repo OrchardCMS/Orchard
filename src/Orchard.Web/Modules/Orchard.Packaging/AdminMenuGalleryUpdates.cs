@@ -23,8 +23,8 @@ namespace Orchard.Packaging {
         }
 
         public void GetNavigation(NavigationBuilder builder) {
-            var modulesCaption = T.Plural("Updates", "Updates ({0})", GetUpdateCount(DefaultExtensionTypes.Module));
-            var themesCaption = T.Plural("Updates", "Updates ({0})", GetUpdateCount(DefaultExtensionTypes.Theme));
+            var modulesCaption = T("Updates ({0})", GetUpdateCount(DefaultExtensionTypes.Module));
+            var themesCaption = T("Updates ({0})", GetUpdateCount(DefaultExtensionTypes.Theme));
 
             builder
                 .Add(T("Modules"), menu => menu
