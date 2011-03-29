@@ -72,12 +72,15 @@ namespace Orchard.Widgets.Services {
                     .Select(x => x.Trim())
                     .ToList();
 
-            // add the zones for the base theme
-            if (!string.IsNullOrWhiteSpace(theme.BaseTheme)) {
+            // if this theme has no zones defined then walk the BaseTheme chain until we hit a theme which defines zones
+            while (zones.Count() == 0 && theme != null && !string.IsNullOrWhiteSpace(theme.BaseTheme)) {
                 string baseTheme = theme.BaseTheme;
                 theme = _extensionManager.GetExtension(baseTheme);
-                if (theme != null)
-                    zones.Concat(GetZones(theme).Where(z => !zones.Contains(z)));
+                if (theme != null && theme.Zones != null)
+                    zones = theme.Zones.Split(',')
+                        .Distinct()
+                        .Select(x => x.Trim())
+                        .ToList();
             }
 
             return zones;
