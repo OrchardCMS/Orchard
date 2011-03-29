@@ -10,7 +10,6 @@ using Orchard.Services;
 
 namespace Orchard.Core.Common.Drivers {
     public class CommonPartDriver : ContentPartDriver<CommonPart> {
-        private const string TemplatePrefix = "CommonPart";
         private readonly IContentManager _contentManager;
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
@@ -35,6 +34,10 @@ namespace Orchard.Core.Common.Drivers {
 
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
+
+        protected override string Prefix {
+            get { return "CommonPart"; }
+        }
 
         protected override DriverResult Display(CommonPart part, string displayType, dynamic shapeHelper) {
             return Combined(
@@ -75,7 +78,7 @@ namespace Orchard.Core.Common.Drivers {
 
             if (updater != null) {
                 var priorOwner = model.Owner;
-                updater.TryUpdateModel(model, TemplatePrefix, null, null);
+                updater.TryUpdateModel(model, Prefix, null, null);
 
                 if (model.Owner != null && model.Owner != priorOwner) {
                     var newOwner = _membershipService.GetUser(model.Owner);
@@ -104,7 +107,7 @@ namespace Orchard.Core.Common.Drivers {
 
             if (updater != null) {
                 var priorContainerId = model.ContainerId;
-                updater.TryUpdateModel(model, TemplatePrefix, null, null);
+                updater.TryUpdateModel(model, Prefix, null, null);
 
                 if (model.ContainerId != null && model.ContainerId != priorContainerId) {
                     var newContainer = _contentManager.Get((int)model.ContainerId, VersionOptions.Latest);
