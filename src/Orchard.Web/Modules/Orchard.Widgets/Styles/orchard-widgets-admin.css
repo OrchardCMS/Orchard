@@ -178,12 +178,13 @@ margin-top:0;
 #widgets-layer-visibility li {
 cursor:default;
 }
-#widgets-layer-visibility .widgets-other-layer {
+#widgets-layer-visibility .widgets-other-layer, #widgets-layer-visibility .widgets-this-layer  {
 background-image:url(images/eye.png);
 background-position:5px 11px;
 background-repeat:no-repeat;
 cursor:pointer;
 }
+#widgets-layer-visibility .widgets-this-layer {cursor:default;}
 #widgets-layer-visibility .widgets-other-layer.off, #widgets-layer-visibility .widgets-other-layer.off:hover {
 background-position:5px -17px;
 }
