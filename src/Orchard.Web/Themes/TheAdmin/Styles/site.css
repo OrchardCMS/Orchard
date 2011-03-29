@@ -161,7 +161,7 @@ strong {font-weight:600;}
     float:right;
     margin-left:-240px;
     width:100%;
-    padding:0 0 74px 0; /*Bottom padding set to footer height*/
+    padding:0 0 70px 0; /*Bottom padding set to footer height*/
 }
 #main {
     margin-left:260px;
@@ -179,9 +179,9 @@ strong {font-weight:600;}
 }
 #footer {
     clear:both;
-    height:74px;
+    height:70px;
     position:relative;
-    margin-top:-74px; /*Top margin set negative px of footer height*/
+    margin-top:-70px; /*Top margin set negative px of footer height*/
     background:url(images/vinesBackgroundBottom.gif) no-repeat bottom left;
 }
 
@@ -341,7 +341,7 @@ form.link button:hover, button.link:hover {
      border-radius: 2px;
 }
 #menu .menu-admin ul a:hover, #menu .menu-admin ul a:active {background-color:rgba(101,107,85,0.5);}
-ul.menuItems {margin:4px 0 0 0;}
+ul.menuItems {margin:6px 0 0 0;}
 
 /******Tabs******/
 #local-navigation {margin:8px 0 -8px 0;}
