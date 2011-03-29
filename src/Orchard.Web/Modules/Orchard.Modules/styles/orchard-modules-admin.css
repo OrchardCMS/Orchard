@@ -4,6 +4,10 @@
 #main .features h3 {
     padding:0 3em 0 0;
 }
+html.dyn #main ul.features button 
+{
+    display:none;
+}
 #otherActionsBar {
     clear: both;
     border-top-width: thin;
