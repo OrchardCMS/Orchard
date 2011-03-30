@@ -8,8 +8,8 @@
     <ProjectGuid>{5C0D5249-AEF5-4BB6-8F5F-057B91AC2D7A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orchard.Startup</RootNamespace>
-    <AssemblyName>Orchard.Startup</AssemblyName>
+    <RootNamespace>Orchard.WarmupStarter</RootNamespace>
+    <AssemblyName>Orchard.WarmupStarter</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
