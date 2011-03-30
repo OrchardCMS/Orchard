@@ -175,7 +175,23 @@
   </Target> -->
   <ItemGroup>
     <Orchard-Web-Bins Include="bin\*"/>
-  </ItemGroup>  
+  </ItemGroup>
+  <PropertyGroup>  
+    <CopyAllFilesToSingleFolderForPackageDependsOn>    
+      CustomCollectFiles;    
+      $(CopyAllFilesToSingleFolderForPackageDependsOn);  
+    </CopyAllFilesToSingleFolderForPackageDependsOn>
+  </PropertyGroup>
+  <Target Name="CustomCollectFiles">
+    <ItemGroup>
+      <_CustomFiles 
+        Include="Modules\**\*;Themes\**\*;Core\**\*;**\*.po" 
+        Exclude="**\obj\**;@(Orchard-Web-Bins -> '**\%(Filename)%(Extension)');**\*.csproj.user;**\*.hg*"/>
+      <FilesForPackagingFromProject  Include="%(_CustomFiles.Identity)">
+        <DestinationRelativePath>%(RelativeDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup>
+  </Target>
   <Target Name="CopySqlCeBinaries">
     <ItemGroup>
       <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\**\*" />
