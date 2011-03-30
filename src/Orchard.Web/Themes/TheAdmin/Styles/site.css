@@ -783,11 +783,7 @@ button.link {
     text-align:right;
 }
 .item-properties.actions {
-    /*margin-bottom:.5em;
-    margin-top:-5em;
-    overflow:hidden;
-    padding:1px;*/
-    float:right;
+    margin: -10px 0 10px 0;
 }
 .contentItems .actions li {
     background:inherit;
