@@ -121,7 +121,6 @@
     <Content Include="Views\Widget.Edit.cshtml" />
     <Content Include="Views\Widget.cshtml" />
     <Content Include="Views\Widget.ControlWrapper.cshtml" />
-    <Content Include="Views\Content-WidgetPage.cshtml" />
     <Content Include="Views\Widget.Wrapper.cshtml" />
   </ItemGroup>
   <ItemGroup>
