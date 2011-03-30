@@ -198,7 +198,7 @@ namespace Orchard.Media.Controllers {
                 Services.Notifier.Information(T("Media file(s) uploaded"));
                 return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
             } catch (Exception exception) {
-                this.Error(exception, T("Uploading media file failed: {0}", exception.Message), Logger, Services.Notifier);
+                this.Error(exception, T("Uploading media file failed:"), Logger, Services.Notifier);
 
                 return View(viewModel);
             }

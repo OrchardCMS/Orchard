@@ -196,14 +196,17 @@ namespace Orchard.Media.Services {
                 return _storageProvider.GetPublicUrl(folderPath);
             }
 
-            if (FileAllowed(fileName, true)) {
-                string filePath = _storageProvider.Combine(folderPath, fileName);
-                _storageProvider.SaveStream(filePath, inputStream);
+            if (!FileAllowed(fileName, true)) {
+                var currentSite = _orchardServices.WorkContext.CurrentSite;
+                var mediaSettings = currentSite.As<MediaSettingsPart>();
 
-                return _storageProvider.GetPublicUrl(filePath);
+                throw new ArgumentException(T("Could not upload file {0}. Supported file types are {1}.", fileName, mediaSettings.UploadAllowedFileTypeWhitelist).Text);
             }
 
-            return null;
+            string filePath = _storageProvider.Combine(folderPath, fileName);
+            _storageProvider.SaveStream(filePath, inputStream);
+
+            return _storageProvider.GetPublicUrl(filePath);
         }
 
         /// <summary>
