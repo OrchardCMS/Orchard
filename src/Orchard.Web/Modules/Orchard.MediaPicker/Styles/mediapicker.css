@@ -41,11 +41,7 @@ body {
     overflow-y:scroll;
     overflow-x:hidden;
     }
-
-input[disabled], input[disabled="disabled"], input.disabled {
-    color: White 
-}
-
+    
 .media-largepreview
 {
     width: 300px;
@@ -107,7 +103,7 @@ table.items td.media-thumbnail
 form              { margin: 0; padding: 0; }
 legend            { font-weight: normal; border:none; }
 fieldset          { padding:0; margin: 0; border: 0px solid #dbdbdb; }
-#orchardmediapicker label { font-weight:normal; display:block; padding: 0 0 0 0; margin:10px 0 0 0; }
+#orchardmediapicker label { font-weight:normal; display:block; padding: 0 0 0 0; margin:12px 0 2px 0; }
 #orchardmediapicker label.forcheckbox { display: inline; margin: 10px 0 0 4px; }
 #orchardmediapicker .actions { margin:12px 0 0 0; clear:both; text-align:left; }
 
