@@ -80,8 +80,10 @@ margin:5px 0;
 .widgets-listed li.last {
 margin:0;
 }
+
 .widgets-listed li:hover, .widgets-listed li.on {
-border-color:#bfd3a7;
+/*border-color:#bfd3a7;*/
+border-color:#487328;
 }
 #widgets-available h2 {
 font-size:1.231em;
@@ -99,11 +101,24 @@ padding:5px 100px 5px 25px;
 #widgets-layer-visibility li {
 margin:1px 0 0;
 }
-.widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer:hover {
-border-color:#898989;
+.widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer {
+border-color:#cfe493;
+border-color:#487328;
+background-color:#e6f1c9;
 }
+/*#widgets-layer-visibility li.widgets-this-layer:hover {
+border-color:#487328;
+}*/
 .widgets-listed li li.widgets-this-layer:hover, #widgets-layer-visibility li:hover {
-border-color:#bfd3a7;
+/*border-color:#bfd3a7;*/
+border-color:#487328;
+}
+#widgets-layer-visibility li.widgets-empty-layer:hover, #widgets-layer-visibility li.off:hover {
+border-color:#eaeaea;
+}
+#widgets-layer-visibility li.widgets-this-layer.widgets-empty-layer:hover {
+border-color:#cfe493;
+border-color:#487328;
 }
 .widgets-listed .widgets-mover {
 margin-left:-18px;
@@ -169,11 +184,12 @@ display:block;
 padding:5px 10px;
 }
 #widgets-available li a:hover {
-border-color:#bfd3a7;
+/*border-color:#bfd3a7;*/
+border-color:#487328;
 }
-#widgets-available a h2, #widgets-available a p {
+/*#widgets-available a h2, #widgets-available a p {
 color:#333;
-}
+}*/
 #widgets-available a p {
 margin-top:5px;
 }
@@ -188,15 +204,15 @@ margin-top:0;
 #widgets-layer-visibility li {
 cursor:default;
 }
-#widgets-layer-visibility .widgets-other-layer, #widgets-layer-visibility .widgets-this-layer  {
+#widgets-layer-visibility .widgets-other-layer, #widgets-layer-visibility .widgets-this-layer {
 background-image:url(images/eye.png);
 background-position:5px 11px;
 background-repeat:no-repeat;
 cursor:pointer;
 }
-#widgets-layer-visibility .widgets-this-layer.widgets-empty-layer {
+/*#widgets-layer-visibility .widgets-this-layer .widgets-empty-layer {
 background-image:none;
-}
+}*/
 #widgets-layer-visibility .widgets-this-layer {cursor:default;}
 #widgets-layer-visibility .widgets-other-layer.off, #widgets-layer-visibility .widgets-other-layer.off:hover {
 background-position:5px -17px;
