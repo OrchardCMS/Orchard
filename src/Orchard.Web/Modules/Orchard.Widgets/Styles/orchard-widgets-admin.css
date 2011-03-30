@@ -37,15 +37,19 @@ vertical-align:middle;
 margin-left:10px;
 }
 
-#widgets-zones, #widgets-available {
+#widgets-zones, #widgets-zones-orphans, #widgets-available {
 background:#F3F4F5;
 border:1px solid #E4E5E6;
 padding:5px;
 }
-#widgets-zones-orphans {
+#widgets-orphans {
+margin:20px 10px 10px;
+padding:5px;
+}
+#widgets-zones-orphans-container {
 margin-top:40px;
 }
-#widgets-zones-orphans p {
+#widgets-zones-orphans-container p {
 margin-bottom:10px;
 }
 /* The number seems slightly meaningless. Leaving it out for now. * /
@@ -53,10 +57,13 @@ margin-bottom:10px;
 list-style:decimal inside;
 }
 */
-#widgets-zones ol {
+.widgets-listed ol {
 
 }
-#widgets-zones li, #widgets-available li {
+#widgets-orphans ul {
+margin-top:10px;
+}
+.widgets-listed li, #widgets-available li {
 background:#FFF;
 color:#AEC3CE;
 border:1px solid #EAEAEA;
@@ -64,22 +71,25 @@ margin:0 0 5px;
 padding:0 10px;
 position:relative;
 }
+#widgets-orphans li {
+padding:5px 10px;
+}
 #widgets-available li {
 margin:5px 0;
 }
-#widgets-zones li.last {
+.widgets-listed li.last {
 margin:0;
 }
-#widgets-zones li:hover, #widgets-zones li.on {
+.widgets-listed li:hover, .widgets-listed li.on {
 border-color:#bfd3a7;
 }
 #widgets-available h2 {
 font-size:1.231em;
 }
-#widgets-zones h2, #widgets-zones li li, #widgets-layer-visibility li {
+.widgets-listed h2, .widgets-listed li li, #widgets-layer-visibility li {
 color:#333;
 }
-#widgets-zones li li, #widgets-layer-visibility li {
+.widgets-listed li li, #widgets-layer-visibility li {
 background:#F3F4F5;
 border:0;
 border-left:3px solid #EAEAEA;
@@ -89,32 +99,32 @@ padding:5px 100px 5px 25px;
 #widgets-layer-visibility li {
 margin:1px 0 0;
 }
-#widgets-zones li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer:hover {
+.widgets-listed li li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer, #widgets-layer-visibility li.widgets-this-layer:hover {
 border-color:#898989;
 }
-#widgets-zones li li.widgets-this-layer:hover, #widgets-layer-visibility li:hover {
+.widgets-listed li li.widgets-this-layer:hover, #widgets-layer-visibility li:hover {
 border-color:#bfd3a7;
 }
-#widgets-zones .widgets-mover {
+.widgets-listed .widgets-mover {
 margin-left:-18px;
 vertical-align:-2px;
 }
-#widgets-zones .widgets-actions {
+.widgets-listed .widgets-actions {
 position:absolute;
 right:10px;
 top:5px;
 }
-#widgets-zones .widgets-zone-widgets li {
+.widgets-listed .widgets-zone-widgets li {
 position:relative;
 }
-#widgets-zones .widgets-zone-widgets .widgets-move-somewhere {
+.widgets-listed .widgets-zone-widgets .widgets-move-somewhere {
 left:3px;
 overflow:hidden;
 position:absolute;
 top:1px;
 width:20px;
 }
-#widgets-zones .widgets-move {
+.widgets-listed .widgets-move {
 background:url(images/arrows.png) 7px -31px no-repeat;
 border:0;
 webkit-border-radius:0;
@@ -130,21 +140,21 @@ padding:0;
 text-indent:-9999em;
 width:20px;
 }
-#widgets-zones .widgets-move-down {
+.widgets-listed .widgets-move-down {
 background-position:7px -58px;
 margin-top:1px;
 }
-#widgets-zones .widgets-move-up:hover {
+.widgets-listed .widgets-move-up:hover {
 background-position:7px -71px;
 }
-#widgets-zones .widgets-move-down:hover {
+.widgets-listed .widgets-move-down:hover {
 background-position:7px -98px;
 }
-#widgets-zones .widgets-move-up[disabled] {
+.widgets-listed .widgets-move-up[disabled] {
 background-position:7px 9px;
 cursor:default;
 }
-#widgets-zones .widgets-move-down[disabled] {
+.widgets-listed .widgets-move-down[disabled] {
 background-position:7px -18px;
 cursor:default;
 }
@@ -183,6 +193,9 @@ background-image:url(images/eye.png);
 background-position:5px 11px;
 background-repeat:no-repeat;
 cursor:pointer;
+}
+#widgets-layer-visibility .widgets-this-layer.widgets-empty-layer {
+background-image:none;
 }
 #widgets-layer-visibility .widgets-this-layer {cursor:default;}
 #widgets-layer-visibility .widgets-other-layer.off, #widgets-layer-visibility .widgets-other-layer.off:hover {

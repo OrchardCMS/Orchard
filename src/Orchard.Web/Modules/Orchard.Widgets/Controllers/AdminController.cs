@@ -80,6 +80,7 @@ namespace Orchard.Widgets.Controllers {
                 .Widgets(_widgetsService.GetWidgets())
                 .Zones(currentThemesZones)
                 .OrphanZones(allZones.Except(currentThemesZones))
+                .OrphanWidgets(_widgetsService.GetOrphanedWidgets())
                 .ZonePreviewImage(zonePreviewImage);
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
