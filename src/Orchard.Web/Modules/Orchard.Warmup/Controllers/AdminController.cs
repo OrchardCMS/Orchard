@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Contents.Controllers;
-using Orchard.Environment.Warmup;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Security;
@@ -16,16 +11,15 @@ using Orchard.UI.Notify;
 using Orchard.Warmup.Services;
 
 namespace Orchard.Warmup.Controllers {
+    [ValidateInput(false)]
     public  class AdminController : Controller, IUpdateModel {
         private readonly IWarmupScheduler _warmupScheduler;
-        private readonly IAppDataFolder _appDataFolder;
 
         public AdminController(
             IOrchardServices services, 
             IWarmupScheduler warmupScheduler,
             IAppDataFolder appDataFolder) {
             _warmupScheduler = warmupScheduler;
-            _appDataFolder = appDataFolder;
             Services = services;
 
             T = NullLocalizer.Instance;

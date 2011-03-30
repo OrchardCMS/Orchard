@@ -4,7 +4,7 @@ using System.Web;
 using Autofac;
 using Orchard.Environment;
 
-namespace Orchard.Startup {
+namespace Orchard.WarmupStarter {
     public class Starter {
         private static IOrchardHost _host;
         private static Exception _error;
