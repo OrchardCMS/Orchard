@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.Setup.Services;
@@ -32,11 +33,15 @@ namespace Orchard.Setup.Commands {
         [OrchardSwitch]
         public string EnabledFeatures { get; set; }
 
+        [OrchardSwitch]
+        public string Recipe { get; set; }
+
         [CommandHelp("setup /SiteName:<siteName> /AdminUsername:<username> /AdminPassword:<password> /DatabaseProvider:<SqlCe|SQLServer> " + 
-            "/DatabaseConnectionString:<connection_string> /DatabaseTablePrefix:<table_prefix> /EnabledFeatures:<feature1,feature2,...>" +
+            "/DatabaseConnectionString:<connection_string> /DatabaseTablePrefix:<table_prefix> /EnabledFeatures:<feature1,feature2,...> " +
+            "/Recipe:<recipe>" + 
             "\r\n\tRun first time setup for the site or for a given tenant")]
         [CommandName("setup")]
-        [OrchardSwitches("SiteName,AdminUsername,AdminPassword,DatabaseProvider,DatabaseConnectionString,DatabaseTablePrefix,EnabledFeatures")]
+        [OrchardSwitches("SiteName,AdminUsername,AdminPassword,DatabaseProvider,DatabaseConnectionString,DatabaseTablePrefix,EnabledFeatures,Recipe")]
         public void Setup() {
             IEnumerable<string> enabledFeatures = null;
             if (!string.IsNullOrEmpty(this.EnabledFeatures)) {
@@ -45,23 +50,26 @@ namespace Orchard.Setup.Commands {
                     .Select(s => s.Trim())
                     .Where(s => !string.IsNullOrEmpty(s));
             }
+            Recipe = String.IsNullOrEmpty(Recipe) ? "Default" : Recipe;
 
             var setupContext = new SetupContext {
-                SiteName = this.SiteName,
-                AdminUsername = this.AdminUsername,
-                AdminPassword = this.AdminPassword,
-                DatabaseProvider = this.DatabaseProvider,
-                DatabaseConnectionString = this.DatabaseConnectionString,
-                DatabaseTablePrefix = this.DatabaseTablePrefix,
-                EnabledFeatures = enabledFeatures
+                SiteName = SiteName,
+                AdminUsername = AdminUsername,
+                AdminPassword = AdminPassword,
+                DatabaseProvider = DatabaseProvider,
+                DatabaseConnectionString = DatabaseConnectionString,
+                DatabaseTablePrefix = DatabaseTablePrefix,
+                EnabledFeatures = enabledFeatures,
+                Recipe = Recipe,
             };
 
             _setupService.Setup(setupContext);
 
-            Context.Output.WriteLine(T("Site \"{0}\" sucessfully setup to run data provider \"{1}\" (with table prefix \"{2}\").",
+            Context.Output.WriteLine(T("Site \"{0}\" successfully setup to run data provider \"{1}\" (with table prefix \"{2}\") and configured by recipe \"{3}\"",
                 setupContext.SiteName,
                 setupContext.DatabaseProvider,
-                setupContext.DatabaseTablePrefix));
+                setupContext.DatabaseTablePrefix,
+                setupContext.Recipe));
         }
     }
 }
