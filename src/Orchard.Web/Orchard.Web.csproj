@@ -173,6 +173,39 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target> -->
+  <PropertyGroup>
+    <CopyAllFilesToSingleFolderForPackageDependsOn>    
+      CustomCollectFiles;    
+      $(CopyAllFilesToSingleFolderForPackageDependsOn);  
+    </CopyAllFilesToSingleFolderForPackageDependsOn>
+
+  </PropertyGroup>
+  <Target Name="CustomCollectFiles">
+     <ItemGroup>
+       <Orchard-Web-Bins Include="bin\*" />
+       <SqlCeBinariesx86 Include="..\..\lib\sqlce\x86\**\*" />
+       <SqlCeBinariesx64 Include="..\..\lib\sqlce\amd64\**\*" />  
+   
+      <_CustomFiles 
+        Include="Modules\**\*;Themes\**\*;Core\**\*;**\*.po" 
+        Exclude="**\obj\**;@(Orchard-Web-Bins -> '**\%(Filename)%(Extension)');**\*.csproj.user;**\*.hg*" 
+        />
+      <FilesForPackagingFromProject Include="%(_CustomFiles.Identity)">
+        <DestinationRelativePath>%(RelativeDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+      
+      <_SqlCeBinariesx86Files Include="@(SqlCeBinariesx86);" />
+      <FilesForPackagingFromProject Include="%(_SqlCeBinariesx86Files.Identity)">
+        <DestinationRelativePath>bin\x86\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+
+      <_SqlCeBinariesx64Files Include="@(SqlCeBinariesx64);" />
+      <FilesForPackagingFromProject Include="%(_SqlCeBinariesx64Files.Identity)">
+        <DestinationRelativePath>bin\amd64\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+
+    </ItemGroup>
+  </Target>
   <Target Name="CopySqlCeBinaries">
     <ItemGroup>
       <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\**\*" />
