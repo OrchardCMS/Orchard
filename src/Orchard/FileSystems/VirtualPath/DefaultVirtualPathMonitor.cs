@@ -30,7 +30,7 @@ namespace Orchard.FileSystems.VirtualPath {
                     && !HostingEnvironment.VirtualPathProvider.FileExists(virtualPath)) {
                     // if trying to monitor a directory or file inside a directory which doesn't exist
                     // monitor first existing parent directory
-                    new Token(virtualPath);
+                    return new Token(virtualPath);
                 }
 
                 BindSignal(virtualPath);

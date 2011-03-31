@@ -45,11 +45,13 @@ namespace Orchard.Warmup.Controllers {
             var warmupPart = Services.WorkContext.CurrentSite.As<WarmupSettingsPart>();
 
             if(TryUpdateModel(warmupPart)) {
-                using (var urlReader = new StringReader(warmupPart.Urls)) {
-                    string relativeUrl;
-                    while (null != (relativeUrl = urlReader.ReadLine())) {
-                        if(!Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative) || !(relativeUrl.StartsWith("/"))) {
-                            AddModelError("Urls", T("{0} is an invalid warmup url.", relativeUrl));
+                if (!String.IsNullOrEmpty(warmupPart.Urls)) {
+                    using (var urlReader = new StringReader(warmupPart.Urls)) {
+                        string relativeUrl;
+                        while (null != (relativeUrl = urlReader.ReadLine())) {
+                            if (!Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative) || !(relativeUrl.StartsWith("/"))) {
+                                AddModelError("Urls", T("{0} is an invalid warmup url.", relativeUrl));
+                            }
                         }
                     }
                 }
