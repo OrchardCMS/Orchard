@@ -84,10 +84,10 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                                 placement.ShapeType = value;
                                 break;
                             case "alternate":
-                                placement.Alternates = new[] {value};
+                                placement.Alternates = placement.Alternates.Concat(new[] { value });
                                 break;
                             case "wrapper":
-                                placement.Wrappers = new[] {value};
+                                placement.Wrappers = placement.Wrappers.Concat(new[] { value });
                                 break;
                             default:
                                 // ignore unknown properties
