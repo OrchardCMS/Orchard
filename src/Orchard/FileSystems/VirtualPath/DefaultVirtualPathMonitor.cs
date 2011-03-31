@@ -25,6 +25,14 @@ namespace Orchard.FileSystems.VirtualPath {
         public IVolatileToken WhenPathChanges(string virtualPath) {
             try {
                 var token = BindToken(virtualPath);
+
+                if (!HostingEnvironment.VirtualPathProvider.DirectoryExists(virtualPath)
+                    && !HostingEnvironment.VirtualPathProvider.FileExists(virtualPath)) {
+                    // if trying to monitor a directory or file inside a directory which doesn't exist
+                    // monitor first existing parent directory
+                    new Token(virtualPath);
+                }
+
                 BindSignal(virtualPath);
                 return token;
             }
@@ -73,10 +81,6 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         private void BindSignal(string virtualPath, CacheItemRemovedCallback callback) {
-            if(!HostingEnvironment.VirtualPathProvider.DirectoryExists(virtualPath)) {
-                return;
-            }
-
             var cacheDependency = HostingEnvironment.VirtualPathProvider.GetCacheDependency(
                 virtualPath,
                 new[] { virtualPath },
