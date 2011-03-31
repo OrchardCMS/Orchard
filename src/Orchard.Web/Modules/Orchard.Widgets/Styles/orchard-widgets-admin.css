@@ -107,7 +107,7 @@ background-color:#e6f1c9;
 /*#widgets-layer-visibility li.widgets-this-layer:hover {
 border-color:#487328;
 }*/
-.widgets-listed li li.widgets-this-layer:hover, #widgets-layer-visibility li:hover {
+.widgets-listed li li.widgets-this-layer:hover, #widgets-layer-visibility li:hover, #widgets-layer-visibility li.on {
 /*border-color:#bfd3a7;*/
 border-color:#487328;
 }
