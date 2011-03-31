@@ -259,13 +259,13 @@ namespace Orchard.Widgets.Controllers {
             } catch (Exception exception) {
                 this.Error(exception, T("Editing layer failed: {0}", exception.Message), Logger, Services.Notifier);
 
-                return RedirectToAction("Index", "Admin", new { id });
+                return RedirectToAction("Index", "Admin");
             }
         }
 
         [HttpPost, ActionName("EditLayer")]
         [FormValueRequired("submit.Save")]
-        public ActionResult EditLayerSavePOST(int id) {
+        public ActionResult EditLayerSavePOST(int id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -287,12 +287,12 @@ namespace Orchard.Widgets.Controllers {
                 this.Error(exception, T("Editing layer failed: {0}", exception.Message), Logger, Services.Notifier);
             }
 
-            return RedirectToAction("Index");
+            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
         }
 
         [HttpPost, ActionName("EditLayer")]
         [FormValueRequired("submit.Delete")]
-        public ActionResult EditLayerDeletePOST(int id, string returnUrl) {
+        public ActionResult EditLayerDeletePOST(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -303,7 +303,7 @@ namespace Orchard.Widgets.Controllers {
                 this.Error(exception, T("Removing Layer failed: {0}", exception.Message), Logger, Services.Notifier);
             }
 
-            return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
+            return RedirectToAction("Index", "Admin");
         }
 
         public ActionResult EditWidget(int id) {
@@ -325,8 +325,8 @@ namespace Orchard.Widgets.Controllers {
             catch (Exception exception) {
                 this.Error(exception, T("Editing widget failed: {0}", exception.Message), Logger, Services.Notifier);
 
-                if (widgetPart != null)
-                    return RedirectToAction("Index", "Admin", new { id = widgetPart.LayerPart.Id });
+                if (widgetPart != null && widgetPart.LayerPart != null)
+                    return RedirectToAction("Index", "Admin", new { layerId = widgetPart.LayerPart.Id });
 
                 return RedirectToAction("Index");
             }
