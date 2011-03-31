@@ -12,10 +12,14 @@
     <ul>
         @foreach (WidgetPart widget in widgets) {
             <li class="@(widget == widgets.First() ? "first" : (widget == widgets.Last() ? "last" : ""))">
-                <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3>
-                <div class="widgets-actions">
-                    <button name="moveOut" value="@widget.Id" class="link" type="submit">@T("Remove")</button>
-                </div>
+                @using (Html.BeginFormAntiForgeryPost()) {
+                    <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3>
+                    <div class="widgets-actions">
+                        <button name="moveOut" class="link" type="submit" value="1">@T("Remove")</button>
+                    </div>
+                    @Html.Hidden("widgetId", widget.Id)
+                    @Html.Hidden("returnUrl", returnUrl)
+                }
             </li>
         }
     </ul>

@@ -88,20 +88,20 @@ namespace Orchard.Widgets.Controllers {
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexWidgetPOST(int? layerId, int? moveUp, int? moveDown, int? moveHere, int? moveOut, string returnUrl) {
-            if (moveOut.HasValue)
-                return DeleteWidget(moveOut.Value, returnUrl);
+        public ActionResult IndexWidgetPOST(int widgetId, string returnUrl, int? layerId, string moveUp, string moveDown, string moveHere, string moveOut) {
+            if (!string.IsNullOrWhiteSpace(moveOut))
+                return DeleteWidget(widgetId, returnUrl);
 
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
             try {
-                if (moveUp.HasValue)
-                    _widgetsService.MoveWidgetUp(moveUp.Value);
-                if (moveDown.HasValue)
-                    _widgetsService.MoveWidgetDown(moveDown.Value);
-                if (moveHere.HasValue)
-                    _widgetsService.MoveWidgetToLayer(moveHere.Value, layerId);
+                if (!string.IsNullOrWhiteSpace(moveUp))
+                    _widgetsService.MoveWidgetUp(widgetId);
+                else if (!string.IsNullOrWhiteSpace(moveDown))
+                    _widgetsService.MoveWidgetDown(widgetId);
+                else if (!string.IsNullOrWhiteSpace(moveHere))
+                    _widgetsService.MoveWidgetToLayer(widgetId, layerId);
             }
             catch (Exception exception) {
                 this.Error(exception, T("Moving widget failed: {0}", exception.Message), Logger, Services.Notifier);
