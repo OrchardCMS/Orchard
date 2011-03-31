@@ -11,3 +11,7 @@ button, .button, .button:link, .button:visited {
 .button {
     line-height:inherit;
 }
+
+.group {
+zoom:1;
+}
