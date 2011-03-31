@@ -106,7 +106,7 @@ background-color:#e6f1c9;
 /*#widgets-layer-visibility li.widgets-this-layer:hover {
 border-color:#487328;
 }*/
-.widgets-listed li li.widgets-this-layer:hover, #widgets-layer-visibility li:hover, #widgets-layer-visibility li.on {
+.widgets-listed li li.widgets-this-layer:hover, #widgets-layer-visibility li:hover {
 /*border-color:#bfd3a7;*/
 border-color:#487328;
 }
@@ -216,6 +216,18 @@ background-position:5px -17px;
 }
 
 /* begin: switchable tweaks for admin/widgets */
+.orchard-widgets .switch-for-switchable .summary-view {
+	background: url("images/widget-zones.gif") no-repeat left top;
+}
+.orchard-widgets .switch-for-switchable.summary-switched .summary-view {
+	background:url("images/widget-zones-on.gif") no-repeat left top;
+}
+.orchard-widgets .switch-for-switchable .detail-view {
+	background:url("images/all-zones.gif") no-repeat left top;
+}
+.orchard-widgets .switch-for-switchable.detail-switched .detail-view {
+	background:url("images/all-zones-on.gif") no-repeat left top;
+}
 #widgets-placement .switch-for-switchable {
 margin:-32px 10px -2px 0;
 }
