@@ -65,8 +65,21 @@ namespace Orchard.FileSystems.VirtualPath {
             try {
                 // Check if the path falls outside the root directory of the app
                 string directoryName = Path.GetDirectoryName(virtualPath);
-                if (CountOccurences(@"\", directoryName.Replace(@"\..", "")) < CountOccurences(@"..", directoryName)) {
-                    return false;
+
+                int level = 0;
+                int stringLength = directoryName.Count();
+
+                for(int i = 0 ; i < stringLength ; i++) {
+                    if (directoryName[i] == '\\') {
+                        if (i < (stringLength - 2) && directoryName[i + 1] == '.' && directoryName[i + 2] == '.') {
+                            level--;
+                            i += 2;
+                        } else level++;
+                    }
+
+                    if (level < 0) {
+                        return false;
+                    }
                 }
 
                 return FileExists(virtualPath);
@@ -82,10 +95,6 @@ namespace Orchard.FileSystems.VirtualPath {
 
         public virtual void CreateDirectory(string virtualPath) {
             Directory.CreateDirectory(MapPath(virtualPath));
-        }
-
-        private static int CountOccurences(string needle, string haystack) {
-            return (haystack.Length - haystack.Replace(needle, "").Length) / needle.Length;
         }
     }
 }
