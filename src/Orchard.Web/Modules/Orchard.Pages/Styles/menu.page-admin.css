@@ -5,11 +5,3 @@ background-image:url(images/menu.page.png) !important;
 .navicon-page:hover {
 background-position:0 -30px !important;
 }
-/* subnav */
-.section-new .subnavicon-page { 
-background-position:0 6px !important;
-padding-left:20px !important;
-}
-.section-new .subnavicon-page:hover {
-background-position:0 -26px !important;
-}
