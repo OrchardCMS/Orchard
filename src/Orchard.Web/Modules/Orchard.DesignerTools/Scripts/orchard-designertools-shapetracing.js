@@ -279,8 +279,9 @@
         // open the tree until the selected element
         $('li[tree-shape-id="' + shapeNode.id + '"]').parents('li').andSelf().find('> .expando-glyph-container').each(function () {
             openExpando($(this));
-        })
-        .get(0).scrollIntoView();
+        }).each(function () {
+            shapeTracingWindowTree.scrollTo(this, 0, { margin: true });
+        });
 
         refreshBreadcrumb();
 
@@ -305,7 +306,7 @@
         var element = $('[shape-id="' + shapeId + '"]').get(0);
         // there might be no DOM element if the shape was empty, or is not displayed
         if (element) {
-            element.scrollIntoView();
+            $(window).scrollTo(element, 500, {margin:true});
         }
 
         event.stopPropagation();
