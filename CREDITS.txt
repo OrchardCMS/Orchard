@@ -123,6 +123,12 @@ Website:      http://code.google.com/p/jquery-utils/
 Copyright:    Copyright (c) Maxime Haineault (http://haineault.com)
 License:      MIT
 
+jQuery ScrollTo
+-----
+Website:      http://flesler.blogspot.com
+Copyright:    Copyright (c) 2007-2009 Ariel Flesler
+License:      MIT
+
 Log4Net
 -----
 Website:      http://logging.apache.org/log4net/index.html
