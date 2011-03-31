@@ -203,7 +203,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                                           : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
 
                         // Attempt to reference the project / library file
-                        if (!currentSet.Contains(path) && _virtualPathProvider.FileExists(path)) {
+                        if (!string.IsNullOrEmpty(path) && !currentSet.Contains(path) && _virtualPathProvider.TryFileExists(path)) {
                             currentSet.Add(path);
 
                             // In case of project, also reference the source files
@@ -212,7 +212,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
                                 // Try to also reference any pre-built DLL
                                 DependencyDescriptor dependencyDescriptor = _dependenciesFolder.GetDescriptor(_virtualPathProvider.GetDirectoryName(referenceDescriptor.Path));
-                                if (dependencyDescriptor != null && _virtualPathProvider.FileExists(dependencyDescriptor.VirtualPath)) {
+                                if (dependencyDescriptor != null && _virtualPathProvider.TryFileExists(dependencyDescriptor.VirtualPath)) {
                                     currentSet.Add(dependencyDescriptor.VirtualPath);
                                 }
                             }
