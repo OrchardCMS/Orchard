@@ -73,6 +73,10 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         private void BindSignal(string virtualPath, CacheItemRemovedCallback callback) {
+            if(!HostingEnvironment.VirtualPathProvider.DirectoryExists(virtualPath)) {
+                return;
+            }
+
             var cacheDependency = HostingEnvironment.VirtualPathProvider.GetCacheDependency(
                 virtualPath,
                 new[] { virtualPath },
