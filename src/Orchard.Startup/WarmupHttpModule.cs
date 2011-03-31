@@ -6,7 +6,7 @@ using System.Threading;
 using System.Web;
 using System.Web.Hosting;
 
-namespace Orchard.Startup {
+namespace Orchard.WarmupStarter {
     public class WarmupHttpModule : IHttpModule {
         private const string WarmupFilesPath = "~/App_Data/Warmup/";
         private HttpApplication _context;

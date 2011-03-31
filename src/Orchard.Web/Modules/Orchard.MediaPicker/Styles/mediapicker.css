@@ -41,11 +41,7 @@ body {
     overflow-y:scroll;
     overflow-x:hidden;
     }
-
-/*input[disabled], input[disabled="disabled"], input.disabled {
-    color: #fff;
-}*/
-
+    
 .media-largepreview
 {
     width: 300px;

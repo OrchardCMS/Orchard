@@ -46,10 +46,23 @@ namespace Orchard.Widgets.Services {
                 .List();
         }
 
-        public IEnumerable<WidgetPart> GetWidgets() {
+        private IEnumerable<WidgetPart> GetAllWidgets() {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
                 .List();
+        }
+
+        public IEnumerable<WidgetPart> GetWidgets() {
+            return GetAllWidgets().Where(w => w.Has<ICommonPart>());
+        }
+
+        // info: (heskew) Just including invalid widgets for now. Eventually need to include any in a layer which no longer exists if possible.
+        public IEnumerable<WidgetPart> GetOrphanedWidgets() {
+            return GetAllWidgets().Where(w => !w.Has<ICommonPart>());
+        }
+
+        public IEnumerable<WidgetPart> GetWidgets(int layerId) {
+            return GetWidgets().Where(widgetPart => widgetPart.As<ICommonPart>().Container.ContentItem.Id == layerId);
         }
 
         public IEnumerable<string> GetZones() {
@@ -84,10 +97,6 @@ namespace Orchard.Widgets.Services {
             }
 
             return zones;
-        }
-
-        public IEnumerable<WidgetPart> GetWidgets(int layerId) {
-            return GetWidgets().Where(widgetPart => widgetPart.As<ICommonPart>().Container.ContentItem.Id == layerId);
         }
 
         public LayerPart GetLayer(int layerId) {

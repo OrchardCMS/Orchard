@@ -280,10 +280,7 @@
         $('li[tree-shape-id="' + shapeNode.id + '"]').parents('li').andSelf().find('> .expando-glyph-container').each(function () {
             openExpando($(this));
         })
-        .last()
-        .each(function () {
-            this.scrollIntoView()
-        });
+        .get(0).scrollIntoView();
 
         refreshBreadcrumb();
 

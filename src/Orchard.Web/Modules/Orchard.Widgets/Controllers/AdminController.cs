@@ -80,6 +80,7 @@ namespace Orchard.Widgets.Controllers {
                 .Widgets(_widgetsService.GetWidgets())
                 .Zones(currentThemesZones)
                 .OrphanZones(allZones.Except(currentThemesZones))
+                .OrphanWidgets(_widgetsService.GetOrphanedWidgets())
                 .ZonePreviewImage(zonePreviewImage);
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
@@ -236,7 +237,7 @@ namespace Orchard.Widgets.Controllers {
                 }
 
                 Services.Notifier.Information(T("Your {0} has been created.", layerPart.TypeDefinition.DisplayName));
-                return RedirectToAction("Index", "Admin", new { id = layerPart.Id });
+                return RedirectToAction("Index", "Admin", new { layerId = layerPart.Id });
             } catch (Exception exception) {
                 this.Error(exception, T("Creating layer failed: {0}", exception.Message), Logger, Services.Notifier);
                 return RedirectToAction("Index");
