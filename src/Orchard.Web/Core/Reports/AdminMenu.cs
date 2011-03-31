@@ -9,7 +9,7 @@ namespace Orchard.Core.Reports {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("reports")
-                .Add(T("Reports"), "50",
+                .Add(T("Reports"), "12",
                     menu => menu.Add(T("View"), "0", item => item.Action("Index", "Admin", new { area = "Reports" })
                         .Permission(StandardPermissions.AccessAdminPanel)));
         }

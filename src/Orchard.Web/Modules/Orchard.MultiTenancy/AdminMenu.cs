@@ -1,5 +1,4 @@
-﻿using Orchard.Environment;
-using Orchard.Environment.Configuration;
+﻿using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Navigation;
