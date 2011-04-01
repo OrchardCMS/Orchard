@@ -33,7 +33,10 @@ namespace Orchard.Azure.Environment.Configuration {
         void IShellSettingsManager.SaveSettings(ShellSettings settings) {
             var content = ComposeSettings(settings);
             var filePath = _fileSystem.Combine(settings.Name, SettingsFilename);
-            var file = _fileSystem.CreateFile(filePath);
+
+            var file = _fileSystem.FileExists(filePath) 
+                ? _fileSystem.GetFile(filePath)
+                : _fileSystem.CreateFile(filePath);
 
             using (var stream = file.OpenWrite()) {
                 using (var writer = new StreamWriter(stream)) {
