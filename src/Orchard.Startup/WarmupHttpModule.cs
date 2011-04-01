@@ -27,6 +27,10 @@ namespace Orchard.WarmupStarter {
 
         public static void Signal() {
             lock(typeof(WarmupHttpModule)) {
+                if (_awaiting == null) {
+                    return;
+                }
+
                 var awaiting = _awaiting;
                 _awaiting = null;
                 foreach (var action in awaiting) {
