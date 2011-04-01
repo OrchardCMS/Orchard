@@ -184,7 +184,7 @@
       <Orchard-Web-Bins Include="bin\*" />
       <SqlCeBinariesx86 Include="..\..\lib\sqlce\x86\**\*" />
       <SqlCeBinariesx64 Include="..\..\lib\sqlce\amd64\**\*" />
-      <_CustomFiles Include="Modules\**\*;Themes\**\*;Core\**\*;**\*.po" Exclude="**\obj\**;@(Orchard-Web-Bins -> '**\%(Filename)%(Extension)');**\*.csproj.user;**\*.hg*" />
+      <_CustomFiles Include="Media\**\*;App_Data\**\*;Modules\**\*;Themes\**\*;Core\**\*" Exclude="**\obj\**;@(Orchard-Web-Bins -> '**\%(Filename)%(Extension)');**\*.csproj.user;**\*.hg*" />
       <FilesForPackagingFromProject Include="%(_CustomFiles.Identity)">
         <DestinationRelativePath>%(RelativeDir)%(Filename)%(Extension)</DestinationRelativePath>
       </FilesForPackagingFromProject>
