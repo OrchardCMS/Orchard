@@ -7,7 +7,7 @@
 	
     string createLinkText = string.IsNullOrEmpty(Model.ContainerItemContentType) ? T("Create New Content").ToString() : T("Create New {0}", Model.ContainerItemContentType).ToString();
     
-    Layout.Title = T("Manage Content for {0}", Model.ContainerDisplayName);
+    Layout.Title = T("Manage {0}", Model.ContainerDisplayName);
 
     var lists = ((IEnumerable<ContentItem>)Model.OtherLists).Select(
         contentItem => new SelectListItem {
