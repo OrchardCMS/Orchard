@@ -203,6 +203,12 @@ form.link button:hover, button.link:hover {
     border-bottom:1px solid #1e5d7d;
 }
 
+/* Lists
+***************************************************************/
+
+ol.decimal {list-style:decimal inside; margin:12px 0;}
+ul.disc {list-style:disc inside; margin:12px 0;}
+
 /* Header - Branding and Login  
 ***************************************************************/
 #header {
@@ -826,7 +832,7 @@ button.link {
 
 
 /* (Items) Tables
-----------------------------------------------------------*/
+***************************************************************/
 table.items {
     margin:0 0 1.4em 0;
     background:#fff;
