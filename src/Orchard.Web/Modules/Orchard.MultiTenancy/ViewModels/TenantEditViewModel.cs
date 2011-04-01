@@ -6,7 +6,6 @@ namespace Orchard.MultiTenancy.ViewModels {
     public class TenantEditViewModel  {
         [Required]
         public string Name { get; set; }
-        [Required]
         public string RequestUrlHost { get; set; }
         public string RequestUrlPrefix { get; set; }
         public string DataProvider { get; set; }
