@@ -19,6 +19,9 @@ padding:2px 2px;
 }
 #widgets-layers-control {
 margin-bottom:-20px;
+}
+#widgets-layers-control form, #widgets-layer-add {
+display:inline;
 position:relative;
 }
 #widgets-layers-control label {

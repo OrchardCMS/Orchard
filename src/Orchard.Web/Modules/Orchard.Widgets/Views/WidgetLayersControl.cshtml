@@ -22,5 +22,7 @@
             </fieldset>
         }
     }
-    @Html.Link(T("Add a new layer...").Text, Url.Action("AddLayer", "Admin", new { area = "Orchard.Widgets", returnUrl }))
+    <div id="widgets-layer-add">
+        @Html.Link(T("Add a new layer...").Text, Url.Action("AddLayer", "Admin", new { area = "Orchard.Widgets", returnUrl }))
+    </div>
 </div>
