@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
@@ -28,17 +27,15 @@ namespace Orchard.DesignerTools.Services {
         }
 
         public XElement Dump(object o, string name) {
-            // prevent cyclic references
-            if (_parents.Contains(o)) {
-                return _node;
-            }
-
             if(_parents.Count >= _levels) {
                 return _node;
             }
 
             _parents.Push(o);
+            var tempNode = _node;
+
             try {
+                
                 // starts a new container
                 _node.Add(_node = new XElement("li"));
 
@@ -52,14 +49,15 @@ namespace Orchard.DesignerTools.Services {
                     DumpObject(o, name);
                 }
             }
-            finally { 
+            finally {
                 _parents.Pop(); 
             }
 
             if(_node.DescendantNodes().Count() == 0) {
                 _node.Remove();
             }
-            _node = _node.Parent;
+
+            _node = tempNode;
 
             return _node;
         }
@@ -113,36 +111,39 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
+            var tempNode = _node;
             _node.Add(_node = new XElement("ul"));
-            foreach (var member in members) {
-                if (o is ContentItem && member.Name == "ContentManager") {
-                    // ignore Content Manager explicitly
-                    continue;
-                }
 
-                try {
-                    DumpMember(o, member);
-                }
-                catch {
-                    // ignore members which can't be rendered
+            try{
+                foreach (var member in members) {
+                    if (o is ContentItem && member.Name == "ContentManager") {
+                        // ignore Content Manager explicitly
+                        continue;
+                    }
+                    SafeCall(() => DumpMember(o, member));
                 }
 
                 // process ContentItem.Parts specifically
-                if (o is ContentItem && member.Name == "Parts") {
-                    foreach (var part in ((ContentItem)o).Parts) {
-                        Dump(part, part.PartDefinition.Name);
+                foreach (var member in members) {
+                    if (o is ContentItem && member.Name == "Parts") {
+                        foreach (var part in ((ContentItem) o).Parts) {
+                            SafeCall(() => Dump(part, part.PartDefinition.Name));
+                        }
                     }
                 }
 
-                // process ContentPart.Fields specifically
-                if (o is ContentPart && member.Name == "Fields") {
-                    foreach (var field in ((ContentPart)o).Fields) {
-                        Dump(field, field.Name);
+                foreach (var member in members) {
+                    // process ContentPart.Fields specifically
+                    if (o is ContentPart && member.Name == "Fields") {
+                        foreach (var field in ((ContentPart) o).Fields) {
+                            SafeCall(() => Dump(field, field.Name));
+                        }
                     }
                 }
             }
-
-            _node = _node.Parent;
+            finally {
+                _node = tempNode;
+            }
         }
 
         private void DumpEnumerable(IEnumerable enumerable) {
@@ -150,24 +151,36 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
+            var tempNode = _node;
             _node.Add(_node = new XElement("ul"));
-            int i = 0;
-            foreach (var child in enumerable) {
-                Dump(child, string.Format("[{0}]", i++));
+
+            try {
+                int i = 0;
+                foreach (var child in enumerable) {
+                    Dump(child, string.Format("[{0}]", i++));
+                }
             }
-            
-            _node = _node.Parent;
+            finally {
+                _node = tempNode;
+            }
         }
 
         private void DumpDictionary(IDictionary dictionary) {
             if (dictionary.Keys.Count == 0) {
                 return;
             }
+
+            var tempNode = _node;
             _node.Add(_node = new XElement("ul"));
-            foreach (var key in dictionary.Keys) {
-                Dump(dictionary[key], string.Format("[\"{0}\"]", key));
+
+            try {
+                foreach (var key in dictionary.Keys) {
+                    Dump(dictionary[key], string.Format("[\"{0}\"]", key));
+                }
             }
-            _node = _node.Parent;
+            finally {
+                _node = tempNode;
+            }
         }
 
         private void DumpShape(IShape shape) {
@@ -193,15 +206,21 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
+            var tempNode = _node;
             _node.Add(_node = new XElement("ul"));
-            foreach (var key in props.Keys) {
-                // ignore private members (added dynmically by the shape wrapper)
-                if(key.ToString().StartsWith("_")) {
-                    continue;
+
+            try {
+                foreach (var key in props.Keys) {
+                    // ignore private members (added dynmically by the shape wrapper)
+                    if (key.ToString().StartsWith("_")) {
+                        continue;
+                    }
+                    Dump(props[key], key.ToString());
                 }
-                Dump(props[key], key.ToString());
             }
-            _node = _node.Parent;
+            finally {
+                _node = tempNode;
+            }
         }
 
         private void DumpMember(object o, MemberInfo member) {
@@ -254,6 +273,15 @@ namespace Orchard.DesignerTools.Services {
             }
 
             return type.Name;
+        }
+
+        private static void SafeCall(Action action) {
+            try {
+                action();
+            }
+            catch {
+                // ignore exceptions is safe call
+            }
         }
     }
 }
