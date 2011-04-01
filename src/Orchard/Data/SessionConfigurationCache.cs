@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using NHibernate.Cfg;
 using Orchard.Environment;
@@ -16,12 +17,14 @@ namespace Orchard.Data {
         private readonly ShellBlueprint _shellBlueprint;
         private readonly IAppDataFolder _appDataFolder;
         private readonly IHostEnvironment _hostEnvironment;
+        private ConfigurationCache _currentConfig;
 
         public SessionConfigurationCache(ShellSettings shellSettings, ShellBlueprint shellBlueprint, IAppDataFolder appDataFolder, IHostEnvironment hostEnvironment) {
             _shellSettings = shellSettings;
             _shellBlueprint = shellBlueprint;
             _appDataFolder = appDataFolder;
             _hostEnvironment = hostEnvironment;
+            _currentConfig = null;
 
             Logger = NullLogger.Instance;
         }
@@ -31,21 +34,27 @@ namespace Orchard.Data {
         public Configuration GetConfiguration(Func<Configuration> builder) {
             var hash = ComputeHash().Value;
 
-            // Return previous configuration if it exsists and has the same hash as
+            // if the current configuration is unchanged, return it
+            if(_currentConfig != null && _currentConfig.Hash == hash) {
+                return _currentConfig.Configuration;
+            }
+
+            // Return previous configuration if it exists and has the same hash as
             // the current blueprint.
             var previousConfig = ReadConfiguration(hash);
             if (previousConfig != null) {
+                _currentConfig = previousConfig;
                 return previousConfig.Configuration;
             }
 
             // Create cache and persist it
-            var cache = new ConfigurationCache {
+            _currentConfig = new ConfigurationCache {
                 Hash = hash,
                 Configuration = builder()
             };
 
-            StoreConfiguration(cache);
-            return cache.Configuration;
+            StoreConfiguration(_currentConfig);
+            return _currentConfig.Configuration;
         }
 
         private class ConfigurationCache {
@@ -66,11 +75,11 @@ namespace Orchard.Data {
                     formatter.Serialize(stream, cache.Configuration);
                 }
             }
-            catch (Exception e) {
+            catch (SerializationException e) {
                 //Note: This can happen when multiple processes/AppDomains try to save
                 //      the cached configuration at the same time. Only one concurrent
                 //      writer will win, and it's harmless for the other ones to fail.
-                for (var scan = e; scan != null; scan = scan.InnerException)
+                for (Exception scan = e; scan != null; scan = scan.InnerException)
                     Logger.Warning("Error storing new NHibernate cache configuration: {0}", scan.Message);
             }
         }
@@ -87,6 +96,11 @@ namespace Orchard.Data {
             try {
                 var formatter = new BinaryFormatter();
                 using (var stream = _appDataFolder.OpenFile(pathName)) {
+
+                    // if the stream is empty, stop here
+                    if(stream.Length == 0) {
+                        return null;
+                    }
 
                     var oldHash = (string)formatter.Deserialize(stream);
                     if (hash != oldHash) {

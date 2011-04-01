@@ -74,7 +74,7 @@ namespace Orchard.Data.Migration {
 
             var migrations = GetDataMigrations(feature);
 
-            // apply update methods to each migration class for the module))))
+            // apply update methods to each migration class for the module
             foreach ( var migration in migrations ) {
                 // copy the objet for the Linq query
                 var tempMigration = migration;
