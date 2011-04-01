@@ -84,10 +84,10 @@ namespace Orchard.WarmupStarter {
             // use the url as it was requested by the client
             // the real url might be different if it has been translated (proxy, load balancing, ...)
             var url = ToUrlString(_context.Request);
-            var virtualFileCopy = WarmupFilesPath + EncodeUrl(url.Trim('/'));
-            var localCopy = HostingEnvironment.MapPath(virtualFileCopy);
+            var virtualFileCopy = EncodeUrl(url.Trim('/'));
+            var localCopy = Path.Combine(HostingEnvironment.MapPath(WarmupFilesPath), virtualFileCopy);
 
-            if (localCopy != null && File.Exists(localCopy)) {
+            if (File.Exists(localCopy)) {
                 // result should not be cached, even on proxies
                 _context.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
                 _context.Response.Cache.SetValidUntilExpires(false);
