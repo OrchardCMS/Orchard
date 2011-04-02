@@ -48,10 +48,6 @@ namespace Orchard.DesignerTools.Services {
                 }
             }
             finally {
-                //if(_node.DescendantNodes().Count() == 0) {
-                //    _node.Remove();
-                //}
-
                 _parents.Pop(); 
                 RestoreCurrentNode();
             }
@@ -112,8 +108,8 @@ namespace Orchard.DesignerTools.Services {
 
             try{
                 foreach (var member in members) {
-                    if (o is ContentItem && member.Name == "ContentManager") {
-                        // ignore Content Manager explicitly
+                    if (o is ContentItem && member.Name == "ContentManager"
+                        || o is Delegate) {
                         continue;
                     }
                     SafeCall(() => DumpMember(o, member));
@@ -217,7 +213,7 @@ namespace Orchard.DesignerTools.Services {
         }
 
         private void DumpMember(object o, MemberInfo member) {
-            if (member is MethodInfo || member is ConstructorInfo || member is EventInfo)
+            if (member is MethodBase || member is EventInfo)
                 return;
 
             if (member is FieldInfo) {
@@ -282,6 +278,10 @@ namespace Orchard.DesignerTools.Services {
         }
 
         private void RestoreCurrentNode() {
+            if (_current.DescendantNodes().Count() == 0) {
+                _current.Remove();
+            }
+            
             _current = _currents.Pop();
         }
 

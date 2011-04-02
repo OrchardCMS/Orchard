@@ -1,4 +1,4 @@
-﻿jQuery(function($) {
+﻿jQuery(function ($) {
     // default shape window height when first opened
     var defaultHeight = 200;
 
@@ -189,7 +189,7 @@
 
     // add the expand/collapse logic to the shapes tree
     var glyph = $('<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>');
-    shapeTracingWindowTree.find('div').parent(':has(li)').prepend(glyph);
+    shapeTracingWindowTree.find('li:has(ul:has(li))').prepend(glyph);
 
     // collapse all sub uls
     shapeTracingWindowTree.find('ul ul').toggle(false);
@@ -306,7 +306,7 @@
         var element = $('[shape-id="' + shapeId + '"]').get(0);
         // there might be no DOM element if the shape was empty, or is not displayed
         if (element) {
-            $(window).scrollTo(element, 500, {margin:true});
+            $(window).scrollTo(element, 500, { margin: true });
         }
 
         event.stopPropagation();
@@ -316,8 +316,7 @@
     $("[shape-id-meta]").detach().prependTo(shapeTracingWindowContent);
 
     // add the expand/collapse logic to the shape model
-    // var glyph = $('<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>');
-    shapeTracingWindowContent.find('li:has(ul)').prepend(glyph);
+    shapeTracingWindowContent.find('li:has(ul:has(li))').prepend(glyph);
 
     // collapse all sub uls
     shapeTracingWindowContent.find('ul ul').toggle(false);

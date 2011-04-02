@@ -20,7 +20,7 @@ namespace Orchard.DesignerTools.Services {
         private readonly IThemeManager _themeManager;
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IAuthorizer _authorizer;
-        private int shapeId = 0;
+        private int _shapeId;
 
         public ShapeTracingFactory(
             WorkContext workContext, 
@@ -124,7 +124,8 @@ namespace Orchard.DesignerTools.Services {
             }
 
             try {
-                if (_webSiteFolder.FileExists(shape.Template)) {
+                // we know that templates are classes if they contain ':'
+                if (!shape.Template.Contains(":") && _webSiteFolder.FileExists(shape.Template)) {
                     shape.TemplateContent = _webSiteFolder.ReadFile(shape.Template);
                 }
             }
@@ -141,7 +142,7 @@ namespace Orchard.DesignerTools.Services {
                 shape.Hint = ((Zone) shape).ZoneName;
             }
 
-            shape.ShapeId = shapeId++;
+            shape.ShapeId = _shapeId++;
         }
 
 
