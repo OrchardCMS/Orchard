@@ -143,6 +143,8 @@ h4 img, h5 img, h6 img {
 
 strong {font-weight:600;}
 .smallText {font-size:1em; line-height:1.4em;}
+
+hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
     
 #header, #footer {
     width:100%;
@@ -1026,8 +1028,8 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
 .checkbox-and-label {
     white-space:nowrap;
 }
-/* Settings */
-.orchard-media fieldset div, .settings fieldset div, .settings .button {
+/* Settings and Import/Export */
+.orchard-media fieldset div, .settings fieldset div, .settings .button, .orchard-importexport fieldset div {
     margin:.5em 0;
 }
 .settings legend {
