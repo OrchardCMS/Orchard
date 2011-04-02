@@ -74,7 +74,7 @@
         </div>
             
         <div class="model grid-display" style="display:none">
-            @(new MvcHtmlString(@Model.Dump))
+            @(new MvcHtmlString((string)@Model.Dump))
         </div>
 
         <div class="placement" style="display:none">

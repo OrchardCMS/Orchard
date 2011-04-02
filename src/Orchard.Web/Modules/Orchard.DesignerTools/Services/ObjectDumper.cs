@@ -15,30 +15,28 @@ namespace Orchard.DesignerTools.Services {
         private const int MaxStringLength = 60;
 
         private readonly Stack<object> _parents = new Stack<object>();
+        private readonly Stack<XElement> _currents = new Stack<XElement>();
         private readonly int _levels;
 
         private readonly XDocument _xdoc;
-        private XElement _node;
+        private XElement _current;
         
         public ObjectDumper(int levels) {
             _levels = levels;
             _xdoc = new XDocument();
-            _xdoc.Add(_node = new XElement("ul"));
+            _xdoc.Add(_current = new XElement("ul"));
         }
 
         public XElement Dump(object o, string name) {
             if(_parents.Count >= _levels) {
-                return _node;
+                return _current;
             }
 
             _parents.Push(o);
-            var tempNode = _node;
+            // starts a new container
+            EnterNode("li");
 
             try {
-                
-                // starts a new container
-                _node.Add(_node = new XElement("li"));
-
                 if (o == null) {
                     DumpValue(null, name);
                 }
@@ -50,28 +48,27 @@ namespace Orchard.DesignerTools.Services {
                 }
             }
             finally {
+                //if(_node.DescendantNodes().Count() == 0) {
+                //    _node.Remove();
+                //}
+
                 _parents.Pop(); 
+                RestoreCurrentNode();
             }
 
-            if(_node.DescendantNodes().Count() == 0) {
-                _node.Remove();
-            }
-
-            _node = tempNode;
-
-            return _node;
+            return _current;
         }
 
         private void DumpValue(object o, string name) {
             string formatted = FormatValue(o);
-            _node.Add(
+            _current.Add(
                 new XElement("div", new XAttribute("class", "name"), name),
                 new XElement("div", new XAttribute("class", "value"), formatted)
             );
         }
 
         private void DumpObject(object o, string name) {
-            _node.Add(
+            _current.Add(
                 new XElement("div", new XAttribute("class", "name"), name),
                 new XElement("div", new XAttribute("class", "type"), FormatType(o))
             );
@@ -111,8 +108,7 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
-            var tempNode = _node;
-            _node.Add(_node = new XElement("ul"));
+            EnterNode("ul");
 
             try{
                 foreach (var member in members) {
@@ -142,7 +138,7 @@ namespace Orchard.DesignerTools.Services {
                 }
             }
             finally {
-                _node = tempNode;
+                RestoreCurrentNode();
             }
         }
 
@@ -151,8 +147,7 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
-            var tempNode = _node;
-            _node.Add(_node = new XElement("ul"));
+            EnterNode("ul");
 
             try {
                 int i = 0;
@@ -161,7 +156,7 @@ namespace Orchard.DesignerTools.Services {
                 }
             }
             finally {
-                _node = tempNode;
+               RestoreCurrentNode();
             }
         }
 
@@ -170,8 +165,7 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
-            var tempNode = _node;
-            _node.Add(_node = new XElement("ul"));
+            EnterNode("ul");
 
             try {
                 foreach (var key in dictionary.Keys) {
@@ -179,7 +173,7 @@ namespace Orchard.DesignerTools.Services {
                 }
             }
             finally {
-                _node = tempNode;
+                RestoreCurrentNode();
             }
         }
 
@@ -206,8 +200,7 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
-            var tempNode = _node;
-            _node.Add(_node = new XElement("ul"));
+            EnterNode("ul");
 
             try {
                 foreach (var key in props.Keys) {
@@ -219,7 +212,7 @@ namespace Orchard.DesignerTools.Services {
                 }
             }
             finally {
-                _node = tempNode;
+                RestoreCurrentNode();
             }
         }
 
@@ -282,6 +275,19 @@ namespace Orchard.DesignerTools.Services {
             catch {
                 // ignore exceptions is safe call
             }
+        }
+
+        private void SaveCurrentNode() {
+            _currents.Push(_current);
+        }
+
+        private void RestoreCurrentNode() {
+            _current = _currents.Pop();
+        }
+
+        private void EnterNode(string tag) {
+            SaveCurrentNode();
+            _current.Add(_current = new XElement(tag));
         }
     }
 }
