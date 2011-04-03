@@ -212,10 +212,23 @@ namespace Orchard.Media.Services {
         /// <summary>
         /// Verifies if a file is allowed based on its name and the policies defined by the black / white lists.
         /// </summary>
+        /// <param name="postedFile">The posted file</param>
+        /// <returns>True if the file is allowed; false if otherwise.</returns>
+        public bool FileAllowed(HttpPostedFileBase postedFile) {
+            if (postedFile == null) {
+                return false;
+            }
+
+            return FileAllowed(postedFile.FileName, true);
+        }
+
+        /// <summary>
+        /// Verifies if a file is allowed based on its name and the policies defined by the black / white lists.
+        /// </summary>
         /// <param name="fileName">The file name of the file to validate.</param>
         /// <param name="allowZip">Boolean value indicating weather zip files are allowed.</param>
         /// <returns>True if the file is allowed; false if otherwise.</returns>
-        protected bool FileAllowed(string fileName, bool allowZip) {
+        public bool FileAllowed(string fileName, bool allowZip) {
             string localFileName = GetFileName(fileName);
             string extension = GetExtension(localFileName);
             if (string.IsNullOrEmpty(localFileName) || string.IsNullOrEmpty(extension)) {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
@@ -92,5 +93,20 @@ namespace Orchard.Media.Services {
         /// <param name="extractZip">Boolean value indicating weather zip files should be extracted.</param>
         /// <returns>The path to the uploaded file.</returns>
         string UploadMediaFile(string folderPath, string fileName, Stream inputStream, bool extractZip);
+
+        /// <summary>
+        /// Verifies if a file is allowed based on its name and the policies defined by the black / white lists.
+        /// </summary>
+        /// <param name="postedFile">The posted file</param>
+        /// <returns>True if the file is allowed; false if otherwise.</returns>
+        bool FileAllowed(HttpPostedFileBase postedFile);
+
+        /// <summary>
+        /// Verifies if a file is allowed based on its name and the policies defined by the black / white lists.
+        /// </summary>
+        /// <param name="fileName">The file name of the file to validate.</param>
+        /// <param name="allowZip">Boolean value indicating weather zip files are allowed.</param>
+        /// <returns>True if the file is allowed; false if otherwise.</returns>
+        bool FileAllowed(string fileName, bool allowZip);
     }
 }
