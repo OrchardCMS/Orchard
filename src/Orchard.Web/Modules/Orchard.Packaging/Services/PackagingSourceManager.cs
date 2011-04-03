@@ -8,6 +8,9 @@ using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
+    /// <summary>
+    /// Responsible for managing package sources and getting the list of packages from it.
+    /// </summary>
     [OrchardFeature("PackagingServices")]
     public class PackagingSourceManager : IPackagingSourceManager {
         public static string GetExtensionPrefix(string extensionType) {
@@ -25,15 +28,32 @@ namespace Orchard.Packaging.Services {
 
         #region IPackagingSourceManager Members
 
+        /// <summary>
+        /// Gets the different feed sources.
+        /// </summary>
+        /// <returns>The feeds.</returns>
         public IEnumerable<PackagingSource> GetSources() {
             return _packagingSourceRecordRepository.Table.ToList();
         }
 
-        public void AddSource(string feedTitle, string feedUrl) {
-            var packagingSource = new PackagingSource {FeedTitle = feedTitle, FeedUrl = feedUrl};
+        /// <summary>
+        /// Adds a new feed sources.
+        /// </summary>
+        /// <param name="feedTitle">The feed title.</param>
+        /// <param name="feedUrl">The feed url.</param>
+        /// <returns>The feed identifier.</returns>
+        public int AddSource(string feedTitle, string feedUrl) {
+            PackagingSource packagingSource = new PackagingSource { FeedTitle = feedTitle, FeedUrl = feedUrl };
+
             _packagingSourceRecordRepository.Create(packagingSource);
+
+            return packagingSource.Id;
         }
 
+        /// <summary>
+        /// Removes a feed source.
+        /// </summary>
+        /// <param name="id">The feed identifier.</param>
         public void RemoveSource(int id) {
             var packagingSource = _packagingSourceRecordRepository.Get(id);
             if(packagingSource != null) {
@@ -41,6 +61,12 @@ namespace Orchard.Packaging.Services {
             }
         }
 
+        /// <summary>
+        /// Retrieves the list of extensions from a feed source.
+        /// </summary>
+        /// <param name="packagingSource">The packaging source from where to get the extensions.</param>
+        /// <param name="query">The optional query to retrieve the extensions.</param>
+        /// <returns>The list of extensions.</returns>
         public IEnumerable<PackagingEntry> GetExtensionList(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
             return (packagingSource == null ? GetSources() : new[] {packagingSource})
                 .SelectMany(
@@ -64,6 +90,12 @@ namespace Orchard.Packaging.Services {
                 );
         }
 
+        /// <summary>
+        /// Retrieves the number of extensions from a feed source.
+        /// </summary>
+        /// <param name="packagingSource">The packaging source from where to get the extensions.</param>
+        /// <param name="query">The optional query to retrieve the extensions.</param>
+        /// <returns>The number of extensions from a feed source.</returns>
         public int GetExtensionCount(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
             return (packagingSource == null ? GetSources() : new[] { packagingSource })
                 .Sum( source => {
@@ -78,6 +110,8 @@ namespace Orchard.Packaging.Services {
                     }
                 );
         }
+
+        #endregion
 
         private static PackagingEntry CreatePackageEntry(PublishedPackage package, PublishedScreenshot screenshot, PackagingSource source, Uri downloadUri) {
             Uri baseUri = new Uri(string.Format("{0}://{1}:{2}/",
@@ -109,10 +143,8 @@ namespace Orchard.Packaging.Services {
 
         protected static string GetAbsoluteUri(string url, Uri baseUri) {
             Uri uri = null;
-            if (!string.IsNullOrEmpty(url))
-            {
-                if (!Uri.TryCreate(url, UriKind.Absolute, out uri))
-                {
+            if (!string.IsNullOrEmpty(url)) {
+                if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
                     Uri.TryCreate(baseUri,
                         url,
                         out uri);
@@ -121,7 +153,5 @@ namespace Orchard.Packaging.Services {
 
             return uri != null ? uri.ToString() : string.Empty;
         }
-
-        #endregion
     }
 }

@@ -183,7 +183,6 @@ namespace Orchard.Packaging.Services {
             context.Builder.Files.Add(file);
         }
 
-
         private static void EndPackage(CreateContext context) {
             context.Builder.Save(context.Stream);
         }
@@ -202,7 +201,6 @@ namespace Orchard.Packaging.Services {
         }
 
         #endregion
-
 
         #region Nested type: CreateContext
 
@@ -229,6 +227,5 @@ namespace Orchard.Packaging.Services {
         }
 
         #endregion
-
     }
 }

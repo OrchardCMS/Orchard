@@ -54,6 +54,7 @@ namespace Orchard.Tests.Modules.Indexing {
             if (Directory.Exists(_basePath)) {
                 Directory.Delete(_basePath, true);
             }
+
             Directory.CreateDirectory(_basePath);
             _contentDefinitionManager = new Mock<IContentDefinitionManager>();
             _appDataFolder = AppDataFolderTests.CreateAppDataFolder(_basePath);
@@ -227,6 +228,7 @@ namespace Orchard.Tests.Modules.Indexing {
         }
 
         #region Stubs
+
         public class ThingHandler : ContentHandler {
             public ThingHandler() {
                 Filters.Add(new ActivatingFilter<Thing>(ThingDriver.ContentTypeName));
@@ -278,6 +280,7 @@ namespace Orchard.Tests.Modules.Indexing {
                 });
             }
         }
+
         #endregion
     }
 }

@@ -118,7 +118,7 @@ Features:
                 return Enumerable.Empty<PackagingSource>();
             }
 
-            public void AddSource(string feedTitle, string feedUrl) {
+            public int AddSource(string feedTitle, string feedUrl) {
                 throw new NotImplementedException();
             }
 
