@@ -77,7 +77,7 @@ namespace Orchard.ContentTypes.Controllers {
         }
 
         public ActionResult ContentTypeName(string displayName) {
-            return Json(_contentDefinitionService.GenerateName(displayName));
+            return Json(_contentDefinitionService.GenerateContentTypeNameFromDisplayName(displayName));
         }
 
         public ActionResult Edit(string id) {
