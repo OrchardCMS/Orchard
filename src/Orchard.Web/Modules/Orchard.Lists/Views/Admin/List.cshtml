@@ -26,6 +26,8 @@
 @Display.Parts_Container_Manage(ContainerDisplayName: Model.ContainerDisplayName, ContainerContentType: Model.ContainerContentType, ContainerId: containerId)
 <div class="manage">
     @Html.ActionLink(createLinkText, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter, ContainerId = containerId, ReturnUrl = Url.Action("List", "Admin", new { Area = "Orchard.Lists", ContainerId = containerId }) }, new { @class = "button primaryAction" })
+
+    @Html.ActionLink(T("Choose Items").ToString(), "Choose", new { TargetContainerId = (int)Model.ContainerId, Area = "Orchard.Lists" }, new { @class = "button primaryAction" })
 </div>
 
 @using (Html.BeginFormAntiForgeryPost()) {
@@ -58,13 +60,15 @@
         </select>
         <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
     </fieldset>
-    <fieldset class="contentItems bulk-items">
-	@if ((int)Model.ContentItems.Items.Count == 0) {
-		@T("The '{0}' {1} has no content items.", Model.ContainerDisplayName, Model.ContainerContentType)
+
+	if ((int)Model.ContentItems.Items.Count == 0) {
+		<div class="message notifications">@T("The '{0}' {1} has no content items.", Model.ContainerDisplayName, Model.ContainerContentType)</div>
 	}
 	else {
+        <fieldset class="contentItems bulk-items">
 		@Display(Model.ContentItems)
+        </fieldset>
 	}
-    </fieldset>
+
 @Display(Model.Pager)
 }

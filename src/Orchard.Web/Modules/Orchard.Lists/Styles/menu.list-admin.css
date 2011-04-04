@@ -1,7 +1,7 @@
-﻿.navicon-lists,
+﻿.navicon-list,
 .section-new .subnavicon-list {
 background-image:url(images/menu.list.png) !important;
 }
-.navicon-lists:hover {
+.navicon-list:hover {
 background-position:0 -30px !important;
 }
