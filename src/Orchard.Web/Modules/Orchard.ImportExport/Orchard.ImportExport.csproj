@@ -71,18 +71,25 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\images\menu.importexport.png" />
+    <Content Include="Styles\menu.importexport-admin.css" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Import.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Export.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>
