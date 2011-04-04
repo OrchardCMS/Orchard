@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -151,7 +150,11 @@ namespace Orchard.Packaging.Controllers {
                         packages => {
                             packages = packages.Where(p => p.PackageType == packageType &&
                                 p.IsLatestVersion &&
-                                (string.IsNullOrEmpty(options.SearchText) || p.Title.Contains(options.SearchText)));
+                                (string.IsNullOrEmpty(options.SearchText) 
+                                    || p.Title.Contains(options.SearchText)
+                                    || p.Description.Contains(options.SearchText)
+                                    || p.Tags.Contains(options.SearchText)
+                                    ));
 
                             switch (options.Order) {
                                 case PackagingExtensionsOrder.Downloads:
