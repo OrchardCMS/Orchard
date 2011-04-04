@@ -146,7 +146,7 @@ namespace Orchard.Packaging.Controllers {
             int totalCount = 0;
             foreach (var source in sources) {
                 try {
-                    var sourceExtensions = _packagingSourceManager.GetExtensionList(
+                    var sourceExtensions = _packagingSourceManager.GetExtensionList(true,
                         source,
                         packages => {
                             packages = packages.Where(p => p.PackageType == packageType &&

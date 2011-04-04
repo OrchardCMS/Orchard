@@ -126,7 +126,7 @@ Features:
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<PackagingEntry> GetExtensionList(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
+            public IEnumerable<PackagingEntry> GetExtensionList(bool includeScreenshots, PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
                 return new[] {
                     new PackagingEntry {
                         PackageId = "Orchard.Module.SuperWiki",

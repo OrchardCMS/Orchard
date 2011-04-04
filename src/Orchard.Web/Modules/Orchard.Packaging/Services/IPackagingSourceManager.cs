@@ -32,10 +32,11 @@ namespace Orchard.Packaging.Services {
         /// <summary>
         /// Retrieves the list of extensions from a feed source.
         /// </summary>
+        /// <param name="includeScreenshots">Specifies if screenshots should be included in the result.</param>
         /// <param name="packagingSource">The packaging source from where to get the extensions.</param>
         /// <param name="query">The optional query to retrieve the extensions.</param>
         /// <returns>The list of extensions.</returns>
-        IEnumerable<PackagingEntry> GetExtensionList(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null);
+        IEnumerable<PackagingEntry> GetExtensionList(bool includeScreenshots, PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null);
 
         /// <summary>
         /// Retrieves the number of extensions from a feed source.

@@ -72,14 +72,14 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             if (enforceVersion) {
-                packagingEntry = _packagingSourceManager.GetExtensionList(packagingSource, 
+                packagingEntry = _packagingSourceManager.GetExtensionList(false, packagingSource, 
                     packages => packages.Where(package => 
                         package.PackageType.Equals(DefaultExtensionTypes.Module) && 
                         package.Id.Equals(packageId, StringComparison.OrdinalIgnoreCase) && 
                         package.Version.Equals(version, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             }
             else {
-                packagingEntry = _packagingSourceManager.GetExtensionList(packagingSource, 
+                packagingEntry = _packagingSourceManager.GetExtensionList(false, packagingSource, 
                     packages => packages.Where(package => 
                         package.PackageType.Equals(DefaultExtensionTypes.Module) && 
                         package.Id.Equals(packageId, StringComparison.OrdinalIgnoreCase) && 

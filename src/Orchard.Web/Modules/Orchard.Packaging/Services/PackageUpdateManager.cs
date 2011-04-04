@@ -92,7 +92,7 @@ namespace Orchard.Packaging.Services {
                 GetOrAddEntry(list, packageId).ExtensionsDescriptor = extension;
             }
 
-            var packages = _packagingSourceManager.GetExtensionList(packagingSource)
+            var packages = _packagingSourceManager.GetExtensionList(false, packagingSource)
                 .ToList()
                 .GroupBy(p => p.PackageId, StringComparer.OrdinalIgnoreCase);
 

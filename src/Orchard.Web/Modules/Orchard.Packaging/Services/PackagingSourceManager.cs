@@ -64,10 +64,11 @@ namespace Orchard.Packaging.Services {
         /// <summary>
         /// Retrieves the list of extensions from a feed source.
         /// </summary>
+        /// <param name="includeScreenshots">Specifies if screenshots should be included in the result.</param>
         /// <param name="packagingSource">The packaging source from where to get the extensions.</param>
         /// <param name="query">The optional query to retrieve the extensions.</param>
         /// <returns>The list of extensions.</returns>
-        public IEnumerable<PackagingEntry> GetExtensionList(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
+        public IEnumerable<PackagingEntry> GetExtensionList(bool includeScreenshots, PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
             return (packagingSource == null ? GetSources() : new[] {packagingSource})
                 .SelectMany(
                     source => {
@@ -80,10 +81,12 @@ namespace Orchard.Packaging.Services {
 
                         return packages.ToList().Select(
                             p => {
-                                PublishedScreenshot firstScreenshot = galleryFeedContext.Screenshots
-                                    .Where(s => s.PublishedPackageId == p.Id && s.PublishedPackageVersion == p.Version)
-                                    .ToList()
-                                    .FirstOrDefault();
+                                PublishedScreenshot firstScreenshot = includeScreenshots
+                                    ? galleryFeedContext.Screenshots
+                                        .Where(s => s.PublishedPackageId == p.Id && s.PublishedPackageVersion == p.Version)
+                                        .ToList()
+                                        .FirstOrDefault() 
+                                    : null;
                                 return CreatePackageEntry(p, firstScreenshot, packagingSource, galleryFeedContext.GetReadStreamUri(p));
                             });
                     }
