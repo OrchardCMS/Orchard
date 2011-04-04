@@ -87,9 +87,9 @@ namespace Orchard.Core.Routable.Drivers {
             if ( !_routableService.IsSlugValid(part.Slug) ) {
                 var slug = (part.Slug ?? String.Empty);
                 if ( slug.StartsWith(".") || slug.EndsWith(".") )
-                    updater.AddModelError("Routable.Slug", T("The \".\" can't be used around routes."));
+                    updater.AddModelError("Routable.Slug", T("The \".\" can't be used at either end of the permalink."));
                 else
-                    updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\". No spaces are allowed (please use dashes or underscores instead)."));
+                    updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\". No spaces are allowed (please use dashes or underscores instead)."));
             }
 
             return Editor(part, shapeHelper);
