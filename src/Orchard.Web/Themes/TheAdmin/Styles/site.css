@@ -158,8 +158,8 @@ hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
     min-height:100%;
 }
 #layout-main {
-    display:inline;
-    overflow:auto;
+    /*display:inline;
+    overflow:auto;*/
     float:right;
     margin-left:-240px;
     width:100%;
@@ -168,6 +168,7 @@ hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
 #main {
     margin-left:260px;
     margin-right:20px;
+    clear:both;
 }
 #menu {
     background:#323232;
@@ -382,7 +383,7 @@ ul.menuItems {margin:6px 0 0 0;}
 #content {
     background-color: #fff;
     padding: 16px 24px;
-    margin:8px 0 0 0;
+    margin-top:8px;
     border: 1px solid #e4e5e6;
     clear:both;
    
