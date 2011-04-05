@@ -56,7 +56,7 @@ namespace Orchard.UI.Resources {
             return tagBuilder;
         }
 
-        public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition, Dictionary<string,string> attributes) {
+        public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition, Dictionary<string, string> attributes) {
             if (!string.IsNullOrEmpty(condition)) {
                 writer.WriteLine("<!--[if " + condition + "]>");
             }
@@ -81,7 +81,7 @@ namespace Orchard.UI.Resources {
                     var builder = new ResourceManifestBuilder();
                     foreach (var provider in _providers) {
                         builder.Feature = provider.Metadata.ContainsKey("Feature") ?
-                            (Feature) provider.Metadata["Feature"] :
+                            (Feature)provider.Metadata["Feature"] :
                             null;
                         provider.Value.BuildManifests(builder);
                     }
@@ -107,7 +107,7 @@ namespace Orchard.UI.Resources {
             RequireSettings settings;
             var key = new Tuple<string, string>(resourceType, resourceName);
             if (!_required.TryGetValue(key, out settings)) {
-                settings = new RequireSettings {Type = resourceType, Name = resourceName};
+                settings = new RequireSettings { Type = resourceType, Name = resourceName };
                 _required[key] = settings;
             }
             _builtResources[resourceType] = null;
@@ -162,6 +162,10 @@ namespace Orchard.UI.Resources {
         }
 
         public virtual ResourceDefinition FindResource(RequireSettings settings) {
+            return FindResource(settings, true);
+        }
+
+        private ResourceDefinition FindResource(RequireSettings settings, bool resolveInlineDefinitions) {
             // find the resource with the given type and name
             // that has at least the given version number. If multiple,
             // return the resource with the greatest version number.
@@ -180,19 +184,35 @@ namespace Orchard.UI.Resources {
                             orderby r.Value.Version descending
                             select r.Value).FirstOrDefault();
             }
-            if (resource == null && settings.InlineDefinition != null) {
-                // defining it on the fly
-                resource = DynamicResources.DefineResource(type, name)
-                    .SetBasePath(settings.BasePath);
-                settings.InlineDefinition(resource);
+            if (resolveInlineDefinitions && resource == null) {
+                // Does not seem to exist, but it's possible it is being
+                // defined by a Define() from a RequireSettings somewhere.
+                if (ResolveInlineDefinitions(settings.Type)) {
+                    // if any were defined, now try to find it
+                    resource = FindResource(settings, false);
+                }
             }
             return resource;
         }
 
+        private bool ResolveInlineDefinitions(string resourceType) {
+            bool anyWereDefined = false;
+            foreach (var settings in GetRequiredResources(resourceType).Where(settings => settings.InlineDefinition != null)) {
+                // defining it on the fly
+                var resource = FindResource(settings, false);
+                if (resource == null) {
+                    // does not already exist, so define it
+                    resource = DynamicResources.DefineResource(resourceType, settings.Name).SetBasePath(settings.BasePath);
+                    anyWereDefined = true;
+                }
+                settings.InlineDefinition(resource);
+                settings.InlineDefinition = null;
+            }
+            return anyWereDefined;
+        }
+
         public virtual IEnumerable<RequireSettings> GetRequiredResources(string type) {
-            return from r in _required
-                   where r.Key.Item1 == type
-                   select r.Value;
+            return _required.Where(r => r.Key.Item1 == type).Select(r => r.Value);
         }
 
         public virtual IList<LinkEntry> GetRegisteredLinks() {
@@ -225,7 +245,7 @@ namespace Orchard.UI.Resources {
                 ExpandDependencies(resource, settings, allResources);
             }
             requiredResources = (from DictionaryEntry entry in allResources
-                                 select new ResourceRequiredContext {Resource = (ResourceDefinition) entry.Key, Settings = (RequireSettings) entry.Value}).ToList();
+                                 select new ResourceRequiredContext { Resource = (ResourceDefinition)entry.Key, Settings = (RequireSettings)entry.Value }).ToList();
             _builtResources[resourceType] = requiredResources;
             return requiredResources;
         }
