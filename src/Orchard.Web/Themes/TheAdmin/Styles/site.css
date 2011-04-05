@@ -1069,12 +1069,59 @@ fieldset.delete-button {
 .dashboard .help-item 
 {
     width: 245px;
-    min-height: 200px;
-    background-color: #fafafa;
-    border: 1px solid #eeeeee;
+    min-height: 170px;
     float: left;
     margin: 0 55px 55px 0;
 }
+
+.dashboard a:hover 
+{
+    text-decoration: underline;
+}
+
+.dashboard p 
+{
+     padding: 0 8px 0px 8px;
+}
+
+.dashboard .help-item h2
+{
+    background-color: #dee0e1;
+    padding: 6px;
+    font-size: 16px;
+}
+
+.dashboard .help-item h2.gallery
+{
+    background: #f1f1f2 url('images/icon-gallery.png') no-repeat 5px 50%;
+    padding-left: 40px;
+}
+
+.dashboard .help-item h2.friends
+{
+    background: #f1f1f2 url('images/icon-friends.png') no-repeat 5px 50%;
+    padding-left: 40px;
+}
+
+.dashboard .help-item h2.start
+{
+    background: #f1f1f2 url('images/icon-settings.png') no-repeat 5px 50%;
+    padding-left: 40px;
+}
+
+.dashboard .help-item h2.docs
+{
+    background: #f1f1f2 url('images/icon-docs.png') no-repeat 5px 50%;
+    padding-left: 38px;
+}
+
+.dashboard .help-item h2.contribute
+{
+    background: #f1f1f2 url('images/icon-contribute.png') no-repeat 5px 50%;
+    padding-left: 40px;
+}
+
+
 
 
 /* Fields
