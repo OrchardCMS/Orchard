@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
-
 using log4net.Appender;
 using log4net.Core;
 using log4net.ObjectRenderer;
@@ -154,17 +153,12 @@ namespace Orchard.Logging {
                 LogLog.Debug("XmlHierarchyConfigurator: Configuration reset before reading config.");
             }
 
-            // Try to retrieve the environment variables
-            try {
+            // The Log4netFactory/OrchardXmlConfigurator/OrchardXmlHierarchyConfigurator can be refactored later
+            // so we call HostEnvironment.IsFullTrust
+            if (AppDomain.CurrentDomain.IsHomogenous && AppDomain.CurrentDomain.IsFullyTrusted)
                 _environmentVariables = System.Environment.GetEnvironmentVariables();
-            }
-            catch (System.Security.SecurityException) {
+            else {
                 _environmentVariables = null;
-
-                // This security exception will occur if the caller does not have 
-                // unrestricted environment permission. If this occurs the expansion 
-                // will be skipped with the following warning message.
-                LogLog.Debug("XmlHierarchyConfigurator: Security exception while trying to expand environment variables. Error Ignored. No Expansion.");
             }
 
             /* Building Appender objects, placing them in a local namespace
