@@ -74,7 +74,18 @@ namespace Orchard.UI.Resources {
         }
 
         public RequireSettings Define(Action<ResourceDefinition> resourceDefinition) {
-            InlineDefinition = resourceDefinition ?? InlineDefinition;
+            if (resourceDefinition != null) {
+                var previous = InlineDefinition;
+                if (previous != null) {
+                    InlineDefinition = r => {
+                        previous(r);
+                        resourceDefinition(r);
+                    };
+                }
+                else {
+                    InlineDefinition = resourceDefinition;
+                }
+            }
             return this;
         }
 
