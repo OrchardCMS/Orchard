@@ -12,11 +12,13 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
+using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
+using Orchard.Mvc.Html;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Settings;
@@ -295,6 +297,17 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
+            // store the previous route in case a back redirection is requested
+            string previousRoute = null;
+            var route = contentItem.As<RoutePart>();
+            if(route != null 
+                &&!string.IsNullOrWhiteSpace(returnUrl) 
+                && Url.IsLocalUrl(returnUrl)
+                && returnUrl == Url.ItemDisplayUrl(contentItem) // only if the original returnUrl is the content itself
+                ) {
+                previousRoute = route.Path;
+            }
+
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
@@ -303,6 +316,13 @@ namespace Orchard.Core.Contents.Controllers {
             }
 
             conditionallyPublish(contentItem);
+
+            // did the route change ?
+            if (!string.IsNullOrWhiteSpace(returnUrl) 
+                && previousRoute != null 
+                && contentItem.As<RoutePart>().Path != previousRoute) {
+                returnUrl = Url.ItemDisplayUrl(contentItem);
+            }
 
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been saved.")
