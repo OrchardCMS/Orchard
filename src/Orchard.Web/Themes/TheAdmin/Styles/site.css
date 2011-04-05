@@ -159,8 +159,8 @@ hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
     min-height:100%;
 }
 #layout-main {
-    display:inline;
-    overflow:auto;
+    /*display:inline;
+    overflow:auto;*/
     float:right;
     margin-left:-240px;
     width:100%;
@@ -510,6 +510,11 @@ span.message {
     background:#e68585; /* red */
     color:#fff;
 }
+.info { 
+    background: url(images/info.gif) no-repeat 5px 5px #fff;
+    border:1px solid #e4e8ee;  /* blue */
+    padding-left:26px;
+}
 .message-Information, .notifications {
     background:#e6f1c9; /* green */
     border:1px solid #cfe493;
@@ -536,7 +541,7 @@ span.message {
 /* Forms
 ***************************************************************/
 
-form              { margin: 0; padding: 0; }
+form              { margin: 0; padding: 0;}
 legend            { font-size: 1.231em; font-weight: normal; border:none;}
 fieldset          { padding:6px 0 0; margin:0 0 1em 0; border: 0px solid #dbdbdb; }
 label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
@@ -599,7 +604,7 @@ input.textMedium {
     width:26em;
 }
 select {
-    padding:1px;
+    padding:1px;	
 }
 select:focus, textarea:focus, input.text:focus, input.text-box:focus {
     border-color:#666d51;
