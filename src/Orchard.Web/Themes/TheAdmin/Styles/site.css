@@ -710,8 +710,13 @@ button, .button, a.button {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
      border-radius: 2px;
-
 }
+
+.button, a.button /* For link buttons */
+{
+   padding: 5px 14px 5px 14px; 
+}
+
 button, input.button, x:-moz-any-link {
     padding: 3px 14px 3px 14px;
     }
@@ -773,11 +778,15 @@ button.link {
     -moz-border-radius:0;
     border-radius:0;
 }
+
+
+
 .cancel {
     margin:0 0 0 .93em;
 }
 .manage {
     float:right;
+    margin-bottom: 16px;
 }
 .actions {
     clear:right;
@@ -872,6 +881,11 @@ table.items th, table.items td {
     border-spacing:0px;
     display:table-cell;
     padding:8px 12px;
+}
+
+table.items td .add 
+{
+    float: right;
 }
 
 /* Content item lists

@@ -8,7 +8,9 @@
 @{
     SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
     Style.Include("site.css");
-    Style.Include("ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
+    Style.Include("ie.css").UseCondition("gte IE 9").SetAttribute("media", "screen, projection");
+    Style.Include("ie8.css").UseCondition("IE 8").SetAttribute("media", "screen, projection");
+    Style.Include("ie7.css").UseCondition("lte IE 7").SetAttribute("media", "screen, projection");
     Script.Require("jQuery");
     Script.Require("ShapesBase");
     Script.Include("admin.js");

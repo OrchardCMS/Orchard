@@ -34,7 +34,7 @@ display:inline;
 vertical-align:middle;
 }
 #widgets-layers-control a {
-margin-left:10px;
+margin-left:4px;
 }
 
 #widgets-zones, #widgets-zones-orphans, #widgets-available {
@@ -242,4 +242,12 @@ display:none;
 /* ...and the current state of the theme zone preview */
 #widgets-theme-zone-preview img {
 width:100%;
+}
+
+/* For link buttons in the widget UI. */
+/* Need to revisit */
+.orchard-widgets .button, .orchard-widgets a.button 
+{
+    
+   padding: 4px 14px 4px 14px; 
 }
