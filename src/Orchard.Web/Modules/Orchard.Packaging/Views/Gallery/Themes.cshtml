@@ -70,6 +70,13 @@
                         </div>
 
                         <div class="properties">
+                            @if (item.Notifications != null && item.Notifications.Count > 0) {
+                                <div class="notifications">
+                                @foreach (string notification in item.Notifications) {
+                                    <h5>@notification</h5>
+                                }
+                                </div>
+                            }
                             <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
                             <ul class="pageStatus group">
                                 <li>@T("Last Updated: {0}", item.LastUpdated)</li>

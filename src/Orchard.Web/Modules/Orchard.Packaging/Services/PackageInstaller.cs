@@ -1,11 +1,11 @@
 using System;
 using System.IO;
-using System.Web.Hosting;
 using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
+using Orchard.Packaging.Extensions;
 using Orchard.Packaging.Models;
 using Orchard.UI.Notify;
 using NuGetPackageManager = NuGet.PackageManager;
@@ -58,12 +58,11 @@ namespace Orchard.Packaging.Services {
         }
 
         protected PackageInfo InstallPackage(IPackage package, IPackageRepository packageRepository, string location, string applicationPath) {
-            InstallContext context = new InstallContext { Package = package };
             bool previousInstalled;
 
             // 1. See if extension was previous installed and backup its folder if so
             try {
-                previousInstalled = BackupExtensionFolder(context.ExtensionFolder, context.ExtensionId);
+                previousInstalled = BackupExtensionFolder(package.ExtensionFolder(), package.ExtensionId());
             }
             catch (Exception exception) {
                 throw new OrchardException(T("Unable to backup existing local package directory."), exception);
@@ -72,7 +71,7 @@ namespace Orchard.Packaging.Services {
             if (previousInstalled) {
                 // 2. If extension is installed, need to un-install first
                 try {
-                    UninstallExtensionIfNeeded(context);
+                    UninstallExtensionIfNeeded(package);
                 }
                 catch (Exception exception) {
                     throw new OrchardException(T("Unable to un-install local package before updating."), exception);
@@ -248,34 +247,14 @@ namespace Orchard.Packaging.Services {
             return false;
         }
 
-        private void UninstallExtensionIfNeeded(InstallContext context) {
+        private void UninstallExtensionIfNeeded(IPackage package) {
             // Nuget requires to un-install the currently installed packages if the new
             // package is the same version or an older version
             try {
-                Uninstall(context.Package.Id, _virtualPathProvider.MapPath("~\\"));
-                _notifier.Information(T("Successfully un-installed local package {0}", context.ExtensionId));
+                Uninstall(package.Id, _virtualPathProvider.MapPath("~\\"));
+                _notifier.Information(T("Successfully un-installed local package {0}", package.ExtensionId()));
             }
             catch {}
-        }
-
-        internal class InstallContext {
-            public IPackage Package { get; set; }
-            public bool IsTheme {
-                get {
-                    return Package.Id.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme));
-                }
-            }
-            public string ExtensionFolder {
-                get { return IsTheme ? "Themes" : "Modules"; }
-            }
-
-            public string ExtensionId {
-                get {
-                    return IsTheme ?
-                        Package.Id.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme).Length) :
-                        Package.Id.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length);
-                }
-            }
         }
     }
 }
