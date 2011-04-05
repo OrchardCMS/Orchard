@@ -61,6 +61,7 @@ namespace Orchard.DesignerTools.Services {
                 && context.ShapeType != "PlaceChildContent"
                 && context.ShapeType != "ContentZone"
                 && context.ShapeType != "ShapeTracingMeta"
+                && context.ShapeType != "ShapeTracingTemplates"
                 && context.ShapeType != "DateTimeRelative") {
 
                 var shapeMetadata = (ShapeMetadata)context.Shape.Metadata;
@@ -92,7 +93,7 @@ namespace Orchard.DesignerTools.Services {
             var descriptor = shapeTable.Descriptors[shapeMetadata.Type];
 
             // dump the Shape's content
-            var dumper = new ObjectDumper(6);
+            var dumper = new ObjectDumper(1);
             var el = dumper.Dump(context.Shape, "Model");
             using (var sw = new StringWriter()) {
                 el.WriteTo(new XmlTextWriter(sw) {Formatting = Formatting.None});

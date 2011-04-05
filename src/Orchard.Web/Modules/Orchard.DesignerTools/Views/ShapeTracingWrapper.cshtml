@@ -20,6 +20,8 @@
     Script.Include("CodeMirror/css.js");
     Style.Include("CodeMirror/css.css");
     Script.Include("CodeMirror/htmlmixed.js");
+    
+    Script.Include("jquery.tmpl.min.js");
 }
 
 <script class="shape-tracing-wrapper" shape-id="@Model.ShapeId" shape-type="@Model.Metadata.Type" shape-hint="@Model.Hint"></script>@Display(Model.Metadata.ChildContent)<script class="shape-tracing-wrapper" end-of="@Model.ShapeId"></script>
