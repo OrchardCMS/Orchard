@@ -685,18 +685,12 @@ button, .button, a.button {
     color:#fff;
     cursor: pointer;
     display: inline-block;
-    /*font: 14px/100% Arial,Helvetica,sans-serif;*/
-    font: 90% Arial,Helvetica,sans-serif;
-
-    /*padding: 0.5em 1em;
-    padding: 4px 14px;*/
-    padding: 4px 14px 2px 14px; /*ie9*/
-    /*padding: 3px 14px 3px 14px; Firefox*/
+    font: 12px Arial,Helvetica,sans-serif;
+    padding: 4px 14px 4px 14px;
     
     /*position: relative;*/
     text-align: center;
     text-decoration: none;
-    vertical-align: middle;
     
     /*----CSS3 properties----*/
      text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
@@ -719,8 +713,7 @@ button, .button, a.button {
 
 }
 button, input.button, x:-moz-any-link {
-    /*padding: 0.35em 1em;*/ 
-    padding: 2px 14px 2px 14px;
+    padding: 3px 14px 3px 14px;
     }
 
 button:hover, .button:hover, a.button:hover {
