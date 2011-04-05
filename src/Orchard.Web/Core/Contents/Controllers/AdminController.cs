@@ -299,13 +299,13 @@ namespace Orchard.Core.Contents.Controllers {
 
             // store the previous route in case a back redirection is requested
             string previousRoute = null;
-            var route = contentItem.As<RoutePart>();
-            if(route != null 
+            if(contentItem.Has<RoutePart>() 
                 &&!string.IsNullOrWhiteSpace(returnUrl) 
                 && Url.IsLocalUrl(returnUrl)
-                && returnUrl == Url.ItemDisplayUrl(contentItem) // only if the original returnUrl is the content itself
+                // only if the original returnUrl is the content itself
+                && String.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase) 
                 ) {
-                previousRoute = route.Path;
+                previousRoute = contentItem.As<RoutePart>().Path;
             }
 
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
@@ -320,7 +320,7 @@ namespace Orchard.Core.Contents.Controllers {
             // did the route change ?
             if (!string.IsNullOrWhiteSpace(returnUrl) 
                 && previousRoute != null 
-                && contentItem.As<RoutePart>().Path != previousRoute) {
+                && !String.Equals(contentItem.As<RoutePart>().Path, previousRoute, StringComparison.OrdinalIgnoreCase)) {
                 returnUrl = Url.ItemDisplayUrl(contentItem);
             }
 
