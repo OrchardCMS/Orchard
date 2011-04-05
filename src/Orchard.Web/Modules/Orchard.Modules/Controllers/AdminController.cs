@@ -75,9 +75,10 @@ namespace Orchard.Modules.Controllers {
             int totalItemCount = modules.Count();
 
             if (pager.PageSize != 0) {
-                modules = modules.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize).ToList();
+                modules = modules.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
             }
 
+            modules = modules.ToList();
             foreach (ModuleEntry moduleEntry in modules) {
                 moduleEntry.IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(moduleEntry.Descriptor);
 
