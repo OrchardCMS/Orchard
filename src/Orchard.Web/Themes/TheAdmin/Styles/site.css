@@ -7,8 +7,7 @@ Copyright: 2010, Orchard. All Rights Reserved
 /* Color Palette
 **************************************************************
 
-Old Background: #fcfcfc
-New Background: #f3f4f5
+Background: #f3f4f5
 Borders: 
 Text: #333333
 Secondary Text: 
@@ -536,18 +535,11 @@ span.message {
 ***************************************************************/
 
 form              { margin: 0; padding: 0; }
-legend            { font-size: 1.231em; font-weight: normal; border:none; }
-fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #dbdbdb; }
+legend            { font-size: 1.231em; font-weight: normal; border:none;}
+fieldset          { padding:6px 0 0; margin:0 0 1em 0; border: 0px solid #dbdbdb; }
 label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 
-
-/*label { color: #747874;
-    display: block;
-    font-size: 12px;
-    font-weight:bold;
-    padding: 0 0 2px;
-    }*/
 
 form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
     display:inline;
@@ -558,7 +550,7 @@ form.inline fieldset {
 .bulk-actions {
     display:inline;
     height:auto;
-    margin:0 1.4em 0 0;
+    margin:0 4px 0 0;
     padding-top:0;
 }
 
@@ -617,10 +609,7 @@ input.check-box {
 input.large.text, textarea, fieldset {
     clear:both;
 }
-fieldset {
-    margin:0 0 1em 0;
-    padding:6px 0 0;
-}
+
 textarea {
     min-height:8em;
 }
