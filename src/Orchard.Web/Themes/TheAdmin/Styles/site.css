@@ -119,6 +119,8 @@ body {
   padding:0;
 }
 
+iframe {border:1px solid #eee;}
+
 /* Headings */
 h1,h2,h3,h4,h5,h6 { font-weight: normal;}
 
@@ -551,7 +553,7 @@ form.inline fieldset {
     display:inline;
     height:auto;
     margin:0 4px 0 0;
-    padding-top:0;
+    padding:0 0 0 0;
 }
 
 input[type="checkbox"]:focus, input[type="radio"]:focus {
