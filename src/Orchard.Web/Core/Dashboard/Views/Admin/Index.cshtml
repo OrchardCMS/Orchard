@@ -2,9 +2,30 @@
 
 @{ Layout.Title = T("Welcome to Orchard").ToString(); }
 
-<p>@T("This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”.")</p>
-<p>@T("Have fun!")<br />@T("The Orchard Team")</p>
-
+<section class="dashboard group">
+    <div class="help-item">
+        <h2>Get up and running.</h2>
+        <p>Start by exploring the menu on the left and familiarize yourself with Orchard. 
+        As for the basics, we suggest <a href="#">changing the theme</a>, <a href="#">adding some pages</a>, <a href="#">setup up a 
+        blog</a>, and <a href="#">configuring basic settings.</a></p>
+    </div>
+    <div class="help-item">
+        <h2>Get more goodies.</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nisl justo, pretium quis suscipit vel, consectetur ac purus. Suscipit vel, consectetur ac purus.</p>    
+    </div>
+    <div class="help-item">
+    <h2>Make friends.</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nisl justo, pretium quis suscipit vel, consectetur ac purus. Suscipit vel, consectetur ac purus.</p>    
+    </div>
+    <div class="help-item">
+        <h2>Read the Docs.</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nisl justo, pretium quis suscipit vel, consectetur ac purus. Suscipit vel, consectetur ac purus.</p>    
+    </div>
+    <div class="help-item">
+        <h2>Contribute back.</h2>
+        <p>Help grow Orchard. We encourage contributions of all sorts, including code submissions, documentation, translations, feature recommendations, and more. <a href=”#”>Here are some ways to give back to the project</a>.</p>    
+    </div>
+</section>
 
 <h2>@T("Advisory from <a href=\"{0}\">{0}</a>", "http://www.orchardproject.net/advisory")</h2>
 <iframe id="advisory" src="http://www.orchardproject.net/advisory" frameborder="0" height="64" width="100%"  >
