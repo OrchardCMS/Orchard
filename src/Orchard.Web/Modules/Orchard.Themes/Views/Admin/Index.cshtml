@@ -21,7 +21,7 @@
 <div id="installedBar" class="group">
     <h3>@T("Available")</h3>
     @if (Model.InstallThemes) {
-    @Html.ActionLink(T("Install a theme from my computer").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)
+    @Html.ActionLink(T("Install a theme from your computer").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)
 }
 </div>
 

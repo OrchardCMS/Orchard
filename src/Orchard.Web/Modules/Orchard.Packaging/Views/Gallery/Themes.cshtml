@@ -52,9 +52,18 @@
             }
                 }
 
+                <div class="summary">
+                 @if (item.Notifications != null && item.Notifications.Count > 0) {
+                                <div class="notifications">
+                                @foreach (string notification in item.Notifications) {
+                                    <h5>@Html.Raw(notification)</h5>
+                                }
+                                </div>
+                            }
+                </div>
                 <div class="@extensionClass">
                     <div class="extensionDetails column">
-                        <div class="extensionName">
+                    <div class="extensionName @if (item.Installed) {<text>installed</text>}">
                             @if (!string.IsNullOrWhiteSpace(item.GalleryDetailsUrl)) {
                                 <a href="@item.GalleryDetailsUrl">
                                     <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
@@ -70,13 +79,6 @@
                         </div>
 
                         <div class="properties">
-                            @if (item.Notifications != null && item.Notifications.Count > 0) {
-                                <div class="notifications">
-                                @foreach (string notification in item.Notifications) {
-                                    <h5>@Html.Raw(notification)</h5>
-                                }
-                                </div>
-                            }
                             <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
                             <ul class="pageStatus group">
                                 <li>@T("Last Updated: {0}", item.LastUpdated)</li>

@@ -2,7 +2,7 @@
     border:1px solid #D3D2D2;
 }
 
-.bulk-actions {display:block;}
+/*.bulk-actions {display:block;}*/
 
 button, .button, .button:link, .button:visited {
     background:#6a7b42;
@@ -37,5 +37,7 @@ zoom:1;
     padding-top: 0;
 }
 
-/*modules*/
+/*packaging module*/
 .iconThumbnail .extensionThumbnail {right:0px;}
+
+.orchard-packaging .screenshotThumbnail .extensionThumbnail.column {position:static;}
