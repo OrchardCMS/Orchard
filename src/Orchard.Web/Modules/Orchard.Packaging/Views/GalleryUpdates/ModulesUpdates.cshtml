@@ -65,7 +65,7 @@
                                 @if (!string.IsNullOrEmpty(module.NewVersionToInstall.ProjectUrl)) { <a href="@module.NewVersionToInstall.ProjectUrl">@module.NewVersionToInstall.ProjectUrl</a> } else { @T("Unknown").ToString() }
                             </li>
                             <li><div>&nbsp;&#124;&nbsp;@T("Rating: ")
-                                    <div class="ratings" style="width:@(15 * 5)px" title="@T("Ratings: {0} ({1})", module.NewVersionToInstall.Rating, module.NewVersionToInstall.RatingsCount)">
+                                    <div class="ratings" style="width:@(15 * 5)px" title="@T("Rating: {0} out of 5 ({1} total).", module.NewVersionToInstall.Rating, module.NewVersionToInstall.RatingsCount)">
                                         <div class="score" style="width:@(15 * (module.NewVersionToInstall.Rating))px">&nbsp;</div>
                                     </div>
                                 </div>
