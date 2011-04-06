@@ -177,6 +177,8 @@ namespace Orchard.Widgets.Controllers {
                     return HttpNotFound();
 
                 var model = Services.ContentManager.UpdateEditor(widgetPart, this);
+                // override the CommonPart's persisting of the current container
+                widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 if (!ModelState.IsValid) {
                     Services.TransactionManager.Cancel();
                     // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
