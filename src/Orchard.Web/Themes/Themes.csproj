@@ -18,6 +18,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,11 +55,6 @@
     <Content Include="TheAdmin\Styles\ie7.css" />
     <Content Include="TheAdmin\Styles\ie8.css" />
     <Content Include="TheAdmin\Styles\images\adminNavBackground.gif" />
-    <Content Include="TheAdmin\Styles\images\icon-contribute.png" />
-    <Content Include="TheAdmin\Styles\images\icon-docs.png" />
-    <Content Include="TheAdmin\Styles\images\icon-friends.png" />
-    <Content Include="TheAdmin\Styles\images\icon-gallery.png" />
-    <Content Include="TheAdmin\Styles\images\icon-settings.png" />
     <Content Include="TheAdmin\Styles\images\info.gif" />
     <Content Include="TheAdmin\Styles\images\menu-default.png" />
     <Content Include="TheAdmin\Styles\images\menu-glyph.png" />
@@ -105,7 +101,6 @@
     <Content Include="SafeMode\Theme.png" />
     <Content Include="SafeMode\Theme.txt" />
     <Content Include="SafeMode\Views\Layout.cshtml" />
-    <Content Include="TheAdmin\Styles\ie6.css" />
     <Content Include="TheAdmin\Styles\images\backgroundGradient.gif" />
     <Content Include="TheAdmin\Styles\images\backgroundHeader.gif" />
     <Content Include="TheAdmin\Styles\images\orchardLogo.gif" />
