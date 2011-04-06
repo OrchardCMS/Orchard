@@ -4,7 +4,6 @@ if (!window.shapeTracingMetadataHost) {
     window.shapeTracingMetadataHost.placement = {
         'n/a': 'n/a'
     };
-    window.shapeTracingMetadataHost.references = {};
 }
 
 jQuery(function ($) {
@@ -407,7 +406,7 @@ jQuery(function ($) {
         });
 
         // open the root node (Model)
-        openExpando(shapeTracingMetaContent.find('.expando-glyph-container:first'))
+        shapeTracingMetaContent.find('.expando-glyph-container:first').click();
 
         defaultTab = displayTabModel;
     };
