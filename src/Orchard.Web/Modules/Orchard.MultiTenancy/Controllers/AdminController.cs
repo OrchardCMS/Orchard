@@ -8,7 +8,6 @@ using Orchard.Logging;
 using Orchard.MultiTenancy.Services;
 using Orchard.MultiTenancy.ViewModels;
 using Orchard.Security;
-using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.MultiTenancy.Controllers {
@@ -105,40 +104,39 @@ namespace Orchard.MultiTenancy.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPost(TenantEditViewModel viewModel) {
-           
-                if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't edit tenant")))
-                    return new HttpUnauthorizedResult();
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't edit tenant")))
+                return new HttpUnauthorizedResult();
 
-                if ( !EnsureDefaultTenant() )
-                    return new HttpUnauthorizedResult();
+            if ( !EnsureDefaultTenant() )
+                return new HttpUnauthorizedResult();
 
-                var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
-                if (tenant == null)
-                    return HttpNotFound();
+            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
+            if (tenant == null)
+                return HttpNotFound();
 
-                if (!ModelState.IsValid) {
-                    return View(viewModel);
-                }
+            if (!ModelState.IsValid) {
+                return View(viewModel);
+            }
 
-                try {
-                    _tenantService.UpdateTenant(
-                        new ShellSettings
-                        {
-                            Name = tenant.Name,
-                            RequestUrlHost = viewModel.RequestUrlHost,
-                            RequestUrlPrefix = viewModel.RequestUrlPrefix,
-                            DataProvider = viewModel.DataProvider,
-                            DataConnectionString = viewModel.DatabaseConnectionString,
-                            DataTablePrefix = viewModel.DatabaseTablePrefix,
-                            State = tenant.State
-                        });
+            try {
+                _tenantService.UpdateTenant(
+                    new ShellSettings
+                    {
+                        Name = tenant.Name,
+                        RequestUrlHost = viewModel.RequestUrlHost,
+                        RequestUrlPrefix = viewModel.RequestUrlPrefix,
+                        DataProvider = viewModel.DataProvider,
+                        DataConnectionString = viewModel.DatabaseConnectionString,
+                        DataTablePrefix = viewModel.DatabaseTablePrefix,
+                        State = tenant.State
+                    });
 
-                    return RedirectToAction("Index");
-                }
-                catch (Exception exception) {
-                    this.Error(exception, T("Failed to edit tenant: {0} ", exception.Message), Logger, Services.Notifier);
-                    return View(viewModel);
-                }
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                this.Error(exception, T("Failed to edit tenant: {0} ", exception.Message), Logger, Services.Notifier);
+                return View(viewModel);
+            }
         }
 
         [HttpPost]

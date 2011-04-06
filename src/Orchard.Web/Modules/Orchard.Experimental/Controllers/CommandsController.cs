@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Commands;
+using Orchard.Environment.Configuration;
 using Orchard.Experimental.ViewModels;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.Utility.Extensions;
@@ -15,11 +17,15 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Experimental.Controllers {
     [Themed, Admin, OrchardFeature("Orchard.Experimental.WebCommandLine")]
     public class CommandsController : Controller {
+        private readonly ShellSettings _shellSettings;
         private readonly ICommandManager _commandManager;
 
-        public CommandsController(ICommandManager commandManager, IOrchardServices services) {
+        public CommandsController(ShellSettings shellSettings, ICommandManager commandManager, IOrchardServices services) {
+            _shellSettings = shellSettings;
             _commandManager = commandManager;
+
             Services = services;
+
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -33,11 +39,17 @@ namespace Orchard.Experimental.Controllers {
         }
 
         public ActionResult Execute() {
+            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to use the web console")))
+                return new HttpUnauthorizedResult();
+
             return View("Execute", new CommandsExecuteViewModel());
         }
 
         [HttpPost]
         public ActionResult Execute(CommandsExecuteViewModel model) {
+            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to use the web console")))
+                return new HttpUnauthorizedResult();
+
             try {
                 using (var writer = new StringWriter()) {
                     var commandLine = model.CommandLine.Trim();
