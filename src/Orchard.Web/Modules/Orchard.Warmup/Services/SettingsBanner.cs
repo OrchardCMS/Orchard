@@ -1,9 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Security.Policy;
 using System.Web.Mvc;
-using System.Web.Routing;
-using Orchard.ContentManagement;
-using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.UI.Admin.Notification;
 using Orchard.UI.Notify;
