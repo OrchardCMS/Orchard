@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using ClaySharp;
 using ClaySharp.Behaviors;
@@ -17,12 +18,18 @@ namespace Orchard.DesignerTools.Services {
         private readonly Stack<object> _parents = new Stack<object>();
         private readonly Stack<XElement> _currents = new Stack<XElement>();
         private readonly int _levels;
+        private readonly Dictionary<int, XElement> _local;
+        private readonly Dictionary<int, XElement> _global;
 
         private readonly XDocument _xdoc;
         private XElement _current;
-        
-        public ObjectDumper(int levels) {
+
+        // object/key/dump
+
+        public ObjectDumper(int levels, Dictionary<int, XElement> local, Dictionary<int, XElement> global) {
             _levels = levels;
+            _local = local;
+            _global = global;
             _xdoc = new XDocument();
             _xdoc.Add(_current = new XElement("ul"));
         }
@@ -44,29 +51,42 @@ namespace Orchard.DesignerTools.Services {
                     DumpValue(o, name);
                 }
                 else {
-                    DumpObject(o, name);
+                    int hashCode = RuntimeHelpers.GetHashCode(o);
+                    // if the object has already been processed, return a named ref to it
+                    if (_global.ContainsKey(hashCode)) {
+                        _current.Add(
+                            new XElement("h1", new XText(name)),
+                            new XElement("span", FormatType(o)),
+                            new XElement("a", new XAttribute("href", hashCode.ToString()))
+                        );
+                    }
+                    else {
+                        _global.Add(hashCode, _current);
+                        _local.Add(hashCode, _current);
+                        DumpObject(o, name);
+                    }
                 }
             }
             finally {
                 _parents.Pop(); 
                 RestoreCurrentNode();
             }
-
+        
             return _current;
         }
 
         private void DumpValue(object o, string name) {
             string formatted = FormatValue(o);
             _current.Add(
-                new XElement("div", new XAttribute("class", "name"), name),
-                new XElement("div", new XAttribute("class", "value"), formatted)
+                new XElement("h1", new XText(name)),
+                new XElement("span", formatted)
             );
         }
 
         private void DumpObject(object o, string name) {
             _current.Add(
-                new XElement("div", new XAttribute("class", "name"), name),
-                new XElement("div", new XAttribute("class", "type"), FormatType(o))
+                new XElement("h1", new XText(name)),
+                new XElement("span", FormatType(o))
             );
 
             if (_parents.Count >= _levels) {
