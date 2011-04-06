@@ -70,7 +70,7 @@
         <div class="name">${name}</div>
         <div class="value">${value}</div>
         {{if children}}
-            <ul>
+            <ul style="display:none">
                 {{tmpl(children) "#shape-tracing-tabs-model-node-template"}}
             </ul>
         {{/if}}

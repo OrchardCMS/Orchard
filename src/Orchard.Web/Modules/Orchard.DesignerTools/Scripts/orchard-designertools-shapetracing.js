@@ -406,6 +406,9 @@ jQuery(function ($) {
             event.stopPropagation();
         });
 
+        // open the root node (Model)
+        openExpando(shapeTracingMetaContent.find('.expando-glyph-container:first'))
+
         defaultTab = displayTabModel;
     };
 
