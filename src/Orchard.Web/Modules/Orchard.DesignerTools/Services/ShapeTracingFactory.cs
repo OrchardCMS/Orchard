@@ -23,7 +23,7 @@ namespace Orchard.DesignerTools.Services {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IAuthorizer _authorizer;
         private int _shapeId;
-        private readonly Dictionary<int, XElement> _dumped = new Dictionary<int, XElement>(1000);
+        private readonly DumpMap _dumped = new DumpMap();
 
         public ShapeTracingFactory(
             WorkContext workContext, 
@@ -96,17 +96,11 @@ namespace Orchard.DesignerTools.Services {
             var descriptor = shapeTable.Descriptors[shapeMetadata.Type];
 
             // dump the Shape's content
-            var local = new Dictionary<int, XElement>();
-            new ObjectDumper(6, local, _dumped).Dump(context.Shape, "Model");
-            context.Shape.Reference = RuntimeHelpers.GetHashCode(context.Shape);
+            var dump = new ObjectDumper(6).Dump(context.Shape, "Model");
 
             var sb = new StringBuilder();
-            context.Shape.LocalReferences = new Dictionary<int, string>(); 
-            foreach (var key in local.Keys) {
-                sb.Clear();
-                ConvertToJSon(local[key], sb);
-                ((Dictionary<int, string>) context.Shape.LocalReferences)[key] = sb.ToString();
-            }
+            ConvertToJSon(dump, sb);
+            shape.Dump = sb.ToString();
 
             shape.Template = null;
             shape.OriginalTemplate = descriptor.BindingSource;
@@ -158,7 +152,7 @@ namespace Orchard.DesignerTools.Services {
         public void Displayed(ShapeDisplayedContext context) {
         }
 
-        private static void ConvertToJSon(XElement x, StringBuilder sb) {
+        public static void ConvertToJSon(XElement x, StringBuilder sb) {
             if(x == null) {
                 return;
             }
@@ -177,21 +171,18 @@ namespace Orchard.DesignerTools.Services {
                     sb.AppendFormat("name: \"{0}\", ", FormatJsonValue(name));
                     sb.AppendFormat("value: \"{0}\"", FormatJsonValue(value));
 
-                    var a = x.Element("a");
-                    if (a != null) {
-                        sb.AppendFormat(", children: shapeTracingMetadataHost.references[{0}]", a.Attribute("href").Value);
-                    }
-
                     var ul = x.Element("ul");
-                    if (ul != null) {
+                    if (ul != null && ul.Descendants().Any()) {
                         sb.Append(", children: [");
                         foreach (var li in ul.Elements()) {
                             sb.Append("{ ");
                             ConvertToJSon(li, sb);
-                            sb.Append(" },");
+                            sb.Append(" }");
+                            sb.Append(", ");
                         }
                         sb.Append("]");
                     }
+
                     break;
             }
         }

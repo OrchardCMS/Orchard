@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using ClaySharp;
 using ClaySharp.Behaviors;
@@ -11,25 +10,22 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 
 namespace Orchard.DesignerTools.Services {
-
+    
     public class ObjectDumper {
         private const int MaxStringLength = 60;
 
         private readonly Stack<object> _parents = new Stack<object>();
         private readonly Stack<XElement> _currents = new Stack<XElement>();
         private readonly int _levels;
-        private readonly Dictionary<int, XElement> _local;
-        private readonly Dictionary<int, XElement> _global;
 
         private readonly XDocument _xdoc;
         private XElement _current;
 
         // object/key/dump
 
-        public ObjectDumper(int levels, Dictionary<int, XElement> local, Dictionary<int, XElement> global) {
+        public ObjectDumper(int levels)
+        {
             _levels = levels;
-            _local = local;
-            _global = global;
             _xdoc = new XDocument();
             _xdoc.Add(_current = new XElement("ul"));
         }
@@ -40,6 +36,7 @@ namespace Orchard.DesignerTools.Services {
             }
 
             _parents.Push(o);
+            
             // starts a new container
             EnterNode("li");
 
@@ -51,20 +48,11 @@ namespace Orchard.DesignerTools.Services {
                     DumpValue(o, name);
                 }
                 else {
-                    int hashCode = RuntimeHelpers.GetHashCode(o);
-                    // if the object has already been processed, return a named ref to it
-                    if (_global.ContainsKey(hashCode)) {
-                        _current.Add(
-                            new XElement("h1", new XText(name)),
-                            new XElement("span", FormatType(o)),
-                            new XElement("a", new XAttribute("href", hashCode.ToString()))
-                        );
+                    if (_parents.Count >= _levels) {
+                        return _current;
                     }
-                    else {
-                        _global.Add(hashCode, _current);
-                        _local.Add(hashCode, _current);
-                        DumpObject(o, name);
-                    }
+
+                    DumpObject(o, name);
                 }
             }
             finally {
@@ -87,29 +75,31 @@ namespace Orchard.DesignerTools.Services {
             _current.Add(
                 new XElement("h1", new XText(name)),
                 new XElement("span", FormatType(o))
-            );
+            ); 
+            
+            EnterNode("ul");
 
-            if (_parents.Count >= _levels) {
-                return;
-            }
+            try {
+                if (o is IDictionary) {
+                    DumpDictionary((IDictionary) o);
+                }
+                else if (o is IShape) {
+                    DumpShape((IShape) o);
 
-            if (o is IDictionary) {
-                DumpDictionary((IDictionary)o);
-            }
-            else if (o is IShape) {
-                DumpShape((IShape)o);
-                
-                // a shape can also be IEnumerable
-                if (o is IEnumerable) {
+                    // a shape can also be IEnumerable
+                    if (o is IEnumerable) {
+                        DumpEnumerable((IEnumerable) o);
+                    }
+                }
+                else if (o is IEnumerable) {
                     DumpEnumerable((IEnumerable) o);
                 }
+                else {
+                    DumpMembers(o);
+                }
             }
-            else if (o is IEnumerable)
-            {
-                DumpEnumerable((IEnumerable)o);
-            }
-            else {
-                DumpMembers(o);
+            finally {
+                RestoreCurrentNode();
             }
         }
 
@@ -124,55 +114,41 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
-            EnterNode("ul");
-
-            try{
-                foreach (var member in members) {
-                    if (o is ContentItem && member.Name == "ContentManager"
-                        || o is Delegate) {
-                        continue;
-                    }
-                    SafeCall(() => DumpMember(o, member));
+            foreach (var member in members) {
+                if (o is ContentItem && member.Name == "ContentManager"
+                    || o is Delegate) {
+                    continue;
                 }
+                SafeCall(() => DumpMember(o, member));
+            }
 
-                // process ContentItem.Parts specifically
-                foreach (var member in members) {
-                    if (o is ContentItem && member.Name == "Parts") {
-                        foreach (var part in ((ContentItem) o).Parts) {
-                            SafeCall(() => Dump(part, part.PartDefinition.Name));
-                        }
-                    }
-                }
-
-                foreach (var member in members) {
-                    // process ContentPart.Fields specifically
-                    if (o is ContentPart && member.Name == "Fields") {
-                        foreach (var field in ((ContentPart) o).Fields) {
-                            SafeCall(() => Dump(field, field.Name));
-                        }
+            // process ContentItem.Parts specifically
+            foreach (var member in members) {
+                if (o is ContentItem && member.Name == "Parts") {
+                    foreach (var part in ((ContentItem) o).Parts) {
+                        SafeCall(() => Dump(part, part.PartDefinition.Name));
                     }
                 }
             }
-            finally {
-                RestoreCurrentNode();
+
+            foreach (var member in members) {
+                // process ContentPart.Fields specifically
+                if (o is ContentPart && member.Name == "Fields") {
+                    foreach (var field in ((ContentPart) o).Fields) {
+                        SafeCall(() => Dump(field, field.Name));
+                    }
+                }
             }
         }
 
         private void DumpEnumerable(IEnumerable enumerable) {
-            if(!enumerable.GetEnumerator().MoveNext()) {
+            if (!enumerable.GetEnumerator().MoveNext()) {
                 return;
             }
 
-            EnterNode("ul");
-
-            try {
-                int i = 0;
-                foreach (var child in enumerable) {
-                    Dump(child, string.Format("[{0}]", i++));
-                }
-            }
-            finally {
-               RestoreCurrentNode();
+            int i = 0;
+            foreach (var child in enumerable) {
+                Dump(child, string.Format("[{0}]", i++));
             }
         }
 
@@ -181,21 +157,14 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
-            EnterNode("ul");
-
-            try {
-                foreach (var key in dictionary.Keys) {
-                    Dump(dictionary[key], string.Format("[\"{0}\"]", key));
-                }
-            }
-            finally {
-                RestoreCurrentNode();
+            foreach (var key in dictionary.Keys) {
+                Dump(dictionary[key], string.Format("[\"{0}\"]", key));
             }
         }
 
         private void DumpShape(IShape shape) {
 
-            var b = ((IClayBehaviorProvider)(dynamic)shape).Behavior as ClayBehaviorCollection;
+            var b = ((IClayBehaviorProvider) (dynamic) shape).Behavior as ClayBehaviorCollection;
 
             if (b == null)
                 return;
@@ -216,19 +185,12 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
-            EnterNode("ul");
-
-            try {
-                foreach (var key in props.Keys) {
-                    // ignore private members (added dynmically by the shape wrapper)
-                    if (key.ToString().StartsWith("_")) {
-                        continue;
-                    }
-                    Dump(props[key], key.ToString());
+            foreach (var key in props.Keys) {
+                // ignore private members (added dynmically by the shape wrapper)
+                if (key.ToString().StartsWith("_")) {
+                    continue;
                 }
-            }
-            finally {
-                RestoreCurrentNode();
+                Dump(props[key], key.ToString());
             }
         }
 
@@ -305,9 +267,22 @@ namespace Orchard.DesignerTools.Services {
             _current = _currents.Pop();
         }
 
-        private void EnterNode(string tag) {
+        private XElement EnterNode(string tag) {
             SaveCurrentNode();
             _current.Add(_current = new XElement(tag));
+            return _current;
+        }
+
+        private int MaxNodesLength(XElement el) {
+            int max = 1;
+            var local = 0;
+            foreach(var node in el.Elements()) {
+                local = Math.Max(local, MaxNodesLength(node));
+            }
+
+            return max + local;
         }
     }
+
+    public class DumpMap : Dictionary<int, XElement> {}
 }
