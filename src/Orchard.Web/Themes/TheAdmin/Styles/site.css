@@ -544,7 +544,7 @@ span.message {
 
 form              { margin: 0; padding: 0;}
 legend            { font-size: 1.231em; font-weight: normal; border:none;}
-fieldset          { padding:6px 0 0; margin:0 0 1em 0; border: 0px solid #dbdbdb; }
+fieldset          { padding:6px 0 0; margin:0 0 12px 0; border: 0px solid #dbdbdb; }
 label             { font-weight:normal; display:block; padding: 0 0 0.3em 0; }
 label.forcheckbox { margin:0 0 0 .4em; display:inline; }
 
@@ -1032,7 +1032,8 @@ html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
     margin:.5em 0;
 }
 .settings legend {
-    margin:0 0 -.4em;
+    margin:0 0 0 0;
+    font-size:18px;
 }
 /* Core Contents and Orchard.PublishLater */
 

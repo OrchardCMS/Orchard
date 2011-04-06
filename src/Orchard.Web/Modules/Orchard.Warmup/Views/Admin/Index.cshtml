@@ -2,13 +2,13 @@
 @using Orchard.Utility.Extensions;
 @using Orchard.Warmup.Models;
 
-@{ Layout.Title = T("Settings for Warmup").ToString(); }
+@{ Layout.Title = T("Settings").ToString(); }
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
 
 <fieldset>
-    <legend>@T("Enter Settings")</legend>
+    <legend>@T("Settings for Warmup")</legend>
     <div>
         <label for="@Html.FieldIdFor(m => m.Urls)">@T("Urls for which static warmup pages will be generated")</label>
         @Html.TextAreaFor(m => m.Urls, new { @class = "textMedium" })
