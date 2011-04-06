@@ -2,7 +2,7 @@
 <Orchard>
   <Recipe>
     <Name>Blog</Name>
-    <Description>A recipe providing an installation profile with the features you need for a personal blog.</Description>
+    <Description>A recipe providing the features you need for a personal blog site.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
     <Tags>blog</Tags>
