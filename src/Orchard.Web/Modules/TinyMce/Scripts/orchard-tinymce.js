@@ -9,5 +9,7 @@
     theme_advanced_buttons2: "",
     theme_advanced_buttons3: "",
     convert_urls: false,
-    valid_elements: "*[*]"
+    valid_elements: "*[*]",
+    // shouldn't be needed due to the valid_elements setting, but TinyMCE would strip script.src without it.
+    extended_valid_elements: "script[type|defer|src|language]"
 });
