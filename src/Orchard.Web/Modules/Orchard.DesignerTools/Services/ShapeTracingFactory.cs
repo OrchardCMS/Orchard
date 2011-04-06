@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web.Routing;
-using System.Xml;
+using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
@@ -21,6 +23,7 @@ namespace Orchard.DesignerTools.Services {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IAuthorizer _authorizer;
         private int _shapeId;
+        private readonly Dictionary<int, XElement> _dumped = new Dictionary<int, XElement>(1000);
 
         public ShapeTracingFactory(
             WorkContext workContext, 
@@ -61,6 +64,7 @@ namespace Orchard.DesignerTools.Services {
                 && context.ShapeType != "PlaceChildContent"
                 && context.ShapeType != "ContentZone"
                 && context.ShapeType != "ShapeTracingMeta"
+                && context.ShapeType != "ShapeTracingTemplates"
                 && context.ShapeType != "DateTimeRelative") {
 
                 var shapeMetadata = (ShapeMetadata)context.Shape.Metadata;
@@ -92,11 +96,16 @@ namespace Orchard.DesignerTools.Services {
             var descriptor = shapeTable.Descriptors[shapeMetadata.Type];
 
             // dump the Shape's content
-            var dumper = new ObjectDumper(6);
-            var el = dumper.Dump(context.Shape, "Model");
-            using (var sw = new StringWriter()) {
-                el.WriteTo(new XmlTextWriter(sw) {Formatting = Formatting.None});
-                context.Shape._Dump = sw.ToString();
+            var local = new Dictionary<int, XElement>();
+            new ObjectDumper(6, local, _dumped).Dump(context.Shape, "Model");
+            context.Shape.Reference = RuntimeHelpers.GetHashCode(context.Shape);
+
+            var sb = new StringBuilder();
+            context.Shape.LocalReferences = new Dictionary<int, string>(); 
+            foreach (var key in local.Keys) {
+                sb.Clear();
+                ConvertToJSon(local[key], sb);
+                ((Dictionary<int, string>) context.Shape.LocalReferences)[key] = sb.ToString();
             }
 
             shape.Template = null;
@@ -147,6 +156,49 @@ namespace Orchard.DesignerTools.Services {
 
 
         public void Displayed(ShapeDisplayedContext context) {
+        }
+
+        private static void ConvertToJSon(XElement x, StringBuilder sb) {
+            if(x == null) {
+                return;
+            }
+
+            switch (x.Name.ToString()) {
+                case "ul" :
+                    foreach(var li in x.Elements()) {
+                        ConvertToJSon(li, sb);
+                        sb.Append(",");
+                    }
+                    break;
+                case "li":
+                    var name = x.Element("h1").Value;
+                    var value = x.Element("span").Value;
+
+                    sb.AppendFormat("name: \"{0}\", ", FormatJsonValue(name));
+                    sb.AppendFormat("value: \"{0}\"", FormatJsonValue(value));
+
+                    var a = x.Element("a");
+                    if (a != null) {
+                        sb.AppendFormat(", children: shapeTracingMetadataHost.references[{0}]", a.Attribute("href").Value);
+                    }
+
+                    var ul = x.Element("ul");
+                    if (ul != null) {
+                        sb.Append(", children: [");
+                        foreach (var li in ul.Elements()) {
+                            sb.Append("{ ");
+                            ConvertToJSon(li, sb);
+                            sb.Append(" },");
+                        }
+                        sb.Append("]");
+                    }
+                    break;
+            }
+        }
+
+        private static string FormatJsonValue(string value) {
+            // replace " by \" in json strings
+            return value.Replace("\"", @"\""");
         }
     }
 }
