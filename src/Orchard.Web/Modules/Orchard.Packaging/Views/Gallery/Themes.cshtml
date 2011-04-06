@@ -73,7 +73,7 @@
                             @if (item.Notifications != null && item.Notifications.Count > 0) {
                                 <div class="notifications">
                                 @foreach (string notification in item.Notifications) {
-                                    <h5>@notification</h5>
+                                    <h5>@Html.Raw(notification)</h5>
                                 }
                                 </div>
                             }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
@@ -11,7 +10,6 @@ using Orchard.Logging;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
-using Orchard.Reports;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Themes;
