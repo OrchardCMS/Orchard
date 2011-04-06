@@ -2,6 +2,8 @@
     border:1px solid #D3D2D2;
 }
 
+.bulk-actions {display:block;}
+
 button, .button, .button:link, .button:visited {
     background:#6a7b42;
     border:1px solid #487328;
@@ -34,3 +36,6 @@ zoom:1;
     margin: 0 0 4px 0;
     padding-top: 0;
 }
+
+/*modules*/
+.iconThumbnail .extensionThumbnail {right:0px;}

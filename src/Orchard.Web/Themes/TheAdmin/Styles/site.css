@@ -775,9 +775,6 @@ button.link {
     -moz-border-radius:0;
     border-radius:0;
 }
-
-
-
 .cancel {
     margin:0 0 0 .93em;
 }
@@ -807,7 +804,7 @@ button.link {
 .manage a.button {
     float:right;
     height:inherit;
-   margin-left:.3em;
+    margin-left:4px;
 }
 
 .options 
