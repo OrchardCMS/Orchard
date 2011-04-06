@@ -235,7 +235,7 @@ namespace Orchard.Packaging.Controllers {
                 packagings.Item2.Installed = true;
 
                 if (_extensionDisplayEventHandler != null) {
-                    foreach (string notification in _extensionDisplayEventHandler.Displaying(packagings.Item1)) {
+                    foreach (string notification in _extensionDisplayEventHandler.Displaying(packagings.Item1, ControllerContext.RequestContext)) {
                         packagings.Item2.Notifications.Add(notification);
                     }
                 }

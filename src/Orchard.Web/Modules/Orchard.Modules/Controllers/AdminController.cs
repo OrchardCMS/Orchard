@@ -83,7 +83,7 @@ namespace Orchard.Modules.Controllers {
                 moduleEntry.IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(moduleEntry.Descriptor);
 
                 if (_extensionDisplayEventHandler != null) {
-                    foreach (string notification in _extensionDisplayEventHandler.Displaying(moduleEntry.Descriptor)) {
+                    foreach (string notification in _extensionDisplayEventHandler.Displaying(moduleEntry.Descriptor, ControllerContext.RequestContext)) {
                         moduleEntry.Notifications.Add(notification);
                     }
                 }
