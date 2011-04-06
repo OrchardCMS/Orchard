@@ -6,12 +6,14 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.UI.Navigation {
     public class MenuItem {
+        private IList<string> _classes = new List<string>();
+
         public MenuItem() {
             Permissions = Enumerable.Empty<Permission>();
             LinkToFirstChild = true;
         }
 
-        public LocalizedString Text { get; set; }        
+        public LocalizedString Text { get; set; }
         public string IdHint { get; set; }
         public string Url { get; set; }
         public string Href { get; set; }
@@ -22,5 +24,13 @@ namespace Orchard.UI.Navigation {
         public RouteValueDictionary RouteValues { get; set; }
         public IEnumerable<MenuItem> Items { get; set; }
         public IEnumerable<Permission> Permissions { get; set; }
-    }
+        public IList<string> Classes {
+            get { return _classes; } 
+            set {
+                if (value == null)
+                    return;
+                _classes = value;
+            }
+        }
+   }
 }
