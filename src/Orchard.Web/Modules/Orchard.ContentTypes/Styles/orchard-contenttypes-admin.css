@@ -1,5 +1,5 @@
 ﻿.orchard-contenttypes #main h2 {
-    margin:40px 0 0;
+    margin:42px 0 0;
     border-bottom:1px solid #ccc;
 }
 
@@ -8,7 +8,7 @@
 }
 
 .manage.add-to-type {
-    margin-top:-28px;
+    margin-top:-32px;
 }
 .manage-part {
     margin-bottom:1em;
