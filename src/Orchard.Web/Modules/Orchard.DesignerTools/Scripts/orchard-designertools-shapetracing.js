@@ -4,6 +4,7 @@ if (!window.shapeTracingMetadataHost) {
     window.shapeTracingMetadataHost.placement = {
         'n/a': 'n/a'
     };
+    window.shapeTracingMetadataHost.references = {};
 }
 
 jQuery(function ($) {
@@ -350,6 +351,68 @@ jQuery(function ($) {
         displayTabShape();
     });
 
+    // Model tab
+    var displayTabModel = function () {
+        // toggle the selected class
+        shapeTracingTabs.children('.selected').removeClass('selected');
+        shapeTracingTabsModel.addClass('selected');
+
+        // remove old content
+        shapeTracingMetaContent.empty();
+
+        // render the template
+        if (currentShape && shapeTracingMetadataHost[currentShape]) {
+            $("#shape-tracing-tabs-model-template").tmpl(shapeTracingMetadataHost[currentShape].shape.model).appendTo(shapeTracingMetaContent);
+        }
+
+        shapeTracingBreadcrumb.text('');
+
+        // create collapsible containers
+        shapeTracingMetaContent.find('li:has(ul:has(li))').prepend(glyph);
+        shapeTracingMetaContent.find('ul ul').toggle(false);
+        shapeTracingMetaContent.find('.expando-glyph-container').click(expandCollapseExpando);
+
+        shapeTracingMetaContent.find('.model div.name')
+        .hover(
+            function () {
+                var _this = $(this);
+                $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
+                _this.addClass('shape-tracing-overlay');
+            },
+            function () {
+                $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
+            })
+        .click(function (event) {
+            // model node is selected
+            var _this = $(this);
+            shapeTracingWindowContent.find('.shape-tracing-selected').removeClass('shape-tracing-selected');
+            _this.addClass('shape-tracing-selected');
+
+            // display breadcrumb
+            var breadcrumb = null;
+            _this.parentsUntil('.model').children('.name').each(function () {
+                if (breadcrumb != null) {
+                    breadcrumb = $(this).text() + '.' + breadcrumb;
+                }
+                else {
+                    breadcrumb = $(this).text();
+                }
+            });
+
+            // fix enumerable properties display
+            breadcrumb = breadcrumb.replace('.[', '[');
+
+            shapeTracingBreadcrumb.text('@' + breadcrumb);
+            event.stopPropagation();
+        });
+
+        defaultTab = displayTabModel;
+    };
+
+    shapeTracingTabsModel.click(function () {
+        displayTabModel();
+    });
+
     // Placement tab
     var displayTabPlacement = function () {
         // toggle the selected class
@@ -416,7 +479,7 @@ jQuery(function ($) {
         if (currentShape && shapeTracingMetadataHost[currentShape]) {
             $("#shape-tracing-tabs-html-template").tmpl(shapeTracingMetadataHost[currentShape].shape.html).appendTo(shapeTracingMetaContent);
         }
-            
+
         shapeTracingBreadcrumb.text('');
 
         enableCodeMirror(shapeTracingMetaContent);
@@ -453,41 +516,6 @@ jQuery(function ($) {
 
     // automatically expand or collapse shapes in the tree
     shapeTracingWindowTree.find('.expando-glyph-container').click(expandCollapseExpando);
-
-    //create an overlay on model nodes
-    shapeTracingWindowContent.find('.model div.name')
-    .hover(
-        function () {
-            var _this = $(this);
-            $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
-            _this.addClass('shape-tracing-overlay');
-        },
-        function () {
-            $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
-        })
-    .click(function (event) {
-        // model node is selected
-        var _this = $(this);
-        shapeTracingWindowContent.find('.shape-tracing-selected').removeClass('shape-tracing-selected');
-        _this.addClass('shape-tracing-selected');
-
-        // display breadcrumb
-        var breadcrumb = null;
-        _this.parentsUntil('.model').children('.name').each(function () {
-            if (breadcrumb != null) {
-                breadcrumb = $(this).text() + '.' + breadcrumb;
-            }
-            else {
-                breadcrumb = $(this).text();
-            }
-        });
-
-        // fix enumerable properties display
-        breadcrumb = breadcrumb.replace('.[', '[');
-
-        _this.parents('.shape-tracing-meta').find('.shape-tracing-breadcrumb').text('@' + breadcrumb);
-        event.stopPropagation();
-    });
 
     // recursively create a node for the shapes tree
     function createTreeNode(shapeNode) {

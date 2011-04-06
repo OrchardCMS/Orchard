@@ -59,6 +59,24 @@
     </div>
 </script>
 
+<script id="shape-tracing-tabs-model-template" type="text/x-jquery-tmpl">
+    <div class="model grid-display">
+        <ul>{{tmpl "#shape-tracing-tabs-model-node-template"}}</ul>
+    </div>
+</script>
+
+<script id="shape-tracing-tabs-model-node-template" type="text/x-jquery-tmpl">
+    <li>
+        <div class="name">${name}</div>
+        <div class="value">${value}</div>
+        {{if children}}
+            <ul>
+                {{tmpl(children) "#shape-tracing-tabs-model-node-template"}}
+            </ul>
+        {{/if}}
+    </li>
+</script>
+
 <script id="shape-tracing-tabs-placement-template" type="text/x-jquery-tmpl">
     <div class="placement">
         <textarea>${$data}</textarea>

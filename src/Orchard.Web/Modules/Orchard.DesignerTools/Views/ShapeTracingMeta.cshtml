@@ -15,14 +15,15 @@
         return regex.Replace(htmlContent, System.Environment.NewLine);
     }
 }
-<div class="shape-tracing-meta" shape-id-meta="@Model.ShapeId" style="display:none">
-    <div class="model grid-display" style="display:none">
-        @(new MvcHtmlString((string)@Model.Dump))
-    </div>
-</div>
+
 
 <script type="text/javascript">
 shapeTracingMetadataHost[@Model.ShapeId] = {};
+
+@foreach (var pair in Model.LocalReferences) {
+<text>shapeTracingMetadataHost.references[@pair.Key] = { @(new MvcHtmlString(pair.Value)) };</text>
+}
+
 shapeTracingMetadataHost[@Model.ShapeId].shape = { 
     type: '@Model.ShapeType', 
     template: '@Model.Template', 
@@ -48,7 +49,8 @@ shapeTracingMetadataHost[@Model.ShapeId].shape = {
         }
     ],
     html: '@RemoveEmptyLines(RemoveBeacons(Display(Model.ChildContent).ToString())).Replace(Environment.NewLine, "\\n")',
-    templateContent: '@(String.IsNullOrWhiteSpace((string)Model.TemplateContent) ? @T("Content not available as coming from source code.") : @Model.TemplateContent.Replace(Environment.NewLine, "\\n"))'
+    templateContent: '@(String.IsNullOrWhiteSpace((string)Model.TemplateContent) ? @T("Content not available as coming from source code.") : @Model.TemplateContent.Replace(Environment.NewLine, "\\n"))',
+    model: shapeTracingMetadataHost.references[@Model.Reference]
 };
 
 @if(!String.IsNullOrEmpty((string)Model.PlacementSource) && !TempData.ContainsKey((string)Model.PlacementSource)) {
