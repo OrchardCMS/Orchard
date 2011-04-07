@@ -36,7 +36,7 @@ jQuery(function ($) {
     var previousSize = 0;
 
     // represents the arrow to add to any collpasible container
-    var glyph = $('<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>');
+    var glyph = '<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>';
 
     // ensure the ghost has always the same size as the container
     // and the container is always positionned correctly
@@ -117,7 +117,7 @@ jQuery(function ($) {
     $('#shape-tracing-resize-handle').addClass('ui-resizable-handle ui-resizable-n');
     shapeTracingContainer.resizable({
         handles: { n: '#shape-tracing-resize-handle' },
-        grid: 20, // mitigates the number of calls to syncResize(), and aligns to the line height
+        grid: 20, // mitigates the number of calls to syncResize()
         resize: function () { shapeTracingEnabled = false },
         stop: function () { shapeTracingEnabled = true }
     });
@@ -191,26 +191,33 @@ jQuery(function ($) {
     shapeTracingWindowTree.append(shapes);
 
     // add the expand/collapse logic to the shapes tree
-    shapeTracingWindowTree.find('li:has(ul:has(li))').prepend(glyph);
+    shapeTracingWindowTree.find('li:has(ul:has(li))').prepend($(glyph));
 
     // collapse all sub uls
     shapeTracingWindowTree.find('ul ul').toggle(false);
 
     // expands a list of shapes in the tree
     var openExpando = function (expando) {
-        if (expando.hasClass("closed") || expando.hasClass("closing")) {
-            expando.siblings('ul').slideDown(100, function () { expando.removeClass("opening").removeClass("closed").addClass("open"); });
-            expando.addClass("opening");
+        if (expando.hasClass("closed")) {
+            expando.siblings('ul').toggle(true);
+            expando.removeClass("closed").addClass("open");
         }
     }
 
     // collapses a list of shapes in the tree
     var closeExpando = function (expando) {
-        if (!expando.hasClass("closed") && !expando.hasClass("closing")) {
-            expando.siblings('ul').slideUp(100, function () { expando.removeClass("closing").removeClass("open").addClass("closed"); });
-            expando.addClass("closing");
+        if (expando.hasClass("open")) {
+            expando.siblings('ul').toggle(false);
+            expando.removeClass("open").addClass("closed");
         }
     }
+
+    shapeTracingWindow.add(shapeTracingResizeHandle).hover(function () {
+        shapeTracingOverlay.hide();
+    }, function () {
+        shapeTracingOverlay.show();
+    }
+    );
 
     //create an overlay on shapes' descendants
     var overlayTarget = null;
@@ -315,7 +322,7 @@ jQuery(function ($) {
     $("[shape-id-meta]").detach().prependTo(shapeTracingWindowContent);
 
     // add the expand/collapse logic to the shape model
-    shapeTracingWindowContent.find('li:has(ul:has(li))').prepend(glyph);
+    shapeTracingWindowContent.find('li:has(ul:has(li))').prepend($(glyph));
 
     // collapse all sub uls
     shapeTracingWindowContent.find('ul ul').toggle(false);
@@ -327,7 +334,7 @@ jQuery(function ($) {
         shapeTracingTabsShape.addClass('selected');
 
         // remove old content
-        shapeTracingMetaContent.empty();
+        shapeTracingMetaContent.children().remove();
 
         // render the template
         if (currentShape && shapeTracingMetadataHost[currentShape]) {
@@ -337,9 +344,13 @@ jQuery(function ($) {
         shapeTracingBreadcrumb.text('');
 
         // create collapsible containers
-        shapeTracingMetaContent.find('li:has(ul:has(li))').prepend(glyph);
+        shapeTracingMetaContent.find('li:has(ul:has(li))').prepend($(glyph));
         shapeTracingMetaContent.find('ul ul').toggle(false);
         shapeTracingMetaContent.find('.expando-glyph-container').click(expandCollapseExpando);
+
+        $('#activeTemplate').click(function () {
+            displayTabTemplate();
+        });
 
         defaultTab = displayTabShape;
     };
@@ -357,7 +368,7 @@ jQuery(function ($) {
         shapeTracingTabsModel.addClass('selected');
 
         // remove old content
-        shapeTracingMetaContent.empty();
+        shapeTracingMetaContent.children().remove();
 
         // render the template
         if (currentShape && shapeTracingMetadataHost[currentShape]) {
@@ -367,7 +378,7 @@ jQuery(function ($) {
         shapeTracingBreadcrumb.text('');
 
         // create collapsible containers
-        shapeTracingMetaContent.find('li:has(ul:has(li))').prepend(glyph);
+        shapeTracingMetaContent.find('li:has(ul:has(li))').prepend($(glyph));
         shapeTracingMetaContent.find('ul ul').toggle(false);
         shapeTracingMetaContent.find('.expando-glyph-container').click(expandCollapseExpando);
 
@@ -422,7 +433,7 @@ jQuery(function ($) {
         shapeTracingTabsPlacement.addClass('selected');
 
         // remove old content
-        shapeTracingMetaContent.empty();
+        shapeTracingMetaContent.children().remove();
 
         // render the template
         if (currentShape && shapeTracingMetadataHost[currentShape]) {
@@ -449,7 +460,7 @@ jQuery(function ($) {
         shapeTracingTabsTemplate.addClass('selected');
 
         // remove old content
-        shapeTracingMetaContent.empty();
+        shapeTracingMetaContent.children().remove();
 
         // render the template
         if (currentShape && shapeTracingMetadataHost[currentShape]) {
@@ -475,7 +486,7 @@ jQuery(function ($) {
         shapeTracingTabsHtml.addClass('selected');
 
         // remove old content
-        shapeTracingMetaContent.empty();
+        shapeTracingMetaContent.children().remove();
 
         // render the template
         if (currentShape && shapeTracingMetadataHost[currentShape]) {
@@ -506,7 +517,7 @@ jQuery(function ($) {
     // hooks the click event on expandos
     var expandCollapseExpando = function () {
         var _this = $(this);
-        if (_this.hasClass("closed") || _this.hasClass("closing")) {
+        if (_this.hasClass("closed")) {
             openExpando(_this);
         }
         else {

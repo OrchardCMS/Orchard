@@ -1,8 +1,22 @@
 ﻿@using Orchard.Utility.Extensions;
 
 @functions {
-    string FormatShapeFilename(string type, string themeId) {
-        return "~/Themes/" + themeId + "/Views/" + type.Replace("__", "-").Replace("_", ".") + ".cshtml";
+    string FormatShapeName(string shape) {
+        string shapeType = Model.ShapeType;
+        string displayType = Model.DisplayType;
+        
+        if(!String.IsNullOrWhiteSpace(displayType)) {
+            if(shape.StartsWith(shapeType + "_" + displayType)) {
+                shape = shapeType + shape.Substring(shapeType.Length + displayType.Length + 1) + "_" + displayType; 
+            }
+        }
+        
+        return shape.Replace("__", "-").Replace("_", ".");
+    }
+    
+    string FormatShapeFilename(string shape, string themeId) {
+        shape = FormatShapeName(shape);
+        return "~/Themes/" + themeId + "/Views/" + shape.Replace("__", "-").Replace("_", ".") + ".cshtml";
     }
     
     string RemoveBeacons(string htmlContent) {
@@ -28,10 +42,11 @@ shapeTracingMetadataHost[@Model.ShapeId].shape = {
     position: '@(String.IsNullOrEmpty((string)Model.Position) ? T("n/a").Text : Model.Position.ToString())',
     placement: '@(String.IsNullOrEmpty((string)Model.PlacementSource) ? T("n/a").Text : Model.PlacementSource.ToString())',
     alternates: [
-        @foreach (var alternate in Model.Alternates) {
+        @foreach (var alternate in (new[] { (string)Model.ShapeType }).Concat((List<string>)Model.Alternates))
+        {
         <text>{</text>
         <text>filename: '@FormatShapeFilename(alternate, WorkContext.CurrentTheme.Id)',</text>
-        <text>alternate: '@alternate',</text> 
+        <text>alternate: '@FormatShapeName(alternate)',</text> 
         <text>template: '@Model.Template',</text>
         <text>returnUrl: '@Context.Request.RawUrl'</text>
         <text>},</text>
@@ -49,8 +64,8 @@ shapeTracingMetadataHost[@Model.ShapeId].shape = {
     model: { @(new MvcHtmlString((string)@Model.Dump)) }
 };
 
-@if(!String.IsNullOrEmpty((string)Model.PlacementSource) && !TempData.ContainsKey((string)Model.PlacementSource)) {
-    TempData[(string)Model.PlacementSource] = new object();
+@if (!String.IsNullOrEmpty((string)Model.PlacementSource) && (WorkContext.HttpContext.Items[(string)Model.PlacementSource] == null)) {
+    WorkContext.HttpContext.Items[(string)Model.PlacementSource] = new object();
 <text>shapeTracingMetadataHost.placement['@Model.PlacementSource.ToString()'] = '@Model.PlacementContent.Replace(Environment.NewLine, "\\n")'; </text>
 }
 

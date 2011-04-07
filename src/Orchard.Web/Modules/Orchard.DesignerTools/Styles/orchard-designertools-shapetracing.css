@@ -75,7 +75,7 @@ button.create-template, button.create-template:hover, background-image:hover {
     clear:both;
     display:block;
     font-size:10pt;
-    font-family:Segoe;
+    font-family:Segoe UI,Trebuchet,Arial,Sans-Serif;;
     left: 0px;
     bottom: 0px;
     position:fixed;
@@ -321,8 +321,12 @@ ul#shape-tracing-tabs {
 
 #shape-tracing-window-content .grid-display div.type, #shape-tracing-window-content .grid-display div.value {
     position:absolute;
-    left:66%;
+    left:40%;
     white-space:nowrap;
+}
+
+#shape-tracing-window-content div.model div.type, #shape-tracing-window-content div.model div.value {
+    left:66%;
 }
 
 #shape-tracing-breadcrumb {

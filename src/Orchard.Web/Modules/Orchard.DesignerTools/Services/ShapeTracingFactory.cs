@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Web.Routing;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
@@ -23,7 +22,6 @@ namespace Orchard.DesignerTools.Services {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IAuthorizer _authorizer;
         private int _shapeId;
-        private readonly DumpMap _dumped = new DumpMap();
 
         public ShapeTracingFactory(
             WorkContext workContext, 
@@ -76,10 +74,12 @@ namespace Orchard.DesignerTools.Services {
                 }
 
                 shapeMetadata.Wrappers.Add("ShapeTracingWrapper");
+                shapeMetadata.OnDisplaying(OnDisplaying);
             }
         }
+        public void Displaying(ShapeDisplayingContext context) {}
 
-        public void Displaying(ShapeDisplayingContext context) {
+        public void OnDisplaying(ShapeDisplayingContext context) {
             if (!IsActivable()) {
                 return;
             }
@@ -106,8 +106,8 @@ namespace Orchard.DesignerTools.Services {
             shape.OriginalTemplate = descriptor.BindingSource;
 
             foreach (var extension in new[] { ".cshtml", ".aspx" }) {
-                foreach (var alternate in shapeMetadata.Alternates.Reverse()) {
-                    var alternateFilename = currentTheme.Location + "/" + currentTheme.Id + "/Views/" + alternate.Replace("__", "-").Replace("_", ".") + extension;
+                foreach (var alternate in shapeMetadata.Alternates.Reverse().Concat(new [] {shapeMetadata.Type}) ) {
+                    var alternateFilename = FormatShapeFilename(alternate, shapeMetadata.Type, shapeMetadata.DisplayType, currentTheme.Location + "/" + currentTheme.Id, extension);
                     if (_webSiteFolder.FileExists(alternateFilename)) {
                         shape.Template = alternateFilename;
                     }
@@ -191,5 +191,17 @@ namespace Orchard.DesignerTools.Services {
             // replace " by \" in json strings
             return value.Replace("\"", @"\""");
         }
+
+        private static string FormatShapeFilename(string shape, string shapeType, string displayType, string themePrefix, string extension) {
+
+            if (!String.IsNullOrWhiteSpace(displayType)) {
+                if (shape.StartsWith(shapeType + "_" + displayType)) {
+                    shape = shapeType + shape.Substring(shapeType.Length + displayType.Length + 1) + "_" + displayType;
+                }
+            }
+
+            return themePrefix + "/Views/" + shape.Replace("__", "-").Replace("_", ".") + extension;
+        }
+
     }
 }

@@ -272,17 +272,5 @@ namespace Orchard.DesignerTools.Services {
             _current.Add(_current = new XElement(tag));
             return _current;
         }
-
-        private int MaxNodesLength(XElement el) {
-            int max = 1;
-            var local = 0;
-            foreach(var node in el.Elements()) {
-                local = Math.Max(local, MaxNodesLength(node));
-            }
-
-            return max + local;
-        }
     }
-
-    public class DumpMap : Dictionary<int, XElement> {}
 }
