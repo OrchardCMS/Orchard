@@ -8,7 +8,7 @@
     @Html.ValidationSummary()
 
 <fieldset>
-    <legend>@T("Settings for Warmup")</legend>
+    <legend>@T("Warmup")</legend>
     <div>
         <label for="@Html.FieldIdFor(m => m.Urls)">@T("Urls for which static warmup pages will be generated")</label>
         @Html.TextAreaFor(m => m.Urls, new { @class = "textMedium" })

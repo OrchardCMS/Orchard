@@ -1,7 +1,7 @@
 @model Orchard.Users.Models.RegistrationSettingsPartRecord
 
 <fieldset>
-    <legend>@T("Settings for Users")</legend>
+    <legend>@T("Users")</legend>
     <div>
         @Html.EditorFor(m => m.UsersCanRegister) 
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersCanRegister)">@T("Users can create new accounts on the site")</label>
