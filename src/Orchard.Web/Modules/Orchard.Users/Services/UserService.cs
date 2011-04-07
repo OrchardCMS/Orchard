@@ -37,16 +37,13 @@ namespace Orchard.Users.Services {
         public ILogger Logger { get; set; }
 
         public bool VerifyUserUnicity(string userName, string email) {
-            string normalizedUserName = userName.ToUpperInvariant();
+            string normalizedUserName = userName.ToLower();
 
             if (_contentManager.Query<UserPart, UserPartRecord>()
                                    .Where(user => 
                                           user.NormalizedUserName == normalizedUserName || 
                                           user.Email == email)
-                                   .List()
-                                   .Any(user =>
-                                          user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase) ||
-                                          user.Email == email)) {
+                                   .List().Any()) {
                 return false;
             }
 
@@ -54,17 +51,13 @@ namespace Orchard.Users.Services {
         }
 
         public bool VerifyUserUnicity(int id, string userName, string email) {
-            string normalizedUserName = userName.ToUpperInvariant();
+            string normalizedUserName = userName.ToLower();
 
             if (_contentManager.Query<UserPart, UserPartRecord>()
                                    .Where(user =>
                                           user.NormalizedUserName == normalizedUserName ||
                                           user.Email == email)
-                                   .List()
-                                   .Any(user =>
-                                          (user.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase) ||
-                                          user.Email == email) &&
-                                          user.Id != id)) {
+                                   .List().Any(user => user.Id != id)) {
                 return false;
             }
 
