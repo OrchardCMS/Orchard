@@ -49,7 +49,7 @@ namespace Orchard.Users.Services {
 
             user.Record.UserName = createUserParams.Username;
             user.Record.Email = createUserParams.Email;
-            user.Record.NormalizedUserName = createUserParams.Username.ToLower();
+            user.Record.NormalizedUserName = createUserParams.Username.ToUpperInvariant();
             user.Record.HashAlgorithm = "SHA1";
             SetPassword(user.Record, createUserParams.Password);
 
@@ -97,18 +97,24 @@ namespace Orchard.Users.Services {
         }
 
         public IUser GetUser(string username) {
-            var lowerName = username == null ? "" : username.ToLower();
+            var higherName = username == null ? "" : username.ToUpperInvariant();
 
-            return _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
+            return _orchardServices.ContentManager.Query<UserPart, UserPartRecord>()
+                .Where(u => u.NormalizedUserName == higherName).List()
+                .FirstOrDefault(u => u.UserName.Equals(username, StringComparison.OrdinalIgnoreCase));
         }
 
         public IUser ValidateUser(string userNameOrEmail, string password) {
-            var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLower();
+            var higherName = userNameOrEmail == null ? "" : userNameOrEmail.ToUpperInvariant();
 
-            var user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
-
-            if (user == null)
-                user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
+            var user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>()
+                .Where(u =>
+                       u.NormalizedUserName == higherName ||
+                       u.Email == userNameOrEmail)
+                .List()
+                .FirstOrDefault(u =>
+                                u.UserName.Equals(userNameOrEmail, StringComparison.OrdinalIgnoreCase) ||
+                                u.Email == userNameOrEmail);
 
             if ( user == null || ValidatePassword(user.As<UserPart>().Record, password) == false )
                 return null;
