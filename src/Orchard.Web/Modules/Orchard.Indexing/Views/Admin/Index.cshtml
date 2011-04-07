@@ -1,11 +1,11 @@
 ﻿@model Orchard.Indexing.ViewModels.IndexViewModel
 @using Orchard.Indexing.Services;
 
-@{ Layout.Title = T("Search Index Management").ToString(); }
+@{ Layout.Title = T("Settings").ToString(); }
 
 @using (Html.BeginForm("update", "admin", FormMethod.Post, new {area = "Orchard.Indexing"})) { 
     <fieldset>
-        <legend>@T("Search Index Statistics")</legend>
+        <legend>@T("Search Index")</legend>
          <ol class="decimal">
         @if (Model.IndexEntry == null) {
 

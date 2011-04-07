@@ -88,7 +88,7 @@
                                     @if (!string.IsNullOrEmpty(item.ProjectUrl)) { <a href="@item.ProjectUrl">@item.ProjectUrl</a> } else { @T("Unknown").ToString() }
                                 </li>
                                 <li class="rating">&nbsp;&#124;&nbsp;@T("Rating: ")
-                                        <div class="ratings" style="width:@(15 * 5)px" title="@T("Ratings: {0} ({1})", item.Rating, item.RatingsCount)">
+                                        <div class="ratings" style="width:@(15 * 5)px" title="@T("Rating: {0} out of 5 ({1} total).", item.Rating, item.RatingsCount)">
                                             <div class="score" style="width:@(15 * (item.Rating))px">&nbsp;</div>
                                         </div>
                                 </li>

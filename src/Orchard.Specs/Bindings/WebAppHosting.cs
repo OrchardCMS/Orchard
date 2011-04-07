@@ -222,6 +222,23 @@ namespace Orchard.Specs.Bindings {
             WhenIGoTo(urlPath);
         }
 
+        [When(@"I follow ""([^""]+)"" where class name has ""([^""]+)""")]
+        public void WhenIFollowClass(string linkText, string className) {
+            var link = _doc.DocumentNode
+                            .SelectNodes("//a[@href]").Where(elt =>
+                                (elt.InnerText == linkText ||
+                                    (elt.Attributes["title"] != null && elt.Attributes["title"].Value == linkText)) &&
+                                 elt.Attributes["class"].Value.IndexOf(className, StringComparison.OrdinalIgnoreCase) != -1).SingleOrDefault();
+
+            if (link == null) {
+                throw new InvalidOperationException(string.Format("Could not find an anchor with matching text '{0}' and class '{1}'. Document: {2}", linkText, className, _doc.DocumentNode.InnerHtml));
+            }
+            var href = link.Attributes["href"].Value;
+            var urlPath = HttpUtility.HtmlDecode(href);
+
+            WhenIGoTo(urlPath);
+        }
+
         [When(@"I fill in")]
         public void WhenIFillIn(Table table) {
             var inputs = _doc.DocumentNode

@@ -7,11 +7,11 @@
         <div id="shape-tracing-window-tree"></div>
         <div id="shape-tracing-window-content">
             <ul id="shape-tracing-tabs">
-                <li id="shape-tracing-tabs-shape" class="selected first">Shape</li>
-                <li id="shape-tracing-tabs-model" class="middle">Model</li>
-                <li id="shape-tracing-tabs-placement" class="middle">Placement</li>
-                <li id="shape-tracing-tabs-template" class="middle">Template</li>
-                <li id="shape-tracing-tabs-html" class="last">HTML</li>
+                <li id="shape-tracing-tabs-shape" class="selected first">@T("Shape")</li>
+                <li id="shape-tracing-tabs-model" class="middle">@T("Model")</li>
+                <li id="shape-tracing-tabs-placement" class="middle">@T("Placement")</li>
+                <li id="shape-tracing-tabs-template" class="middle">@T("Template")</li>
+                <li id="shape-tracing-tabs-html" class="last">@T("HTML")</li>
             </ul>
             <div id="shape-tracing-breadcrumb"></div>
             <div id="shape-tracing-meta-content"></div>
@@ -24,11 +24,13 @@
 <script id="shape-tracing-tabs-shape-template" type="text/x-jquery-tmpl">
     <div class="shape grid-display">
         <ul class="properties">
-            <li class="sgd-s"><div class="name">Shape</div><div class="value">${shape.type}</div></li>
-            <li class="sgd-t"><div class="name">Template</div><div class="value"><a href="#">${shape.template}</a></div></li>
-            <li class="sgd-ot"><div class="name">Original Template</div><div class="value">${shape.originalTemplate}</div></li>
-            <li class="sgd-d"><div class="name">Display Type</div><div class="value">${shape.displayType}</div></li>
-            <li class="sgd-a"><div class="name">Alternates (${shape.alternates.length})</div>
+            <li class="sgd-s"><div class="name">@T("Shape").Text</div><div class="value">${shape.type}</div></li>
+            <li class="sgd-t"><div class="name">@T("Active Template").Text</div><div class="value"><a id="activeTemplate" href="#">${shape.template}</a></div></li>
+            {{if shape.template != shape.originalTemplate}}
+            <li class="sgd-ot"><div class="name">@T("Original Template").Text Template</div><div class="value">${shape.originalTemplate}</div></li>
+            {{/if}}
+            <li class="sgd-d"><div class="name">@T("Display Type").Text</div><div class="value">${shape.displayType}</div></li>
+            <li class="sgd-a"><div class="name">@T("Alternate ({0})", "${shape.alternates.length}").Text</div>
                 <div class="value">&nbsp;</div>
                 <ul>
                 {{each shape.alternates}}
@@ -47,7 +49,7 @@
                 {{/each}}
                 </ul>
             </li>
-            <li class="sgd-w"><div class="name">Wrappers (${shape.wrappers.length})</div>
+            <li class="sgd-w"><div class="name">@T("Wrappers ({0})", "${shape.wrappers.length}")</div>
                 <div class="value">&nbsp;</div>
                 <ul>
                 {{each shape.wrappers}}

@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Web.Routing;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
@@ -23,7 +22,6 @@ namespace Orchard.DesignerTools.Services {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IAuthorizer _authorizer;
         private int _shapeId;
-        private readonly Dictionary<int, XElement> _dumped = new Dictionary<int, XElement>(1000);
 
         public ShapeTracingFactory(
             WorkContext workContext, 
@@ -76,10 +74,12 @@ namespace Orchard.DesignerTools.Services {
                 }
 
                 shapeMetadata.Wrappers.Add("ShapeTracingWrapper");
+                shapeMetadata.OnDisplaying(OnDisplaying);
             }
         }
+        public void Displaying(ShapeDisplayingContext context) {}
 
-        public void Displaying(ShapeDisplayingContext context) {
+        public void OnDisplaying(ShapeDisplayingContext context) {
             if (!IsActivable()) {
                 return;
             }
@@ -96,24 +96,18 @@ namespace Orchard.DesignerTools.Services {
             var descriptor = shapeTable.Descriptors[shapeMetadata.Type];
 
             // dump the Shape's content
-            var local = new Dictionary<int, XElement>();
-            new ObjectDumper(6, local, _dumped).Dump(context.Shape, "Model");
-            context.Shape.Reference = RuntimeHelpers.GetHashCode(context.Shape);
+            var dump = new ObjectDumper(6).Dump(context.Shape, "Model");
 
             var sb = new StringBuilder();
-            context.Shape.LocalReferences = new Dictionary<int, string>(); 
-            foreach (var key in local.Keys) {
-                sb.Clear();
-                ConvertToJSon(local[key], sb);
-                ((Dictionary<int, string>) context.Shape.LocalReferences)[key] = sb.ToString();
-            }
+            ConvertToJSon(dump, sb);
+            shape._Dump = sb.ToString();
 
             shape.Template = null;
             shape.OriginalTemplate = descriptor.BindingSource;
 
             foreach (var extension in new[] { ".cshtml", ".aspx" }) {
-                foreach (var alternate in shapeMetadata.Alternates.Reverse()) {
-                    var alternateFilename = currentTheme.Location + "/" + currentTheme.Id + "/Views/" + alternate.Replace("__", "-").Replace("_", ".") + extension;
+                foreach (var alternate in shapeMetadata.Alternates.Reverse().Concat(new [] {shapeMetadata.Type}) ) {
+                    var alternateFilename = FormatShapeFilename(alternate, shapeMetadata.Type, shapeMetadata.DisplayType, currentTheme.Location + "/" + currentTheme.Id, extension);
                     if (_webSiteFolder.FileExists(alternateFilename)) {
                         shape.Template = alternateFilename;
                     }
@@ -158,47 +152,59 @@ namespace Orchard.DesignerTools.Services {
         public void Displayed(ShapeDisplayedContext context) {
         }
 
-        private static void ConvertToJSon(XElement x, StringBuilder sb) {
+        public static void ConvertToJSon(XElement x, StringBuilder sb) {
             if(x == null) {
                 return;
             }
 
             switch (x.Name.ToString()) {
                 case "ul" :
+                    var first = true;
                     foreach(var li in x.Elements()) {
+                        if (!first) sb.Append(",");
                         ConvertToJSon(li, sb);
-                        sb.Append(",");
+                        first = false;
                     }
                     break;
                 case "li":
                     var name = x.Element("h1").Value;
                     var value = x.Element("span").Value;
 
-                    sb.AppendFormat("name: \"{0}\", ", FormatJsonValue(name));
-                    sb.AppendFormat("value: \"{0}\"", FormatJsonValue(value));
-
-                    var a = x.Element("a");
-                    if (a != null) {
-                        sb.AppendFormat(", children: shapeTracingMetadataHost.references[{0}]", a.Attribute("href").Value);
-                    }
+                    sb.AppendFormat("\"name\": \"{0}\", ", FormatJsonValue(name));
+                    sb.AppendFormat("\"value\": \"{0}\"", FormatJsonValue(value));
 
                     var ul = x.Element("ul");
-                    if (ul != null) {
-                        sb.Append(", children: [");
+                    if (ul != null && ul.Descendants().Any()) {
+                        sb.Append(", \"children\": [");
+                        first = true;
                         foreach (var li in ul.Elements()) {
-                            sb.Append("{ ");
+                            sb.Append(first ? "{ " : ", {");
                             ConvertToJSon(li, sb);
-                            sb.Append(" },");
+                            sb.Append(" }");
+                            first = false;
                         }
                         sb.Append("]");
                     }
+
                     break;
             }
         }
 
         private static string FormatJsonValue(string value) {
             // replace " by \" in json strings
-            return value.Replace("\"", @"\""");
+            return value.Replace(@"\", @"\\").Replace("\"", @"\""").Replace("\r\n", @"\n").Replace("\n", @"\n");
         }
+
+        private static string FormatShapeFilename(string shape, string shapeType, string displayType, string themePrefix, string extension) {
+
+            if (!String.IsNullOrWhiteSpace(displayType)) {
+                if (shape.StartsWith(shapeType + "_" + displayType)) {
+                    shape = shapeType + shape.Substring(shapeType.Length + displayType.Length + 1) + "_" + displayType;
+                }
+            }
+
+            return themePrefix + "/Views/" + shape.Replace("__", "-").Replace("_", ".") + extension;
+        }
+
     }
 }

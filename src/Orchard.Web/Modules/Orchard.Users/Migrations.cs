@@ -1,7 +1,16 @@
-﻿using Orchard.Data.Migration;
+﻿using System.Collections.Generic;
+using Orchard.ContentManagement;
+using Orchard.Data.Migration;
+using Orchard.Users.Models;
 
 namespace Orchard.Users {
     public class UsersDataMigration : DataMigrationImpl {
+
+        public UsersDataMigration(IOrchardServices orchardServices) {
+            Services = orchardServices;
+        }
+
+        public IOrchardServices Services { get; set; }
 
         public int Create() {
             SchemaBuilder.CreateTable("UserPartRecord", 
@@ -9,7 +18,7 @@ namespace Orchard.Users {
                     .ContentPartRecord()
                     .Column<string>("UserName")
                     .Column<string>("Email")
-                    .Column<string>("NormalizedUserName")
+                    .Column<string>("NormalizedUserName", c => c.Unique())
                     .Column<string>("Password")
                     .Column<string>("PasswordFormat")
                     .Column<string>("HashAlgorithm")
@@ -32,7 +41,17 @@ namespace Orchard.Users {
                     .Column<bool>("EnableLostPassword", c => c.WithDefault(false))
                 );
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+            IEnumerable<UserPart> users = Services.ContentManager.Query<UserPart, UserPartRecord>().List();
+
+            foreach (UserPart user in users) {
+                user.NormalizedUserName = user.UserName.ToUpperInvariant();
+            }
+
+            return 2;
         }
     }
 }

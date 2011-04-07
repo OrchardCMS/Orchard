@@ -17,7 +17,7 @@ Scenario: I can create a new blog and blog post
         And I hit "Save"
         And I go to "admin/blogs"
         And I follow "My Blog"
-        And I follow "New Post"
+        And I follow "New Post" where class name has "primaryAction"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -39,7 +39,7 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I hit "Save"
         And I go to "admin/blogs"
         And I follow "My Blog"
-        And I follow "New Post"
+        And I follow "New Post" where class name has "primaryAction"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -50,7 +50,7 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I should see "Hi there."
     When I go to "admin/blogs"
         And I follow "My Blog"
-        And I follow "New Post"
+        And I follow "New Post" where class name has "primaryAction"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -61,7 +61,7 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I should see "Hi there, again."
     When I go to "admin/blogs"
         And I follow "My Blog"
-        And I follow "New Post"
+        And I follow "New Post" where class name has "primaryAction"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -83,7 +83,7 @@ Scenario: I can create a new blog and blog post and when I change the slug of th
     Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
     When I go to "admin/blogs"
         And I follow "My Blog"
-        And I follow "New Post"
+        And I follow "New Post" where class name has "primaryAction"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -114,7 +114,7 @@ Scenario: When viewing a blog the user agent is given an RSS feed of the blog's 
         And I hit "Save"
         And I go to "admin/blogs"
         And I follow "My Blog"
-        And I follow "New Post"
+        And I follow "New Post" where class name has "primaryAction"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
@@ -151,7 +151,7 @@ Scenario: The virtual path of my installation when not at the root is reflected 
         And I hit "Save"
         And I go to "admin/blogs"
         And I follow "My Blog"
-        And I follow "New Post"
+        And I follow "New Post" where class name has "primaryAction"
     Then I should see "<span>http\://localhost/OrchardLocal/my-blog/</span>"
 
 Scenario: The virtual path of my installation when at the root is reflected in the URL example for the slug field when creating a blog or blog post
@@ -164,7 +164,7 @@ Scenario: The virtual path of my installation when at the root is reflected in t
         And I hit "Save"
         And I go to "admin/blogs"
         And I follow "My Blog"
-        And I follow "New Post"
+        And I follow "New Post" where class name has "primaryAction"
     Then I should see "<span>http\://localhost/my-blog/</span>"
 
 Scenario: I set my blog to be the content for the home page and the posts for the blog be rooted to the app
@@ -177,7 +177,7 @@ Scenario: I set my blog to be the content for the home page and the posts for th
         And I hit "Save"
         And I go to "admin/blogs"
         And I follow "My Blog"
-        And I follow "New Post"
+        And I follow "New Post" where class name has "primaryAction"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
