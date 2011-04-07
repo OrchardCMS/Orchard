@@ -12,7 +12,7 @@ Scenario: HTML markup in any given comment is encoded
         And I hit "Save"
         And I go to "admin/blogs"
         And I follow "My Blog"
-        And I follow "New Post"
+        And I follow "New Post" where class name has "primaryAction"
         And I fill in
             | name | value |
             | Routable.Title | My Post |
