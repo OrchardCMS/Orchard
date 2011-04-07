@@ -140,7 +140,10 @@ namespace Orchard.Media.Services {
             Argument.ThrowIfNullOrEmpty(newFileName, "newFileName");
 
             if (!FileAllowed(newFileName, false)) {
-                throw new ArgumentException(T("New file name {0} is not allowed", newFileName).ToString());
+                if (string.IsNullOrEmpty(Path.GetExtension(newFileName))) {
+                    throw new ArgumentException(T("New file name \"{0}\" is not allowed. Please provide a file extension.", newFileName).ToString());
+                }
+                throw new ArgumentException(T("New file name \"{0}\" is not allowed.", newFileName).ToString());
             }
 
             _storageProvider.RenameFile(_storageProvider.Combine(folderPath, currentFileName), _storageProvider.Combine(folderPath, newFileName));

@@ -50,7 +50,7 @@ namespace Orchard.Core.Containers.Drivers {
                     var listItems = new[] { new SelectListItem { Text = T("(None)").Text, Value = "0" } }
                         .Concat(containers.Select(x => new SelectListItem {
                             Value = Convert.ToString(x.Id),
-                            Text = x.ContentItem.TypeDefinition.DisplayName + ": " + x.As<IRoutableAspect>().Title,
+                            Text = x.ContentItem.TypeDefinition.DisplayName + ": " + _contentManager.GetItemMetadata(x.ContentItem).DisplayText,
                             Selected = x.Id == model.ContainerId,
                         }))
                         .ToList();
