@@ -31,15 +31,16 @@
 </div>
 
 @using (Html.BeginFormAntiForgeryPost()) {
+    var options = (ContentOptions) Model.Options;
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="Options.BulkAction">
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.RemoveFromList, T("Remove from List").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.MoveToList, T("Move to List...").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.RemoveFromList, T("Remove from List").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.MoveToList, T("Move to List...").ToString())
         </select>
 		@Html.DropDownList("TargetContainerId", lists, new { id = "TargetContainerId" })
         <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>

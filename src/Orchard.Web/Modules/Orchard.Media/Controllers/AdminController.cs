@@ -233,16 +233,8 @@ namespace Orchard.Media.Controllers {
             }
         }
 
-        public ActionResult EditMedia(string name, DateTime lastUpdated, long size, string folderName, string mediaPath) {
-            var model = new MediaItemEditViewModel();
-            model.Name = name;
-            // todo: reimplement
-            //model.Caption = caption ?? String.Empty;
-            model.LastUpdated = lastUpdated;
-            model.Size = size;
-            model.FolderName = folderName;
-            model.MediaPath = mediaPath;
-            model.PublicUrl = _mediaService.GetPublicUrl(Path.Combine(mediaPath, name));
+        public ActionResult EditMedia(MediaItemEditViewModel model) {
+            model.PublicUrl = _mediaService.GetPublicUrl(Path.Combine(model.MediaPath, model.Name));
             return View(model);
         }
 
@@ -293,9 +285,8 @@ namespace Orchard.Media.Controllers {
                                                            mediaPath = viewModel.MediaPath });
             }
             catch (Exception exception) {
-                this.Error(exception, T("Editing media file failed: {0}", exception.Message), Logger, Services.Notifier);
-
-                return View(viewModel);
+                this.Error(exception, T("Editing media file failed."), Logger, Services.Notifier);
+                return EditMedia(viewModel);
             }
         }
     }

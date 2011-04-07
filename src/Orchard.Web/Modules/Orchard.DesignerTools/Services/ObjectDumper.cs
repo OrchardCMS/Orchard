@@ -126,6 +126,11 @@ namespace Orchard.DesignerTools.Services {
             foreach (var member in members) {
                 if (o is ContentItem && member.Name == "Parts") {
                     foreach (var part in ((ContentItem) o).Parts) {
+                        // ignore contentparts like ContentPart<ContentItemVersionRecord>
+                        if(part.GetType().IsGenericType) {
+                            continue;
+                        }
+
                         SafeCall(() => Dump(part, part.PartDefinition.Name));
                     }
                 }

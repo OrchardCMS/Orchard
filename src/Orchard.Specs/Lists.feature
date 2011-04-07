@@ -33,5 +33,5 @@ Scenario: I can add content items to a list
             | Routable.Title | MyContentItem |
         And I hit "Save"
         And I am redirected
-    Then I should see "Manage Content for MyList"
+    Then I should see "Manage MyList"
         And I should see "MyContentItem"

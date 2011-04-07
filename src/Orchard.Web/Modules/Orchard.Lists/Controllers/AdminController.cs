@@ -311,7 +311,7 @@ namespace Lists.Controllers {
                 // ensure the item can be in that container.
                 if (!string.IsNullOrEmpty(itemContentType) && item.ContentType != itemContentType) {
                     Services.TransactionManager.Cancel();
-                    Services.Notifier.Information(T("One or more items could not be moved to '{0}' because it is restricted to containing items of type '{1}'.", _contentManager.GetItemMetadata(targetContainer).DisplayText, itemContentType));
+                    Services.Notifier.Information(T("One or more items could not be moved to '{0}' because it is restricted to containing items of type '{1}'.", _contentManager.GetItemMetadata(targetContainer).DisplayText ?? targetContainer.ContentItem.ContentType, itemContentType));
                     return true; // todo: transactions
                 }
 
@@ -319,7 +319,7 @@ namespace Lists.Controllers {
                 FixItemPath(item);
             }
             Services.Notifier.Information(T("Content successfully moved to <a href=\"{0}\">{1}</a>.",
-                                            Url.Action("List", new { containerId = targetContainerId }), _contentManager.GetItemMetadata(targetContainer).DisplayText));
+                                            Url.Action("List", new { containerId = targetContainerId }), _contentManager.GetItemMetadata(targetContainer).DisplayText ?? targetContainer.ContentItem.ContentType));
             return true;
         }
 

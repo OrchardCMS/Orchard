@@ -8,14 +8,14 @@
 
     var targetContainers = ((IEnumerable<ContentItem>)Model.Containers).Select(
         contentItem => new SelectListItem {
-            Text = T("Move to {0}", contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText).ToString(),
+            Text = T("Move to {0}", contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText ?? contentItem.ContentType).ToString(),
             Value = contentItem.Id.ToString(System.Globalization.CultureInfo.InvariantCulture),
 			Selected = contentItem.Id == targetContainerId
         }).ToList();
 
     var sourceContainers = ((IEnumerable<ContentItem>)Model.Containers).Select(
         contentItem => new SelectListItem {
-            Text = contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText,
+            Text = contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText ?? contentItem.ContentType,
             Value = contentItem.Id.ToString(System.Globalization.CultureInfo.InvariantCulture),
 			Selected = contentItem.Id == sourceContainerId
         }).ToList();

@@ -5,7 +5,7 @@
 
 @using (Html.BeginForm("update", "admin", FormMethod.Post, new {area = "Orchard.Indexing"})) { 
     <fieldset>
-        <legend>@T("Search Index Statistics")</legend>
+        <legend>@T("Search Index")</legend>
          <ol class="decimal">
         @if (Model.IndexEntry == null) {
 
