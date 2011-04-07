@@ -55,6 +55,12 @@
     <Content Include="TheAdmin\Styles\ie7.css" />
     <Content Include="TheAdmin\Styles\ie8.css" />
     <Content Include="TheAdmin\Styles\images\adminNavBackground.gif" />
+    <Content Include="TheAdmin\Styles\images\icon-advisory.png" />
+    <Content Include="TheAdmin\Styles\images\icon-contribute.png" />
+    <Content Include="TheAdmin\Styles\images\icon-docs.png" />
+    <Content Include="TheAdmin\Styles\images\icon-friends.png" />
+    <Content Include="TheAdmin\Styles\images\icon-gallery.png" />
+    <Content Include="TheAdmin\Styles\images\icon-settings.png" />
     <Content Include="TheAdmin\Styles\images\info.gif" />
     <Content Include="TheAdmin\Styles\images\menu-default.png" />
     <Content Include="TheAdmin\Styles\images\menu-glyph.png" />
