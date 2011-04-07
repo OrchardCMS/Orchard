@@ -388,7 +388,7 @@
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.MediaPicker &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Migrations &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.MultiTenancy &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
-    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Recipies &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Recipes &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Scripting.Dlr &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Search &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Warmup &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
