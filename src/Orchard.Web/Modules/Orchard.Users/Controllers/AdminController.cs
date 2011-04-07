@@ -245,7 +245,7 @@ namespace Orchard.Users.Controllers {
                         _siteService.GetSiteSettings().As<SiteSettingsPart>().SuperUser = editModel.UserName;
                     }
 
-                    user.NormalizedUserName = editModel.UserName.ToUpperInvariant();
+                    user.NormalizedUserName = editModel.UserName.ToLower();
                 }
             }
 
