@@ -12,28 +12,28 @@ namespace Orchard.Core.Contents {
                 .OnDisplaying(displaying => {
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
-                        //Content-BlogPost
-                        displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.ContentType);
-                        //Content-42
-                        displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.Id);
-                        //Content.Summary
+                        // Alternates in order of specificity. 
+                        // Display type > content type > specific content > display type for a content type > display type for specific content
+
+                        // Content__[DisplayType] e.g. Content.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType);
-                        //Content-Page.Summary
+
+                        // Content__[ContentType] e.g. Content-BlogPost
+                        displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.ContentType);
+
+                        // Content__[Id] e.g. Content-42
+                        displaying.ShapeMetadata.Alternates.Add("Content__" + contentItem.Id);
+
+                        // Content_[DisplayType]__[ContentType] e.g. Content-BlogPost.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" + displaying.ShapeMetadata.DisplayType + "__" + contentItem.ContentType);
 
-                        if (!displaying.ShapeMetadata.DisplayType.Contains("Admin"))
+                        // Content_[DisplayType]__[Id] e.g. Content-42.Summary
+                        displaying.ShapeMetadata.Alternates.Add("Content_" +  displaying.ShapeMetadata.DisplayType + "__" + contentItem.Id);
+
+                        if ( !displaying.ShapeMetadata.DisplayType.Contains("Admin") )
                             displaying.ShapeMetadata.Wrappers.Add("Content_ControlWrapper");
                     }
                 });
-
-            builder.Describe("Content_Edit")
-               .OnDisplaying(displaying => {
-                   ContentItem contentItem = displaying.Shape.ContentItem;
-                   if (contentItem != null) {
-                       //Content-Page.Edit
-                       displaying.ShapeMetadata.Alternates.Add("Content_Edit__" + contentItem.ContentType);
-                   }
-               });
         }
     }
 }

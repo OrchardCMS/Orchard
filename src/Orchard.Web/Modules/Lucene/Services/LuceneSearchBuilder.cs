@@ -23,6 +23,7 @@ namespace Lucene.Services {
         private int _count;
         private int _skip;
         private string _sort;
+        private int _comparer;
         private bool _sortDescending;
         private bool _asFilter;
 
@@ -43,6 +44,7 @@ namespace Lucene.Services {
             _clauses = new List<BooleanClause>();
             _filters = new List<BooleanClause>();
             _sort = String.Empty;
+            _comparer = 0;
             _sortDescending = true;
 
             InitPendingClause();
@@ -101,25 +103,25 @@ namespace Lucene.Services {
 
         public ISearchBuilder WithField(string field, bool value) {
             CreatePendingClause();
-            _query = new TermQuery(new Term(field, value.ToString()));
+            _query = new TermQuery(new Term(field, value.ToString().ToLower()));
             return this;
         }
 
         public ISearchBuilder WithField(string field, DateTime value) {
             CreatePendingClause();
-            _query = new TermQuery(new Term(field, DateTools.DateToString(value, DateTools.Resolution.SECOND)));
+            _query = new TermQuery(new Term(field, DateTools.DateToString(value, DateTools.Resolution.MILLISECOND)));
             return this;
         }
 
         public ISearchBuilder WithinRange(string field, DateTime min, DateTime max) {
             CreatePendingClause();
-            _query = new TermRangeQuery(field, DateTools.DateToString(min, DateTools.Resolution.SECOND), DateTools.DateToString(max, DateTools.Resolution.SECOND), true, true);
+            _query = new TermRangeQuery(field, DateTools.DateToString(min, DateTools.Resolution.MILLISECOND), DateTools.DateToString(max, DateTools.Resolution.MILLISECOND), true, true);
             return this;
         }
 
         public ISearchBuilder WithinRange(string field, string min, string max) {
             CreatePendingClause();
-            _query = new TermRangeQuery(field, QueryParser.Escape(min.ToLower()), QueryParser.Escape(min.ToLower()), true, true);
+            _query = new TermRangeQuery(field, QueryParser.Escape(min.ToLower()), QueryParser.Escape(max.ToLower()), true, true);
             return this;
         }
 
@@ -159,6 +161,8 @@ namespace Lucene.Services {
             _query = null;
             _boost = 0;
             _asFilter = false;
+            _sort = String.Empty;
+            _comparer = 0;
         }
 
         private void CreatePendingClause() {
@@ -173,7 +177,9 @@ namespace Lucene.Services {
             if(!_exactMatch) {
                 var termQuery = _query as TermQuery;
                 if(termQuery != null) {
-                    _query = new PrefixQuery(termQuery.GetTerm());
+                    var term = termQuery.GetTerm();
+                    // prefixed queries are case sensitive
+                    _query = new PrefixQuery(term);
                 }
             }
             if ( _asFilter ) {
@@ -184,12 +190,40 @@ namespace Lucene.Services {
             }
         }
 
-        public ISearchBuilder SortBy(string name) {
+        public ISearchBuilder SortBy(string name)
+        {
             _sort = name;
+            _comparer = 0;
             return this;
         }
 
-        public ISearchBuilder Ascending() {
+        public ISearchBuilder SortByInteger(string name) {
+            _sort = name;
+            _comparer = SortField.INT;
+            return this;
+        }
+
+        public ISearchBuilder SortByString(string name) {
+            _sort = name;
+            _comparer = SortField.STRING;
+            return this;
+        }
+
+        public ISearchBuilder SortByFloat(string name) {
+            _sort = name;
+            _comparer = SortField.FLOAT;
+            return this;
+        }
+
+        public ISearchBuilder SortByDateTime(string name)
+        {
+            _sort = name;
+            _comparer = SortField.LONG;
+            return this;
+        }
+
+        public ISearchBuilder Ascending()
+        {
             _sortDescending = false;
             return this;
         }
@@ -267,7 +301,7 @@ namespace Lucene.Services {
             try {
                 var sort = String.IsNullOrEmpty(_sort)
                                ? Sort.RELEVANCE
-                               : new Sort(new SortField(_sort, CultureInfo.InvariantCulture, _sortDescending));
+                               : new Sort(new SortField(_sort, _comparer, _sortDescending));
                 var collector = TopFieldCollector.create(
                     sort,
                     _count + _skip,

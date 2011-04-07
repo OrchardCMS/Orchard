@@ -5,8 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The media module offer basic media management features. It currently only supports image files. Storage goes into the current Orchard file system, which can be the server's physical file system or Azure blob storage.
-Features:
-    Orchard.Media:
-        Name: Media
-        Description: File system based media upload, storage and management.
-        Category: Media
+FeatureDescription: File system based media upload, storage and management.
+Category: Media

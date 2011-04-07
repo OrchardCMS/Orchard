@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
 using JetBrains.Annotations;
@@ -8,13 +9,26 @@ using Orchard.ContentManagement;
 using Orchard.FileSystems.Media;
 using Orchard.Localization;
 using Orchard.Media.Models;
+using Orchard.Security;
+using Orchard.Settings;
+using Orchard.Validation;
 
 namespace Orchard.Media.Services {
+    /// <summary>
+    /// The MediaService class provides the services o manipulate media entities (files / folders).
+    /// Among other things it provides filtering functionalities on file types.
+    /// The actual manipulation of the files is, however, delegated to the IStorageProvider.
+    /// </summary>
     [UsedImplicitly]
     public class MediaService : IMediaService {
         private readonly IStorageProvider _storageProvider;
         private readonly IOrchardServices _orchardServices;
 
+        /// <summary>
+        /// Initializes a new instance of the MediaService class with a given IStorageProvider and IOrchardServices.
+        /// </summary>
+        /// <param name="storageProvider">The storage provider.</param>
+        /// <param name="orchardServices">The orchard services provider.</param>
         public MediaService(IStorageProvider storageProvider, IOrchardServices orchardServices) {
             _storageProvider = storageProvider;
             _orchardServices = orchardServices;
@@ -24,197 +38,274 @@ namespace Orchard.Media.Services {
 
         public Localizer T { get; set; }
 
-        public string GetPublicUrl(string path) {
-            return _storageProvider.GetPublicUrl(path);
-        }
+        /// <summary>
+        /// Retrieves the public path based on the relative path within the media directory.
+        /// </summary>
+        /// <example>
+        /// "/Media/Default/InnerDirectory/Test.txt" based on the input "InnerDirectory/Test.txt"
+        /// </example>
+        /// <param name="relativePath">The relative path within the media directory.</param>
+        /// <returns>The public path relative to the application url.</returns>
+        public string GetPublicUrl(string relativePath) {
+            Argument.ThrowIfNullOrEmpty(relativePath, "relativePath");
 
-        public IEnumerable<MediaFolder> GetMediaFolders(string path) {
-            var mediaFolders = new List<MediaFolder>();
-            var folders = _storageProvider.ListFolders(path);
+            return _storageProvider.GetPublicUrl(relativePath);
+         }
 
-            foreach (var folder in folders) {
-                var mediaFolder = new MediaFolder {
+        /// <summary>
+        /// Retrieves the media folders within a given relative path.
+        /// </summary>
+        /// <param name="relativePath">The path where to retrieve the media folder from. null means root.</param>
+        /// <returns>The media folder in the given path.</returns>
+        public IEnumerable<MediaFolder> GetMediaFolders(string relativePath) {
+            return _storageProvider.ListFolders(relativePath).Select(folder =>
+                new MediaFolder {
                     Name = folder.GetName(),
                     Size = folder.GetSize(),
                     LastUpdated = folder.GetLastUpdated(),
                     MediaPath = folder.GetPath()
-                };
-                mediaFolders.Add(mediaFolder);
-            }
-            return mediaFolders;
+                }).Where(f => !f.Name.Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase));
         }
 
-        public IEnumerable<MediaFile> GetMediaFiles(string path) {
-            var mediaFiles = new List<MediaFile>();
-
-            var files = _storageProvider.ListFiles(path);
-            foreach (var file in files) {
-                var mediaFile = new MediaFile {
+        /// <summary>
+        /// Retrieves the media files within a given relative path.
+        /// </summary>
+        /// <param name="relativePath">The path where to retrieve the media files from. null means root.</param>
+        /// <returns>The media files in the given path.</returns>
+        public IEnumerable<MediaFile> GetMediaFiles(string relativePath) {
+            return _storageProvider.ListFiles(relativePath).Select(file =>
+                new MediaFile {
                     Name = file.GetName(),
                     Size = file.GetSize(),
                     LastUpdated = file.GetLastUpdated(),
                     Type = file.GetFileType(),
-                    FolderName = path
-                };
-                mediaFiles.Add(mediaFile);
+                    FolderName = relativePath
+                });
+        }
+
+        /// <summary>
+        /// Creates a media folder.
+        /// </summary>
+        /// <param name="relativePath">The path where to create the new folder. null means root.</param>
+        /// <param name="folderName">The name of the folder to be created.</param>
+        public void CreateFolder(string relativePath, string folderName) {
+            Argument.ThrowIfNullOrEmpty(folderName, "folderName");
+
+            _storageProvider.CreateFolder(relativePath == null ? folderName : _storageProvider.Combine(relativePath, folderName));
+        }
+
+        /// <summary>
+        /// Deletes a media folder.
+        /// </summary>
+        /// <param name="folderPath">The path to the folder to be deleted.</param>
+        public void DeleteFolder(string folderPath) {
+            Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
+
+            _storageProvider.DeleteFolder(folderPath);
+        }
+
+        /// <summary>
+        /// Renames a media folder.
+        /// </summary>
+        /// <param name="folderPath">The path to the folder to be renamed.</param>
+        /// <param name="newFolderName">The new folder name.</param>
+        public void RenameFolder(string folderPath, string newFolderName) {
+            Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
+            Argument.ThrowIfNullOrEmpty(newFolderName, "newFolderName");
+
+            _storageProvider.RenameFolder(folderPath, _storageProvider.Combine(Path.GetDirectoryName(folderPath), newFolderName));
+        }
+
+        /// <summary>
+        /// Deletes a media file.
+        /// </summary>
+        /// <param name="folderPath">The folder path.</param>
+        /// <param name="fileName">The file name.</param>
+        public void DeleteFile(string folderPath, string fileName) {
+            Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
+            Argument.ThrowIfNullOrEmpty(fileName, "fileName");
+
+            _storageProvider.DeleteFile(_storageProvider.Combine(folderPath, fileName));
+        }
+
+        /// <summary>
+        /// Renames a media file.
+        /// </summary>
+        /// <param name="folderPath">The path to the file's parent folder.</param>
+        /// <param name="currentFileName">The current file name.</param>
+        /// <param name="newFileName">The new file name.</param>
+        public void RenameFile(string folderPath, string currentFileName, string newFileName) {
+            Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
+            Argument.ThrowIfNullOrEmpty(currentFileName, "currentFileName");
+            Argument.ThrowIfNullOrEmpty(newFileName, "newFileName");
+
+            if (!FileAllowed(newFileName, false)) {
+                throw new ArgumentException(T("New file name {0} is not allowed", newFileName).ToString());
             }
-            return mediaFiles;
+
+            _storageProvider.RenameFile(_storageProvider.Combine(folderPath, currentFileName), _storageProvider.Combine(folderPath, newFileName));
         }
 
-        //TODO: Use Path.Combine.
-        public void CreateFolder(string mediaPath, string name) {
-            if (String.IsNullOrEmpty(mediaPath)) {
-                _storageProvider.CreateFolder(name);
-                return;
-            }
-            _storageProvider.CreateFolder(_storageProvider.Combine(mediaPath, name));
+        /// <summary>
+        /// Uploads a media file based on a posted file.
+        /// </summary>
+        /// <param name="folderPath">The path to the folder where to upload the file.</param>
+        /// <param name="postedFile">The file to upload.</param>
+        /// <param name="extractZip">Boolean value indicating weather zip files should be extracted.</param>
+        /// <returns>The path to the uploaded file.</returns>
+        public string UploadMediaFile(string folderPath, HttpPostedFileBase postedFile, bool extractZip) {
+            Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
+            Argument.ThrowIfNull(postedFile, "postedFile");
+
+            return UploadMediaFile(folderPath, Path.GetFileName(postedFile.FileName), postedFile.InputStream, extractZip);
         }
 
-        public void DeleteFolder(string name) {
-            _storageProvider.DeleteFolder(name);
-        }
-
-        public void RenameFolder(string path, string newName) {
-            var newPath = RenameFolderPath(path, newName);
-            _storageProvider.RenameFolder(path, newPath);
-        }
-
-        public void DeleteFile(string name, string folderName) {
-            _storageProvider.DeleteFile(_storageProvider.Combine(folderName, name));
-        }
-
-        public void RenameFile(string name, string newName, string folderName) {
-            if (!FileAllowed(newName, false)) {
-                throw new ArgumentException(T("New file name {0} not allowed", newName).ToString());
-            }
-
-            _storageProvider.RenameFile(_storageProvider.Combine(folderName, name), _storageProvider.Combine(folderName, newName));
-        }
-
-        public string UploadMediaFile(string folderName, HttpPostedFileBase postedFile, bool extractZip) {
-            var postedFileLength = postedFile.ContentLength;
-            var postedFileStream = postedFile.InputStream;
-            var postedFileData = new byte[postedFileLength];
-            postedFileStream.Read(postedFileData, 0, postedFileLength);
-
-            return UploadMediaFile(folderName, postedFile.FileName, postedFileData, extractZip);
-        }
-
+        /// <summary>
+        /// Uploads a media file based on an array of bytes.
+        /// </summary>
+        /// <param name="folderPath">The path to the folder where to upload the file.</param>
+        /// <param name="fileName">The file name.</param>
+        /// <param name="bytes">The array of bytes with the file's contents.</param>
+        /// <param name="extractZip">Boolean value indicating weather zip files should be extracted.</param>
+        /// <returns>The path to the uploaded file.</returns>
         public string UploadMediaFile(string folderPath, string fileName, byte [] bytes, bool extractZip) {
-            if (extractZip && fileName.EndsWith(".zip")) {
-                UnzipMediaFileArchive(folderPath, bytes);
+            Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
+            Argument.ThrowIfNullOrEmpty(fileName, "fileName");
+            Argument.ThrowIfNull(bytes, "bytes");
+
+            return UploadMediaFile(folderPath, fileName, new MemoryStream(bytes), extractZip);
+        }
+
+        /// <summary>
+        /// Uploads a media file based on a stream.
+        /// </summary>
+        /// <param name="folderPath">The folder path to where to upload the file.</param>
+        /// <param name="fileName">The file name.</param>
+        /// <param name="inputStream">The stream with the file's contents.</param>
+        /// <param name="extractZip">Boolean value indicating weather zip files should be extracted.</param>
+        /// <returns>The path to the uploaded file.</returns>
+        public string UploadMediaFile(string folderPath, string fileName, Stream inputStream, bool extractZip) {
+            Argument.ThrowIfNullOrEmpty(folderPath, "folderPath");
+            Argument.ThrowIfNullOrEmpty(fileName, "fileName");
+            Argument.ThrowIfNull(inputStream, "inputStream");
+
+            if (extractZip && IsZipFile(Path.GetExtension(fileName))) {
+                UnzipMediaFileArchive(folderPath, inputStream);
+
                 // Don't save the zip file.
                 return _storageProvider.GetPublicUrl(folderPath);
             }
 
-            if (FileAllowed(fileName, true) && bytes.Length > 0) {
-                string filePath = Path.Combine(folderPath, Path.GetFileName(fileName));
-                _storageProvider.TryCreateFolder(folderPath);
-                IStorageFile file = _storageProvider.CreateFile(filePath);
-                using(var stream = file.OpenWrite()) {
-                    stream.Write(bytes, 0, bytes.Length);
-                }
+            if (!FileAllowed(fileName, true)) {
+                var currentSite = _orchardServices.WorkContext.CurrentSite;
+                var mediaSettings = currentSite.As<MediaSettingsPart>();
 
-                return _storageProvider.GetPublicUrl(filePath);
+                throw new ArgumentException(T("Could not upload file {0}. Supported file types are {1}.", fileName, mediaSettings.UploadAllowedFileTypeWhitelist).Text);
             }
 
-            return null;
+            string filePath = _storageProvider.Combine(folderPath, fileName);
+            _storageProvider.SaveStream(filePath, inputStream);
+
+            return _storageProvider.GetPublicUrl(filePath);
         }
 
+        /// <summary>
+        /// Verifies if a file is allowed based on its name and the policies defined by the black / white lists.
+        /// </summary>
+        /// <param name="postedFile">The posted file</param>
+        /// <returns>True if the file is allowed; false if otherwise.</returns>
         public bool FileAllowed(HttpPostedFileBase postedFile) {
             if (postedFile == null) {
                 return false;
             }
+
             return FileAllowed(postedFile.FileName, true);
         }
 
-        private bool FileAllowed(string name, bool allowZip) {
-            if (string.IsNullOrWhiteSpace(name)) {
+        /// <summary>
+        /// Verifies if a file is allowed based on its name and the policies defined by the black / white lists.
+        /// </summary>
+        /// <param name="fileName">The file name of the file to validate.</param>
+        /// <param name="allowZip">Boolean value indicating weather zip files are allowed.</param>
+        /// <returns>True if the file is allowed; false if otherwise.</returns>
+        public bool FileAllowed(string fileName, bool allowZip) {
+            string localFileName = GetFileName(fileName);
+            string extension = GetExtension(localFileName);
+            if (string.IsNullOrEmpty(localFileName) || string.IsNullOrEmpty(extension)) {
                 return false;
             }
-            var currentSite = _orchardServices.WorkContext.CurrentSite;
-            var mediaSettings = currentSite.As<MediaSettingsPart>();
-            var allowedExtensions = mediaSettings.UploadAllowedFileTypeWhitelist.ToUpperInvariant().Split(' ');
-            var ext = (Path.GetExtension(name) ?? "").TrimStart('.').ToUpperInvariant();
-            if (string.IsNullOrWhiteSpace(ext)) {
-                return false;
+
+            ISite currentSite = _orchardServices.WorkContext.CurrentSite;
+            IUser currentUser = _orchardServices.WorkContext.CurrentUser;
+
+            // zip files at the top level are allowed since this is how you upload multiple files at once.
+            if (IsZipFile(extension)) {
+                return allowZip;
             }
+
             // whitelist does not apply to the superuser
-            var currentUser = _orchardServices.WorkContext.CurrentUser;
             if (currentUser == null || !currentSite.SuperUser.Equals(currentUser.UserName, StringComparison.Ordinal)) {
-                // zip files at the top level are allowed since this is how you upload multiple files at once.
-                if (allowZip && ext.Equals("zip", StringComparison.OrdinalIgnoreCase)) {
-                    return true;
-                }
+
                 // must be in the whitelist
-                if (Array.IndexOf(allowedExtensions, ext) == -1) {
+                MediaSettingsPart mediaSettings = currentSite.As<MediaSettingsPart>();
+                if (mediaSettings == null ||
+                    !mediaSettings.UploadAllowedFileTypeWhitelist.ToUpperInvariant().Split(' ').Contains(extension.ToUpperInvariant())) {
                     return false;
                 }
             }
+
             // blacklist always applies
-            if (string.Equals(name.Trim(), "web.config", StringComparison.OrdinalIgnoreCase)) {
+            if (string.Equals(localFileName, "web.config", StringComparison.OrdinalIgnoreCase)) {
                 return false;
             }
+
             return true;
         }
 
-        private void SaveStream(string filePath, Stream inputStream) {
-            var file = _storageProvider.CreateFile(filePath);
-            var outputStream = file.OpenWrite();
-            var buffer = new byte[8192];
-            for (; ; ) {
+        /// <summary>
+        /// Unzips a media archive file.
+        /// </summary>
+        /// <param name="targetFolder">The folder where to unzip the file.</param>
+        /// <param name="zipStream">The archive file stream.</param>
+        protected void UnzipMediaFileArchive(string targetFolder, Stream zipStream) {
+            Argument.ThrowIfNullOrEmpty(targetFolder, "targetFolder");
+            Argument.ThrowIfNull(zipStream, "zipStream");
 
-                var length = inputStream.Read(buffer, 0, buffer.Length);
-                if (length <= 0)
-                    break;
-                outputStream.Write(buffer, 0, length);
-            }
-            outputStream.Dispose();
-        }
+            var fileInflater = new ZipInputStream(zipStream);
+            ZipEntry entry;
+            // We want to preserve whatever directory structure the zip file contained instead
+            // of flattening it.
+            // The API below doesn't necessarily return the entries in the zip file in any order.
+            // That means the files in subdirectories can be returned as entries from the stream 
+            // before the directories that contain them, so we create directories as soon as first
+            // file below their path is encountered.
+            while ((entry = fileInflater.GetNextEntry()) != null) {
+                if (!entry.IsDirectory && !string.IsNullOrEmpty(entry.Name)) {
 
-        private void UnzipMediaFileArchive(string targetFolder, HttpPostedFileBase postedFile) {
-            var postedFileLength = postedFile.ContentLength;
-            var postedFileStream = postedFile.InputStream;
-            var postedFileData = new byte[postedFileLength];
-            postedFileStream.Read(postedFileData, 0, postedFileLength);
-
-            UnzipMediaFileArchive(targetFolder, postedFileData);
-        }
-
-        private void UnzipMediaFileArchive(string targetFolder, byte [] postedFileData) {
-            using (var memoryStream = new MemoryStream(postedFileData)) {
-                var fileInflater = new ZipInputStream(memoryStream);
-                ZipEntry entry;
-                // We want to preserve whatever directory structure the zip file contained instead
-                // of flattening it.
-                // The API below doesn't necessarily return the entries in the zip file in any order.
-                // That means the files in subdirectories can be returned as entries from the stream 
-                // before the directories that contain them, so we create directories as soon as first
-                // file below their path is encountered.
-                while ((entry = fileInflater.GetNextEntry()) != null) {
-
-                    if (!entry.IsDirectory && entry.Name.Length > 0) {
-                        var entryName = Path.Combine(targetFolder, entry.Name);
-                        var directoryName = Path.GetDirectoryName(entryName);
-
-                        // skip disallowed files
-                        if (FileAllowed(entry.Name, false)) {
-                            _storageProvider.TryCreateFolder(directoryName);
-                            SaveStream(entryName, fileInflater);
-                        }
+                    // skip disallowed files
+                    if (FileAllowed(entry.Name, false)) {
+                        string fullFileName = _storageProvider.Combine(targetFolder, entry.Name);
+                        _storageProvider.TrySaveStream(fullFileName, fileInflater);
                     }
                 }
             }
         }
 
-        private string RenameFolderPath(string path, string newName) {
-            var lastIndex = Math.Max(path.LastIndexOf(Path.DirectorySeparatorChar), path.LastIndexOf(Path.AltDirectorySeparatorChar));
+        /// <summary>
+        /// Determines if a file is a Zip Archive based on its extension.
+        /// </summary>
+        /// <param name="extension">The extension of the file to analyze.</param>
+        /// <returns>True if the file is a Zip archive; false otherwise.</returns>
+        private static bool IsZipFile(string extension) {
+            return string.Equals(extension.TrimStart('.'), "zip", StringComparison.OrdinalIgnoreCase);
+        }
 
-            if (lastIndex == -1) {
-                return newName;
-            }
+        private static string GetFileName(string fileName) {
+            return Path.GetFileName(fileName).Trim();
+        }
 
-            return _storageProvider.Combine(path.Substring(0, lastIndex), newName);
+        private static string GetExtension(string fileName) {
+            return Path.GetExtension(fileName).Trim().TrimStart('.');
         }
     }
 }

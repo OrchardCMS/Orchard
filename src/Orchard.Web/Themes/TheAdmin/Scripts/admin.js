@@ -23,7 +23,8 @@
                 }
 
                 if ((settings.remember && "closed" === $.orchard.setting(__cookieName, { key: settings.key + "-" + controller.text(), path: settings.path }))
-                    || settings.collapse) {
+                    || settings.collapse
+                    || (controller.closest("li").hasClass("collapsed") && !(settings.remember && "open" === $.orchard.setting(__cookieName, { key: settings.key + "-" + controller.text(), path: settings.path })))) {
                     glyph.addClass("closed").data("controllees").hide();
                 }
                 else if (settings.collapse) {
@@ -55,5 +56,9 @@
 
             return this;
         }
+    });
+
+    $(".bulk-actions-auto select").change(function () {
+        $(this).closest("form").find(".apply-bulk-actions-auto:first").click();
     });
 })(jQuery);

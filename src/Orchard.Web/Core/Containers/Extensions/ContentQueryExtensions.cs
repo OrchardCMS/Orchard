@@ -36,6 +36,11 @@ namespace Orchard.Core.Containers.Extensions
                                 ? query.OrderByDescending<CustomPropertiesPartRecord, string>(record => record.CustomThree)
                                 : query.OrderBy<CustomPropertiesPartRecord, string>(record => record.CustomThree);
                     break;
+                case "CommonPart.CreatedUtc":
+                    query = descendingOrder
+                                ? query.OrderByDescending<CommonPartRecord, DateTime?>(record => record.CreatedUtc)
+                                : query.OrderBy<CommonPartRecord, DateTime?>(record => record.CreatedUtc);
+                    break;
                 default: // "CommonPart.PublishedUtc"
                     query = descendingOrder
                                 ? query.OrderByDescending<CommonPartRecord, DateTime?>(record => record.PublishedUtc)

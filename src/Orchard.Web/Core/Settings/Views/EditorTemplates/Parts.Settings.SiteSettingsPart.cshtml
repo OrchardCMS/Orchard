@@ -8,7 +8,7 @@
     }, "Id", "Text", (int)Model.ResourceDebugMode);
 }
 <fieldset>
-    <legend>@T("Global Settings")</legend>
+    <legend>@T("General Settings")</legend>
     <div>
         <label for="SiteName">@T("Site name")</label>
         @Html.EditorFor(m => m.SiteName)
@@ -38,7 +38,13 @@
     </div>
     <div>
         <label for="DefaultPageSize">@T("Default number of items per page")</label>
-        @Html.TextBoxFor(m => m.PageSize, new { @class = "textMedium" })
+        @Html.TextBoxFor(m => m.PageSize, new { @class = "text-small" })
         <span class="hint">@T("Determines the default number of items that are shown per page.")</span>
+    </div>
+    <div>
+        <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base url ")</label>
+        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "textMedium" })
+        <span class="hint">@T("Enter the fully qualified base url of your website.")</span>
+        <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
     </div>
 </fieldset>

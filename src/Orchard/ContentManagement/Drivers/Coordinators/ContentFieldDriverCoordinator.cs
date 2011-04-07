@@ -39,6 +39,10 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }
         }
 
+        public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
+            _drivers.Invoke(driver => driver.GetContentItemMetadata(context), Logger);
+        }
+
         public override void BuildDisplay(BuildDisplayContext context) {
             _drivers.Invoke(driver => {
                 var result = driver.BuildDisplayShape(context);
@@ -61,6 +65,30 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                 if (result != null)
                     result.Apply(context);
             }, Logger);
+        }
+
+        public override void Importing(ImportContentContext context) {
+            foreach (var contentFieldDriver in _drivers) {
+                contentFieldDriver.Importing(context);
+            }
+        }
+
+        public override void Imported(ImportContentContext context) {
+            foreach (var contentFieldDriver in _drivers) {
+                contentFieldDriver.Imported(context);
+            }
+        }
+
+        public override void Exporting(ExportContentContext context) {
+            foreach (var contentFieldDriver in _drivers) {
+                contentFieldDriver.Exporting(context);
+            }
+        }
+
+        public override void Exported(ExportContentContext context) {
+            foreach (var contentFieldDriver in _drivers) {
+                contentFieldDriver.Exported(context);
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             var harvester = new BasicShapeTemplateHarvester();
             var harvestShapeHits = harvester.HarvestShape(new HarvestShapeInfo { SubPath = givenSubPath, FileName = givenFileName });
             Assert.That(harvestShapeHits.Count(), Is.EqualTo(1));
-            Assert.That(harvestShapeHits.Single().ShapeType, Is.EqualTo(expectedShapeType));
+            Assert.That(harvestShapeHits.Single().ShapeType, Is.EqualTo(expectedShapeType).IgnoreCase);
         }
 
         [Test]

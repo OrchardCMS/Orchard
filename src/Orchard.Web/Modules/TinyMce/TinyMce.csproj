@@ -50,11 +50,15 @@
     <Content Include="Module.txt" />
     <Content Include="Scripts\langs\en.js" />
     <Content Include="Scripts\license.txt" />
+    <Content Include="Scripts\orchard-tinymce.js" />
     <Content Include="Scripts\plugins\autoresize\editor_plugin.js" />
     <Content Include="Scripts\plugins\autoresize\editor_plugin_src.js" />
     <Content Include="Scripts\plugins\fullscreen\editor_plugin.js" />
     <Content Include="Scripts\plugins\fullscreen\editor_plugin_src.js" />
     <Content Include="Scripts\plugins\fullscreen\fullscreen.htm" />
+    <Content Include="Scripts\plugins\mediapicker\editor_plugin_src.js" />
+    <Content Include="Scripts\plugins\mediapicker\editor_plugin.js" />
+    <Content Include="Scripts\plugins\mediapicker\img\picture_add.png" />
     <Content Include="Scripts\themes\advanced\about.htm" />
     <Content Include="Scripts\themes\advanced\anchor.htm" />
     <Content Include="Scripts\themes\advanced\charmap.htm" />
@@ -124,13 +128,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\plugins\addmedia\addmedia.htm" />
-    <Content Include="Scripts\plugins\addmedia\editor_plugin_src.js" />
-    <Content Include="Scripts\plugins\addmedia\editor_plugin.js" />
-    <Content Include="Scripts\plugins\addmedia\img\picture_add.png" />
-    <Content Include="Scripts\plugins\addmedia\js\addmedia.js" />
-    <Content Include="Scripts\plugins\addmedia\langs\en_dlg.js" />
-    <Content Include="Scripts\plugins\addmedia\langs\en.js" />
     <Content Include="Scripts\plugins\searchreplace\css\searchreplace.css" />
     <Content Include="Scripts\plugins\searchreplace\editor_plugin.js" />
     <Content Include="Scripts\plugins\searchreplace\editor_plugin_src.js" />
@@ -143,6 +140,10 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

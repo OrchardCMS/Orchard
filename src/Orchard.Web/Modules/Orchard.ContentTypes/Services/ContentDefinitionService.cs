@@ -69,7 +69,7 @@ namespace Orchard.ContentTypes.Services {
             }
 
             if(String.IsNullOrWhiteSpace(name)) {
-                name = GenerateName(displayName);
+                name = GenerateContentTypeNameFromDisplayName(displayName);
             }
 
             while ( _contentDefinitionManager.GetTypeDefinition(name) != null )
@@ -185,10 +185,10 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public EditPartViewModel AddPart(CreatePartViewModel partViewModel) {
-            var name = GenerateName(partViewModel.Name);
+            var name = partViewModel.Name;
 
-            while (_contentDefinitionManager.GetPartDefinition(name) != null)
-                name = VersionName(name);
+            if (_contentDefinitionManager.GetPartDefinition(name) != null)
+                throw new OrchardException(T("Cannot add part named '{0}'. It already exists.", name));
 
             if (!String.IsNullOrEmpty(name)) {
                 _contentDefinitionManager.AlterPartDefinition(name, builder => builder.Attachable());
@@ -241,13 +241,13 @@ namespace Orchard.ContentTypes.Services {
         }
 
         //gratuitously stolen from the RoutableService
-        public string GenerateName(string name) {
-            name = SafeName(name);
+        public string GenerateContentTypeNameFromDisplayName(string displayName) {
+            displayName = SafeName(displayName);
 
-            while ( _contentDefinitionManager.GetTypeDefinition(name) != null )
-                name = VersionName(name);
+            while ( _contentDefinitionManager.GetTypeDefinition(displayName) != null )
+                displayName = VersionName(displayName);
 
-            return name;
+            return displayName;
         }
 
         private static string VersionName(string name) {

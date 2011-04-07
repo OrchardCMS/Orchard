@@ -31,7 +31,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         ShellSettings CreateSettings() {
-            return new ShellSettings {Name = "Default"};
+            return new ShellSettings { Name = ShellSettings.DefaultName };
         }
         ShellBlueprint CreateBlueprint(params ShellBlueprintItem[] items) {
             return new ShellBlueprint {

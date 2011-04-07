@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Routing;
 using ClaySharp.Implementation;
 using Orchard.ContentManagement.Handlers;
@@ -33,7 +34,7 @@ namespace Orchard.ContentManagement {
 
         public ILogger Logger { get; set; }
 
-        public dynamic BuildDisplay(IContent content, string displayType) {
+        public dynamic BuildDisplay(IContent content, string displayType, string groupId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -46,14 +47,14 @@ namespace Orchard.ContentManagement {
             itemShape.ContentItem = content.ContentItem;
             itemShape.Metadata.DisplayType = actualDisplayType;
 
-            var context = new BuildDisplayContext(itemShape, content, actualDisplayType, _shapeFactory);
-            BindPlacement(context, actualDisplayType);
+            var context = new BuildDisplayContext(itemShape, content, actualDisplayType, groupId, _shapeFactory);
+            BindPlacement(context, actualDisplayType, stereotype);
 
             _handlers.Value.Invoke(handler => handler.BuildDisplay(context), Logger);
             return context.Shape;
         }
 
-        public dynamic BuildEditor(IContent content) {
+        public dynamic BuildEditor(IContent content, string groupId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -64,14 +65,15 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
-            var context = new BuildEditorContext(itemShape, content, _shapeFactory);
-            BindPlacement(context, null);
+            var context = new BuildEditorContext(itemShape, content, groupId, _shapeFactory);
+            BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
+
             return context.Shape;
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater) {
+        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -82,10 +84,11 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
-            var context = new UpdateEditorContext(itemShape, content, updater, _shapeFactory);
-            BindPlacement(context, null);
+            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory);
+            BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);
+            
             return context.Shape;
         }
 
@@ -94,24 +97,34 @@ namespace Orchard.ContentManagement {
             return _shapeFactory.Create(actualShapeType, Arguments.Empty(), new[] { zoneHoldingBehavior });
         }
 
-        private void BindPlacement(BuildShapeContext context, string displayType) {
+        private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {
             context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
-                //var workContext = _workContextAccessor.GetContext();
-                //var theme = workContext.CurrentTheme;
+
                 var theme = _themeService.Value.GetRequestTheme(_requestContext);
                 var shapeTable = _shapeTableManager.GetShapeTable(theme.Id);
+                var request = _requestContext.HttpContext.Request;
 
                 ShapeDescriptor descriptor;
                 if (shapeTable.Descriptors.TryGetValue(partShapeType, out descriptor)) {
                     var placementContext = new ShapePlacementContext {
                         ContentType = context.ContentItem.ContentType,
+                        Stereotype = stereotype,
                         DisplayType = displayType,
                         Differentiator = differentiator,
+                        Path = VirtualPathUtility.AppendTrailingSlash(VirtualPathUtility.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
                     };
-                    var location = descriptor.Placement(placementContext);
-                    return location ?? defaultLocation;
+
+                    var placement = descriptor.Placement(placementContext);
+                    if(placement != null) {
+                        placement.Source = placementContext.Source;
+                        return placement;
+                    }
                 }
-                return defaultLocation;
+
+                return new PlacementInfo {
+                    Location = defaultLocation,
+                    Source = String.Empty
+                };
             };
         }
     }

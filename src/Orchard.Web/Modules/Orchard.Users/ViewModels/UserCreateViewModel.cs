@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
+using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
     public class UserCreateViewModel  {

@@ -24,6 +24,7 @@ fieldset.publish-later-datetime input {
 
 input#PublishLater_ScheduledPublishDate {
     width:39%;
+    margin:0 0 0 12px;
 }
 input#PublishLater_ScheduledPublishTime {
     width:33%;

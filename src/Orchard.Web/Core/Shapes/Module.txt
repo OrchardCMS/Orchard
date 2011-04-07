@@ -5,7 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The shapes module contains core shape templates and display hooks.
-Features:
-    Shapes:
-        Description: Core shape templates and display hooks.
-        Category: Core
+FeatureDescription: Core shape templates and display hooks.
+Category: Core

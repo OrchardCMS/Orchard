@@ -4,10 +4,28 @@
 
 button, .button, .button:link, .button:visited {
     cursor:pointer;
-    padding:0.1em 0.8em 0.2em 0.8em;
+    padding: 4px 14px 4px 14px;
     text-align:center;
 }
 
-.button {
-    line-height:inherit;
+.button:link 
+{
+    
+}
+
+.button, .button:link, .button:visited {
+    cursor:pointer;
+    padding: 5px 14px 5px 14px;
+    text-align:center;
+}
+
+.search-actions button {
+
+   float:right;
+   margin: 1px 0 0 5px;
+
+}
+
+.group {
+zoom:1;
 }

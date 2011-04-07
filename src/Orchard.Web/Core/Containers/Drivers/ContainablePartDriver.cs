@@ -20,7 +20,7 @@ namespace Orchard.Core.Containers.Drivers {
         public Localizer T { get; set; }
 
         protected override DriverResult Editor(ContainablePart part, dynamic shapeHelper) {
-            return Editor(part, null, shapeHelper);
+            return Editor(part, (IUpdateModel)null, shapeHelper);
         }
 
         protected override DriverResult Editor(ContainablePart part, IUpdateModel updater, dynamic shapeHelper) {
@@ -30,7 +30,7 @@ namespace Orchard.Core.Containers.Drivers {
                     var commonPart = part.As<ICommonPart>();
 
                     var model = new ContainableViewModel();
-                    if (commonPart.Container != null) {
+                    if (commonPart != null && commonPart.Container != null) {
                         model.ContainerId = commonPart.Container.Id;
                     }
 
@@ -38,10 +38,15 @@ namespace Orchard.Core.Containers.Drivers {
                         var oldContainerId = model.ContainerId;
                         updater.TryUpdateModel(model, "Containable", null, null);
                         if (oldContainerId != model.ContainerId)
-                            commonPart.Container = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
+                            if (commonPart != null) {
+                                commonPart.Container = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
+                            }
                     }
 
-                    var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).List();
+                    // note: string.isnullorempty not being recognized by linq-to-nhibernate hence the inline or
+                    var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest)
+                        .Where(ctr => ctr.ItemContentType == null || ctr.ItemContentType == "" || ctr.ItemContentType == part.ContentItem.ContentType).List();
+
                     var listItems = new[] { new SelectListItem { Text = T("(None)").Text, Value = "0" } }
                         .Concat(containers.Select(x => new SelectListItem {
                             Value = Convert.ToString(x.Id),

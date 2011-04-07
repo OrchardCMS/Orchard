@@ -4,12 +4,14 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
 using Orchard.Security;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Roles.Controllers {
     [ValidateInput(false)]
@@ -25,12 +27,14 @@ namespace Orchard.Roles.Controllers {
             Services = services;
             _roleService = roleService;
             _authorizationService = authorizationService;
+
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
-
+        public ILogger Logger { get; set; }
 
         public ActionResult Index() {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
@@ -54,9 +58,9 @@ namespace Orchard.Roles.Controllers {
                     }
                 }
                 return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Deleting Role failed: {0}", exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Deleting Role failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View();
             }
         }
@@ -93,9 +97,9 @@ namespace Orchard.Roles.Controllers {
                     }
                 }
                 return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Creating Role failed: {0}", exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Creating Role failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return RedirectToAction("Create");
             }
         }
@@ -145,9 +149,9 @@ namespace Orchard.Roles.Controllers {
 
                 Services.Notifier.Information(T("Your Role has been saved."));
                 return RedirectToAction("Edit", new { id });
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Editing Role failed: {0}", exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Editing Role failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return RedirectToAction("Edit", id);
             }
         }
@@ -170,7 +174,8 @@ namespace Orchard.Roles.Controllers {
 
                 return this.RedirectLocal(returnUrl, () => RedirectToAction("Index"));
             } catch (Exception exception) {
-                Services.Notifier.Error(T("Editing Role failed: {0}", exception.Message));
+                this.Error(exception, T("Editing Role failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return RedirectToAction("Edit", id);
             }
         }

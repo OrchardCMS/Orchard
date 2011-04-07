@@ -39,6 +39,7 @@ using Orchard.Tests.Messaging;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.Handlers;
 using System.Collections.Specialized;
+using Orchard.Mvc;
 
 namespace Orchard.Tests.Modules.Users.Controllers {
     [TestFixture]
@@ -149,7 +150,69 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             _session.Flush();
 
             var result = _controller.Register();
-            Assert.That(result, Is.TypeOf<ViewResult>());
+            Assert.That(result, Is.TypeOf<ShapeResult>());
+        }
+
+        [Test]
+
+        public void UsersShouldNotBeAbleToRegisterIfInvalidEmail(
+            [Values(
+                @"NotAnEmail", 
+                @"@NotAnEmail",
+                @"""test\blah""@example.com",
+                "\"test\rblah\"@example.com",
+                @"""test""blah""@example.com",
+                @".wooly@example.com",
+                @"wo..oly@example.com",
+                @"pootietang.@example.com",
+                @".@example.com",
+                @"Ima Fool@example.com")]
+            string email) {
+
+            var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
+            registrationSettings.UsersCanRegister = true;
+            registrationSettings.UsersAreModerated = false;
+            registrationSettings.UsersMustValidateEmail = false;
+
+            _session.Flush();
+
+            _controller.ModelState.Clear();
+            var result = _controller.Register("bar", email, "66554321", "66554321");
+ 
+            Assert.That(((ViewResult)result).ViewData.ModelState.Count == 1,"Invalid email address.");
+        }
+
+        [Test]
+        public void UsersShouldBeAbleToRegisterIfValidEmail(
+            [Values(
+                @"""test\\blah""@example.com",
+                "\"test\\\rblah\"@example.com",
+                @"""test\""blah""@example.com",
+                @"customer/department@example.com",
+                @"$A12345@example.com",
+                @"!def!xyz%abc@example.com",
+                @"_Yosemite.Sam@example.com",
+                @"~@example.com",
+                @"""Austin@Powers""@example.com",
+                @"Ima.Fool@example.com",
+                @"""Ima.Fool""@example.com",
+                @"""Ima Fool""@example.com"
+                )]
+            string email)
+        {
+
+            var registrationSettings = _container.Resolve<IWorkContextAccessor>().GetContext().CurrentSite.As<RegistrationSettingsPart>();
+            registrationSettings.UsersCanRegister = true;
+            registrationSettings.UsersAreModerated = false;
+            registrationSettings.UsersMustValidateEmail = false;
+
+            _session.Flush();
+
+            _controller.ModelState.Clear();
+            var result = _controller.Register("bar", email, "password", "password");
+
+            Assert.That(result, Is.TypeOf<RedirectResult>());
+            Assert.That(((RedirectResult)result).Url, Is.EqualTo("~/"));
         }
 
         [Test]

@@ -93,6 +93,15 @@ namespace Orchard.Tests.Mvc {
             Assert.That(((ReplacementFooController) controller).Disposals, Is.EqualTo(4));
         }
 
+        [Test]
+        public void NullServiceKeyReturnsDefault() {
+            OrchardControllerFactoryAccessor orchardControllerFactory = new OrchardControllerFactoryAccessor();
+            ReplacementFooController fooController;
+
+            Assert.That(orchardControllerFactory.TryResolveAccessor(_workContextAccessor.GetContext(), null, out fooController), Is.False);
+            Assert.That(fooController, Is.Null);
+        }
+
         private static RequestContext GetRequestContext(IWorkContextAccessor workContextAccessor)
         {
             var handler = new MvcRouteHandler();
@@ -120,6 +129,12 @@ namespace Orchard.Tests.Mvc {
             public int Disposals { get; set; }
         }
 
+        internal class OrchardControllerFactoryAccessor : OrchardControllerFactory {
+            public bool TryResolveAccessor<T>(WorkContext workContext, object serviceKey, out T instance) {
+                return TryResolve(workContext, serviceKey, out instance);
+            }
+        }
+
         private static void InjectKnownControllerTypes(DefaultControllerFactory controllerFactory,
                                                        params Type[] controllerTypes) {
             // D'oh!!! Hey MVC people, how is this testable? ;)
@@ -144,6 +159,4 @@ namespace Orchard.Tests.Mvc {
                 cache);
         }
    }
-
-
 }

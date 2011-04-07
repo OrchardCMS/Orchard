@@ -8,7 +8,6 @@ namespace Orchard.Core.Contents.ViewModels {
         }
 
         public string Id { get; set; }
-        public int? ContainerId { get; set; }
 
         public string TypeName {
             get { return Id; }

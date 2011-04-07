@@ -1,11 +1,12 @@
 using System;
+using System.IO;
 using System.Linq;
-using System.Web.Hosting;
 using NuGet;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
-using Orchard.UI.Notify;
+using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
     [OrchardFeature("PackagingServices")]
@@ -13,17 +14,14 @@ namespace Orchard.Packaging.Services {
         private readonly IExtensionManager _extensionManager;
         private readonly IPackageBuilder _packageBuilder;
         private readonly IPackageInstaller _packageExpander;
-        private readonly INotifier _notifier;
 
         public PackageManager(
             IExtensionManager extensionManager,
             IPackageBuilder packageBuilder,
-            IPackageInstaller packageExpander,
-            INotifier notifier) {
+            IPackageInstaller packageExpander) {
             _extensionManager = extensionManager;
             _packageBuilder = packageBuilder;
             _packageExpander = packageExpander;
-            _notifier = notifier;
 
             T = NullLocalizer.Instance;
         }
@@ -69,6 +67,22 @@ namespace Orchard.Packaging.Services {
 
         public void Uninstall(string packageId, string applicationPath) {
             _packageExpander.Uninstall(packageId, applicationPath);
+        }
+
+        public ExtensionDescriptor GetExtensionDescriptor(IPackage package, string extensionType) {
+            IPackageFile packageFile = package.GetFiles().FirstOrDefault(file =>
+                                                            Path.GetFileName(file.Path).Equals(
+                                                                DefaultExtensionTypes.IsModule(extensionType) ? "module.txt" : "theme.txt",
+                                                                StringComparison.OrdinalIgnoreCase));
+
+            if (packageFile != null) {
+                string extensionId = Path.GetFileName(Path.GetDirectoryName(packageFile.Path).TrimEnd('/', '\\'));
+                using (StreamReader streamReader = new StreamReader(packageFile.GetStream())) {
+                    return ExtensionFolders.GetDescriptorForExtension("", extensionId, extensionType, streamReader.ReadToEnd());
+                }
+            }
+
+            return null;
         }
 
         #endregion

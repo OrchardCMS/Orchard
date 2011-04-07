@@ -8,8 +8,9 @@ namespace Orchard.Localization {
         private readonly string _textHint;
         private readonly object[] _args;
 
-        public LocalizedString(string localized) {
-            _localized = localized;
+        public LocalizedString(string languageNeutral) {
+            _localized = languageNeutral;
+            _textHint = languageNeutral;
         }
 
         public LocalizedString(string localized, string scope, string textHint, object[] args) {

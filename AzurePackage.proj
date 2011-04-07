@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 <!-- Initialization -->
 
   <PropertyGroup>
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
     <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
-    <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
-    <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
+    <BuildFolder>$(MSBuildProjectDirectory)\buildazure</BuildFolder>
     <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts\Azure</ArtifactsFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
@@ -29,6 +28,12 @@
     <CallTarget Targets="Package"/>
   </Target>
 
+  <Target Name ="CIBuild">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package"/>
+  </Target>
+
   <Target Name="Package">
     <CallTarget Targets="Package-ForCloud"/>
     <CallTarget Targets="Package-SqlCe" />    
@@ -41,14 +46,14 @@
 
   <Target Name="Clean">
     <MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln" Targets="Clean" />
-    <RemoveDir Directories="$(BuildFolder)" />
+    <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true" />
   </Target>
 
   <Target Name ="Compile">
     <MSBuild
       Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64;DefineConstants=AZURE" 
+      Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64" 
        />      
 
     <MSBuild

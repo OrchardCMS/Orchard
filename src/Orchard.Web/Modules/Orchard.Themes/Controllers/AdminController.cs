@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
@@ -8,17 +9,22 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Reports.Services;
 using Orchard.Security;
+using Orchard.Themes.Events;
+using Orchard.Themes.Models;
 using Orchard.Themes.Preview;
 using Orchard.Themes.Services;
 using Orchard.Themes.ViewModels;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Themes.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
+        private readonly IExtensionDisplayEventHandler _extensionDisplayEventHandler;
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IFeatureManager _featureManager;
         private readonly ISiteThemeService _siteThemeService;
@@ -29,6 +35,7 @@ namespace Orchard.Themes.Controllers {
         private readonly IReportsCoordinator _reportsCoordinator;
 
         public AdminController(
+            IEnumerable<IExtensionDisplayEventHandler> extensionDisplayEventHandlers,
             IOrchardServices services,
             IDataMigrationManager dataMigraitonManager,
             IFeatureManager featureManager,
@@ -40,6 +47,7 @@ namespace Orchard.Themes.Controllers {
             IReportsCoordinator reportsCoordinator) {
             Services = services;
 
+            _extensionDisplayEventHandler = extensionDisplayEventHandlers.FirstOrDefault();
             _dataMigrationManager = dataMigraitonManager;
             _siteThemeService = siteThemeService;
             _extensionManager = extensionManager;
@@ -50,33 +58,58 @@ namespace Orchard.Themes.Controllers {
             _reportsCoordinator = reportsCoordinator;
 
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public ActionResult Index() {
             try {
-                var currentTheme = _siteThemeService.GetSiteTheme();
-                var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
+                bool installThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null;
 
-                var themes = _extensionManager.AvailableExtensions()
-                    .Where(d => DefaultExtensionTypes.IsTheme(d.ExtensionType))
-                    .Select(d => new ThemeEntry {
-                        Descriptor = d,
-                        NeedsUpdate = featuresThatNeedUpdate.Contains(d.Id),
-                        Enabled = _shellDescriptor.Features.Any(sf => sf.Name == d.Id)
-                    })
+                var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
+                ThemeEntry currentTheme = new ThemeEntry(_siteThemeService.GetSiteTheme());
+                IEnumerable<ThemeEntry> themes = _extensionManager.AvailableExtensions()
+                    .Where(extensionDescriptor => {
+                            bool hidden = false;
+                            string tags = extensionDescriptor.Tags;
+                            if (tags != null) {
+                                hidden = tags.Split(',').Any(t => t.Trim().Equals("hidden", StringComparison.OrdinalIgnoreCase));
+                            }
+
+                            return !hidden &&
+                                    DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType) &&
+                                    !currentTheme.Descriptor.Id.Equals(extensionDescriptor.Id);
+                        })
+                    .Select(extensionDescriptor => {
+                            ThemeEntry themeEntry = new ThemeEntry(extensionDescriptor) {
+                                NeedsUpdate = featuresThatNeedUpdate.Contains(extensionDescriptor.Id),
+                                IsRecentlyInstalled = _themeService.IsRecentlyInstalled(extensionDescriptor),
+                                Enabled = _shellDescriptor.Features.Any(sf => sf.Name == extensionDescriptor.Id),
+                                CanUninstall = installThemes
+                            };
+
+                            if (_extensionDisplayEventHandler != null) {
+                                foreach (string notification in _extensionDisplayEventHandler.Displaying(themeEntry.Descriptor, ControllerContext.RequestContext))
+                                {
+                                    themeEntry.Notifications.Add(notification);
+                                }
+                            }
+
+                            return themeEntry;
+                        })
                     .ToArray();
 
                 return View(new ThemesIndexViewModel {
-                    CurrentTheme = currentTheme, Themes = themes,
-                    InstallThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
-                    BrowseToGallery = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "Gallery") != null
+                    CurrentTheme = currentTheme,
+                    InstallThemes = installThemes,
+                    Themes = themes
                 });
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Listing themes failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Listing themes failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(new ThemesIndexViewModel());
             }
         }
@@ -86,11 +119,14 @@ namespace Orchard.Themes.Controllers {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
                     return new HttpUnauthorizedResult();
+
+                _themeService.EnableThemeFeatures(themeName);
                 _previewTheme.SetPreviewTheme(themeName);
+
                 return this.RedirectLocal(returnUrl, "~/");
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Previewing theme failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Previewing theme failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return RedirectToAction("Index");
             }
         }
@@ -102,10 +138,10 @@ namespace Orchard.Themes.Controllers {
                     return new HttpUnauthorizedResult();
                 _previewTheme.SetPreviewTheme(null);
                 _siteThemeService.SetSiteTheme(themeName);
+            } catch (Exception exception) {
+                this.Error(exception, T("Previewing theme failed: {0}", exception.Message), Logger, Services.Notifier);
             }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Previewing theme failed: " + exception.Message));
-            }
+
             return RedirectToAction("Index");
         }
 
@@ -115,9 +151,8 @@ namespace Orchard.Themes.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
                     return new HttpUnauthorizedResult();
                 _previewTheme.SetPreviewTheme(null);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Previewing theme failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Previewing theme failed: {0}", exception.Message), Logger, Services.Notifier);
             }
             return RedirectToAction("Index");
         }
@@ -129,9 +164,8 @@ namespace Orchard.Themes.Controllers {
                     return new HttpUnauthorizedResult();
 
                 _themeService.EnableThemeFeatures(themeName);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Enabling theme failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Enabling theme failed: {0}", exception.Message), Logger, Services.Notifier);
             }
             return RedirectToAction("Index");
         }
@@ -143,9 +177,8 @@ namespace Orchard.Themes.Controllers {
                     return new HttpUnauthorizedResult();
 
                 _themeService.DisableThemeFeatures(themeName);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Disabling theme failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Disabling theme failed: {0}", exception.Message), Logger, Services.Notifier);
             }
             return RedirectToAction("Index");
         }
@@ -158,9 +191,8 @@ namespace Orchard.Themes.Controllers {
 
                 _themeService.EnableThemeFeatures(themeName);
                 _siteThemeService.SetSiteTheme(themeName);
-            }
-            catch (Exception exception) {
-                Services.Notifier.Error(T("Activating theme failed: " + exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Activating theme failed: {0}", exception.Message), Logger, Services.Notifier);
             }
             return RedirectToAction("Index");
         }
@@ -177,9 +209,8 @@ namespace Orchard.Themes.Controllers {
                 _reportsCoordinator.Register("Data Migration", "Upgrade " + themeName, "Orchard installation");
                 _dataMigrationManager.Update(themeName);
                 Services.Notifier.Information(T("The theme {0} was updated succesfuly", themeName));
-            }
-            catch (Exception ex) {
-                Services.Notifier.Error(T("An error occured while updating the theme {0}: {1}", themeName, ex.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("An error occured while updating the theme {0}: {1}", themeName, exception.Message), Logger, Services.Notifier);
             }
 
             return RedirectToAction("Index");

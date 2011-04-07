@@ -1,14 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Web;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Settings;
-using Orchard.Core.Contents.Extensions;
-using Orchard.Core.Navigation.Models;
-using Orchard.Core.Routable.Models;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
@@ -16,13 +11,13 @@ using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
-using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
+using Orchard.Recipes.Models;
+using Orchard.Recipes.Services;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
@@ -30,8 +25,6 @@ using Orchard.Environment.State;
 using Orchard.Data.Migration;
 using Orchard.Themes.Services;
 using Orchard.Utility.Extensions;
-using Orchard.Widgets.Models;
-using Orchard.Widgets;
 
 namespace Orchard.Setup.Services {
     public class SetupService : ISetupService {
@@ -41,6 +34,8 @@ namespace Orchard.Setup.Services {
         private readonly IShellContainerFactory _shellContainerFactory;
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IProcessingEngine _processingEngine;
+        private readonly IRecipeHarvester _recipeHarvester;
+        private readonly IEnumerable<Recipe> _recipes;
 
         public SetupService(
             ShellSettings shellSettings,
@@ -48,13 +43,16 @@ namespace Orchard.Setup.Services {
             IShellSettingsManager shellSettingsManager,
             IShellContainerFactory shellContainerFactory,
             ICompositionStrategy compositionStrategy,
-            IProcessingEngine processingEngine) {
+            IProcessingEngine processingEngine,
+            IRecipeHarvester recipeHarvester) {
             _shellSettings = shellSettings;
             _orchardHost = orchardHost;
             _shellSettingsManager = shellSettingsManager;
             _shellContainerFactory = shellContainerFactory;
             _compositionStrategy = compositionStrategy;
             _processingEngine = processingEngine;
+            _recipeHarvester = recipeHarvester;
+            _recipes = _recipeHarvester.HarvestRecipes("Orchard.Setup");
             T = NullLocalizer.Instance;
         }
 
@@ -64,53 +62,22 @@ namespace Orchard.Setup.Services {
             return _shellSettings;
         }
 
-        public void Setup(SetupContext context) {
+        public IEnumerable<Recipe> Recipes() {
+            return _recipes;
+        }
+
+        public string Setup(SetupContext context) {
+            string executionId = null;
             // The vanilla Orchard distibution has the following features enabled.
             if (context.EnabledFeatures == null || context.EnabledFeatures.Count() == 0) {
                 string[] hardcoded = {
                     // Framework
                     "Orchard.Framework",
-
                     // Core
-                    "Common",
-                    "Containers",
-                    "Contents",
-                    "Dashboard",
-                    "Feeds",
-                    "HomePage",
-                    "Navigation",
-                    "Reports",
-                    "Routable",
-                    "Scheduling",
-                    "Settings",
-                    "Shapes",
-
-                    // Other
-                    "Orchard.PublishLater", // todo: (sebros) remove
-                    "Orchard.Blogs",
-                    "Orchard.Comments",
-                    "Orchard.ContentTypes",
-                    "Orchard.jQuery",
-                    "Orchard.Lists",
-                    "Orchard.Media",
-                    "Orchard.Modules",
-                    "Orchard.Pages",
-                    "Orchard.Roles",
-                    "Orchard.Tags",
-                    "Orchard.Themes",
-                    "Orchard.Users",
-                    "Orchard.Scripting",
-                    "Orchard.Scripting.Lightweight",
-                    "Orchard.Widgets",
-                    "TinyMce",
-
-                    // Gallery/Packaging
-                    "PackagingServices",
-                    "Orchard.Packaging",
-                    "Gallery",
-
-                    // Themes
-                    "TheThemeMachine",
+                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "HomePage", "Navigation", "Reports", "Routable", "Scheduling", "Settings", "Shapes",
+                    // Modules
+                    "Orchard.Pages", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules", 
+                    "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes",
                 };
 
                 context.EnabledFeatures = hardcoded;
@@ -167,7 +134,7 @@ namespace Orchard.Setup.Services {
                     var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
                     dataMigrationManager.Update("Settings");
 
-                    foreach ( var feature in context.EnabledFeatures ) {
+                    foreach (var feature in context.EnabledFeatures) {
                         dataMigrationManager.Update(feature);
                     }
 
@@ -182,7 +149,6 @@ namespace Orchard.Setup.Services {
             while ( _processingEngine.AreTasksPending() )
                 _processingEngine.ExecuteNextTask();
 
-
             // creating a standalone environment. 
             // in theory this environment can be used to resolve any normal components by interface, and those
             // components will exist entirely in isolation - no crossover between the safemode container currently in effect
@@ -191,7 +157,7 @@ namespace Orchard.Setup.Services {
             shellSettings.State = new TenantState("Running");
             using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                 try {
-                    CreateTenantData(context, environment);
+                    executionId = CreateTenantData(context, environment);
                 }
                 catch {
                     environment.Resolve<ITransactionManager>().Cancel();
@@ -200,9 +166,12 @@ namespace Orchard.Setup.Services {
             }
 
             _shellSettingsManager.SaveSettings(shellSettings);
+
+            return executionId;
         }
 
-        private void CreateTenantData(SetupContext context, IWorkContextScope environment) {
+        private string CreateTenantData(SetupContext context, IWorkContextScope environment) {
+            string executionId = null;
             // create superuser
             var membershipService = environment.Resolve<IMembershipService>();
             var user =
@@ -220,7 +189,6 @@ namespace Orchard.Setup.Services {
             siteSettings.Record.SiteSalt = Guid.NewGuid().ToString("N");
             siteSettings.Record.SiteName = context.SiteName;
             siteSettings.Record.SuperUser = context.AdminUsername;
-            siteSettings.Record.PageTitleSeparator = " - ";
             siteSettings.Record.SiteCulture = "en-US";
 
             // set site theme
@@ -231,110 +199,15 @@ namespace Orchard.Setup.Services {
             var cultureManager = environment.Resolve<ICultureManager>();
             cultureManager.AddCulture("en-US");
 
-            var contentManager = environment.Resolve<IContentManager>();
-
-            // this needs to exit the standalone environment? rework this process entirely?
-            // simulate installation-time module activation events
-            //var hackInstallationGenerator = environment.Resolve<IHackInstallationGenerator>();
-            //hackInstallationGenerator.GenerateInstallEvents();
-
-            var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-            //todo: (heskew) pull these definitions (and initial content creation) out into a distribution configuration when we have that capability
-            contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
-                .WithPart("CommentsPart")
-                .WithPart("TagsPart")
-                .WithPart("LocalizationPart")
-                .Draftable()
-                .Indexed()
-                );
-            contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
-                .WithPart("TagsPart")
-                .WithPart("LocalizationPart")
-                .Draftable()
-                .Indexed()
-                );
-            contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg
-                .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
-
-            // If "Orchard.Widgets" is enabled, setup default layers and widgets
-            var extensionManager = environment.Resolve<IExtensionManager>();
-            var shellDescriptor = environment.Resolve<ShellDescriptor>();
-            if (extensionManager.EnabledFeatures(shellDescriptor).Where(d => d.Id == "Orchard.Widgets").Any()) {
-                // Create default layers
-                var layerInitializer = environment.Resolve<IDefaultLayersInitializer>();
-                layerInitializer.CreateDefaultLayers();
-
-                // add a layer for the homepage
-                var homepageLayer = contentManager.Create("Layer", VersionOptions.Draft);
-                homepageLayer.As<LayerPart>().Name = "TheHomepage";
-                homepageLayer.As<LayerPart>().LayerRule = "url \"~/\"";
-                contentManager.Publish(homepageLayer);
-
-                // and three more for the tripel...really need this elsewhere...
-                var tripelFirst = contentManager.Create("HtmlWidget", VersionOptions.Draft);
-                tripelFirst.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
-                tripelFirst.As<WidgetPart>().Title = T("First Leader Aside").Text;
-                tripelFirst.As<WidgetPart>().Zone = "TripelFirst";
-                tripelFirst.As<WidgetPart>().Position = "5";
-                tripelFirst.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
-                contentManager.Publish(tripelFirst);
-
-                var tripelSecond = contentManager.Create("HtmlWidget", VersionOptions.Draft);
-                tripelSecond.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
-                tripelSecond.As<WidgetPart>().Title = T("Second Leader Aside").Text;
-                tripelSecond.As<WidgetPart>().Zone = "TripelSecond";
-                tripelSecond.As<WidgetPart>().Position = "5";
-                tripelSecond.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
-                contentManager.Publish(tripelSecond);
-
-                var tripelThird = contentManager.Create("HtmlWidget", VersionOptions.Draft);
-                tripelThird.As<WidgetPart>().LayerPart = homepageLayer.As<LayerPart>();
-                tripelThird.As<WidgetPart>().Title = T("Third Leader Aside").Text;
-                tripelThird.As<WidgetPart>().Zone = "TripelThird";
-                tripelThird.As<WidgetPart>().Position = "5";
-                tripelThird.As<BodyPart>().Text = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a nibh ut tortor dapibus vestibulum. Aliquam vel sem nibh. Suspendisse vel condimentum tellus.</p>";
-                contentManager.Publish(tripelThird);
-            }
-
-            // create a welcome page that's promoted to the home page
-            var page = contentManager.Create("Page", VersionOptions.Draft);
-            page.As<RoutePart>().Title = T("Welcome to Orchard!").Text;
-            page.As<RoutePart>().Path = "welcome-to-orchard";
-            page.As<RoutePart>().Slug = "welcome-to-orchard";
-            page.As<RoutePart>().PromoteToHomePage = true;
-            page.As<BodyPart>().Text = T(
-@"<p>You've successfully setup your Orchard Site and this is the homepage of your new site.
-Here are a few things you can look at to get familiar with the application.
-Once you feel confident you don't need this anymore, you can
-<a href=""Admin/Contents/Edit/{0}"">remove it by going into editing mode</a>
-and replacing it with whatever you want.</p>
-<p>First things first - You'll probably want to <a href=""Admin/Settings"">manage your settings</a>
-and configure Orchard to your liking. After that, you can head over to
-<a href=""Admin/Themes"">manage themes to change or install new themes</a>
-and really make it your own. Once you're happy with a look and feel, it's time for some content.
-You can start creating new custom content types or start from the built-in ones by
-<a href=""Admin/Contents/Create/Page"">adding a page</a>, <a href=""Admin/Blogs/Create"">creating a blog</a>
-or <a href=""Admin/Navigation"">managing your menus.</a></p>
-<p>Finally, Orchard has been designed to be extended. It comes with a few built-in
-modules such as pages and blogs or themes. If you're looking to add additional functionality,
-you can do so by creating your own module or by installing one that somebody else built.
-Modules are created by other users of Orchard just like you so if you feel up to it,
-<a href=""http://orchardproject.net/contribution"">please consider participating</a>.</p>
-<p>Thanks for using Orchard – The Orchard Team </p>", page.Id).Text;
-
-            contentManager.Publish(page);
-
-            // add a menu item for the shiny new home page
-            var menuItem = contentManager.Create("MenuItem");
-            menuItem.As<MenuPart>().MenuPosition = "1";
-            menuItem.As<MenuPart>().MenuText = T("Home").ToString();
-            menuItem.As<MenuPart>().OnMainMenu = true;
-            menuItem.As<MenuItemPart>().Url = "";
+            var recipeManager = environment.Resolve<IRecipeManager>();
+            executionId = recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
 
             //null check: temporary fix for running setup in command line
             if (HttpContext.Current != null) {
                 authenticationService.SignIn(user, true);
             }
+
+            return executionId;
         }
     }
 }

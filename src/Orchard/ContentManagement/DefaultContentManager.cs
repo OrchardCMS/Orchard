@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using Autofac;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
@@ -12,6 +13,7 @@ using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Indexing;
 using Orchard.Logging;
+using Orchard.UI;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentManager : IContentManager {
@@ -22,6 +24,8 @@ namespace Orchard.ContentManagement {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
+        private const string Published = "Published";
+        private const string Draft = "Draft";
 
         public DefaultContentManager(
             IComponentContext context,
@@ -125,6 +129,9 @@ namespace Orchard.ContentManagement {
 
             // return item if obtained earlier in session
             if (session.RecallVersionRecordId(versionRecord.Id, out contentItem)) {
+                if (options.IsDraftRequired && versionRecord.Published) {
+                    return BuildNewVersion(contentItem);
+                }
                 return contentItem;
             }
 
@@ -357,22 +364,103 @@ namespace Orchard.ContentManagement {
             return context.Metadata;
         }
 
-
-        public dynamic BuildDisplay(IContent content, string displayType = "") {
-            return _contentDisplay.Value.BuildDisplay(content, displayType);
+        public IEnumerable<GroupInfo> GetEditorGroupInfos(IContent content) {
+            var metadata = GetItemMetadata(content);
+            return metadata.EditorGroupInfo
+                .GroupBy(groupInfo => groupInfo.Id)
+                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new FlatPositionComparer()).FirstOrDefault());
         }
 
-        public dynamic BuildEditor(IContent content) {
-            return _contentDisplay.Value.BuildEditor(content);
+        public IEnumerable<GroupInfo> GetDisplayGroupInfos(IContent content) {
+            var metadata = GetItemMetadata(content);
+            return metadata.DisplayGroupInfo
+                .GroupBy(groupInfo => groupInfo.Id)
+                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new FlatPositionComparer()).FirstOrDefault());
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater) {
-            return _contentDisplay.Value.UpdateEditor(content, updater);
+        public GroupInfo GetEditorGroupInfo(IContent content, string groupInfoId) {
+            return GetEditorGroupInfos(content).FirstOrDefault(gi => string.Equals(gi.Id, groupInfoId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public GroupInfo GetDisplayGroupInfo(IContent content, string groupInfoId) {
+            return GetDisplayGroupInfos(content).FirstOrDefault(gi => string.Equals(gi.Id, groupInfoId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
+            return _contentDisplay.Value.BuildDisplay(content, displayType, groupId);
+        }
+
+        public dynamic BuildEditor(IContent content, string groupId = "") {
+            return _contentDisplay.Value.BuildEditor(content, groupId);
+        }
+
+        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "") {
+            return _contentDisplay.Value.UpdateEditor(content, updater, groupId);
         }
 
         public IContentQuery<ContentItem> Query() {
             var query = _context.Resolve<IContentQuery>(TypedParameter.From<IContentManager>(this));
             return query.ForPart<ContentItem>();
+        }
+
+        // Insert or Update imported data into the content manager.
+        // Call content item handlers.
+        public void Import(XElement element, ImportContentSession importContentSession) {
+            var elementId = element.Attribute("Id");
+            if (elementId == null)
+                return;
+
+            var identity = elementId.Value;
+            var status = element.Attribute("Status");
+
+            var item = importContentSession.Get(identity);
+            if (item == null) {
+                item = New(element.Name.LocalName);
+                if (status != null && status.Value == "Draft") {
+                    Create(item, VersionOptions.Draft);
+                }
+                else {
+                    Create(item);
+                }
+            }
+            else {
+                item = Get(item.Id, VersionOptions.DraftRequired);
+            }
+            importContentSession.Store(identity, item);
+
+            var context = new ImportContentContext(item, element, importContentSession);
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Importing(context);
+            }
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Imported(context);
+            }
+
+            if (status == null || status.Value == Published) {
+                Publish(item);
+            }
+        }
+
+        public XElement Export(ContentItem contentItem) {
+            var context = new ExportContentContext(contentItem, new XElement(contentItem.ContentType));
+
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Exporting(context);
+            }
+
+            foreach (var contentHandler in Handlers) {
+                contentHandler.Exported(context);
+            }
+
+            context.Data.SetAttributeValue("Id", GetItemMetadata(contentItem).Identity.ToString());
+            if (contentItem.IsPublished()) {
+                context.Data.SetAttributeValue("Status", Published);
+            }
+            else {
+                context.Data.SetAttributeValue("Status", Draft);
+            }
+
+            return context.Data;
         }
 
         public void Flush() {

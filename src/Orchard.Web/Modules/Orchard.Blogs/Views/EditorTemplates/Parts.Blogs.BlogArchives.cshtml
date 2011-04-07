@@ -1,8 +1,17 @@
-﻿@model Orchard.Blogs.Models.BlogArchivesPart
+﻿@model Orchard.Blogs.ViewModels.BlogArchivesViewModel
+
+@using Orchard.Blogs.Models;
+@using Orchard.Core.Routable.Models;
+@using Orchard.ContentManagement;
+
 <fieldset>
     <div>
-        @Html.LabelFor(m => m.ForBlog, T("For Blog"))
-        @Html.TextBoxFor(m => m.ForBlog)
-        <span class="hint">@T("Show the archives for which blog? Note: specify the blog's slug.")</span>
+        @Html.LabelFor(m => m.Path, T("For Blog"))
+        <select id="@Html.FieldIdFor(m => m.Path)" name="@Html.FieldNameFor(m => m.Path)">
+		@foreach(BlogPart blog in Model.Blogs) {
+            @Html.SelectOption(Model.Path, blog.As<RoutePart>().Slug, blog.Name)
+		}
+		</select>
+        <span class="hint">@T("Select which blog you want to display the archives for")</span>
     </div>
 </fieldset>

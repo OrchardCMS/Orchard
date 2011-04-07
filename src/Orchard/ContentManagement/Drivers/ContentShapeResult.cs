@@ -9,6 +9,7 @@ namespace Orchard.ContentManagement.Drivers {
         private readonly string _shapeType;
         private readonly string _prefix;
         private readonly Func<BuildShapeContext, dynamic> _shapeBuilder;
+        private string _groupId;
 
         public ContentShapeResult(string shapeType, string prefix, Func<BuildShapeContext, dynamic> shapeBuilder) {
             _shapeType = shapeType;
@@ -25,8 +26,11 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private void ApplyImplementation(BuildShapeContext context, string displayType) {
-            var location = context.FindPlacement(_shapeType, _differentiator, _defaultLocation);
-            if (string.IsNullOrEmpty(location) || location == "-")
+            if (!string.Equals(context.GroupId ?? "", _groupId ?? "", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            var placement = context.FindPlacement(_shapeType, _differentiator, _defaultLocation);
+            if (string.IsNullOrEmpty(placement.Location) || placement.Location == "-")
                 return;
 
             dynamic parentShape = context.Shape;
@@ -34,14 +38,30 @@ namespace Orchard.ContentManagement.Drivers {
             ShapeMetadata newShapeMetadata = newShape.Metadata;
             newShapeMetadata.Prefix = _prefix;
             newShapeMetadata.DisplayType = displayType;
+            newShapeMetadata.PlacementSource = placement.Source;
+            
+            // if a specific shape is provided, remove all previous alternates and wrappers
+            if (!String.IsNullOrEmpty(placement.ShapeType)) {
+                newShapeMetadata.Type = placement.ShapeType;
+                newShapeMetadata.Alternates.Clear();
+                newShapeMetadata.Wrappers.Clear();
+            }
 
-            var delimiterIndex = location.IndexOf(':');
+            foreach (var alternate in placement.Alternates) {
+                newShapeMetadata.Alternates.Add(alternate);
+            }
+
+            foreach (var wrapper in placement.Wrappers) {
+                newShapeMetadata.Wrappers.Add(wrapper);
+            }
+
+            var delimiterIndex = placement.Location.IndexOf(':');
             if (delimiterIndex < 0) {
-                parentShape.Zones[location].Add(newShape);
+                parentShape.Zones[placement.Location].Add(newShape);
             }
             else {
-                var zoneName = location.Substring(0, delimiterIndex);
-                var position = location.Substring(delimiterIndex + 1);
+                var zoneName = placement.Location.Substring(0, delimiterIndex);
+                var position = placement.Location.Substring(delimiterIndex + 1);
                 parentShape.Zones[zoneName].Add(newShape, position);
             }
         }
@@ -50,8 +70,14 @@ namespace Orchard.ContentManagement.Drivers {
             _defaultLocation = zone;
             return this;
         }
+
         public ContentShapeResult Differentiator(string differentiator) {
             _differentiator = differentiator;
+            return this;
+        }
+
+        public ContentShapeResult OnGroup(string groupId) {
+            _groupId=groupId;
             return this;
         }
     }

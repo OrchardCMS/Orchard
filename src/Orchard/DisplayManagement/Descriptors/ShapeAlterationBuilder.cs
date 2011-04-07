@@ -88,14 +88,14 @@ namespace Orchard.DisplayManagement.Descriptors {
             });
         }
 
-        public ShapeAlterationBuilder Placement(Func<ShapePlacementContext, string> action) {
+        public ShapeAlterationBuilder Placement(Func<ShapePlacementContext, PlacementInfo> action) {
             return Configure(descriptor => {
                 var next = descriptor.Placement;
                 descriptor.Placement = ctx => action(ctx) ?? next(ctx);
             });
         }
-        
-        public ShapeAlterationBuilder Placement(Func<ShapePlacementContext, bool> predicate, string location) {
+
+        public ShapeAlterationBuilder Placement(Func<ShapePlacementContext, bool> predicate, PlacementInfo location) {
             return Configure(descriptor => {
                 var next = descriptor.Placement;
                 descriptor.Placement = ctx => predicate(ctx) ? location : next(ctx);
@@ -109,7 +109,10 @@ namespace Orchard.DisplayManagement.Descriptors {
 
     public class ShapePlacementContext {
         public string ContentType { get; set; }
+        public string Stereotype { get; set; }
         public string DisplayType { get; set; }
         public string Differentiator { get; set; }
+        public string Path { get; set; }
+        public string Source { get; set; }
     }
 }

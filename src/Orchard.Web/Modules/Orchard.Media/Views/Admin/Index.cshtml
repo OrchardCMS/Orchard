@@ -1,13 +1,14 @@
 ﻿@model Orchard.Media.ViewModels.MediaFolderIndexViewModel
 @using Orchard.Media.Extensions;
 
-<h1>@Html.TitleForPage(T("Manage Media Folders").ToString())</h1>
-    @Html.ValidationSummary()
-	@using (Html.BeginFormAntiForgeryPost()) { 
+@{ Layout.Title = T("Media").ToString(); }
+
+@Html.ValidationSummary()
+@using (Html.BeginFormAntiForgeryPost()) { 
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="Select1" name="publishActions">
-            <option value="1">@T("Remove")</option>
+            <option value="1">@T("Delete")</option>
         </select>
         <button type="submit">@T("Apply")</button>
     </fieldset>

@@ -37,7 +37,7 @@ namespace Orchard.DisplayManagement.Descriptors {
 
                 var alterations = builderFactory.BuildAlterations()
                     .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName))
-                    .OrderByDependencies(AlterationHasDependency);
+                    .OrderByDependenciesAndPriorities(AlterationHasDependency, GetPriority);
 
                 var descriptors = alterations.GroupBy(alteration => alteration.ShapeType, StringComparer.OrdinalIgnoreCase)
                     .Select(group => group.Aggregate(
@@ -52,6 +52,10 @@ namespace Orchard.DisplayManagement.Descriptors {
                     Bindings = descriptors.SelectMany(sd => sd.Bindings).ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase),
                 };
             });
+        }
+
+        private static int GetPriority(ShapeAlteration shapeAlteration) {
+            return shapeAlteration.Feature.Descriptor.Priority;
         }
 
         private static bool AlterationHasDependency(ShapeAlteration item, ShapeAlteration subject) {

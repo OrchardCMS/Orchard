@@ -47,7 +47,7 @@ namespace Orchard.Core.Routable.Services {
         }
 
         public void FillSlugFromTitle<TModel>(TModel model) where TModel : IRoutableAspect {
-            if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
+            if ((model.Slug != null && !string.IsNullOrEmpty(model.Slug.Trim())) || string.IsNullOrEmpty(model.Title))
                 return;
 
             FillSlugContext slugContext = new FillSlugContext(model.Title);
@@ -57,7 +57,7 @@ namespace Orchard.Core.Routable.Services {
             }
 
             if (!slugContext.Adjusted) {
-                var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>]+");
+                var disallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s\""\<\>\\]+");
 
                 slugContext.Slug = disallowed.Replace(slugContext.Slug, "-").Trim('-');
 
@@ -108,7 +108,7 @@ namespace Orchard.Core.Routable.Services {
         }
 
         public bool IsSlugValid(string slug) {
-            return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s\""\<\>]+$") && !(slug.StartsWith(".") || slug.EndsWith("."));
+            return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s\""\<\>\\]+$") && !(slug.StartsWith(".") || slug.EndsWith("."));
         }
 
         public bool ProcessSlug(IRoutableAspect part) {

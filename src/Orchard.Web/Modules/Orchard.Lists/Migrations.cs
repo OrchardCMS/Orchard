@@ -11,9 +11,21 @@ namespace Orchard.Lists {
                     .WithPart("RoutePart")
                     .WithPart("ContainerPart")
                     .WithPart("MenuPart")
+                    .WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2"))
                     .Creatable());
 
-            return 1;
+            return 3;
         }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("List", cfg => cfg.WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2")));
+            return 3;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterTypeDefinition("List", cfg => cfg.WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2")));
+            return 3;
+        }
+
     }
 }

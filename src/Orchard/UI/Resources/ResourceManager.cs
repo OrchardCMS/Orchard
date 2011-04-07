@@ -11,7 +11,7 @@ using Autofac.Features.Metadata;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.UI.Resources {
-    public class ResourceManager : IResourceManager {
+    public class ResourceManager : IResourceManager, IUnitOfWorkDependency {
         private readonly Dictionary<Tuple<String, String>, RequireSettings> _required = new Dictionary<Tuple<String, String>, RequireSettings>();
         private readonly List<LinkEntry> _links = new List<LinkEntry>();
         private readonly Dictionary<string, MetaEntry> _metas = new Dictionary<string, MetaEntry> {
@@ -56,11 +56,16 @@ namespace Orchard.UI.Resources {
             return tagBuilder;
         }
 
-        public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition) {
+        public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition, Dictionary<string, string> attributes) {
             if (!string.IsNullOrEmpty(condition)) {
                 writer.WriteLine("<!--[if " + condition + "]>");
             }
-            writer.WriteLine(GetTagBuilder(resource, url).ToString(resource.TagRenderMode));
+            var tagBuilder = GetTagBuilder(resource, url);
+            if (attributes != null) {
+                // todo: try null value
+                tagBuilder.MergeAttributes(attributes, true);
+            }
+            writer.WriteLine(tagBuilder.ToString(resource.TagRenderMode));
             if (!string.IsNullOrEmpty(condition)) {
                 writer.WriteLine("<![endif]-->");
             }
@@ -76,7 +81,7 @@ namespace Orchard.UI.Resources {
                     var builder = new ResourceManifestBuilder();
                     foreach (var provider in _providers) {
                         builder.Feature = provider.Metadata.ContainsKey("Feature") ?
-                            (Feature) provider.Metadata["Feature"] :
+                            (Feature)provider.Metadata["Feature"] :
                             null;
                         provider.Value.BuildManifests(builder);
                     }
@@ -102,7 +107,7 @@ namespace Orchard.UI.Resources {
             RequireSettings settings;
             var key = new Tuple<string, string>(resourceType, resourceName);
             if (!_required.TryGetValue(key, out settings)) {
-                settings = new RequireSettings {Type = resourceType, Name = resourceName};
+                settings = new RequireSettings { Type = resourceType, Name = resourceName };
                 _required[key] = settings;
             }
             _builtResources[resourceType] = null;
@@ -110,7 +115,7 @@ namespace Orchard.UI.Resources {
         }
 
         public virtual RequireSettings Include(string resourceType, string resourcePath, string resourceDebugPath) {
-            return Include(resourceType, resourcePath, null);
+            return Include(resourceType, resourcePath, null, null);
         }
 
         public virtual RequireSettings Include(string resourceType, string resourcePath, string resourceDebugPath, string relativeFromPath) {
@@ -157,6 +162,10 @@ namespace Orchard.UI.Resources {
         }
 
         public virtual ResourceDefinition FindResource(RequireSettings settings) {
+            return FindResource(settings, true);
+        }
+
+        private ResourceDefinition FindResource(RequireSettings settings, bool resolveInlineDefinitions) {
             // find the resource with the given type and name
             // that has at least the given version number. If multiple,
             // return the resource with the greatest version number.
@@ -175,19 +184,35 @@ namespace Orchard.UI.Resources {
                             orderby r.Value.Version descending
                             select r.Value).FirstOrDefault();
             }
-            if (resource == null && settings.InlineDefinition != null) {
-                // defining it on the fly
-                resource = DynamicResources.DefineResource(type, name)
-                    .SetBasePath(settings.BasePath);
-                settings.InlineDefinition(resource);
+            if (resolveInlineDefinitions && resource == null) {
+                // Does not seem to exist, but it's possible it is being
+                // defined by a Define() from a RequireSettings somewhere.
+                if (ResolveInlineDefinitions(settings.Type)) {
+                    // if any were defined, now try to find it
+                    resource = FindResource(settings, false);
+                }
             }
             return resource;
         }
 
+        private bool ResolveInlineDefinitions(string resourceType) {
+            bool anyWereDefined = false;
+            foreach (var settings in GetRequiredResources(resourceType).Where(settings => settings.InlineDefinition != null)) {
+                // defining it on the fly
+                var resource = FindResource(settings, false);
+                if (resource == null) {
+                    // does not already exist, so define it
+                    resource = DynamicResources.DefineResource(resourceType, settings.Name).SetBasePath(settings.BasePath);
+                    anyWereDefined = true;
+                }
+                settings.InlineDefinition(resource);
+                settings.InlineDefinition = null;
+            }
+            return anyWereDefined;
+        }
+
         public virtual IEnumerable<RequireSettings> GetRequiredResources(string type) {
-            return from r in _required
-                   where r.Key.Item1 == type
-                   select r.Value;
+            return _required.Where(r => r.Key.Item1 == type).Select(r => r.Value);
         }
 
         public virtual IList<LinkEntry> GetRegisteredLinks() {
@@ -220,7 +245,7 @@ namespace Orchard.UI.Resources {
                 ExpandDependencies(resource, settings, allResources);
             }
             requiredResources = (from DictionaryEntry entry in allResources
-                                 select new ResourceRequiredContext {Resource = (ResourceDefinition) entry.Key, Settings = (RequireSettings) entry.Value}).ToList();
+                                 select new ResourceRequiredContext { Resource = (ResourceDefinition)entry.Key, Settings = (RequireSettings)entry.Value }).ToList();
             _builtResources[resourceType] = requiredResources;
             return requiredResources;
         }
@@ -229,11 +254,14 @@ namespace Orchard.UI.Resources {
             if (resource == null) {
                 return;
             }
-            if (allResources.Contains(resource)) {
-                settings = ((RequireSettings) allResources[resource]).Combine(settings);
-            }
-            settings.Type = resource.Type;
-            settings.Name = resource.Name;
+            // Settings is given so they can cascade down into dependencies. For example, if Foo depends on Bar, and Foo's required
+            // location is Head, so too should Bar's location.
+            // forge the effective require settings for this resource
+            // (1) If a require exists for the resource, combine with it. Last settings in gets preference for its specified values.
+            // (2) If no require already exists, form a new settings object based on the given one but with its own type/name.
+            settings = allResources.Contains(resource)
+                ? ((RequireSettings)allResources[resource]).Combine(settings)
+                : new RequireSettings { Type = resource.Type, Name = resource.Name }.Combine(settings);
             if (resource.Dependencies != null) {
                 var dependencies = from d in resource.Dependencies
                                    select FindResource(new RequireSettings { Type = resource.Type, Name = d });

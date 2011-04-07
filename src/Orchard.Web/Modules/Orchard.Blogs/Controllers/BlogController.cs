@@ -8,6 +8,7 @@ using Orchard.Core.Feeds;
 using Orchard.Core.Routable.Services;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
+using Orchard.Mvc;
 using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
@@ -20,7 +21,7 @@ namespace Orchard.Blogs.Controllers {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
-        private readonly IBlogSlugConstraint _blogSlugConstraint;
+        private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly IFeedManager _feedManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IHomePageProvider _routableHomePageProvider;
@@ -30,7 +31,7 @@ namespace Orchard.Blogs.Controllers {
             IOrchardServices services, 
             IBlogService blogService,
             IBlogPostService blogPostService,
-            IBlogSlugConstraint blogSlugConstraint,
+            IBlogPathConstraint blogPathConstraint,
             IFeedManager feedManager, 
             IShapeFactory shapeFactory,
             IWorkContextAccessor workContextAccessor,
@@ -39,7 +40,7 @@ namespace Orchard.Blogs.Controllers {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
-            _blogSlugConstraint = blogSlugConstraint;
+            _blogPathConstraint = blogPathConstraint;
             _feedManager = feedManager;
             _workContextAccessor = workContextAccessor;
             _siteService = siteService;
@@ -64,13 +65,13 @@ namespace Orchard.Blogs.Controllers {
             return View((object)viewModel);
         }
 
-        public ActionResult Item(string blogSlug, PagerParameters pagerParameters) {
+        public ActionResult Item(string blogPath, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var correctedSlug = _blogSlugConstraint.FindSlug(blogSlug);
-            if (correctedSlug == null)
+            var correctedPath = _blogPathConstraint.FindPath(blogPath);
+            if (correctedPath == null)
                 return HttpNotFound();
 
-            var blogPart = _blogService.Get(correctedSlug);
+            var blogPart = _blogService.Get(correctedPath);
             if (blogPart == null)
                 return HttpNotFound();
 
@@ -92,8 +93,7 @@ namespace Orchard.Blogs.Controllers {
             var totalItemCount = _blogPostService.PostCount(blogPart);
             blog.Content.Add(Shape.Pager(pager).TotalItemCount(totalItemCount), "Content:after");
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)blog);
+            return new ShapeResult(this, blog);
         }
     }
 }

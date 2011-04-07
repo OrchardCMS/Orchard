@@ -1,6 +1,8 @@
 ﻿@using Orchard.Blogs.Extensions;
 @using Orchard.Blogs.Models;
-<h1>@Html.TitleForPage((string)Model.Title)</h1>
+
+@{ Layout.Title = (string)Model.Title; }
+
 @Display(Model.Header)
 @Display(Model.Actions)
 <div class="manage"><a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" class="add button primaryAction">@T("New Post")</a></div>

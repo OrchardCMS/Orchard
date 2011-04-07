@@ -58,7 +58,7 @@ namespace Orchard.Commands {
 
         public CommandReturnCodes RunCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
             try {
-                tenant = tenant ?? "Default";
+                tenant = tenant ?? ShellSettings.DefaultName;
 
                 using (var env = CreateStandaloneEnvironment(tenant)) {
                     var commandManager = env.Resolve<ICommandManager>();
@@ -208,7 +208,7 @@ namespace Orchard.Commands {
             }
             else {
                 // In case of an unitiliazed site (no default settings yet), we create a default settings instance.
-                var settings = new ShellSettings { Name = "Default", State = new TenantState("Uninitialized") };
+                var settings = new ShellSettings { Name = ShellSettings.DefaultName, State = new TenantState("Uninitialized") };
                 return host.CreateStandaloneEnvironment(settings);
             }
         }

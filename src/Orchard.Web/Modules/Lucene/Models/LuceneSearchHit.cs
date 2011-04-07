@@ -20,12 +20,12 @@ namespace Lucene.Models {
 
         public int GetInt(string name) {
             var field = _doc.GetField(name);
-            return field == null ? 0 : NumericUtils.PrefixCodedToInt(field.StringValue());
+            return field == null ? 0 : Int32.Parse(field.StringValue());
         }
 
-        public float GetFloat(string name) {
+        public double GetDouble(string name) {
             var field = _doc.GetField(name);
-            return field == null ? 0 : float.Parse(field.StringValue(), CultureInfo.InvariantCulture);
+            return field == null ? 0 : double.Parse(field.StringValue());
         }
 
         public bool GetBoolean(string name) {

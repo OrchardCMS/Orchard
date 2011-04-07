@@ -1,17 +1,42 @@
-﻿/*Yahoo browser reset
-----------------------------------------------------------*/
+﻿/* Reset
+***************************************************************/
 
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,
-blockquote,th,td {margin:0; padding:0; }
-table { border-collapse:collapse; border-spacing:0; }
-fieldset,img { border:0; }
-address,caption,cite,code,dfn,em,strong,th,var { font-style:normal; font-weight:normal; }
-ol,ul { list-style:none; }
-caption,th { text-align:left; }
-h1,h2,h3,h4,h5,h6 { font-size:100%; font-weight:normal; }
-abbr,acronym { border:0; }
-q:before,q:after {content:'';}
-abbr,acronym { border:0;}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td, button, submit {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+
+/* Remember focus styles! */
+:focus { outline: 0; }
+
+body { line-height: 1; color: black; background: white; }
+ol, ul { list-style: none; }
+
+/* Tables still need 'cellspacing="0"' in the markup */
+table { border-collapse: separate; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+
+blockquote:before, blockquote:after,
+q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+
+/* HTML 5 elements as block */  
+header, footer, aside, nav, article { display: block; }
+/* end: reset */
 
 /*Defaults
 ----------------------------------------------------------*/
@@ -34,6 +59,8 @@ h2 {font-size: 145%;}
 h3 {font-size: 130%;}
 h4 {font-size: 120%;}
 h5 {font-size: 105%;}
+
+#setUpHeader {font-size: 145%;}
 
 .hint {
     font-size:60%;
@@ -81,6 +108,11 @@ form {
     border:1px solid #DDDEDF;
     padding:10px 0;
     background:transparent url(images/backgroundVines.gif) no-repeat right bottom;
+    
+    /*----CSS3 properties----*/        
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
 }
 
 form h2 {
@@ -128,20 +160,13 @@ input[type="password"] {
     width:98%;
 }
 
-button.primaryAction, .button.primaryAction, .button.primaryAction:link, .button.primaryAction:visited {
-    background:#4687ad;
-    border:1px solid #405f71;
-    font-size: 102%;
-    font-weight:600;
-    color:#fff;
-    margin:0 0 20px 20px;
-    padding:3px 28px;
-
-    /*CSS3 properties*/
-    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#4687AD',  endColorstr='#366581');
-    background: -webkit-gradient(linear, left top, left bottom, from(#4687AD), to(#366581));
-    background:-moz-linear-gradient(top , #4687AD, #366581);
+select {
+    padding:3px;
+    border:1px solid #bdbcbc;
+    width:100%;
 }
+
+/*----buttons----*/
 button.remove, .remove.button, .remove.button:link, .remove.button:visited {
     background-color:#DECCCA;
     background-image:url(images/tableHeaderBackgroundRed.gif);
@@ -161,54 +186,82 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 .delete.button {
     float:right;
 }
-input[type="submit"], input[type="reset"], input[type="button"], button, submit, .button, .button:link, .button:visited
-  {
-          color:#333;
-        background:#F5F5F5;
-        border:1px solid #999;
-        cursor:pointer;
-        padding: 0 12px 2px 12px;
-        text-align:center;
-        
-        /*CSS3 properties*/
-        filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#f5f5f5',  endColorstr='#cbcbcb');
-        background: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#cbcbcb));
-        background: -moz-linear-gradient(top, #f5f5f5, #cbcbcb);
-        box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
-        -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3); 
-        -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
-        border-radius: 3px;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-    }
-input[type="submit"]:hover,input[type="reset"]:hover, input[type="button"]:hover, button:hover, .button:hover, .button.primaryAction:hover {
-    text-decoration:none; 
-    background: #ffac40;
+.button.disabled, .button.disabled:visited, .button.disabled:hover, .button.disabled:active, .button.disabled:focus {
+	background:#eee;
+	border:1px solid #ababab;
+	color:#ababab;
+	cursor:default;
+	text-shadow: none;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}
+button, .button, a.button {
+    background:#6a7b42;
+    border:1px solid #487328;
     color:#fff;
-    border:1px solid #bb8b2d;
+    cursor: pointer;
+    display: inline-block;
+    font: 90% Arial,Helvetica,sans-serif;
+    padding: 4px 14px 2px 14px; /*ie9*/
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
     
-    /*CSS3 properties*/    
-    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ffac40',  endColorstr='#f9760d');
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#ffac40), to(#f9760d));
-    background: -moz-linear-gradient(top, #ffac40, #f9760d);
+    /*----CSS3 properties----*/
+     text-shadow: rgba(40,53,9,.2) 0px 0px 1px;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+    -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
+     box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
+
+  
+    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+
+        
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+     border-radius: 2px;
 }
-input[type="submit"]:active, input[type="reset"]:active, input[type="button"]:active, button:active, .buton:active, .button.primaryAction:active {
+button, input.button, x:-moz-any-link {
+    padding: 2px 14px 2px 14px;
+    }
+button:hover, .button:hover, a.button:hover {
+    border-color:#3a822e;
+    color:#eefcec;
     text-decoration:none; 
-    background: #62a9e2;
-    color:#fff;
-     border:1px solid #bb772d;
- 
-     /*CSS3 properties*/
-     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fece3b',  endColorstr='#fe6001');
-     background: -webkit-gradient(linear, 0 0, 0 100%, from(#fece3b), to(#fe6001));
-    background: -moz-linear-gradient(top, #fece3b, #fe6001);
-    box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
-    -moz-box-shadow: inset 0px 0px 1px rgba(254, 225, 109, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.3);
-    -webkit-box-shadow: inset 1px 1px 1px rgba(254, 225, 109, 0.6), 1px 1px 1px rgba(102, 102, 102, 0.1);
+    background: #809f43;
+    
+    /*CSS3 properties*/  
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));    
+     background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
 }
-input[type="submit"]:focus::-moz-focus-inner, button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
+button:active, .buton:active, a.button:active {
+    text-decoration:none; 
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+
+    /*CSS3 properties*/
+    text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
+     background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
+}
+button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
   border: 1px dotted transparent;
 }
+
+
+.setupButton {
+    margin:0 0 20px 20px;
+    padding:4px 28px;
+    font-size: 105%;
+    font-weight:600;
+ }
 
 /* Confirmations, Messages and the like
 ***************************************************************/
@@ -222,9 +275,9 @@ input[type="submit"]:focus::-moz-focus-inner, button:focus::-moz-focus-inner, .b
     top:0;
     width:100%;
     height:100%;
-    background-color:Gray;
-    filter:alpha(opacity=70);
-    opacity: 0.7;
+    background-color:#3e4d45;
+    opacity: 0.9;
+    filter:alpha(opacity=90);
 }
 #throbber .curtain-content 
 {

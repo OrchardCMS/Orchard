@@ -27,6 +27,7 @@ using Orchard.Mvc.ViewEngines;
 using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Mvc.ViewEngines.WebForms;
+using Orchard.Recipes.Services;
 using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.UI.Notify;
@@ -74,6 +75,9 @@ namespace Orchard.Setup {
 
             builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>().InstancePerLifetimeScope();
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>().InstancePerLifetimeScope();
+
+            builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>().InstancePerLifetimeScope();
+            builder.RegisterType<RecipeParser>().As<IRecipeParser>().InstancePerLifetimeScope();
 
             // in progress - adding services for display/shape support in setup
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
@@ -177,6 +181,10 @@ namespace Orchard.Setup {
             public int PageSize {
                 get { return SiteSettingsPartRecord.DefaultPageSize; }
                 set { throw new NotImplementedException(); }
+            }
+
+            public string BaseUrl {
+                get { return ""; }
             }
         }
     }

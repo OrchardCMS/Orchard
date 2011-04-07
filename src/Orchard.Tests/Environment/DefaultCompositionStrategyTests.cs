@@ -25,7 +25,6 @@ namespace Orchard.Tests.Environment {
         private IEnumerable<ExtensionDescriptor> _extensionDescriptors;
         private IDictionary<string, IEnumerable<Type>> _featureTypes;
 
-
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
@@ -57,7 +56,7 @@ namespace Orchard.Tests.Environment {
         }
 
         private static ShellSettings BuildDefaultSettings() {
-            return new ShellSettings { Name = "Default" };
+            return new ShellSettings { Name = ShellSettings.DefaultName };
         }
 
         [Test]
@@ -293,5 +292,32 @@ namespace Orchard.Tests.Environment {
             Assert.That(bar.TableName, Is.EqualTo("Yadda_Bar_BarRecord"));
         }
 
+        [Test]
+        public void FeatureReplacement() {
+            var descriptor = Build.ShellDescriptor().WithFeatures("Bar");
+
+            _extensionDescriptors = new[] {
+                Build.ExtensionDescriptor("Foo").WithFeatures("Bar"),
+            };
+
+            _featureTypes["Bar"] = new[] { typeof(ReplacedStubType), typeof(StubType), typeof(ReplacedStubNestedType), typeof(StubNestedType) };
+
+            var compositionStrategy = _container.Resolve<ICompositionStrategy>();
+            var blueprint = compositionStrategy.Compose(BuildDefaultSettings(), descriptor);
+
+            Assert.That(blueprint.Dependencies.Count(), Is.EqualTo(2));
+            Assert.That(blueprint.Dependencies.FirstOrDefault(dependency => dependency.Type.Equals(typeof(StubType))), Is.Not.Null);
+            Assert.That(blueprint.Dependencies.FirstOrDefault(dependency => dependency.Type.Equals(typeof(StubNestedType))), Is.Not.Null);
+        }
+
+        [OrchardSuppressDependency("Orchard.Tests.Environment.DefaultCompositionStrategyTests+ReplacedStubNestedType")]
+        internal class StubNestedType : IDependency {}
+
+        internal class ReplacedStubNestedType : IDependency {}
     }
+
+    [OrchardSuppressDependency("Orchard.Tests.Environment.ReplacedStubType")]
+    internal class StubType : IDependency { }
+
+    internal class ReplacedStubType : IDependency { }
 }

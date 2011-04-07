@@ -1,27 +1,33 @@
-﻿@model Orchard.Core.Containers.Models.ContainerPart
+﻿@model Orchard.Core.Containers.ViewModels.ContainerViewModel
 @using Orchard.Core.Containers.Models;
 <fieldset>
-    @Html.LabelFor(m => m.Record.OrderByProperty, T("Order by"))
-    <select id="@Html.FieldIdFor(m => m.Record.OrderByProperty)" name="@Html.FieldNameFor(m => m.Record.OrderByProperty)">
-        @Html.SelectOption(Model.Record.OrderByProperty, "CommonPart.PublishedUtc", T("Date Published").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "RoutePart.Title", T("Title").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "RoutePart.Slug", T("Slug").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "CustomPropertiesPart.CustomOne", T("Custom 1").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "CustomPropertiesPart.CustomTwo", T("Custom 2").Text)
-        @Html.SelectOption(Model.Record.OrderByProperty, "CustomPropertiesPart.CustomThree", T("Custom 3").Text)
+	@Html.LabelFor(m => m.Part.Record.ItemContentType, T("Contains"))
+	@Html.DropDownListFor(m => m.Part.Record.ItemContentType, Model.AvailableContainables)
+	<span class="hint">@T("Only types with the Containable part can be contained in a list.")</span>
+</fieldset>
+<fieldset>
+    @Html.LabelFor(m => m.Part.Record.OrderByProperty, T("Order by"))
+    <select id="@Html.FieldIdFor(m => m.Part.Record.OrderByProperty)" name="@Html.FieldNameFor(m => m.Part.Record.OrderByProperty)">
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "CommonPart.CreatedUtc", T("Date Created").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "CommonPart.PublishedUtc", T("Date Published").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "RoutePart.Title", T("Title").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "RoutePart.Slug", T("Slug").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "CustomPropertiesPart.CustomOne", T("Custom 1").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "CustomPropertiesPart.CustomTwo", T("Custom 2").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByProperty, "CustomPropertiesPart.CustomThree", T("Custom 3").Text)
     </select>
-    <select id="@Html.FieldIdFor(m => m.Record.OrderByDirection)" name="@Html.FieldNameFor(m => m.Record.OrderByDirection)">
-        @Html.SelectOption(Model.Record.OrderByDirection, (int)OrderByDirection.Ascending, T("Ascending").Text)
-        @Html.SelectOption(Model.Record.OrderByDirection, (int)OrderByDirection.Descending, T("Descending").Text)
+    <select id="@Html.FieldIdFor(m => m.Part.Record.OrderByDirection)" name="@Html.FieldNameFor(m => m.Part.Record.OrderByDirection)">
+        @Html.SelectOption(Model.Part.Record.OrderByDirection, (int)OrderByDirection.Ascending, T("Ascending").Text)
+        @Html.SelectOption(Model.Part.Record.OrderByDirection, (int)OrderByDirection.Descending, T("Descending").Text)
     </select>
 </fieldset>
 <fieldset class="with-checkbox">
     <span>
-        @Html.LabelFor(m => m.Record.PageSize, T("Page size"))
-        @Html.TextBoxFor(m => m.Record.PageSize, new { @class = "text text-small" })
+        @Html.LabelFor(m => m.Part.Record.PageSize, T("Page size"))
+        @Html.TextBoxFor(m => m.Part.Record.PageSize, new { @class = "text text-small" })
     </span>
     <span class="checkbox-and-label">
-        @Html.CheckBoxFor(m => m.Record.Paginated)
-        <label for="@Html.FieldIdFor(m => m.Record.Paginated)" class="forcheckbox">@T("Show paging controls")</label>
+        @Html.CheckBoxFor(m => m.Part.Record.Paginated)
+        <label for="@Html.FieldIdFor(m => m.Part.Record.Paginated)" class="forcheckbox">@T("Show paging controls")</label>
     </span>
 </fieldset>

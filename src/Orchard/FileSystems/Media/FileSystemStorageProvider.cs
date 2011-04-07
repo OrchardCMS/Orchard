@@ -1,11 +1,11 @@
-﻿#if !AZURE
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
+using Orchard.Validation;
 
 namespace Orchard.FileSystems.Media {
     public class FileSystemStorageProvider : IStorageProvider {
@@ -16,7 +16,7 @@ namespace Orchard.FileSystems.Media {
             var mediaPath = HostingEnvironment.IsHosted
                                 ? HostingEnvironment.MapPath("~/Media/") ?? ""
                                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
-            
+
             _storagePath = Path.Combine(mediaPath, settings.Name);
 
             var appPath = "";
@@ -35,11 +35,26 @@ namespace Orchard.FileSystems.Media {
 
         public Localizer T { get; set; }
 
-        string Map(string path) {
-            return string.IsNullOrEmpty(path) ? _storagePath : Path.Combine(_storagePath, path);
+        /// <summary>
+        /// Maps a relative path into the storage path.
+        /// </summary>
+        /// <param name="path">The relative path to be mapped.</param>
+        /// <returns>The relative path combined with the storage path.</returns>
+        private string MapStorage(string path) {
+            string mappedPath = string.IsNullOrEmpty(path) ? _storagePath : Path.Combine(_storagePath, path);
+            return PathValidation.ValidatePath(_storagePath, mappedPath);
         }
 
-        static string Fix(string path) {
+        /// <summary>
+        /// Maps a relative path into the public path.
+        /// </summary>
+        /// <param name="path">The relative path to be mapped.</param>
+        /// <returns>The relative path combined with the public path in an URL friendly format ('/' character for directory separator).</returns>
+        private string MapPublic(string path) {
+            return string.IsNullOrEmpty(path) ? _publicPath : Path.Combine(_publicPath, path).Replace(Path.DirectorySeparatorChar, '/');
+        }
+
+        private static string Fix(string path) {
             return string.IsNullOrEmpty(path)
                        ? ""
                        : Path.DirectorySeparatorChar != '/'
@@ -49,116 +64,233 @@ namespace Orchard.FileSystems.Media {
 
         #region Implementation of IStorageProvider
 
+        /// <summary>
+        /// Retrieves the public URL for a given file within the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path within the storage provider.</param>
+        /// <returns>The public URL.</returns>
         public string GetPublicUrl(string path) {
-
-            return Map(_publicPath + path.Replace(Path.DirectorySeparatorChar, '/'));
+            return MapPublic(path);
         }
 
+        /// <summary>
+        /// Retrieves a file within the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path to the file within the storage provider.</param>
+        /// <returns>The file.</returns>
+        /// <exception cref="ArgumentException">If the file is not found.</exception>
         public IStorageFile GetFile(string path) {
-            if (!File.Exists(Map(path))) {
+            FileInfo fileInfo = new FileInfo(MapStorage(path));
+            if (!fileInfo.Exists) {
                 throw new ArgumentException(T("File {0} does not exist", path).ToString());
             }
-            return new FileSystemStorageFile(Fix(path), new FileInfo(Map(path)));
+
+            return new FileSystemStorageFile(Fix(path), fileInfo);
         }
 
+        /// <summary>
+        /// Lists the files within a storage provider's path.
+        /// </summary>
+        /// <param name="path">The relative path to the folder which files to list.</param>
+        /// <returns>The list of files in the folder.</returns>
         public IEnumerable<IStorageFile> ListFiles(string path) {
-            if (!Directory.Exists(Map(path))) {
+            DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
+            if (!directoryInfo.Exists) {
                 throw new ArgumentException(T("Directory {0} does not exist", path).ToString());
             }
 
-            return new DirectoryInfo(Map(path))
+            return directoryInfo
                 .GetFiles()
                 .Where(fi => !IsHidden(fi))
                 .Select<FileInfo, IStorageFile>(fi => new FileSystemStorageFile(Path.Combine(Fix(path), fi.Name), fi))
                 .ToList();
         }
 
+        /// <summary>
+        /// Lists the folders within a storage provider's path.
+        /// </summary>
+        /// <param name="path">The relative path to the folder which folders to list.</param>
+        /// <returns>The list of folders in the folder.</returns>
         public IEnumerable<IStorageFolder> ListFolders(string path) {
-            if (!Directory.Exists(Map(path))) {
+            DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
+            if (!directoryInfo.Exists) {
                 try {
-                    Directory.CreateDirectory(Map(path));
+                    directoryInfo.Create();
                 }
                 catch (Exception ex) {
                     throw new ArgumentException(T("The folder could not be created at path: {0}. {1}", path, ex).ToString());
                 }
             }
 
-            return new DirectoryInfo(Map(path))
+            return directoryInfo
                 .GetDirectories()
                 .Where(di => !IsHidden(di))
                 .Select<DirectoryInfo, IStorageFolder>(di => new FileSystemStorageFolder(Path.Combine(Fix(path), di.Name), di))
                 .ToList();
         }
 
-        private static bool IsHidden(FileSystemInfo di) {
-            return (di.Attributes & FileAttributes.Hidden) != 0;
+        /// <summary>
+        /// Tries to create a folder in the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path to the folder to be created.</param>
+        /// <returns>True if success; False otherwise.</returns>
+        public bool TryCreateFolder(string path) {
+            try { CreateFolder(path); }
+            catch { return false; }
+
+            return true;
         }
 
-        public void TryCreateFolder(string path) {
-            Directory.CreateDirectory(Map(path));
-        }
-
+        /// <summary>
+        /// Creates a folder in the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path to the folder to be created.</param>
+        /// <exception cref="ArgumentException">If the folder already exists.</exception>
         public void CreateFolder(string path) {
-            if (Directory.Exists(Map(path))) {
+            DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
+            if (directoryInfo.Exists) {
                 throw new ArgumentException(T("Directory {0} already exists", path).ToString());
             }
 
-            TryCreateFolder(Map(path));
+            Directory.CreateDirectory(directoryInfo.FullName);
         }
 
+        /// <summary>
+        /// Deletes a folder in the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path to the folder to be deleted.</param>
+        /// <exception cref="ArgumentException">If the folder doesn't exist.</exception>
         public void DeleteFolder(string path) {
-            if (!Directory.Exists(Map(path))) {
+            DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
+            if (!directoryInfo.Exists) {
                 throw new ArgumentException(T("Directory {0} does not exist", path).ToString());
             }
 
-            Directory.Delete(Map(path), true);
+            directoryInfo.Delete(true);
         }
 
-        public void RenameFolder(string path, string newPath) {
-            if (!Directory.Exists(Map(path))) {
-                throw new ArgumentException(T("Directory {0} does not exist", path).ToString());
+        /// <summary>
+        /// Renames a folder in the storage provider.
+        /// </summary>
+        /// <param name="oldPath">The relative path to the folder to be renamed.</param>
+        /// <param name="newPath">The relative path to the new folder.</param>
+        public void RenameFolder(string oldPath, string newPath) {
+            DirectoryInfo sourceDirectory = new DirectoryInfo(MapStorage(oldPath));
+            if (!sourceDirectory.Exists) {
+                throw new ArgumentException(T("Directory {0} does not exist", oldPath).ToString());
             }
 
-            if (Directory.Exists(Map(newPath))) {
+            DirectoryInfo targetDirectory = new DirectoryInfo(MapStorage(newPath));
+            if (targetDirectory.Exists) {
                 throw new ArgumentException(T("Directory {0} already exists", newPath).ToString());
             }
 
-            Directory.Move(Map(path), Map(newPath));
+            Directory.Move(sourceDirectory.FullName, targetDirectory.FullName);
         }
 
-        public IStorageFile CreateFile(string path) {
-            if (File.Exists(Map(path))) {
-                throw new ArgumentException(T("File {0} already exists", path).ToString());
+        /// <summary>
+        /// Deletes a file in the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path to the file to be deleted.</param>
+        /// <exception cref="ArgumentException">If the file doesn't exist.</exception>
+        public void DeleteFile(string path) {
+            FileInfo fileInfo = new FileInfo(MapStorage(path));
+            if (!fileInfo.Exists) {
+                throw new ArgumentException(T("File {0} does not exist", path).ToString());
             }
 
-            var fileInfo = new FileInfo(Map(path));
-            File.WriteAllBytes(Map(path), new byte[0]);
+            fileInfo.Delete();
+        }
+
+        /// <summary>
+        /// Renames a file in the storage provider.
+        /// </summary>
+        /// <param name="oldPath">The relative path to the file to be renamed.</param>
+        /// <param name="newPath">The relative path to the new file.</param>
+        public void RenameFile(string oldPath, string newPath) {
+            FileInfo sourceFileInfo = new FileInfo(MapStorage(oldPath));
+            if (!sourceFileInfo.Exists) {
+                throw new ArgumentException(T("File {0} does not exist", oldPath).ToString());
+            }
+
+            FileInfo targetFileInfo = new FileInfo(MapStorage(newPath));
+            if (targetFileInfo.Exists) {
+                throw new ArgumentException(T("File {0} already exists", newPath).ToString());
+            }
+
+            File.Move(sourceFileInfo.FullName, targetFileInfo.FullName);
+        }
+
+        /// <summary>
+        /// Creates a file in the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path to the file to be created.</param>
+        /// <exception cref="ArgumentException">If the file already exists.</exception>
+        /// <returns>The created file.</returns>
+        public IStorageFile CreateFile(string path) {
+            FileInfo fileInfo = new FileInfo(MapStorage(path));
+            if (fileInfo.Exists) {
+                throw new ArgumentException(T("File {0} already exists", fileInfo.Name).ToString());
+            }
+
+            // ensure the directory exists
+            var dirName = Path.GetDirectoryName(fileInfo.FullName);
+            if (!Directory.Exists(dirName)) {
+                Directory.CreateDirectory(dirName);
+            }
+            File.WriteAllBytes(fileInfo.FullName, new byte[0]);
 
             return new FileSystemStorageFile(Fix(path), fileInfo);
         }
 
-        public void DeleteFile(string path) {
-            if (!File.Exists(Map(path))) {
-                throw new ArgumentException(T("File {0} does not exist", path).ToString());
-            }
+        /// <summary>
+        /// Tries to save a stream in the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path to the file to be created.</param>
+        /// <param name="inputStream">The stream to be saved.</param>
+        /// <returns>True if success; False otherwise.</returns>
+        public bool TrySaveStream(string path, Stream inputStream) {
+            try { SaveStream(path, inputStream); }
+            catch { return false; }
 
-            File.Delete(Map(path));
+            return true;
         }
 
-        public void RenameFile(string path, string newPath) {
-            if (!File.Exists(Map(path))) {
-                throw new ArgumentException(T("File {0} does not exist", path).ToString());
-            }
+        /// <summary>
+        /// Saves a stream in the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path to the file to be created.</param>
+        /// <param name="inputStream">The stream to be saved.</param>
+        /// <exception cref="ArgumentException">If the stream can't be saved due to access permissions.</exception>
+        public void SaveStream(string path, Stream inputStream) {
+            // Create the file.
+            // The CreateFile method will map the still relative path
+            var file = CreateFile(path);
 
-            if (File.Exists(Map(newPath))) {
-                throw new ArgumentException(T("File {0} already exists", newPath).ToString());
-            }
+            var outputStream = file.OpenWrite();
+            var buffer = new byte[8192];
+            for (;;) {
 
-            File.Move(Map(path), Map(newPath));
+                var length = inputStream.Read(buffer, 0, buffer.Length);
+                if (length <= 0)
+                    break;
+                outputStream.Write(buffer, 0, length);
+            }
+            outputStream.Dispose();
         }
 
+        /// <summary>
+        /// Combines to paths.
+        /// </summary>
+        /// <param name="path1">The parent path.</param>
+        /// <param name="path2">The child path.</param>
+        /// <returns>The combined path.</returns>
         public string Combine(string path1, string path2) {
             return Path.Combine(path1, path2);
+        }
+
+        private static bool IsHidden(FileSystemInfo di) {
+            return (di.Attributes & FileAttributes.Hidden) != 0;
         }
 
         #endregion
@@ -264,7 +396,5 @@ namespace Orchard.FileSystems.Media {
                 return size;
             }
         }
-
     }
 }
-#endif

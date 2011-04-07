@@ -2,14 +2,13 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Orchard.Environment;
+using Orchard.WarmupStarter;
 
 namespace Orchard.Web {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
     public class MvcApplication : HttpApplication {
-        private static IOrchardHost _host;
 
         public static void RegisterRoutes(RouteCollection routes) {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
@@ -18,18 +17,15 @@ namespace Orchard.Web {
         protected void Application_Start() {
             RegisterRoutes(RouteTable.Routes);
 
-            _host = OrchardStarter.CreateHost(MvcSingletons);
-            _host.Initialize();
+            Starter.LaunchStartupThread(MvcSingletons);
         }
 
         protected void Application_BeginRequest() {
-            Context.Items["originalHttpContext"] = Context;
-
-            _host.BeginRequest();
+            Starter.OnBeginRequest(Context, MvcSingletons);
         }
 
         protected void Application_EndRequest() {
-            _host.EndRequest();
+            Starter.OnEndRequest();
         }
 
         static void MvcSingletons(ContainerBuilder builder) {
@@ -37,6 +33,5 @@ namespace Orchard.Web {
             builder.Register(ctx => ModelBinders.Binders).SingleInstance();
             builder.Register(ctx => ViewEngines.Engines).SingleInstance();
         }
-
     }
 }

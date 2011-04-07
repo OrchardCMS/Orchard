@@ -1,5 +1,23 @@
-﻿#main .templates p {
-    margin:0 0 .3em 0;
+﻿/*button[title="Disable"], button[title="Enable"]
+{
+    display:none;
+}*/
+#currentTheme .themePreviewImage {
+    float: left;
+    margin-right: 20px;
+}
+#installedBar {
+    clear: both;
+    border-bottom:1px solid #E4E5E6;
+    height: 36px;
+    margin: 10px 0 10px 0;
+}
+#installedBar h3 {
+    float: left;
+}
+#installedBar a {
+    float: right;
+    padding-top: 10px;
 }
 .templates li {
     margin:.8em;
@@ -30,3 +48,8 @@
 .themePreviewImage {
     height:300px;
 }
+#main .themeInfo {margin:12px 0 0 0;}
+/***Recently installed**/
+.recentlyInstalledTheme { }
+.recentlyInstalledTheme {background:#fff url(images/new.gif) no-repeat 0px 5px;}
+h3.recentlyInstalledTheme {padding:0 0 0 40px;}

@@ -7,7 +7,11 @@ namespace Orchard.ContentManagement.Drivers {
         DriverResult BuildDisplayShape(BuildDisplayContext context);
         DriverResult BuildEditorShape(BuildEditorContext context);
         DriverResult UpdateEditorShape(UpdateEditorContext context);
-
+        void Importing(ImportContentContext context);
+        void Imported(ImportContentContext context);
+        void Exporting(ExportContentContext context);
+        void Exported(ExportContentContext context);
         IEnumerable<ContentFieldInfo> GetFieldInfo();
+        void GetContentItemMetadata(GetContentItemMetadataContext context);
     }
 }

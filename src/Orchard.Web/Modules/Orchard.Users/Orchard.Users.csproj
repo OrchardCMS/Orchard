@@ -83,13 +83,15 @@
     <Content Include="Content\Admin\images\offline.gif" />
     <Content Include="Content\Admin\images\online.gif" />
     <Content Include="Module.txt" />
+    <Content Include="Styles\images\menu.users.png" />
+    <Content Include="Styles\menu.users-admin.css" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\AccessDenied.cshtml" />
     <Content Include="Views\Account\ChallengeEmailSuccess.cshtml" />
     <Content Include="Views\Account\ChallengeEmailSent.cshtml" />
     <Content Include="Views\Account\ChallengeEmailFail.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Register.cshtml" />
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\Create.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
@@ -129,6 +131,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\LogOn.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

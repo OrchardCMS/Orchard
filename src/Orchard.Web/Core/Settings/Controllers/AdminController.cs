@@ -1,6 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Settings.ViewModels;
 using Orchard.Localization;
 using Orchard.ContentManagement;
@@ -28,25 +30,59 @@ namespace Orchard.Core.Settings.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult Index(string tabName) {
+        public ActionResult Index(string groupInfoId) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            dynamic model = Services.ContentManager.BuildEditor(_siteService.GetSiteSettings());
+            dynamic model;
+            var site = _siteService.GetSiteSettings();
+            if (!string.IsNullOrWhiteSpace(groupInfoId)) {
+                model = Services.ContentManager.BuildEditor(site, groupInfoId);
+
+                if (model == null)
+                    return HttpNotFound();
+
+                var groupInfo = Services.ContentManager.GetEditorGroupInfo(site, groupInfoId);
+                if (groupInfo == null)
+                    return HttpNotFound();
+
+                model.GroupInfo = groupInfo;
+            }
+            else {
+                model = Services.ContentManager.BuildEditor(site);
+            }
+
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
 
         [HttpPost, ActionName("Index")]
-        public ActionResult IndexPOST(string tabName) {
+        public ActionResult IndexPOST(string groupInfoId) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings();
-            dynamic model = Services.ContentManager.UpdateEditor(site, this);
+            dynamic model = Services.ContentManager.UpdateEditor(site, this, groupInfoId);
+
+            GroupInfo groupInfo = null;
+
+            if (!string.IsNullOrWhiteSpace(groupInfoId)) {
+                if (model == null) {
+                    Services.TransactionManager.Cancel();
+                    return HttpNotFound();
+                }
+
+                groupInfo = Services.ContentManager.GetEditorGroupInfo(site, groupInfoId);
+                if (groupInfo == null) {
+                    Services.TransactionManager.Cancel();
+                    return HttpNotFound();
+                }
+            }
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
+                model.GroupInfo = groupInfo;
+
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }

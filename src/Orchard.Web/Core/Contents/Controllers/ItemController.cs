@@ -2,6 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Themes;
 
 namespace Orchard.Core.Contents.Controllers {
@@ -24,8 +25,7 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Display(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Published);
             dynamic model = _contentManager.BuildDisplay(contentItem);
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return new ShapeResult(this, model);
         }
 
         // /Contents/Item/Preview/72
@@ -41,8 +41,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             dynamic model = _contentManager.BuildDisplay(contentItem);
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View("Display", (object)model);
+            return new ShapeResult(this, model);
         }
     }
 }

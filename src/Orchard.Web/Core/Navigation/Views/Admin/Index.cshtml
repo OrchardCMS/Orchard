@@ -3,7 +3,8 @@
 @using Orchard.Core.Navigation.Models;
 @using Orchard.Core.Navigation.ViewModels;
 
-<h1>@Html.TitleForPage(T("Manage Main Menu").ToString())</h1>
+@{ Layout.Title = T("Navigation").ToString(); }
+
 @using (Html.BeginFormAntiForgeryPost()) {
 <table class="items">
     <colgroup>
@@ -25,17 +26,17 @@
         foreach (var menuPartEntry in Model.MenuItemEntries) {
             var i = menuPartEntryIndex;
             <tr>
-                <td><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Text)" value="@menuPartEntry.MenuItem.Text" /></td>
-                <td><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Position)" value="@menuPartEntry.MenuItem.Position" /></td>
-                <td>@if (!menuPartEntry.IsMenuItem) {<input type="text" class="text-box disabled" disabled="disabled" value="@menuPartEntry.MenuItem.Url" /> } else {<input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Url)" value="@menuPartEntry.MenuItem.Url" />}</td>
-                <td><input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" /><a href="@Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = menuPartEntry.MenuItemId}))" class="remove">@T("Remove")</a></td>
+                <td><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Text)" value="@menuPartEntry.Text" /></td>
+                <td><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></td>
+                <td>@if (!menuPartEntry.IsMenuItem) {<input type="text" class="text-box disabled" disabled="disabled" value="@menuPartEntry.Url" /> } else {<input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Url)" value="@menuPartEntry.Url" />}</td>
+                <td><input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" /><a href="@Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = menuPartEntry.MenuItemId}))" class="remove">@T("Delete")</a></td>
             </tr>
             ++menuPartEntryIndex;
         }
     }
     </tbody>
 </table>
-<fieldset class="actions"><button type="submit" class="primaryAction">@T("Update All")</button></fieldset>
+<fieldset class="actions"><button type="submit" class="button">@T("Update All")</button></fieldset>
 }
 
 <h2>@T("Add New Item")</h2>
@@ -51,15 +52,15 @@
         <tr>
             <td>
                 <label for="MenuText">@T("Text")</label>
-                @Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.As<MenuPart>().MenuText)
+                @Html.EditorFor(m => m.NewMenuItem.Text)
             </td>
             <td>
                 <label for="MenuPosition">@T("Position")</label>
-                @Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.As<MenuPart>().MenuPosition)
+                @Html.EditorFor(m => m.NewMenuItem.Position)
             </td>
             <td>
                 <label for="Url">@T("Url")</label>
-                @Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.As<MenuItemPart>().Url)
+                @Html.EditorFor(m => m.NewMenuItem.Url)
             </td>
             <td><button class="add" type="submit">@T("Add")</button></td>
         </tr>

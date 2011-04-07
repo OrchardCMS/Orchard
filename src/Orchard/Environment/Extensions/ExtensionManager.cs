@@ -39,7 +39,11 @@ namespace Orchard.Environment.Extensions {
 
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
             return _cacheManager.Get("...", ctx => 
-                AvailableExtensions().SelectMany(ext => ext.Features).OrderByDependencies(HasDependency).ToReadOnlyCollection());
+                AvailableExtensions().SelectMany(ext => ext.Features).OrderByDependenciesAndPriorities(HasDependency, GetPriority).ToReadOnlyCollection());
+        }
+
+        internal static int GetPriority(FeatureDescriptor featureDescriptor) {
+            return featureDescriptor.Priority;
         }
 
         /// <summary>

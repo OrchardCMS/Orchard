@@ -1,20 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Data.Migration;
+using Orchard.DisplayManagement;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.Modules.Events;
+using Orchard.Modules.Models;
 using Orchard.Modules.Services;
 using Orchard.Modules.ViewModels;
 using Orchard.Reports.Services;
 using Orchard.Security;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Modules.Controllers {
     public class AdminController : Controller {
+        private readonly IExtensionDisplayEventHandler _extensionDisplayEventHandler;
         private readonly IModuleService _moduleService;
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IReportsCoordinator _reportsCoordinator;
@@ -22,38 +30,70 @@ namespace Orchard.Modules.Controllers {
         private readonly IFeatureManager _featureManager;
         private readonly ShellDescriptor _shellDescriptor;
 
-        public AdminController(IOrchardServices services,
+        public AdminController(
+            IEnumerable<IExtensionDisplayEventHandler> extensionDisplayEventHandlers,
+            IOrchardServices services,
             IModuleService moduleService,
             IDataMigrationManager dataMigrationManager,
             IReportsCoordinator reportsCoordinator,
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
-            ShellDescriptor shellDescriptor)
+            ShellDescriptor shellDescriptor,
+            IShapeFactory shapeFactory)
         {
             Services = services;
+            _extensionDisplayEventHandler = extensionDisplayEventHandlers.FirstOrDefault();
             _moduleService = moduleService;
             _dataMigrationManager = dataMigrationManager;
             _reportsCoordinator = reportsCoordinator;
             _extensionManager = extensionManager;
             _featureManager = featureManager;
             _shellDescriptor = shellDescriptor;
+            Shape = shapeFactory;
 
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
+        public ILogger Logger { get; set; }
+        public dynamic Shape { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index(ModulesIndexOptions options, PagerParameters pagerParameters) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not allowed to manage modules")))
                 return new HttpUnauthorizedResult();
 
-            var modules = _extensionManager.AvailableExtensions().Where(x => DefaultExtensionTypes.IsModule(x.ExtensionType));
+            Pager pager = new Pager(Services.WorkContext.CurrentSite, pagerParameters);
 
-            return View(new ModulesIndexViewModel { 
+            IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
+                .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType) &&
+                                              (string.IsNullOrEmpty(options.SearchText) || extensionDescriptor.Name.ToLowerInvariant().Contains(options.SearchText.ToLowerInvariant())))
+                .OrderBy(extensionDescriptor => extensionDescriptor.Name)
+                .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
+
+            int totalItemCount = modules.Count();
+
+            if (pager.PageSize != 0) {
+                modules = modules.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
+            }
+
+            modules = modules.ToList();
+            foreach (ModuleEntry moduleEntry in modules) {
+                moduleEntry.IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(moduleEntry.Descriptor);
+
+                if (_extensionDisplayEventHandler != null) {
+                    foreach (string notification in _extensionDisplayEventHandler.Displaying(moduleEntry.Descriptor, ControllerContext.RequestContext)) {
+                        moduleEntry.Notifications.Add(notification);
+                    }
+                }
+            }
+
+            return View(new ModulesIndexViewModel {
                 Modules = modules,
                 InstallModules = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null,
-                BrowseToGallery = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "Gallery") != null
+                Options = options,
+                Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)
             });
         }
 
@@ -63,12 +103,14 @@ namespace Orchard.Modules.Controllers {
 
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
 
-            var features = _featureManager.GetAvailableFeatures()
+            IEnumerable<ModuleFeature> features = _featureManager.GetAvailableFeatures()
                 .Where(f => !DefaultExtensionTypes.IsTheme(f.Extension.ExtensionType))
-                .Select(f=>new ModuleFeature{Descriptor=f,
-                IsEnabled=_shellDescriptor.Features.Any(sf=>sf.Name==f.Id),
-                NeedsUpdate=featuresThatNeedUpdate.Contains(f.Id)})
-                .ToList();
+                .Select(f => new ModuleFeature {
+                                Descriptor = f,
+                                IsEnabled = _shellDescriptor.Features.Any(sf => sf.Name == f.Id),
+                                IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(f.Extension),
+                                NeedsUpdate = featuresThatNeedUpdate.Contains(f.Id)
+                            });
 
             return View(new FeaturesViewModel { Features = features });
         }
@@ -110,10 +152,9 @@ namespace Orchard.Modules.Controllers {
             try {
                 _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
                 _dataMigrationManager.Update(id);
-                Services.Notifier.Information(T("The feature {0} was updated succesfuly", id));
-            }
-            catch (Exception ex) {
-                Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, ex.Message));
+                Services.Notifier.Information(T("The feature {0} was updated successfully", id));
+            } catch (Exception exception) {
+                this.Error(exception, T("An error occured while updating the feature {0}: {1}", id, exception.Message), Logger, Services.Notifier);
             }
 
             return RedirectToAction("Features");

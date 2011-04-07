@@ -11,6 +11,10 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual string Prefix { get { return ""; } }
         protected virtual string Zone { get { return "Content"; } }
 
+        void IContentFieldDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {            
+            Process(context.ContentItem, (part, field) => GetContentItemMetadata(part, field, context.Metadata));
+        }
+
         DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context) {
             return Process(context.ContentItem, (part, field) => Display(part, field, context.DisplayType, context.New));
         }
@@ -21,6 +25,29 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
             return Process(context.ContentItem, (part, field) => Editor(part, field, context.Updater, context.New));
+        }
+
+        void IContentFieldDriver.Importing(ImportContentContext context) {
+            Process(context.ContentItem, (part, field) => Importing(part, field, context));
+        }
+
+        void IContentFieldDriver.Imported(ImportContentContext context) {
+            Process(context.ContentItem, (part, field) => Imported(part, field, context));
+        }
+
+        void IContentFieldDriver.Exporting(ExportContentContext context) {
+            Process(context.ContentItem, (part, field) => Exporting(part, field, context));
+        }
+
+        void IContentFieldDriver.Exported(ExportContentContext context) {
+            Process(context.ContentItem, (part, field) => Exported(part, field, context));
+        }
+
+        void Process(ContentItem item, Action<ContentPart, TField> effort) {
+            var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }));
+            foreach (var occurence in occurences) {
+                effort(occurence.part, occurence.field);
+            }
         }
 
         DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort) {
@@ -44,10 +71,16 @@ namespace Orchard.ContentManagement.Drivers {
             return contentFieldInfo;
         }
 
+        protected virtual void GetContentItemMetadata(ContentPart part, TField field, ContentItemMetadata metadata) { return; }
 
         protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater, dynamic shapeHelper) { return null; }
+        
+        protected virtual void Importing(ContentPart part, TField field, ImportContentContext context) { }
+        protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) { }
+        protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }
+        protected virtual void Exported(ContentPart part, TField field, ExportContentContext context) { }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
             return ContentShapeImplementation(shapeType, null, ctx => factory());
@@ -69,30 +102,51 @@ namespace Orchard.ContentManagement.Drivers {
             return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), differentiator)).Differentiator(differentiator);
         }
 
-        private object AddAlternates(dynamic shape, string differentiator) {
+        private static object AddAlternates(dynamic shape, string differentiator) {
             // automatically add shape alternates for shapes added by fields
-            // [ShapeType__FieldName] for ShapeType-FieldName.cshtml templates
-            // [ShapeType__PartName] for ShapeType-PartName.cshtml templates
-            // [ShapeType__PartName__FieldName] for ShapeType-PartName-FieldName.cshtml templates
-
             // for fields on dynamic parts the part name is the same as the content type name
-            // ex. Fields/Common.Text-Something.FirstName
 
             ShapeMetadata metadata = shape.Metadata;
-            if (!string.IsNullOrEmpty(differentiator))
-                metadata.Alternates.Add(metadata.Type + "__" + differentiator);
-
             ContentPart part = shape.ContentPart;
-            if (part != null) {
-                metadata.Alternates.Add(metadata.Type + "__" + part.PartDefinition.Name);
-                if (!string.IsNullOrEmpty(differentiator))
-                    metadata.Alternates.Add(metadata.Type + "__" + part.PartDefinition.Name + "__" + differentiator);
+            var shapeType = metadata.Type;
+            var fieldName = differentiator ?? String.Empty;
+            var partName = part != null ? part.PartDefinition.Name : String.Empty;
+            var contentType = part != null ? part.ContentItem.ContentType : String.Empty;
+            var dynamicType = string.Equals(partName, contentType, StringComparison.Ordinal);
+
+            // [ShapeType__FieldName] e.g. Fields/Common.Text-Teaser
+            if ( !string.IsNullOrEmpty(fieldName) )
+                metadata.Alternates.Add(shapeType + "__" + fieldName);
+
+            // [ShapeType__PartName] e.g. Fields/Common.Text-TeaserPart
+            if ( !string.IsNullOrEmpty(partName) ) {
+                metadata.Alternates.Add(shapeType + "__" + partName);
             }
 
+            // [ShapeType]__[ContentType]__[PartName] e.g. Fields/Common.Text-Blog-TeaserPart
+            if ( !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(contentType) && !dynamicType ) {
+                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName);
+            }
+
+            // [ShapeType]__[PartName]__[FieldName] e.g. Fields/Common.Text-TeaserPart-Teaser
+            if ( !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) ) {
+                metadata.Alternates.Add(shapeType + "__" + partName + "__" + fieldName);
+            }
+
+            // [ShapeType]__[ContentType]__[FieldName] e.g. Fields/Common.Text-Blog-Teaser
+            if ( !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(fieldName) ) {
+                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + fieldName);
+            }
+
+            // [ShapeType]__[ContentType]__[PartName]__[FieldName] e.g. Fields/Common.Text-Blog-TeaserPart-Teaser
+            if ( !string.IsNullOrEmpty(contentType) && !string.IsNullOrEmpty(partName) && !string.IsNullOrEmpty(fieldName) && !dynamicType ) {
+                metadata.Alternates.Add(shapeType + "__" + contentType + "__" + partName );
+            }
+            
             return shape;
         }
 
-        private object CreateShape(BuildShapeContext context, string shapeType) {
+        private static object CreateShape(BuildShapeContext context, string shapeType) {
             IShapeFactory shapeFactory = context.New;
             return shapeFactory.Create(shapeType);
         }

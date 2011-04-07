@@ -3,7 +3,6 @@ using Orchard.Localization;
 
 namespace Orchard.Localization {
     public delegate LocalizedString Localizer(string text, params object[] args);
-
 }
 
 namespace Orchard.Mvc.Html {

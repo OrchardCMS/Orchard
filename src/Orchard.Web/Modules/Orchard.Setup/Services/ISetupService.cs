@@ -1,8 +1,11 @@
-﻿using Orchard.Environment.Configuration;
+﻿using System.Collections.Generic;
+using Orchard.Environment.Configuration;
+using Orchard.Recipes.Models;
 
 namespace Orchard.Setup.Services {
     public interface ISetupService : IDependency {
         ShellSettings Prime();
-        void Setup(SetupContext context);
+        IEnumerable<Recipe> Recipes();
+        string Setup(SetupContext context);
     }
 }

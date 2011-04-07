@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Security;
 using Orchard.Tags.Helpers;
 using Orchard.Tags.Models;
@@ -55,6 +57,22 @@ namespace Orchard.Tags.Drivers {
             return new EditTagsViewModel {
                 Tags = string.Join(", ", part.CurrentTags.Select((t, i) => t.TagName).ToArray())
             };
+        }
+
+        protected override void Importing(TagsPart part, ImportContentContext context) {
+            var tagString = context.Attribute(part.PartDefinition.Name, "Tags");
+            if (tagString != null) {
+                var tags = tagString.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
+                // Merge tags.
+                if (tags.Length > 0) {
+                    var currentTags = part.CurrentTags.Select(t => t.TagName);
+                    _tagService.UpdateTagsForContentItem(context.ContentItem, tags.Concat(currentTags).Distinct()); 
+                }
+            }
+        }
+
+        protected override void Exporting(TagsPart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Tags", String.Join(",", part.CurrentTags.Select(t => t.TagName)));
         }
     }
 }

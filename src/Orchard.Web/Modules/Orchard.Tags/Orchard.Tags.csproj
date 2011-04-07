@@ -78,6 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Styles\images\menu.tags.png" />
+    <Content Include="Styles\menu.tags-admin.css" />
     <Content Include="Styles\orchard-tags-admin.css" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Admin\Edit.cshtml" />
@@ -107,6 +109,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\EditorTemplates\Parts\CreateTag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -417,6 +417,12 @@ nav ul
 .split-124 #footer-quad-fourth { width:480px; } /* If zones 1, 2, 4 are on */
 .split-123 #footer-quad-third { width:480px; } /* If zones 1, 2, 3 are on */
 
+/*3 zones on - alternate layout*/
+/*.split-123 #footer-quad-first, .split-123 #footer-quad-second, .split-123 #footer-quad-third { width:320px; }*/ /* If zones 1, 2, 3 are on */
+/*.split-124 #footer-quad-first, .split-124 #footer-quad-second, .split-124 #footer-quad-fourth { width:320px; }*/ /* If zones 1, 2, 4 are on */
+/*.split-134 #footer-quad-first, .split-134 #footer-quad-third, .split-134 #footer-quad-fourth { width:320px; }*/ /* If zones 1, 3, 4 are on */
+/*.split-234 #footer-quad-second, .split-234 #footer-quad-third, .split-234 #footer-quad-fourth { width:320px; }*/ /* If zones 2, 3, 4 are on */
+
 
 
 /* Widgets
@@ -432,7 +438,7 @@ nav ul
 .widget-control .manage-actions a:hover { background-color: #434343; color: #fff; text-decoration: none; }
 
 /* Content Mode */
-.content-control { position: relative; border: 1px dotted #5f97af; }
+.content-control { border: 1px dotted #5f97af; overflow:auto; position: relative; }
 .content-control .manage-actions { position:absolute; top: 0px; right: 0px; }
 .content-control .manage-actions a { display: block; background-color: #dbdbdb; color: #434343; padding: 3px 6px;  }
 .content-control .manage-actions a:hover { background-color: #434343; color: #fff; text-decoration: none; }

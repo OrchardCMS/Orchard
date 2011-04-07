@@ -1,9 +1,12 @@
 ﻿@model Orchard.Media.ViewModels.MediaFolderCreateViewModel
 @using Orchard.Media.Helpers;
 @using Orchard.Media.Models;
-@{ Style.Require("MediaAdmin"); }
+@{
+    Style.Require("MediaAdmin");
 
-<h1>@Html.TitleForPage(T("Add a Folder").ToString())</h1>
+    Layout.Title = T("Add a Folder").ToString();
+}
+
 <div class="breadCrumbs">
 <p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
         @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) { 

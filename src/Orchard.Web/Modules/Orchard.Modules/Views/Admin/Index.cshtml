@@ -1,40 +1,38 @@
-﻿@model ModulesIndexViewModel
+﻿@model Orchard.Modules.ViewModels.ModulesIndexViewModel
+@using Orchard.Localization;
+@using Orchard.Modules.Models;
 @using Orchard.Modules.Extensions;
 @using Orchard.Mvc.Html;
-@using Orchard.Modules.ViewModels;
+@using Orchard.Utility.Extensions;
 
 @{
     Style.Require("ModulesAdmin");
+
+    Layout.Title = T("Modules").ToString();
 }
 
-<h1>@Html.TitleForPage(T("Installed Modules").ToString())</h1>
 
-@if (Model.BrowseToGallery) {
-    <div class="manage">@Html.ActionLink(T("Install a module from the Gallery").ToString(), "Modules", "Gallery", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
+@using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Admin"))) {
+    <fieldset class="search-actions">
+        <input type="text" id="searchText" class="text-box single-line" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText" />
+
+        <button type="submit">@T("Search").ToString()</button>
+    </fieldset>
+
+    if (Model.InstallModules) {
+    <span>@Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</span>
 }
 
-@if (Model.InstallModules) {
-    <div class="manage">@Html.ActionLink(T("Install a module").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, new { @class = "button primaryAction" })</div>
+    if (Model.Modules.Count() > 0) {
+        <ul class="contentItems">
+            @foreach (ModuleEntry module in Model.Modules.OrderBy(m => m.Descriptor.Name)) {
+                <li>@Display.ModuleEntry(ContentPart: module)</li>
+            }
+        </ul>
+    } else {
+        <p>@T("No modules available").ToString()</p>
+    }
+
+    @Display(Model.Pager)
 }
 
-@if (Model.Modules.Count() > 0) {
-<ul class="contentItems">
-    @foreach (var module in Model.Modules.OrderBy(m => m.Name)) {
-    <li>
-        <div class="summary">
-            <div class="properties">
-                <h2>@module.Name<span> - @T("Version: {0}", !string.IsNullOrEmpty(module.Version) ? module.Version : T("1.0").ToString())</span></h2>
-                @if (!string.IsNullOrEmpty(module.Description)) {
-                <p>@module.Description</p>}
-                <ul class="pageStatus" style="color:#666; margin:.6em 0 0 0;">
-                    <li>@T("Features: {0}", MvcHtmlString.Create(string.Join(", ", module.Features.Select(f => Html.Link(string.IsNullOrEmpty(f.Name) ? f.Id : f.Name, string.Format("{0}#{1}", Url.Action("features", new { area = "Orchard.Modules" }), f.Id.AsFeatureId(n => T(n)))).ToString()).OrderBy(s => s).ToArray())))</li>
-                    <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(module.Author) ? module.Author : T("Unknown").ToString())</li>
-                    <li>&nbsp;&#124;&nbsp;@T("Website: ")
-                        @if (!string.IsNullOrEmpty(module.WebSite)) { <a href="@module.WebSite">@module.WebSite</a> }
-                        else { @T("Unknown").ToString() }
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </li>}
-</ul>}

@@ -25,6 +25,14 @@ namespace Orchard.FileSystems.VirtualPath {
         public IVolatileToken WhenPathChanges(string virtualPath) {
             try {
                 var token = BindToken(virtualPath);
+
+                if (!HostingEnvironment.VirtualPathProvider.DirectoryExists(virtualPath)
+                    && !HostingEnvironment.VirtualPathProvider.FileExists(virtualPath)) {
+                    // if trying to monitor a directory or file inside a directory which doesn't exist
+                    // monitor first existing parent directory
+                    return new Token(virtualPath);
+                }
+
                 BindSignal(virtualPath);
                 return token;
             }

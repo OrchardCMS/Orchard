@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Autofac;
@@ -116,7 +117,7 @@ namespace Orchard.Tests.Environment.Extensions {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath) {
+            public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
                 throw new NotImplementedException();
             }
 
@@ -502,41 +503,92 @@ OrchardVersion: 1
             var moduleExtensionFolder = new StubFolders();
             var themeExtensionFolder = new StubFolders(DefaultExtensionTypes.Theme);
 
-            moduleExtensionFolder.Manifests.Add("Alpha", @"
-Name: Alpha
-Version: 1.0.3
-OrchardVersion: 1
-Features:
-    Alpha:
-        Dependencies: Gamma
-");
+            moduleExtensionFolder.Manifests.Add("Alpha", CreateManifest("Alpha", null, "Gamma"));
+            moduleExtensionFolder.Manifests.Add("Beta", CreateManifest("Beta"));
+            moduleExtensionFolder.Manifests.Add("Gamma", CreateManifest("Gamma", null, "Beta"));
+            moduleExtensionFolder.Manifests.Add("Classic", CreateManifest("Classic", null, "Alpha"));
 
-            moduleExtensionFolder.Manifests.Add("Beta", @"
-Name: Beta
-Version: 1.0.3
-OrchardVersion: 1
-");
-            moduleExtensionFolder.Manifests.Add("Gamma", @"
-Name: Gamma
-Version: 1.0.3
-OrchardVersion: 1
-Features:
-    Gamma:
-        Dependencies: Beta
-");
-
-            moduleExtensionFolder.Manifests.Add("Classic", @"
-Name: Classic
-Version: 1.0.3
-OrchardVersion: 1
-Features:
-    Classic:
-        Dependencies: Alpha
-");
-
-            IExtensionManager extensionManager = new ExtensionManager(new[] { moduleExtensionFolder, themeExtensionFolder }, new[] { extensionLoader }, new StubCacheManager());
-            var features = extensionManager.AvailableFeatures();
-            Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo("<Beta<Gamma<Alpha<Classic<"));
+            AssertFeaturesAreInOrder(new[] { moduleExtensionFolder, themeExtensionFolder }, extensionLoader, "<Beta<Gamma<Alpha<Classic<");
         }
+
+        private static string CreateManifest(string name, string priority = null, string dependencies = null) {
+            return string.Format(CultureInfo.InvariantCulture, @"
+Name: {0}
+Version: 1.0.3
+OrchardVersion: 1{1}{2}",
+             name,
+             (dependencies == null ? null : "\nDependencies: " + dependencies),
+             (priority == null ? null : "\nPriority:" + priority));
+        }
+
+        private static void AssertFeaturesAreInOrder(StubFolders folder, StubLoaders loader, string expectedOrder) {
+            AssertFeaturesAreInOrder(new StubFolders[] { folder }, loader, expectedOrder);
+        }
+
+        private static void AssertFeaturesAreInOrder(IEnumerable<StubFolders> folders, StubLoaders loader, string expectedOrder) {
+            var extensionManager = new ExtensionManager(folders, new[] { loader }, new StubCacheManager());
+            var features = extensionManager.AvailableFeatures();
+            Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo(expectedOrder));
+        }
+
+        [Test]
+        public void FeatureDescriptorsAreInDependencyAndPriorityOrder() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            // Check that priorities apply correctly on items on the same level of dependencies and are overwritten by dependencies
+            extensionFolder.Manifests.Add("Alpha", CreateManifest("Alpha", "2", "Gamma")); // More important than Gamma but will get overwritten by the dependency
+            extensionFolder.Manifests.Add("Beta", CreateManifest("Beta", "2"));
+            extensionFolder.Manifests.Add("Foo", CreateManifest("Foo", "1"));
+            extensionFolder.Manifests.Add("Gamma", CreateManifest("Gamma", "3", "Beta, Foo"));
+            AssertFeaturesAreInOrder(extensionFolder, extensionLoader, "<Foo<Beta<Gamma<Alpha<");
+
+            // Change priorities and see that it reflects properly
+            // Gamma comes after Foo (same priority) because their order in the Manifests is preserved
+            extensionFolder.Manifests["Foo"] = CreateManifest("Foo", "3");
+            AssertFeaturesAreInOrder(extensionFolder, extensionLoader, "<Beta<Foo<Gamma<Alpha<");
+
+            // Remove dependency on Foo and see that it moves down the list since no one depends on it anymore
+            extensionFolder.Manifests["Gamma"] = CreateManifest("Gamma", "3", "Beta");
+            AssertFeaturesAreInOrder(extensionFolder, extensionLoader, "<Beta<Gamma<Alpha<Foo<");
+
+            // Change Foo to depend on Gamma and see that it says in its position (same dependencies as alpha but lower priority)
+            extensionFolder.Manifests["Foo"] = CreateManifest("Foo", "3", "Gamma");
+            AssertFeaturesAreInOrder(extensionFolder, extensionLoader, "<Beta<Gamma<Alpha<Foo<");
+
+            // Update Foo to a higher priority than alpha and see that it moves before alpha
+            extensionFolder.Manifests["Foo"] = CreateManifest("Foo", "1", "Gamma");
+            AssertFeaturesAreInOrder(extensionFolder, extensionLoader, "<Beta<Gamma<Foo<Alpha<");
+        }
+
+        [Test]
+        public void FeatureDescriptorsAreInPriorityOrder() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            // Check that priorities apply correctly on items on the same level of dependencies and are overwritten by dependencies
+            extensionFolder.Manifests.Add("Alpha", CreateManifest("Alpha", "4")); // More important than Gamma but will get overwritten by the dependency
+            extensionFolder.Manifests.Add("Beta", CreateManifest("Beta", "3"));
+            extensionFolder.Manifests.Add("Foo", CreateManifest("Foo", "1"));
+            extensionFolder.Manifests.Add("Gamma", CreateManifest("Gamma", "2"));
+
+            AssertFeaturesAreInOrder(extensionFolder, extensionLoader, "<Foo<Gamma<Beta<Alpha<");
+        }
+
+        [Test]
+        public void FeatureDescriptorsAreInManifestOrderWhenTheyHaveEqualPriority() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            extensionFolder.Manifests.Add("Alpha", CreateManifest("Alpha", "4"));
+            extensionFolder.Manifests.Add("Beta", CreateManifest("Beta", "4"));
+            extensionFolder.Manifests.Add("Gamma", CreateManifest("Gamma", "4"));
+            extensionFolder.Manifests.Add("Foo", CreateManifest("Foo", "3"));
+            extensionFolder.Manifests.Add("Bar", CreateManifest("Bar", "3"));
+            extensionFolder.Manifests.Add("Baz", CreateManifest("Baz", "3"));
+
+            AssertFeaturesAreInOrder(extensionFolder, extensionLoader, "<Foo<Bar<Baz<Alpha<Beta<Gamma<");
+        }
+
     }
 }

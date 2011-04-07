@@ -1,5 +1,6 @@
 ﻿@model Orchard.Setup.ViewModels.SetupViewModel
 @{
+	Script.Require("jquery").AtFoot();
     Script.Include("setup.js").AtFoot();
 }
 <h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
@@ -50,11 +51,23 @@ if (!Model.DatabaseIsPreconfigured) {
     </div>
 </fieldset>
 }
+<fieldset>
+	<legend>@T("Choose an Orchard Recipe")</legend>
+	<div>@T("Orchard Recipes allow you to setup your site with additional pre-configured options, features and settings out of the box")</div>	
+	<div>
+        <select id="@Html.FieldIdFor(m => m.Recipe)" name="@Html.FieldNameFor(m => m.Recipe)" class="recipe">
+        @foreach(var recipe in Model.Recipes) {
+            @Html.SelectOption(Model.Recipe, recipe.Name, recipe.Name, new { recipedescription = recipe.Description })
+        }
+        </select>
+    </div>
+	<div id="recipedescription">@Model.RecipeDescription</div>
+</fieldset>
 <div id="throbber">
     <div class="curtain"></div>
     <div class="curtain-content">
         <div>
-            <h1>@T("Configuring Orchard...")</h1>
+            <h1 id="setUpHeader">@T("Cooking Orchard Recipe ...")</h1>
             <p>
                 <img src="@Href("../../content/synchronizing.gif")" alt="" />
             </p>
@@ -63,6 +76,6 @@ if (!Model.DatabaseIsPreconfigured) {
 </div>
     
 <fieldset>
-    <button class="primaryAction" type="submit">@T("Finish Setup")</button>
+    <button class="primaryAction setupButton" type="submit">@T("Finish Setup")</button>
 </fieldset>
 }

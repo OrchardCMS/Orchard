@@ -5,7 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: The settings module creates site settings that other modules can contribute to.
-Features:
-    Settings:
-        Description: Site settings.
-        Category: Core
+FeatureDescription: Site settings.
+Category: Core

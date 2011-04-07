@@ -1,9 +1,8 @@
-﻿#main .features h2 {
-    margin-top:0;
-}
-#main .features h3 {
-    padding:0 3em 0 0;
-}
+﻿#main .features h2 { margin-top:0; }
+#main .features h3 { padding:0 3em 0 0; }
+html.dyn #main ul.features button { display:none; }
+.pageStatus { clear: both; }
+
 .features.detail-view .category > ul {
     border:1px solid #EAEAEA;
     margin-bottom:2em;
@@ -41,14 +40,15 @@
 .features .enabled.feature {
     background:#FFF;
 }
-.features.summary-view .enabled.feature {
-    border-color:#CFE493;
+.features.summary-view .enabled.feature, .features.summary-view .disabled.feature {
+    border-color:#cfe493;
+    overflow:hidden;
 }
 .features .disabled.feature {
-    background:#EAEAEA;
+    background:#f3f3f3;
 }
 .features.summary-view .disabled.feature {
-    border-color:#CCC;
+    border-color:#eaeaea;
 }
 .features .update.feature {
     background:#ECC;
@@ -77,7 +77,6 @@
 #main .features.detail-view h3 {
     display:inline;
     font-size:1.4em;
-    font-weight:bold;
     padding-right:0;
 }
 #main .features.summary-view .description {
@@ -136,4 +135,20 @@
 .features .feature .actions form.inline.link,
 .features .feature .actions a {
     margin-left:.5em;
+}
+
+/***Recently installed**/
+.recentlyInstalledFeature { }
+.recentlyInstalledModule {background:#fff url(images/new.gif) no-repeat 0px 5px;}
+h2.recentlyInstalledModule {padding:0 0 0 40px;}
+
+.updateAvailable {background-color: #f1f0cb;}
+.search-actions {
+    float: right;
+    height: auto;
+    padding:0 0 0 0;
+}
+
+.manage {
+    float: right;
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
@@ -86,12 +87,46 @@ namespace Orchard.Core.Routable.Drivers {
             if ( !_routableService.IsSlugValid(part.Slug) ) {
                 var slug = (part.Slug ?? String.Empty);
                 if ( slug.StartsWith(".") || slug.EndsWith(".") )
-                    updater.AddModelError("Routable.Slug", T("The \".\" can't be used around routes."));
+                    updater.AddModelError("Routable.Slug", T("The \".\" can't be used at either end of the permalink."));
                 else
-                    updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\". No spaces are allowed (please use dashes or underscores instead)."));
+                    updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \", \"<\", \">\", \"\\\". No spaces are allowed (please use dashes or underscores instead)."));
             }
 
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Importing(RoutePart part, ImportContentContext context) {
+            var title = context.Attribute(part.PartDefinition.Name, "Title");
+            if (title != null) {
+                part.Title = title;
+            }
+
+            var slug = context.Attribute(part.PartDefinition.Name, "Slug");
+            if (slug != null) {
+                part.Slug = slug;
+            }
+
+            var path = context.Attribute(part.PartDefinition.Name, "Path");
+            if (path != null) {
+                part.Path = path;
+            }
+
+            var promoteToHomePage = context.Attribute(part.PartDefinition.Name, "PromoteToHomePage");
+            if (promoteToHomePage != null) {
+                part.PromoteToHomePage = Convert.ToBoolean(promoteToHomePage);
+                if (part.PromoteToHomePage && _routableHomePageProvider != null) {
+                    _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
+                }
+            }
+        }
+
+        protected override void Exporting(RoutePart part, ExportContentContext context) {
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Slug", part.Slug);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Path", part.Path);
+            if (_services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(part.ContentItem.Id)) {
+                context.Element(part.PartDefinition.Name).SetAttributeValue("PromoteToHomePage", "true");   
+            }
         }
     }
 }

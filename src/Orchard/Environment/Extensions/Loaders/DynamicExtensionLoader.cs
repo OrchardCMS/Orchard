@@ -9,6 +9,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class DynamicExtensionLoader : ExtensionLoaderBase {
@@ -17,6 +18,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IAssemblyProbingFolder _assemblyProbingFolder;
+        private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IProjectFileParser _projectFileParser;
         private readonly ReloadWorkaround _reloadWorkaround = new ReloadWorkaround();
 
@@ -36,6 +38,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             _hostEnvironment = hostEnvironment;
             _assemblyProbingFolder = assemblyProbingFolder;
             _projectFileParser = projectFileParser;
+            _dependenciesFolder = dependenciesFolder;
 
             Logger = NullLogger.Instance;
         }
@@ -54,13 +57,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             return GetDependencies(dependency.VirtualPath);
         }
 
-        public override IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath){
+        public override IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
             virtualPath = _virtualPathProvider.ToAppRelative(virtualPath);
 
             if (StringComparer.OrdinalIgnoreCase.Equals(virtualPath, dependency.VirtualPath)) {
-                return GetSourceFiles(virtualPath);
+                return GetDependencies(virtualPath);
             }
-            return base.GetFileDependencies(dependency, virtualPath);
+            return base.GetDynamicModuleDependencies(dependency, virtualPath);
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
@@ -94,14 +97,14 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (projectPath == null)
                 return Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
-            using(var stream = _virtualPathProvider.OpenFile(projectPath)) {
+            using (var stream = _virtualPathProvider.OpenFile(projectPath)) {
                 var projectFile = _projectFileParser.Parse(stream);
 
                 return projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
                     Descriptor = descriptor,
                     Loader = this,
                     Name = r.SimpleName,
-                    VirtualPath = GetReferenceVirtualPath(projectPath, r.SimpleName)
+                    VirtualPath = _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
                 });
             }
         }
@@ -127,14 +130,6 @@ namespace Orchard.Environment.Extensions.Loaders {
                     context.RestartAppDomain = true;
                 }
             }
-        }
-
-        private string GetReferenceVirtualPath(string projectPath, string referenceName) {
-            var path = _virtualPathProvider.GetDirectoryName(projectPath);
-            path = _virtualPathProvider.Combine(path, "bin", referenceName + ".dll");
-            if (_virtualPathProvider.FileExists(path))
-                return path;
-            return null;
         }
 
         public override Assembly LoadReference(DependencyReferenceDescriptor reference) {
@@ -183,17 +178,47 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        private IEnumerable<string> GetDependencies(string projectPath) {
-            return new[] {projectPath}.Concat(GetSourceFiles(projectPath));
+        protected IEnumerable<string> GetDependencies(string projectPath) {
+            HashSet<string> dependencies = new HashSet<string> { projectPath };
+
+            AddDependencies(projectPath, dependencies);
+
+            return dependencies;
         }
 
-        private IEnumerable<string> GetSourceFiles(string projectPath) {
-            var basePath = _virtualPathProvider.GetDirectoryName(projectPath);
+        private void AddDependencies(string projectPath, HashSet<string> currentSet) {
+            string basePath = _virtualPathProvider.GetDirectoryName(projectPath);
 
             using (var stream = _virtualPathProvider.OpenFile(projectPath)) {
-                var projectFile = _projectFileParser.Parse(stream);
+                ProjectFileDescriptor projectFile = _projectFileParser.Parse(stream);
 
-                return projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f));
+                // Add source files
+                currentSet.UnionWith(projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f)));
+
+                // Add Project and Library references
+                if (projectFile.References != null) {
+                    foreach (ReferenceDescriptor referenceDescriptor in projectFile.References.Where(reference => !string.IsNullOrEmpty(reference.Path))) {
+                        string path = referenceDescriptor.ReferenceType == ReferenceType.Library
+                                          ? _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
+                                          : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
+
+                        // Attempt to reference the project / library file
+                        if (!string.IsNullOrEmpty(path) && !currentSet.Contains(path) && _virtualPathProvider.TryFileExists(path)) {
+                            currentSet.Add(path);
+
+                            // In case of project, also reference the source files
+                            if (referenceDescriptor.ReferenceType == ReferenceType.Project) {
+                                AddDependencies(path, currentSet);
+
+                                // Try to also reference any pre-built DLL
+                                DependencyDescriptor dependencyDescriptor = _dependenciesFolder.GetDescriptor(_virtualPathProvider.GetDirectoryName(referenceDescriptor.Path));
+                                if (dependencyDescriptor != null && _virtualPathProvider.TryFileExists(dependencyDescriptor.VirtualPath)) {
+                                    currentSet.Add(dependencyDescriptor.VirtualPath);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -217,7 +242,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         /// The purpose of this class is to keep track of all .csproj files monitored until
         /// an AppDomain restart.
         /// </summary>
-        class ReloadWorkaround {
+        internal class ReloadWorkaround {
             private readonly List<IVolatileToken> _tokens = new List<IVolatileToken>();
 
             public void Monitor(IVolatileToken whenProjectFileChanges) {

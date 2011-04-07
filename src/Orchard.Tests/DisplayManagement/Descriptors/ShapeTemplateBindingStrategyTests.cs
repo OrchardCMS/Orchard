@@ -99,6 +99,10 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             public IEnumerable<string> ListDirectories(string path) {
                 throw new NotImplementedException();
             }
+
+            public bool TryFileExists(string virtualPath) {
+                throw new NotImplementedException();
+            }
         }
 
         protected override void Resolve(ILifetimeScope container) {
@@ -140,7 +144,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             strategy.Discover(builder);
             var alterations = alterationBuilders.Select(alterationBuilder=>alterationBuilder.Build());
 
-            Assert.That(alterations.Any(alteration => alteration.ShapeType == "AlphaShape"));
+            Assert.That(alterations.Any(alteration => alteration.ShapeType.Equals("AlphaShape", StringComparison.OrdinalIgnoreCase)));
         }
 
     }

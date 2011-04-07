@@ -36,8 +36,7 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                 return viewResult;
             }
 
-            // Don't layout the result if it's not an Admin controller and it's disabled
-            if ( !AdminFilter.IsApplied(controllerContext.RequestContext) && !ThemeFilter.IsApplied(controllerContext.RequestContext) ) {
+            if (!ThemeFilter.IsApplied(controllerContext.RequestContext)) {
                 return viewResult;
             }
 

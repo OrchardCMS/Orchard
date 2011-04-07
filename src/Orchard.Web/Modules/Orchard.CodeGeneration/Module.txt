@@ -5,8 +5,5 @@ Website: http://orchardproject.net
 Version: 1.0.20
 OrchardVersion: 1.0.20
 Description: Tools to create Orchard components.
-Features:
-    Orchard.CodeGeneration:
-        Name: Code Generation
-        Description: Tools to create Orchard components.
-        Category: Developer
+FeatureDescription: Tools to create Orchard components.
+Category: Developer

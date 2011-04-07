@@ -68,13 +68,22 @@ namespace Orchard.DisplayManagement.Implementation {
                 shapeBinding.ShapeDescriptor.Displaying.Invoke(action => action(displayingContext), Logger);
             }
 
-            // now find the actual binding to render, taking alternates into account
-            ShapeBinding actualBinding;
-            if (TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding)) {
-                shape.Metadata.ChildContent = Process(actualBinding, shape, context);
+            // invoking ShapeMetadata displaying events
+            shapeMetadata.Displaying.Invoke(action => action(displayingContext), Logger);
+
+            // use pre-fectched content if available (e.g. coming from specific cache implmentation)
+            if ( displayingContext.ChildContent != null ) {
+                shape.Metadata.ChildContent = displayingContext.ChildContent;
             }
             else {
-                throw new OrchardException(T("Shape type {0} not found", shapeMetadata.Type));
+                // now find the actual binding to render, taking alternates into account
+                ShapeBinding actualBinding;
+                if ( TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out actualBinding) ) {
+                    shape.Metadata.ChildContent = Process(actualBinding, shape, context);
+                }
+                else {
+                    throw new OrchardException(T("Shape type {0} not found", shapeMetadata.Type));
+                }
             }
 
             foreach (var frameType in shape.Metadata.Wrappers) {
@@ -107,6 +116,9 @@ namespace Orchard.DisplayManagement.Implementation {
                         displayedContext.ShapeMetadata.ChildContent = displayedContext.ChildContent;
                 }, Logger);
             }
+
+            // invoking ShapeMetadata displayed events
+            shapeMetadata.Displayed.Invoke(action => action(displayedContext), Logger);
 
             return shape.Metadata.ChildContent;
         }

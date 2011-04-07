@@ -15,11 +15,13 @@ namespace Orchard.Widgets.Filters {
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRuleManager _ruleManager;
+        private readonly IWidgetsService _widgetsService;
 
-        public WidgetFilter(IContentManager contentManager, IWorkContextAccessor workContextAccessor, IRuleManager ruleManager) {
+        public WidgetFilter(IContentManager contentManager, IWorkContextAccessor workContextAccessor, IRuleManager ruleManager, IWidgetsService widgetsService) {
             _contentManager = contentManager;
             _workContextAccessor = workContextAccessor;
             _ruleManager = ruleManager;
+            _widgetsService = widgetsService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -44,7 +46,7 @@ namespace Orchard.Widgets.Filters {
 
             // Once the Rule Engine is done:
             // Get Layers and filter by zone and rule
-            IEnumerable<WidgetPart> widgetParts = _contentManager.Query<WidgetPart, WidgetPartRecord>().List();
+            IEnumerable<WidgetPart> widgetParts = _widgetsService.GetWidgets();
             IEnumerable<LayerPart> activeLayers = _contentManager.Query<LayerPart, LayerPartRecord>().List();
 
             var activeLayerIds = new List<int>();

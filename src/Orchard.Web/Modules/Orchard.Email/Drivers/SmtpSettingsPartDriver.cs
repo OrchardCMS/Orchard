@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Email.Models;
 using Orchard.Localization;
@@ -21,20 +22,22 @@ namespace Orchard.Email.Drivers {
 
         protected override DriverResult Editor(SmtpSettingsPart part, dynamic shapeHelper) {
             return ContentShape("Parts_SmtpSettings_Edit",
-                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
+                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix))
+                    .OnGroup("email");
         }
 
         protected override DriverResult Editor(SmtpSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var previousPassword = part.Password;
-            updater.TryUpdateModel(part, Prefix, null, null);
+            return ContentShape("Parts_SmtpSettings_Edit", () => {
+                    var previousPassword = part.Password;
+                    updater.TryUpdateModel(part, Prefix, null, null);
 
-            // restore password if the input is empty, meaning it has not been reseted
-            if (string.IsNullOrEmpty(part.Password)) { 
-                part.Password = previousPassword;
-            }
-            
-            return ContentShape("Parts_SmtpSettings_Edit",
-                    () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix));
+                    // restore password if the input is empty, meaning it has not been reseted
+                    if (string.IsNullOrEmpty(part.Password)) {
+                        part.Password = previousPassword;
+                    }
+                    return shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: part, Prefix: Prefix);
+                })
+                .OnGroup("email");
         }
     }
 }

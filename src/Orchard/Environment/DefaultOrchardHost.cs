@@ -51,6 +51,11 @@ namespace Orchard.Environment {
             get { return BuildCurrent().ToReadOnlyCollection(); }
         }
 
+        public ShellContext GetShellContext(ShellSettings shellSettings) {
+            return Current
+                .Single(shellContext => shellContext.Settings.Name.Equals(shellSettings.Name));
+        }
+
         void IOrchardHost.Initialize() {
             Logger.Information("Initializing");
             BuildCurrent();
@@ -115,7 +120,7 @@ namespace Orchard.Environment {
 
         ShellContext CreateSetupContext() {
             Logger.Debug("Creating shell context for root setup");
-            return _shellContextFactory.CreateSetupContext(new ShellSettings { Name = "Default" });
+            return _shellContextFactory.CreateSetupContext(new ShellSettings { Name = ShellSettings.DefaultName });
         }
 
         ShellContext CreateShellContext(ShellSettings settings) {

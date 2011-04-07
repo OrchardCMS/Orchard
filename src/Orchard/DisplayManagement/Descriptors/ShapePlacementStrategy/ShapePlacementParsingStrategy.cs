@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -64,12 +65,49 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
                 }
 
                 if (matches.Any()) {
-                    predicate = matches.SelectMany(match => match.Terms).Aggregate(predicate, BuildPredicate);
+                    predicate =  matches.SelectMany(match => match.Terms).Aggregate(predicate, BuildPredicate);
+                }
+
+                var placement = new PlacementInfo();
+
+                var segments = shapeLocation.Location.Split(';').Select(s => s.Trim());
+                foreach (var segment in segments) {
+                    if (!segment.Contains('=')) {
+                        placement.Location = segment;
+                    }
+                    else {
+                        var index = segment.IndexOf('=');
+                        var property = segment.Substring(0, index).ToLower();
+                        var value = segment.Substring(index + 1);
+                        switch (property) {
+                            case "shape":
+                                placement.ShapeType = value;
+                                break;
+                            case "alternate":
+                                placement.Alternates = placement.Alternates.Concat(new[] { value });
+                                break;
+                            case "wrapper":
+                                placement.Wrappers = placement.Wrappers.Concat(new[] { value });
+                                break;
+                            default:
+                                // ignore unknown properties
+                                // Logger.Warning("Unknown property name [{0}] in {1}", property, placement.Source);
+                                break;
+                        }
+                    }
                 }
 
                 builder.Describe(shapeType)
                     .From(feature)
-                    .Placement(predicate, shapeLocation.Location);
+                    .Placement(ctx => {
+                                   var hit = predicate(ctx);
+                                   // generate 'debugging' information to trace which file originated the actual location
+                                    if (hit) {
+                                       var virtualPath = featureDescriptor.Extension.Location + "/" + featureDescriptor.Extension.Id + "/Placement.info";
+                                       ctx.Source = virtualPath;
+                                   }
+                                   return hit;
+                               }, placement);
             }
         }
 
@@ -83,21 +121,33 @@ namespace Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy {
             }
         }
 
-        private Func<ShapePlacementContext, bool> BuildPredicate(Func<ShapePlacementContext, bool> predicate, KeyValuePair<string, string> term) {
+        public static Func<ShapePlacementContext, bool> BuildPredicate(Func<ShapePlacementContext, bool> predicate, KeyValuePair<string, string> term) {
             var expression = term.Value;
             switch (term.Key) {
                 case "ContentType":
                     if (expression.EndsWith("*")) {
                         var prefix = expression.Substring(0, expression.Length - 1);
-                        return ctx => (ctx.ContentType ?? "").StartsWith(prefix) && predicate(ctx);
+                        return ctx => ((ctx.ContentType ?? "").StartsWith(prefix) || (ctx.Stereotype ?? "").StartsWith(prefix)) && predicate(ctx);
                     }
-                    return ctx => (ctx.ContentType == expression) && predicate(ctx);
+                    return ctx => ((ctx.ContentType == expression) || (ctx.Stereotype == expression)) && predicate(ctx);
                 case "DisplayType":
                     if (expression.EndsWith("*")) {
                         var prefix = expression.Substring(0, expression.Length - 1);
                         return ctx => (ctx.DisplayType ?? "").StartsWith(prefix) && predicate(ctx);
                     }
                     return ctx => (ctx.DisplayType == expression) && predicate(ctx);
+                case "Path":
+                    var normalizedPath = VirtualPathUtility.IsAbsolute(expression)
+                                             ? VirtualPathUtility.ToAppRelative(expression)
+                                             : VirtualPathUtility.Combine("~/", expression);
+
+                    if (normalizedPath.EndsWith("*")) {
+                        var prefix = normalizedPath.Substring(0, normalizedPath.Length - 1);
+                        return ctx => VirtualPathUtility.ToAppRelative(ctx.Path ?? "").StartsWith(prefix, StringComparison.OrdinalIgnoreCase) && predicate(ctx);
+                    }
+
+                    normalizedPath = VirtualPathUtility.AppendTrailingSlash(normalizedPath);
+                    return ctx => (ctx.Path.Equals(normalizedPath, StringComparison.OrdinalIgnoreCase)) && predicate(ctx);
             }
             return predicate;
         }

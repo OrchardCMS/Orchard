@@ -13,6 +13,7 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Collections;
 using Orchard.Themes;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Search.Controllers {
     using Orchard.Settings;
@@ -55,10 +56,8 @@ namespace Orchard.Search.Controllers {
                                                   Services.WorkContext.CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
                                                   searchFields,
                                                   searchHit => searchHit);
-            }
-            catch(Exception e) {
-                Services.Notifier.Error(T("Invalid search query: {0}", q));
-                Logger.Error(e, "Invalid search query: " + q);
+            } catch(Exception exception) {
+                this.Error(exception, T("Invalid search query: {0}", exception.Message), Logger, Services.Notifier);
             }
 
             var list = Shape.List();

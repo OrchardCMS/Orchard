@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
@@ -17,11 +19,18 @@ namespace Orchard.UI.Navigation {
             _authorizationService = authorizationService;
             _urlHelper = urlHelper;
             _orchardServices = orchardServices;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             var sources = GetSources(menuName);
-            return FinishMenu(Crop(Reduce(Merge(sources))).ToArray());
+            return FinishMenu(Reduce(Merge(sources)).ToArray());
+        }
+
+        public IEnumerable<string> BuildImageSets(string menuName) {
+            return GetImageSets(menuName).SelectMany(imageSets => imageSets.Distinct()).Distinct();
         }
 
         private IEnumerable<MenuItem> FinishMenu(IEnumerable<MenuItem> menuItems) {
@@ -53,9 +62,6 @@ namespace Orchard.UI.Navigation {
             return url;
         }
 
-        private static IEnumerable<MenuItem> Crop(IEnumerable<MenuItem> items) {
-            return items.Where(item => item.Items.Any() || item.RouteValues != null);
-        }
 
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {
             var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), _orchardServices.WorkContext.CurrentUser, null);
@@ -68,7 +74,10 @@ namespace Orchard.UI.Navigation {
                         Permissions = item.Permissions,
                         Position = item.Position,
                         RouteValues = item.RouteValues,
+                        LocalNav = item.LocalNav,
                         Text = item.Text,
+                        IdHint = item.IdHint,
+                        Classes = item.Classes,
                         Url = item.Url,
                         LinkToFirstChild = item.LinkToFirstChild,
                         Href = item.Href
@@ -81,8 +90,36 @@ namespace Orchard.UI.Navigation {
             foreach (var provider in _providers) {
                 if (provider.MenuName == menuName) {
                     var builder = new NavigationBuilder();
-                    provider.GetNavigation(builder);
-                    yield return builder.Build();
+                    IEnumerable<MenuItem> items = null;
+                    try {
+                        provider.GetNavigation(builder);
+                        items = builder.Build();
+                    }
+                    catch (Exception ex) {
+                        Logger.Error(ex, "Unexpected error while querying a navigation provider. It was ignored. The menu provided by the provider may not be complete.");
+                    }
+                    if (items != null) {
+                        yield return items;
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<IEnumerable<string>> GetImageSets(string menuName) {
+            foreach (var provider in _providers) {
+                if (provider.MenuName == menuName) {
+                    var builder = new NavigationBuilder();
+                    IEnumerable<string> imageSets = null;
+                    try {
+                        provider.GetNavigation(builder);
+                        imageSets = builder.BuildImageSets();
+                    }
+                    catch (Exception ex) {
+                        Logger.Error(ex, "Unexpected error while querying a navigation provider. It was ignored. The menu provided by the provider may not be complete.");
+                    }
+                    if (imageSets != null) {
+                        yield return imageSets;
+                    }
                 }
             }
         }
@@ -92,8 +129,14 @@ namespace Orchard.UI.Navigation {
             var orderer = new FlatPositionComparer();
 
             return sources.SelectMany(x => x).ToArray()
+                // group same menus
                 .GroupBy(key => key, (key, items) => Join(items), comparer)
-                .OrderBy(item => item.Position, orderer);
+                // group same position
+                .GroupBy(item => item.Position)
+                // order position groups by position
+                .OrderBy(positionGroup => positionGroup.Key, orderer)
+                // ordered by item text in the postion group
+                .SelectMany(positionGroup => positionGroup.OrderBy(item => item.Text == null ? "" : item.Text.TextHint));
         }
 
         static MenuItem Join(IEnumerable<MenuItem> items) {
@@ -102,13 +145,16 @@ namespace Orchard.UI.Navigation {
 
             var joined = new MenuItem {
                 Text = items.First().Text,
-                Url = items.First().Url,
-                Href = items.First().Href,
+                IdHint = items.Select(x => x.IdHint).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
+                Classes = items.Select(x => x.Classes).FirstOrDefault(x => x != null && x.Count > 0),
+                Url = items.Select(x => x.Url).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
+                Href = items.Select(x => x.Href).FirstOrDefault(x => !string.IsNullOrWhiteSpace(x)),
                 LinkToFirstChild = items.First().LinkToFirstChild,
-                RouteValues = items.First().RouteValues,
+                RouteValues = items.Select(x => x.RouteValues).FirstOrDefault(x => x != null),
+                LocalNav = items.Any(x => x.LocalNav),
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),
-                Permissions = items.SelectMany(x => x.Permissions)
+                Permissions = items.SelectMany(x => x.Permissions).Distinct(),
             };
             return joined;
         }

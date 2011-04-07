@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.WindowsAzure;

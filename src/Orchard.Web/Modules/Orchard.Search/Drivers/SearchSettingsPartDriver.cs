@@ -24,28 +24,32 @@ namespace Orchard.Search.Drivers {
         protected override string Prefix { get { return "SearchSettings"; } }
 
         protected override DriverResult Editor(SearchSettingsPart part, dynamic shapeHelper) {
-            SearchSettingsViewModel model = new SearchSettingsViewModel();
-            String [] searchedFields = part.SearchedFields;
-
-            if (_indexManager.HasIndexProvider()) {
-                model.Entries = new List<SearchSettingsEntry>();
-                foreach (var field in _indexManager.GetSearchIndexProvider().GetFields(SearchIndexName)) {
-                    model.Entries.Add(new SearchSettingsEntry { Field = field, Selected = searchedFields.Contains(field) });
-                }
-            }
-
-            return ContentShape("Parts_Search_SiteSettings",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts/Search.SiteSettings", Model: model, Prefix: Prefix));
+            return Editor(part, null, shapeHelper);
+            
         }
 
         protected override DriverResult Editor(SearchSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
-            SearchSettingsViewModel model = new SearchSettingsViewModel();
+            return ContentShape("Parts_Search_SiteSettings", () => {
+                SearchSettingsViewModel model = new SearchSettingsViewModel();
+                String[] searchedFields = part.SearchedFields;
 
-            if (updater.TryUpdateModel(model, Prefix, null, null)) {
-                part.SearchedFields = model.Entries.Where(e => e.Selected).Select(e => e.Field).ToArray();
-            }
+                if (updater != null) {
+                    // submitting: rebuild model from form data
+                    if (updater.TryUpdateModel(model, Prefix, null, null)) {
+                        // update part if successful
+                        part.SearchedFields = model.Entries.Where(e => e.Selected).Select(e => e.Field).ToArray();
+                    }
+                }
+                else if (_indexManager.HasIndexProvider()) {
+                    // viewing editor: build model from part
+                    model.Entries = new List<SearchSettingsEntry>();
+                    foreach (var field in _indexManager.GetSearchIndexProvider().GetFields(SearchIndexName)) {
+                        model.Entries.Add(new SearchSettingsEntry { Field = field, Selected = searchedFields.Contains(field) });
+                    }
+                }
 
-            return Editor(part, shapeHelper);
+                return shapeHelper.EditorTemplate(TemplateName: "Parts/Search.SiteSettings", Model: model, Prefix: Prefix);
+            }).OnGroup("search");
         }
     }
 }

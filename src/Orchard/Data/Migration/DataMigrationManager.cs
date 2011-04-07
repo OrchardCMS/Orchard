@@ -74,7 +74,7 @@ namespace Orchard.Data.Migration {
 
             var migrations = GetDataMigrations(feature);
 
-            // apply update methods to each migration class for the module))))
+            // apply update methods to each migration class for the module
             foreach ( var migration in migrations ) {
                 // copy the objet for the Linq query
                 var tempMigration = migration;
@@ -187,7 +187,7 @@ namespace Orchard.Data.Migration {
             return dataMigration
                 .GetType()
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Select(mi => GetUpdateMethod(mi))
+                .Select(GetUpdateMethod)
                 .Where(tuple => tuple != null)
                 .ToDictionary(tuple => tuple.Item1, tuple => tuple.Item2);
         }

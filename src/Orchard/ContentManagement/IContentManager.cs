@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Indexing;
 
@@ -20,21 +21,27 @@ namespace Orchard.ContentManagement {
         void Remove(ContentItem contentItem);
         void Index(ContentItem contentItem, IDocumentIndex documentIndex);
 
+        XElement Export(ContentItem contentItem);
+        void Import(XElement element, ImportContentSession importContentSession);
 
         void Flush();
         IContentQuery<ContentItem> Query();
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
+        IEnumerable<GroupInfo> GetEditorGroupInfos(IContent contentItem);
+        IEnumerable<GroupInfo> GetDisplayGroupInfos(IContent contentItem);
+        GroupInfo GetEditorGroupInfo(IContent contentItem, string groupInfoId);
+        GroupInfo GetDisplayGroupInfo(IContent contentItem, string groupInfoId);
 
-        dynamic BuildDisplay(IContent content, string displayType = "");
-        dynamic BuildEditor(IContent content);
-        dynamic UpdateEditor(IContent content, IUpdateModel updater);
+        dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "");
+        dynamic BuildEditor(IContent content, string groupId = "");
+        dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "");
     }
 
     public interface IContentDisplay : IDependency {
-        dynamic BuildDisplay(IContent content, string displayType = "");
-        dynamic BuildEditor(IContent content);
-        dynamic UpdateEditor(IContent content, IUpdateModel updater);
+        dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "");
+        dynamic BuildEditor(IContent content, string groupId = "");
+        dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "");
     }
 
     public class VersionOptions {

@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 
 namespace Orchard.Packaging.Services {
-    [OrchardFeature("Gallery")]
+    /// <summary>
+    /// Responsible for managing package sources and getting the list of packages from it.
+    /// </summary>
+    [OrchardFeature("PackagingServices")]
     public class PackagingSourceManager : IPackagingSourceManager {
         public static string GetExtensionPrefix(string extensionType) {
             return string.Format("Orchard.{0}.", extensionType);
@@ -26,15 +28,32 @@ namespace Orchard.Packaging.Services {
 
         #region IPackagingSourceManager Members
 
+        /// <summary>
+        /// Gets the different feed sources.
+        /// </summary>
+        /// <returns>The feeds.</returns>
         public IEnumerable<PackagingSource> GetSources() {
             return _packagingSourceRecordRepository.Table.ToList();
         }
 
-        public void AddSource(string feedTitle, string feedUrl) {
-            var packagingSource = new PackagingSource {FeedTitle = feedTitle, FeedUrl = feedUrl};
+        /// <summary>
+        /// Adds a new feed sources.
+        /// </summary>
+        /// <param name="feedTitle">The feed title.</param>
+        /// <param name="feedUrl">The feed url.</param>
+        /// <returns>The feed identifier.</returns>
+        public int AddSource(string feedTitle, string feedUrl) {
+            PackagingSource packagingSource = new PackagingSource { FeedTitle = feedTitle, FeedUrl = feedUrl };
+
             _packagingSourceRecordRepository.Create(packagingSource);
+
+            return packagingSource.Id;
         }
 
+        /// <summary>
+        /// Removes a feed source.
+        /// </summary>
+        /// <param name="id">The feed identifier.</param>
         public void RemoveSource(int id) {
             var packagingSource = _packagingSourceRecordRepository.Get(id);
             if(packagingSource != null) {
@@ -42,31 +61,60 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        public IEnumerable<PackagingEntry> GetModuleList(PackagingSource packagingSource = null) {
-            return GetExtensionList(DefaultExtensionTypes.Module, packagingSource);
-        }
-        public IEnumerable<PackagingEntry> GetThemeList(PackagingSource packagingSource = null) {
-            return GetExtensionList(DefaultExtensionTypes.Theme, packagingSource);
-        }
-
-        private IEnumerable<PackagingEntry> GetExtensionList(string filter = null, PackagingSource packagingSource = null) {
+        /// <summary>
+        /// Retrieves the list of extensions from a feed source.
+        /// </summary>
+        /// <param name="includeScreenshots">Specifies if screenshots should be included in the result.</param>
+        /// <param name="packagingSource">The packaging source from where to get the extensions.</param>
+        /// <param name="query">The optional query to retrieve the extensions.</param>
+        /// <returns>The list of extensions.</returns>
+        public IEnumerable<PackagingEntry> GetExtensionList(bool includeScreenshots, PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
             return (packagingSource == null ? GetSources() : new[] {packagingSource})
                 .SelectMany(
                     source => {
-                        GalleryFeedContext galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl));
-                        return galleryFeedContext.Packages
-                            .Where(p => p.PackageType == filter)
-                            .ToList()
-                            .Select(p => {
-                                    PublishedScreenshot firstScreenshot = galleryFeedContext.Screenshots
+                        var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl));
+                        IQueryable<PublishedPackage> packages = galleryFeedContext.Packages;
+
+                        if (query != null) {
+                            packages = query(packages);
+                        }
+
+                        return packages.ToList().Select(
+                            p => {
+                                PublishedScreenshot firstScreenshot = includeScreenshots
+                                    ? galleryFeedContext.Screenshots
                                         .Where(s => s.PublishedPackageId == p.Id && s.PublishedPackageVersion == p.Version)
                                         .ToList()
-                                        .FirstOrDefault();
-                                    return CreatePackageEntry(p, firstScreenshot, packagingSource, galleryFeedContext.GetReadStreamUri(p));
-                                });
+                                        .FirstOrDefault() 
+                                    : null;
+                                return CreatePackageEntry(p, firstScreenshot, packagingSource, galleryFeedContext.GetReadStreamUri(p));
+                            });
                     }
-                ).ToArray();
+                );
         }
+
+        /// <summary>
+        /// Retrieves the number of extensions from a feed source.
+        /// </summary>
+        /// <param name="packagingSource">The packaging source from where to get the extensions.</param>
+        /// <param name="query">The optional query to retrieve the extensions.</param>
+        /// <returns>The number of extensions from a feed source.</returns>
+        public int GetExtensionCount(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
+            return (packagingSource == null ? GetSources() : new[] { packagingSource })
+                .Sum( source => {
+                        var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl));
+                        IQueryable<PublishedPackage> packages = galleryFeedContext.Packages;
+
+                        if (query != null) {
+                            packages = query(packages);
+                        }
+
+                        return packages.Count();
+                    }
+                );
+        }
+
+        #endregion
 
         private static PackagingEntry CreatePackageEntry(PublishedPackage package, PublishedScreenshot screenshot, PackagingSource source, Uri downloadUri) {
             Uri baseUri = new Uri(string.Format("{0}://{1}:{2}/",
@@ -91,16 +139,15 @@ namespace Orchard.Packaging.Services {
                 IconUrl = iconUrl,
                 FirstScreenshot = firstScreenshot,
                 Rating = package.Rating,
-                RatingsCount = package.RatingsCount
+                RatingsCount = package.RatingsCount,
+                DownloadCount = package.DownloadCount
             };
         }
 
         protected static string GetAbsoluteUri(string url, Uri baseUri) {
             Uri uri = null;
-            if (!string.IsNullOrEmpty(url))
-            {
-                if (!Uri.TryCreate(url, UriKind.Absolute, out uri))
-                {
+            if (!string.IsNullOrEmpty(url)) {
+                if (!Uri.TryCreate(url, UriKind.Absolute, out uri)) {
                     Uri.TryCreate(baseUri,
                         url,
                         out uri);
@@ -109,7 +156,5 @@ namespace Orchard.Packaging.Services {
 
             return uri != null ? uri.ToString() : string.Empty;
         }
-
-        #endregion
     }
 }

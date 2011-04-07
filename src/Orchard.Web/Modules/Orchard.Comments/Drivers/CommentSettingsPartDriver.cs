@@ -1,4 +1,5 @@
-﻿using Orchard.Comments.Models;
+﻿using System;
+using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
@@ -14,13 +15,18 @@ namespace Orchard.Comments.Drivers {
         protected override string Prefix { get { return "CommentSettings"; } }
 
         protected override DriverResult Editor(CommentSettingsPart part, dynamic shapeHelper) {
-            return ContentShape("Parts_Comments_SiteSettings",
-                               () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comments.SiteSettings", Model: part.Record, Prefix: Prefix));
+            return Editor(part, null, shapeHelper);
         }
 
         protected override DriverResult Editor(CommentSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part.Record, Prefix, null, null);
-            return Editor(part, shapeHelper);
+
+            return ContentShape("Parts_Comments_SiteSettings", () => {
+                    if (updater != null) {
+                        updater.TryUpdateModel(part.Record, Prefix, null, null);
+                    }
+                    return shapeHelper.EditorTemplate(TemplateName: "Parts.Comments.SiteSettings", Model: part.Record, Prefix: Prefix); 
+                })
+                .OnGroup("comments");
         }
     }
 }

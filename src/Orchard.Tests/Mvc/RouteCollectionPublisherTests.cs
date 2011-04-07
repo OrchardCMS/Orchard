@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Mvc.Routes;
 using Orchard.Tests.Utility;
@@ -27,7 +28,7 @@ namespace Orchard.Tests.Mvc {
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>();
             builder.RegisterType<ShellRoute>().InstancePerDependency();
             builder.Register(ctx => _routes);
-            builder.Register(ctx => new ShellSettings { Name = "Default" });
+            builder.Register(ctx => new ShellSettings { Name = ShellSettings.DefaultName });
             builder.RegisterAutoMocking();
             _container = builder.Build();
         }

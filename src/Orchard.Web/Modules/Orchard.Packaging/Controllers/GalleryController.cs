@@ -1,40 +1,47 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Services.Client;
 using System.Linq;
-using System.Web.Hosting;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Xml.Linq;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
-using Orchard.Logging;
+using Orchard.Packaging.Events;
+using Orchard.Packaging.Extensions;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
 using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Admin;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
-using IPackageManager = Orchard.Packaging.Services.IPackageManager;
+using Orchard.Utility.Extensions;
+using ILogger = Orchard.Logging.ILogger;
+using NullLogger = Orchard.Logging.NullLogger;
 
 namespace Orchard.Packaging.Controllers {
     [OrchardFeature("Gallery")]
     [Themed, Admin]
     public class GalleryController : Controller {
-
-        private readonly IPackageManager _packageManager;
+        private readonly ShellSettings _shellSettings;
         private readonly IPackagingSourceManager _packagingSourceManager;
-        private readonly INotifier _notifier;
+        private readonly IExtensionDisplayEventHandler _extensionDisplayEventHandler;
+        private readonly IExtensionManager _extensionManager;
 
         public GalleryController(
-            IPackageManager packageManager,
+            IEnumerable<IExtensionDisplayEventHandler> extensionDisplayEventHandlers,
+            ShellSettings shellSettings,
             IPackagingSourceManager packagingSourceManager,
-            INotifier notifier,
+            IExtensionManager extensionManager,
             IOrchardServices services) {
-            _packageManager = packageManager;
+
+            _shellSettings = shellSettings;
             _packagingSourceManager = packagingSourceManager;
-            _notifier = notifier;
+            _extensionDisplayEventHandler = extensionDisplayEventHandlers.FirstOrDefault();
+            _extensionManager = extensionManager;
             Services = services;
 
             T = NullLocalizer.Instance;
@@ -46,7 +53,7 @@ namespace Orchard.Packaging.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult Sources() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list sources")))
+            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list sources")))
                 return new HttpUnauthorizedResult();
 
             return View(new PackagingSourcesViewModel {
@@ -55,16 +62,16 @@ namespace Orchard.Packaging.Controllers {
         }
 
         public ActionResult Remove(int id) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove sources")))
+            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove sources")))
                 return new HttpUnauthorizedResult();
 
             _packagingSourceManager.RemoveSource(id);
-            _notifier.Information(T("The feed has been removed successfully."));
+            Services.Notifier.Information(T("The feed has been removed successfully."));
             return RedirectToAction("Sources");
         }
 
         public ActionResult AddSource() {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
+            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
             return View(new PackagingAddSourceViewModel());
@@ -72,7 +79,7 @@ namespace Orchard.Packaging.Controllers {
 
         [HttpPost]
         public ActionResult AddSource(string url) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
+            if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
             try {
@@ -98,8 +105,7 @@ namespace Orchard.Packaging.Controllers {
                     if (String.IsNullOrWhiteSpace(title)) {
                         ModelState.AddModelError("Url", T("The feed has no title.").Text);
                     }
-                }
-                catch {
+                } catch {
                     ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
                 }
 
@@ -107,29 +113,34 @@ namespace Orchard.Packaging.Controllers {
                     return View(new PackagingAddSourceViewModel { Url = url });
 
                 _packagingSourceManager.AddSource(title, url);
-                _notifier.Information(T("The feed has been added successfully."));
+                Services.Notifier.Information(T("The feed has been added successfully."));
 
                 return RedirectToAction("Sources");
-            }
-            catch (Exception exception) {
-                _notifier.Error(T("Adding feed failed: {0}", exception.Message));
+            } catch (Exception exception) {
+                this.Error(exception, T("Adding feed failed: {0}", exception.Message), Logger, Services.Notifier);
+
                 return View(new PackagingAddSourceViewModel { Url = url });
             }
         }
 
-        public ActionResult Modules(int? sourceId) {
-            return ListExtensions(sourceId, DefaultExtensionTypes.Module, "Modules", source => _packagingSourceManager.GetModuleList(source).ToArray());
-        }
-
-        public ActionResult Themes(int? sourceId) {
-            return ListExtensions(sourceId, DefaultExtensionTypes.Theme, "Themes", source => _packagingSourceManager.GetThemeList(source).ToArray());
-        }
-
-        protected ActionResult ListExtensions(int? sourceId, string extensionType, string returnView, Func<PackagingSource, PackagingEntry[]> getList) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list {0}", extensionType)))
+        public ActionResult Modules(PackagingExtensionsOptions options, PagerParameters pagerParameters) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list Modules")))
                 return new HttpUnauthorizedResult();
 
-            var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
+            var pager = new Pager(Services.WorkContext.CurrentSite, pagerParameters);
+            return ListExtensions(options, DefaultExtensionTypes.Module, pager);
+        }
+
+        public ActionResult Themes(PackagingExtensionsOptions options, PagerParameters pagerParameters) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list Themes")))
+                return new HttpUnauthorizedResult();
+
+            var pager = new Pager(Services.WorkContext.CurrentSite, pagerParameters);
+            return ListExtensions(options, DefaultExtensionTypes.Theme, pager);
+        }
+
+        protected ActionResult ListExtensions(PackagingExtensionsOptions options, string packageType, Pager pager) {
+            var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == options.SourceId).FirstOrDefault();
 
             var sources = selectedSource != null
                 ? new[] { selectedSource }
@@ -137,52 +148,105 @@ namespace Orchard.Packaging.Controllers {
             ;
 
             IEnumerable<PackagingEntry> extensions = null;
+            int totalCount = 0;
             foreach (var source in sources) {
                 try {
-                    var sourceExtensions = getList(source);
+                    var sourceExtensions = _packagingSourceManager.GetExtensionList(true,
+                        source,
+                        packages => {
+                            packages = packages.Where(p => p.PackageType == packageType &&
+                                p.IsLatestVersion &&
+                                (string.IsNullOrEmpty(options.SearchText) 
+                                    || p.Title.Contains(options.SearchText)
+                                    || p.Description.Contains(options.SearchText)
+                                    || p.Tags.Contains(options.SearchText)
+                                    ));
+
+                            switch (options.Order) {
+                                case PackagingExtensionsOrder.Downloads:
+                                    packages = packages.OrderByDescending(p => p.DownloadCount).ThenBy(p => p.Title);
+                                    break;
+                                case PackagingExtensionsOrder.Ratings:
+                                    packages = packages.OrderByDescending(p => p.Rating).ThenBy(p => p.Title);
+                                    break;
+                                case PackagingExtensionsOrder.Alphanumeric:
+                                    packages = packages.OrderBy(p => p.Title);
+                                    break;
+                            }
+
+                            if(pager.PageSize != 0) {
+                                packages = packages.Skip((pager.Page - 1)*pager.PageSize).Take(pager.PageSize);
+                            }
+
+                            return packages;
+                        }).ToArray();
+
+                    // count packages separately to prevent loading everything just to count
+                    totalCount += _packagingSourceManager.GetExtensionCount(
+                        source,
+                        packages => packages.Where(p => p.PackageType == packageType &&
+                                p.IsLatestVersion &&
+                                (string.IsNullOrEmpty(options.SearchText) || p.Title.Contains(options.SearchText)))
+                        );
+
                     extensions = extensions == null ? sourceExtensions : extensions.Concat(sourceExtensions);
-                }
-                catch (Exception ex) {
-                    Logger.Error(ex, "Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message);
-                    _notifier.Error(T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, ex.Message));
+
+                    // apply another paging rule in case there were multiple sources
+                    if (sources.Count() > 1) {
+                        switch (options.Order) {
+                            case PackagingExtensionsOrder.Downloads:
+                                extensions = extensions.OrderByDescending(p => p.DownloadCount).ThenBy(p => p.Title);
+                                break;
+                            case PackagingExtensionsOrder.Ratings:
+                                extensions = extensions.OrderByDescending(p => p.Rating).ThenBy(p => p.Title);
+                                break;
+                            case PackagingExtensionsOrder.Alphanumeric:
+                                extensions = extensions.OrderBy(p => p.Title);
+                                break;
+                        }
+
+                        if (pager.PageSize != 0) {
+                            extensions = extensions.Take(pager.PageSize);
+                        }
+                    }
+                } catch (Exception exception) {
+                    this.Error(exception, T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, exception.Message), Logger, Services.Notifier);
                 }
             }
 
-            return View(returnView, new PackagingExtensionsViewModel {
-                Extensions = extensions ?? new PackagingEntry[] { },
+            extensions = extensions ?? new PackagingEntry[0];
+            var pagerShape = Services.New.Pager(pager).TotalItemCount(totalCount);
+
+            // maintain previous route data when generating page links
+            var routeData = new RouteData();
+            routeData.Values.Add("Options.Order", options.Order);
+            routeData.Values.Add("Options.SearchText", options.SearchText);
+            routeData.Values.Add("Options.SourceId", options.SourceId);
+            pagerShape.RouteData(routeData);
+
+            extensions = extensions.ToList();
+
+            // Populate the notifications
+            IEnumerable<Tuple<ExtensionDescriptor, PackagingEntry>> extensionDescriptors = _extensionManager.AvailableExtensions()
+                .Join(extensions, extensionDescriptor => extensionDescriptor.Id, packaginEntry => packaginEntry.ExtensionId(),
+                      (extensionDescriptor, packagingEntry) => new Tuple<ExtensionDescriptor, PackagingEntry>(extensionDescriptor, packagingEntry));
+
+            foreach (Tuple<ExtensionDescriptor, PackagingEntry> packagings in extensionDescriptors) {
+                packagings.Item2.Installed = true;
+
+                if (_extensionDisplayEventHandler != null) {
+                    foreach (string notification in _extensionDisplayEventHandler.Displaying(packagings.Item1, ControllerContext.RequestContext)) {
+                        packagings.Item2.Notifications.Add(notification);
+                    }
+                }
+            }
+
+            return View(packageType == DefaultExtensionTypes.Theme ? "Themes" : "Modules", new PackagingExtensionsViewModel {
+                Extensions = extensions,
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
-                SelectedSource = selectedSource
+                Pager = pagerShape,
+                Options = options
             });
-        }
-
-        public ActionResult Install(string packageId, string version, int sourceId, string redirectTo) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to install packages")))
-                return new HttpUnauthorizedResult();
-
-            var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
-
-            if (source == null) {
-                return HttpNotFound();
-            }
-
-            try {
-                _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
-
-                if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
-                    _notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
-                }
-                else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
-                    _notifier.Information(T("The module has been successfully installed. Its features can be enabled in the \"Configuration | Features\" page accessible from the menu."));
-                }
-            }
-            catch (Exception exception) {
-                _notifier.Error(T("Package installation failed."));
-                for (Exception scan = exception; scan != null; scan = scan.InnerException) {
-                    _notifier.Error(T("{0}", scan.Message));
-                }
-            }
-
-            return RedirectToAction(redirectTo == "Themes" ? "Themes" : "Modules");
         }
     }
 }

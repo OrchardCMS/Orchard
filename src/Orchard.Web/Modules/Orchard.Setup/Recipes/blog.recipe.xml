@@ -1,0 +1,56 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>Blog</Name>
+    <Description>A recipe providing the features you need for a personal blog site.</Description>
+    <Author>The Orchard Team</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags>blog</Tags>
+    <Version>1.0</Version>
+  </Recipe>
+  
+  <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,
+                   XmlRpc,Orchard.Blogs.RemotePublishing,
+                   TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
+                   Orchard.jQuery,Orchard.Widgets,Orchard.Widgets.PageLayerHinting,
+                   Orchard.Scripting,Orchard.Scripting.Lightweight,
+                   PackagingServices,Orchard.Packaging,Gallery.Updates,
+                   TheThemeMachine" />
+  
+  <Metadata>
+    <Types>
+      <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+        <TagsPart />
+        <LocalizationPart />
+      </Page>
+      <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
+        <CommentsPart />
+        <TagsPart />
+        <LocalizationPart />
+      </BlogPost>
+    </Types>
+    <Parts>
+      <BodyPart BodyPartSettings.FlavorDefault="html" />
+    </Parts>
+  </Metadata>
+
+  <Settings>
+    <SiteSettingsPart PageSize="20" PageTitleSeparator = " - " />
+    <CommentSettingsPart ModerateComments="true" />
+  </Settings>
+
+  <Migration features="*" />
+
+  <Command>
+    layer create Default /LayerRule:"true"
+    layer create Authenticated /LayerRule:"authenticated"
+    layer create Anonymous /LayerRule:"not authenticated"
+    layer create Disabled /LayerRule:"false"
+    layer create TheHomepage /LayerRule:"url '~/'"
+    blog create /Slug:"blog" /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
+    widget create HtmlWidget /Title:"First Leader Aside" /Zone:"TripelFirst" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget1" /UseLoremIpsumText:true
+    widget create HtmlWidget /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget2" /UseLoremIpsumText:true
+    widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget3" /UseLoremIpsumText:true
+    menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
+  </Command>
+</Orchard>

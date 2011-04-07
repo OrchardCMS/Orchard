@@ -166,15 +166,33 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)).Store());
             _provider.Store("default", _provider.New(3).Add("date", new DateTime(2010, 05, 28, 12, 30, 45)).Store());
 
-            var date = _searchBuilder.SortBy("date").Search().ToList();
+            var date = _searchBuilder.SortByDateTime("date").Search().ToList();
             Assert.That(date.Count(), Is.EqualTo(3));
             Assert.That(date[0].GetDateTime("date") > date[1].GetDateTime("date"), Is.True);
             Assert.That(date[1].GetDateTime("date") > date[2].GetDateTime("date"), Is.True);
 
-            date = _searchBuilder.SortBy("date").Ascending().Search().ToList();
+            date = _searchBuilder.SortByDateTime("date").Ascending().Search().ToList();
             Assert.That(date.Count(), Is.EqualTo(3));
             Assert.That(date[0].GetDateTime("date") < date[1].GetDateTime("date"), Is.True);
             Assert.That(date[1].GetDateTime("date") < date[2].GetDateTime("date"), Is.True);
+        }
+
+        [Test]
+        public void ShouldSortByNumber() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("downloads", 111).Store());
+            _provider.Store("default", _provider.New(2).Add("downloads", 2222).Store());
+            _provider.Store("default", _provider.New(3).Add("downloads", 3).Store());
+
+            var number = _searchBuilder.SortByInteger("downloads").Search().ToList();
+            Assert.That(number.Count(), Is.EqualTo(3));
+            Assert.That(number[0].GetInt("downloads") > number[1].GetInt("downloads"), Is.True);
+            Assert.That(number[1].GetInt("downloads") > number[2].GetInt("downloads"), Is.True);
+
+            number = _searchBuilder.SortByInteger("downloads").Ascending().Search().ToList();
+            Assert.That(number.Count(), Is.EqualTo(3));
+            Assert.That(number[0].GetInt("downloads") < number[1].GetInt("downloads"), Is.True);
+            Assert.That(number[1].GetInt("downloads") < number[2].GetInt("downloads"), Is.True);
         }
 
         [Test]
@@ -231,14 +249,29 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
             _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Analyze().Add("title", "Soap opera").Analyze());
 
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen", false).Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen bertrand", false).Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen +bertrand", false).Count(), Is.EqualTo(1));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "+kitchen +bertrand", false).Count(), Is.EqualTo(0));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit", false).Count(), Is.EqualTo(0));
-            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit*", false).Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap", false).Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap", false).Search().First().ContentItemId, Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "kitchen", false).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "kitchen bertrand", false).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "kitchen +bertrand", false).Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "+kitchen +bertrand", false).Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "kit", false).Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] {"body"}, "kit*", false).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] {"body", "title"}, "bradley love^3 soap", false).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.Parse(new[] {"body", "title"}, "bradley love^3 soap", false).Search().First().ContentItemId, Is.EqualTo(2));
+
+        }
+        [Test]
+        public void ShouldParseLuceneQueriesWithSpecificFields() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "Bradley is in the kitchen.").Analyze().Add("title", "Beer and takos").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
+            _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Analyze().Add("title", "Soap opera").Analyze());
+
+            // specifying a field to match
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "title:bradley", false).Search().Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "title:s*", false).Search().Count(), Is.EqualTo(1));
+
+            // checking terms fall back to the default fields
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "title:bradley bradley", false).Search().Count(), Is.EqualTo(1));
         }
 
         [Test]
@@ -342,6 +375,42 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_searchBuilder.WithField("tag-value", "tag").Count(), Is.EqualTo(1));
         }
 
+        [Test]
+        public void AnalyzedFieldsAreNotCaseSensitive() {
+            _provider.CreateIndex("default");
+            var documentIndex = _provider.New(1)
+                .Add("tag-id", 1)
+                .Add("tag-value", "Tag1").Analyze();
+
+            _provider.Store("default", documentIndex);
+
+            // trying in prefix mode
+            Assert.That(_searchBuilder.WithField("tag-value", "tag").Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("tag-value", "Tag").Count(), Is.EqualTo(1));
+
+            // trying in full word match mode
+            Assert.That(_searchBuilder.WithField("tag-value", "tag1").ExactMatch().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("tag-value", "Tag1").ExactMatch().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void NotAnalyzedFieldsAreSearchable() {
+            _provider.CreateIndex("default");
+            var documentIndex = _provider.New(1)
+                .Add("tag-id", 1)
+                .Add("tag-valueL", "tag1")
+                .Add("tag-valueU", "Tag1");
+
+            _provider.Store("default", documentIndex);
+
+            // a value which is not analyzed, is not lowered cased in the index
+            Assert.That(_searchBuilder.WithField("tag-valueL", "tag").Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("tag-valueU", "tag").Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.WithField("tag-valueL", "Tag").Count(), Is.EqualTo(1)); // queried term is lower cased
+            Assert.That(_searchBuilder.WithField("tag-valueU", "Tag").Count(), Is.EqualTo(0)); // queried term is lower cased
+            Assert.That(_searchBuilder.WithField("tag-valueL", "tag1").ExactMatch().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("tag-valueU", "tag1").ExactMatch().Count(), Is.EqualTo(0));
+        }
 
         [Test]
         public void ShouldReturnAllDocuments() {
@@ -368,5 +437,64 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_searchBuilder.WithField("term-id", 4).ExactMatch().AsFilter().Count(), Is.EqualTo(10));
         }
 
+        [Test]
+        public void MandatoryCanBeUsedrMultipleTimes() {
+            _provider.CreateIndex("default");
+            _provider.Store("default",
+                _provider.New(1)
+                    .Add("field1", 1)
+                    .Add("field2", 1)
+                    .Add("field3", 1)
+            );
+
+            _provider.Store("default",
+                _provider.New(2)
+                    .Add("field1", 1)
+                    .Add("field2", 2)
+                    .Add("field3", 2)
+            );
+
+            _provider.Store("default",
+                _provider.New(3)
+                    .Add("field1", 1)
+                    .Add("field2", 2)
+                    .Add("field3", 3)
+            );
+
+
+            Assert.That(_searchBuilder.WithField("field1", 0).Mandatory().Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.WithField("field1", 1).Mandatory().Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.WithField("field1", 1).Mandatory().WithField("field2", 2).Mandatory().Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("field1", 1).Mandatory().WithField("field2", 2).Mandatory().WithField("field3", 3).Mandatory().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void SearchQueryCanContainMultipleFilters() {
+            _provider.CreateIndex("default");
+            _provider.Store("default",
+                _provider.New(1)
+                    .Add("field1", 1)
+                    .Add("field2", 1)
+                    .Add("field3", 1)
+            );
+
+            _provider.Store("default",
+                _provider.New(2)
+                    .Add("field1", 1)
+                    .Add("field2", 2)
+                    .Add("field3", 2)
+            );
+
+            _provider.Store("default",
+                _provider.New(3)
+                    .Add("field1", 1)
+                    .Add("field2", 2)
+                    .Add("field3", 3)
+            );
+
+            Assert.That(_searchBuilder.WithField("field1", 1).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.WithField("field1", 1).WithField("field2", 2).AsFilter().Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("field1", 1).WithField("field2", 2).Mandatory().AsFilter().WithField("field3", 3).Mandatory().AsFilter().Count(), Is.EqualTo(1));
+        }
     }
 }

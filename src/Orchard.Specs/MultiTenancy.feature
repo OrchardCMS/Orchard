@@ -110,7 +110,7 @@ Scenario: An existing initialized tenant cannot have its database option cleared
             | ConfirmPassword | 6655321 |
         And I hit "Finish Setup"
         And I go to "/Admin/MultiTenancy/Edit/Scott" on host localhost
-    Then I should see "<h1>Edit Tenant</h1>"
+    Then I should see "<h1 id="page-title">Edit Tenant</h1>"
         And I should see "<h2>Scott</h2>"
         And I should not see "Allow the tenant to set up the database"
 

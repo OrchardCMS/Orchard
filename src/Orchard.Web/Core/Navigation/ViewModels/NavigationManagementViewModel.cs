@@ -7,7 +7,7 @@ namespace Orchard.Core.Navigation.ViewModels {
             MenuItemEntries = Enumerable.Empty<MenuItemEntry>().ToList();
         }
 
-        public CreateMenuItemViewModel NewMenuItem { get; set; }
+        public MenuItemEntry NewMenuItem { get; set; }
         public IList<MenuItemEntry> MenuItemEntries { get; set; }
     }
 }

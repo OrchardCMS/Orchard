@@ -3,8 +3,10 @@
     Style.Require("ContentTypesAdmin");
     Script.Require("jQuery");
     Script.Include("admin.js");
+
+    Layout.Title = T("Edit Content Type").ToString();
 }
-<h1>@Html.TitleForPage(T("Edit Content Type").ToString())</h1>
+
 <p class="breadcrumb">@Html.ActionLink(T("Content Types").Text, "index")@T(" &#62; ")@T("Edit Content Type")</p>
 @using (Html.BeginFormAntiForgeryPost()) {
     // todo: come up with real itemtype definitions and locations for said definitions
@@ -24,12 +26,12 @@
         <div class="manage-type">
             <h2>@T("Fields")</h2>
             <div class="manage add-to-type">
-                @Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
+                @Html.ActionLink(T("Add Field").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
             </div>
                 @Html.EditorFor(m => m.Fields, "Fields", "")
             <h2>@T("Parts")</h2>
             <div class="manage add-to-type">
-                @Html.ActionLink(T("Add").Text, "AddPartsTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
+                @Html.ActionLink(T("Add Parts").Text, "AddPartsTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
             </div>
             @Html.EditorFor(m => m.Parts, "TypeParts", "")
         </div>

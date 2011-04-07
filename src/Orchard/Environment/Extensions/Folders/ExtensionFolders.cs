@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Folders {
     public class ExtensionFolders : IExtensionFolders {
@@ -49,8 +51,24 @@ namespace Orchard.Environment.Extensions.Folders {
                         var manifestPath = Path.Combine(subfolderPath, _manifestName);
                         try {
                             var descriptor = GetExtensionDescriptor(path, extensionId, manifestPath);
-                            if (descriptor != null)
-                                localList.Add(descriptor);
+
+                            if (descriptor == null)
+                                continue;
+
+                            if (descriptor.Path != null && !descriptor.Path.IsValidUrlSegment()) {
+                                Logger.Error("The module '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
+                                    extensionId,
+                                    descriptor.Path);
+                                continue;
+                            }
+
+                            if (descriptor.Path == null) {
+                                descriptor.Path = descriptor.Name.IsValidUrlSegment()
+                                    ? descriptor.Name
+                                    : descriptor.Id;
+                            }
+
+                            localList.Add(descriptor);
                         }
                         catch (Exception ex) {
                             // Ignore invalid module manifests
@@ -72,6 +90,7 @@ namespace Orchard.Environment.Extensions.Folders {
                 Id = extensionId,
                 ExtensionType = extensionType,
                 Name = GetValue(manifest, "Name") ?? extensionId,
+                Path = GetValue(manifest, "Path"),
                 Description = GetValue(manifest, "Description"),
                 Version = GetValue(manifest, "Version"),
                 OrchardVersion = GetValue(manifest, "OrchardVersion"),
@@ -82,7 +101,7 @@ namespace Orchard.Environment.Extensions.Folders {
                 Zones = GetValue(manifest, "Zones"),
                 BaseTheme = GetValue(manifest, "BaseTheme"),
             };
-            extensionDescriptor.Features = GetFeaturesForExtension(GetValue(manifest, "Features"), extensionDescriptor);
+            extensionDescriptor.Features = GetFeaturesForExtension(manifest, extensionDescriptor);
 
             return extensionDescriptor;
         }
@@ -125,6 +144,9 @@ namespace Orchard.Environment.Extensions.Folders {
                         case "Name":
                             manifest.Add("Name", field[1]);
                             break;
+                        case "Path":
+                            manifest.Add("Path", field[1]);
+                            break;
                         case "Description":
                             manifest.Add("Description", field[1]);
                             break;
@@ -152,6 +174,21 @@ namespace Orchard.Environment.Extensions.Folders {
                         case "BaseTheme":
                             manifest.Add("BaseTheme", field[1]);
                             break;
+                        case "Dependencies":
+                            manifest.Add("Dependencies", field[1]);
+                            break;
+                        case "Category":
+                            manifest.Add("Category", field[1]);
+                            break;
+                        case "FeatureDescription":
+                            manifest.Add("FeatureDescription", field[1]);
+                            break;
+                        case "FeatureName":
+                            manifest.Add("FeatureName", field[1]);
+                            break;
+                        case "Priority":
+                            manifest.Add("Priority", field[1]);
+                            break;
                         case "Features":
                             manifest.Add("Features", reader.ReadToEnd());
                             break;
@@ -162,8 +199,24 @@ namespace Orchard.Environment.Extensions.Folders {
             return manifest;
         }
 
-        private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(string featuresText, ExtensionDescriptor extensionDescriptor) {
+        private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(IDictionary<string, string> manifest, ExtensionDescriptor extensionDescriptor) {
             var featureDescriptors = new List<FeatureDescriptor>();
+
+            // Default feature
+            FeatureDescriptor defaultFeature = new FeatureDescriptor {
+                Id = extensionDescriptor.Id,
+                Name = GetValue(manifest, "FeatureName") ?? extensionDescriptor.Name,
+                Priority = GetValue(manifest, "Priority") != null ? int.Parse(GetValue(manifest, "Priority")) : 0,
+                Description = GetValue(manifest, "FeatureDescription") ?? GetValue(manifest, "Description") ?? string.Empty,
+                Dependencies = ParseFeatureDependenciesEntry(GetValue(manifest, "Dependencies")),
+                Extension = extensionDescriptor,
+                Category = GetValue(manifest, "Category")
+            };
+
+            featureDescriptors.Add(defaultFeature);
+
+            // Remaining features
+            string featuresText = GetValue(manifest, "Features");
             if (featuresText != null) {
                 FeatureDescriptor featureDescriptor = null;
                 using (StringReader reader = new StringReader(featuresText)) {
@@ -171,16 +224,24 @@ namespace Orchard.Environment.Extensions.Folders {
                     while ((line = reader.ReadLine()) != null) {
                         if (IsFeatureDeclaration(line)) {
                             if (featureDescriptor != null) {
-                                featureDescriptors.Add(featureDescriptor);
+                                if (!featureDescriptor.Equals(defaultFeature)) {
+                                    featureDescriptors.Add(featureDescriptor);
+                                }
+
                                 featureDescriptor = null;
                             }
-                            featureDescriptor = new FeatureDescriptor {
-                                Extension = extensionDescriptor
-                            };
+
                             string[] featureDeclaration = line.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-                            featureDescriptor.Id = featureDeclaration[0].Trim();
-                            if (featureDescriptor.Id == extensionDescriptor.Id) {
+                            string featureDescriptorId = featureDeclaration[0].Trim();
+                            if (featureDescriptorId == extensionDescriptor.Id) {
+                                featureDescriptor = defaultFeature;
                                 featureDescriptor.Name = extensionDescriptor.Name;
+                            }
+                            else {
+                                featureDescriptor = new FeatureDescriptor {
+                                    Id = featureDescriptorId,
+                                    Extension = extensionDescriptor
+                                };
                             }
                         }
                         else if (IsFeatureFieldDeclaration(line)) {
@@ -202,6 +263,9 @@ namespace Orchard.Environment.Extensions.Folders {
                                     case "Category":
                                         featureDescriptor.Category = featureField[1];
                                         break;
+                                    case "Priority":
+                                        featureDescriptor.Priority = int.Parse(featureField[1]);
+                                        break;
                                     case "Dependencies":
                                         featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureField[1]);
                                         break;
@@ -217,18 +281,10 @@ namespace Orchard.Environment.Extensions.Folders {
                             throw new ArgumentException(message);
                         }
                     }
-                    if (featureDescriptor != null)
+
+                    if (featureDescriptor != null && !featureDescriptor.Equals(defaultFeature))
                         featureDescriptors.Add(featureDescriptor);
                 }
-            }
-
-            if (!featureDescriptors.Any(fd => fd.Id == extensionDescriptor.Id)) {
-                featureDescriptors.Add(new FeatureDescriptor {
-                    Id = extensionDescriptor.Id,
-                    Name = extensionDescriptor.Name,
-                    Dependencies = new string[0],
-                    Extension = extensionDescriptor
-                });
             }
 
             return featureDescriptors;
@@ -255,12 +311,15 @@ namespace Orchard.Environment.Extensions.Folders {
             return false;
         }
 
-        private static string[] ParseFeatureDependenciesEntry(string dependenciesEntry) {
+        private static IEnumerable<string> ParseFeatureDependenciesEntry(string dependenciesEntry) {
+            if (string.IsNullOrEmpty(dependenciesEntry))
+                return Enumerable.Empty<string>();
+
             var dependencies = new List<string>();
             foreach (var s in dependenciesEntry.Split(',')) {
                 dependencies.Add(s.Trim());
             }
-            return dependencies.ToArray();
+            return dependencies;
         }
 
         private static string GetValue(IDictionary<string, string> fields, string key) {

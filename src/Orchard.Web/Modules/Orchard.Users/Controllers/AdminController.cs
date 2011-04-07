@@ -1,6 +1,11 @@
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.ContentManagement;
+using Orchard.Core.Common.Models;
+using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Settings.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -12,6 +17,7 @@ using Orchard.Users.ViewModels;
 using Orchard.Mvc.Extensions;
 using System;
 using Orchard.Settings;
+using Orchard.UI.Navigation;
 
 namespace Orchard.Users.Controllers {
     [ValidateInput(false)]
@@ -39,22 +45,105 @@ namespace Orchard.Users.Controllers {
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index(UserIndexOptions options, PagerParameters pagerParameters) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to list users")))
                 return new HttpUnauthorizedResult();
 
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+
+            // default options
+            if (options == null)
+                options = new UserIndexOptions();
+
             var users = Services.ContentManager
-                .Query<UserPart, UserPartRecord>()
-                .Where(x => x.UserName != null)
-                .List();
+                .Query<UserPart, UserPartRecord>();
+
+            switch (options.Filter) {
+                case UsersFilter.Approved:
+                    users = users.Where(u => u.RegistrationStatus == UserStatus.Approved);
+                    break;
+                case UsersFilter.Pending:
+                    users = users.Where(u => u.RegistrationStatus == UserStatus.Pending);
+                    break;
+                case UsersFilter.EmailPending:
+                    users = users.Where(u => u.EmailStatus == UserStatus.Pending);
+                    break;
+            }
+
+            if(!String.IsNullOrWhiteSpace(options.Search)) {
+                users = users.Where(u => u.UserName.Contains(options.Search) || u.Email.Contains(options.Search));
+            }
+
+            var pagerShape = Shape.Pager(pager).TotalItemCount(users.Count());
+
+            switch (options.Order) {
+                case UsersOrder.Name:
+                    users = users.OrderBy(u => u.UserName);
+                    break;
+                case UsersOrder.Email:
+                    users = users.OrderBy(u => u.Email);
+                    break;
+            }
+
+            var results = users
+                .Slice(pager.GetStartIndex(), pager.PageSize)
+                .ToList();
 
             var model = new UsersIndexViewModel {
-                Rows = users
-                    .Select(x => new UsersIndexViewModel.Row { UserPart = x })
-                    .ToList()
+                Users = results
+                    .Select(x => new UserEntry { User = x.Record })
+                    .ToList(),
+                    Options = options,
+                    Pager = pagerShape
             };
 
+            // maintain previous route data when generating page links
+            var routeData = new RouteData();
+            routeData.Values.Add("Options.Filter", options.Filter);
+            routeData.Values.Add("Options.Search", options.Search);
+            routeData.Values.Add("Options.Order", options.Order);
+
+            pagerShape.RouteData(routeData);
+            
             return View(model);
+        }
+
+        [HttpPost]
+        [FormValueRequired("submit.BulkEdit")]
+        public ActionResult Index(FormCollection input) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+
+            var viewModel = new UsersIndexViewModel {Users = new List<UserEntry>(), Options = new UserIndexOptions()};
+            UpdateModel(viewModel);
+
+            var checkedEntries = viewModel.Users.Where(c => c.IsChecked);
+            switch (viewModel.Options.BulkAction) {
+                case UsersBulkAction.None:
+                    break;
+                case UsersBulkAction.Approve:
+                    foreach (var entry in checkedEntries) {
+                        Approve(entry.User.Id);
+                    }
+                    break;
+                case UsersBulkAction.Disable:
+                    foreach (var entry in checkedEntries) {
+                        Moderate(entry.User.Id);
+                    }
+                    break;
+                case UsersBulkAction.ChallengeEmail:
+                    foreach (var entry in checkedEntries) {
+                        SendChallengeEmail(entry.User.Id);
+                    }
+                    break;
+                case UsersBulkAction.Delete:
+                    foreach (var entry in checkedEntries) {
+                        Delete(entry.User.Id);
+                    }
+                    break;
+            }
+
+            return RedirectToAction("Index", ControllerContext.RouteData.Values);
         }
 
         public ActionResult Create() {
@@ -81,7 +170,12 @@ namespace Orchard.Users.Controllers {
                     AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
             }
-
+            
+            if (!Regex.IsMatch(createModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+                // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
+                ModelState.AddModelError("Email", T("You must specify a valid email address."));
+            }
+            
             if (createModel.Password != createModel.ConfirmPassword) {
                 AddModelError("ConfirmPassword", T("Password confirmation must match"));
             }
@@ -109,7 +203,7 @@ namespace Orchard.Users.Controllers {
             }
 
             Services.Notifier.Information(T("User created"));
-            return RedirectToAction("edit", new { user.Id });
+            return RedirectToAction("Index");
         }
 
         public ActionResult Edit(int id) {
@@ -141,6 +235,10 @@ namespace Orchard.Users.Controllers {
                 if (!_userService.VerifyUserUnicity(id, editModel.UserName, editModel.Email)) {
                     AddModelError("NotUniqueUserName", T("User with that username and/or email already exists."));
                 }
+                else if (!Regex.IsMatch(editModel.Email ?? "", UserPart.EmailPattern, RegexOptions.IgnoreCase)) {
+                    // http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx    
+                    ModelState.AddModelError("Email", T("You must specify a valid email address."));
+                }
                 else {
                     // also update the Super user if this is the renamed account
                     if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, previousName, StringComparison.OrdinalIgnoreCase)) {
@@ -163,7 +261,7 @@ namespace Orchard.Users.Controllers {
             }
 
             Services.Notifier.Information(T("User information updated"));
-            return RedirectToAction("Edit", new { id });
+            return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id) {
@@ -181,7 +279,7 @@ namespace Orchard.Users.Controllers {
                 }
                 else{
                     Services.ContentManager.Remove(user.ContentItem);
-                    Services.Notifier.Information(T("User deleted"));
+                    Services.Notifier.Information(T("User {0} deleted", user.UserName));
                 }
             }
 
@@ -192,13 +290,13 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.Get(id);
+            var user = Services.ContentManager.Get<IUser>(id);
 
             if ( user != null ) {
                 _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", nonce = nonce})));
+                Services.Notifier.Information(T("Challenge email sent to {0}", user.UserName));
             }
 
-            Services.Notifier.Information(T("Challenge email sent"));
 
             return RedirectToAction("Index");
         }
@@ -207,11 +305,11 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.Get(id);
+            var user = Services.ContentManager.Get<IUser>(id);
 
             if ( user != null ) {
                 user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
-                Services.Notifier.Information(T("User approved"));
+                Services.Notifier.Information(T("User {0} approved", user.UserName));
             }
 
             return RedirectToAction("Index");

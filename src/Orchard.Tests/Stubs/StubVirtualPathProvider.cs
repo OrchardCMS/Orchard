@@ -79,5 +79,14 @@ namespace Orchard.Tests.Stubs {
                 .Directories
                 .Select(f => Combine(path, f.Name));
         }
+
+        public bool TryFileExists(string virtualPath) {
+            try {
+                return FileExists(virtualPath);
+            }
+            catch {
+                return false;
+            }
+        }
     }
 }

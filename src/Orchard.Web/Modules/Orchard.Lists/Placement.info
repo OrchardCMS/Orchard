@@ -1,7 +1,9 @@
 ﻿<Placement>
-    <Match ContentType="List">
-        <Match DisplayType="SummaryAdmin">
-            <Place Parts_Container_Contained_SummaryAdmin="-"/>
-        </Match>
+    <!-- available display shapes -->
+    <!--
+        Parts_Container_Contained_SummaryAdmin
+    -->
+    <Match DisplayType="SummaryAdmin">
+        <Place Parts_Container_Contained_SummaryAdmin="Actions:10"/>
     </Match>
 </Placement>

@@ -5,6 +5,10 @@
     Script.Include("admin.js");
     IEnumerable<dynamic> firstLevelMenuItems = Model;
 
+    foreach (var imageSet in Model.ImageSets) {
+        RegisterImageSet("menu." + imageSet, Model.MenuName /* style */, 16 /* bounding box */);
+    }
+
     Model.Attributes.Add("role", "navigation");
     var tag = Tag(Model, "ul");
 }
@@ -12,13 +16,38 @@
     @foreach(var firstLevelMenuItem in Model) {
         IEnumerable<dynamic> secondLevelMenuItems = firstLevelMenuItem;
 
-        string sectionHeaderText = firstLevelMenuItem.Text;
+        string sectionHeaderText = firstLevelMenuItem.Text.Text;
+        string sectionHeaderTextHint = firstLevelMenuItem.Text.TextHint;
         var firstOfTheSecond = secondLevelMenuItems.FirstOrDefault();
-        var sectionHeaderMarkup = firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)
-            ? Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href)
-            : firstOfTheSecond != null && firstLevelMenuItem.LinkToFirstChild
-                ? Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href)
-                : new HtmlString(string.Format("<span>{0}</span>", Html.Encode(sectionHeaderText)));
+
+        var itemClassName = HasText(sectionHeaderTextHint)
+            ? "navicon-" + sectionHeaderTextHint.HtmlClassify()
+            : "navicon";
+        var itemId = HasText(firstLevelMenuItem.IdHint)
+            ? "navicon-" + firstLevelMenuItem.IdHint
+            : null;
+
+        IHtmlString sectionHeaderMarkup;
+        if (firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)) {
+            sectionHeaderMarkup = HasText(itemId)
+                ? Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href, new { @class = itemClassName, id = itemId })
+                : Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href, new { @class = itemClassName });
+        }
+        else if (firstOfTheSecond != null && firstLevelMenuItem.LinkToFirstChild && (firstOfTheSecond.RouteValues != null || HasText(firstOfTheSecond.Url))) {
+            sectionHeaderMarkup = HasText(itemId)
+                ? Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href, new { @class = itemClassName, id = itemId })
+                : Html.Link(sectionHeaderText, (string)firstOfTheSecond.Href, new { @class = itemClassName });
+        }
+        else {
+            // if the header isn't linked and there are no children there's no reason for this item in the menu other than to look pretty
+            if (secondLevelMenuItems.Count() == 0) {
+                continue;
+            }
+        
+            sectionHeaderMarkup = HasText(itemId)
+                ? new HtmlString(string.Format(@"<span class=""{1}"" id=""{2}"">{0}</span>", Html.Encode(sectionHeaderText), Html.Encode(itemClassName), Html.Encode(itemId)))
+                : new HtmlString(string.Format(@"<span class=""{1}"">{0}</span>", Html.Encode(sectionHeaderText), Html.Encode(itemClassName)));
+        }
 
         if (firstLevelMenuItem == firstLevelMenuItems.First()) {
             firstLevelMenuItem.Classes.Add("first");
@@ -26,17 +55,41 @@
         if (firstLevelMenuItem == firstLevelMenuItems.Last()) {
             firstLevelMenuItem.Classes.Add("last");
         }
+        if (firstLevelMenuItem.Selected) {
+            firstLevelMenuItem.Classes.Add("selected");
+        }
 
-        firstLevelMenuItem.Classes.Add("section-" + sectionHeaderText.HtmlClassify());
+        if (HasText(sectionHeaderTextHint)) {
+            firstLevelMenuItem.Classes.Add("section-" + sectionHeaderTextHint.HtmlClassify());
+        }
+
         var firstLevelTag = Tag(firstLevelMenuItem, "li");
         @firstLevelTag.StartElement
             <h3>@sectionHeaderMarkup</h3>
-            if (secondLevelMenuItems.Count() > 1 || !firstLevelMenuItem.LinkToFirstChild) {
+            if (secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav).Count() > 1 || !firstLevelMenuItem.LinkToFirstChild) {
                 <ul class="menuItems">
-                @foreach(var secondLevelMenuItem in secondLevelMenuItems) {
-                    <li>
-                        <a href="@secondLevelMenuItem.Href">@secondLevelMenuItem.Text</a>
-                    </li>
+                @foreach (var secondLevelMenuItem in secondLevelMenuItems.Where(menuItem => !menuItem.LocalNav)) {
+                    string secondLevelTextHint = secondLevelMenuItem.Text.TextHint;
+                    var secondLevelItemClassName = HasText(secondLevelTextHint)
+                        ? "subnavicon-" + secondLevelTextHint.HtmlClassify()
+                        : "subnavicon";
+                    var secondLevelItemId = HasText(secondLevelMenuItem.IdHint)
+                        ? "subnavicon-" + secondLevelMenuItem.IdHint
+                        : null;
+
+                    if (secondLevelMenuItem.Selected) {
+                        secondLevelMenuItem.Classes.Add("selected"); 
+                    }
+
+                    var secondLevelTag = Tag(secondLevelMenuItem, "li");
+                    @secondLevelTag.StartElement
+                        if (HasText(secondLevelItemId)) {
+                            <a href="@secondLevelMenuItem.Href" class="@secondLevelItemClassName" id="@secondLevelItemId">@secondLevelMenuItem.Text</a>
+                        }
+                        else {
+                            <a href="@secondLevelMenuItem.Href" class="@secondLevelItemClassName">@secondLevelMenuItem.Text</a>
+                        }
+                    @secondLevelTag.EndElement
                 }
                 </ul>
             }

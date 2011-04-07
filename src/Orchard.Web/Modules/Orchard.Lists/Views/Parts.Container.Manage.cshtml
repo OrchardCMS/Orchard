@@ -1,0 +1,5 @@
+﻿<div class="item-properties actions">
+  <p>
+    @Html.ActionLink(T("{0} Properties", (string)Model.ContainerContentType).ToString(), "Edit", new { Area = "Contents", Id = (int)Model.ContainerId, ReturnUrl = Html.ViewContext.HttpContext.Request.RawUrl })
+  </p>
+</div>

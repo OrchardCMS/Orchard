@@ -59,47 +59,60 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="AdminMenuGalleryUpdates.cs" />
     <Compile Include="Commands\PackagingCommands.cs" />
+    <Compile Include="Controllers\GalleryUpdatesController.cs" />
     <Compile Include="Controllers\PackagingServicesController.cs" />
-    <Compile Include="Controllers\DownloadStreamResult.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="DefaultPackagingUpdater.cs" />
+    <Compile Include="Events\ExtensionDisplayEventHandler.cs" />
+    <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
+    <Compile Include="Extensions\PackageExtensions.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\PackagingSource.cs" />
+    <Compile Include="Models\UpdatePackageEntry.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Service References\GalleryServer\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.datasvcmap</DependentUpon>
     </Compile>
-    <Compile Include="Services\AtomExtensions.cs" />
+    <Compile Include="Services\BackgroundPackageUpdateStatus.cs" />
+    <Compile Include="Services\BackgroundPackageUpdateTask.cs" />
     <Compile Include="Services\ExtensionReferenceRepository.cs" />
     <Compile Include="Services\FileBaseProjectSystem.cs" />
+    <Compile Include="Services\FolderUpdater.cs" />
     <Compile Include="Services\IPackageBuilder.cs" />
     <Compile Include="Services\IPackageInstaller.cs" />
     <Compile Include="Services\IPackageManager.cs" />
     <Compile Include="Services\IPackagingSourceManager.cs" />
-    <Compile Include="Services\NugetLogger.cs" />
+    <Compile Include="Models\NugetLogger.cs" />
+    <Compile Include="Models\PackageData.cs" />
     <Compile Include="Services\PackageBuilder.cs" />
-    <Compile Include="Services\PackageData.cs" />
     <Compile Include="Services\PackageInstaller.cs" />
     <Compile Include="Services\PackageManager.cs" />
-    <Compile Include="Services\PackagingEntry.cs" />
+    <Compile Include="Models\PackagingEntry.cs" />
+    <Compile Include="Services\PackageUpdateManager.cs" />
     <Compile Include="Services\PackagingSourceManager.cs" />
     <Compile Include="ViewModels\PackagingAddSourceViewModel.cs" />
     <Compile Include="ViewModels\PackagingHarvestViewModel.cs" />
     <Compile Include="ViewModels\PackagingExtensionsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\PackagingInstallViewModel.cs" />
+    <Compile Include="ViewModels\PackagingListViewModel.cs" />
     <Compile Include="ViewModels\PackagingSourcesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Images\imagePlaceholder.png" />
     <Content Include="Content\Images\moduleDefaultIcon.png" />
+    <Content Include="Content\Images\stars.png" />
     <Content Include="Module.txt" />
     <Content Include="Service References\GalleryServer\Reference.datasvcmap">
       <Generator>DataServiceClientGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </Content>
+    <Content Include="Styles\images\installed.gif" />
     <Content Include="Styles\orchard-packaging-admin.css" />
     <Content Include="Views\Gallery\AddSource.cshtml" />
     <Content Include="Views\Gallery\Modules.cshtml" />
@@ -114,14 +127,13 @@
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Modules\Orchard.Modules.csproj">
+      <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>
+      <Name>Orchard.Modules</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
@@ -147,6 +159,19 @@
   <ItemGroup>
     <Content Include="Service References\GalleryServer\service.edmx" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\GalleryUpdates\ThemesUpdates.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\GalleryUpdates\ModulesUpdates.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\PackagingServices\InstallModuleDetails.cshtml" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

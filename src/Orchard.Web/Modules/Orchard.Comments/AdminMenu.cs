@@ -8,9 +8,10 @@ namespace Orchard.Comments {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Comments"), "2.75",
-                menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.Comments" })
-                    .Permission(Permissions.ManageComments)));
+            builder.AddImageSet("comments")
+                .Add(T("Comments"), "4",
+                    menu => menu.Add(T("List"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.Comments" })
+                        .Permission(Permissions.ManageComments)));
         }
     }
 }

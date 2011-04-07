@@ -8,9 +8,11 @@ namespace Orchard.Users {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Users"), "40",
-                menu => menu.Add(T("Users"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Users" })
-                    .Permission(StandardPermissions.SiteOwner)));
+            builder.AddImageSet("users")
+                .Add(T("Users"), "11",
+                    menu => menu.Action("Index", "Admin", new { area = "Orchard.Users" }).Permission(StandardPermissions.SiteOwner)
+                        .Add(T("Users"), "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Users" })
+                            .LocalNav().Permission(StandardPermissions.SiteOwner)));
         }
     }
 }

@@ -1,7 +1,12 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace Orchard.UI.Resources {
     public class RequireSettings {
+        private Dictionary<string, string> _attributes;
+
         public string BasePath { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }
@@ -11,6 +16,13 @@ namespace Orchard.UI.Resources {
         public ResourceLocation Location { get; set; }
         public string Condition { get; set; }
         public Action<ResourceDefinition> InlineDefinition { get; set; }
+        public Dictionary<string, string> Attributes {
+            get { return _attributes ?? (_attributes = new Dictionary<string, string>()); }
+            set { _attributes = value; }
+        }
+        public bool HasAttributes {
+            get { return _attributes != null && _attributes.Any(a => a.Value != null); }
+        }
 
         public RequireSettings AtHead() {
             return AtLocation(ResourceLocation.Head);
@@ -62,12 +74,47 @@ namespace Orchard.UI.Resources {
         }
 
         public RequireSettings Define(Action<ResourceDefinition> resourceDefinition) {
-            InlineDefinition = resourceDefinition ?? InlineDefinition;
+            if (resourceDefinition != null) {
+                var previous = InlineDefinition;
+                if (previous != null) {
+                    InlineDefinition = r => {
+                        previous(r);
+                        resourceDefinition(r);
+                    };
+                }
+                else {
+                    InlineDefinition = resourceDefinition;
+                }
+            }
             return this;
         }
 
+        public RequireSettings SetAttribute(string name, string value) {
+            if (_attributes == null) {
+                _attributes = new Dictionary<string, string>();
+            }
+            _attributes[name] = value;
+            return this;
+        }
+
+        private Dictionary<string, string> MergeAttributes(RequireSettings other) {
+            // efficiently merge the two dictionaries, taking into account that one or both may not exist
+            // and that attributes in 'other' should overridde attributes in this, even if the value is null.
+            if (_attributes == null) {
+                return other._attributes == null ? null : new Dictionary<string, string>(other._attributes);
+            }
+            if (other._attributes == null) {
+                return new Dictionary<string, string>(_attributes);
+            }
+            var mergedAttributes = new Dictionary<string, string>(_attributes);
+            foreach (var pair in other._attributes) {
+                mergedAttributes[pair.Key] = pair.Value;
+            }
+            return mergedAttributes;
+        }
+
         public RequireSettings Combine(RequireSettings other) {
-            return (new RequireSettings {
+            var settings = (new RequireSettings {
                 Name = Name,
                 Type = Type
             }).AtLocation(Location).AtLocation(other.Location)
@@ -77,6 +124,8 @@ namespace Orchard.UI.Resources {
                 .UseCulture(Culture).UseCulture(other.Culture)
                 .UseCondition(Condition).UseCondition(other.Condition)
                 .Define(InlineDefinition).Define(other.InlineDefinition);
+            settings._attributes = MergeAttributes(other);
+            return settings;
         }
     }
 }

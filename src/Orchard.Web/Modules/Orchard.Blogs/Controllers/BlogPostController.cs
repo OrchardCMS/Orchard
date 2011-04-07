@@ -7,6 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Security;
 using Orchard.Themes;
 
@@ -36,12 +37,12 @@ namespace Orchard.Blogs.Controllers {
         public Localizer T { get; set; }
 
         //TODO: (erikpo) Should think about moving the slug parameters and get calls and null checks up into a model binder or action filter
-        public ActionResult Item(string blogSlug, string postSlug) {
+        public ActionResult Item(string blogPath, string postSlug) {
             if (!_services.Authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Couldn't view blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
-            var blogPart = _blogService.Get(blogSlug);
+            var blogPart = _blogService.Get(blogPath);
             if (blogPart == null)
                 return HttpNotFound();
 
@@ -51,13 +52,12 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             dynamic model = _services.ContentManager.BuildDisplay(postPart);
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return new ShapeResult(this, model);
         }
 
-        public ActionResult ListByArchive(string blogSlug, string archiveData) {
+        public ActionResult ListByArchive(string blogPath, string archiveData) {
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
-            BlogPart blogPart = _blogService.Get(blogSlug);
+            BlogPart blogPart = _blogService.Get(blogPath);
 
             if (blogPart == null)
                 return HttpNotFound();

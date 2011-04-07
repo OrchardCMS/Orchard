@@ -41,7 +41,7 @@ namespace Orchard.Core.Routable.Handlers {
             Action<RoutePart> processSlug = (
                 routable => {
                     if (!_routableService.ProcessSlug(routable))
-                        _services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
+                        _services.Notifier.Warning(T("Permalinks in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
                                                      routable.Slug, routable.GetEffectiveSlug(), routable.ContentItem.ContentType));
                 });
 
@@ -87,6 +87,14 @@ namespace Orchard.Core.Routable.Handlers {
             });
 
             OnIndexing<RoutePart>((context, part) => context.DocumentIndex.Add("title", part.Record.Title).RemoveTags().Analyze());
+        }
+
+        protected override void GetItemMetadata(GetContentItemMetadataContext context) {
+            var part = context.ContentItem.As<RoutePart>();
+
+            if (part != null) {
+                context.Metadata.Identity.Add("Route.Slug", part.Slug);
+            }
         }
 
         private void FinalizePath(RoutePart route, PublishContentContext context, Action<RoutePart> processSlug) {

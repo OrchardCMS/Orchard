@@ -6,7 +6,7 @@
 Scenario: In the admin (menu) there is a link to create a Page
     Given I have installed Orchard
     When I go to "admin"
-    Then I should see "<a href="/Admin/Contents/Create/Page">Page</a>"
+    Then I should see "<a href="/Admin/Contents/Create/Page"[^>]*>Page</a>"
 
 Scenario: I can create and publish a new Page
     Given I have installed Orchard

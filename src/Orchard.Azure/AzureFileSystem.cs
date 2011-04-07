@@ -154,14 +154,15 @@ namespace Orchard.Azure {
             }
         }
 
-        public void TryCreateFolder(string path) {
-            EnsurePathIsRelative(path);
-            using (new HttpContextWeaver()) {
-                if (Container.DirectoryExists(String.Concat(_root, path))) {
-                    return;
+        public bool TryCreateFolder(string path) {
+            try {
+                if (!Container.DirectoryExists(String.Concat(_root, path))) {
+                    CreateFolder(path);
                 }
-
-                CreateFile(Combine(path, FolderEntry));
+                return true;
+            }
+            catch {
+                return false;
             }
         }
 
@@ -222,8 +223,8 @@ namespace Orchard.Azure {
             EnsurePathIsRelative(path);
             
             using ( new HttpContextWeaver() ) {
-                Container.EnsureBlobExists(path);
-                var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
+                Container.EnsureBlobExists(Combine(_root, path));
+                var blob = Container.GetBlockBlobReference(Combine(_root, path));
                 blob.Delete();
             }
         }

@@ -6,7 +6,7 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Themes.Services;
-using Orchard.Themes.ViewModels;
+using Orchard.Themes.Models;
 
 namespace Orchard.Themes.Commands {
     public class ThemeCommands : DefaultOrchardCommandHandler     {
@@ -66,7 +66,7 @@ namespace Orchard.Themes.Commands {
                 Context.Output.WriteLine(T("--------------------------"));
                 themes.Where(t => t.Name.Trim().Equals(currentTheme.Name.Trim(), StringComparison.OrdinalIgnoreCase) == false)
                     .ToList()
-                    .ForEach(t => WriteThemeLines(t));
+                    .ForEach(WriteThemeLines);
             }
         }
 
@@ -93,11 +93,11 @@ namespace Orchard.Themes.Commands {
 
             if (!_shellDescriptor.Features.Any(sf => sf.Name == theme.Id)) {
                 Context.Output.WriteLine(T("Enabling theme \"{0}\"...", themeName));
-                _themeService.EnableThemeFeatures(themeName);
+                _themeService.EnableThemeFeatures(theme.Id);
             }
 
             Context.Output.WriteLine(T("Activating theme \"{0}\"...", themeName));
-            _siteThemeService.SetSiteTheme(themeName);
+            _siteThemeService.SetSiteTheme(theme.Id);
 
             Context.Output.WriteLine(T("Theme \"{0}\" activated", themeName));
         }

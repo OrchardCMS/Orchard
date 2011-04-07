@@ -1,0 +1,43 @@
+﻿.contentItems {
+    border:1px solid #D3D2D2;
+}
+
+/*.bulk-actions {display:block;}*/
+
+button, .button, .button:link, .button:visited {
+    background:#6a7b42;
+    border:1px solid #487328;
+    color:#fff;
+    cursor: pointer;
+    display: inline-block;
+    font: 12px Arial,Helvetica,sans-serif;
+    padding: 2px 12px 2px 12px;
+    margin-left: 4px;
+    
+    /*position: relative;*/
+    text-align: center;
+    text-decoration: none;
+     
+    /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
+}
+
+.button {
+    line-height:inherit;
+}
+
+.group {
+zoom:1;
+}
+
+.search-actions {
+    float: right;
+    height: auto;
+    margin: 0 0 4px 0;
+    padding-top: 0;
+}
+
+/*packaging module*/
+.iconThumbnail .extensionThumbnail {right:0px;}
+
+.orchard-packaging .screenshotThumbnail .extensionThumbnail.column {position:static;}

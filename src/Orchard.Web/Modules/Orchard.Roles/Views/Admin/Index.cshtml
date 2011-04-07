@@ -3,15 +3,16 @@
 @using Orchard.Utility.Extensions;
 @{
     Script.Require("ShapesBase");
+
+    Layout.Title = T("Roles").ToString();
 }
 
-<h1>@Html.TitleForPage(T("Manage Roles").ToString())</h1>
 @using(Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="Select1" name="roleActions">
-            <option value="1">@T("Remove")</option>
+            <option value="1">@T("Delete")</option>
         </select>
         <button type="submit">@T("Apply")</button>
     </fieldset>
@@ -38,7 +39,7 @@
                         @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
                         @if (row.Name != "Administrator") {
                             @T(" | ")
-                            <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Remove")</a>                       
+                            <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>                       
                         }
                     </td>
                 </tr>
