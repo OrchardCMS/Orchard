@@ -100,7 +100,7 @@ namespace Orchard.DesignerTools.Services {
 
             var sb = new StringBuilder();
             ConvertToJSon(dump, sb);
-            shape.Dump = sb.ToString();
+            shape._Dump = sb.ToString();
 
             shape.Template = null;
             shape.OriginalTemplate = descriptor.BindingSource;
@@ -159,26 +159,29 @@ namespace Orchard.DesignerTools.Services {
 
             switch (x.Name.ToString()) {
                 case "ul" :
+                    var first = true;
                     foreach(var li in x.Elements()) {
+                        if (!first) sb.Append(",");
                         ConvertToJSon(li, sb);
-                        sb.Append(",");
+                        first = false;
                     }
                     break;
                 case "li":
                     var name = x.Element("h1").Value;
                     var value = x.Element("span").Value;
 
-                    sb.AppendFormat("name: \"{0}\", ", FormatJsonValue(name));
-                    sb.AppendFormat("value: \"{0}\"", FormatJsonValue(value));
+                    sb.AppendFormat("\"name\": \"{0}\", ", FormatJsonValue(name));
+                    sb.AppendFormat("\"value\": \"{0}\"", FormatJsonValue(value));
 
                     var ul = x.Element("ul");
                     if (ul != null && ul.Descendants().Any()) {
-                        sb.Append(", children: [");
+                        sb.Append(", \"children\": [");
+                        first = true;
                         foreach (var li in ul.Elements()) {
-                            sb.Append("{ ");
+                            sb.Append(first ? "{ " : ", {");
                             ConvertToJSon(li, sb);
                             sb.Append(" }");
-                            sb.Append(", ");
+                            first = false;
                         }
                         sb.Append("]");
                     }
@@ -189,7 +192,7 @@ namespace Orchard.DesignerTools.Services {
 
         private static string FormatJsonValue(string value) {
             // replace " by \" in json strings
-            return value.Replace("\"", @"\""");
+            return value.Replace(@"\", @"\\").Replace("\"", @"\""").Replace("\r\n", @"\n").Replace("\n", @"\n");
         }
 
         private static string FormatShapeFilename(string shape, string shapeType, string displayType, string themePrefix, string extension) {
