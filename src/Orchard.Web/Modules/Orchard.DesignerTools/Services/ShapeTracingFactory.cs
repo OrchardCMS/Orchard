@@ -192,7 +192,7 @@ namespace Orchard.DesignerTools.Services {
 
         private static string FormatJsonValue(string value) {
             // replace " by \" in json strings
-            return value.Replace(@"\", @"\\").Replace("\"", @"\""").Replace("\r\n", @"\n").Replace("\n", @"\n");
+            return value.Replace(@"\", @"\\").Replace("\"", @"\""").Replace("\r\n", @"\n").Replace("\r", @"\n").Replace("\n", @"\n");
         }
 
         private static string FormatShapeFilename(string shape, string shapeType, string displayType, string themePrefix, string extension) {
