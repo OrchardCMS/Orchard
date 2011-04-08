@@ -5,7 +5,7 @@
     IEnumerable<WidgetPart> widgets = Model.Widgets;
     IEnumerable<string> zones = Model.Zones;
     IEnumerable<string> orphanZones = Model.OrphanZones;
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    var returnUrl = Request.RawUrl;
 }
 <div id="widgets-placement">
     <div id="widgets-layers" class="widgets-container detail-view switchable">
