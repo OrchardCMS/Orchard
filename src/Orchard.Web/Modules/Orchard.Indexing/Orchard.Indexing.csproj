@@ -87,6 +87,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Recipes\lucene.recipe.xml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

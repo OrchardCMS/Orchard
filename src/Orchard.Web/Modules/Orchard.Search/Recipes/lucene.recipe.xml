@@ -1,0 +1,21 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>Lucene Based Search</Name>
+    <Description>Default recipe which installs lucene based search.</Description>
+    <Author>The Orchard Team</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags></Tags>
+    <Version>1.0</Version>
+  </Recipe>
+
+  <Module packageId="Orchard.Module.Lucene" />
+  <Module packageId="Orchard.Module.Orchard.Indexing" />
+
+  <Feature enable="Lucene, Orchard.Indexing, Orchard.Search" />
+
+  <!--Example on how to add a search form widget to the header in the homepage-->
+  <!--<Command>
+    widget create SearchForm /Title:"Search Widget" /Zone:"Header" /Position:"1" /Layer:"TheHomepage" /Identity:"SearchWidget1"
+  </Command>-->
+</Orchard>
