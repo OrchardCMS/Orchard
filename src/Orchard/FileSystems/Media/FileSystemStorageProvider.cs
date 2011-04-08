@@ -135,8 +135,18 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the folder to be created.</param>
         /// <returns>True if success; False otherwise.</returns>
         public bool TryCreateFolder(string path) {
-            try { CreateFolder(path); }
-            catch { return false; }
+            try {
+                // prevent unnecessary exception
+                DirectoryInfo directoryInfo = new DirectoryInfo(MapStorage(path));
+                if (directoryInfo.Exists) {
+                    return false;
+                }
+
+                CreateFolder(path);
+            }
+            catch {
+                return false; 
+            }
 
             return true;
         }
@@ -250,8 +260,12 @@ namespace Orchard.FileSystems.Media {
         /// <param name="inputStream">The stream to be saved.</param>
         /// <returns>True if success; False otherwise.</returns>
         public bool TrySaveStream(string path, Stream inputStream) {
-            try { SaveStream(path, inputStream); }
-            catch { return false; }
+            try {
+                SaveStream(path, inputStream);
+            }
+            catch {
+                return false;
+            }
 
             return true;
         }
@@ -332,6 +346,10 @@ namespace Orchard.FileSystems.Media {
 
             public Stream OpenWrite() {
                 return new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.ReadWrite);
+            }
+
+            public Stream CreateFile() {
+                return new FileStream(_fileInfo.FullName, FileMode.Truncate, FileAccess.ReadWrite);
             }
 
             #endregion

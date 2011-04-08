@@ -8,8 +8,7 @@ using Microsoft.WindowsAzure.StorageClient;
 using Orchard.FileSystems.Media;
 
 namespace Orchard.Azure {
-    public class AzureFileSystem
-    {
+    public class AzureFileSystem {
         private const string FolderEntry = "$$$ORCHARD$$$.$$$";
 
         public string ContainerName { get; protected set; }
@@ -71,15 +70,13 @@ namespace Orchard.Azure {
                 return path2;
             }
 
-            if ( path2.StartsWith("http://") || path2.StartsWith("https://") )
-            {
+            if ( path2.StartsWith("http://") || path2.StartsWith("https://") ) {
                 return path2;
             }
 
             var ch = path1[path1.Length - 1];
 
-            if (ch != '/')
-            {
+            if (ch != '/') {
                 return (path1.TrimEnd('/') + '/' + path2.TrimStart('/'));
             }
 
@@ -158,6 +155,9 @@ namespace Orchard.Azure {
             try {
                 if (!Container.DirectoryExists(String.Concat(_root, path))) {
                     CreateFolder(path);
+
+                    // return false to be consistent with FileSystemProvider's implementation
+                    return false;
                 }
                 return true;
             }
@@ -302,6 +302,12 @@ namespace Orchard.Azure {
                 return _blob.OpenWrite();
             }
 
+            public Stream CreateFile() {
+                // as opposed to the File System implementation, if nothing is done on the stream
+                // the file will be emptied, because Azure doesn't implement FileMode.Truncate
+                _blob.DeleteIfExists();
+                return OpenWrite();
+            }
         }
 
         private class AzureBlobFolderStorage : IStorageFolder {
