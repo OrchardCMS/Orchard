@@ -23,15 +23,15 @@ namespace Orchard.Specs.Hosting {
 
             var details = new RequestDetails {
                 HostName = webHost.HostName,
-                UrlPath = urlPath,
+                UrlPath = urlPath.Replace('\\', '/'),
             };
 
             int queryIndex = urlPath.IndexOf('?');
             if (queryIndex >= 0) {
-                details.UrlPath = urlPath.Substring(0, queryIndex);
+                details.UrlPath = urlPath.Substring(0, queryIndex).Replace('\\', '/');
                 details.Query = urlPath.Substring(queryIndex + 1);
             }
-            details.Page = (isHomepage ? "" : physicalPath.Combine(details.UrlPath.TrimStart('/', '\\')).GetRelativePath(physicalPath).ToString());
+            details.Page = (isHomepage ? "" : physicalPath.Combine(details.UrlPath.TrimStart('/', '\\')).GetRelativePath(physicalPath).ToString()).Replace('\\','/');
 
             if (!string.IsNullOrEmpty(webHost.Cookies)) {
                 details.RequestHeaders.Add("Cookie", webHost.Cookies);
