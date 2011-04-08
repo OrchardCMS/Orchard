@@ -264,6 +264,7 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public ActionResult Delete(int id) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
