@@ -10,7 +10,7 @@ using Orchard.Recipes.Models;
 namespace Orchard.Recipes.Services {
     public class RecipeJournalManager : IRecipeJournal {
         private readonly IStorageProvider _storageProvider;
-        private readonly string _recipeJournalFolder = "RecipeJournal" + Path.DirectorySeparatorChar;
+        private const string RecipeJournalFolder = "RecipeJournal";
         private const string WebConfig = 
 @"
 <configuration>
@@ -92,10 +92,10 @@ namespace Orchard.Recipes.Services {
 
         private IStorageFile GetJournalFile(string executionId) {
             IStorageFile journalFile;
-            var journalPath = Path.Combine(_recipeJournalFolder, executionId);
+            var journalPath = _storageProvider.Combine(RecipeJournalFolder, executionId);
             try {
-                if (_storageProvider.TryCreateFolder(_recipeJournalFolder)) {
-                    var webConfigPath = Path.Combine(_recipeJournalFolder, "web.config");
+                if (_storageProvider.TryCreateFolder(RecipeJournalFolder)) {
+                    var webConfigPath = _storageProvider.Combine(RecipeJournalFolder, "web.config");
                     var webConfigFile = _storageProvider.CreateFile(webConfigPath);
                     WriteWebConfig(webConfigFile);
                 }
