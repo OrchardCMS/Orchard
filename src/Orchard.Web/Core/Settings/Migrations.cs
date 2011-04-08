@@ -97,9 +97,10 @@ namespace Orchard.Core.Settings {
         }
 
         public int UpdateFrom1() {
-            SchemaBuilder.AlterTable("SiteSettingsPartRecord",
+            SchemaBuilder.CreateTable("SiteSettings2PartRecord",
                 table => table
-                    .AddColumn<string>("BaseUrl", c => c.WithLength(255))
+                    .ContentPartRecord()
+                    .Column<string>("BaseUrl", c => c.Unlimited())
                 );
 
             return 2;

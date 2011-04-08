@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
+using Orchard.Data.Conventions;
 using Orchard.Settings;
 
 namespace Orchard.Core.Settings.Models {
@@ -44,10 +45,14 @@ namespace Orchard.Core.Settings.Models {
             set { Record.PageSize = value; }
         }
 
-        [StringLength(255)]
+        [StringLengthMax]
         public string BaseUrl {
-            get { return Record.BaseUrl; }
-            set { Record.BaseUrl = value; }
+            get {
+                return this.As<SiteSettings2Part>().BaseUrl;
+            }
+            set {
+                this.As<SiteSettings2Part>().BaseUrl = value;
+            }
         }
     }
 }
