@@ -3,7 +3,7 @@
 @{
     Style.Require("WidgetsAdmin");
     IEnumerable<WidgetPart> widgets = Model.OrphanWidgets;
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    var returnUrl = Request.RawUrl;
 }
 @if (widgets.Count() > 0) {
 <div id="widgets-orphans" class="widgets-container widgets-listed message-Warning">

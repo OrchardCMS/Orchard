@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Orchard.ContentManagement.Records;
+﻿using Orchard.ContentManagement.Records;
 using Orchard.Settings;
 
 namespace Orchard.Core.Settings.Models {
@@ -25,8 +24,5 @@ namespace Orchard.Core.Settings.Models {
         public virtual ResourceDebugMode ResourceDebugMode { get; set; }
 
         public virtual int PageSize { get; set; }
-
-        [StringLength(255)]
-        public virtual string BaseUrl { get; set; }
     }
 }
