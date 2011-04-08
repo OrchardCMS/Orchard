@@ -121,10 +121,9 @@ namespace Orchard.Recipes.Services {
 
         private static void WriteJournal(IStorageFile journalFile, XElement journal) {
             string content = journal.ToString();
-            using (var stream = journalFile.OpenWrite()) {
+            using (var stream = journalFile.CreateFile()) {
                 using (var tw = new StreamWriter(stream)) {
                     tw.Write(content);
-                    stream.SetLength(stream.Position);
                 }
             }
         }

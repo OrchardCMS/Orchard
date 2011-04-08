@@ -190,9 +190,9 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
-        public void CanCreateAlreadyExistingFolder() {
+        public void TryCreateFolderShouldReturnFalseIfFolderAlreadyExists() {
             _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
-            Assert.That(_azureBlobStorageProvider.TryCreateFolder("folder1"), Is.True);
+            Assert.That(_azureBlobStorageProvider.TryCreateFolder("folder1"), Is.False);
         }
 
         [Test]
