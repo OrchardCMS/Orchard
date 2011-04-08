@@ -337,7 +337,7 @@ namespace Orchard.Specs.Bindings {
         public void WhenIAmRedirected() {
             var urlPath = "";
             if (Details.ResponseHeaders.TryGetValue("Location", out urlPath)) {
-                WhenIGoTo(urlPath.Replace("http://127.0.0.1/", ""));
+                WhenIGoTo(urlPath);
             }
             else {
                 Assert.Fail("Expected to be redirected but no Location header returned");

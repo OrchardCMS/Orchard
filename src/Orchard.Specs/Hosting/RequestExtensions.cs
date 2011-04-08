@@ -31,7 +31,12 @@ namespace Orchard.Specs.Hosting {
                 details.UrlPath = urlPath.Substring(0, queryIndex).Replace('\\', '/');
                 details.Query = urlPath.Substring(queryIndex + 1);
             }
-            details.Page = (isHomepage ? "" : physicalPath.Combine(details.UrlPath.TrimStart('/', '\\')).GetRelativePath(physicalPath).ToString()).Replace('\\','/');
+
+            var physicalFilePath = physicalPath.Combine(details.UrlPath.TrimStart('/', '\\'));
+            details.Page = (isHomepage ? "" : physicalFilePath.GetRelativePath(physicalPath).ToString());
+
+            if (!File.Exists(physicalFilePath))
+                details.Page = details.Page.Replace('\\', '/');
 
             if (!string.IsNullOrEmpty(webHost.Cookies)) {
                 details.RequestHeaders.Add("Cookie", webHost.Cookies);
