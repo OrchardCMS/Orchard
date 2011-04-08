@@ -5,7 +5,7 @@
     Script.Require("Switchable");
     Style.Require("Switchable");
     IEnumerable<LayerPart> layers = Model.Layers;
-    var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+    var returnUrl = Request.RawUrl;
 }
 <div id="widgets-layers-control" class="widgets-container">
     @if (layers.Count() > 0) {

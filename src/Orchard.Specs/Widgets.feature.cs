@@ -161,6 +161,65 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             testRunner.CollectScenarioErrors();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can add a widget to a specific zone in a specific layer")]
+        public virtual void ICanAddAWidgetToASpecificZoneInASpecificLayer()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can add a widget to a specific zone in a specific layer", ((string[])(null)));
+#line 45
+this.ScenarioSetup(scenarioInfo);
+#line 46
+    testRunner.Given("I have installed Orchard");
+#line 47
+    testRunner.When("I go to \"admin/widgets\"");
+#line hidden
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table3.AddRow(new string[] {
+                        "layerId",
+                        "Disabled"});
+#line 48
+        testRunner.And("I fill in", ((string)(null)), table3);
+#line 51
+        testRunner.And("I hit \"Show\"");
+#line 52
+    testRunner.Then("I should see \"<option[^>]*selected[^>]*>Disabled\"");
+#line 53
+    testRunner.When("I follow \"Add\" where href has \"zone=Header\"");
+#line 54
+    testRunner.Then("I should see \"<h1[^>]*>Choose A Widget</h1>\"");
+#line 55
+    testRunner.When("I follow \"<h2>Html Widget</h2>\"");
+#line 56
+    testRunner.Then("I should see \"<h1[^>]*>Add Widget</h1>\"");
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table4.AddRow(new string[] {
+                        "Title",
+                        "Flashy HTML Widget"});
+            table4.AddRow(new string[] {
+                        "Body.Text",
+                        "<p><blink>hi</blink></p>"});
+#line 57
+    testRunner.When("I fill in", ((string)(null)), table4);
+#line 61
+        testRunner.And("I hit \"Save\"");
+#line 62
+        testRunner.And("I am redirected");
+#line 63
+    testRunner.Then("I should see \"Your Html Widget has been added.\"");
+#line 64
+        testRunner.And("I should see \"<option[^>]*selected[^>]*>Disabled\"");
+#line 65
+        testRunner.And("I should see \"<li[^>]*class=\"[^\"]*widgets-this-layer[^\"]*\"[^>]*>\\s*<form[^>]*>\\s*" +
+                    "<h3[^>]*>\\s*<a[^>]*>Flashy HTML Widget</a>\\s*</h3>\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
     }
 }
 #endregion

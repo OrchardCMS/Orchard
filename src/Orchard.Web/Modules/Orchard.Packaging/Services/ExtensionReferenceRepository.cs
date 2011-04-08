@@ -38,20 +38,19 @@ namespace Orchard.Packaging.Services {
         }
 
         public override IQueryable<IPackage> GetPackages() {
+            IEnumerable<IPackage> repositoryPackages = SourceRepository.GetPackages().ToList();
             IEnumerable<IPackage> packages = from extension in _extensionManager.AvailableExtensions()
                                    let id = PackageBuilder.BuildPackageId(extension.Id, extension.ExtensionType)
                                    let version = Version.Parse(extension.Version)
-                                   let package = SourceRepository.FindPackage(id, version)
+                                   let package = repositoryPackages.FirstOrDefault(p => p.Id == id && p.Version == version)
                                    where package != null
                                    select package;
 
             return packages.AsQueryable();
         }
 
-        public override void AddPackage(IPackage package) {
-        }
+        public override void AddPackage(IPackage package) {}
 
-        public override void RemovePackage(IPackage package) {
-        }
+        public override void RemovePackage(IPackage package) {}
     }
 }

@@ -73,22 +73,15 @@ namespace Orchard.Packaging.Services {
                 .SelectMany(
                     source => {
                         var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl));
-                        IQueryable<PublishedPackage> packages = galleryFeedContext.Packages;
-
+                        IQueryable<PublishedPackage> packages = includeScreenshots
+                            ? galleryFeedContext.Packages.Expand("Screenshots")
+                            : galleryFeedContext.Packages;
+                        
                         if (query != null) {
                             packages = query(packages);
                         }
 
-                        return packages.ToList().Select(
-                            p => {
-                                PublishedScreenshot firstScreenshot = includeScreenshots
-                                    ? galleryFeedContext.Screenshots
-                                        .Where(s => s.PublishedPackageId == p.Id && s.PublishedPackageVersion == p.Version)
-                                        .ToList()
-                                        .FirstOrDefault() 
-                                    : null;
-                                return CreatePackageEntry(p, firstScreenshot, packagingSource, galleryFeedContext.GetReadStreamUri(p));
-                            });
+                        return packages.ToList().Select(p => CreatePackageEntry(p, packagingSource, galleryFeedContext.GetReadStreamUri(p)));
                     }
                 );
         }
@@ -116,11 +109,13 @@ namespace Orchard.Packaging.Services {
 
         #endregion
 
-        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PublishedScreenshot screenshot, PackagingSource source, Uri downloadUri) {
+        private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source, Uri downloadUri) {
             Uri baseUri = new Uri(string.Format("{0}://{1}:{2}/",
                                                 downloadUri.Scheme,
                                                 downloadUri.Host,
                                                 downloadUri.Port));
+
+            PublishedScreenshot screenshot = package.Screenshots != null ? package.Screenshots.FirstOrDefault() : null;
 
             string iconUrl = GetAbsoluteUri(package.IconUrl, baseUri);
             string firstScreenshot = screenshot != null ? GetAbsoluteUri(screenshot.ScreenshotUri, baseUri) : string.Empty;

@@ -119,7 +119,8 @@ body {
   padding:0;
 }
 
-iframe {border:1px solid #eee;}
+/*Hide shape tracing*/
+#shape-tracing-container {display:none;}
 
 /* Headings */
 h1,h2,h3,h4,h5,h6 { font-weight: normal;}
@@ -1085,12 +1086,7 @@ fieldset.delete-button {
 
 .dashboard .help-item h2
 {
-    background-color: #dee0e1;
     padding: 6px;
-    font-size: 16px;
-}
-.dashboard h2.advisory
-{
     font-size: 16px;
 }
 .dashboard .help-item h2.gallery
@@ -1123,6 +1119,11 @@ fieldset.delete-button {
     padding-left: 40px;
 }
 
+.dashboard .help-item h2.advisory
+{
+    background: #f1f1f2 url('images/icon-advisory.png') no-repeat 5px 50%;
+    padding-left: 40px;
+}
 
 
 

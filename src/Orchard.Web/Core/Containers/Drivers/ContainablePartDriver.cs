@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Containers.ViewModels;
 using Orchard.Localization;
@@ -27,7 +28,7 @@ namespace Orchard.Core.Containers.Drivers {
             return ContentShape(
                 "Parts_Containable_Edit",
                 () => {
-                    var commonPart = part.As<ICommonPart>();
+                    var commonPart = part.As<CommonPart>();
 
                     var model = new ContainableViewModel();
                     if (commonPart != null && commonPart.Container != null) {
@@ -37,10 +38,12 @@ namespace Orchard.Core.Containers.Drivers {
                     if (updater != null) {
                         var oldContainerId = model.ContainerId;
                         updater.TryUpdateModel(model, "Containable", null, null);
-                        if (oldContainerId != model.ContainerId)
+                        if (oldContainerId != model.ContainerId) {
                             if (commonPart != null) {
-                                commonPart.Container = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
+                                var containerItem = _contentManager.Get(model.ContainerId, VersionOptions.Latest);
+                                commonPart.Record.Container = containerItem == null ? null : containerItem.Record;
                             }
+                        }
                     }
 
                     // note: string.isnullorempty not being recognized by linq-to-nhibernate hence the inline or
