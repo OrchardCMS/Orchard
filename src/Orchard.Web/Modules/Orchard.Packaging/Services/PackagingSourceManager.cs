@@ -115,7 +115,7 @@ namespace Orchard.Packaging.Services {
                                                 downloadUri.Host,
                                                 downloadUri.Port));
 
-            PublishedScreenshot screenshot = package.Screenshots.FirstOrDefault();
+            PublishedScreenshot screenshot = package.Screenshots != null ? package.Screenshots.FirstOrDefault() : null;
 
             string iconUrl = GetAbsoluteUri(package.IconUrl, baseUri);
             string firstScreenshot = screenshot != null ? GetAbsoluteUri(screenshot.ScreenshotUri, baseUri) : string.Empty;
