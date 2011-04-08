@@ -8,7 +8,7 @@ namespace Orchard.Utility.Extensions {
         /// <example>http://localhost:3030</example>
         /// <remarks>Prevents port number issues by using the client requested host</remarks>
         public static string ToRootUrlString(this HttpRequestBase request) {
-            return string.Format("{0}://{1}", request.Url.Scheme, request.Url.Host);
+            return string.Format("{0}://{1}", request.Url.Scheme, request.Headers["Host"]);
         }
 
         /// <summary>
@@ -17,7 +17,7 @@ namespace Orchard.Utility.Extensions {
         /// <example>http://localhost:3030</example>
         /// <remarks>Prevents port number issues by using the client requested host</remarks>
         public static string ToRootUrlString(this HttpRequest request) {
-            return string.Format("{0}://{1}", request.Url.Scheme, request.Url.Host);
+            return string.Format("{0}://{1}", request.Url.Scheme, request.Headers["Host"]);
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Orchard.Utility.Extensions {
         /// <example>http://localhost:3030/OrchardLocal</example>
         /// <remarks>Prevents port number issues by using the client requested host</remarks>
         public static string ToApplicationRootUrlString(this HttpRequestBase request) {
-            string url = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Host, request.ApplicationPath);
+            string url = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Headers["Host"], request.ApplicationPath);
             return url;
         }
 
@@ -36,7 +36,7 @@ namespace Orchard.Utility.Extensions {
         /// <example>http://localhost:3030/OrchardLocal</example>
         /// <remarks>Prevents port number issues by using the client requested host</remarks>
         public static string ToApplicationRootUrlString(this HttpRequest request) {
-            string url = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Host, request.ApplicationPath);
+            string url = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Headers["Host"], request.ApplicationPath);
             return url;
         }
 
@@ -46,7 +46,7 @@ namespace Orchard.Utility.Extensions {
         /// <example>http://localhost:3030/OrchardLocal/Admin/Blogs</example>
         /// <remarks>Prevents port number issues by using the client requested host</remarks>
         public static string ToUrlString(this HttpRequestBase request) {
-            return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Host, request.RawUrl);
+            return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Headers["Host"], request.RawUrl);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Orchard.Utility.Extensions {
         /// <example>http://localhost:3030/OrchardLocal/Admin/Blogs</example>
         /// <remarks>Prevents port number issues by using the client requested host</remarks>
         public static string ToUrlString(this HttpRequest request) {
-            return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Host, request.RawUrl);
+            return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Headers["Host"], request.RawUrl);
         }
     }
 }
