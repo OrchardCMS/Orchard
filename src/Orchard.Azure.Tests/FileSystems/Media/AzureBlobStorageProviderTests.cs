@@ -129,6 +129,14 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
+        public void FoldersShouldBeCreatedRecursively() {
+            _azureBlobStorageProvider.CreateFolder("foo/bar/baz");
+            Assert.That(_azureBlobStorageProvider.ListFolders("").Count(), Is.EqualTo(1));
+            Assert.That(_azureBlobStorageProvider.ListFolders("foo").Count(), Is.EqualTo(1));
+            Assert.That(_azureBlobStorageProvider.ListFolders("foo/bar").Count(), Is.EqualTo(1));
+        }
+
+        [Test]
         public void ShouldDeleteFiles() {
             _azureBlobStorageProvider.CreateFile("folder/foo1.txt");
             _azureBlobStorageProvider.CreateFile("folder/foo2.txt");
@@ -214,6 +222,26 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
             }
 
             Assert.AreEqual(teststring, content);
+        }
+
+        [Test]
+        public void ShouldTruncateFile() {
+            var sf = _azureBlobStorageProvider.CreateFile("folder/foo1.txt");
+            using (var sw = new StreamWriter(sf.OpenWrite())) {
+                sw.Write("foo");
+            }
+
+            using (var sw = new StreamWriter(sf.CreateFile())) {
+                sw.Write("fo");
+            }
+
+            sf = _azureBlobStorageProvider.GetFile("folder/foo1.txt");
+            string content;
+            using (var sr = new StreamReader(sf.OpenRead())) {
+                content = sr.ReadToEnd();
+            }
+            
+            Assert.That(content, Is.EqualTo("fo"));
         }
     }
 }

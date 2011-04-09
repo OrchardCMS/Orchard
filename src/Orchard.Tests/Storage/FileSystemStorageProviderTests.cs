@@ -130,6 +130,15 @@ namespace Orchard.Tests.Storage {
         }
 
         [Test]
+        public void ShouldCreateFolders() {
+            Directory.Delete(_folderPath, true);
+            _storageProvider.CreateFolder("foo/bar/baz");
+            Assert.That(_storageProvider.ListFolders("").Count(), Is.EqualTo(1));
+            Assert.That(_storageProvider.ListFolders("foo").Count(), Is.EqualTo(1));
+            Assert.That(_storageProvider.ListFolders("foo/bar").Count(), Is.EqualTo(1));
+        }
+
+        [Test]
         public void RenameFolderTakesShortPathWithAnyKindOfSlash() {
             Assert.That(GetFolder(@"SubFolder1/SubSubFolder1"), Is.Not.Null);
             _storageProvider.RenameFolder(@"SubFolder1\SubSubFolder1", @"SubFolder1/SubSubFolder2");
