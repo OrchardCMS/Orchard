@@ -151,6 +151,7 @@ Scenario: I should not be able to reuse an existing username or email
     Then I should see "User with that username and/or email already exists."
 
 @management
+@ignore
 Scenario: I should be able to remove an existing user
     Given I have installed Orchard
     When I go to "admin/users"

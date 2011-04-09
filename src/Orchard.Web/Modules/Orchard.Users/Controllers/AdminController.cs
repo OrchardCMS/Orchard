@@ -241,11 +241,11 @@ namespace Orchard.Users.Controllers {
                 }
                 else {
                     // also update the Super user if this is the renamed account
-                    if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, previousName, StringComparison.OrdinalIgnoreCase)) {
+                    if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, previousName, StringComparison.Ordinal)) {
                         _siteService.GetSiteSettings().As<SiteSettingsPart>().SuperUser = editModel.UserName;
                     }
 
-                    user.NormalizedUserName = editModel.UserName.ToLower();
+                    user.NormalizedUserName = editModel.UserName.ToLowerInvariant();
                 }
             }
 
@@ -264,6 +264,7 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public ActionResult Delete(int id) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
@@ -271,10 +272,10 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get<IUser>(id);
 
             if (user != null) {
-                if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                if (String.Equals(Services.WorkContext.CurrentSite.SuperUser, user.UserName, StringComparison.Ordinal)) {
                     Services.Notifier.Error(T("The Super user can't be removed. Please disable this account or specify another Super user account"));
                 }
-                else if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                else if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.Ordinal)) {
                     Services.Notifier.Error(T("You can't remove your own account. Please log in with another account"));
                 }
                 else{
@@ -322,7 +323,7 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get<IUser>(id);
 
             if (user != null) {
-                if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                if (String.Equals(Services.WorkContext.CurrentUser.UserName, user.UserName, StringComparison.Ordinal)) {
                     Services.Notifier.Error(T("You can't disable your own account. Please log in with another account"));
                 }
                 else {
