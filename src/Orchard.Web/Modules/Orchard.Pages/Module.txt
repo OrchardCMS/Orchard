@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.1.28
-OrchardVersion: 1.1.28
+Version: 1.1.29
+OrchardVersion: 1.1.29
 Description: Introduces a preconfigured page content type.
 FeatureDescription: A basic page content type.
 Dependencies: Contents

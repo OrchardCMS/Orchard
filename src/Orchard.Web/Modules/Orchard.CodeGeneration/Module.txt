@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.1.28
-OrchardVersion: 1.1.28
+Version: 1.1.29
+OrchardVersion: 1.1.29
 Description: Tools to create Orchard components.
 FeatureDescription: Tools to create Orchard components.
 Category: Developer
