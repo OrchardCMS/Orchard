@@ -64,7 +64,7 @@ namespace Orchard.Media.Services {
                     Size = folder.GetSize(),
                     LastUpdated = folder.GetLastUpdated(),
                     MediaPath = folder.GetPath()
-                }).Where(f => !f.Name.Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase));
+                }).Where(f => !f.Name.Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Orchard.Media.Services {
                     LastUpdated = file.GetLastUpdated(),
                     Type = file.GetFileType(),
                     FolderName = relativePath
-                });
+                }).ToList();
         }
 
         /// <summary>
