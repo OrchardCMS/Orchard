@@ -1,9 +1,9 @@
-Name: Warmup
+﻿Name: Warmup
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.0
-OrchardVersion: 1.0
+Version: 1.1.28
+OrchardVersion: 1.1.28
 Description: Provides a mecanism to generate a static version of pages for being used during application warm up.
 FeatureDescription: Generates the static version of specific pages periodically.
 Category: Hosting

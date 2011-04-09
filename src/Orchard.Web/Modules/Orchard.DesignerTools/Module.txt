@@ -1,9 +1,9 @@
-Name: Designer Tools
+﻿Name: Designer Tools
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.0
-OrchardVersion: 1.0
+Version: 1.1.28
+OrchardVersion: 1.1.28
 Description: Contains designer tools to ease the Themes development process
 FeatureName: Shape Tracing
 Category: Designer
