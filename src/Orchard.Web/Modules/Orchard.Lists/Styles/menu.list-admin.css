@@ -1,15 +1,7 @@
-﻿.navicon-lists,
+﻿.navicon-list,
 .section-new .subnavicon-list {
 background-image:url(images/menu.list.png) !important;
 }
-.navicon-lists:hover {
+.navicon-list:hover {
 background-position:0 -30px !important;
-}
-/* subnav */
-.section-new .subnavicon-list { 
-background-position:0 6px !important;
-padding-left:20px !important;
-}
-.section-new .subnavicon-list:hover {
-background-position:0 -26px !important;
 }

@@ -1,21 +1,15 @@
-﻿jQuery(function($) {
+﻿ // declare global metadata host
+if (!window.shapeTracingMetadataHost) {
+    window.shapeTracingMetadataHost = {};
+    window.shapeTracingMetadataHost.placement = {
+        'n/a': 'n/a'
+    };
+}
+
+jQuery(function ($) {
+
     // default shape window height when first opened
     var defaultHeight = 200;
-
-    // append the shape tracing window container at the end of the document
-    $('<div id="shape-tracing-container"> ' +
-            '<div id="shape-tracing-resize-handle" ></div>' +
-            '<div id="shape-tracing-toolbar">' +
-                '<div id="shape-tracing-toolbar-switch"></div>' +
-            '</div>' +
-            '<div id="shape-tracing-window">' +
-                '<div id="shape-tracing-window-tree"></div>' +
-                '<div id="shape-tracing-window-content"></div>' +
-            '</div>' +
-        '</div>' +
-        '<div id="shape-tracing-container-ghost"></div>' +
-        '<div id="shape-tracing-overlay"></div>'
-    ).appendTo('body');
 
     // preload main objects
     var shapeTracingContainer = $('#shape-tracing-container');
@@ -27,12 +21,22 @@
     var shapeTracingWindowContent = $('#shape-tracing-window-content');
     var shapeTracingGhost = $('#shape-tracing-container-ghost');
     var shapeTracingOverlay = $('#shape-tracing-overlay');
-
+    var shapeTracingTabs = $('#shape-tracing-tabs');
+    var shapeTracingTabsShape = $('#shape-tracing-tabs-shape');
+    var shapeTracingTabsModel = $('#shape-tracing-tabs-model');
+    var shapeTracingTabsPlacement = $('#shape-tracing-tabs-placement');
+    var shapeTracingTabsTemplate = $('#shape-tracing-tabs-template');
+    var shapeTracingTabsHtml = $('#shape-tracing-tabs-html');
+    var shapeTracingBreadcrumb = $('#shape-tracing-breadcrumb');
+    var shapeTracingMetaContent = $('#shape-tracing-meta-content');
     var shapeTracingEnabled = false;
 
     // store the size of the container when it is closed (default in css)
     var initialContainerSize = shapeTracingContainer.height();
     var previousSize = 0;
+
+    // represents the arrow to add to any collpasible container
+    var glyph = '<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>';
 
     // ensure the ghost has always the same size as the container
     // and the container is always positionned correctly
@@ -65,12 +69,11 @@
         var toolbarHeight = shapeTracingToolbar.outerHeight();
         var resizeHandleHeight = shapeTracingResizeHandle.outerHeight();
 
-        var tabsHeight = $('.shape-tracing-tabs:visible').outerHeight();
-        var breadcrumbHeight = $('.shape-tracing-breadcrumb:visible').outerHeight();
+        var tabsHeight = shapeTracingTabs.outerHeight();
+        var breadcrumbHeight = shapeTracingBreadcrumb.outerHeight();
         if (tabsHeight) {
-            var metaContent = $('.shape-tracing-meta-content:visible');
-            padding = parseInt(metaContent.css('padding-bottom') + metaContent.css('padding-top'));
-            metaContent.height(containerHeight - toolbarHeight - resizeHandleHeight - tabsHeight - breadcrumbHeight - padding);
+            padding = parseInt(shapeTracingMetaContent.css('padding-bottom') + shapeTracingMetaContent.css('padding-top'));
+            shapeTracingMetaContent.height(containerHeight - toolbarHeight - resizeHandleHeight - tabsHeight - breadcrumbHeight - padding);
         }
     };
 
@@ -114,7 +117,7 @@
     $('#shape-tracing-resize-handle').addClass('ui-resizable-handle ui-resizable-n');
     shapeTracingContainer.resizable({
         handles: { n: '#shape-tracing-resize-handle' },
-        grid: 20, // mitigates the number of calls to syncResize(), and aligns to the line height
+        grid: 20, // mitigates the number of calls to syncResize()
         resize: function () { shapeTracingEnabled = false },
         stop: function () { shapeTracingEnabled = true }
     });
@@ -188,27 +191,33 @@
     shapeTracingWindowTree.append(shapes);
 
     // add the expand/collapse logic to the shapes tree
-    var glyph = $('<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>');
-    shapeTracingWindowTree.find('div').parent(':has(li)').prepend(glyph);
+    shapeTracingWindowTree.find('li:has(ul:has(li))').prepend($(glyph));
 
     // collapse all sub uls
     shapeTracingWindowTree.find('ul ul').toggle(false);
 
     // expands a list of shapes in the tree
     var openExpando = function (expando) {
-        if (expando.hasClass("closed") || expando.hasClass("closing")) {
-            expando.siblings('ul').slideDown(100, function () { expando.removeClass("opening").removeClass("closed").addClass("open"); });
-            expando.addClass("opening");
+        if (expando.hasClass("closed")) {
+            expando.siblings('ul').toggle(true);
+            expando.removeClass("closed").addClass("open");
         }
     }
 
     // collapses a list of shapes in the tree
     var closeExpando = function (expando) {
-        if (!expando.hasClass("closed") && !expando.hasClass("closing")) {
-            expando.siblings('ul').slideUp(100, function () { expando.removeClass("closing").removeClass("open").addClass("closed"); });
-            expando.addClass("closing");
+        if (expando.hasClass("open")) {
+            expando.siblings('ul').toggle(false);
+            expando.removeClass("open").addClass("closed");
         }
     }
+
+    shapeTracingWindow.add(shapeTracingResizeHandle).hover(function () {
+        shapeTracingOverlay.hide();
+    }, function () {
+        shapeTracingOverlay.show();
+    }
+    );
 
     //create an overlay on shapes' descendants
     var overlayTarget = null;
@@ -244,30 +253,29 @@
         }
     );
 
-    // selects a specific shape in the tree, highlight its elements, and display the information
+    var currentShape;
+
+    // selects a specific shape in the tree, highlight its elements, and display the current tab
     var selectShape = function (shapeId) {
+        // remove current tab content
+        shapeTracingMetaContent.children().remove();
+
+        // remove selection ?
         if (!shapeId) {
-            // remove selection ?
+            currentShape = null;
             shapeTracingOverlay.hide();
             $('.shape-tracing-selected').removeClass('shape-tracing-selected');
             shapeTracingWindowTree.find('.shape-tracing-selected').removeClass('shape-tracing-selected');
-            $('[shape-id-meta]:visible').toggle(false);
             return;
         }
+
+        currentShape = shapeId;
 
         $('.shape-tracing-selected').removeClass('shape-tracing-selected');
         $('li[tree-shape-id="' + shapeId + '"] > div').add('[shape-id="' + shapeId + '"]').addClass('shape-tracing-selected');
         shapeTracingOverlay.hide();
 
-        // show the properties for the selected shape
-        $('[shape-id-meta]:visible').toggle(false);
-        var target = $('[shape-id-meta="' + shapeId + '"]"');
-        target.toggle(true);
-
-        // enable codemirror for the current tab
-        enableCodeMirror(target);
-
-        syncResizeMeta();
+        defaultTab();
     }
 
     // select shapes when clicked
@@ -279,13 +287,9 @@
         // open the tree until the selected element
         $('li[tree-shape-id="' + shapeNode.id + '"]').parents('li').andSelf().find('> .expando-glyph-container').each(function () {
             openExpando($(this));
-        })
-        .last()
-        .each(function () {
-            this.scrollIntoView()
+        }).each(function () {
+            shapeTracingWindowTree.scrollTo(this, 0, { margin: true });
         });
-
-        refreshBreadcrumb();
 
         return false;
     });
@@ -308,7 +312,7 @@
         var element = $('[shape-id="' + shapeId + '"]').get(0);
         // there might be no DOM element if the shape was empty, or is not displayed
         if (element) {
-            element.scrollIntoView();
+            $(window).scrollTo(element, 500, { margin: true });
         }
 
         event.stopPropagation();
@@ -318,61 +322,185 @@
     $("[shape-id-meta]").detach().prependTo(shapeTracingWindowContent);
 
     // add the expand/collapse logic to the shape model
-    // var glyph = $('<span class="expando-glyph-container closed"><span class="expando-glyph"></span>&#8203;</span>');
-    shapeTracingWindowContent.find('li:has(ul)').prepend(glyph);
+    shapeTracingWindowContent.find('li:has(ul:has(li))').prepend($(glyph));
 
     // collapse all sub uls
     shapeTracingWindowContent.find('ul ul').toggle(false);
 
-    // tabs events
-    shapeTracingWindowContent.find('.shape-tracing-tabs > li').click(function () {
-        var _this = $(this);
-        var tabName = this.className.split(/\s/)[0];
+    // Shape tab
+    var displayTabShape = function () {
+        // toggle the selected class
+        shapeTracingTabs.children('.selected').removeClass('selected');
+        shapeTracingTabsShape.addClass('selected');
 
-        // toggle the selected class on the tab li
-        $('.shape-tracing-tabs > li.selected').removeClass('selected');
-        $('.shape-tracing-tabs > li.' + tabName).addClass('selected');
+        // remove old content
+        shapeTracingMetaContent.children().remove();
 
-        // hide all tabs and display the selected one
-        $('.shape-tracing-meta-content > div').toggle(false);
-        $('.shape-tracing-meta-content > div.' + tabName).toggle(true);
-
-        // look for the targetted panel
-        var wrapper = _this.parent().parent().first();
-        var panel = wrapper.find('div.' + tabName);
-
-        refreshBreadcrumb();
-        syncResizeMeta();
-
-        // enable codemirror for the current tab
-        enableCodeMirror(panel);
-    });
-
-    var refreshBreadcrumb = function () {
-        var container = shapeTracingWindowContent.find('.shape-tracing-meta:visible');
-        var breadcrumb = container.find('.shape-tracing-breadcrumb');
-        var tab = container.find('.shape-tracing-meta-content > div:visible');
-
-        if (tab.hasClass('shape')) {
-            breadcrumb.text('');
+        // render the template
+        if (currentShape && shapeTracingMetadataHost[currentShape]) {
+            $("#shape-tracing-tabs-shape-template").tmpl(shapeTracingMetadataHost[currentShape]).appendTo(shapeTracingMetaContent);
         }
-        else if (tab.hasClass('model')) {
-            breadcrumb.text('');
-        }
-        else if (tab.hasClass('placement')) {
-            breadcrumb.text(container.find('.sgd-pl > .value').text());
-        }
-        else if (tab.hasClass('template')) {
-            breadcrumb.text(container.find('.sgd-t > .value').text());
-        }
-        else if (tab.hasClass('html')) {
-            breadcrumb.text('');
-        }
+
+        shapeTracingBreadcrumb.text('');
+
+        // create collapsible containers
+        shapeTracingMetaContent.find('li:has(ul:has(li))').prepend($(glyph));
+        shapeTracingMetaContent.find('ul ul').toggle(false);
+        shapeTracingMetaContent.find('.expando-glyph-container').click(expandCollapseExpando);
+
+        $('#activeTemplate').click(function () {
+            displayTabTemplate();
+        });
+
+        defaultTab = displayTabShape;
     };
 
-    // template link opens template tab
-    shapeTracingWindowContent.find('.sgd-t a').click(function () {
-        $(this).parents('.shape-tracing-meta').find('.shape-tracing-tabs > .template').click()
+    var defaultTab = displayTabShape;
+
+    shapeTracingTabsShape.click(function () {
+        displayTabShape();
+    });
+
+    // Model tab
+    var displayTabModel = function () {
+        // toggle the selected class
+        shapeTracingTabs.children('.selected').removeClass('selected');
+        shapeTracingTabsModel.addClass('selected');
+
+        // remove old content
+        shapeTracingMetaContent.children().remove();
+
+        // render the template
+        if (currentShape && shapeTracingMetadataHost[currentShape]) {
+            $("#shape-tracing-tabs-model-template").tmpl(shapeTracingMetadataHost[currentShape].shape.model).appendTo(shapeTracingMetaContent);
+        }
+
+        shapeTracingBreadcrumb.text('');
+
+        // create collapsible containers
+        shapeTracingMetaContent.find('li:has(ul:has(li))').prepend($(glyph));
+        shapeTracingMetaContent.find('ul ul').toggle(false);
+        shapeTracingMetaContent.find('.expando-glyph-container').click(expandCollapseExpando);
+
+        shapeTracingMetaContent.find('.model div.name')
+        .hover(
+            function () {
+                var _this = $(this);
+                $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
+                _this.addClass('shape-tracing-overlay');
+            },
+            function () {
+                $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
+            })
+        .click(function (event) {
+            // model node is selected
+            var _this = $(this);
+            shapeTracingWindowContent.find('.shape-tracing-selected').removeClass('shape-tracing-selected');
+            _this.addClass('shape-tracing-selected');
+
+            // display breadcrumb
+            var breadcrumb = null;
+            _this.parentsUntil('.model').children('.name').each(function () {
+                if (breadcrumb != null) {
+                    breadcrumb = $(this).text() + '.' + breadcrumb;
+                }
+                else {
+                    breadcrumb = $(this).text();
+                }
+            });
+
+            // fix enumerable properties display
+            breadcrumb = breadcrumb.replace('.[', '[');
+
+            shapeTracingBreadcrumb.text('@' + breadcrumb);
+            event.stopPropagation();
+        });
+
+        // open the root node (Model)
+        shapeTracingMetaContent.find('.expando-glyph-container:first').click();
+
+        defaultTab = displayTabModel;
+    };
+
+    shapeTracingTabsModel.click(function () {
+        displayTabModel();
+    });
+
+    // Placement tab
+    var displayTabPlacement = function () {
+        // toggle the selected class
+        shapeTracingTabs.children('.selected').removeClass('selected');
+        shapeTracingTabsPlacement.addClass('selected');
+
+        // remove old content
+        shapeTracingMetaContent.children().remove();
+
+        // render the template
+        if (currentShape && shapeTracingMetadataHost[currentShape]) {
+            var placementSource = shapeTracingMetadataHost[currentShape].shape.placement;
+            shapeTracingBreadcrumb.text(placementSource);
+            $("#shape-tracing-tabs-placement-template").tmpl(shapeTracingMetadataHost.placement[placementSource]).appendTo(shapeTracingMetaContent);
+        }
+        else {
+            shapeTracingBreadcrumb.text('');
+        }
+
+        enableCodeMirror(shapeTracingMetaContent);
+        defaultTab = displayTabPlacement;
+    };
+
+    shapeTracingTabsPlacement.click(function () {
+        displayTabPlacement();
+    });
+
+    // Template tab
+    var displayTabTemplate = function () {
+        // toggle the selected class
+        shapeTracingTabs.children('.selected').removeClass('selected');
+        shapeTracingTabsTemplate.addClass('selected');
+
+        // remove old content
+        shapeTracingMetaContent.children().remove();
+
+        // render the template
+        if (currentShape && shapeTracingMetadataHost[currentShape]) {
+            shapeTracingBreadcrumb.text(shapeTracingMetadataHost[currentShape].shape.template);
+            $("#shape-tracing-tabs-template-template").tmpl(shapeTracingMetadataHost[currentShape].shape.templateContent).appendTo(shapeTracingMetaContent);
+        }
+        else {
+            shapeTracingBreadcrumb.text('');
+        }
+
+        enableCodeMirror(shapeTracingMetaContent);
+        defaultTab = displayTabTemplate;
+    };
+
+    shapeTracingTabsTemplate.click(function () {
+        displayTabTemplate();
+    });
+
+    // HTML tab
+    var displayTabHtml = function () {
+        // toggle the selected class
+        shapeTracingTabs.children('.selected').removeClass('selected');
+        shapeTracingTabsHtml.addClass('selected');
+
+        // remove old content
+        shapeTracingMetaContent.children().remove();
+
+        // render the template
+        if (currentShape && shapeTracingMetadataHost[currentShape]) {
+            $("#shape-tracing-tabs-html-template").tmpl(shapeTracingMetadataHost[currentShape].shape.html).appendTo(shapeTracingMetaContent);
+        }
+
+        shapeTracingBreadcrumb.text('');
+
+        enableCodeMirror(shapeTracingMetaContent);
+        defaultTab = displayTabHtml;
+    };
+
+    shapeTracingTabsHtml.click(function () {
+        displayTabHtml();
     });
 
     // activates codemirror on specific textareas
@@ -386,10 +514,10 @@
         });
     }
 
-    // automatically expand or collapse shapes in the tree
-    shapeTracingWindow.find('.expando-glyph-container').click(function () {
+    // hooks the click event on expandos
+    var expandCollapseExpando = function () {
         var _this = $(this);
-        if (_this.hasClass("closed") || _this.hasClass("closing")) {
+        if (_this.hasClass("closed")) {
             openExpando(_this);
         }
         else {
@@ -397,42 +525,10 @@
         }
 
         return false;
-    });
+    };
 
-    //create an overlay on model nodes
-    shapeTracingWindowContent.find('.model div.name')
-    .hover(
-        function () {
-            var _this = $(this);
-            $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
-            _this.addClass('shape-tracing-overlay');
-        },
-        function () {
-            $('.shape-tracing-overlay').removeClass('shape-tracing-overlay');
-        })
-    .click(function (event) {
-        // model node is selected
-        var _this = $(this);
-        shapeTracingWindowContent.find('.shape-tracing-selected').removeClass('shape-tracing-selected');
-        _this.addClass('shape-tracing-selected');
-
-        // display breadcrumb
-        var breadcrumb = null;
-        _this.parentsUntil('.model').children('.name').each(function () {
-            if (breadcrumb != null) {
-                breadcrumb = $(this).text() + '.' + breadcrumb;
-            }
-            else {
-                breadcrumb = $(this).text();
-            }
-        });
-
-        // fix enumerable properties display
-        breadcrumb = breadcrumb.replace('.[', '[');
-
-        _this.parents('.shape-tracing-meta').find('.shape-tracing-breadcrumb').text('@' + breadcrumb);
-        event.stopPropagation();
-    });
+    // automatically expand or collapse shapes in the tree
+    shapeTracingWindowTree.find('.expando-glyph-container').click(expandCollapseExpando);
 
     // recursively create a node for the shapes tree
     function createTreeNode(shapeNode) {

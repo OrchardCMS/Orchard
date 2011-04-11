@@ -8,9 +8,8 @@ using Microsoft.WindowsAzure.StorageClient;
 using Orchard.FileSystems.Media;
 
 namespace Orchard.Azure {
-    public class AzureFileSystem
-    {
-        private const string FolderEntry = "$$$ORCHARD$$$.$$$";
+    public class AzureFileSystem {
+        public const string FolderEntry = "$$$ORCHARD$$$.$$$";
 
         public string ContainerName { get; protected set; }
 
@@ -71,15 +70,13 @@ namespace Orchard.Azure {
                 return path2;
             }
 
-            if ( path2.StartsWith("http://") || path2.StartsWith("https://") )
-            {
+            if ( path2.StartsWith("http://") || path2.StartsWith("https://") ) {
                 return path2;
             }
 
             var ch = path1[path1.Length - 1];
 
-            if (ch != '/')
-            {
+            if (ch != '/') {
                 return (path1.TrimEnd('/') + '/' + path2.TrimStart('/'));
             }
 
@@ -91,7 +88,7 @@ namespace Orchard.Azure {
 
             using ( new HttpContextWeaver() ) {
                 Container.EnsureBlobExists(String.Concat(_root, path));
-                return new AzureBlobFileStorage(Container.GetBlockBlobReference(path), _absoluteRoot);
+                return new AzureBlobFileStorage(Container.GetBlockBlobReference(String.Concat(_root, path)), _absoluteRoot);
             }
         }
 
@@ -155,15 +152,18 @@ namespace Orchard.Azure {
         }
 
         public bool TryCreateFolder(string path) {
-            EnsurePathIsRelative(path);
-            using (new HttpContextWeaver()) {
-                if (Container.DirectoryExists(String.Concat(_root, path))) {
+            try {
+                if (!Container.DirectoryExists(String.Concat(_root, path))) {
+                    CreateFolder(path);
                     return true;
                 }
 
-                CreateFile(Combine(path, FolderEntry));
+                // return false to be consistent with FileSystemProvider's implementation
+                return false;
             }
-            return true;
+            catch {
+                return false;
+            }
         }
 
         public void CreateFolder(string path) {
@@ -173,6 +173,14 @@ namespace Orchard.Azure {
 
                 // Creating a virtually hidden file to make the directory an existing concept
                 CreateFile(Combine(path, FolderEntry));
+
+                int lastIndex;
+                while ((lastIndex = path.LastIndexOf('/')) > 0) {
+                    path = path.Substring(0, lastIndex);
+                    if(!Container.DirectoryExists(String.Concat(_root, path))) {
+                        CreateFile(Combine(path, FolderEntry));
+                    }
+                }
             }
         }
 
@@ -223,8 +231,8 @@ namespace Orchard.Azure {
             EnsurePathIsRelative(path);
             
             using ( new HttpContextWeaver() ) {
-                Container.EnsureBlobExists(path);
-                var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
+                Container.EnsureBlobExists(Combine(_root, path));
+                var blob = Container.GetBlockBlobReference(Combine(_root, path));
                 blob.Delete();
             }
         }
@@ -246,9 +254,18 @@ namespace Orchard.Azure {
 
         public IStorageFile CreateFile(string path) {
             EnsurePathIsRelative(path);
-
+            
             if ( Container.BlobExists(String.Concat(_root, path)) ) {
                 throw new ArgumentException("File " + path + " already exists");
+            }
+
+            // create all folder entries in the hierarchy
+            int lastIndex;
+            var localPath = path;
+            while ((lastIndex = localPath.LastIndexOf('/')) > 0) {
+                localPath = localPath.Substring(0, lastIndex);
+                var folder = Container.GetBlockBlobReference(String.Concat(_root, Combine(localPath, FolderEntry)));
+                folder.OpenWrite().Dispose();
             }
 
             var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
@@ -266,7 +283,7 @@ namespace Orchard.Azure {
         }
 
         private class AzureBlobFileStorage : IStorageFile {
-            private readonly CloudBlockBlob _blob;
+            private CloudBlockBlob _blob;
             private readonly string _rootPath;
 
             public AzureBlobFileStorage(CloudBlockBlob blob, string rootPath) {
@@ -302,6 +319,15 @@ namespace Orchard.Azure {
                 return _blob.OpenWrite();
             }
 
+            public Stream CreateFile() {
+                // as opposed to the File System implementation, if nothing is done on the stream
+                // the file will be emptied, because Azure doesn't implement FileMode.Truncate
+                _blob.DeleteIfExists();
+                _blob = _blob.Container.GetBlockBlobReference(_blob.Uri.ToString());
+                _blob.OpenWrite().Dispose(); // force file creation
+
+                return OpenWrite();
+            }
         }
 
         private class AzureBlobFolderStorage : IStorageFolder {

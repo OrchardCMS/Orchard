@@ -67,7 +67,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 9
     testRunner.When("I go to \"admin/media\"");
 #line 10
-    testRunner.Then("I should see \"Manage Media Folders\"");
+    testRunner.Then("I should see \"Media\"");
 #line 11
         testRunner.And("the status should be 200 \"OK\"");
 #line hidden
@@ -101,7 +101,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 21
         testRunner.And("I am redirected");
 #line 22
-    testRunner.Then("I should see \"Manage Media Folders\"");
+    testRunner.Then("I should see \"Media\"");
 #line 23
         testRunner.And("I should see \"Hello World\"");
 #line 24
@@ -126,7 +126,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 30
         testRunner.And("I am redirected");
 #line 31
-    testRunner.Then("I should see \"Manage Media Folders\"");
+    testRunner.Then("I should see \"Media\"");
 #line 32
         testRunner.And("I should see \"Editing failed: Invalid path\"");
 #line 33

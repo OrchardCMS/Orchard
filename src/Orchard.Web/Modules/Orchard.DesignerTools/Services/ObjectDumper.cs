@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
@@ -11,37 +10,37 @@ using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 
 namespace Orchard.DesignerTools.Services {
-
+    
     public class ObjectDumper {
         private const int MaxStringLength = 60;
 
         private readonly Stack<object> _parents = new Stack<object>();
+        private readonly Stack<XElement> _currents = new Stack<XElement>();
         private readonly int _levels;
 
         private readonly XDocument _xdoc;
-        private XElement _node;
-        
-        public ObjectDumper(int levels) {
+        private XElement _current;
+
+        // object/key/dump
+
+        public ObjectDumper(int levels)
+        {
             _levels = levels;
             _xdoc = new XDocument();
-            _xdoc.Add(_node = new XElement("ul"));
+            _xdoc.Add(_current = new XElement("ul"));
         }
 
         public XElement Dump(object o, string name) {
-            // prevent cyclic references
-            if (_parents.Contains(o)) {
-                return _node;
-            }
-
             if(_parents.Count >= _levels) {
-                return _node;
+                return _current;
             }
 
             _parents.Push(o);
-            try {
-                // starts a new container
-                _node.Add(_node = new XElement("li"));
+            
+            // starts a new container
+            EnterNode("li");
 
+            try {
                 if (o == null) {
                     DumpValue(null, name);
                 }
@@ -49,56 +48,58 @@ namespace Orchard.DesignerTools.Services {
                     DumpValue(o, name);
                 }
                 else {
+                    if (_parents.Count >= _levels) {
+                        return _current;
+                    }
+
                     DumpObject(o, name);
                 }
             }
-            finally { 
+            finally {
                 _parents.Pop(); 
+                RestoreCurrentNode();
             }
-
-            if(_node.DescendantNodes().Count() == 0) {
-                _node.Remove();
-            }
-            _node = _node.Parent;
-
-            return _node;
+        
+            return _current;
         }
 
         private void DumpValue(object o, string name) {
             string formatted = FormatValue(o);
-            _node.Add(
-                new XElement("div", new XAttribute("class", "name"), name),
-                new XElement("div", new XAttribute("class", "value"), formatted)
+            _current.Add(
+                new XElement("h1", new XText(name)),
+                new XElement("span", formatted)
             );
         }
 
         private void DumpObject(object o, string name) {
-            _node.Add(
-                new XElement("div", new XAttribute("class", "name"), name),
-                new XElement("div", new XAttribute("class", "type"), FormatType(o))
-            );
+            _current.Add(
+                new XElement("h1", new XText(name)),
+                new XElement("span", FormatType(o))
+            ); 
+            
+            EnterNode("ul");
 
-            if (_parents.Count >= _levels) {
-                return;
-            }
+            try {
+                if (o is IDictionary) {
+                    DumpDictionary((IDictionary) o);
+                }
+                else if (o is IShape) {
+                    DumpShape((IShape) o);
 
-            if (o is IDictionary) {
-                DumpDictionary((IDictionary)o);
-            }
-            else if (o is IShape) {
-                DumpShape((IShape)o);
-                
-                // a shape can also be IEnumerable
-                if (o is IEnumerable) {
+                    // a shape can also be IEnumerable
+                    if (o is IEnumerable) {
+                        DumpEnumerable((IEnumerable) o);
+                    }
+                }
+                else if (o is IEnumerable) {
                     DumpEnumerable((IEnumerable) o);
                 }
+                else {
+                    DumpMembers(o);
+                }
             }
-            else if (o is IEnumerable)
-            {
-                DumpEnumerable((IEnumerable)o);
-            }
-            else {
-                DumpMembers(o);
+            finally {
+                RestoreCurrentNode();
             }
         }
 
@@ -113,66 +114,62 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
-            _node.Add(_node = new XElement("ul"));
             foreach (var member in members) {
-                if (o is ContentItem && member.Name == "ContentManager") {
-                    // ignore Content Manager explicitly
+                if (o is ContentItem && member.Name == "ContentManager"
+                    || o is Delegate) {
                     continue;
                 }
+                SafeCall(() => DumpMember(o, member));
+            }
 
-                try {
-                    DumpMember(o, member);
-                }
-                catch {
-                    // ignore members which can't be rendered
-                }
-
-                // process ContentItem.Parts specifically
+            // process ContentItem.Parts specifically
+            foreach (var member in members) {
                 if (o is ContentItem && member.Name == "Parts") {
-                    foreach (var part in ((ContentItem)o).Parts) {
-                        Dump(part, part.PartDefinition.Name);
-                    }
-                }
+                    foreach (var part in ((ContentItem) o).Parts) {
+                        // ignore contentparts like ContentPart<ContentItemVersionRecord>
+                        if(part.GetType().IsGenericType) {
+                            continue;
+                        }
 
-                // process ContentPart.Fields specifically
-                if (o is ContentPart && member.Name == "Fields") {
-                    foreach (var field in ((ContentPart)o).Fields) {
-                        Dump(field, field.Name);
+                        SafeCall(() => Dump(part, part.PartDefinition.Name));
                     }
                 }
             }
 
-            _node = _node.Parent;
+            foreach (var member in members) {
+                // process ContentPart.Fields specifically
+                if (o is ContentPart && member.Name == "Fields") {
+                    foreach (var field in ((ContentPart) o).Fields) {
+                        SafeCall(() => Dump(field, field.Name));
+                    }
+                }
+            }
         }
 
         private void DumpEnumerable(IEnumerable enumerable) {
-            if(!enumerable.GetEnumerator().MoveNext()) {
+            if (!enumerable.GetEnumerator().MoveNext()) {
                 return;
             }
 
-            _node.Add(_node = new XElement("ul"));
             int i = 0;
             foreach (var child in enumerable) {
                 Dump(child, string.Format("[{0}]", i++));
             }
-            
-            _node = _node.Parent;
         }
 
         private void DumpDictionary(IDictionary dictionary) {
             if (dictionary.Keys.Count == 0) {
                 return;
             }
-            _node.Add(_node = new XElement("ul"));
+
             foreach (var key in dictionary.Keys) {
                 Dump(dictionary[key], string.Format("[\"{0}\"]", key));
             }
-            _node = _node.Parent;
         }
 
         private void DumpShape(IShape shape) {
 
-            var b = ((IClayBehaviorProvider)(dynamic)shape).Behavior as ClayBehaviorCollection;
+            var b = ((IClayBehaviorProvider) (dynamic) shape).Behavior as ClayBehaviorCollection;
 
             if (b == null)
                 return;
@@ -193,19 +190,17 @@ namespace Orchard.DesignerTools.Services {
                 return;
             }
 
-            _node.Add(_node = new XElement("ul"));
             foreach (var key in props.Keys) {
                 // ignore private members (added dynmically by the shape wrapper)
-                if(key.ToString().StartsWith("_")) {
+                if (key.ToString().StartsWith("_")) {
                     continue;
                 }
                 Dump(props[key], key.ToString());
             }
-            _node = _node.Parent;
         }
 
         private void DumpMember(object o, MemberInfo member) {
-            if (member is MethodInfo || member is ConstructorInfo || member is EventInfo)
+            if (member is MethodBase || member is EventInfo)
                 return;
 
             if (member is FieldInfo) {
@@ -254,6 +249,33 @@ namespace Orchard.DesignerTools.Services {
             }
 
             return type.Name;
+        }
+
+        private static void SafeCall(Action action) {
+            try {
+                action();
+            }
+            catch {
+                // ignore exceptions is safe call
+            }
+        }
+
+        private void SaveCurrentNode() {
+            _currents.Push(_current);
+        }
+
+        private void RestoreCurrentNode() {
+            if (_current.DescendantNodes().Count() == 0) {
+                _current.Remove();
+            }
+            
+            _current = _currents.Pop();
+        }
+
+        private XElement EnterNode(string tag) {
+            SaveCurrentNode();
+            _current.Add(_current = new XElement(tag));
+            return _current;
         }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,6 +8,8 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
+using Orchard.Packaging.Events;
+using Orchard.Packaging.Extensions;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
@@ -19,7 +20,6 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 using ILogger = Orchard.Logging.ILogger;
-using IPackageManager = Orchard.Packaging.Services.IPackageManager;
 using NullLogger = Orchard.Logging.NullLogger;
 
 namespace Orchard.Packaging.Controllers {
@@ -28,15 +28,20 @@ namespace Orchard.Packaging.Controllers {
     public class GalleryController : Controller {
         private readonly ShellSettings _shellSettings;
         private readonly IPackagingSourceManager _packagingSourceManager;
+        private readonly IExtensionDisplayEventHandler _extensionDisplayEventHandler;
+        private readonly IExtensionManager _extensionManager;
 
         public GalleryController(
+            IEnumerable<IExtensionDisplayEventHandler> extensionDisplayEventHandlers,
             ShellSettings shellSettings,
-            IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
+            IExtensionManager extensionManager,
             IOrchardServices services) {
 
             _shellSettings = shellSettings;
             _packagingSourceManager = packagingSourceManager;
+            _extensionDisplayEventHandler = extensionDisplayEventHandlers.FirstOrDefault();
+            _extensionManager = extensionManager;
             Services = services;
 
             T = NullLocalizer.Instance;
@@ -146,12 +151,16 @@ namespace Orchard.Packaging.Controllers {
             int totalCount = 0;
             foreach (var source in sources) {
                 try {
-                    var sourceExtensions = _packagingSourceManager.GetExtensionList(
+                    var sourceExtensions = _packagingSourceManager.GetExtensionList(true,
                         source,
                         packages => {
                             packages = packages.Where(p => p.PackageType == packageType &&
                                 p.IsLatestVersion &&
-                                (string.IsNullOrEmpty(options.SearchText) || p.Title.Contains(options.SearchText)));
+                                (string.IsNullOrEmpty(options.SearchText) 
+                                    || p.Title.Contains(options.SearchText)
+                                    || p.Description.Contains(options.SearchText)
+                                    || p.Tags.Contains(options.SearchText)
+                                    ));
 
                             switch (options.Order) {
                                 case PackagingExtensionsOrder.Downloads:
@@ -214,6 +223,23 @@ namespace Orchard.Packaging.Controllers {
             routeData.Values.Add("Options.SearchText", options.SearchText);
             routeData.Values.Add("Options.SourceId", options.SourceId);
             pagerShape.RouteData(routeData);
+
+            extensions = extensions.ToList();
+
+            // Populate the notifications
+            IEnumerable<Tuple<ExtensionDescriptor, PackagingEntry>> extensionDescriptors = _extensionManager.AvailableExtensions()
+                .Join(extensions, extensionDescriptor => extensionDescriptor.Id, packaginEntry => packaginEntry.ExtensionId(),
+                      (extensionDescriptor, packagingEntry) => new Tuple<ExtensionDescriptor, PackagingEntry>(extensionDescriptor, packagingEntry));
+
+            foreach (Tuple<ExtensionDescriptor, PackagingEntry> packagings in extensionDescriptors) {
+                packagings.Item2.Installed = true;
+
+                if (_extensionDisplayEventHandler != null) {
+                    foreach (string notification in _extensionDisplayEventHandler.Displaying(packagings.Item1, ControllerContext.RequestContext)) {
+                        packagings.Item2.Notifications.Add(notification);
+                    }
+                }
+            }
 
             return View(packageType == DefaultExtensionTypes.Theme ? "Themes" : "Modules", new PackagingExtensionsViewModel {
                 Extensions = extensions,

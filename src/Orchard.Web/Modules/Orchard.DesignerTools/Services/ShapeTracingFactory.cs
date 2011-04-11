@@ -1,7 +1,8 @@
-﻿using System.IO;
+﻿using System;
 using System.Linq;
+using System.Text;
 using System.Web.Routing;
-using System.Xml;
+using System.Xml.Linq;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
@@ -20,7 +21,7 @@ namespace Orchard.DesignerTools.Services {
         private readonly IThemeManager _themeManager;
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly IAuthorizer _authorizer;
-        private int shapeId = 0;
+        private int _shapeId;
 
         public ShapeTracingFactory(
             WorkContext workContext, 
@@ -60,7 +61,9 @@ namespace Orchard.DesignerTools.Services {
                 && context.ShapeType != "DocumentZone"
                 && context.ShapeType != "PlaceChildContent"
                 && context.ShapeType != "ContentZone"
-                && context.ShapeType != "ShapeTracingMeta") {
+                && context.ShapeType != "ShapeTracingMeta"
+                && context.ShapeType != "ShapeTracingTemplates"
+                && context.ShapeType != "DateTimeRelative") {
 
                 var shapeMetadata = (ShapeMetadata)context.Shape.Metadata;
                 var currentTheme = _themeManager.GetRequestTheme(_workContext.HttpContext.Request.RequestContext);
@@ -71,10 +74,12 @@ namespace Orchard.DesignerTools.Services {
                 }
 
                 shapeMetadata.Wrappers.Add("ShapeTracingWrapper");
+                shapeMetadata.OnDisplaying(OnDisplaying);
             }
         }
+        public void Displaying(ShapeDisplayingContext context) {}
 
-        public void Displaying(ShapeDisplayingContext context) {
+        public void OnDisplaying(ShapeDisplayingContext context) {
             if (!IsActivable()) {
                 return;
             }
@@ -91,19 +96,18 @@ namespace Orchard.DesignerTools.Services {
             var descriptor = shapeTable.Descriptors[shapeMetadata.Type];
 
             // dump the Shape's content
-            var dumper = new ObjectDumper(6);
-            var el = dumper.Dump(context.Shape, "Model");
-            using (var sw = new StringWriter()) {
-                el.WriteTo(new XmlTextWriter(sw) {Formatting = Formatting.None});
-                context.Shape._Dump = sw.ToString();
-            }
+            var dump = new ObjectDumper(6).Dump(context.Shape, "Model");
+
+            var sb = new StringBuilder();
+            ConvertToJSon(dump, sb);
+            shape._Dump = sb.ToString();
 
             shape.Template = null;
             shape.OriginalTemplate = descriptor.BindingSource;
 
             foreach (var extension in new[] { ".cshtml", ".aspx" }) {
-                foreach (var alternate in shapeMetadata.Alternates.Reverse()) {
-                    var alternateFilename = currentTheme.Location + "/" + currentTheme.Id + "/Views/" + alternate.Replace("__", "-").Replace("_", ".") + extension;
+                foreach (var alternate in shapeMetadata.Alternates.Reverse().Concat(new [] {shapeMetadata.Type}) ) {
+                    var alternateFilename = FormatShapeFilename(alternate, shapeMetadata.Type, shapeMetadata.DisplayType, currentTheme.Location + "/" + currentTheme.Id, extension);
                     if (_webSiteFolder.FileExists(alternateFilename)) {
                         shape.Template = alternateFilename;
                     }
@@ -123,7 +127,8 @@ namespace Orchard.DesignerTools.Services {
             }
 
             try {
-                if (_webSiteFolder.FileExists(shape.Template)) {
+                // we know that templates are classes if they contain ':'
+                if (!shape.Template.Contains(":") && _webSiteFolder.FileExists(shape.Template)) {
                     shape.TemplateContent = _webSiteFolder.ReadFile(shape.Template);
                 }
             }
@@ -140,11 +145,66 @@ namespace Orchard.DesignerTools.Services {
                 shape.Hint = ((Zone) shape).ZoneName;
             }
 
-            shape.ShapeId = shapeId++;
+            shape.ShapeId = _shapeId++;
         }
 
 
         public void Displayed(ShapeDisplayedContext context) {
         }
+
+        public static void ConvertToJSon(XElement x, StringBuilder sb) {
+            if(x == null) {
+                return;
+            }
+
+            switch (x.Name.ToString()) {
+                case "ul" :
+                    var first = true;
+                    foreach(var li in x.Elements()) {
+                        if (!first) sb.Append(",");
+                        ConvertToJSon(li, sb);
+                        first = false;
+                    }
+                    break;
+                case "li":
+                    var name = x.Element("h1").Value;
+                    var value = x.Element("span").Value;
+
+                    sb.AppendFormat("\"name\": \"{0}\", ", FormatJsonValue(name));
+                    sb.AppendFormat("\"value\": \"{0}\"", FormatJsonValue(value));
+
+                    var ul = x.Element("ul");
+                    if (ul != null && ul.Descendants().Any()) {
+                        sb.Append(", \"children\": [");
+                        first = true;
+                        foreach (var li in ul.Elements()) {
+                            sb.Append(first ? "{ " : ", {");
+                            ConvertToJSon(li, sb);
+                            sb.Append(" }");
+                            first = false;
+                        }
+                        sb.Append("]");
+                    }
+
+                    break;
+            }
+        }
+
+        private static string FormatJsonValue(string value) {
+            // replace " by \" in json strings
+            return value.Replace(@"\", @"\\").Replace("\"", @"\""").Replace("\r\n", @"\n").Replace("\r", @"\n").Replace("\n", @"\n");
+        }
+
+        private static string FormatShapeFilename(string shape, string shapeType, string displayType, string themePrefix, string extension) {
+
+            if (!String.IsNullOrWhiteSpace(displayType)) {
+                if (shape.StartsWith(shapeType + "_" + displayType)) {
+                    shape = shapeType + shape.Substring(shapeType.Length + displayType.Length + 1) + "_" + displayType;
+                }
+            }
+
+            return themePrefix + "/Views/" + shape.Replace("__", "-").Replace("_", ".") + extension;
+        }
+
     }
 }

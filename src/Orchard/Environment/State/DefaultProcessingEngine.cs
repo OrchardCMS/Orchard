@@ -11,12 +11,13 @@ using Orchard.Logging;
 namespace Orchard.Environment.State {
     public class DefaultProcessingEngine : Component, IProcessingEngine {
         private readonly IShellContextFactory _shellContextFactory;
+        private readonly Func<IOrchardHost> _orchardHost;
         private readonly IList<Entry> _entries = new List<Entry>();
 
 
-        public DefaultProcessingEngine(
-            IShellContextFactory shellContextFactory) {
+        public DefaultProcessingEngine(IShellContextFactory shellContextFactory, Func<IOrchardHost> orchardHost) {
             _shellContextFactory = shellContextFactory;
+            _orchardHost = orchardHost;
         }
 
         public string AddTask(ShellSettings shellSettings, ShellDescriptor shellDescriptor, string eventName, Dictionary<string, object> parameters) {
@@ -67,6 +68,12 @@ namespace Orchard.Environment.State {
         }
 
         private void Execute(Entry entry) {
+            // Force reloading extensions if there were extensions installed
+            // See http://orchard.codeplex.com/workitem/17465
+            if (entry.MessageName == "IRecipeSchedulerEventHandler.ExecuteWork") {
+                var ctx = _orchardHost().GetShellContext(entry.ShellSettings);
+            }
+
             var shellContext = _shellContextFactory.CreateDescribedContext(entry.ShellSettings, entry.ShellDescriptor);
             using (shellContext.LifetimeScope) {
                 using (var standaloneEnvironment = shellContext.LifetimeScope.CreateWorkContextScope()) {

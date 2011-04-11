@@ -7,11 +7,11 @@
     Style.Require("Admin");
     Script.Require("ShapesBase");
 
-    Layout.Title = T("Manage Comments").ToString();
+    Layout.Title = T("Comments").ToString();
 }
 
 @using(Html.BeginFormAntiForgeryPost()) { 
-    @Html.ValidationSummary() 
+    @Html.ValidationSummary()
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">

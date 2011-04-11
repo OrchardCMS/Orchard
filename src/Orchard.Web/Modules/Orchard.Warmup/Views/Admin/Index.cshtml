@@ -2,12 +2,13 @@
 @using Orchard.Utility.Extensions;
 @using Orchard.Warmup.Models;
 
-@{ Layout.Title = T("Warmup").ToString(); }
+@{ Layout.Title = T("Settings").ToString(); }
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
 
 <fieldset>
+    <legend>@T("Warmup")</legend>
     <div>
         <label for="@Html.FieldIdFor(m => m.Urls)">@T("Urls for which static warmup pages will be generated")</label>
         @Html.TextAreaFor(m => m.Urls, new { @class = "textMedium" })
@@ -33,6 +34,5 @@
 <fieldset>
     <button class="primaryAction" name="submit" value="@T("Save")" type="submit">@T("Save")</button>
     <button class="primaryAction" name="submit.Generate" value="@T("Save and generate")" type="submit">@T("Save and generate")</button>
-    <button class="primaryAction" name="submit.Extract" value="@T("Extract resources")" type="submit">@T("Extract resources")</button>
 </fieldset>    
 }

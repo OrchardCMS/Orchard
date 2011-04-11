@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0"?>
 <Orchard>
   <Recipe>
-    <Name>Minimal</Name>
-    <Description>A recipe providing the Orchard framework with limited end-user functionality that can be used during development.</Description>
+    <Name>Core</Name>
+    <Description>A recipe providing only the core Orchard framework, with limited end-user functionality. This is useful for development scenarios.</Description>
     <Author>The Orchard Team</Author>
     <WebSite>http://orchardproject.net</WebSite>
     <Tags>developer</Tags>

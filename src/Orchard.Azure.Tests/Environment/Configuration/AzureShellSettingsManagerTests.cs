@@ -40,6 +40,17 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
             Assert.That(settings.DataConnectionString, Is.EqualTo("something else"));
         }
 
+        [Test]
+        public void SettingsShouldBeOverwritable() {
+            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe", DataConnectionString = "something else" });
+            ShellSettingsManager.SaveSettings(new ShellSettings { Name = "Default", DataProvider = "SQLCe2", DataConnectionString = "something else2" });
+
+            var settings = ShellSettingsManager.LoadSettings().Single();
+            Assert.That(settings, Is.Not.Null);
+            Assert.That(settings.Name, Is.EqualTo("Default"));
+            Assert.That(settings.DataProvider, Is.EqualTo("SQLCe2"));
+            Assert.That(settings.DataConnectionString, Is.EqualTo("something else2"));
+        }
 
         [Test]
         public void MultipleFilesCanBeDetected() {

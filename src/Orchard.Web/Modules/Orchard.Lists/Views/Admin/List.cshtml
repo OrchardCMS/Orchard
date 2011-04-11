@@ -7,7 +7,7 @@
 	
     string createLinkText = string.IsNullOrEmpty(Model.ContainerItemContentType) ? T("Create New Content").ToString() : T("Create New {0}", Model.ContainerItemContentType).ToString();
     
-    Layout.Title = T("Manage Content for {0}", Model.ContainerDisplayName);
+    Layout.Title = T("Manage {0}", Model.ContainerDisplayName);
 
     var lists = ((IEnumerable<ContentItem>)Model.OtherLists).Select(
         contentItem => new SelectListItem {
@@ -26,18 +26,21 @@
 @Display.Parts_Container_Manage(ContainerDisplayName: Model.ContainerDisplayName, ContainerContentType: Model.ContainerContentType, ContainerId: containerId)
 <div class="manage">
     @Html.ActionLink(createLinkText, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter, ContainerId = containerId, ReturnUrl = Url.Action("List", "Admin", new { Area = "Orchard.Lists", ContainerId = containerId }) }, new { @class = "button primaryAction" })
+
+    @Html.ActionLink(T("Choose Items").ToString(), "Choose", new { TargetContainerId = (int)Model.ContainerId, Area = "Orchard.Lists" }, new { @class = "button primaryAction" })
 </div>
 
 @using (Html.BeginFormAntiForgeryPost()) {
+    var options = (ContentOptions) Model.Options;
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="publishActions" name="Options.BulkAction">
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.RemoveFromList, T("Remove from List").ToString())
-            @Html.SelectOption((ContentsBulkAction)Model.Options.BulkAction, ContentsBulkAction.MoveToList, T("Move to List...").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.Remove, T("Delete").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.RemoveFromList, T("Remove from List").ToString())
+            @Html.SelectOption(options.BulkAction, ContentsBulkAction.MoveToList, T("Move to List...").ToString())
         </select>
 		@Html.DropDownList("TargetContainerId", lists, new { id = "TargetContainerId" })
         <button type="submit" name="submit.BulkEdit" value="yes">@T("Apply")</button>
@@ -58,13 +61,15 @@
         </select>
         <button type="submit" name="submit.Filter" value="yes please">@T("Apply")</button>
     </fieldset>
-    <fieldset class="contentItems bulk-items">
-	@if ((int)Model.ContentItems.Items.Count == 0) {
-		@T("The '{0}' {1} has no content items.", Model.ContainerDisplayName, Model.ContainerContentType)
+
+	if ((int)Model.ContentItems.Items.Count == 0) {
+		<div class="message info">@T("The '{0}' {1} has no content items.", Model.ContainerDisplayName, Model.ContainerContentType)</div>
 	}
 	else {
+        <fieldset class="contentItems bulk-items">
 		@Display(Model.ContentItems)
+        </fieldset>
 	}
-    </fieldset>
+
 @Display(Model.Pager)
 }

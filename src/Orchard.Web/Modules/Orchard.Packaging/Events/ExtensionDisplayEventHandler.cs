@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
@@ -26,7 +29,7 @@ namespace Orchard.Packaging.Events {
 
         public Localizer T { get; set; }
 
-        public IEnumerable<string> Displaying(ExtensionDescriptor extensionDescriptor) {
+        public IEnumerable<string> Displaying(ExtensionDescriptor extensionDescriptor, RequestContext requestContext) {
             // Get status from background task state or directly
             _backgroundPackageUpdateStatus.Value =
                 _backgroundPackageUpdateStatus.Value ??
@@ -37,7 +40,12 @@ namespace Orchard.Packaging.Events {
 
             if (updatePackageEntry != null) {
                 if (updatePackageEntry.NewVersionToInstall != null) {
-                    yield return T("Version {0} is available.", updatePackageEntry.NewVersionToInstall.Version).ToString();
+                    UrlHelper urlHelper = new UrlHelper(requestContext);
+                    yield return T("Version {0} is available (See <a href=\"{1}\">Updates</a>).", updatePackageEntry.NewVersionToInstall.Version,
+                                    urlHelper.Action(DefaultExtensionTypes.IsTheme(updatePackageEntry.ExtensionsDescriptor.ExtensionType)
+                                            ? "ThemesUpdates"
+                                            : "ModulesUpdates",
+                                            "GalleryUpdates")).ToString();
                 }
             }
         }

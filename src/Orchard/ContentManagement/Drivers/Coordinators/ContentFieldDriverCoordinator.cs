@@ -39,6 +39,10 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }
         }
 
+        public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
+            _drivers.Invoke(driver => driver.GetContentItemMetadata(context), Logger);
+        }
+
         public override void BuildDisplay(BuildDisplayContext context) {
             _drivers.Invoke(driver => {
                 var result = driver.BuildDisplayShape(context);

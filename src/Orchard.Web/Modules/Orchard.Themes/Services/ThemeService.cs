@@ -10,6 +10,7 @@ using Orchard.Environment.Features;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.UI.Notify;
 
 namespace Orchard.Themes.Services {
     [UsedImplicitly]
@@ -21,11 +22,14 @@ namespace Orchard.Themes.Services {
         private readonly ICacheManager _cacheManager;
 
         public ThemeService(
+            IOrchardServices orchardServices,
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
             IEnumerable<IThemeSelector> themeSelectors,
             IVirtualPathProvider virtualPathProvider,
             ICacheManager cacheManager) {
+
+            Services = orchardServices;
 
             _extensionManager = extensionManager;
             _featureManager = featureManager;
@@ -33,10 +37,15 @@ namespace Orchard.Themes.Services {
             _virtualPathProvider = virtualPathProvider;
             _cacheManager = cacheManager;
 
+            if (_featureManager.FeatureDependencyNotification == null) {
+                _featureManager.FeatureDependencyNotification = GenerateWarning;
+            }
+
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
+        public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
@@ -145,6 +154,25 @@ namespace Orchard.Themes.Services {
             }
 
             return projectPath;
+        }
+
+        private void GenerateWarning(string messageFormat, string featureName, IEnumerable<string> featuresInQuestion) {
+            if (featuresInQuestion.Count() < 1)
+                return;
+
+            Services.Notifier.Warning(T(
+                messageFormat,
+                featureName,
+                featuresInQuestion.Count() > 1
+                    ? string.Join("",
+                                  featuresInQuestion.Select(
+                                      (fn, i) =>
+                                      T(i == featuresInQuestion.Count() - 1
+                                            ? "{0}"
+                                            : (i == featuresInQuestion.Count() - 2
+                                                   ? "{0} and "
+                                                   : "{0}, "), fn).ToString()).ToArray())
+                    : featuresInQuestion.First()));
         }
     }
 }

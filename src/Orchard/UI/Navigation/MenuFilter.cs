@@ -192,7 +192,7 @@ namespace Orchard.UI.Navigation {
         /// <param name="menuItem">The menu item to build the shape for.</param>
         /// <returns>The menu item shape.</returns>
         protected dynamic BuildMenuItemShape(dynamic shapeFactory, dynamic parentShape, dynamic menu, MenuItem menuItem) {
-            return shapeFactory.MenuItem()
+            var menuItemShape = shapeFactory.MenuItem()
                 .Text(menuItem.Text)
                 .IdHint(menuItem.IdHint)
                 .Href(menuItem.Href)
@@ -203,6 +203,11 @@ namespace Orchard.UI.Navigation {
                 .Item(menuItem)
                 .Menu(menu)
                 .Parent(parentShape);
+
+            foreach (var className in menuItem.Classes)
+                menuItemShape.Classes.Add(className);
+
+            return menuItemShape;
         }
 
         /// <summary>
@@ -214,7 +219,7 @@ namespace Orchard.UI.Navigation {
         /// <param name="menuItem">The menu item to build the shape for.</param>
         /// <returns>The menu item shape.</returns>
         protected dynamic BuildLocalMenuItemShape(dynamic shapeFactory, dynamic parentShape, dynamic menu, MenuItem menuItem) {
-            return shapeFactory.LocalMenuItem()
+            var menuItemShape = shapeFactory.LocalMenuItem()
                 .Text(menuItem.Text)
                 .IdHint(menuItem.IdHint)
                 .Href(menuItem.Href)
@@ -225,6 +230,11 @@ namespace Orchard.UI.Navigation {
                 .Item(menuItem)
                 .Menu(menu)
                 .Parent(parentShape);
+
+            foreach (var className in menuItem.Classes)
+                menuItemShape.Classes.Add(className);
+
+            return menuItemShape;
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) { }

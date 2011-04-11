@@ -149,6 +149,8 @@
     <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
     <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
     <Compile Include="Media\Services\MediaServiceTests.cs" />
+    <Compile Include="Packaging\Services\FolderUpdaterTests.cs" />
+    <Compile Include="Packaging\Services\PackageInstallerTests.cs" />
     <Compile Include="Recipes\RecipeHandlers\ModuleRecipeHandlerTest.cs" />
     <Compile Include="Recipes\RecipeHandlers\ThemeRecipeHandlerTest.cs" />
     <Compile Include="Recipes\Services\RecipeManagerTests.cs" />

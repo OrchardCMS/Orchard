@@ -128,7 +128,7 @@
 
             //make sure the placeholder value is not taken as the input value when submitting forms
             $("form").live("submit", function () {
-               $(":input[placeholder].placeholderd").val("");
+                $(":input[placeholder].placeholderd").val("");
             });
 
             return _this;
@@ -137,10 +137,12 @@
             var _this = $(this);
             var _controllees = $("[data-controllerid=" + _this.attr("id") + "]");
             var _controlleesAreHidden = _controllees.is(":hidden");
-            if (_this.is(":checked") && _controlleesAreHidden) {
-                _controllees.hide(); // <- unhook this when the following comment applies
-                $(_controllees.show()[0]).find("input").focus(); // <- aaaand a slideDown there...eventually
-            } else if (!(_this.is(":checked") && _controlleesAreHidden)) {
+            if (_this.is(":checked")) {
+                if (_controlleesAreHidden) {
+                    _controllees.hide(); // <- unhook this when the following comment applies
+                    $(_controllees.show()[0]).find("input").focus(); // <- aaaand a slideDown there...eventually
+                }
+            } else if (!_controlleesAreHidden) {
                 //_controllees.slideUp(200); <- hook this back up when chrome behaves, or when I care less...or when chrome behaves
                 _controllees.hide()
             }

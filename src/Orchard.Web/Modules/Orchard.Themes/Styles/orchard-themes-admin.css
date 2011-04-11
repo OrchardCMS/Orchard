@@ -1,31 +1,23 @@
-﻿#currentTheme .themePreviewImage {
+﻿/*button[title="Disable"], button[title="Enable"]
+{
+    display:none;
+}*/
+#currentTheme .themePreviewImage {
     float: left;
     margin-right: 20px;
 }
 #installedBar {
     clear: both;
-    border-bottom-width: thin;
-    border-bottom-style: solid;
-    border-bottom-color: #E4E5E6;
-    height: 50px;
+    border-bottom:1px solid #E4E5E6;
+    height: 36px;
     margin: 10px 0 10px 0;
-}
-#otherActionsBar {
-    clear: both;
-    border-top-width: thin;
-    border-top-style: solid;
-    border-top-color: #E4E5E6;
-    margin: 10px 0 0;
-    padding: 10px 0 0;
 }
 #installedBar h3 {
     float: left;
-    padding-top: 10px;
 }
-#installedBar p a {
-    color: #3A822E;
+#installedBar a {
     float: right;
-    padding-top: 20px;
+    padding-top: 10px;
 }
 .templates li {
     margin:.8em;

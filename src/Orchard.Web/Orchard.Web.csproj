@@ -144,9 +144,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Orchard.Startup\Orchard.Startup.csproj">
+    <ProjectReference Include="..\Orchard.Startup\Orchard.WarmupStarter.csproj">
       <Project>{5C0D5249-AEF5-4BB6-8F5F-057B91AC2D7A}</Project>
-      <Name>Orchard.Startup</Name>
+      <Name>Orchard.WarmupStarter</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
@@ -173,6 +173,31 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target> -->
+  <PropertyGroup>
+    <CopyAllFilesToSingleFolderForPackageDependsOn>    
+      CustomCollectFiles;    
+      $(CopyAllFilesToSingleFolderForPackageDependsOn);  
+    </CopyAllFilesToSingleFolderForPackageDependsOn>
+  </PropertyGroup>
+  <Target Name="CustomCollectFiles">
+    <ItemGroup>
+      <Orchard-Web-Bins Include="bin\*" />
+      <SqlCeBinariesx86 Include="..\..\lib\sqlce\x86\**\*" />
+      <SqlCeBinariesx64 Include="..\..\lib\sqlce\amd64\**\*" />
+      <_CustomFiles Include="Media\**\*;App_Data\**\*;Modules\**\*;Themes\**\*;Core\**\*" Exclude="**\obj\**;@(Orchard-Web-Bins -> '**\%(Filename)%(Extension)');**\*.csproj.user;**\*.hg*" />
+      <FilesForPackagingFromProject Include="%(_CustomFiles.Identity)">
+        <DestinationRelativePath>%(RelativeDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+      <_SqlCeBinariesx86Files Include="@(SqlCeBinariesx86);" />
+      <FilesForPackagingFromProject Include="%(_SqlCeBinariesx86Files.Identity)">
+        <DestinationRelativePath>bin\x86\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+      <_SqlCeBinariesx64Files Include="@(SqlCeBinariesx64);" />
+      <FilesForPackagingFromProject Include="%(_SqlCeBinariesx64Files.Identity)">
+        <DestinationRelativePath>bin\amd64\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
+      </FilesForPackagingFromProject>
+    </ItemGroup>
+  </Target>
   <Target Name="CopySqlCeBinaries">
     <ItemGroup>
       <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\**\*" />

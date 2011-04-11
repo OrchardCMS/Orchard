@@ -14,6 +14,7 @@
     <AssemblyName>Orchard.Widgets</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -80,9 +81,13 @@
     <Content Include="Content\Admin\images\moveup.gif" />
     <Content Include="Content\Admin\images\movedown.gif" />
     <Content Include="Module.txt" />
+    <Content Include="Styles\images\all-zones-on.gif" />
+    <Content Include="Styles\images\all-zones.gif" />
     <Content Include="Styles\images\arrows.png" />
     <Content Include="Styles\images\eye.png" />
     <Content Include="Styles\images\menu.widgets.png" />
+    <Content Include="Styles\images\widget-zones-on.gif" />
+    <Content Include="Styles\images\widget-zones.gif" />
     <Content Include="Styles\menu.widgets-admin.css" />
     <Content Include="Styles\orchard-widgets-admin.css" />
     <Content Include="Views\Web.config" />
@@ -120,7 +125,6 @@
     <Content Include="Views\Widget.Edit.cshtml" />
     <Content Include="Views\Widget.cshtml" />
     <Content Include="Views\Widget.ControlWrapper.cshtml" />
-    <Content Include="Views\Content-WidgetPage.cshtml" />
     <Content Include="Views\Widget.Wrapper.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -159,7 +163,10 @@
     <Content Include="Views\WidgetLayerVisibility.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\WidgetPlacement.Zones.cshtml" />
+    <Content Include="Views\WidgetPlacement.Zones.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WidgetPlacement.Orphans.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

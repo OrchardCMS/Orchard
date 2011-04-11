@@ -1,0 +1,98 @@
+﻿<div id="shape-tracing-container"> 
+    <div id="shape-tracing-resize-handle" ></div>
+    <div id="shape-tracing-toolbar">
+        <div id="shape-tracing-toolbar-switch"></div>
+    </div>
+    <div id="shape-tracing-window">
+        <div id="shape-tracing-window-tree"></div>
+        <div id="shape-tracing-window-content">
+            <ul id="shape-tracing-tabs">
+                <li id="shape-tracing-tabs-shape" class="selected first">@T("Shape")</li>
+                <li id="shape-tracing-tabs-model" class="middle">@T("Model")</li>
+                <li id="shape-tracing-tabs-placement" class="middle">@T("Placement")</li>
+                <li id="shape-tracing-tabs-template" class="middle">@T("Template")</li>
+                <li id="shape-tracing-tabs-html" class="last">@T("HTML")</li>
+            </ul>
+            <div id="shape-tracing-breadcrumb"></div>
+            <div id="shape-tracing-meta-content"></div>
+        </div>
+    </div>
+</div>
+<div id="shape-tracing-container-ghost"></div>
+<div id="shape-tracing-overlay"></div>
+
+<script id="shape-tracing-tabs-shape-template" type="text/x-jquery-tmpl">
+    <div class="shape grid-display">
+        <ul class="properties">
+            <li class="sgd-s"><div class="name">@T("Shape").Text</div><div class="value">${shape.type}</div></li>
+            <li class="sgd-t"><div class="name">@T("Active Template").Text</div><div class="value"><a id="activeTemplate" href="#">${shape.template}</a></div></li>
+            {{if shape.template != shape.originalTemplate}}
+            <li class="sgd-ot"><div class="name">@T("Original Template").Text Template</div><div class="value">${shape.originalTemplate}</div></li>
+            {{/if}}
+            <li class="sgd-d"><div class="name">@T("Display Type").Text</div><div class="value">${shape.displayType}</div></li>
+            <li class="sgd-a"><div class="name">@T("Alternate ({0})", "${shape.alternates.length}").Text</div>
+                <div class="value">&nbsp;</div>
+                <ul>
+                {{each shape.alternates}}
+                    <li>
+                        <div class="name">
+                        @using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Alternate", new { Area = "Orchard.DesignerTools" }), FormMethod.Post, new { @class = "inline link" }))
+                        { 
+                            @Html.Hidden("Alternate", "${$value.alternate}")
+                            @Html.Hidden("Template", "${$value.template}")
+                            @Html.Hidden("ReturnUrl", "${$value.returnUrl}")
+                            <button type="submit" class="create-template">@T("Create").Text</button>
+                        }
+                        </div>
+                        <div class="value">${$value.filename}</div>
+                    </li>
+                {{/each}}
+                </ul>
+            </li>
+            <li class="sgd-w"><div class="name">@T("Wrappers ({0})", "${shape.wrappers.length}")</div>
+                <div class="value">&nbsp;</div>
+                <ul>
+                {{each shape.wrappers}}
+                    <li><div class="name">&nbsp;</div><div class="value">${$value.filename}</div></li>
+                {{/each}}
+                </ul>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script id="shape-tracing-tabs-model-template" type="text/x-jquery-tmpl">
+    <div class="model grid-display">
+        <ul>{{tmpl "#shape-tracing-tabs-model-node-template"}}</ul>
+    </div>
+</script>
+
+<script id="shape-tracing-tabs-model-node-template" type="text/x-jquery-tmpl">
+    <li>
+        <div class="name">${name}</div>
+        <div class="value">${value}</div>
+        {{if children}}
+            <ul style="display:none">
+                {{tmpl(children) "#shape-tracing-tabs-model-node-template"}}
+            </ul>
+        {{/if}}
+    </li>
+</script>
+
+<script id="shape-tracing-tabs-placement-template" type="text/x-jquery-tmpl">
+    <div class="placement">
+        <textarea>${$data}</textarea>
+    </div>
+</script>
+
+<script id="shape-tracing-tabs-template-template" type="text/x-jquery-tmpl">
+    <div class="template">
+        <textarea>${$data}</textarea>
+    </div>
+</script>
+
+<script id="shape-tracing-tabs-html-template" type="text/x-jquery-tmpl">
+    <div class="html">
+        <textarea>${$data}</textarea>
+    </div>
+</script>

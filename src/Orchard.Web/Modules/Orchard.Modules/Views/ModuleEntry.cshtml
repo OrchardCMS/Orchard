@@ -9,7 +9,7 @@
  @if (Model.ContentPart.Notifications != null && Model.ContentPart.Notifications.Count > 0) {
             <div class="notifications">
             @foreach (string notification in Model.ContentPart.Notifications) {
-                <h5>@notification</h5>
+                <h5>@Html.Raw(notification)</h5>
             }
             </div>
         }

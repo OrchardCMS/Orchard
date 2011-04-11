@@ -10,7 +10,7 @@
             <h2>@Model.Name</h2>
         </div>
         <div>
-            <label for="RequestUrlHost">@T("Host")</label>
+            <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
             @Html.TextBoxFor(m => m.RequestUrlHost, new {@class = "textMedium"})
             <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
         </div>

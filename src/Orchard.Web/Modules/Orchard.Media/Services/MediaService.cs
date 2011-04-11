@@ -64,7 +64,7 @@ namespace Orchard.Media.Services {
                     Size = folder.GetSize(),
                     LastUpdated = folder.GetLastUpdated(),
                     MediaPath = folder.GetPath()
-                }).Where(f => !f.Name.Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase));
+                }).Where(f => !f.Name.Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Orchard.Media.Services {
                     LastUpdated = file.GetLastUpdated(),
                     Type = file.GetFileType(),
                     FolderName = relativePath
-                });
+                }).ToList();
         }
 
         /// <summary>
@@ -140,7 +140,10 @@ namespace Orchard.Media.Services {
             Argument.ThrowIfNullOrEmpty(newFileName, "newFileName");
 
             if (!FileAllowed(newFileName, false)) {
-                throw new ArgumentException(T("New file name {0} is not allowed", newFileName).ToString());
+                if (string.IsNullOrEmpty(Path.GetExtension(newFileName))) {
+                    throw new ArgumentException(T("New file name \"{0}\" is not allowed. Please provide a file extension.", newFileName).ToString());
+                }
+                throw new ArgumentException(T("New file name \"{0}\" is not allowed.", newFileName).ToString());
             }
 
             _storageProvider.RenameFile(_storageProvider.Combine(folderPath, currentFileName), _storageProvider.Combine(folderPath, newFileName));
@@ -196,14 +199,30 @@ namespace Orchard.Media.Services {
                 return _storageProvider.GetPublicUrl(folderPath);
             }
 
-            if (FileAllowed(fileName, true)) {
-                string filePath = _storageProvider.Combine(folderPath, fileName);
-                _storageProvider.SaveStream(filePath, inputStream);
+            if (!FileAllowed(fileName, true)) {
+                var currentSite = _orchardServices.WorkContext.CurrentSite;
+                var mediaSettings = currentSite.As<MediaSettingsPart>();
 
-                return _storageProvider.GetPublicUrl(filePath);
+                throw new ArgumentException(T("Could not upload file {0}. Supported file types are {1}.", fileName, mediaSettings.UploadAllowedFileTypeWhitelist).Text);
             }
 
-            return null;
+            string filePath = _storageProvider.Combine(folderPath, fileName);
+            _storageProvider.SaveStream(filePath, inputStream);
+
+            return _storageProvider.GetPublicUrl(filePath);
+        }
+
+        /// <summary>
+        /// Verifies if a file is allowed based on its name and the policies defined by the black / white lists.
+        /// </summary>
+        /// <param name="postedFile">The posted file</param>
+        /// <returns>True if the file is allowed; false if otherwise.</returns>
+        public bool FileAllowed(HttpPostedFileBase postedFile) {
+            if (postedFile == null) {
+                return false;
+            }
+
+            return FileAllowed(postedFile.FileName, true);
         }
 
         /// <summary>
@@ -212,7 +231,7 @@ namespace Orchard.Media.Services {
         /// <param name="fileName">The file name of the file to validate.</param>
         /// <param name="allowZip">Boolean value indicating weather zip files are allowed.</param>
         /// <returns>True if the file is allowed; false if otherwise.</returns>
-        protected bool FileAllowed(string fileName, bool allowZip) {
+        public bool FileAllowed(string fileName, bool allowZip) {
             string localFileName = GetFileName(fileName);
             string extension = GetExtension(localFileName);
             if (string.IsNullOrEmpty(localFileName) || string.IsNullOrEmpty(extension)) {

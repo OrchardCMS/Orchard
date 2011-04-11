@@ -3,6 +3,11 @@ using Orchard.MultiTenancy.Annotations;
 
 namespace Orchard.MultiTenancy.ViewModels {
     public class TenantAddViewModel  {
+        public TenantAddViewModel() {
+            // define "Allow the tenant to set up the database" as default value 
+            DataProvider = "";
+        }
+
         [Required]
         public string Name { get; set; }
         public string RequestUrlHost { get; set; }

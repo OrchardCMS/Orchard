@@ -9,6 +9,12 @@ namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
         protected virtual string Prefix { get { return ""; } }
 
+        void IContentPartDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
+            var part = context.ContentItem.As<TContent>();
+            if (part != null)
+                GetContentItemMetadata(part, context.Metadata);
+        }
+
         DriverResult IContentPartDriver.BuildDisplay(BuildDisplayContext context) {
             var part = context.ContentItem.As<TContent>();
             return part == null ? null : Display(part, context.DisplayType, context.New);
@@ -16,16 +22,12 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentPartDriver.BuildEditor(BuildEditorContext context) {
             var part = context.ContentItem.As<TContent>();
-            return part == null
-                ? null
-                : !string.IsNullOrWhiteSpace(context.GroupInfoId) ? Editor(part, context.GroupInfoId, context.New) : Editor(part, context.New);
+            return part == null ? null : Editor(part, context.New);
         }
 
         DriverResult IContentPartDriver.UpdateEditor(UpdateEditorContext context) {
             var part = context.ContentItem.As<TContent>();
-            return part == null
-                ? null
-                : !string.IsNullOrWhiteSpace(context.GroupInfoId) ? Editor(part, context.Updater, context.GroupInfoId, context.New) : Editor(part, context.Updater, context.New);
+            return part == null ? null : Editor(part, context.Updater, context.New);
         }
 
         void IContentPartDriver.Importing(ImportContentContext context) {
@@ -52,11 +54,12 @@ namespace Orchard.ContentManagement.Drivers {
                 Exported(part, context);
         }
 
+        protected virtual void GetContentItemMetadata(TContent context, ContentItemMetadata metadata) { return; }
+
         protected virtual DriverResult Display(TContent part, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, dynamic shapeHelper) { return null; }
-        protected virtual DriverResult Editor(TContent part, string groupInfoId, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater, dynamic shapeHelper) { return null; }
-        protected virtual DriverResult Editor(TContent part, IUpdateModel updater, string groupInfoId, dynamic shapeHelper) { return null; }
+
         protected virtual void Importing(TContent part, ImportContentContext context) { return; }
         protected virtual void Imported(TContent part, ImportContentContext context) { return; }
         protected virtual void Exporting(TContent part, ExportContentContext context) { return; }

@@ -57,7 +57,7 @@ namespace Orchard.Utility {
                 }
 
                 int currentPriority = getPriority(list[i]);
-                if (currentPriority >= bestPriority) {
+                if (currentPriority > bestPriority) {
                     bestIndex = i;
                 }
             }

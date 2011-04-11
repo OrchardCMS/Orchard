@@ -7,6 +7,7 @@
     Script.Require("jQueryUI_Tabs").AtHead();
     Script.Require("jQueryUI_Resizable").AtHead();
     Script.Include("orchard-designertools-shapetracing.js").AtHead();
+    Script.Include("jquery.scrollTo-min.js").AtHead();
     Style.Include("orchard-designertools-shapetracing.css");
     
     // Code Mirror
@@ -19,6 +20,8 @@
     Script.Include("CodeMirror/css.js");
     Style.Include("CodeMirror/css.css");
     Script.Include("CodeMirror/htmlmixed.js");
+    
+    Script.Include("jquery.tmpl.min.js");
 }
 
 <script class="shape-tracing-wrapper" shape-id="@Model.ShapeId" shape-type="@Model.Metadata.Type" shape-hint="@Model.Hint"></script>@Display(Model.Metadata.ChildContent)<script class="shape-tracing-wrapper" end-of="@Model.ShapeId"></script>
@@ -32,11 +35,11 @@
                 DisplayType: Model.Metadata.DisplayType, 
                 Position: Model.Metadata.Position, 
                 PlacementSource: Model.Metadata.PlacementSource, 
-                Dump: Model._Dump, 
                 PlacementContent: Model.PlacementContent, 
                 Alternates: Model.Metadata.Alternates, 
                 Wrappers: Model.Metadata.Wrappers, 
                 ChildContent: Model.Metadata.ChildContent,
-                ShapeId: Model.ShapeId
+                ShapeId: Model.ShapeId,
+                Dump: Model._Dump
         ));
     }

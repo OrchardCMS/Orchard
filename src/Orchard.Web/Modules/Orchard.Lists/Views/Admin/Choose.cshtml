@@ -8,14 +8,14 @@
 
     var targetContainers = ((IEnumerable<ContentItem>)Model.Containers).Select(
         contentItem => new SelectListItem {
-            Text = T("Move to {0}", contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText).ToString(),
+            Text = T("Move to {0}", contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText ?? contentItem.ContentType).ToString(),
             Value = contentItem.Id.ToString(System.Globalization.CultureInfo.InvariantCulture),
 			Selected = contentItem.Id == targetContainerId
         }).ToList();
 
     var sourceContainers = ((IEnumerable<ContentItem>)Model.Containers).Select(
         contentItem => new SelectListItem {
-            Text = contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText,
+            Text = contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText ?? contentItem.ContentType,
             Value = contentItem.Id.ToString(System.Globalization.CultureInfo.InvariantCulture),
 			Selected = contentItem.Id == sourceContainerId
         }).ToList();
@@ -50,13 +50,15 @@
         <button type="submit" name="submit.MoveTo" value="yes">@T("Apply")</button>
 	</div>
 
-    <fieldset class="contentItems bulk-items">
-	@if ((int)Model.ContentItems.Items.Count == 0) {
-		@T("There are no content items.")
+    
+	if ((int)Model.ContentItems.Items.Count == 0) {
+		<div class="message info">@T("There are no content items.")</div>
 	}
 	else {
+    <fieldset class="contentItems bulk-items">
 		@Display(Model.ContentItems)
+     </fieldset>
 	}
-    </fieldset>
+
 @Display(Model.Pager)
 }

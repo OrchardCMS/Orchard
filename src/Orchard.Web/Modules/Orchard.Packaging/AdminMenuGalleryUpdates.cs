@@ -23,8 +23,11 @@ namespace Orchard.Packaging {
         }
 
         public void GetNavigation(NavigationBuilder builder) {
-            var modulesCaption = T.Plural("Updates", "Updates ({0})", GetUpdateCount(DefaultExtensionTypes.Module));
-            var themesCaption = T.Plural("Updates", "Updates ({0})", GetUpdateCount(DefaultExtensionTypes.Theme));
+            int? modulesCount = GetUpdateCount(DefaultExtensionTypes.Module);
+            var modulesCaption = modulesCount == null ? T("Updates") : T("Updates ({0})", modulesCount);
+
+            int? themesCount = GetUpdateCount(DefaultExtensionTypes.Theme);
+            var themesCaption = modulesCount == null ? T("Updates") : T("Updates ({0})", themesCount);
 
             builder
                 .Add(T("Modules"), menu => menu
@@ -33,22 +36,22 @@ namespace Orchard.Packaging {
                     .Add(themesCaption, "8", item => Describe(item, "ThemesUpdates", "GalleryUpdates", true)));
         }
 
-        int GetUpdateCount(string extensionType) {
+        private int? GetUpdateCount(string extensionType) {
             try {
                 // Admin menu should never block, so simply return the result from the background task
                 if (_backgroundPackageUpdateStatus.Value == null)
-                    return 0;
+                    return null;
 
                 return _backgroundPackageUpdateStatus.Value.Entries.Count(updatePackageEntry =>
                     updatePackageEntry.NewVersionToInstall != null &&
                         updatePackageEntry.ExtensionsDescriptor.ExtensionType == extensionType);
             }
             catch {
-                return 0;
+                return null;
             }
         }
 
-        static NavigationItemBuilder Describe(NavigationItemBuilder item, string actionName, string controllerName, bool localNav) {
+        private static NavigationItemBuilder Describe(NavigationItemBuilder item, string actionName, string controllerName, bool localNav) {
             item = item.Action(actionName, controllerName, new { area = "Orchard.Packaging" }).Permission(StandardPermissions.SiteOwner);
             if (localNav)
                 item = item.LocalNav();

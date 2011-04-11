@@ -30,9 +30,12 @@
             if (layersWidgets.length > 0) {
                 layer = $("<li class=\"widgets-" + ((layers[i].id == currentLayerId && "this") || "other") + "-layer\">" + layers[i].name + "</li>");
                 layer.data("widgets", layersWidgets);
+                layersWidgets.each(function(){
+                    $(this).data("widgets-vis-control", layer);
+                });
             }
             else {
-                layer = $("<li class=\"widgets-empty-layer\">" + layers[i].name + " <span>[empty]<span></li>");
+                layer = $("<li class=\"widgets-empty-layer" + ((layers[i].id == currentLayerId && " widgets-this-layer") || "") + "\">" + layers[i].name + " <span>[empty]</span></li>");
             }
 
             visContainer.append(layer);
@@ -50,6 +53,11 @@
         });
         $("#widgets-layer-visibility .widgets-other-layer").live("hover", function() {
             $(this).data("widgets").toggleClass("on");
+        });
+        $("#widgets-zones .widgets-other-layer").live("hover", function() {
+            var layer = $(this).data("widgets-vis-control");
+            layer.toggleClass("on");
+            layer.data("widgets").toggleClass("on");
         });
 
         visWrapper.append(visContainer);
