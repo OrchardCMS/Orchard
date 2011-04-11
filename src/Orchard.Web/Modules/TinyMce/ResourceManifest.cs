@@ -3,7 +3,9 @@ using Orchard.UI.Resources;
 namespace TinyMce {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
-            builder.Add().DefineScript("TinyMce").SetUrl("tiny_mce.js", "tiny_mce_src.js");
+            var manifest = builder.Add();
+            manifest.DefineScript("TinyMce").SetUrl("tiny_mce.js", "tiny_mce_src.js");
+            manifest.DefineScript("OrchardTinyMce").SetUrl("orchard-tinymce.js").SetDependencies("TinyMce");
         }
     }
 }

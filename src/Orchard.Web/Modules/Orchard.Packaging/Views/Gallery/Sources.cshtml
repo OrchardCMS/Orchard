@@ -1,7 +1,8 @@
 ﻿@model Orchard.Packaging.ViewModels.PackagingSourcesViewModel
 
-@{ Layout.Title = T("Gallery Feeds").ToString(); }
+@{ Layout.Title = T("Settings").ToString(); }
 
+<h2>@T("Gallery")</h2>
 <div class="manage">
     @Html.ActionLink(T("Add Feed").Text, "AddSource", new { }, new { @class = "button primaryAction" })
 </div>

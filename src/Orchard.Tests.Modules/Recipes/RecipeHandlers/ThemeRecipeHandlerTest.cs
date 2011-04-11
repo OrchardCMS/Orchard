@@ -26,6 +26,7 @@ using Orchard.Tests.DisplayManagement.Descriptors;
 using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Environment.Features;
 using Orchard.Tests.Stubs;
+using Orchard.Tests.UI.Navigation;
 using Orchard.Themes.Services;
 using IPackageManager = Orchard.Packaging.Services.IPackageManager;
 
@@ -60,6 +61,7 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             builder.RegisterInstance(_testVirtualPathProvider).As<IVirtualPathProvider>();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterType<ThemeService>().As<IThemeService>();
+            builder.RegisterType<StubOrchardServices>().As<IOrchardServices>();
             builder.RegisterType<StubSiteThemeService>().As<ISiteThemeService>();
             builder.RegisterType<ThemeRecipeHandler>();
             builder.RegisterSource(new EventsRegistrationSource());

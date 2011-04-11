@@ -38,15 +38,15 @@
     @if (Model.ContentPart.Enabled) {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Disable"), FormMethod.Post, new { @class = "inline link" })) {
             @Html.Hidden("themeName", (string)Model.ContentPart.Descriptor.Id)
-            <button type="submit" title="Disable">@T("Disable")</button>
+            <button type="submit" class="disable" title="Disable">@T("Disable")</button>
         }
     }
-	else {
+    else {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Enable"), FormMethod.Post, new { @class = "inline link" })) {
             @Html.Hidden("themeName", (string)Model.ContentPart.Descriptor.Id)
-            <button type="submit" title="Enable">@T("Enable")</button>
+            <button type="submit" class="enable" title="Enable">@T("Enable")</button>
         }
-	}
+    }
 
     @if (Model.ContentPart.NeedsUpdate) {
         <span> | </span>

@@ -37,7 +37,7 @@ namespace Orchard.Users.Services {
         public ILogger Logger { get; set; }
 
         public bool VerifyUserUnicity(string userName, string email) {
-            string normalizedUserName = userName.ToLower();
+            string normalizedUserName = userName.ToLowerInvariant();
 
             if (_contentManager.Query<UserPart, UserPartRecord>()
                                    .Where(user => 
@@ -51,7 +51,7 @@ namespace Orchard.Users.Services {
         }
 
         public bool VerifyUserUnicity(int id, string userName, string email) {
-            string normalizedUserName = userName.ToLower();
+            string normalizedUserName = userName.ToLowerInvariant();
 
             if (_contentManager.Query<UserPart, UserPartRecord>()
                                    .Where(user =>
@@ -115,7 +115,7 @@ namespace Orchard.Users.Services {
         }
 
         public bool SendLostPasswordEmail(string usernameOrEmail, Func<string, string> createUrl) {
-            var lowerName = usernameOrEmail.ToLower();
+            var lowerName = usernameOrEmail.ToLowerInvariant();
             var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName || u.Email == lowerName).List().FirstOrDefault();
 
             if (user != null) {

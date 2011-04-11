@@ -21,7 +21,7 @@ namespace Orchard.Comments.Feeds {
             T = NullLocalizer.Instance;
         }
 
-        Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public void Populate(FeedContext context) {
             foreach (var feedItem in context.Response.Items.OfType<FeedItem<CommentPart>>()) {

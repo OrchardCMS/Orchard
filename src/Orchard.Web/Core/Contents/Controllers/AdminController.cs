@@ -12,11 +12,13 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
+using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
+using Orchard.Mvc.Html;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using Orchard.Settings;
@@ -126,43 +128,51 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("List")]
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
-            if (itemIds != null) {
-                switch (options.BulkAction) {
-                    case ContentsBulkAction.None:
-                        break;
-                    case ContentsBulkAction.PublishNow:
-                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content.")))
-                                return new HttpUnauthorizedResult();
+            try {
+                if (itemIds != null) {
+                    switch (options.BulkAction) {
+                        case ContentsBulkAction.None:
+                            break;
+                        case ContentsBulkAction.PublishNow:
+                            foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                                if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content."))) {
+                                    _transactionManager.Cancel();
+                                    return new HttpUnauthorizedResult();
+                                }
 
-                            _contentManager.Publish(item);
-                            Services.ContentManager.Flush();
-                        }
-                        Services.Notifier.Information(T("Content successfully published."));
-                        break;
-                    case ContentsBulkAction.Unpublish:
-                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content.")))
-                                return new HttpUnauthorizedResult();
+                                _contentManager.Publish(item);
+                            }
+                            Services.Notifier.Information(T("Content successfully published."));
+                            break;
+                        case ContentsBulkAction.Unpublish:
+                            foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                                if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content."))) {
+                                    _transactionManager.Cancel();
+                                    return new HttpUnauthorizedResult();
+                                }
 
-                            _contentManager.Unpublish(item);
-                            Services.ContentManager.Flush();
-                        }
-                        Services.Notifier.Information(T("Content successfully unpublished."));
-                        break;
-                    case ContentsBulkAction.Remove:
-                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content.")))
-                                return new HttpUnauthorizedResult();
+                                _contentManager.Unpublish(item);
+                            }
+                            Services.Notifier.Information(T("Content successfully unpublished."));
+                            break;
+                        case ContentsBulkAction.Remove:
+                            foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                                if (!Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content."))) {
+                                    _transactionManager.Cancel();
+                                    return new HttpUnauthorizedResult();
+                                }
 
-                            _contentManager.Remove(item);
-                            Services.ContentManager.Flush();
-                        }
-                        Services.Notifier.Information(T("Content successfully removed."));
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                                _contentManager.Remove(item);
+                            }
+                            Services.Notifier.Information(T("Content successfully removed."));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
+            }
+            catch {
+                _transactionManager.Cancel();
             }
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
@@ -287,6 +297,17 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
+            // store the previous route in case a back redirection is requested
+            string previousRoute = null;
+            if(contentItem.Has<RoutePart>() 
+                &&!string.IsNullOrWhiteSpace(returnUrl) 
+                && Url.IsLocalUrl(returnUrl)
+                // only if the original returnUrl is the content itself
+                && String.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase) 
+                ) {
+                previousRoute = contentItem.As<RoutePart>().Path;
+            }
+
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
@@ -295,6 +316,13 @@ namespace Orchard.Core.Contents.Controllers {
             }
 
             conditionallyPublish(contentItem);
+
+            // did the route change ?
+            if (!string.IsNullOrWhiteSpace(returnUrl) 
+                && previousRoute != null 
+                && !String.Equals(contentItem.As<RoutePart>().Path, previousRoute, StringComparison.OrdinalIgnoreCase)) {
+                returnUrl = Url.ItemDisplayUrl(contentItem);
+            }
 
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been saved.")

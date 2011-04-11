@@ -93,11 +93,11 @@ namespace Orchard.Themes.Commands {
 
             if (!_shellDescriptor.Features.Any(sf => sf.Name == theme.Id)) {
                 Context.Output.WriteLine(T("Enabling theme \"{0}\"...", themeName));
-                _themeService.EnableThemeFeatures(themeName);
+                _themeService.EnableThemeFeatures(theme.Id);
             }
 
             Context.Output.WriteLine(T("Activating theme \"{0}\"...", themeName));
-            _siteThemeService.SetSiteTheme(themeName);
+            _siteThemeService.SetSiteTheme(theme.Id);
 
             Context.Output.WriteLine(T("Theme \"{0}\" activated", themeName));
         }

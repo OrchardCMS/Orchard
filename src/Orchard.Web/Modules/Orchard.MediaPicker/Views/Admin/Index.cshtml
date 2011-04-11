@@ -11,6 +11,7 @@
     Script.Require("jQueryUI_Tabs").AtHead();
     Script.Include("MediaBrowser.js").AtHead();
 
+    SetMeta("X-UA-Compatible", "IE=edge,chrome=1");
     Style.Include("~/themes/theadmin/styles/site.css");
 	Style.Include("~/themes/theadmin/styles/ie.css").UseCondition("lte IE 8").SetAttribute("media", "screen, projection");
 	Style.Include("~/themes/theadmin/styles/ie6.css").UseCondition("lte IE 6").SetAttribute("media", "screen, projection");

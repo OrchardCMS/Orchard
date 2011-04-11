@@ -92,7 +92,8 @@ namespace Orchard.Themes.Controllers {
                             };
 
                             if (_extensionDisplayEventHandler != null) {
-                                foreach (string notification in _extensionDisplayEventHandler.Displaying(themeEntry.Descriptor)) {
+                                foreach (string notification in _extensionDisplayEventHandler.Displaying(themeEntry.Descriptor, ControllerContext.RequestContext))
+                                {
                                     themeEntry.Notifications.Add(notification);
                                 }
                             }

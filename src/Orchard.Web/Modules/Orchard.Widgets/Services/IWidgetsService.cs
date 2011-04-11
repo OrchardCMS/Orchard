@@ -14,6 +14,7 @@ namespace Orchard.Widgets.Services {
         IEnumerable<Tuple<string, string>> GetWidgetTypes();
         IEnumerable<string> GetWidgetTypeNames();
         IEnumerable<WidgetPart> GetWidgets();
+        IEnumerable<WidgetPart> GetOrphanedWidgets();
         IEnumerable<WidgetPart> GetWidgets(int layerId);
 
         WidgetPart GetWidget(int widgetId);

@@ -18,8 +18,11 @@
     @Display.ThemeEntry_Current(ContentPart: Model.CurrentTheme)
 }
 
-<div id="installedBar">
+<div id="installedBar" class="group">
     <h3>@T("Available")</h3>
+    @if (Model.InstallThemes) {
+    @Html.ActionLink(T("Install a theme from your computer").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)
+}
 </div>
 
 @if (Model.Themes == null || Model.Themes.Count() <= 0) {
@@ -30,8 +33,4 @@
             <li>@Display.ThemeEntry(ContentPart: themeEntry)</li>
         }
     </ul>
-}
-
-@if (Model.InstallThemes) {
-    <p id="otherActionsBar">@Html.ActionLink(T("Upload a theme").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</p>
 }

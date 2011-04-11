@@ -15,19 +15,12 @@
 
 @functions {
     public string InstallAction(PackagingEntry package) {
-        return Url.Action("Install", "GalleryUpdates", new {
+        return Url.Action("InstallGallery", "PackagingServices", new {
             area = "Orchard.Packaging",
             packageId = package.PackageId,
             version = package.Version,
             sourceId = package.Source.Id,
-            returnUrl = "ThemesUpdates"
-        });
-    }
-    public string UninstallAction(PackagingEntry package) {
-        return Url.Action("Uninstall", "GalleryUpdates", new {
-            area = "Orchard.Packaging",
-            packageId = package.PackageId,
-            returnUrl = "ThemesUpdates"
+            redirectUrl = HttpContext.Current.Request.RawUrl
         });
     }
 }
@@ -77,7 +70,7 @@
                                 @if (!string.IsNullOrEmpty(theme.NewVersionToInstall.ProjectUrl)) { <a href="@theme.NewVersionToInstall.ProjectUrl">@theme.NewVersionToInstall.ProjectUrl</a> } else { @T("Unknown").ToString() }
                             </li>
                             <li><div>&nbsp;&#124;&nbsp;@T("Rating: ")
-                                    <div class="ratings" style="width:@(15 * 5)px" title="@T("Ratings: {0} ({1})", theme.NewVersionToInstall.Rating, theme.NewVersionToInstall.RatingsCount)">
+                                    <div class="ratings" style="width:@(15 * 5)px" title="@T("Rating: {0} out of 5 ({1} total).", theme.NewVersionToInstall.Rating, theme.NewVersionToInstall.RatingsCount)">
                                         <div class="score" style="width:@(15 * (theme.NewVersionToInstall.Rating))px">&nbsp;</div>
                                     </div>
                                 </div>

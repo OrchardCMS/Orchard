@@ -1,4 +1,4 @@
-﻿@{ Layout.Title = T("Install a Module").ToString(); }
+﻿@{ Layout.Title = T("Install a module from your computer").ToString(); }
 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("InstallLocally", "PackagingServices", new { redirectUrl = HttpContext.Current.Request["returnUrl"] }), FormMethod.Post, new { enctype = "multipart/form-data" })) {
     Html.ValidationSummary();

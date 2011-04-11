@@ -8,7 +8,7 @@ namespace Orchard.Widgets {
 
         public void GetNavigation(NavigationBuilder builder) {
             builder.AddImageSet("widgets")
-                .Add(T("Widgets"), "10",
+                .Add(T("Widgets"), "5",
                     menu => menu.Add(T("Configure"), "0", item => item.Action("Index", "Admin", new { area = "Orchard.Widgets" })
                         .Permission(Permissions.ManageWidgets)));
         }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 using System.Xml.Linq;
 using Autofac;
 using Moq;
@@ -39,6 +41,7 @@ namespace Orchard.Tests.Modules.Users.Services {
         private ISessionFactory _sessionFactory;
         private ISession _session;
         private IContainer _container;
+        private CultureInfo _currentCulture;
 
 
         public class TestSessionLocator : ISessionLocator {
@@ -55,6 +58,7 @@ namespace Orchard.Tests.Modules.Users.Services {
 
         [TestFixtureSetUp]
         public void InitFixture() {
+            _currentCulture = Thread.CurrentThread.CurrentCulture;
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
@@ -66,7 +70,7 @@ namespace Orchard.Tests.Modules.Users.Services {
 
         [TestFixtureTearDown]
         public void TermFixture() {
-
+            Thread.CurrentThread.CurrentCulture = _currentCulture;
         }
 
         [SetUp]
@@ -121,6 +125,19 @@ namespace Orchard.Tests.Modules.Users.Services {
             Assert.That(result, Is.True);
             Assert.That(username, Is.EqualTo("foo"));
             Assert.That(validateByUtc, Is.GreaterThan(_clock.UtcNow));
+        }
+
+        [Test]
+        public void VerifyUserUnicityTurkishTest() {
+            CultureInfo turkishCulture = new CultureInfo("tr-TR");
+            Thread.CurrentThread.CurrentCulture = turkishCulture;
+
+            // Create user lower case
+            _membershipService.CreateUser(new CreateUserParams("admin", "66554321", "foo@bar.com", "", "", true));
+            _container.Resolve<IOrchardServices>().ContentManager.Flush();
+
+            // Verify unicity with upper case which with turkish coallition would yeld admin with an i without the dot and therefore generate a different user name
+            Assert.That(_userService.VerifyUserUnicity("ADMIN", "differentfoo@bar.com"), Is.False);
         }
     }
 }

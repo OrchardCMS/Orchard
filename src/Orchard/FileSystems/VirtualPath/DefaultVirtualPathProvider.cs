@@ -7,11 +7,11 @@ using System.Web.Hosting;
 
 namespace Orchard.FileSystems.VirtualPath {
     public class DefaultVirtualPathProvider : IVirtualPathProvider {
-        public string GetDirectoryName(string virtualPath) {
+        public virtual string GetDirectoryName(string virtualPath) {
             return Path.GetDirectoryName(virtualPath).Replace(Path.DirectorySeparatorChar, '/');
         }
 
-        public IEnumerable<string> ListFiles(string path) {
+        public virtual IEnumerable<string> ListFiles(string path) {
             return HostingEnvironment
                 .VirtualPathProvider
                 .GetDirectory(path)
@@ -20,7 +20,7 @@ namespace Orchard.FileSystems.VirtualPath {
                 .Select(f => ToAppRelative(f.VirtualPath));
         }
 
-        public IEnumerable<string> ListDirectories(string path) {
+        public virtual IEnumerable<string> ListDirectories(string path) {
             return HostingEnvironment
                 .VirtualPathProvider
                 .GetDirectory(path)
@@ -29,48 +29,71 @@ namespace Orchard.FileSystems.VirtualPath {
                 .Select(d => ToAppRelative(d.VirtualPath));
         }
 
-        public string Combine(params string[] paths) {
+        public virtual string Combine(params string[] paths) {
             return Path.Combine(paths).Replace(Path.DirectorySeparatorChar, '/');
         }
 
-        public string ToAppRelative(string virtualPath) {
+        public virtual string ToAppRelative(string virtualPath) {
             return VirtualPathUtility.ToAppRelative(virtualPath);
         }
 
-        public Stream OpenFile(string virtualPath) {
+        public virtual Stream OpenFile(string virtualPath) {
             return HostingEnvironment.VirtualPathProvider.GetFile(virtualPath).Open();
         }
 
-        public StreamWriter CreateText(string virtualPath) {
+        public virtual StreamWriter CreateText(string virtualPath) {
             return File.CreateText(MapPath(virtualPath));
         }
 
-        public Stream CreateFile(string virtualPath) {
+        public virtual Stream CreateFile(string virtualPath) {
             return File.Create(MapPath(virtualPath));
         }
 
-        public DateTime GetFileLastWriteTimeUtc(string virtualPath) {
+        public virtual DateTime GetFileLastWriteTimeUtc(string virtualPath) {
             return File.GetLastWriteTimeUtc(MapPath(virtualPath));
         }
 
-        public string MapPath(string virtualPath) {
+        public virtual string MapPath(string virtualPath) {
             return HostingEnvironment.MapPath(virtualPath);
         }
 
-        public bool FileExists(string virtualPath) {
+        public virtual bool FileExists(string virtualPath) {
+            return HostingEnvironment.VirtualPathProvider.FileExists(virtualPath);
+        }
+
+        public virtual bool TryFileExists(string virtualPath) {
             try {
-                return HostingEnvironment.VirtualPathProvider.FileExists(virtualPath);
-            } catch {
-                // Medium Trust or invalid mappings that fall outside the app folder
+                // Check if the path falls outside the root directory of the app
+                string directoryName = Path.GetDirectoryName(virtualPath);
+
+                int level = 0;
+                int stringLength = directoryName.Count();
+
+                for(int i = 0 ; i < stringLength ; i++) {
+                    if (directoryName[i] == '\\') {
+                        if (i < (stringLength - 2) && directoryName[i + 1] == '.' && directoryName[i + 2] == '.') {
+                            level--;
+                            i += 2;
+                        } else level++;
+                    }
+
+                    if (level < 0) {
+                        return false;
+                    }
+                }
+
+                return FileExists(virtualPath);
+            }
+            catch {
                 return false;
             }
         }
 
-        public bool DirectoryExists(string virtualPath) {
+        public virtual bool DirectoryExists(string virtualPath) {
             return HostingEnvironment.VirtualPathProvider.DirectoryExists(virtualPath);
         }
 
-        public void CreateDirectory(string virtualPath) {
+        public virtual void CreateDirectory(string virtualPath) {
             Directory.CreateDirectory(MapPath(virtualPath));
         }
     }

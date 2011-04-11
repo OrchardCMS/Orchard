@@ -36,7 +36,7 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         protected override void BuildEditorShape(BuildEditorContext context, ContentPart<TRecord> part) {
-            if (!string.IsNullOrWhiteSpace(_groupId) && !string.Equals(_groupId, context.GroupInfoId, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(_groupId, context.GroupId, StringComparison.OrdinalIgnoreCase))
                 return;
 
             var templateShape = context.New.EditorTemplate(TemplateName: _templateName, Model: part.Record, Prefix: _prefix);
@@ -44,7 +44,7 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         protected override void UpdateEditorShape(UpdateEditorContext context, ContentPart<TRecord> part) {
-            if (!string.IsNullOrWhiteSpace(_groupId) && !string.Equals(_groupId, context.GroupInfoId, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(_groupId, context.GroupId, StringComparison.OrdinalIgnoreCase))
                 return;
 
             context.Updater.TryUpdateModel(part.Record, _prefix, null, null);

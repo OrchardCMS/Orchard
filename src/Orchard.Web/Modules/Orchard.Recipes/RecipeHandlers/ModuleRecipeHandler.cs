@@ -17,27 +17,21 @@ namespace Orchard.Recipes.RecipeHandlers {
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IPackageManager _packageManager;
         private readonly IExtensionManager _extensionManager;
-        private readonly IFeatureManager _featureManager;
-        private readonly IDataMigrationManager _dataMigrationManager;
 
         public ModuleRecipeHandler(
             IPackagingSourceManager packagingSourceManager, 
             IPackageManager packageManager, 
-            IExtensionManager extensionManager,
-            IFeatureManager featureManager,
-            IDataMigrationManager dataMigrationManager) {
+            IExtensionManager extensionManager) {
             _packagingSourceManager = packagingSourceManager;
             _packageManager = packageManager;
             _extensionManager = extensionManager;
-            _featureManager = featureManager;
-            _dataMigrationManager = dataMigrationManager;
 
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
-        ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
 
         // <Module packageId="module1" [repository="somerepo"] version="1.1" />
         // install modules from feed.
@@ -69,6 +63,7 @@ namespace Orchard.Recipes.RecipeHandlers {
             // download and install module from the orchard feed or a custom feed if repository is specified.
             bool enforceVersion = version != null;
             bool installed = false;
+            PackagingEntry packagingEntry = null;
 
             var packagingSource = _packagingSourceManager.GetSources().FirstOrDefault();
             if (repository != null) {
@@ -76,15 +71,25 @@ namespace Orchard.Recipes.RecipeHandlers {
                 packagingSource = new PackagingSource {FeedTitle = repository, FeedUrl = repository};
             }
 
-            var packagingEntry = _packagingSourceManager.GetExtensionList(packagingSource,
-                packages => packages.Where(package =>
-                    package.PackageType.Equals(DefaultExtensionTypes.Module) &&
-                    package.Id.Equals(packageId, StringComparison.OrdinalIgnoreCase) &&
-                    (!enforceVersion || package.Version.Equals(version, StringComparison.OrdinalIgnoreCase))))
-                .FirstOrDefault();
+            if (enforceVersion) {
+                packagingEntry = _packagingSourceManager.GetExtensionList(false, packagingSource, 
+                    packages => packages.Where(package => 
+                        package.PackageType.Equals(DefaultExtensionTypes.Module) && 
+                        package.Id.Equals(packageId, StringComparison.OrdinalIgnoreCase) && 
+                        package.Version.Equals(version, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+            }
+            else {
+                packagingEntry = _packagingSourceManager.GetExtensionList(false, packagingSource, 
+                    packages => packages.Where(package => 
+                        package.PackageType.Equals(DefaultExtensionTypes.Module) && 
+                        package.Id.Equals(packageId, StringComparison.OrdinalIgnoreCase) && 
+                        package.IsLatestVersion)).FirstOrDefault();
+            }
 
             if (packagingEntry != null) {
-                _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/")); 
+                if (!ModuleAlreadyInstalled(packagingEntry.PackageId)) {
+                    _packageManager.Install(packagingEntry.PackageId, packagingEntry.Version, packagingSource.FeedUrl, HostingEnvironment.MapPath("~/")); 
+                }
                 installed = true;
             }
 
@@ -93,6 +98,13 @@ namespace Orchard.Recipes.RecipeHandlers {
             }
 
             recipeContext.Executed = true;
+        }
+
+        private bool ModuleAlreadyInstalled(string packageId) {
+            return _extensionManager.AvailableExtensions().Where(m => DefaultExtensionTypes.IsModule(m.ExtensionType))
+                .Any(module => module.Id.Equals(
+                    packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length), 
+                    StringComparison.OrdinalIgnoreCase));
         }
     }
 }

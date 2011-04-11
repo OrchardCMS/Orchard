@@ -49,7 +49,7 @@ namespace Orchard.Users.Services {
 
             user.Record.UserName = createUserParams.Username;
             user.Record.Email = createUserParams.Email;
-            user.Record.NormalizedUserName = createUserParams.Username.ToLower();
+            user.Record.NormalizedUserName = createUserParams.Username.ToLowerInvariant();
             user.Record.HashAlgorithm = "SHA1";
             SetPassword(user.Record, createUserParams.Password);
 
@@ -97,13 +97,13 @@ namespace Orchard.Users.Services {
         }
 
         public IUser GetUser(string username) {
-            var lowerName = username == null ? "" : username.ToLower();
+            var lowerName = username == null ? "" : username.ToLowerInvariant();
 
             return _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
         }
 
         public IUser ValidateUser(string userNameOrEmail, string password) {
-            var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLower();
+            var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLowerInvariant();
 
             var user = _orchardServices.ContentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
 

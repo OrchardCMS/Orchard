@@ -1,8 +1,22 @@
 ﻿@using Orchard.Utility.Extensions;
 
 @functions {
-    string FormatShapeFilename(string type, string themeId) {
-        return "~/Themes/" + themeId + "/Views/" + type.Replace("__", "-").Replace("_", ".") + ".cshtml";
+    string FormatShapeName(string shape) {
+        string shapeType = Model.ShapeType;
+        string displayType = Model.DisplayType;
+        
+        if(!String.IsNullOrWhiteSpace(displayType)) {
+            if(shape.StartsWith(shapeType + "_" + displayType)) {
+                shape = shapeType + shape.Substring(shapeType.Length + displayType.Length + 1) + "_" + displayType; 
+            }
+        }
+        
+        return shape.Replace("__", "-").Replace("_", ".");
+    }
+    
+    string FormatShapeFilename(string shape, string themeId) {
+        shape = FormatShapeName(shape);
+        return "~/Themes/" + themeId + "/Views/" + shape.Replace("__", "-").Replace("_", ".") + ".cshtml";
     }
     
     string RemoveBeacons(string htmlContent) {
@@ -15,89 +29,44 @@
         return regex.Replace(htmlContent, System.Environment.NewLine);
     }
 }
-<div class="shape-tracing-meta" shape-id-meta="@Model.ShapeId" style="display:none">
-    <ul class="shape-tracing-tabs">
-        <li class="shape selected first">Shape</li>
-        <li class="model middle">Model</li>
-        <li class="placement middle">Placement</li>
-        <li class="template middle">Template</li>
-        <li class="html last">HTML</li>
-    </ul>
 
-    <div class="shape-tracing-breadcrumb"></div>
-    <div class="shape-tracing-meta-content">
-        <div class="shape grid-display">
-            <ul class="properties">
-                <li class="sgd-s"><div class="name">Shape</div><div class="value">@Model.ShapeType</div></li>
-                <li class="sgd-t"><div class="name">Template</div><div class="value"><a href="#">@Model.Template</a></div></li>
-                @if(!Model.Template.Equals(Model.OriginalTemplate)) {
-                <li class="sgd-ot"><div class="name">Original Template</div><div class="value">@Model.OriginalTemplate</div></li>
-                }
-                <li class="sgd-d"><div class="name">Display Type</div><div class="value">@(String.IsNullOrEmpty((string)Model.DisplayType) ? T("n/a").Text : Model.DisplayType.ToString())</div></li>
-                <li class="sgd-po"><div class="name">Position</div><div class="value">@(String.IsNullOrEmpty((string)Model.Position) ? T("n/a").Text : Model.Position.ToString())</div></li>
-                <li class="sgd-pl"><div class="name">Placement</div><div class="value">@(String.IsNullOrEmpty((string)Model.PlacementSource) ? T("n/a").Text : Model.PlacementSource.ToString())</div></li>
-                <li class="sgd-a"><div class="name">Alternates (@Model.Alternates.Count)</div>
-                    <div class="value">&nbsp;</div>
-                    <ul>
-                    @foreach (var alternate in Model.Alternates)
-                    {
-                        var formatted = @FormatShapeFilename(alternate, WorkContext.CurrentTheme.Id);
-                        <li>
-                            <div class="name">
-                            @using (Html.BeginFormAntiForgeryPost(Url.Action("Create", "Alternate", new { Area = "Orchard.DesignerTools" }), FormMethod.Post, new { @class = "inline link" }))
-                            { 
-                                @Html.Hidden("Alternate", (string)alternate)
-                                @Html.Hidden("Template", (string)Model.Template)
-                                @Html.Hidden("ReturnUrl", Context.Request.RawUrl)
-                                <button type="submit" class="create-template">@T("Create").Text</button>
-                            }
-                            </div>
-                            <div class="value">@formatted</div>
-                        </li>
-                    }
-                    </ul>
-                </li>
-                <li class="sgd-w"><div class="name">Wrappers (@Model.Wrappers.Count)</div>
-                    <div class="value">&nbsp;</div>
-                    <ul>
-                    @foreach (var wrapper in Model.Wrappers)
-                    {
-                        if (wrapper != "ShapeTracing_Wrapper")
-                        {
-                            var formatted = @FormatShapeFilename(wrapper, WorkContext.CurrentTheme.Id);
-                        <li><div class="name">&nbsp;</div><div class="value">@formatted</div></li>
-                        }
-                    }
-                    </ul>
-                </li>
-            </ul>
-        </div>
-            
-        <div class="model grid-display" style="display:none">
-            @(new MvcHtmlString(@Model.Dump))
-        </div>
 
-        <div class="placement" style="display:none">
-            <textarea id="placement-@Model.ShapeId" name="placement-@Model.ShapeId">@Model.PlacementContent</textarea>
-        </div>
+<script type="text/javascript">
+shapeTracingMetadataHost[@Model.ShapeId] = {};
 
-        <div class="template" style="display:none">
-            @if (String.IsNullOrWhiteSpace((string)Model.TemplateContent))
-            {
-                if (!String.IsNullOrWhiteSpace((string)Model.Template))
-                {
-                    @T("Content not available as coming from source code.")
-                }
-            }
-            else
-            {
-                <textarea id="template-@Model.ShapeId" name="template-@Model.ShapeId">@Model.TemplateContent</textarea>
-            }
-            
-        </div>
+shapeTracingMetadataHost[@Model.ShapeId].shape = { 
+    type: '@Model.ShapeType', 
+    template: '@Model.Template', 
+    originalTemplate: '@Model.OriginalTemplate',
+    displayType: '@(String.IsNullOrEmpty((string)Model.DisplayType) ? T("n/a").Text : Model.DisplayType.ToString())',
+    position: '@(String.IsNullOrEmpty((string)Model.Position) ? T("n/a").Text : Model.Position.ToString())',
+    placement: '@(String.IsNullOrEmpty((string)Model.PlacementSource) ? T("n/a").Text : Model.PlacementSource.ToString())',
+    alternates: [
+        @foreach (var alternate in (new[] { (string)Model.ShapeType }).Concat((List<string>)Model.Alternates))
+        {
+        <text>{</text>
+        <text>filename: '@FormatShapeFilename(alternate, WorkContext.CurrentTheme.Id)',</text>
+        <text>alternate: '@FormatShapeName(alternate)',</text> 
+        <text>template: '@Model.Template',</text>
+        <text>returnUrl: '@Context.Request.RawUrl'</text>
+        <text>},</text>
+        }
+    ],
+    wrappers: [
+        @foreach (var wrapper in Model.Wrappers) {
+            if (wrapper == "ShapeTracingWrapper") { continue; }
+        <text>{ filename: '@FormatShapeFilename(wrapper, WorkContext.CurrentTheme.Id)' },
+        </text>
+        }
+    ],
+    html: '@RemoveEmptyLines(RemoveBeacons(Display(Model.ChildContent).ToString())).Replace(Environment.NewLine, "\\n")',
+    templateContent: '@(String.IsNullOrWhiteSpace((string)Model.TemplateContent) ? @T("Content not available as coming from source code.") : @Model.TemplateContent.Replace(Environment.NewLine, "\\n"))',
+    model: { @(new MvcHtmlString((string)@Model.Dump)) }
+};
 
-        <div class="html" style="display:none">
-            <textarea id="html-@Model.ShapeId" name="html-@Model.ShapeId">@RemoveEmptyLines(RemoveBeacons(Display(Model.ChildContent).ToString()))</textarea>
-        </div>
-    </div>
-</div>
+@if (!String.IsNullOrEmpty((string)Model.PlacementSource) && (WorkContext.HttpContext.Items[(string)Model.PlacementSource] == null)) {
+    WorkContext.HttpContext.Items[(string)Model.PlacementSource] = new object();
+<text>shapeTracingMetadataHost.placement['@Model.PlacementSource.ToString()'] = '@Model.PlacementContent.Replace(Environment.NewLine, "\\n")'; </text>
+}
+
+</script>

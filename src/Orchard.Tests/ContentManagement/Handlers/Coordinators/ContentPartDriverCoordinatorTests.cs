@@ -43,7 +43,7 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var contentHandler = _container.Resolve<IContentHandler>();
 
             var contentItem = new ContentItem();
-            var context = new BuildDisplayContext(null, contentItem, "", new Mock<IShapeFactory>().Object);
+            var context = new BuildDisplayContext(null, contentItem, "", "", new Mock<IShapeFactory>().Object);
 
             driver1.Verify(x => x.BuildDisplay(context), Times.Never());
             driver2.Verify(x => x.BuildDisplay(context), Times.Never());
@@ -64,7 +64,7 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var contentItem = new ContentItem();
             contentItem.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
 
-            var ctx = new BuildDisplayContext(null, null, "", null);
+            var ctx = new BuildDisplayContext(null, null, "", "", null);
             var context = shapeFactory.Context(ctx);
             Assert.That(context.TopMeta, Is.Null);
             contentHandler.BuildDisplay(ctx);

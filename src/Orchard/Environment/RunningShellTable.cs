@@ -10,6 +10,7 @@ namespace Orchard.Environment {
         void Remove(ShellSettings settings);
         void Update(ShellSettings settings);
         ShellSettings Match(HttpContextBase httpContext);
+        ShellSettings Match(string host, string appRelativeCurrentExecutionFilePath);
     }
 
     public class RunningShellTable : IRunningShellTable {
@@ -75,14 +76,14 @@ namespace Orchard.Environment {
         }
 
         public ShellSettings Match(HttpContextBase httpContext) {
-            // use Host header to prevent proxy alteration of the orignal request
-            var host = httpContext.Request.Headers["Host"];
+            return Match(httpContext.Request.Headers["Host"], httpContext.Request.AppRelativeCurrentExecutionFilePath);
+        }
 
+        public ShellSettings Match(string host, string appRelativePath) {
+            // use Host header to prevent proxy alteration of the orignal request
             var hostLength = host.IndexOf(':');
             if (hostLength != -1)
                 host = host.Substring(0, hostLength);
-
-            var appRelativePath = httpContext.Request.AppRelativeCurrentExecutionFilePath;
 
             var mostQualifiedMatch = _shellsByHost
                 .Where(group => host.EndsWith(group.Key, StringComparison.OrdinalIgnoreCase))
@@ -93,6 +94,5 @@ namespace Orchard.Environment {
 
             return mostQualifiedMatch ?? _fallback;
         }
-
     }
 }

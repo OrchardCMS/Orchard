@@ -10,19 +10,19 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
     [TestFixture]
     public class AzureBlobStorageProviderTests : AzureVirtualEnvironmentTest {
 
-        CloudStorageAccount DevAccount;
+        CloudStorageAccount _devAccount;
         private AzureBlobStorageProvider _azureBlobStorageProvider;
 
         protected override void OnInit() {
-            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out DevAccount);
+            CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out _devAccount);
 
-            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, DevAccount);
+            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, _devAccount);
         }
 
         [SetUp]
         public void Setup() {
             // ensure default container is empty before running any test
-            DeleteAllBlobs(_azureBlobStorageProvider.Container.Name, DevAccount);
+            DeleteAllBlobs(_azureBlobStorageProvider.Container.Name, _devAccount);
         }
 
         [Test]
@@ -129,6 +129,31 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
         }
 
         [Test]
+        public void FoldersShouldBeCreatedRecursively() {
+            _azureBlobStorageProvider.CreateFolder("foo/bar/baz");
+            Assert.That(_azureBlobStorageProvider.ListFolders("").Count(), Is.EqualTo(1));
+            Assert.That(_azureBlobStorageProvider.ListFolders("foo").Count(), Is.EqualTo(1));
+            Assert.That(_azureBlobStorageProvider.ListFolders("foo/bar").Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ShouldDeleteFiles() {
+            _azureBlobStorageProvider.CreateFile("folder/foo1.txt");
+            _azureBlobStorageProvider.CreateFile("folder/foo2.txt");
+            _azureBlobStorageProvider.CreateFile("folder/folder/foo1.txt");
+            _azureBlobStorageProvider.CreateFile("folder/folder/foo2.txt");
+
+            Assert.That(_azureBlobStorageProvider.ListFiles("folder").Count(), Is.EqualTo(2));
+            Assert.That(_azureBlobStorageProvider.ListFiles("folder/folder").Count(), Is.EqualTo(2));
+
+            _azureBlobStorageProvider.DeleteFile("folder/foo1.txt");
+            _azureBlobStorageProvider.DeleteFile("folder/folder/foo2.txt");
+
+            Assert.That(_azureBlobStorageProvider.ListFiles("folder").Count(), Is.EqualTo(1));
+            Assert.That(_azureBlobStorageProvider.ListFiles("folder/folder").Count(), Is.EqualTo(1));
+        }
+
+        [Test]
         public void DeleteFolderShouldDeleteFilesAlso() {
             _azureBlobStorageProvider.CreateFile("folder/foo1.txt");
             _azureBlobStorageProvider.CreateFile("folder/foo2.txt");
@@ -167,17 +192,15 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
-        public void CannotCreateAlreadyExistingFolders()
-        {
+        public void CannotCreateAlreadyExistingFolders() {
             _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
             _azureBlobStorageProvider.CreateFolder("folder1");
         }
 
         [Test]
-        public void CanCreateAlreadyExistingFolder()
-        {
+        public void TryCreateFolderShouldReturnFalseIfFolderAlreadyExists() {
             _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
-            _azureBlobStorageProvider.TryCreateFolder("folder1");
+            Assert.That(_azureBlobStorageProvider.TryCreateFolder("folder1"), Is.False);
         }
 
         [Test]
@@ -199,6 +222,26 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
             }
 
             Assert.AreEqual(teststring, content);
+        }
+
+        [Test]
+        public void ShouldTruncateFile() {
+            var sf = _azureBlobStorageProvider.CreateFile("folder/foo1.txt");
+            using (var sw = new StreamWriter(sf.OpenWrite())) {
+                sw.Write("foo");
+            }
+
+            using (var sw = new StreamWriter(sf.CreateFile())) {
+                sw.Write("fo");
+            }
+
+            sf = _azureBlobStorageProvider.GetFile("folder/foo1.txt");
+            string content;
+            using (var sr = new StreamReader(sf.OpenRead())) {
+                content = sr.ReadToEnd();
+            }
+            
+            Assert.That(content, Is.EqualTo("fo"));
         }
     }
 }

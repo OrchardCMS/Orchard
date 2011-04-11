@@ -12,7 +12,7 @@ namespace Orchard.Environment.Configuration {
         public const char Separator = ':';
         public const string EmptyValue = "null";
 
-        Localizer T { get; set; }
+        public Localizer T { get; set; }
         
         public ShellSettingsManager(
             IAppDataFolder appDataFolder, 

@@ -4,7 +4,7 @@ using System.Web;
 using Autofac;
 using Orchard.Environment;
 
-namespace Orchard.Startup {
+namespace Orchard.WarmupStarter {
     public class Starter {
         private static IOrchardHost _host;
         private static Exception _error;
@@ -56,6 +56,12 @@ namespace Orchard.Startup {
                     finally {
                         // Execute pending actions as the host is available
                         WarmupHttpModule.Signal();
+                    }
+
+                    // initialize shells to speed up the first dynamic query
+                    if (_host != null) {
+                        _host.BeginRequest();
+                        _host.EndRequest();
                     }
                 });
         }

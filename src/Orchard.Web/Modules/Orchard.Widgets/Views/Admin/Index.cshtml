@@ -1,7 +1,8 @@
 ﻿@{
     Style.Require("WidgetsAdmin");
-    Layout.Title = T("Manage Widgets").ToString();
+    Layout.Title = T("Widgets").ToString();
 }
+@Display.WidgetPlacement_Orphans(OrphanWidgets: Model.OrphanWidgets)
 <div id="widgets" class="group">
     @Display.WidgetLayersControl(Layers: Model.Layers, CurrentLayer: Model.CurrentLayer)
     <div id="layout-widgets-placement">

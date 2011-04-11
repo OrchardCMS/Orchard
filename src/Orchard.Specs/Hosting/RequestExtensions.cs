@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -11,7 +12,7 @@ using Orchard.Specs.Util;
 
 namespace Orchard.Specs.Hosting {
     public static class RequestExtensions {
-        public static RequestDetails SendRequest(this WebHost webHost, string urlPath, IDictionary<string, IEnumerable<string>> postData) {
+        public static RequestDetails SendRequest(this WebHost webHost, string urlPath, IDictionary<string, IEnumerable<string>> postData, string requestMethod = null) {
 
             var physicalPath = Bleroy.FluentPath.Path.Get(webHost.PhysicalDirectory);
 
@@ -22,15 +23,20 @@ namespace Orchard.Specs.Hosting {
 
             var details = new RequestDetails {
                 HostName = webHost.HostName,
-                UrlPath = urlPath,
+                UrlPath = urlPath.Replace('\\', '/'),
             };
 
             int queryIndex = urlPath.IndexOf('?');
             if (queryIndex >= 0) {
-                details.UrlPath = urlPath.Substring(0, queryIndex);
-                details.Query = HttpUtility.UrlDecode(urlPath.Substring(queryIndex + 1));
+                details.UrlPath = urlPath.Substring(0, queryIndex).Replace('\\', '/');
+                details.Query = urlPath.Substring(queryIndex + 1);
             }
-            details.Page = (isHomepage ? "" : physicalPath.Combine(details.UrlPath.TrimStart('/', '\\')).GetRelativePath(physicalPath).ToString());
+
+            var physicalFilePath = physicalPath.Combine(details.UrlPath.TrimStart('/', '\\'));
+            details.Page = (isHomepage ? "" : physicalFilePath.GetRelativePath(physicalPath).ToString());
+
+            if (!File.Exists(physicalFilePath))
+                details.Page = details.Page.Replace('\\', '/');
 
             if (!string.IsNullOrEmpty(webHost.Cookies)) {
                 details.RequestHeaders.Add("Cookie", webHost.Cookies);
@@ -41,7 +47,11 @@ namespace Orchard.Specs.Hosting {
                     .SelectMany(kv => kv.Value.Select(v => new { k = kv.Key, v }))
                     .Select((kv, n) => new { p = HttpUtility.UrlEncode(kv.k) + "=" + HttpUtility.UrlEncode(kv.v), n })
                     .Aggregate("", (a, x) => a + (x.n == 0 ? "" : "&") + x.p);
-                details.PostData = Encoding.Default.GetBytes(requestBodyText);
+
+                if (requestMethod == "POST")
+                    details.PostData = Encoding.Default.GetBytes(requestBodyText);
+                else
+                    details.Query = requestBodyText;
             }
 
             webHost.Execute(() => {

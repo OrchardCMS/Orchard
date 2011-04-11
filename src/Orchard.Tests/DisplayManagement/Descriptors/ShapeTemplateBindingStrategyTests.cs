@@ -99,6 +99,10 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             public IEnumerable<string> ListDirectories(string path) {
                 throw new NotImplementedException();
             }
+
+            public bool TryFileExists(string virtualPath) {
+                throw new NotImplementedException();
+            }
         }
 
         protected override void Resolve(ILifetimeScope container) {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using Orchard.ContentManagement;
-using Orchard.Environment.Configuration;
+using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.UI.Admin.Notification;
 using Orchard.UI.Notify;
@@ -8,9 +7,11 @@ using Orchard.UI.Notify;
 namespace Orchard.Warmup.Services {
     public class SettingsBanner: INotificationProvider {
         private readonly IOrchardServices _orchardServices;
+        private readonly WorkContext _workContext;
 
-        public SettingsBanner(IOrchardServices orchardServices) {
+        public SettingsBanner(IOrchardServices orchardServices, WorkContext workContext) {
             _orchardServices = orchardServices;
+            _workContext = workContext;
             T = NullLocalizer.Instance;
         }
 
@@ -18,7 +19,9 @@ namespace Orchard.Warmup.Services {
 
         public IEnumerable<NotifyEntry> GetNotifications() {
             if ( string.IsNullOrWhiteSpace(_orchardServices.WorkContext.CurrentSite.BaseUrl)) {
-                yield return new NotifyEntry { Message = T("The Warmup feature needs the Base Url site setting to be set." ), Type = NotifyType.Warning };
+                var urlHelper = new UrlHelper(_workContext.HttpContext.Request.RequestContext);
+                var url = urlHelper.Action("Index", "Admin", new {Area = "Settings"});
+                yield return new NotifyEntry { Message = T("The Warmup feature needs the <a href=\"{0}\">Base Url site setting</a> to be set.", url), Type = NotifyType.Warning };
             }
         }
     }

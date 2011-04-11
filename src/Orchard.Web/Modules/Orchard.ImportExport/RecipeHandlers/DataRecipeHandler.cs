@@ -16,7 +16,7 @@ namespace Orchard.ImportExport.RecipeHandlers {
         }
 
         public Localizer T { get; set; }
-        ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
 
         // <Data />
         // Import Data

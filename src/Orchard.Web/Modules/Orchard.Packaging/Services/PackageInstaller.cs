@@ -1,10 +1,11 @@
 using System;
 using System.IO;
-using System.Web.Hosting;
 using NuGet;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
+using Orchard.Packaging.Extensions;
 using Orchard.Packaging.Models;
 using Orchard.UI.Notify;
 using NuGetPackageManager = NuGet.PackageManager;
@@ -16,12 +17,20 @@ namespace Orchard.Packaging.Services {
         private const string SolutionFilename = "Orchard.sln";
 
         private readonly INotifier _notifier;
+        private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IExtensionManager _extensionManager;
+        private readonly IFolderUpdater _folderUpdater;
 
-        public PackageInstaller(INotifier notifier, 
-            IExtensionManager extensionManager) {
+        public PackageInstaller(
+            INotifier notifier,
+            IVirtualPathProvider virtualPathProvider,
+            IExtensionManager extensionManager,
+            IFolderUpdater folderUpdater) {
+
             _notifier = notifier;
+            _virtualPathProvider = virtualPathProvider;
             _extensionManager = extensionManager;
+            _folderUpdater = folderUpdater;
 
             T = NullLocalizer.Instance;
         }
@@ -35,21 +44,52 @@ namespace Orchard.Packaging.Services {
             // gets an IPackage instance from the repository
             var packageVersion = String.IsNullOrEmpty(version) ? null : new Version(version);
             var package = packageRepository.FindPackage(packageId, packageVersion);
-            if (package == null)
-            {
+            if (package == null) {
                 throw new ArgumentException(T("The specified package could not be found, id:{0} version:{1}", packageId, String.IsNullOrEmpty(version) ? T("No version").Text : version).Text);
             }
 
-            return Install(package, packageRepository, location, applicationPath);
+            return InstallPackage(package, packageRepository, location, applicationPath);
         }
 
         public PackageInfo Install(IPackage package, string location, string applicationPath) {
             // instantiates the appropriate package repository
             IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(location, "Default"));
-            return Install(package, packageRepository, location, applicationPath);
+            return InstallPackage(package, packageRepository, location, applicationPath);
         }
 
-        protected PackageInfo Install(IPackage package, IPackageRepository packageRepository, string location, string applicationPath) {
+        protected PackageInfo InstallPackage(IPackage package, IPackageRepository packageRepository, string location, string applicationPath) {
+            bool previousInstalled;
+
+            // 1. See if extension was previous installed and backup its folder if so
+            try {
+                previousInstalled = BackupExtensionFolder(package.ExtensionFolder(), package.ExtensionId());
+            }
+            catch (Exception exception) {
+                throw new OrchardException(T("Unable to backup existing local package directory."), exception);
+            }
+
+            if (previousInstalled) {
+                // 2. If extension is installed, need to un-install first
+                try {
+                    UninstallExtensionIfNeeded(package);
+                }
+                catch (Exception exception) {
+                    throw new OrchardException(T("Unable to un-install local package before updating."), exception);
+                }
+            }
+
+            return ExecuteInstall(package, packageRepository, location, applicationPath);
+        }
+
+        /// <summary>
+        /// Executes a package installation.
+        /// </summary>
+        /// <param name="package">The package to install.</param>
+        /// <param name="packageRepository">The repository for the package.</param>
+        /// <param name="sourceLocation">The source location.</param>
+        /// <param name="targetPath">The path where to install the package.</param>
+        /// <returns>The package information.</returns>
+        protected PackageInfo ExecuteInstall(IPackage package, IPackageRepository packageRepository, string sourceLocation, string targetPath) {
             // this logger is used to render NuGet's log on the notifier
             var logger = new NugetLogger(_notifier);
 
@@ -58,12 +98,12 @@ namespace Orchard.Packaging.Services {
             // if we can access the parent directory, and the solution is inside, NuGet-install the package here
             string solutionPath;
             var installedPackagesPath = String.Empty;
-            if (TryGetSolutionPath(applicationPath, out solutionPath)) {
+            if (TryGetSolutionPath(targetPath, out solutionPath)) {
                 installedPackagesPath = Path.Combine(solutionPath, PackagesPath);
                 try {
                     var packageManager = new NuGetPackageManager(
                         packageRepository,
-                        new DefaultPackagePathResolver(location),
+                        new DefaultPackagePathResolver(sourceLocation),
                         new PhysicalFileSystem(installedPackagesPath) {Logger = logger}
                         ) {Logger = logger};
 
@@ -80,10 +120,10 @@ namespace Orchard.Packaging.Services {
                 ? new LocalPackageRepository(installedPackagesPath)
                 : packageRepository;
 
-            var project = new FileBasedProjectSystem(applicationPath) { Logger = logger };
+            var project = new FileBasedProjectSystem(targetPath) { Logger = logger };
             var projectManager = new ProjectManager(
                 sourceRepository, // source repository for the package to install
-                new DefaultPackagePathResolver(applicationPath),
+                new DefaultPackagePathResolver(targetPath),
                 project,
                 new ExtensionReferenceRepository(project, sourceRepository, _extensionManager)
                 ) { Logger = logger };
@@ -95,18 +135,23 @@ namespace Orchard.Packaging.Services {
                 ExtensionName = package.Title ?? package.Id,
                 ExtensionVersion = package.Version.ToString(),
                 ExtensionType = package.Id.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme)) ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module,
-                ExtensionPath = applicationPath
+                ExtensionPath = targetPath
             };
         }
 
+        /// <summary>
+        /// Uninstalls a package.
+        /// </summary>
+        /// <param name="packageId">The package identifier for the package to be uninstalled.</param>
+        /// <param name="applicationPath">The application path.</param>
         public void Uninstall(string packageId, string applicationPath) {
             string solutionPath;
             string extensionFullPath = string.Empty;
 
             if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme))) {
-                extensionFullPath = HostingEnvironment.MapPath("~/Themes/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme).Length));
+                extensionFullPath = _virtualPathProvider.MapPath("~/Themes/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme).Length));
             } else if (packageId.StartsWith(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module))) {
-                extensionFullPath = HostingEnvironment.MapPath("~/Modules/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length));
+                extensionFullPath = _virtualPathProvider.MapPath("~/Modules/" + packageId.Substring(PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length));
             }
 
             if (string.IsNullOrEmpty(extensionFullPath) ||
@@ -155,7 +200,7 @@ namespace Orchard.Packaging.Services {
             }
 
             // If the package was not installed through nuget we still need to try to uninstall it by removing its directory
-            if(Directory.Exists(extensionFullPath)) {
+            if (Directory.Exists(extensionFullPath)) {
                 Directory.Delete(extensionFullPath, true);
             }
         }
@@ -171,6 +216,45 @@ namespace Orchard.Packaging.Services {
                 parentPath = null;
                 return false;
             }
+        }
+
+        private bool BackupExtensionFolder(string extensionFolder, string extensionId) {
+            var source = new DirectoryInfo(_virtualPathProvider.MapPath(_virtualPathProvider.Combine("~", extensionFolder, extensionId)));
+
+            if (source.Exists) {
+                var tempPath = _virtualPathProvider.Combine("~", extensionFolder, "_Backup", extensionId);
+                string localTempPath = null;
+                for (int i = 0; i < 1000; i++) {
+                    localTempPath = _virtualPathProvider.MapPath(tempPath) + (i == 0 ? "" : "." + i.ToString());
+                    if (!Directory.Exists(localTempPath)) {
+                        Directory.CreateDirectory(localTempPath);
+                        break;
+                    }
+                    localTempPath = null;
+                }
+
+                if (localTempPath == null) {
+                    throw new OrchardException(T("Backup folder {0} has too many backups subfolder (limit is 1,000)", tempPath));
+                }
+
+                var backupFolder = new DirectoryInfo(localTempPath);
+                _folderUpdater.Backup(source, backupFolder);
+                _notifier.Information(T("Successfully backed up local package to local folder \"{0}\"", backupFolder));
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private void UninstallExtensionIfNeeded(IPackage package) {
+            // Nuget requires to un-install the currently installed packages if the new
+            // package is the same version or an older version
+            try {
+                Uninstall(package.Id, _virtualPathProvider.MapPath("~\\"));
+                _notifier.Information(T("Successfully un-installed local package {0}", package.ExtensionId()));
+            }
+            catch {}
         }
     }
 }

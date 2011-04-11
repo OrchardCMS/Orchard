@@ -9,6 +9,7 @@ namespace Orchard.ContentManagement.Drivers {
         private readonly string _shapeType;
         private readonly string _prefix;
         private readonly Func<BuildShapeContext, dynamic> _shapeBuilder;
+        private string _groupId;
 
         public ContentShapeResult(string shapeType, string prefix, Func<BuildShapeContext, dynamic> shapeBuilder) {
             _shapeType = shapeType;
@@ -25,6 +26,9 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private void ApplyImplementation(BuildShapeContext context, string displayType) {
+            if (!string.Equals(context.GroupId ?? "", _groupId ?? "", StringComparison.OrdinalIgnoreCase))
+                return;
+
             var placement = context.FindPlacement(_shapeType, _differentiator, _defaultLocation);
             if (string.IsNullOrEmpty(placement.Location) || placement.Location == "-")
                 return;
@@ -66,8 +70,14 @@ namespace Orchard.ContentManagement.Drivers {
             _defaultLocation = zone;
             return this;
         }
+
         public ContentShapeResult Differentiator(string differentiator) {
             _differentiator = differentiator;
+            return this;
+        }
+
+        public ContentShapeResult OnGroup(string groupId) {
+            _groupId=groupId;
             return this;
         }
     }

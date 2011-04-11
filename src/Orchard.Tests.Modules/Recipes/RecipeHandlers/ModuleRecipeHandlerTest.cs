@@ -80,7 +80,7 @@ Features:
             ModuleRecipeHandler moduleRecipeHandler = _container.Resolve<ModuleRecipeHandler>();
 
             RecipeContext recipeContext = new RecipeContext { RecipeStep = new RecipeStep { Name = "Module", Step = new XElement("SuperWiki") } };
-            recipeContext.RecipeStep.Step.Add(new XAttribute("packageId", "SuperWiki"));
+            recipeContext.RecipeStep.Step.Add(new XAttribute("packageId", "Orchard.Module.SuperWiki"));
             recipeContext.RecipeStep.Step.Add(new XAttribute("repository", "test"));
 
             IFeatureManager featureManager = _container.Resolve<IFeatureManager>();
@@ -118,7 +118,7 @@ Features:
                 return Enumerable.Empty<PackagingSource>();
             }
 
-            public void AddSource(string feedTitle, string feedUrl) {
+            public int AddSource(string feedTitle, string feedUrl) {
                 throw new NotImplementedException();
             }
 
@@ -126,10 +126,10 @@ Features:
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<PackagingEntry> GetExtensionList(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
+            public IEnumerable<PackagingEntry> GetExtensionList(bool includeScreenshots, PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
                 return new[] {
                     new PackagingEntry {
-                        PackageId = "SuperWiki",
+                        PackageId = "Orchard.Module.SuperWiki",
                         Title = "SuperWiki",
                         Version = "1.0.3"
                     }

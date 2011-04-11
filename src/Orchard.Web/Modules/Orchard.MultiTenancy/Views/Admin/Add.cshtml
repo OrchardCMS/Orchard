@@ -6,13 +6,13 @@
     @Html.ValidationSummary()
     <fieldset>
         <div>
-            <label for="Name">@T("Name")</label>
-            <input id="Name" class="textMedium" name="Name" type="text" />
-        </div>
+            <label for="@Html.FieldIdFor(m => m.Name)">@T("Name")</label>
+            @Html.TextBoxFor(m => m.Name, new { @class = "text" })
+        </div>        
         <div>
-            <label for="RequestUrlHost">@T("Host")</label>
-            <input id="RequestUrlHost" class="textMedium" name="RequestUrlHost" type="text" />
-            <span class="hint">@T("Example: If host is 'orchardproject.net', the tenant site URL is 'http://orchardproject.net/'")</span>
+            <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
+            @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "textMedium" })
+            <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
         </div>
     </fieldset>
     <fieldset>

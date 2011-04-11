@@ -10,7 +10,6 @@
 }
 
 @using (Html.BeginFormAntiForgeryPost(Url.Action("InstallPackageDetails", "PackagingServices", new { packageId = Request.QueryString["packageId"], version = Request.QueryString["version"], sourceId = Request.QueryString["sourceId"], redirectUrl = Request.QueryString["redirectUrl"] }))) {
-    <h3>@T("Installation details").ToString()</h3>
 
     @Html.HiddenFor(m => m.ExtensionDescriptor.Id)
 
