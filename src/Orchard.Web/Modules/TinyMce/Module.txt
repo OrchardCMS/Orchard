@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.1.29
-OrchardVersion: 1.1.29
+Version: 1.1.30
+OrchardVersion: 1.1.30
 Description: The TinyMCE module enables rich text contents to be created using a "What You See Is What You Get" user interface.
 FeatureDescription: TinyMCE HTML WYSIWYG editor.
 Category: Input Editor

@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.1.29
-OrchardVersion: 1.1.29
+Version: 1.1.30
+OrchardVersion: 1.1.30
 Description: The Messaging module adds messaging functionalities.
 FeatureDescription: Messaging services.
 Category: Messaging
