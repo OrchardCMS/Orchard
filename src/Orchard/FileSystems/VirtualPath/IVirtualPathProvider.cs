@@ -10,6 +10,7 @@ namespace Orchard.FileSystems.VirtualPath {
         string MapPath(string virtualPath);
 
         bool FileExists(string virtualPath);
+        bool TryFileExists(string virtualPath);
         Stream OpenFile(string virtualPath);
         StreamWriter CreateText(string virtualPath);
         Stream CreateFile(string virtualPath);

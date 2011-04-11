@@ -51,6 +51,11 @@ namespace Orchard.Environment {
             get { return BuildCurrent().ToReadOnlyCollection(); }
         }
 
+        public ShellContext GetShellContext(ShellSettings shellSettings) {
+            return Current
+                .Single(shellContext => shellContext.Settings.Name.Equals(shellSettings.Name));
+        }
+
         void IOrchardHost.Initialize() {
             Logger.Information("Initializing");
             BuildCurrent();

@@ -46,10 +46,23 @@ namespace Orchard.Widgets.Services {
                 .List();
         }
 
-        public IEnumerable<WidgetPart> GetWidgets() {
+        private IEnumerable<WidgetPart> GetAllWidgets() {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
                 .List();
+        }
+
+        public IEnumerable<WidgetPart> GetWidgets() {
+            return GetAllWidgets().Where(w => w.Has<ICommonPart>());
+        }
+
+        // info: (heskew) Just including invalid widgets for now. Eventually need to include any in a layer which no longer exists if possible.
+        public IEnumerable<WidgetPart> GetOrphanedWidgets() {
+            return GetAllWidgets().Where(w => !w.Has<ICommonPart>());
+        }
+
+        public IEnumerable<WidgetPart> GetWidgets(int layerId) {
+            return GetWidgets().Where(widgetPart => widgetPart.As<ICommonPart>().Container.ContentItem.Id == layerId);
         }
 
         public IEnumerable<string> GetZones() {
@@ -72,19 +85,18 @@ namespace Orchard.Widgets.Services {
                     .Select(x => x.Trim())
                     .ToList();
 
-            // add the zones for the base theme
-            if (!string.IsNullOrWhiteSpace(theme.BaseTheme)) {
+            // if this theme has no zones defined then walk the BaseTheme chain until we hit a theme which defines zones
+            while (zones.Count() == 0 && theme != null && !string.IsNullOrWhiteSpace(theme.BaseTheme)) {
                 string baseTheme = theme.BaseTheme;
                 theme = _extensionManager.GetExtension(baseTheme);
-                if (theme != null)
-                    zones.Concat(GetZones(theme).Where(z => !zones.Contains(z)));
+                if (theme != null && theme.Zones != null)
+                    zones = theme.Zones.Split(',')
+                        .Distinct()
+                        .Select(x => x.Trim())
+                        .ToList();
             }
 
             return zones;
-        }
-
-        public IEnumerable<WidgetPart> GetWidgets(int layerId) {
-            return GetWidgets().Where(widgetPart => widgetPart.As<ICommonPart>().Container.ContentItem.Id == layerId);
         }
 
         public LayerPart GetLayer(int layerId) {

@@ -30,9 +30,10 @@
 #shape-tracing-container input[type="button"],
 #shape-tracing-container button,
 #shape-tracing-container .button {
+    color:rgba(0, 94, 153, 0.8);
     padding:0;
     margin:0;
-    border:1px solid rgba(182, 188, 189, 1.0);
+    border:1px solid rgba(154, 155, 157, 1.0);
     background:rgba(236, 241, 242, 1.0);
     
      /*CSS3 properties*/
@@ -62,8 +63,7 @@ button.create-template, button.create-template:hover, background-image:hover {
 
 /* Layout
 ***************************************************************/
-#shape-tracing-container ul, 
-#shape-tracing-container li {
+#shape-tracing-container ul, #shape-tracing-container li {
     margin:0;
     padding:0;
     color:#000;
@@ -75,7 +75,7 @@ button.create-template, button.create-template:hover, background-image:hover {
     clear:both;
     display:block;
     font-size:10pt;
-    font-family:Segoe;
+    font-family:Segoe UI,Trebuchet,Arial,Sans-Serif;;
     left: 0px;
     bottom: 0px;
     position:fixed;
@@ -89,12 +89,12 @@ button.create-template, button.create-template:hover, background-image:hover {
     margin:0;
 }
 
-#shape-tracing-container .shape-tracing-meta-content {
-    padding:0 0 30px 0;
+#shape-tracing-meta-content {
     overflow:auto;
 }
 
-#shape-tracing-container .model, #shape-tracing-container .shape {
+#shape-tracing-container .shape, #shape-tracing-container .model {
+    padding:8px 0 30px 0;
     padding-left:30px;
 }
 
@@ -193,8 +193,7 @@ button.create-template, button.create-template:hover, background-image:hover {
     list-style-type:none;
 }
 
-#shape-tracing-window-tree li > div {
-}
+#shape-tracing-window-tree li > div {}
 
 #shape-tracing-window-content {
     padding:0 0 0 6px;
@@ -262,7 +261,7 @@ button.create-template, button.create-template:hover, background-image:hover {
 /* Tabs
 ***************************************************************/
 
-#shape-tracing-window-content .shape-tracing-tabs li {
+#shape-tracing-tabs li {
     display: inline;
     font-size:14px;
     padding: 4px 18px;
@@ -271,25 +270,25 @@ button.create-template, button.create-template:hover, background-image:hover {
     text-decoration:none;
 }
 
-#shape-tracing-window-content ul.shape-tracing-tabs {
+ul#shape-tracing-tabs {
     padding:8px 0;
     border-bottom:1px solid rgba(182, 188, 189, 1.0);
     background:rgba(236, 241, 242, 1.0);
     
-     /*CSS3 properties*/
-     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2',  endColorstr='#ffeffcfc');   
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));    
-     background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
-    }
+    /*CSS3 properties*/
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#fffcf1f2',  endColorstr='#ffeffcfc');   
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(251, 252, 252, 1.0)), to(rgba(236, 241, 242, 1.0)));    
+    background: -moz-linear-gradient(top, rgba(251, 252, 252, 1.0), rgba(236, 241, 242, 1.0));
+}
 
-#shape-tracing-window-content .shape-tracing-tabs li.middle, #shape-tracing-window-content .shape-tracing-tabs li.first, #shape-tracing-window-content .shape-tracing-tabs li.last {
+#shape-tracing-tabs li.middle, #shape-tracing-tabs li.first, #shape-tracing-tabs li.last {
     border:1px solid rgba(154,155,157,1.0);
     background-color: #F5F5F5;
 }
 
-#shape-tracing-window-content .shape-tracing-tabs li.first {margin:0 0 0 4px;}
+#shape-tracing-tabs li.first {margin:0 0 0 4px;}
 
-#shape-tracing-window-content .shape-tracing-tabs li:hover {
+#shape-tracing-tabs li:hover {
     background-color:rgba(255, 255, 255, 0.5);
     color:#005e99;
     color:rgba(0, 94, 153, 1.0);
@@ -297,9 +296,9 @@ button.create-template, button.create-template:hover, background-image:hover {
     text-decoration:none;
     cursor:pointer;
 }
-#shape-tracing-window-content .shape-tracing-tabs li.selected {
+#shape-tracing-tabs li.selected {
     background-color:rgba(255, 255, 255, 0.9);
-    color:rgba(102, 102, 102, 1.0);
+    color:rgba(51, 51, 51, 1.0);
     border:1px solid rgba(102, 102, 102, 1.0);
 }
 #shape-tracing-window-content .grid-display {
@@ -322,11 +321,15 @@ button.create-template, button.create-template:hover, background-image:hover {
 
 #shape-tracing-window-content .grid-display div.type, #shape-tracing-window-content .grid-display div.value {
     position:absolute;
-    left:300px;
+    left:40%;
     white-space:nowrap;
 }
 
-#shape-tracing-window-content .shape-tracing-breadcrumb {
+#shape-tracing-window-content div.model div.type, #shape-tracing-window-content div.model div.value {
+    left:66%;
+}
+
+#shape-tracing-breadcrumb {
     background:rgba(236, 241, 242, 1.0);
     border-bottom:1px solid rgba(182, 188, 189, 1.0);
     padding: 3px 0 0 4px;

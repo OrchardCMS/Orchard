@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using Castle.Core.Logging;
 using HtmlAgilityPack;
@@ -181,21 +182,21 @@ namespace Orchard.Specs.Bindings {
             Host.HostName = host;
             Details = Host.SendRequest(urlPath);
             _doc = new HtmlDocument();
-            _doc.Load(new StringReader(Details.ResponseText));
+            _doc.Load(new StringReader(Regex.Replace(Details.ResponseText, @">\s+<", "><")));
         }
 
         [When(@"I go to ""(.*)""")]
         public void WhenIGoTo(string urlPath) {
             Details = Host.SendRequest(urlPath);
             _doc = new HtmlDocument();
-            _doc.Load(new StringReader(Details.ResponseText));
+            _doc.Load(new StringReader(Regex.Replace(Details.ResponseText, @">\s+<", "><")));
         }
 
         [When(@"I follow ""([^""]*)""")]
         public void WhenIFollow(string linkText) {
             var link = _doc.DocumentNode
                             .SelectNodes("//a")
-                            .SingleOrDefault(elt => elt.InnerText == linkText)
+                            .SingleOrDefault(elt => elt.InnerHtml == linkText)
                        ?? _doc.DocumentNode
                             .SelectSingleNode(string.Format("//a[@title='{0}']", linkText));
 
@@ -208,12 +209,29 @@ namespace Orchard.Specs.Bindings {
         public void WhenIFollow(string linkText, string hrefFilter) {
             var link = _doc.DocumentNode
                             .SelectNodes("//a[@href]").Where(elt =>
-                                (elt.InnerText == linkText ||
+                                (elt.InnerHtml == linkText ||
                                     (elt.Attributes["title"] != null && elt.Attributes["title"].Value == linkText)) &&
                                  elt.Attributes["href"].Value.IndexOf(hrefFilter, StringComparison.OrdinalIgnoreCase) != -1).SingleOrDefault();
 
             if (link == null) {
                 throw new InvalidOperationException(string.Format("Could not find an anchor with matching text '{0}' and href '{1}'. Document: {2}", linkText, hrefFilter, _doc.DocumentNode.InnerHtml));
+            }
+            var href = link.Attributes["href"].Value;
+            var urlPath = HttpUtility.HtmlDecode(href);
+
+            WhenIGoTo(urlPath);
+        }
+
+        [When(@"I follow ""([^""]+)"" where class name has ""([^""]+)""")]
+        public void WhenIFollowClass(string linkText, string className) {
+            var link = _doc.DocumentNode
+                            .SelectNodes("//a[@href]").Where(elt =>
+                                (elt.InnerText == linkText ||
+                                    (elt.Attributes["title"] != null && elt.Attributes["title"].Value == linkText)) &&
+                                 elt.Attributes["class"].Value.IndexOf(className, StringComparison.OrdinalIgnoreCase) != -1).SingleOrDefault();
+
+            if (link == null) {
+                throw new InvalidOperationException(string.Format("Could not find an anchor with matching text '{0}' and class '{1}'. Document: {2}", linkText, className, _doc.DocumentNode.InnerHtml));
             }
             var href = link.Attributes["href"].Value;
             var urlPath = HttpUtility.HtmlDecode(href);
@@ -263,9 +281,9 @@ namespace Orchard.Specs.Bindings {
                         break;
                     default:
                         if (string.Equals(input.Name, "select", StringComparison.OrdinalIgnoreCase)) {
-                            var options = input.ChildNodes;
+                            var options = input.Descendants("option");
                             foreach (var option in options) {
-                                if (option.GetAttributeValue("value", "") == row["value"])
+                                if (option.GetAttributeValue("value", "") == row["value"] || (option.NextSibling.NodeType == HtmlNodeType.Text && option.NextSibling.InnerText == row["value"]))
                                     option.Attributes.Add("selected", "selected");
                                 else if (option.Attributes.Contains("selected"))
                                     option.Attributes.Remove("selected");
@@ -286,7 +304,7 @@ namespace Orchard.Specs.Bindings {
                 .SelectSingleNode(string.Format("(//input[@type='submit'][@value='{0}']|//button[@type='submit'][text()='{0}'])", submitText));
 
             var form = Form.LocateAround(submit);
-            var urlPath = form.Start.GetAttributeValue("action", Details.UrlPath);
+            var urlPath = HttpUtility.HtmlDecode(form.Start.GetAttributeValue("action", Details.UrlPath));
 
 
             var inputs = form.Children
@@ -299,18 +317,18 @@ namespace Orchard.Specs.Bindings {
                         // select all <select> elements
                         form.Children.SelectMany(elt => elt.DescendantsAndSelf("select")).Where(elt => elt.Name.Equals("select", StringComparison.OrdinalIgnoreCase))
                         // group them by their name with value that comes from first of:
-                        //  (1) value of option with 'selected' attribute,
+                        //  (1) value of option with 'selecturlPath.Replace("127.0.0.1", "localhost")ed' attribute,
                         //  (2) value of first option (none have 'selected'),
                         //  (3) empty value (e.g. select with no options)
                             .GroupBy(
                                 sel => sel.GetAttributeValue("name", sel.GetAttributeValue("id", "")),
-                                sel => (sel.Descendants("option").SingleOrDefault(opt => opt.Attributes["selected"] != null) ?? sel.Descendants("option").FirstOrDefault() ?? new HtmlNode(HtmlNodeType.Element, _doc, 0)).GetAttributeValue("value", "")))
+                                sel => (sel.Descendants("option").SingleOrDefault(opt => opt.Attributes["selected"] != null) ?? sel.Descendants("option").FirstOrDefault() ?? new HtmlNode(HtmlNodeType.Element, _doc, 0)).GetOptionValue()))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
 
             if (submit.Attributes.Contains("name"))
                 inputs.Add(submit.GetAttributeValue("name", ""), new[] {submit.GetAttributeValue("value", "yes")});
-
-            Details = Host.SendRequest(urlPath, inputs);
+            
+            Details = Host.SendRequest(urlPath, inputs, form.Start.GetAttributeValue("method", "GET").ToUpperInvariant());
             _doc = new HtmlDocument();
             _doc.Load(new StringReader(Details.ResponseText));
         }
@@ -322,7 +340,7 @@ namespace Orchard.Specs.Bindings {
                 WhenIGoTo(urlPath);
             }
             else {
-                Assert.Fail("No Location header returned");
+                Assert.Fail("Expected to be redirected but no Location header returned");
             }
         }
 

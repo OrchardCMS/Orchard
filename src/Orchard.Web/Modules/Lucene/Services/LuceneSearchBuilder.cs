@@ -103,7 +103,7 @@ namespace Lucene.Services {
 
         public ISearchBuilder WithField(string field, bool value) {
             CreatePendingClause();
-            _query = new TermQuery(new Term(field, value.ToString()));
+            _query = new TermQuery(new Term(field, value.ToString().ToLower()));
             return this;
         }
 
@@ -121,7 +121,7 @@ namespace Lucene.Services {
 
         public ISearchBuilder WithinRange(string field, string min, string max) {
             CreatePendingClause();
-            _query = new TermRangeQuery(field, QueryParser.Escape(min.ToLower()), QueryParser.Escape(min.ToLower()), true, true);
+            _query = new TermRangeQuery(field, QueryParser.Escape(min.ToLower()), QueryParser.Escape(max.ToLower()), true, true);
             return this;
         }
 
@@ -177,7 +177,9 @@ namespace Lucene.Services {
             if(!_exactMatch) {
                 var termQuery = _query as TermQuery;
                 if(termQuery != null) {
-                    _query = new PrefixQuery(termQuery.GetTerm());
+                    var term = termQuery.GetTerm();
+                    // prefixed queries are case sensitive
+                    _query = new PrefixQuery(term);
                 }
             }
             if ( _asFilter ) {

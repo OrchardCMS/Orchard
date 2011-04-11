@@ -9,27 +9,33 @@ namespace Orchard.UI.Navigation {
         private readonly IList<string> _imageSets = new List<string>();
         IEnumerable<MenuItem> Contained { get; set; }
 
-        public NavigationBuilder Add(LocalizedString caption, string position, Action<NavigationItemBuilder> itemBuilder) {
+        public NavigationBuilder Add(LocalizedString caption, string position, Action<NavigationItemBuilder> itemBuilder, IEnumerable<string> classes = null) {
             var childBuilder = new NavigationItemBuilder();
             
             childBuilder.Caption(caption);
             childBuilder.Position(position);
             itemBuilder(childBuilder);
             Contained = (Contained ?? Enumerable.Empty<MenuItem>()).Concat(childBuilder.Build());
+
+            if (classes != null) {
+                foreach (var className in classes) 
+                    childBuilder.AddClass(className);
+            }
+
             return this;
         }
 
-        public NavigationBuilder Add(LocalizedString caption, Action<NavigationItemBuilder> itemBuilder) {
-            return Add(caption, null, itemBuilder);
+        public NavigationBuilder Add(LocalizedString caption, Action<NavigationItemBuilder> itemBuilder, IEnumerable<string> classes = null) {
+            return Add(caption, null, itemBuilder, classes);
         }
-        public NavigationBuilder Add(Action<NavigationItemBuilder> itemBuilder) {
-            return Add(null, null, itemBuilder);
+        public NavigationBuilder Add(Action<NavigationItemBuilder> itemBuilder, IEnumerable<string> classes = null) {
+            return Add(null, null, itemBuilder, classes);
         }
-        public NavigationBuilder Add(LocalizedString caption, string position) {
-            return Add(caption, position, x=> { });
+        public NavigationBuilder Add(LocalizedString caption, string position, IEnumerable<string> classes = null) {
+            return Add(caption, position, x=> { }, classes);
         }
-        public NavigationBuilder Add(LocalizedString caption) {
-            return Add(caption, null, x => { });
+        public NavigationBuilder Add(LocalizedString caption, IEnumerable<string> classes = null) {
+            return Add(caption, null, x => { }, classes);
         }
 
         public NavigationBuilder AddImageSet(string imageSet) {

@@ -375,6 +375,42 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_searchBuilder.WithField("tag-value", "tag").Count(), Is.EqualTo(1));
         }
 
+        [Test]
+        public void AnalyzedFieldsAreNotCaseSensitive() {
+            _provider.CreateIndex("default");
+            var documentIndex = _provider.New(1)
+                .Add("tag-id", 1)
+                .Add("tag-value", "Tag1").Analyze();
+
+            _provider.Store("default", documentIndex);
+
+            // trying in prefix mode
+            Assert.That(_searchBuilder.WithField("tag-value", "tag").Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("tag-value", "Tag").Count(), Is.EqualTo(1));
+
+            // trying in full word match mode
+            Assert.That(_searchBuilder.WithField("tag-value", "tag1").ExactMatch().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("tag-value", "Tag1").ExactMatch().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void NotAnalyzedFieldsAreSearchable() {
+            _provider.CreateIndex("default");
+            var documentIndex = _provider.New(1)
+                .Add("tag-id", 1)
+                .Add("tag-valueL", "tag1")
+                .Add("tag-valueU", "Tag1");
+
+            _provider.Store("default", documentIndex);
+
+            // a value which is not analyzed, is not lowered cased in the index
+            Assert.That(_searchBuilder.WithField("tag-valueL", "tag").Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("tag-valueU", "tag").Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.WithField("tag-valueL", "Tag").Count(), Is.EqualTo(1)); // queried term is lower cased
+            Assert.That(_searchBuilder.WithField("tag-valueU", "Tag").Count(), Is.EqualTo(0)); // queried term is lower cased
+            Assert.That(_searchBuilder.WithField("tag-valueL", "tag1").ExactMatch().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("tag-valueU", "tag1").ExactMatch().Count(), Is.EqualTo(0));
+        }
 
         [Test]
         public void ShouldReturnAllDocuments() {

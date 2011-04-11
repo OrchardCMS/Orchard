@@ -67,28 +67,26 @@ namespace Orchard.Modules.Controllers {
             Pager pager = new Pager(Services.WorkContext.CurrentSite, pagerParameters);
 
             IEnumerable<ModuleEntry> modules = _extensionManager.AvailableExtensions()
-                .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType) && 
-                    (string.IsNullOrEmpty(options.SearchText) || extensionDescriptor.Name.ToLowerInvariant().Contains(options.SearchText.ToLowerInvariant())))
+                .Where(extensionDescriptor => DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType) &&
+                                              (string.IsNullOrEmpty(options.SearchText) || extensionDescriptor.Name.ToLowerInvariant().Contains(options.SearchText.ToLowerInvariant())))
                 .OrderBy(extensionDescriptor => extensionDescriptor.Name)
-                .Select(extensionDescriptor => {
-                            ModuleEntry moduleEntry = new ModuleEntry {
-                                Descriptor = extensionDescriptor,
-                                IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(extensionDescriptor)
-                            };
-
-                            if (_extensionDisplayEventHandler != null) {
-                                foreach (string notification in _extensionDisplayEventHandler.Displaying(moduleEntry.Descriptor)) {
-                                    moduleEntry.Notifications.Add(notification);
-                                }
-                            }
-
-                            return moduleEntry;
-                        });
+                .Select(extensionDescriptor => new ModuleEntry { Descriptor = extensionDescriptor });
 
             int totalItemCount = modules.Count();
 
             if (pager.PageSize != 0) {
                 modules = modules.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
+            }
+
+            modules = modules.ToList();
+            foreach (ModuleEntry moduleEntry in modules) {
+                moduleEntry.IsRecentlyInstalled = _moduleService.IsRecentlyInstalled(moduleEntry.Descriptor);
+
+                if (_extensionDisplayEventHandler != null) {
+                    foreach (string notification in _extensionDisplayEventHandler.Displaying(moduleEntry.Descriptor, ControllerContext.RequestContext)) {
+                        moduleEntry.Notifications.Add(notification);
+                    }
+                }
             }
 
             return View(new ModulesIndexViewModel {

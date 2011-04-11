@@ -18,6 +18,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,7 +52,16 @@
   <ItemGroup>
     <Content Include="TheAdmin\Scripts\admin.js" />
     <Content Include="TheAdmin\Styles\ie.css" />
+    <Content Include="TheAdmin\Styles\ie7.css" />
+    <Content Include="TheAdmin\Styles\ie8.css" />
     <Content Include="TheAdmin\Styles\images\adminNavBackground.gif" />
+    <Content Include="TheAdmin\Styles\images\icon-advisory.png" />
+    <Content Include="TheAdmin\Styles\images\icon-contribute.png" />
+    <Content Include="TheAdmin\Styles\images\icon-docs.png" />
+    <Content Include="TheAdmin\Styles\images\icon-friends.png" />
+    <Content Include="TheAdmin\Styles\images\icon-gallery.png" />
+    <Content Include="TheAdmin\Styles\images\icon-settings.png" />
+    <Content Include="TheAdmin\Styles\images\info.gif" />
     <Content Include="TheAdmin\Styles\images\menu-default.png" />
     <Content Include="TheAdmin\Styles\images\menu-glyph.png" />
     <Content Include="TheAdmin\Styles\images\menuClosed.gif" />
@@ -97,7 +107,6 @@
     <Content Include="SafeMode\Theme.png" />
     <Content Include="SafeMode\Theme.txt" />
     <Content Include="SafeMode\Views\Layout.cshtml" />
-    <Content Include="TheAdmin\Styles\ie6.css" />
     <Content Include="TheAdmin\Styles\images\backgroundGradient.gif" />
     <Content Include="TheAdmin\Styles\images\backgroundHeader.gif" />
     <Content Include="TheAdmin\Styles\images\orchardLogo.gif" />
@@ -129,6 +138,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="TheAdmin\Views\Title.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
+      <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
+      <Name>Orchard.Framework</Name>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

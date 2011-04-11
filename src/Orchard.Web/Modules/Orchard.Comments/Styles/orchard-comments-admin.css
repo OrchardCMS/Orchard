@@ -11,3 +11,10 @@ table.items tr.anonymous {
 .authenticated-commenter-id {
     font-style:italic;
 }
+
+/* For margin on the comments table list. */
+/* Need to revisit */
+.orchard-comments .items 
+{
+    margin-top: 10px;
+}

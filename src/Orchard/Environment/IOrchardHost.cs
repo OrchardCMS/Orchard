@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.ShellBuilders;
 
 namespace Orchard.Environment {
     public interface IOrchardHost {
@@ -22,6 +24,8 @@ namespace Orchard.Environment {
         /// Called each time a request ends to deterministically commit and dispose outstanding activity
         /// </summary>
         void EndRequest();
+
+        ShellContext GetShellContext(ShellSettings shellSettings);
 
         /// <summary>
         /// Can be used to build an temporary self-contained instance of a shell's configured code.

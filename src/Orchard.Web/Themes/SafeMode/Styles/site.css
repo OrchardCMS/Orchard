@@ -60,6 +60,8 @@ h3 {font-size: 130%;}
 h4 {font-size: 120%;}
 h5 {font-size: 105%;}
 
+#setUpHeader {font-size: 145%;}
+
 .hint {
     font-size:60%;
     font-style:italic;
@@ -212,10 +214,10 @@ button, .button, a.button {
     -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2); 
      box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 1.0), 1px 1px 1px rgba(102, 102, 102, 0.2);
 
-     
+  
     /*----In ie the first couplet sets the alpha value so 00=transparent and ff=opaque)----*/    
      filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));    
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 
         
@@ -233,8 +235,8 @@ button:hover, .button:hover, a.button:hover {
     background: #809f43;
     
     /*CSS3 properties*/  
-     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');    
-     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+     filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff6e7f45',  endColorstr='#ff6a7b42');
+     background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), to(rgba(106, 123, 66, 1.0)));    
      background: -moz-linear-gradient(top, rgba(110, 127, 69, 1.0), rgba(106, 123, 66, 1.0));
 }
 button:active, .buton:active, a.button:active {
@@ -246,7 +248,7 @@ button:active, .buton:active, a.button:active {
     /*CSS3 properties*/
     text-shadow: rgba(0,0,0,.5) 0px 0px 1px;
      filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#ff9bb36c',  endColorstr='#ff809f43');	
-	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(110, 127, 69, 1.0)), rgba((106, 123, 66, 1.0)));    
+	 background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(155, 179, 108, 1.0)), to(rgba(128, 159, 67, 1.0)));   
      background: -moz-linear-gradient(top, rgba(155, 179, 108, 1.0), rgba(128, 159, 67, 1.0));
 }
 button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
@@ -273,9 +275,9 @@ button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
     top:0;
     width:100%;
     height:100%;
-    background-color:Gray;
-    filter:alpha(opacity=70);
-    opacity: 0.7;
+    background-color:#3e4d45;
+    opacity: 0.9;
+    filter:alpha(opacity=90);
 }
 #throbber .curtain-content 
 {

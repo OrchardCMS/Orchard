@@ -1,14 +1,14 @@
 @model Orchard.Users.Models.RegistrationSettingsPartRecord
 
 <fieldset>
-    <legend>@T("Users registration")</legend>
+    <legend>@T("Users")</legend>
     <div>
         @Html.EditorFor(m => m.UsersCanRegister) 
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersCanRegister)">@T("Users can create new accounts on the site")</label>
     </div>
     <div>
         @Html.EditorFor(m => m.EnableLostPassword) 
-        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.EnableLostPassword)">@T("Display a link to enable users to reset their email")</label>
+        <label class="forcheckbox" for="@Html.FieldIdFor( m => m.EnableLostPassword)">@T("Display a link to enable users to reset their password")</label>
     </div>
     <div>
         @Html.EditorFor(m => m.UsersMustValidateEmail)

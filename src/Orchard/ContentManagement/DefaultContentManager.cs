@@ -386,16 +386,16 @@ namespace Orchard.ContentManagement {
             return GetDisplayGroupInfos(content).FirstOrDefault(gi => string.Equals(gi.Id, groupInfoId, StringComparison.OrdinalIgnoreCase));
         }
 
-        public dynamic BuildDisplay(IContent content, string displayType = "") {
-            return _contentDisplay.Value.BuildDisplay(content, displayType);
+        public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
+            return _contentDisplay.Value.BuildDisplay(content, displayType, groupId);
         }
 
-        public dynamic BuildEditor(IContent content, string groupInfoId = "") {
-            return _contentDisplay.Value.BuildEditor(content, groupInfoId);
+        public dynamic BuildEditor(IContent content, string groupId = "") {
+            return _contentDisplay.Value.BuildEditor(content, groupId);
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId = "") {
-            return _contentDisplay.Value.UpdateEditor(content, updater, groupInfoId);
+        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "") {
+            return _contentDisplay.Value.UpdateEditor(content, updater, groupId);
         }
 
         public IContentQuery<ContentItem> Query() {

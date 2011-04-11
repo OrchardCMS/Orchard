@@ -67,6 +67,7 @@
     <Compile Include="DefaultPackagingUpdater.cs" />
     <Compile Include="Events\ExtensionDisplayEventHandler.cs" />
     <Compile Include="Events\IExtensionDisplayEventHandler.cs" />
+    <Compile Include="Extensions\PackageExtensions.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\PackagingSource.cs" />
     <Compile Include="Models\UpdatePackageEntry.cs" />
@@ -111,6 +112,7 @@
       <Generator>DataServiceClientGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </Content>
+    <Content Include="Styles\images\installed.gif" />
     <Content Include="Styles\orchard-packaging-admin.css" />
     <Content Include="Views\Gallery\AddSource.cshtml" />
     <Content Include="Views\Gallery\Modules.cshtml" />
@@ -169,6 +171,7 @@
   <ItemGroup>
     <Content Include="Views\PackagingServices\InstallModuleDetails.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

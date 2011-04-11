@@ -165,9 +165,10 @@
     <Compile Include="Commands\CommandHandlerDescriptorBuilderTests.cs" />
     <Compile Include="Commands\CommandHandlerTests.cs" />
     <Compile Include="Commands\CommandManagerTests.cs" />
-    <Compile Include="ContentManagement\ContentQueryTests.cs">
+    <Compile Include="ContentManagement\ContentIdentityTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\ContentQueryTests.cs" />
     <Compile Include="ContentManagement\DefaultContentManagerTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -252,6 +253,7 @@
     <Compile Include="FileSystems\LockFile\LockFileManagerTests.cs" />
     <Compile Include="FileSystems\Dependencies\AssemblyProbingFolderTests.cs" />
     <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
+    <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProviderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
     <Compile Include="Messaging\MessagingChannelStub.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensionsTests.cs" />
@@ -271,6 +273,7 @@
     <Compile Include="Stubs\StubVirtualPathMonitor.cs" />
     <Compile Include="Stubs\StubCacheManager.cs" />
     <Compile Include="Stubs\StubWebSiteFolder.cs" />
+    <Compile Include="UI\Resources\ResourceManagerTests.cs" />
     <Compile Include="UI\ShapeTests.cs" />
     <Compile Include="Utility\ContainerExtensions.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />

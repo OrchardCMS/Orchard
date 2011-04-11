@@ -7,13 +7,11 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using NuGet;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Modules.Services;
 using Orchard.Mvc.Extensions;
-using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
 using Orchard.Recipes.Models;
@@ -134,7 +132,7 @@ namespace Orchard.Packaging.Controllers {
                 }
 
                 HttpPostedFileBase file = Request.Files.Get(0);
-                string fullFileName = Path.Combine(_appDataFolderRoot.RootFolder, file.FileName + ".nupkg").Replace(Path.DirectorySeparatorChar, '/');
+                string fullFileName = Path.Combine(_appDataFolderRoot.RootFolder, Path.GetFileName(file.FileName)).Replace(Path.DirectorySeparatorChar, '/');
                 file.SaveAs(fullFileName);
                 ZipPackage package = new ZipPackage(fullFileName);
                 PackageInfo packageInfo = _packageManager.Install(package, _appDataFolderRoot.RootFolder, HostingEnvironment.MapPath("~/"));

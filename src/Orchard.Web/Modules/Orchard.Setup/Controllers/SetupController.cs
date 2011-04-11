@@ -127,6 +127,12 @@ namespace Orchard.Setup.Controllers {
             } catch (Exception exception) {
                 this.Error(exception, T("Setup failed:"), Logger, _notifier);
 
+                model.Recipes = recipes;
+                foreach (var recipe in recipes.Where(recipe => recipe.Name == model.Recipe)) {
+                    model.RecipeDescription = recipe.Description;
+                }
+                model.DatabaseIsPreconfigured = !string.IsNullOrEmpty(_setupService.Prime().DataProvider);
+
                 return IndexViewResult(model);
             }
         }

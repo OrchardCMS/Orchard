@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.UI.Notify;
 
 namespace Orchard.Packaging.Services {
     public interface IFolderUpdater : IDependency {
         void Backup(DirectoryInfo existingFolder, DirectoryInfo backupfolder);
-        void Update(DirectoryInfo destinationFolder, DirectoryInfo newFolder);
     }
 
-    [OrchardFeature("Gallery.Updates")]
+    [OrchardFeature("PackagingServices")]
     public class FolderUpdater : IFolderUpdater {
-        private readonly INotifier _notifier;
-
         public class FolderContent {
             public DirectoryInfo Folder { get; set; }
             public IEnumerable<string> Files { get; set; }
         }
 
-        public FolderUpdater(INotifier notifier) {
-            _notifier = notifier;
+        public FolderUpdater() {
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -33,33 +27,6 @@ namespace Orchard.Packaging.Services {
 
         public void Backup(DirectoryInfo existingFolder, DirectoryInfo backupfolder) {
             CopyFolder(GetFolderContent(existingFolder), backupfolder);
-        }
-
-        public void Update(DirectoryInfo destinationFolder, DirectoryInfo newFolder) {
-            var destinationContent = GetFolderContent(destinationFolder);
-            var newContent = GetFolderContent(newFolder);
-
-            Update(destinationContent, newContent);
-        }
-
-        private void Update(FolderContent destinationContent, FolderContent newContent) {
-            // Copy files from new folder to existing folder
-            foreach (var file in newContent.Files) {
-                CopyFile(newContent.Folder, file, destinationContent.Folder);
-            }
-
-            // Delete files that are in the existing folder but not in the new folder
-            foreach (var file in destinationContent.Files.Except(newContent.Files, StringComparer.OrdinalIgnoreCase)) {
-                var fileToDelete = new FileInfo(Path.Combine(destinationContent.Folder.FullName, file));
-                try {
-                    fileToDelete.Delete();
-                }
-                catch (Exception exception) {
-                    for (Exception scan = exception; scan != null; scan = scan.InnerException) {
-                        _notifier.Warning(T("Unable to delete file \"{0}\": {1}", fileToDelete.FullName, scan.Message));
-                    }
-                }
-            }
         }
 
         private void CopyFolder(FolderContent source, DirectoryInfo dest) {

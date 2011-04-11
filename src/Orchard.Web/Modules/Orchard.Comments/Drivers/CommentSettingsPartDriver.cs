@@ -14,20 +14,19 @@ namespace Orchard.Comments.Drivers {
 
         protected override string Prefix { get { return "CommentSettings"; } }
 
-        protected override DriverResult Editor(CommentSettingsPart part, string groupInfoId, dynamic shapeHelper) {
-            if (!string.Equals(groupInfoId, "comments", StringComparison.OrdinalIgnoreCase))
-                return null;
-
-            return ContentShape("Parts_Comments_SiteSettings",
-                               () => shapeHelper.EditorTemplate(TemplateName: "Parts.Comments.SiteSettings", Model: part.Record, Prefix: Prefix));
+        protected override DriverResult Editor(CommentSettingsPart part, dynamic shapeHelper) {
+            return Editor(part, null, shapeHelper);
         }
 
-        protected override DriverResult Editor(CommentSettingsPart part, IUpdateModel updater, string groupInfoId, dynamic shapeHelper) {
-            if (!string.Equals(groupInfoId, "comments", StringComparison.OrdinalIgnoreCase))
-                return null;
+        protected override DriverResult Editor(CommentSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
 
-            updater.TryUpdateModel(part.Record, Prefix, null, null);
-            return Editor(part, shapeHelper);
+            return ContentShape("Parts_Comments_SiteSettings", () => {
+                    if (updater != null) {
+                        updater.TryUpdateModel(part.Record, Prefix, null, null);
+                    }
+                    return shapeHelper.EditorTemplate(TemplateName: "Parts.Comments.SiteSettings", Model: part.Record, Prefix: Prefix); 
+                })
+                .OnGroup("comments");
         }
     }
 }

@@ -10,8 +10,12 @@
 .extensionName {
     float:left;
 }
+.extensionName.installed {
+    background: url("images/installed.gif") no-repeat 0px 8px #fff;
+    padding:0 0 0 60px;
+}
 .contentItems .related {
-    padding: 1.2em 0.4em 0.5em
+    padding:6px 0 0 0;
 }
 .contentItems .properties {
     float: left;
@@ -33,7 +37,6 @@
 }
 .extensionThumbnail {
     margin-left: -100%;
-    padding-top: 20px;
 }
 .iconThumbnail .extensionThumbnail {
     width: 70px;
@@ -77,6 +80,5 @@
     float: right;
     display: inline;
     height: auto;
-    margin: 0 1.4em 0 0;
     padding-top: 0;
 }

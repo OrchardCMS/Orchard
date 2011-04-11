@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
@@ -7,7 +8,6 @@ using Orchard.Logging;
 using Orchard.MultiTenancy.Services;
 using Orchard.MultiTenancy.ViewModels;
 using Orchard.Security;
-using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.MultiTenancy.Controllers {
@@ -45,13 +45,22 @@ namespace Orchard.MultiTenancy.Controllers {
 
         [HttpPost, ActionName("Add")]
         public ActionResult AddPOST(TenantAddViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't create tenant")))
+                return new HttpUnauthorizedResult();
+
+            if (!EnsureDefaultTenant())
+                return new HttpUnauthorizedResult();
+
+            // ensure tenants name are valid
+            if (!String.IsNullOrEmpty(viewModel.Name) && !Regex.IsMatch(viewModel.Name, @"^\w+$")) {
+                ModelState.AddModelError("Name", T("Invalid tenant name. Must contain characters only and no spaces.").Text);
+            }
+
+            if (!ModelState.IsValid) {
+                return View(viewModel);
+            }
+
             try {
-                if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't create tenant")))
-                    return new HttpUnauthorizedResult();
-
-                if ( !EnsureDefaultTenant() )
-                    return new HttpUnauthorizedResult();
-
                 _tenantService.CreateTenant(
                     new ShellSettings {
                         Name = viewModel.Name,
@@ -64,9 +73,9 @@ namespace Orchard.MultiTenancy.Controllers {
                     });
 
                 return RedirectToAction("Index");
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 this.Error(exception, T("Creating Tenant failed: {0}", exception.Message), Logger, Services.Notifier);
-
                 return View(viewModel);
             }
         }
@@ -95,19 +104,24 @@ namespace Orchard.MultiTenancy.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPost(TenantEditViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't edit tenant")))
+                return new HttpUnauthorizedResult();
+
+            if ( !EnsureDefaultTenant() )
+                return new HttpUnauthorizedResult();
+
+            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
+            if (tenant == null)
+                return HttpNotFound();
+
+            if (!ModelState.IsValid) {
+                return View(viewModel);
+            }
+
             try {
-                if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't edit tenant")))
-                    return new HttpUnauthorizedResult();
-
-                if ( !EnsureDefaultTenant() )
-                    return new HttpUnauthorizedResult();
-
-                var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
-                if (tenant == null)
-                    return HttpNotFound();
-                
                 _tenantService.UpdateTenant(
-                    new ShellSettings {
+                    new ShellSettings
+                    {
                         Name = tenant.Name,
                         RequestUrlHost = viewModel.RequestUrlHost,
                         RequestUrlPrefix = viewModel.RequestUrlPrefix,
@@ -118,9 +132,9 @@ namespace Orchard.MultiTenancy.Controllers {
                     });
 
                 return RedirectToAction("Index");
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 this.Error(exception, T("Failed to edit tenant: {0} ", exception.Message), Logger, Services.Notifier);
-
                 return View(viewModel);
             }
         }

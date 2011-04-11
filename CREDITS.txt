@@ -5,7 +5,7 @@ Copyright 2009-2011 Outercurve Foundation
 This product includes software developed at
 The Outercurve Foundation (http://www.outercurve.org/).
 
-Orchard includes or is derivative of works distributed under the licenses listed below. The full text for most of the licenses listed below can be found in the LICENSE.txt file accompanying each work. The original copyright notices have been preserved within the respective files and or packages. Please refer to the specific files and/or packages for more detailed information about the authors, copyright notices, and licenses.
+Orchard includes works distributed under the licenses listed below. The full text for most of the licenses listed below can be found in the LICENSE.txt file accompanying each work. The original copyright notices have been preserved within the respective files and or packages. Please refer to the specific files and/or packages for more detailed information about the authors, copyright notices, and licenses.
 
 Akismet.Net
 -----
@@ -123,6 +123,12 @@ Website:      http://code.google.com/p/jquery-utils/
 Copyright:    Copyright (c) Maxime Haineault (http://haineault.com)
 License:      MIT
 
+jQuery ScrollTo
+-----
+Website:      http://flesler.blogspot.com
+Copyright:    Copyright (c) 2007-2009 Ariel Flesler
+License:      MIT
+
 Log4Net
 -----
 Website:      http://logging.apache.org/log4net/index.html
@@ -170,7 +176,7 @@ SharpZipLib
 -----
 Website:      http://www.icsharpcode.net/OpenSource/SharpZipLib/Default.aspx
 Copyright:    Copyright (c) 2000-2009 IC#Code
-License:      Modified GPL: http://www.icsharpcode.net/OpenSource/SharpZipLib/Default.aspx
+License:      GPLv2 with Classpath Exception: http://www.icsharpcode.net/OpenSource/SharpZipLib/Default.aspx
 
 SpecFlow
 -----

@@ -20,7 +20,7 @@ namespace Orchard.Recipes.Services {
         }
 
         public Localizer T { get; set; }
-        ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
 
         public bool ExecuteNextStep(string executionId) {
             var nextRecipeStep= _recipeStepQueue.Dequeue(executionId);

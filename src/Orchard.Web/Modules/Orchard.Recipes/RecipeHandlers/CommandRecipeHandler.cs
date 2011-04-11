@@ -22,7 +22,7 @@ namespace Orchard.Recipes.RecipeHandlers  {
         }
 
         public Localizer T { get; set; }
-        ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
 
         /* 
          <Command>

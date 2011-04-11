@@ -1,46 +1,50 @@
 ﻿@model Orchard.Indexing.ViewModels.IndexViewModel
 @using Orchard.Indexing.Services;
 
-@{ Layout.Title = T("Search Index Management").ToString(); }
+@{ Layout.Title = T("Settings").ToString(); }
 
 @using (Html.BeginForm("update", "admin", FormMethod.Post, new {area = "Orchard.Indexing"})) { 
     <fieldset>
+        <legend>@T("Search Index")</legend>
+         <ol class="decimal">
         @if (Model.IndexEntry == null) {
-            <p>@T("There is currently no search index")</p>
+
+            <li>@T("There is currently no search index")</li>
         } else if (Model.IndexEntry.LastUpdateUtc == DateTime.MinValue) { 
-            <p>@T("The search index has not been built yet.")</p>
+            <li>@T("The search index has not been built yet.")</li>
         } else { 
             if (Model.IndexEntry.DocumentCount == 0) { 
-                <p>@T("The search index does not contain any document.")</p>
+                <li>@T("The search index does not contain any document.")</li>
             } else { 
-                <p>@T("The search index contains {0} document(s).", Model.IndexEntry.DocumentCount)</p>
+                <li>@T("The search index contains {0} document(s).", Model.IndexEntry.DocumentCount)</li>
             } 
 
             if (!Model.IndexEntry.Fields.Any()) { 
-                <p>@T("The search index does not contain any field.")</p>
+                <li>@T("The search index does not contain any field.")</li>
             } else { 
-                <p>@T("The search index contains the following fields: {0}.", string.Join(T(", ").Text, Model.IndexEntry.Fields))</p>
+                <li>@T("The search index contains the following fields: {0}.", string.Join(T(", ").Text, Model.IndexEntry.Fields))</li>
             } 
 
-            <p>@T("The search index was last updated {0}.", Display.DateTimeRelative(dateTimeUtc: Model.IndexEntry.LastUpdateUtc))</p>
+            <li>@T("The search index was last updated {0}.", Display.DateTimeRelative(dateTimeUtc: Model.IndexEntry.LastUpdateUtc))</li>
 
             switch(Model.IndexEntry.IndexingStatus) {
                 case IndexingStatus.Rebuilding:
-                    @T("The indexing process is currently being rebuilt."); 
+                    <li>@T("The indexing process is currently being rebuilt.");</li>
                     break;
                 case IndexingStatus.Updating:
-                    @T("The indexing process is currently being updated."); 
+                    <li>@T("The indexing process is currently being updated.");</li> 
                     break;
             }
         }
-        <p>@T("Update the search index now: ")<button type="submit" title="@T("Update the search index.")" class="primaryAction">@T("Update")</button></p>
+        </ol>
+        <label>@T("Update the search index now:")</label><button type="submit" title="@T("Update the search index.")" class="primaryAction">@T("Update")</button>
         @Html.AntiForgeryTokenOrchard() 
     </fieldset>
 }
 @using (Html.BeginForm("rebuild", "admin", FormMethod.Post, new {area = "Orchard.Search"})) { 
     <fieldset>
-        <p>@T("Rebuild the search index for a fresh start.")
-        <button type="submit" title="@T("Rebuild the search index.")">@T("Rebuild")</button></p>
+        <label>@T("Rebuild the search index for a fresh start:")</label>
+        <button type="submit" title="@T("Rebuild the search index.")">@T("Rebuild")</button>
         @Html.AntiForgeryTokenOrchard()
     </fieldset>
 }

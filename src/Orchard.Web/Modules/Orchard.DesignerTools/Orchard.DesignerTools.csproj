@@ -68,6 +68,9 @@
     <Content Include="Scripts\CodeMirror\htmlmixed.js" />
     <Content Include="Scripts\CodeMirror\javascript.js" />
     <Content Include="Scripts\CodeMirror\razor.js" />
+    <Content Include="Scripts\jquery.scrollTo-min.js" />
+    <Content Include="Scripts\jquery.tmpl.js" />
+    <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Styles\CodeMirror\codemirror.css" />
     <Content Include="Styles\CodeMirror\razor.css" />
     <Content Include="Styles\CodeMirror\css.css" />
@@ -100,6 +103,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AlternateController.cs" />
     <Compile Include="Services\ObjectDumper.cs" />
+    <Compile Include="Services\TemplatesFilter.cs" />
     <Compile Include="Services\ShapeTracingFactory.cs" />
     <Compile Include="Services\UrlAlternatesFactory.cs" />
   </ItemGroup>
@@ -111,6 +115,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ShapeTracingMeta.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ShapeTracingTemplates.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

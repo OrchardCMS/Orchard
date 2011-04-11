@@ -11,12 +11,17 @@
     Layout.Title = T("Modules").ToString();
 }
 
+
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Index", "Admin"))) {
     <fieldset class="search-actions">
         <input type="text" id="searchText" class="text-box single-line" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText" />
 
         <button type="submit">@T("Search").ToString()</button>
     </fieldset>
+
+    if (Model.InstallModules) {
+    <span>@Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</span>
+}
 
     if (Model.Modules.Count() > 0) {
         <ul class="contentItems">
@@ -31,6 +36,3 @@
     @Display(Model.Pager)
 }
 
-@if (Model.InstallModules) {
-    <p id="otherActionsBar">@Html.ActionLink(T("Upload a module").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</p>
-}

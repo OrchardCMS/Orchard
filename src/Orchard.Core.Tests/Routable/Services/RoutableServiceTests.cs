@@ -72,12 +72,12 @@ namespace Orchard.Core.Tests.Routable.Services {
 
             var thing = contentManager.Create<Thing>("thing", t => {
                 t.As<RoutePart>().Record = new RoutePartRecord();
-                t.Title = "Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \"\"\", \"<\", \">\"";
+                t.Title = "Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \"\"\", \"<\", \">\", \"\\\"";
             });
 
             _routableService.FillSlugFromTitle(thing.As<RoutePart>());
 
-            Assert.That(thing.Slug, Is.EqualTo("please-do-not-use-any-of-the-following-characters-in-your-slugs"));
+            Assert.That(thing.Slug, Is.EqualTo("please-do-not-use-any-of-the-following-characters-in-your-permalink"));
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace Orchard.Core.Tests.Routable.Services {
         public void InvalidCharacterShouldBeRefusedInSlugs() {
             Assert.That(_routableService.IsSlugValid("aaaa-_aaaa"), Is.True);
 
-            foreach (var c in @":?#[]@!$&'()*+,;= ") {
+            foreach (var c in @":?#[]@!$&'()*+,;= \") {
                 Assert.That(_routableService.IsSlugValid("a" + c + "b"), Is.False);
             }
         }

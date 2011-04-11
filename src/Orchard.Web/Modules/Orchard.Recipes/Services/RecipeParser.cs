@@ -14,7 +14,7 @@ namespace Orchard.Recipes.Services {
         }
 
         public Localizer T { get; set; }
-        ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
 
         public Recipe ParseRecipe(string recipeText) {
             var recipe = new Recipe();

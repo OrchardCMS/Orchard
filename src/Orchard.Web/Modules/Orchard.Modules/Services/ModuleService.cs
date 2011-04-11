@@ -72,7 +72,8 @@ namespace Orchard.Modules.Services {
         /// <param name="force">Boolean parameter indicating if the feature should enable it's dependencies if required or fail otherwise.</param>
         public void EnableFeatures(IEnumerable<string> featureIds, bool force) {
             foreach (string featureId in _featureManager.EnableFeatures(featureIds, force)) {
-                Services.Notifier.Information(T("{0} was enabled", featureId));
+                var featureName = _featureManager.GetAvailableFeatures().Where(f => f.Id == featureId).First().Name;
+                Services.Notifier.Information(T("{0} was enabled", featureName));
             }
         }
 
@@ -91,7 +92,8 @@ namespace Orchard.Modules.Services {
         /// <param name="force">Boolean parameter indicating if the feature should disable the features which depend on it if required or fail otherwise.</param>
         public void DisableFeatures(IEnumerable<string> featureIds, bool force) {
             foreach (string featureId in _featureManager.DisableFeatures(featureIds, force)) {
-                Services.Notifier.Information(T("{0} was disabled", featureId));
+                var featureName = _featureManager.GetAvailableFeatures().Where(f => f.Id == featureId).First().Name;
+                Services.Notifier.Information(T("{0} was disabled", featureName));
             }
         }
 

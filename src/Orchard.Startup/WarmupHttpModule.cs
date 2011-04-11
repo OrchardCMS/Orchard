@@ -6,7 +6,7 @@ using System.Threading;
 using System.Web;
 using System.Web.Hosting;
 
-namespace Orchard.Startup {
+namespace Orchard.WarmupStarter {
     public class WarmupHttpModule : IHttpModule {
         private const string WarmupFilesPath = "~/App_Data/Warmup/";
         private HttpApplication _context;
@@ -27,6 +27,10 @@ namespace Orchard.Startup {
 
         public static void Signal() {
             lock(typeof(WarmupHttpModule)) {
+                if (_awaiting == null) {
+                    return;
+                }
+
                 var awaiting = _awaiting;
                 _awaiting = null;
                 foreach (var action in awaiting) {
@@ -80,10 +84,10 @@ namespace Orchard.Startup {
             // use the url as it was requested by the client
             // the real url might be different if it has been translated (proxy, load balancing, ...)
             var url = ToUrlString(_context.Request);
-            var virtualFileCopy = WarmupFilesPath + EncodeUrl(url.Trim('/'));
-            var localCopy = HostingEnvironment.MapPath(virtualFileCopy);
+            var virtualFileCopy = EncodeUrl(url.Trim('/'));
+            var localCopy = Path.Combine(HostingEnvironment.MapPath(WarmupFilesPath), virtualFileCopy);
 
-            if (localCopy != null && File.Exists(localCopy)) {
+            if (File.Exists(localCopy)) {
                 // result should not be cached, even on proxies
                 _context.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
                 _context.Response.Cache.SetValidUntilExpires(false);

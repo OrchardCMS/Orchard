@@ -14,3 +14,4 @@ Features:
         Description: Adds a notification after creating a new Page with a direct link to create a Widget Layer for that specific page by URL.
         Dependencies: Orchard.Widgets
         Category: Widget
+        Priority: -1
