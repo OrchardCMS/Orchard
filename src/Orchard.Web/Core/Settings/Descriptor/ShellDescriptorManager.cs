@@ -19,7 +19,7 @@ namespace Orchard.Core.Settings.Descriptor {
             T = NullLocalizer.Instance;
         }
 
-        Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public ShellDescriptor GetShellDescriptor() {
             ShellDescriptorRecord shellDescriptorRecord = GetDescriptorRecord();

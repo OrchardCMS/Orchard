@@ -37,7 +37,7 @@ namespace Orchard.Recipes.RecipeHandlers {
         }
 
         public Localizer T { get; set; }
-        ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
 
         // <Theme packageId="theme1" repository="somethemerepo" version="1.1" enable="true" current="true" />
         // install themes from feed.
