@@ -31,7 +31,7 @@ namespace Orchard.Recipes.RecipeHandlers {
         }
 
         public Localizer T { get; set; }
-        ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
 
         // <Module packageId="module1" [repository="somerepo"] version="1.1" />
         // install modules from feed.

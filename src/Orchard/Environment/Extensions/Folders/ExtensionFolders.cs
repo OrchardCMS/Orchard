@@ -35,8 +35,8 @@ namespace Orchard.Environment.Extensions.Folders {
             T = NullLocalizer.Instance;
         }
 
-        Localizer T { get; set; }
-        ILogger Logger { get; set; }
+        public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             var list = new List<ExtensionDescriptor>();

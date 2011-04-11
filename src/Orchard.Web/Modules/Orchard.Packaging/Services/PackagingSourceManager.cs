@@ -24,7 +24,7 @@ namespace Orchard.Packaging.Services {
             T = NullLocalizer.Instance;
         }
 
-        Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         #region IPackagingSourceManager Members
 

@@ -20,7 +20,7 @@ namespace Orchard.FileSystems.VirtualPath {
             Logger = NullLogger.Instance;
         }
 
-        ILogger Logger { get; set; }
+        public ILogger Logger { get; set; }
 
         public IVolatileToken WhenPathChanges(string virtualPath) {
             try {
