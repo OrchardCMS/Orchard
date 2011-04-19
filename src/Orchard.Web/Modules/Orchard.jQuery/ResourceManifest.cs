@@ -22,7 +22,7 @@ namespace Orchard.UI.Resources {
             manifest.DefineScript("jQueryUI_Autocomplete").SetUrl("jquery.ui.autocomplete.min.js", "jquery.ui.autocomplete.js").SetVersion("1.8.10").SetDependencies("jQueryUI_Core", "jQueryUI_Widget", "jQueryUI_Position");
             manifest.DefineScript("jQueryUI_Button").SetUrl("jquery.ui.button.min.js", "jquery.ui.button.js").SetVersion("1.8.10").SetDependencies("jQueryUI_Core", "jQueryUI_Widget");
             manifest.DefineScript("jQueryUI_Dialog").SetUrl("jquery.ui.dialog.min.js", "jquery.ui.dialog.js").SetVersion("1.8.10").SetDependencies("jQueryUI_Core", "jQueryUI_Widget", "jQueryUI_Position", "jQueryUI_Mouse", "jQueryUI_Draggable", "jQueryUI_Resizable");
-            manifest.DefineScript("jQueryUI_Slider").SetUrl("jquery.ui.slidder.min.js", "jquery.ui.slidder.js").SetVersion("1.8.10").SetDependencies("jQueryUI_Core", "jQueryUI_Widget", "jQueryUI_Mouse");
+            manifest.DefineScript("jQueryUI_Slider").SetUrl("jquery.ui.slider.min.js", "jquery.ui.slider.js").SetVersion("1.8.10").SetDependencies("jQueryUI_Core", "jQueryUI_Widget", "jQueryUI_Mouse");
             manifest.DefineScript("jQueryUI_Tabs").SetUrl("jquery.ui.tabs.min.js", "jquery.ui.tabs.js").SetVersion("1.8.10").SetDependencies("jQueryUI_Core", "jQueryUI_Widget");
             manifest.DefineScript("jQueryUI_DatePicker").SetUrl("jquery.ui.datepicker.min.js", "jquery.ui.datepicker.js").SetVersion("1.8.10").SetDependencies("jQueryUI_Core");
             manifest.DefineScript("jQueryUI_Progressbar").SetUrl("jquery.ui.progressbar.min.js", "jquery.ui.progressbar.js").SetVersion("1.8.10").SetDependencies("jQueryUI_Core", "jQueryUI_Widget");
