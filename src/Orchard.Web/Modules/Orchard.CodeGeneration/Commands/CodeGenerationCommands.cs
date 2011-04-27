@@ -23,7 +23,7 @@ namespace Orchard.CodeGeneration.Commands {
             "", "Content", "Styles", "Scripts", "Views", "Zones"
         };
         private static readonly string[] _moduleDirectories = new [] {
-            "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles"
+            "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles", "CodeTemplates/AddController"
         };
 
         private const string ModuleName = "CodeGeneration";
@@ -210,6 +210,7 @@ namespace Orchard.CodeGeneration.Commands {
             string propertiesPath = modulePath + "Properties";
             var content = new HashSet<string>();
             var folders = new HashSet<string>();
+            var contentNoDeploy = new HashSet<string>(); 
 
             foreach(var folder in _moduleDirectories) {
                 Directory.CreateDirectory(modulePath + folder);
@@ -226,6 +227,8 @@ namespace Orchard.CodeGeneration.Commands {
             content.Add(modulePath + "Scripts\\Web.config");
             File.WriteAllText(modulePath + "Styles\\Web.config", File.ReadAllText(_codeGenTemplatePath + "StaticFilesWebConfig.txt"));
             content.Add(modulePath + "Styles\\Web.config");
+            File.WriteAllText(modulePath + "CodeTemplates\\AddController\\Controller.tt", File.ReadAllText(_codeGenTemplatePath + "Controller.tt."));
+            contentNoDeploy.Add(modulePath + "CodeTemplates\\AddController\\Controller.tt");
 
             string templateText = File.ReadAllText(_codeGenTemplatePath + "ModuleAssemblyInfo.txt");
             templateText = templateText.Replace("$$ModuleName$$", moduleName);
@@ -238,7 +241,7 @@ namespace Orchard.CodeGeneration.Commands {
             File.WriteAllText(modulePath + "Module.txt", templateText);
             content.Add(modulePath + "Module.txt");
 
-            var itemGroup = CreateProjectItemGroup(modulePath, content, folders);
+            var itemGroup = CreateProjectItemGroup(modulePath, content, folders, contentNoDeploy);
 
             File.WriteAllText(modulePath + moduleName + ".csproj", CreateCsProject(moduleName, projectGuid, itemGroup));
         }
@@ -321,7 +324,7 @@ namespace Orchard.CodeGeneration.Commands {
 
             // create new csproj for the theme
             if (projectGuid != null) {
-                var itemGroup = CreateProjectItemGroup(themePath, createdFiles, createdFolders);
+                var itemGroup = CreateProjectItemGroup(themePath, createdFiles, createdFolders, null);
                 string projectText = CreateCsProject(themeName, projectGuid, itemGroup);
                 File.WriteAllText(themePath + "\\" + themeName + ".csproj", projectText);
             }
@@ -329,7 +332,7 @@ namespace Orchard.CodeGeneration.Commands {
             if (includeInSolution) {
                 if (projectGuid == null) {
                     // include in solution but dont create a project: just add the references to Orchard.Themes project
-                    var itemGroup = CreateProjectItemGroup(HostingEnvironment.MapPath("~/Themes/"), createdFiles, createdFolders);
+                    var itemGroup = CreateProjectItemGroup(HostingEnvironment.MapPath("~/Themes/"), createdFiles, createdFolders, null);
                     AddFilesToOrchardThemesProject(output, itemGroup);
                     TouchSolution(output);
                 }
@@ -356,7 +359,8 @@ namespace Orchard.CodeGeneration.Commands {
             }
         }
 
-        private static string CreateProjectItemGroup(string relativeFromPath, HashSet<string> content, HashSet<string> folders) {
+        private static string CreateProjectItemGroup(string relativeFromPath, HashSet<string> content, HashSet<string> folders, HashSet<string> contentNoDeploy)
+        {
             var contentInclude = "";
             if (relativeFromPath != null && !relativeFromPath.EndsWith("\\", StringComparison.OrdinalIgnoreCase)) {
                 relativeFromPath += "\\";
@@ -373,6 +377,10 @@ namespace Orchard.CodeGeneration.Commands {
             if (folders != null && folders.Count > 0) {
                 contentInclude += "\r\n" + string.Join("\r\n", from folder in folders
                                                                select "    <Folder Include=\"" + folder.Replace(relativeFromPath, "") + "\" />");
+            }
+            if (contentNoDeploy != null && contentNoDeploy.Count > 0) {
+                contentInclude += "\r\n" + string.Join("\r\n", from file in contentNoDeploy
+                                                               select "    <None Include=\"" + file.Replace(relativeFromPath, "") + "\" />");
             }
             return string.Format(CultureInfo.InvariantCulture, "<ItemGroup>\r\n{0}\r\n  </ItemGroup>\r\n  ", contentInclude);
         }
