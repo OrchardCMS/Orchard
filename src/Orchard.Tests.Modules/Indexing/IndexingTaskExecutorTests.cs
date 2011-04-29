@@ -211,11 +211,31 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
 
             _contentManager.Unpublish(content.ContentItem);
+            _contentManager.Flush();
 
             while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
             Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
         }
 
+        [Test]
+        public void ShouldUpdateTheIndexWhenContentIsDeleted() {
+            _contentManager.Create<Thing>(ThingDriver.ContentTypeName).Text = "Lorem ipsum";
+
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
+            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
+
+            var content = _contentManager.Create<Thing>(ThingDriver.ContentTypeName);
+            content.Text = "Lorem ipsum";
+
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
+            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(2));
+
+            _contentManager.Remove(content.ContentItem);
+            _contentManager.Flush();
+
+            while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) { }
+            Assert.That(_provider.NumDocs(IndexName), Is.EqualTo(1));
+        }
 
         [Test]
         public void ShouldIndexAllContentOverTheLoopSize() {
