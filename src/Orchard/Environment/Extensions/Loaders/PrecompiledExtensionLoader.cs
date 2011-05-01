@@ -122,6 +122,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+            if (Disabled)
+                return;
+
             // If the assembly exists, monitor it
             string assemblyPath = GetAssemblyPath(descriptor);
             if (assemblyPath != null) {

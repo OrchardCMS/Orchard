@@ -67,6 +67,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+            if (Disabled)
+                return;
+
             // Monitor .csproj and all .cs files
             string projectPath = GetProjectPath(descriptor);
             if (projectPath != null) {
