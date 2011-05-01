@@ -17,7 +17,7 @@ namespace Orchard.WarmupStarter {
                 // so we need to simulate a "restart".
                 var error = _error;
                 LaunchStartupThread(registrations);
-                throw error;
+                throw new ApplicationException("Error during Orchard startup", error);
             }
 
             // Only notify if the host has started up
