@@ -76,8 +76,9 @@ namespace Orchard.Environment.Extensions.Loaders {
                 foreach (var path in GetDependencies(projectPath)) {
                     Logger.Information("Monitoring virtual path \"{0}\"", path);
 
-                    monitor(_virtualPathMonitor.WhenPathChanges(path));
-                    _reloadWorkaround.Monitor(_virtualPathMonitor.WhenPathChanges(path));
+                    var token = _virtualPathMonitor.WhenPathChanges(path);
+                    monitor(token);
+                    _reloadWorkaround.Monitor(token);
                 }
             }
         }
@@ -182,7 +183,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected IEnumerable<string> GetDependencies(string projectPath) {
-            HashSet<string> dependencies = new HashSet<string> { projectPath };
+            var dependencies = new HashSet<string> { projectPath };
 
             AddDependencies(projectPath, dependencies);
 
@@ -204,6 +205,18 @@ namespace Orchard.Environment.Extensions.Loaders {
                         string path = referenceDescriptor.ReferenceType == ReferenceType.Library
                                           ? _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
                                           : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
+
+                        // Normalize the virtual path (avoid ".." in the path name)
+                        if (!string.IsNullOrEmpty(path)) {
+                            try {
+                                path = _virtualPathProvider.ToAppRelative(path);
+                            }
+                            catch (Exception e) {
+                                // The initial path might have been invalid (e.g. path indicates a path outside the application root)
+                                Logger.Information(e, "Path '{0}' cannot be made app relative", path);
+                                path = null;
+                            }
+                        }
 
                         // Attempt to reference the project / library file
                         if (!string.IsNullOrEmpty(path) && !currentSet.Contains(path) && _virtualPathProvider.TryFileExists(path)) {
