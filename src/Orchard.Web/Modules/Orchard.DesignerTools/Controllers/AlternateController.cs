@@ -23,7 +23,7 @@ namespace Orchard.DesignerTools.Controllers
         public Localizer T { get; set; }
 
         public ActionResult Create(string template, string alternate, string returnUrl) {
-            if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to create templates")) && !Request.IsLocal)
+            if (!Request.IsLocal && !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to create templates")))
                 return new HttpUnauthorizedResult();
 
             alternate = alternate.Replace("__", "-").Replace("_", ".");
