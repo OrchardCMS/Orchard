@@ -11,7 +11,7 @@ namespace Orchard.Core.Reports {
             builder.AddImageSet("reports")
                 .Add(T("Reports"), "12",
                     menu => menu.Add(T("View"), "0", item => item.Action("Index", "Admin", new { area = "Reports" })
-                        .Permission(StandardPermissions.AccessAdminPanel)));
+                        .Permission(StandardPermissions.SiteOwner)));
         }
     }
 }
