@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using log4net.Appender;
+using log4net.Util;
 
 namespace Orchard.Logging {
     public class OrchardFileAppender : RollingFileAppender {
@@ -18,13 +19,14 @@ namespace Orchard.Logging {
         protected override void OpenFile(string fileName, bool append) {
             lock (this) {
                 bool fileOpened = false;
+                string completeFilename = GetNextOutputFileName(fileName);
                 string currentFilename = fileName;
 
-                if (!_suffixes.ContainsKey(fileName)) {
-                    _suffixes[fileName] = 0;
+                if (!_suffixes.ContainsKey(completeFilename)) {
+                    _suffixes[completeFilename] = 0;
                 }
 
-                int newSuffix = _suffixes[fileName];
+                int newSuffix = _suffixes[completeFilename];
 
                 for (int i = 1; !fileOpened && i <= Retries; i++) {
                     try {
@@ -36,11 +38,13 @@ namespace Orchard.Logging {
 
                         fileOpened = true;
                     } catch {
-                        newSuffix = _suffixes[fileName] + i;
+                        newSuffix = _suffixes[completeFilename] + i;
+
+                        LogLog.Error(string.Format("OrchardFileAppender: Failed to open [{0}]. Attempting [{1}-{2}] instead.", fileName, fileName, newSuffix));
                     }
                 }
 
-                _suffixes[fileName] = newSuffix;
+                _suffixes[completeFilename] = newSuffix;
             }
         }
 
