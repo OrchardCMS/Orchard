@@ -1,4 +1,5 @@
 ﻿using System;
+using log4net.Util;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
@@ -14,6 +15,9 @@ namespace Orchard.Tests.Logging {
             const string filenameAlternative2 = "Orchard-debug-2";
 
             string filenameUsed = string.Empty;
+
+            // Set logging to quiet mode
+            LogLog.QuietMode = true;
 
             Mock<StubOrchardFileAppender> firstOrchardFileAppenderMock = new Mock<StubOrchardFileAppender>();
             StubOrchardFileAppender firstOrchardFileAppender = firstOrchardFileAppenderMock.Object;
