@@ -101,8 +101,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (projectPath == null)
                 return Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
-            using (var stream = _virtualPathProvider.OpenFile(projectPath)) {
-                var projectFile = _projectFileParser.Parse(stream);
+            var projectFile = _projectFileParser.Parse(projectPath);
 
                 return projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
                     Descriptor = descriptor,
@@ -111,7 +110,6 @@ namespace Orchard.Environment.Extensions.Loaders {
                     VirtualPath = _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
                 });
             }
-        }
 
         public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
             //Note: This is the same implementation as "PrecompiledExtensionLoader"
@@ -193,8 +191,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         private void AddDependencies(string projectPath, HashSet<string> currentSet) {
             string basePath = _virtualPathProvider.GetDirectoryName(projectPath);
 
-            using (var stream = _virtualPathProvider.OpenFile(projectPath)) {
-                ProjectFileDescriptor projectFile = _projectFileParser.Parse(stream);
+            ProjectFileDescriptor projectFile = _projectFileParser.Parse(projectPath);
 
                 // Add source files
                 currentSet.UnionWith(projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f)));
@@ -236,7 +233,6 @@ namespace Orchard.Environment.Extensions.Loaders {
                     }
                 }
             }
-        }
 
         private string GetProjectPath(ExtensionDescriptor descriptor) {
             string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
