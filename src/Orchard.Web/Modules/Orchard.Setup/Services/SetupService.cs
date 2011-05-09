@@ -200,7 +200,7 @@ namespace Orchard.Setup.Services {
             cultureManager.AddCulture("en-US");
 
             var recipeManager = environment.Resolve<IRecipeManager>();
-            executionId = recipeManager.Execute(Recipes().Where(r => r.Name == context.Recipe).FirstOrDefault());
+            executionId = recipeManager.Execute(Recipes().Where(r => r.Name.Equals(context.Recipe, StringComparison.OrdinalIgnoreCase)).FirstOrDefault());
 
             //null check: temporary fix for running setup in command line
             if (HttpContext.Current != null) {
