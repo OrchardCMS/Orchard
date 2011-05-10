@@ -845,7 +845,6 @@
     <Compile Include="Utility\Extensions\HttpRequestExtensions.cs" />
     <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
-    <Compile Include="Utility\ReflectOn.cs" />
     <Compile Include="Validation\JetBrains.Annotations.cs" />
     <Compile Include="IMapper.cs" />
   </ItemGroup>
