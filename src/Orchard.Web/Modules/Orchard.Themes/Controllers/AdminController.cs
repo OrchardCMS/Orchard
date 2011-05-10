@@ -109,34 +109,34 @@ namespace Orchard.Themes.Controllers {
         }
 
         [HttpPost, FormValueAbsent("submit.Apply"), FormValueAbsent("submit.Cancel")]
-        public ActionResult Preview(string themeName, string returnUrl) {
+        public ActionResult Preview(string themeId, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
                 return new HttpUnauthorizedResult();
 
             if (_extensionManager.AvailableExtensions()
-                .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Name.Equals(themeName)) == null) {
+                .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Id.Equals(themeId)) == null) {
 
-                Services.Notifier.Error(T("Theme {0} was not found", themeName));
+                Services.Notifier.Error(T("Theme {0} was not found", themeId));
             } else {
-                _themeService.EnableThemeFeatures(themeName);
-                _previewTheme.SetPreviewTheme(themeName);
+                _themeService.EnableThemeFeatures(themeId);
+                _previewTheme.SetPreviewTheme(themeId);
             }
 
             return this.RedirectLocal(returnUrl, "~/");
         }
 
         [HttpPost, ActionName("Preview"), FormValueRequired("submit.Apply")]
-        public ActionResult ApplyPreview(string themeName, string returnUrl) {
+        public ActionResult ApplyPreview(string themeId, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
                 return new HttpUnauthorizedResult();
 
             if (_extensionManager.AvailableExtensions()
-                .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Name.Equals(themeName)) == null) {
+                .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Id.Equals(themeId)) == null) {
 
-                Services.Notifier.Error(T("Theme {0} was not found", themeName));
+                Services.Notifier.Error(T("Theme {0} was not found", themeId));
             } else {
                 _previewTheme.SetPreviewTheme(null);
-                _siteThemeService.SetSiteTheme(themeName);
+                _siteThemeService.SetSiteTheme(themeId);
             }
 
             return RedirectToAction("Index");
@@ -153,68 +153,68 @@ namespace Orchard.Themes.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Enable(string themeName) {
+        public ActionResult Enable(string themeId) {
             if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't enable the theme")))
                 return new HttpUnauthorizedResult();
 
             if (_extensionManager.AvailableExtensions()
-                .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Name.Equals(themeName)) == null) {
+                .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Id.Equals(themeId)) == null) {
 
-                Services.Notifier.Error(T("Theme {0} was not found", themeName));
+                Services.Notifier.Error(T("Theme {0} was not found", themeId));
             } else {
-                _themeService.EnableThemeFeatures(themeName);
+                _themeService.EnableThemeFeatures(themeId);
             }
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult Disable(string themeName) {
+        public ActionResult Disable(string themeId) {
             if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't disable the current theme")))
                 return new HttpUnauthorizedResult();
 
             if (_extensionManager.AvailableExtensions()
-                .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Name.Equals(themeName)) == null) {
+                .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Id.Equals(themeId)) == null) {
 
-                Services.Notifier.Error(T("Theme {0} was not found", themeName));
+                Services.Notifier.Error(T("Theme {0} was not found", themeId));
             } else {
-                _themeService.DisableThemeFeatures(themeName);
+                _themeService.DisableThemeFeatures(themeId);
             }
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult Activate(string themeName) {
+        public ActionResult Activate(string themeId) {
             if (!Services.Authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't set the current theme")))
                 return new HttpUnauthorizedResult();
 
             if (_extensionManager.AvailableExtensions()
-                .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Name.Equals(themeName)) == null) {
+                .FirstOrDefault(extension => DefaultExtensionTypes.IsTheme(extension.ExtensionType) && extension.Id.Equals(themeId)) == null) {
 
-                Services.Notifier.Error(T("Theme {0} was not found", themeName));
+                Services.Notifier.Error(T("Theme {0} was not found", themeId));
             } else {
-                _themeService.EnableThemeFeatures(themeName);
-                _siteThemeService.SetSiteTheme(themeName);
+                _themeService.EnableThemeFeatures(themeId);
+                _siteThemeService.SetSiteTheme(themeId);
             }
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public ActionResult Update(string themeName) {
+        public ActionResult Update(string themeId) {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Couldn't update theme")))
                 return new HttpUnauthorizedResult();
 
-            if (string.IsNullOrEmpty(themeName))
+            if (string.IsNullOrEmpty(themeId))
                 return HttpNotFound();
 
             try {
-                _reportsCoordinator.Register("Data Migration", "Upgrade " + themeName, "Orchard installation");
-                _dataMigrationManager.Update(themeName);
-                Services.Notifier.Information(T("The theme {0} was updated succesfuly", themeName));
+                _reportsCoordinator.Register("Data Migration", "Upgrade " + themeId, "Orchard installation");
+                _dataMigrationManager.Update(themeId);
+                Services.Notifier.Information(T("The theme {0} was updated succesfuly", themeId));
             } catch (Exception exception) {
-                this.Error(exception, T("An error occured while updating the theme {0}: {1}", themeName, exception.Message), Logger, Services.Notifier);
+                this.Error(exception, T("An error occured while updating the theme {0}: {1}", themeId, exception.Message), Logger, Services.Notifier);
             }
 
             return RedirectToAction("Index");
