@@ -190,7 +190,7 @@ namespace Orchard.DesignerTools.Services {
             }
         }
 
-        private static string FormatJsonValue(string value) {
+        public static string FormatJsonValue(string value) {
             // replace " by \" in json strings
             return value.Replace(@"\", @"\\").Replace("\"", @"\""").Replace("\r\n", @"\n").Replace("\r", @"\n").Replace("\n", @"\n");
         }
