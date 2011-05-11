@@ -7,7 +7,12 @@ using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Core.Common.Settings {
     public class CommonTypePartSettings {
+        public CommonTypePartSettings() {
+            ShowOwnerEditor = true;
+        }
+
         public bool ShowCreatedUtcEditor { get; set; }
+        public bool ShowOwnerEditor { get; set; }
     }
 
     public class CommonSettingsHooks : ContentDefinitionEditorEventsBase {
@@ -26,6 +31,7 @@ namespace Orchard.Core.Common.Settings {
             var model = new CommonTypePartSettings();
             updateModel.TryUpdateModel(model, "CommonTypePartSettings", null, null);
             builder.WithSetting("CommonTypePartSettings.ShowCreatedUtcEditor", model.ShowCreatedUtcEditor.ToString());
+            builder.WithSetting("CommonTypePartSettings.ShowOwnerEditor", model.ShowOwnerEditor.ToString());
             yield return DefinitionTemplate(model);
         }
     }

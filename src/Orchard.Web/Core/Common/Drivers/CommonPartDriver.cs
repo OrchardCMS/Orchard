@@ -73,7 +73,9 @@ namespace Orchard.Core.Common.Drivers {
             List<DriverResult> parts = new List<DriverResult>();
             CommonTypePartSettings commonTypePartSettings = GetTypeSettings(part);
 
-            parts.Add(OwnerEditor(part, updater, shapeHelper));
+            if (commonTypePartSettings.ShowOwnerEditor) {
+                parts.Add(OwnerEditor(part, updater, shapeHelper));
+            }
 
             if (commonTypePartSettings.ShowCreatedUtcEditor) {
                 parts.Add(CreatedUtcEditor(part, updater, shapeHelper));
@@ -114,12 +116,7 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         DriverResult CreatedUtcEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, currentUser, part)) {
-                return null;
-            }
-
-            var model = new CreatedUtcEditorViewModel();
+            CreatedUtcEditorViewModel model = new CreatedUtcEditorViewModel();
             if (part.CreatedUtc != null) {
                 model.CreatedDate = part.CreatedUtc.Value.ToLocalTime().ToString(DatePattern, CultureInfo.InvariantCulture);
                 model.CreatedTime = part.CreatedUtc.Value.ToLocalTime().ToString(TimePattern, CultureInfo.InvariantCulture);
@@ -134,7 +131,7 @@ namespace Orchard.Core.Common.Drivers {
 
                     // use an english culture as it is the one used by jQuery.datepicker by default
                     if (DateTime.TryParse(parseDateTime, CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AssumeLocal, out createdUtc)) {
-                        part.CreatedUtc = createdUtc;
+                        part.CreatedUtc = createdUtc.ToUniversalTime();
                     }
                     else {
                         updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));
