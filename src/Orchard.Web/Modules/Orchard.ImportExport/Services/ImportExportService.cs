@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Environment.Descriptor;
@@ -15,7 +14,6 @@ using Orchard.Recipes.Services;
 using VersionOptions = Orchard.ContentManagement.VersionOptions;
 
 namespace Orchard.ImportExport.Services {
-    [UsedImplicitly]
     public class ImportExportService : IImportExportService {
         private readonly IOrchardServices _orchardServices;
         private readonly IContentDefinitionManager _contentDefinitionManager;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -20,7 +19,6 @@ using Orchard.Security;
 using Orchard.Blogs.Extensions;
 
 namespace Orchard.Blogs.Services {
-    [UsedImplicitly]
     [OrchardFeature("Orchard.Blogs.RemotePublishing")]
     public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IBlogService _blogService;

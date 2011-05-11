@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Feeds.Models;
@@ -9,7 +8,6 @@ using Orchard.Core.Feeds.StandardBuilders;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Feeds.StandardQueries {
-    [UsedImplicitly]
     public class ContainerFeedQuery : IFeedQueryProvider, IFeedQuery {
         private readonly IContentManager _contentManager;
 

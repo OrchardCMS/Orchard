@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
@@ -12,7 +11,6 @@ using Orchard.Data;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Blogs.Services {
-    [UsedImplicitly]
     public class BlogPostService : IBlogPostService {
         private readonly IContentManager _contentManager;
         private readonly IRepository<BlogPartArchiveRecord> _blogArchiveRepository;

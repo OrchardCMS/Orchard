@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Settings.Models;
@@ -13,7 +12,6 @@ using Orchard.UI.Notify;
 using Orchard.Localization;
 
 namespace Orchard.Core.Settings.Drivers {
-    [UsedImplicitly]
     public class SiteSettingsPartDriver : ContentPartDriver<SiteSettingsPart> {
         private readonly ISiteService _siteService;
         private readonly ICultureManager _cultureManager;

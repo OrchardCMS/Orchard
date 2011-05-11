@@ -1,5 +1,4 @@
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
@@ -10,7 +9,6 @@ using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Handlers {
-    [UsedImplicitly]
     public class CommonPartHandler : ContentHandler {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;

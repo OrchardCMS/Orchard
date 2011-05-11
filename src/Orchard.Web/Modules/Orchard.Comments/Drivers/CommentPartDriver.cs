@@ -1,12 +1,10 @@
 using System;
 using System.Xml;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 
 namespace Orchard.Comments.Drivers {
-    [UsedImplicitly]
     public class CommentPartDriver : ContentPartDriver<CommentPart> {
         private readonly IContentManager _contentManager;
         protected override string Prefix { get { return "Comments"; } }

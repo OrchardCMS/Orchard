@@ -1,15 +1,10 @@
-﻿using System;
-using System.Linq;
-using JetBrains.Annotations;
-using Orchard.Comments.Models;
+﻿using Orchard.Comments.Models;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Services;
 
 namespace Orchard.Comments.Services {
-    [UsedImplicitly]
     public class CommentService : ICommentService {
         private readonly IClock _clock;
         private readonly ICommentValidator _commentValidator;

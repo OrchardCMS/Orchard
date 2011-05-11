@@ -1,11 +1,9 @@
 ﻿using System;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 
 namespace Orchard.Comments.Drivers {
-    [UsedImplicitly]
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
         protected override DriverResult Display(CommentsPart part, string displayType, dynamic shapeHelper) {
             if (part.CommentsShown == false)

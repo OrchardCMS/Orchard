@@ -1,11 +1,9 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Fields;
 
 namespace Orchard.Core.Common.Drivers {
-    [UsedImplicitly]
     public class TextFieldDriver : ContentFieldDriver<TextField> {
         public TextFieldDriver(IOrchardServices services) {
             Services = services;

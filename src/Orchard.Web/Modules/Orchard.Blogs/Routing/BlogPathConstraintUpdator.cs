@@ -1,5 +1,4 @@
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -7,7 +6,6 @@ using Orchard.Environment;
 using Orchard.Tasks;
 
 namespace Orchard.Blogs.Routing {
-    [UsedImplicitly]
     public class BlogPathConstraintUpdator : IOrchardShellEvents, IBackgroundTask {
         private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly IBlogService _blogService;

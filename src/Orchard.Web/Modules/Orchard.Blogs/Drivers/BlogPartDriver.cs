@@ -1,11 +1,9 @@
 ﻿using System;
-using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 
 namespace Orchard.Blogs.Drivers {
-    [UsedImplicitly]
     public class BlogPartDriver : ContentPartDriver<BlogPart> {
         protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper) {
             return Combined(

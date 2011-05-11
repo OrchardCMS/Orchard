@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -8,7 +7,6 @@ using Orchard.Services;
 using Orchard.ContentManagement;
 
 namespace Orchard.Core.Routable.Services {
-    [UsedImplicitly]
     public class RoutableHomePageProvider : IHomePageProvider {
         private readonly IContentManager _contentManager;
         public const string Name = "RoutableHomePageProvider";

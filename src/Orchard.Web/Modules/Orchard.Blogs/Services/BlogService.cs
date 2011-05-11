@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.ContentManagement;
@@ -8,7 +7,6 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Services {
-    [UsedImplicitly]
     public class BlogService : IBlogService {
         private readonly IContentManager _contentManager;
         private readonly IBlogPathConstraint _blogPathConstraint;

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
-using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.ContentManagement;
@@ -13,7 +12,6 @@ using Orchard.Data;
 using Orchard.Services;
 
 namespace Orchard.Blogs.Handlers {
-    [UsedImplicitly]
     public class BlogPartHandler : ContentHandler {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IBlogPathConstraint _blogPathConstraint;

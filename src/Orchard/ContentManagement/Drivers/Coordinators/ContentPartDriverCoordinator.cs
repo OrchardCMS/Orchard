@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers.Coordinators {
-    [UsedImplicitly]
     public class ContentPartDriverCoordinator : ContentHandlerBase {
         private readonly IEnumerable<IContentPartDriver> _drivers;
         private readonly IContentDefinitionManager _contentDefinitionManager;

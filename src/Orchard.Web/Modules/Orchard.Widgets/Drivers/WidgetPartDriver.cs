@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Widgets.Models;
 using Orchard.Widgets.Services;
 
 namespace Orchard.Widgets.Drivers {
-
-    [UsedImplicitly]
     public class WidgetPartDriver : ContentPartDriver<WidgetPart> {
         private readonly IWidgetsService _widgetsService;
 

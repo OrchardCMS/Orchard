@@ -1,11 +1,9 @@
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Models;
 
 namespace Orchard.Comments.Feeds {
-    [UsedImplicitly]
     public class CommentedOnFeedQuery : IFeedQueryProvider, IFeedQuery {
         private readonly IContentManager _contentManager;
 

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Navigation.Models;
 
 namespace Orchard.Core.Navigation.Services {
-    [UsedImplicitly]
     public class MainMenuService : IMenuService {
         private readonly IContentManager _contentManager;
 

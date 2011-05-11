@@ -3,7 +3,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
-using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
@@ -15,7 +14,6 @@ using System.Collections.Generic;
 using Orchard.Services;
 
 namespace Orchard.Users.Services {
-    [UsedImplicitly]
     public class MembershipService : IMembershipService {
         private readonly IOrchardServices _orchardServices;
         private readonly IMessageManager _messageManager;

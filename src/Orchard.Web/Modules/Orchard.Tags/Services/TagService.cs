@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -11,7 +10,6 @@ using Orchard.Tags.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Tags.Services {
-    [UsedImplicitly]
     public class TagService : ITagService {
         private readonly IRepository<TagRecord> _tagRepository;
         private readonly IRepository<ContentTagRecord> _contentTagRepository;

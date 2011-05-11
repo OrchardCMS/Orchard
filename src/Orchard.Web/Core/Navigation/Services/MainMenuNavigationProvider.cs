@@ -1,12 +1,10 @@
 ﻿using System.Web;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Navigation.Models;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Core.Navigation.Services {
-    [UsedImplicitly]
     public class MainMenuNavigationProvider : INavigationProvider {
         private readonly IContentManager _contentManager;
 

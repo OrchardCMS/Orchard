@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
-using JetBrains.Annotations;
 using Orchard.Logging;
 
 namespace Orchard.Blogs.Routing {
-    [UsedImplicitly]
     public class BlogPathConstraint : IBlogPathConstraint {
         /// <summary>
         /// Singleton object, per Orchard Shell instance. We need to protect concurrent access to the dictionary.

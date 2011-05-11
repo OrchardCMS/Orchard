@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Caching;
 using Orchard.Data;
 using Orchard.Localization;
@@ -10,7 +9,6 @@ using Orchard.Roles.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Roles.Services {
-    [UsedImplicitly]
     public class RoleService : IRoleService {
         private const string SignalName = "Orchard.Roles.Services.RoleService";
 

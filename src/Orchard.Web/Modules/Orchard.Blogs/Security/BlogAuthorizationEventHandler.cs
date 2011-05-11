@@ -1,11 +1,9 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Blogs.Security {
-    [UsedImplicitly]
     public class BlogAuthorizationEventHandler : IAuthorizationServiceEventHandler {
         public void Checking(CheckAccessContext context) { }
         public void Complete(CheckAccessContext context) { }

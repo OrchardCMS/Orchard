@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
-using JetBrains.Annotations;
 using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -13,7 +12,6 @@ using Orchard.Logging;
 using Orchard.UI.Notify;
 
 namespace Orchard.Themes.Services {
-    [UsedImplicitly]
     public class ThemeService : IThemeService {
         private readonly IExtensionManager _extensionManager;
         private readonly IFeatureManager _featureManager;

@@ -1,9 +1,7 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement.Handlers;
+﻿using Orchard.ContentManagement.Handlers;
 using Orchard.Experimental.Models;
 
 namespace Orchard.Experimental.Handlers {
-    [UsedImplicitly]
     public class DebugLinkHandler : ContentHandler {
         protected override void BuildDisplayShape(BuildDisplayContext context) {
             var experimentalSettings = context.ContentItem.TypeDefinition.Settings.GetModel<Settings.ExperimentalSettings>();

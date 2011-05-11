@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
@@ -261,7 +260,6 @@ namespace Orchard.Core.Tests.Routable.Services {
             }
         }
 
-        [UsedImplicitly]
         public class ThingHandler : ContentHandler {
             public ThingHandler() {
                 Filters.Add(new ActivatingFilter<Thing>("thing"));
@@ -283,7 +281,6 @@ namespace Orchard.Core.Tests.Routable.Services {
             }
         }
 
-        [UsedImplicitly]
         public class StuffHandler : ContentHandler {
             public StuffHandler() {
                 Filters.Add(new ActivatingFilter<Stuff>("stuff"));

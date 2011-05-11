@@ -1,10 +1,8 @@
 ﻿using System.Web.Mvc;
-using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
 
 namespace Orchard.Security {
-    [UsedImplicitly]
     public class SecurityFilter : FilterProvider, IExceptionFilter {
         public SecurityFilter() {
             Logger = NullLogger.Instance;

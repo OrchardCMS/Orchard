@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
@@ -11,7 +10,6 @@ using Orchard.Tags.Services;
 using Orchard.Tags.ViewModels;
 
 namespace Orchard.Tags.Drivers {
-    [UsedImplicitly]
     public class TagsPartDriver : ContentPartDriver<TagsPart> {
         private const string TemplateName = "Parts/Tags";
         private readonly ITagService _tagService;

@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 
 namespace Orchard.Comments.Drivers {
-    [UsedImplicitly]
     public class CommentsContainerPartDriver : ContentPartDriver<CommentsContainerPart> {
         protected override DriverResult Display(CommentsContainerPart part, string displayType, dynamic shapeHelper) {
             return Combined(

@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Orchard.Logging;
 
 namespace Orchard.Tasks {
@@ -7,7 +6,6 @@ namespace Orchard.Tasks {
         void Sweep();
     }
 
-    [UsedImplicitly]
     public class BackgroundService : IBackgroundService {
         private readonly IBackgroundTask _tasks;
 

@@ -1,13 +1,11 @@
 using System;
 using System.IO;
 using System.Xml.Linq;
-using JetBrains.Annotations;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Security;
 
 namespace Orchard.Media.Services {
-    [UsedImplicitly]
     public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IMembershipService _membershipService;
         private readonly IAuthorizationService _authorizationService;

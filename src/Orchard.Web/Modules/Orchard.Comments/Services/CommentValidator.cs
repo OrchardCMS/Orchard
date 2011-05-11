@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web;
-using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.Localization;
@@ -11,7 +10,6 @@ using Joel.Net;
 namespace Orchard.Comments.Services {
     //This uses an akismet api implementation from http://akismetapi.codeplex.com/ 
     //Since the implementation is trivial, it may make sense to implement it to reduce dependencies.
-    [UsedImplicitly]
     public class AkismetCommentValidator : ICommentValidator {
         private readonly INotifier _notifer;
         private readonly IOrchardServices _orchardServices;

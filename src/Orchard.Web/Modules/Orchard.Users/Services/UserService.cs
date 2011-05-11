@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
@@ -14,7 +13,6 @@ using Orchard.Messaging.Services;
 using Orchard.Environment.Configuration;
 
 namespace Orchard.Users.Services {
-    [UsedImplicitly]
     public class UserService : IUserService {
         private static readonly TimeSpan DelayToValidate = new TimeSpan(7, 0, 0, 0); // one week to validate email
         private static readonly TimeSpan DelayToResetPassword = new TimeSpan(1, 0, 0, 0); // 24 hours to validate email

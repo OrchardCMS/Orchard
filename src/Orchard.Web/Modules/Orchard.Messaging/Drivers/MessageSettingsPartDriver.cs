@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Localization;
 using Orchard.Messaging.Models;
@@ -7,7 +6,6 @@ using Orchard.Messaging.Services;
 using Orchard.Messaging.ViewModels;
 
 namespace Orchard.Messaging.Drivers {
-    [UsedImplicitly]
     public class MessageSettingsPartDriver : ContentPartDriver<MessageSettingsPart> {
         private const string TemplateName = "Parts/MessageSettings";
         private readonly IMessageManager _messageQueueManager;

@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
-using JetBrains.Annotations;
 using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.ContentManagement.Records {
     class ContentItemAlteration : IAutoMappingAlteration {
         private readonly IEnumerable<RecordBlueprint> _recordDescriptors;
 
-        [UsedImplicitly]
         public ContentItemAlteration() {
             _recordDescriptors = Enumerable.Empty<RecordBlueprint>();
         }

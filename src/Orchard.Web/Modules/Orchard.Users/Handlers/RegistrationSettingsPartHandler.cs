@@ -1,12 +1,10 @@
-﻿using JetBrains.Annotations;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.Handlers {
-    [UsedImplicitly]
     public class RegistrationSettingsPartHandler : ContentHandler {
         public RegistrationSettingsPartHandler(IRepository<RegistrationSettingsPartRecord> repository) {
             T = NullLocalizer.Instance;
