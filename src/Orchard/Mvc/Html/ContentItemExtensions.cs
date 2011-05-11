@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Mvc.Html {
     public static class ContentItemExtensions {
@@ -45,7 +45,7 @@ namespace Orchard.Mvc.Html {
             return html.ActionLink(
                 NonNullOrEmpty(linkText, metadata.DisplayText, content.ContentItem.TypeDefinition.DisplayName),
                 Convert.ToString(metadata.EditorRouteValues["action"]),
-                metadata.EditorRouteValues.Merge(additionalRouteValues));
+                additionalRouteValues == null ? metadata.EditorRouteValues : MergeRouteValues(metadata.EditorRouteValues, new RouteValueDictionary(additionalRouteValues)));
         }
 
         public static MvcHtmlString ItemAdminLink(this HtmlHelper html, IContent content) {
@@ -64,7 +64,7 @@ namespace Orchard.Mvc.Html {
             return html.ActionLink(
                 NonNullOrEmpty(linkText, metadata.DisplayText, content.ContentItem.TypeDefinition.DisplayName),
                 Convert.ToString(metadata.AdminRouteValues["action"]),
-                metadata.AdminRouteValues.Merge(additionalRouteValues));
+                additionalRouteValues == null ? metadata.AdminRouteValues : MergeRouteValues(metadata.AdminRouteValues, new RouteValueDictionary(additionalRouteValues)));
         }
 
         public static string ItemDisplayUrl(this UrlHelper urlHelper, IContent content) {
@@ -87,6 +87,10 @@ namespace Orchard.Mvc.Html {
                 metadata.EditorRouteValues);
         }
 
+        public static MvcHtmlString ItemEditLink(this HtmlHelper html, IContent content) {
+            return ItemEditLink(html, null, content);
+        }
+
         private static string NonNullOrEmpty(params string[] values) {
             foreach (var value in values) {
                 if (!string.IsNullOrEmpty(value))
@@ -95,8 +99,15 @@ namespace Orchard.Mvc.Html {
             return null;
         }
 
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, IContent content) {
-            return ItemEditLink(html, null, content);
+        private static RouteValueDictionary MergeRouteValues(RouteValueDictionary dictionary, RouteValueDictionary dictionaryToMerge) {
+            if (dictionaryToMerge == null)
+                return dictionary;
+
+            var newDictionary = new RouteValueDictionary(dictionary);
+            foreach (var valueDictionary in dictionaryToMerge)
+                newDictionary[valueDictionary.Key] = valueDictionary.Value;
+
+            return newDictionary;
         }
     }
 }
