@@ -59,6 +59,7 @@ namespace Orchard.Environment {
         void IOrchardHost.Initialize() {
             Logger.Information("Initializing");
             BuildCurrent();
+            Logger.Information("Initialized");
         }
 
         void IOrchardHost.ReloadExtensions() {
@@ -98,19 +99,26 @@ namespace Orchard.Environment {
         }
 
         IEnumerable<ShellContext> CreateAndActivate() {
+            Logger.Information("Start creation of shells");
+
+            IEnumerable<ShellContext> result;
             var allSettings = _shellSettingsManager.LoadSettings();
             if (allSettings.Any()) {
-                return allSettings.Select(
+                result = allSettings.Select(
                     settings => {
                         var context = CreateShellContext(settings);
                         ActivateShell(context);
                         return context;
                     });
             }
+            else {
+                var setupContext = CreateSetupContext();
+                ActivateShell(setupContext);
+                result = new[] {setupContext};
+            }
 
-            var setupContext = CreateSetupContext();
-            ActivateShell(setupContext);
-            return new[] { setupContext };
+            Logger.Information("Done creating shells");
+            return result;
         }
 
         private void ActivateShell(ShellContext context) {

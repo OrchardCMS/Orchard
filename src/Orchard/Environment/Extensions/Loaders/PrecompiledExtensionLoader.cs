@@ -128,7 +128,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             // If the assembly exists, monitor it
             string assemblyPath = GetAssemblyPath(descriptor);
             if (assemblyPath != null) {
-                Logger.Information("Monitoring virtual path \"{0}\"", assemblyPath);
+                Logger.Debug("Monitoring virtual path \"{0}\"", assemblyPath);
                 monitor(_virtualPathMonitor.WhenPathChanges(assemblyPath));
                 return;
             }
@@ -138,7 +138,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             // detect that as a change of configuration.
             var assemblyDirectory = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id, "bin");
             if (_virtualPathProvider.DirectoryExists(assemblyDirectory)) {
-                Logger.Information("Monitoring virtual path \"{0}\"", assemblyDirectory);
+                Logger.Debug("Monitoring virtual path \"{0}\"", assemblyDirectory);
                 monitor(_virtualPathMonitor.WhenPathChanges(assemblyDirectory));
             }
         }
@@ -196,11 +196,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (Disabled)
                 return null;
 
+            Logger.Information("Start loading pre-compiled extension \"{0}\"", descriptor.Name);
+
             var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Id);
             if (assembly == null)
                 return null;
 
-            Logger.Information("Loaded pre-compiled extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
+            Logger.Information("Done loading pre-compiled extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,

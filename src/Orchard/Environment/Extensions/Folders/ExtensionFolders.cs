@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
@@ -39,48 +38,49 @@ namespace Orchard.Environment.Extensions.Folders {
         public ILogger Logger { get; set; }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-            var list = new List<ExtensionDescriptor>();
-            foreach (var locationPath in _paths) {
-                var path = locationPath;
-                var subList = _cacheManager.Get(locationPath, ctx => {
+            return _paths
+                .SelectMany(path => _cacheManager.Get(path, ctx => {
                     ctx.Monitor(_webSiteFolder.WhenPathChanges(ctx.Key));
-                    var subfolderPaths = _webSiteFolder.ListDirectories(ctx.Key);
-                    var localList = new List<ExtensionDescriptor>();
-                    foreach (var subfolderPath in subfolderPaths) {
-                        var extensionId = Path.GetFileName(subfolderPath.TrimEnd('/', '\\'));
-                        var manifestPath = Path.Combine(subfolderPath, _manifestName);
-                        try {
-                            var descriptor = GetExtensionDescriptor(path, extensionId, manifestPath);
+                    return AvailableExtensionsInFolder(ctx.Key);
+                    }))
+                .ToList();
+        }
 
-                            if (descriptor == null)
-                                continue;
+        private List<ExtensionDescriptor> AvailableExtensionsInFolder(string path) {
+            Logger.Information("Start looking for extensions in '{0}'...", path);
+            var subfolderPaths = _webSiteFolder.ListDirectories(path);
+            var localList = new List<ExtensionDescriptor>();
+            foreach (var subfolderPath in subfolderPaths) {
+                var extensionId = Path.GetFileName(subfolderPath.TrimEnd('/', '\\'));
+                var manifestPath = Path.Combine(subfolderPath, _manifestName);
+                try {
+                    var descriptor = GetExtensionDescriptor(path, extensionId, manifestPath);
 
-                            if (descriptor.Path != null && !descriptor.Path.IsValidUrlSegment()) {
-                                Logger.Error("The module '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
-                                    extensionId,
-                                    descriptor.Path);
-                                continue;
-                            }
+                    if (descriptor == null)
+                        continue;
 
-                            if (descriptor.Path == null) {
-                                descriptor.Path = descriptor.Name.IsValidUrlSegment()
-                                    ? descriptor.Name
-                                    : descriptor.Id;
-                            }
-
-                            localList.Add(descriptor);
-                        }
-                        catch (Exception ex) {
-                            // Ignore invalid module manifests
-                            Logger.Error(ex, "The module '{0}' could not be loaded. It was ignored.", extensionId);
-                        }
+                    if (descriptor.Path != null && !descriptor.Path.IsValidUrlSegment()) {
+                        Logger.Error("The module '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
+                                     extensionId,
+                                     descriptor.Path);
+                        continue;
                     }
-                    return localList;
-                });
-                list.AddRange(subList);
-            }
 
-            return list;
+                    if (descriptor.Path == null) {
+                        descriptor.Path = descriptor.Name.IsValidUrlSegment()
+                                              ? descriptor.Name
+                                              : descriptor.Id;
+                    }
+
+                    localList.Add(descriptor);
+                }
+                catch (Exception ex) {
+                    // Ignore invalid module manifests
+                    Logger.Error(ex, "The module '{0}' could not be loaded. It was ignored.", extensionId);
+                }
+            }
+            Logger.Information("Done looking for extensions in '{0}': {1}", path, string.Join(", ", localList.Select(d => d.Id)));
+            return localList;
         }
 
         public static ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionId, string extensionType, string manifestText) {

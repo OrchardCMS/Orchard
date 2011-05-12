@@ -299,6 +299,7 @@ namespace Orchard.Environment.Extensions {
         }
 
         public void MonitorExtensions(Action<IVolatileToken> monitor) {
+            Logger.Information("Start monitoring extension files...");
             // Monitor add/remove of any module/theme
             monitor(_virtualPathMonitor.WhenPathChanges("~/Modules"));
             monitor(_virtualPathMonitor.WhenPathChanges("~/Themes"));
@@ -310,6 +311,7 @@ namespace Orchard.Environment.Extensions {
                     loader.Monitor(extension, monitor);
                 }
             }
+            Logger.Information("Done monitoring extension files...");
         }
     }
 }

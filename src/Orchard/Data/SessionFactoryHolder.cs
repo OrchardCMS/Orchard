@@ -72,10 +72,13 @@ namespace Orchard.Data {
                 NHibernate.Cfg.Environment.UseReflectionOptimizer = false;
 
             Configuration config = GetConfiguration();
-            return config.BuildSessionFactory();
+            var result = config.BuildSessionFactory();
+            Logger.Debug("Done building session factory");
+            return result;
         }
 
         private Configuration BuildConfiguration() {
+            Logger.Debug("Building configuration");
             var parameters = GetSessionFactoryParameters();
 
             var config = _sessionConfigurationCache.GetConfiguration(() =>
@@ -100,6 +103,7 @@ namespace Orchard.Data {
             }
             #endregion
 
+            Logger.Debug("Done Building configuration");
             return config;
         }
 

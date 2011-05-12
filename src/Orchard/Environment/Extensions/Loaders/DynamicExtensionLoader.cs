@@ -74,7 +74,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             string projectPath = GetProjectPath(descriptor);
             if (projectPath != null) {
                 foreach (var path in GetDependencies(projectPath)) {
-                    Logger.Information("Monitoring virtual path \"{0}\"", path);
+                    Logger.Debug("Monitoring virtual path \"{0}\"", path);
 
                     var token = _virtualPathMonitor.WhenPathChanges(path);
                     monitor(token);
@@ -91,7 +91,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
             if (_reloadWorkaround.AppDomainRestartNeeded) {
-                Logger.Information("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Id);
+                Logger.Debug("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Id);
                 ctx.RestartAppDomain = _reloadWorkaround.AppDomainRestartNeeded;
             }
         }
@@ -128,7 +128,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
                 // We need to restart the appDomain if the assembly is loaded
                 if (_hostEnvironment.IsAssemblyLoaded(referenceEntry.Name)) {
-                    Logger.Information("ReferenceActivated: Reference \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", referenceEntry.Name);
+                    Logger.Debug("ReferenceActivated: Reference \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", referenceEntry.Name);
                     context.RestartAppDomain = true;
                 }
             }
@@ -167,11 +167,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (projectPath == null)
                 return null;
 
+            Logger.Information("Start loading dynamic extension \"{0}\"", descriptor.Name);
+
             var assembly = _buildManager.GetCompiledAssembly(projectPath);
             if (assembly == null)
                 return null;
 
-            Logger.Information("Loaded dynamic extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
+            Logger.Information("Done loading dynamic extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,

@@ -11,6 +11,7 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders.Models;
+using Orchard.Logging;
 
 namespace Orchard.Environment.ShellBuilders {
     /// <summary>
@@ -31,7 +32,11 @@ namespace Orchard.Environment.ShellBuilders {
             _extensionManager = extensionManager;
         }
 
+        public ILogger Logger { get; set; }
+
         public ShellBlueprint Compose(ShellSettings settings, ShellDescriptor descriptor) {
+            Logger.Debug("Composing blueprint");
+
             var enabledFeatures = _extensionManager.EnabledFeatures(descriptor);
             var features = _extensionManager.LoadFeatures(enabledFeatures);
 
@@ -43,13 +48,16 @@ namespace Orchard.Environment.ShellBuilders {
             var controllers = BuildBlueprint(features, IsController, BuildController);
             var records = BuildBlueprint(features, IsRecord, (t, f) => BuildRecord(t, f, settings));
 
-            return new ShellBlueprint {
+            var result = new ShellBlueprint {
                 Settings = settings,
                 Descriptor = descriptor,
                 Dependencies = dependencies.Concat(modules).ToArray(),
                 Controllers = controllers,
                 Records = records,
             };
+
+            Logger.Debug("Done composing blueprint");
+            return result;
         }
 
         private static IEnumerable<Feature> BuiltinFeatures() {
