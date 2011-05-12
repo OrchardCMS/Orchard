@@ -45,7 +45,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                         (descriptor, alteration) => {
                             alteration.Alter(descriptor);
                             return descriptor;
-                        }));
+                        })).ToList();
 
                 return new ShapeTable {
                     Descriptors = descriptors.ToDictionary(sd => sd.ShapeType, StringComparer.OrdinalIgnoreCase),

@@ -1,4 +1,5 @@
 ﻿@using Orchard.Utility.Extensions;
+@using Orchard.DesignerTools.Services;
 
 @functions {
     string FormatShapeName(string shape) {
@@ -59,14 +60,14 @@ shapeTracingMetadataHost[@Model.ShapeId].shape = {
         </text>
         }
     ],
-    html: '@RemoveEmptyLines(RemoveBeacons(Display(Model.ChildContent).ToString())).Replace(Environment.NewLine, "\\n")',
-    templateContent: '@(String.IsNullOrWhiteSpace((string)Model.TemplateContent) ? @T("Content not available as coming from source code.") : @Model.TemplateContent.Replace(Environment.NewLine, "\\n"))',
+    html: '@ShapeTracingFactory.FormatJsonValue(RemoveEmptyLines(RemoveBeacons(Display(Model.ChildContent).ToString())))',
+    templateContent: '@(ShapeTracingFactory.FormatJsonValue(String.IsNullOrWhiteSpace((string)Model.TemplateContent) ? @T("Content not available as coming from source code.").ToString() : (string)Model.TemplateContent))',
     model: { @(new MvcHtmlString((string)@Model.Dump)) }
 };
 
 @if (!String.IsNullOrEmpty((string)Model.PlacementSource) && (WorkContext.HttpContext.Items[(string)Model.PlacementSource] == null)) {
     WorkContext.HttpContext.Items[(string)Model.PlacementSource] = new object();
-<text>shapeTracingMetadataHost.placement['@Model.PlacementSource.ToString()'] = '@Model.PlacementContent.Replace(Environment.NewLine, "\\n")'; </text>
+<text>shapeTracingMetadataHost.placement['@Model.PlacementSource.ToString()'] = '@ShapeTracingFactory.FormatJsonValue((string)Model.PlacementContent)'; </text>
 }
 
 </script>

@@ -63,7 +63,10 @@ namespace Orchard.Warmup.Controllers {
                 }
             }
 
-            Services.Notifier.Information(T("Warmup updated successfully."));
+            if (ModelState.IsValid) {
+                Services.Notifier.Information(T("Warmup updated successfully."));
+            }
+
             return View(warmupPart);
         }
 

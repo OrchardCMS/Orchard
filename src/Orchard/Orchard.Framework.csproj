@@ -200,8 +200,6 @@
     <Compile Include="Logging\OrchardFileAppender.cs" />
     <Compile Include="Logging\OrchardLog4netFactory.cs" />
     <Compile Include="Logging\OrchardLog4netLogger.cs" />
-    <Compile Include="Logging\OrchardXmlConfigurator.cs" />
-    <Compile Include="Logging\OrchardXmlHierarchyConfigurator.cs" />
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
     <Compile Include="Mvc\Extensions\RouteExtension.cs" />
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
