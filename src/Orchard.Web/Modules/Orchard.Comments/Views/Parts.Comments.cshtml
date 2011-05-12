@@ -25,13 +25,13 @@
         </div>
     }
 }
-else if(!Request.IsAuthenticated && !AuthorizedFor(Permissions.AddComment)) {
+else if (WorkContext.CurrentUser == null && !AuthorizedFor(Permissions.AddComment)) {
 <h2 id="add-comment">@T("Add a Comment")</h2>
 <p class="info message">@T("You must {0} to comment.", Html.ActionLink(T("log on").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = string.Format("{0}#addacomment", Context.Request.RawUrl) }))</p>
 } else {
 using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment-form" })) { 
     @Html.ValidationSummary() 
-    if (!Request.IsAuthenticated) {
+    if (WorkContext.CurrentUser == null) {
 
     <fieldset class="who">
         <legend id="add-comment">@T("Add a Comment")</legend> 
@@ -55,7 +55,7 @@ using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, Fo
         @Html.Hidden("Email", WorkContext.CurrentUser.Email ?? "")
     }
 
-    <h2 id="commenter">@if (Request.IsAuthenticated) { @T("Hi, {0}!", Html.Encode(WorkContext.CurrentUser.UserName))}</h2>
+    <h2 id="commenter">@if (WorkContext.CurrentUser != null) { @T("Hi, {0}!", Html.Encode(WorkContext.CurrentUser.UserName))}</h2>
     <fieldset class="what">
     <ol>
         <li>
