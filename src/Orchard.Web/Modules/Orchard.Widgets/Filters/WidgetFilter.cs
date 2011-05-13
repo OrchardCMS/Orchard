@@ -65,7 +65,12 @@ namespace Orchard.Widgets.Filters {
             // Build and add shape to zone.
             var zones = workContext.Layout.Zones;
             foreach (var widgetPart in widgetParts) {
-                if (activeLayerIds.Contains(widgetPart.As<ICommonPart>().Container.ContentItem.Id)) {
+                var commonPart = widgetPart.As<ICommonPart>();
+                if (commonPart == null || commonPart.Container == null) {
+                    Logger.Warning(T("The widget '{0}' is has no assigned layer or the layer does not exist.", widgetPart.Title).Text);
+                    continue;
+                }
+                if (activeLayerIds.Contains(commonPart.Container.ContentItem.Id)) {
                     var widgetShape = _contentManager.BuildDisplay(widgetPart);
                     zones[widgetPart.Record.Zone].Add(widgetShape, widgetPart.Record.Position);
                 }
