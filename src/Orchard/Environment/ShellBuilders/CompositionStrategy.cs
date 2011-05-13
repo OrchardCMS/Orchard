@@ -30,6 +30,8 @@ namespace Orchard.Environment.ShellBuilders {
 
         public CompositionStrategy(IExtensionManager extensionManager) {
             _extensionManager = extensionManager;
+
+            Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
