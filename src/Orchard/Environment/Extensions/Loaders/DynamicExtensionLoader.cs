@@ -91,7 +91,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
             if (_reloadWorkaround.AppDomainRestartNeeded) {
-                Logger.Debug("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Id);
+                Logger.Information("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Id);
                 ctx.RestartAppDomain = _reloadWorkaround.AppDomainRestartNeeded;
             }
         }
@@ -128,7 +128,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
                 // We need to restart the appDomain if the assembly is loaded
                 if (_hostEnvironment.IsAssemblyLoaded(referenceEntry.Name)) {
-                    Logger.Debug("ReferenceActivated: Reference \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", referenceEntry.Name);
+                    Logger.Information("ReferenceActivated: Reference \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", referenceEntry.Name);
                     context.RestartAppDomain = true;
                 }
             }
