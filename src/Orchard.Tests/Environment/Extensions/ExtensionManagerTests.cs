@@ -139,6 +139,22 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         [Test]
+        public void ExtensionDescriptorKeywordsAreCaseInsensitive() {
+
+            _folders.Manifests.Add("Sample", @"
+NaMe: Sample Extension
+version: 2.x
+DESCRIPTION: HELLO
+");
+
+            var descriptor = _manager.AvailableExtensions().Single();
+            Assert.That(descriptor.Id, Is.EqualTo("Sample"));
+            Assert.That(descriptor.Name, Is.EqualTo("Sample Extension"));
+            Assert.That(descriptor.Version, Is.EqualTo("2.x"));
+            Assert.That(descriptor.Description, Is.EqualTo("HELLO"));
+        }
+
+        [Test]
         public void ExtensionDescriptorsShouldHaveNameAndVersion() {
 
             _folders.Manifests.Add("Sample", @"
