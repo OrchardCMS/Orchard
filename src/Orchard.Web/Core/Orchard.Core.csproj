@@ -66,7 +66,10 @@
     <Compile Include="Common\Models\CommonPartVersionRecord.cs" />
     <Compile Include="Common\Models\IdentityPartRecord.cs" />
     <Compile Include="Common\Models\IdentityPart.cs" />
+    <Compile Include="Common\ResourceManifest.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
+    <Compile Include="Common\Settings\CommonSettings.cs" />
+    <Compile Include="Common\ViewModels\CreatedUtcEditorViewModel.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
@@ -243,6 +246,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Common\Styles\orchard-common-datetime.css" />
     <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.cshtml" />
     <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.cshtml" />
     <Content Include="Common\Views\Fields.Common.Text.cshtml" />
@@ -426,6 +430,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\CommonTypePartSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\EditorTemplates\Parts.Common.CreatedUtc.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

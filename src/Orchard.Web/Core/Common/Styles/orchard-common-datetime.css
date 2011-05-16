@@ -1,0 +1,14 @@
+﻿fieldset.createdutc-datetime {
+    float:left;
+    clear:none;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+fieldset.createdutc-datetime legend {
+    display:none;
+}
+fieldset.createdutc-datetime input {
+    padding:1px;
+    text-align:center;
+    color:#666;
+}

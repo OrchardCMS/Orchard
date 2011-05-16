@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ImportExport.Services;
@@ -76,8 +75,6 @@ namespace Orchard.ImportExport.Controllers {
                     exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
                 }
                 var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
-                Services.Notifier.Information(T("Your export file has been created at {0}", exportFilePath));
-           
                 return File(exportFilePath, "text/xml", "export.xml");
             }
             catch (Exception exception) {

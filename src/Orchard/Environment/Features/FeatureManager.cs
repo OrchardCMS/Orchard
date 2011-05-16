@@ -78,7 +78,7 @@ namespace Orchard.Environment.Features {
                     string id = featureId;
 
                     enabledFeatures.Add(new ShellFeature { Name = id });
-                    Logger.Information(T("{0} was enabled", featureId).ToString());
+                    Logger.Information("{0} was enabled", featureId);
                 }
 
                 _shellDescriptorManager.UpdateShellDescriptor(shellDescriptor.SerialNumber, enabledFeatures,
@@ -120,7 +120,7 @@ namespace Orchard.Environment.Features {
                     string id = featureId;
 
                     enabledFeatures.RemoveAll(shellFeature => shellFeature.Name == id);
-                    Logger.Information(T("{0} was disabled", featureId).ToString());
+                    Logger.Information("{0} was disabled", featureId);
                 }
 
                 _shellDescriptorManager.UpdateShellDescriptor(shellDescriptor.SerialNumber, enabledFeatures,
@@ -152,7 +152,7 @@ namespace Orchard.Environment.Features {
 
             IEnumerable<string> featuresToEnable = GetAffectedFeatures(featureId, availableFeatures, getDisabledDependencies);
             if (featuresToEnable.Count() > 1 && !force) {
-                Logger.Warning(T("Aditional features need to be enabled.").ToString());
+                Logger.Warning("Additional features need to be enabled.");
                 if (FeatureDependencyNotification != null) {
                     FeatureDependencyNotification("If {0} is enabled, then you'll also need to enable {1}.", featureId, featuresToEnable.Where(fId => fId != featureId));
                 }
@@ -178,7 +178,7 @@ namespace Orchard.Environment.Features {
 
             IEnumerable<string> featuresToDisable = GetAffectedFeatures(featureId, availableFeatures, getEnabledDependants);
             if (featuresToDisable.Count() > 1 && !force) {
-                Logger.Warning(T("Aditional features need to be disabled.").ToString());
+                Logger.Warning("Additional features need to be disabled.");
                 if (FeatureDependencyNotification != null) {
                     FeatureDependencyNotification("If {0} is disabled, then you'll also need to disable {1}.", featureId, featuresToDisable.Where(fId => fId != featureId));
                 }

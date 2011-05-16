@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
@@ -12,6 +11,24 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Folders {
     public class ExtensionFolders : IExtensionFolders {
+        private const string NameSection = "name";
+        private const string PathSection = "path";
+        private const string DescriptionSection = "description";
+        private const string VersionSection = "version";
+        private const string OrchardVersionSection = "orchardversion";
+        private const string AuthorSection = "author";
+        private const string WebsiteSection = "website";
+        private const string TagsSection = "tags";
+        private const string AntiForgerySection = "antiforgery";
+        private const string ZonesSection = "zones";
+        private const string BaseThemeSection = "basetheme";
+        private const string DependenciesSection = "dependencies";
+        private const string CategorySection = "category";
+        private const string FeatureDescriptionSection = "featuredescription";
+        private const string FeatureNameSection = "featurename";
+        private const string PrioritySection = "priority";
+        private const string FeaturesSection = "features";
+
         private readonly IEnumerable<string> _paths;
         private readonly string _manifestName;
         private readonly string _extensionType;
@@ -39,48 +56,49 @@ namespace Orchard.Environment.Extensions.Folders {
         public ILogger Logger { get; set; }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-            var list = new List<ExtensionDescriptor>();
-            foreach (var locationPath in _paths) {
-                var path = locationPath;
-                var subList = _cacheManager.Get(locationPath, ctx => {
+            return _paths
+                .SelectMany(path => _cacheManager.Get(path, ctx => {
                     ctx.Monitor(_webSiteFolder.WhenPathChanges(ctx.Key));
-                    var subfolderPaths = _webSiteFolder.ListDirectories(ctx.Key);
-                    var localList = new List<ExtensionDescriptor>();
-                    foreach (var subfolderPath in subfolderPaths) {
-                        var extensionId = Path.GetFileName(subfolderPath.TrimEnd('/', '\\'));
-                        var manifestPath = Path.Combine(subfolderPath, _manifestName);
-                        try {
-                            var descriptor = GetExtensionDescriptor(path, extensionId, manifestPath);
+                    return AvailableExtensionsInFolder(ctx.Key);
+                    }))
+                .ToList();
+        }
 
-                            if (descriptor == null)
-                                continue;
+        private List<ExtensionDescriptor> AvailableExtensionsInFolder(string path) {
+            Logger.Information("Start looking for extensions in '{0}'...", path);
+            var subfolderPaths = _webSiteFolder.ListDirectories(path);
+            var localList = new List<ExtensionDescriptor>();
+            foreach (var subfolderPath in subfolderPaths) {
+                var extensionId = Path.GetFileName(subfolderPath.TrimEnd('/', '\\'));
+                var manifestPath = Path.Combine(subfolderPath, _manifestName);
+                try {
+                    var descriptor = GetExtensionDescriptor(path, extensionId, manifestPath);
 
-                            if (descriptor.Path != null && !descriptor.Path.IsValidUrlSegment()) {
-                                Logger.Error("The module '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
-                                    extensionId,
-                                    descriptor.Path);
-                                continue;
-                            }
+                    if (descriptor == null)
+                        continue;
 
-                            if (descriptor.Path == null) {
-                                descriptor.Path = descriptor.Name.IsValidUrlSegment()
-                                    ? descriptor.Name
-                                    : descriptor.Id;
-                            }
-
-                            localList.Add(descriptor);
-                        }
-                        catch (Exception ex) {
-                            // Ignore invalid module manifests
-                            Logger.Error(ex, "The module '{0}' could not be loaded. It was ignored.", extensionId);
-                        }
+                    if (descriptor.Path != null && !descriptor.Path.IsValidUrlSegment()) {
+                        Logger.Error("The module '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
+                                     extensionId,
+                                     descriptor.Path);
+                        continue;
                     }
-                    return localList;
-                });
-                list.AddRange(subList);
-            }
 
-            return list;
+                    if (descriptor.Path == null) {
+                        descriptor.Path = descriptor.Name.IsValidUrlSegment()
+                                              ? descriptor.Name
+                                              : descriptor.Id;
+                    }
+
+                    localList.Add(descriptor);
+                }
+                catch (Exception ex) {
+                    // Ignore invalid module manifests
+                    Logger.Error(ex, "The module '{0}' could not be loaded. It was ignored.", extensionId);
+                }
+            }
+            Logger.Information("Done looking for extensions in '{0}': {1}", path, string.Join(", ", localList.Select(d => d.Id)));
+            return localList;
         }
 
         public static ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionId, string extensionType, string manifestText) {
@@ -89,17 +107,17 @@ namespace Orchard.Environment.Extensions.Folders {
                 Location = locationPath,
                 Id = extensionId,
                 ExtensionType = extensionType,
-                Name = GetValue(manifest, "Name") ?? extensionId,
-                Path = GetValue(manifest, "Path"),
-                Description = GetValue(manifest, "Description"),
-                Version = GetValue(manifest, "Version"),
-                OrchardVersion = GetValue(manifest, "OrchardVersion"),
-                Author = GetValue(manifest, "Author"),
-                WebSite = GetValue(manifest, "Website"),
-                Tags = GetValue(manifest, "Tags"),
-                AntiForgery = GetValue(manifest, "AntiForgery"),
-                Zones = GetValue(manifest, "Zones"),
-                BaseTheme = GetValue(manifest, "BaseTheme"),
+                Name = GetValue(manifest, NameSection) ?? extensionId,
+                Path = GetValue(manifest, PathSection),
+                Description = GetValue(manifest, DescriptionSection),
+                Version = GetValue(manifest, VersionSection),
+                OrchardVersion = GetValue(manifest, OrchardVersionSection),
+                Author = GetValue(manifest, AuthorSection),
+                WebSite = GetValue(manifest, WebsiteSection),
+                Tags = GetValue(manifest, TagsSection),
+                AntiForgery = GetValue(manifest, AntiForgerySection),
+                Zones = GetValue(manifest, ZonesSection),
+                BaseTheme = GetValue(manifest, BaseThemeSection)
             };
             extensionDescriptor.Features = GetFeaturesForExtension(manifest, extensionDescriptor);
 
@@ -140,57 +158,57 @@ namespace Orchard.Environment.Extensions.Folders {
                     for (int i = 0; i < fieldLength; i++) {
                         field[i] = field[i].Trim();
                     }
-                    switch (field[0]) {
-                        case "Name":
-                            manifest.Add("Name", field[1]);
+                    switch (field[0].ToLowerInvariant()) {
+                        case NameSection:
+                            manifest.Add(NameSection, field[1]);
                             break;
-                        case "Path":
-                            manifest.Add("Path", field[1]);
+                        case PathSection:
+                            manifest.Add(PathSection, field[1]);
                             break;
-                        case "Description":
-                            manifest.Add("Description", field[1]);
+                        case DescriptionSection:
+                            manifest.Add(DescriptionSection, field[1]);
                             break;
-                        case "Version":
-                            manifest.Add("Version", field[1]);
+                        case VersionSection:
+                            manifest.Add(VersionSection, field[1]);
                             break;
-                        case "OrchardVersion":
-                            manifest.Add("OrchardVersion", field[1]);
+                        case OrchardVersionSection:
+                            manifest.Add(OrchardVersionSection, field[1]);
                             break;
-                        case "Author":
-                            manifest.Add("Author", field[1]);
+                        case AuthorSection:
+                            manifest.Add(AuthorSection, field[1]);
                             break;
-                        case "Website":
-                            manifest.Add("Website", field[1]);
+                        case WebsiteSection:
+                            manifest.Add(WebsiteSection, field[1]);
                             break;
-                        case "Tags":
-                            manifest.Add("Tags", field[1]);
+                        case TagsSection:
+                            manifest.Add(TagsSection, field[1]);
                             break;
-                        case "AntiForgery":
-                            manifest.Add("AntiForgery", field[1]);
+                        case AntiForgerySection:
+                            manifest.Add(AntiForgerySection, field[1]);
                             break;
-                        case "Zones":
-                            manifest.Add("Zones", field[1]);
+                        case ZonesSection:
+                            manifest.Add(ZonesSection, field[1]);
                             break;
-                        case "BaseTheme":
-                            manifest.Add("BaseTheme", field[1]);
+                        case BaseThemeSection:
+                            manifest.Add(BaseThemeSection, field[1]);
                             break;
-                        case "Dependencies":
-                            manifest.Add("Dependencies", field[1]);
+                        case DependenciesSection:
+                            manifest.Add(DependenciesSection, field[1]);
                             break;
-                        case "Category":
-                            manifest.Add("Category", field[1]);
+                        case CategorySection:
+                            manifest.Add(CategorySection, field[1]);
                             break;
-                        case "FeatureDescription":
-                            manifest.Add("FeatureDescription", field[1]);
+                        case FeatureDescriptionSection:
+                            manifest.Add(FeatureDescriptionSection, field[1]);
                             break;
-                        case "FeatureName":
-                            manifest.Add("FeatureName", field[1]);
+                        case FeatureNameSection:
+                            manifest.Add(FeatureNameSection, field[1]);
                             break;
-                        case "Priority":
-                            manifest.Add("Priority", field[1]);
+                        case PrioritySection:
+                            manifest.Add(PrioritySection, field[1]);
                             break;
-                        case "Features":
-                            manifest.Add("Features", reader.ReadToEnd());
+                        case FeaturesSection:
+                            manifest.Add(FeaturesSection, reader.ReadToEnd());
                             break;
                     }
                 }
@@ -205,18 +223,18 @@ namespace Orchard.Environment.Extensions.Folders {
             // Default feature
             FeatureDescriptor defaultFeature = new FeatureDescriptor {
                 Id = extensionDescriptor.Id,
-                Name = GetValue(manifest, "FeatureName") ?? extensionDescriptor.Name,
-                Priority = GetValue(manifest, "Priority") != null ? int.Parse(GetValue(manifest, "Priority")) : 0,
-                Description = GetValue(manifest, "FeatureDescription") ?? GetValue(manifest, "Description") ?? string.Empty,
-                Dependencies = ParseFeatureDependenciesEntry(GetValue(manifest, "Dependencies")),
+                Name = GetValue(manifest, FeatureNameSection) ?? extensionDescriptor.Name,
+                Priority = GetValue(manifest, PrioritySection) != null ? int.Parse(GetValue(manifest, PrioritySection)) : 0,
+                Description = GetValue(manifest, FeatureDescriptionSection) ?? GetValue(manifest, DescriptionSection) ?? string.Empty,
+                Dependencies = ParseFeatureDependenciesEntry(GetValue(manifest, DependenciesSection)),
                 Extension = extensionDescriptor,
-                Category = GetValue(manifest, "Category")
+                Category = GetValue(manifest, CategorySection)
             };
 
             featureDescriptors.Add(defaultFeature);
 
             // Remaining features
-            string featuresText = GetValue(manifest, "Features");
+            string featuresText = GetValue(manifest, FeaturesSection);
             if (featuresText != null) {
                 FeatureDescriptor featureDescriptor = null;
                 using (StringReader reader = new StringReader(featuresText)) {
@@ -253,20 +271,21 @@ namespace Orchard.Environment.Extensions.Folders {
                                 for (int i = 0; i < featureFieldLength; i++) {
                                     featureField[i] = featureField[i].Trim();
                                 }
-                                switch (featureField[0]) {
-                                    case "Name":
+
+                                switch (featureField[0].ToLowerInvariant()) {
+                                    case NameSection:
                                         featureDescriptor.Name = featureField[1];
                                         break;
-                                    case "Description":
+                                    case DescriptionSection:
                                         featureDescriptor.Description = featureField[1];
                                         break;
-                                    case "Category":
+                                    case CategorySection:
                                         featureDescriptor.Category = featureField[1];
                                         break;
-                                    case "Priority":
+                                    case PrioritySection:
                                         featureDescriptor.Priority = int.Parse(featureField[1]);
                                         break;
-                                    case "Dependencies":
+                                    case DependenciesSection:
                                         featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureField[1]);
                                         break;
                                 }

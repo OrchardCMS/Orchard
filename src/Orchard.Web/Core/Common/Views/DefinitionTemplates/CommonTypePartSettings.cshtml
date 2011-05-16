@@ -1,0 +1,12 @@
+﻿@model Orchard.Core.Common.Settings.CommonTypePartSettings
+    <fieldset>
+        @Html.CheckBoxFor(m => m.ShowCreatedUtcEditor)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ShowCreatedUtcEditor)">@T("Show editor for creation date time")</label>
+        @Html.ValidationMessageFor(m => m.ShowCreatedUtcEditor)
+    </fieldset>
+
+    <fieldset>
+        @Html.CheckBoxFor(m => m.ShowOwnerEditor)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.ShowOwnerEditor)">@T("Show editor for owner")</label>
+        @Html.ValidationMessageFor(m => m.ShowOwnerEditor)
+    </fieldset>

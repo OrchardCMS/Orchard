@@ -53,10 +53,10 @@ namespace Orchard.Tests.Environment.Loaders {
 
             DynamicExtensionLoaderAccessor extensionLoader = _container.Resolve<DynamicExtensionLoaderAccessor>();
             StubFileSystem stubFileSystem = _container.Resolve<StubFileSystem>();
-            StubFileSystem.FileEntry fileEntry = stubFileSystem.CreateFileEntry("orchard.a.csjproj");
+            StubFileSystem.FileEntry fileEntry = stubFileSystem.CreateFileEntry("orchard.a.csproj");
 
             // Create duplicate source files (invalid situation in reality but easy enough to test)
-            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.IsAny<Stream>())).Returns(
+            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.IsAny<string>())).Returns(
                 new ProjectFileDescriptor { SourceFilenames = new[] { fileName1, fileName2, fileName1 } }); // duplicate file
 
             IEnumerable<string> dependencies = extensionLoader.GetDependenciesAccessor(fileEntry.Name);
@@ -76,14 +76,15 @@ namespace Orchard.Tests.Environment.Loaders {
 
             DynamicExtensionLoaderAccessor extensionLoader = _container.Resolve<DynamicExtensionLoaderAccessor>();
             StubFileSystem stubFileSystem = _container.Resolve<StubFileSystem>();
-            StubFileSystem.FileEntry fileEntry = stubFileSystem.CreateFileEntry("orchard.a.csjproj");
-            StubFileSystem.FileEntry fileEntry2 = stubFileSystem.CreateFileEntry("orchard.b.csjproj");
-            StubFileSystem.FileEntry fileEntry3 = stubFileSystem.CreateFileEntry("orchard.c.csjproj");
+            StubFileSystem.FileEntry fileEntry = stubFileSystem.CreateFileEntry("orchard.a.csproj");
+            StubFileSystem.FileEntry fileEntry2 = stubFileSystem.CreateFileEntry("orchard.b.csproj");
+            StubFileSystem.FileEntry fileEntry3 = stubFileSystem.CreateFileEntry("orchard.c.csproj");
 
             // Project a reference b and c which share a file in common
 
             // Result for project a
-            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<Stream>(stream => ((StubFileSystem.FileEntryReadStream)stream).FileEntry == fileEntry)))
+            _mockedStubProjectFileParser
+                .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => virtualPath == "orchard.a.csproj")))
                 .Returns(
                     new ProjectFileDescriptor {
                         SourceFilenames = new[] { fileName1, fileName2 },
@@ -96,16 +97,16 @@ namespace Orchard.Tests.Environment.Loaders {
                             },
                             new ReferenceDescriptor {
                                 ReferenceType = ReferenceType.Project,
-                                SimpleName = Path.GetFileNameWithoutExtension(fileEntry2.Name),
-                                FullName = Path.GetFileNameWithoutExtension(fileEntry2.Name),
+                                SimpleName = Path.GetFileNameWithoutExtension(fileEntry3.Name),
+                                FullName = Path.GetFileNameWithoutExtension(fileEntry3.Name),
                                 Path = fileEntry3.Name
                             }
                         }
                     });
 
             // Result for project b and c
-            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<Stream>(stream =>
-                ((StubFileSystem.FileEntryReadStream)stream).FileEntry == fileEntry2 || ((StubFileSystem.FileEntryReadStream)stream).FileEntry == fileEntry3)))
+            _mockedStubProjectFileParser
+                .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => (virtualPath == "~/orchard.b.csproj" || virtualPath == "~/orchard.c.csproj"))))
                 .Returns(
                     new ProjectFileDescriptor {
                         SourceFilenames = new[] { commonFileName }
@@ -116,14 +117,14 @@ namespace Orchard.Tests.Environment.Loaders {
             Assert.That(dependencies.Count(), Is.EqualTo(6), "6 results should mean no duplicates");
 
             // Project files
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry.Name)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry2.Name)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry3.Name)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(fileEntry.Name)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(fileEntry2.Name)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(fileEntry3.Name)), Is.Not.Null);
 
             // Individual source files
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileName1)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileName2)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(commonFileName)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(fileName1)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(fileName2)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(commonFileName)), Is.Not.Null);
         }
 
         [Test]
@@ -135,8 +136,8 @@ namespace Orchard.Tests.Environment.Loaders {
 
             DynamicExtensionLoaderAccessor extensionLoader = _container.Resolve<DynamicExtensionLoaderAccessor>();
             StubFileSystem stubFileSystem = _container.Resolve<StubFileSystem>();
-            StubFileSystem.FileEntry fileEntry = stubFileSystem.CreateFileEntry("orchard.a.csjproj");
-            StubFileSystem.FileEntry fileEntry2 = stubFileSystem.CreateFileEntry("orchard.b.csjproj");
+            StubFileSystem.FileEntry fileEntry = stubFileSystem.CreateFileEntry("orchard.a.csproj");
+            StubFileSystem.FileEntry fileEntry2 = stubFileSystem.CreateFileEntry("orchard.b.csproj");
 
             StubFileSystem.DirectoryEntry directoryEntry = stubFileSystem.CreateDirectoryEntry("bin");
             StubFileSystem.FileEntry fileEntry3 = directoryEntry.CreateFile("orchard.b.dll");
@@ -144,7 +145,8 @@ namespace Orchard.Tests.Environment.Loaders {
             // Project a reference b and c which share a file in common
 
             // Result for project a
-            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<Stream>(stream => ((StubFileSystem.FileEntryReadStream)stream).FileEntry == fileEntry)))
+            _mockedStubProjectFileParser
+                .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => virtualPath == "orchard.a.csproj")))
                 .Returns(
                     new ProjectFileDescriptor {
                         SourceFilenames = new[] { fileName1, fileName2 },
@@ -159,14 +161,15 @@ namespace Orchard.Tests.Environment.Loaders {
                     });
 
             // Result for project b and c
-            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<Stream>(stream =>
-                ((StubFileSystem.FileEntryReadStream)stream).FileEntry == fileEntry2)))
+            _mockedStubProjectFileParser
+                .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => virtualPath == "~/orchard.b.csproj")))
                 .Returns(
                     new ProjectFileDescriptor {
                         SourceFilenames = new[] { commonFileName }
                     });
 
-            _mockedDependenciesFolder.Setup(dependenciesFolder => dependenciesFolder.GetDescriptor(It.Is<string>(moduleName => moduleName == Path.GetDirectoryName(fileEntry2.Name))))
+            _mockedDependenciesFolder
+                .Setup(dependenciesFolder => dependenciesFolder.GetDescriptor(It.Is<string>(moduleName => moduleName == Path.GetDirectoryName(fileEntry2.Name))))
                 .Returns(
                     new DependencyDescriptor {
                         VirtualPath = Path.Combine(directoryEntry.Name, fileEntry3.Name)
@@ -177,14 +180,14 @@ namespace Orchard.Tests.Environment.Loaders {
             Assert.That(dependencies.Count(), Is.EqualTo(6), "6 results should mean no duplicates");
 
             // Project files
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry.Name)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry2.Name)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(Path.Combine(directoryEntry.Name, fileEntry3.Name))), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(fileEntry.Name)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(fileEntry2.Name)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(Path.Combine(directoryEntry.Name, fileEntry3.Name))), Is.Not.Null);
 
             // Individual source files
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileName1)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileName2)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(commonFileName)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(fileName1)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(fileName2)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(commonFileName)), Is.Not.Null);
         }
 
         internal class DynamicExtensionLoaderAccessor : DynamicExtensionLoader {

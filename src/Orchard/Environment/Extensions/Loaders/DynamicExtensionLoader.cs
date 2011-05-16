@@ -67,14 +67,18 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+            if (Disabled)
+                return;
+
             // Monitor .csproj and all .cs files
             string projectPath = GetProjectPath(descriptor);
             if (projectPath != null) {
                 foreach (var path in GetDependencies(projectPath)) {
-                    Logger.Information("Monitoring virtual path \"{0}\"", path);
+                    Logger.Debug("Monitoring virtual path \"{0}\"", path);
 
-                    monitor(_virtualPathMonitor.WhenPathChanges(path));
-                    _reloadWorkaround.Monitor(_virtualPathMonitor.WhenPathChanges(path));
+                    var token = _virtualPathMonitor.WhenPathChanges(path);
+                    monitor(token);
+                    _reloadWorkaround.Monitor(token);
                 }
             }
         }
@@ -97,8 +101,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (projectPath == null)
                 return Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
-            using (var stream = _virtualPathProvider.OpenFile(projectPath)) {
-                var projectFile = _projectFileParser.Parse(stream);
+            var projectFile = _projectFileParser.Parse(projectPath);
 
                 return projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
                     Descriptor = descriptor,
@@ -107,7 +110,6 @@ namespace Orchard.Environment.Extensions.Loaders {
                     VirtualPath = _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
                 });
             }
-        }
 
         public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
             //Note: This is the same implementation as "PrecompiledExtensionLoader"
@@ -165,11 +167,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (projectPath == null)
                 return null;
 
+            Logger.Information("Start loading dynamic extension \"{0}\"", descriptor.Name);
+
             var assembly = _buildManager.GetCompiledAssembly(projectPath);
             if (assembly == null)
                 return null;
 
-            Logger.Information("Loaded dynamic extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
+            Logger.Information("Done loading dynamic extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.FullName);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,
@@ -179,7 +183,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected IEnumerable<string> GetDependencies(string projectPath) {
-            HashSet<string> dependencies = new HashSet<string> { projectPath };
+            var dependencies = new HashSet<string> { projectPath };
 
             AddDependencies(projectPath, dependencies);
 
@@ -189,8 +193,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         private void AddDependencies(string projectPath, HashSet<string> currentSet) {
             string basePath = _virtualPathProvider.GetDirectoryName(projectPath);
 
-            using (var stream = _virtualPathProvider.OpenFile(projectPath)) {
-                ProjectFileDescriptor projectFile = _projectFileParser.Parse(stream);
+            ProjectFileDescriptor projectFile = _projectFileParser.Parse(projectPath);
 
                 // Add source files
                 currentSet.UnionWith(projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f)));
@@ -201,6 +204,18 @@ namespace Orchard.Environment.Extensions.Loaders {
                         string path = referenceDescriptor.ReferenceType == ReferenceType.Library
                                           ? _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
                                           : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
+
+                        // Normalize the virtual path (avoid ".." in the path name)
+                        if (!string.IsNullOrEmpty(path)) {
+                            try {
+                                path = _virtualPathProvider.ToAppRelative(path);
+                            }
+                            catch (Exception e) {
+                                // The initial path might have been invalid (e.g. path indicates a path outside the application root)
+                                Logger.Information(e, "Path '{0}' cannot be made app relative", path);
+                                path = null;
+                            }
+                        }
 
                         // Attempt to reference the project / library file
                         if (!string.IsNullOrEmpty(path) && !currentSet.Contains(path) && _virtualPathProvider.TryFileExists(path)) {
@@ -220,7 +235,6 @@ namespace Orchard.Environment.Extensions.Loaders {
                     }
                 }
             }
-        }
 
         private string GetProjectPath(ExtensionDescriptor descriptor) {
             string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
