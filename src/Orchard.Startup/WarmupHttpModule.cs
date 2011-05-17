@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Hosting;
@@ -10,47 +9,82 @@ namespace Orchard.WarmupStarter {
     public class WarmupHttpModule : IHttpModule {
         private const string WarmupFilesPath = "~/App_Data/Warmup/";
         private HttpApplication _context;
+        private static object _synLock = new object();
+        private static IList<Action> _awaiting = new List<Action>();
+
+        public WarmupHttpModule() {
+        }
 
         public void Init(HttpApplication context) {
             _context = context;
             context.AddOnBeginRequestAsync(BeginBeginRequest, EndBeginRequest, null);
         }
 
-        static IList<Action> _awaiting = new List<Action>();
+        public void Dispose() {
+        }
 
-        public static bool InWarmup() {
-            if (_awaiting == null) return false;
-            lock (_awaiting) {
+        private static bool InWarmup() {
+            lock (_synLock) {
                 return _awaiting != null;
             }
         }
 
-        public static void Signal() {
-            lock(typeof(WarmupHttpModule)) {
-                if (_awaiting == null) {
-                    return;
-                }
+        /// <summary>
+        /// Called to unblock all pending requests, while remaining in "queue" incoming requests mode.
+        /// New incoming request are queued in the "_await" list.
+        /// </summary>
+        public static void ProcessPendingRequests() {
+            FlushAwaitingRequests(new List<Action>());
+        }
 
-                var awaiting = _awaiting;
-                _awaiting = null;
-                foreach (var action in awaiting) {
-                    action();
+        /// <summary>
+        /// Pending requests in the "_await" queue are processed, and any new incoming request
+        /// is now processed immediately.
+        /// </summary>
+        public static void SignalWarmupDone() {
+            FlushAwaitingRequests(null);
+        }
+
+        public static void SignalWarmupStart() {
+            lock (_synLock) {
+                if (_awaiting == null) {
+                    _awaiting = new List<Action>();
                 }
             }
         }
 
-        public static void Await(Action action) {
-            if (_awaiting == null) {
-                action();
-                return;
-            }
+        private static void FlushAwaitingRequests(IList<Action> newAwaiting) {
+            IList<Action> temp;
 
-            lock(typeof(WarmupHttpModule)) {
+            lock (_synLock) {
                 if (_awaiting == null) {
-                    action();
                     return;
                 }
-                _awaiting.Add(action);
+
+                temp = _awaiting;
+                _awaiting = newAwaiting;
+            }
+
+            foreach (var action in temp) {
+                    action();
+                }
+            }
+
+        /// <summary>
+        /// Enqueue or directly process action depending on current mode.
+        /// </summary>
+        private void Await(Action action) {
+            Action temp = action;
+
+            lock (_synLock) {
+                if (_awaiting != null) {
+                    temp = null;
+                    _awaiting.Add(action);
+                }
+        }
+
+            if (temp != null) {
+                temp();
             }
         }
 
@@ -73,9 +107,6 @@ namespace Orchard.WarmupStarter {
             ((WarmupAsyncResult)ar).Wait();
         }
 
-        public void Dispose() {
-        }
-
         /// <summary>
         /// return true to put request on hold (until call to Signal()) - return false to allow pipeline to execute immediately
         /// </summary>
@@ -84,7 +115,7 @@ namespace Orchard.WarmupStarter {
             // use the url as it was requested by the client
             // the real url might be different if it has been translated (proxy, load balancing, ...)
             var url = ToUrlString(_context.Request);
-            var virtualFileCopy = EncodeUrl(url.Trim('/'));
+            var virtualFileCopy = WarmupUtility.EncodeUrl(url.Trim('/'));
             var localCopy = Path.Combine(HostingEnvironment.MapPath(WarmupFilesPath), virtualFileCopy);
 
             if (File.Exists(localCopy)) {
@@ -109,65 +140,44 @@ namespace Orchard.WarmupStarter {
             return false;
         }
 
-        public static string EncodeUrl(string url) {
-            if(String.IsNullOrWhiteSpace(url)) {
-                throw new ArgumentException("url can't be empty");
-            }
-
-            var sb = new StringBuilder();
-            foreach(var c in url.ToLowerInvariant()) {
-                // only accept alphanumeric chars
-                if((c >= 'a' && c <= 'z')  || (c >= '0' && c <= '9')) {
-                    sb.Append(c);
-                }
-                // otherwise encode them in UTF8
-                else {
-                    sb.Append("_");
-                    foreach(var b in Encoding.UTF8.GetBytes(new [] {c})) {
-                        sb.Append(b.ToString("X"));
-                    }
-                }
-            }
-
-            return sb.ToString();
-        }
-
         public static string ToUrlString(HttpRequest request) {
             return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Headers["Host"], request.RawUrl);
         }
 
         private class WarmupAsyncResult : IAsyncResult {
-            readonly EventWaitHandle _eventWaitHandle = new AutoResetEvent(false);
-
+            private readonly EventWaitHandle _eventWaitHandle = new AutoResetEvent(false);
             private readonly AsyncCallback _cb;
+            private bool _isCompleted;
 
             public WarmupAsyncResult(AsyncCallback cb) {
                 _cb = cb;
-                IsCompleted = false;
+                _isCompleted = false;
             }
 
             public void Done() {
-                IsCompleted = true;
+                _isCompleted = true;
                 _eventWaitHandle.Set();
                 _cb(this);
             }
 
-            public object AsyncState {
+            public void Wait() {
+                _eventWaitHandle.WaitOne();
+            }
+
+            object IAsyncResult.AsyncState {
                 get { return null; }
             }
 
-            public WaitHandle AsyncWaitHandle {
+            WaitHandle IAsyncResult.AsyncWaitHandle {
                 get { throw new NotImplementedException(); }
             }
 
-            public bool CompletedSynchronously {
-                get { return true; }
+            bool IAsyncResult.CompletedSynchronously {
+                get { return false; }
             }
 
-            public bool IsCompleted { get; private set; }
-
-            public void Wait() {
-                _eventWaitHandle.WaitOne();
+            bool IAsyncResult.IsCompleted {
+                get { return _isCompleted; }
             }
         }
     }
