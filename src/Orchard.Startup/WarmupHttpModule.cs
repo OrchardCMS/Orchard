@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Web;
-using System.Web.Hosting;
 
 namespace Orchard.WarmupStarter {
     public class WarmupHttpModule : IHttpModule {
-        private const string WarmupFilesPath = "~/App_Data/Warmup/";
         private HttpApplication _context;
         private static object _synLock = new object();
         private static IList<Action> _awaiting = new List<Action>();
-
-        public WarmupHttpModule() {
-        }
 
         public void Init(HttpApplication context) {
             _context = context;
@@ -92,7 +86,7 @@ namespace Orchard.WarmupStarter {
             var asyncResult = new WarmupAsyncResult(cb);
             
             // host is available, process every requests, or file is processed
-            if (!InWarmup() || DoBeginRequest()) {
+            if (!InWarmup() || WarmupUtility.DoBeginRequest(_context)) {
                 asyncResult.Done();
             }
             else {
@@ -105,43 +99,6 @@ namespace Orchard.WarmupStarter {
 
         private static void EndBeginRequest(IAsyncResult ar) {
             ((WarmupAsyncResult)ar).Wait();
-        }
-
-        /// <summary>
-        /// return true to put request on hold (until call to Signal()) - return false to allow pipeline to execute immediately
-        /// </summary>
-        /// <returns></returns>
-        private bool DoBeginRequest() {
-            // use the url as it was requested by the client
-            // the real url might be different if it has been translated (proxy, load balancing, ...)
-            var url = ToUrlString(_context.Request);
-            var virtualFileCopy = WarmupUtility.EncodeUrl(url.Trim('/'));
-            var localCopy = Path.Combine(HostingEnvironment.MapPath(WarmupFilesPath), virtualFileCopy);
-
-            if (File.Exists(localCopy)) {
-                // result should not be cached, even on proxies
-                _context.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
-                _context.Response.Cache.SetValidUntilExpires(false);
-                _context.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
-                _context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                _context.Response.Cache.SetNoStore();
-
-                _context.Response.WriteFile(localCopy);
-                _context.Response.End();
-                return true;
-            }
-
-            // there is no local copy and the file exists
-            // serve the static file
-            if (File.Exists(_context.Request.PhysicalPath)) {
-                return true;
-            }
-
-            return false;
-        }
-
-        public static string ToUrlString(HttpRequest request) {
-            return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Headers["Host"], request.RawUrl);
         }
 
         private class WarmupAsyncResult : IAsyncResult {
