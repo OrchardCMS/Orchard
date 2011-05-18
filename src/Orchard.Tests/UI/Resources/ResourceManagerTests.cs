@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Autofac;
 using NUnit.Framework;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Admin;
 using Orchard.UI.Resources;
@@ -42,6 +43,8 @@ namespace Orchard.Tests.UI.Resources {
             var builder = new ContainerBuilder();
             builder.RegisterType<ResourceManager>().As<IResourceManager>();
             builder.RegisterType<TestManifestProvider>().As<IResourceManifestProvider>().SingleInstance();
+            var stubVpp = new StubVirtualPathProvider(null);
+            builder.RegisterInstance(stubVpp).As<IVirtualPathProvider>();
             _container = builder.Build();
             _resourceManager = _container.Resolve<IResourceManager>();
             _testManifest = _container.Resolve<IResourceManifestProvider>() as TestManifestProvider;

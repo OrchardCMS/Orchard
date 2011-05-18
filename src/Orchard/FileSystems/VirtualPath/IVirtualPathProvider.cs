@@ -7,7 +7,12 @@ namespace Orchard.FileSystems.VirtualPath {
     public interface IVirtualPathProvider : IVolatileProvider {
         string Combine(params string[] paths);
         string ToAppRelative(string virtualPath);
+        string ToAbsolute(string virtualPath);
         string MapPath(string virtualPath);
+
+        bool IsAppRelative(string virtualPath);
+        bool IsAbsolute(string virtualPath);
+
 
         bool FileExists(string virtualPath);
         bool TryFileExists(string virtualPath);

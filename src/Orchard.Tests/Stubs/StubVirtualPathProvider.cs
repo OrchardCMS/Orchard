@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Tests.Stubs {
@@ -87,6 +88,19 @@ namespace Orchard.Tests.Stubs {
             catch {
                 return false;
             }
+        }
+
+
+        public string ToAbsolute(string virtualPath) {
+            throw new NotImplementedException();
+        }
+
+        public bool IsAppRelative(string virtualPath) {
+            return !string.IsNullOrEmpty(virtualPath) && virtualPath.StartsWith("~");
+        }
+
+        public bool IsAbsolute(string virtualPath) {
+            return !string.IsNullOrEmpty(virtualPath) && virtualPath.StartsWith("/");
         }
     }
 }

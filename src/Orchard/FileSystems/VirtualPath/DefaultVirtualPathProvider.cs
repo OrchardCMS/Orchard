@@ -37,6 +37,22 @@ namespace Orchard.FileSystems.VirtualPath {
             return VirtualPathUtility.ToAppRelative(virtualPath);
         }
 
+        public virtual bool IsAppRelative(string virtualPath) {
+            return VirtualPathUtility.IsAppRelative(virtualPath);
+        }
+
+        public virtual string ToAbsolute(string virtualPath) {
+            return VirtualPathUtility.ToAbsolute(virtualPath);
+        }
+
+        public virtual bool IsAbsolute(string virtualPath) {
+            return VirtualPathUtility.IsAbsolute(virtualPath);
+        }
+
+        public virtual string Combine(string basePath, string relativePath) {
+            return VirtualPathUtility.Combine(basePath, relativePath);
+        }
+
         public virtual Stream OpenFile(string virtualPath) {
             return HostingEnvironment.VirtualPathProvider.GetFile(virtualPath).Open();
         }

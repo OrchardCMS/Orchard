@@ -10,6 +10,7 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy;
 using Orchard.Environment;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Mvc;
 using Orchard.Settings;
 using Orchard.UI;
@@ -24,15 +25,18 @@ namespace Orchard.Core.Shapes {
         private readonly Work<WorkContext> _workContext;
         private readonly Work<IResourceManager> _resourceManager;
         private readonly Work<IHttpContextAccessor> _httpContextAccessor;
+        private readonly IVirtualPathProvider _virtualPathProvider;
 
         public CoreShapes(
             Work<WorkContext> workContext, 
             Work<IResourceManager> resourceManager,
-            Work<IHttpContextAccessor> httpContextAccessor
+            Work<IHttpContextAccessor> httpContextAccessor,
+            IVirtualPathProvider virtualPathProvider
             ) {
             _workContext = workContext;
             _resourceManager = resourceManager;
             _httpContextAccessor = httpContextAccessor;
+            _virtualPathProvider = virtualPathProvider;
         }
 
         public void Discover(ShapeTableBuilder builder) {
@@ -239,12 +243,12 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public void Style(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
-            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
+            UI.Resources.ResourceManager.WriteResource(_virtualPathProvider, Output, Resource, Url, Condition, TagAttributes);
         }
 
         [Shape]
         public void Resource(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
-            UI.Resources.ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
+            UI.Resources.ResourceManager.WriteResource(_virtualPathProvider, Output, Resource, Url, Condition, TagAttributes);
         }
 
         private static void WriteLiteralScripts(TextWriter output, IEnumerable<string> scripts) {

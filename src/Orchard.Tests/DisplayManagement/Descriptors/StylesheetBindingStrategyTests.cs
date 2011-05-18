@@ -101,6 +101,23 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             public bool TryFileExists(string virtualPath) {
                 throw new NotImplementedException();
             }
+
+
+            public string ToAbsolute(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public string Combine(string basePath, string relativePath) {
+                throw new NotImplementedException();
+            }
+
+            public bool IsAppRelative(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public bool IsAbsolute(string virtualPath) {
+                throw new NotImplementedException();
+            }
         }
 
         protected override void Resolve(ILifetimeScope container) {

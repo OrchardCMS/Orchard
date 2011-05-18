@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Autofac.Features.Metadata;
 using Orchard.Environment.Extensions.Models;
+using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.UI.Resources {
     public class ResourceManager : IResourceManager, IUnitOfWorkDependency {
@@ -19,36 +20,37 @@ namespace Orchard.UI.Resources {
         };
         private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>(StringComparer.OrdinalIgnoreCase);
         private readonly IEnumerable<Meta<IResourceManifestProvider>> _providers;
+        private readonly IVirtualPathProvider _virtualPathProvider;
         private ResourceManifest _dynamicManifest;
         private List<String> _headScripts;
         private List<String> _footScripts;
         private IEnumerable<IResourceManifest> _manifests;
 
-        private static string ToAppRelativePath(string resourcePath) {
+        private string ToAppRelativePath(string resourcePath) {
             if (!String.IsNullOrEmpty(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
-                resourcePath = VirtualPathUtility.ToAppRelative(resourcePath);
+                resourcePath = _virtualPathProvider.ToAppRelative(resourcePath);
             }
             return resourcePath;
         }
 
-        private static string FixPath(string resourcePath, string relativeFromPath) {
-            if (!String.IsNullOrEmpty(resourcePath) && !VirtualPathUtility.IsAbsolute(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
+        private string FixPath(string resourcePath, string relativeFromPath) {
+            if (!String.IsNullOrEmpty(resourcePath) && !_virtualPathProvider.IsAbsolute(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
                 // appears to be a relative path (e.g. 'foo.js' or '../foo.js', not "/foo.js" or "http://..")
                 if (String.IsNullOrEmpty(relativeFromPath)) {
                     throw new InvalidOperationException("ResourcePath cannot be relative unless a base relative path is also provided.");
                 }
-                resourcePath = VirtualPathUtility.ToAbsolute(VirtualPathUtility.Combine(relativeFromPath, resourcePath));
+                resourcePath = _virtualPathProvider.ToAbsolute(_virtualPathProvider.Combine(relativeFromPath, resourcePath));
             }
             return resourcePath;
         }
 
-        private static TagBuilder GetTagBuilder(ResourceDefinition resource, string url) {
+        private static TagBuilder GetTagBuilder(IVirtualPathProvider vpp, ResourceDefinition resource, string url) {
             var tagBuilder = new TagBuilder(resource.TagName);
             tagBuilder.MergeAttributes(resource.TagBuilder.Attributes);
             if (!String.IsNullOrEmpty(resource.FilePathAttributeName)) {
                 if (!String.IsNullOrEmpty(url)) {
-                    if (VirtualPathUtility.IsAppRelative(url)) {
-                        url = VirtualPathUtility.ToAbsolute(url);
+                    if (vpp.IsAppRelative(url)) {
+                        url = vpp.ToAbsolute(url);
                     }
                     tagBuilder.MergeAttribute(resource.FilePathAttributeName, url, true);
                 }
@@ -56,11 +58,11 @@ namespace Orchard.UI.Resources {
             return tagBuilder;
         }
 
-        public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition, Dictionary<string, string> attributes) {
+        public static void WriteResource(IVirtualPathProvider virtualPathProvider, TextWriter writer, ResourceDefinition resource, string url, string condition, Dictionary<string, string> attributes) {
             if (!string.IsNullOrEmpty(condition)) {
                 writer.WriteLine("<!--[if " + condition + "]>");
             }
-            var tagBuilder = GetTagBuilder(resource, url);
+            var tagBuilder = GetTagBuilder(virtualPathProvider, resource, url);
             if (attributes != null) {
                 // todo: try null value
                 tagBuilder.MergeAttributes(attributes, true);
@@ -71,8 +73,9 @@ namespace Orchard.UI.Resources {
             }
         }
 
-        public ResourceManager(IEnumerable<Meta<IResourceManifestProvider>> resourceProviders) {
+        public ResourceManager(IEnumerable<Meta<IResourceManifestProvider>> resourceProviders, IVirtualPathProvider virtualPathProvider) {
             _providers = resourceProviders;
+            _virtualPathProvider = virtualPathProvider;
         }
 
         public IEnumerable<IResourceManifest> ResourceProviders {
@@ -126,9 +129,9 @@ namespace Orchard.UI.Resources {
                 throw new ArgumentNullException("resourcePath");
             }
 
-            if (VirtualPathUtility.IsAppRelative(resourcePath)) {
+            if (_virtualPathProvider.IsAppRelative(resourcePath)) {
                 // ~/ ==> convert to absolute path (e.g. /orchard/..)
-                resourcePath = VirtualPathUtility.ToAbsolute(resourcePath);
+                resourcePath = _virtualPathProvider.ToAbsolute(resourcePath);
             }
             resourcePath = FixPath(resourcePath, relativeFromPath);
             resourceDebugPath = FixPath(resourceDebugPath, relativeFromPath);

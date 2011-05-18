@@ -48,6 +48,10 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         }
 
         public class TestVirtualPathProvider : IVirtualPathProvider {
+            public IEnumerable<string> ListFiles(string path) {
+                return new List<string> {"~/Modules/Alpha/Views/AlphaShape.blah"};
+            }
+
             public string Combine(params string[] paths) {
                 throw new NotImplementedException();
             }
@@ -56,11 +60,31 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                 throw new NotImplementedException();
             }
 
+            public string ToAbsolute(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
             public string MapPath(string virtualPath) {
                 throw new NotImplementedException();
             }
 
+            public string Combine(string basePath, string relativePath) {
+                throw new NotImplementedException();
+            }
+
+            public bool IsAppRelative(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public bool IsAbsolute(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
             public bool FileExists(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public bool TryFileExists(string virtualPath) {
                 throw new NotImplementedException();
             }
 
@@ -92,15 +116,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> ListFiles(string path) {
-                return new List<string> {"~/Modules/Alpha/Views/AlphaShape.blah"};
-            }
-
             public IEnumerable<string> ListDirectories(string path) {
-                throw new NotImplementedException();
-            }
-
-            public bool TryFileExists(string virtualPath) {
                 throw new NotImplementedException();
             }
         }
