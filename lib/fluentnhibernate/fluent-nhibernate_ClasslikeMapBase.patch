@@ -1,0 +1,84 @@
+# HG changeset patch
+# User Andre Rodrigues <andrerod@microsoft.com>
+# Date 1305755030 25200
+# Node ID 9cd8564ec960ed8b634f87249da62a69b506b60f
+# Parent  82d19d966b63b14bc6b7e1d76404c0fb0aacf4e0
+Exposing References method to avoid the usage of propertyinfo.
+
+diff -r 82d19d966b63 -r 9cd8564ec960 src/FluentNHibernate/Mapping/ClasslikeMapBase.cs
+--- a/src/FluentNHibernate/Mapping/ClasslikeMapBase.cs	Wed May 18 14:42:42 2011 -0700
++++ b/src/FluentNHibernate/Mapping/ClasslikeMapBase.cs	Wed May 18 14:43:50 2011 -0700
+@@ -64,7 +64,11 @@
+ 
+         protected virtual ManyToOnePart<TOther> References<TOther>(PropertyInfo property, string columnName)
+         {
+-            var part = new ManyToOnePart<TOther>(EntityType, property);
++            return References<TOther>(property.DeclaringType, property.Name, columnName);
++        }
++
++        public ManyToOnePart<TOther> References<TOther>(Type declaringType, string propertyName, string columnName) {
++            var part = new ManyToOnePart<TOther>(EntityType, propertyName, declaringType.Name);
+ 
+             if (columnName != null)
+                 part.Column(columnName);
+diff -r 82d19d966b63 -r 9cd8564ec960 src/FluentNHibernate/Mapping/CompositeElementPart.cs
+--- a/src/FluentNHibernate/Mapping/CompositeElementPart.cs	Wed May 18 14:42:42 2011 -0700
++++ b/src/FluentNHibernate/Mapping/CompositeElementPart.cs	Wed May 18 14:43:50 2011 -0700
+@@ -59,7 +59,7 @@
+ 
+         protected virtual ManyToOnePart<TOther> References<TOther>(PropertyInfo property, string columnName)
+         {
+-            var part = new ManyToOnePart<TOther>(typeof(T), property);
++            var part = new ManyToOnePart<TOther>(typeof(T), property.Name, property.DeclaringType.Name);
+ 
+             if (columnName != null)
+                 part.Column(columnName);
+diff -r 82d19d966b63 -r 9cd8564ec960 src/FluentNHibernate/Mapping/ManyToOnePart.cs
+--- a/src/FluentNHibernate/Mapping/ManyToOnePart.cs	Wed May 18 14:42:42 2011 -0700
++++ b/src/FluentNHibernate/Mapping/ManyToOnePart.cs	Wed May 18 14:43:50 2011 -0700
+@@ -20,12 +20,14 @@
+         private readonly AttributeStore<ManyToOneMapping> attributes = new AttributeStore<ManyToOneMapping>();
+         private readonly AttributeStore<ColumnMapping> columnAttributes = new AttributeStore<ColumnMapping>();
+         private readonly Type entity;
+-        private readonly PropertyInfo property;
++        private readonly string name;
++        private readonly string declaringTypeName;
+ 
+-        public ManyToOnePart(Type entity, PropertyInfo property) 
++        public ManyToOnePart(Type entity, string name, string declaringTypeName) 
+         {
+             this.entity = entity;
+-            this.property = property;
++            this.name = name;
++            this.declaringTypeName = declaringTypeName;
+             access = new AccessStrategyBuilder<ManyToOnePart<TOther>>(this, value => attributes.Set(x => x.Access, value));
+             fetch = new FetchTypeExpression<ManyToOnePart<TOther>>(this, value => attributes.Set(x => x.Fetch, value));
+             cascade = new CascadeExpression<ManyToOnePart<TOther>>(this, value => attributes.Set(x => x.Cascade, value));
+@@ -37,16 +39,15 @@
+             var mapping = new ManyToOneMapping(attributes.CloneInner());
+ 
+             mapping.ContainingEntityType = entity;
+-            mapping.PropertyInfo = property;
+ 
+             if (!mapping.IsSpecified("Name"))
+-                mapping.Name = property.Name;
++                mapping.Name = name;
+ 
+             if (!mapping.IsSpecified("Class"))
+                 mapping.SetDefaultValue(x => x.Class, new TypeReference(typeof(TOther)));
+ 
+             if (columns.Count == 0)
+-                mapping.AddDefaultColumn(CreateColumn(property.Name + "_id"));
++                mapping.AddDefaultColumn(CreateColumn(name + "_id"));
+ 
+             foreach (var column in columns)
+             {
+@@ -124,7 +125,7 @@
+ 		
+ 		public ManyToOnePart<TOther> ForeignKey()
+ 		{
+-			return ForeignKey(string.Format("FK_{0}To{1}", property.DeclaringType.Name, property.Name));
++            return ForeignKey(string.Format("FK_{0}To{1}", declaringTypeName, name));
+ 		}
+ 		
+ 		public ManyToOnePart<TOther> ForeignKey(string foreignKeyName)
