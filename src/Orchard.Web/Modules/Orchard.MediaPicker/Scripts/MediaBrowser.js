@@ -122,15 +122,7 @@
             .attr("src", src);
         $(prefix + "loader").attr("src", src);
         $(prefix + "src").val(src);
-
-        var insertButton = $(prefix + "insert");
-        if (src) {
-            insertButton.removeAttr("disabled");
-        }
-        else {
-            insertButton.attr("disabled", "disabled");
-        }
-        insertButton.toggleClass("disabled", !src);
+        $(prefix + "insert").attr("disabled", !src).toggleClass("disabled", !src);
     }
 
     function getIdPrefix(e) {
