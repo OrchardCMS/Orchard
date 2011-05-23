@@ -70,7 +70,6 @@
     <Compile Include="ValidateExtensionProjectFiles.cs" />
     <Compile Include="FileUpdateLines.cs" />
     <Compile Include="FilterModuleBinaries.cs" />
-    <Compile Include="StageProjectAlteration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
