@@ -16,11 +16,11 @@ namespace Orchard.Caching {
                 // "Add" lambda
                 k => CreateEntry(k, acquire),
                 // "Update" lamdba
-                (k, currentEntry) => (currentEntry.Tokens.All(t => t.IsCurrent) ? currentEntry : CreateEntry(k, acquire)));
+                (k, currentEntry) => (currentEntry.GetTokens() != null && currentEntry.GetTokens().Any(t => !t.IsCurrent) ? CreateEntry(k, acquire) : currentEntry));
 
             // Bubble up volatile tokens to parent context
-            if (CacheAquireContext.ThreadInstance != null) {
-                foreach (var token in entry.Tokens)
+            if (CacheAquireContext.ThreadInstance != null && entry.GetTokens() != null) {
+                foreach (var token in entry.GetTokens())
                     CacheAquireContext.ThreadInstance.Monitor(token);
             }
 
@@ -29,8 +29,8 @@ namespace Orchard.Caching {
 
 
         private static CacheEntry CreateEntry(TKey k, Func<AcquireContext<TKey>, TResult> acquire) {
-            var entry = new CacheEntry { Tokens = new List<IVolatileToken>() };
-            var context = new AcquireContext<TKey>(k, volatileItem => entry.Tokens.Add(volatileItem));
+            var entry = new CacheEntry();
+            var context = new AcquireContext<TKey>(k, entry.AddToken);
 
             IAcquireContext parentContext = null;
             try {
@@ -49,7 +49,19 @@ namespace Orchard.Caching {
 
         private class CacheEntry {
             public TResult Result { get; set; }
-            public IList<IVolatileToken> Tokens { get; set; }
+            private IList<IVolatileToken> Tokens { get; set; }
+
+            public void AddToken(IVolatileToken volatileToken) {
+                if (Tokens == null) {
+                    Tokens = new List<IVolatileToken>();
+                }
+
+                Tokens.Add(volatileToken);
+            }
+
+            public IEnumerable<IVolatileToken> GetTokens() {
+                return Tokens;
+            }
         }
     }
 

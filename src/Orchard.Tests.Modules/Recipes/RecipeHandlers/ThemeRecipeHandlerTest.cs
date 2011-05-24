@@ -128,13 +128,16 @@ Features:
             Assert.Throws(typeof(InvalidOperationException), () => themeRecipeHandler.ExecuteRecipeStep(recipeContext));
         }
 
-        internal class StubSiteThemeService : ISiteThemeService
-        {
+        internal class StubSiteThemeService : ISiteThemeService {
             public ExtensionDescriptor GetSiteTheme() {
                 throw new NotImplementedException();
             }
 
             public void SetSiteTheme(string themeName) {
+                throw new NotImplementedException();
+            }
+
+            public string GetCurrentThemeName() {
                 throw new NotImplementedException();
             }
         }
