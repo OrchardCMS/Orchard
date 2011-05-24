@@ -5,6 +5,7 @@ using Autofac.Features.Metadata;
 using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Logging;
 using Orchard.Utility;
 
 namespace Orchard.DisplayManagement.Descriptors {
@@ -21,10 +22,15 @@ namespace Orchard.DisplayManagement.Descriptors {
             _extensionManager = extensionManager;
             _cacheManager = cacheManager;
             _bindingStrategies = bindingStrategies;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public ShapeTable GetShapeTable(string themeName) {
             return _cacheManager.Get(themeName ?? "", x => {
+                Logger.Information("Start building shape table");
+
                 var builderFactory = new ShapeTableBuilderFactory();
                 foreach (var bindingStrategy in _bindingStrategies) {
                     Feature strategyDefaultFeature = bindingStrategy.Metadata.ContainsKey("Feature") ?
@@ -47,10 +53,13 @@ namespace Orchard.DisplayManagement.Descriptors {
                             return descriptor;
                         })).ToList();
 
-                return new ShapeTable {
+                var result = new ShapeTable {
                     Descriptors = descriptors.ToDictionary(sd => sd.ShapeType, StringComparer.OrdinalIgnoreCase),
                     Bindings = descriptors.SelectMany(sd => sd.Bindings).ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase),
                 };
+
+                Logger.Information("Done building shape table");
+                return result;
             });
         }
 

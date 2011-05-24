@@ -51,6 +51,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
         }
 
         public void Discover(ShapeTableBuilder builder) {
+            Logger.Information("Start discovering shapes");
+
             var harvesterInfos = _harvesters.Select(harvester => new { harvester, subPaths = harvester.SubPaths() });
 
             var availableFeatures = _extensionManager.AvailableFeatures();
@@ -58,6 +60,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             var activeExtensions = Once(activeFeatures);
 
             var hits = activeExtensions.SelectMany(extensionDescriptor => {
+                Logger.Information("Start discovering candidate views filenames");
                 var pathContexts = harvesterInfos.SelectMany(harvesterInfo => harvesterInfo.subPaths.Select(subPath => {
                     var basePath = Path.Combine(extensionDescriptor.Location, extensionDescriptor.Id).Replace(Path.DirectorySeparatorChar, '/');
                     var virtualPath = Path.Combine(basePath, subPath).Replace(Path.DirectorySeparatorChar, '/');
@@ -66,7 +69,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                         return _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
                     });
                     return new { harvesterInfo.harvester, basePath, subPath, virtualPath, fileNames };
-                }));
+                })).ToList();
+                Logger.Information("Done discovering candidate views filenames");
 
                 var fileContexts = pathContexts.SelectMany(pathContext => _shapeTemplateViewEngines.SelectMany(ve => {
                     var fileNames = ve.DetectTemplateFileNames(pathContext.fileNames);
@@ -109,6 +113,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                             shapeDescriptor => displayContext => Render(shapeDescriptor, displayContext, hit.shapeContext.harvestShapeInfo, hit.shapeContext.harvestShapeHit));
                 }
             }
+
+            Logger.Information("Done discovering shapes");
         }
 
         private bool FeatureIsEnabled(FeatureDescriptor fd) {
@@ -117,8 +123,13 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
         }
 
         private IHtmlString Render(ShapeDescriptor shapeDescriptor, DisplayContext displayContext, HarvestShapeInfo harvestShapeInfo, HarvestShapeHit harvestShapeHit) {
+            Logger.Information("Rendering template file '{0}'", harvestShapeInfo.TemplateVirtualPath);
+
             var htmlHelper = new HtmlHelper(displayContext.ViewContext, displayContext.ViewDataContainer);
-            return htmlHelper.Partial(harvestShapeInfo.TemplateVirtualPath, displayContext.Value);
+            var result = htmlHelper.Partial(harvestShapeInfo.TemplateVirtualPath, displayContext.Value);
+
+            Logger.Information("Done rendering template file '{0}'", harvestShapeInfo.TemplateVirtualPath);
+            return result;
         }
 
     }
