@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using ClaySharp;
-using ClaySharp.Behaviors;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 
@@ -168,34 +167,12 @@ namespace Orchard.DesignerTools.Services {
         }
 
         private void DumpShape(IShape shape) {
+            var members = new Dictionary<string, object>();
+            ((IClayBehaviorProvider) (dynamic) shape).Behavior.GetMembers(() => null, shape, members);
 
-            var b = ((IClayBehaviorProvider) (dynamic) shape).Behavior as ClayBehaviorCollection;
-
-            if (b == null)
-                return;
-
-            // seek the PropBehavior if exists
-            var propBehavior = b.OfType<PropBehavior>().FirstOrDefault();
-
-            if (propBehavior == null)
-                return;
-
-            // retrieve the internal dictionary for properties
-            var props = propBehavior.GetType().GetField("_props", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField).GetValue(propBehavior) as Dictionary<object, object>;
-
-            if (props == null)
-                return;
-
-            if (props.Keys.Count == 0) {
-                return;
-            }
-
-            foreach (var key in props.Keys) {
-                // ignore private members (added dynmically by the shape wrapper)
-                if (key.ToString().StartsWith("_")) {
-                    continue;
-                }
-                Dump(props[key], key.ToString());
+            foreach (var key in members.Keys.Where(key => !key.StartsWith("_"))) {
+                // ignore private members (added dynamically by the shape wrapper)
+                Dump(members[key], key);
             }
         }
 
