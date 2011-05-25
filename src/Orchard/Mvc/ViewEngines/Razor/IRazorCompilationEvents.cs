@@ -85,9 +85,15 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                     }
                 }
 
-                foreach (var virtualDependency in entry.dependencies) {
-                    provider.AddVirtualPathDependency(virtualDependency);
-                }
+            }
+
+            //PERF: Ensure each virtual path is present only once in the list of dependencies
+            var virtualDependencies = entries
+                .SelectMany(e => e.dependencies)
+                .Distinct(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var virtualDependency in virtualDependencies) {
+                provider.AddVirtualPathDependency(virtualDependency);
             }
         }
 
