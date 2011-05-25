@@ -53,11 +53,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (assembly == null)
                 return null;
 
+            var assemblyPath = _virtualPathProvider.Combine("~/bin", descriptor.Id + ".dll");
+
             return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastWriteTimeUtc = File.GetLastWriteTimeUtc(assembly.Location),
+                LastWriteTimeUtc = _virtualPathProvider.GetFileLastWriteTimeUtc(assemblyPath),
                 Loader = this,
-                VirtualPath = _virtualPathProvider.Combine("~/bin", descriptor.Id + ".dll")
+                VirtualPath = assemblyPath
             };
         }
 
