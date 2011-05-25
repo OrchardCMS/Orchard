@@ -76,9 +76,9 @@ namespace Orchard.Core.Containers.Controllers {
             list.Classes.Add("list-items");
 
             var model = _contentManager.BuildDisplay(container, "Detail");
-            model.Content.Add(list, "5");
+            model.Content.Add(list, "7");
             if (container.As<ContainerPart>().Record.Paginated) {
-                model.Content.Add(pagerShape, "5.1");
+                model.Content.Add(pagerShape, "7.5");
             }
 
             return new ShapeResult(this, model);
