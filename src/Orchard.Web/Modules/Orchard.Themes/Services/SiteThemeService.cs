@@ -2,8 +2,6 @@
 using Orchard.ContentManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Localization;
-using Orchard.Logging;
 using Orchard.Themes.Models;
 
 namespace Orchard.Themes.Services {
@@ -17,7 +15,6 @@ namespace Orchard.Themes.Services {
         public const string CurrentThemeSignal = "SiteCurrentTheme";
 
         private readonly IExtensionManager _extensionManager;
-        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly ICacheManager _cacheManager;
         private readonly ISignals _signals;
         private readonly IOrchardServices _orchardServices;
@@ -25,22 +22,14 @@ namespace Orchard.Themes.Services {
         public SiteThemeService(
             IOrchardServices orchardServices,
             IExtensionManager extensionManager,
-            IWorkContextAccessor workContextAccessor,
             ICacheManager cacheManager,
             ISignals signals) {
 
             _orchardServices = orchardServices;
             _extensionManager = extensionManager;
-            _workContextAccessor = workContextAccessor;
             _cacheManager = cacheManager;
             _signals = signals;
-
-            Logger = NullLogger.Instance;
-
-            T = NullLocalizer.Instance;
         }
-        public Localizer T { get; set; }
-        public ILogger Logger { get; set; }
 
         public ExtensionDescriptor GetSiteTheme() {
             string currentThemeName = GetCurrentThemeName();
@@ -48,7 +37,7 @@ namespace Orchard.Themes.Services {
         }
 
         public void SetSiteTheme(string themeName) {
-            var site = _workContextAccessor.GetContext().CurrentSite;
+            var site = _orchardServices.WorkContext.CurrentSite;
             site.As<ThemeSiteSettingsPart>().CurrentThemeName = themeName;
 
             _signals.Trigger(CurrentThemeSignal);
