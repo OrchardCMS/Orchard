@@ -200,6 +200,7 @@
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
+    <Compile Include="Settings\Commands\SiteSettingsCommands.cs" />
     <Compile Include="Settings\Models\SiteSettings2Part.cs" />
     <Compile Include="Settings\Models\SiteSettings2PartRecord.cs" />
     <Compile Include="Settings\ResourceManifest.cs" />
