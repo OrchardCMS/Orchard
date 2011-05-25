@@ -40,91 +40,93 @@
 }
 
 @if (Model.TotalItemCount > 1) {
-    <div class="pager-footer">
+    using (Html.BeginFormAntiForgeryPost()) {    
+        <div class="pager-footer">
 
-        @if (totalPageCount > 1 || Model.PageSize == 0 || Model.PageSize > pageSizes.First()) {
-            <div class="page-size-options">
-                <input type="hidden" name="Page" value="1" />
-                <label for="pageSize">@T("Show:")</label>
-                <select id="pageSize" name="PageSize">
-                    @Html.SelectOption((int)Model.PageSize, 0, T("All").ToString())
-                    @foreach (int size in pageSizes.OrderBy(p => p)) {
-                        @Html.SelectOption((int)Model.PageSize, size, size.ToString())
-                    }
-                </select>
+            @if (totalPageCount > 1 || Model.PageSize == 0 || Model.PageSize > pageSizes.First()) {
+                <div class="page-size-options">
+                    <input type="hidden" name="Page" value="1" />
+                    <label for="pageSize">@T("Show:")</label>
+                    <select id="pageSize" name="PageSize">
+                        @Html.SelectOption((int)Model.PageSize, 0, T("All").ToString())
+                        @foreach (int size in pageSizes.OrderBy(p => p)) {
+                            @Html.SelectOption((int)Model.PageSize, size, size.ToString())
+                        }
+                    </select>
 
-                <button id="submit-pager" type="submit">@T("Apply")</button>
-            </div>
-        }
+                    <button id="submit-pager" type="submit">@T("Apply")</button>
+                </div>
+            }
 
-        <span class="page-results">@T("Showing items {0} - {1} of {2}", (Model.Page - 1) * (int)Model.PageSize + 1, Model.PageSize == 0 ? Model.TotalItemCount : Math.Min(Model.TotalItemCount, (Model.Page) * (int)Model.PageSize), Model.TotalItemCount)</span>
+            <span class="page-results">@T("Showing items {0} - {1} of {2}", (Model.Page - 1) * (int)Model.PageSize + 1, Model.PageSize == 0 ? Model.TotalItemCount : Math.Min(Model.TotalItemCount, (Model.Page) * (int)Model.PageSize), Model.TotalItemCount)</span>
 
-        @if (totalPageCount > 1) {
-            routeData["pageSize"] = Model.PageSize;
-            @tag.StartElement
+            @if (totalPageCount > 1) {
+                routeData["pageSize"] = Model.PageSize;
+                @tag.StartElement
 
-                // first
-                if (firstPage > 1) {
-                    if (routeData.ContainsKey("page")) {
-                        routeData.Remove("page");
-                    }
+                    // first
+                    if (firstPage > 1) {
+                        if (routeData.ContainsKey("page")) {
+                            routeData.Remove("page");
+                        }
 
-                    <li class="page-first">
-                    @Html.ActionLink(T("<<").Text, (string)routeData["action"], (string)routeData["controller"], routeData, null)
-                    </li>
-                }
-
-                // previous page
-                if (Model.Page > 1) {
-                    if (Model.Page == 2 && routeData.ContainsKey("page")) {
-                        routeData.Remove("page");
-                    } else {
-                        routeData["page"] = Model.Page - 1;
+                        <li class="page-first">
+                        @Html.ActionLink(T("<<").Text, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                        </li>
                     }
 
-                    <li class="page-previous">
-                    @Html.ActionLink((string)previousText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
-                    </li>
-                }
-
-                // page numbers
-                for (var p = firstPage; p <= lastPage; p++) {
-                    <li class="page-@p">
-                    @if (p == Model.Page) {
-                        <span>@p</span>
-                    } else {
-                        if (p == 1) {
+                    // previous page
+                    if (Model.Page > 1) {
+                        if (Model.Page == 2 && routeData.ContainsKey("page")) {
                             routeData.Remove("page");
                         } else {
-                            routeData["page"] = p;
+                            routeData["page"] = Model.Page - 1;
                         }
-                        @Html.ActionLink(p.ToString(), (string)routeData["action"], (string)routeData["controller"], routeData, null)
+
+                        <li class="page-previous">
+                        @Html.ActionLink((string)previousText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                        </li>
                     }
-                    </li>
-                }
 
-                // next page
-                if (Model.Page < totalPageCount) {
-                    routeData["page"] = Model.Page + 1;
+                    // page numbers
+                    for (var p = firstPage; p <= lastPage; p++) {
+                        <li class="page-@p">
+                        @if (p == Model.Page) {
+                            <span>@p</span>
+                        } else {
+                            if (p == 1) {
+                                routeData.Remove("page");
+                            } else {
+                                routeData["page"] = p;
+                            }
+                            @Html.ActionLink(p.ToString(), (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                        }
+                        </li>
+                    }
 
-                    <li class="page-next">
-                    @Html.ActionLink((string)nextText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
-                    </li>
-                }
+                    // next page
+                    if (Model.Page < totalPageCount) {
+                        routeData["page"] = Model.Page + 1;
 
-                // last page
-                if (lastPage < totalPageCount) {
-                    routeData["page"] = totalPageCount;
+                        <li class="page-next">
+                        @Html.ActionLink((string)nextText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                        </li>
+                    }
 
-                    <li class="page-last">
-                    @Html.ActionLink(T(">>").Text, (string)routeData["action"], (string)routeData["controller"], routeData, null)
-                    </li>
-                }
+                    // last page
+                    if (lastPage < totalPageCount) {
+                        routeData["page"] = totalPageCount;
 
-            @tag.EndElement
-        }
+                        <li class="page-last">
+                        @Html.ActionLink(T(">>").Text, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                        </li>
+                    }
 
-    </div>
+                @tag.EndElement
+            }
+
+        </div>
+    }
 }
 @using(Script.Foot()) {
 <script type="text/javascript">
@@ -133,7 +135,7 @@
         // Add the event handler for value change in the select field
         $("#pageSize").change(function () {
             var self = $(this);
-            var form = self.closest("form");
+            var form = self.parents("form");
 
             // Submit form
             form.submit();
