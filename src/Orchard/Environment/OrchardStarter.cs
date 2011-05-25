@@ -31,6 +31,7 @@ namespace Orchard.Environment {
     public static class OrchardStarter {
         public static IContainer CreateHostContainer(Action<ContainerBuilder> registrations) {
             var builder = new ContainerBuilder();
+            builder.RegisterModule(new CollectionOrderModule());
             builder.RegisterModule(new LoggingModule());
             builder.RegisterModule(new EventsModule());
             builder.RegisterModule(new CacheModule());

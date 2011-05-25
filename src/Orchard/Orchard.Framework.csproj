@@ -174,6 +174,7 @@
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ShapeDebugView.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Environment\CollectionOrderModule.cs" />
     <Compile Include="Environment\Extensions\OrchardSuppressDependencyAttribute.cs" />
     <Compile Include="Environment\Features\IFeatureManager.cs" />
     <Compile Include="Environment\IAssemblyNameResolver.cs" />
