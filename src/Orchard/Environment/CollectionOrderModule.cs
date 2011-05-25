@@ -5,15 +5,15 @@ using Autofac.Core;
 namespace Orchard.Environment {
     internal class CollectionOrderModule : IModule {
         public void Configure(IComponentRegistry componentRegistry) {
-            componentRegistry.Registered += (s, e) => {
+            componentRegistry.Registered += (sender, registered) => {
                 // only bother watching enumerable resolves
-                var limitType = e.ComponentRegistration.Activator.LimitType;
+                var limitType = registered.ComponentRegistration.Activator.LimitType;
                 if (typeof(IEnumerable).IsAssignableFrom(limitType)) {
-                    e.ComponentRegistration.Activated += (s2, e2) => {
+                    registered.ComponentRegistration.Activated += (sender2, activated) => {
                         // Autofac's IEnumerable feature returns an Array
-                        if (e2.Instance is Array) {
+                        if (activated.Instance is Array) {
                             // Orchard needs FIFO, not FILO, component order
-                            Array.Reverse((Array)e2.Instance);
+                            Array.Reverse((Array)activated.Instance);
                         }
                     };
                 }
