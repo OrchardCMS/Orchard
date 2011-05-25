@@ -7,6 +7,7 @@ using Orchard.Core.Containers.Extensions;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
+using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
 using Orchard.Settings;
@@ -71,14 +72,16 @@ namespace Orchard.Core.Containers.Controllers {
 
             var list = Shape.List();
             list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+            list.Classes.Add("content-items");
+            list.Classes.Add("list-items");
 
-            dynamic viewModel = Shape.ViewModel()
-                .ContentItems(list)
-                .Pager(pagerShape)
-                .ShowPager(container.As<ContainerPart>().Record.Paginated);
+            var model = _contentManager.BuildDisplay(container, "Detail");
+            model.Content.Add(list, "5");
+            if (container.As<ContainerPart>().Record.Paginated) {
+                model.Content.Add(pagerShape, "5.1");
+            }
 
-            // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)viewModel);
+            return new ShapeResult(this, model);
         }
     }
 }
