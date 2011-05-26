@@ -66,25 +66,24 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                                               .Select(loader => new {
                                                   loader,
                                                   descriptor,
-                                                  directive = loader.GetWebFormAssemblyDirective(descriptor),
-                                                  dependencies = loader.GetWebFormVirtualDependencies(descriptor)
+                                                  references = loader.GetCompilationReferences(descriptor),
+                                                  dependencies = loader.GetVirtualPathDependencies(descriptor)
                                               }));
 
             foreach (var entry in entries) {
-                if (entry.directive != null) {
-                    if (entry.directive.StartsWith("<%@ Assembly Name=\"")) {
-                        var assembly = _assemblyLoader.Load(entry.descriptor.Name);
+                foreach (var reference in entry.references) {
+                    if (!string.IsNullOrEmpty(reference.AssemblyName)) {
+                        var assembly = _assemblyLoader.Load(reference.AssemblyName);
                         if (assembly != null)
                             provider.AssemblyBuilder.AddAssemblyReference(assembly);
                     }
-                    else if (entry.directive.StartsWith("<%@ Assembly Src=\"")) {
+                    if (!string.IsNullOrEmpty(reference.BuildProviderTarget)) {
                         // Returned assembly may be null if the .csproj file doesn't containt any .cs file, for example
-                        var assembly = _buildManager.GetCompiledAssembly(entry.descriptor.VirtualPath);
+                        var assembly = _buildManager.GetCompiledAssembly(reference.BuildProviderTarget);
                         if (assembly != null)
                             provider.AssemblyBuilder.AddAssemblyReference(assembly);
                     }
                 }
-
             }
 
             //PERF: Ensure each virtual path is present only once in the list of dependencies
@@ -99,7 +98,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         private DependencyDescriptor GetModuleDependencyDescriptor(string virtualPath) {
             var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
-            var prefix = PrefixMatch(appRelativePath, new [] { "~/Modules/", "~/Core/"});
+            var prefix = PrefixMatch(appRelativePath, new[] { "~/Modules/", "~/Core/" });
             if (prefix == null)
                 return null;
 

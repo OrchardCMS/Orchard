@@ -48,11 +48,11 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override int Order { get { return 100; } }
 
-        public override string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
-            return string.Format("<%@ Assembly Src=\"{0}\"%>", dependency.VirtualPath);
+        public override IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
+            yield return new ExtensionCompilationReference { BuildProviderTarget = dependency.VirtualPath };
         }
 
-        public override IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+        public override IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
             // Return csproj and all .cs files
             return GetDependencies(dependency.VirtualPath);
         }

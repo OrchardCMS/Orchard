@@ -104,15 +104,11 @@ namespace Orchard.Tests.Environment.Extensions {
             public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) {
             }
 
-            public string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
+            public IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
-                throw new NotImplementedException();
-            }
-
-            public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
+            public IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
                 throw new NotImplementedException();
             }
 

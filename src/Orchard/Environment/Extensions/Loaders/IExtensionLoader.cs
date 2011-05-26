@@ -20,6 +20,11 @@ namespace Orchard.Environment.Extensions.Loaders {
         public string VirtualPath { get; set; }
     }
 
+    public class ExtensionCompilationReference {
+        public string AssemblyName { get; set; }
+        public string BuildProviderTarget { get; set; }
+    }
+
     public interface IExtensionLoader {
         int Order { get; }
         string Name { get; }
@@ -39,7 +44,19 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor);
 
-        string GetWebFormAssemblyDirective(DependencyDescriptor dependency);
-        IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency);
+        /// <summary>
+        /// Return a list of references required to compile a component (e.g. a Razor or WebForm view)
+        /// depending on the given module. 
+        /// Each reference can either be an assembly name or a file to pass to the 
+        /// IBuildManager.GetCompiledAssembly() method (e.g. a module .csproj project file).
+        /// </summary>
+        IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency);
+        /// <summary>
+        /// Return the list of dependencies (as virtual path) of the given module.
+        /// If any of the dependency returned in the list is updated, a component depending 
+        /// on the assembly produced for the module must be re-compiled.
+        /// For example, Razor or WebForms views needs to be recompiled when a dependency of a module changes.
+        /// </summary>
+        IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency);
     }
 }

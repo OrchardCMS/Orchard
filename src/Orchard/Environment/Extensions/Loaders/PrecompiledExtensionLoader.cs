@@ -40,11 +40,11 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override int Order { get { return 30; } }
 
-        public override string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
-            return string.Format("<%@ Assembly Name=\"{0}\"%>", dependency.Name);
+        public override IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
+            yield return new ExtensionCompilationReference { AssemblyName = dependency.Name };
         }
 
-        public override IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+        public override IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
             yield return _assemblyProbingFolder.GetAssemblyVirtualPath(dependency.Name);
         }
 

@@ -50,11 +50,11 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         protected abstract ExtensionEntry LoadWorker(ExtensionDescriptor descriptor);
 
-        public virtual string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
-            return null;
+        public virtual IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
+            return Enumerable.Empty<ExtensionCompilationReference>();
         }
 
-        public virtual IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+        public virtual IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
             return Enumerable.Empty<string>();
         }
     }
