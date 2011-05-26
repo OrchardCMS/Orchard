@@ -386,7 +386,6 @@
     <Content Include="Containers\Placement.info" />
     <Content Include="Containers\Views\EditorTemplates\ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Container.cshtml" />
-    <Content Include="Containers\Views\Item\Display.cshtml" />
     <Content Include="Containers\Views\DefinitionTemplates\ContainerPartSettings.cshtml" />
     <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettings.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
