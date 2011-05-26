@@ -57,9 +57,5 @@ namespace Orchard.Environment.Extensions.Loaders {
         public virtual IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
             return Enumerable.Empty<string>();
         }
-
-        public virtual IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
-            return Enumerable.Empty<string>();
-        }
     }
 }

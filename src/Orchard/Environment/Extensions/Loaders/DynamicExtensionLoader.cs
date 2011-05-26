@@ -57,13 +57,14 @@ namespace Orchard.Environment.Extensions.Loaders {
             return GetDependencies(dependency.VirtualPath);
         }
 
-        public override IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
+        public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
             virtualPath = _virtualPathProvider.ToAppRelative(virtualPath);
 
             if (StringComparer.OrdinalIgnoreCase.Equals(virtualPath, dependency.VirtualPath)) {
                 return GetDependencies(virtualPath);
             }
-            return base.GetDynamicModuleDependencies(dependency, virtualPath);
+
+            return Enumerable.Empty<string>();
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
