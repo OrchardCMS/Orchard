@@ -60,6 +60,7 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultLockFileManager, ILockFileManager>(builder);
             RegisterVolatileProvider<Clock, IClock>(builder);
             RegisterVolatileProvider<DefaultDependenciesFolder, IDependenciesFolder>(builder);
+            RegisterVolatileProvider<DefaultModuleDependenciesManager, IModuleDependenciesManager>(builder);
             RegisterVolatileProvider<DefaultAssemblyProbingFolder, IAssemblyProbingFolder>(builder);
             RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
