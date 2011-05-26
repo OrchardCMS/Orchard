@@ -21,6 +21,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IProjectFileParser _projectFileParser;
         private readonly ReloadWorkaround _reloadWorkaround = new ReloadWorkaround();
+        private readonly string[] _modulesPrefixes = { "~/Modules/", "~/Themes/" };
 
         public DynamicExtensionLoader(
             IBuildManager buildManager,
@@ -104,13 +105,13 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             var projectFile = _projectFileParser.Parse(projectPath);
 
-                return projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
-                    Descriptor = descriptor,
-                    Loader = this,
-                    Name = r.SimpleName,
-                    VirtualPath = _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
-                });
-            }
+            return projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
+                Descriptor = descriptor,
+                Loader = this,
+                Name = r.SimpleName,
+                VirtualPath = _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
+            });
+        }
 
         public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
             //Note: This is the same implementation as "PrecompiledExtensionLoader"
@@ -184,51 +185,56 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected IEnumerable<string> GetDependencies(string projectPath) {
-            var dependencies = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { projectPath };
-
+            var dependencies = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             AddDependencies(projectPath, dependencies);
-
             return dependencies;
         }
 
         private void AddDependencies(string projectPath, HashSet<string> currentSet) {
+            // Skip files from locations other than "~/Modules" and "~/Themes"
+            if (string.IsNullOrEmpty(PrefixMatch(projectPath, _modulesPrefixes))) {
+                return;
+            }
+
+            // Add project path
+            currentSet.Add(projectPath);
+
+            // Add source file paths
+            var projectFile = _projectFileParser.Parse(projectPath);
             string basePath = _virtualPathProvider.GetDirectoryName(projectPath);
+            currentSet.UnionWith(projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f)));
 
-            ProjectFileDescriptor projectFile = _projectFileParser.Parse(projectPath);
+            // Add Project and Library references
+            if (projectFile.References != null) {
+                foreach (ReferenceDescriptor referenceDescriptor in projectFile.References.Where(reference => !string.IsNullOrEmpty(reference.Path))) {
+                    string path = referenceDescriptor.ReferenceType == ReferenceType.Library
+                                      ? _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
+                                      : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
 
-                // Add source files
-                currentSet.UnionWith(projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f)));
+                    // Normalize the virtual path (avoid ".." in the path name)
+                    if (!string.IsNullOrEmpty(path)) {
+                        path = _virtualPathProvider.ToAppRelative(path);
+                    }
 
-                // Add Project and Library references
-                if (projectFile.References != null) {
-                    foreach (ReferenceDescriptor referenceDescriptor in projectFile.References.Where(reference => !string.IsNullOrEmpty(reference.Path))) {
-                        string path = referenceDescriptor.ReferenceType == ReferenceType.Library
-                                          ? _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
-                                          : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
-
-                        // Normalize the virtual path (avoid ".." in the path name)
-                        if (!string.IsNullOrEmpty(path)) {
-                            path = _virtualPathProvider.ToAppRelative(path);
-                        }
-
-                        // Attempt to reference the project / library file
-                        if (!string.IsNullOrEmpty(path) && !currentSet.Contains(path) && _virtualPathProvider.TryFileExists(path)) {
-                            currentSet.Add(path);
-
-                            // In case of project, also reference the source files
-                            if (referenceDescriptor.ReferenceType == ReferenceType.Project) {
+                    // Attempt to reference the project / library file
+                    if (!string.IsNullOrEmpty(path) && !currentSet.Contains(path) && _virtualPathProvider.TryFileExists(path)) {
+                        switch (referenceDescriptor.ReferenceType) {
+                            case ReferenceType.Project:
                                 AddDependencies(path, currentSet);
-
-                                // Try to also reference any pre-built DLL
-                                DependencyDescriptor dependencyDescriptor = _dependenciesFolder.GetDescriptor(_virtualPathProvider.GetDirectoryName(referenceDescriptor.Path));
-                                if (dependencyDescriptor != null && _virtualPathProvider.TryFileExists(dependencyDescriptor.VirtualPath)) {
-                                    currentSet.Add(dependencyDescriptor.VirtualPath);
-                                }
-                            }
+                                break;
+                            case ReferenceType.Library:
+                                currentSet.Add(path);
+                                break;
                         }
                     }
                 }
             }
+        }
+
+        private static string PrefixMatch(string virtualPath, params string[] prefixes) {
+            return prefixes
+                .FirstOrDefault(p => virtualPath.StartsWith(p, StringComparison.OrdinalIgnoreCase));
+        }
 
         private string GetProjectPath(ExtensionDescriptor descriptor) {
             string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
@@ -254,14 +260,14 @@ namespace Orchard.Environment.Extensions.Loaders {
             private readonly List<IVolatileToken> _tokens = new List<IVolatileToken>();
 
             public void Monitor(IVolatileToken whenProjectFileChanges) {
-                lock(_tokens) {
+                lock (_tokens) {
                     _tokens.Add(whenProjectFileChanges);
                 }
             }
 
             public bool AppDomainRestartNeeded {
                 get {
-                    lock(_tokens) {
+                    lock (_tokens) {
                         return _tokens.Any(t => t.IsCurrent == false);
                     }
                 }
