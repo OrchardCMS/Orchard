@@ -31,7 +31,7 @@ namespace Orchard.FileSystems.VirtualPath {
             catch (HttpException e) {
                 // This exception happens if trying to monitor a directory or file
                 // inside a directory which doesn't exist
-                Logger.Warning(e, "Error monitoring file changes on virtual path '{0}'", virtualPath);
+                Logger.Information(e, "Error monitoring file changes on virtual path '{0}'", virtualPath);
 
                 //TODO: Return a token monitoring first existing parent directory.
             }

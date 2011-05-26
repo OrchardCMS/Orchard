@@ -207,14 +207,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
                         // Normalize the virtual path (avoid ".." in the path name)
                         if (!string.IsNullOrEmpty(path)) {
-                            try {
-                                path = _virtualPathProvider.ToAppRelative(path);
-                            }
-                            catch (Exception e) {
-                                // The initial path might have been invalid (e.g. path indicates a path outside the application root)
-                                Logger.Information(e, "Path '{0}' cannot be made app relative", path);
-                                path = null;
-                            }
+                            path = _virtualPathProvider.ToAppRelative(path);
                         }
 
                         // Attempt to reference the project / library file

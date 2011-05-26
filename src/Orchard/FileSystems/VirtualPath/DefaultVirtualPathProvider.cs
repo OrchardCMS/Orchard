@@ -4,9 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
+using Orchard.Logging;
 
 namespace Orchard.FileSystems.VirtualPath {
     public class DefaultVirtualPathProvider : IVirtualPathProvider {
+        public DefaultVirtualPathProvider() {
+            Logger = NullLogger.Instance;
+        }
+
+        public ILogger Logger { get; set; }
+
         public virtual string GetDirectoryName(string virtualPath) {
             return Path.GetDirectoryName(virtualPath).Replace(Path.DirectorySeparatorChar, '/');
         }
@@ -17,7 +24,7 @@ namespace Orchard.FileSystems.VirtualPath {
                 .GetDirectory(path)
                 .Files
                 .OfType<VirtualFile>()
-                .Select(f => ToAppRelative(f.VirtualPath));
+                .Select(f => VirtualPathUtility.ToAppRelative(f.VirtualPath));
         }
 
         public virtual IEnumerable<string> ListDirectories(string path) {
@@ -26,7 +33,7 @@ namespace Orchard.FileSystems.VirtualPath {
                 .GetDirectory(path)
                 .Directories
                 .OfType<VirtualDirectory>()
-                .Select(d => ToAppRelative(d.VirtualPath));
+                .Select(d => VirtualPathUtility.ToAppRelative(d.VirtualPath));
         }
 
         public virtual string Combine(params string[] paths) {
@@ -34,7 +41,65 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         public virtual string ToAppRelative(string virtualPath) {
-            return VirtualPathUtility.ToAppRelative(virtualPath);
+            if (RejectMalformedVirtualPath(virtualPath))
+                return null;
+
+            try {
+                string result = VirtualPathUtility.ToAppRelative(virtualPath);
+
+                // In some cases, ToAppRelative doesn't normalize the path. In those cases,
+                // the path is invalid.
+                // Example:
+                //   ApplicationPath: /Foo
+                //   VirtualPath    : ~/Bar/../Blah/Blah2
+                //   Result         : /Blah/Blah2  <= that is not an app relative path!
+                if (!result.StartsWith("~/")) {
+                    Logger.Information("Path '{0}' cannot be made app relative: Path returned ('{1}') is not app relative.", virtualPath, result);
+                    return null;
+                }
+                return result;
+            }
+            catch (Exception e) {
+                // The initial path might have been invalid (e.g. path indicates a path outside the application root)
+                Logger.Information(e, "Path '{0}' cannot be made app relative", virtualPath);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// We want to reject path that contains ".." going outside of the application root.
+        /// ToAppRelative does that already, but we want to do the same while avoiding exceptions.
+        /// 
+        /// Note: This method doesn't detect all cases of malformed paths, it merely checks
+        ///       for *some* cases of malformed paths, so this is not a replacement for full virtual path
+        ///       verification through VirtualPathUtilty methods.
+        /// </summary>
+        public bool RejectMalformedVirtualPath(string virtualPath) {
+            if (string.IsNullOrEmpty(virtualPath))
+                return true;
+
+            if (virtualPath.IndexOf("..") >= 0) {
+                virtualPath = virtualPath.Replace(Path.DirectorySeparatorChar, '/');
+                string rootPrefix = virtualPath.StartsWith("~/") ? "~/" : virtualPath.StartsWith("/") ? "/" : "";
+                if (!string.IsNullOrEmpty(rootPrefix)) {
+                    string[] terms = virtualPath.Substring(rootPrefix.Length).Split('/');
+                    int depth = 0;
+                    foreach (var term in terms) {
+                        if (term == "..") {
+                            if (depth == 0) {
+                                Logger.Information("Path '{0}' cannot be made app relative: Too many '..'", virtualPath);
+                                return true;
+                            }
+                            depth--;
+                        }
+                        else {
+                            depth++;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         public virtual Stream OpenFile(string virtualPath) {
@@ -62,29 +127,14 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         public virtual bool TryFileExists(string virtualPath) {
+            if (RejectMalformedVirtualPath(virtualPath))
+                return false;
+
             try {
-                // Check if the path falls outside the root directory of the app
-                string directoryName = Path.GetDirectoryName(virtualPath);
-
-                int level = 0;
-                int stringLength = directoryName.Count();
-
-                for(int i = 0 ; i < stringLength ; i++) {
-                    if (directoryName[i] == '\\') {
-                        if (i < (stringLength - 2) && directoryName[i + 1] == '.' && directoryName[i + 2] == '.') {
-                            level--;
-                            i += 2;
-                        } else level++;
-                    }
-
-                    if (level < 0) {
-                        return false;
-                    }
-                }
-
                 return FileExists(virtualPath);
             }
-            catch {
+            catch (Exception e) {
+                Logger.Information(e, "File '{0}' can not be checked for exitence. Assuming doesn't exist.", virtualPath);
                 return false;
             }
         }
