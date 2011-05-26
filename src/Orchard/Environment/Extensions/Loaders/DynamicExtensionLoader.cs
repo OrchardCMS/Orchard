@@ -184,7 +184,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected IEnumerable<string> GetDependencies(string projectPath) {
-            var dependencies = new HashSet<string> { projectPath };
+            var dependencies = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { projectPath };
 
             AddDependencies(projectPath, dependencies);
 
