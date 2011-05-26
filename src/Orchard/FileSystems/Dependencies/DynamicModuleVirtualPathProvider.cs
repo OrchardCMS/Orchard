@@ -16,7 +16,6 @@ namespace Orchard.FileSystems.Dependencies {
     public class DynamicModuleVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-        private readonly string[] _modulesPrefixes = { "~/Modules/", "~/Themes/" };
 
         public DynamicModuleVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
             _dependenciesFolder = dependenciesFolder;
@@ -41,25 +40,30 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         private string GetFileHashWorker(string virtualPath, IEnumerable virtualPathDependencies) {
+            virtualPath = VirtualPathUtility.ToAppRelative(virtualPath);
+
             var desc = GetDependencyDescriptor(virtualPath);
             if (desc != null) {
+                // We are only interested in ".csproj" files loaded from "DynamicExtensionLoader"
+                var dynamicExtensionLoader = _loaders.Where(l => l.Name == desc.LoaderName).FirstOrDefault() as DynamicExtensionLoader;
+                if (dynamicExtensionLoader != null) {
 
-                var loader = _loaders.Where(l => l.Name == desc.LoaderName).FirstOrDefault() as DynamicExtensionLoader;
-                if (loader != null) {
+                    if (virtualPath.Equals(desc.VirtualPath, StringComparison.OrdinalIgnoreCase)) {
 
-                    var otherDependencies = loader.GetDynamicModuleDependencies(desc, virtualPath);
-                    if (otherDependencies.Any()) {
+                        var otherDependencies = dynamicExtensionLoader.GetFileHashDependencies(desc);
+                        if (otherDependencies.Any()) {
 
-                        var allDependencies = virtualPathDependencies.OfType<string>().Concat(otherDependencies);
+                            var allDependencies = virtualPathDependencies.OfType<string>().Concat(otherDependencies).ToList();
 
-                        if (Logger.IsEnabled(LogLevel.Debug)) {
-                            Logger.Debug("GetFileHash(\"{0}\") - virtual path dependencies:", virtualPath);
-                            foreach (var dependency in allDependencies) {
-                                Logger.Debug("  Dependency: \"{0}\"", dependency);
+                            if (Logger.IsEnabled(LogLevel.Debug)) {
+                                Logger.Debug("GetFileHash(\"{0}\") - virtual path dependencies:", virtualPath);
+                                foreach (var dependency in allDependencies) {
+                                    Logger.Debug("  Dependency: \"{0}\"", dependency);
+                                }
                             }
-                        }
 
-                        return base.GetFileHash(virtualPath, allDependencies);
+                            return base.GetFileHash(virtualPath, allDependencies);
+                        }
                     }
                 }
             }
@@ -71,12 +75,11 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         private DependencyDescriptor GetDependencyDescriptor(string virtualPath) {
-            var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
-            var prefix = PrefixMatch(appRelativePath, _modulesPrefixes);
+            var prefix = PrefixMatch(virtualPath, DynamicExtensionLoader.ExtensionsVirtualPathPrefixes);
             if (prefix == null)
                 return null;
 
-            var moduleName = ModuleMatch(appRelativePath, prefix);
+            var moduleName = ModuleMatch(virtualPath, prefix);
             if (moduleName == null)
                 return null;
 

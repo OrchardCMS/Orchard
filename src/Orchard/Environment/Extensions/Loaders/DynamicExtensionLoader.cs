@@ -13,6 +13,8 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class DynamicExtensionLoader : ExtensionLoaderBase {
+        public static readonly string[] ExtensionsVirtualPathPrefixes = { "~/Modules/", "~/Themes/" };
+
         private readonly IBuildManager _buildManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
@@ -21,7 +23,6 @@ namespace Orchard.Environment.Extensions.Loaders {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IProjectFileParser _projectFileParser;
         private readonly ReloadWorkaround _reloadWorkaround = new ReloadWorkaround();
-        private readonly string[] _modulesPrefixes = { "~/Modules/", "~/Themes/" };
 
         public DynamicExtensionLoader(
             IBuildManager buildManager,
@@ -58,14 +59,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             return GetDependencies(dependency.VirtualPath);
         }
 
-        public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
-            virtualPath = _virtualPathProvider.ToAppRelative(virtualPath);
-
-            if (StringComparer.OrdinalIgnoreCase.Equals(virtualPath, dependency.VirtualPath)) {
-                return GetDependencies(virtualPath);
-            }
-
-            return Enumerable.Empty<string>();
+        public IEnumerable<string> GetFileHashDependencies(DependencyDescriptor dependency) {
+            return GetDependencies(dependency.VirtualPath);
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
@@ -192,7 +187,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         private void AddDependencies(string projectPath, HashSet<string> currentSet) {
             // Skip files from locations other than "~/Modules" and "~/Themes"
-            if (string.IsNullOrEmpty(PrefixMatch(projectPath, _modulesPrefixes))) {
+            if (string.IsNullOrEmpty(PrefixMatch(projectPath, ExtensionsVirtualPathPrefixes))) {
                 return;
             }
 
