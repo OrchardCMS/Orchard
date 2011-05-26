@@ -41,7 +41,7 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         public virtual string ToAppRelative(string virtualPath) {
-            if (RejectMalformedVirtualPath(virtualPath))
+            if (IsMalformedVirtualPath(virtualPath))
                 return null;
 
             try {
@@ -73,8 +73,9 @@ namespace Orchard.FileSystems.VirtualPath {
         /// Note: This method doesn't detect all cases of malformed paths, it merely checks
         ///       for *some* cases of malformed paths, so this is not a replacement for full virtual path
         ///       verification through VirtualPathUtilty methods.
+        ///       In other wors, !IsMalformed does *not* imply "IsWellformed".
         /// </summary>
-        public bool RejectMalformedVirtualPath(string virtualPath) {
+        public bool IsMalformedVirtualPath(string virtualPath) {
             if (string.IsNullOrEmpty(virtualPath))
                 return true;
 
@@ -127,7 +128,7 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         public virtual bool TryFileExists(string virtualPath) {
-            if (RejectMalformedVirtualPath(virtualPath))
+            if (IsMalformedVirtualPath(virtualPath))
                 return false;
 
             try {

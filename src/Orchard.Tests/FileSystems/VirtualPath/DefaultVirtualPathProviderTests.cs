@@ -22,26 +22,26 @@ namespace Orchard.Tests.FileSystems.VirtualPath {
         public void RejectMalformedVirtualPathTests() {
             StubDefaultVirtualPathProvider defaultVirtualPathProvider = new StubDefaultVirtualPathProvider();
 
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("~/a.txt"), Is.False);
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("/a.txt"), Is.False);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("~/a.txt"), Is.False);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("/a.txt"), Is.False);
 
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("~/../a.txt"), Is.True);
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("/../a.txt"), Is.True);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("~/../a.txt"), Is.True);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("/../a.txt"), Is.True);
 
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("~/a/../a.txt"), Is.False);
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("/a/../a.txt"), Is.False);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("~/a/../a.txt"), Is.False);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("/a/../a.txt"), Is.False);
 
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("~/a/b/../a.txt"), Is.False);
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("/a/b/../a.txt"), Is.False);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("~/a/b/../a.txt"), Is.False);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("/a/b/../a.txt"), Is.False);
 
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("~/a/b/../../a.txt"), Is.False);
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("/a/b/../../a.txt"), Is.False);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("~/a/b/../../a.txt"), Is.False);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("/a/b/../../a.txt"), Is.False);
 
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("~/a/b/../../../a.txt"), Is.True);
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("/a/b/../../../a.txt"), Is.True);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("~/a/b/../../../a.txt"), Is.True);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("/a/b/../../../a.txt"), Is.True);
 
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("~/a/../../b//.txt"), Is.True);
-            Assert.That(defaultVirtualPathProvider.RejectMalformedVirtualPath("/a/../../b//.txt"), Is.True);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("~/a/../../b//.txt"), Is.True);
+            Assert.That(defaultVirtualPathProvider.IsMalformedVirtualPath("/a/../../b//.txt"), Is.True);
         }
     }
 
