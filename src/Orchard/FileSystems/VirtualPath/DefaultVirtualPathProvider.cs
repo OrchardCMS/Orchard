@@ -134,7 +134,7 @@ namespace Orchard.FileSystems.VirtualPath {
                 return FileExists(virtualPath);
             }
             catch (Exception e) {
-                Logger.Information(e, "File '{0}' can not be checked for exitence. Assuming doesn't exist.", virtualPath);
+                Logger.Information(e, "File '{0}' can not be checked for existence. Assuming doesn't exist.", virtualPath);
                 return false;
             }
         }
