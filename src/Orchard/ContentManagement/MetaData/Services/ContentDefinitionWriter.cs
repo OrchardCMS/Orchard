@@ -12,7 +12,10 @@ namespace Orchard.ContentManagement.MetaData.Services {
 
         public XElement Export(ContentTypeDefinition typeDefinition) {
             var typeElement = NewElement(typeDefinition.Name, typeDefinition.Settings);
-            
+            if (typeElement.Attribute("DisplayName") == null && typeDefinition.DisplayName != null) {
+                typeElement.Add(new XAttribute("DisplayName", typeDefinition.DisplayName));
+            }
+
             foreach(var typePart in typeDefinition.Parts) {
                 typeElement.Add(NewElement(typePart.PartDefinition.Name, typePart.Settings));
             }
