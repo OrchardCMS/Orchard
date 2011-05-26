@@ -119,6 +119,14 @@ namespace Orchard.FileSystems.VirtualPath {
             return File.GetLastWriteTimeUtc(MapPath(virtualPath));
         }
 
+        public string GetFileHash(string virtualPath) {
+            return GetFileHash(virtualPath, new[] {virtualPath});
+        }
+
+        public string GetFileHash(string virtualPath, IEnumerable<string> dependencies) {
+            return HostingEnvironment.VirtualPathProvider.GetFileHash(virtualPath, dependencies);
+        }
+
         public virtual string MapPath(string virtualPath) {
             return HostingEnvironment.MapPath(virtualPath);
         }

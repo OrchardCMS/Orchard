@@ -56,6 +56,14 @@ namespace Orchard.Tests.Stubs {
             return _fileSystem.GetFileEntry(ToFileSystemPath(virtualPath)).LastWriteTimeUtc;
         }
 
+        public string GetFileHash(string virtualPath) {
+            throw new NotImplementedException();
+        }
+
+        public string GetFileHash(string virtualPath, IEnumerable<string> dependencies) {
+            throw new NotImplementedException();
+        }
+
         public bool DirectoryExists(string virtualPath) {
             return _fileSystem.GetDirectoryEntry(ToFileSystemPath(virtualPath)) != null;
         }
