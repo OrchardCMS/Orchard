@@ -32,14 +32,18 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public void StoreDependencies(IEnumerable<DependencyDescriptor> dependencyDescriptors) {
+            Logger.Information("Storing module dependency file.");
+
             var newDocument = CreateDocument(dependencyDescriptors);
             var previousDocument = ReadDocument(PersistencePath);
             if (CompareXmlDocuments(newDocument, previousDocument)) {
                 Logger.Debug("Existing document is identical to new one. Skipping save.");
-                return;
+            }
+            else {
+                WriteDocument(PersistencePath, newDocument);
             }
 
-            WriteDocument(PersistencePath, newDocument);
+            Logger.Information("Done storing module dependency file.");
         }
 
         public IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor descriptor) {
