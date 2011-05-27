@@ -24,21 +24,9 @@ namespace Orchard.WarmupStarter {
         }
 
         /// <summary>
-        /// Called to unblock all pending requests, while remaining in "queue" incoming requests mode.
-        /// New incoming request are queued in the "_await" list.
+        /// Warmup code is about to start: Any new incoming request is queued 
+        /// until "SignalWarmupDone" is called.
         /// </summary>
-        public static void ProcessPendingRequests() {
-            FlushAwaitingRequests(new List<Action>());
-        }
-
-        /// <summary>
-        /// Pending requests in the "_await" queue are processed, and any new incoming request
-        /// is now processed immediately.
-        /// </summary>
-        public static void SignalWarmupDone() {
-            FlushAwaitingRequests(null);
-        }
-
         public static void SignalWarmupStart() {
             lock (_synLock) {
                 if (_awaiting == null) {
@@ -47,22 +35,24 @@ namespace Orchard.WarmupStarter {
             }
         }
 
-        private static void FlushAwaitingRequests(IList<Action> newAwaiting) {
+        /// <summary>
+        /// Warmup code just completed: All pending requests in the "_await" queue are processed, 
+        /// and any new incoming request is now processed immediately.
+        /// </summary>
+        public static void SignalWarmupDone() {
             IList<Action> temp;
 
             lock (_synLock) {
-                if (_awaiting == null) {
-                    return;
-                }
-
                 temp = _awaiting;
-                _awaiting = newAwaiting;
+                _awaiting = null;
             }
 
-            foreach (var action in temp) {
+            if (temp != null) {
+                foreach (var action in temp) {
                     action();
                 }
             }
+        }
 
         /// <summary>
         /// Enqueue or directly process action depending on current mode.
@@ -75,7 +65,7 @@ namespace Orchard.WarmupStarter {
                     temp = null;
                     _awaiting.Add(action);
                 }
-        }
+            }
 
             if (temp != null) {
                 temp();
@@ -83,50 +73,42 @@ namespace Orchard.WarmupStarter {
         }
 
         private IAsyncResult BeginBeginRequest(object sender, EventArgs e, AsyncCallback cb, object extradata) {
-            var asyncResult = new WarmupAsyncResult(cb);
-            
             // host is available, process every requests, or file is processed
             if (!InWarmup() || WarmupUtility.DoBeginRequest(_context)) {
-                asyncResult.Done();
+                var asyncResult = new DoneAsyncResult(extradata);
+                cb(asyncResult);
+                return asyncResult;
             }
             else {
                 // this is the "on hold" execution path
-                Await(asyncResult.Done);
+                var asyncResult = new WarmupAsyncResult(cb, extradata);
+                Await(asyncResult.Completed);
+                return asyncResult;
             }
-            
-            return asyncResult;
         }
 
         private static void EndBeginRequest(IAsyncResult ar) {
-            ((WarmupAsyncResult)ar).Wait();
         }
 
+        /// <summary>
+        /// AsyncResult for "on hold" request (resumes when "Completed()" is called)
+        /// </summary>
         private class WarmupAsyncResult : IAsyncResult {
-            private readonly EventWaitHandle _eventWaitHandle = new AutoResetEvent(false);
+            private readonly EventWaitHandle _eventWaitHandle = new AutoResetEvent(false/*initialState*/);
             private readonly AsyncCallback _cb;
+            private readonly object _asyncState;
             private bool _isCompleted;
 
-            public WarmupAsyncResult(AsyncCallback cb) {
+            public WarmupAsyncResult(AsyncCallback cb, object asyncState) {
                 _cb = cb;
+                _asyncState = asyncState;
                 _isCompleted = false;
             }
 
-            public void Done() {
+            public void Completed() {
                 _isCompleted = true;
                 _eventWaitHandle.Set();
                 _cb(this);
-            }
-
-            public void Wait() {
-                _eventWaitHandle.WaitOne();
-            }
-
-            object IAsyncResult.AsyncState {
-                get { return null; }
-            }
-
-            WaitHandle IAsyncResult.AsyncWaitHandle {
-                get { throw new NotImplementedException(); }
             }
 
             bool IAsyncResult.CompletedSynchronously {
@@ -135,6 +117,42 @@ namespace Orchard.WarmupStarter {
 
             bool IAsyncResult.IsCompleted {
                 get { return _isCompleted; }
+            }
+
+            object IAsyncResult.AsyncState {
+                get { return _asyncState; }
+            }
+
+            WaitHandle IAsyncResult.AsyncWaitHandle {
+                get { return _eventWaitHandle; }
+            }
+        }
+
+        /// <summary>
+        /// Async result for "ok to process now" requests
+        /// </summary>
+        private class DoneAsyncResult : IAsyncResult {
+            private readonly object _asyncState;
+            private static readonly WaitHandle _waitHandle = new ManualResetEvent(true/*initialState*/);
+
+            public DoneAsyncResult(object asyncState) {
+                _asyncState = asyncState;
+            }
+
+            bool IAsyncResult.CompletedSynchronously {
+                get { return true; }
+            }
+
+            bool IAsyncResult.IsCompleted {
+                get { return true; }
+            }
+
+            WaitHandle IAsyncResult.AsyncWaitHandle {
+                get { return _waitHandle; }
+            }
+
+            object IAsyncResult.AsyncState {
+                get { return _asyncState; }
             }
         }
     }
