@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Razor.Generator;
 using System.Web.WebPages.Razor;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.Dependencies;
+using Orchard.Logging;
 
 namespace Orchard.Mvc.ViewEngines.Razor {
     public interface IRazorCompilationEvents {
@@ -42,9 +44,14 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             _buildManager = buildManager;
             _loaders = loaders;
             _assemblyLoader = assemblyLoader;
+            Logger = NullLogger.Instance;
         }
 
+        public ILogger Logger { get; set; }
+
         public void CodeGenerationStarted(RazorBuildProvider provider) {
+            var assembliesToAdd = new List<Assembly>();
+
             DependencyDescriptor moduleDependencyDescriptor = GetModuleDependencyDescriptor(provider.VirtualPath);
 
             IEnumerable<DependencyDescriptor> dependencyDescriptors = _dependenciesFolder.LoadDescriptors();
@@ -73,29 +80,54 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                                                   dependencies = _moduleDependenciesManager.GetVirtualPathDependencies(descriptor)
                                               }));
 
+            // Add assemblies
             foreach (var entry in entries) {
                 foreach (var reference in entry.references) {
                     if (!string.IsNullOrEmpty(reference.AssemblyName)) {
                         var assembly = _assemblyLoader.Load(reference.AssemblyName);
                         if (assembly != null)
-                            provider.AssemblyBuilder.AddAssemblyReference(assembly);
+                            assembliesToAdd.Add(assembly);
                     }
                     if (!string.IsNullOrEmpty(reference.BuildProviderTarget)) {
                         // Returned assembly may be null if the .csproj file doesn't containt any .cs file, for example
                         var assembly = _buildManager.GetCompiledAssembly(reference.BuildProviderTarget);
                         if (assembly != null)
-                            provider.AssemblyBuilder.AddAssemblyReference(assembly);
+                            assembliesToAdd.Add(assembly);
                     }
                 }
             }
 
+            foreach (var assembly in assembliesToAdd) {
+                provider.AssemblyBuilder.AddAssemblyReference(assembly);
+            }
+
+            // Add virtual path dependencies (i.e. source files)
             //PERF: Ensure each virtual path is present only once in the list of dependencies
             var virtualDependencies = entries
                 .SelectMany(e => e.dependencies)
-                .Distinct(StringComparer.OrdinalIgnoreCase);
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
 
             foreach (var virtualDependency in virtualDependencies) {
                 provider.AddVirtualPathDependency(virtualDependency);
+            }
+
+            // Logging
+            if (Logger.IsEnabled(LogLevel.Debug)) {
+                if (assembliesToAdd.Count == 0 && provider.VirtualPathDependencies == null) {
+                    Logger.Debug("CodeGenerationStarted(\"{0}\") - no dependencies.", provider.VirtualPath);
+                }
+                else {
+                    Logger.Debug("CodeGenerationStarted(\"{0}\") - Dependencies: ", provider.VirtualPath);
+                    if (provider.VirtualPathDependencies != null) {
+                        foreach (var virtualPath in provider.VirtualPathDependencies) {
+                            Logger.Debug("  VirtualPath: \"{0}\"", virtualPath);
+                        }
+                    }
+                    foreach (var assembly in assembliesToAdd) {
+                        Logger.Debug("  Reference: \"{0}\"", assembly);
+                    }
+                }
             }
         }
 
