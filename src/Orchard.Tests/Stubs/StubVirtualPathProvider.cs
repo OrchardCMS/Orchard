@@ -18,9 +18,23 @@ namespace Orchard.Tests.Stubs {
 
         private string ToFileSystemPath(string path) {
             if (path.StartsWith("~/"))
-                return path.Substring(2);
-            if (path.StartsWith("/"))
-                return path.Substring(1);
+                path = path.Substring(2);
+            else if (path.StartsWith("/"))
+                path = path.Substring(1);
+
+            if (path.Contains("..")) {
+                string[] terms = path.Replace(Path.DirectorySeparatorChar, '/').Split('/');
+                var names = new List<string>();
+                foreach(var term in terms) {
+                    if (term == "..")
+                        names.RemoveAt(0);
+                    else
+                        names.Insert(0, term);
+                }
+                names.Reverse();
+                path = string.Join("/", names);
+            }
+
             return path;
         }
 
