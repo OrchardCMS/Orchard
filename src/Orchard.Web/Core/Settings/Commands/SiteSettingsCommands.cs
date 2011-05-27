@@ -29,9 +29,11 @@ namespace Orchard.Core.Settings.Commands {
         [OrchardSwitches("BaseUrl")]
         public string SetBaseUrl() {
             // Don't do anything if set and not forcing
-            if (Force == false && string.IsNullOrEmpty(_siteService.GetSiteSettings().BaseUrl)) {
-                Context.Output.WriteLine(T("'BaseUrl' site setting is already set. Use the 'Force' flag to override."));
-                return null;
+            if (!string.IsNullOrEmpty(_siteService.GetSiteSettings().BaseUrl)) {
+                if (!Force) {
+                    Context.Output.WriteLine(T("'BaseUrl' site setting is already set. Use the 'Force' flag to override."));
+                    return null;
+                }
             }
 
             // Retrieve request URL if BaseUrl not provided as a switch value
