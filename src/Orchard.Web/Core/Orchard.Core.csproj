@@ -18,6 +18,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,14 +62,17 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Drivers\OwnerEditorPartDriver.cs" />
+    <Compile Include="Common\Drivers\DateEditorPartDriver.cs" />
     <Compile Include="Common\Drivers\IdentityPartDriver.cs" />
+    <Compile Include="Common\Handlers\DateEditorPartHandler.cs" />
     <Compile Include="Common\Handlers\IdentityPartHandler.cs" />
     <Compile Include="Common\Models\CommonPartVersionRecord.cs" />
     <Compile Include="Common\Models\IdentityPartRecord.cs" />
     <Compile Include="Common\Models\IdentityPart.cs" />
     <Compile Include="Common\ResourceManifest.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
-    <Compile Include="Common\Settings\CommonSettings.cs" />
+    <Compile Include="Common\Settings\CommonEditorsSettings.cs" />
     <Compile Include="Common\ViewModels\CreatedUtcEditorViewModel.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
@@ -431,15 +435,15 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\DefinitionTemplates\CommonTypePartSettings.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Common\Views\EditorTemplates\Parts.Common.CreatedUtc.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Styles\Web.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\CommonEditorsSettings.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
