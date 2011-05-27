@@ -25,17 +25,20 @@ namespace Orchard.Mvc.ViewEngines.Razor {
     /// </summary>
     public class DefaultRazorCompilationEvents : IRazorCompilationEvents {
         private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IModuleDependenciesManager _moduleDependenciesManager;
         private readonly IBuildManager _buildManager;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IAssemblyLoader _assemblyLoader;
 
         public DefaultRazorCompilationEvents(
             IDependenciesFolder dependenciesFolder,
+            IModuleDependenciesManager moduleDependenciesManager,
             IBuildManager buildManager,
             IEnumerable<IExtensionLoader> loaders,
             IAssemblyLoader assemblyLoader) {
 
             _dependenciesFolder = dependenciesFolder;
+            _moduleDependenciesManager = moduleDependenciesManager;
             _buildManager = buildManager;
             _loaders = loaders;
             _assemblyLoader = assemblyLoader;
@@ -67,7 +70,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                                                   loader,
                                                   descriptor,
                                                   references = loader.GetCompilationReferences(descriptor),
-                                                  dependencies = loader.GetVirtualPathDependencies(descriptor)
+                                                  dependencies = _moduleDependenciesManager.GetVirtualPathDependencies(descriptor)
                                               }));
 
             foreach (var entry in entries) {

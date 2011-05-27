@@ -21,13 +21,15 @@ namespace Orchard.FileSystems.Dependencies {
     /// </summary>
     public class WebFormVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IModuleDependenciesManager _moduleDependenciesManager;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly string[] _modulesPrefixes = { "~/Modules/" };
         private readonly string[] _themesPrefixes = { "~/Themes/" };
         private readonly string[] _extensions = { ".ascx", ".aspx", ".master" };
 
-        public WebFormVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
+        public WebFormVirtualPathProvider(IDependenciesFolder dependenciesFolder, IModuleDependenciesManager moduleDependenciesManager, IEnumerable<IExtensionLoader> loaders) {
             _dependenciesFolder = dependenciesFolder;
+            _moduleDependenciesManager = moduleDependenciesManager;
             _loaders = loaders;
             Logger = NullLogger.Instance;
         }
@@ -60,7 +62,9 @@ namespace Orchard.FileSystems.Dependencies {
             var dependencies =
                 virtualPathDependencies
                     .OfType<string>()
-                    .Concat(file.Loaders.SelectMany(dl => dl.Loader.GetVirtualPathDependencies(dl.Descriptor)));
+                    .Concat(file.Loaders.SelectMany(dl => _moduleDependenciesManager.GetVirtualPathDependencies(dl.Descriptor)))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
 
             if (Logger.IsEnabled(LogLevel.Debug)) {
                 Logger.Debug("GetFileHash(\"{0}\") - virtual path dependencies:", virtualPath);

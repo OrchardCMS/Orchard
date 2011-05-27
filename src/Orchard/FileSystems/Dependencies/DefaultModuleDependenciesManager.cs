@@ -43,10 +43,12 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor descriptor) {
-            // Currently, we return the same file for every module. An improvement would be to return
-            // a specific file per module (this would decrease the number of recompilations needed
-            // when modules change on disk).
-            yield return _appDataFolder.GetVirtualPath(PersistencePath);
+            if (IsSupportedLoader(descriptor.LoaderName)) {
+                // Currently, we return the same file for every module. An improvement would be to return
+                // a specific file per module (this would decrease the number of recompilations needed
+                // when modules change on disk).
+                yield return _appDataFolder.GetVirtualPath(PersistencePath);
+            }
         }
 
         private XDocument CreateDocument(IEnumerable<DependencyDescriptor> dependencies) {
@@ -54,20 +56,37 @@ namespace Orchard.FileSystems.Dependencies {
 
             var document = new XDocument();
             document.Add(new XElement(ns("Dependencies")));
-            var elements = dependencies.Select(d => new XElement("Dependency",
-                                                                 new XElement(ns("ModuleName"), d.Name),
-                                                                 new XElement(ns("LoaderName"), d.LoaderName),
-                                                                 new XElement(ns("VirtualPath"), d.VirtualPath),
-                                                                 new XElement(ns("FileHash"), _virtualPathProvider.GetFileHash(d.VirtualPath)),
-                                                                 new XElement(ns("References"), d.References
-                                                                     .Select(r => new XElement(ns("Reference"),
-                                                                        new XElement(ns("Name"), r.Name),
-                                                                        new XElement(ns("LoaderName"), r.LoaderName),
-                                                                        new XElement(ns("VirtualPath"), r.VirtualPath),
-                                                                        new XElement(ns("FileHash"), _virtualPathProvider.GetFileHash(r.VirtualPath)))).ToArray())));
+            var elements = FilterDependencies(dependencies).Select(
+                d => new XElement("Dependency",
+                    new XElement(ns("ModuleName"), d.Name),
+                    new XElement(ns("LoaderName"), d.LoaderName),
+                    new XElement(ns("VirtualPath"), d.VirtualPath),
+                    new XElement(ns("FileHash"), _virtualPathProvider.GetFileHash(d.VirtualPath)),
+                    new XElement(ns("References"), FilterReferences(d.References)
+                        .Select(r => new XElement(ns("Reference"),
+                        new XElement(ns("Name"), r.Name),
+                        new XElement(ns("LoaderName"), r.LoaderName),
+                        new XElement(ns("VirtualPath"), r.VirtualPath),
+                        new XElement(ns("FileHash"), _virtualPathProvider.GetFileHash(r.VirtualPath)))).ToArray())));
 
             document.Root.Add(elements);
             return document;
+        }
+
+        private IEnumerable<DependencyDescriptor> FilterDependencies(IEnumerable<DependencyDescriptor> dependencies) {
+            return dependencies.Where(dep => IsSupportedLoader(dep.LoaderName));
+        }
+
+        private IEnumerable<DependencyReferenceDescriptor> FilterReferences(IEnumerable<DependencyReferenceDescriptor> references) {
+            return references.Where(dep => IsSupportedLoader(dep.LoaderName));
+        }
+
+        private bool IsSupportedLoader(string loaderName) {
+            //Note: this is hard-coded for now, to avoid adding more responsibilities to the IExtensionLoader
+            //      implementations.
+            return
+                loaderName == "DynamicExtensionLoader" || 
+                loaderName == "PrecompiledExtensionLoader";
         }
 
         private void WriteDocument(string persistancePath, XDocument document) {
