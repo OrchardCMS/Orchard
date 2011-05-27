@@ -53,12 +53,16 @@ namespace Orchard.ContentTypes.Controllers {
             if (String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
                 ModelState.AddModelError("DisplayName", T("The Display Name name can't be empty.").ToString());
             }
-            
-            if ( _contentDefinitionService.GetTypes().Any(t => String.Equals(t.Name.Trim(), viewModel.Name.Trim(), StringComparison.OrdinalIgnoreCase)) ) {
+
+            if (_contentDefinitionService.GetTypes().Any(t => String.Equals(t.Name.Trim(), viewModel.Name.Trim(), StringComparison.OrdinalIgnoreCase))) {
                 ModelState.AddModelError("Name", T("A type with the same Id already exists.").ToString());
             }
 
-            if ( _contentDefinitionService.GetTypes().Any(t => String.Equals(t.DisplayName.Trim(), viewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase)) ) {
+            if (!String.IsNullOrWhiteSpace(viewModel.Name) && !ContentDefinitionService.IsLetter(viewModel.Name[0])) {
+                ModelState.AddModelError("Name", T("The technical name must start with a letter.").ToString());
+            }
+
+            if (_contentDefinitionService.GetTypes().Any(t => String.Equals(t.DisplayName.Trim(), viewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase))) {
                 ModelState.AddModelError("DisplayName", T("A type with the same Name already exists.").ToString());
             }
 
