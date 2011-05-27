@@ -94,18 +94,26 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+            if (Disabled)
+                return Enumerable.Empty<ExtensionReferenceProbeEntry>();
+
+            Logger.Information("Probing references for module '{0}'", descriptor.Id);
+
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
                 return Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
             var projectFile = _projectFileParser.Parse(projectPath);
 
-            return projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
+            var result = projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
                 Descriptor = descriptor,
                 Loader = this,
                 Name = r.SimpleName,
                 VirtualPath = _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
             });
+
+            Logger.Information("Done probing references for module '{0}'", descriptor.Id);
+            return result;
         }
 
         public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
@@ -132,28 +140,43 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override Assembly LoadReference(DependencyReferenceDescriptor reference) {
+            if (Disabled)
+                return null;
+
+            Logger.Information("Loading reference '{0}'", reference.Name);
+
             // DynamicExtensionLoader has 2 types of references: assemblies from module bin directory
             // and .csproj.
+            Assembly result;
             if (StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(reference.VirtualPath), ".dll"))
-                return _assemblyProbingFolder.LoadAssembly(reference.Name);
+                result = _assemblyProbingFolder.LoadAssembly(reference.Name);
+            else {
+                result = _buildManager.GetCompiledAssembly(reference.VirtualPath);
+            }
 
-            return _buildManager.GetCompiledAssembly(reference.VirtualPath);
+            Logger.Information("Done loading reference '{0}'", reference.Name);
+            return result;
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if (Disabled)
                 return null;
 
+            Logger.Information("Probing for module '{0}'", descriptor.Id);
+
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
                 return null;
 
-            return new ExtensionProbeEntry {
+            var result = new ExtensionProbeEntry {
                 Descriptor = descriptor,
                 LastWriteTimeUtc = GetDependencies(projectPath).Max(f => _virtualPathProvider.GetFileLastWriteTimeUtc(f)),
                 Loader = this,
                 VirtualPath = projectPath
             };
+
+            Logger.Information("Done probing for module '{0}'", descriptor.Id);
+            return result;
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {

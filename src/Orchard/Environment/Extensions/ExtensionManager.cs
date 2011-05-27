@@ -71,9 +71,14 @@ namespace Orchard.Environment.Extensions {
         }
 
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
-            return featureDescriptors
+            Logger.Information("Loading features");
+
+            var result = featureDescriptors
                 .Select(descriptor => _cacheManager.Get(descriptor.Id, ctx => LoadFeature(descriptor)))
                 .ToArray();
+
+            Logger.Information("Done loading features");
+            return result;
         }
 
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
