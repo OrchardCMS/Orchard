@@ -1,18 +1,16 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Settings;
-using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
 using Orchard.Security;
 
-namespace Orchard.Core.Common.Drivers {
-    public class OwnerEditorPartDriver : ContentPartDriver<CommonPart> {
+namespace Orchard.Core.Common.OwnerEditor {
+    public class OwnerEditorDriver : ContentPartDriver<CommonPart> {
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
 
-        public OwnerEditorPartDriver(
+        public OwnerEditorDriver(
             IOrchardServices services,
             IAuthenticationService authenticationService,
             IAuthorizationService authorizationService,
@@ -28,7 +26,7 @@ namespace Orchard.Core.Common.Drivers {
         public IOrchardServices Services { get; set; }
 
         protected override string Prefix {
-            get { return "OwnerEditorPart"; }
+            get { return "OwnerEditor"; }
         }
 
         protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) {
@@ -41,31 +39,36 @@ namespace Orchard.Core.Common.Drivers {
                 return null;
             }
 
-            var commonEditorsSettings = CommonEditorsSettings.Get(part.ContentItem);
-            if (!commonEditorsSettings.ShowOwnerEditor) {
+            var settings = part.TypePartDefinition.Settings.GetModel<OwnerEditorSettings>();
+            if (!settings.ShowOwnerEditor) {
                 return null;
             }
 
-            var model = new OwnerEditorViewModel();
-            if (part.Owner != null)
-                model.Owner = part.Owner.UserName;
+            return ContentShape(
+                "Parts_Common_Owner_Edit",
+                () => {
+                    OwnerEditorViewModel model = shapeHelper.Parts_Common_Owner_Edit(typeof(OwnerEditorViewModel));
 
-            if (updater != null) {
-                var priorOwner = model.Owner;
-                updater.TryUpdateModel(model, Prefix, null, null);
-
-                if (model.Owner != null && model.Owner != priorOwner) {
-                    var newOwner = _membershipService.GetUser(model.Owner);
-                    if (newOwner == null) {
-                        updater.AddModelError("CommonPart.Owner", T("Invalid user name"));
-                    } else {
-                        part.Owner = newOwner;
+                    if (part.Owner != null) {
+                        model.Owner = part.Owner.UserName;
                     }
-                }
-            }
 
-            return ContentShape("Parts_Common_Owner_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Common.Owner", Model: model, Prefix: Prefix));
+                    if (updater != null) {
+                        var priorOwner = model.Owner;
+                        updater.TryUpdateModel(model, Prefix, null, null);
+
+                        if (model.Owner != null && model.Owner != priorOwner) {
+                            var newOwner = _membershipService.GetUser(model.Owner);
+                            if (newOwner == null) {
+                                updater.AddModelError("OwnerEditor.Owner", T("Invalid user name"));
+                            }
+                            else {
+                                part.Owner = newOwner;
+                            }
+                        }
+                    }
+                    return model;
+                });
         }
     }
 }

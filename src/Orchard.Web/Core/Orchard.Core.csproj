@@ -62,18 +62,19 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Drivers\OwnerEditorPartDriver.cs" />
-    <Compile Include="Common\Drivers\DateEditorPartDriver.cs" />
+    <Compile Include="Common\DateEditor\DateEditorSettings.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorSettings.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorDriver.cs" />
+    <Compile Include="Common\DateEditor\DateEditorDriver.cs" />
     <Compile Include="Common\Drivers\IdentityPartDriver.cs" />
-    <Compile Include="Common\Handlers\DateEditorPartHandler.cs" />
+    <Compile Include="Common\DateEditor\DateEditorHandler.cs" />
     <Compile Include="Common\Handlers\IdentityPartHandler.cs" />
     <Compile Include="Common\Models\CommonPartVersionRecord.cs" />
     <Compile Include="Common\Models\IdentityPartRecord.cs" />
     <Compile Include="Common\Models\IdentityPart.cs" />
     <Compile Include="Common\ResourceManifest.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
-    <Compile Include="Common\Settings\CommonEditorsSettings.cs" />
-    <Compile Include="Common\ViewModels\CreatedUtcEditorViewModel.cs" />
+    <Compile Include="Common\DateEditor\DateEditorViewModel.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
@@ -148,7 +149,7 @@
     <Compile Include="Common\Models\BodyPartRecord.cs" />
     <Compile Include="Common\Models\CommonPartRecord.cs" />
     <Compile Include="Common\ViewModels\BodyEditorViewModel.cs" />
-    <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorViewModel.cs" />
     <Compile Include="Contents\AdminMenu.cs" />
     <Compile Include="Contents\Controllers\AdminController.cs" />
     <Compile Include="Dashboard\AdminMenu.cs" />
@@ -328,7 +329,7 @@
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Body.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Parts.Common.Body.cshtml" />
-    <Content Include="Common\Views\EditorTemplates\Parts.Common.Owner.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Owner.Edit.cshtml" />
     <Content Include="Feeds\Module.txt" />
     <Content Include="Navigation\Module.txt" />
     <Content Include="Scheduling\Module.txt" />
@@ -435,7 +436,7 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\EditorTemplates\Parts.Common.CreatedUtc.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Date.Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Styles\Web.config">
@@ -443,7 +444,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\DefinitionTemplates\CommonEditorsSettings.cshtml" />
+    <Content Include="Common\Views\DefinitionTemplates\DateEditorSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\OwnerEditorSettings.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
