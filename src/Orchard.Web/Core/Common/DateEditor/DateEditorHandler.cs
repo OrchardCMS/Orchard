@@ -7,7 +7,7 @@ namespace Orchard.Core.Common.DateEditor {
     public class DateEditorHandler : ContentHandler {
         public DateEditorHandler() {
             OnPublished<CommonPart>((context, part) => {
-                var settings = part.ContentItem.TypeDefinition.Settings.GetModel<DateEditorSettings>();
+                var settings = part.TypePartDefinition.Settings.GetModel<DateEditorSettings>();
                 if (!settings.ShowDateEditor) {
                     return;
                 }
