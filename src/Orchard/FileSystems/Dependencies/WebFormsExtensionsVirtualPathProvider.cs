@@ -62,7 +62,7 @@ namespace Orchard.FileSystems.Dependencies {
             var dependencies =
                 virtualPathDependencies
                     .OfType<string>()
-                    .Concat(file.Loaders.SelectMany(dl => _extensionDependenciesManager.GetVirtualPathDependencies(dl.Descriptor)))
+                    .Concat(file.Loaders.SelectMany(dl => _extensionDependenciesManager.GetVirtualPathDependencies(dl.Descriptor.Name)))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToList();
 

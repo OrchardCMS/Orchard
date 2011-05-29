@@ -77,7 +77,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                                                   loader,
                                                   descriptor,
                                                   references = loader.GetCompilationReferences(descriptor),
-                                                  dependencies = _extensionDependenciesManager.GetVirtualPathDependencies(descriptor)
+                                                  dependencies = _extensionDependenciesManager.GetVirtualPathDependencies(descriptor.Name)
                                               }));
 
             // Add assemblies

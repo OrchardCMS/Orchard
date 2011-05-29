@@ -14,7 +14,7 @@ namespace Orchard.FileSystems.Dependencies {
     /// </summary>
     public class DefaultExtensionDependenciesManager : IExtensionDependenciesManager {
         private const string BasePath = "Dependencies";
-        private const string FileName = "Dependencies.ModuleCompilation.xml";
+        private const string FileName = "dependencies.compiled.xml";
         private readonly ICacheManager _cacheManager;
         private readonly IAppDataFolder _appDataFolder;
         private readonly InvalidationToken _writeThroughToken;
@@ -33,12 +33,12 @@ namespace Orchard.FileSystems.Dependencies {
             get { return _appDataFolder.Combine(BasePath, FileName); }
         }
 
-        public void StoreDependencies(IEnumerable<DependencyDescriptor> dependencyDescriptors, Func<string, string> fileHashProvider) {
+        public void StoreDependencies(IEnumerable<DependencyDescriptor> dependencyDescriptors, Func<DependencyDescriptor, string> fileHashProvider) {
             Logger.Information("Storing module dependency file.");
 
             var newDocument = CreateDocument(dependencyDescriptors, fileHashProvider);
             var previousDocument = ReadDocument(PersistencePath);
-            if (CompareXmlDocuments(newDocument, previousDocument)) {
+            if (XNode.DeepEquals(newDocument.Root, previousDocument.Root)) {
                 Logger.Debug("Existing document is identical to new one. Skipping save.");
             }
             else {
@@ -48,8 +48,9 @@ namespace Orchard.FileSystems.Dependencies {
             Logger.Information("Done storing module dependency file.");
         }
 
-        public IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor descriptor) {
-            if (IsSupportedLoader(descriptor.LoaderName)) {
+        public IEnumerable<string> GetVirtualPathDependencies(string extensionId) {
+            var descriptor = GetDescriptor(extensionId);
+            if (descriptor != null && IsSupportedLoader(descriptor.LoaderName)) {
                 // Currently, we return the same file for every module. An improvement would be to return
                 // a specific file per module (this would decrease the number of recompilations needed
                 // when modules change on disk).
@@ -62,38 +63,31 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public IEnumerable<ActivatedExtensionDescriptor> LoadDescriptors() {
-            return _cacheManager.Get(PersistencePath,
-                                     ctx => {
-                                         _appDataFolder.CreateDirectory(BasePath);
-                                         ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
+            return _cacheManager.Get(PersistencePath, ctx => {
+                _appDataFolder.CreateDirectory(BasePath);
+                ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
 
-                                         _writeThroughToken.IsCurrent = true;
-                                         ctx.Monitor(_writeThroughToken);
+                _writeThroughToken.IsCurrent = true;
+                ctx.Monitor(_writeThroughToken);
 
-                                         return ReadDescriptors(ctx.Key).ToList();
-                                     });
+                return ReadDescriptors(ctx.Key).ToList();
+            });
         }
 
-        private XDocument CreateDocument(IEnumerable<DependencyDescriptor> dependencies, Func<string, string> fileHashProvider) {
+        private XDocument CreateDocument(IEnumerable<DependencyDescriptor> dependencies, Func<DependencyDescriptor, string> fileHashProvider) {
             Func<string, XName> ns = (name => XName.Get(name));
 
-            var document = new XDocument();
-            document.Add(new XElement(ns("Dependencies")));
-            var elements = FilterDependencies(dependencies).Select(
-                d => new XElement("Dependency",
-                    new XElement(ns("ExtensionId"), d.Name),
-                    new XElement(ns("LoaderName"), d.LoaderName),
-                    new XElement(ns("VirtualPath"), d.VirtualPath),
-                    new XElement(ns("FileHash"), fileHashProvider(d.Name)),
-                    new XElement(ns("References"), FilterReferences(d.References)
-                        .Select(r => new XElement(ns("Reference"),
-                        new XElement(ns("ReferenceId"), r.Name),
-                        new XElement(ns("LoaderName"), r.LoaderName),
-                        new XElement(ns("VirtualPath"), r.VirtualPath),
-                        new XElement(ns("FileHash"), fileHashProvider(r.Name)))).ToArray())));
+            var elements = dependencies
+                .Where(dep => IsSupportedLoader(dep.LoaderName))
+                .OrderBy(dep => dep.Name, StringComparer.OrdinalIgnoreCase)
+                .Select(descriptor =>
+                        new XElement(ns("Dependency"),
+                            new XElement(ns("ExtensionId"), descriptor.Name),
+                            new XElement(ns("LoaderName"), descriptor.LoaderName),
+                            new XElement(ns("VirtualPath"), descriptor.VirtualPath),
+                            new XElement(ns("Hash"), fileHashProvider(descriptor))));
 
-            document.Root.Add(elements);
-            return document;
+            return new XDocument(new XElement(ns("Dependencies"), elements.ToArray()));
         }
 
         private IEnumerable<ActivatedExtensionDescriptor> ReadDescriptors(string persistancePath) {
@@ -108,21 +102,8 @@ namespace Orchard.FileSystems.Dependencies {
                     ExtensionId = elem(e, "ExtensionId"),
                     VirtualPath = elem(e, "VirtualPath"),
                     LoaderName = elem(e, "LoaderName"),
-                    FileHash = elem(e, "FileHash"),
-                    //References = e.Elements(ns("References")).Elements(ns("Reference")).Select(r => new DependencyReferenceDescriptor {
-                    //    Name = elem(r, "Name"),
-                    //    LoaderName = elem(r, "LoaderName"),
-                    //    VirtualPath = elem(r, "VirtualPath")
-                    //})
+                    Hash = elem(e, "Hash"),
                 }).ToList();
-        }
-
-        private IEnumerable<DependencyDescriptor> FilterDependencies(IEnumerable<DependencyDescriptor> dependencies) {
-            return dependencies.Where(dep => IsSupportedLoader(dep.LoaderName));
-        }
-
-        private IEnumerable<DependencyReferenceDescriptor> FilterReferences(IEnumerable<DependencyReferenceDescriptor> references) {
-            return references.Where(dep => IsSupportedLoader(dep.LoaderName));
         }
 
         private bool IsSupportedLoader(string loaderName) {
@@ -151,13 +132,9 @@ namespace Orchard.FileSystems.Dependencies {
                 }
             }
             catch (Exception e) {
-                Logger.Information(e, "Error reading file '{0}'", persistancePath);
+                Logger.Information(e, "Error reading file '{0}'. Assuming empty.", persistancePath);
                 return new XDocument();
             }
-        }
-
-        private bool CompareXmlDocuments(XDocument doc1, XDocument doc2) {
-            return XNode.DeepEquals(doc1.Root, doc2.Root);
         }
 
         private class InvalidationToken : IVolatileToken {

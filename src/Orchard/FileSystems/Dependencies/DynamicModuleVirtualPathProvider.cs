@@ -36,12 +36,8 @@ namespace Orchard.FileSystems.Dependencies {
 
             var desc = GetExtensionDescriptor(virtualPath);
             if (desc != null) {
-                // We are only interested in ".csproj" files loaded from "DynamicExtensionLoader"
-                var dynamicExtensionLoader = _loaders.Where(l => l.Name == desc.LoaderName).FirstOrDefault() as DynamicExtensionLoader;
-                if (dynamicExtensionLoader != null) {
-                    if (virtualPath.Equals(desc.VirtualPath, StringComparison.OrdinalIgnoreCase)) {
-                        return desc.FileHash;
-                    }
+                if (desc.VirtualPath.Equals(virtualPath, StringComparison.OrdinalIgnoreCase)) {
+                    return desc.Hash;
                 }
             }
             return base.GetFileHash(virtualPath, virtualPathDependencies);

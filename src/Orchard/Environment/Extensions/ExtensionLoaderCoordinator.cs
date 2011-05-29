@@ -74,7 +74,7 @@ namespace Orchard.Environment.Extensions {
 
             // And finally save the new entries in the dependencies folder
             _dependenciesFolder.StoreDescriptors(context.NewDependencies);
-            _extensionDependenciesManager.StoreDependencies(context.NewDependencies, path => GetFileHash(context, path));
+            _extensionDependenciesManager.StoreDependencies(context.NewDependencies, desc => GetExtensionHash(context, desc));
 
             Logger.Information("Done loading extensions...");
 
@@ -85,35 +85,18 @@ namespace Orchard.Environment.Extensions {
             }
         }
 
-        private string GetFileHash(ExtensionLoadingContext context, string extensionId) {
+        private string GetExtensionHash(ExtensionLoadingContext context, DependencyDescriptor dependencyDescriptor) {
             var hash = new Hash();
-            hash.AddString(extensionId);
+            hash.AddString(dependencyDescriptor.Name);
 
-            {
-                ExtensionProbeEntry extensionProbe;
-                if (context.ProcessedExtensions.TryGetValue(extensionId, out extensionProbe)) {
-                    if (extensionProbe != null) {
-                        var virtualPathDependencies = extensionProbe.VirtualPathDependencies;
-                        foreach (var virtualpathDependency in virtualPathDependencies) {
-                            DateTime dateTime;
-                            if (context.VirtualPathModficationDates.TryGetValue(virtualpathDependency, out dateTime)) {
-                                hash.AddDateTime(dateTime);
-                            }
-                        }
-                    }
-                }
+            foreach (var virtualpathDependency in context.ProcessedExtensions[dependencyDescriptor.Name].VirtualPathDependencies) {
+                hash.AddDateTime(GetVirtualPathModificationTimeUtc(context.VirtualPathModficationDates, virtualpathDependency));
             }
 
-            {
-                ExtensionReferenceProbeEntry extensionReferenceProbe;
-                if (context.ProcessedReferences.TryGetValue(extensionId, out extensionReferenceProbe)) {
-                    if (extensionReferenceProbe != null) {
-                        DateTime dateTime;
-                        if (context.VirtualPathModficationDates.TryGetValue(extensionReferenceProbe.VirtualPath, out dateTime)) {
-                            hash.AddDateTime(dateTime);
-                        }
-                    }
-                }
+            foreach (var reference in dependencyDescriptor.References) {
+                hash.AddString(reference.Name);
+                hash.AddString(reference.LoaderName);
+                hash.AddDateTime(GetVirtualPathModificationTimeUtc(context.VirtualPathModficationDates, reference.VirtualPath));
             }
 
             return hash.Value;
@@ -215,7 +198,7 @@ namespace Orchard.Environment.Extensions {
                                                                                             .Where(probe => probe != null))
                 .GroupBy(e => e.Descriptor.Id)
                 .ToDictionary(g => g.Key, g => g.AsEnumerable()
-                                                   .OrderByDescending(probe => GetLatestModificationTimeUtc(virtualPathModficationDates, probe))
+                                                   .OrderByDescending(probe => GetVirtualPathDepedenciesModificationTimeUtc(virtualPathModficationDates, probe))
                                                    .ThenBy(probe => probe.Loader.Order), StringComparer.OrdinalIgnoreCase);
 
             var deletedDependencies = previousDependencies
@@ -254,23 +237,25 @@ namespace Orchard.Environment.Extensions {
             };
         }
 
-        private DateTime GetLatestModificationTimeUtc(Dictionary<string, DateTime> virtualPathDependencies, ExtensionProbeEntry probe) {
+        private DateTime GetVirtualPathDepedenciesModificationTimeUtc(IDictionary<string, DateTime> virtualPathDependencies, ExtensionProbeEntry probe) {
             if (!probe.VirtualPathDependencies.Any())
                 return DateTime.MinValue;
 
             Logger.Information("Retrieving modification dates of dependencies of extension '{0}'", probe.Descriptor.Id);
 
-            var result = probe.VirtualPathDependencies.Max(path => {
-                DateTime dateTime;
-                if (!virtualPathDependencies.TryGetValue(path, out dateTime)) {
-                    dateTime = _virtualPathProvider.GetFileLastWriteTimeUtc(path);
-                    virtualPathDependencies.Add(path, dateTime);
-                }
-                return dateTime;
-            });
+            var result = probe.VirtualPathDependencies.Max(path => GetVirtualPathModificationTimeUtc(virtualPathDependencies, path));
 
             Logger.Information("Done retrieving modification dates of dependencies of extension '{0}'", probe.Descriptor.Id);
             return result;
+        }
+
+        private DateTime GetVirtualPathModificationTimeUtc(IDictionary<string, DateTime> virtualPathDependencies, string path) {
+            DateTime dateTime;
+            if (!virtualPathDependencies.TryGetValue(path, out dateTime)) {
+                dateTime = _virtualPathProvider.GetFileLastWriteTimeUtc(path);
+                virtualPathDependencies.Add(path, dateTime);
+            }
+            return dateTime;
         }
 
         IEnumerable<DependencyReferenceDescriptor> ProcessExtensionReferences(ExtensionLoadingContext context, ExtensionProbeEntry activatedExtension) {
