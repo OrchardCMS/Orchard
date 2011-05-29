@@ -15,13 +15,11 @@ namespace Orchard.FileSystems.Dependencies {
     /// </summary>
     public class DefaultExtensionDependenciesManager : IExtensionDependenciesManager {
         private readonly IAppDataFolder _appDataFolder;
-        private readonly IVirtualPathProvider _virtualPathProvider;
         private const string BasePath = "Dependencies";
         private const string FileName = "Dependencies.ModuleCompilation.xml";
 
-        public DefaultExtensionDependenciesManager(IAppDataFolder appDataFolder, IVirtualPathProvider virtualPathProvider) {
+        public DefaultExtensionDependenciesManager(IAppDataFolder appDataFolder) {
             _appDataFolder = appDataFolder;
-            _virtualPathProvider = virtualPathProvider;
             Logger = NullLogger.Instance;
         }
 
@@ -31,10 +29,10 @@ namespace Orchard.FileSystems.Dependencies {
             get { return _appDataFolder.Combine(BasePath, FileName); }
         }
 
-        public void StoreDependencies(IEnumerable<DependencyDescriptor> dependencyDescriptors) {
+        public void StoreDependencies(IEnumerable<DependencyDescriptor> dependencyDescriptors, Func<string, string> fileHashProvider) {
             Logger.Information("Storing module dependency file.");
 
-            var newDocument = CreateDocument(dependencyDescriptors);
+            var newDocument = CreateDocument(dependencyDescriptors, fileHashProvider);
             var previousDocument = ReadDocument(PersistencePath);
             if (CompareXmlDocuments(newDocument, previousDocument)) {
                 Logger.Debug("Existing document is identical to new one. Skipping save.");
@@ -55,7 +53,7 @@ namespace Orchard.FileSystems.Dependencies {
             }
         }
 
-        private XDocument CreateDocument(IEnumerable<DependencyDescriptor> dependencies) {
+        private XDocument CreateDocument(IEnumerable<DependencyDescriptor> dependencies, Func<string, string> fileHashProvider) {
             Func<string, XName> ns = (name => XName.Get(name));
 
             var document = new XDocument();
@@ -65,13 +63,13 @@ namespace Orchard.FileSystems.Dependencies {
                     new XElement(ns("ModuleName"), d.Name),
                     new XElement(ns("LoaderName"), d.LoaderName),
                     new XElement(ns("VirtualPath"), d.VirtualPath),
-                    new XElement(ns("FileHash"), _virtualPathProvider.GetFileHash(d.VirtualPath)),
+                    new XElement(ns("FileHash"), fileHashProvider(d.VirtualPath)),
                     new XElement(ns("References"), FilterReferences(d.References)
                         .Select(r => new XElement(ns("Reference"),
                         new XElement(ns("Name"), r.Name),
                         new XElement(ns("LoaderName"), r.LoaderName),
                         new XElement(ns("VirtualPath"), r.VirtualPath),
-                        new XElement(ns("FileHash"), _virtualPathProvider.GetFileHash(r.VirtualPath)))).ToArray())));
+                        new XElement(ns("FileHash"), fileHashProvider(r.VirtualPath)))).ToArray())));
 
             document.Root.Add(elements);
             return document;

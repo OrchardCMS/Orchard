@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace Orchard.Utility {
     /// <summary>
@@ -9,10 +10,10 @@ namespace Orchard.Utility {
     public class Hash {
         private long _hash;
 
-        public string Value { get { return _hash.ToString(); } }
+        public string Value { get { return _hash.ToString("x", CultureInfo.InvariantCulture); } }
 
         public void AddString(string value) {
-            if ( string.IsNullOrEmpty(value) )
+            if (string.IsNullOrEmpty(value))
                 return;
             _hash += value.GetHashCode();
         }
@@ -20,6 +21,10 @@ namespace Orchard.Utility {
         public void AddTypeReference(Type type) {
             AddString(type.AssemblyQualifiedName);
             AddString(type.FullName);
+        }
+
+        public void AddDateTime(DateTime dateTime) {
+            _hash += dateTime.ToUniversalTime().ToBinary();
         }
     }
 }

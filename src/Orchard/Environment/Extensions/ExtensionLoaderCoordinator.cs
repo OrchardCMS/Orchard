@@ -74,7 +74,7 @@ namespace Orchard.Environment.Extensions {
 
             // And finally save the new entries in the dependencies folder
             _dependenciesFolder.StoreDescriptors(context.NewDependencies);
-            _extensionDependenciesManager.StoreDependencies(context.NewDependencies);
+            _extensionDependenciesManager.StoreDependencies(context.NewDependencies, path => GetFileHash(context, path));
 
             Logger.Information("Done loading extensions...");
 
@@ -83,6 +83,17 @@ namespace Orchard.Environment.Extensions {
                 Logger.Information("AppDomain restart required.");
                 _hostEnvironment.RestartAppDomain();
             }
+        }
+
+        private string GetFileHash(ExtensionLoadingContext context, string path) {
+            var hash = new Hash();
+            hash.AddString(path);
+
+            DateTime dateTime;
+            if (context.VirtualPathModficationDates.TryGetValue(path, out dateTime)) {
+                hash.AddDateTime(dateTime);
+            }
+            return hash.Value;
         }
 
         private void ProcessExtension(ExtensionLoadingContext context, ExtensionDescriptor extension) {
