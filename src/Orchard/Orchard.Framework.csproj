@@ -193,8 +193,8 @@
     <Compile Include="Environment\WorkContextImplementation.cs" />
     <Compile Include="Environment\WorkContextModule.cs" />
     <Compile Include="Environment\WorkContextProperty.cs" />
-    <Compile Include="FileSystems\Dependencies\IModuleDependenciesManager.cs" />
-    <Compile Include="FileSystems\Dependencies\DefaultModuleDependenciesManager.cs" />
+    <Compile Include="FileSystems\Dependencies\IExtensionDependenciesManager.cs" />
+    <Compile Include="FileSystems\Dependencies\DefaultExtensionDependenciesManager.cs" />
     <Compile Include="FileSystems\LockFile\ILockFile.cs" />
     <Compile Include="FileSystems\LockFile\ILockFileManager.cs" />
     <Compile Include="FileSystems\LockFile\LockFile.cs" />

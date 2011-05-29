@@ -21,15 +21,15 @@ namespace Orchard.FileSystems.Dependencies {
     /// </summary>
     public class WebFormVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
-        private readonly IModuleDependenciesManager _moduleDependenciesManager;
+        private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly string[] _modulesPrefixes = { "~/Modules/" };
         private readonly string[] _themesPrefixes = { "~/Themes/" };
         private readonly string[] _extensions = { ".ascx", ".aspx", ".master" };
 
-        public WebFormVirtualPathProvider(IDependenciesFolder dependenciesFolder, IModuleDependenciesManager moduleDependenciesManager, IEnumerable<IExtensionLoader> loaders) {
+        public WebFormVirtualPathProvider(IDependenciesFolder dependenciesFolder, IExtensionDependenciesManager extensionDependenciesManager, IEnumerable<IExtensionLoader> loaders) {
             _dependenciesFolder = dependenciesFolder;
-            _moduleDependenciesManager = moduleDependenciesManager;
+            _extensionDependenciesManager = extensionDependenciesManager;
             _loaders = loaders;
             Logger = NullLogger.Instance;
         }
@@ -62,7 +62,7 @@ namespace Orchard.FileSystems.Dependencies {
             var dependencies =
                 virtualPathDependencies
                     .OfType<string>()
-                    .Concat(file.Loaders.SelectMany(dl => _moduleDependenciesManager.GetVirtualPathDependencies(dl.Descriptor)))
+                    .Concat(file.Loaders.SelectMany(dl => _extensionDependenciesManager.GetVirtualPathDependencies(dl.Descriptor)))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToList();
 

@@ -2,7 +2,7 @@
 using Orchard.Caching;
 
 namespace Orchard.FileSystems.Dependencies {
-    public interface IModuleDependenciesManager : IVolatileProvider {
+    public interface IExtensionDependenciesManager : IVolatileProvider {
         void StoreDependencies(IEnumerable<DependencyDescriptor> dependencyDescriptors);
         IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor descriptor);
     }

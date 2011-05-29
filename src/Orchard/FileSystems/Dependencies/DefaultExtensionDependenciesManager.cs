@@ -13,13 +13,13 @@ namespace Orchard.FileSystems.Dependencies {
     /// VirtualPath entry. This is so that if any virtual path reference in the file changes,
     /// the file stored by this component will also change.
     /// </summary>
-    public class DefaultModuleDependenciesManager : IModuleDependenciesManager {
+    public class DefaultExtensionDependenciesManager : IExtensionDependenciesManager {
         private readonly IAppDataFolder _appDataFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private const string BasePath = "Dependencies";
         private const string FileName = "Dependencies.ModuleCompilation.xml";
 
-        public DefaultModuleDependenciesManager(IAppDataFolder appDataFolder, IVirtualPathProvider virtualPathProvider) {
+        public DefaultExtensionDependenciesManager(IAppDataFolder appDataFolder, IVirtualPathProvider virtualPathProvider) {
             _appDataFolder = appDataFolder;
             _virtualPathProvider = virtualPathProvider;
             Logger = NullLogger.Instance;

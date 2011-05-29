@@ -14,7 +14,7 @@ using Orchard.Utility;
 namespace Orchard.Environment.Extensions {
     public class ExtensionLoaderCoordinator : IExtensionLoaderCoordinator {
         private readonly IDependenciesFolder _dependenciesFolder;
-        private readonly IModuleDependenciesManager _moduleDependenciesManager;
+        private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IExtensionManager _extensionManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
@@ -24,7 +24,7 @@ namespace Orchard.Environment.Extensions {
 
         public ExtensionLoaderCoordinator(
             IDependenciesFolder dependenciesFolder,
-            IModuleDependenciesManager moduleDependenciesManager,
+            IExtensionDependenciesManager extensionDependenciesManager,
             IExtensionManager extensionManager,
             IVirtualPathProvider virtualPathProvider,
             IVirtualPathMonitor virtualPathMonitor,
@@ -33,7 +33,7 @@ namespace Orchard.Environment.Extensions {
             IBuildManager buildManager) {
 
             _dependenciesFolder = dependenciesFolder;
-            _moduleDependenciesManager = moduleDependenciesManager;
+            _extensionDependenciesManager = extensionDependenciesManager;
             _extensionManager = extensionManager;
             _virtualPathProvider = virtualPathProvider;
             _virtualPathMonitor = virtualPathMonitor;
@@ -74,7 +74,7 @@ namespace Orchard.Environment.Extensions {
 
             // And finally save the new entries in the dependencies folder
             _dependenciesFolder.StoreDescriptors(context.NewDependencies);
-            _moduleDependenciesManager.StoreDependencies(context.NewDependencies);
+            _extensionDependenciesManager.StoreDependencies(context.NewDependencies);
 
             Logger.Information("Done loading extensions...");
 
