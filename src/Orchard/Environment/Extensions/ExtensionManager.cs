@@ -13,14 +13,21 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Environment.Extensions {
     public class ExtensionManager : IExtensionManager {
         private readonly IEnumerable<IExtensionFolders> _folders;
+        private readonly IAsyncTokenProvider _asyncTokenProvider;
         private readonly ICacheManager _cacheManager;
         private readonly IEnumerable<IExtensionLoader> _loaders;
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ExtensionManager(IEnumerable<IExtensionFolders> folders, IEnumerable<IExtensionLoader> loaders, ICacheManager cacheManager) {
+        public ExtensionManager(
+            IEnumerable<IExtensionFolders> folders,
+            IEnumerable<IExtensionLoader> loaders,
+            ICacheManager cacheManager,
+            IAsyncTokenProvider asyncTokenProvider) {
+
             _folders = folders;
+            _asyncTokenProvider = asyncTokenProvider;
             _cacheManager = cacheManager;
             _loaders = loaders.OrderBy(x => x.Order).ToArray();
             T = NullLocalizer.Instance;
@@ -38,7 +45,7 @@ namespace Orchard.Environment.Extensions {
         }
 
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
-            return _cacheManager.Get("...", ctx => 
+            return _cacheManager.Get("...", ctx =>
                 AvailableExtensions().SelectMany(ext => ext.Features).OrderByDependenciesAndPriorities(HasDependency, GetPriority).ToReadOnlyCollection());
         }
 
@@ -58,7 +65,7 @@ namespace Orchard.Environment.Extensions {
                     // Themes implicitly depend on modules to ensure build and override ordering
                     return true;
                 }
-                
+
                 if (DefaultExtensionTypes.IsTheme(subject.Extension.ExtensionType)) {
                     // Theme depends on another if it is its base theme
                     return item.Extension.BaseTheme == subject.Id;
@@ -91,9 +98,11 @@ namespace Orchard.Environment.Extensions {
                 extensionEntry = _cacheManager.Get(extensionId, ctx => {
                     var entry = BuildEntry(extensionDescriptor);
                     if (entry != null) {
-                        foreach (var loader in _loaders) {
-                            loader.Monitor(entry.Descriptor, (token) => ctx.Monitor(token));
-                        }
+                        ctx.Monitor(_asyncTokenProvider.GetToken(monitor => {
+                            foreach (var loader in _loaders) {
+                                loader.Monitor(entry.Descriptor, token => monitor(token));
+                            }
+                        }));
                     }
                     return entry;
                 });
@@ -134,7 +143,7 @@ namespace Orchard.Environment.Extensions {
             }
             return extensionId;
         }
-        
+
         private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
             foreach (var loader in _loaders) {
                 ExtensionEntry entry = loader.Load(descriptor);

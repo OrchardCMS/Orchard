@@ -50,6 +50,7 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SchemaCommandGenerator>().As<ISchemaCommandGenerator>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
 
             _container = builder.Build();

@@ -27,6 +27,7 @@ namespace Orchard.Tests.Environment.Extensions {
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
 
             _container = builder.Build();
             _manager = _container.Resolve<IExtensionManager>();
@@ -360,7 +361,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -386,7 +387,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -415,7 +416,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestFeature");
@@ -445,7 +446,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestFeature");
@@ -473,7 +474,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
             var testModule = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestModule");
@@ -497,7 +498,7 @@ Version: 1.0.3
 OrchardVersion: 1
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
             var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Id == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
@@ -516,7 +517,7 @@ Version: 1.0.3
 OrchardVersion: 1
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
             var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Id == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));

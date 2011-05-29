@@ -73,6 +73,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();
             builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<Environment.Extensions.ExtensionManagerTests.StubLoaders>().As<IExtensionLoader>();
             builder.RegisterType<RecipeParser>().As<IRecipeParser>();
