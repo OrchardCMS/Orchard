@@ -26,6 +26,11 @@ namespace Orchard.Environment.Extensions {
         public bool RestartAppDomain { get; set; }
 
         /// <summary>
+        /// Keep track of modification date of files (VirtualPath => DateTime)
+        /// </summary>
+        public IDictionary<string, DateTime> VirtualPathModficationDates { get; set; }
+
+        /// <summary>
         /// List of extensions (modules) present in the system
         /// </summary>
         public List<ExtensionDescriptor> AvailableExtensions { get; set; }

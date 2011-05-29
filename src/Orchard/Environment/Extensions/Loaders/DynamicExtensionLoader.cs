@@ -170,9 +170,9 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             var result = new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastWriteTimeUtc = GetDependencies(projectPath).Max(f => _virtualPathProvider.GetFileLastWriteTimeUtc(f)),
                 Loader = this,
-                VirtualPath = projectPath
+                VirtualPath = projectPath,
+                VirtualPathDependencies = GetDependencies(projectPath).ToList(),
             };
 
             Logger.Information("Done probing for module '{0}'", descriptor.Id);

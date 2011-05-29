@@ -10,7 +10,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         public ExtensionDescriptor Descriptor { get; set; }
         public IExtensionLoader Loader { get; set; }
         public string VirtualPath { get; set; }
-        public DateTime LastWriteTimeUtc { get; set; }
+        public IEnumerable<string> VirtualPathDependencies { get; set; }
     }
 
     public class ExtensionReferenceProbeEntry {
