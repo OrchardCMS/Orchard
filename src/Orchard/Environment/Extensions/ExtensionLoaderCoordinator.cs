@@ -165,7 +165,7 @@ namespace Orchard.Environment.Extensions {
             if (duplicates.Count() > 0) {
                 var sb = new StringBuilder();
                 sb.Append(T("There are multiple extensions with the same name installed in this instance of Orchard.\r\n"));
-                foreach(var dup in duplicates) {
+                foreach (var dup in duplicates) {
                     sb.Append(T("Extension '{0}' has been found from the following locations: {1}.\r\n", dup.Key, string.Join(", ", dup.Select(e => e.Location + "/" + e.Id))));
                 }
                 sb.Append(T("This issue can be usually solved by removing or renaming the conflicting extension."));
@@ -299,22 +299,6 @@ namespace Orchard.Environment.Extensions {
             foreach (var action in ctx.CopyActions) {
                 action();
             }
-        }
-
-        public void MonitorExtensions(Action<IVolatileToken> monitor) {
-            Logger.Information("Start monitoring extension files...");
-            // Monitor add/remove of any module/theme
-            monitor(_virtualPathMonitor.WhenPathChanges("~/Modules"));
-            monitor(_virtualPathMonitor.WhenPathChanges("~/Themes"));
-
-            // Give loaders a chance to monitor any additional changes
-            var extensions = _extensionManager.AvailableExtensions().Where(d => DefaultExtensionTypes.IsModule(d.ExtensionType) || DefaultExtensionTypes.IsTheme(d.ExtensionType)).ToList();
-            foreach (var extension in extensions) {
-                foreach (var loader in _loaders) {
-                    loader.Monitor(extension, monitor);
-                }
-            }
-            Logger.Information("Done monitoring extension files...");
         }
     }
 }
