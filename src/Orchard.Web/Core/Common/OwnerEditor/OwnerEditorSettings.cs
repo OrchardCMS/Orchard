@@ -7,6 +7,12 @@ using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Core.Common.OwnerEditor {
     public class OwnerEditorSettings {
+
+        public OwnerEditorSettings() {
+            // owner editor should is displayed by default
+            ShowOwnerEditor = true;
+        }
+
         public bool ShowOwnerEditor { get; set; }
     }
 
