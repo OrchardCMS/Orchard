@@ -87,14 +87,14 @@ namespace Orchard.Environment.Extensions {
 
         private string GetExtensionHash(ExtensionLoadingContext context, DependencyDescriptor dependencyDescriptor) {
             var hash = new Hash();
-            hash.AddString(dependencyDescriptor.Name);
+            hash.AddStringInvariant(dependencyDescriptor.Name);
 
             foreach (var virtualpathDependency in context.ProcessedExtensions[dependencyDescriptor.Name].VirtualPathDependencies) {
                 hash.AddDateTime(GetVirtualPathModificationTimeUtc(context.VirtualPathModficationDates, virtualpathDependency));
             }
 
             foreach (var reference in dependencyDescriptor.References) {
-                hash.AddString(reference.Name);
+                hash.AddStringInvariant(reference.Name);
                 hash.AddString(reference.LoaderName);
                 hash.AddDateTime(GetVirtualPathModificationTimeUtc(context.VirtualPathModficationDates, reference.VirtualPath));
             }
