@@ -9,14 +9,14 @@ namespace Orchard.Environment.Extensions {
     public class ExtensionLoadingContext {
         public ExtensionLoadingContext() {
             ProcessedExtensions = new Dictionary<string, ExtensionProbeEntry>(StringComparer.OrdinalIgnoreCase);
-            ProcessedReferences = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            ProcessedReferences = new Dictionary<string, ExtensionReferenceProbeEntry>(StringComparer.OrdinalIgnoreCase);
             DeleteActions = new List<Action>();
             CopyActions = new List<Action>();
             NewDependencies = new List<DependencyDescriptor>();
         }
 
         public IDictionary<string, ExtensionProbeEntry> ProcessedExtensions { get; private set; }
-        public ISet<string> ProcessedReferences { get; private set; }
+        public IDictionary<string, ExtensionReferenceProbeEntry> ProcessedReferences { get; private set; }
 
         public IList<DependencyDescriptor> NewDependencies { get; private set; }
 

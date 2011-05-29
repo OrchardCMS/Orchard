@@ -4,7 +4,6 @@ using System.Linq;
 using System.Xml.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.AppData;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.FileSystems.Dependencies {
@@ -14,12 +13,17 @@ namespace Orchard.FileSystems.Dependencies {
     /// the file stored by this component will also change.
     /// </summary>
     public class DefaultExtensionDependenciesManager : IExtensionDependenciesManager {
-        private readonly IAppDataFolder _appDataFolder;
         private const string BasePath = "Dependencies";
         private const string FileName = "Dependencies.ModuleCompilation.xml";
+        private readonly ICacheManager _cacheManager;
+        private readonly IAppDataFolder _appDataFolder;
+        private readonly InvalidationToken _writeThroughToken;
 
-        public DefaultExtensionDependenciesManager(IAppDataFolder appDataFolder) {
+        public DefaultExtensionDependenciesManager(ICacheManager cacheManager, IAppDataFolder appDataFolder) {
+            _cacheManager = cacheManager;
             _appDataFolder = appDataFolder;
+            _writeThroughToken = new InvalidationToken();
+
             Logger = NullLogger.Instance;
         }
 
@@ -53,6 +57,23 @@ namespace Orchard.FileSystems.Dependencies {
             }
         }
 
+        public ActivatedExtensionDescriptor GetDescriptor(string extensionId) {
+            return LoadDescriptors().FirstOrDefault(d => d.ExtensionId.Equals(extensionId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public IEnumerable<ActivatedExtensionDescriptor> LoadDescriptors() {
+            return _cacheManager.Get(PersistencePath,
+                                     ctx => {
+                                         _appDataFolder.CreateDirectory(BasePath);
+                                         ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
+
+                                         _writeThroughToken.IsCurrent = true;
+                                         ctx.Monitor(_writeThroughToken);
+
+                                         return ReadDescriptors(ctx.Key).ToList();
+                                     });
+        }
+
         private XDocument CreateDocument(IEnumerable<DependencyDescriptor> dependencies, Func<string, string> fileHashProvider) {
             Func<string, XName> ns = (name => XName.Get(name));
 
@@ -60,19 +81,40 @@ namespace Orchard.FileSystems.Dependencies {
             document.Add(new XElement(ns("Dependencies")));
             var elements = FilterDependencies(dependencies).Select(
                 d => new XElement("Dependency",
-                    new XElement(ns("ModuleName"), d.Name),
+                    new XElement(ns("ExtensionId"), d.Name),
                     new XElement(ns("LoaderName"), d.LoaderName),
                     new XElement(ns("VirtualPath"), d.VirtualPath),
-                    new XElement(ns("FileHash"), fileHashProvider(d.VirtualPath)),
+                    new XElement(ns("FileHash"), fileHashProvider(d.Name)),
                     new XElement(ns("References"), FilterReferences(d.References)
                         .Select(r => new XElement(ns("Reference"),
-                        new XElement(ns("Name"), r.Name),
+                        new XElement(ns("ReferenceId"), r.Name),
                         new XElement(ns("LoaderName"), r.LoaderName),
                         new XElement(ns("VirtualPath"), r.VirtualPath),
-                        new XElement(ns("FileHash"), fileHashProvider(r.VirtualPath)))).ToArray())));
+                        new XElement(ns("FileHash"), fileHashProvider(r.Name)))).ToArray())));
 
             document.Root.Add(elements);
             return document;
+        }
+
+        private IEnumerable<ActivatedExtensionDescriptor> ReadDescriptors(string persistancePath) {
+            Func<string, XName> ns = (name => XName.Get(name));
+            Func<XElement, string, string> elem = (e, name) => e.Element(ns(name)).Value;
+
+            XDocument document = ReadDocument(persistancePath);
+            return document
+                .Elements(ns("Dependencies"))
+                .Elements(ns("Dependency"))
+                .Select(e => new ActivatedExtensionDescriptor {
+                    ExtensionId = elem(e, "ExtensionId"),
+                    VirtualPath = elem(e, "VirtualPath"),
+                    LoaderName = elem(e, "LoaderName"),
+                    FileHash = elem(e, "FileHash"),
+                    //References = e.Elements(ns("References")).Elements(ns("Reference")).Select(r => new DependencyReferenceDescriptor {
+                    //    Name = elem(r, "Name"),
+                    //    LoaderName = elem(r, "LoaderName"),
+                    //    VirtualPath = elem(r, "VirtualPath")
+                    //})
+                }).ToList();
         }
 
         private IEnumerable<DependencyDescriptor> FilterDependencies(IEnumerable<DependencyDescriptor> dependencies) {
@@ -87,11 +129,12 @@ namespace Orchard.FileSystems.Dependencies {
             //Note: this is hard-coded for now, to avoid adding more responsibilities to the IExtensionLoader
             //      implementations.
             return
-                loaderName == "DynamicExtensionLoader" || 
+                loaderName == "DynamicExtensionLoader" ||
                 loaderName == "PrecompiledExtensionLoader";
         }
 
         private void WriteDocument(string persistancePath, XDocument document) {
+            _writeThroughToken.IsCurrent = false;
             using (var stream = _appDataFolder.CreateFile(persistancePath)) {
                 document.Save(stream, SaveOptions.None);
                 stream.Close();
@@ -107,7 +150,7 @@ namespace Orchard.FileSystems.Dependencies {
                     return XDocument.Load(stream);
                 }
             }
-            catch(Exception e) {
+            catch (Exception e) {
                 Logger.Information(e, "Error reading file '{0}'", persistancePath);
                 return new XDocument();
             }

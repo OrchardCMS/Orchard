@@ -85,14 +85,37 @@ namespace Orchard.Environment.Extensions {
             }
         }
 
-        private string GetFileHash(ExtensionLoadingContext context, string path) {
+        private string GetFileHash(ExtensionLoadingContext context, string extensionId) {
             var hash = new Hash();
-            hash.AddString(path);
+            hash.AddString(extensionId);
 
-            DateTime dateTime;
-            if (context.VirtualPathModficationDates.TryGetValue(path, out dateTime)) {
-                hash.AddDateTime(dateTime);
+            {
+                ExtensionProbeEntry extensionProbe;
+                if (context.ProcessedExtensions.TryGetValue(extensionId, out extensionProbe)) {
+                    if (extensionProbe != null) {
+                        var virtualPathDependencies = extensionProbe.VirtualPathDependencies;
+                        foreach (var virtualpathDependency in virtualPathDependencies) {
+                            DateTime dateTime;
+                            if (context.VirtualPathModficationDates.TryGetValue(virtualpathDependency, out dateTime)) {
+                                hash.AddDateTime(dateTime);
+                            }
+                        }
+                    }
+                }
             }
+
+            {
+                ExtensionReferenceProbeEntry extensionReferenceProbe;
+                if (context.ProcessedReferences.TryGetValue(extensionId, out extensionReferenceProbe)) {
+                    if (extensionReferenceProbe != null) {
+                        DateTime dateTime;
+                        if (context.VirtualPathModficationDates.TryGetValue(extensionReferenceProbe.VirtualPath, out dateTime)) {
+                            hash.AddDateTime(dateTime);
+                        }
+                    }
+                }
+            }
+
             return hash.Value;
         }
 
@@ -309,8 +332,8 @@ namespace Orchard.Environment.Extensions {
 
             // Activate the binary ref
             if (bestBinaryReference != null) {
-                if (!context.ProcessedReferences.Contains(bestBinaryReference.Entry.Name)) {
-                    context.ProcessedReferences.Add(bestBinaryReference.Entry.Name);
+                if (!context.ProcessedReferences.ContainsKey(bestBinaryReference.Entry.Name)) {
+                    context.ProcessedReferences.Add(bestBinaryReference.Entry.Name, bestBinaryReference.Entry);
                     bestBinaryReference.Entry.Loader.ReferenceActivated(context, bestBinaryReference.Entry);
                 }
                 activatedReferences.Add(new DependencyReferenceDescriptor {
