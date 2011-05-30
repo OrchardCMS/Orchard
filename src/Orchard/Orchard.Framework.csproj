@@ -178,6 +178,7 @@
     <Compile Include="Caching\DefaultAsyncTokenProvider.cs" />
     <Compile Include="Environment\Extensions\ExtensionMonitoringCoordinator.cs" />
     <Compile Include="Caching\IAsyncTokenProvider.cs" />
+    <Compile Include="Environment\Extensions\Folders\IExtensionHarvester.cs" />
     <Compile Include="Environment\Extensions\IExtensionMonitoringCoordinator.cs" />
     <Compile Include="Environment\Extensions\OrchardSuppressDependencyAttribute.cs" />
     <Compile Include="Environment\Features\IFeatureManager.cs" />
@@ -710,7 +711,7 @@
     <Compile Include="Events\EventsRegistrationSource.cs" />
     <Compile Include="Environment\Configuration\IShellSettingsManagerEventHandler.cs" />
     <Compile Include="Events\IEventBus.cs" />
-    <Compile Include="Environment\Extensions\Folders\ExtensionFolders.cs" />
+    <Compile Include="Environment\Extensions\Folders\ExtensionHarvester.cs" />
     <Compile Include="Environment\Extensions\Models\Feature.cs" />
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />

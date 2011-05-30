@@ -51,7 +51,7 @@ namespace Orchard.Tests.Environment.Extensions {
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 foreach (var e in Manifests) {
                     string name = e.Key;
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, _extensionType, Manifests[name]);
+                    yield return ExtensionHarvester.GetDescriptorForExtension("~/", name, _extensionType, Manifests[name]);
                 }
             }
         }

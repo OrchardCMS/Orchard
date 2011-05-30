@@ -92,7 +92,7 @@ namespace Orchard.Tests.DataMigration {
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 foreach (var e in Manifests) {
                     string name = e.Key;
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, DefaultExtensionTypes.Module, Manifests[name]);
+                    yield return ExtensionHarvester.GetDescriptorForExtension("~/", name, DefaultExtensionTypes.Module, Manifests[name]);
                 }
             }
         }

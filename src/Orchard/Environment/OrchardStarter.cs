@@ -81,6 +81,7 @@ namespace Orchard.Environment {
                         builder.RegisterType<ExtensionMonitoringCoordinator>().As<IExtensionMonitoringCoordinator>().SingleInstance();
                         builder.RegisterType<ExtensionManager>().As<IExtensionManager>().SingleInstance();
                         {
+                            builder.RegisterType<ExtensionHarvester>().As<IExtensionHarvester>().SingleInstance();
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>().SingleInstance()
                                 .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Modules" }));
                             builder.RegisterType<ThemeFolders>().As<IExtensionFolders>().SingleInstance()

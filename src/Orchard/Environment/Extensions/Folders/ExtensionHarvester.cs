@@ -10,7 +10,7 @@ using Orchard.Logging;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Folders {
-    public class ExtensionFolders : IExtensionFolders {
+    public class ExtensionHarvester : IExtensionHarvester {
         private const string NameSection = "name";
         private const string PathSection = "path";
         private const string DescriptionSection = "description";
@@ -29,23 +29,10 @@ namespace Orchard.Environment.Extensions.Folders {
         private const string PrioritySection = "priority";
         private const string FeaturesSection = "features";
 
-        private readonly IEnumerable<string> _paths;
-        private readonly string _manifestName;
-        private readonly string _extensionType;
-        private readonly bool _manifestIsOptional;
         private readonly ICacheManager _cacheManager;
         private readonly IWebSiteFolder _webSiteFolder;
 
-        protected ExtensionFolders(
-            IEnumerable<string> paths,
-            string manifestName,
-            bool manifestIsOptional,
-            ICacheManager cacheManager,
-            IWebSiteFolder webSiteFolder) {
-            _paths = paths;
-            _manifestName = manifestName;
-            _extensionType = manifestName == "Theme.txt" ? DefaultExtensionTypes.Theme : DefaultExtensionTypes.Module;
-            _manifestIsOptional = manifestIsOptional;
+        public ExtensionHarvester(ICacheManager cacheManager, IWebSiteFolder webSiteFolder) {
             _cacheManager = cacheManager;
             _webSiteFolder = webSiteFolder;
             Logger = NullLogger.Instance;
@@ -55,24 +42,30 @@ namespace Orchard.Environment.Extensions.Folders {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-            return _paths
-                .SelectMany(path => _cacheManager.Get(path, ctx => {
-                    ctx.Monitor(_webSiteFolder.WhenPathChanges(ctx.Key));
-                    return AvailableExtensionsInFolder(ctx.Key);
-                    }))
+        public IEnumerable<ExtensionDescriptor> HarvestExtensions(IEnumerable<string> paths, string extensionType, string manifestName, bool manifestIsOptional) {
+            return paths
+                .SelectMany(path => HarvestExtensions(path, extensionType, manifestName, manifestIsOptional))
                 .ToList();
         }
 
-        private List<ExtensionDescriptor> AvailableExtensionsInFolder(string path) {
+        private IEnumerable<ExtensionDescriptor> HarvestExtensions(string path, string extensionType, string manifestName, bool manifestIsOptional) {
+            string key = string.Format("{0}-{1}-{2}", path, manifestName, extensionType);
+
+            return _cacheManager.Get(key, ctx => {
+                ctx.Monitor(_webSiteFolder.WhenPathChanges(path));
+                return AvailableExtensionsInFolder(path, extensionType, manifestName, manifestIsOptional);
+            });
+        }
+
+        private List<ExtensionDescriptor> AvailableExtensionsInFolder(string path, string extensionType, string manifestName, bool manifestIsOptional) {
             Logger.Information("Start looking for extensions in '{0}'...", path);
             var subfolderPaths = _webSiteFolder.ListDirectories(path);
             var localList = new List<ExtensionDescriptor>();
             foreach (var subfolderPath in subfolderPaths) {
                 var extensionId = Path.GetFileName(subfolderPath.TrimEnd('/', '\\'));
-                var manifestPath = Path.Combine(subfolderPath, _manifestName);
+                var manifestPath = Path.Combine(subfolderPath, manifestName);
                 try {
-                    var descriptor = GetExtensionDescriptor(path, extensionId, manifestPath);
+                    var descriptor = GetExtensionDescriptor(path, extensionId, extensionType, manifestPath, manifestIsOptional);
 
                     if (descriptor == null)
                         continue;
@@ -124,12 +117,12 @@ namespace Orchard.Environment.Extensions.Folders {
             return extensionDescriptor;
         }
 
-        private ExtensionDescriptor GetExtensionDescriptor(string locationPath, string extensionId, string manifestPath) {
+        private ExtensionDescriptor GetExtensionDescriptor(string locationPath, string extensionId, string extensionType, string manifestPath, bool manifestIsOptional) {
             return _cacheManager.Get(manifestPath, context => {
                 context.Monitor(_webSiteFolder.WhenPathChanges(manifestPath));
                 var manifestText = _webSiteFolder.ReadFile(manifestPath);
                 if (manifestText == null) {
-                    if (_manifestIsOptional) {
+                    if (manifestIsOptional) {
                         manifestText = string.Format("Id: {0}", extensionId);
                     }
                     else {
@@ -137,12 +130,8 @@ namespace Orchard.Environment.Extensions.Folders {
                     }
                 }
 
-                return GetDescriptorForExtension(locationPath, extensionId, manifestText);
+                return GetDescriptorForExtension(locationPath, extensionId, extensionType, manifestText);
             });
-        }
-
-        private ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionId, string manifestText) {
-            return GetDescriptorForExtension(locationPath, extensionId, _extensionType, manifestText);
         }
 
         private static Dictionary<string, string> ParseManifest(string manifestText) {
