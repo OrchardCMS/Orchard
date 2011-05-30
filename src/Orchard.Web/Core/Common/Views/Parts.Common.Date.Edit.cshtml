@@ -1,6 +1,6 @@
-﻿@model CreatedUtcEditorViewModel
-@using Orchard.Core.Common.ViewModels;
+﻿@model Orchard.Core.Common.DateEditor.DateEditorViewModel
 @{
+	var DateEditor = Model;
     Script.Require("jQueryUtils_TimePicker");
     Script.Require("jQueryUI_DatePicker");
     Style.Require("Common_DatePicker");
@@ -8,11 +8,11 @@
     Style.Require("jQueryUI_DatePicker"); 
 }
 <fieldset class="createdutc-datetime">
-    @Html.LabelFor(m => m.CreatedDate, T("Created On"))
-    <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("CreatedDate")">@T("Date")</label>
-    @Html.EditorFor(m => m.CreatedDate)
-    <label class="forpicker" for="@ViewData.TemplateInfo.GetFullHtmlFieldId("CreatedTime")">@T("Time")</label>
-    @Html.EditorFor(m => m.CreatedTime)
+    @Html.LabelFor(m => DateEditor.CreatedDate, T("Created On"))
+    <label class="forpicker" for="@Html.FieldIdFor(m => DateEditor.CreatedDate)">@T("Date")</label>
+    @Html.EditorFor(m => DateEditor.CreatedDate)
+    <label class="forpicker" for="@Html.FieldIdFor(m => DateEditor.CreatedTime)">@T("Time")</label>
+    @Html.EditorFor(m => DateEditor.CreatedTime)
 </fieldset>
 @using(Script.Foot()) {
 <script type="text/javascript">
@@ -33,8 +33,8 @@
                 $this.closest("form").submit(function() {clearHint(pickerInput); pickerInput = 0;});
             }
         });
-        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("CreatedDate")').datepicker({ showAnim: "" }).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_Created")').attr("checked", "checked") });
-        $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("CreatedTime")').timepickr({ showAnim: "" }).focus(function () { $('#@ViewData.TemplateInfo.GetFullHtmlFieldId("Command_Created")').attr("checked", "checked") });
+        $('#@Html.FieldIdFor(m => DateEditor.CreatedDate)').datepicker({ showAnim: "" });
+        $('#@Html.FieldIdFor(m => DateEditor.CreatedTime)').timepickr({ showAnim: "" });
     })
 //]]>
 </script>
