@@ -8,7 +8,7 @@ namespace Orchard.Tests.Stubs {
         private readonly ICacheManager _defaultCacheManager;
 
         public StubCacheManager() {
-            _defaultCacheManager = new DefaultCacheManager(this.GetType(), new DefaultCacheHolder());
+            _defaultCacheManager = new DefaultCacheManager(this.GetType(), new DefaultCacheHolder(new DefaultAcquireContextContext()));
         }
         public TResult Get<TKey, TResult>(TKey key, Func<AcquireContext<TKey>, TResult> acquire) {
             return _defaultCacheManager.Get(key, acquire);

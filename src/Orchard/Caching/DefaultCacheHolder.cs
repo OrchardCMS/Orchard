@@ -7,7 +7,12 @@ namespace Orchard.Caching {
     /// The cache holder is responsible for actually storing the references to cached entities.
     /// </summary>
     public class DefaultCacheHolder : ICacheHolder {
+        private readonly IAcquireContextContext _acquireContextContext;
         private readonly ConcurrentDictionary<CacheKey, object> _caches = new ConcurrentDictionary<CacheKey, object>();
+
+        public DefaultCacheHolder(IAcquireContextContext acquireContextContext) {
+            _acquireContextContext = acquireContextContext;
+        }
 
         class CacheKey : Tuple<Type, Type, Type> {
             public CacheKey(Type component, Type key, Type result)
@@ -24,7 +29,7 @@ namespace Orchard.Caching {
         /// <returns>An entry from the cache, or a new, empty one, if none is found.</returns>
         public ICache<TKey, TResult> GetCache<TKey, TResult>(Type component) {
             var cacheKey = new CacheKey(component, typeof(TKey), typeof(TResult));
-            var result = _caches.GetOrAdd(cacheKey, k => new Cache<TKey, TResult>());
+            var result = _caches.GetOrAdd(cacheKey, k => new Cache<TKey, TResult>(_acquireContextContext));
             return (Cache<TKey, TResult>)result;
         }
     }
