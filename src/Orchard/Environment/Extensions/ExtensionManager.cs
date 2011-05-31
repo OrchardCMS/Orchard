@@ -41,11 +41,16 @@ namespace Orchard.Environment.Extensions {
         }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-            return _folders.SelectMany(folder => folder.AvailableExtensions());
+            return _cacheManager.Get("AvailableExtensions", ctx =>
+                _folders
+                    .AsParallel()  // Execute in parallel for each folder
+                    .SelectMany(folder => folder.AvailableExtensions())
+                    .ToList()      // Force execution inside the cache entry
+                    );
         }
 
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
-            return _cacheManager.Get("...", ctx =>
+            return _cacheManager.Get("AvailableFeatures", ctx =>
                 AvailableExtensions().SelectMany(ext => ext.Features).OrderByDependenciesAndPriorities(HasDependency, GetPriority).ToReadOnlyCollection());
         }
 
