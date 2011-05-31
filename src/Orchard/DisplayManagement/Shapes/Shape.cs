@@ -19,6 +19,11 @@ namespace Orchard.DisplayManagement.Shapes {
         public virtual IEnumerable<dynamic> Items { get { return _items; } }
 
         public virtual Shape Add(object item, string position = DefaultPosition) {
+            // pszmyd: Ignoring null shapes 
+            if (item == null) {
+                return this;
+            }
+
             try {
                 // todo: (sebros) this is a temporary implementation to prevent common known scenarios throwing exceptions. The final solution would need to filter based on the fact that it is a Shape instance
                 if ( item is MvcHtmlString ||
