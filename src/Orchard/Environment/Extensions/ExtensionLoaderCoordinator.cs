@@ -20,6 +20,7 @@ namespace Orchard.Environment.Extensions {
         private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IHostEnvironment _hostEnvironment;
+        private readonly IParallelCacheContext _parallelCacheContext;
         private readonly IBuildManager _buildManager;
 
         public ExtensionLoaderCoordinator(
@@ -30,6 +31,7 @@ namespace Orchard.Environment.Extensions {
             IVirtualPathMonitor virtualPathMonitor,
             IEnumerable<IExtensionLoader> loaders,
             IHostEnvironment hostEnvironment,
+            IParallelCacheContext parallelCacheContext,
             IBuildManager buildManager) {
 
             _dependenciesFolder = dependenciesFolder;
@@ -39,6 +41,7 @@ namespace Orchard.Environment.Extensions {
             _virtualPathMonitor = virtualPathMonitor;
             _loaders = loaders.OrderBy(l => l.Order);
             _hostEnvironment = hostEnvironment;
+            _parallelCacheContext = parallelCacheContext;
             _buildManager = buildManager;
 
             T = NullLocalizer.Instance;
@@ -193,13 +196,13 @@ namespace Orchard.Environment.Extensions {
             var previousDependencies = _dependenciesFolder.LoadDescriptors().ToList();
 
             var virtualPathModficationDates = new Dictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
-            var availableExtensionsProbes = availableExtensions.SelectMany(extension => _loaders
-                                                                                            .Select(loader => loader.Probe(extension))
-                                                                                            .Where(probe => probe != null))
-                .GroupBy(e => e.Descriptor.Id)
-                .ToDictionary(g => g.Key, g => g.AsEnumerable()
-                                                   .OrderByDescending(probe => GetVirtualPathDepedenciesModificationTimeUtc(virtualPathModficationDates, probe))
-                                                   .ThenBy(probe => probe.Loader.Order), StringComparer.OrdinalIgnoreCase);
+
+            var availableExtensionsProbes = _parallelCacheContext
+                .RunInParallel(availableExtensions, extension => _loaders.Select(loader => loader.Probe(extension)))
+                .SelectMany(entries => entries)
+                .Where(entry => entry != null)
+                .GroupBy(entry => entry.Descriptor.Id)
+                .ToDictionary(g => g.Key, g => SortExtensionProbeEntries(g, virtualPathModficationDates), StringComparer.OrdinalIgnoreCase);
 
             var deletedDependencies = previousDependencies
                 .Where(e => !availableExtensions.Any(e2 => StringComparer.OrdinalIgnoreCase.Equals(e2.Id, e.Name)))
@@ -235,6 +238,13 @@ namespace Orchard.Environment.Extensions {
                 ReferencesByModule = referencesByModule,
                 VirtualPathModficationDates = virtualPathModficationDates,
             };
+        }
+
+        private IEnumerable<ExtensionProbeEntry> SortExtensionProbeEntries(IEnumerable<ExtensionProbeEntry> entries, Dictionary<string, DateTime> virtualPathModficationDates) {
+            return entries
+                .OrderByDescending(probe => GetVirtualPathDepedenciesModificationTimeUtc(virtualPathModficationDates, probe))
+                .ThenBy(probe => probe.Loader.Order)
+                .ToList();
         }
 
         private DateTime GetVirtualPathDepedenciesModificationTimeUtc(IDictionary<string, DateTime> virtualPathDependencies, ExtensionProbeEntry probe) {

@@ -50,7 +50,7 @@ namespace Orchard.Environment.Extensions {
         /// For every extension name, the list of loaders that can potentially load
         /// that extension (in order of "best-of" applicable)
         /// </summary>
-        public IDictionary<string, IOrderedEnumerable<ExtensionProbeEntry>> AvailableExtensionsProbes { get; set; }
+        public IDictionary<string, IEnumerable<ExtensionProbeEntry>> AvailableExtensionsProbes { get; set; }
 
         /// <summary>
         /// For every reference name, list of potential loaders/locations
