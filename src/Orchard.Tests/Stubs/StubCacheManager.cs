@@ -8,7 +8,7 @@ namespace Orchard.Tests.Stubs {
         private readonly ICacheManager _defaultCacheManager;
 
         public StubCacheManager() {
-            _defaultCacheManager = new DefaultCacheManager(this.GetType(), new DefaultCacheHolder(new DefaultAcquireContextContext()));
+            _defaultCacheManager = new DefaultCacheManager(this.GetType(), new DefaultCacheHolder(new DefaultCacheContextAccessor()));
         }
         public TResult Get<TKey, TResult>(TKey key, Func<AcquireContext<TKey>, TResult> acquire) {
             return _defaultCacheManager.Get(key, acquire);
@@ -18,6 +18,17 @@ namespace Orchard.Tests.Stubs {
             return _defaultCacheManager.GetCache<TKey, TResult>();
         }
     }
+
+    public class StubParallelCacheContext : IParallelCacheContext {
+        public ITask<T> CreateContextAwareTask<T>(Func<T> function) {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TResult> RunInParallel<T, TResult>(IEnumerable<T> source, Func<T, TResult> selector) {
+            return source.Select(selector);
+        }
+    }
+
 
     public class StubAsyncTokenProvider : IAsyncTokenProvider {
         public IVolatileToken GetToken(Action<Action<IVolatileToken>> task) {

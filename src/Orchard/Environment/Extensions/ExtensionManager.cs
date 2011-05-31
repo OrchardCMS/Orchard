@@ -15,6 +15,7 @@ namespace Orchard.Environment.Extensions {
         private readonly IEnumerable<IExtensionFolders> _folders;
         private readonly IAsyncTokenProvider _asyncTokenProvider;
         private readonly ICacheManager _cacheManager;
+        private readonly IParallelCacheContext _parallelCacheContext;
         private readonly IEnumerable<IExtensionLoader> _loaders;
 
         public Localizer T { get; set; }
@@ -24,11 +25,13 @@ namespace Orchard.Environment.Extensions {
             IEnumerable<IExtensionFolders> folders,
             IEnumerable<IExtensionLoader> loaders,
             ICacheManager cacheManager,
+            IParallelCacheContext parallelCacheContext,
             IAsyncTokenProvider asyncTokenProvider) {
 
             _folders = folders;
             _asyncTokenProvider = asyncTokenProvider;
             _cacheManager = cacheManager;
+            _parallelCacheContext = parallelCacheContext;
             _loaders = loaders.OrderBy(x => x.Order).ToArray();
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -42,16 +45,18 @@ namespace Orchard.Environment.Extensions {
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             return _cacheManager.Get("AvailableExtensions", ctx =>
-                _folders
-                    .AsParallel()  // Execute in parallel for each folder
-                    .SelectMany(folder => folder.AvailableExtensions())
-                    .ToList()      // Force execution inside the cache entry
-                    );
+                _parallelCacheContext
+                    .RunInParallel(_folders, folder => folder.AvailableExtensions())
+                    .SelectMany(descriptors => descriptors)
+                    .ToReadOnlyCollection());
         }
 
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
             return _cacheManager.Get("AvailableFeatures", ctx =>
-                AvailableExtensions().SelectMany(ext => ext.Features).OrderByDependenciesAndPriorities(HasDependency, GetPriority).ToReadOnlyCollection());
+                AvailableExtensions()
+                    .SelectMany(ext => ext.Features)
+                    .OrderByDependenciesAndPriorities(HasDependency, GetPriority)
+                    .ToReadOnlyCollection());
         }
 
         internal static int GetPriority(FeatureDescriptor featureDescriptor) {

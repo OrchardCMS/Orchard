@@ -28,6 +28,7 @@ namespace Orchard.Tests.Environment.Extensions {
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
 
             _container = builder.Build();
@@ -284,7 +285,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -310,7 +311,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -321,6 +322,14 @@ Features:
                 Assert.That(type.IsClass);
                 Assert.That(!type.IsAbstract);
             }
+        }
+
+        private static ExtensionManager CreateExtensionManager(StubFolders extensionFolder, StubLoaders extensionLoader) {
+            return CreateExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+        }
+
+        private static ExtensionManager CreateExtensionManager(IEnumerable<StubFolders> extensionFolder, IEnumerable<StubLoaders> extensionLoader) {
+            return new ExtensionManager(extensionFolder, extensionLoader, new StubCacheManager(), new StubParallelCacheContext(), new StubAsyncTokenProvider());
         }
 
         [Test]
@@ -347,7 +356,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestFeature");
@@ -377,7 +386,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestFeature");
@@ -405,7 +414,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
             var testModule = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestModule");
@@ -429,7 +438,7 @@ Version: 1.0.3
 OrchardVersion: 1
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
             var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Id == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
@@ -465,7 +474,7 @@ Features:
         Dependencies: Beta
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
             var features = extensionManager.AvailableFeatures();
             Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo("<Beta<Gamma<Alpha<"));
         }
@@ -505,7 +514,7 @@ Version: 1.0.3
 OrchardVersion: 1
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { moduleExtensionFolder, themeExtensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubAsyncTokenProvider());
+            IExtensionManager extensionManager = CreateExtensionManager(new[] { moduleExtensionFolder, themeExtensionFolder }, new[] { extensionLoader });
             var features = extensionManager.AvailableFeatures();
             Assert.That(features.Count(), Is.EqualTo(4));
         }
@@ -539,7 +548,7 @@ OrchardVersion: 1{1}{2}",
         }
 
         private static void AssertFeaturesAreInOrder(IEnumerable<StubFolders> folders, StubLoaders loader, string expectedOrder) {
-            var extensionManager = new ExtensionManager(folders, new[] { loader }, new StubCacheManager(), new StubAsyncTokenProvider());
+            var extensionManager = CreateExtensionManager(folders, new[] { loader });
             var features = extensionManager.AvailableFeatures();
             Assert.That(features.Aggregate("<", (a, b) => a + b.Id + "<"), Is.EqualTo(expectedOrder));
         }

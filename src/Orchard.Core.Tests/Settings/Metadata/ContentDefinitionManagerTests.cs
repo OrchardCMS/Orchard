@@ -50,6 +50,7 @@ namespace Orchard.Core.Tests.Settings.Metadata {
                 .As(typeof(IMapper<SettingsDictionary, XElement>));
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
 
             _container = builder.Build();
 

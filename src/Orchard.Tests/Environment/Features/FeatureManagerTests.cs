@@ -39,6 +39,7 @@ namespace Orchard.Tests.Environment.Features {
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<FeatureManager>().As<IFeatureManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>().SingleInstance();
             builder.RegisterType<ShellStateManager>().As<IShellStateManager>().SingleInstance();

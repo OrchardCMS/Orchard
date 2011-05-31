@@ -68,6 +68,7 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();

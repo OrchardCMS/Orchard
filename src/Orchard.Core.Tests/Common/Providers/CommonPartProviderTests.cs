@@ -55,6 +55,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterInstance(new Mock<IThemeManager>().Object);
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
             builder.RegisterInstance(new Mock<RequestContext>().Object);

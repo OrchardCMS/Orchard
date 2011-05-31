@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace Orchard.Caching {
     public class Cache<TKey, TResult> : ICache<TKey, TResult> {
-        private readonly IAcquireContextContext _acquireContextContext;
+        private readonly ICacheContextAccessor _cacheContextAccessor;
         private readonly ConcurrentDictionary<TKey, CacheEntry> _entries;
 
-        public Cache(IAcquireContextContext acquireContextContext) {
-            _acquireContextContext = acquireContextContext;
+        public Cache(ICacheContextAccessor cacheContextAccessor) {
+            _cacheContextAccessor = cacheContextAccessor;
             _entries = new ConcurrentDictionary<TKey, CacheEntry>();
         }
 
@@ -21,9 +21,9 @@ namespace Orchard.Caching {
                 (k, currentEntry) => (currentEntry.GetTokens() != null && currentEntry.GetTokens().Any(t => !t.IsCurrent) ? CreateEntry(k, acquire) : currentEntry));
 
             // Bubble up volatile tokens to parent context
-            if (_acquireContextContext.Instance != null && entry.GetTokens() != null) {
+            if (_cacheContextAccessor.Current != null && entry.GetTokens() != null) {
                 foreach (var token in entry.GetTokens())
-                    _acquireContextContext.Instance.Monitor(token);
+                    _cacheContextAccessor.Current.Monitor(token);
             }
 
             return entry.Result;
@@ -37,14 +37,14 @@ namespace Orchard.Caching {
             IAcquireContext parentContext = null;
             try {
                 // Push context
-                parentContext = _acquireContextContext.Instance;
-                _acquireContextContext.Instance = context;
+                parentContext = _cacheContextAccessor.Current;
+                _cacheContextAccessor.Current = context;
 
                 entry.Result = acquire(context);
             }
             finally {
                 // Pop context
-                _acquireContextContext.Instance = parentContext;
+                _cacheContextAccessor.Current = parentContext;
             }
             return entry;
         }

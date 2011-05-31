@@ -31,6 +31,7 @@ namespace Orchard.Tests.Modules.Packaging.Services {
             builder.RegisterType<FolderUpdater>().As<IFolderUpdater>();
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
 
             _mockedVirtualPathProvider = new Mock<IVirtualPathProvider>();
