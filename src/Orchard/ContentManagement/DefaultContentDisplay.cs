@@ -6,6 +6,7 @@ using ClaySharp.Implementation;
 using Orchard.ContentManagement.Handlers;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 using Orchard.Themes;
 using Orchard.UI.Zones;
@@ -17,18 +18,23 @@ namespace Orchard.ContentManagement {
         private readonly IShapeTableManager _shapeTableManager;
         private readonly Lazy<IThemeManager> _themeService;
         private readonly RequestContext _requestContext;
+        private readonly IVirtualPathProvider _virtualPathProvider;
 
         public DefaultContentDisplay(
             Lazy<IEnumerable<IContentHandler>> handlers,
             IShapeFactory shapeFactory,
             IShapeTableManager shapeTableManager,
             Lazy<IThemeManager> themeService,
-            RequestContext requestContext) {
+            RequestContext requestContext,
+            IVirtualPathProvider virtualPathProvider) {
+
             _handlers = handlers;
             _shapeFactory = shapeFactory;
             _shapeTableManager = shapeTableManager;
             _themeService = themeService;
             _requestContext = requestContext;
+            _virtualPathProvider = virtualPathProvider;
+
             Logger = NullLogger.Instance;
         }
 
@@ -111,11 +117,11 @@ namespace Orchard.ContentManagement {
                         Stereotype = stereotype,
                         DisplayType = displayType,
                         Differentiator = differentiator,
-                        Path = VirtualPathUtility.AppendTrailingSlash(VirtualPathUtility.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
+                        Path = VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
                     };
 
                     var placement = descriptor.Placement(placementContext);
-                    if(placement != null) {
+                    if (placement != null) {
                         placement.Source = placementContext.Source;
                         return placement;
                     }
