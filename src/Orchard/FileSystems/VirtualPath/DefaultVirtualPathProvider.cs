@@ -116,11 +116,17 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         public virtual DateTime GetFileLastWriteTimeUtc(string virtualPath) {
+#if true
+            // This code is less "pure" than the code below, but performs fewer file I/O, and it 
+            // has been measured to make a significant difference (4x) on slow file systems.
+            return File.GetLastWriteTimeUtc(MapPath(virtualPath));
+#else
             var dependency = HostingEnvironment.VirtualPathProvider.GetCacheDependency(virtualPath, new[] { virtualPath }, DateTime.UtcNow);
             if (dependency == null) {
                 throw new Exception(string.Format("Invalid virtual path: '{0}'", virtualPath));
             }
             return dependency.UtcLastModified;
+#endif
         }
 
         public string GetFileHash(string virtualPath) {
