@@ -26,7 +26,13 @@ namespace Orchard.ContentManagement.MetaData.Services {
             var partElement = NewElement(partDefinition.Name, partDefinition.Settings);
             foreach(var partField in partDefinition.Fields) {
                 var attributeName = partField.Name + "." + partField.FieldDefinition.Name;
-                var partFieldElement = NewElement(attributeName, partField.Settings);
+                var fieldSettings = new SettingsDictionary();
+                foreach (var partFieldSetting in partField.Settings.Keys) {
+                    if (partFieldSetting.StartsWith(partField.FieldDefinition.Name)) {
+                        fieldSettings.Add(partFieldSetting, partField.Settings[partFieldSetting]);
+                    }
+                }
+                var partFieldElement = NewElement(attributeName, fieldSettings);
                 partElement.Add(partFieldElement);
             }
             return partElement;
