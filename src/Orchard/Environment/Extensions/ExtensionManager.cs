@@ -46,7 +46,7 @@ namespace Orchard.Environment.Extensions {
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             return _cacheManager.Get("AvailableExtensions", ctx =>
                 _parallelCacheContext
-                    .RunInParallel(_folders, folder => folder.AvailableExtensions())
+                    .RunInParallel(_folders, folder => folder.AvailableExtensions().ToList())
                     .SelectMany(descriptors => descriptors)
                     .ToReadOnlyCollection());
         }
@@ -90,8 +90,9 @@ namespace Orchard.Environment.Extensions {
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
             Logger.Information("Loading features");
 
-            var result = featureDescriptors
-                .Select(descriptor => _cacheManager.Get(descriptor.Id, ctx => LoadFeature(descriptor)))
+            var result =
+                _parallelCacheContext
+                .RunInParallel(featureDescriptors, descriptor => _cacheManager.Get(descriptor.Id, ctx => LoadFeature(descriptor)))
                 .ToArray();
 
             Logger.Information("Done loading features");
