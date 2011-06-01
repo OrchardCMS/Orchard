@@ -2,6 +2,7 @@ using System;
 using System.Collections.Specialized;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Environment.Extensions;
 using Orchard.Mvc.Filters;
@@ -40,7 +41,7 @@ namespace Orchard.Mvc.AntiForgery {
         }
 
         private bool IsAntiForgeryProtectionEnabled(ControllerContext context) {
-            string currentModule = context.RouteData.Values["area"].ToString();
+            string currentModule = GetArea(context.RouteData);
             if (!String.IsNullOrEmpty(currentModule)) {
                 foreach (var descriptor in _extensionManager.AvailableExtensions()) {
                     if (String.Equals(descriptor.Id, currentModule, StringComparison.OrdinalIgnoreCase)) {
@@ -53,6 +54,13 @@ namespace Orchard.Mvc.AntiForgery {
             }
 
             return false;
+        }
+
+        private static string GetArea(RouteData routeData) {
+            if (routeData.Values.ContainsKey("area"))
+                return routeData.Values["area"] as string;
+
+            return routeData.DataTokens["area"] as string ?? "";
         }
 
         private static bool ShouldValidateGet(AuthorizationContext context) {
