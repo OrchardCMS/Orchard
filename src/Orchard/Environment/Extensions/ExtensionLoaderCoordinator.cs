@@ -197,22 +197,26 @@ namespace Orchard.Environment.Extensions {
 
             var virtualPathModficationDates = new Dictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
 
+            Logger.Information("Probing extensions");
             var availableExtensionsProbes = _parallelCacheContext
-                .RunInParallel(availableExtensions, extension => _loaders.Select(loader => loader.Probe(extension)))
+                .RunInParallel(availableExtensions, extension => 
+                    _loaders.Select(loader => loader.Probe(extension)).Where(entry => entry != null).ToArray())
                 .SelectMany(entries => entries)
-                .Where(entry => entry != null)
                 .GroupBy(entry => entry.Descriptor.Id)
                 .ToDictionary(g => g.Key, g => SortExtensionProbeEntries(g, virtualPathModficationDates), StringComparer.OrdinalIgnoreCase);
+            Logger.Information("Done probing extensions");
 
             var deletedDependencies = previousDependencies
                 .Where(e => !availableExtensions.Any(e2 => StringComparer.OrdinalIgnoreCase.Equals(e2.Id, e.Name)))
                 .ToList();
 
             // Collect references for all modules
-            var references =
-                availableExtensions
-                    .SelectMany(extension => _loaders.SelectMany(loader => loader.ProbeReferences(extension)))
-                    .ToList();
+            Logger.Information("Probing extension references");
+            var references = _parallelCacheContext
+                .RunInParallel(availableExtensions, extension => _loaders.SelectMany(loader => loader.ProbeReferences(extension)).ToList())
+                .SelectMany(entries => entries)
+                .ToList();
+            Logger.Information("Done probing extension references");
 
             var referencesByModule = references
                 .GroupBy(entry => entry.Descriptor.Id, StringComparer.OrdinalIgnoreCase)
