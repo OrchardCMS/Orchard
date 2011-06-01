@@ -36,7 +36,6 @@ using Orchard.UI.PageTitle;
 using Orchard.UI.Resources;
 using Orchard.UI.Zones;
 using IFilterProvider = Orchard.Mvc.Filters.IFilterProvider;
-using ResourceManifest = Orchard.Core.Shapes.ResourceManifest;
 
 namespace Orchard.Setup {
     public class SetupMode : Module {
@@ -64,7 +63,6 @@ namespace Orchard.Setup {
             builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
-            builder.RegisterType<ResourceManifest>().As<IResourceManifestProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
 

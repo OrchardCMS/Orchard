@@ -1,4 +1,6 @@
-namespace Orchard.UI.Resources {
+using Orchard.UI.Resources;
+
+namespace Orchard.jQuery {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
