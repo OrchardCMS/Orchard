@@ -15,10 +15,14 @@ namespace Orchard.Caching {
             var tasks = source.Select(item => this.CreateContextAwareTask(() => selector(item))).ToList();
 
             // Run tasks in parallel and combine results immediately
-            var result = tasks.AsParallel().Select(task => task.Execute()).ToList();
+            var result = tasks
+                .AsParallel()                       // prepare for parallel execution
+                .AsOrdered()                        // preserve initial enumeration order
+                .Select(task => task.Execute())     // prepare tasks to run in parallel
+                .ToArray();                         // force evaluation
 
             // Forward tokens collected by tasks to the current context
-            foreach(var task in tasks) {
+            foreach (var task in tasks) {
                 task.Finish();
             }
             return result;
