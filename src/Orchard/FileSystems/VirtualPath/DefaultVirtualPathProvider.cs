@@ -116,11 +116,15 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         public virtual DateTime GetFileLastWriteTimeUtc(string virtualPath) {
-            return File.GetLastWriteTimeUtc(MapPath(virtualPath));
+            var dependency = HostingEnvironment.VirtualPathProvider.GetCacheDependency(virtualPath, new[] { virtualPath }, DateTime.UtcNow);
+            if (dependency == null) {
+                throw new Exception(string.Format("Invalid virtual path: '{0}'", virtualPath));
+            }
+            return dependency.UtcLastModified;
         }
 
         public string GetFileHash(string virtualPath) {
-            return GetFileHash(virtualPath, new[] {virtualPath});
+            return GetFileHash(virtualPath, new[] { virtualPath });
         }
 
         public string GetFileHash(string virtualPath, IEnumerable<string> dependencies) {
