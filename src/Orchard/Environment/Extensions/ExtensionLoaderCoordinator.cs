@@ -17,7 +17,6 @@ namespace Orchard.Environment.Extensions {
         private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IExtensionManager _extensionManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
-        private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IParallelCacheContext _parallelCacheContext;
@@ -28,7 +27,6 @@ namespace Orchard.Environment.Extensions {
             IExtensionDependenciesManager extensionDependenciesManager,
             IExtensionManager extensionManager,
             IVirtualPathProvider virtualPathProvider,
-            IVirtualPathMonitor virtualPathMonitor,
             IEnumerable<IExtensionLoader> loaders,
             IHostEnvironment hostEnvironment,
             IParallelCacheContext parallelCacheContext,
@@ -38,7 +36,6 @@ namespace Orchard.Environment.Extensions {
             _extensionDependenciesManager = extensionDependenciesManager;
             _extensionManager = extensionManager;
             _virtualPathProvider = virtualPathProvider;
-            _virtualPathMonitor = virtualPathMonitor;
             _loaders = loaders.OrderBy(l => l.Order);
             _hostEnvironment = hostEnvironment;
             _parallelCacheContext = parallelCacheContext;
