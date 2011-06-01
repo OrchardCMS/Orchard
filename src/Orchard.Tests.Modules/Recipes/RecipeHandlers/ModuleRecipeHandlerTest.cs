@@ -50,6 +50,8 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<FeatureManager>().As<IFeatureManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
+            builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>().SingleInstance();
             builder.RegisterType<StubDataMigrationManager>().As<IDataMigrationManager>();
             builder.RegisterType<StubPackagingSourceManager>().As<IPackagingSourceManager>();

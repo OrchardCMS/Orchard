@@ -13,6 +13,8 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class DynamicExtensionLoader : ExtensionLoaderBase {
+        public static readonly string[] ExtensionsVirtualPathPrefixes = { "~/Modules/", "~/Themes/" };
+
         private readonly IBuildManager _buildManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
@@ -48,22 +50,17 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override int Order { get { return 100; } }
 
-        public override string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
-            return string.Format("<%@ Assembly Src=\"{0}\"%>", dependency.VirtualPath);
+        public override IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
+            yield return new ExtensionCompilationReference { BuildProviderTarget = dependency.VirtualPath };
         }
 
-        public override IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+        public override IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
             // Return csproj and all .cs files
             return GetDependencies(dependency.VirtualPath);
         }
 
-        public override IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
-            virtualPath = _virtualPathProvider.ToAppRelative(virtualPath);
-
-            if (StringComparer.OrdinalIgnoreCase.Equals(virtualPath, dependency.VirtualPath)) {
-                return GetDependencies(virtualPath);
-            }
-            return base.GetDynamicModuleDependencies(dependency, virtualPath);
+        public IEnumerable<string> GetFileHashDependencies(DependencyDescriptor dependency) {
+            return GetDependencies(dependency.VirtualPath);
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
@@ -97,19 +94,27 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+            if (Disabled)
+                return Enumerable.Empty<ExtensionReferenceProbeEntry>();
+
+            Logger.Information("Probing references for module '{0}'", descriptor.Id);
+
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
                 return Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
             var projectFile = _projectFileParser.Parse(projectPath);
 
-                return projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
-                    Descriptor = descriptor,
-                    Loader = this,
-                    Name = r.SimpleName,
-                    VirtualPath = _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
-                });
-            }
+            var result = projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
+                Descriptor = descriptor,
+                Loader = this,
+                Name = r.SimpleName,
+                VirtualPath = _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
+            });
+
+            Logger.Information("Done probing references for module '{0}'", descriptor.Id);
+            return result;
+        }
 
         public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
             //Note: This is the same implementation as "PrecompiledExtensionLoader"
@@ -135,28 +140,43 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override Assembly LoadReference(DependencyReferenceDescriptor reference) {
+            if (Disabled)
+                return null;
+
+            Logger.Information("Loading reference '{0}'", reference.Name);
+
             // DynamicExtensionLoader has 2 types of references: assemblies from module bin directory
             // and .csproj.
+            Assembly result;
             if (StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(reference.VirtualPath), ".dll"))
-                return _assemblyProbingFolder.LoadAssembly(reference.Name);
+                result = _assemblyProbingFolder.LoadAssembly(reference.Name);
+            else {
+                result = _buildManager.GetCompiledAssembly(reference.VirtualPath);
+            }
 
-            return _buildManager.GetCompiledAssembly(reference.VirtualPath);
+            Logger.Information("Done loading reference '{0}'", reference.Name);
+            return result;
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if (Disabled)
                 return null;
 
+            Logger.Information("Probing for module '{0}'", descriptor.Id);
+
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
                 return null;
 
-            return new ExtensionProbeEntry {
+            var result = new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastWriteTimeUtc = GetDependencies(projectPath).Max(f => _virtualPathProvider.GetFileLastWriteTimeUtc(f)),
                 Loader = this,
-                VirtualPath = projectPath
+                VirtualPath = projectPath,
+                VirtualPathDependencies = GetDependencies(projectPath).ToList(),
             };
+
+            Logger.Information("Done probing for module '{0}'", descriptor.Id);
+            return result;
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
@@ -183,58 +203,56 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         protected IEnumerable<string> GetDependencies(string projectPath) {
-            var dependencies = new HashSet<string> { projectPath };
-
+            var dependencies = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             AddDependencies(projectPath, dependencies);
-
             return dependencies;
         }
 
         private void AddDependencies(string projectPath, HashSet<string> currentSet) {
+            // Skip files from locations other than "~/Modules" and "~/Themes"
+            if (string.IsNullOrEmpty(PrefixMatch(projectPath, ExtensionsVirtualPathPrefixes))) {
+                return;
+            }
+
+            // Add project path
+            currentSet.Add(projectPath);
+
+            // Add source file paths
+            var projectFile = _projectFileParser.Parse(projectPath);
             string basePath = _virtualPathProvider.GetDirectoryName(projectPath);
+            currentSet.UnionWith(projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f)));
 
-            ProjectFileDescriptor projectFile = _projectFileParser.Parse(projectPath);
+            // Add Project and Library references
+            if (projectFile.References != null) {
+                foreach (ReferenceDescriptor referenceDescriptor in projectFile.References.Where(reference => !string.IsNullOrEmpty(reference.Path))) {
+                    string path = referenceDescriptor.ReferenceType == ReferenceType.Library
+                                      ? _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
+                                      : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
 
-                // Add source files
-                currentSet.UnionWith(projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f)));
+                    // Normalize the virtual path (avoid ".." in the path name)
+                    if (!string.IsNullOrEmpty(path)) {
+                        path = _virtualPathProvider.ToAppRelative(path);
+                    }
 
-                // Add Project and Library references
-                if (projectFile.References != null) {
-                    foreach (ReferenceDescriptor referenceDescriptor in projectFile.References.Where(reference => !string.IsNullOrEmpty(reference.Path))) {
-                        string path = referenceDescriptor.ReferenceType == ReferenceType.Library
-                                          ? _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
-                                          : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
-
-                        // Normalize the virtual path (avoid ".." in the path name)
-                        if (!string.IsNullOrEmpty(path)) {
-                            try {
-                                path = _virtualPathProvider.ToAppRelative(path);
-                            }
-                            catch (Exception e) {
-                                // The initial path might have been invalid (e.g. path indicates a path outside the application root)
-                                Logger.Information(e, "Path '{0}' cannot be made app relative", path);
-                                path = null;
-                            }
-                        }
-
-                        // Attempt to reference the project / library file
-                        if (!string.IsNullOrEmpty(path) && !currentSet.Contains(path) && _virtualPathProvider.TryFileExists(path)) {
-                            currentSet.Add(path);
-
-                            // In case of project, also reference the source files
-                            if (referenceDescriptor.ReferenceType == ReferenceType.Project) {
+                    // Attempt to reference the project / library file
+                    if (!string.IsNullOrEmpty(path) && !currentSet.Contains(path) && _virtualPathProvider.TryFileExists(path)) {
+                        switch (referenceDescriptor.ReferenceType) {
+                            case ReferenceType.Project:
                                 AddDependencies(path, currentSet);
-
-                                // Try to also reference any pre-built DLL
-                                DependencyDescriptor dependencyDescriptor = _dependenciesFolder.GetDescriptor(_virtualPathProvider.GetDirectoryName(referenceDescriptor.Path));
-                                if (dependencyDescriptor != null && _virtualPathProvider.TryFileExists(dependencyDescriptor.VirtualPath)) {
-                                    currentSet.Add(dependencyDescriptor.VirtualPath);
-                                }
-                            }
+                                break;
+                            case ReferenceType.Library:
+                                currentSet.Add(path);
+                                break;
                         }
                     }
                 }
             }
+        }
+
+        private static string PrefixMatch(string virtualPath, params string[] prefixes) {
+            return prefixes
+                .FirstOrDefault(p => virtualPath.StartsWith(p, StringComparison.OrdinalIgnoreCase));
+        }
 
         private string GetProjectPath(ExtensionDescriptor descriptor) {
             string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
@@ -260,14 +278,14 @@ namespace Orchard.Environment.Extensions.Loaders {
             private readonly List<IVolatileToken> _tokens = new List<IVolatileToken>();
 
             public void Monitor(IVolatileToken whenProjectFileChanges) {
-                lock(_tokens) {
+                lock (_tokens) {
                     _tokens.Add(whenProjectFileChanges);
                 }
             }
 
             public bool AppDomainRestartNeeded {
                 get {
-                    lock(_tokens) {
+                    lock (_tokens) {
                         return _tokens.Any(t => t.IsCurrent == false);
                     }
                 }

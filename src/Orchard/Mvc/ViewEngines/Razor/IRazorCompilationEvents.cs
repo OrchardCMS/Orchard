@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Razor.Generator;
 using System.Web.WebPages.Razor;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.Dependencies;
+using Orchard.Logging;
 
 namespace Orchard.Mvc.ViewEngines.Razor {
     public interface IRazorCompilationEvents {
@@ -25,23 +27,31 @@ namespace Orchard.Mvc.ViewEngines.Razor {
     /// </summary>
     public class DefaultRazorCompilationEvents : IRazorCompilationEvents {
         private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IBuildManager _buildManager;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IAssemblyLoader _assemblyLoader;
 
         public DefaultRazorCompilationEvents(
             IDependenciesFolder dependenciesFolder,
+            IExtensionDependenciesManager extensionDependenciesManager,
             IBuildManager buildManager,
             IEnumerable<IExtensionLoader> loaders,
             IAssemblyLoader assemblyLoader) {
 
             _dependenciesFolder = dependenciesFolder;
+            _extensionDependenciesManager = extensionDependenciesManager;
             _buildManager = buildManager;
             _loaders = loaders;
             _assemblyLoader = assemblyLoader;
+            Logger = NullLogger.Instance;
         }
 
+        public ILogger Logger { get; set; }
+
         public void CodeGenerationStarted(RazorBuildProvider provider) {
+            var assembliesToAdd = new List<Assembly>();
+
             DependencyDescriptor moduleDependencyDescriptor = GetModuleDependencyDescriptor(provider.VirtualPath);
 
             IEnumerable<DependencyDescriptor> dependencyDescriptors = _dependenciesFolder.LoadDescriptors();
@@ -66,34 +76,64 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                                               .Select(loader => new {
                                                   loader,
                                                   descriptor,
-                                                  directive = loader.GetWebFormAssemblyDirective(descriptor),
-                                                  dependencies = loader.GetWebFormVirtualDependencies(descriptor)
+                                                  references = loader.GetCompilationReferences(descriptor),
+                                                  dependencies = _extensionDependenciesManager.GetVirtualPathDependencies(descriptor.Name)
                                               }));
 
+            // Add assemblies
             foreach (var entry in entries) {
-                if (entry.directive != null) {
-                    if (entry.directive.StartsWith("<%@ Assembly Name=\"")) {
-                        var assembly = _assemblyLoader.Load(entry.descriptor.Name);
+                foreach (var reference in entry.references) {
+                    if (!string.IsNullOrEmpty(reference.AssemblyName)) {
+                        var assembly = _assemblyLoader.Load(reference.AssemblyName);
                         if (assembly != null)
-                            provider.AssemblyBuilder.AddAssemblyReference(assembly);
+                            assembliesToAdd.Add(assembly);
                     }
-                    else if (entry.directive.StartsWith("<%@ Assembly Src=\"")) {
+                    if (!string.IsNullOrEmpty(reference.BuildProviderTarget)) {
                         // Returned assembly may be null if the .csproj file doesn't containt any .cs file, for example
-                        var assembly = _buildManager.GetCompiledAssembly(entry.descriptor.VirtualPath);
+                        var assembly = _buildManager.GetCompiledAssembly(reference.BuildProviderTarget);
                         if (assembly != null)
-                            provider.AssemblyBuilder.AddAssemblyReference(assembly);
+                            assembliesToAdd.Add(assembly);
                     }
                 }
+            }
 
-                foreach (var virtualDependency in entry.dependencies) {
-                    provider.AddVirtualPathDependency(virtualDependency);
+            foreach (var assembly in assembliesToAdd) {
+                provider.AssemblyBuilder.AddAssemblyReference(assembly);
+            }
+
+            // Add virtual path dependencies (i.e. source files)
+            //PERF: Ensure each virtual path is present only once in the list of dependencies
+            var virtualDependencies = entries
+                .SelectMany(e => e.dependencies)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            foreach (var virtualDependency in virtualDependencies) {
+                provider.AddVirtualPathDependency(virtualDependency);
+            }
+
+            // Logging
+            if (Logger.IsEnabled(LogLevel.Debug)) {
+                if (assembliesToAdd.Count == 0 && provider.VirtualPathDependencies == null) {
+                    Logger.Debug("CodeGenerationStarted(\"{0}\") - no dependencies.", provider.VirtualPath);
+                }
+                else {
+                    Logger.Debug("CodeGenerationStarted(\"{0}\") - Dependencies: ", provider.VirtualPath);
+                    if (provider.VirtualPathDependencies != null) {
+                        foreach (var virtualPath in provider.VirtualPathDependencies) {
+                            Logger.Debug("  VirtualPath: \"{0}\"", virtualPath);
+                        }
+                    }
+                    foreach (var assembly in assembliesToAdd) {
+                        Logger.Debug("  Reference: \"{0}\"", assembly);
+                    }
                 }
             }
         }
 
         private DependencyDescriptor GetModuleDependencyDescriptor(string virtualPath) {
             var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
-            var prefix = PrefixMatch(appRelativePath, new [] { "~/Modules/", "~/Core/"});
+            var prefix = PrefixMatch(appRelativePath, new[] { "~/Modules/", "~/Core/" });
             if (prefix == null)
                 return null;
 

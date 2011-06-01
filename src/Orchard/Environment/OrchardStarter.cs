@@ -39,6 +39,9 @@ namespace Orchard.Environment {
             // a single default host implementation is needed for bootstrapping a web app domain
             builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
+            builder.RegisterType<DefaultCacheContextAccessor>().As<ICacheContextAccessor>().SingleInstance();
+            builder.RegisterType<DefaultParallelCacheContext>().As<IParallelCacheContext>().SingleInstance();
+            builder.RegisterType<DefaultAsyncTokenProvider>().As<IAsyncTokenProvider>().SingleInstance();
             builder.RegisterType<DefaultHostEnvironment>().As<IHostEnvironment>().SingleInstance();
             builder.RegisterType<DefaultHostLocalRestart>().As<IHostLocalRestart>().SingleInstance();
             builder.RegisterType<DefaultBuildManager>().As<IBuildManager>().SingleInstance();
@@ -60,6 +63,7 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultLockFileManager, ILockFileManager>(builder);
             RegisterVolatileProvider<Clock, IClock>(builder);
             RegisterVolatileProvider<DefaultDependenciesFolder, IDependenciesFolder>(builder);
+            RegisterVolatileProvider<DefaultExtensionDependenciesManager, IExtensionDependenciesManager>(builder);
             RegisterVolatileProvider<DefaultAssemblyProbingFolder, IAssemblyProbingFolder>(builder);
             RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
@@ -76,12 +80,16 @@ namespace Orchard.Environment {
                     {
                         builder.RegisterType<ShellContainerRegistrations>().As<IShellContainerRegistrations>().SingleInstance();
                         builder.RegisterType<ExtensionLoaderCoordinator>().As<IExtensionLoaderCoordinator>().SingleInstance();
+                        builder.RegisterType<ExtensionMonitoringCoordinator>().As<IExtensionMonitoringCoordinator>().SingleInstance();
                         builder.RegisterType<ExtensionManager>().As<IExtensionManager>().SingleInstance();
                         {
+                            builder.RegisterType<ExtensionHarvester>().As<IExtensionHarvester>().SingleInstance();
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Modules" }));
+                                .WithParameter(new NamedParameter("paths", new[] { "~/Modules" }));
+                            builder.RegisterType<CoreModuleFolders>().As<IExtensionFolders>().SingleInstance()
+                                .WithParameter(new NamedParameter("paths", new[] { "~/Core" }));
                             builder.RegisterType<ThemeFolders>().As<IExtensionFolders>().SingleInstance()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Themes" }));
+                                .WithParameter(new NamedParameter("paths", new[] { "~/Themes" }));
 
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();

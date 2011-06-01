@@ -3,6 +3,7 @@ using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
+using Orchard.Logging;
 using Orchard.Mvc.Spooling;
 using Orchard.Themes;
 using Orchard.UI.Admin;
@@ -23,7 +24,10 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             _workContext = workContext;
             _themeAwareViewEngine = themeAwareViewEngine;
             _displayHelperFactory = displayHelperFactory;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache) {
             return _themeAwareViewEngine.FindPartialView(controllerContext, partialViewName, useCache, true);
@@ -41,6 +45,8 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             }
 
             var layoutView = new LayoutView((viewContext, writer, viewDataContainer) => {
+                Logger.Information("Rendering layout view");
+
                 var childContentWriter = new HtmlStringWriter();
 
                 var childContentViewContext = new ViewContext(
@@ -57,6 +63,7 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                 IHtmlString result = display(_workContext.Layout);
                 writer.Write(result.ToHtmlString());
 
+                Logger.Information("Done rendering layout view");
             }, (context, view) => viewResult.ViewEngine.ReleaseView(context, viewResult.View));
 
             return new ViewEngineResult(layoutView, this);

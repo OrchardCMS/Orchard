@@ -80,6 +80,14 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                 throw new NotImplementedException();
             }
 
+            public string GetFileHash(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public string GetFileHash(string virtualPath, IEnumerable<string> dependencies) {
+                throw new NotImplementedException();
+            }
+
             public bool DirectoryExists(string virtualPath) {
                 throw new NotImplementedException();
             }

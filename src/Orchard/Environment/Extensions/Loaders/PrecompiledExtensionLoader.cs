@@ -40,11 +40,11 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override int Order { get { return 30; } }
 
-        public override string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
-            return string.Format("<%@ Assembly Name=\"{0}\"%>", dependency.Name);
+        public override IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
+            yield return new ExtensionCompilationReference { AssemblyName = dependency.Name };
         }
 
-        public override IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+        public override IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
             yield return _assemblyProbingFolder.GetAssemblyVirtualPath(dependency.Name);
         }
 
@@ -144,11 +144,16 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+            if (Disabled)
+                return Enumerable.Empty<ExtensionReferenceProbeEntry>();
+
+            Logger.Information("Probing references for module '{0}'", descriptor.Id);
+
             var assemblyPath = GetAssemblyPath(descriptor);
             if (assemblyPath == null)
                 return Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
-            return _virtualPathProvider
+            var result = _virtualPathProvider
                 .ListFiles(_virtualPathProvider.GetDirectoryName(assemblyPath))
                 .Where(s => StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(s), ".dll"))
                 .Where(s => !StringComparer.OrdinalIgnoreCase.Equals(Path.GetFileNameWithoutExtension(s), descriptor.Id))
@@ -159,6 +164,9 @@ namespace Orchard.Environment.Extensions.Loaders {
                     VirtualPath = path
                 } )
                 .ToList();
+
+            Logger.Information("Done probing references for module '{0}'", descriptor.Id);
+            return result;
         }
 
         public override bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
@@ -176,20 +184,33 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (Disabled)
                 return null;
 
+            Logger.Information("Probing for module '{0}'", descriptor.Id);
+
             var assemblyPath = GetAssemblyPath(descriptor);
             if (assemblyPath == null)
                 return null;
 
-            return new ExtensionProbeEntry {
+            var result = new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastWriteTimeUtc = _virtualPathProvider.GetFileLastWriteTimeUtc(assemblyPath),
                 Loader = this,
-                VirtualPath = assemblyPath
+                VirtualPath = assemblyPath,
+                VirtualPathDependencies = new[] { assemblyPath },
             };
+
+            Logger.Information("Done probing for module '{0}'", descriptor.Id);
+            return result;
         }
 
         public override Assembly LoadReference(DependencyReferenceDescriptor reference) {
-            return _assemblyProbingFolder.LoadAssembly(reference.Name);
+            if (Disabled)
+                return null;
+
+            Logger.Information("Loading reference '{0}'", reference.Name);
+
+            var result = _assemblyProbingFolder.LoadAssembly(reference.Name);
+
+            Logger.Information("Done loading reference '{0}'", reference.Name);
+            return result;
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {

@@ -17,6 +17,7 @@ namespace Orchard.Tests.FileSystems.Dependencies {
             builder.RegisterType<StubClock>().As<IClock>().SingleInstance();
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>().SingleInstance();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>().SingleInstance();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<DefaultDependenciesFolder>().As<IDependenciesFolder>();
             return builder.Build();
         }
