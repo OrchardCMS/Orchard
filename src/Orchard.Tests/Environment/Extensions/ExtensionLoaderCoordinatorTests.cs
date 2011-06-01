@@ -365,7 +365,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -391,7 +391,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -420,7 +420,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestFeature");
@@ -450,7 +450,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestFeature");
@@ -478,7 +478,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testModule = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestModule");
@@ -502,7 +502,7 @@ Version: 1.0.3
 OrchardVersion: 1
 ");
 
-            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Id == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
@@ -521,7 +521,7 @@ Version: 1.0.3
 OrchardVersion: 1
 ");
 
-            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader); ;
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Id == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
