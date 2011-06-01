@@ -33,18 +33,18 @@ namespace Orchard.Caching {
 
             public void QueueWorkItem() {
                 // Start a work item to collect tokens in our internal array
-                ThreadPool.QueueUserWorkItem((state) => {
-                                                 try {
-                                                     _task(token => _taskTokens.Add(token));
-                                                 }
-                                                 catch (Exception e) {
-                                                     Logger.Error(e, "Error while monitoring extension files. Assuming extensions are not current.");
-                                                     _taskException = e;
-                                                 }
-                                                 finally {
-                                                     _isTaskFinished = true;
-                                                 }
-                                             });
+                ThreadPool.QueueUserWorkItem(state => {
+                    try {
+                        _task(token => _taskTokens.Add(token));
+                    }
+                    catch (Exception e) {
+                        Logger.Error(e, "Error while monitoring extension files. Assuming extensions are not current.");
+                        _taskException = e;
+                    }
+                    finally {
+                        _isTaskFinished = true;
+                    }
+                });
             }
 
             public bool IsCurrent {
