@@ -77,6 +77,8 @@ namespace Orchard.Setup {
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>().InstancePerLifetimeScope();
             builder.RegisterType<RecipeParser>().As<IRecipeParser>().InstancePerLifetimeScope();
 
+            builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().InstancePerLifetimeScope();
+
             // in progress - adding services for display/shape support in setup
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
