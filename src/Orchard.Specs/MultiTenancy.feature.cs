@@ -205,10 +205,10 @@ this.ScenarioSetup(scenarioInfo);
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("A new tenant with preconfigured database goes to the setup screen")]
-        public virtual void ANewTenantWithPreconfiguredDatabaseGoesToTheSetupScreen()
+        [NUnit.Framework.DescriptionAttribute("Several tenants are configured and go to setup screen")]
+        public virtual void SeveralTenantsAreConfiguredAndGoToSetupScreen()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A new tenant with preconfigured database goes to the setup screen", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Several tenants are configured and go to setup screen", ((string[])(null)));
 #line 59
 this.ScenarioSetup(scenarioInfo);
 #line 60
@@ -223,101 +223,76 @@ this.ScenarioSetup(scenarioInfo);
                         "value"});
             table4.AddRow(new string[] {
                         "Name",
-                        "Scott"});
+                        "Scott1"});
             table4.AddRow(new string[] {
                         "RequestUrlHost",
-                        "scott.example.org"});
-            table4.AddRow(new string[] {
-                        "DataProvider",
-                        "SqlCe"});
+                        "scott1.example.org"});
 #line 63
         testRunner.And("I fill in", ((string)(null)), table4);
-#line 68
+#line 67
         testRunner.And("I hit \"Save\"");
-#line 69
+#line 68
         testRunner.And("I am redirected");
-#line 70
-        testRunner.And("I go to \"/Setup\" on host scott.example.org");
-#line 71
-    testRunner.Then("I should see \"Welcome to Orchard\"");
-#line 72
-        testRunner.And("I should see \"Finish Setup\"");
-#line 73
-        testRunner.And("I should not see \"SQL Server Compact\"");
-#line 74
-        testRunner.And("the status should be 200 \"OK\"");
-#line hidden
-            testRunner.CollectScenarioErrors();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("A new tenant runs the setup")]
-        public virtual void ANewTenantRunsTheSetup()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A new tenant runs the setup", ((string[])(null)));
-#line 76
-this.ScenarioSetup(scenarioInfo);
-#line 77
-    testRunner.Given("I have installed Orchard");
-#line 78
-        testRunner.And("I have installed \"Orchard.MultiTenancy\"");
-#line 79
-    testRunner.When("I go to \"Admin/MultiTenancy/Add\"");
+#line 69
+        testRunner.And("I go to \"Admin/MultiTenancy/Add\"");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table5.AddRow(new string[] {
                         "Name",
-                        "Scott"});
+                        "Scott2"});
             table5.AddRow(new string[] {
                         "RequestUrlHost",
-                        "scott.example.org"});
-#line 80
+                        "scott2.example.org"});
+#line 70
         testRunner.And("I fill in", ((string)(null)), table5);
-#line 84
+#line 74
         testRunner.And("I hit \"Save\"");
-#line 85
-        testRunner.And("I go to \"/Setup\" on host scott.example.org");
+#line 75
+        testRunner.And("I am redirected");
+#line 76
+        testRunner.And("I go to \"Admin/MultiTenancy/Add\"");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "SiteName",
-                        "Scott Site"});
+                        "Name",
+                        "Scott3"});
             table6.AddRow(new string[] {
-                        "AdminPassword",
-                        "6655321"});
-            table6.AddRow(new string[] {
-                        "ConfirmPassword",
-                        "6655321"});
-#line 86
+                        "RequestUrlHost",
+                        "scott3.example.org"});
+#line 77
         testRunner.And("I fill in", ((string)(null)), table6);
-#line 91
-        testRunner.And("I hit \"Finish Setup\"");
-#line 92
-            testRunner.And("I go to \"/\"");
-#line 93
-    testRunner.Then("I should see \"Scott Site\"");
-#line 94
-        testRunner.And("I should see \"Welcome\"");
+#line 81
+        testRunner.And("I hit \"Save\"");
+#line 82
+        testRunner.And("I am redirected");
+#line 83
+        testRunner.And("I go to \"/Setup\" on host scott1.example.org");
+#line 84
+        testRunner.And("I go to \"/Setup\" on host scott2.example.org");
+#line 85
+        testRunner.And("I go to \"/Setup\" on host scott3.example.org");
+#line 86
+    testRunner.Then("I should see \"Welcome to Orchard\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("An existing initialized tenant cannot have its database option cleared")]
-        public virtual void AnExistingInitializedTenantCannotHaveItsDatabaseOptionCleared()
+        [NUnit.Framework.DescriptionAttribute("A new tenant with preconfigured database goes to the setup screen")]
+        public virtual void ANewTenantWithPreconfiguredDatabaseGoesToTheSetupScreen()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An existing initialized tenant cannot have its database option cleared", ((string[])(null)));
-#line 96
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A new tenant with preconfigured database goes to the setup screen", ((string[])(null)));
+#line 88
 this.ScenarioSetup(scenarioInfo);
-#line 97
+#line 89
     testRunner.Given("I have installed Orchard");
-#line 98
+#line 90
         testRunner.And("I have installed \"Orchard.MultiTenancy\"");
-#line 99
+#line 91
     testRunner.When("I go to \"Admin/MultiTenancy/Add\"");
 #line hidden
             TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
@@ -329,36 +304,138 @@ this.ScenarioSetup(scenarioInfo);
             table7.AddRow(new string[] {
                         "RequestUrlHost",
                         "scott.example.org"});
-#line 100
+            table7.AddRow(new string[] {
+                        "DataProvider",
+                        "SqlCe"});
+#line 92
         testRunner.And("I fill in", ((string)(null)), table7);
-#line 104
+#line 97
         testRunner.And("I hit \"Save\"");
-#line 105
+#line 98
+        testRunner.And("I am redirected");
+#line 99
         testRunner.And("I go to \"/Setup\" on host scott.example.org");
+#line 100
+    testRunner.Then("I should see \"Welcome to Orchard\"");
+#line 101
+        testRunner.And("I should see \"Finish Setup\"");
+#line 102
+        testRunner.And("I should not see \"SQL Server Compact\"");
+#line 103
+        testRunner.And("the status should be 200 \"OK\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("A new tenant runs the setup")]
+        public virtual void ANewTenantRunsTheSetup()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A new tenant runs the setup", ((string[])(null)));
+#line 105
+this.ScenarioSetup(scenarioInfo);
+#line 106
+    testRunner.Given("I have installed Orchard");
+#line 107
+        testRunner.And("I have installed \"Orchard.MultiTenancy\"");
+#line 108
+    testRunner.When("I go to \"Admin/MultiTenancy/Add\"");
 #line hidden
             TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table8.AddRow(new string[] {
+                        "Name",
+                        "Scott"});
+            table8.AddRow(new string[] {
+                        "RequestUrlHost",
+                        "scott.example.org"});
+#line 109
+        testRunner.And("I fill in", ((string)(null)), table8);
+#line 113
+        testRunner.And("I hit \"Save\"");
+#line 114
+        testRunner.And("I go to \"/Setup\" on host scott.example.org");
+#line hidden
+            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table9.AddRow(new string[] {
                         "SiteName",
                         "Scott Site"});
-            table8.AddRow(new string[] {
+            table9.AddRow(new string[] {
                         "AdminPassword",
                         "6655321"});
-            table8.AddRow(new string[] {
+            table9.AddRow(new string[] {
                         "ConfirmPassword",
                         "6655321"});
-#line 106
-        testRunner.And("I fill in", ((string)(null)), table8);
-#line 111
-        testRunner.And("I hit \"Finish Setup\"");
-#line 112
-        testRunner.And("I go to \"/Admin/MultiTenancy/Edit/Scott\" on host localhost");
-#line 113
-    testRunner.Then("I should see \"<h1 id=\"page-title\">Edit Tenant</h1>\"");
-#line 114
-        testRunner.And("I should see \"<h2>Scott</h2>\"");
 #line 115
+        testRunner.And("I fill in", ((string)(null)), table9);
+#line 120
+        testRunner.And("I hit \"Finish Setup\"");
+#line 121
+            testRunner.And("I go to \"/\"");
+#line 122
+    testRunner.Then("I should see \"Scott Site\"");
+#line 123
+        testRunner.And("I should see \"Welcome\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("An existing initialized tenant cannot have its database option cleared")]
+        public virtual void AnExistingInitializedTenantCannotHaveItsDatabaseOptionCleared()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("An existing initialized tenant cannot have its database option cleared", ((string[])(null)));
+#line 125
+this.ScenarioSetup(scenarioInfo);
+#line 126
+    testRunner.Given("I have installed Orchard");
+#line 127
+        testRunner.And("I have installed \"Orchard.MultiTenancy\"");
+#line 128
+    testRunner.When("I go to \"Admin/MultiTenancy/Add\"");
+#line hidden
+            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table10.AddRow(new string[] {
+                        "Name",
+                        "Scott"});
+            table10.AddRow(new string[] {
+                        "RequestUrlHost",
+                        "scott.example.org"});
+#line 129
+        testRunner.And("I fill in", ((string)(null)), table10);
+#line 133
+        testRunner.And("I hit \"Save\"");
+#line 134
+        testRunner.And("I go to \"/Setup\" on host scott.example.org");
+#line hidden
+            TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table11.AddRow(new string[] {
+                        "SiteName",
+                        "Scott Site"});
+            table11.AddRow(new string[] {
+                        "AdminPassword",
+                        "6655321"});
+            table11.AddRow(new string[] {
+                        "ConfirmPassword",
+                        "6655321"});
+#line 135
+        testRunner.And("I fill in", ((string)(null)), table11);
+#line 140
+        testRunner.And("I hit \"Finish Setup\"");
+#line 141
+        testRunner.And("I go to \"/Admin/MultiTenancy/Edit/Scott\" on host localhost");
+#line 142
+    testRunner.Then("I should see \"<h1 id=\"page-title\">Edit Tenant</h1>\"");
+#line 143
+        testRunner.And("I should see \"<h2>Scott</h2>\"");
+#line 144
         testRunner.And("I should not see \"Allow the tenant to set up the database\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -369,15 +446,15 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void DefaultTenantCannotBeDisabled()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Default tenant cannot be disabled", ((string[])(null)));
-#line 117
+#line 146
 this.ScenarioSetup(scenarioInfo);
-#line 118
+#line 147
     testRunner.Given("I have installed Orchard");
-#line 119
+#line 148
         testRunner.And("I have installed \"Orchard.MultiTenancy\"");
-#line 120
+#line 149
     testRunner.When("I go to \"Admin/MultiTenancy\"");
-#line 121
+#line 150
     testRunner.Then("I should not see \"<form action=\"/Admin/MultiTenancy/disable\"\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -388,54 +465,54 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void ARunningTenantCanBeDisabled()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A running tenant can be disabled", ((string[])(null)));
-#line 123
+#line 152
 this.ScenarioSetup(scenarioInfo);
-#line 124
+#line 153
     testRunner.Given("I have installed Orchard");
-#line 125
+#line 154
         testRunner.And("I have installed \"Orchard.MultiTenancy\"");
-#line 126
+#line 155
     testRunner.When("I go to \"Admin/MultiTenancy/Add\"");
 #line hidden
-            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table9.AddRow(new string[] {
+            table12.AddRow(new string[] {
                         "Name",
                         "Scott"});
-            table9.AddRow(new string[] {
+            table12.AddRow(new string[] {
                         "RequestUrlHost",
                         "scott.example.org"});
-#line 127
-        testRunner.And("I fill in", ((string)(null)), table9);
-#line 131
+#line 156
+        testRunner.And("I fill in", ((string)(null)), table12);
+#line 160
         testRunner.And("I hit \"Save\"");
-#line 132
+#line 161
         testRunner.And("I go to \"/Setup\" on host scott.example.org");
 #line hidden
-            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table10.AddRow(new string[] {
+            table13.AddRow(new string[] {
                         "SiteName",
                         "Scott Site"});
-            table10.AddRow(new string[] {
+            table13.AddRow(new string[] {
                         "AdminPassword",
                         "6655321"});
-            table10.AddRow(new string[] {
+            table13.AddRow(new string[] {
                         "ConfirmPassword",
                         "6655321"});
-#line 133
-        testRunner.And("I fill in", ((string)(null)), table10);
-#line 138
+#line 162
+        testRunner.And("I fill in", ((string)(null)), table13);
+#line 167
         testRunner.And("I hit \"Finish Setup\"");
-#line 139
+#line 168
         testRunner.And("I go to \"/Admin/MultiTenancy\" on host localhost");
-#line 140
+#line 169
         testRunner.And("I hit \"Suspend\"");
-#line 141
+#line 170
         testRunner.And("I am redirected");
-#line 142
+#line 171
     testRunner.Then("I should see \"<form action=\"/Admin/MultiTenancy/enable\"\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -446,58 +523,58 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void ARunningTenantWhichIsDisabledCanBeEnabled()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A running tenant which is disabled can be enabled", ((string[])(null)));
-#line 144
+#line 173
 this.ScenarioSetup(scenarioInfo);
-#line 145
+#line 174
     testRunner.Given("I have installed Orchard");
-#line 146
+#line 175
         testRunner.And("I have installed \"Orchard.MultiTenancy\"");
-#line 147
+#line 176
     testRunner.When("I go to \"Admin/MultiTenancy/Add\"");
 #line hidden
-            TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table11.AddRow(new string[] {
+            table14.AddRow(new string[] {
                         "Name",
                         "Scott"});
-            table11.AddRow(new string[] {
+            table14.AddRow(new string[] {
                         "RequestUrlHost",
                         "scott.example.org"});
-#line 148
-        testRunner.And("I fill in", ((string)(null)), table11);
-#line 152
+#line 177
+        testRunner.And("I fill in", ((string)(null)), table14);
+#line 181
         testRunner.And("I hit \"Save\"");
-#line 153
+#line 182
         testRunner.And("I go to \"/Setup\" on host scott.example.org");
 #line hidden
-            TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
-            table12.AddRow(new string[] {
+            table15.AddRow(new string[] {
                         "SiteName",
                         "Scott Site"});
-            table12.AddRow(new string[] {
+            table15.AddRow(new string[] {
                         "AdminPassword",
                         "6655321"});
-            table12.AddRow(new string[] {
+            table15.AddRow(new string[] {
                         "ConfirmPassword",
                         "6655321"});
-#line 154
-        testRunner.And("I fill in", ((string)(null)), table12);
-#line 159
+#line 183
+        testRunner.And("I fill in", ((string)(null)), table15);
+#line 188
         testRunner.And("I hit \"Finish Setup\"");
-#line 160
+#line 189
         testRunner.And("I go to \"/Admin/MultiTenancy\" on host localhost");
-#line 161
+#line 190
         testRunner.And("I hit \"Suspend\"");
-#line 162
+#line 191
         testRunner.And("I am redirected");
-#line 163
+#line 192
         testRunner.And("I hit \"Resume\"");
-#line 164
+#line 193
         testRunner.And("I am redirected");
-#line 165
+#line 194
     testRunner.Then("I should see \"<form action=\"/Admin/MultiTenancy/disable\"\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -508,19 +585,19 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void ListingTenantsFromCommandLine()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Listing tenants from command line", ((string[])(null)));
-#line 167
+#line 196
 this.ScenarioSetup(scenarioInfo);
-#line 168
+#line 197
     testRunner.Given("I have installed Orchard");
-#line 169
+#line 198
         testRunner.And("I have installed \"Orchard.MultiTenancy\"");
-#line 170
+#line 199
         testRunner.And("I have tenant \"Alpha\" on \"example.org\" as \"New-site-name\"");
-#line 171
+#line 200
     testRunner.When("I execute >tenant list");
-#line 172
+#line 201
     testRunner.Then("I should see \"Name: Alpha\"");
-#line 173
+#line 202
         testRunner.And("I should see \"Request Url Host: example.org\"");
 #line hidden
             testRunner.CollectScenarioErrors();
