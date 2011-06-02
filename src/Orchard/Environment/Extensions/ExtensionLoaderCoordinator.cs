@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -192,15 +193,19 @@ namespace Orchard.Environment.Extensions {
 
             var previousDependencies = _dependenciesFolder.LoadDescriptors().ToList();
 
-            var virtualPathModficationDates = new Dictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
+            var virtualPathModficationDates = new ConcurrentDictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
 
             Logger.Information("Probing extensions");
-            var availableExtensionsProbes = _parallelCacheContext
+            var availableExtensionsProbes1 = _parallelCacheContext
                 .RunInParallel(availableExtensions, extension => 
                     _loaders.Select(loader => loader.Probe(extension)).Where(entry => entry != null).ToArray())
                 .SelectMany(entries => entries)
-                .GroupBy(entry => entry.Descriptor.Id)
-                .ToDictionary(g => g.Key, g => SortExtensionProbeEntries(g, virtualPathModficationDates), StringComparer.OrdinalIgnoreCase);
+                .GroupBy(entry => entry.Descriptor.Id);
+
+            var availableExtensionsProbes = _parallelCacheContext
+                .RunInParallel(availableExtensionsProbes1, g =>
+                    new { Id = g.Key, Entries = SortExtensionProbeEntries(g, virtualPathModficationDates)})
+                .ToDictionary(g => g.Id, g => g.Entries, StringComparer.OrdinalIgnoreCase);
             Logger.Information("Done probing extensions");
 
             var deletedDependencies = previousDependencies
@@ -241,14 +246,14 @@ namespace Orchard.Environment.Extensions {
             };
         }
 
-        private IEnumerable<ExtensionProbeEntry> SortExtensionProbeEntries(IEnumerable<ExtensionProbeEntry> entries, Dictionary<string, DateTime> virtualPathModficationDates) {
+        private IEnumerable<ExtensionProbeEntry> SortExtensionProbeEntries(IEnumerable<ExtensionProbeEntry> entries, ConcurrentDictionary<string, DateTime> virtualPathModficationDates) {
             return entries
                 .OrderByDescending(probe => GetVirtualPathDepedenciesModificationTimeUtc(virtualPathModficationDates, probe))
                 .ThenBy(probe => probe.Loader.Order)
                 .ToList();
         }
 
-        private DateTime GetVirtualPathDepedenciesModificationTimeUtc(IDictionary<string, DateTime> virtualPathDependencies, ExtensionProbeEntry probe) {
+        private DateTime GetVirtualPathDepedenciesModificationTimeUtc(ConcurrentDictionary<string, DateTime> virtualPathDependencies, ExtensionProbeEntry probe) {
             if (!probe.VirtualPathDependencies.Any())
                 return DateTime.MinValue;
 
@@ -260,13 +265,8 @@ namespace Orchard.Environment.Extensions {
             return result;
         }
 
-        private DateTime GetVirtualPathModificationTimeUtc(IDictionary<string, DateTime> virtualPathDependencies, string path) {
-            DateTime dateTime;
-            if (!virtualPathDependencies.TryGetValue(path, out dateTime)) {
-                dateTime = _virtualPathProvider.GetFileLastWriteTimeUtc(path);
-                virtualPathDependencies.Add(path, dateTime);
-            }
-            return dateTime;
+        private DateTime GetVirtualPathModificationTimeUtc(ConcurrentDictionary<string, DateTime> virtualPathDependencies, string path) {
+            return virtualPathDependencies.GetOrAdd(path, p => _virtualPathProvider.GetFileLastWriteTimeUtc(p));
         }
 
         IEnumerable<DependencyReferenceDescriptor> ProcessExtensionReferences(ExtensionLoadingContext context, ExtensionProbeEntry activatedExtension) {

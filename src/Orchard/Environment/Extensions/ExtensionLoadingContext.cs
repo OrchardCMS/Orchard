@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment.Extensions.Loaders;
@@ -28,7 +29,7 @@ namespace Orchard.Environment.Extensions {
         /// <summary>
         /// Keep track of modification date of files (VirtualPath => DateTime)
         /// </summary>
-        public IDictionary<string, DateTime> VirtualPathModficationDates { get; set; }
+        public ConcurrentDictionary<string, DateTime> VirtualPathModficationDates { get; set; }
 
         /// <summary>
         /// List of extensions (modules) present in the system
