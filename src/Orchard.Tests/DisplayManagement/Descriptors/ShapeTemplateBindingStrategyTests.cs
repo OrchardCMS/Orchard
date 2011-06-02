@@ -147,13 +147,11 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             _testViewEngine.Add("~/Modules/Alpha/Views/AlphaShape.blah", null);
             var strategy = _container.Resolve<IShapeTableProvider>();
 
-            IList<ShapeAlterationBuilder> alterationBuilders = new List<ShapeAlterationBuilder>();
-            var builder = new ShapeTableBuilder(alterationBuilders,null);
+            var builder = new ShapeTableBuilder(null);
             strategy.Discover(builder);
-            var alterations = alterationBuilders.Select(alterationBuilder=>alterationBuilder.Build());
+            var alterations = builder.BuildAlterations();
 
             Assert.That(alterations.Any(alteration => alteration.ShapeType.Equals("AlphaShape", StringComparison.OrdinalIgnoreCase)));
         }
-
     }
 }

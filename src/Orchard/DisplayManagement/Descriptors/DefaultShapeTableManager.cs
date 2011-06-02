@@ -14,13 +14,16 @@ namespace Orchard.DisplayManagement.Descriptors {
         private readonly IEnumerable<Meta<IShapeTableProvider>> _bindingStrategies;
         private readonly IExtensionManager _extensionManager;
         private readonly ICacheManager _cacheManager;
+        private readonly IParallelCacheContext _parallelCacheContext;
 
         public DefaultShapeTableManager(
             IEnumerable<Meta<IShapeTableProvider>> bindingStrategies,
             IExtensionManager extensionManager,
-            ICacheManager cacheManager) {
+            ICacheManager cacheManager,
+            IParallelCacheContext parallelCacheContext) {
             _extensionManager = extensionManager;
             _cacheManager = cacheManager;
+            _parallelCacheContext = parallelCacheContext;
             _bindingStrategies = bindingStrategies;
             Logger = NullLogger.Instance;
         }
@@ -31,19 +34,20 @@ namespace Orchard.DisplayManagement.Descriptors {
             return _cacheManager.Get(themeName ?? "", x => {
                 Logger.Information("Start building shape table");
 
-                var builderFactory = new ShapeTableBuilderFactory();
-                foreach (var bindingStrategy in _bindingStrategies) {
+                var alterationSets = _parallelCacheContext.RunInParallel(_bindingStrategies, bindingStrategy => {
                     Feature strategyDefaultFeature = bindingStrategy.Metadata.ContainsKey("Feature") ?
-                        (Feature) bindingStrategy.Metadata["Feature"] : 
-                        null;
+                                                               (Feature)bindingStrategy.Metadata["Feature"] :
+                                                               null;
 
-                    var builder = builderFactory.CreateTableBuilder(strategyDefaultFeature);
+                    var builder = new ShapeTableBuilder(strategyDefaultFeature);
                     bindingStrategy.Value.Discover(builder);
-                }
+                    return builder.BuildAlterations().ToList();
+                });
 
-                var alterations = builderFactory.BuildAlterations()
-                    .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName))
-                    .OrderByDependenciesAndPriorities(AlterationHasDependency, GetPriority);
+                var alterations = alterationSets
+                .SelectMany(shapeAlterations => shapeAlterations)
+                .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName))
+                .OrderByDependenciesAndPriorities(AlterationHasDependency, GetPriority);
 
                 var descriptors = alterations.GroupBy(alteration => alteration.ShapeType, StringComparer.OrdinalIgnoreCase)
                     .Select(group => group.Aggregate(
@@ -98,7 +102,7 @@ namespace Orchard.DisplayManagement.Descriptors {
             var availableFeatures = _extensionManager.AvailableFeatures();
 
             var themeFeature = availableFeatures.SingleOrDefault(fd => fd.Id == themeName);
-            while(themeFeature != null) {
+            while (themeFeature != null) {
                 var baseTheme = themeFeature.Extension.BaseTheme;
                 if (String.IsNullOrEmpty(baseTheme)) {
                     return false;
@@ -110,21 +114,5 @@ namespace Orchard.DisplayManagement.Descriptors {
             }
             return false;
         }
-
-        class ShapeTableBuilderFactory {
-            readonly IList<ShapeAlterationBuilder> _alterationBuilders = new List<ShapeAlterationBuilder>();
-
-            public ShapeTableBuilder CreateTableBuilder(Feature feature) {
-                return new ShapeTableBuilder(_alterationBuilders, feature);
-            }
-
-            public IEnumerable<ShapeAlteration> BuildAlterations() {
-                return _alterationBuilders.Select(b => b.Build());
-            }
-
-        }
-
-
-
     }
 }
