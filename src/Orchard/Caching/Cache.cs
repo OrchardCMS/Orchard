@@ -16,17 +16,31 @@ namespace Orchard.Caching {
         public TResult Get(TKey key, Func<AcquireContext<TKey>, TResult> acquire) {
             var entry = _entries.AddOrUpdate(key,
                 // "Add" lambda
-                k => CreateEntry(k, acquire),
+                k => AddEntry(k, acquire),
                 // "Update" lamdba
-                (k, currentEntry) => (currentEntry.GetTokens() != null && currentEntry.GetTokens().Any(t => !t.IsCurrent) ? CreateEntry(k, acquire) : currentEntry));
-
-            // Bubble up volatile tokens to parent context
-            if (_cacheContextAccessor.Current != null && entry.GetTokens() != null) {
-                foreach (var token in entry.GetTokens())
-                    _cacheContextAccessor.Current.Monitor(token);
-            }
+                (k, currentEntry) => UpdateEntry(currentEntry, k, acquire));
 
             return entry.Result;
+        }
+
+        private CacheEntry AddEntry(TKey k, Func<AcquireContext<TKey>, TResult> acquire) {
+            var entry = CreateEntry(k, acquire);
+            PropagateTokens(entry);
+            return entry;
+        }
+
+        private CacheEntry UpdateEntry(CacheEntry currentEntry, TKey k, Func<AcquireContext<TKey>, TResult> acquire) {
+            var entry = (currentEntry.Tokens.Any(t => !t.IsCurrent)) ? CreateEntry(k, acquire) : currentEntry;
+            PropagateTokens(entry);
+            return entry;
+        }
+
+        private void PropagateTokens(CacheEntry entry) {
+            // Bubble up volatile tokens to parent context
+            if (_cacheContextAccessor.Current != null) {
+                foreach (var token in entry.Tokens)
+                    _cacheContextAccessor.Current.Monitor(token);
+            }
         }
 
 
@@ -46,23 +60,31 @@ namespace Orchard.Caching {
                 // Pop context
                 _cacheContextAccessor.Current = parentContext;
             }
+            entry.CompactTokens();
             return entry;
         }
 
         private class CacheEntry {
+            private IList<IVolatileToken> _tokens;
             public TResult Result { get; set; }
-            private IList<IVolatileToken> Tokens { get; set; }
 
-            public void AddToken(IVolatileToken volatileToken) {
-                if (Tokens == null) {
-                    Tokens = new List<IVolatileToken>();
+            public IEnumerable<IVolatileToken> Tokens {
+                get {
+                    return _tokens ?? Enumerable.Empty<IVolatileToken>();
                 }
-
-                Tokens.Add(volatileToken);
             }
 
-            public IEnumerable<IVolatileToken> GetTokens() {
-                return Tokens;
+            public void AddToken(IVolatileToken volatileToken) {
+                if (_tokens == null) {
+                    _tokens = new List<IVolatileToken>();
+                }
+
+                _tokens.Add(volatileToken);
+            }
+
+            public void CompactTokens() {
+                if (_tokens != null)
+                    _tokens = _tokens.Distinct().ToArray();
             }
         }
     }
