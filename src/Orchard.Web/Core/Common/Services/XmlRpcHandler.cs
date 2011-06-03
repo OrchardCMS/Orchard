@@ -22,7 +22,7 @@ namespace Orchard.Core.Common.Services {
         public void Process(XmlRpcContext context) {
             switch (context.Request.MethodName) {
                 case "metaWeblog.newPost":
-                    MetaWeblogSetCustomPublishedDate(
+                    MetaWeblogSetCustomCreatedDate(
                         GetId(context.Response),
                         Convert.ToString(context.Request.Params[0].Value),
                         Convert.ToString(context.Request.Params[1].Value),
@@ -32,7 +32,7 @@ namespace Orchard.Core.Common.Services {
                         context._drivers);
                     break;
                 case "metaWeblog.editPost":
-                    MetaWeblogSetCustomPublishedDate(
+                    MetaWeblogSetCustomCreatedDate(
                         GetId(context.Response),
                         Convert.ToString(context.Request.Params[0].Value),
                         Convert.ToString(context.Request.Params[1].Value),
@@ -44,12 +44,12 @@ namespace Orchard.Core.Common.Services {
             }
         }
 
-        private void MetaWeblogSetCustomPublishedDate(int contentItemId, string appKey, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
+        private void MetaWeblogSetCustomCreatedDate(int contentItemId, string appKey, string userName, string password, XRpcStruct content, bool publish, ICollection<IXmlRpcDriver> drivers) {
             if (!publish)
                 return;
 
-            var publishedUtc = content.Optional<DateTime?>("dateCreated");
-            if (publishedUtc == null || publishedUtc > DateTime.UtcNow) // only pre-dating of content with the CommonPart
+            var createdUtc = content.Optional<DateTime?>("dateCreated");
+            if (createdUtc == null || createdUtc > DateTime.UtcNow)
                 return;
 
             var driver = new XmlRpcDriver(item => {
@@ -58,10 +58,10 @@ namespace Orchard.Core.Common.Services {
 
                 var id = (int)item;
                 var contentItem = _contentManager.Get(id, VersionOptions.Latest);
-                if (contentItem == null || !contentItem.Is<CommonPart>())
+                if (contentItem == null || !contentItem.Is<CommonPart>()) // only pre-dating of content with the CommonPart (obviously)
                     return;
 
-                contentItem.As<CommonPart>().PublishedUtc = publishedUtc;
+                contentItem.As<CommonPart>().CreatedUtc = createdUtc;
             });
 
             if (contentItemId > 0)
