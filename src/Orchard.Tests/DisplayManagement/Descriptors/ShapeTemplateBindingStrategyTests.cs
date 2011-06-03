@@ -30,6 +30,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
 
             builder.Register(ctx => _descriptor);
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<StubVirtualPathMonitor>().As<IVirtualPathMonitor>();
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
