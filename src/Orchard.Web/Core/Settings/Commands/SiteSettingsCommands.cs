@@ -26,7 +26,7 @@ namespace Orchard.Core.Settings.Commands {
             "use the current request context heuristic to discover the base url. " +
             "If 'Force' is true, set the site base url even if it is already set. " +
             "The default behavior is to not override the setting.")]
-        [OrchardSwitches("BaseUrl")]
+        [OrchardSwitches("BaseUrl,Force")]
         public string SetBaseUrl() {
             // Don't do anything if set and not forcing
             if (!string.IsNullOrEmpty(_siteService.GetSiteSettings().BaseUrl)) {
