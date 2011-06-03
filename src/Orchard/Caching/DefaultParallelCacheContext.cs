@@ -10,22 +10,32 @@ namespace Orchard.Caching {
             _cacheContextAccessor = cacheContextAccessor;
         }
 
+        /// <summary>
+        ///  Allow disabling parallel behavior through HostComponents.config
+        /// </summary>
+        public bool Disabled { get; set; }
+
         public IEnumerable<TResult> RunInParallel<T, TResult>(IEnumerable<T> source, Func<T, TResult> selector) {
-            // Create tasks that capture the current thread context
-            var tasks = source.Select(item => this.CreateContextAwareTask(() => selector(item))).ToList();
-
-            // Run tasks in parallel and combine results immediately
-            var result = tasks
-                .AsParallel()                       // prepare for parallel execution
-                .AsOrdered()                        // preserve initial enumeration order
-                .Select(task => task.Execute())     // prepare tasks to run in parallel
-                .ToArray();                         // force evaluation
-
-            // Forward tokens collected by tasks to the current context
-            foreach (var task in tasks) {
-                task.Finish();
+            if (Disabled) {
+                return source.Select(selector);
             }
-            return result;
+            else {
+                // Create tasks that capture the current thread context
+                var tasks = source.Select(item => this.CreateContextAwareTask(() => selector(item))).ToList();
+
+                // Run tasks in parallel and combine results immediately
+                var result = tasks
+                    .AsParallel() // prepare for parallel execution
+                    .AsOrdered() // preserve initial enumeration order
+                    .Select(task => task.Execute()) // prepare tasks to run in parallel
+                    .ToArray(); // force evaluation
+
+                // Forward tokens collected by tasks to the current context
+                foreach (var task in tasks) {
+                    task.Finish();
+                }
+                return result;
+            }
         }
 
         /// <summary>
