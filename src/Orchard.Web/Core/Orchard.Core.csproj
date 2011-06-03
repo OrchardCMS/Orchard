@@ -208,6 +208,7 @@
     <Compile Include="Settings\Commands\SiteSettingsCommands.cs" />
     <Compile Include="Settings\Models\SiteSettings2Part.cs" />
     <Compile Include="Settings\Models\SiteSettings2PartRecord.cs" />
+    <Compile Include="Settings\Models\SiteSettingsCache.cs" />
     <Compile Include="Settings\ResourceManifest.cs" />
     <Compile Include="Settings\Migrations.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
