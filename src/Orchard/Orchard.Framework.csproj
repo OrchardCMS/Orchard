@@ -148,6 +148,10 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\DefaultCacheContextAccessor.cs" />
+    <Compile Include="Caching\DefaultParallelCacheContext.cs" />
+    <Compile Include="Caching\ICacheContextAccessor.cs" />
+    <Compile Include="Caching\IParallelCacheContext.cs" />
     <Compile Include="ContentManagement\ContentIdentity.cs" />
     <Compile Include="ContentManagement\ContentItemBehavior.cs" />
     <Compile Include="ContentManagement\ContentPartBehavior.cs" />
@@ -172,7 +176,15 @@
     <Compile Include="DisplayManagement\Descriptors\ShapeTableBuilder.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
+    <Compile Include="DisplayManagement\Shapes\ShapeDebugView.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Environment\CollectionOrderModule.cs" />
+    <Compile Include="Caching\DefaultAsyncTokenProvider.cs" />
+    <Compile Include="Environment\Extensions\ExtensionMonitoringCoordinator.cs" />
+    <Compile Include="Caching\IAsyncTokenProvider.cs" />
+    <Compile Include="Environment\Extensions\Folders\CoreModuleFolders.cs" />
+    <Compile Include="Environment\Extensions\Folders\IExtensionHarvester.cs" />
+    <Compile Include="Environment\Extensions\IExtensionMonitoringCoordinator.cs" />
     <Compile Include="Environment\Extensions\OrchardSuppressDependencyAttribute.cs" />
     <Compile Include="Environment\Features\IFeatureManager.cs" />
     <Compile Include="Environment\IAssemblyNameResolver.cs" />
@@ -189,6 +201,8 @@
     <Compile Include="Environment\WorkContextImplementation.cs" />
     <Compile Include="Environment\WorkContextModule.cs" />
     <Compile Include="Environment\WorkContextProperty.cs" />
+    <Compile Include="FileSystems\Dependencies\IExtensionDependenciesManager.cs" />
+    <Compile Include="FileSystems\Dependencies\DefaultExtensionDependenciesManager.cs" />
     <Compile Include="FileSystems\LockFile\ILockFile.cs" />
     <Compile Include="FileSystems\LockFile\ILockFileManager.cs" />
     <Compile Include="FileSystems\LockFile\LockFile.cs" />
@@ -200,8 +214,6 @@
     <Compile Include="Logging\OrchardFileAppender.cs" />
     <Compile Include="Logging\OrchardLog4netFactory.cs" />
     <Compile Include="Logging\OrchardLog4netLogger.cs" />
-    <Compile Include="Logging\OrchardXmlConfigurator.cs" />
-    <Compile Include="Logging\OrchardXmlHierarchyConfigurator.cs" />
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
     <Compile Include="Mvc\Extensions\RouteExtension.cs" />
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
@@ -704,7 +716,7 @@
     <Compile Include="Events\EventsRegistrationSource.cs" />
     <Compile Include="Environment\Configuration\IShellSettingsManagerEventHandler.cs" />
     <Compile Include="Events\IEventBus.cs" />
-    <Compile Include="Environment\Extensions\Folders\ExtensionFolders.cs" />
+    <Compile Include="Environment\Extensions\Folders\ExtensionHarvester.cs" />
     <Compile Include="Environment\Extensions\Models\Feature.cs" />
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />
@@ -867,7 +879,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

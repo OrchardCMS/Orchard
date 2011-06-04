@@ -48,6 +48,7 @@ namespace Orchard.Tests.DisplayManagement {
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterInstance(new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext)).As<IWorkContextAccessor>();
             builder.RegisterInstance(new SimpleShapes()).WithMetadata("Feature", testFeature);
             builder.RegisterInstance(new RouteCollection());

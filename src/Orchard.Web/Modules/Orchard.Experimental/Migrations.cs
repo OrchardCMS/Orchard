@@ -8,23 +8,18 @@ namespace Orchard.Experimental {
     public class TestingListsMigrations : DataMigrationImpl {
         public int Create() {
             ContentDefinitionManager.AlterTypeDefinition("ListItem",
-                                                         cfg => cfg
-                                                                    .WithPart("CommonPart")
-                                                                    .WithPart("RoutePart")
-                                                                    .WithPart("BodyPart")
-                                                                    .WithPart("ContainablePart")
-                                                                    .Creatable());
+                cfg => cfg
+                    .WithPart("CommonPart")
+                    .WithPart("RoutePart")
+                    .WithPart("BodyPart")
+                    .WithPart("ContainablePart")
+                    .Creatable()
+                );
 
             ContentDefinitionManager.AlterTypeDefinition("Page",
-                                                         cfg => cfg
-                                                                    .WithPart("ContainablePart"));
-
-            //ContentDefinitionManager.AlterTypeDefinition("ListWidget",
-            //    cfg => cfg
-            //        .WithPart("CommonPart")
-            //        .WithPart("WidgetPart")
-            //        .WithPart("ListWidgetPart")
-            //        .WithSetting("Stereotype", "Widget"));
+                cfg => cfg
+                    .WithPart("ContainablePart")
+                );
 
             return 1;
         }

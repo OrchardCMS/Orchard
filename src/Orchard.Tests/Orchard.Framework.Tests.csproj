@@ -255,6 +255,7 @@
     <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProviderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
+    <Compile Include="Logging\OrchardFileAppenderTests.cs" />
     <Compile Include="Messaging\MessagingChannelStub.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensionsTests.cs" />
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />

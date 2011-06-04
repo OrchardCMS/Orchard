@@ -15,9 +15,17 @@ namespace Orchard.Core.Settings.Services {
 
             _contentManager = contentManager;
             _cacheManager = cacheManager;
+
         }
 
         public ISite GetSiteSettings() {
+            SiteSettingsCache siteSettingsCache = _cacheManager.Get("SiteSettings",
+                ctx => new SiteSettingsCache(GetSiteSettingsPart()));
+            siteSettingsCache.ResetCache(this);
+            return siteSettingsCache;
+        }
+
+        public ISite GetSiteSettingsPart() {
             var siteId = _cacheManager.Get("SiteId", ctx => {
                 var site = _contentManager.Query("Site")
                     .Slice(0, 1)

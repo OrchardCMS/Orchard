@@ -19,6 +19,7 @@ namespace Orchard.Environment {
         private readonly IRunningShellTable _runningShellTable;
         private readonly IProcessingEngine _processingEngine;
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
+        private readonly IExtensionMonitoringCoordinator _extensionMonitoringCoordinator;
         private readonly ICacheManager _cacheManager;
         private readonly object _syncLock = new object();
 
@@ -30,6 +31,7 @@ namespace Orchard.Environment {
             IRunningShellTable runningShellTable,
             IProcessingEngine processingEngine,
             IExtensionLoaderCoordinator extensionLoaderCoordinator,
+            IExtensionMonitoringCoordinator extensionMonitoringCoordinator,
             ICacheManager cacheManager,
             IHostLocalRestart hostLocalRestart ) {
             _shellSettingsManager = shellSettingsManager;
@@ -37,6 +39,7 @@ namespace Orchard.Environment {
             _runningShellTable = runningShellTable;
             _processingEngine = processingEngine;
             _extensionLoaderCoordinator = extensionLoaderCoordinator;
+            _extensionMonitoringCoordinator = extensionMonitoringCoordinator;
             _cacheManager = cacheManager;
             _hostLocalRestart = hostLocalRestart;
 
@@ -59,6 +62,7 @@ namespace Orchard.Environment {
         void IOrchardHost.Initialize() {
             Logger.Information("Initializing");
             BuildCurrent();
+            Logger.Information("Initialized");
         }
 
         void IOrchardHost.ReloadExtensions() {
@@ -98,19 +102,26 @@ namespace Orchard.Environment {
         }
 
         IEnumerable<ShellContext> CreateAndActivate() {
+            Logger.Information("Start creation of shells");
+
+            IEnumerable<ShellContext> result;
             var allSettings = _shellSettingsManager.LoadSettings();
             if (allSettings.Any()) {
-                return allSettings.Select(
+                result = allSettings.Select(
                     settings => {
                         var context = CreateShellContext(settings);
                         ActivateShell(context);
                         return context;
                     });
             }
+            else {
+                var setupContext = CreateSetupContext();
+                ActivateShell(setupContext);
+                result = new[] {setupContext};
+            }
 
-            var setupContext = CreateSetupContext();
-            ActivateShell(setupContext);
-            return new[] { setupContext };
+            Logger.Information("Done creating shells");
+            return result;
         }
 
         private void ActivateShell(ShellContext context) {
@@ -143,7 +154,7 @@ namespace Orchard.Environment {
             // on disk, and we need to reload new/updated extensions.
             _cacheManager.Get("OrchardHost_Extensions",
                               ctx => {
-                                  _extensionLoaderCoordinator.MonitorExtensions(ctx.Monitor);
+                                  _extensionMonitoringCoordinator.MonitorExtensions(ctx.Monitor);
                                   _hostLocalRestart.Monitor(ctx.Monitor);
                                   DisposeShellContext();
                                   return "";

@@ -19,9 +19,23 @@ namespace Orchard.Tests.Stubs {
 
         private string ToFileSystemPath(string path) {
             if (path.StartsWith("~/"))
-                return path.Substring(2);
-            if (path.StartsWith("/"))
-                return path.Substring(1);
+                path = path.Substring(2);
+            else if (path.StartsWith("/"))
+                path = path.Substring(1);
+
+            if (path.Contains("..")) {
+                string[] terms = path.Replace(Path.DirectorySeparatorChar, '/').Split('/');
+                var names = new List<string>();
+                foreach(var term in terms) {
+                    if (term == "..")
+                        names.RemoveAt(0);
+                    else
+                        names.Insert(0, term);
+                }
+                names.Reverse();
+                path = string.Join("/", names);
+            }
+
             return path;
         }
 
@@ -55,6 +69,14 @@ namespace Orchard.Tests.Stubs {
 
         public DateTime GetFileLastWriteTimeUtc(string virtualPath) {
             return _fileSystem.GetFileEntry(ToFileSystemPath(virtualPath)).LastWriteTimeUtc;
+        }
+
+        public string GetFileHash(string virtualPath) {
+            throw new NotImplementedException();
+        }
+
+        public string GetFileHash(string virtualPath, IEnumerable<string> dependencies) {
+            throw new NotImplementedException();
         }
 
         public bool DirectoryExists(string virtualPath) {

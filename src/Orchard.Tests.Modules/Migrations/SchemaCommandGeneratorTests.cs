@@ -88,6 +88,8 @@ namespace Orchard.Tests.Modules.Migrations {
             builder.RegisterType<SchemaCommandGenerator>().As<ISchemaCommandGenerator>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
+            builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterType<StubHostEnvironment>().As<IHostEnvironment>();
 
             _session = _sessionFactory.OpenSession();
@@ -124,7 +126,7 @@ Features:
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 foreach (var e in Manifests) {
                     string name = e.Key;
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, DefaultExtensionTypes.Module, Manifests[name]);
+                    yield return ExtensionHarvester.GetDescriptorForExtension("~/", name, DefaultExtensionTypes.Module, Manifests[name]);
                 }
             }
         }
@@ -183,15 +185,11 @@ Features:
             public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) {
             }
 
-            public string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
+            public IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
-                throw new NotImplementedException();
-            }
-
-            public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
+            public IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
                 throw new NotImplementedException();
             }
 

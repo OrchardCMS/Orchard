@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Web.Routing;
-using Orchard.ContentManagement;
-using Orchard.Themes.Models;
 
 namespace Orchard.Themes.Services {
     public class SiteThemeSelector : IThemeSelector {
-        private readonly IOrchardServices _orchardServices;
+        private readonly ISiteThemeService _siteThemeService;
 
-        public SiteThemeSelector(IOrchardServices orchardServices) {
-            _orchardServices = orchardServices;
+        public SiteThemeSelector(ISiteThemeService siteThemeService) {
+            _siteThemeService = siteThemeService;
         }
 
         public ThemeSelectorResult GetTheme(RequestContext context) {
-            string currentThemeName = _orchardServices.WorkContext.CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
-
+            string currentThemeName = _siteThemeService.GetCurrentThemeName();
             return String.IsNullOrEmpty(currentThemeName) ? null : new ThemeSelectorResult { Priority = -5, ThemeName = currentThemeName };
         }
     }
-
 }

@@ -72,7 +72,7 @@ namespace Orchard.Packaging.Services {
             return (packagingSource == null ? GetSources() : new[] {packagingSource})
                 .SelectMany(
                     source => {
-                        var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl));
+                        var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl)) { IgnoreMissingProperties = true };
                         IQueryable<PublishedPackage> packages = includeScreenshots
                             ? galleryFeedContext.Packages.Expand("Screenshots")
                             : galleryFeedContext.Packages;
@@ -95,7 +95,7 @@ namespace Orchard.Packaging.Services {
         public int GetExtensionCount(PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
             return (packagingSource == null ? GetSources() : new[] { packagingSource })
                 .Sum( source => {
-                        var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl));
+                        var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl)) { IgnoreMissingProperties = true };
                         IQueryable<PublishedPackage> packages = galleryFeedContext.Packages;
 
                         if (query != null) {

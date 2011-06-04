@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -8,19 +9,28 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_Blogs_Blog_Manage",
-                             () => shapeHelper.Parts_Blogs_Blog_Manage(ContentPart: part)),
+                    () => shapeHelper.Parts_Blogs_Blog_Manage(ContentPart: part)),
                 ContentShape("Parts_Blogs_Blog_Description",
-                             () => shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part, Description: part.Description)),
+                    () => shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part, Description: part.Description)),
                 ContentShape("Parts_Blogs_Blog_SummaryAdmin",
-                             () => shapeHelper.Parts_Blogs_Blog_SummaryAdmin(ContentPart: part, ContentItem: part.ContentItem)),
+                    () => shapeHelper.Parts_Blogs_Blog_SummaryAdmin(ContentPart: part, ContentItem: part.ContentItem)),
                 ContentShape("Parts_Blogs_Blog_BlogPostCount",
-                             () => shapeHelper.Parts_Blogs_Blog_BlogPostCount(ContentPart: part, PostCount: part.PostCount))
+                    () => shapeHelper.Parts_Blogs_Blog_BlogPostCount(ContentPart: part, PostCount: part.PostCount))
                 );
         }
 
         protected override DriverResult Editor(BlogPart blogPart, dynamic shapeHelper) {
-            return ContentShape("Parts_Blogs_Blog_Fields",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.Blog.Fields", Model: blogPart, Prefix: Prefix));
+            var results = new List<DriverResult> {
+                ContentShape("Parts_Blogs_Blog_Fields",
+                             () => shapeHelper.EditorTemplate(TemplateName: "Parts.Blogs.Blog.Fields", Model: blogPart, Prefix: Prefix))
+            };
+
+            
+            if (blogPart.Id > 0)
+                results.Add(ContentShape("Blog_DeleteButton",
+                    deleteButton => deleteButton));
+
+            return Combined(results.ToArray());
         }
 
         protected override DriverResult Editor(BlogPart blogPart, IUpdateModel updater, dynamic shapeHelper) {

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
@@ -53,11 +54,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (assembly == null)
                 return null;
 
+            var assemblyPath = _virtualPathProvider.Combine("~/bin", descriptor.Id + ".dll");
+
             return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastWriteTimeUtc = File.GetLastWriteTimeUtc(assembly.Location),
                 Loader = this,
-                VirtualPath = _virtualPathProvider.Combine("~/bin", descriptor.Id + ".dll")
+                VirtualPath = assemblyPath,
+                VirtualPathDependencies = new[] { assemblyPath },
             };
         }
 

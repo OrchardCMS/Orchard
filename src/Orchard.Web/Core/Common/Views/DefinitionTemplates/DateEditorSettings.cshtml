@@ -1,0 +1,8 @@
+﻿@model Orchard.Core.Common.DateEditor.DateEditorSettings
+<fieldset>
+    <div>
+        @Html.EditorFor(m=>m.ShowDateEditor)
+        <label for="@Html.FieldIdFor(m => m.ShowDateEditor)" class="forcheckbox">@T("Show editor for creation date time")</label>
+        @Html.ValidationMessageFor(m => m.ShowDateEditor)
+    </div>    
+</fieldset>

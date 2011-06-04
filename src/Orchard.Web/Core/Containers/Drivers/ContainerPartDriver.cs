@@ -115,12 +115,12 @@ namespace Orchard.Core.Containers.Drivers {
             Filters.Add(StorageFilter.For(repository));
             OnInitializing<ContainerPart>((context, part) => {
                 part.Record.PageSize = part.Settings.GetModel<ContainerTypePartSettings>().PageSizeDefault
-                    ?? part.PartDefinition.Settings.GetModel<ContainerPartSettings>().PageSizeDefault;
+                                        ?? part.PartDefinition.Settings.GetModel<ContainerPartSettings>().PageSizeDefault;
                 part.Record.Paginated = part.Settings.GetModel<ContainerTypePartSettings>().PaginatedDefault
-                    ?? part.PartDefinition.Settings.GetModel<ContainerPartSettings>().PaginatedDefault;
+                                        ?? part.PartDefinition.Settings.GetModel<ContainerPartSettings>().PaginatedDefault;
 
-                //hard-coded defaults for ordering
-                part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.PublishedUtc" : "";
+                // hard-coded defaults for ordering
+                part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.CreatedUtc" : string.Empty;
                 part.Record.OrderByDirection = (int)OrderByDirection.Descending;
             });
         }

@@ -1,0 +1,9 @@
+﻿@model Orchard.Core.Common.OwnerEditor.OwnerEditorViewModel
+@{
+	var OwnerEditor = Model;
+}
+<fieldset>
+    @Html.LabelFor(m => OwnerEditor.Owner, T("Owner"))
+    @Html.EditorFor(m => OwnerEditor.Owner)
+    @Html.ValidationMessageFor(m => OwnerEditor.Owner)
+</fieldset>

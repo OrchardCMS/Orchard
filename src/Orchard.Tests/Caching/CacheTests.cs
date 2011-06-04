@@ -15,7 +15,7 @@ namespace Orchard.Tests.Caching {
             builder.RegisterModule(new CacheModule());
             builder.RegisterType<DefaultCacheManager>().As<ICacheManager>();
             builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
-            builder.RegisterType<DefaultCacheManager>().As<ICacheManager>();
+            builder.RegisterType<DefaultCacheContextAccessor>().As<ICacheContextAccessor>();
             _container = builder.Build();
             _cacheManager = _container.Resolve<ICacheManager>(new TypedParameter(typeof(Type), GetType()));
         }

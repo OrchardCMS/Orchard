@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.DisplayManagement.Descriptors {
     public class ShapeTableBuilder {
-        readonly IList<ShapeAlterationBuilder> _alterationBuilders;
-        readonly Feature _feature;
+        private readonly IList<ShapeAlterationBuilder> _alterationBuilders = new List<ShapeAlterationBuilder>();
+        private readonly Feature _feature;
 
-        public ShapeTableBuilder(IList<ShapeAlterationBuilder> alterationBuilders, Feature feature) {
-            _alterationBuilders = alterationBuilders;
+        public ShapeTableBuilder(Feature feature) {
             _feature = feature;
         }
 
@@ -17,5 +17,8 @@ namespace Orchard.DisplayManagement.Descriptors {
             return alterationBuilder;
         }
 
+        public IEnumerable<ShapeAlteration> BuildAlterations() {
+            return _alterationBuilders.Select(b => b.Build());
+        }
     }
 }

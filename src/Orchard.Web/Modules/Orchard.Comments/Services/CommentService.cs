@@ -64,28 +64,22 @@ namespace Orchard.Comments.Services {
         }
 
         public CommentPart CreateComment(CreateCommentContext context, bool moderateComments) {
-            var comment = _orchardServices.ContentManager.Create<CommentPart>("Comment");
-
-            comment.Record.Author = context.Author;
-            comment.Record.CommentDateUtc = _clock.UtcNow;
-            comment.Record.CommentText = context.CommentText;
-            comment.Record.Email = context.Email;
-            comment.Record.SiteName = context.SiteName;
-            comment.Record.UserName = (_orchardServices.WorkContext.CurrentUser != null ? _orchardServices.WorkContext.CurrentUser.UserName : null);
-            comment.Record.CommentedOn = context.CommentedOn;
-
-            comment.Record.Status = _commentValidator.ValidateComment(comment)
-                ? moderateComments ? CommentStatus.Pending : CommentStatus.Approved
-                : CommentStatus.Spam;
-
-            // store id of the next layer for large-grained operations, e.g. rss on blog
-            //TODO:(rpaquay) Get rid of this (comment aspect takes care of container)
-            var commentedOn = _orchardServices.ContentManager.Get<ICommonPart>(comment.Record.CommentedOn);
-            if (commentedOn != null && commentedOn.Container != null) {
-                comment.Record.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
-            }
-
-            return comment;
+            return _orchardServices.ContentManager.Create<CommentPart>("Comment", comment => {
+                comment.Record.Author = context.Author;
+                comment.Record.CommentDateUtc = _clock.UtcNow;
+                comment.Record.CommentText = context.CommentText;
+                comment.Record.Email = context.Email;
+                comment.Record.SiteName = context.SiteName;
+                comment.Record.UserName = (_orchardServices.WorkContext.CurrentUser != null ? _orchardServices.WorkContext.CurrentUser.UserName : null);
+                comment.Record.CommentedOn = context.CommentedOn;
+                comment.Record.Status = _commentValidator.ValidateComment(comment)
+                                            ? moderateComments ? CommentStatus.Pending : CommentStatus.Approved
+                                            : CommentStatus.Spam;
+                var commentedOn = _orchardServices.ContentManager.Get<ICommonPart>(comment.Record.CommentedOn);
+                if (commentedOn != null && commentedOn.Container != null) {
+                    comment.Record.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
+                }
+            });
         }
 
         public void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status) {

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
@@ -35,16 +36,15 @@ namespace Orchard.Core.Common.Handlers {
             OnActivated<CommonPart>(PropertySetHandlers);
             OnInitializing<CommonPart>(AssignCreatingOwner);
             OnInitializing<CommonPart>(AssignCreatingDates);
-            OnInitializing<ContentPart<CommonPartVersionRecord>>(AssignCreatingDates);
 
             OnLoading<CommonPart>((context, part) => LazyLoadHandlers(part));
             OnVersioning<CommonPart>((context, part, newVersionPart) => LazyLoadHandlers(newVersionPart));
 
-            OnVersioned<CommonPart>(AssignVersioningDates);
-            OnVersioned<ContentPart<CommonPartVersionRecord>>(AssignVersioningDates);
+            OnUpdateEditorShape<CommonPart>(AssignUpdateDates);
+
+            OnVersioning<CommonPart>(AssignVersioningDates);
 
             OnPublishing<CommonPart>(AssignPublishingDates);
-            OnPublishing<ContentPart<CommonPartVersionRecord>>(AssignPublishingDates);
 
             OnIndexing<CommonPart>((context, commonPart) => context.DocumentIndex
                                                     .Add("type", commonPart.ContentItem.ContentType).Analyze().Store()
@@ -54,6 +54,7 @@ namespace Orchard.Core.Common.Handlers {
                                                     .Add("modified", commonPart.ModifiedUtc ?? _clock.UtcNow).Store()
                                                     );
         }
+
 
         public Localizer T { get; set; }
 
@@ -81,42 +82,42 @@ namespace Orchard.Core.Common.Handlers {
 
         protected void AssignCreatingDates(InitializingContentContext context, CommonPart part) {
             // assign default create/modified dates
-            part.CreatedUtc = _clock.UtcNow;
-            part.ModifiedUtc = _clock.UtcNow;
+            var utcNow = _clock.UtcNow;
+            part.CreatedUtc = utcNow;
+            part.ModifiedUtc = utcNow;
+            part.VersionCreatedUtc = utcNow;
+            part.VersionModifiedUtc = utcNow;
         }
 
-        protected void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonPartVersionRecord> part) {
-            // assign default create/modified dates
-            part.Record.CreatedUtc = _clock.UtcNow;
-            part.Record.ModifiedUtc = _clock.UtcNow;
+        private void AssignUpdateDates(UpdateEditorContext context, CommonPart part) {
+            var utcNow = _clock.UtcNow;
+            part.ModifiedUtc = utcNow;
+            part.VersionModifiedUtc = utcNow;
         }
 
         protected void AssignVersioningDates(VersionContentContext context, CommonPart existing, CommonPart building) {
+            var utcNow = _clock.UtcNow;
+
+             // assign the created date
+            building.VersionCreatedUtc = utcNow;
+            // assign modified date for the new version
+            building.VersionModifiedUtc = utcNow;
+            // publish date should be null until publish method called
+            building.VersionPublishedUtc = null;
+
             // assign the created
             building.CreatedUtc = existing.CreatedUtc ?? _clock.UtcNow;
-            // persist and published dates
+            // persist any published dates
             building.PublishedUtc = existing.PublishedUtc;
             // assign modified date for the new version
             building.ModifiedUtc = _clock.UtcNow;
         }
 
-        protected void AssignVersioningDates(VersionContentContext context, ContentPart<CommonPartVersionRecord> existing, ContentPart<CommonPartVersionRecord> building) {
-            // assign the created date
-            building.Record.CreatedUtc = _clock.UtcNow;
-            // assign modified date for the new version
-            building.Record.ModifiedUtc = _clock.UtcNow;
-            // publish date should be null until publish method called
-            building.Record.PublishedUtc = null;
-        }
 
         protected void AssignPublishingDates(PublishContentContext context, CommonPart part) {
-            // The non-versioned publish date is always the last publish date
-            part.PublishedUtc = _clock.UtcNow;
-        }
-
-        protected void AssignPublishingDates(PublishContentContext context, ContentPart<CommonPartVersionRecord> part) {
-            // assign the version's published date
-            part.Record.PublishedUtc = _clock.UtcNow;
+            var utcNow = _clock.UtcNow;
+            part.PublishedUtc = utcNow;
+            part.VersionPublishedUtc = utcNow;
         }
 
         protected void LazyLoadHandlers(CommonPart part) {

@@ -68,6 +68,8 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
+            builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
             foreach(var type in dataMigrations) {
@@ -91,7 +93,7 @@ namespace Orchard.Tests.DataMigration {
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 foreach (var e in Manifests) {
                     string name = e.Key;
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, DefaultExtensionTypes.Module, Manifests[name]);
+                    yield return ExtensionHarvester.GetDescriptorForExtension("~/", name, DefaultExtensionTypes.Module, Manifests[name]);
                 }
             }
         }

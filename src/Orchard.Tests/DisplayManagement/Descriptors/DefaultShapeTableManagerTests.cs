@@ -18,6 +18,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         protected override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
 
             var features = new [] {
                 new FeatureDescriptor {

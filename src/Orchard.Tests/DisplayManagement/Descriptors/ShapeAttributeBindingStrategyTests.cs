@@ -58,10 +58,9 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         }
 
         static IEnumerable<ShapeAlteration> GetAlterationBuilders(IShapeTableProvider strategy) {
-            IList<ShapeAlterationBuilder> alterationBuilders = new List<ShapeAlterationBuilder>();
-            var builder = new ShapeTableBuilder(alterationBuilders, null);
+            var builder = new ShapeTableBuilder(null);
             strategy.Discover(builder);
-            return alterationBuilders.Select(alterationBuilder => alterationBuilder.Build());
+            return builder.BuildAlterations();
         }
 
         [Test]

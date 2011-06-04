@@ -55,7 +55,36 @@ Scenario: A new tenant goes to the setup screen
     Then I should see "Welcome to Orchard"
         And I should see "Finish Setup"
         And the status should be 200 "OK"
-        
+
+Scenario: Several tenants are configured and go to setup screen
+    Given I have installed Orchard
+        And I have installed "Orchard.MultiTenancy"
+    When I go to "Admin/MultiTenancy/Add"
+        And I fill in 
+            | name | value |
+            | Name | Scott1 |
+            | RequestUrlHost | scott1.example.org |
+        And I hit "Save"
+        And I am redirected
+        And I go to "Admin/MultiTenancy/Add"
+        And I fill in 
+            | name | value |
+            | Name | Scott2 |
+            | RequestUrlHost | scott2.example.org |
+        And I hit "Save"
+        And I am redirected
+        And I go to "Admin/MultiTenancy/Add"
+        And I fill in 
+            | name | value |
+            | Name | Scott3 |
+            | RequestUrlHost | scott3.example.org |
+        And I hit "Save"
+        And I am redirected
+        And I go to "/Setup" on host scott1.example.org
+        And I go to "/Setup" on host scott2.example.org
+        And I go to "/Setup" on host scott3.example.org
+    Then I should see "Welcome to Orchard"
+
 Scenario: A new tenant with preconfigured database goes to the setup screen
     Given I have installed Orchard
         And I have installed "Orchard.MultiTenancy"

@@ -5,9 +5,11 @@ using Orchard.Tasks.Scheduling;
 namespace Orchard.PublishLater.Handlers {
     public class PublishingTaskHandler : IScheduledTaskHandler {
         private readonly IContentManager _contentManager;
+        private readonly IOrchardServices _orchardServices;
 
         public PublishingTaskHandler(IContentManager contentManager, IOrchardServices orchardServices) {
             _contentManager = contentManager;
+            _orchardServices = orchardServices;
             Logger = NullLogger.Instance;
         }
 
@@ -21,6 +23,7 @@ namespace Orchard.PublishLater.Handlers {
                     context.Task.ScheduledUtc);
 
                 _contentManager.Publish(context.Task.ContentItem);
+                _orchardServices.ContentManager.Flush();
             }
         }
     }

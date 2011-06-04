@@ -8,6 +8,7 @@ using Orchard.Logging;
 using Orchard.Services;
 
 namespace Orchard.FileSystems.VirtualPath {
+
     public class DefaultVirtualPathMonitor : IVirtualPathMonitor {
         private readonly Thunk _thunk;
         private readonly string _prefix = Guid.NewGuid().ToString("n");
@@ -23,26 +24,18 @@ namespace Orchard.FileSystems.VirtualPath {
         public ILogger Logger { get; set; }
 
         public IVolatileToken WhenPathChanges(string virtualPath) {
+            var token = BindToken(virtualPath);
             try {
-                var token = BindToken(virtualPath);
-
-                if (!HostingEnvironment.VirtualPathProvider.DirectoryExists(virtualPath)
-                    && !HostingEnvironment.VirtualPathProvider.FileExists(virtualPath)) {
-                    // if trying to monitor a directory or file inside a directory which doesn't exist
-                    // monitor first existing parent directory
-                    return new Token(virtualPath);
-                }
-
                 BindSignal(virtualPath);
-                return token;
             }
             catch (HttpException e) {
                 // This exception happens if trying to monitor a directory or file
                 // inside a directory which doesn't exist
-                Logger.Warning(e, "Error monitor file changes on virtual path '{0}'", virtualPath);
-                // Fix this to monitor first existing parent directory.
-                return new Token(virtualPath);
+                Logger.Information(e, "Error monitoring file changes on virtual path '{0}'", virtualPath);
+
+                //TODO: Return a token monitoring first existing parent directory.
             }
+            return token;
         }
 
         private Token BindToken(string virtualPath) {
@@ -81,13 +74,20 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         private void BindSignal(string virtualPath, CacheItemRemovedCallback callback) {
+            string key = _prefix + virtualPath;
+
+            //PERF: Don't add in the cache if already present. Creating a "CacheDependency"
+            //      object (below) is actually quite expensive.
+            if (HostingEnvironment.Cache.Get(key) != null)
+                return;
+
             var cacheDependency = HostingEnvironment.VirtualPathProvider.GetCacheDependency(
                 virtualPath,
                 new[] { virtualPath },
                 _clock.UtcNow);
 
             HostingEnvironment.Cache.Add(
-                _prefix + virtualPath,
+                key,
                 virtualPath,
                 cacheDependency,
                 Cache.NoAbsoluteExpiration,

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using Orchard.Environment.Extensions.Loaders;
@@ -20,13 +21,15 @@ namespace Orchard.FileSystems.Dependencies {
     /// </summary>
     public class WebFormVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly string[] _modulesPrefixes = { "~/Modules/" };
         private readonly string[] _themesPrefixes = { "~/Themes/" };
         private readonly string[] _extensions = { ".ascx", ".aspx", ".master" };
 
-        public WebFormVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
+        public WebFormVirtualPathProvider(IDependenciesFolder dependenciesFolder, IExtensionDependenciesManager extensionDependenciesManager, IEnumerable<IExtensionLoader> loaders) {
             _dependenciesFolder = dependenciesFolder;
+            _extensionDependenciesManager = extensionDependenciesManager;
             _loaders = loaders;
             Logger = NullLogger.Instance;
         }
@@ -59,11 +62,13 @@ namespace Orchard.FileSystems.Dependencies {
             var dependencies =
                 virtualPathDependencies
                     .OfType<string>()
-                    .Concat(file.Loaders.SelectMany(dl => dl.Loader.GetWebFormVirtualDependencies(dl.Descriptor)));
+                    .Concat(file.Loaders.SelectMany(dl => _extensionDependenciesManager.GetVirtualPathDependencies(dl.Descriptor.Name)))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
 
             if (Logger.IsEnabled(LogLevel.Debug)) {
                 Logger.Debug("GetFileHash(\"{0}\") - virtual path dependencies:", virtualPath);
-                foreach(var dependency in dependencies) {
+                foreach (var dependency in dependencies) {
                     Logger.Debug("  Dependency: \"{0}\"", dependency);
                 }
             }
@@ -129,13 +134,13 @@ namespace Orchard.FileSystems.Dependencies {
             if (loader == null)
                 return null;
 
-            var directive = loader.GetWebFormAssemblyDirective(dependencyDescriptor);
-            if (string.IsNullOrEmpty(directive))
+            var references = loader.GetCompilationReferences(dependencyDescriptor).ToList();
+            if (!references.Any())
                 return null;
 
             return new VirtualFileOverride {
                 ModuleName = moduleName,
-                Directive = directive,
+                Directive = CreateAssemblyDirectivesString(references),
                 Loaders = new[] { new DependencyLoader { Loader = loader, Descriptor = dependencyDescriptor } }
             };
         }
@@ -150,23 +155,38 @@ namespace Orchard.FileSystems.Dependencies {
             if (extension == null)
                 return null;
 
-            var loaders = _loaders
+            var dependencyLoaders = _loaders
                 .SelectMany(loader => _dependenciesFolder
                                           .LoadDescriptors()
                                           .Where(d => d.LoaderName == loader.Name),
-                            (loader, desr) => new DependencyLoader { Loader = loader, Descriptor = desr });
+                            (loader, desr) => new DependencyLoader { Loader = loader, Descriptor = desr })
+                .ToList();
 
-            var directive = loaders
-                .Aggregate("", (s, dl) => s + dl.Loader.GetWebFormAssemblyDirective(dl.Descriptor));
+            var references = dependencyLoaders
+                .SelectMany(dl => dl.Loader.GetCompilationReferences(dl.Descriptor))
+                .ToList();
 
-            if (string.IsNullOrEmpty(directive))
+            if (!references.Any())
                 return null;
 
             return new VirtualFileOverride {
                 ModuleName = "",
-                Directive = directive,
-                Loaders = loaders
+                Directive = CreateAssemblyDirectivesString(references),
+                Loaders = dependencyLoaders
             };
+        }
+
+        private string CreateAssemblyDirectivesString(IEnumerable<ExtensionCompilationReference> references) {
+            var sb = new StringBuilder();
+            foreach (var reference in references) {
+                if (!string.IsNullOrEmpty(reference.AssemblyName)) {
+                    sb.AppendFormat("<%@ Assembly Name=\"{0}\"%>", reference.AssemblyName);
+                }
+                if (!string.IsNullOrEmpty(reference.BuildProviderTarget)) {
+                    sb.AppendFormat("<%@ Assembly Src=\"{0}\"%>", reference.BuildProviderTarget);
+                }
+            }
+            return sb.ToString();
         }
 
         private static string ModuleMatch(string virtualPath, string prefix) {

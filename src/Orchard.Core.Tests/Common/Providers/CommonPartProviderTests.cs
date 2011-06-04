@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Routing;
 using Autofac;
 using Moq;
@@ -16,18 +17,23 @@ using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
+using Orchard.Core.Common.OwnerEditor;
 using Orchard.Core.Common.Services;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy;
+using Orchard.DisplayManagement.Descriptors.ShapePlacementStrategy;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Tasks.Scheduling;
+using Orchard.Tests.DisplayManagement.Descriptors;
 using Orchard.Tests.Modules;
-using Orchard.Core.Common.ViewModels;
 using System.Web.Mvc;
 using Orchard.Tests.Stubs;
 using Orchard.Themes;
@@ -46,19 +52,32 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<TestHandler>().As<IContentHandler>();
             builder.RegisterType<CommonPartHandler>().As<IContentHandler>();
             builder.RegisterType<CommonPartDriver>().As<IContentPartDriver>();
+            builder.RegisterType<OwnerEditorDriver>().As<IContentPartDriver>();
             builder.RegisterType<ContentPartDriverCoordinator>().As<IContentHandler>();
             builder.RegisterType<CommonService>().As<ICommonService>();
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
-            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
-            builder.RegisterInstance(new Mock<IThemeManager>().Object);
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
+            builder.RegisterType<StubThemeService>().As<IThemeManager>();
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
-            builder.RegisterInstance(new Mock<RequestContext>().Object);
+
+            builder.RegisterInstance(new RequestContext(new StubHttpContext(), new RouteData()));
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
+
+            DefaultShapeTableManagerTests.TestShapeProvider.FeatureShapes = new Dictionary<Feature, IEnumerable<string>> {
+                { TestFeature(), new[] { "Parts_Common_Owner_Edit" } }
+            };
+
+            builder.RegisterType<DefaultShapeTableManagerTests.TestShapeProvider>().As<IShapeTableProvider>()
+                .As<DefaultShapeTableManagerTests.TestShapeProvider>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterInstance(new RouteCollection());
+            builder.RegisterModule(new ShapeAttributeBindingModule());
 
             _authn = new Mock<IAuthenticationService>();
             _authz = new Mock<IAuthorizationService>();
@@ -69,6 +88,24 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterInstance(_authz.Object);
             builder.RegisterInstance(_membership.Object);
             builder.RegisterInstance(_contentDefinitionManager.Object);
+
+            var virtualPathProviderMock = new Mock<IVirtualPathProvider>();
+            virtualPathProviderMock.Setup(a => a.ToAppRelative(It.IsAny<string>())).Returns("~/yadda");
+
+            builder.RegisterInstance(virtualPathProviderMock.Object);
+        }
+
+        static Feature TestFeature() {
+            return new Feature {
+                Descriptor = new FeatureDescriptor {
+                    Id = "Testing",
+                    Dependencies = Enumerable.Empty<string>(),
+                    Extension = new ExtensionDescriptor {
+                        Id = "Testing",
+                        ExtensionType = DefaultExtensionTypes.Module,
+                    }
+                }
+            };
         }
 
         protected override IEnumerable<Type> DatabaseTypes {
@@ -116,9 +153,8 @@ namespace Orchard.Core.Tests.Common.Providers {
             var user = contentManager.New<IUser>("User");
             _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
 
-            var createUtc = _clock.UtcNow;
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
-            var viewModel = new OwnerEditorViewModel() { Owner = "User" };
+            var viewModel = new OwnerEditorViewModel { Owner = "User" };
             updateModel.Setup(x => x.TryUpdateModel(viewModel, "", null, null)).Returns(true);
             contentManager.UpdateEditor(item.ContentItem, updateModel.Object);
         }
@@ -141,6 +177,16 @@ namespace Orchard.Core.Tests.Common.Providers {
             public void AddModelError(string key, LocalizedString errorMessage) {
                 _modelState.AddModelError(key, errorMessage.ToString());
             }
+        }
+
+        class StubThemeService : IThemeManager {
+            private readonly ExtensionDescriptor _theme = new ExtensionDescriptor {
+                Id = "SafeMode",
+                Name = "SafeMode",
+                Location = "~/Themes",
+            };
+
+            public ExtensionDescriptor GetRequestTheme(RequestContext requestContext) { return _theme; }
         }
 
         [Test]
@@ -174,9 +220,13 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             var updater = new UpdatModelStub() { Owner = "" };
 
+            _container.Resolve<DefaultShapeTableManagerTests.TestShapeProvider>().Discover =
+                b => b.Describe("Parts_Common_Owner_Edit").From(TestFeature())
+                               .Placement(ShapePlacementParsingStrategy.BuildPredicate(c => true, new KeyValuePair<string, string>("Path", "~/yadda")), new PlacementInfo { Location = "Match" });
+
             contentManager.UpdateEditor(item.ContentItem, updater);
 
-            Assert.That(updater.ModelErrors.ContainsKey("CommonPart.Owner"), Is.True);
+            Assert.That(updater.ModelErrors.ContainsKey("OwnerEditor.Owner"), Is.True);
         }
 
         [Test]

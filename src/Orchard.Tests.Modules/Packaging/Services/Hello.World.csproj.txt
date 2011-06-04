@@ -70,37 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="Commands\GalleryCommands.cs" />
-    <Compile Include="Commands\PackagingCommands.cs" />
-    <Compile Include="Controllers\GalleryController.cs" />
-    <Compile Include="DefaultPackagingUpdater.cs" />
-    <Compile Include="ResourceManifest.cs" />
-    <Compile Include="Services\AtomExtensions.cs" />
-    <Compile Include="Services\IPackageBuilder.cs" />
-    <Compile Include="Services\IPackageExpander.cs" />
-    <Compile Include="Services\IPackageManager.cs" />
-    <Compile Include="Services\IPackagingSourceManager.cs" />
-    <Compile Include="Services\PackageBuilder.cs" />
-    <Compile Include="Services\PackageData.cs" />
-    <Compile Include="Services\PackageExpander.cs" />
-    <Compile Include="Services\PackageManager.cs" />
-    <Compile Include="Services\PackagingEntry.cs" />
-    <Compile Include="Services\PackagingSource.cs" />
-    <Compile Include="Services\PackagingSourceManager.cs" />
-    <Compile Include="ViewModels\PackagingAddSourceViewModel.cs" />
-    <Compile Include="ViewModels\PackagingHarvestViewModel.cs" />
-    <Compile Include="ViewModels\PackagingModulesViewModel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\PackagingSourcesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Module.txt" />
-    <Content Include="Styles\admin.css" />
-    <Content Include="Views\Gallery\AddSource.cshtml" />
-    <Content Include="Views\Gallery\Harvest.cshtml" />
-    <Content Include="Views\Gallery\Modules.cshtml" />
-    <Content Include="Views\Gallery\Sources.cshtml" />
-    <Content Include="Views\Gallery\_Subnav.cshtml" />
+    <Content Include="Service References\SomeReference.cs" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

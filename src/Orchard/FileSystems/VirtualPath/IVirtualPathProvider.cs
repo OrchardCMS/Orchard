@@ -20,6 +20,8 @@ namespace Orchard.FileSystems.VirtualPath {
         StreamWriter CreateText(string virtualPath);
         Stream CreateFile(string virtualPath);
         DateTime GetFileLastWriteTimeUtc(string virtualPath);
+        string GetFileHash(string virtualPath);
+        string GetFileHash(string virtualPath, IEnumerable<string> dependencies);
 
         bool DirectoryExists(string virtualPath);
         void CreateDirectory(string virtualPath);

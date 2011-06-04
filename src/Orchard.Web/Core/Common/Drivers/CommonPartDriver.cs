@@ -6,7 +6,6 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
 using Orchard.Security;
-using Orchard.Services;
 
 namespace Orchard.Core.Common.Drivers {
     public class CommonPartDriver : ContentPartDriver<CommonPart> {
@@ -14,20 +13,17 @@ namespace Orchard.Core.Common.Drivers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
-        private readonly IClock _clock;
 
         public CommonPartDriver(
             IOrchardServices services,
             IContentManager contentManager,
             IAuthenticationService authenticationService,
             IAuthorizationService authorizationService,
-            IMembershipService membershipService,
-            IClock clock) {
+            IMembershipService membershipService) {
             _contentManager = contentManager;
             _authenticationService = authenticationService;
             _authorizationService = authorizationService;
             _membershipService = membershipService;
-            _clock = clock;
             T = NullLocalizer.Instance;
             Services = services;
         }
@@ -51,51 +47,10 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) {
-            return Combined(
-                OwnerEditor(part, null, shapeHelper),
-                ContainerEditor(part, null, shapeHelper));
+            return Editor(part, null, shapeHelper);
         }
 
         protected override DriverResult Editor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
-            // this event is hooked so the modified timestamp is changed when an edit-post occurs
-            part.ModifiedUtc = _clock.UtcNow;
-            part.VersionModifiedUtc = _clock.UtcNow;
-
-            return Combined(
-                OwnerEditor(part, updater, shapeHelper),
-                ContainerEditor(part, updater, shapeHelper));
-        }
-
-        DriverResult OwnerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
-            var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, currentUser, part)) {
-                return null;
-            }
-
-            var model = new OwnerEditorViewModel();
-            if (part.Owner != null)
-                model.Owner = part.Owner.UserName;
-
-            if (updater != null) {
-                var priorOwner = model.Owner;
-                updater.TryUpdateModel(model, Prefix, null, null);
-
-                if (model.Owner != null && model.Owner != priorOwner) {
-                    var newOwner = _membershipService.GetUser(model.Owner);
-                    if (newOwner == null) {
-                        updater.AddModelError("CommonPart.Owner", T("Invalid user name"));
-                    }
-                    else {
-                        part.Owner = newOwner;
-                    }
-                }
-            }
-
-            return ContentShape("Parts_Common_Owner_Edit",
-                                () => shapeHelper.EditorTemplate(TemplateName: "Parts.Common.Owner", Model: model, Prefix: Prefix));
-        }
-
-        DriverResult ContainerEditor(CommonPart part, IUpdateModel updater, dynamic shapeHelper) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
             if (!_authorizationService.TryCheckAccess(StandardPermissions.SiteOwner, currentUser, part)) {
                 return null;
@@ -113,8 +68,7 @@ namespace Orchard.Core.Common.Drivers {
                     var newContainer = _contentManager.Get((int)model.ContainerId, VersionOptions.Latest);
                     if (newContainer == null) {
                         updater.AddModelError("CommonPart.ContainerId", T("Invalid container"));
-                    }
-                    else {
+                    } else {
                         part.Container = newContainer;
                     }
                 }
