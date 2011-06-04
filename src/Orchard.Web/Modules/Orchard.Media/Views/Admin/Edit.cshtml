@@ -59,8 +59,8 @@
             @foreach (var mediaFile in Model.MediaFiles) {
                 <tr>
                     <td>
-                        <input type="checkbox" value="true" name="@T("Checkbox.File.{0}", mediaFile.Name)"/>
-                        <input type="hidden" value="@T(Model.MediaPath)" name="@T(mediaFile.Name)" />
+                        <input type="checkbox" value="true" name="Checkbox.File.@mediaFile.Name"/>
+                        <input type="hidden" value="@Model.MediaPath" name="@mediaFile.Name" />
                     </td>
                     <td>
                         @Html.ActionLink(mediaFile.Name, "EditMedia", new { name = mediaFile.Name, 
@@ -79,7 +79,7 @@
             @foreach (var mediaFolder in Model.MediaFolders) {
                 <tr>
                     <td>
-                        <input type="checkbox" value="true" name="@T("Checkbox.Folder.{0}", mediaFolder.Name)"/>
+                        <input type="checkbox" value="true" name="Checkbox.Folder.@mediaFolder.Name"/>
                         <input type="hidden" value="@mediaFolder.MediaPath" name="@mediaFolder.Name" />
                     </td>
                     <td>

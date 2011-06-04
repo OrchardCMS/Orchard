@@ -77,6 +77,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<Signals>().As<ISignals>();
 
             builder.RegisterType<DefaultEncryptionService>().As<IEncryptionService>();
@@ -99,7 +100,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] { typeof(UserPartRecord),
-                    typeof(SiteSettingsPartRecord), 
+                    typeof(SiteSettingsPartRecord),
+                    typeof(SiteSettings2PartRecord),
                     typeof(RegistrationSettingsPartRecord), 
                     typeof(ContentTypeRecord),
                     typeof(ContentItemRecord),

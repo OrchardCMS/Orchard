@@ -1,46 +1,20 @@
 ﻿using System;
 using System.Configuration;
-using System.IO;
-using System.Web;
-using System.Web.Hosting;
-
 using Castle.Core.Logging;
-
 using log4net;
+using log4net.Config;
+using Orchard.Environment;
 
 namespace Orchard.Logging {
     public class OrchardLog4netFactory : AbstractLoggerFactory {
-        public OrchardLog4netFactory()
-            : this(ConfigurationManager.AppSettings["log4net.Config"]) {
-        }
+        public OrchardLog4netFactory(IHostEnvironment hostEnvironment) 
+            : this(ConfigurationManager.AppSettings["log4net.Config"], hostEnvironment) { }
 
-        public OrchardLog4netFactory(String configFilename) {
-            if (!String.IsNullOrWhiteSpace(configFilename)) {
-                var mappedConfigFilename = configFilename;
-
-                if (HostingEnvironment.IsHosted) {
-                    if (!VirtualPathUtility.IsAppRelative(mappedConfigFilename)) {
-                        if (!mappedConfigFilename.StartsWith("/")) {
-                            mappedConfigFilename = "~/" + mappedConfigFilename;
-                        }
-                        else {
-                            mappedConfigFilename = "~" + mappedConfigFilename;
-                        }
-                    }
-
-                    mappedConfigFilename = HostingEnvironment.MapPath(mappedConfigFilename);
-                }
-
-                OrchardXmlConfigurator.Configure(mappedConfigFilename);
+        public OrchardLog4netFactory(string configFilename, IHostEnvironment hostEnvironment) {
+            if (!string.IsNullOrWhiteSpace(configFilename) && hostEnvironment.IsFullTrust) {
+                // Only monitor configuration file in full trust
+                XmlConfigurator.ConfigureAndWatch(GetConfigFile(configFilename));
             }
-        }
-
-        /// <summary>
-        ///   Configures log4net with a stream containing XML.
-        /// </summary>
-        /// <param name = "config"></param>
-        public OrchardLog4netFactory(Stream config) {
-            OrchardXmlConfigurator.Configure(config);
         }
 
         public override Castle.Core.Logging.ILogger Create(string name, LoggerLevel level) {

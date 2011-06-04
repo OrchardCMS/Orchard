@@ -14,25 +14,16 @@ namespace Orchard.FileSystems.Dependencies {
     /// served from the "~/Modules" or "~/Themes" directory.
     /// </summary>
     public class DynamicModuleVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
-        private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-        private readonly string[] _modulesPrefixes = { "~/Modules/", "~/Themes/" };
 
-        public DynamicModuleVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
-            _dependenciesFolder = dependenciesFolder;
+        public DynamicModuleVirtualPathProvider(IExtensionDependenciesManager extensionDependenciesManager, IEnumerable<IExtensionLoader> loaders) {
+            _extensionDependenciesManager = extensionDependenciesManager;
             _loaders = loaders;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
-
-        public override bool DirectoryExists(string virtualDir) {
-            return Previous.DirectoryExists(virtualDir);
-        }
-
-        public override bool FileExists(string virtualPath) {
-            return Previous.FileExists(virtualPath);
-        }
 
         public override string GetFileHash(string virtualPath, IEnumerable virtualPathDependencies) {
             var result = GetFileHashWorker(virtualPath, virtualPathDependencies);
@@ -41,46 +32,27 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         private string GetFileHashWorker(string virtualPath, IEnumerable virtualPathDependencies) {
-            var desc = GetDependencyDescriptor(virtualPath);
+            virtualPath = VirtualPathUtility.ToAppRelative(virtualPath);
+
+            var desc = GetExtensionDescriptor(virtualPath);
             if (desc != null) {
-
-                var loader = _loaders.Where(l => l.Name == desc.LoaderName).FirstOrDefault();
-                if (loader != null) {
-
-                    var otherDependencies = loader.GetDynamicModuleDependencies(desc, virtualPath);
-                    if (otherDependencies.Any()) {
-
-                        var allDependencies = virtualPathDependencies.OfType<string>().Concat(otherDependencies);
-
-                        if (Logger.IsEnabled(LogLevel.Debug)) {
-                            Logger.Debug("GetFileHash(\"{0}\") - virtual path dependencies:", virtualPath);
-                            foreach (var dependency in allDependencies) {
-                                Logger.Debug("  Dependency: \"{0}\"", dependency);
-                            }
-                        }
-
-                        return base.GetFileHash(virtualPath, allDependencies);
-                    }
+                if (desc.VirtualPath.Equals(virtualPath, StringComparison.OrdinalIgnoreCase)) {
+                    return desc.Hash;
                 }
             }
             return base.GetFileHash(virtualPath, virtualPathDependencies);
         }
 
-        public override VirtualFile GetFile(string virtualPath) {
-            return Previous.GetFile(virtualPath);
-        }
-
-        private DependencyDescriptor GetDependencyDescriptor(string virtualPath) {
-            var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
-            var prefix = PrefixMatch(appRelativePath, _modulesPrefixes);
+        private ActivatedExtensionDescriptor GetExtensionDescriptor(string virtualPath) {
+            var prefix = PrefixMatch(virtualPath, DynamicExtensionLoader.ExtensionsVirtualPathPrefixes);
             if (prefix == null)
                 return null;
 
-            var moduleName = ModuleMatch(appRelativePath, prefix);
-            if (moduleName == null)
+            var moduleId = ModuleMatch(virtualPath, prefix);
+            if (moduleId == null)
                 return null;
 
-            return _dependenciesFolder.GetDescriptor(moduleName);
+            return _extensionDependenciesManager.GetDescriptor(moduleId);
         }
 
         private static string ModuleMatch(string virtualPath, string prefix) {
@@ -88,8 +60,8 @@ namespace Orchard.FileSystems.Dependencies {
             if (index < 0)
                 return null;
 
-            var moduleName = virtualPath.Substring(prefix.Length, index - prefix.Length);
-            return (string.IsNullOrEmpty(moduleName) ? null : moduleName);
+            var moduleId = virtualPath.Substring(prefix.Length, index - prefix.Length);
+            return (string.IsNullOrEmpty(moduleId) ? null : moduleId);
         }
 
         private static string PrefixMatch(string virtualPath, params string[] prefixes) {

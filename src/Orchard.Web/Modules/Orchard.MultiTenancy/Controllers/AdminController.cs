@@ -120,15 +120,18 @@ namespace Orchard.MultiTenancy.Controllers {
 
             try {
                 _tenantService.UpdateTenant(
-                    new ShellSettings
-                    {
+                    new ShellSettings {
                         Name = tenant.Name,
                         RequestUrlHost = viewModel.RequestUrlHost,
                         RequestUrlPrefix = viewModel.RequestUrlPrefix,
                         DataProvider = viewModel.DataProvider,
                         DataConnectionString = viewModel.DatabaseConnectionString,
                         DataTablePrefix = viewModel.DatabaseTablePrefix,
-                        State = tenant.State
+                        State = tenant.State,
+                        EncryptionAlgorithm = tenant.EncryptionAlgorithm,
+                        EncryptionKey = tenant.EncryptionKey,
+                        HashAlgorithm = tenant.HashAlgorithm,
+                        HashKey = tenant.HashKey
                     });
 
                 return RedirectToAction("Index");

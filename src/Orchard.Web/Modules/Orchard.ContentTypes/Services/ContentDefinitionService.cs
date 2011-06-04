@@ -71,6 +71,11 @@ namespace Orchard.ContentTypes.Services {
             if(String.IsNullOrWhiteSpace(name)) {
                 name = GenerateContentTypeNameFromDisplayName(displayName);
             }
+            else {
+                if(!IsLetter(name[0])) {
+                    throw new ArgumentException("Content type name must start with a letter", "name");
+                }
+            }
 
             while ( _contentDefinitionManager.GetTypeDefinition(name) != null )
                 name = VersionName(name);
@@ -235,9 +240,21 @@ namespace Orchard.ContentTypes.Services {
             name = dissallowed.Replace(name, String.Empty);
             name = name.Trim();
 
+            // don't allow non A-Z chars as first letter, as they are not allowed in prefixes
+            if(name.Length > 0) {
+                if (!IsLetter(name[0])) {
+                    name = name.Substring(1);
+                }
+            }
+
             if (name.Length > 128)
                 name = name.Substring(0, 128);
+
             return name;
+        }
+
+        public static bool IsLetter(char c) {
+            return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z');
         }
 
         //gratuitously stolen from the RoutableService

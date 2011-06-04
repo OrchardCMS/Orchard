@@ -62,7 +62,8 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             }
 
             var builder = new ContainerBuilder();
-            _folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
+            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder());
+            _folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             builder.RegisterType<RecipeManager>().As<IRecipeManager>();
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>();
             builder.RegisterType<RecipeStepExecutor>().As<IRecipeStepExecutor>();
@@ -73,6 +74,8 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();
             builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
+            builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<Environment.Extensions.ExtensionManagerTests.StubLoaders>().As<IExtensionLoader>();
             builder.RegisterType<RecipeParser>().As<IRecipeParser>();

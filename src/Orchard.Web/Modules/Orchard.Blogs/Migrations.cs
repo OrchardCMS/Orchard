@@ -46,7 +46,8 @@ namespace Orchard.Blogs {
             ContentDefinitionManager.AlterTypeDefinition("BlogPost",
                 cfg => cfg
                     .WithPart("BlogPostPart")
-                    .WithPart("CommonPart")
+                    .WithPart("CommonPart", p => p
+                        .WithSetting("CommonTypePartSettings.ShowCreatedUtcEditor", "true"))
                     .WithPart("PublishLaterPart")
                     .WithPart("RoutePart")
                     .WithPart("BodyPart")

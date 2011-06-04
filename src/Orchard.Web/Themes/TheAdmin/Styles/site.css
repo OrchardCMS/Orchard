@@ -588,7 +588,7 @@ label input {
     color:#7c7c7c;
 }
 /* todo: (heskew) try to get .text on stuff like .text-box */
-select, textarea, input.text, input.textMedium, input.text-box {
+select, textarea, input.text, input.textMedium, input.text-small, input.text-box {
     font-family:inherit;
     padding:3px;
     border:1px solid #bdbcbc;
@@ -608,7 +608,7 @@ input.textMedium {
 select {
     padding:1px;	
 }
-select:focus, textarea:focus, input.text:focus, input.text-box:focus {
+select:focus, textarea:focus, input.text:focus, input.text-box:focus, input.text-small:focus, input.textMedium:focus  {
     border-color:#666d51;
 }
 input.check-box {

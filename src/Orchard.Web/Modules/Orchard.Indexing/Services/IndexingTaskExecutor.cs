@@ -173,21 +173,22 @@ namespace Orchard.Indexing.Services {
                 Logger.Information("Updating index");
                 _indexingStatus = IndexingStatus.Updating;
 
-                var contentItems = _taskRepository
+                var indexingTasks = _taskRepository
                     .Fetch(x => x.Id > indexSettings.LastIndexedId)
                     .OrderBy(x => x.Id)
                     .Take(ContentItemsPerLoop)
                     .GroupBy(x => x.ContentItemRecord.Id)
-                    .Select(group => new {TaskId = group.Max(task => task.Id), ContentItem = _contentManager.Get(group.Key, VersionOptions.Published)})
+                    .Select(group => new {TaskId = group.Max(task => task.Id), Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Published)})
                     .OrderBy(x => x.TaskId)
                     .ToArray();
 
-                foreach (var item in contentItems) {
+                foreach (var item in indexingTasks) {
                     try {
+                        // item.ContentItem can be null if the content item has been deleted
                         IDocumentIndex documentIndex = ExtractDocumentIndex(item.ContentItem);
 
                         if (documentIndex == null) {
-                            deleteFromIndex.Add(item.ContentItem.Id);
+                            deleteFromIndex.Add(item.Id);
                         }
                         else if (documentIndex.IsDirty) {
                             addToIndex.Add(documentIndex);
@@ -196,7 +197,7 @@ namespace Orchard.Indexing.Services {
                         indexSettings.LastIndexedId = item.TaskId;
                     }
                     catch (Exception ex) {
-                        Logger.Warning(ex, "Unable to index content item #{0} during update", item.ContentItem.Id);
+                        Logger.Warning(ex, "Unable to index content item #{0} during update", item.Id);
                     }
                 }
             }

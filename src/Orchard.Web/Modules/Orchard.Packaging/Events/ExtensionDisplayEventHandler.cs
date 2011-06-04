@@ -45,7 +45,8 @@ namespace Orchard.Packaging.Events {
                                     urlHelper.Action(DefaultExtensionTypes.IsTheme(updatePackageEntry.ExtensionsDescriptor.ExtensionType)
                                             ? "ThemesUpdates"
                                             : "ModulesUpdates",
-                                            "GalleryUpdates")).ToString();
+                                            "GalleryUpdates",
+                                            new { Area = "Orchard.Packaging" })).ToString();
                 }
             }
         }

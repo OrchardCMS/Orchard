@@ -1,0 +1,41 @@
+﻿@model Orchard.Core.Common.DateEditor.DateEditorViewModel
+@{
+	var DateEditor = Model;
+    Script.Require("jQueryUtils_TimePicker");
+    Script.Require("jQueryUI_DatePicker");
+    Style.Require("Common_DatePicker");
+    Style.Require("jQueryUtils_TimePicker");
+    Style.Require("jQueryUI_DatePicker"); 
+}
+<fieldset class="createdutc-datetime">
+    @Html.LabelFor(m => DateEditor.CreatedDate, T("Created On"))
+    <label class="forpicker" for="@Html.FieldIdFor(m => DateEditor.CreatedDate)">@T("Date")</label>
+    @Html.EditorFor(m => DateEditor.CreatedDate)
+    <label class="forpicker" for="@Html.FieldIdFor(m => DateEditor.CreatedTime)">@T("Time")</label>
+    @Html.EditorFor(m => DateEditor.CreatedTime)
+</fieldset>
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    $(function () {
+        var clearHint = function ($this) { if ($this.val() == $this.data("hint")) { $this.removeClass("hinted").val("") } };
+        var resetHint = function ($this) { setTimeout(function () { if (!$this.val()) { $this.addClass("hinted").val($this.data("hint")) } }, 300) };
+        @* todo: (heskew) make a plugin *@
+        $("label.forpicker").each(function () {
+            var $this = $(this);
+            var pickerInput = $("#" + $this.attr("for"));
+            if (!pickerInput.val()) {
+                pickerInput.data("hint", $this.text());
+                pickerInput.addClass("hinted")
+                    .val(pickerInput.data("hint"))
+                    .focus(function() {clearHint($(this));})
+                    .blur(function() {resetHint($(this));});
+                $this.closest("form").submit(function() {clearHint(pickerInput); pickerInput = 0;});
+            }
+        });
+        $('#@Html.FieldIdFor(m => DateEditor.CreatedDate)').datepicker({ showAnim: "" });
+        $('#@Html.FieldIdFor(m => DateEditor.CreatedTime)').timepickr({ showAnim: "" });
+    })
+//]]>
+</script>
+}

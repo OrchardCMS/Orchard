@@ -41,8 +41,8 @@ namespace Orchard.Packaging.Services {
             IEnumerable<IPackage> repositoryPackages = SourceRepository.GetPackages().ToList();
             IEnumerable<IPackage> packages = from extension in _extensionManager.AvailableExtensions()
                                    let id = PackageBuilder.BuildPackageId(extension.Id, extension.ExtensionType)
-                                   let version = Version.Parse(extension.Version)
-                                   let package = repositoryPackages.FirstOrDefault(p => p.Id == id && p.Version == version)
+                                   let version = extension.Version != null ? Version.Parse(extension.Version) : null
+                                   let package = repositoryPackages.FirstOrDefault(p => p.Id == id && (version == null || p.Version == version))
                                    where package != null
                                    select package;
 

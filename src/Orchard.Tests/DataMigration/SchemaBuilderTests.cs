@@ -142,7 +142,7 @@ namespace Orchard.Tests.DataMigration {
             _schemaBuilder
                 .ExecuteSql("insert into TEST_User VALUES (DEFAULT, DEFAULT)");
 
-            // ensure wehave one record woth the default value
+            // ensure we have one record with the default value
             var command = _session.Connection.CreateCommand();
             command.CommandText = "SELECT count(*) FROM TEST_User WHERE Lastname = 'Doe'";
             Assert.That(command.ExecuteScalar(), Is.EqualTo(1));

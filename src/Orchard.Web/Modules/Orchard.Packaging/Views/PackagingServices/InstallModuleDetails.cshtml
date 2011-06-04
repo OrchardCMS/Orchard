@@ -13,7 +13,7 @@
 
     @Html.HiddenFor(m => m.ExtensionDescriptor.Id)
 
-    if (Model.Recipes.Count > 0) {
+    if (Model.Recipes != null && Model.Recipes.Count > 0) {
         <fieldset>
             <legend>@T("Pick the recipes you want to run").ToString()</legend>
 

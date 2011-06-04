@@ -48,143 +48,99 @@ namespace Orchard.Tests.Environment.Loaders {
 
         [Test]
         public void GetDependenciesContainsNoDuplicatesTest() {
+            const string pathPrefix = "~/modules/foo";
+            const string projectName = "orchard.a.csproj";
             const string fileName1 = "a.cs";
             const string fileName2 = "b.cs";
 
-            DynamicExtensionLoaderAccessor extensionLoader = _container.Resolve<DynamicExtensionLoaderAccessor>();
-            StubFileSystem stubFileSystem = _container.Resolve<StubFileSystem>();
-            StubFileSystem.FileEntry fileEntry = stubFileSystem.CreateFileEntry("orchard.a.csjproj");
+            var vpp = _container.Resolve<IVirtualPathProvider>();
+            var projectPath = vpp.Combine(pathPrefix, projectName);
+            using (vpp.CreateText(projectPath)) { }
 
             // Create duplicate source files (invalid situation in reality but easy enough to test)
-            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.IsAny<Stream>())).Returns(
+            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.IsAny<string>())).Returns(
                 new ProjectFileDescriptor { SourceFilenames = new[] { fileName1, fileName2, fileName1 } }); // duplicate file
 
-            IEnumerable<string> dependencies = extensionLoader.GetDependenciesAccessor(fileEntry.Name);
+            var extensionLoader = _container.Resolve<DynamicExtensionLoaderAccessor>();
+            var dependencies = extensionLoader.GetDependenciesAccessor(projectPath);
 
             Assert.That(dependencies.Count(), Is.EqualTo(3), "3 results should mean no duplicates");
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry.Name)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileName1)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileName2)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(projectPath)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(vpp.Combine(pathPrefix, fileName1))), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(vpp.Combine(pathPrefix, fileName2))), Is.Not.Null);
         }
 
         [Test]
         public void GetDependenciesContainsNoDuplicatesEvenIfMultipleProjectsTest() {
+            const string path1Prefix = "~/modules/foo";
+            const string path2Prefix = "~/modules/bar";
+            const string path3Prefix = "~/modules/blah";
+            const string project1Name = "orchard.a.csproj";
+            const string project2Name = "orchard.b.csproj";
+            const string project3Name = "orchard.c.csproj";
             const string fileName1 = "a.cs";
             const string fileName2 = "b.cs";
-
             const string commonFileName = "c.cs";
 
-            DynamicExtensionLoaderAccessor extensionLoader = _container.Resolve<DynamicExtensionLoaderAccessor>();
-            StubFileSystem stubFileSystem = _container.Resolve<StubFileSystem>();
-            StubFileSystem.FileEntry fileEntry = stubFileSystem.CreateFileEntry("orchard.a.csjproj");
-            StubFileSystem.FileEntry fileEntry2 = stubFileSystem.CreateFileEntry("orchard.b.csjproj");
-            StubFileSystem.FileEntry fileEntry3 = stubFileSystem.CreateFileEntry("orchard.c.csjproj");
+            var vpp = _container.Resolve<IVirtualPathProvider>();
+
+            var project1Path = vpp.Combine(path1Prefix, project1Name);
+            using (vpp.CreateText(project1Path)) { }
+
+            var project2Path = vpp.Combine(path2Prefix, project2Name);
+            using (vpp.CreateText(project2Path)) { }
+
+            var project3Path = vpp.Combine(path3Prefix, project3Name);
+            using (vpp.CreateText(project3Path)) { }
+
 
             // Project a reference b and c which share a file in common
 
             // Result for project a
-            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<Stream>(stream => ((StubFileSystem.FileEntryReadStream)stream).FileEntry == fileEntry)))
+            _mockedStubProjectFileParser
+                .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => virtualPath == project1Path)))
                 .Returns(
                     new ProjectFileDescriptor {
-                        SourceFilenames = new[] { fileName1, fileName2 },
-                        References = new[] { 
+                        SourceFilenames = new[] {fileName1, fileName2},
+                        References = new[] {
                             new ReferenceDescriptor {
                                 ReferenceType = ReferenceType.Project,
-                                SimpleName = Path.GetFileNameWithoutExtension(fileEntry2.Name),
-                                FullName = Path.GetFileNameWithoutExtension(fileEntry2.Name),
-                                Path = fileEntry2.Name
+                                SimpleName = project2Path,
+                                FullName = project2Path,
+                                Path = "..\\bar\\" + project2Name
                             },
                             new ReferenceDescriptor {
                                 ReferenceType = ReferenceType.Project,
-                                SimpleName = Path.GetFileNameWithoutExtension(fileEntry2.Name),
-                                FullName = Path.GetFileNameWithoutExtension(fileEntry2.Name),
-                                Path = fileEntry3.Name
+                                SimpleName = project3Path,
+                                FullName = project3Path,
+                                Path = "..\\blah\\" + project3Name
                             }
                         }
                     });
 
             // Result for project b and c
-            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<Stream>(stream =>
-                ((StubFileSystem.FileEntryReadStream)stream).FileEntry == fileEntry2 || ((StubFileSystem.FileEntryReadStream)stream).FileEntry == fileEntry3)))
+            _mockedStubProjectFileParser
+                .Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<string>(virtualPath => (virtualPath == project2Path || virtualPath == project3Path))))
                 .Returns(
                     new ProjectFileDescriptor {
                         SourceFilenames = new[] { commonFileName }
                     });
 
-            IEnumerable<string> dependencies = extensionLoader.GetDependenciesAccessor(fileEntry.Name);
+            var extensionLoader = _container.Resolve<DynamicExtensionLoaderAccessor>();
+            var dependencies = extensionLoader.GetDependenciesAccessor(project1Path);
 
-            Assert.That(dependencies.Count(), Is.EqualTo(6), "6 results should mean no duplicates");
-
-            // Project files
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry.Name)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry2.Name)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry3.Name)), Is.Not.Null);
-
-            // Individual source files
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileName1)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileName2)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(commonFileName)), Is.Not.Null);
-        }
-
-        [Test]
-        public void GetDependenciesContainsBinForReferencedProjectsTest() {
-            const string fileName1 = "a.cs";
-            const string fileName2 = "b.cs";
-
-            const string commonFileName = "c.cs";
-
-            DynamicExtensionLoaderAccessor extensionLoader = _container.Resolve<DynamicExtensionLoaderAccessor>();
-            StubFileSystem stubFileSystem = _container.Resolve<StubFileSystem>();
-            StubFileSystem.FileEntry fileEntry = stubFileSystem.CreateFileEntry("orchard.a.csjproj");
-            StubFileSystem.FileEntry fileEntry2 = stubFileSystem.CreateFileEntry("orchard.b.csjproj");
-
-            StubFileSystem.DirectoryEntry directoryEntry = stubFileSystem.CreateDirectoryEntry("bin");
-            StubFileSystem.FileEntry fileEntry3 = directoryEntry.CreateFile("orchard.b.dll");
-
-            // Project a reference b and c which share a file in common
-
-            // Result for project a
-            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<Stream>(stream => ((StubFileSystem.FileEntryReadStream)stream).FileEntry == fileEntry)))
-                .Returns(
-                    new ProjectFileDescriptor {
-                        SourceFilenames = new[] { fileName1, fileName2 },
-                        References = new[] { 
-                            new ReferenceDescriptor {
-                                ReferenceType = ReferenceType.Project,
-                                SimpleName = Path.GetFileNameWithoutExtension(fileEntry2.Name),
-                                FullName = Path.GetFileNameWithoutExtension(fileEntry2.Name),
-                                Path = fileEntry2.Name
-                            }
-                        }
-                    });
-
-            // Result for project b and c
-            _mockedStubProjectFileParser.Setup(stubProjectFileParser => stubProjectFileParser.Parse(It.Is<Stream>(stream =>
-                ((StubFileSystem.FileEntryReadStream)stream).FileEntry == fileEntry2)))
-                .Returns(
-                    new ProjectFileDescriptor {
-                        SourceFilenames = new[] { commonFileName }
-                    });
-
-            _mockedDependenciesFolder.Setup(dependenciesFolder => dependenciesFolder.GetDescriptor(It.Is<string>(moduleName => moduleName == Path.GetDirectoryName(fileEntry2.Name))))
-                .Returns(
-                    new DependencyDescriptor {
-                        VirtualPath = Path.Combine(directoryEntry.Name, fileEntry3.Name)
-                    });
-
-            IEnumerable<string> dependencies = extensionLoader.GetDependenciesAccessor(fileEntry.Name);
-
-            Assert.That(dependencies.Count(), Is.EqualTo(6), "6 results should mean no duplicates");
+            Assert.That(dependencies.Count(), Is.EqualTo(7), "7 results should mean no duplicates");
 
             // Project files
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry.Name)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileEntry2.Name)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(Path.Combine(directoryEntry.Name, fileEntry3.Name))), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(project1Path)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(project2Path)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(project3Path)), Is.Not.Null);
 
             // Individual source files
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileName1)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(fileName2)), Is.Not.Null);
-            Assert.That(dependencies.FirstOrDefault(dep => dep.Equals(commonFileName)), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(vpp.Combine(path1Prefix, fileName1))), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(vpp.Combine(path1Prefix, fileName2))), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(vpp.Combine(path2Prefix, commonFileName))), Is.Not.Null);
+            Assert.That(dependencies.FirstOrDefault(dep => dep.Contains(vpp.Combine(path3Prefix, commonFileName))), Is.Not.Null);
         }
 
         internal class DynamicExtensionLoaderAccessor : DynamicExtensionLoader {

@@ -31,6 +31,7 @@ namespace Orchard.Tests.Modules.Widgets.Services {
 
         private const string ThemeZoneName1 = "sidebar";
         private const string ThemeZoneName2 = "alternative";
+        private const string DuplicateZoneNames = "sidebar,alternative, sidebar , alternative ";
 
         private const string LayerName1 = "Test layer 1";
         private const string LayerDescription1 = "Test layer 1";
@@ -78,10 +79,12 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         public override void Register(ContainerBuilder builder) {
             var mockFeatureManager = new Mock<IFeatureManager>();
 
-            var theme1 = new FeatureDescriptor {Extension = new ExtensionDescriptor {Zones = ThemeZoneName1}};
-            var theme2 = new FeatureDescriptor {Extension = new ExtensionDescriptor {Zones = ThemeZoneName2}};
+            var theme1 = new FeatureDescriptor {Extension = new ExtensionDescriptor { Zones = ThemeZoneName1, ExtensionType = "Theme" }};
+            var theme2 = new FeatureDescriptor { Extension = new ExtensionDescriptor { Zones = ThemeZoneName2, ExtensionType = "Theme" } };
+            var theme3 = new FeatureDescriptor { Extension = new ExtensionDescriptor { Zones = DuplicateZoneNames, ExtensionType = "Theme" } };
+            var module1 = new FeatureDescriptor { Extension = new ExtensionDescriptor { Zones = "DontSeeMeBecauseIAmNotATheme", ExtensionType = "Module" } };
             mockFeatureManager.Setup(x => x.GetEnabledFeatures())
-                .Returns(new[] { theme1, theme2 });
+                .Returns(new[] { theme1, theme2, theme3, module1 });
 
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
@@ -200,10 +203,10 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         [Test]
-        [Ignore("Needs fixing")]
+        //[Ignore("Needs fixing")]
         public void GetZonesTest() {
             IEnumerable<string> zones = _widgetService.GetZones();
-            Assert.That(zones.Count(), Is.EqualTo(2), "One zone on the mock list");
+            Assert.That(zones.Count(), Is.EqualTo(2), "Two zones on the mock list");
             Assert.That(zones.FirstOrDefault(zone => zone == ThemeZoneName1), Is.Not.Null);
             Assert.That(zones.FirstOrDefault(zone => zone == ThemeZoneName2), Is.Not.Null);
         }
