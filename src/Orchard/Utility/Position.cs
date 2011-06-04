@@ -25,9 +25,11 @@ namespace Orchard.Utility {
         public static string GetNextMinor(int major, IEnumerable<MenuItem> menuItems) {
             var majorStr = major.ToString(CultureInfo.InvariantCulture);
 
-            var allmajors = menuItems.Where(mi => PositionHasMajorNumber(mi, major)).ToArray();
-
             var maxMenuItem = menuItems.Where(mi => PositionHasMajorNumber(mi, major)).OrderByDescending(mi => mi.Position, new FlatPositionComparer()).FirstOrDefault();
+            if (maxMenuItem == null) {
+                // first one in this major position number
+                return majorStr;
+            }
             var positionParts = maxMenuItem.Position.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim().Length > 0);
             if (positionParts.Count() > 1) {
                 int result;
