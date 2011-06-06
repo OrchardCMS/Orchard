@@ -1,9 +1,7 @@
-using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Common.DateEditor {
-    [UsedImplicitly]
     public class DateEditorHandler : ContentHandler {
         public DateEditorHandler() {
             OnPublished<CommonPart>((context, part) => {
