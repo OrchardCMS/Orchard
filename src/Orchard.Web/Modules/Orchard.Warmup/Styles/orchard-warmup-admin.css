@@ -1,0 +1,8 @@
+﻿
+td.status-error  {
+    background: transparent url(../Content/Admin/images/offline.gif) no-repeat right;
+}
+
+td.status-ok  {
+    background: transparent url(../Content/Admin/images/online.gif) no-repeat right;
+}

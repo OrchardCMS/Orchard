@@ -10,8 +10,9 @@ namespace Orchard.Warmup {
         public void GetNavigation(NavigationBuilder builder) {
             builder
                 .Add(T("Settings"), menu => menu
-                    .Add(T("Warmup" ), "10.0", item => item.Action("Index", "Admin", new { area = "Orchard.Warmup" }).Permission(StandardPermissions.SiteOwner))
-                    );
+                    .Add(T("Performance"), "10.0", subMenu => subMenu.Action("Index", "Admin", new { area = "Orchard.Warmup" }).Permission(StandardPermissions.SiteOwner)
+                        .Add(T("Warmup"), "10.0", item => item.Action("Index", "Admin", new { area = "Orchard.Warmup" }).Permission(StandardPermissions.SiteOwner).LocalNav())
+                    ));
         }
     }
 }
