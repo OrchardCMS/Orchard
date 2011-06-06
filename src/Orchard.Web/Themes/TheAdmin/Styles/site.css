@@ -184,7 +184,6 @@ hr {border:0; height:1px; color:#e4e5e6; background-color:#e4e5e6;}
 #footer {
     clear:both;
     height:70px;
-    position:relative;
     margin-top:-70px; /*Top margin set negative px of footer height*/
     background:url(images/vinesBackgroundBottom.gif) no-repeat bottom left;
 }

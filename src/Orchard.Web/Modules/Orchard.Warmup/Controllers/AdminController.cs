@@ -1,25 +1,28 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Contents.Controllers;
-using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Warmup.Models;
 using Orchard.UI.Notify;
 using Orchard.Warmup.Services;
+using Orchard.Warmup.ViewModels;
 
 namespace Orchard.Warmup.Controllers {
     [ValidateInput(false)]
     public  class AdminController : Controller, IUpdateModel {
-        private readonly IWarmupScheduler _warmupScheduler;
+        private readonly IWarmupUpdater _warmupUpdater;
+        private readonly IWarmupReportManager _reportManager;
 
         public AdminController(
             IOrchardServices services, 
-            IWarmupScheduler warmupScheduler,
-            IAppDataFolder appDataFolder) {
-            _warmupScheduler = warmupScheduler;
+            IWarmupUpdater warmupUpdater,
+            IWarmupReportManager reportManager) {
+            _warmupUpdater = warmupUpdater;
+            _reportManager = reportManager;
             Services = services;
 
             T = NullLocalizer.Instance;
@@ -33,7 +36,13 @@ namespace Orchard.Warmup.Controllers {
                 return new HttpUnauthorizedResult();
 
             var warmupPart = Services.WorkContext.CurrentSite.As<WarmupSettingsPart>();
-            return View(warmupPart);
+
+            var viewModel = new WarmupViewModel {
+                Settings = warmupPart,
+                ReportEntries = _reportManager.Read()
+            };
+
+            return View(viewModel);
         }
 
         [FormValueRequired("submit")]
@@ -42,11 +51,14 @@ namespace Orchard.Warmup.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            var warmupPart = Services.WorkContext.CurrentSite.As<WarmupSettingsPart>();
+            var viewModel = new WarmupViewModel {
+                Settings = Services.WorkContext.CurrentSite.As<WarmupSettingsPart>(),
+                ReportEntries = Enumerable.Empty<ReportEntry>()
+            };
 
-            if(TryUpdateModel(warmupPart)) {
-                if (!String.IsNullOrEmpty(warmupPart.Urls)) {
-                    using (var urlReader = new StringReader(warmupPart.Urls)) {
+            if (TryUpdateModel(viewModel)) {
+                if (!String.IsNullOrEmpty(viewModel.Settings.Urls)) {
+                    using (var urlReader = new StringReader(viewModel.Settings.Urls)) {
                         string relativeUrl;
                         while (null != (relativeUrl = urlReader.ReadLine())) {
                             if (!Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative) || !(relativeUrl.StartsWith("/"))) {
@@ -57,30 +69,20 @@ namespace Orchard.Warmup.Controllers {
                 }
             }
 
-            if (warmupPart.Scheduled) {
-                if (warmupPart.Delay <= 0) {
+            if (viewModel.Settings.Scheduled) {
+                if (viewModel.Settings.Delay <= 0) {
                     AddModelError("Delay", T("Delay must be greater than zero."));
                 }
             }
 
             if (ModelState.IsValid) {
                 Services.Notifier.Information(T("Warmup updated successfully."));
-            }
-
-            return View(warmupPart);
-        }
-
-        [FormValueRequired("submit.Generate")]
-        [HttpPost, ActionName("Index")]
-        public ActionResult IndexPostGenerate() {
-            var result = IndexPost();
-            
+            }            
             if (ModelState.IsValid) {
-                _warmupScheduler.Schedule(true);
-                Services.Notifier.Information(T("Static pages are currently being generated."));
+                _warmupUpdater.Generate();
             }
 
-            return result;
+            return RedirectToAction("Index");
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

@@ -6,6 +6,7 @@ using System.Xml;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Warmup;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.LockFile;
@@ -26,11 +27,13 @@ namespace Orchard.Tests.Modules.Warmup {
         private Mock<IWebDownloader> _webDownloader;
         private IOrchardServices _orchardServices;
         private WarmupSettingsPart _settings;
+        private IWarmupReportManager _reportManager;
 
         private readonly string _basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
         private string _warmupFilename, _lockFilename;
         private const string WarmupFolder = "Warmup";
+        private const string TenantFolder = "Sites/Default";
 
         [TestFixtureTearDown]
         public void Clean() {
@@ -60,15 +63,18 @@ namespace Orchard.Tests.Modules.Warmup {
             builder.RegisterType<DefaultLockFileManager>().As<ILockFileManager>();
             builder.RegisterType<WarmupUpdater>().As<IWarmupUpdater>();
             builder.RegisterType<StubClock>().As<IClock>();
+            builder.RegisterType<WarmupReportManager>().As<IWarmupReportManager>();
+            builder.RegisterInstance(new ShellSettings { Name = "Default" }).As<ShellSettings>();
             builder.RegisterInstance(_clock = new StubClock()).As<IClock>();
             builder.RegisterInstance(_webDownloader.Object).As<IWebDownloader>();
             _container = builder.Build();
 
             _lockFileManager = _container.Resolve<ILockFileManager>();
             _warmupUpdater = _container.Resolve<IWarmupUpdater>();
+            _reportManager = _container.Resolve<IWarmupReportManager>();
 
-            _warmupFilename = _appDataFolder.Combine(WarmupFolder, "warmup.txt");
-            _lockFilename = _appDataFolder.Combine(WarmupFolder, "warmup.txt.lock");
+            _warmupFilename = _appDataFolder.Combine(TenantFolder, "warmup.txt");
+            _lockFilename = _appDataFolder.Combine(TenantFolder, "warmup.txt.lock");
         }
 
         [Test]
@@ -91,8 +97,7 @@ namespace Orchard.Tests.Modules.Warmup {
             _lockFileManager.TryAcquireLock(_lockFilename, ref lockFile);
             using(lockFile) {
                 _warmupUpdater.Generate();
-                // warmup file + lock file
-                Assert.That(_appDataFolder.ListFiles(WarmupFolder).Count(), Is.EqualTo(2));
+                Assert.That(_appDataFolder.ListFiles(WarmupFolder).Count(), Is.EqualTo(0));
             }
 
             _warmupUpdater.Generate();
@@ -114,10 +119,13 @@ namespace Orchard.Tests.Modules.Warmup {
             _warmupUpdater.Generate();
             var files = _appDataFolder.ListFiles(WarmupFolder).ToList();
             
-            // warmup + content files
-            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, "warmup.txt")));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About"))));
+
+            files = _appDataFolder.ListFiles(TenantFolder).ToList();
+
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(TenantFolder, "warmup.txt")));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(TenantFolder, "warmup.xml")));
 
             var homepageContent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net")));
             var aboutcontent = _appDataFolder.ReadFile(_appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About")));
@@ -141,8 +149,6 @@ namespace Orchard.Tests.Modules.Warmup {
             _warmupUpdater.Generate();
             var files = _appDataFolder.ListFiles(WarmupFolder).ToList();
 
-            // warmup + content file
-            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, "warmup.txt")));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
             Assert.That(files, Has.None.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About"))));
         }
@@ -158,9 +164,7 @@ namespace Orchard.Tests.Modules.Warmup {
             _warmupUpdater.Generate();
             var files = _appDataFolder.ListFiles(WarmupFolder).ToList();
 
-            // warmup + content file
-            Assert.That(files.Count, Is.EqualTo(2));
-            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, "warmup.txt")));
+            Assert.That(files.Count, Is.EqualTo(1));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
         }
 
@@ -258,8 +262,6 @@ namespace Orchard.Tests.Modules.Warmup {
             _warmupUpdater.Generate();
             var files = _appDataFolder.ListFiles(WarmupFolder).ToList();
             
-            // warmup + content files
-            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, "warmup.txt")));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net"))));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net/About"))));
             Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
@@ -276,6 +278,96 @@ namespace Orchard.Tests.Modules.Warmup {
             Assert.That(aboutcontent, Is.EqualTo("Bar"));
             Assert.That(wwwaboutcontent, Is.EqualTo("Bar"));
         }
-    
+
+        [Test]
+        public void ReportIsCreated() {
+            _settings.Urls = @" /
+                                /About";
+
+            ((StubWorkContextAccessor.WorkContextImpl.StubSite)_orchardServices.WorkContext.CurrentSite).BaseUrl = "http://www.orchardproject.net/";
+
+            _webDownloader
+                .Setup(w => w.Download("http://www.orchardproject.net/"))
+                .Returns(new DownloadResult { Content = "Foo", StatusCode = HttpStatusCode.OK });
+
+            _webDownloader
+                .Setup(w => w.Download("http://www.orchardproject.net/About"))
+                .Returns(new DownloadResult { Content = "Bar", StatusCode = HttpStatusCode.OK });
+
+            _warmupUpdater.Generate();
+            var files = _appDataFolder.ListFiles(WarmupFolder).ToList();
+
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net/About"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About"))));
+
+            var report = _reportManager.Read().ToList();
+
+            Assert.That(report.Count(), Is.EqualTo(2));
+            Assert.That(report, Has.Some.Matches<ReportEntry>(x => x.RelativeUrl == "/"));
+            Assert.That(report, Has.Some.Matches<ReportEntry>(x => x.RelativeUrl == "/About"));
+        }
+
+        [Test]
+        public void ShouldNotDeleteOtherFiles() {
+            _settings.Urls = @" /
+                                /About";
+
+            ((StubWorkContextAccessor.WorkContextImpl.StubSite)_orchardServices.WorkContext.CurrentSite).BaseUrl = "http://www.orchardproject.net/";
+
+            _webDownloader
+                .Setup(w => w.Download("http://www.orchardproject.net/"))
+                .Returns(new DownloadResult { Content = "Foo", StatusCode = HttpStatusCode.OK });
+
+            _webDownloader
+                .Setup(w => w.Download("http://www.orchardproject.net/About"))
+                .Returns(new DownloadResult { Content = "Bar", StatusCode = HttpStatusCode.OK });
+
+            // Create a static file in the warmup folder
+            _appDataFolder.CreateFile(_appDataFolder.Combine(WarmupFolder, "foo.txt"), "Foo");
+
+            _warmupUpdater.Generate();
+            var files = _appDataFolder.ListFiles(WarmupFolder).ToList();
+
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, "foo.txt")));
+
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net/About"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About"))));
+        }
+
+
+        [Test]
+        public void ClearingUrlsShouldDeleteContent() {
+            _settings.Urls = @" /
+                                /About";
+
+            ((StubWorkContextAccessor.WorkContextImpl.StubSite)_orchardServices.WorkContext.CurrentSite).BaseUrl = "http://www.orchardproject.net/";
+
+            _webDownloader
+                .Setup(w => w.Download("http://www.orchardproject.net/"))
+                .Returns(new DownloadResult { Content = "Foo", StatusCode = HttpStatusCode.OK });
+
+            _webDownloader
+                .Setup(w => w.Download("http://www.orchardproject.net/About"))
+                .Returns(new DownloadResult { Content = "Bar", StatusCode = HttpStatusCode.OK });
+
+            _warmupUpdater.Generate();
+            var files = _appDataFolder.ListFiles(WarmupFolder).ToList();
+
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://www.orchardproject.net/About"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net"))));
+            Assert.That(files, Has.Some.Matches<string>(x => x == _appDataFolder.Combine(WarmupFolder, WarmupUtility.EncodeUrl("http://orchardproject.net/About"))));
+
+            _settings.Urls = @"";
+
+            _warmupUpdater.Generate();
+            files = _appDataFolder.ListFiles(WarmupFolder).ToList();
+
+            Assert.That(files.Count, Is.EqualTo(0));
+        }
     }
 }
