@@ -37,7 +37,7 @@
             </thead>
             @foreach (var mediaFolder in Model.MediaFolders) {
             <tr>
-                <td><input type="checkbox" value="true" name="@T("Checkbox.{0}", mediaFolder.Name)"/></td>
+                <td><input type="checkbox" value="true" name="Checkbox.@mediaFolder.Name"/></td>
                 @* todo: (heskew) this URL needs to be determined from current module location *@
                 <td>
                     <img src="@Href("~/Modules/Orchard.Media/Content/Admin/images/folder.gif")" height="16" width="16" class="mediaTypeIcon" alt="@T("Folder")" />

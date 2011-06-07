@@ -100,6 +100,24 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Delete")]
+        public ActionResult EditDeletePOST(int blogId) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't delete blog")))
+                return new HttpUnauthorizedResult();
+
+            var blog = _blogService.Get(blogId, VersionOptions.DraftRequired);
+            if (blog == null)
+                return HttpNotFound();
+            _blogService.Delete(blog);
+
+            Services.Notifier.Information(T("Blog deleted"));
+
+            return Redirect(Url.BlogsForAdmin());
+        }
+
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int blogId) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();

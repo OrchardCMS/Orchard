@@ -47,7 +47,7 @@ namespace Orchard.Packaging.Services {
         }
 
         public string GetFullPath(string path) {
-            return Path.Combine(Root, path);
+            return Path.Combine(Root, Uri.UnescapeDataString(path));
         }
 
         protected virtual string GetReferencePath(string name) {
@@ -55,12 +55,12 @@ namespace Orchard.Packaging.Services {
         }
 
         public void AddFile(string path, Stream stream) {
-            EnsureDirectory(Path.GetDirectoryName(path));
+            string fullPath = GetFullPath(path);
+            EnsureDirectory(Path.GetDirectoryName(fullPath));
 
-            using (Stream outputStream = File.Create(GetFullPath(path))) {
+            using (Stream outputStream = File.Create(fullPath)) {
                 stream.CopyTo(outputStream);
             }
-
         }
 
         public void DeleteFile(string path) {
@@ -88,9 +88,7 @@ namespace Orchard.Packaging.Services {
                 path = GetFullPath(path);
                 Directory.Delete(path, recursive);
             }
-            catch (DirectoryNotFoundException) {
-
-            }
+            catch (DirectoryNotFoundException) {}
         }
 
         public void AddReference(string referencePath, Stream stream) {
@@ -125,12 +123,8 @@ namespace Orchard.Packaging.Services {
                 return Directory.EnumerateFiles(path, filter)
                                 .Select(MakeRelativePath);
             }
-            catch (UnauthorizedAccessException) {
-
-            }
-            catch (DirectoryNotFoundException) {
-
-            }
+            catch (UnauthorizedAccessException) {}
+            catch (DirectoryNotFoundException) {}
 
             return Enumerable.Empty<string>();
         }
@@ -144,12 +138,8 @@ namespace Orchard.Packaging.Services {
                 return Directory.EnumerateDirectories(path)
                                 .Select(MakeRelativePath);
             }
-            catch (UnauthorizedAccessException) {
-
-            }
-            catch (DirectoryNotFoundException) {
-                
-            }
+            catch (UnauthorizedAccessException) {}
+            catch (DirectoryNotFoundException) {}
 
             return Enumerable.Empty<string>();
         }

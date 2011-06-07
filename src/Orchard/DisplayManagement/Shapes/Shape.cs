@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Web.Mvc;
 
 namespace Orchard.DisplayManagement.Shapes {
+    [DebuggerTypeProxy(typeof(ShapeDebugView))]
     public class Shape : IShape, IEnumerable {
         private const string DefaultPosition = "5";
 
@@ -51,7 +53,5 @@ namespace Orchard.DisplayManagement.Shapes {
         public virtual IEnumerator GetEnumerator() {
             return _items.GetEnumerator();
         }
-
-
     }
 }

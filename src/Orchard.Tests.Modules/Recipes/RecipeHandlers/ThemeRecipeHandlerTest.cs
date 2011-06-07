@@ -53,6 +53,8 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<FeatureManager>().As<IFeatureManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
+            builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
             builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>().SingleInstance();
             builder.RegisterType<ModuleRecipeHandlerTest.StubDataMigrationManager>().As<IDataMigrationManager>();
             builder.RegisterType<ModuleRecipeHandlerTest.StubPackagingSourceManager>().As<IPackagingSourceManager>();
@@ -128,13 +130,16 @@ Features:
             Assert.Throws(typeof(InvalidOperationException), () => themeRecipeHandler.ExecuteRecipeStep(recipeContext));
         }
 
-        internal class StubSiteThemeService : ISiteThemeService
-        {
+        internal class StubSiteThemeService : ISiteThemeService {
             public ExtensionDescriptor GetSiteTheme() {
                 throw new NotImplementedException();
             }
 
             public void SetSiteTheme(string themeName) {
+                throw new NotImplementedException();
+            }
+
+            public string GetCurrentThemeName() {
                 throw new NotImplementedException();
             }
         }

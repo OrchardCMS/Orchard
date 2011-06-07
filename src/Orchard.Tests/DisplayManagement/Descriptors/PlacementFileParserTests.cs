@@ -15,6 +15,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         protected override void Register(Autofac.ContainerBuilder builder) {
             builder.RegisterType<PlacementFileParser>().As<IPlacementFileParser>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
             builder.RegisterType<InMemoryWebSiteFolder>().As<IWebSiteFolder>()
                 .As<InMemoryWebSiteFolder>().InstancePerLifetimeScope();
         }

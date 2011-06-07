@@ -149,6 +149,7 @@
     <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
     <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
     <Compile Include="Media\Services\MediaServiceTests.cs" />
+    <Compile Include="Packaging\Services\FileBasedProjectSystemTests.cs" />
     <Compile Include="Packaging\Services\FolderUpdaterTests.cs" />
     <Compile Include="Packaging\Services\PackageInstallerTests.cs" />
     <Compile Include="Recipes\RecipeHandlers\ModuleRecipeHandlerTest.cs" />
@@ -162,7 +163,6 @@
     <Compile Include="Scripting\SimpleScriptingTests.cs" />
     <Compile Include="DatabaseEnabledTestsBase.cs" />
     <Compile Include="Media\Extensions\LongExtensionsTests.cs" />
-    <EmbeddedResource Include="Packaging\Services\HelloDriver.cs.txt" />
     <Compile Include="Packaging\Services\PackageBuilderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles\Controllers\AdminControllerTests.cs" />
@@ -296,12 +296,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Packaging\Services\Hello.World.csproj.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Recipes\Services\FoldersData\Sample1\Module.txt" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
     <EmbeddedResource Include="Recipes\Services\FoldersData\Sample1\Recipes\cms.recipe.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

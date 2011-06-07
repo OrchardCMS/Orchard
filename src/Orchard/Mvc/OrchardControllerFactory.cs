@@ -56,7 +56,6 @@ namespace Orchard.Mvc {
                 return (Type) info.Metadata["ControllerType"];
             }
 
-            // fail as appropriate for MVC's expectations
             return null;
         }
 
@@ -74,7 +73,7 @@ namespace Orchard.Mvc {
             }
 
             // fail as appropriate for MVC's expectations
-            return null;
+            return base.GetControllerInstance(requestContext, controllerType);
         }
     }
 }

@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.1.30
-OrchardVersion: 1.1.30
+Version: 1.2.0
+OrchardVersion: 1.2.0
 Description: The DLR scripting module enables the possibility to execute scripts using the DLR.
 FeatureDescription: DLR scripting support.
 Dependencies: Orchard.Scripting

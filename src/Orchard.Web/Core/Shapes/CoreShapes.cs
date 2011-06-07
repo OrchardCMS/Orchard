@@ -43,6 +43,7 @@ namespace Orchard.Core.Shapes {
                 .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(() => creating.New.Zone())))
                 .OnCreated(created => {
                     var layout = created.Shape;
+                    
                     layout.Head = created.New.DocumentZone(ZoneName: "Head");
                     layout.Body = created.New.DocumentZone(ZoneName: "Body");
                     layout.Tail = created.New.DocumentZone(ZoneName: "Tail");

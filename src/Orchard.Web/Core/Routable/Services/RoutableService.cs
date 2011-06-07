@@ -100,7 +100,7 @@ namespace Orchard.Core.Routable.Services {
 
         public IEnumerable<IRoutableAspect> GetSimilarPaths(string path) {
             return
-                _contentManager.Query().Join<RoutePartRecord>()
+                _contentManager.Query<RoutePart, RoutePartRecord>()
                     .List()
                     .Select(i => i.As<RoutePart>())
                     .Where(routable => routable.Path != null && routable.Path.StartsWith(path, StringComparison.OrdinalIgnoreCase))

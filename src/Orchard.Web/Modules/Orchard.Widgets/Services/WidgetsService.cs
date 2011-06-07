@@ -69,9 +69,9 @@ namespace Orchard.Widgets.Services {
             return _featureManager.GetEnabledFeatures()
                 .Select(x => x.Extension)
                 .Where(x => DefaultExtensionTypes.IsTheme(x.ExtensionType) && x.Zones != null)
-                .SelectMany(x => x.Zones.Split(','))
-                .Distinct()
+                .SelectMany(x => x.Zones.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 .Select(x => x.Trim())
+                .Distinct()
                 .ToArray();
         }
 
@@ -80,9 +80,9 @@ namespace Orchard.Widgets.Services {
 
             // get the zones for this theme
             if (theme.Zones != null)
-                zones = theme.Zones.Split(',')
-                    .Distinct()
+                zones = theme.Zones.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim())
+                    .Distinct()
                     .ToList();
 
             // if this theme has no zones defined then walk the BaseTheme chain until we hit a theme which defines zones
@@ -90,9 +90,9 @@ namespace Orchard.Widgets.Services {
                 string baseTheme = theme.BaseTheme;
                 theme = _extensionManager.GetExtension(baseTheme);
                 if (theme != null && theme.Zones != null)
-                    zones = theme.Zones.Split(',')
-                        .Distinct()
+                    zones = theme.Zones.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(x => x.Trim())
+                        .Distinct()
                         .ToList();
             }
 

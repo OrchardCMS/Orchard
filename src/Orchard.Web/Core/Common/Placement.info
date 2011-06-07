@@ -12,6 +12,7 @@
     <!-- edit "shape" -->
     <Place Parts_Common_Body_Edit="Content:2"/>
     <Place Parts_Common_Owner_Edit="Content:20"/>
+    <Place Parts_Common_Date_Edit="Content:18"/>
     <Place Parts_Common_Container_Edit="Content:20"/>
     <Place Fields_Common_Text_Edit="Content:2.5"/>
     <!-- default positioning -->

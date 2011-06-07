@@ -49,7 +49,8 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void IdsFromFoldersWithModuleTxtShouldBeListed() {
-            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
+            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder());
+            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var ids = folders.AvailableExtensions().Select(d => d.Id);
             Assert.That(ids.Count(), Is.EqualTo(5));
             Assert.That(ids, Has.Some.EqualTo("Sample1")); // Sample1 - obviously
@@ -61,7 +62,8 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void ModuleTxtShouldBeParsedAndReturnedAsYamlDocument() {
-            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
+            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder());
+            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var sample1 = folders.AvailableExtensions().Single(d => d.Id == "Sample1");
             Assert.That(sample1.Id, Is.Not.Empty);
             Assert.That(sample1.Author, Is.EqualTo("Bertrand Le Roy")); // Sample1
@@ -69,7 +71,8 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void NamesFromFoldersWithModuleTxtShouldFallBackToIdIfNotGiven() {
-            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
+            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder());
+            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var names = folders.AvailableExtensions().Select(d => d.Name);
             Assert.That(names.Count(), Is.EqualTo(5));
             Assert.That(names, Has.Some.EqualTo("Le plug-in français")); // Sample1
@@ -81,7 +84,8 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void PathsFromFoldersWithModuleTxtShouldFallBackAppropriatelyIfNotGiven() {
-            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
+            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder());
+            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var paths = folders.AvailableExtensions().Select(d => d.Path);
             Assert.That(paths.Count(), Is.EqualTo(5));
             Assert.That(paths, Has.Some.EqualTo("Sample1")); // Sample1 - Id, Name invalid URL segment

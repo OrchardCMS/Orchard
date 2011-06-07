@@ -3,12 +3,38 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Orchard.Caching;
+using Orchard.FileSystems.WebSite;
 
 namespace Orchard.Environment.Extensions.Compilers {
     public class DefaultProjectFileParser : IProjectFileParser {
+        private readonly IWebSiteFolder _webSiteFolder;
+        private readonly ICacheManager _cacheManager;
+
+        public DefaultProjectFileParser(IWebSiteFolder webSiteFolder, ICacheManager cacheManager) {
+            _webSiteFolder = webSiteFolder;
+            _cacheManager = cacheManager;
+        }
+
+        public ProjectFileDescriptor Parse(string virtualPath) {
+            return _cacheManager.Get(virtualPath,
+                ctx => {
+                    ctx.Monitor(_webSiteFolder.WhenPathChanges(virtualPath));
+                    string content = _webSiteFolder.ReadFile(virtualPath);
+                    using (var reader = new StringReader(content)) {
+                        return Parse(reader);
+                    }
+                });
+        }
 
         public ProjectFileDescriptor Parse(Stream stream) {
-            var document = XDocument.Load(XmlReader.Create(stream));
+            using (var reader = new StreamReader(stream)) {
+                return Parse(reader);
+            }
+        }
+
+        public ProjectFileDescriptor Parse(TextReader reader) {
+            var document = XDocument.Load(XmlReader.Create(reader));
             return new ProjectFileDescriptor {
                 AssemblyName = GetAssemblyName(document),
                 SourceFilenames = GetSourceFilenames(document).ToArray(),

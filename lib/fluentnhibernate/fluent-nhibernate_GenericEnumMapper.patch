@@ -1,0 +1,21 @@
+# HG changeset patch
+# User Andre Rodrigues <andrerod@microsoft.com>
+# Date 1305755041 25200
+# Node ID 48d2b0560a4196a96e906a218208b69ff9db25bd
+# Parent  9cd8564ec960ed8b634f87249da62a69b506b60f
+Making GenericEnumMapper Serializable.
+
+diff -r 9cd8564ec960 -r 48d2b0560a41 src/FluentNHibernate/Mapping/GenericEnumMapper.cs
+--- a/src/FluentNHibernate/Mapping/GenericEnumMapper.cs	Wed May 18 14:43:50 2011 -0700
++++ b/src/FluentNHibernate/Mapping/GenericEnumMapper.cs	Wed May 18 14:44:01 2011 -0700
+@@ -1,7 +1,9 @@
+-﻿using NHibernate.Type;
++﻿using System;
++using NHibernate.Type;
+ 
+ namespace FluentNHibernate.Mapping
+ {
++    [Serializable]
+     public class GenericEnumMapper<TEnum> : EnumStringType
+     {
+         public GenericEnumMapper()

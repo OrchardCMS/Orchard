@@ -12,6 +12,7 @@
     <Place Parts_Blogs_Blog_Fields="Content:2"/>
     <Place Parts_Blogs_BlogArchives_Edit="Content:5"/>
     <Place Parts_Blogs_RecentBlogPosts_Edit="Content:5"/>
+    <Place Blog_DeleteButton="Sidebar:25" />
     <!-- widgets -->
     <Place Parts_Blogs_BlogArchives="Content"/>
     <Place Parts_Blogs_RecentBlogPosts="Content"/>

@@ -30,14 +30,14 @@ namespace Orchard.Tests.Caching {
         [Test]
         public void ComponentsAtHostLevelHaveAccessToCache() {
             var alpha = _hostContainer.Resolve<Alpha>();
-            Assert.That(alpha.CacheManager, Is.Not.Null);            
+            Assert.That(alpha.CacheManager, Is.Not.Null);
         }
 
         [Test]
         public void HostLevelHasAccessToGlobalVolatileProviders() {
-            Assert.That(_hostContainer.Resolve<IWebSiteFolder>(), Is.Not.Null);            
-            Assert.That(_hostContainer.Resolve<IAppDataFolder>(), Is.Not.Null);            
-            Assert.That(_hostContainer.Resolve<IClock>(), Is.Not.Null);            
+            Assert.That(_hostContainer.Resolve<IWebSiteFolder>(), Is.Not.Null);
+            Assert.That(_hostContainer.Resolve<IAppDataFolder>(), Is.Not.Null);
+            Assert.That(_hostContainer.Resolve<IClock>(), Is.Not.Null);
         }
 
     }

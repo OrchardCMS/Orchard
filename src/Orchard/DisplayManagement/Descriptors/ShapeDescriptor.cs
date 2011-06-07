@@ -12,7 +12,7 @@ namespace Orchard.DisplayManagement.Descriptors {
             Displaying = Enumerable.Empty<Action<ShapeDisplayingContext>>();
             Displayed = Enumerable.Empty<Action<ShapeDisplayedContext>>();
             Wrappers = new List<string>();
-            Bindings = new Dictionary<string, ShapeBinding>();
+            Bindings = new Dictionary<string, ShapeBinding>(StringComparer.OrdinalIgnoreCase);
             Placement = ctx => new PlacementInfo {Location = DefaultPlacement};
         }
 

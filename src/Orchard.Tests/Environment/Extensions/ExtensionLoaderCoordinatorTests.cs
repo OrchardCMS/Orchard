@@ -27,6 +27,8 @@ namespace Orchard.Tests.Environment.Extensions {
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
+            builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
+            builder.RegisterType<StubAsyncTokenProvider>().As<IAsyncTokenProvider>();
 
             _container = builder.Build();
             _manager = _container.Resolve<IExtensionManager>();
@@ -45,7 +47,7 @@ namespace Orchard.Tests.Environment.Extensions {
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 foreach (var e in Manifests) {
                     string name = e.Key;
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, _extensionType, Manifests[name]);
+                    yield return ExtensionHarvester.GetDescriptorForExtension("~/", name, _extensionType, Manifests[name]);
                 }
             }
         }
@@ -104,21 +106,20 @@ namespace Orchard.Tests.Environment.Extensions {
             public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) {
             }
 
-            public string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
+            public IEnumerable<ExtensionCompilationReference> GetCompilationReferences(DependencyDescriptor dependency) {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
-                throw new NotImplementedException();
-            }
-
-            public IEnumerable<string> GetDynamicModuleDependencies(DependencyDescriptor dependency, string virtualPath) {
+            public IEnumerable<string> GetVirtualPathDependencies(DependencyDescriptor dependency) {
                 throw new NotImplementedException();
             }
 
             #endregion
         }
 
+        private ExtensionManager CreateExtensionManager(StubFolders extensionFolder, StubLoaders extensionLoader) {
+            return new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager(), new StubParallelCacheContext(), new StubAsyncTokenProvider());
+        }
 
         [Test]
         public void AvailableExtensionsShouldFollowCatalogLocations() {
@@ -364,7 +365,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -390,7 +391,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -419,7 +420,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestFeature");
@@ -449,7 +450,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestFeature");
@@ -477,7 +478,7 @@ Features:
         Description: Contains the Phi type.
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var testModule = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Id == "TestModule");
@@ -501,7 +502,7 @@ Version: 1.0.3
 OrchardVersion: 1
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Id == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
@@ -520,7 +521,7 @@ Version: 1.0.3
 OrchardVersion: 1
 ");
 
-            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader }, new StubCacheManager());
+            IExtensionManager extensionManager = CreateExtensionManager(extensionFolder, extensionLoader);
             var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Id == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));

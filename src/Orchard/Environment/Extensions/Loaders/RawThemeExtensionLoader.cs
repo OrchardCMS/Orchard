@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
@@ -42,9 +43,9 @@ namespace Orchard.Environment.Extensions.Loaders {
 
                 return new ExtensionProbeEntry {
                     Descriptor = descriptor,
-                    LastWriteTimeUtc = DateTime.MinValue,
                     Loader = this,
-                    VirtualPath = "~/Theme/" + descriptor.Id
+                    VirtualPath = "~/Theme/" + descriptor.Id,
+                    VirtualPathDependencies = Enumerable.Empty<string>(),
                 };
             }
             return null;

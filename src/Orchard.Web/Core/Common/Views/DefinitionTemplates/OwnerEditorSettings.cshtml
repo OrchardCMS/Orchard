@@ -1,0 +1,9 @@
+﻿@model Orchard.Core.Common.OwnerEditor.OwnerEditorSettings
+
+<fieldset>
+    <div>
+        @Html.EditorFor(m=>m.ShowOwnerEditor)
+        <label for="@Html.FieldIdFor(m => m.ShowOwnerEditor)" class="forcheckbox">@T("Show editor for owner")</label>
+        @Html.ValidationMessageFor(m => m.ShowOwnerEditor)
+    </div>
+</fieldset>
