@@ -89,6 +89,10 @@ namespace Orchard.UI.Zones {
             public override object InvokeMember(Func<object> proceed, object self, string name, INamedEnumerable<object> args) {
                 var argsCount = args.Count();
                 if (name == "Add" && (argsCount == 1 || argsCount == 2)) {
+                    // pszmyd: Ignore null shapes
+                    if (args.First() == null)
+                        return _parent;
+
                     dynamic parent = _parent;
 
                     dynamic zone = _zoneFactory();

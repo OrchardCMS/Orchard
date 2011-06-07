@@ -41,6 +41,8 @@ namespace Orchard.Media.Controllers {
                 foreach (string key in input.Keys) {
                     if (key.StartsWith("Checkbox.") && input[key] == "true") {
                         string folderName = key.Substring("Checkbox.".Length);
+                        if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't delete media folder")))
+                            return new HttpUnauthorizedResult();
                         _mediaService.DeleteFolder(folderName);
                     }
                 }
