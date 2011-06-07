@@ -4,28 +4,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Orchard.Localization;
-using Orchard.Logging;
+using Orchard.UI.Notify;
 
 namespace Orchard.Events {
     public class DefaultOrchardEventBus : IEventBus {
         private readonly Func<IEnumerable<IEventHandler>> _eventHandlers;
+        private readonly INotifier _notifier;
 
         public DefaultOrchardEventBus(Func<IEnumerable<IEventHandler>> eventHandlers) {
             _eventHandlers = eventHandlers;
-            Logger = NullLogger.Instance;
+            _notifier = new Notifier();
             T = NullLocalizer.Instance;
         }
 
-        public ILogger Logger { get; set; }
         public Localizer T { get; set; }
-
 
         public IEnumerable Notify(string messageName, IDictionary<string, object> eventData) {
             // call ToArray to ensure evaluation has taken place
-            return NotifyHandlers(messageName, eventData, true/*failFast*/).ToArray();
+            return NotifyHandlers(messageName, eventData).ToArray();
         }
 
-        private IEnumerable<object> NotifyHandlers(string messageName, IDictionary<string, object> eventData, bool failFast) {
+        private IEnumerable<object> NotifyHandlers(string messageName, IDictionary<string, object> eventData) {
             string[] parameters = messageName.Split('.');
             if (parameters.Length != 2) {
                 throw new ArgumentException(T("{0} is not formatted correctly", messageName).Text);
@@ -36,7 +35,7 @@ namespace Orchard.Events {
             var eventHandlers = _eventHandlers();
             foreach (var eventHandler in eventHandlers) {
                 IEnumerable returnValue;
-                if (TryNotifyHandler(eventHandler, messageName, interfaceName, methodName, eventData, failFast, out returnValue)) {
+                if (TryNotifyHandler(eventHandler, messageName, interfaceName, methodName, eventData, out returnValue)) {
                     if (returnValue != null) {
                         foreach (var value in returnValue) {
                             yield return value;
@@ -46,18 +45,15 @@ namespace Orchard.Events {
             }
         }
 
-        private bool TryNotifyHandler(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> eventData, bool failFast, out IEnumerable returnValue) {
+        private bool TryNotifyHandler(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> eventData, out IEnumerable returnValue) {
             try {
                 return TryInvoke(eventHandler, interfaceName, methodName, eventData, out returnValue);
             }
             catch (Exception ex) {
-                Logger.Error(ex, "{2} thrown from {0} by {1}",
-                             messageName,
-                             eventHandler.GetType().FullName,
-                             ex.GetType().Name);
-
-                if (failFast)
-                    throw;
+                _notifier.Error(T("{2} thrown from {0} by {1}",
+                                    messageName,
+                                    eventHandler.GetType().FullName,
+                                    ex.GetType().Name));
 
                 returnValue = null;
                 return false;
