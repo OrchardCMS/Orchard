@@ -50,23 +50,18 @@ namespace Orchard.Experimental.Controllers {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to use the web console")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                using (var writer = new StringWriter()) {
-                    var commandLine = model.CommandLine.Trim();
-                    CommandParameters parameters = GetCommandParameters(commandLine, writer);
+            using (var writer = new StringWriter()) {
+                var commandLine = model.CommandLine.Trim();
+                CommandParameters parameters = GetCommandParameters(commandLine, writer);
 
-                    _commandManager.Execute(parameters);
-                    model.History = (model.History ?? Enumerable.Empty<string>())
-                        .Concat(new[] {model.CommandLine})
-                        .Distinct()
-                        .ToArray();
-                    model.Results = writer.ToString();
-                }
-            } catch(Exception exception) {
-                this.Error(exception, T("Error executing command: {0}", exception.Message), Logger, Services.Notifier);
-
-                Services.TransactionManager.Cancel();
+                _commandManager.Execute(parameters);
+                model.History = (model.History ?? Enumerable.Empty<string>())
+                    .Concat(new[] {model.CommandLine})
+                    .Distinct()
+                    .ToArray();
+                model.Results = writer.ToString();
             }
+
             return View(model);
         }
 

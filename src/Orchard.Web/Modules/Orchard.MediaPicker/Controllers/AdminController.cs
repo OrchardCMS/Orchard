@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Media;
-using Orchard.Media.Models;
 using Orchard.Media.Services;
 using Orchard.Media.ViewModels;
-using Orchard.Security;
 using Orchard.Themes;
 
 namespace Orchard.MediaPicker.Controllers {
