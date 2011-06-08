@@ -8,7 +8,7 @@ using Orchard.ContentManagement;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Warmup;
 using Orchard.FileSystems.AppData;
-using Orchard.FileSystems.LockFile;
+using Orchard.Locking;
 using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Warmup.Models;
@@ -16,7 +16,7 @@ using Orchard.Warmup.Models;
 namespace Orchard.Warmup.Services {
     public class WarmupUpdater : IWarmupUpdater {
         private readonly IOrchardServices _orchardServices;
-        private readonly ILockFileManager _lockFileManager;
+        private readonly ILockManager _lockManager;
         private readonly IClock _clock;
         private readonly IAppDataFolder _appDataFolder;
         private readonly IWebDownloader _webDownloader;
@@ -25,24 +25,22 @@ namespace Orchard.Warmup.Services {
         private const string WarmupFilename = "warmup.txt";
         
         private readonly string _warmupPath;
-        private readonly string _lockFilename;
 
         public WarmupUpdater(
             IOrchardServices orchardServices, 
-            ILockFileManager lockFileManager,
+            ILockManager lockManager,
             IClock clock,
             IAppDataFolder appDataFolder,
             IWebDownloader webDownloader,
             IWarmupReportManager reportManager,
             ShellSettings shellSettings) {
             _orchardServices = orchardServices;
-            _lockFileManager = lockFileManager;
+            _lockManager = lockManager;
             _clock = clock;
             _appDataFolder = appDataFolder;
             _webDownloader = webDownloader;
             _reportManager = reportManager;
 
-            _lockFilename = _appDataFolder.Combine("Sites", _appDataFolder.Combine(shellSettings.Name, WarmupFilename + ".lock"));
             _warmupPath = _appDataFolder.Combine("Sites", _appDataFolder.Combine(shellSettings.Name, WarmupFilename));
 
             Logger = NullLogger.Instance;
@@ -60,12 +58,12 @@ namespace Orchard.Warmup.Services {
             }
 
             // prevent multiple appdomains from rebuilding the static page concurrently (e.g., command line)
-            ILockFile lockFile = null;
-            if (!_lockFileManager.TryAcquireLock(_lockFilename, ref lockFile)) {
+            var @lock = _lockManager.Lock(WarmupFilename);
+            if(@lock == null) {
                 return;
             }
 
-            using (lockFile) {
+            using (@lock) {
 
                 // check if we need to regenerate the pages by reading the last time it has been done
                 // 1- if the warmup file doesn't exists, generate the pages
@@ -183,12 +181,12 @@ namespace Orchard.Warmup.Services {
 
         public void Generate() {
             // prevent multiple appdomains from rebuilding the static page concurrently (e.g., command line)
-            ILockFile lockFile = null;
-            if (!_lockFileManager.TryAcquireLock(_lockFilename, ref lockFile)) {
+            var @lock = _lockManager.Lock(WarmupFilename);
+            if (@lock == null) {
                 return;
             }
 
-            using (lockFile) {
+            using (@lock) {
                 if (_appDataFolder.FileExists(_warmupPath)) {
                     _appDataFolder.DeleteFile(_warmupPath);
                 }

@@ -9,7 +9,7 @@ using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Warmup;
 using Orchard.FileSystems.AppData;
-using Orchard.FileSystems.LockFile;
+using Orchard.Locking;
 using Orchard.Services;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
@@ -22,7 +22,7 @@ namespace Orchard.Tests.Modules.Warmup {
         protected IContainer _container;
         private IWarmupUpdater _warmupUpdater;
         private IAppDataFolder _appDataFolder;
-        private ILockFileManager _lockFileManager;
+        private ILockManager _lockManager;
         private StubClock _clock;
         private Mock<IWebDownloader> _webDownloader;
         private IOrchardServices _orchardServices;
@@ -60,7 +60,7 @@ namespace Orchard.Tests.Modules.Warmup {
             var builder = new ContainerBuilder();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
             builder.RegisterInstance(_orchardServices).As<IOrchardServices>();
-            builder.RegisterType<DefaultLockFileManager>().As<ILockFileManager>();
+            builder.RegisterType<DefaultLockManager>().As<ILockManager>();
             builder.RegisterType<WarmupUpdater>().As<IWarmupUpdater>();
             builder.RegisterType<StubClock>().As<IClock>();
             builder.RegisterType<WarmupReportManager>().As<IWarmupReportManager>();
@@ -69,7 +69,7 @@ namespace Orchard.Tests.Modules.Warmup {
             builder.RegisterInstance(_webDownloader.Object).As<IWebDownloader>();
             _container = builder.Build();
 
-            _lockFileManager = _container.Resolve<ILockFileManager>();
+            _lockManager = _container.Resolve<ILockManager>();
             _warmupUpdater = _container.Resolve<IWarmupUpdater>();
             _reportManager = _container.Resolve<IWarmupReportManager>();
 
@@ -93,9 +93,9 @@ namespace Orchard.Tests.Modules.Warmup {
         [Test]
         public void GenerateShouldNotRunIfLocked() {
             _appDataFolder.CreateFile(_warmupFilename, "");
-            ILockFile lockFile = null;
-            _lockFileManager.TryAcquireLock(_lockFilename, ref lockFile);
-            using(lockFile) {
+            var @lock = _lockManager.Lock(_lockFilename);
+            
+            using (@lock) {
                 _warmupUpdater.Generate();
                 Assert.That(_appDataFolder.ListFiles(WarmupFolder).Count(), Is.EqualTo(0));
             }
