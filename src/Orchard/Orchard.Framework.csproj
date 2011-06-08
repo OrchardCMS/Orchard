@@ -201,6 +201,7 @@
     <Compile Include="Environment\WorkContextImplementation.cs" />
     <Compile Include="Environment\WorkContextModule.cs" />
     <Compile Include="Environment\WorkContextProperty.cs" />
+    <Compile Include="Exceptions\Filters\UnhandledExceptionFilter.cs" />
     <Compile Include="FileSystems\Dependencies\IExtensionDependenciesManager.cs" />
     <Compile Include="FileSystems\Dependencies\DefaultExtensionDependenciesManager.cs" />
     <Compile Include="FileSystems\LockFile\ILockFile.cs" />
@@ -879,6 +880,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

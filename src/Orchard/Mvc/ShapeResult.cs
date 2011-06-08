@@ -6,7 +6,7 @@ namespace Orchard.Mvc {
             ViewData = controller.ViewData;
             TempData = controller.TempData;
             ViewData.Model = shape;
-            ViewName = "~/Core/Shapes/Views/ShapeResult/Display.cshtml";
+            ViewName = "ShapeResult/Display";
         }
     }
 }
