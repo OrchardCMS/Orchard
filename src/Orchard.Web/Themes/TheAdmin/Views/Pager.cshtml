@@ -46,7 +46,7 @@
     <div class="pager-footer">
         @if (totalPageCount > 1 || Model.PageSize == 0 || Model.PageSize > pageSizes.First()) {
             <div class="page-size-options">
-                <label for="pageSize">@T("Show:")</label>
+                <div>@T("Show:")</div>
 
                 @pageSizeTag.StartElement
 
