@@ -11,7 +11,7 @@
 @using (Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery"))) {
     <fieldset class="bulk-actions bulk-actions-auto">
         <label for="sourceId">@T("Feed:")</label>
-        <select id="sourceId" name="@Html.NameOf(m => m.Options.SourceId)">
+        <select id="sourceId" name="@Html.FieldNameFor(m => m.Options.SourceId)">
             @Html.SelectOption(Model.Options.SourceId, null, T("All feeds").ToString())
             @foreach (var source in Model.Sources) {
                 @Html.SelectOption(Model.Options.SourceId, source.Id, source.FeedTitle)
@@ -21,7 +21,7 @@
 
     <fieldset class="bulk-actions bulk-actions-auto">
         <label for="filterResults">@T("Sort by:")</label>
-        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
+        <select id="filterResults" name="@Html.FieldNameFor(m => m.Options.Order)">
             @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Downloads, T("Downloads").ToString())
             @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Ratings, T("Ratings").ToString())
             @Html.SelectOption(Model.Options.Order, PackagingExtensionsOrder.Alphanumeric, T("Alphanumeric").ToString())
@@ -31,7 +31,7 @@
     </fieldset>
 
     <fieldset class="search-actions">
-        <input type="text" id="searchText" class="text-box single-line" name="@Html.NameOf(m => m.Options.SearchText)" value="@Model.Options.SearchText" />
+        <input type="text" id="searchText" class="text-box single-line" name="@Html.FieldNameFor(m => m.Options.SearchText)" value="@Model.Options.SearchText" />
 
         <button type="submit">@T("Search")</button>
     </fieldset>

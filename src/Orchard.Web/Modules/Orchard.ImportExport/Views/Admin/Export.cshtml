@@ -10,8 +10,8 @@
 		    @{var contentTypeIndex = 0;}
             @foreach (var contentTypeEntry in Model.ContentTypes) {
 			    <li>
-                <input type="hidden" value="@Model.ContentTypes[contentTypeIndex].ContentTypeName" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].ContentTypeName)"/>
-                <input type="checkbox" value="true" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)"/>
+                <input type="hidden" value="@Model.ContentTypes[contentTypeIndex].ContentTypeName" name="@Html.FieldNameFor(m => m.ContentTypes[contentTypeIndex].ContentTypeName)"/>
+                <input type="checkbox" value="true" name="@Html.FieldNameFor(m => m.ContentTypes[contentTypeIndex].IsChecked)"/>
 			    <label class="forcheckbox">@Model.ContentTypes[contentTypeIndex].ContentTypeName</label></li>
 			    contentTypeIndex = contentTypeIndex + 1;
 		    }

@@ -14,7 +14,7 @@
 @using(Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
-        <select id="publishActions" name="@Html.NameOf(m => m.BulkAction)">
+        <select id="publishActions" name="@Html.FieldNameFor(m => m.BulkAction)">
             @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, T("Delete").ToString())
         </select>
@@ -36,8 +36,8 @@
             @foreach (var tagEntry in Model.Tags) { 
             <tr>
                 <td>
-                    <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.NameOf(m => m.Tags[tagIndex].Tag.Id)"/>
-                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Tags[tagIndex].IsChecked)"/>
+                    <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.FieldNameFor(m => m.Tags[tagIndex].Tag.Id)"/>
+                    <input type="checkbox" value="true" name="@Html.FieldNameFor(m => m.Tags[tagIndex].IsChecked)"/>
                 </td>
                 <td>
                     @Html.ActionLink(tagEntry.Tag.TagName, "Edit", new {id = tagEntry.Tag.Id})
