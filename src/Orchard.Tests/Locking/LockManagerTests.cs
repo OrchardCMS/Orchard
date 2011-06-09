@@ -49,31 +49,31 @@ namespace Orchard.Tests.Locking {
 
         [Test]
         public void LockShouldBeGrantedWhenDoesNotExist() {
-            var @lock = _lockFileManager.Lock("foo.txt");
+            var @lock = _lockFileManager.TryLock("foo.txt");
 
             Assert.That(@lock, Is.Not.Null);
-            Assert.That(_lockFileManager.Lock("foo.txt"), Is.Null);
+            Assert.That(_lockFileManager.TryLock("foo.txt"), Is.Null);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
         }
 
         [Test]
         public void ExistingLockFileShouldPreventGrants() {
-            _lockFileManager.Lock("foo.txt");
+            _lockFileManager.TryLock("foo.txt");
 
-            Assert.That(_lockFileManager.Lock("foo.txt"), Is.Null);
+            Assert.That(_lockFileManager.TryLock("foo.txt"), Is.Null);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
         }
 
         [Test]
         public void ReleasingALockShouldAllowGranting() {
-            var @lock = _lockFileManager.Lock("foo.txt");
+            var @lock = _lockFileManager.TryLock("foo.txt");
             
             using (@lock) {
-                Assert.That(_lockFileManager.Lock("foo.txt"), Is.Null);
+                Assert.That(_lockFileManager.TryLock("foo.txt"), Is.Null);
                 Assert.That(LockFilesCount(), Is.EqualTo(1));
             }
 
-            @lock = _lockFileManager.Lock("foo.txt");
+            @lock = _lockFileManager.TryLock("foo.txt");
             Assert.That(@lock, Is.Not.Null);
 
             @lock.Dispose();
@@ -82,19 +82,19 @@ namespace Orchard.Tests.Locking {
 
         [Test]
         public void ReleasingAReleasedLockShouldWork() {
-            var @lock = _lockFileManager.Lock("foo.txt");
+            var @lock = _lockFileManager.TryLock("foo.txt");
 
-            Assert.That(_lockFileManager.Lock("foo.txt"), Is.Null);
+            Assert.That(_lockFileManager.TryLock("foo.txt"), Is.Null);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
 
             @lock.Dispose();
-            @lock = _lockFileManager.Lock("foo.txt");
+            @lock = _lockFileManager.TryLock("foo.txt");
             Assert.That(@lock, Is.Not.Null);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
 
             @lock.Dispose();
             @lock.Dispose(); 
-            @lock = _lockFileManager.Lock("foo.txt");
+            @lock = _lockFileManager.TryLock("foo.txt");
             Assert.That(@lock, Is.Not.Null);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
 
@@ -104,14 +104,14 @@ namespace Orchard.Tests.Locking {
 
         [Test]
         public void DisposingLockShouldReleaseIt() {
-            var @lock = _lockFileManager.Lock("foo.txt");
+            var @lock = _lockFileManager.TryLock("foo.txt");
 
             using (@lock) {
-                Assert.That(_lockFileManager.Lock("foo.txt"), Is.Null);
+                Assert.That(_lockFileManager.TryLock("foo.txt"), Is.Null);
                 Assert.That(LockFilesCount(), Is.EqualTo(1));
             }
 
-            @lock = _lockFileManager.Lock("foo.txt");
+            @lock = _lockFileManager.TryLock("foo.txt");
             Assert.That(@lock, Is.Not.Null);
 
             @lock.Dispose();
@@ -120,19 +120,19 @@ namespace Orchard.Tests.Locking {
 
         [Test]
         public void ExpiredLockShouldBeAvailable() {
-            _lockFileManager.Lock("foo.txt");
+            _lockFileManager.TryLock("foo.txt");
 
             _clock.Advance(DefaultLockManager.Expiration);
-            Assert.That(_lockFileManager.Lock("foo.txt"), Is.Not.Null);
+            Assert.That(_lockFileManager.TryLock("foo.txt"), Is.Not.Null);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
         }
 
         [Test]
         public void ShouldGrantExpiredLock() {
-            _lockFileManager.Lock("foo.txt");
+            _lockFileManager.TryLock("foo.txt");
 
             _clock.Advance(DefaultLockManager.Expiration);
-            var @lock = _lockFileManager.Lock("foo.txt");
+            var @lock = _lockFileManager.TryLock("foo.txt");
 
             Assert.That(@lock, Is.Not.Null);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
@@ -163,7 +163,7 @@ namespace Orchard.Tests.Locking {
 
             // loop until the lock has been acquired
             for (;;) {
-                if (null == (@lock = _lockFileManager.Lock("foo.txt"))) {
+                if (null == (@lock = _lockFileManager.TryLock("foo.txt"))) {
                     continue;
                 }
 

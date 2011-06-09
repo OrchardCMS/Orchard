@@ -93,7 +93,7 @@ namespace Orchard.Tests.Modules.Warmup {
         [Test]
         public void GenerateShouldNotRunIfLocked() {
             _appDataFolder.CreateFile(_warmupFilename, "");
-            var @lock = _lockManager.Lock(_lockFilename);
+            var @lock = _lockManager.TryLock(_lockFilename);
             
             using (@lock) {
                 _warmupUpdater.Generate();

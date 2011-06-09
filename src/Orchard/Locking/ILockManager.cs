@@ -17,6 +17,6 @@ namespace Orchard.Locking {
         /// <param name="resourceKey">The resource key of the lock to create.</param>
         /// <returns>A reference to the lock object if the lock is granted; otherwise <c>null</c>.</returns>
         /// <remarks>The lock instance has to be disposed in order to be released.</remarks>
-        IDisposable Lock(string resourceKey);
+        IDisposable TryLock(string resourceKey);
     }
 }

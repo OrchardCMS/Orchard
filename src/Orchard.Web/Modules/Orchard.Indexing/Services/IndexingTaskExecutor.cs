@@ -56,7 +56,7 @@ namespace Orchard.Indexing.Services {
         public ILogger Logger { get; set; }
 
         public bool DeleteIndex(string indexName) {
-            IDisposable @lock = _lockManager.Lock(indexName);
+            IDisposable @lock = _lockManager.TryLock(indexName);
 
             // acquire a lock file on the index
             if (@lock == null) {
@@ -84,7 +84,7 @@ namespace Orchard.Indexing.Services {
             var settingsFilename = GetSettingsFileName(indexName);
 
             // acquire a lock file on the index
-            var @lock = _lockManager.Lock(indexName);
+            var @lock = _lockManager.TryLock(indexName);
             if(@lock == null) {
                 Logger.Information("Index was requested but is already running");
                 return false;

@@ -39,7 +39,7 @@ namespace Orchard.Locking {
             _tenantPrefix = appDataFolder.Combine("Sites", shellSettings.Name);
         }
 
-        public IDisposable Lock(string resourceKey) {
+        public IDisposable TryLock(string resourceKey) {
             var filename = GetFilenameFromResourceKey(resourceKey);
 
             try {

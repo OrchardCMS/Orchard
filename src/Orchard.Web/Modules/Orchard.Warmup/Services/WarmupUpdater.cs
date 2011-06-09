@@ -58,7 +58,7 @@ namespace Orchard.Warmup.Services {
             }
 
             // prevent multiple appdomains from rebuilding the static page concurrently (e.g., command line)
-            var @lock = _lockManager.Lock(WarmupFilename);
+            var @lock = _lockManager.TryLock(WarmupFilename);
             if(@lock == null) {
                 return;
             }
@@ -181,7 +181,7 @@ namespace Orchard.Warmup.Services {
 
         public void Generate() {
             // prevent multiple appdomains from rebuilding the static page concurrently (e.g., command line)
-            var @lock = _lockManager.Lock(WarmupFilename);
+            var @lock = _lockManager.TryLock(WarmupFilename);
             if (@lock == null) {
                 return;
             }

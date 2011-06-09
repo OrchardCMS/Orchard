@@ -184,7 +184,7 @@ namespace Orchard.Tests.Modules.Indexing {
 
         [Test]
         public void IndexingTaskExecutorShouldNotBeReEntrant() {
-            var @lock = _lockManager.Lock(IndexName); 
+            var @lock = _lockManager.TryLock(IndexName); 
 
             using (@lock) {
                 while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
