@@ -16,6 +16,7 @@ using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
 using Orchard.Environment.Descriptor;
 using Orchard.Events;
+using Orchard.Exceptions;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.LockFile;
@@ -57,6 +58,7 @@ namespace Orchard.Environment {
             builder.RegisterType<OrchardFrameworkAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
+            builder.RegisterType<DefaultExceptionPolicy>().As<IExceptionPolicy>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);

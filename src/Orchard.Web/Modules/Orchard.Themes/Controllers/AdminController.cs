@@ -214,7 +214,8 @@ namespace Orchard.Themes.Controllers {
                 _dataMigrationManager.Update(themeId);
                 Services.Notifier.Information(T("The theme {0} was updated succesfuly", themeId));
             } catch (Exception exception) {
-                this.Error(exception, T("An error occured while updating the theme {0}: {1}", themeId, exception.Message), Logger, Services.Notifier);
+                Logger.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message).Text);
+                Services.Notifier.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message));
             }
 
             return RedirectToAction("Index");

@@ -21,38 +21,32 @@ namespace Orchard.Core.HomePage.Controllers {
 
         [Themed]
         public ActionResult Index() {
-            try {
-                var homepage = _orchardServices.WorkContext.CurrentSite.HomePage;
-                if (String.IsNullOrEmpty(homepage))
-                    return View();
+            var homepage = _orchardServices.WorkContext.CurrentSite.HomePage;
+            if (String.IsNullOrEmpty(homepage))
+                return View();
 
-                var homePageParameters = homepage.Split(';');
-                if (homePageParameters.Length != 2)
-                    return View();
+            var homePageParameters = homepage.Split(';');
+            if (homePageParameters.Length != 2)
+                return View();
 
-                var providerName = homePageParameters[0];
-                var item = Int32.Parse(homePageParameters[1]);
+            var providerName = homePageParameters[0];
+            var item = Int32.Parse(homePageParameters[1]);
 
-                foreach (var provider in _homePageProviders) {
-                    if (!string.Equals(provider.GetProviderName(), providerName))
-                        continue;
+            foreach (var provider in _homePageProviders) {
+                if (!string.Equals(provider.GetProviderName(), providerName))
+                    continue;
 
-                    var result = provider.GetHomePage(item);
-                    if (result is ViewResultBase) {
-                        var resultBase = result as ViewResultBase;
-                        ViewData.Model = resultBase.ViewData.Model;
-                        resultBase.ViewData = ViewData;
-                    }
-
-                    return result;
+                var result = provider.GetHomePage(item);
+                if (result is ViewResultBase) {
+                    var resultBase = result as ViewResultBase;
+                    ViewData.Model = resultBase.ViewData.Model;
+                    resultBase.ViewData = ViewData;
                 }
 
-                return View();
+                return result;
             }
-            catch {
-                return View();
-            }
+
+            return View();
         }
     }
-
 }

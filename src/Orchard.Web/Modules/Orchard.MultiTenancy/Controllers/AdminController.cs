@@ -8,6 +8,7 @@ using Orchard.Logging;
 using Orchard.MultiTenancy.Services;
 using Orchard.MultiTenancy.ViewModels;
 using Orchard.Security;
+using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.MultiTenancy.Controllers {
@@ -74,8 +75,8 @@ namespace Orchard.MultiTenancy.Controllers {
 
                 return RedirectToAction("Index");
             }
-            catch (Exception exception) {
-                this.Error(exception, T("Creating Tenant failed: {0}", exception.Message), Logger, Services.Notifier);
+            catch (ArgumentException exception) {
+                Services.Notifier.Error(T("Creating Tenant failed: {0}", exception.Message));
                 return View(viewModel);
             }
         }
@@ -137,7 +138,7 @@ namespace Orchard.MultiTenancy.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                this.Error(exception, T("Failed to edit tenant: {0} ", exception.Message), Logger, Services.Notifier);
+                Services.Notifier.Error(T("Failed to edit tenant: {0} ", exception.Message));
                 return View(viewModel);
             }
         }

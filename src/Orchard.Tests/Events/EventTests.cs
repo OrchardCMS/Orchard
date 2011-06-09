@@ -4,6 +4,7 @@ using Autofac;
 using NUnit.Framework;
 using Orchard.Events;
 using System;
+using Orchard.Exceptions;
 
 namespace Orchard.Tests.Events {
     [TestFixture]
@@ -18,6 +19,7 @@ namespace Orchard.Tests.Events {
 
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>();
+            builder.RegisterType<StubExceptionPolicy>().As<IExceptionPolicy>();
             builder.RegisterType<StubEventHandler2>().As<IEventHandler>();
             builder.RegisterInstance(_eventHandler).As<IEventHandler>();
 
@@ -227,6 +229,12 @@ namespace Orchard.Tests.Events {
             public IEnumerable<string> Gather(int a, string b) {
                 return new[] { a.ToString(), b };
             }
+        }
+    }
+
+    class StubExceptionPolicy : IExceptionPolicy {
+        public bool HandleException(object sender, Exception exception) {
+            return true;
         }
     }
 }

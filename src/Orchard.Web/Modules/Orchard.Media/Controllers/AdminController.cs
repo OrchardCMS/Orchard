@@ -9,7 +9,6 @@ using Orchard.Media.Models;
 using Orchard.Media.Services;
 using Orchard.Media.ViewModels;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Media.Controllers {
     [ValidateInput(false)]
@@ -197,7 +196,7 @@ namespace Orchard.Media.Controllers {
                 try {
                     _mediaService.UploadMediaFile(viewModel.MediaPath, Request.Files[fileName], viewModel.ExtractZip);
                 }
-                catch (ArgumentException argumentException) {
+                catch (ArgumentException) {
                     Services.Notifier.Error(T("Uploading media file failed:"));
                     return View(viewModel);   
                 }
@@ -277,7 +276,7 @@ namespace Orchard.Media.Controllers {
                 try {
                     _mediaService.RenameFile(viewModel.MediaPath, viewModel.Name, input["NewName"]);
                 }
-                catch (ArgumentException argumentException) {
+                catch (ArgumentException) {
                     Services.Notifier.Error(T("Editing media file failed."));
                     return EditMedia(viewModel);
                 }

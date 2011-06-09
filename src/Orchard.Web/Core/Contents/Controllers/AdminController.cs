@@ -128,51 +128,46 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("List")]
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
-            try {
-                if (itemIds != null) {
-                    switch (options.BulkAction) {
-                        case ContentsBulkAction.None:
-                            break;
-                        case ContentsBulkAction.PublishNow:
-                            foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                                if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content."))) {
-                                    _transactionManager.Cancel();
-                                    return new HttpUnauthorizedResult();
-                                }
-
-                                _contentManager.Publish(item);
+            if (itemIds != null) {
+                switch (options.BulkAction) {
+                    case ContentsBulkAction.None:
+                        break;
+                    case ContentsBulkAction.PublishNow:
+                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                            if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content."))) {
+                                _transactionManager.Cancel();
+                                return new HttpUnauthorizedResult();
                             }
-                            Services.Notifier.Information(T("Content successfully published."));
-                            break;
-                        case ContentsBulkAction.Unpublish:
-                            foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                                if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content."))) {
-                                    _transactionManager.Cancel();
-                                    return new HttpUnauthorizedResult();
-                                }
 
-                                _contentManager.Unpublish(item);
+                            _contentManager.Publish(item);
+                        }
+                        Services.Notifier.Information(T("Content successfully published."));
+                        break;
+                    case ContentsBulkAction.Unpublish:
+                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                            if (!Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content."))) {
+                                _transactionManager.Cancel();
+                                return new HttpUnauthorizedResult();
                             }
-                            Services.Notifier.Information(T("Content successfully unpublished."));
-                            break;
-                        case ContentsBulkAction.Remove:
-                            foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
-                                if (!Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content."))) {
-                                    _transactionManager.Cancel();
-                                    return new HttpUnauthorizedResult();
-                                }
 
-                                _contentManager.Remove(item);
+                            _contentManager.Unpublish(item);
+                        }
+                        Services.Notifier.Information(T("Content successfully unpublished."));
+                        break;
+                    case ContentsBulkAction.Remove:
+                        foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                            if (!Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content."))) {
+                                _transactionManager.Cancel();
+                                return new HttpUnauthorizedResult();
                             }
-                            Services.Notifier.Information(T("Content successfully removed."));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+
+                            _contentManager.Remove(item);
+                        }
+                        Services.Notifier.Information(T("Content successfully removed."));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
-            }
-            catch {
-                _transactionManager.Cancel();
             }
 
             return this.RedirectLocal(returnUrl, () => RedirectToAction("List"));
