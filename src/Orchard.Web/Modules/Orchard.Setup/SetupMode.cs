@@ -140,10 +140,6 @@ namespace Orchard.Setup {
 
                 return site.As<ISite>();
             }
-
-            public ISite GetSiteSettingsPart() {
-                return GetSiteSettings();
-            }
         }
 
         class SafeModeSite : ContentPart, ISite {
