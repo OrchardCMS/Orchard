@@ -57,7 +57,6 @@ namespace Orchard.Environment {
             builder.RegisterType<OrchardFrameworkAssemblyNameResolver>().As<IAssemblyNameResolver>().SingleInstance();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
-            builder.RegisterType<DefaultLockManager>().As<ILockManager>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);

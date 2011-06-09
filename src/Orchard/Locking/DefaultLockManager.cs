@@ -20,6 +20,7 @@ namespace Orchard.Locking {
         private readonly IClock _clock;
         public static TimeSpan Expiration { get; private set; }
         private readonly string _tenantPrefix = String.Empty;
+        private readonly object _synLock = new object();
 
         public ILogger Logger { get; set; }
 
@@ -42,15 +43,15 @@ namespace Orchard.Locking {
             var filename = GetFilenameFromResourceKey(resourceKey);
 
             try {
-                // lock on a singleton to prevent concurrent tenant's requests
-                lock (_appDataFolder) {
-                    if (IsLockedImpl(filename)) {
+                // lock to prevent concurrent tenant's requests
+                lock (_synLock) {
+                    if (IsLocked(filename)) {
                         return null;
                     }
 
                     var path = _appDataFolder.Combine(_tenantPrefix, filename);
 
-                    return new FileLock(_appDataFolder, path, _clock.UtcNow.ToString());
+                    return new FileLock(_appDataFolder, path, _clock.UtcNow.ToString(), _synLock);
                 }
             }
             catch (Exception e) {
@@ -60,22 +61,7 @@ namespace Orchard.Locking {
             }
         }
 
-        public bool IsLocked(string resourceKey) {
-
-            try {
-                lock (_appDataFolder) {
-                    var filename = GetFilenameFromResourceKey(resourceKey);
-                    return IsLockedImpl(filename);
-                }
-
-            } catch (Exception e) {
-                // an error occured while reading the file
-                Logger.Error(e, "Unexpected error while checking lock {0}", resourceKey);
-                return true;
-            }
-        }
-
-        private bool IsLockedImpl(string filename) {
+        private bool IsLocked(string filename) {
             var path = _appDataFolder.Combine(_tenantPrefix, filename);
             if (_appDataFolder.FileExists(path)) {
                 var content = _appDataFolder.ReadFile(path);

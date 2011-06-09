@@ -15,13 +15,15 @@ namespace Orchard.Locking {
         private readonly string _path;
         private readonly string _content;
         private bool _released;
+        private object _synLock;
 
         public ILogger Logger { get; set; }
 
-        public FileLock(IAppDataFolder appDataFolder, string path, string content) {
+        public FileLock(IAppDataFolder appDataFolder, string path, string content, object synLock) {
             _appDataFolder = appDataFolder;
             _path = path;
             _content = content;
+            _synLock = synLock;
 
             // create the physical lock file
             _appDataFolder.CreateFile(path, content);
@@ -29,7 +31,7 @@ namespace Orchard.Locking {
 
         public void Dispose() {
             try {
-                lock (_appDataFolder) {
+                lock (_synLock) {
                     if (_released || !_appDataFolder.FileExists(_path)) {
                         // nothing to do, might happen if re-granted, and already released
                         return;

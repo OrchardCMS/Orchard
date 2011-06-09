@@ -52,7 +52,7 @@ namespace Orchard.Tests.Locking {
             var @lock = _lockFileManager.Lock("foo.txt");
 
             Assert.That(@lock, Is.Not.Null);
-            Assert.That(_lockFileManager.IsLocked("foo.txt"), Is.True);
+            Assert.That(_lockFileManager.Lock("foo.txt"), Is.Null);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
         }
 
@@ -61,7 +61,6 @@ namespace Orchard.Tests.Locking {
             _lockFileManager.Lock("foo.txt");
 
             Assert.That(_lockFileManager.Lock("foo.txt"), Is.Null);
-            Assert.That(_lockFileManager.IsLocked("foo.txt"), Is.True);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
         }
 
@@ -70,11 +69,14 @@ namespace Orchard.Tests.Locking {
             var @lock = _lockFileManager.Lock("foo.txt");
             
             using (@lock) {
-                Assert.That(_lockFileManager.IsLocked("foo.txt"), Is.True);
+                Assert.That(_lockFileManager.Lock("foo.txt"), Is.Null);
                 Assert.That(LockFilesCount(), Is.EqualTo(1));
             }
 
-            Assert.That(_lockFileManager.IsLocked("foo.txt"), Is.False);
+            @lock = _lockFileManager.Lock("foo.txt");
+            Assert.That(@lock, Is.Not.Null);
+
+            @lock.Dispose();
             Assert.That(LockFilesCount(), Is.EqualTo(0));
         }
 
@@ -82,15 +84,21 @@ namespace Orchard.Tests.Locking {
         public void ReleasingAReleasedLockShouldWork() {
             var @lock = _lockFileManager.Lock("foo.txt");
 
-            Assert.That(_lockFileManager.IsLocked("foo.txt"), Is.True);
+            Assert.That(_lockFileManager.Lock("foo.txt"), Is.Null);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
 
             @lock.Dispose();
-            Assert.That(_lockFileManager.IsLocked("foo.txt"), Is.False);
-            Assert.That(LockFilesCount(), Is.EqualTo(0));
+            @lock = _lockFileManager.Lock("foo.txt");
+            Assert.That(@lock, Is.Not.Null);
+            Assert.That(LockFilesCount(), Is.EqualTo(1));
 
             @lock.Dispose();
-            Assert.That(_lockFileManager.IsLocked("foo.txt"), Is.False);
+            @lock.Dispose(); 
+            @lock = _lockFileManager.Lock("foo.txt");
+            Assert.That(@lock, Is.Not.Null);
+            Assert.That(LockFilesCount(), Is.EqualTo(1));
+
+            @lock.Dispose();
             Assert.That(LockFilesCount(), Is.EqualTo(0));
         }
 
@@ -99,11 +107,14 @@ namespace Orchard.Tests.Locking {
             var @lock = _lockFileManager.Lock("foo.txt");
 
             using (@lock) {
-                Assert.That(_lockFileManager.IsLocked("foo.txt"), Is.True);
+                Assert.That(_lockFileManager.Lock("foo.txt"), Is.Null);
                 Assert.That(LockFilesCount(), Is.EqualTo(1));
             }
 
-            Assert.That(_lockFileManager.IsLocked("foo.txt"), Is.False);
+            @lock = _lockFileManager.Lock("foo.txt");
+            Assert.That(@lock, Is.Not.Null);
+
+            @lock.Dispose();
             Assert.That(LockFilesCount(), Is.EqualTo(0));
         }
 
@@ -112,7 +123,7 @@ namespace Orchard.Tests.Locking {
             _lockFileManager.Lock("foo.txt");
 
             _clock.Advance(DefaultLockManager.Expiration);
-            Assert.That(_lockFileManager.IsLocked("foo.txt"), Is.False);
+            Assert.That(_lockFileManager.Lock("foo.txt"), Is.Not.Null);
             Assert.That(LockFilesCount(), Is.EqualTo(1));
         }
 
@@ -146,22 +157,6 @@ namespace Orchard.Tests.Locking {
             Assert.That(_lockCount, Is.EqualTo(0));
         }
 
-        [Test]
-        public void IsLockedShouldBeThreadSafe() {
-            // A number of threads will try to acquire a lock and keep it for 
-            // some random time. Each of them stops when it has acquired the lock once.
-
-            var threads = new List<Thread>();
-            for (var i = 0; i < 10; i++) {
-                var t = new Thread(PlayWithIsLocked);
-                t.Start();
-                threads.Add(t);
-            }
-
-            threads.ForEach(t => t.Join());
-            Assert.That(_lockCount, Is.EqualTo(0));
-        }
-
         private void PlayWithAcquire() {
             var r = new Random(DateTime.Now.Millisecond);
             IDisposable @lock;
@@ -169,38 +164,6 @@ namespace Orchard.Tests.Locking {
             // loop until the lock has been acquired
             for (;;) {
                 if (null == (@lock = _lockFileManager.Lock("foo.txt"))) {
-                    continue;
-                }
-
-                lock (_synLock) {
-                    _lockCount++;
-                    Assert.That(_lockCount, Is.EqualTo(1));
-                }
-
-                // keep the lock for a certain time
-                Thread.Sleep(r.Next(200));
-                lock (_synLock) {
-                    _lockCount--;
-                    Assert.That(_lockCount, Is.EqualTo(0));
-                }
-
-                @lock.Dispose();
-                return;
-            }
-        }
-
-        private void PlayWithIsLocked() {
-            var r = new Random(DateTime.Now.Millisecond);
-            IDisposable @lock;
-            const string path = "foo.txt";
-
-            // loop until the lock has been acquired
-            for (;;) {
-                if (_lockFileManager.IsLocked(path)) {
-                    continue;
-                }
-
-                if (null == (@lock = _lockFileManager.Lock(path))) {
                     continue;
                 }
 
