@@ -70,11 +70,11 @@ namespace Orchard.Core.Contents {
         }
 
         [Shape]
-        public MvcHtmlString EditLink(dynamic Display, HtmlHelper Html, IContent ContentItem, dynamic Value, object ReturnUrl, object RouteValues) {
+        public MvcHtmlString EditLink(dynamic Display, HtmlHelper Html, IContent ContentItem, dynamic Value, object ReturnUrl, object RouteValues, bool? AdminLink) {
             // This shape renders a link to a Content Item's Editor route. The Value may be a nested shape or any string convertable object.
             // ReturnUrl may be (boolean)true to use the current RawUrl of the request, or a string to set it specifically.
             var metadata = ContentItem.ContentItem.ContentManager.GetItemMetadata(ContentItem);
-            if (metadata.EditorRouteValues == null) {
+            if ((AdminLink.GetValueOrDefault() && metadata.AdminRouteValues == null) || (!AdminLink.GetValueOrDefault() && metadata.EditorRouteValues == null)) {
                 return null;
             }
             var content = NonNullOrEmpty((object)Value, metadata.DisplayText, ContentItem.ContentItem.TypeDefinition.DisplayName);
@@ -101,9 +101,10 @@ namespace Orchard.Core.Contents {
             }
 
             var displayText = (string)Display(content).ToString();
+            var metadataRouteValues = AdminLink.GetValueOrDefault() ? metadata.AdminRouteValues : metadata.EditorRouteValues;
             return Html.ActionLink(displayText,
-                Convert.ToString(metadata.EditorRouteValues["action"]),
-                RouteValues == null ? metadata.EditorRouteValues : MergeRouteValues(metadata.EditorRouteValues, new RouteValueDictionary(RouteValues)));
+                Convert.ToString(metadataRouteValues["action"]),
+                RouteValues == null ? metadataRouteValues : MergeRouteValues(metadataRouteValues, new RouteValueDictionary(RouteValues)));
         }
 
         private static object NonNullOrEmpty(params object[] values) {
