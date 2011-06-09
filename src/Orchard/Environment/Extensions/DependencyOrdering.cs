@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Orchard.Utility {
+namespace Orchard.Environment.Extensions {
     public static class DependencyOrdering {
 
         class Linkage<T> {
