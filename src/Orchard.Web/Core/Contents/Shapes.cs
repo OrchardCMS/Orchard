@@ -56,6 +56,7 @@ namespace Orchard.Core.Contents {
 
         [Shape]
         public MvcHtmlString DisplayLink(dynamic Display, HtmlHelper Html, IContent ContentItem, dynamic Value) {
+            // This shape renders a link to a Content Item's Display route. The Value may be a nested shape or any string convertable object.
             var metadata = ContentItem.ContentItem.ContentManager.GetItemMetadata(ContentItem);
             if (metadata.DisplayRouteValues == null) {
                 return null;
