@@ -14,21 +14,6 @@ namespace Orchard.Mvc.Html {
         }
 
 
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, IContent content) {
-            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
-            if (metadata.DisplayRouteValues == null)
-                return null;
-
-            return html.ActionLink(
-                NonNullOrEmpty(linkText, metadata.DisplayText, "view"),
-                Convert.ToString(metadata.DisplayRouteValues["action"]),
-                metadata.DisplayRouteValues);
-        }
-
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent content) {
-            return ItemDisplayLink(html, null, content);
-        }
-
         public static MvcHtmlString ItemEditLinkWithReturnUrl(this HtmlHelper html, string linkText, IContent content) {
             return html.ItemEditLink(linkText, content, new { ReturnUrl = html.ViewContext.HttpContext.Request.RawUrl });
         }

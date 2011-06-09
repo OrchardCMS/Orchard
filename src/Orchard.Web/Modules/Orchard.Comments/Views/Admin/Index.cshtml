@@ -87,7 +87,7 @@
                         @T("[Empty]")
                     }
                 </td>
-                <td>@Html.ItemDisplayLink(commentEntry.CommentedOn)</td>
+                <td>@Display.DisplayLink(ContentItem: commentEntry.CommentedOn)</td>
                 <td>
                     <div class="actions">
                         @if (commentEntry.Comment.Status != CommentStatus.Spam) {

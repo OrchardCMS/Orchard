@@ -1,8 +1,25 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using System.Web.Mvc;
+using System.Web.Mvc.Html;
+using Orchard.ContentManagement;
+using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
+using Orchard.Localization;
+using Orchard.Mvc;
+
+// ReSharper disable InconsistentNaming
 
 namespace Orchard.Core.Contents {
     public class Shapes : IShapeTableProvider {
+        public Shapes() {
+            T = NullLocalizer.Instance;
+        }
+
+        public IDisplayHelperFactory DisplayHelperFactory { get; set; }
+
+        public Localizer T { get; set; }
+
         public void Discover(ShapeTableBuilder builder) {
             builder.Describe("Content")
                 .OnCreated(created => {
@@ -34,6 +51,28 @@ namespace Orchard.Core.Contents {
                             displaying.ShapeMetadata.Wrappers.Add("Content_ControlWrapper");
                     }
                 });
+        }
+
+
+        [Shape]
+        public MvcHtmlString DisplayLink(dynamic Display, HtmlHelper Html, IContent ContentItem, dynamic Value) {
+            var metadata = ContentItem.ContentItem.ContentManager.GetItemMetadata(ContentItem);
+            if (metadata.DisplayRouteValues == null) {
+                return null;
+            }
+            var content = NonNullOrEmpty((object)Value, metadata.DisplayText, T("view"));
+
+            var displayText = (string)Display(content).ToString();
+            return Html.ActionLink(displayText, Convert.ToString(metadata.DisplayRouteValues["action"]), metadata.DisplayRouteValues);
+        }
+
+        private static object NonNullOrEmpty(params object[] values) {
+            foreach (var value in values) {
+                if (value != null && (!(value is string) || ((string)value) != "")) {
+                    return value;
+                }
+            }
+            return null;
         }
     }
 }

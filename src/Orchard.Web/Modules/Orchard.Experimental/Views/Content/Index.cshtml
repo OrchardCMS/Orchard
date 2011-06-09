@@ -16,7 +16,7 @@
 @foreach(var item in Model.Items.OrderBy(x=>x.Id)) {
     <li>
         @Html.ActionLink(T("{0}: {1}", item.Id, item.ContentType).ToString(), "details", "content", new{item.Id},new{})
-        @Html.ItemDisplayLink(T("view").ToString(), item)
+        @Display.DisplayLink(Value: T("view"), ContentItem: item)
         @Html.ItemEditLink(T("edit").ToString(), item)
     </li>
 }
