@@ -4,7 +4,11 @@ using Orchard.Logging;
 
 namespace Orchard.Locking {
     /// <summary>
-    /// Represents a Lock File acquired on the file system
+    /// This class represents a lock lile acquired on the file system. It contains a
+    /// timestamp in order to define when it will timeout, in case it has not been released
+    /// for too long.
+    /// This class should not be used directly. This is an implentation detail
+    /// for <seealso cref="DefaultLockManager"/>.
     /// </summary>
     public class FileLock : IDisposable {
         private readonly IAppDataFolder _appDataFolder;

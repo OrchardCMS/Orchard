@@ -7,7 +7,13 @@ using Orchard.Services;
 
 namespace Orchard.Locking {
     /// <summary>
-    /// Default implementation of LockManager using the filesystem
+    /// Implements <seealso cref="ILockManager"/> by creating lock files in App_Data/Sites/[Tenant].
+    /// A lock file is implemented by  <seealso cref="FileLock"/>. When a lock is requested, if the lock file
+    /// doesn't exist, it is created, and returned. Otherwise, the file is read, and its timestamp is analyzed. If the 
+    /// timestamp is over, then the file is deleted and the lock is granted. Otherwise the lock is not granted.
+    /// This implementation is thread safe so that multiple process can try to acquire a lock on the same
+    /// resource at the same time. 
+    /// This class should not be used directly. Use <seealso cref="ILockManager"/> instead.
     /// </summary>
     public class DefaultLockManager : ILockManager {
         private readonly IAppDataFolder _appDataFolder;
@@ -36,7 +42,7 @@ namespace Orchard.Locking {
             var filename = GetFilenameFromResourceKey(resourceKey);
 
             try {
-                // lock on a singletong to prevent concurrent tenant's requests
+                // lock on a singleton to prevent concurrent tenant's requests
                 lock (_appDataFolder) {
                     if (IsLockedImpl(filename)) {
                         return null;
