@@ -218,7 +218,7 @@ namespace Orchard.Commands {
             MvcSingletons(builder);
 
             builder.RegisterType<CommandHostEnvironment>().As<IHostEnvironment>().SingleInstance();
-            builder.RegisterType<CommandHostVirtualPathMonitor>().As<IVirtualPathMonitor>().As<IVolatileProvider>().SingleInstance();
+            builder.RegisterType<CommandHostVirtualPathMonitor>().As<IVirtualPathMonitor>().SingleInstance();
             builder.RegisterInstance(CreateShellRegistrations()).As<IShellContainerRegistrations>();
         }
 
@@ -227,7 +227,6 @@ namespace Orchard.Commands {
                 Registrations = shellBuilder => {
                                     shellBuilder.RegisterType<CommandHostVirtualPathMonitor>()
                                         .As<IVirtualPathMonitor>()
-                                        .As<IVolatileProvider>()
                                         .InstancePerMatchingLifetimeScope("shell");
                                     shellBuilder.RegisterType<CommandBackgroundService>()
                                         .As<IBackgroundService>()

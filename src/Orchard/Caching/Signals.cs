@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace Orchard.Caching {
-    public interface ISignals : IVolatileProvider {
+    public interface ISignals : ISingletonDependency {
         void Trigger<T>(T signal);
         IVolatileToken When<T>(T signal);
     }

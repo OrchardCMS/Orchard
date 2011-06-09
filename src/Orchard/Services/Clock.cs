@@ -2,7 +2,7 @@
 using Orchard.Caching;
 
 namespace Orchard.Services {
-    public interface IClock : IVolatileProvider {
+    public interface IClock : ISingletonDependency {
         DateTime UtcNow { get; }
 
         /// <summary>

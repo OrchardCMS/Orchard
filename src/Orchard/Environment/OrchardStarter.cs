@@ -58,14 +58,14 @@ namespace Orchard.Environment {
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
 
-            RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
-            RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
-            RegisterVolatileProvider<Clock, IClock>(builder);
-            RegisterVolatileProvider<DefaultDependenciesFolder, IDependenciesFolder>(builder);
-            RegisterVolatileProvider<DefaultExtensionDependenciesManager, IExtensionDependenciesManager>(builder);
-            RegisterVolatileProvider<DefaultAssemblyProbingFolder, IAssemblyProbingFolder>(builder);
-            RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
-            RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
+            builder.RegisterType<WebSiteFolder>().As<IWebSiteFolder>().SingleInstance();
+            builder.RegisterType<AppDataFolder>().As<IAppDataFolder>().SingleInstance();
+            builder.RegisterType<Clock>().As<IClock>().SingleInstance();
+            builder.RegisterType<DefaultDependenciesFolder>().As<IDependenciesFolder>().SingleInstance();
+            builder.RegisterType<DefaultExtensionDependenciesManager>().As<IExtensionDependenciesManager>().SingleInstance();
+            builder.RegisterType<DefaultAssemblyProbingFolder>().As<IAssemblyProbingFolder>().SingleInstance();
+            builder.RegisterType<DefaultVirtualPathMonitor>().As<IVirtualPathMonitor>().SingleInstance();
+            builder.RegisterType<DefaultVirtualPathProvider>().As<IVirtualPathProvider>().SingleInstance();
 
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
             {
@@ -143,14 +143,6 @@ namespace Orchard.Environment {
             OrchardHostContainerRegistry.RegisterHostContainer(hostContainer);
 
             return container;
-        }
-
-
-        private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider {
-            builder.RegisterType<TRegister>()
-                .As<TService>()
-                .As<IVolatileProvider>()
-                .SingleInstance();
         }
 
         public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {
