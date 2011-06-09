@@ -18,9 +18,9 @@ using Orchard.Environment.Descriptor;
 using Orchard.Events;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
-using Orchard.FileSystems.LockFile;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
+using Orchard.Locking;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines.Razor;
@@ -60,7 +60,6 @@ namespace Orchard.Environment {
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
-            RegisterVolatileProvider<DefaultLockFileManager, ILockFileManager>(builder);
             RegisterVolatileProvider<Clock, IClock>(builder);
             RegisterVolatileProvider<DefaultDependenciesFolder, IDependenciesFolder>(builder);
             RegisterVolatileProvider<DefaultExtensionDependenciesManager, IExtensionDependenciesManager>(builder);

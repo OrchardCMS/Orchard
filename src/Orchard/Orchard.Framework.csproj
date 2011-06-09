@@ -205,10 +205,9 @@
     <Compile Include="Exceptions\Filters\UnhandledExceptionFilter.cs" />
     <Compile Include="FileSystems\Dependencies\IExtensionDependenciesManager.cs" />
     <Compile Include="FileSystems\Dependencies\DefaultExtensionDependenciesManager.cs" />
-    <Compile Include="FileSystems\LockFile\ILockFile.cs" />
-    <Compile Include="FileSystems\LockFile\ILockFileManager.cs" />
-    <Compile Include="FileSystems\LockFile\LockFile.cs" />
-    <Compile Include="FileSystems\LockFile\DefaultLockFileManager.cs" />
+    <Compile Include="Locking\ILockManager.cs" />
+    <Compile Include="Locking\FileLock.cs" />
+    <Compile Include="Locking\DefaultLockManager.cs" />
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />

@@ -6,9 +6,9 @@ using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
-using Orchard.FileSystems.LockFile;
 using Orchard.Indexing.Models;
 using Orchard.Indexing.Settings;
+using Orchard.Locking;
 using Orchard.Logging;
 using Orchard.Services;
 
@@ -28,7 +28,7 @@ namespace Orchard.Indexing.Services {
         private readonly IContentManager _contentManager;
         private readonly IAppDataFolder _appDataFolder;
         private readonly ShellSettings _shellSettings;
-        private readonly ILockFileManager _lockFileManager;
+        private readonly ILockManager _lockManager;
         private readonly IClock _clock;
         private const int ContentItemsPerLoop = 50;
         private IndexingStatus _indexingStatus = IndexingStatus.Idle;
@@ -40,7 +40,7 @@ namespace Orchard.Indexing.Services {
             IContentManager contentManager,
             IAppDataFolder appDataFolder,
             ShellSettings shellSettings,
-            ILockFileManager lockFileManager,
+            ILockManager lockManager,
             IClock clock) {
             _taskRepository = taskRepository;
             _contentRepository = contentRepository;
@@ -48,7 +48,7 @@ namespace Orchard.Indexing.Services {
             _contentManager = contentManager;
             _appDataFolder = appDataFolder;
             _shellSettings = shellSettings;
-            _lockFileManager = lockFileManager;
+            _lockManager = lockManager;
             _clock = clock;
             Logger = NullLogger.Instance;
         }
@@ -56,17 +56,15 @@ namespace Orchard.Indexing.Services {
         public ILogger Logger { get; set; }
 
         public bool DeleteIndex(string indexName) {
-            ILockFile lockFile = null;
-            var settingsFilename = GetSettingsFileName(indexName);
-            var lockFilename = settingsFilename + ".lock";
+            IDisposable @lock = _lockManager.TryLock(indexName);
 
             // acquire a lock file on the index
-            if (!_lockFileManager.TryAcquireLock(lockFilename, ref lockFile)) {
+            if (@lock == null) {
                 Logger.Information("Could not delete the index. Already in use.");
                 return false;
             }
 
-            using (lockFile) {
+            using (@lock) {
                 if (!_indexManager.HasIndexProvider()) {
                     return false;
                 }
@@ -83,17 +81,16 @@ namespace Orchard.Indexing.Services {
         }
 
         public bool UpdateIndexBatch(string indexName) {
-            ILockFile lockFile = null;
             var settingsFilename = GetSettingsFileName(indexName);
-            var lockFilename = settingsFilename + ".lock";
 
             // acquire a lock file on the index
-            if (!_lockFileManager.TryAcquireLock(lockFilename, ref lockFile)) {
+            var @lock = _lockManager.TryLock(indexName);
+            if(@lock == null) {
                 Logger.Information("Index was requested but is already running");
                 return false;
             }
 
-            using (lockFile) {
+            using (@lock) {
                 if (!_indexManager.HasIndexProvider()) {
                     return false;
                 }
