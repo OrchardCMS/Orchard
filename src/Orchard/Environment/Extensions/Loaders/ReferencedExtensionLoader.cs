@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
@@ -59,6 +60,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             return new ExtensionProbeEntry {
                 Descriptor = descriptor,
                 Loader = this,
+                Priority = 100, // Higher priority because assemblies in ~/bin always take precedence
                 VirtualPath = assemblyPath,
                 VirtualPathDependencies = new[] { assemblyPath },
             };

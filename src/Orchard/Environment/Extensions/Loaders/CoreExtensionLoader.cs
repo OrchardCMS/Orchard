@@ -32,6 +32,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return new ExtensionProbeEntry {
                     Descriptor = descriptor,
                     Loader = this,
+                    Priority = 100, // Higher priority because assemblies in ~/bin always take precedence
                     VirtualPath = "~/Core/" + descriptor.Id,
                     VirtualPathDependencies = Enumerable.Empty<string>(),
                 };
