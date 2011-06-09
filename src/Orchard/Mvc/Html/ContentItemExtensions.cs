@@ -13,26 +13,6 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(html.Encode(metadata.DisplayText));
         }
 
-
-        public static MvcHtmlString ItemEditLinkWithReturnUrl(this HtmlHelper html, string linkText, IContent content) {
-            return html.ItemEditLink(linkText, content, new { ReturnUrl = html.ViewContext.HttpContext.Request.RawUrl });
-        }
-
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, IContent content) {
-            return html.ItemEditLink(linkText, content, null);
-        }
-
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, IContent content, object additionalRouteValues) {
-            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
-            if (metadata.EditorRouteValues == null)
-                return null;
-
-            return html.ActionLink(
-                NonNullOrEmpty(linkText, metadata.DisplayText, content.ContentItem.TypeDefinition.DisplayName),
-                Convert.ToString(metadata.EditorRouteValues["action"]),
-                additionalRouteValues == null ? metadata.EditorRouteValues : MergeRouteValues(metadata.EditorRouteValues, new RouteValueDictionary(additionalRouteValues)));
-        }
-
         public static MvcHtmlString ItemAdminLink(this HtmlHelper html, IContent content) {
             return ItemAdminLink(html, null, content);
         }
@@ -70,10 +50,6 @@ namespace Orchard.Mvc.Html {
             return urlHelper.Action(
                 Convert.ToString(metadata.EditorRouteValues["action"]),
                 metadata.EditorRouteValues);
-        }
-
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, IContent content) {
-            return ItemEditLink(html, null, content);
         }
 
         private static string NonNullOrEmpty(params string[] values) {

@@ -9,7 +9,7 @@
     @T("Version:") @Model.Item.ContentItem.Version<br />
     @T("ContentType:") @Model.Item.ContentItem.ContentType<br />
     @T("DisplayText:") @Html.ItemDisplayText(Model.Item)<br />
-    @T("Links:") @Display.DisplayLink(Value: T("view"), ContentItem: Model.Item) @Html.ItemEditLink(T("edit").ToString(), Model.Item)
+    @T("Links:") @Display.DisplayLink(Value: T("view"), ContentItem: Model.Item) @Display.EditLink(ContentItem: Model.Item, Value: T("edit"))
 </p>
 
 <h2>@T("Content Item Parts")</h2>

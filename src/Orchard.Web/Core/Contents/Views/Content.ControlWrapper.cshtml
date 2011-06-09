@@ -2,7 +2,7 @@
 @using Orchard.Core.Contents;
 @if (AuthorizedFor(Permissions.EditContent) && Model.ContentItem.Id > 0) {
     <div class="content-control">
-        <div class="manage-actions">@Html.ItemEditLinkWithReturnUrl(T("Edit").Text, (ContentItem)Model.ContentItem)</div>
+        <div class="manage-actions">@Display.EditLink(ContentItem: Model.ContentItem, Value: T("Edit"), ReturnUrl: true)</div>
     @Display(Model.Child)
     </div>
 }

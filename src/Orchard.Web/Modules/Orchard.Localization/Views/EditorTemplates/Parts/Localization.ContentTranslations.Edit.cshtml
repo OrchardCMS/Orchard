@@ -6,14 +6,14 @@ Style.Require("LocalizationAdmin");
         <label for="SelectedCulture">@T("Content Localization")</label>
         <div>@T("This is the <em>{0}</em> variation of {1}.",
                             Html.Encode(Model.SelectedCulture),
-                            Html.ItemEditLink(Model.MasterContentItem ?? Model.ContentItem))</div>
+                            Display.EditLink(ContentItem: Model.MasterContentItem ?? Model.ContentItem))</div>
            @Html.Hidden("SelectedCulture", Model.SelectedCulture)
     </fieldset>
     @if (Model.ContentLocalizations.Localizations.Count() > 0) {
     <dl class="content-localization">
         <dt>@T("Other translations:")</dt>
         <dd class="content-localizations">
-            @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) => Html.ItemEditLink(c.Culture.Culture, c), "localizations")
+            @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) => MvcHtmlString.Create(Display.EditLink(Value: c.Culture.Culture, ContentItem: c).ToString()), "localizations")
         </dd>
     </dl>
     }

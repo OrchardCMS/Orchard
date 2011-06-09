@@ -17,7 +17,7 @@
     <li>
         @Html.ActionLink(T("{0}: {1}", item.Id, item.ContentType).ToString(), "details", "content", new{item.Id},new{})
         @Display.DisplayLink(Value: T("view"), ContentItem: item)
-        @Html.ItemEditLink(T("edit").ToString(), item)
+        @Display.EditLink(ContentItem: item, Value: T("edit"))
     </li>
 }
 </ul>
