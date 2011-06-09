@@ -7,7 +7,7 @@ namespace Orchard.FileSystems.LockFile {
     /// <remarks>
     /// All virtual paths passed in or returned are relative to "~/App_Data".
     /// </remarks>
-    public interface ILockFileManager : IVolatileProvider {
+    public interface ILockFileManager : ISingletonDependency {
         /// <summary>
         /// Attempts to acquire an exclusive lock file.
         /// </summary>

@@ -670,7 +670,6 @@
     <Compile Include="Caching\ICache.cs" />
     <Compile Include="Caching\ICacheManager.cs" />
     <Compile Include="Caching\IVolatileToken.cs" />
-    <Compile Include="Caching\IVolatileProvider.cs" />
     <Compile Include="Commands\CommandParameters.cs" />
     <Compile Include="Commands\CommandDescriptor.cs" />
     <Compile Include="Commands\CommandHandlerDescriptor.cs" />

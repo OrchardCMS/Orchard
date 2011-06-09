@@ -19,7 +19,7 @@ namespace Orchard.FileSystems.Dependencies {
         public string VirtualPath { get; set; }
     }
 
-    public interface IDependenciesFolder : IVolatileProvider {
+    public interface IDependenciesFolder : ISingletonDependency {
         DependencyDescriptor GetDescriptor(string moduleName);
         IEnumerable<DependencyDescriptor> LoadDescriptors();
         void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors);

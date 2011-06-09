@@ -10,7 +10,7 @@ namespace Orchard.FileSystems.Dependencies {
         public string Hash { get; set; }
     }
 
-    public interface IExtensionDependenciesManager : IVolatileProvider {
+    public interface IExtensionDependenciesManager : ISingletonDependency {
         void StoreDependencies(IEnumerable<DependencyDescriptor> dependencyDescriptors, Func<DependencyDescriptor, string> fileHashProvider);
 
         IEnumerable<string> GetVirtualPathDependencies(string extensionId);
