@@ -18,6 +18,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,25 +44,33 @@
     <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\autofac\Autofac.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Autofac.Integration.Web">
       <HintPath>..\..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Autofac.Integration.Web.Mvc">
       <HintPath>..\..\..\lib\autofac\Autofac.Integration.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\aspnetmvc\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
       <HintPath>..\..\..\lib\fluentnhibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
@@ -172,151 +181,188 @@
     <ProjectReference Include="..\..\Orchard.Web\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Lucene\Lucene.csproj">
       <Project>{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}</Project>
       <Name>Lucene</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.ArchiveLater\Orchard.ArchiveLater.csproj">
       <Project>{1C981BB3-26F7-494C-9005-CC27A5144233}</Project>
       <Name>Orchard.ArchiveLater</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Blogs\Orchard.Blogs.csproj">
       <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
       <Name>Orchard.Blogs</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.CodeGeneration\Orchard.CodeGeneration.csproj">
       <Project>{C0C45321-B51D-4D8D-9B7B-AA4C2E0B2962}</Project>
       <Name>Orchard.CodeGeneration</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj">
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
       <Name>Orchard.Comments</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.ContentTypes\Orchard.ContentTypes.csproj">
       <Project>{0E7646E8-FE8F-43C1-8799-D97860925EC4}</Project>
       <Name>Orchard.ContentTypes</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.DesignerTools\Orchard.DesignerTools.csproj">
       <Project>{4A4595EF-6C37-4F99-96ED-4AE0B9E438D3}</Project>
       <Name>Orchard.DesignerTools</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Email\Orchard.Email.csproj">
       <Project>{05660F47-D649-48BD-9DED-DF4E01E7CFF9}</Project>
       <Name>Orchard.Email</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Experimental\Orchard.Experimental.csproj">
       <Project>{AB3C207C-0126-4143-8D62-1119DF80D366}</Project>
       <Name>Orchard.Experimental</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Indexing\Orchard.Indexing.csproj">
       <Project>{EA2B9121-EF54-40A6-A53E-6593C86EE696}</Project>
       <Name>Orchard.Indexing</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.jQuery\Orchard.jQuery.csproj">
       <Project>{8F116B06-1C0E-4E4C-9A0A-D2FAB851E768}</Project>
       <Name>Orchard.jQuery</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Lists\Orchard.Lists.csproj">
       <Project>{137906EA-15FE-4AD8-A6A0-27528F0477D6}</Project>
       <Name>Orchard.Lists</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Localization\Orchard.Localization.csproj">
       <Project>{FBC8B571-ED50-49D8-8D9D-64AB7454A0D6}</Project>
       <Name>Orchard.Localization</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MediaPicker\Orchard.MediaPicker.csproj">
       <Project>{43D0EC0B-1955-4566-8D31-7B9102DA1703}</Project>
       <Name>Orchard.MediaPicker</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Messaging\Orchard.Messaging.csproj">
       <Project>{085948FF-0E9B-4A9A-B564-F8B8B4BDDDBC}</Project>
       <Name>Orchard.Messaging</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Migrations\Orchard.Migrations.csproj">
       <Project>{EA4F1DA7-F2AB-4384-9AA4-9B756E2026B1}</Project>
       <Name>Orchard.Migrations</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Modules\Orchard.Modules.csproj">
       <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>
       <Name>Orchard.Modules</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MultiTenancy\Orchard.MultiTenancy.csproj">
       <Project>{72457126-E118-4171-A08F-9A709EE4B7FC}</Project>
       <Name>Orchard.MultiTenancy</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Packaging\Orchard.Packaging.csproj">
       <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
       <Name>Orchard.Packaging</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Pages\Orchard.Pages.csproj">
       <Project>{3420C92A-747F-4990-BA08-F2C9531E44AD}</Project>
       <Name>Orchard.Pages</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.PublishLater\Orchard.PublishLater.csproj">
       <Project>{C889167C-E52C-4A65-A419-224B3D1B957D}</Project>
       <Name>Orchard.PublishLater</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Recipes\Orchard.Recipes.csproj">
       <Project>{FC1D74E8-7A4D-48F4-83DE-95C6173780C4}</Project>
       <Name>Orchard.Recipes</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj">
       <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
       <Name>Orchard.Scripting.Dlr</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Scripting\Orchard.Scripting.csproj">
       <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
       <Name>Orchard.Scripting</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Search\Orchard.Search.csproj">
       <Project>{4BE4EB01-AC56-4048-924E-2CA77F509ABA}</Project>
       <Name>Orchard.Search</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Setup\Orchard.Setup.csproj">
       <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
       <Name>Orchard.Setup</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Tags\Orchard.Tags.csproj">
       <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
       <Name>Orchard.Tags</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
       <Name>Orchard.Themes</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Widgets\Orchard.Widgets.csproj">
       <Project>{194D3CCC-1153-474D-8176-FDE8D7D0D0BD}</Project>
       <Name>Orchard.Widgets</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\TinyMce\TinyMce.csproj">
       <Project>{954CA994-D204-468B-9D69-51F6AD3E1C29}</Project>
       <Name>TinyMce</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
       <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Tools\Orchard\Orchard.csproj">
       <Project>{33B1BC8D-E292-4972-A363-22056B207156}</Project>
       <Name>Orchard</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Azure.csproj">
       <Project>{2505AA84-65A6-43D0-9C27-4F44FD576284}</Project>
       <Name>Orchard.Azure</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
