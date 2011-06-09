@@ -309,7 +309,6 @@
     <Compile Include="UI\Navigation\NavigationManagerTests.cs" />
     <Compile Include="UI\Navigation\PositionComparerTests.cs" />
     <Compile Include="Utility\Extensions\StringExtensionsTests.cs" />
-    <Compile Include="Utility\ReflectTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
