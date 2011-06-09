@@ -103,17 +103,18 @@ namespace Orchard.Packaging.Controllers {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
-                if (source == null) {
-                    return HttpNotFound();
-                }
+            var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
+            if (source == null) {
+                return HttpNotFound();
+            }
 
+           try {
                 PackageInfo packageInfo = _packageManager.Install(packageId, version, source.FeedUrl, HostingEnvironment.MapPath("~/"));
 
                 if (DefaultExtensionTypes.IsTheme(packageInfo.ExtensionType)) {
                     Services.Notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
-                } else if (DefaultExtensionTypes.IsModule(packageInfo.ExtensionType)) {
+                } 
+                else if (DefaultExtensionTypes.IsModule(packageInfo.ExtensionType)) {
                     Services.Notifier.Information(T("The module has been successfully installed."));
 
                     IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(source.FeedUrl, "Default"));
@@ -123,8 +124,8 @@ namespace Orchard.Packaging.Controllers {
                     return InstallPackageDetails(extensionDescriptor, redirectUrl);
                 }
             }
-            catch (Exception exception) {
-                this.Error(exception, T("Package installation failed."), Logger, Services.Notifier);
+            catch (Exception) {
+                Services.Notifier.Error(T("Package installation failed."));
             }
 
             return Redirect(redirectUrl);
@@ -134,14 +135,13 @@ namespace Orchard.Packaging.Controllers {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to install packages")))
                 return new HttpUnauthorizedResult();
 
+            if (Request.Files == null ||
+                Request.Files.Count == 0 ||
+                string.IsNullOrWhiteSpace(Request.Files.Get(0).FileName)) {
+
+                throw new OrchardException(T("Select a file to upload."));
+            }
             try {
-                if (Request.Files == null ||
-                    Request.Files.Count == 0 ||
-                    string.IsNullOrWhiteSpace(Request.Files.Get(0).FileName)) {
-
-                    throw new OrchardException(T("Select a file to upload."));
-                }
-
                 HttpPostedFileBase file = Request.Files.Get(0);
                 string fullFileName = Path.Combine(_appDataFolderRoot.RootFolder, Path.GetFileName(file.FileName)).Replace(Path.DirectorySeparatorChar, '/');
                 file.SaveAs(fullFileName);
@@ -158,8 +158,8 @@ namespace Orchard.Packaging.Controllers {
                     return InstallPackageDetails(extensionDescriptor, redirectUrl);
                 }
             }
-            catch (Exception exception) {
-                this.Error(exception, T("Package uploading and installation failed."), Logger, Services.Notifier);
+            catch (Exception) {
+                Services.Notifier.Error(T("Package uploading and installation failed."));
             }
 
             return Redirect(redirectUrl);
@@ -210,7 +210,7 @@ namespace Orchard.Packaging.Controllers {
                             _recipeManager.Execute(recipe);
                         }
                         catch {
-                            Services.Notifier.Error(T("Recipes contains {0} unsuported module installation steps.", recipe.Name));
+                            Services.Notifier.Error(T("Recipes contains {0} unsupported module installation steps.", recipe.Name));
                         }
                     }
                 }
@@ -237,15 +237,14 @@ namespace Orchard.Packaging.Controllers {
 
             try {
                 _packageManager.Uninstall(id, HostingEnvironment.MapPath("~/"));
-
-                _notifier.Information(T("Uninstalled package \"{0}\"", id));
-
-                return this.RedirectLocal(returnUrl, "~/");
-            } catch (Exception exception) {
-                this.Error(exception, T("Uninstall failed: {0}", exception.Message), Logger, Services.Notifier);
-
+            }
+            catch (Exception exception) {
+                Services.Notifier.Error(T("Uninstall failed: {0}", exception.Message));
                 return Redirect(retryUrl);
             }
+
+            Services.Notifier.Information(T("Uninstalled package \"{0}\"", id));
+            return this.RedirectLocal(returnUrl, "~/");
         }
     }
 }
