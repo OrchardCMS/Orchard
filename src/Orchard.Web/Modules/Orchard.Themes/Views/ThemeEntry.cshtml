@@ -7,7 +7,7 @@
 <div>
     <h3@{ if(!string.IsNullOrEmpty(themeClasses)) {<text>  class="@themeClasses"</text>}}>@Model.ContentPart.Name</h3>
 
-    @Html.Image(Href(Html.ThemePath((ExtensionDescriptor) Model.ContentPart.Descriptor, "/Theme.png")), Html.Encode((string)Model.ContentPart.Name), null)
+    @Display.Image(Src: Html.ThemePath((ExtensionDescriptor)Model.ContentPart.Descriptor, "/Theme.png"), Alt: Model.ContentPart.Name)
     @using (Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" })) {
         @Html.Hidden("themeId", (string)Model.ContentPart.Descriptor.Id)
         <button type="submit" title="@T("Activate")">@T("Set Current")</button>

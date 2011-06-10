@@ -3,7 +3,12 @@
 @using Orchard.Environment.Extensions.Models
 
 <div id="currentTheme">
-    @Html.Image(Href(Html.ThemePath((ExtensionDescriptor)Model.ContentPart.Descriptor, "/Theme.png")), Html.Encode((string)Model.ContentPart.Name), new { @class = "themePreviewImage" })
+@{
+    var image = New.Image(Src: Html.ThemePath((ExtensionDescriptor)Model.ContentPart.Descriptor, "/Theme.png"), Alt: Model.ContentPart.Name);
+    // temporary workaround for problem where putting "Classes:" as a named parameter doesn't work -- refer to dareed for why
+    image.Classes.Add("themePreviewImage");
+}
+    @Display(image)
 
     <div class="details">
         <h4>@Model.ContentPart.Name</h4>

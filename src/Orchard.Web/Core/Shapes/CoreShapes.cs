@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -303,6 +304,24 @@ namespace Orchard.Core.Shapes {
                 }
                 Output.Write(result);
             }
+        }
+
+        [Shape]
+        public IHtmlString Image(dynamic Display, dynamic Shape, UrlHelper Url, string Src, object Alt) {
+            // Displays an image. The Src will be resolved against the current context if need be.
+            if (Src == null) {
+                throw new ArgumentNullException("Src");
+            }
+            Src = Url.Content(Src);
+            var tag = _tagBuilderFactory.Create((object)Shape, "img");
+            tag.MergeAttribute("src", Src);
+            var alt = Alt == null ? "" : (string)Display(Alt).ToString();
+            tag.MergeAttribute("alt", alt);
+            if (tag.Attributes.ContainsKey("alt") && !tag.Attributes.ContainsKey("title")) {
+                tag.MergeAttribute("title", tag.Attributes["alt"] ?? "");
+            }
+
+            return MvcHtmlString.Create(tag.ToString(TagRenderMode.SelfClosing));
         }
 
         [Shape]
