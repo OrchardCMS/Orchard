@@ -8,6 +8,7 @@ using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Tasks;
 using Orchard.Tasks.Scheduling;
+using Orchard.Time;
 
 namespace Orchard.Core.Scheduling.Services {
     public class ScheduledTaskExecutor : IBackgroundTask {

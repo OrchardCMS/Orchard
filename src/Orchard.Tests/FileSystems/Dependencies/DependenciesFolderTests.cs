@@ -8,6 +8,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
+using Orchard.Time;
 
 namespace Orchard.Tests.FileSystems.Dependencies {
     [TestFixture]

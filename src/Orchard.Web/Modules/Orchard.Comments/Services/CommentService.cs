@@ -3,6 +3,7 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Comments.Services {
     public class CommentService : ICommentService {

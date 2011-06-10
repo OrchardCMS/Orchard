@@ -4,6 +4,7 @@ using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Locking {
     /// <summary>

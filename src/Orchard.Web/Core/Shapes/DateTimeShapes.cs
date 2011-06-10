@@ -5,6 +5,7 @@ using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Core.Shapes {
     public class DateTimeShapes : ISingletonDependency {

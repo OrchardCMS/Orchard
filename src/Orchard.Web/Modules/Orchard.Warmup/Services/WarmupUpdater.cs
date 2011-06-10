@@ -11,6 +11,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.Locking;
 using Orchard.Logging;
 using Orchard.Services;
+using Orchard.Time;
 using Orchard.Warmup.Models;
 
 namespace Orchard.Warmup.Services {

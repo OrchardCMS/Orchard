@@ -7,6 +7,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Packaging.Models;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Packaging.Services {
     public interface IPackageUpdateService : IDependency {

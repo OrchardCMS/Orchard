@@ -27,6 +27,7 @@ using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {

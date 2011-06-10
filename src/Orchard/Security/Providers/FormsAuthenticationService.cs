@@ -5,6 +5,7 @@ using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Mvc;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Security.Providers {
     public class FormsAuthenticationService : IAuthenticationService {

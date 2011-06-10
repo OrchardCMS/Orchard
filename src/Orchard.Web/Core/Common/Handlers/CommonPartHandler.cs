@@ -8,6 +8,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Security;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Core.Common.Handlers {
     public class CommonPartHandler : ContentHandler {
