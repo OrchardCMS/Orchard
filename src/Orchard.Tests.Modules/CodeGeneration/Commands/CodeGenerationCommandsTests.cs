@@ -60,14 +60,14 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
         }
 
         [Test]
-        [ExpectedException(typeof(OrchardException))]
         public void CreateDataMigrationTestNonExistentFeature() {
             CodeGenerationCommands codeGenerationCommands = new CodeGenerationCommands(_extensionManager,
                 _schemaCommandGenerator);
 
-            TextWriter textWriterOutput = new StringWriter();
+            var textWriterOutput = new StringWriter();
             codeGenerationCommands.Context = new CommandContext { Output = textWriterOutput };
             codeGenerationCommands.CreateDataMigration("feature");
+            Assert.That(textWriterOutput.ToString().Contains("Creating data migration failed: target Feature feature could not be found."));
         }
     }
 }
