@@ -9,7 +9,6 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class DynamicExtensionLoader : ExtensionLoaderBase {
@@ -109,7 +108,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Descriptor = descriptor,
                 Loader = this,
                 Name = r.SimpleName,
-                VirtualPath = _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
+                VirtualPath = GetProjectReferenceVirtualPath(projectPath, r.SimpleName, r.Path)
             });
 
             Logger.Information("Done probing references for module '{0}'", descriptor.Id);
@@ -117,7 +116,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
-            //Note: This is the same implementation as "PrecompiledExtensionLoader"
+            // Note: This is the same implementation as "PrecompiledExtensionLoader"
             if (string.IsNullOrEmpty(referenceEntry.VirtualPath))
                 return;
 
@@ -226,7 +225,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (projectFile.References != null) {
                 foreach (ReferenceDescriptor referenceDescriptor in projectFile.References.Where(reference => !string.IsNullOrEmpty(reference.Path))) {
                     string path = referenceDescriptor.ReferenceType == ReferenceType.Library
-                                      ? _virtualPathProvider.GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
+                                      ? GetProjectReferenceVirtualPath(projectPath, referenceDescriptor.SimpleName, referenceDescriptor.Path)
                                       : _virtualPathProvider.Combine(basePath, referenceDescriptor.Path);
 
                     // Normalize the virtual path (avoid ".." in the path name)
@@ -263,6 +262,32 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
 
             return projectPath;
+        }
+
+        private string GetProjectReferenceVirtualPath(string projectPath, string referenceName, string hintPath) {
+            string basePath = _virtualPathProvider.GetDirectoryName(projectPath);
+            string virtualPath = GetReferenceVirtualPath(basePath, referenceName, hintPath);
+
+            if (!string.IsNullOrEmpty(virtualPath)) {
+                return _virtualPathProvider.Combine(basePath, virtualPath);
+            }
+
+            return null;
+        }
+
+        private string GetReferenceVirtualPath(string basePath, string referenceName, string hintPath) {
+            // Check if hint path is valid
+            if (!string.IsNullOrEmpty(hintPath) && _virtualPathProvider.TryFileExists(_virtualPathProvider.Combine(basePath, hintPath))) {
+                return hintPath;
+            }
+
+            // Fall back to bin directory
+            string relativePath = _virtualPathProvider.Combine("bin", referenceName + ".dll");
+            if (_virtualPathProvider.TryFileExists(_virtualPathProvider.Combine(basePath, relativePath))) {
+                return relativePath;
+            }
+
+            return null;
         }
 
         /// <summary>

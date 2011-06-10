@@ -518,7 +518,6 @@
     <Compile Include="Messaging\Services\IMessageManager.cs" />
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
-    <Compile Include="Utility\Extensions\VirtualPathProviderExtensions.cs" />
     <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="Wcf\OrchardDependencyInjectionServiceBehavior.cs" />
     <Compile Include="Wcf\OrchardInstanceContext.cs" />

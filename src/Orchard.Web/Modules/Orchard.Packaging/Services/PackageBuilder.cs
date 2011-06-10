@@ -9,16 +9,13 @@ using NuGet;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
-using Orchard.Utility.Extensions;
 using NuGetPackageBuilder = NuGet.PackageBuilder;
 
 namespace Orchard.Packaging.Services {
     [OrchardFeature("PackagingServices")]
     public class PackageBuilder : IPackageBuilder {
         private readonly IWebSiteFolder _webSiteFolder;
-        private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IOrchardFrameworkAssemblies _frameworkAssemblies;
 
         private static readonly string[] _ignoredThemeExtensions = new[] {
@@ -36,11 +33,9 @@ namespace Orchard.Packaging.Services {
         }
 
         public PackageBuilder(IWebSiteFolder webSiteFolder,
-            IVirtualPathProvider virtualPathProvider,
             IOrchardFrameworkAssemblies frameworkAssemblies) {
 
             _webSiteFolder = webSiteFolder;
-            _virtualPathProvider = virtualPathProvider;
             _frameworkAssemblies = frameworkAssemblies;
         }
 
@@ -120,13 +115,28 @@ namespace Orchard.Packaging.Services {
 
                 // If it is not a core assembly
                 if (_frameworkAssemblies.GetFrameworkAssemblies().FirstOrDefault(assembly => assembly.Name.Equals(assemblyName.Name)) == null) {
-                    string virtualPath = _virtualPathProvider.GetReferenceVirtualPath(context.SourcePath, assemblyName.Name, entry.HintPath != null ? entry.HintPath.Value : null);
+                    string virtualPath = GetReferenceVirtualPath(context.SourcePath, assemblyName.Name, entry.HintPath != null ? entry.HintPath.Value : null);
 
                     if (!string.IsNullOrEmpty(virtualPath)) {
                         EmbedVirtualFile(context, virtualPath, MediaTypeNames.Application.Octet);
                     }
                 }
             }
+        }
+
+        private string GetReferenceVirtualPath(string basePath, string referenceName, string hintPath) {
+            // Check if hint path is valid
+            if (!string.IsNullOrEmpty(hintPath) && _webSiteFolder.FileExists(Path.Combine(basePath, hintPath))) {
+                return hintPath;
+            }
+
+            // Fall back to bin directory
+            string relativePath = Path.Combine("bin", referenceName + ".dll");
+            if (_webSiteFolder.FileExists(Path.Combine(basePath, relativePath))) {
+                return relativePath;
+            }
+
+            return null;
         }
 
         private static void EmbedThemeFiles(CreateContext context) {
