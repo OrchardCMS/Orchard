@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
@@ -10,6 +11,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Packaging.Events;
 using Orchard.Packaging.Extensions;
+using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
@@ -82,45 +84,39 @@ namespace Orchard.Packaging.Controllers {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
-            try {
-                if (!String.IsNullOrEmpty(url)) {
-                    if (!url.StartsWith("http")) {
-                        ModelState.AddModelError("Url", T("The Url is not valid").Text);
-                    }
+            if (!String.IsNullOrEmpty(url)) {
+                if (!url.StartsWith("http")) {
+                    ModelState.AddModelError("Url", T("The Url is not valid").Text);
                 }
-                else if (String.IsNullOrWhiteSpace(url)) {
-                    ModelState.AddModelError("Url", T("Url is required").Text);
-                }
-
-                string title = null;
-                // try to load the feed
-                try {
-
-                    XNamespace atomns = "http://www.w3.org/2005/Atom";
-                    var feed = XDocument.Load(url, LoadOptions.PreserveWhitespace);
-                    var titleNode = feed.Descendants(atomns + "title").FirstOrDefault();
-                    if (titleNode != null)
-                        title = titleNode.Value;
-
-                    if (String.IsNullOrWhiteSpace(title)) {
-                        ModelState.AddModelError("Url", T("The feed has no title.").Text);
-                    }
-                } catch {
-                    ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
-                }
-
-                if (!ModelState.IsValid)
-                    return View(new PackagingAddSourceViewModel { Url = url });
-
-                _packagingSourceManager.AddSource(title, url);
-                Services.Notifier.Information(T("The feed has been added successfully."));
-
-                return RedirectToAction("Sources");
-            } catch (Exception exception) {
-                this.Error(exception, T("Adding feed failed: {0}", exception.Message), Logger, Services.Notifier);
-
-                return View(new PackagingAddSourceViewModel { Url = url });
             }
+            else if (String.IsNullOrWhiteSpace(url)) {
+                ModelState.AddModelError("Url", T("Url is required").Text);
+            }
+
+            string title = null;
+            // try to load the feed
+            try {
+                XNamespace atomns = "http://www.w3.org/2005/Atom";
+                var feed = XDocument.Load(url, LoadOptions.PreserveWhitespace);
+                var titleNode = feed.Descendants(atomns + "title").FirstOrDefault();
+                if (titleNode != null)
+                    title = titleNode.Value;
+
+                if (String.IsNullOrWhiteSpace(title)) {
+                    ModelState.AddModelError("Url", T("The feed has no title.").Text);
+                }
+            } 
+            catch {
+                ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
+            }
+
+            if (!ModelState.IsValid)
+                return View(new PackagingAddSourceViewModel { Url = url });
+
+            _packagingSourceManager.AddSource(title, url);
+            Services.Notifier.Information(T("The feed has been added successfully."));
+
+            return RedirectToAction("Sources");
         }
 
         public ActionResult Modules(PackagingExtensionsOptions options, PagerParameters pagerParameters) {
@@ -151,16 +147,17 @@ namespace Orchard.Packaging.Controllers {
             int totalCount = 0;
             foreach (var source in sources) {
                 try {
+                    Expression<Func<PublishedPackage, bool>> packagesCriteria = p => p.PackageType == packageType &&
+                                p.IsLatestVersion &&
+                                (string.IsNullOrEmpty(options.SearchText)
+                                    || p.Title.Contains(options.SearchText)
+                                    || p.Description.Contains(options.SearchText)
+                                    || p.Tags.Contains(options.SearchText));
+
                     var sourceExtensions = _packagingSourceManager.GetExtensionList(true,
                         source,
                         packages => {
-                            packages = packages.Where(p => p.PackageType == packageType &&
-                                p.IsLatestVersion &&
-                                (string.IsNullOrEmpty(options.SearchText) 
-                                    || p.Title.Contains(options.SearchText)
-                                    || p.Description.Contains(options.SearchText)
-                                    || p.Tags.Contains(options.SearchText)
-                                    ));
+                            packages = packages.Where(packagesCriteria);
 
                             switch (options.Order) {
                                 case PackagingExtensionsOrder.Downloads:
@@ -174,8 +171,8 @@ namespace Orchard.Packaging.Controllers {
                                     break;
                             }
 
-                            if(pager.PageSize != 0) {
-                                packages = packages.Skip((pager.Page - 1)*pager.PageSize).Take(pager.PageSize);
+                            if (pager.PageSize != 0) {
+                                packages = packages.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
                             }
 
                             return packages;
@@ -184,10 +181,7 @@ namespace Orchard.Packaging.Controllers {
                     // count packages separately to prevent loading everything just to count
                     totalCount += _packagingSourceManager.GetExtensionCount(
                         source,
-                        packages => packages.Where(p => p.PackageType == packageType &&
-                                p.IsLatestVersion &&
-                                (string.IsNullOrEmpty(options.SearchText) || p.Title.Contains(options.SearchText)))
-                        );
+                        packages => packages.Where(packagesCriteria));
 
                     extensions = extensions == null ? sourceExtensions : extensions.Concat(sourceExtensions);
 
@@ -209,8 +203,9 @@ namespace Orchard.Packaging.Controllers {
                             extensions = extensions.Take(pager.PageSize);
                         }
                     }
-                } catch (Exception exception) {
-                    this.Error(exception, T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, exception.Message), Logger, Services.Notifier);
+                } 
+                catch (Exception exception) {
+                    Services.Notifier.Error(T("Error loading extensions from gallery source '{0}'. {1}.", source.FeedTitle, exception.Message));
                 }
             }
 

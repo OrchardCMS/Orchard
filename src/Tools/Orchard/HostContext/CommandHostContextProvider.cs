@@ -113,7 +113,12 @@ namespace Orchard.HostContext {
         }
 
         private static CommandHost CreateWorkerAppDomainWithHost(string virtualPath, string physicalPath, Type hostType) {
-            ClientBuildManager clientBuildManager = new ClientBuildManager(virtualPath, physicalPath);
+            var clientBuildManager = new ClientBuildManager(virtualPath, physicalPath);
+            // Fix for http://orchard.codeplex.com/workitem/17920
+            // By forcing the CBM to build App_Code, etc, we ensure that the ASP.NET BuildManager
+            // is in a state where it can safely (i.e. in a multi-threaded safe way) process
+            // multiple concurrent calls to "GetCompiledAssembly".
+            clientBuildManager.CompileApplicationDependencies();
             return (CommandHost)clientBuildManager.CreateObject(hostType, false);
         }
     }

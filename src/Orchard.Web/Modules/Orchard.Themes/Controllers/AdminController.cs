@@ -69,7 +69,13 @@ namespace Orchard.Themes.Controllers {
             bool installThemes = _featureManager.GetEnabledFeatures().FirstOrDefault(f => f.Id == "PackagingServices") != null;
 
             var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
-            ThemeEntry currentTheme = new ThemeEntry(_siteThemeService.GetSiteTheme());
+
+            ThemeEntry currentTheme = null;
+            ExtensionDescriptor currentThemeDescriptor = _siteThemeService.GetSiteTheme();
+            if (currentThemeDescriptor != null) {
+                currentTheme = new ThemeEntry(currentThemeDescriptor);
+            }
+
             IEnumerable<ThemeEntry> themes = _extensionManager.AvailableExtensions()
                 .Where(extensionDescriptor => {
                         bool hidden = false;
@@ -80,7 +86,8 @@ namespace Orchard.Themes.Controllers {
 
                         return !hidden &&
                                 DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType) &&
-                                !currentTheme.Descriptor.Id.Equals(extensionDescriptor.Id);
+                                (currentTheme == null ||
+                                !currentTheme.Descriptor.Id.Equals(extensionDescriptor.Id));
                     })
                 .Select(extensionDescriptor => {
                         ThemeEntry themeEntry = new ThemeEntry(extensionDescriptor) {
@@ -214,7 +221,8 @@ namespace Orchard.Themes.Controllers {
                 _dataMigrationManager.Update(themeId);
                 Services.Notifier.Information(T("The theme {0} was updated succesfuly", themeId));
             } catch (Exception exception) {
-                this.Error(exception, T("An error occured while updating the theme {0}: {1}", themeId, exception.Message), Logger, Services.Notifier);
+                Logger.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message).Text);
+                Services.Notifier.Error(T("An error occured while updating the theme {0}: {1}", themeId, exception.Message));
             }
 
             return RedirectToAction("Index");

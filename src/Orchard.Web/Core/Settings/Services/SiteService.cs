@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Orchard.Caching;
 using Orchard.Core.Settings.Models;
 using Orchard.ContentManagement;
@@ -15,24 +16,20 @@ namespace Orchard.Core.Settings.Services {
 
             _contentManager = contentManager;
             _cacheManager = cacheManager;
-
         }
 
         public ISite GetSiteSettings() {
-            SiteSettingsCache siteSettingsCache = _cacheManager.Get("SiteSettings",
-                ctx => new SiteSettingsCache(GetSiteSettingsPart()));
-            siteSettingsCache.ResetCache(this);
-            return siteSettingsCache;
-        }
-
-        public ISite GetSiteSettingsPart() {
             var siteId = _cacheManager.Get("SiteId", ctx => {
                 var site = _contentManager.Query("Site")
                     .Slice(0, 1)
                     .FirstOrDefault();
 
                 if (site == null) {
-                    site = _contentManager.Create<SiteSettingsPart>("Site").ContentItem;
+                    site = _contentManager.Create<SiteSettingsPart>("Site", item => {
+                        item.Record.SiteSalt = Guid.NewGuid().ToString("N");
+                        item.Record.SiteName = "My Orchard Project Application";
+                        item.Record.PageTitleSeparator = " - ";
+                    }).ContentItem;
                 }
 
                 return site.Id;

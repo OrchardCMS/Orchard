@@ -3,17 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Orchard.Exceptions;
 using Orchard.Localization;
-using Orchard.UI.Notify;
 
 namespace Orchard.Events {
     public class DefaultOrchardEventBus : IEventBus {
         private readonly Func<IEnumerable<IEventHandler>> _eventHandlers;
-        private readonly INotifier _notifier;
+        private readonly IExceptionPolicy _exceptionPolicy;
 
-        public DefaultOrchardEventBus(Func<IEnumerable<IEventHandler>> eventHandlers) {
+        public DefaultOrchardEventBus(Func<IEnumerable<IEventHandler>> eventHandlers, IExceptionPolicy exceptionPolicy) {
             _eventHandlers = eventHandlers;
-            _notifier = new Notifier();
+            _exceptionPolicy = exceptionPolicy;
             T = NullLocalizer.Instance;
         }
 
@@ -49,11 +49,10 @@ namespace Orchard.Events {
             try {
                 return TryInvoke(eventHandler, interfaceName, methodName, eventData, out returnValue);
             }
-            catch (Exception ex) {
-                _notifier.Error(T("{2} thrown from {0} by {1}",
-                                    messageName,
-                                    eventHandler.GetType().FullName,
-                                    ex.GetType().Name));
+            catch (Exception exception) {
+                if (!_exceptionPolicy.HandleException(this, exception)) {
+                    throw;
+                }
 
                 returnValue = null;
                 return false;
