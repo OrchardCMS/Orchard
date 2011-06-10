@@ -11,7 +11,7 @@
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
 
-<p>@T("The paths below will be requested using {0} as a base url. You can change the base url on the {0}. ", @Html.Link(WorkContext.CurrentSite.BaseUrl, WorkContext.CurrentSite.BaseUrl), @Html.ActionLink(T("General Settings page").Text, "Index", new { controller = "Admin", area = "Settings" }))</p>
+<p>@T("The paths below will be requested using {0} as a base url. You can change the base url on the {1}. ", @Html.Link(WorkContext.CurrentSite.BaseUrl, WorkContext.CurrentSite.BaseUrl), @Html.ActionLink(T("General Settings page").Text, "Index", new { controller = "Admin", area = "Settings" }))</p>
 
 <fieldset>
     <div>
