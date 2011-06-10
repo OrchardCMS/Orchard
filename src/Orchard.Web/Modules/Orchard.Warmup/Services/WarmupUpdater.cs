@@ -117,6 +117,10 @@ namespace Orchard.Warmup.Services {
                     using (var urlReader = new StringReader(part.Urls)) {
                         string relativeUrl;
                         while (null != (relativeUrl = urlReader.ReadLine())) {
+                            if (String.IsNullOrWhiteSpace(relativeUrl)) {
+                                continue;
+                            }
+
                             string url = null;
                             relativeUrl = relativeUrl.Trim();
 

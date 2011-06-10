@@ -7,13 +7,15 @@ using Orchard.ContentManagement;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
+using Orchard.Data.Migration;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Recipes.Models;
@@ -21,9 +23,6 @@ using Orchard.Recipes.Services;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
-using Orchard.Environment.State;
-using Orchard.Data.Migration;
-using Orchard.Themes.Services;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Setup.Services {
@@ -172,6 +171,7 @@ namespace Orchard.Setup.Services {
 
         private string CreateTenantData(SetupContext context, IWorkContextScope environment) {
             string executionId = null;
+
             // create superuser
             var membershipService = environment.Resolve<IMembershipService>();
             var user =
@@ -191,10 +191,6 @@ namespace Orchard.Setup.Services {
             siteSettings.Record.SuperUser = context.AdminUsername;
             siteSettings.Record.SiteCulture = "en-US";
 
-            // set site theme
-            var themeService = environment.Resolve<ISiteThemeService>();
-            themeService.SetSiteTheme("TheThemeMachine");
-
             // add default culture
             var cultureManager = environment.Resolve<ICultureManager>();
             cultureManager.AddCulture("en-US");
@@ -202,7 +198,7 @@ namespace Orchard.Setup.Services {
             var recipeManager = environment.Resolve<IRecipeManager>();
             executionId = recipeManager.Execute(Recipes().Where(r => r.Name.Equals(context.Recipe, StringComparison.OrdinalIgnoreCase)).FirstOrDefault());
 
-            //null check: temporary fix for running setup in command line
+            // null check: temporary fix for running setup in command line
             if (HttpContext.Current != null) {
                 authenticationService.SignIn(user, true);
             }

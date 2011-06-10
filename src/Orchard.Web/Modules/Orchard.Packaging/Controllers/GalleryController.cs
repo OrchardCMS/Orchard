@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
@@ -10,6 +11,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Packaging.Events;
 using Orchard.Packaging.Extensions;
+using Orchard.Packaging.GalleryServer;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
@@ -151,16 +153,17 @@ namespace Orchard.Packaging.Controllers {
             int totalCount = 0;
             foreach (var source in sources) {
                 try {
+                    Expression<Func<PublishedPackage, bool>> packagesCriteria = p => p.PackageType == packageType &&
+                                p.IsLatestVersion &&
+                                (string.IsNullOrEmpty(options.SearchText)
+                                    || p.Title.Contains(options.SearchText)
+                                    || p.Description.Contains(options.SearchText)
+                                    || p.Tags.Contains(options.SearchText));
+
                     var sourceExtensions = _packagingSourceManager.GetExtensionList(true,
                         source,
                         packages => {
-                            packages = packages.Where(p => p.PackageType == packageType &&
-                                p.IsLatestVersion &&
-                                (string.IsNullOrEmpty(options.SearchText) 
-                                    || p.Title.Contains(options.SearchText)
-                                    || p.Description.Contains(options.SearchText)
-                                    || p.Tags.Contains(options.SearchText)
-                                    ));
+                            packages = packages.Where(packagesCriteria);
 
                             switch (options.Order) {
                                 case PackagingExtensionsOrder.Downloads:
@@ -174,8 +177,8 @@ namespace Orchard.Packaging.Controllers {
                                     break;
                             }
 
-                            if(pager.PageSize != 0) {
-                                packages = packages.Skip((pager.Page - 1)*pager.PageSize).Take(pager.PageSize);
+                            if (pager.PageSize != 0) {
+                                packages = packages.Skip((pager.Page - 1) * pager.PageSize).Take(pager.PageSize);
                             }
 
                             return packages;
@@ -184,10 +187,7 @@ namespace Orchard.Packaging.Controllers {
                     // count packages separately to prevent loading everything just to count
                     totalCount += _packagingSourceManager.GetExtensionCount(
                         source,
-                        packages => packages.Where(p => p.PackageType == packageType &&
-                                p.IsLatestVersion &&
-                                (string.IsNullOrEmpty(options.SearchText) || p.Title.Contains(options.SearchText)))
-                        );
+                        packages => packages.Where(packagesCriteria));
 
                     extensions = extensions == null ? sourceExtensions : extensions.Concat(sourceExtensions);
 
