@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Services;
 using Orchard.Experimental.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;

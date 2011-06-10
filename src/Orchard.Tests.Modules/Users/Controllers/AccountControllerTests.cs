@@ -53,9 +53,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<AccountController>().SingleInstance();
             builder.RegisterType<SiteService>().As<ISiteService>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
-            builder.RegisterType(typeof(SettingsFormatter))
-                .As(typeof(IMapper<XElement, SettingsDictionary>))
-                .As(typeof(IMapper<SettingsDictionary, XElement>));
+            builder.RegisterType(typeof(SettingsFormatter)).As<ISettingsFormatter>();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>().InstancePerDependency();

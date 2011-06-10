@@ -17,8 +17,8 @@ namespace Orchard.Tests.Modules.XmlRpc.Controllers {
             
             var builder = new ContainerBuilder();
             builder.RegisterType<LiveWriterController>();
-            builder.RegisterType<XmlRpcReader>().As<IMapper<XElement, XRpcMethodCall>>();
-            builder.RegisterType<XmlRpcWriter>().As<IMapper<XRpcMethodResponse, XElement>>();
+            builder.RegisterType<XmlRpcReader>().As<IXmlRpcReader>();
+            builder.RegisterType<XmlRpcWriter>().As<IXmlRpcWriter>();
             builder.RegisterInstance(thing).As<IXmlRpcHandler>();
             builder.RegisterInstance(thingToo).As<IXmlRpcHandler>();
 

@@ -76,15 +76,13 @@ namespace Orchard.Tests.Modules.Users.Services {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            //builder.RegisterModule(new ImplicitCollectionSupportModule());
+
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterInstance(_clock = new StubClock()).As<IClock>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
-            builder.RegisterType(typeof(SettingsFormatter))
-                .As(typeof(IMapper<XElement, SettingsDictionary>))
-                .As(typeof(IMapper<SettingsDictionary, XElement>));
+            builder.RegisterType(typeof(SettingsFormatter)).As<ISettingsFormatter>();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<UserPartHandler>().As<IContentHandler>();

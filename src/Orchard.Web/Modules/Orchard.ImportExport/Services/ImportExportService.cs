@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Services;
 using Orchard.Environment.Descriptor;
 using Orchard.FileSystems.AppData;
 using Orchard.ImportExport.Models;

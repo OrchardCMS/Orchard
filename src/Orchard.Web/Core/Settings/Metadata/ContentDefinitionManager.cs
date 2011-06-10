@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.MetaData.Services;
 using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Data;
 using Orchard.Logging;
@@ -18,8 +19,7 @@ namespace Orchard.Core.Settings.Metadata {
         private readonly IRepository<ContentTypeDefinitionRecord> _typeDefinitionRepository;
         private readonly IRepository<ContentPartDefinitionRecord> _partDefinitionRepository;
         private readonly IRepository<ContentFieldDefinitionRecord> _fieldDefinitionRepository;
-        private readonly IMapper<XElement, SettingsDictionary> _settingsReader;
-        private readonly IMapper<SettingsDictionary, XElement> _settingsWriter;
+        private readonly ISettingsFormatter _settingsFormatter;
 
         public ContentDefinitionManager(
             ICacheManager cacheManager,
@@ -27,15 +27,13 @@ namespace Orchard.Core.Settings.Metadata {
             IRepository<ContentTypeDefinitionRecord> typeDefinitionRepository,
             IRepository<ContentPartDefinitionRecord> partDefinitionRepository,
             IRepository<ContentFieldDefinitionRecord> fieldDefinitionRepository,
-            IMapper<XElement, SettingsDictionary> settingsReader,
-            IMapper<SettingsDictionary, XElement> settingsWriter) {
+            ISettingsFormatter settingsFormatter) {
             _cacheManager = cacheManager;
             _signals = signals;
             _typeDefinitionRepository = typeDefinitionRepository;
             _partDefinitionRepository = partDefinitionRepository;
             _fieldDefinitionRepository = fieldDefinitionRepository;
-            _settingsReader = settingsReader;
-            _settingsWriter = settingsWriter;
+            _settingsFormatter = settingsFormatter;
         }
 
         public ContentTypeDefinition GetTypeDefinition(string name) {
@@ -120,7 +118,7 @@ namespace Orchard.Core.Settings.Metadata {
 
         private void Apply(ContentTypeDefinition model, ContentTypeDefinitionRecord record) {
             record.DisplayName = model.DisplayName;
-            record.Settings = _settingsWriter.Map(model.Settings).ToString();
+            record.Settings = _settingsFormatter.Map(model.Settings).ToString();
 
             var toRemove = record.ContentTypePartDefinitionRecords
                 .Where(partDefinitionRecord => !model.Parts.Any(part => partDefinitionRecord.ContentPartDefinitionRecord.Name == part.PartDefinition.Name))
@@ -142,11 +140,11 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private void Apply(ContentTypePartDefinition model, ContentTypePartDefinitionRecord record) {
-            record.Settings = Compose(_settingsWriter.Map(model.Settings));
+            record.Settings = Compose(_settingsFormatter.Map(model.Settings));
         }
 
         private void Apply(ContentPartDefinition model, ContentPartDefinitionRecord record) {
-            record.Settings = _settingsWriter.Map(model.Settings).ToString();
+            record.Settings = _settingsFormatter.Map(model.Settings).ToString();
 
             var toRemove = record.ContentPartFieldDefinitionRecords
                 .Where(partFieldDefinitionRecord => !model.Fields.Any(partField => partFieldDefinitionRecord.Name == partField.Name))
@@ -171,7 +169,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private void Apply(ContentPartFieldDefinition model, ContentPartFieldDefinitionRecord record) {
-            record.Settings = Compose(_settingsWriter.Map(model.Settings));
+            record.Settings = Compose(_settingsFormatter.Map(model.Settings));
         }
 
         ContentTypeDefinition Build(ContentTypeDefinitionRecord source) {
@@ -179,27 +177,27 @@ namespace Orchard.Core.Settings.Metadata {
                 source.Name,
                 source.DisplayName,
                 source.ContentTypePartDefinitionRecords.Select(Build),
-                _settingsReader.Map(Parse(source.Settings)));
+                _settingsFormatter.Map(Parse(source.Settings)));
         }
 
         ContentTypePartDefinition Build(ContentTypePartDefinitionRecord source) {
             return new ContentTypePartDefinition(
                 Build(source.ContentPartDefinitionRecord),
-                _settingsReader.Map(Parse(source.Settings)));
+                _settingsFormatter.Map(Parse(source.Settings)));
         }
 
         ContentPartDefinition Build(ContentPartDefinitionRecord source) {
             return new ContentPartDefinition(
                 source.Name,
                 source.ContentPartFieldDefinitionRecords.Select(Build),
-                _settingsReader.Map(Parse(source.Settings)));
+                _settingsFormatter.Map(Parse(source.Settings)));
         }
 
         ContentPartFieldDefinition Build(ContentPartFieldDefinitionRecord source) {
             return new ContentPartFieldDefinition(
                 Build(source.ContentFieldDefinitionRecord),
                 source.Name,
-                _settingsReader.Map(Parse(source.Settings)));
+                _settingsFormatter.Map(Parse(source.Settings)));
         }
 
         ContentFieldDefinition Build(ContentFieldDefinitionRecord source) {

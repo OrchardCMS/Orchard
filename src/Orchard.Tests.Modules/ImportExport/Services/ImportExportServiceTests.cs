@@ -72,8 +72,7 @@ namespace Orchard.Tests.Modules.ImportExport.Services {
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>();
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
-            builder.RegisterInstance(new Mock<IMapper<SettingsDictionary, XElement>>().Object);
-            builder.RegisterInstance(new Mock<IMapper<XElement, SettingsDictionary>>().Object);
+            builder.RegisterInstance(new Mock<ISettingsFormatter>().Object);
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
 
