@@ -2,13 +2,17 @@
 @using Orchard.Experimental.ViewModels;
 @using Orchard.ContentManagement;
 @using System.Collections;
-
+@{
+    var metadata = Model.Item.ContentItem.ContentManager.GetItemMetadata(content);
+    var itemDisplayText = metadata.DisplayText;
+    
+}
 <h1>@Html.TitleForPage(T("{0} Content Type", Model.Item.ContentItem.ContentType).ToString(), T("Content").ToString())</h1>
 <h2>@T("Content Item")</h2>
 <p>@T("Id:") @Model.Item.ContentItem.Id<br />
     @T("Version:") @Model.Item.ContentItem.Version<br />
     @T("ContentType:") @Model.Item.ContentItem.ContentType<br />
-    @T("DisplayText:") @Html.ItemDisplayText(Model.Item)<br />
+    @T("DisplayText:") @itemDisplayText<br />
     @T("Links:") @Display.DisplayLink(Value: T("view"), ContentItem: Model.Item) @Display.EditLink(ContentItem: Model.Item, Value: T("edit"))
 </p>
 
