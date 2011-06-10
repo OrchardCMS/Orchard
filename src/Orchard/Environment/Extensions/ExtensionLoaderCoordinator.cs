@@ -247,7 +247,20 @@ namespace Orchard.Environment.Extensions {
         }
 
         private IEnumerable<ExtensionProbeEntry> SortExtensionProbeEntries(IEnumerable<ExtensionProbeEntry> entries, ConcurrentDictionary<string, DateTime> virtualPathModficationDates) {
-            return entries
+            // All "entries" are for the same extension ID, so we just need to filter/sort them by priority+ modification dates.
+            var groupByPriority = entries
+                .GroupBy(entry => entry.Priority)
+                .OrderByDescending(g => g.Key);
+
+            // Select highest priority group with at least one item
+            var firstNonEmptyGroup = groupByPriority.FirstOrDefault(g => g.Count() >= 1) ?? Enumerable.Empty<ExtensionProbeEntry>();
+
+            // No need for further sorting if only 1 item found
+            if (firstNonEmptyGroup.Count() <= 1)
+                return firstNonEmptyGroup;
+
+            // Sort by last modification date/loader order
+            return firstNonEmptyGroup
                 .OrderByDescending(probe => GetVirtualPathDepedenciesModificationTimeUtc(virtualPathModficationDates, probe))
                 .ThenBy(probe => probe.Loader.Order)
                 .ToList();

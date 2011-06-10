@@ -30,7 +30,7 @@ namespace Orchard.jQuery {
             manifest.DefineScript("jQueryUI_Progressbar").SetUrl("jquery.ui.progressbar.min.js", "jquery.ui.progressbar.js").SetVersion("1.8.10").SetDependencies("jQueryUI_Core", "jQueryUI_Widget");
 
             // Effects
-            manifest.DefineScript("jQueryEffects_Core").SetUrl("jquery.effects.core.min.js", "jquery.effects.core.js").SetVersion("1.8.10").SetDependencies("jQueryEffects_Core");
+            manifest.DefineScript("jQueryEffects_Core").SetUrl("jquery.effects.core.min.js", "jquery.effects.core.js").SetVersion("1.8.10").SetDependencies("jQuery");
             manifest.DefineScript("jQueryEffects_Blind").SetUrl("jquery.effects.blind.min.js", "jquery.effects.blind.js").SetVersion("1.8.10").SetDependencies("jQueryEffects_Core");
             manifest.DefineScript("jQueryEffects_Bounce").SetUrl("jquery.effects.bounce.min.js", "jquery.effects.bounce.js").SetVersion("1.8.10").SetDependencies("jQueryEffects_Core");
             manifest.DefineScript("jQueryEffects_Clip").SetUrl("jquery.effects.clip.min.js", "jquery.effects.clip.js").SetVersion("1.8.10").SetDependencies("jQueryEffects_Core");
