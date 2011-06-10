@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using NHibernate;
 using NHibernate.Linq;
 using Orchard.Logging;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Data {
     public class Repository<T> : IRepository<T> {
@@ -69,16 +69,16 @@ namespace Orchard.Data {
         }
 
         IEnumerable<T> IRepository<T>.Fetch(Expression<Func<T, bool>> predicate) {
-            return Fetch(predicate).ToReadOnlyCollection();
+            return new ReadOnlyCollection<T>(Fetch(predicate).ToList());
         }
 
         IEnumerable<T> IRepository<T>.Fetch(Expression<Func<T, bool>> predicate, Action<Orderable<T>> order) {
-            return Fetch(predicate, order).ToReadOnlyCollection();
+            return new ReadOnlyCollection<T>(Fetch(predicate, order).ToList());
         }
 
         IEnumerable<T> IRepository<T>.Fetch(Expression<Func<T, bool>> predicate, Action<Orderable<T>> order, int skip,
                                             int count) {
-            return Fetch(predicate, order, skip, count).ToReadOnlyCollection();
+            return new ReadOnlyCollection<T>(Fetch(predicate, order, skip, count).ToList());
         }
 
         #endregion

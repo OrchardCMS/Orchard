@@ -8,7 +8,6 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Settings.Metadata.Records;
 using Orchard.Data;
 using Orchard.Logging;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Settings.Metadata {
     public class ContentDefinitionManager : Component, IContentDefinitionManager {
@@ -55,21 +54,21 @@ namespace Orchard.Core.Settings.Metadata {
         public IEnumerable<ContentTypeDefinition> ListTypeDefinitions() {
             return _cacheManager.Get(string.Empty, ctx => {
                 MonitorContentDefinitionSignal(ctx);
-                return _typeDefinitionRepository.Fetch(x => !x.Hidden).Select(Build).ToReadOnlyCollection();
+                return _typeDefinitionRepository.Fetch(x => !x.Hidden).Select(Build);
             });
         }
 
         public IEnumerable<ContentPartDefinition> ListPartDefinitions() {
             return _cacheManager.Get(string.Empty, ctx => {
                 MonitorContentDefinitionSignal(ctx);
-                return _partDefinitionRepository.Fetch(x => !x.Hidden).Select(Build).ToReadOnlyCollection();
+                return _partDefinitionRepository.Fetch(x => !x.Hidden).Select(Build);
             });
         }
 
         public IEnumerable<ContentFieldDefinition> ListFieldDefinitions() {
             return _cacheManager.Get(string.Empty, ctx => {
                 MonitorContentDefinitionSignal(ctx);
-                return _fieldDefinitionRepository.Fetch(x => true, cfdr => cfdr.Asc(fdr => fdr.Name)).Select(Build).ToReadOnlyCollection();
+                return _fieldDefinitionRepository.Fetch(x => true, cfdr => cfdr.Asc(fdr => fdr.Name)).Select(Build);
             });
         }
 

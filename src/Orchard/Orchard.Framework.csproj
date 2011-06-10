@@ -866,7 +866,6 @@
     <Compile Include="FileSystems\Media\IStorageFile.cs" />
     <Compile Include="FileSystems\Media\IStorageFolder.cs" />
     <Compile Include="FileSystems\Media\IStorageProvider.cs" />
-    <Compile Include="Utility\Extensions\ReadOnlyCollectionExtensions.cs" />
     <Compile Include="Utility\Extensions\StringExtensions.cs" />
     <Compile Include="Utility\Extensions\HttpRequestExtensions.cs" />
     <Compile Include="Utility\Position.cs" />

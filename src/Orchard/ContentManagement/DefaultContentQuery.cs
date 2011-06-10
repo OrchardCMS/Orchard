@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using NHibernate;
@@ -8,7 +9,6 @@ using NHibernate.Impl;
 using NHibernate.Linq;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
@@ -136,10 +136,11 @@ namespace Orchard.ContentManagement {
             if (count != 0) {
                 criteria = criteria.SetMaxResults(count);
             }
-            return criteria
-                .List<ContentItemVersionRecord>()
-                .Select(x => ContentManager.Get(x.Id, VersionOptions.VersionRecord(x.Id)))
-                .ToReadOnlyCollection();
+            return 
+                new ReadOnlyCollection<ContentItem>(criteria
+                    .List<ContentItemVersionRecord>()
+                    .Select(x => ContentManager.Get(x.Id, VersionOptions.VersionRecord(x.Id)))
+                    .ToList());
         }
 
         int Count() {
