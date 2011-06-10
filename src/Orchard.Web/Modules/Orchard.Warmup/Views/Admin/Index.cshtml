@@ -7,10 +7,12 @@
     Layout.Title = T("Performance").ToString(); 
 }
 
-<p>The urls below will be requested using @Html.Link(WorkContext.CurrentSite.BaseUrl, WorkContext.CurrentSite.BaseUrl) as a base url. You can change it on the @Html.ActionLink(T("General Settings page").Text, "Index", new { controller = "Admin", area = "Settings" }).</p>
 
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
+
+<p>@T("The paths below will be requested using {0} as a base url. You can change the base url on the {0}. ", @Html.Link(WorkContext.CurrentSite.BaseUrl, WorkContext.CurrentSite.BaseUrl), @Html.ActionLink(T("General Settings page").Text, "Index", new { controller = "Admin", area = "Settings" }))</p>
+
 <fieldset>
     <div>
         @Html.TextAreaFor(m => m.Settings.Urls, new { @class = "textMedium" })
@@ -33,13 +35,10 @@
         <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Settings.OnPublish)">@T("Generate warmup pages any time some content is published")</label>
     </div>
 </fieldset>
-<fieldset>
-    <button class="primaryAction" name="submit" value="@T("Save")" type="submit">@T("Save")</button>
-</fieldset>    
-}
 
+    if (Model.ReportEntries.Any()) {
 <fieldset>
-    <label>@T("Report")</label>
+    <h3>@T("Status")</h3>
     <table class="items" summary="@T("This is a table of the reports in your application")">
         <colgroup>
             <col id="Col1" />
@@ -49,9 +48,9 @@
         </colgroup>
         <thead>
             <tr>
-                <th scope="col">@T("Url")</th>
+                <th scope="col">@T("Path")</th>
                 <th scope="col">@T("Status")</th>
-                <th scope="col">@T("Date")</th>
+                <th scope="col">@T("Date generated")</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -70,3 +69,8 @@
         }
     </table>
 </fieldset>
+    }
+<fieldset>
+    <button class="primaryAction" name="submit" value="@T("Save")" type="submit">@T("Save")</button>
+</fieldset>    
+}
