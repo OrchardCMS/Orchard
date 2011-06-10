@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
 using Orchard.Mvc;
 using System.Web.Routing;
+using Orchard.Mvc.Spooling;
 
 // ReSharper disable InconsistentNaming
 
 namespace Orchard.Core.Contents {
     public class Shapes : IShapeTableProvider {
+
         public Shapes() {
             T = NullLocalizer.Instance;
         }
@@ -55,29 +60,42 @@ namespace Orchard.Core.Contents {
                 });
         }
 
-
         [Shape]
-        public MvcHtmlString DisplayLink(dynamic Display, HtmlHelper Html, IContent ContentItem, dynamic Value) {
+        public MvcHtmlString DisplayLink(dynamic Display, dynamic Shape, IContent ContentItem) {
             // This shape renders a link to a Content Item's Display route. The Value may be a nested shape or any string convertable object.
+            // Note that you may provide Id(string), Classes(IEnumerable<string>), and Attributes(IDictionary<string,string>) as well, despite
+            // them not appearing as parameters here. The Link shape will consume those.
             var metadata = ContentItem.ContentItem.ContentManager.GetItemMetadata(ContentItem);
             if (metadata.DisplayRouteValues == null) {
                 return null;
             }
-            var content = NonNullOrEmpty((object)Value, metadata.DisplayText, T("view"));
-
-            var displayText = (string)Display(content).ToString();
-            return Html.ActionLink(displayText, Convert.ToString(metadata.DisplayRouteValues["action"]), metadata.DisplayRouteValues);
+            Shape.RouteValues = metadata.DisplayRouteValues;
+            if (Shape.Value == null) {
+                Shape.Value = metadata.DisplayText ?? T("view").Text;
+            }
+            // now render it as a core Link shape instead (defined in CoreShapes.cs)
+            Shape.Metadata.Type = "Link";
+            Shape.Metadata.Alternates.Clear();
+            // is there a better way?
+            return MvcHtmlString.Create(((HtmlStringWriter)Display(Shape)).ToString());
         }
 
         [Shape]
-        public MvcHtmlString EditLink(dynamic Display, HtmlHelper Html, IContent ContentItem, dynamic Value, object ReturnUrl, object RouteValues, bool? AdminLink) {
+        public MvcHtmlString EditorLink(dynamic Display, dynamic Shape, HtmlHelper Html, IContent ContentItem, dynamic Value, object ReturnUrl, object RouteValues, bool? AdminLink) {
             // This shape renders a link to a Content Item's Editor route. The Value may be a nested shape or any string convertable object.
             // ReturnUrl may be (boolean)true to use the current RawUrl of the request, or a string to set it specifically.
+            // Note that you may provide Id(string), Classes(IEnumerable<string>), and Attributes(IDictionary<string,string>) as well, despite
+            // them not appearing as parameters here. The Link shape will consume those.
             var metadata = ContentItem.ContentItem.ContentManager.GetItemMetadata(ContentItem);
-            if ((AdminLink.GetValueOrDefault() && metadata.AdminRouteValues == null) || (!AdminLink.GetValueOrDefault() && metadata.EditorRouteValues == null)) {
+            var metadataRouteValues = AdminLink.GetValueOrDefault() ? metadata.AdminRouteValues : metadata.EditorRouteValues;
+            if (metadataRouteValues == null) {
                 return null;
             }
-            var content = NonNullOrEmpty((object)Value, metadata.DisplayText, ContentItem.ContentItem.TypeDefinition.DisplayName);
+            
+            Shape.RouteValues = metadata.DisplayRouteValues;
+            if (Shape.Value == null) {
+                Shape.Value = NonNullOrEmpty(metadata.DisplayText, ContentItem.ContentItem.TypeDefinition.DisplayName, T("edit").Text);
+            }
 
             string returnUrl = null;
             if (ReturnUrl != null) {
@@ -90,7 +108,6 @@ namespace Orchard.Core.Contents {
                     returnUrl = ReturnUrl.ToString();
                 }
             }
-
             if (returnUrl != null) {
                 if (RouteValues == null) {
                     RouteValues = new { ReturnUrl = returnUrl };
@@ -99,12 +116,13 @@ namespace Orchard.Core.Contents {
                     RouteValues = MergeRouteValues(new RouteValueDictionary(RouteValues), new RouteValueDictionary(new { ReturnUrl = returnUrl }));
                 }
             }
+            Shape.RouteValues = RouteValues == null ? metadataRouteValues : MergeRouteValues(metadataRouteValues, new RouteValueDictionary(RouteValues));
 
-            var displayText = (string)Display(content).ToString();
-            var metadataRouteValues = AdminLink.GetValueOrDefault() ? metadata.AdminRouteValues : metadata.EditorRouteValues;
-            return Html.ActionLink(displayText,
-                Convert.ToString(metadataRouteValues["action"]),
-                RouteValues == null ? metadataRouteValues : MergeRouteValues(metadataRouteValues, new RouteValueDictionary(RouteValues)));
+            // now render it as a core Link shape instead (defined in CoreShapes.cs)
+            Shape.Metadata.Type = "Link";
+            Shape.Metadata.Alternates.Clear();
+            // is there a better way?
+            return MvcHtmlString.Create(((HtmlStringWriter)Display(Shape)).ToString());
         }
 
         private static object NonNullOrEmpty(params object[] values) {

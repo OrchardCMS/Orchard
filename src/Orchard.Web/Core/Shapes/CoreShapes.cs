@@ -6,9 +6,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Mvc;
@@ -26,13 +28,16 @@ namespace Orchard.Core.Shapes {
         private readonly Work<IResourceManager> _resourceManager;
         private readonly Work<IHttpContextAccessor> _httpContextAccessor;
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly ITagBuilderFactory _tagBuilderFactory;
 
         public CoreShapes(
+            ITagBuilderFactory tagBuilderFactory,
             Work<WorkContext> workContext, 
             Work<IResourceManager> resourceManager,
             Work<IHttpContextAccessor> httpContextAccessor,
             IVirtualPathProvider virtualPathProvider
             ) {
+            _tagBuilderFactory = tagBuilderFactory;
             _workContext = workContext;
             _resourceManager = resourceManager;
             _httpContextAccessor = httpContextAccessor;
@@ -298,6 +303,20 @@ namespace Orchard.Core.Shapes {
                 }
                 Output.Write(result);
             }
+        }
+
+        [Shape]
+        public IHtmlString Link(UrlHelper Url,
+            dynamic Display,
+            dynamic Shape,
+            string Href,
+            RouteValueDictionary RouteValues,
+            object Value) {
+
+            var tag = _tagBuilderFactory.Create((object)Shape, "a");
+            tag.MergeAttribute("href", Href ?? Url.RouteUrl(RouteValues));
+            tag.InnerHtml = Value is string ? (string)Value : Display(Value).ToString();
+            return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }
 
         [Shape]
