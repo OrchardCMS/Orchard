@@ -8,7 +8,6 @@ using Orchard.Environment.Extensions;
 using Orchard.Security;
 
 namespace Orchard.Experimental.Commands {
-    
     [OrchardFeature("Profiling")]
     public class ProfilingCommands : DefaultOrchardCommandHandler {
         private readonly IContentManager _contentManager;
@@ -20,11 +19,10 @@ namespace Orchard.Experimental.Commands {
         }
 
         [CommandName("add profiling data")]
-        public string AddProfilingData() {
+        public void AddProfilingData() {
             var admin = _membershipService.GetUser("admin");
 
             for (var index = 0; index != 5; ++index) {
-
                 var pageName = "page" + index;
                 var page = _contentManager.Create("Page", VersionOptions.Draft);
                 page.As<ICommonPart>().Owner = admin;
@@ -61,18 +59,19 @@ namespace Orchard.Experimental.Commands {
                 //}
             }
 
-            return "AddProfilingData completed";
+            Context.Output.WriteLine(T("Finished adding profiling data"));
         }
 
         [CommandName("add users")]
-        public string AddUsers() {
+        public void AddUsers() {
             for (int i = 0; i < 1000; i++) {
                 var user = _membershipService.CreateUser(new CreateUserParams("user" + i, "1234567", "user" + i + "@orchardproject.net", null, null, true));
-                if (user == null)
-                    throw new OrchardException(T("The authentication provider returned an error"));
-
+                if (user == null) {
+                    Context.Output.WriteLine(T("Creating user failed. The authentication provider returned an error. Aborting..."));
+                    return;
+                }
             }
-            return "Success";
+            Context.Output.WriteLine(T("Adding users completed successfully"));
         }
     }
 }

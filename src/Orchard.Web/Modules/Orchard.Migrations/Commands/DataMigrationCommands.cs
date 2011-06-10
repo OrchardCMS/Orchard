@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.Data.Migration;
@@ -22,24 +21,22 @@ namespace Orchard.Migrations.Commands {
 
         [CommandName("upgrade database")]
         [CommandHelp("upgrade database <feature-name-1> ... <feature-name-n> \r\n\t" + "Upgrades or create the database tables for the <feature-name> or all features if not available")]
-        public string UpgradeDatabase(params string[] featureNames) {
+        public void UpgradeDatabase(params string[] featureNames) {
+            var features = featureNames.Any()
+                                   ? featureNames
+                                   : _extensionManager.AvailableExtensions()
+                                         .SelectMany(ext => ext.Features)
+                                         .Select(f => f.Id);
             try {
-                IEnumerable<string> features = featureNames.Any()
-                                                   ? featureNames
-                                                   : _extensionManager.AvailableExtensions()
-                                                         .SelectMany(ext => ext.Features)
-                                                         .Select(f => f.Id);
-
                 foreach(var feature in features) {
                     _dataMigrationManager.Update(feature);    
                 }
             }
             catch ( Exception ex ) {
-                Context.Output.WriteLine(T("An error occured while upgrading the database: " + ex.Message));
-                return "Upgrade terminated.";
+                throw new OrchardException(T("An error occured while upgrading the database."), ex);
             }
 
-            return "Database upgraded";
+            Context.Output.WriteLine(T("Database upgraded"));
         }
     }
 }
