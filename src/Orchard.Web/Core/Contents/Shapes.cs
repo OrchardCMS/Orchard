@@ -61,7 +61,7 @@ namespace Orchard.Core.Contents {
         }
 
         [Shape]
-        public MvcHtmlString DisplayLink(dynamic Display, dynamic Shape, IContent ContentItem) {
+        public IHtmlString DisplayLink(dynamic Display, dynamic Shape, IContent ContentItem) {
             // This shape renders a link to a Content Item's Display route. The Value may be a nested shape or any string convertable object.
             // Note that you may provide Id(string), Classes(IEnumerable<string>), and Attributes(IDictionary<string,string>) as well, despite
             // them not appearing as parameters here. The Link shape will consume those.
@@ -76,12 +76,11 @@ namespace Orchard.Core.Contents {
             // now render it as a core Link shape instead (defined in CoreShapes.cs)
             Shape.Metadata.Type = "Link";
             Shape.Metadata.Alternates.Clear();
-            // is there a better way?
-            return MvcHtmlString.Create(((HtmlStringWriter)Display(Shape)).ToString());
+            return Display(Shape);
         }
 
         [Shape]
-        public MvcHtmlString EditorLink(dynamic Display, dynamic Shape, HtmlHelper Html, IContent ContentItem, dynamic Value, object ReturnUrl, object RouteValues, bool? AdminLink) {
+        public IHtmlString EditorLink(dynamic Display, dynamic Shape, HtmlHelper Html, IContent ContentItem, dynamic Value, object ReturnUrl, object RouteValues, bool? AdminLink) {
             // This shape renders a link to a Content Item's Editor route. The Value may be a nested shape or any string convertable object.
             // ReturnUrl may be (boolean)true to use the current RawUrl of the request, or a string to set it specifically.
             // Note that you may provide Id(string), Classes(IEnumerable<string>), and Attributes(IDictionary<string,string>) as well, despite
@@ -121,8 +120,7 @@ namespace Orchard.Core.Contents {
             // now render it as a core Link shape instead (defined in CoreShapes.cs)
             Shape.Metadata.Type = "Link";
             Shape.Metadata.Alternates.Clear();
-            // is there a better way?
-            return MvcHtmlString.Create(((HtmlStringWriter)Display(Shape)).ToString());
+            return Display(Shape);
         }
 
         private static object NonNullOrEmpty(params object[] values) {
