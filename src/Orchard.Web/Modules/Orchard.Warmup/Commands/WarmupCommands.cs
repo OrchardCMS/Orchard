@@ -15,15 +15,15 @@ namespace Orchard.Warmup.Commands {
         [CommandName("warmup generate")]
         [CommandHelp("warmup generate [/Force:true] \r\n\t Generates all the static pages for the warmup feature.")]
         [OrchardSwitches("Force")]
-        public string Generate() {
+        public void Generate() {
             if(Force) {
                 _warmupUpdater.Generate();
             }
             else {
                 _warmupUpdater.EnsureGenerate();
             }
-            
-            return "Generation finished";
+
+            Context.Output.WriteLine(T("Generation finished"));
         }
     }
 }

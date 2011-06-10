@@ -24,42 +24,40 @@ namespace Orchard.Migrations.Commands {
 
         [CommandName("update database")]
         [CommandHelp("update database \r\n\t" + "Automatically updates the database schema according to the defintion of the \"Record\" types in code for the enabled features.")]
-        public string UpdateDatabase() {
+        public void UpdateDatabase() {
             try {
                 _schemaCommandGenerator.UpdateDatabase();
             }
             catch ( Exception ex ) {
-                Context.Output.WriteLine(T("An error occured while updating the database: " + ex.Message));
-                return "Update terminated.";
+                throw new OrchardException(T("An error occured while updating the database."), ex);
             }
 
-            return "Database updated";
+            Context.Output.WriteLine(T("Database updated"));
         }
 
         [CommandName("create tables")]
         [CommandHelp("create tables <feature-name> [/Drop:true|false] \r\n\t" + "Creates the database tables according to the defintion of the \"Record\" types in code for the <feature-name> and optionally drops them before if specified.")]
         [OrchardSwitches("Drop")]
-        public string CreateTables(string featureName) {
+        public void CreateTables(string featureName) {
             var stringInterpreter = new StringCommandInterpreter(Context.Output);
             try {
                 var commands = _schemaCommandGenerator.GetCreateFeatureCommands(featureName, Drop).ToList();
                 if ( commands.Any() ) {
-
                     foreach (var command in commands) {
                         stringInterpreter.Visit(command);
                         _dataMigrationInterpreter.Visit(command);
                     }
                 }
                 else {
-                    return "There are no tables to create for this feature.";
+                    Context.Output.WriteLine(T("There are no tables to create for feature {0}.", featureName));
+                    return;
                 }
             }
             catch ( Exception ex ) {
-                Context.Output.WriteLine(T("An error occured while creating the tables: " + ex.Message));
-                return "Tables creation terminated.";
+                throw new OrchardException(T("An error occured while creating the tables."), ex);
             }
 
-            return "Tables created";
+            Context.Output.WriteLine(T("Tables created"));
         }
     }
 }
