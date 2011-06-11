@@ -44,6 +44,17 @@ namespace Orchard.Packaging.Controllers {
             INotifier notifier,
             IAppDataFolderRoot appDataFolderRoot,
             IOrchardServices services,
+            IModuleService moduleService)
+            : this(shellSettings, packageManager, packagingSourceManager, notifier, appDataFolderRoot, services, moduleService, null, null) {
+        }
+
+        public PackagingServicesController(
+            ShellSettings shellSettings,
+            IPackageManager packageManager,
+            IPackagingSourceManager packagingSourceManager,
+            INotifier notifier,
+            IAppDataFolderRoot appDataFolderRoot,
+            IOrchardServices services,
             IModuleService moduleService,
             IRecipeHarvester recipeHarvester,
             IRecipeManager recipeManager) {
@@ -163,11 +174,14 @@ namespace Orchard.Packaging.Controllers {
                         FeatureDescriptor = featureDescriptor
                     }).ToList();
 
-                List<PackagingInstallRecipeViewModel> recipes = _recipeHarvester.HarvestRecipes(extensionDescriptor.Id)
-                    .Select(recipe => new PackagingInstallRecipeViewModel {
-                        Execute = false, // by default no recipes are executed
-                        Recipe = recipe
-                    }).ToList();
+                List<PackagingInstallRecipeViewModel> recipes = null;
+                if (_recipeHarvester != null) {
+                    recipes = _recipeHarvester.HarvestRecipes(extensionDescriptor.Id)
+                        .Select(recipe => new PackagingInstallRecipeViewModel {
+                            Execute = false, // by default no recipes are executed
+                            Recipe = recipe
+                        }).ToList();
+                }
 
                 if (features.Count > 0) {
                     return View("InstallModuleDetails", new PackagingInstallViewModel {
@@ -187,15 +201,17 @@ namespace Orchard.Packaging.Controllers {
                 return new HttpUnauthorizedResult();
 
             try {
-                IEnumerable<Recipe> recipes = _recipeHarvester.HarvestRecipes(packagingInstallViewModel.ExtensionDescriptor.Id)
-                    .Where(loadedRecipe => packagingInstallViewModel.Recipes.FirstOrDefault(recipeViewModel => recipeViewModel.Execute && recipeViewModel.Recipe.Name.Equals(loadedRecipe.Name)) != null);
+                if (_recipeHarvester != null && _recipeManager != null) {
+                    IEnumerable<Recipe> recipes = _recipeHarvester.HarvestRecipes(packagingInstallViewModel.ExtensionDescriptor.Id)
+                        .Where(loadedRecipe => packagingInstallViewModel.Recipes.FirstOrDefault(recipeViewModel => recipeViewModel.Execute && recipeViewModel.Recipe.Name.Equals(loadedRecipe.Name)) != null);
 
-                foreach (Recipe recipe in recipes) {
-                    try {
-                        _recipeManager.Execute(recipe);
-                    }
-                    catch {
-                        Services.Notifier.Error(T("Recipes contains {0} unsuported module installation steps.", recipe.Name));
+                    foreach (Recipe recipe in recipes) {
+                        try {
+                            _recipeManager.Execute(recipe);
+                        }
+                        catch {
+                            Services.Notifier.Error(T("Recipes contains {0} unsuported module installation steps.", recipe.Name));
+                        }
                     }
                 }
 

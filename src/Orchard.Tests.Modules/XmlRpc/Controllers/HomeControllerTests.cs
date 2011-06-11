@@ -15,7 +15,7 @@ namespace Orchard.Tests.Modules.XmlRpc.Controllers {
             var thing2 = new StubHandler();
             
             var builder = new ContainerBuilder();
-            //builder.RegisterModule(new ImplicitCollectionSupportModule()); ;
+            //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<HomeController>();
             builder.RegisterType<XmlRpcReader>().As<IMapper<XElement, XRpcMethodCall>>();
             builder.RegisterType<XmlRpcWriter>().As<IMapper<XRpcMethodResponse, XElement>>();

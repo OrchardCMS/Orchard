@@ -140,7 +140,6 @@
 
   <!-- Packaging (Stage) -->
 
-  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.StageProjectAlteration" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
   <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.ValidateExtensionProjectFiles" />
@@ -155,7 +154,7 @@
       <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\**\*"/>
       <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
-      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj;" />
+      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj;" Exclude="$(SrcFolder)\Orchard.Web\Orchard.Web.csproj"/>
       <Stage-Web-Config Include="$(SrcFolder)\Orchard.Web\**\*.config" />
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
       <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
@@ -204,13 +203,6 @@
     <MakeDir Directories="$(StageFolder)\App_Data"/>
     <WriteLinesToFile File="$(StageFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>
 
-
-    <!-- extra processing of the staged csproj file -->
-    <StageProjectAlteration ProjectFileName="$(StageFolder)\Orchard.Web.csproj" AddContentFiles="
-        @(Stage-Modules->'Modules\%(RecursiveDir)%(Filename)%(Extension)');
-        @(Stage-Core->'Core\%(RecursiveDir)%(Filename)%(Extension)')">
-      <Output TaskParameter="ExtraFiles" ItemName="StageProjectAlteration-ExtraFiles"/>
-    </StageProjectAlteration>
 
     <!-- extra processing of the staged config files -->
 
@@ -285,7 +277,6 @@
         $(StageFolder)\**\Modules\Orchard.MultiTenancy\**;
         $(StageFolder)\**\Modules\Orchard.Scripting.Dlr\**;
         $(StageFolder)\**\Modules\Orchard.Search\**;
-        $(StageFolder)\**\Modules\Orchard.Warmup\**;
         " />
 
       <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;@(MsDeploy-Exclude-Modules)" />
@@ -387,7 +378,6 @@
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.MultiTenancy &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Scripting.Dlr &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Search &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
-    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Warmup &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
   </Target>
 
   <!-- ValidateProjectFiles-->

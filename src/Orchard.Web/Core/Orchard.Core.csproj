@@ -18,6 +18,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,6 +43,7 @@
     <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\claysharp\ClaySharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -52,21 +54,30 @@
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\aspnetmvc\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\DateEditor\DateEditorSettings.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorSettings.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorDriver.cs" />
+    <Compile Include="Common\DateEditor\DateEditorDriver.cs" />
     <Compile Include="Common\Drivers\IdentityPartDriver.cs" />
+    <Compile Include="Common\DateEditor\DateEditorHandler.cs" />
     <Compile Include="Common\Handlers\IdentityPartHandler.cs" />
     <Compile Include="Common\Models\CommonPartVersionRecord.cs" />
     <Compile Include="Common\Models\IdentityPartRecord.cs" />
     <Compile Include="Common\Models\IdentityPart.cs" />
+    <Compile Include="Common\ResourceManifest.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
+    <Compile Include="Common\DateEditor\DateEditorViewModel.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
@@ -141,7 +152,7 @@
     <Compile Include="Common\Models\BodyPartRecord.cs" />
     <Compile Include="Common\Models\CommonPartRecord.cs" />
     <Compile Include="Common\ViewModels\BodyEditorViewModel.cs" />
-    <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
+    <Compile Include="Common\OwnerEditor\OwnerEditorViewModel.cs" />
     <Compile Include="Contents\AdminMenu.cs" />
     <Compile Include="Contents\Controllers\AdminController.cs" />
     <Compile Include="Dashboard\AdminMenu.cs" />
@@ -197,6 +208,7 @@
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
+    <Compile Include="Settings\Commands\SiteSettingsCommands.cs" />
     <Compile Include="Settings\Models\SiteSettings2Part.cs" />
     <Compile Include="Settings\Models\SiteSettings2PartRecord.cs" />
     <Compile Include="Settings\ResourceManifest.cs" />
@@ -243,6 +255,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Common\Styles\orchard-common-datetime.css" />
     <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.cshtml" />
     <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.cshtml" />
     <Content Include="Common\Views\Fields.Common.Text.cshtml" />
@@ -309,6 +322,7 @@
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -320,7 +334,7 @@
   <ItemGroup>
     <Content Include="Common\Views\Parts.Common.Body.cshtml" />
     <Content Include="Common\Views\EditorTemplates\Parts.Common.Body.cshtml" />
-    <Content Include="Common\Views\EditorTemplates\Parts.Common.Owner.cshtml" />
+    <Content Include="Common\Views\Parts.Common.Owner.Edit.cshtml" />
     <Content Include="Feeds\Module.txt" />
     <Content Include="Navigation\Module.txt" />
     <Content Include="Scheduling\Module.txt" />
@@ -381,7 +395,6 @@
     <Content Include="Containers\Placement.info" />
     <Content Include="Containers\Views\EditorTemplates\ContainerWidget.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Container.cshtml" />
-    <Content Include="Containers\Views\Item\Display.cshtml" />
     <Content Include="Containers\Views\DefinitionTemplates\ContainerPartSettings.cshtml" />
     <Content Include="Containers\Views\DefinitionTemplates\ContainerTypePartSettings.cshtml" />
     <Content Include="Containers\Views\EditorTemplates\Containable.cshtml" />
@@ -426,6 +439,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\Parts.Common.Date.Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Styles\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\DateEditorSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\OwnerEditorSettings.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

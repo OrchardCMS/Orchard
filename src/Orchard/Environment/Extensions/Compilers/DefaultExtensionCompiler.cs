@@ -48,8 +48,7 @@ namespace Orchard.Environment.Extensions.Compilers {
                 return;
 
             try {
-                using (var stream = _virtualPathProvider.OpenFile(context.VirtualPath)) {
-                    var projectFileDescriptor = _projectFileParser.Parse(stream);
+                var projectFileDescriptor = _projectFileParser.Parse(context.VirtualPath);
 
                     // Add source files
                     var directory = _virtualPathProvider.GetDirectoryName(context.VirtualPath);
@@ -100,7 +99,6 @@ namespace Orchard.Environment.Extensions.Compilers {
                         }
                     }
                 }
-            }
             catch (Exception e) {
                 //Note: we need to embed the "e.Message" in the exception text because 
                 //      ASP.NET build manager "swallows" inner exceptions from this method.

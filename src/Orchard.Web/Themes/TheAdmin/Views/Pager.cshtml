@@ -24,7 +24,10 @@
 
     Model.Classes.Add("pager");
     Model.Classes.Add("group");
-    var tag = Tag(Model, "ul");
+    var pageTag = Tag(Model, "ul");
+
+    Model.Classes.Add("selector");
+    var pageSizeTag = Tag(Model, "ul");
 
     if (Model.RouteData != null) {
         foreach (var rd in Model.RouteData.Values) {
@@ -41,19 +44,31 @@
 
 @if (Model.TotalItemCount > 1) {
     <div class="pager-footer">
-
         @if (totalPageCount > 1 || Model.PageSize == 0 || Model.PageSize > pageSizes.First()) {
             <div class="page-size-options">
-                <input type="hidden" name="Page" value="1" />
-                <label for="pageSize">@T("Show:")</label>
-                <select id="pageSize" name="PageSize">
-                    @Html.SelectOption((int)Model.PageSize, 0, T("All").ToString())
-                    @foreach (int size in pageSizes.OrderBy(p => p)) {
-                        @Html.SelectOption((int)Model.PageSize, size, size.ToString())
-                    }
-                </select>
+                <div>@T("Show:")</div>
 
-                <button id="submit-pager" type="submit">@T("Apply")</button>
+                @pageSizeTag.StartElement
+
+                    @{ routeData["pageSize"] = 0; }
+
+                    @if ((int)Model.PageSize == 0) {
+                        <li class="selected"><span>@T("All").ToString()</span></li>
+                    } else {
+                        <li>@Html.ActionLink(T("All").ToString(), (string)routeData["action"], (string)routeData["controller"], routeData, null)</li>
+                    }
+
+                    @foreach (int size in pageSizes.OrderBy(p => p)) {
+                        routeData["pageSize"] = size;
+
+                        if ((int)Model.PageSize == size) {
+                            <li class="selected"><span>@size.ToString()</span></li>
+                        } else {
+                            <li>@Html.ActionLink(size.ToString(), (string)routeData["action"], (string)routeData["controller"], routeData, null)</li>
+                        }
+                    }
+
+                @pageSizeTag.EndElement
             </div>
         }
 
@@ -61,86 +76,101 @@
 
         @if (totalPageCount > 1) {
             routeData["pageSize"] = Model.PageSize;
-            @tag.StartElement
+            @pageTag.StartElement
 
-                // first
-                if (firstPage > 1) {
-                    if (routeData.ContainsKey("page")) {
+            // first
+            if (firstPage > 1) {
+                if (routeData.ContainsKey("page")) {
+                    routeData.Remove("page");
+                }
+
+                <li class="page-first">
+                @Html.ActionLink(T("<<").Text, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                </li>
+            }
+
+            // previous page
+            if (Model.Page > 1) {
+                if (Model.Page == 2 && routeData.ContainsKey("page")) {
+                    routeData.Remove("page");
+                }
+                else {
+                    routeData["page"] = Model.Page - 1;
+                }
+
+                <li class="page-previous">
+                @Html.ActionLink((string)previousText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                </li>
+            }
+
+            // page numbers
+            for (var p = firstPage; p <= lastPage; p++) {
+                <li class="page-@p">
+                @if (p == Model.Page) {
+                    <span>@p</span>
+                }
+                else {
+                    if (p == 1) {
                         routeData.Remove("page");
                     }
-
-                    <li class="page-first">
-                    @Html.ActionLink(T("<<").Text, (string)routeData["action"], (string)routeData["controller"], routeData, null)
-                    </li>
-                }
-
-                // previous page
-                if (Model.Page > 1) {
-                    if (Model.Page == 2 && routeData.ContainsKey("page")) {
-                        routeData.Remove("page");
-                    } else {
-                        routeData["page"] = Model.Page - 1;
+                    else {
+                        routeData["page"] = p;
                     }
-
-                    <li class="page-previous">
-                    @Html.ActionLink((string)previousText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
-                    </li>
+                    @Html.ActionLink(p.ToString(), (string)routeData["action"], (string)routeData["controller"], routeData, null)
                 }
+                </li>
+            }
 
-                // page numbers
-                for (var p = firstPage; p <= lastPage; p++) {
-                    <li class="page-@p">
-                    @if (p == Model.Page) {
-                        <span>@p</span>
-                    } else {
-                        if (p == 1) {
-                            routeData.Remove("page");
-                        } else {
-                            routeData["page"] = p;
-                        }
-                        @Html.ActionLink(p.ToString(), (string)routeData["action"], (string)routeData["controller"], routeData, null)
-                    }
-                    </li>
-                }
+            // next page
+            if (Model.Page < totalPageCount) {
+                routeData["page"] = Model.Page + 1;
 
-                // next page
-                if (Model.Page < totalPageCount) {
-                    routeData["page"] = Model.Page + 1;
+                <li class="page-next">
+                @Html.ActionLink((string)nextText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                </li>
+            }
 
-                    <li class="page-next">
-                    @Html.ActionLink((string)nextText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
-                    </li>
-                }
+            // last page
+            if (lastPage < totalPageCount) {
+                routeData["page"] = totalPageCount;
 
-                // last page
-                if (lastPage < totalPageCount) {
-                    routeData["page"] = totalPageCount;
+                <li class="page-last">
+                @Html.ActionLink(T(">>").Text, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                </li>
+            }
 
-                    <li class="page-last">
-                    @Html.ActionLink(T(">>").Text, (string)routeData["action"], (string)routeData["controller"], routeData, null)
-                    </li>
-                }
-
-            @tag.EndElement
+            @pageTag.EndElement
         }
 
     </div>
 }
-@using(Script.Foot()) {
+@using (Script.Foot()) {
 <script type="text/javascript">
 //<![CDATA[
     $(function () {
-        // Add the event handler for value change in the select field
-        $("#pageSize").change(function () {
-            var self = $(this);
-            var form = self.closest("form");
-
-            // Submit form
-            form.submit();
-
-            // disable button so that no other value can be chosen while the form is submited
-            self.attr("disabled", true);
+        $('ul.selector').each(function () {
+            var self = $(this),
+                options = $.map(self.find("li"), function (li) {
+                    var self = $(li);
+                    return $("<option/>", {
+                        value: self.children("a").attr("href"),
+                        text: self.text(),
+                        selected: self.hasClass("selected")
+                    })[0];
+                }),
+                select = $("<select/>", {
+                    id: self.attr("id") + "Selector",
+                    "class": self.attr("class"),
+                    name: self.attr("name") + "Selector"
+                }).change(onSelectChange).append(options);
+            self.replaceWith(select);
         });
+
+        function onSelectChange() {
+            // redirect to page with new page size
+            // disable button so that no other value can be chosen while the form is submited
+            window.location = $(this).attr("disabled", true).val();
+        }
     })
 //]]>
 </script>

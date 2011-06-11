@@ -92,6 +92,12 @@ namespace Lists.Controllers {
             var list = Shape.List();
             list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
 
+            var containerItemContentDisplayName = String.Empty;
+            if (hasRestriction)
+                containerItemContentDisplayName = _contentDefinitionManager.GetTypeDefinition(restrictedContentType).DisplayName;
+            else if (!string.IsNullOrEmpty(model.FilterByContentType))
+                containerItemContentDisplayName = _contentDefinitionManager.GetTypeDefinition(model.FilterByContentType).DisplayName;
+
             dynamic viewModel = Shape.ViewModel()
                 .ContentItems(list)
                 .Pager(pagerShape)
@@ -100,6 +106,7 @@ namespace Lists.Controllers {
                 .ContainerDisplayName(model.ContainerDisplayName)
                 .HasRestriction(hasRestriction)
                 .ContainerContentType(container.ContentType)
+                .ContainerItemContentDisplayName(containerItemContentDisplayName)
                 .ContainerItemContentType(hasRestriction ? restrictedContentType : (model.FilterByContentType ?? ""))
                 .OtherLists(_contentManager.Query<ContainerPart>(VersionOptions.Latest).List()
                     .Select(part => part.ContentItem)

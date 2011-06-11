@@ -37,16 +37,16 @@ namespace Orchard.Wcf {
             IOrchardHost orchardHost = HostContainer.Resolve<IOrchardHost>();
             ShellContext shellContext = orchardHost.GetShellContext(shellSettings);
             IWorkContextAccessor workContextAccessor = shellContext.LifetimeScope.Resolve<IWorkContextAccessor>();
-
-            using (IWorkContextScope workContext = workContextAccessor.CreateWorkContextScope()) {
-
-                ILifetimeScope lifetimeScope = workContext.Resolve<ILifetimeScope>();
-                if (!lifetimeScope.ComponentRegistry.TryGetRegistration(new KeyedService(constructorString, typeof (object)), out registration)) {
-                    Type serviceType = Type.GetType(constructorString, false);
-                    if (serviceType != null) {
-                        lifetimeScope.ComponentRegistry.TryGetRegistration(new TypedService(serviceType), out registration);
-                    }
+            WorkContext workContext = workContextAccessor.GetContext();
+            if (workContext == null) {
+                using (IWorkContextScope workContextScope = workContextAccessor.CreateWorkContextScope()) {
+                    ILifetimeScope lifetimeScope = workContextScope.Resolve<ILifetimeScope>();
+                    registration =  GetRegistration(lifetimeScope, constructorString);
                 }
+            }
+            else {
+                ILifetimeScope lifetimeScope = workContext.Resolve<ILifetimeScope>();
+                registration = GetRegistration(lifetimeScope, constructorString);
             }
 
             if (registration == null) {
@@ -68,6 +68,18 @@ namespace Orchard.Wcf {
             };
 
             return host;
+        }
+
+        private IComponentRegistration GetRegistration(ILifetimeScope lifetimeScope, string constructorString) {
+            IComponentRegistration registration;
+            if (!lifetimeScope.ComponentRegistry.TryGetRegistration(new KeyedService(constructorString, typeof(object)), out registration)) {
+                Type serviceType = Type.GetType(constructorString, false);
+                if (serviceType != null) {
+                    lifetimeScope.ComponentRegistry.TryGetRegistration(new TypedService(serviceType), out registration);
+                }
+            }
+
+            return registration;
         }
     }
 }

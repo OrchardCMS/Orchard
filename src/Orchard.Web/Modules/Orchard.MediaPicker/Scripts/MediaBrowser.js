@@ -122,9 +122,7 @@
             .attr("src", src);
         $(prefix + "loader").attr("src", src);
         $(prefix + "src").val(src);
-
-        var disabled = src ? "" : "disabled";
-        $(prefix + "insert").attr("disabled", disabled).toggleClass("disabled", !!disabled);
+        $(prefix + "insert").attr("disabled", !src).toggleClass("disabled", !src);
     }
 
     function getIdPrefix(e) {

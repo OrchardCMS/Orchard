@@ -9,7 +9,9 @@ namespace Orchard.Themes.Models {
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ThemeEntry() {}
+        public ThemeEntry() {
+            Notifications = new List<string>();
+        }
 
         /// <summary>
         /// Instantiates a theme based on an extension descriptor.

@@ -145,7 +145,7 @@ namespace Orchard.Core.Containers.Drivers {
             OnInitializing<ContainerWidgetPart>((context, part) => {
                 part.Record.ContainerId = 0;
                 part.Record.PageSize = 5;
-                part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.PublishedUtc" : "";
+                part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.CreatedUtc" : string.Empty;
                 part.Record.OrderByDirection = (int)OrderByDirection.Descending;
                 part.Record.FilterByProperty = "CustomPropertiesPart.CustomOne";
                 part.Record.FilterByOperator = "=";

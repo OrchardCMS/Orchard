@@ -5,6 +5,7 @@ using Autofac.Features.Metadata;
 using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Logging;
 using Orchard.Utility;
 
 namespace Orchard.DisplayManagement.Descriptors {
@@ -13,31 +14,40 @@ namespace Orchard.DisplayManagement.Descriptors {
         private readonly IEnumerable<Meta<IShapeTableProvider>> _bindingStrategies;
         private readonly IExtensionManager _extensionManager;
         private readonly ICacheManager _cacheManager;
+        private readonly IParallelCacheContext _parallelCacheContext;
 
         public DefaultShapeTableManager(
             IEnumerable<Meta<IShapeTableProvider>> bindingStrategies,
             IExtensionManager extensionManager,
-            ICacheManager cacheManager) {
+            ICacheManager cacheManager,
+            IParallelCacheContext parallelCacheContext) {
             _extensionManager = extensionManager;
             _cacheManager = cacheManager;
+            _parallelCacheContext = parallelCacheContext;
             _bindingStrategies = bindingStrategies;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public ShapeTable GetShapeTable(string themeName) {
             return _cacheManager.Get(themeName ?? "", x => {
-                var builderFactory = new ShapeTableBuilderFactory();
-                foreach (var bindingStrategy in _bindingStrategies) {
+                Logger.Information("Start building shape table");
+
+                var alterationSets = _parallelCacheContext.RunInParallel(_bindingStrategies, bindingStrategy => {
                     Feature strategyDefaultFeature = bindingStrategy.Metadata.ContainsKey("Feature") ?
-                        (Feature) bindingStrategy.Metadata["Feature"] : 
-                        null;
+                                                               (Feature)bindingStrategy.Metadata["Feature"] :
+                                                               null;
 
-                    var builder = builderFactory.CreateTableBuilder(strategyDefaultFeature);
+                    var builder = new ShapeTableBuilder(strategyDefaultFeature);
                     bindingStrategy.Value.Discover(builder);
-                }
+                    return builder.BuildAlterations().ToList();
+                });
 
-                var alterations = builderFactory.BuildAlterations()
-                    .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName))
-                    .OrderByDependenciesAndPriorities(AlterationHasDependency, GetPriority);
+                var alterations = alterationSets
+                .SelectMany(shapeAlterations => shapeAlterations)
+                .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName))
+                .OrderByDependenciesAndPriorities(AlterationHasDependency, GetPriority);
 
                 var descriptors = alterations.GroupBy(alteration => alteration.ShapeType, StringComparer.OrdinalIgnoreCase)
                     .Select(group => group.Aggregate(
@@ -45,12 +55,15 @@ namespace Orchard.DisplayManagement.Descriptors {
                         (descriptor, alteration) => {
                             alteration.Alter(descriptor);
                             return descriptor;
-                        }));
+                        })).ToList();
 
-                return new ShapeTable {
+                var result = new ShapeTable {
                     Descriptors = descriptors.ToDictionary(sd => sd.ShapeType, StringComparer.OrdinalIgnoreCase),
                     Bindings = descriptors.SelectMany(sd => sd.Bindings).ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase),
                 };
+
+                Logger.Information("Done building shape table");
+                return result;
             });
         }
 
@@ -89,7 +102,7 @@ namespace Orchard.DisplayManagement.Descriptors {
             var availableFeatures = _extensionManager.AvailableFeatures();
 
             var themeFeature = availableFeatures.SingleOrDefault(fd => fd.Id == themeName);
-            while(themeFeature != null) {
+            while (themeFeature != null) {
                 var baseTheme = themeFeature.Extension.BaseTheme;
                 if (String.IsNullOrEmpty(baseTheme)) {
                     return false;
@@ -101,21 +114,5 @@ namespace Orchard.DisplayManagement.Descriptors {
             }
             return false;
         }
-
-        class ShapeTableBuilderFactory {
-            readonly IList<ShapeAlterationBuilder> _alterationBuilders = new List<ShapeAlterationBuilder>();
-
-            public ShapeTableBuilder CreateTableBuilder(Feature feature) {
-                return new ShapeTableBuilder(_alterationBuilders, feature);
-            }
-
-            public IEnumerable<ShapeAlteration> BuildAlterations() {
-                return _alterationBuilders.Select(b => b.Build());
-            }
-
-        }
-
-
-
     }
 }

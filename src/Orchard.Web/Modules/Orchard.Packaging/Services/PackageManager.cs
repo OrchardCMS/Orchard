@@ -78,7 +78,7 @@ namespace Orchard.Packaging.Services {
             if (packageFile != null) {
                 string extensionId = Path.GetFileName(Path.GetDirectoryName(packageFile.Path).TrimEnd('/', '\\'));
                 using (StreamReader streamReader = new StreamReader(packageFile.GetStream())) {
-                    return ExtensionFolders.GetDescriptorForExtension("", extensionId, extensionType, streamReader.ReadToEnd());
+                    return ExtensionHarvester.GetDescriptorForExtension("", extensionId, extensionType, streamReader.ReadToEnd());
                 }
             }
 

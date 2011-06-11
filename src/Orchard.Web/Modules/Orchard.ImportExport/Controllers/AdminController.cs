@@ -75,9 +75,7 @@ namespace Orchard.ImportExport.Controllers {
                     exportOptions.VersionHistoryOptions = (VersionHistoryOptions)Enum.Parse(typeof(VersionHistoryOptions), viewModel.DataImportChoice, true);
                 }
                 var exportFilePath = _importExportService.Export(contentTypesToExport, exportOptions);
-                Services.Notifier.Information(T("Your export file has been created at {0}", exportFilePath));
-           
-                return RedirectToAction("Export");
+                return File(exportFilePath, "text/xml", "export.xml");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Export failed: {0}", exception.Message));

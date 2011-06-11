@@ -1,8 +1,10 @@
-namespace Orchard.UI.Resources {
+using Orchard.UI.Resources;
+
+namespace Orchard.jQuery {
     public class ResourceManifest : IResourceManifestProvider {
         public void BuildManifests(ResourceManifestBuilder builder) {
             var manifest = builder.Add();
-            manifest.DefineScript("jQuery").SetUrl("jquery-1.5.2.min.js", "jquery-1.5.2.js").SetVersion("1.5.2");
+            manifest.DefineScript("jQuery").SetUrl("jquery-1.6.1.min.js", "jquery-1.6.1.js").SetVersion("1.6.1");
 
             // UI Core
             manifest.DefineScript("jQueryUI_Core").SetUrl("jquery.ui.core.min.js", "jquery.ui.core.js").SetVersion("1.8.10").SetDependencies("jQuery");
@@ -28,7 +30,7 @@ namespace Orchard.UI.Resources {
             manifest.DefineScript("jQueryUI_Progressbar").SetUrl("jquery.ui.progressbar.min.js", "jquery.ui.progressbar.js").SetVersion("1.8.10").SetDependencies("jQueryUI_Core", "jQueryUI_Widget");
 
             // Effects
-            manifest.DefineScript("jQueryEffects_Core").SetUrl("jquery.effects.core.min.js", "jquery.effects.core.js").SetVersion("1.8.10").SetDependencies("jQueryEffects_Core");
+            manifest.DefineScript("jQueryEffects_Core").SetUrl("jquery.effects.core.min.js", "jquery.effects.core.js").SetVersion("1.8.10").SetDependencies("jQuery");
             manifest.DefineScript("jQueryEffects_Blind").SetUrl("jquery.effects.blind.min.js", "jquery.effects.blind.js").SetVersion("1.8.10").SetDependencies("jQueryEffects_Core");
             manifest.DefineScript("jQueryEffects_Bounce").SetUrl("jquery.effects.bounce.min.js", "jquery.effects.bounce.js").SetVersion("1.8.10").SetDependencies("jQueryEffects_Core");
             manifest.DefineScript("jQueryEffects_Clip").SetUrl("jquery.effects.clip.min.js", "jquery.effects.clip.js").SetVersion("1.8.10").SetDependencies("jQueryEffects_Core");

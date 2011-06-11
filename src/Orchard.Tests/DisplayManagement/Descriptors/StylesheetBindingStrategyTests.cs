@@ -78,6 +78,14 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                 throw new NotImplementedException();
             }
 
+            public string GetFileHash(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public string GetFileHash(string virtualPath, IEnumerable<string> dependencies) {
+                throw new NotImplementedException();
+            }
+
             public bool DirectoryExists(string virtualPath) {
                 throw new NotImplementedException();
             }
@@ -138,10 +146,9 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             _testViewEngine.Add("~/Modules/Alpha/Styles/alpha-shape.css", null);
             var strategy = _container.Resolve<IShapeTableProvider>();
 
-            IList<ShapeAlterationBuilder> alterationBuilders = new List<ShapeAlterationBuilder>();
-            var builder = new ShapeTableBuilder(alterationBuilders,null);
+            var builder = new ShapeTableBuilder(null);
             strategy.Discover(builder);
-            var alterations = alterationBuilders.Select(alterationBuilder=>alterationBuilder.Build());
+            var alterations = builder.BuildAlterations();
 
             Assert.That(alterations.Any(alteration => alteration.ShapeType == "Style"));
 

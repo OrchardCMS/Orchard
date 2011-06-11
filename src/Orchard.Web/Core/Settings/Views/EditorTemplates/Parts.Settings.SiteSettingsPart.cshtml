@@ -15,6 +15,12 @@
         @Html.ValidationMessage("SiteName", "*")
     </div>
     <div>
+        <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base url ")</label>
+        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "textMedium" })
+        <span class="hint">@T("Enter the fully qualified base url of your website.")</span>
+        <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
+    </div>
+    <div>
         <label for="SiteCulture">@T("Default Site Culture")</label>
         @Html.DropDownList("SiteCulture", new SelectList(Model.SiteCultures, Model.SiteCulture))
         @Html.ValidationMessage("SiteCulture", "*")
@@ -40,11 +46,5 @@
         <label for="DefaultPageSize">@T("Default number of items per page")</label>
         @Html.TextBoxFor(m => m.PageSize, new { @class = "text-small" })
         <span class="hint">@T("Determines the default number of items that are shown per page.")</span>
-    </div>
-    <div>
-        <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base url ")</label>
-        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "textMedium" })
-        <span class="hint">@T("Enter the fully qualified base url of your website.")</span>
-        <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
     </div>
 </fieldset>

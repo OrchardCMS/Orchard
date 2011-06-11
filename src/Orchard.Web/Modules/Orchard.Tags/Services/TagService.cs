@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -128,12 +129,11 @@ namespace Orchard.Tags.Services {
         }
 
         public IEnumerable<IContent> GetTaggedContentItems(int tagId, int skip, int take, VersionOptions options) {
-            return _contentTagRepository
-                .Fetch(x => x.TagRecord.Id == tagId)
-                .Skip(skip)
-                .Take(take)
-                .Select(t => _orchardServices.ContentManager.Get(t.TagsPartRecord.Id, options))
-                .Where(c => c != null);
+            return _orchardServices.ContentManager
+                .Query<TagsPart, TagsPartRecord>()
+                .Where(tpr => tpr.Tags.Any(tr => tr.TagRecord.Id == tagId))
+                .Join<CommonPartRecord>().OrderByDescending(x => x.CreatedUtc)
+                .Slice(skip, take);
         }
 
         public int GetTaggedContentItemCount(int tagId) {

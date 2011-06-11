@@ -5,7 +5,7 @@
 
 	int containerId = ((int?)Model.ContainerId).GetValueOrDefault();
 	
-    string createLinkText = string.IsNullOrEmpty(Model.ContainerItemContentType) ? T("Create New Content").ToString() : T("Create New {0}", Model.ContainerItemContentType).ToString();
+    string createLinkText = string.IsNullOrEmpty(Model.ContainerItemContentDisplayName) ? T("Create New Content").ToString() : T("Create New {0}", Model.ContainerItemContentDisplayName).ToString();
     
     Layout.Title = T("Manage {0}", Model.ContainerDisplayName);
 

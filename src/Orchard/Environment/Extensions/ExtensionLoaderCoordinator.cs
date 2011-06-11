@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
@@ -15,28 +15,31 @@ using Orchard.Utility;
 namespace Orchard.Environment.Extensions {
     public class ExtensionLoaderCoordinator : IExtensionLoaderCoordinator {
         private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IExtensionManager _extensionManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
-        private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IHostEnvironment _hostEnvironment;
+        private readonly IParallelCacheContext _parallelCacheContext;
         private readonly IBuildManager _buildManager;
 
         public ExtensionLoaderCoordinator(
             IDependenciesFolder dependenciesFolder,
+            IExtensionDependenciesManager extensionDependenciesManager,
             IExtensionManager extensionManager,
             IVirtualPathProvider virtualPathProvider,
-            IVirtualPathMonitor virtualPathMonitor,
             IEnumerable<IExtensionLoader> loaders,
             IHostEnvironment hostEnvironment,
+            IParallelCacheContext parallelCacheContext,
             IBuildManager buildManager) {
 
             _dependenciesFolder = dependenciesFolder;
+            _extensionDependenciesManager = extensionDependenciesManager;
             _extensionManager = extensionManager;
             _virtualPathProvider = virtualPathProvider;
-            _virtualPathMonitor = virtualPathMonitor;
             _loaders = loaders.OrderBy(l => l.Order);
             _hostEnvironment = hostEnvironment;
+            _parallelCacheContext = parallelCacheContext;
             _buildManager = buildManager;
 
             T = NullLocalizer.Instance;
@@ -72,6 +75,7 @@ namespace Orchard.Environment.Extensions {
 
             // And finally save the new entries in the dependencies folder
             _dependenciesFolder.StoreDescriptors(context.NewDependencies);
+            _extensionDependenciesManager.StoreDependencies(context.NewDependencies, desc => GetExtensionHash(context, desc));
 
             Logger.Information("Done loading extensions...");
 
@@ -80,6 +84,23 @@ namespace Orchard.Environment.Extensions {
                 Logger.Information("AppDomain restart required.");
                 _hostEnvironment.RestartAppDomain();
             }
+        }
+
+        private string GetExtensionHash(ExtensionLoadingContext context, DependencyDescriptor dependencyDescriptor) {
+            var hash = new Hash();
+            hash.AddStringInvariant(dependencyDescriptor.Name);
+
+            foreach (var virtualpathDependency in context.ProcessedExtensions[dependencyDescriptor.Name].VirtualPathDependencies) {
+                hash.AddDateTime(GetVirtualPathModificationTimeUtc(context.VirtualPathModficationDates, virtualpathDependency));
+            }
+
+            foreach (var reference in dependencyDescriptor.References) {
+                hash.AddStringInvariant(reference.Name);
+                hash.AddString(reference.LoaderName);
+                hash.AddDateTime(GetVirtualPathModificationTimeUtc(context.VirtualPathModficationDates, reference.VirtualPath));
+            }
+
+            return hash.Value;
         }
 
         private void ProcessExtension(ExtensionLoadingContext context, ExtensionDescriptor extension) {
@@ -93,7 +114,7 @@ namespace Orchard.Environment.Extensions {
                 foreach (var probe in extensionProbes) {
                     Logger.Debug("  Loader: {0}", probe.Loader.Name);
                     Logger.Debug("    VirtualPath: {0}", probe.VirtualPath);
-                    Logger.Debug("    DateTimeUtc: {0}", probe.LastWriteTimeUtc);
+                    Logger.Debug("    VirtualPathDependencies: {0}", string.Join(", ", probe.VirtualPathDependencies));
                 }
             }
 
@@ -162,7 +183,7 @@ namespace Orchard.Environment.Extensions {
             if (duplicates.Count() > 0) {
                 var sb = new StringBuilder();
                 sb.Append(T("There are multiple extensions with the same name installed in this instance of Orchard.\r\n"));
-                foreach(var dup in duplicates) {
+                foreach (var dup in duplicates) {
                     sb.Append(T("Extension '{0}' has been found from the following locations: {1}.\r\n", dup.Key, string.Join(", ", dup.Select(e => e.Location + "/" + e.Id))));
                 }
                 sb.Append(T("This issue can be usually solved by removing or renaming the conflicting extension."));
@@ -172,23 +193,32 @@ namespace Orchard.Environment.Extensions {
 
             var previousDependencies = _dependenciesFolder.LoadDescriptors().ToList();
 
-            var availableExtensionsProbes = availableExtensions.SelectMany(extension => _loaders
-                                                                                            .Select(loader => loader.Probe(extension))
-                                                                                            .Where(probe => probe != null))
-                .GroupBy(e => e.Descriptor.Id)
-                .ToDictionary(g => g.Key, g => g.AsEnumerable()
-                                                   .OrderByDescending(probe => probe.LastWriteTimeUtc)
-                                                   .ThenBy(probe => probe.Loader.Order), StringComparer.OrdinalIgnoreCase);
+            var virtualPathModficationDates = new ConcurrentDictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
+
+            Logger.Information("Probing extensions");
+            var availableExtensionsProbes1 = _parallelCacheContext
+                .RunInParallel(availableExtensions, extension => 
+                    _loaders.Select(loader => loader.Probe(extension)).Where(entry => entry != null).ToArray())
+                .SelectMany(entries => entries)
+                .GroupBy(entry => entry.Descriptor.Id);
+
+            var availableExtensionsProbes = _parallelCacheContext
+                .RunInParallel(availableExtensionsProbes1, g =>
+                    new { Id = g.Key, Entries = SortExtensionProbeEntries(g, virtualPathModficationDates)})
+                .ToDictionary(g => g.Id, g => g.Entries, StringComparer.OrdinalIgnoreCase);
+            Logger.Information("Done probing extensions");
 
             var deletedDependencies = previousDependencies
                 .Where(e => !availableExtensions.Any(e2 => StringComparer.OrdinalIgnoreCase.Equals(e2.Id, e.Name)))
                 .ToList();
 
             // Collect references for all modules
-            var references =
-                availableExtensions
-                    .SelectMany(extension => _loaders.SelectMany(loader => loader.ProbeReferences(extension)))
-                    .ToList();
+            Logger.Information("Probing extension references");
+            var references = _parallelCacheContext
+                .RunInParallel(availableExtensions, extension => _loaders.SelectMany(loader => loader.ProbeReferences(extension)).ToList())
+                .SelectMany(entries => entries)
+                .ToList();
+            Logger.Information("Done probing extension references");
 
             var referencesByModule = references
                 .GroupBy(entry => entry.Descriptor.Id, StringComparer.OrdinalIgnoreCase)
@@ -211,8 +241,45 @@ namespace Orchard.Environment.Extensions {
                 DeletedDependencies = deletedDependencies,
                 AvailableExtensionsProbes = availableExtensionsProbes,
                 ReferencesByName = referencesByName,
-                ReferencesByModule = referencesByModule
+                ReferencesByModule = referencesByModule,
+                VirtualPathModficationDates = virtualPathModficationDates,
             };
+        }
+
+        private IEnumerable<ExtensionProbeEntry> SortExtensionProbeEntries(IEnumerable<ExtensionProbeEntry> entries, ConcurrentDictionary<string, DateTime> virtualPathModficationDates) {
+            // All "entries" are for the same extension ID, so we just need to filter/sort them by priority+ modification dates.
+            var groupByPriority = entries
+                .GroupBy(entry => entry.Priority)
+                .OrderByDescending(g => g.Key);
+
+            // Select highest priority group with at least one item
+            var firstNonEmptyGroup = groupByPriority.FirstOrDefault(g => g.Count() >= 1) ?? Enumerable.Empty<ExtensionProbeEntry>();
+
+            // No need for further sorting if only 1 item found
+            if (firstNonEmptyGroup.Count() <= 1)
+                return firstNonEmptyGroup;
+
+            // Sort by last modification date/loader order
+            return firstNonEmptyGroup
+                .OrderByDescending(probe => GetVirtualPathDepedenciesModificationTimeUtc(virtualPathModficationDates, probe))
+                .ThenBy(probe => probe.Loader.Order)
+                .ToList();
+        }
+
+        private DateTime GetVirtualPathDepedenciesModificationTimeUtc(ConcurrentDictionary<string, DateTime> virtualPathDependencies, ExtensionProbeEntry probe) {
+            if (!probe.VirtualPathDependencies.Any())
+                return DateTime.MinValue;
+
+            Logger.Information("Retrieving modification dates of dependencies of extension '{0}'", probe.Descriptor.Id);
+
+            var result = probe.VirtualPathDependencies.Max(path => GetVirtualPathModificationTimeUtc(virtualPathDependencies, path));
+
+            Logger.Information("Done retrieving modification dates of dependencies of extension '{0}'", probe.Descriptor.Id);
+            return result;
+        }
+
+        private DateTime GetVirtualPathModificationTimeUtc(ConcurrentDictionary<string, DateTime> virtualPathDependencies, string path) {
+            return virtualPathDependencies.GetOrAdd(path, p => _virtualPathProvider.GetFileLastWriteTimeUtc(p));
         }
 
         IEnumerable<DependencyReferenceDescriptor> ProcessExtensionReferences(ExtensionLoadingContext context, ExtensionProbeEntry activatedExtension) {
@@ -274,8 +341,8 @@ namespace Orchard.Environment.Extensions {
 
             // Activate the binary ref
             if (bestBinaryReference != null) {
-                if (!context.ProcessedReferences.Contains(bestBinaryReference.Entry.Name)) {
-                    context.ProcessedReferences.Add(bestBinaryReference.Entry.Name);
+                if (!context.ProcessedReferences.ContainsKey(bestBinaryReference.Entry.Name)) {
+                    context.ProcessedReferences.Add(bestBinaryReference.Entry.Name, bestBinaryReference.Entry);
                     bestBinaryReference.Entry.Loader.ReferenceActivated(context, bestBinaryReference.Entry);
                 }
                 activatedReferences.Add(new DependencyReferenceDescriptor {
@@ -295,20 +362,6 @@ namespace Orchard.Environment.Extensions {
 
             foreach (var action in ctx.CopyActions) {
                 action();
-            }
-        }
-
-        public void MonitorExtensions(Action<IVolatileToken> monitor) {
-            // Monitor add/remove of any module/theme
-            monitor(_virtualPathMonitor.WhenPathChanges("~/Modules"));
-            monitor(_virtualPathMonitor.WhenPathChanges("~/Themes"));
-
-            // Give loaders a chance to monitor any additional changes
-            var extensions = _extensionManager.AvailableExtensions().Where(d => DefaultExtensionTypes.IsModule(d.ExtensionType) || DefaultExtensionTypes.IsTheme(d.ExtensionType)).ToList();
-            foreach (var extension in extensions) {
-                foreach (var loader in _loaders) {
-                    loader.Monitor(extension, monitor);
-                }
             }
         }
     }
