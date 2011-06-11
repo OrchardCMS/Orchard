@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement;
 using Orchard.Data.Conventions;
 using Orchard.Settings;
@@ -53,6 +54,11 @@ namespace Orchard.Core.Settings.Models {
             set {
                 this.As<SiteSettings2Part>().BaseUrl = value;
             }
+        }
+
+        public TimeZoneInfo TimeZone {
+            get { return TimeZoneInfo.FindSystemTimeZoneById(Record.TimeZoneId); }
+            set { Record.TimeZoneId = value.Id; }
         }
     }
 }

@@ -182,6 +182,10 @@ namespace Orchard.Setup {
             public string BaseUrl {
                 get { return ""; }
             }
+
+            public TimeZoneInfo TimeZone {
+                get { return TimeZoneInfo.Local; }
+            }
         }
     }
 }

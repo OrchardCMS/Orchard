@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 
 namespace Orchard.Settings {
     /// <summary>
@@ -14,5 +15,6 @@ namespace Orchard.Settings {
         ResourceDebugMode ResourceDebugMode { get; set; }
         int PageSize { get; set; }
         string BaseUrl { get; }
+        TimeZoneInfo TimeZone { get; }   
     }
 }
