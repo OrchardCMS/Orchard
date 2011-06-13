@@ -57,11 +57,11 @@
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.Users[userIndex].IsChecked)"/>
                 </td>
                 <td>
-                    @if (entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved) { 
-                    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/online.gif") " alt="@T("Approved") " title="@T("User is approved") " /> 
-                    } else { 
-                    <img class="icon" src="@Href("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") " alt="@T("Moderated") " title="@if (entry.User.EmailStatus == UserStatus.Approved) { @T("User is moderated") } else { @T("E-mail validation is pending") }" />
-                    } 
+                    @{
+                        var approved = entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved;
+                        var title = approved ? T("User is approved") : ((entry.User.EmailStatus == UserStatus.Approved) ? T("User is moderated") : T("E-mail validation is pending"));
+                    }
+                    @Display.Image(Src: "~/Modules/Orchard.Users/Content/Admin/images/" + (approved ? "online.gif" : "offline.gif"), Alt: T(approved ? "Approved" : "Moderated"), Title: title)
                     @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id }) 
                 </td>
                 <td>
@@ -69,10 +69,11 @@
                 </td>
                 <td>
                     @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
-                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id}, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
                     @if (entry.User.RegistrationStatus == UserStatus.Pending) {
                         @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id })
-                    } else {
+                    }
+                    else {
                         @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id })
                     }
                     @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>

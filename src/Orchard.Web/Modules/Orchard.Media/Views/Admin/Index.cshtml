@@ -40,7 +40,7 @@
                 <td><input type="checkbox" value="true" name="Checkbox.@mediaFolder.Name"/></td>
                 @* todo: (heskew) this URL needs to be determined from current module location *@
                 <td>
-                    <img src="@Href("~/Modules/Orchard.Media/Content/Admin/images/folder.gif")" height="16" width="16" class="mediaTypeIcon" alt="@T("Folder")" />
+                    @Display.Image(Src: "~/Modules/Orchard.Media/Content/Admin/images/folder.gif", Classes: "mediaTypeIcon", Alt: T("Folder"), Title: "", Attributes: new { width = "16", height = "16" })
                     @Html.ActionLink(mediaFolder.Name, "Edit", new { name = mediaFolder.Name, mediaPath = mediaFolder.MediaPath })
                 </td>
                 <td>@mediaFolder.User</td>

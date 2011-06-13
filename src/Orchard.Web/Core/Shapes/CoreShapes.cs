@@ -307,16 +307,19 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public IHtmlString Image(dynamic Display, dynamic Shape, UrlHelper Url, string Src, object Alt) {
+        public IHtmlString Image(dynamic Display, dynamic Shape, UrlHelper Url, string Src, object Alt, object Title) {
             // Displays an image. The Src will be resolved against the current context if need be.
             if (Src == null) {
                 throw new ArgumentNullException("Src");
             }
-            Src = Url.Content(Src);
+            Src = Src == "" ? "" : Url.Content(Src);
             var tag = _tagBuilderFactory.Create((object)Shape, "img");
             tag.MergeAttribute("src", Src);
             var alt = Alt == null ? "" : (string)Display(Alt).ToString();
             tag.MergeAttribute("alt", alt);
+            if (Title != null) {
+                tag.MergeAttribute("title", (string)Display(Title).ToString());
+            }
             if (tag.Attributes.ContainsKey("alt") && !tag.Attributes.ContainsKey("title")) {
                 tag.MergeAttribute("title", tag.Attributes["alt"] ?? "");
             }
