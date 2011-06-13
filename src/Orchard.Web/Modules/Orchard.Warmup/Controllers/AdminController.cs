@@ -61,8 +61,11 @@ namespace Orchard.Warmup.Controllers {
                     using (var urlReader = new StringReader(viewModel.Settings.Urls)) {
                         string relativeUrl;
                         while (null != (relativeUrl = urlReader.ReadLine())) {
+                            if(String.IsNullOrWhiteSpace(relativeUrl)) {
+                                continue;
+                            }
                             if (!Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative) || !(relativeUrl.StartsWith("/"))) {
-                                AddModelError("Urls", T("{0} is an invalid warmup url.", relativeUrl));
+                                AddModelError("Urls", T("\"{0}\" is an invalid warmup url.", relativeUrl));
                             }
                         }
                     }
@@ -76,13 +79,14 @@ namespace Orchard.Warmup.Controllers {
             }
 
             if (ModelState.IsValid) {
-                Services.Notifier.Information(T("Warmup updated successfully."));
-            }            
-            if (ModelState.IsValid) {
                 _warmupUpdater.Generate();
+                Services.Notifier.Information(T("Warmup updated successfully."));
+            }
+            else {
+                Services.TransactionManager.Cancel();
             }
 
-            return RedirectToAction("Index");
+            return Index();
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

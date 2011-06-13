@@ -42,6 +42,7 @@
   <ItemGroup>
     <Reference Include="ClaySharp">
       <HintPath>..\..\..\..\lib\claysharp\ClaySharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
