@@ -21,7 +21,7 @@ namespace Orchard.Blogs.Handlers {
 
             // remove all current blog archive records
             var blogArchiveRecords =
-                from bar in blogArchiveRepository.Table
+                from bar in blogArchiveRepository.Fetch()
                 where bar.BlogPart == blogPostPart.BlogPart.Record
                 select bar;
             blogArchiveRecords.ToList().ForEach(blogArchiveRepository.Delete);

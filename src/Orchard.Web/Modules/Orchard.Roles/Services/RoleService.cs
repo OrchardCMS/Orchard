@@ -36,7 +36,7 @@ namespace Orchard.Roles.Services {
         public ILogger Logger { get; set; }
 
         public IEnumerable<RoleRecord> GetRoles() {
-            var roles = from role in _roleRepository.Table select role;
+            var roles = from role in _roleRepository.Fetch() select role;
             return roles.ToList();
         }
 

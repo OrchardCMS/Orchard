@@ -31,7 +31,7 @@ namespace Orchard.Experimental.Controllers {
         public ActionResult Index() {
             return View(new ContentIndexViewModel {
                 Items = _contentManager.Query().List(),
-                Types = _contentTypeRepository.Table.ToList()
+                Types = _contentTypeRepository.Fetch().ToList()
             });
         }
 

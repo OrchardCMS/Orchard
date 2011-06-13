@@ -39,7 +39,7 @@ namespace Orchard.Data.Migration {
         public ILogger Logger { get; set; }
 
         public IEnumerable<string> GetFeaturesThatNeedUpdate() {
-            var currentVersions = _dataMigrationRepository.Table.ToDictionary(r => r.DataMigrationClass);
+            var currentVersions = _dataMigrationRepository.Fetch().ToDictionary(r => r.DataMigrationClass);
 
             var outOfDateMigrations = _dataMigrations.Where(dataMigration => {
                 DataMigrationRecord record;
@@ -152,7 +152,7 @@ namespace Orchard.Data.Migration {
         }
 
         private DataMigrationRecord GetDataMigrationRecord(IDataMigration tempMigration) {
-            return _dataMigrationRepository.Table
+            return _dataMigrationRepository.Fetch()
                 .Where(dm => dm.DataMigrationClass == tempMigration.GetType().FullName)
                 .FirstOrDefault();
         }

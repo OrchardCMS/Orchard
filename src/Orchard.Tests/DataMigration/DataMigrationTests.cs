@@ -241,7 +241,7 @@ Features:
 ");
 
             _dataMigrationManager.Update("Feature1");
-            Assert.That(_repository.Table.Count(), Is.EqualTo(0));
+            Assert.That(_repository.Fetch().Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -258,7 +258,7 @@ Features:
 ");
             
             _dataMigrationManager.Update("Feature1");
-            Assert.That(_repository.Table.Count(), Is.EqualTo(0));
+            Assert.That(_repository.Fetch().Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -275,9 +275,9 @@ Features:
 ");
             
             _dataMigrationManager.Update("Feature1");
-            Assert.That(_repository.Table.Count(), Is.EqualTo(1));
-            Assert.That(_repository.Table.First().Version, Is.EqualTo(999));
-            Assert.That(_repository.Table.First().DataMigrationClass, Is.EqualTo("Orchard.Tests.DataMigration.DataMigrationTests+DataMigration11Create"));
+            Assert.That(_repository.Fetch().Count(), Is.EqualTo(1));
+            Assert.That(_repository.Fetch().First().Version, Is.EqualTo(999));
+            Assert.That(_repository.Fetch().First().DataMigrationClass, Is.EqualTo("Orchard.Tests.DataMigration.DataMigrationTests+DataMigration11Create"));
         }
 
         [Test]
@@ -294,8 +294,8 @@ Features:
 ");
             
             _dataMigrationManager.Update("Feature1");
-            Assert.That(_repository.Table.Count(), Is.EqualTo(1));
-            Assert.That(_repository.Table.First().Version, Is.EqualTo(666));
+            Assert.That(_repository.Fetch().Count(), Is.EqualTo(1));
+            Assert.That(_repository.Fetch().First().Version, Is.EqualTo(666));
         }
 
         [Test]
@@ -316,8 +316,8 @@ Features:
             });
 
             _dataMigrationManager.Update("Feature1");
-            Assert.That(_repository.Table.Count(), Is.EqualTo(1));
-            Assert.That(_repository.Table.First().Version, Is.EqualTo(999));
+            Assert.That(_repository.Fetch().Count(), Is.EqualTo(1));
+            Assert.That(_repository.Fetch().First().Version, Is.EqualTo(999));
         }
 
         [Test]
@@ -344,7 +344,7 @@ Features:
         Description: Feature
 ");
             _dataMigrationManager.Update("Feature1");
-            Assert.That(_repository.Table.Count(), Is.EqualTo(2));
+            Assert.That(_repository.Fetch().Count(), Is.EqualTo(2));
             Assert.That(_repository.Fetch(d => d.Version == 999).Count(), Is.EqualTo(2));
             Assert.That(_repository.Fetch(d => d.DataMigrationClass == "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationDependenciesModule1").Count(), Is.EqualTo(1));
             Assert.That(_repository.Fetch(d => d.DataMigrationClass == "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationDependenciesModule2").Count(), Is.EqualTo(1));
@@ -364,7 +364,7 @@ Features:
 ");
 
             _dataMigrationManager.Update("Feature1");
-            Assert.That(_repository.Table.Count(), Is.EqualTo(1));
+            Assert.That(_repository.Fetch().Count(), Is.EqualTo(1));
         }
 
         [Test]
