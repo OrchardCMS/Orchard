@@ -58,24 +58,32 @@ namespace Orchard.DisplayManagement.Shapes {
         }
 
         public class ShapeBehavior : ClayBehavior {
-            public dynamic _hack;
+            public dynamic _shape;
             // This can't really be done without a hack until indexer methods offer a self parameter
             public override object SetIndex(Func<object> proceed, IEnumerable<object> keys, object value) {
                 if (keys.Count() == 1) {
                     var name = keys.Single().ToString();
+                    if (name.Equals("Id")) {
+                        // need to mutate the actual type
+                        var s = _shape as Shape;
+                        if (s != null) {
+                            s.Id = System.Convert.ToString(value);
+                        }
+                        return value;
+                    }
                     if (name.Equals("Classes")) {
                         var args = Arguments.From(new[] { value }, Enumerable.Empty<string>());
-                        MergeClasses(args, _hack.Classes);
+                        MergeClasses(args, _shape.Classes);
                         return value;
                     }
                     if (name.Equals("Attributes")) {
                         var args = Arguments.From(new[] { value }, Enumerable.Empty<string>());
-                        MergeAttributes(args, _hack.Attributes);
+                        MergeAttributes(args, _shape.Attributes);
                         return value;
                     }
                     if (name.Equals("Items")) {
                         var args = Arguments.From(new[] { value }, Enumerable.Empty<string>());
-                        MergeItems(args, _hack.Items);
+                        MergeItems(args, _shape.Items);
                         return value;
                     }
                 }
@@ -83,6 +91,14 @@ namespace Orchard.DisplayManagement.Shapes {
             }
 
             public override object InvokeMember(Func<object> proceed, dynamic self, string name, INamedEnumerable<object> args) {
+                if (name.Equals("Id")) {
+                    // need to mutate the actual type
+                    var s = self as Shape;
+                    if (s != null) {
+                        s.Id = System.Convert.ToString(args.FirstOrDefault());
+                    }
+                    return self;
+                }
                 if (name.Equals("Classes") && !args.Named.Any()) {
                     MergeClasses(args, self.Classes);
                     return self;
@@ -109,13 +125,21 @@ namespace Orchard.DisplayManagement.Shapes {
                     }
                     else {
                         foreach (var prop in arg.GetType().GetProperties()) {
-                            attributes[prop.Name] = System.Convert.ToString(prop.GetValue(arg, null));
+                            attributes[TranslateIdentifier(prop.Name)] = System.Convert.ToString(prop.GetValue(arg, null));
                         }
                     }
                 }
                 foreach (var named in args.Named) {
                     attributes[named.Key] = System.Convert.ToString(named.Value);
                 }
+            }
+
+            private static string TranslateIdentifier(string name) {
+                // Allows for certain characters in an identifier to represent different
+                // characters in an HTML attribute (mimics MVC behavior):
+                // data_foo ==> data-foo
+                // @keyword ==> keyword
+                return name.Replace("_", "-").Replace("@", "");
             }
 
             private static void MergeClasses(INamedEnumerable<object> args, IList<string> classes) {

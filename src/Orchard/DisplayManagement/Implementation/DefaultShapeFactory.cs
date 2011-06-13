@@ -92,7 +92,7 @@ namespace Orchard.DisplayManagement.Implementation {
                 ShapeType = creatingContext.ShapeType,
                 Shape = ClayActivator.CreateInstance(creatingContext.BaseType, creatingContext.Behaviors)
             };
-            shapeBehavior._hack = createdContext.Shape;
+            shapeBehavior._shape = createdContext.Shape;
             var shapeMetadata = new ShapeMetadata { Type = shapeType };
             createdContext.Shape.Metadata = shapeMetadata;
 
