@@ -36,7 +36,7 @@ namespace Orchard.Tags.Services {
         public Localizer T { get; set; }
 
         public IEnumerable<TagRecord> GetTags() {
-            return _tagRepository.Table.ToList();
+            return _tagRepository.Fetch().ToList();
         }
 
         public TagRecord GetTag(int tagId) {

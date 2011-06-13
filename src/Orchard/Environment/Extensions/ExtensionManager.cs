@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Folders;
@@ -7,8 +8,6 @@ using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Utility;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionManager : IExtensionManager {
@@ -45,18 +44,18 @@ namespace Orchard.Environment.Extensions {
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             return _cacheManager.Get("AvailableExtensions", ctx =>
-                _parallelCacheContext
+                new ReadOnlyCollection<ExtensionDescriptor>(_parallelCacheContext
                     .RunInParallel(_folders, folder => folder.AvailableExtensions().ToList())
                     .SelectMany(descriptors => descriptors)
-                    .ToReadOnlyCollection());
+                    .ToList()));
         }
 
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
             return _cacheManager.Get("AvailableFeatures", ctx =>
-                AvailableExtensions()
+                new ReadOnlyCollection<FeatureDescriptor>(AvailableExtensions()
                     .SelectMany(ext => ext.Features)
                     .OrderByDependenciesAndPriorities(HasDependency, GetPriority)
-                    .ToReadOnlyCollection());
+                    .ToList()));
         }
 
         internal static int GetPriority(FeatureDescriptor featureDescriptor) {

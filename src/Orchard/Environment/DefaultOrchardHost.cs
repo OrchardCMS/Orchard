@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
 using Orchard.Caching;
@@ -9,7 +10,6 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
@@ -51,7 +51,7 @@ namespace Orchard.Environment {
         public ILogger Logger { get; set; }
 
         public IList<ShellContext> Current {
-            get { return BuildCurrent().ToReadOnlyCollection(); }
+            get { return new ReadOnlyCollection<ShellContext>(BuildCurrent().ToList()); }
         }
 
         public ShellContext GetShellContext(ShellSettings shellSettings) {

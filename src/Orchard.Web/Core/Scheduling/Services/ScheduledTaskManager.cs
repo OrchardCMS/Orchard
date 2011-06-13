@@ -6,7 +6,6 @@ using Orchard.Core.Scheduling.Models;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Scheduling.Services {
     public class ScheduledTaskManager : IScheduledTaskManager {
@@ -37,9 +36,7 @@ namespace Orchard.Core.Scheduling.Services {
         public IEnumerable<IScheduledTask> GetTasks(ContentItem contentItem) {
             return _repository
                 .Fetch(x => x.ContentItemVersionRecord.ContentItemRecord == contentItem.Record)
-                .Select(x => new Task(_contentManager, x))
-                .Cast<IScheduledTask>()
-                .ToReadOnlyCollection();
+                .Select(x => new Task(_contentManager, x));
         }
 
         public IEnumerable<IScheduledTask> GetTasks(string taskType, DateTime? scheduledBeforeUtc = null) {
@@ -47,10 +44,7 @@ namespace Orchard.Core.Scheduling.Services {
                 ? _repository.Fetch(t => t.TaskType == taskType && t.ScheduledUtc <= scheduledBeforeUtc)
                 : _repository.Fetch(t => t.TaskType == taskType);
 
-            return 
-                query.Select(x => new Task(_contentManager, x))
-                .Cast<IScheduledTask>()
-                .ToReadOnlyCollection();
+            return query.Select(x => new Task(_contentManager, x));
         }
 
         public void DeleteTasks(ContentItem contentItem, Func<IScheduledTask, bool> predicate = null ) {

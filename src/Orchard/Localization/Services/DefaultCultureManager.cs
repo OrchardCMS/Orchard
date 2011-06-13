@@ -25,7 +25,7 @@ namespace Orchard.Localization.Services {
         }
 
         public IEnumerable<string> ListCultures() {
-            var query = from culture in _cultureRepository.Table select culture.Culture;
+            var query = from culture in _cultureRepository.Fetch() select culture.Culture;
             return query.ToList();
         }
 

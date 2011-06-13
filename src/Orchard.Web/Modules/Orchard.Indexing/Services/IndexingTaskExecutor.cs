@@ -109,7 +109,7 @@ namespace Orchard.Indexing.Services {
                     // mark the last available task at the moment the process is started.
                     // once the Rebuild is done, Update will start at this point of the table
                     indexSettings.LastIndexedId = _taskRepository
-                        .Table
+                        .Fetch()
                         .OrderByDescending(x => x.Id)
                         .Select(x => x.Id)
                         .FirstOrDefault();

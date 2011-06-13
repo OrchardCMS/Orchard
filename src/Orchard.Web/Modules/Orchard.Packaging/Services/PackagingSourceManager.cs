@@ -33,7 +33,7 @@ namespace Orchard.Packaging.Services {
         /// </summary>
         /// <returns>The feeds.</returns>
         public IEnumerable<PackagingSource> GetSources() {
-            return _packagingSourceRecordRepository.Table.ToList();
+            return _packagingSourceRecordRepository.Fetch().ToList();
         }
 
         /// <summary>

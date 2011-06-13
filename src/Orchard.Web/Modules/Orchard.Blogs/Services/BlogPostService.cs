@@ -91,7 +91,7 @@ namespace Orchard.Blogs.Services {
 
         public IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(BlogPart blogPart) {
             var query = 
-                from bar in _blogArchiveRepository.Table
+                from bar in _blogArchiveRepository.Fetch()
                 where bar.BlogPart == blogPart.Record
                 orderby bar.Year descending, bar.Month descending
                 select bar;
