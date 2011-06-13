@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Web.Mvc;
+using ClaySharp;
+using ClaySharp.Implementation;
 
 namespace Orchard.DisplayManagement.Shapes {
     [DebuggerTypeProxy(typeof(ShapeDebugView))]
@@ -52,6 +55,102 @@ namespace Orchard.DisplayManagement.Shapes {
 
         public virtual IEnumerator GetEnumerator() {
             return _items.GetEnumerator();
+        }
+
+        public class ShapeBehavior : ClayBehavior {
+            public dynamic _hack;
+            // This can't really be done without a hack until indexer methods offer a self parameter
+            public override object SetIndex(Func<object> proceed, IEnumerable<object> keys, object value) {
+                if (keys.Count() == 1) {
+                    var name = keys.Single().ToString();
+                    if (name.Equals("Classes")) {
+                        var args = Arguments.From(new[] { value }, Enumerable.Empty<string>());
+                        MergeClasses(args, _hack.Classes);
+                        return value;
+                    }
+                    if (name.Equals("Attributes")) {
+                        var args = Arguments.From(new[] { value }, Enumerable.Empty<string>());
+                        MergeAttributes(args, _hack.Attributes);
+                        return value;
+                    }
+                    if (name.Equals("Items")) {
+                        var args = Arguments.From(new[] { value }, Enumerable.Empty<string>());
+                        MergeItems(args, _hack.Items);
+                        return value;
+                    }
+                }
+                return base.SetIndex(proceed, keys, value);
+            }
+
+            public override object InvokeMember(Func<object> proceed, dynamic self, string name, INamedEnumerable<object> args) {
+                if (name.Equals("Classes") && !args.Named.Any()) {
+                    MergeClasses(args, self.Classes);
+                    return self;
+                }
+                if (name.Equals("Attributes") && args.Positional.Count() <= 1) {
+                    MergeAttributes(args, self.Attributes);
+                    return self;
+                }
+                if (name.Equals("Items")) {
+                    MergeItems(args, self);
+                    return self;
+                }
+                return proceed();
+            }
+
+            private static void MergeAttributes(INamedEnumerable<object> args, IDictionary<string, string> attributes) {
+                var arg = args.Positional.SingleOrDefault();
+                if (arg != null) {
+                    if (arg is IDictionary) {
+                        var dictionary = arg as IDictionary;
+                        foreach (var key in dictionary.Keys) {
+                            attributes[System.Convert.ToString(key)] = System.Convert.ToString(dictionary[key]);
+                        }
+                    }
+                    else {
+                        foreach (var prop in arg.GetType().GetProperties()) {
+                            attributes[prop.Name] = System.Convert.ToString(prop.GetValue(arg, null));
+                        }
+                    }
+                }
+                foreach (var named in args.Named) {
+                    attributes[named.Key] = System.Convert.ToString(named.Value);
+                }
+            }
+
+            private static void MergeClasses(INamedEnumerable<object> args, IList<string> classes) {
+                foreach (var arg in args) {
+                    // look for string first, because the "string" type is also an IEnumerable of char
+                    if (arg is string) {
+                        classes.Add(arg as string);
+                    }
+                    else if (arg is IEnumerable) {
+                        foreach (var item in arg as IEnumerable) {
+                            classes.Add(System.Convert.ToString(item));
+                        }
+                    }
+                    else {
+                        classes.Add(System.Convert.ToString(arg));
+                    }
+                }
+            }
+
+            private static void MergeItems(INamedEnumerable<object> args, dynamic shape) {
+                foreach (var arg in args) {
+                    // look for string first, because the "string" type is also an IEnumerable of char
+                    if (arg is string) {
+                        shape.Add(arg as string);
+                    }
+                    else if (arg is IEnumerable) {
+                        foreach (var item in arg as IEnumerable) {
+                            shape.Add(item);
+                        }
+                    }
+                    else {
+                        shape.Add(System.Convert.ToString(arg));
+                    }
+                }
+            }
         }
     }
 }
