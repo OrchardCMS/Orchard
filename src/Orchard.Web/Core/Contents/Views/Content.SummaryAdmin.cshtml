@@ -7,7 +7,7 @@
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
         <input type="checkbox" value="@contentItem.Id" name="itemIds"/>
-        <h3>@Html.ItemAdminLink(contentItem)</h3>
+        <h3>@Display.EditorLink(ContentItem: contentItem, AdminLink: true)</h3>
         @if (Model.Header != null) {
         <div class="header">@Display(Model.Header)</div>
         }
@@ -17,7 +17,7 @@
     </div>
     <div class="related">
         @Display(Model.Actions)
-        @Html.ItemEditLink(T("Edit").Text, contentItem) @T(" | ")
+        @Display.EditorLink(ContentItem: contentItem, Value: T("Edit")) @T(" | ")
         @Html.Link(T("Delete").Text, Url.Action("Remove", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
     </div>
     @if (Model.Content != null) {

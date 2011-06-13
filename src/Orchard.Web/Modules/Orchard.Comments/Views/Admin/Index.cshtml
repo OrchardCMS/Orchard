@@ -59,6 +59,8 @@
                 if (!HasText(commentEntry.Comment.UserName)) {
                     commentClass = "anonymous";
                 }
+                var metadata = commentEntry.CommentedOn.ContentManager.GetItemMetadata(contentItem);
+                var displayUrl = metadata.DisplayRouteValues == null ? null : Url.Action(Convert.ToString(metadata.DisplayRouteValues["action"]), metadata.DisplayRouteValues);
             <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
                 <td>
                     <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.NameOf(m => m.Comments[commentIndex].Comment.Id)"/>
@@ -77,7 +79,7 @@
                 </td>
                 <td>
                     @* would ideally have permalinks for individual comments *@
-                    <p><a href="@Url.ItemDisplayUrl(commentEntry.CommentedOn)#comments"><time>@Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
+                    <p><a href="@(displayUrl)#comments"><time>@Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
                     @if (commentEntry.Comment.CommentText != null) {
                         var ellipsized = Html.Ellipsize(commentEntry.Comment.CommentText, 500);
                         var paragraphed = new HtmlString(ellipsized.ToHtmlString().Replace("\r\n", "</p><p>"));
@@ -87,7 +89,7 @@
                         @T("[Empty]")
                     }
                 </td>
-                <td>@Html.ItemDisplayLink(commentEntry.CommentedOn)</td>
+                <td>@Display.DisplayLink(ContentItem: commentEntry.CommentedOn)</td>
                 <td>
                     <div class="actions">
                         @if (commentEntry.Comment.Status != CommentStatus.Spam) {
