@@ -13,9 +13,9 @@
     }
 }
         <div id="image-preview">
-            <img alt="" id="img-loader" style="display:none" src="" />
+            @Display.Image(Src: "", Id: "lib-loader", Attributes: new { style = "display:none" })
             <div class="media-largepreview">
-                <img alt="@T("Preview of Image")" id="img-preview" src="@Url.Content("~/modules/orchard.mediapicker/Styles/images/imagepreview.png")" onload="jQuery.mediaPicker.scalePreview(this)" />
+                @Display.Image(Id: "img-preview", Src: "~/modules/orchard.mediapicker/Styles/images/imagepreview.png", Alt: T("Preview of Image"), Attributes: new { onload = "jQuery.mediaPicker.scalePreview(this)" })
             </div>
             <div>
                 <label for="img-src">@T("URL for the image resource")</label>
@@ -28,7 +28,7 @@
                     <input type="file" name="fileUpload" id="fileUpload"  />
                     <input class="button" type="submit" id="upload" value="Upload" />
                 }
-				<img id="img-indicator" src="@Url.Content("~/modules/orchard.mediapicker/Styles/images/synchronizing.gif")" alt="" class="throbber" />
+                @Display.Image(Id: "img-indicator", Src: "~/modules/orchard.mediapicker/Styles/images/synchronizing.gif", Classes: "throbber")
             </div>
 
         </div>

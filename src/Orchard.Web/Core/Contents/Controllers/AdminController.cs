@@ -292,13 +292,16 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
+            var metadata = contentItem.ContentManager.GetItemMetadata(contentItem);
+            var displayUrl = metadata.DisplayRouteValues == null ? null : Url.Action(Convert.ToString(metadata.DisplayRouteValues["action"]), metadata.DisplayRouteValues);
+
             // store the previous route in case a back redirection is requested
             string previousRoute = null;
             if(contentItem.Has<RoutePart>() 
                 &&!string.IsNullOrWhiteSpace(returnUrl) 
                 && Url.IsLocalUrl(returnUrl)
                 // only if the original returnUrl is the content itself
-                && String.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase) 
+                && String.Equals(returnUrl, displayUrl, StringComparison.OrdinalIgnoreCase) 
                 ) {
                 previousRoute = contentItem.As<RoutePart>().Path;
             }
@@ -312,11 +315,14 @@ namespace Orchard.Core.Contents.Controllers {
 
             conditionallyPublish(contentItem);
 
+            metadata = contentItem.ContentManager.GetItemMetadata(contentItem);
+            displayUrl = metadata.DisplayRouteValues == null ? null : Url.Action(Convert.ToString(metadata.DisplayRouteValues["action"]), metadata.DisplayRouteValues);
+
             // did the route change ?
             if (!string.IsNullOrWhiteSpace(returnUrl) 
                 && previousRoute != null 
                 && !String.Equals(contentItem.As<RoutePart>().Path, previousRoute, StringComparison.OrdinalIgnoreCase)) {
-                returnUrl = Url.ItemDisplayUrl(contentItem);
+                returnUrl = displayUrl;
             }
 
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)

@@ -3,7 +3,7 @@
 @using Orchard.Environment.Extensions.Models
 
 <div id="currentTheme">
-    @Html.Image(Href(Html.ThemePath((ExtensionDescriptor)Model.ContentPart.Descriptor, "/Theme.png")), Html.Encode((string)Model.ContentPart.Name), new { @class = "themePreviewImage" })
+    @Display.Image(Src: Html.ThemePath((ExtensionDescriptor)Model.ContentPart.Descriptor, "/Theme.png"), Alt: Model.ContentPart.Name, Classes: "themePreviewImage")
 
     <div class="details">
         <h4>@Model.ContentPart.Name</h4>

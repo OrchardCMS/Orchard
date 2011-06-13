@@ -90,6 +90,10 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
                     _routeCollection);
             }
 
+            if (parameter.Name == "Url" && parameter.ParameterType.IsAssignableFrom(typeof(UrlHelper))) {
+                return new UrlHelper(displayContext.ViewContext.RequestContext, _routeCollection);
+            } 
+
             var getter = _getters.GetOrAdd(parameter.Name, n =>
                 CallSite<Func<CallSite, object, object>>.Create(
                 Microsoft.CSharp.RuntimeBinder.Binder.GetMember(

@@ -37,7 +37,7 @@
                 @foreach (var mediaFolder in Model.MediaFolders) {
                     <tr>
                         <td class="media-folder" colspan="2">
-                            <img src="@Href("~/Modules/Orchard.Media/Content/Admin/images/folder.gif")" height="16" width="16" class="mediaTypeIcon" alt="@T("Folder")" />
+                            @Display.Image(Src: "~/Modules/Orchard.Media/Content/Admin/images/folder.gif", Classes: "mediaTypeIcon", Alt: @T("Folder"), Title: "", Attributes: new { width = "16", height = "16" })
                             @FolderLink(mediaFolder.Name, mediaFolder.MediaPath)
                         </td>
                     </tr>
@@ -47,7 +47,7 @@
                         var src = (((IMediaService)ViewData["Service"]).GetPublicUrl(Path.Combine(Model.MediaPath, mediaFile.Name)));
                     <tr data-imgsrc="@src" class="media-item">
                         <td class="media-thumbnail">
-                            <img data-filename="@src.Substring(src.LastIndexOf("/") + 1)" alt="" src="@src" onload="jQuery.mediaPicker.scalePreview(this)" />
+                            @Display.Image(Src: @src, Alt: "", Attributes: new { data_filename = src.Substring(src.LastIndexOf("/") + 1), onload = "jQuery.mediaPicker.scalePreview(this)" })
                         </td>
                         <td class="media-details">
                             <ul class="media-summary">
@@ -69,13 +69,13 @@
                 <input class="button" type="submit" id="upload" value="Upload" />
                 }
             }
-            <img id="img-indicator" src="@Url.Content("~/modules/orchard.mediapicker/Styles/images/synchronizing.gif")" alt="" class="throbber" />
+            @Display.Image(Id: "img-indicator", Src: "~/modules/orchard.mediapicker/Styles/images/synchronizing.gif", Classes: "throbber")
 
         </fieldset>
 
         </div>
         <div id="file-details">
-            <img alt="" id="lib-loader" style="display:none" src="" />
+            @Display.Image(Src: "", Id: "lib-loader", Attributes: new { style = "display:none" })
             <fieldset>
             <ol>
                 <li>

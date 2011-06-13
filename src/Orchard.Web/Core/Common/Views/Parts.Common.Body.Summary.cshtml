@@ -6,4 +6,4 @@
     string bodyHtml = Model.Html.ToString();
     var body = new HtmlString(Html.Excerpt(bodyHtml, 200).ToString().Replace(Environment.NewLine, "</p>" + Environment.NewLine + "<p>")); 
 }
-<p>@body @Html.ItemDisplayLink(T("more").ToString(), contentItem)</p>
+<p>@body @Display.DisplayLink(Value: T("more"), ContentItem: contentItem)</p>
