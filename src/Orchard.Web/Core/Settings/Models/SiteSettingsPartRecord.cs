@@ -17,6 +17,6 @@ namespace Orchard.Core.Settings.Models {
         public virtual string SiteCulture { get; set; }
         public virtual ResourceDebugMode ResourceDebugMode { get; set; }
         public virtual int PageSize { get; set; }
-        public virtual string TimeZoneId { get; set; }
+        public virtual string TimeZone { get; set; }
     }
 }

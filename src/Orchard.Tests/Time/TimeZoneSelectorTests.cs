@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Web;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Localization.Services;
 using Orchard.Time;
 
 namespace Orchard.Tests.Time {

@@ -57,8 +57,8 @@ namespace Orchard.Core.Settings.Models {
         }
 
         public TimeZoneInfo TimeZone {
-            get { return TimeZoneInfo.FindSystemTimeZoneById(Record.TimeZoneId); }
-            set { Record.TimeZoneId = value.Id; }
+            get { return TimeZoneInfo.FindSystemTimeZoneById(Record.TimeZone); }
+            set { Record.TimeZone = value.Id; }
         }
     }
 }
