@@ -47,7 +47,7 @@
                         var src = (((IMediaService)ViewData["Service"]).GetPublicUrl(Path.Combine(Model.MediaPath, mediaFile.Name)));
                     <tr data-imgsrc="@src" class="media-item">
                         <td class="media-thumbnail">
-                            @Display.Image(Src: @src, Alt: "", Attributes: new { data_filename = src.Substring(src.LastIndexOf("/") + 1), onload = "jQuery.mediaPicker.scalePreview(this)" })
+                            @Display.Image(Src: @src, Alt: T("Preview"), Title: "", Attributes: new { data_filename = src.Substring(src.LastIndexOf("/") + 1), onload = "jQuery.mediaPicker.scalePreview(this)" })
                         </td>
                         <td class="media-details">
                             <ul class="media-summary">
