@@ -175,6 +175,7 @@
     <Compile Include="ContentManagement\Handlers\ImportContentContext.cs" />
     <Compile Include="ContentManagement\IContentBehavior.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
+    <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementInfo.cs" />
     <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
@@ -446,8 +447,8 @@
     <Compile Include="ContentManagement\MetaData\Models\SettingsDictionary.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriter.cs" />
     <Compile Include="ContentManagement\MetaData\IContentDefinitionManager.cs" />
-    <Compile Include="ContentManagement\MetaData\IContentDefinitionReader.cs" />
-    <Compile Include="ContentManagement\MetaData\IContentDefinitionWriter.cs" />
+    <Compile Include="ContentManagement\MetaData\Services\IContentDefinitionReader.cs" />
+    <Compile Include="ContentManagement\MetaData\Services\IContentDefinitionWriter.cs" />
     <Compile Include="ContentManagement\MetaData\Models\ContentFieldDefinition.cs" />
     <Compile Include="ContentManagement\MetaData\Models\ContentPartDefinition.cs">
       <SubType>Code</SubType>
@@ -869,7 +870,6 @@
     <Compile Include="Utility\Extensions\HttpRequestExtensions.cs" />
     <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
-    <Compile Include="IMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

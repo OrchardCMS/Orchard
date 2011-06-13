@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
-using System.Xml.Linq;
 using Orchard.Core.XmlRpc.Models;
+using Orchard.Core.XmlRpc.Services;
 using Orchard.Logging;
 
 namespace Orchard.Core.XmlRpc.Controllers {
     public class HomeController : Controller {
-        private readonly IMapper<XRpcMethodResponse, XElement> _writer;
+        private readonly IXmlRpcWriter _writer;
         private readonly IEnumerable<IXmlRpcHandler> _xmlRpcHandlers;
 
         public HomeController(
-            IMapper<XRpcMethodResponse, XElement> writer,
+            IXmlRpcWriter writer,
             IEnumerable<IXmlRpcHandler> xmlRpcHandlers) {
             _writer = writer;
             _xmlRpcHandlers = xmlRpcHandlers;
@@ -29,7 +29,7 @@ namespace Orchard.Core.XmlRpc.Controllers {
             if (methodResponse == null)
                 throw new HttpException(500, "TODO: xmlrpc fault");
 
-            var content = _writer.Map(methodResponse).ToString();
+            var content = _writer.MapMethodResponse(methodResponse).ToString();
             return Content(content, "text/xml");
         }
 

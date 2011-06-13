@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 using Autofac;
 using Moq;
 using NHibernate;
@@ -9,7 +8,6 @@ using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.MetaData.Services;
 using Orchard.Core.Settings.Metadata;
 using Orchard.Core.Settings.Metadata.Records;
@@ -45,9 +43,7 @@ namespace Orchard.Core.Tests.Settings.Metadata {
             builder.RegisterAutoMocking();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
-            builder.RegisterType(typeof(SettingsFormatter))
-                .As(typeof(IMapper<XElement, SettingsDictionary>))
-                .As(typeof(IMapper<SettingsDictionary, XElement>));
+            builder.RegisterType(typeof(SettingsFormatter)).As(typeof(ISettingsFormatter));
             builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
@@ -208,7 +204,7 @@ namespace Orchard.Core.Tests.Settings.Metadata {
             var type = _container.Resolve<IContentDefinitionManager>().GetTypeDefinition(typeName);
             Assert.That(type, Is.Not.Null);
             Assert.That(type.Parts.Count(), Is.EqualTo(partNames.Count()));
-            foreach(var partName in partNames) {
+            foreach (var partName in partNames) {
                 Assert.That(type.Parts.Select(p=>p.PartDefinition.Name), Has.Some.EqualTo(partName));
             }
         }

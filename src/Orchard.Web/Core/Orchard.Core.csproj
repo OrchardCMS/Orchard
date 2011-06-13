@@ -249,6 +249,8 @@
     <Compile Include="XmlRpc\Models\XRpcMethodCall.cs" />
     <Compile Include="XmlRpc\Models\XRpcMethodResponse.cs" />
     <Compile Include="XmlRpc\Models\XRpcStruct.cs" />
+    <Compile Include="XmlRpc\Services\IXmlRpcReader.cs" />
+    <Compile Include="XmlRpc\Services\IXmlRpcWriter.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcReader.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcWriter.cs" />
     <Compile Include="XmlRpc\XmlRpcContext.cs" />
