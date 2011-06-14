@@ -27,6 +27,7 @@ using Orchard.Tests.Environment.Extensions;
 using Orchard.Tests.Modules.Recipes.Services;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.UI.Navigation;
+using Orchard.Time;
 
 namespace Orchard.Tests.Modules.ImportExport.Services {
     [TestFixture]

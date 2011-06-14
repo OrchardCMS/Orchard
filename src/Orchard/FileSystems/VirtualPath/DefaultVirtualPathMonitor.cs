@@ -6,6 +6,7 @@ using System.Web.Hosting;
 using Orchard.Caching;
 using Orchard.Logging;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.FileSystems.VirtualPath {
 

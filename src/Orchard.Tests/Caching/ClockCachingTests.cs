@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
+using Orchard.Time;
 
 namespace Orchard.Tests.Caching {
     [TestFixture]

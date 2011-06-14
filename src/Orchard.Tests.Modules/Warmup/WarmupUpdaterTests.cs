@@ -14,6 +14,7 @@ using Orchard.Services;
 using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.UI.Navigation;
+using Orchard.Time;
 using Orchard.Warmup.Models;
 using Orchard.Warmup.Services;
 

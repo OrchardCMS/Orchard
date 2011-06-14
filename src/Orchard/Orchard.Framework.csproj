@@ -258,6 +258,11 @@
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
+    <Compile Include="Time\CurrentTimeZoneWorkContext.cs" />
+    <Compile Include="Time\SiteTimeZoneSelector.cs" />
+    <Compile Include="Time\IClock.cs" />
+    <Compile Include="Time\ITimeZoneSelector.cs" />
+    <Compile Include="Time\TimeZoneSelectorResult.cs" />
     <Compile Include="UI\FlatPositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Navigation\PagerParameters.cs" />
@@ -859,7 +864,7 @@
     <Compile Include="Security\Permissions\IPermissionProvider.cs" />
     <Compile Include="Security\Permissions\Permission.cs" />
     <Compile Include="Security\Providers\OrchardRoleProvider.cs" />
-    <Compile Include="Services\Clock.cs" />
+    <Compile Include="Time\Clock.cs" />
     <Compile Include="FileSystems\Media\IStorageFile.cs" />
     <Compile Include="FileSystems\Media\IStorageFolder.cs" />
     <Compile Include="FileSystems\Media\IStorageProvider.cs" />

@@ -12,6 +12,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
+using Orchard.Time;
 
 namespace Orchard.Tests.Environment.Compilation.Loaders {
     [TestFixture]

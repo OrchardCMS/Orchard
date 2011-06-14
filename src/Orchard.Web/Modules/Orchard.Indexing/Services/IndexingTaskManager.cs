@@ -5,6 +5,7 @@ using Orchard.Indexing.Models;
 using Orchard.Logging;
 using Orchard.Tasks.Indexing;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Indexing.Services {
     public class IndexingTaskManager : IIndexingTaskManager {

@@ -274,6 +274,7 @@
     <Compile Include="Stubs\StubVirtualPathMonitor.cs" />
     <Compile Include="Stubs\StubCacheManager.cs" />
     <Compile Include="Stubs\StubWebSiteFolder.cs" />
+    <Compile Include="Time\TimeZoneSelectorTests.cs" />
     <Compile Include="UI\Resources\ResourceManagerTests.cs" />
     <Compile Include="UI\ShapeTests.cs" />
     <Compile Include="Utility\ContainerExtensions.cs" />

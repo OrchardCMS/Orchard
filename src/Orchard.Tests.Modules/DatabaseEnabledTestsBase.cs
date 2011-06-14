@@ -10,6 +10,7 @@ using Orchard.Data;
 using Orchard.Services;
 using Orchard.Tests.Data;
 using Orchard.Tests.Stubs;
+using Orchard.Time;
 
 namespace Orchard.Tests.Modules {
     public abstract class DatabaseEnabledTestsBase {

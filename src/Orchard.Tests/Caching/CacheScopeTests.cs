@@ -5,6 +5,7 @@ using Autofac;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.WebSite;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Tests.Caching {
     [TestFixture]

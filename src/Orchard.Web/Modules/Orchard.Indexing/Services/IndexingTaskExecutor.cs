@@ -11,6 +11,7 @@ using Orchard.Indexing.Settings;
 using Orchard.Locking;
 using Orchard.Logging;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Indexing.Services {
     /// <summary>

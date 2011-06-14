@@ -25,7 +25,7 @@
                 <li>@T("The search index contains the following fields: {0}.", string.Join(T(", ").Text, Model.IndexEntry.Fields))</li>
             } 
 
-            <li>@T("The search index was last updated {0}.", Display.DateTimeRelative(dateTimeUtc: Model.IndexEntry.LastUpdateUtc))</li>
+            <li>@T("The search index was last updated {0}.", Display.DateTimeRelative(DateTimeUtc: Model.IndexEntry.LastUpdateUtc))</li>
 
             switch(Model.IndexEntry.IndexingStatus) {
                 case IndexingStatus.Rebuilding:

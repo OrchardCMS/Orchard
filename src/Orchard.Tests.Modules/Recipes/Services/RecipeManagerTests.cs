@@ -14,6 +14,7 @@ using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
+using Orchard.Time;
 
 namespace Orchard.Tests.Modules.Recipes.Services {
     [TestFixture]

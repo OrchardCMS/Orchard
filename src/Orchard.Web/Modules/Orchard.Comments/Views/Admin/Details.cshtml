@@ -83,7 +83,7 @@
                     @text
                 } 
                 </td>
-                <td>@Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</td>
+                <td>@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</td>
                 <td>
                     <ul class="actions">
                         <li class="construct">

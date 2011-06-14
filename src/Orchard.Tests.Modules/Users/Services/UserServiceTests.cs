@@ -25,6 +25,7 @@ using Orchard.Security;
 using Orchard.Security.Providers;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
+using Orchard.Time;
 using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;

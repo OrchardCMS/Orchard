@@ -1,6 +1,7 @@
 ﻿using System;
 using Orchard.Caching;
 using Orchard.Services;
+using Orchard.Time;
 
 namespace Orchard.Tests.Stubs {
     public class StubClock : IClock {
