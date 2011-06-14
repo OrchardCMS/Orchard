@@ -1,5 +1,5 @@
-﻿using System.Web;
-using Orchard.Settings;
+﻿using System;
+using System.Web;
 
 namespace Orchard.Time {
     /// <summary>
@@ -13,7 +13,11 @@ namespace Orchard.Time {
         }
 
         public TimeZoneSelectorResult GetTimeZone(HttpContextBase context) {
-            return new TimeZoneSelectorResult { Priority = 0, TimeZone = _workContextAccessor.GetContext().CurrentSite.TimeZone };
+            var siteTimeZoneId = _workContextAccessor.GetContext(context).CurrentSite.SiteTimeZone;
+            return new TimeZoneSelectorResult {
+                Priority = 0,
+                TimeZone = TimeZoneInfo.FindSystemTimeZoneById(siteTimeZoneId)
+            };
         }
     }
 }

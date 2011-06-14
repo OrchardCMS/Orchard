@@ -9,16 +9,13 @@ using Orchard.Time;
 namespace Orchard.Core.Shapes {
     public class DateTimeShapes : IDependency {
         private readonly IClock _clock;
-        private readonly ITimeZoneProvider _timeZoneProvider;
         private readonly IWorkContextAccessor _workContextAccessor;
 
         public DateTimeShapes(
             IClock clock,
-            ITimeZoneProvider timeZoneProvider,
             IWorkContextAccessor workContextAccessor
             ) {
             _clock = clock;
-            _timeZoneProvider = timeZoneProvider;
             _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
@@ -62,7 +59,7 @@ namespace Orchard.Core.Shapes {
         private DateTime ConvertToDisplayTime(DateTime dateTimeUtc) {
 
             // get the time zone for the current request
-            var timeZone = _timeZoneProvider.GetTimeZone(_workContextAccessor.GetContext().HttpContext);
+            var timeZone = _workContextAccessor.GetContext().CurrentTimeZone;
 
             return TimeZoneInfo.ConvertTimeFromUtc(dateTimeUtc, timeZone);
         }

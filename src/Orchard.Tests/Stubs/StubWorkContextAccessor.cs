@@ -78,7 +78,7 @@ namespace Orchard.Tests.Stubs {
 
                 public string BaseUrl { get; set;}
                 
-                public TimeZoneInfo TimeZone {
+                public string SiteTimeZone {
                     get { throw new NotImplementedException(); }
                     set { throw new NotImplementedException(); }
                 }

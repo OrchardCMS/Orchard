@@ -50,10 +50,9 @@ namespace Orchard.Core.Settings.ViewModels {
             set { Site.BaseUrl = value; }
         }
 
-
         public string TimeZone {
-            get { return Site.TimeZone.Id; }
-            set { Site.TimeZone = TimeZoneInfo.FindSystemTimeZoneById(value); }
+            get { return Site.SiteTimeZone; }
+            set { Site.SiteTimeZone = value; }
         }
     }
 }

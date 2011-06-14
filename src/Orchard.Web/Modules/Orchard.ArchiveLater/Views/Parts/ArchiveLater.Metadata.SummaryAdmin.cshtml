@@ -4,7 +4,7 @@
 <ul class="pageStatus">
     <li>
         @Display.Image(Src: "~/Modules/Orchard.ArchiveLater/Content/Admin/images/scheduled.gif", Classes: "icon", Alt: T("Scheduled"), Title: T("The page is scheduled for archiving"))@T("Unpublish on")
-        @Display.DateTime(DateTimeUtc: (DateTime)Model.ScheduledArchiveUtc.ToLocalTime(), CustomFormat: T("M/d/yyyy h:mm tt"))
+        @Display.DateTime(DateTimeUtc: (DateTime)Model.ScheduledArchiveUtc, CustomFormat: T("M/d/yyyy h:mm tt"))
         &nbsp;&#124;&nbsp;
     </li>
 </ul>

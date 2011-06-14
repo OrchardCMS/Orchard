@@ -258,11 +258,10 @@
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
+    <Compile Include="Time\CurrentTimeZoneWorkContext.cs" />
     <Compile Include="Time\SiteTimeZoneSelector.cs" />
     <Compile Include="Time\IClock.cs" />
-    <Compile Include="Time\ITimeZoneProvider.cs" />
     <Compile Include="Time\ITimeZoneSelector.cs" />
-    <Compile Include="Time\DefaultTimeZoneProvider.cs" />
     <Compile Include="Time\TimeZoneSelectorResult.cs" />
     <Compile Include="UI\FlatPositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />

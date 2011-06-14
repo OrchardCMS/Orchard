@@ -183,8 +183,8 @@ namespace Orchard.Setup {
                 get { return ""; }
             }
 
-            public TimeZoneInfo TimeZone {
-                get { return TimeZoneInfo.Local; }
+            public string SiteTimeZone {
+                get { return TimeZoneInfo.Local.Id; }
             }
         }
     }

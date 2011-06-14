@@ -15,6 +15,6 @@ namespace Orchard.Settings {
         ResourceDebugMode ResourceDebugMode { get; set; }
         int PageSize { get; set; }
         string BaseUrl { get; }
-        TimeZoneInfo TimeZone { get; }   
+        string SiteTimeZone { get; }   
     }
 }

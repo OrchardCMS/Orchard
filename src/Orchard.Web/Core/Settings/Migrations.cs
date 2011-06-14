@@ -89,7 +89,7 @@ namespace Orchard.Core.Settings {
                     .Column<string>("PageTitleSeparator")
                     .Column<string>("HomePage")
                     .Column<string>("SiteCulture")
-                    .Column<string>("TimeZone")
+                    .Column<string>("SiteTimeZone")
                     .Column<string>("ResourceDebugMode", c => c.WithDefault("FromAppSetting"))
                     .Column<int>("PageSize")
                 );
