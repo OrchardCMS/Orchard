@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orchard.Caching;
 
-namespace Orchard.FileSystems.Dependencies {
+namespace Orchard.Environment.Compilation.Dependencies {
     public class ActivatedExtensionDescriptor {
         public string ExtensionId { get; set; }
         public string LoaderName { get; set; }

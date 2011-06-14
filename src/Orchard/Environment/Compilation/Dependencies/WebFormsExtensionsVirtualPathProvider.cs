@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
-using Orchard.Environment.Extensions.Loaders;
+using Orchard.Environment.Compilation.Loaders;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
-namespace Orchard.FileSystems.Dependencies {
+namespace Orchard.Environment.Compilation.Dependencies {
     /// <summary>
     /// The purpose of this class is to insert assembly directives in WebForms views served
     /// from ~/Modules and ~/Themes. Inserting these directives ensures that the WebForms

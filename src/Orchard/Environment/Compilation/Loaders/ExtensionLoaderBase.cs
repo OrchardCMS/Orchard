@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Orchard.Caching;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.Dependencies;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment.Compilation.Loaders {
+    /// <summary>
+    /// Base class for extension loaders.
+    /// </summary>
     public abstract class ExtensionLoaderBase : IExtensionLoader {
         private readonly IDependenciesFolder _dependenciesFolder;
 

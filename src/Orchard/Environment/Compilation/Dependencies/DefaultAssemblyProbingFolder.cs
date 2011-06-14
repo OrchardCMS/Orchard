@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Reflection;
-using Orchard.Environment;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
 
-namespace Orchard.FileSystems.Dependencies {
+namespace Orchard.Environment.Compilation.Dependencies {
     public class DefaultAssemblyProbingFolder : IAssemblyProbingFolder {
         private const string BasePath = "Dependencies";
         private readonly IAppDataFolder _appDataFolder;

@@ -6,7 +6,7 @@ using Orchard.Caching;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
 
-namespace Orchard.FileSystems.Dependencies {
+namespace Orchard.Environment.Compilation.Dependencies {
     /// <summary>
     /// Similar to "Dependencies.xml" file, except we also store "GetFileHash" result for every 
     /// VirtualPath entry. This is so that if any virtual path reference in the file changes,

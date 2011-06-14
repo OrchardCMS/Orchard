@@ -6,7 +6,7 @@ using Orchard.Caching;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 
-namespace Orchard.FileSystems.Dependencies {
+namespace Orchard.Environment.Compilation.Dependencies {
     public class DefaultDependenciesFolder : IDependenciesFolder {
         private const string BasePath = "Dependencies";
         private const string FileName = "dependencies.xml";

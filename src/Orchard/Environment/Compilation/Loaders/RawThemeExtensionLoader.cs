@@ -1,11 +1,15 @@
 using System;
 using System.Linq;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment.Compilation.Loaders {
+    /// <summary>
+    /// Extension loader for a theme.
+    /// </summary>
     public class RawThemeExtensionLoader : ExtensionLoaderBase {
         private readonly IVirtualPathProvider _virtualPathProvider;
 
@@ -22,24 +26,31 @@ namespace Orchard.Environment.Extensions.Loaders {
         public override int Order { get { return 10; } }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
-            if (Disabled)
+            if (Disabled) {
                 return null;
+            }
 
             if (descriptor.Location == "~/Themes") {
-                string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
-                                           descriptor.Id + ".csproj");
+                string projectPath = _virtualPathProvider.Combine(
+                    descriptor.Location,
+                    descriptor.Id,
+                    descriptor.Id + ".csproj");
 
                 // ignore themes including a .csproj in this loader
-                if ( _virtualPathProvider.FileExists(projectPath) ) {
+                if (_virtualPathProvider.FileExists(projectPath)) {
                     return null;
                 }
 
-                var assemblyPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id, "bin",
-                                                descriptor.Id + ".dll");
+                var assemblyPath = _virtualPathProvider.Combine(
+                    descriptor.Location,
+                    descriptor.Id,
+                    "bin",
+                    descriptor.Id + ".dll");
 
                 // ignore themes with /bin in this loader
-                if ( _virtualPathProvider.FileExists(assemblyPath) )
+                if (_virtualPathProvider.FileExists(assemblyPath)) {
                     return null;
+                }
 
                 return new ExtensionProbeEntry {
                     Descriptor = descriptor,
@@ -48,12 +59,14 @@ namespace Orchard.Environment.Extensions.Loaders {
                     VirtualPathDependencies = Enumerable.Empty<string>(),
                 };
             }
+
             return null;
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
-            if (Disabled)
+            if (Disabled) {
                 return null;
+            }
 
             Logger.Information("Loaded no-code theme \"{0}\"", descriptor.Name);
 

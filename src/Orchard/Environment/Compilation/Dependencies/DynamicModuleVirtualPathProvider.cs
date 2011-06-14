@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
-using Orchard.Environment.Extensions.Loaders;
+using Orchard.Environment.Compilation.Loaders;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
-namespace Orchard.FileSystems.Dependencies {
+namespace Orchard.Environment.Compilation.Dependencies {
     /// <summary>
     /// The purpose of this virtual path provider is to add file dependencies to .csproj files
     /// served from the "~/Modules" or "~/Themes" directory.

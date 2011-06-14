@@ -3,13 +3,13 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Orchard.Environment.Extensions.Loaders;
-using Orchard.FileSystems.Dependencies;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Compilation.Loaders;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
 
-namespace Orchard.Environment.Extensions.Compilers {
+namespace Orchard.Environment.Compilation.Compilers {
     /// <summary>
     /// Compile an extension project file into an assembly
     /// </summary>

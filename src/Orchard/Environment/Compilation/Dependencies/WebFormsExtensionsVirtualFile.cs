@@ -1,7 +1,7 @@
 using System.IO;
 using System.Web.Hosting;
 
-namespace Orchard.FileSystems.Dependencies {
+namespace Orchard.Environment.Compilation.Dependencies {
     public class WebFormVirtualFile : VirtualFile {
         private readonly VirtualFile _actualFile;
         private readonly string _assemblyDirective;

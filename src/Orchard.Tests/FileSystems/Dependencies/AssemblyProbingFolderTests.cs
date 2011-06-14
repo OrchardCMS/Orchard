@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using Orchard.Environment;
-using Orchard.FileSystems.Dependencies;
+using Orchard.Environment.Compilation.Dependencies;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.FileSystems.Dependencies {

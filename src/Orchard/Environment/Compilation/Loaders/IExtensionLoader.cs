@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Orchard.Caching;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.Dependencies;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment.Compilation.Loaders {
     public class ExtensionProbeEntry {
         public ExtensionDescriptor Descriptor { get; set; }
         public IExtensionLoader Loader { get; set; }

@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment.Compilation.Loaders {
     /// <summary>
     /// Load an extension by looking through the BuildManager referenced assemblies
     /// </summary>

@@ -4,13 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Orchard.Caching;
-using Orchard.Environment.Extensions.Compilers;
+using Orchard.Environment.Compilation.Compilers;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment.Compilation.Loaders {
+    /// <summary>
+    /// Loads an extension using dynamic compilation.
+    /// </summary>
     public class DynamicExtensionLoader : ExtensionLoaderBase {
         public static readonly string[] ExtensionsVirtualPathPrefixes = { "~/Modules/", "~/Themes/" };
 

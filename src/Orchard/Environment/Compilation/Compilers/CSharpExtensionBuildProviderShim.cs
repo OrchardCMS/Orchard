@@ -1,6 +1,6 @@
 ﻿using System.Web.Compilation;
 
-namespace Orchard.Environment.Extensions.Compilers {
+namespace Orchard.Environment.Compilation.Compilers {
     public class CSharpExtensionBuildProviderShim : BuildProvider, IShim {
         private readonly CompilerType _codeCompilerType;
 

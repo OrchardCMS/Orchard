@@ -2,9 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Environment.Extensions.Loaders;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Compilation.Loaders;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.Dependencies;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionLoadingContext {

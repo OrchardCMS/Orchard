@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Orchard.Environment.Extensions.Compilers {
+namespace Orchard.Environment.Compilation.Compilers {
     public enum ReferenceType {
         Library,
         Project

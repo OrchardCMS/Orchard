@@ -1,10 +1,11 @@
 using System;
 using System.Linq;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.Dependencies;
 using Orchard.Logging;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment.Compilation.Loaders {
     /// <summary>
     /// Load an extension by looking into specific namespaces of the "Orchard.Core" assembly
     /// </summary>

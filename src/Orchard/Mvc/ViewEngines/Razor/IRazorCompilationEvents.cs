@@ -6,8 +6,8 @@ using System.Web;
 using System.Web.Razor.Generator;
 using System.Web.WebPages.Razor;
 using Orchard.Environment;
-using Orchard.Environment.Extensions.Loaders;
-using Orchard.FileSystems.Dependencies;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Compilation.Loaders;
 using Orchard.Logging;
 
 namespace Orchard.Mvc.ViewEngines.Razor {

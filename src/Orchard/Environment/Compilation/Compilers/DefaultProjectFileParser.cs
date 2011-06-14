@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.WebSite;
 
-namespace Orchard.Environment.Extensions.Compilers {
+namespace Orchard.Environment.Compilation.Compilers {
     public class DefaultProjectFileParser : IProjectFileParser {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly ICacheManager _cacheManager;
