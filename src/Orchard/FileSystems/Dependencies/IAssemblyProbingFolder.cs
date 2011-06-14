@@ -8,7 +8,7 @@ namespace Orchard.FileSystems.Dependencies {
     /// location to load assemblies from. This assumes a local physical file system,
     /// since Orchard will need to store assembly files locally.
     /// </summary>
-    public interface IAssemblyProbingFolder : IVolatileProvider {
+    public interface IAssemblyProbingFolder : ISingletonDependency {
         /// <summary>
         /// Return "true" if the assembly corresponding to "moduleName" is
         /// present in the folder.

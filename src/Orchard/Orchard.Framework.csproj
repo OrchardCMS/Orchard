@@ -220,10 +220,9 @@
     <Compile Include="Exceptions\IExceptionPolicy.cs" />
     <Compile Include="FileSystems\Dependencies\IExtensionDependenciesManager.cs" />
     <Compile Include="FileSystems\Dependencies\DefaultExtensionDependenciesManager.cs" />
-    <Compile Include="FileSystems\LockFile\ILockFile.cs" />
-    <Compile Include="FileSystems\LockFile\ILockFileManager.cs" />
-    <Compile Include="FileSystems\LockFile\LockFile.cs" />
-    <Compile Include="FileSystems\LockFile\DefaultLockFileManager.cs" />
+    <Compile Include="Locking\ILockManager.cs" />
+    <Compile Include="Locking\FileLock.cs" />
+    <Compile Include="Locking\DefaultLockManager.cs" />
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
     <Compile Include="Localization\Services\CurrentCultureWorkContext.cs" />
     <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
@@ -685,7 +684,6 @@
     <Compile Include="Caching\ICache.cs" />
     <Compile Include="Caching\ICacheManager.cs" />
     <Compile Include="Caching\IVolatileToken.cs" />
-    <Compile Include="Caching\IVolatileProvider.cs" />
     <Compile Include="Commands\CommandParameters.cs" />
     <Compile Include="Commands\CommandDescriptor.cs" />
     <Compile Include="Commands\CommandHandlerDescriptor.cs" />
@@ -868,7 +866,6 @@
     <Compile Include="Utility\Extensions\StringExtensions.cs" />
     <Compile Include="Utility\Extensions\HttpRequestExtensions.cs" />
     <Compile Include="Utility\Position.cs" />
-    <Compile Include="Utility\Reflect.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

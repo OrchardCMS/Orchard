@@ -8,20 +8,11 @@ using System.Web.Mvc.Html;
 using System.Web.Routing;
 using Orchard.Localization;
 using Orchard.Settings;
-using Orchard.Utility;
 using Orchard.Utility.Extensions;
 using System.Web;
 
 namespace Orchard.Mvc.Html {
     public static class HtmlHelperExtensions {
-
-        public static string NameOf<T>(this HtmlHelper<T> html, Expression<Action<T>> expression) {
-            return Reflect.NameOf(html.ViewData.Model, expression);
-        }
-
-        public static string NameOf<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
-            return Reflect.NameOf(html.ViewData.Model, expression);
-        }
 
         public static string FieldNameFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
             return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));

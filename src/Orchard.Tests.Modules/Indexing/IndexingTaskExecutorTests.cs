@@ -18,11 +18,11 @@ using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.AppData;
-using Orchard.FileSystems.LockFile;
 using Orchard.Indexing;
 using Orchard.Indexing.Handlers;
 using Orchard.Indexing.Models;
 using Orchard.Indexing.Services;
+using Orchard.Locking;
 using Orchard.Logging;
 using Orchard.Security;
 using Orchard.Tasks.Indexing;
@@ -38,7 +38,7 @@ namespace Orchard.Tests.Modules.Indexing {
         private IContentManager _contentManager;
         private Mock<IContentDefinitionManager> _contentDefinitionManager;
         private StubLogger _logger;
-        private ILockFileManager _lockFileManager;
+        private ILockManager _lockManager;
 
         private const string IndexName = "Search";
         private readonly string _basePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -81,7 +81,7 @@ namespace Orchard.Tests.Modules.Indexing {
             builder.RegisterType<BodyPartHandler>().As<IContentHandler>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
 
-            builder.RegisterType<DefaultLockFileManager>().As<ILockFileManager>();
+            builder.RegisterType<DefaultLockManager>().As<ILockManager>();
 
             // setting up a ShellSettings instance
             _shellSettings = new ShellSettings { Name = "My Site" };
@@ -103,7 +103,7 @@ namespace Orchard.Tests.Modules.Indexing {
 
         public override void Init() {
             base.Init();
-            _lockFileManager = _container.Resolve<ILockFileManager>();
+            _lockManager = _container.Resolve<ILockManager>();
             _provider = _container.Resolve<IIndexProvider>();
             _indexTaskExecutor = _container.Resolve<IIndexingTaskExecutor>();
             _contentManager = _container.Resolve<IContentManager>();
@@ -184,9 +184,9 @@ namespace Orchard.Tests.Modules.Indexing {
 
         [Test]
         public void IndexingTaskExecutorShouldNotBeReEntrant() {
-            ILockFile lockFile = null;
-            _lockFileManager.TryAcquireLock("Sites/My Site/Search.settings.xml.lock", ref lockFile);
-            using (lockFile) {
+            var @lock = _lockManager.TryLock(IndexName); 
+
+            using (@lock) {
                 while (_indexTaskExecutor.UpdateIndexBatch(IndexName)) {}
                 Assert.That(_logger.LogEntries.Count, Is.EqualTo(1));
                 Assert.That(_logger.LogEntries, Has.Some.Matches<LogEntry>(entry => entry.LogFormat == "Index was requested but is already running"));

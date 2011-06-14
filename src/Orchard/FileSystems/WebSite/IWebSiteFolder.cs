@@ -6,7 +6,7 @@ namespace Orchard.FileSystems.WebSite {
     /// <summary>
     /// Abstraction over the virtual files/directories of a web site.
     /// </summary>
-    public interface IWebSiteFolder : IVolatileProvider {
+    public interface IWebSiteFolder : ISingletonDependency {
         IEnumerable<string> ListDirectories(string virtualPath);
         IEnumerable<string> ListFiles(string virtualPath, bool recursive);
 

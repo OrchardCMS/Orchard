@@ -250,7 +250,7 @@
     <Compile Include="Environment\OrchardStarterTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactoryTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
-    <Compile Include="FileSystems\LockFile\LockFileManagerTests.cs" />
+    <Compile Include="Locking\LockManagerTests.cs" />
     <Compile Include="FileSystems\Dependencies\AssemblyProbingFolderTests.cs" />
     <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProviderTests.cs" />
@@ -309,7 +309,6 @@
     <Compile Include="UI\Navigation\NavigationManagerTests.cs" />
     <Compile Include="UI\Navigation\PositionComparerTests.cs" />
     <Compile Include="Utility\Extensions\StringExtensionsTests.cs" />
-    <Compile Include="Utility\ReflectTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">

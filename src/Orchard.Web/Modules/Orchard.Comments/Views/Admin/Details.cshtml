@@ -23,7 +23,7 @@
     @Html.ValidationSummary()
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
-        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
+        <select id="publishActions" name="@Html.FieldNameFor(m => m.Options.BulkAction)">
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Approve, T("Approve").ToString())
             @Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Unapprove, T("Unapprove").ToString())
@@ -34,7 +34,7 @@
     </fieldset>
     <fieldset class="bulk-actions">
         <label for="filterResults">@T("Filter:")</label>
-        <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)">
+        <select id="filterResults" name="@Html.FieldNameFor(m => m.Options.Filter)">
             @Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.All, T("All Comments").ToString())
             @Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Approved, T("Approved Comments").ToString())
             @Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Pending, T("Pending Comments").ToString())
@@ -66,8 +66,8 @@
             @foreach (var commentEntry in Model.Comments) {
             <tr>
                 <td>
-                    <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.NameOf(m => m.Comments[commentIndex].Comment.Id)"/>
-                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"/>
+                    <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.FieldNameFor(m => m.Comments[commentIndex].Comment.Id)"/>
+                    <input type="checkbox" value="true" name="@Html.FieldNameFor(m => m.Comments[commentIndex].IsChecked)"/>
                     <input type="hidden" value="@Model.DisplayNameForCommentedItem" name="DisplayNameForCommentedtem" />
                     <input type="hidden" value="@Model.CommentedItemId" name="CommentedItemId" />
                 </td>

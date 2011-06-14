@@ -4,7 +4,7 @@ using System.IO;
 using Orchard.Caching;
 
 namespace Orchard.FileSystems.VirtualPath {
-    public interface IVirtualPathProvider : IVolatileProvider {
+    public interface IVirtualPathProvider : ISingletonDependency {
         string Combine(params string[] paths);
         string ToAppRelative(string virtualPath);
         string ToAbsolute(string virtualPath);

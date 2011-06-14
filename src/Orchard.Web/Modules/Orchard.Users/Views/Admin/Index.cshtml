@@ -14,7 +14,7 @@
 
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
-        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
+        <select id="publishActions" name="@Html.FieldNameFor(m => m.Options.BulkAction)">
             @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.None, T("Choose action...").ToString())
             @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Approve, T("Approve").ToString()) 
             @Html.SelectOption(Model.Options.BulkAction, UsersBulkAction.Disable, T("Disable").ToString())
@@ -26,14 +26,14 @@
     <fieldset class="bulk-actions">
         @Html.TextBoxFor(m => m.Options.Search, new { @class = "text" })        
         <label for="filterResults">@T("Filter:")</label>
-        <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)">
+        <select id="filterResults" name="@Html.FieldNameFor(m => m.Options.Filter)">
             @Html.SelectOption(Model.Options.Filter, UsersFilter.All, T("All Users").ToString())
             @Html.SelectOption(Model.Options.Filter, UsersFilter.Approved, T("Approved Users").ToString())
             @Html.SelectOption(Model.Options.Filter, UsersFilter.Pending, T("Pending Users").ToString())
             @Html.SelectOption(Model.Options.Filter, UsersFilter.EmailPending, T("Pending Emails").ToString())
         </select>
         <label for="filterResults">@T("Sort by:")</label>
-        <select id="filterResults" name="@Html.NameOf(m => m.Options.Order)">
+        <select id="filterResults" name="@Html.FieldNameFor(m => m.Options.Order)">
             @Html.SelectOption(Model.Options.Order, UsersOrder.Name, T("Name").ToString())
             @Html.SelectOption(Model.Options.Order, UsersOrder.Email, T("Email").ToString())
         </select>
@@ -53,8 +53,8 @@
             @foreach (var entry in Model.Users) { 
             <tr>
                 <td>
-                    <input type="hidden" value="@Model.Users[userIndex].User.Id" name="@Html.NameOf(m => m.Users[userIndex].User.Id)"/>
-                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Users[userIndex].IsChecked)"/>
+                    <input type="hidden" value="@Model.Users[userIndex].User.Id" name="@Html.FieldNameFor(m => m.Users[userIndex].User.Id)"/>
+                    <input type="checkbox" value="true" name="@Html.FieldNameFor(m => m.Users[userIndex].IsChecked)"/>
                 </td>
                 <td>
                     @{
