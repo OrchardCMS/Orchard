@@ -9,4 +9,4 @@
     var comment = (Orchard.Comments.Models.CommentPart)Model.ContentPart;
 }
 
-said <time datetime="@comment.Record.CommentDateUtc.GetValueOrDefault()">@Html.Link((string)Display.DateTimeRelative(DateTimeUtc: comment.Record.CommentDateUtc.GetValueOrDefault()).ToString(), "#comment-" + comment.Id)</time>
+@T("said") <time datetime="@comment.Record.CommentDateUtc.GetValueOrDefault()">@Display.Link(Value: Display.DateTimeRelative(DateTimeUtc: comment.Record.CommentDateUtc.GetValueOrDefault()), Href: "#comment-" + comment.Id)</time>

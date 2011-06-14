@@ -18,11 +18,11 @@
                     }
                 </select>
                 <button type="submit" class="apply-bulk-actions-auto">@T("Show")</button>
-                @Html.Link(T("Edit").Text, Url.Action("EditLayer", "Admin", new { area = "Orchard.Widgets", id = Model.CurrentLayer.Id, returnUrl }), new { @class = "button" })
+                @Display.Link(Value: T("Edit"), RouteValues: new { Action = "EditLayer", Controller = "Admin", Area = "Orchard.Widgets", id = Model.CurrentLayer.Id, returnUrl }, Classes: "button")
             </fieldset>
         }
     }
     <div id="widgets-layer-add">
-        @Html.Link(T("Add a new layer...").Text, Url.Action("AddLayer", "Admin", new { area = "Orchard.Widgets", returnUrl }))
+        @Display.Link(Value: T("Add a new layer..."), RouteValues: new { Action = "AddLayer", Controller = "Admin", Area = "Orchard.Widgets", returnUrl })
     </div>
 </div>

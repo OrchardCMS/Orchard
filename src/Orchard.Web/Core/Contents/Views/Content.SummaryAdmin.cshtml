@@ -18,7 +18,7 @@
     <div class="related">
         @Display(Model.Actions)
         @Display.EditorLink(ContentItem: contentItem, Value: T("Edit")) @T(" | ")
-        @Html.Link(T("Delete").Text, Url.Action("Remove", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
+        @Display.Link(Value: T("Delete"), RouteValues: new { Action = "Remove", Controller = "Admin", area = "Contents", id = contentItem.Id, returnUrl }, Attributes: new { itemprop = "RemoveUrl UnsafeUrl" })
     </div>
     @if (Model.Content != null) {
     <div class="primary">@Display(Model.Content)</div>

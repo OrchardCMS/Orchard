@@ -344,7 +344,8 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public IHtmlString Link(UrlHelper Url,
+        public IHtmlString Link(HtmlHelper Html,
+            UrlHelper Url,
             dynamic Display,
             dynamic Shape,
             string Href,
@@ -358,7 +359,7 @@ namespace Orchard.Core.Shapes {
 
             var tag = _tagBuilderFactory.Create((object)Shape, "a");
             tag.MergeAttribute("href", Href ?? (RouteValues is RouteValueDictionary ? Url.RouteUrl((RouteValueDictionary)RouteValues) : Url.RouteUrl(RouteValues)));
-            tag.InnerHtml = Value is string ? (string)Value : Display(Value).ToString();
+            tag.InnerHtml = Html.Encode(Value is string ? (string)Value : Display(Value));
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }
 

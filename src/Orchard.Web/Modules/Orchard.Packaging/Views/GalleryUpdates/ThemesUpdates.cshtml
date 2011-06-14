@@ -14,14 +14,16 @@
 }
 
 @functions {
-    public string InstallAction(PackagingEntry package) {
-        return Url.Action("InstallGallery", "PackagingServices", new {
+    object InstallRoute(PackagingEntry package) {
+        return new {
+            Action = "InstallGallery",
+            Controller = "PackagingServices",
             area = "Orchard.Packaging",
             packageId = package.PackageId,
             version = package.Version,
             sourceId = package.Source.Id,
             redirectUrl = HttpContext.Current.Request.RawUrl
-        });
+        };
     }
 }
 
@@ -56,7 +58,7 @@
                     </div>
 
                     <div class="related">
-                        @Html.Link(T("Install Latest").Text, InstallAction(theme.NewVersionToInstall))@T(" | ")
+                        @Display.Link(Value: T("Install Latest"), RouteValues: InstallRoute(theme.NewVersionToInstall))@T(" | ")
                         <a href="@theme.NewVersionToInstall.PackageStreamUri">@T("Download")</a>
                     </div>
 

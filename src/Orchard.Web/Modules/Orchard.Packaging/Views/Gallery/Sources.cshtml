@@ -24,7 +24,7 @@
         @foreach ( var item in Model.Sources ) {
         <tr>
             <td>@item.FeedTitle</td>
-            <td>@Html.Link(item.FeedUrl, item.FeedUrl)</td>
+            <td>@Display.Link(Value: item.FeedUrl, Href: item.FeedUrl)</td>
             <td>@Html.ActionLink(T("Delete").ToString(), "Remove", new { id = item.Id })</td>
         </tr>
         }

@@ -9,5 +9,9 @@
 @{
     var comment = (Orchard.Comments.Models.CommentPart)Model.ContentPart;
 }
-
-@Html.LinkOrDefault(comment.Record.Author, comment.Record.SiteName, new { rel = "nofollow" })
+@if (string.IsNullOrEmpty(comment.Record.SiteName)) {
+    @comment.Record.Author
+}
+else {
+    @Display.Link(Value: comment.Record.Author, Href: comment.Record.SiteName, Attributes: new { rel = "nofollow" })
+}

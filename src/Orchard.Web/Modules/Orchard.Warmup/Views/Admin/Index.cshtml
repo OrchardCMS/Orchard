@@ -11,7 +11,9 @@
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
 
-<p>@T("The paths below will be requested using {0} as a base url. You can change the base url on the {1}. ", @Html.Link(WorkContext.CurrentSite.BaseUrl, WorkContext.CurrentSite.BaseUrl), @Html.ActionLink(T("General Settings page").Text, "Index", new { controller = "Admin", area = "Settings" }))</p>
+<p>@T("The paths below will be requested using {0} as a base url. You can change the base url on the {1}. ",
+    Display.Link(Value: WorkContext.CurrentSite.BaseUrl, Href: WorkContext.CurrentSite.BaseUrl),
+    Display.Link(Value: T("General Settings page"), RouteValues: new { Action = "Index", Controller = "Admin", Area = "Settings" }))</p>
 
 <fieldset>
     <div>
@@ -57,7 +59,7 @@
         @foreach (var reportEntry in Model.ReportEntries) {
         <tr>
             <td class="status-@(reportEntry.StatusCode != 200 ? "error" : "ok")" >
-                @Html.Link(Html.Encode(reportEntry.RelativeUrl), reportEntry.RelativeUrl, new { target = "_blank" })
+                @Display.Link(Value: reportEntry.RelativeUrl, Href: reportEntry.RelativeUrl, Attributes: new { target = "_blank" })
             </td>
             <td>
                 @reportEntry.StatusCode
