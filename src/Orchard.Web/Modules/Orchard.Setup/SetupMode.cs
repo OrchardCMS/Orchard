@@ -16,6 +16,7 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy;
 using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
@@ -93,6 +94,7 @@ namespace Orchard.Setup {
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
             builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>();
+            builder.RegisterType<TagBuilderFactory>().As<ITagBuilderFactory>();
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 
