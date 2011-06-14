@@ -2,25 +2,24 @@
 using System.Web;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
-using Orchard.Environment;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 using Orchard.Time;
 
 namespace Orchard.Core.Shapes {
-    public class DateTimeShapes : ISingletonDependency {
+    public class DateTimeShapes : IDependency {
         private readonly IClock _clock;
         private readonly ITimeZoneProvider _timeZoneProvider;
-        private readonly Work<WorkContext> _workContext;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         public DateTimeShapes(
             IClock clock,
             ITimeZoneProvider timeZoneProvider,
-            Work<WorkContext> workContext
+            IWorkContextAccessor workContextAccessor
             ) {
             _clock = clock;
             _timeZoneProvider = timeZoneProvider;
-            _workContext = workContext;
+            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
 
@@ -63,7 +62,7 @@ namespace Orchard.Core.Shapes {
         private DateTime ConvertToDisplayTime(DateTime dateTimeUtc) {
 
             // get the time zone for the current request
-            var timeZone = _timeZoneProvider.GetTimeZone(_workContext.Value.HttpContext);
+            var timeZone = _timeZoneProvider.GetTimeZone(_workContextAccessor.GetContext().HttpContext);
 
             return TimeZoneInfo.ConvertTimeFromUtc(dateTimeUtc, timeZone);
         }

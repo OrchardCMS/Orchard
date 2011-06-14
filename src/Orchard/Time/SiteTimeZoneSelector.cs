@@ -6,14 +6,14 @@ namespace Orchard.Time {
     /// Implements <see cref="ITimeZoneSelector"/> by providing the timezone defined in the sites settings.
     /// </summary>
     public class SiteTimeZoneSelector : ITimeZoneSelector {
-        private readonly ISiteService _siteService;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public SiteTimeZoneSelector(ISiteService siteService) {
-            _siteService = siteService;
+        public SiteTimeZoneSelector(IWorkContextAccessor workContextAccessor) {
+            _workContextAccessor = workContextAccessor;
         }
 
         public TimeZoneSelectorResult GetTimeZone(HttpContextBase context) {
-            return new TimeZoneSelectorResult { Priority = 0, TimeZone = _siteService.GetSiteSettings().TimeZone};
+            return new TimeZoneSelectorResult { Priority = 0, TimeZone = _workContextAccessor.GetContext().CurrentSite.TimeZone };
         }
     }
 }
