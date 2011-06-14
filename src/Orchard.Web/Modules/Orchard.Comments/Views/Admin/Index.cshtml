@@ -59,7 +59,7 @@
                 if (!HasText(commentEntry.Comment.UserName)) {
                     commentClass = "anonymous";
                 }
-                var metadata = commentEntry.CommentedOn.ContentManager.GetItemMetadata(contentItem);
+                var metadata = commentEntry.CommentedOn.ContentManager.GetItemMetadata(commentEntry.CommentedOn);
                 var displayUrl = metadata.DisplayRouteValues == null ? null : Url.Action(Convert.ToString(metadata.DisplayRouteValues["action"]), metadata.DisplayRouteValues);
             <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
                 <td>
