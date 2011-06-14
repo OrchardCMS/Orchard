@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Orchard.Caching;
-using Orchard.Environment.Extensions.Loaders;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Compilation.Loaders;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -14,7 +14,7 @@ using Orchard.Utility;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionLoaderCoordinator : IExtensionLoaderCoordinator {
-        private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IDependencyDescriptorManager _dependenciesFolder;
         private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IExtensionManager _extensionManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -24,7 +24,7 @@ namespace Orchard.Environment.Extensions {
         private readonly IBuildManager _buildManager;
 
         public ExtensionLoaderCoordinator(
-            IDependenciesFolder dependenciesFolder,
+            IDependencyDescriptorManager dependenciesFolder,
             IExtensionDependenciesManager extensionDependenciesManager,
             IExtensionManager extensionManager,
             IVirtualPathProvider virtualPathProvider,

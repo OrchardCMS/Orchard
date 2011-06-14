@@ -6,11 +6,11 @@ using System.Reflection;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.Environment.Compilation.Dependencies;
+using Orchard.Environment.Compilation.Loaders;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
-using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.Extensions.ExtensionTypes;
 using Orchard.Tests.Stubs;
 

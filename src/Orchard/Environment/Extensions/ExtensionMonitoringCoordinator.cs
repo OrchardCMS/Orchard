@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Caching;
-using Orchard.Environment.Extensions.Loaders;
+using Orchard.Environment.Compilation.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
