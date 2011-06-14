@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Caching;
+using Orchard.Environment.Descriptor;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Descriptor;
 using Orchard.Environment.Features;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;

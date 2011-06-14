@@ -7,6 +7,11 @@ using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 
 namespace Orchard.Environment.Compilation.Dependencies {
+    /// <summary>
+    /// Provides an abstraction used to manage the dependency descriptors in the dependencies folder.
+    /// The dependecy descriptors provide information about the different extensions, and loaders used to load them.
+    /// By default they are stored in the dependencies.xml file in the dependencies folder.
+    /// </summary>
     public class DefaultDependencyDescriptorManager : IDependencyDescriptorManager {
         private const string BasePath = "Dependencies";
         private const string FileName = "dependencies.xml";
@@ -14,6 +19,11 @@ namespace Orchard.Environment.Compilation.Dependencies {
         private readonly IAppDataFolder _appDataFolder;
         private readonly InvalidationToken _writeThroughToken;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultDependencyDescriptorManager"/> class.
+        /// </summary>
+        /// <param name="cacheManager">The cache manager.</param>
+        /// <param name="appDataFolder">The app data folder.</param>
         public DefaultDependencyDescriptorManager(ICacheManager cacheManager, IAppDataFolder appDataFolder) {
             _cacheManager = cacheManager;
             _appDataFolder = appDataFolder;
@@ -21,16 +31,28 @@ namespace Orchard.Environment.Compilation.Dependencies {
             T = NullLocalizer.Instance;
         }
 
+        /// <summary>
+        /// Gets or sets the localizer.
+        /// </summary>
         public Localizer T { get; set; }
 
         private string PersistencePath {
             get { return _appDataFolder.Combine(BasePath, FileName); }
         }
 
+        /// <summary>
+        /// Retrieves the dependency descriptor for a module.
+        /// </summary>
+        /// <param name="moduleName">The module's name.</param>
+        /// <returns>The dependency descriptor for the module.</returns>
         public DependencyDescriptor GetDescriptor(string moduleName) {
             return LoadDescriptors().SingleOrDefault(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, moduleName));
         }
 
+        /// <summary>
+        /// Loads the dependency descriptors from the dependencies folder.
+        /// </summary>
+        /// <returns>A collection of the dependency descriptors.</returns>
         public IEnumerable<DependencyDescriptor> LoadDescriptors() {
             return _cacheManager.Get(PersistencePath,
                                      ctx => {
@@ -44,6 +66,10 @@ namespace Orchard.Environment.Compilation.Dependencies {
                                      });
         }
 
+        /// <summary>
+        /// Stores a collection of dependencies descriptors into the dependencies folder.
+        /// </summary>
+        /// <param name="dependencyDescriptors">The collection to be stored.</param>
         public void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors) {
             var existingDescriptors = LoadDescriptors().OrderBy(d => d.Name);
             var newDescriptors = dependencyDescriptors.OrderBy(d => d.Name);
@@ -78,7 +104,7 @@ namespace Orchard.Environment.Compilation.Dependencies {
         }
 
         private void WriteDependencies(string persistancePath, IEnumerable<DependencyDescriptor> dependencies) {
-            Func<string, XName> ns = (name => XName.Get(name));
+            Func<string, XName> ns = name => XName.Get(name);
 
             var document = new XDocument();
             document.Add(new XElement(ns("Dependencies")));
@@ -132,7 +158,6 @@ namespace Orchard.Environment.Compilation.Dependencies {
                     StringComparer.OrdinalIgnoreCase.Equals(x.Name, y.Name) &&
                     StringComparer.OrdinalIgnoreCase.Equals(x.LoaderName, y.LoaderName) &&
                     StringComparer.OrdinalIgnoreCase.Equals(x.VirtualPath, y.VirtualPath);
-
             }
 
             public override int GetHashCode(DependencyReferenceDescriptor obj) {
