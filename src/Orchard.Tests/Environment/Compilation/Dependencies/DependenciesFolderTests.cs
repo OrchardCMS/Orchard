@@ -9,7 +9,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.FileSystems.Dependencies {
+namespace Orchard.Tests.Environment.Compilation.Dependencies {
     [TestFixture]
     public class DependenciesFolderTests {
         public IContainer BuildContainer() {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Autofac;
 using Moq;
@@ -14,7 +13,7 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Services;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Environment.Loaders {
+namespace Orchard.Tests.Environment.Compilation.Loaders {
     [TestFixture]
     public class DynamicExtensionLoaderTests {
         private IContainer _container;

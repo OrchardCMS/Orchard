@@ -236,7 +236,7 @@
     <Compile Include="Environment\DefaultWorkContextAccessorTests.cs" />
     <Compile Include="Environment\Extensions\ExtensionLoaderCoordinatorTests.cs" />
     <Compile Include="Environment\Features\FeatureManagerTests.cs" />
-    <Compile Include="Environment\Loaders\DynamicExtensionLoaderTests.cs" />
+    <Compile Include="Environment\Compilation\Loaders\DynamicExtensionLoaderTests.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngineTests.cs" />
     <Compile Include="Environment\RunningShellTableTests.cs" />
     <Compile Include="Environment\StubHostEnvironment.cs" />
@@ -251,8 +251,8 @@
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactoryTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
     <Compile Include="Locking\LockManagerTests.cs" />
-    <Compile Include="FileSystems\Dependencies\AssemblyProbingFolderTests.cs" />
-    <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
+    <Compile Include="Environment\Compilation\Dependencies\AssemblyProbingFolderTests.cs" />
+    <Compile Include="Environment\Compilation\Dependencies\DependenciesFolderTests.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProviderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
     <Compile Include="Logging\OrchardFileAppenderTests.cs" />

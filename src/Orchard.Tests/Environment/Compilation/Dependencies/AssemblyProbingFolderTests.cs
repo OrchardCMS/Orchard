@@ -4,7 +4,7 @@ using Orchard.Environment;
 using Orchard.Environment.Compilation.Dependencies;
 using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.FileSystems.Dependencies {
+namespace Orchard.Tests.Environment.Compilation.Dependencies {
     [TestFixture]
     public class AssemblyProbingFolderTests {
 
