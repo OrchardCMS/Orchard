@@ -7,7 +7,7 @@
 <div class="content-localization">
     <div class="content-localizations">
         <h4>@T("Translations:")</h4>
-        @Html.UnorderedList(localizations, (c, i) => MvcHtmlString.Create(Display.DisplayLink(Value: c.Culture.Culture, ContentItem: c).ToString()), "localizations")
+        @Display.List(Items: localizations.Select(c => Display.DisplayLink(Value: c.Culture.Culture, ContentItem: c)), Classes: "localizations")
     </div>
 </div>
 }

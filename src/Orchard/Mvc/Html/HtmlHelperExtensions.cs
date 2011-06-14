@@ -69,64 +69,6 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
         }
 
-        #region UnorderedList
-
-        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, MvcHtmlString> generateContent, string cssClass) {
-            return htmlHelper.UnorderedList(items, generateContent, cssClass, null, null);
-        }
-
-        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, MvcHtmlString> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
-            return UnorderedList(items, (t, i) => generateContent(t, i) as IHtmlString, cssClass, t => itemCssClass, t => alternatingItemCssClass);
-        }
-
-        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass) {
-            return htmlHelper.UnorderedList(items, generateContent, cssClass, null, null);
-        }
-
-        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
-            return UnorderedList(items, generateContent, cssClass, t => itemCssClass, t => alternatingItemCssClass);
-        }
-
-        private static IHtmlString UnorderedList<T>(IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass, Func<T, string> generateItemCssClass, Func<T, string> generateAlternatingItemCssClass) {
-            if (items == null || !items.Any()) return new HtmlString(string.Empty);
-
-            var sb = new StringBuilder(250);
-            int counter = 0, count = items.Count() - 1;
-
-            sb.AppendFormat(
-                !string.IsNullOrEmpty(cssClass) ? "<ul class=\"{0}\">" : "<ul>",
-                cssClass
-                );
-
-            foreach (var item in items) {
-                var sbClass = new StringBuilder(50);
-
-                if (counter == 0)
-                    sbClass.Append("first ");
-                if (counter == count)
-                    sbClass.Append("last ");
-                if (generateItemCssClass != null)
-                    sbClass.AppendFormat("{0} ", generateItemCssClass(item));
-                if (counter % 2 != 0 && generateAlternatingItemCssClass != null)
-                    sbClass.AppendFormat("{0} ", generateAlternatingItemCssClass(item));
-
-                sb.AppendFormat(
-                    sbClass.Length > 0
-                        ? string.Format("<li class=\"{0}\">{{0}}</li>", sbClass.ToString().TrimEnd())
-                        : "<li>{0}</li>",
-                    generateContent(item, counter)
-                    );
-
-                counter++;
-            }
-
-            sb.Append("</ul>");
-
-            return new HtmlString(sb.ToString());
-        }
-
-        #endregion
-
         #region Ellipsize
 
         public static IHtmlString Ellipsize(this HtmlHelper htmlHelper, string text, int characterCount) {

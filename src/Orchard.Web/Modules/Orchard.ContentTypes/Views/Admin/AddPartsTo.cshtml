@@ -3,24 +3,25 @@
     Style.Require("ContentTypesAdmin");
     Layout.Title = T("Add Parts To \"{0}\"", Model.Type.DisplayName).ToString();
 }
+@functions {
+    int itemCount = 0;
+    MvcHtmlString GenerateItem(Orchard.ContentTypes.ViewModels.PartSelectionViewModel item) {
+        var fieldNameStart = "PartSelections[" + (itemCount++) + "].";
+        return MvcHtmlString.Create(
+            string.Format(
+                "\n            {0} \n            <label for=\"{1}\" class=\"forcheckbox\">{2}</label>\n            {3}\n        ",
+                Html.CheckBox(fieldNameStart + "IsSelected"),
+                ViewData.TemplateInfo.GetFullHtmlFieldId(fieldNameStart + "IsSelected"),
+                item.PartDisplayName,
+                Html.Hidden(fieldNameStart + "PartName", item.PartName)));
+
+    }
+}
 @T("Choose the Parts to add to this Content Type.  The <b>Common</b> part should be included in most types. It gives the items an owner as well as a creation, publication and last modification date stamps. In addition to the Common part, adding the <b>Containable</b> part makes it possible to add content items of this type to a <b>List</b>.")
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <fieldset>
-        @Html.UnorderedList(
-            Model.PartSelections,
-            (partSelection, i) => {
-                var fieldNameStart = "PartSelections[" + i + "].";
-                return MvcHtmlString.Create(
-                    string.Format(
-                        "{0} <label for=\"{1}\" class=\"forcheckbox\">{2}</label>{3}",
-                        Html.CheckBox(fieldNameStart + "IsSelected"),
-                        ViewData.TemplateInfo.GetFullHtmlFieldId(fieldNameStart + "IsSelected"),
-                        partSelection.PartDisplayName,
-                        Html.Hidden(fieldNameStart + "PartName", partSelection.PartName)));
-                  
-            },
-            "available-parts")
+        @Display.List(Items: Model.PartSelections.Select(GenerateItem), Classes: "available-parts")
     </fieldset>
     <fieldset>
         <button class="primaryAction" type="submit">@T("Save")</button>

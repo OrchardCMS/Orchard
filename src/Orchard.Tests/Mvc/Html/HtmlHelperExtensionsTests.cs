@@ -133,33 +133,5 @@ namespace Orchard.Tests.Mvc.Html {
             //assert
             Assert.AreEqual(@"<option value=""value"">&lt;br /&gt;</option>", result.ToString());
         }
-
-        [Test]
-        public void UnorderedListWithNullItemsReturnsEmptyHtmlString() {
-            //arrange
-            var viewContext = new ViewContext();
-            var viewDataContainer = new Mock<IViewDataContainer>();
-            var html = new HtmlHelper(viewContext, viewDataContainer.Object);
-
-            //act
-            var result = html.UnorderedList((IEnumerable<string>)null, (a, b) => MvcHtmlString.Create(""), "test");
-
-            //assert
-            Assert.AreEqual(string.Empty, result.ToString());
-        }
-
-        [Test]
-        public void UnorderedListWithEmptyItemsReturnsEmptyHtmlString() {
-            //arrange
-            var viewContext = new ViewContext();
-            var viewDataContainer = new Mock<IViewDataContainer>();
-            var html = new HtmlHelper(viewContext, viewDataContainer.Object);
-
-            //act
-            var result = html.UnorderedList(new string[] { }, (a, b) => MvcHtmlString.Create(""), "test");
-
-            //assert
-            Assert.AreEqual(string.Empty, result.ToString());
-        }
     }
 }
