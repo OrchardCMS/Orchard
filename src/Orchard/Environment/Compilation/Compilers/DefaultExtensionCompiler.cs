@@ -16,14 +16,14 @@ namespace Orchard.Environment.Compilation.Compilers {
     public class DefaultExtensionCompiler : IExtensionCompiler {
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IProjectFileParser _projectFileParser;
-        private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IDependencyDescriptorManager _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IAssemblyLoader _assemblyLoader;
 
         public DefaultExtensionCompiler(
             IVirtualPathProvider virtualPathProvider,
             IProjectFileParser projectFileParser,
-            IDependenciesFolder dependenciesFolder,
+            IDependencyDescriptorManager dependenciesFolder,
             IEnumerable<IExtensionLoader> loaders,
             IAssemblyLoader assemblyLoader) {
 

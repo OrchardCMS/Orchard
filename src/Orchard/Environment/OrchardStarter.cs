@@ -63,7 +63,7 @@ namespace Orchard.Environment {
             builder.RegisterType<WebSiteFolder>().As<IWebSiteFolder>().SingleInstance();
             builder.RegisterType<AppDataFolder>().As<IAppDataFolder>().SingleInstance();
             builder.RegisterType<Clock>().As<IClock>().SingleInstance();
-            builder.RegisterType<DefaultDependenciesFolder>().As<IDependenciesFolder>().SingleInstance();
+            builder.RegisterType<DefaultDependencyDescriptorManager>().As<IDependencyDescriptorManager>().SingleInstance();
             builder.RegisterType<DefaultExtensionDependenciesManager>().As<IExtensionDependenciesManager>().SingleInstance();
             builder.RegisterType<DefaultAssemblyProbingFolder>().As<IAssemblyProbingFolder>().SingleInstance();
             builder.RegisterType<DefaultVirtualPathMonitor>().As<IVirtualPathMonitor>().SingleInstance();

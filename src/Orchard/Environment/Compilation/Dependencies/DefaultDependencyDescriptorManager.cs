@@ -7,14 +7,14 @@ using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 
 namespace Orchard.Environment.Compilation.Dependencies {
-    public class DefaultDependenciesFolder : IDependenciesFolder {
+    public class DefaultDependencyDescriptorManager : IDependencyDescriptorManager {
         private const string BasePath = "Dependencies";
         private const string FileName = "dependencies.xml";
         private readonly ICacheManager _cacheManager;
         private readonly IAppDataFolder _appDataFolder;
         private readonly InvalidationToken _writeThroughToken;
 
-        public DefaultDependenciesFolder(ICacheManager cacheManager, IAppDataFolder appDataFolder) {
+        public DefaultDependencyDescriptorManager(ICacheManager cacheManager, IAppDataFolder appDataFolder) {
             _cacheManager = cacheManager;
             _appDataFolder = appDataFolder;
             _writeThroughToken = new InvalidationToken();

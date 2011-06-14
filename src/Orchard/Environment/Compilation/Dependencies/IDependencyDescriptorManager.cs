@@ -37,7 +37,7 @@ namespace Orchard.Environment.Compilation.Dependencies {
         public string VirtualPath { get; set; }
     }
 
-    public interface IDependenciesFolder : ISingletonDependency {
+    public interface IDependencyDescriptorManager : ISingletonDependency {
         DependencyDescriptor GetDescriptor(string moduleName);
         IEnumerable<DependencyDescriptor> LoadDescriptors();
         void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors);

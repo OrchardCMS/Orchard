@@ -23,7 +23,7 @@ namespace Orchard.Environment.Compilation.Loaders {
 
         public PrecompiledExtensionLoader(
             IHostEnvironment hostEnvironment,
-            IDependenciesFolder dependenciesFolder,
+            IDependencyDescriptorManager dependenciesFolder,
             IAssemblyProbingFolder assemblyProbingFolder,
             IVirtualPathProvider virtualPathProvider,
             IVirtualPathMonitor virtualPathMonitor)

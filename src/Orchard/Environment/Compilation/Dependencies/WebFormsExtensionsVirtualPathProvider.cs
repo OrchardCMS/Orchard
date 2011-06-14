@@ -20,14 +20,14 @@ namespace Orchard.Environment.Compilation.Dependencies {
     /// &lt;%@ Assembly Name="Foo"%&gt;
     /// </summary>
     public class WebFormVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
-        private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IDependencyDescriptorManager _dependenciesFolder;
         private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly string[] _modulesPrefixes = { "~/Modules/" };
         private readonly string[] _themesPrefixes = { "~/Themes/" };
         private readonly string[] _extensions = { ".ascx", ".aspx", ".master" };
 
-        public WebFormVirtualPathProvider(IDependenciesFolder dependenciesFolder, IExtensionDependenciesManager extensionDependenciesManager, IEnumerable<IExtensionLoader> loaders) {
+        public WebFormVirtualPathProvider(IDependencyDescriptorManager dependenciesFolder, IExtensionDependenciesManager extensionDependenciesManager, IEnumerable<IExtensionLoader> loaders) {
             _dependenciesFolder = dependenciesFolder;
             _extensionDependenciesManager = extensionDependenciesManager;
             _loaders = loaders;

@@ -11,20 +11,20 @@ using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Environment.Compilation.Dependencies {
     [TestFixture]
-    public class DependenciesFolderTests {
+    public class DependencyDescriptorManagerTests {
         public IContainer BuildContainer() {
             var builder = new ContainerBuilder();
             builder.RegisterType<StubClock>().As<IClock>().SingleInstance();
             builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>().SingleInstance();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>().SingleInstance();
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();
-            builder.RegisterType<DefaultDependenciesFolder>().As<IDependenciesFolder>();
+            builder.RegisterType<DefaultDependencyDescriptorManager>().As<IDependencyDescriptorManager>();
             return builder.Build();
         }
 
         [Test]
         public void LoadDescriptorsShouldReturnEmptyList() {
-            var dependenciesFolder = BuildContainer().Resolve<IDependenciesFolder>();
+            var dependenciesFolder = BuildContainer().Resolve<IDependencyDescriptorManager>();
 
             var e = dependenciesFolder.LoadDescriptors();
             Assert.That(e, Is.Empty);
@@ -32,7 +32,7 @@ namespace Orchard.Tests.Environment.Compilation.Dependencies {
 
         [Test]
         public void StoreDescriptorsShouldWork() {
-            var dependenciesFolder = BuildContainer().Resolve<IDependenciesFolder>();
+            var dependenciesFolder = BuildContainer().Resolve<IDependencyDescriptorManager>();
 
             var d = new DependencyDescriptor {
                 Name = "name",
@@ -53,7 +53,7 @@ namespace Orchard.Tests.Environment.Compilation.Dependencies {
             var container = BuildContainer();
             var clock = (StubClock)container.Resolve<IClock>();
             var appDataFolder = (StubAppDataFolder)container.Resolve<IAppDataFolder>();
-            var dependenciesFolder = container.Resolve<IDependenciesFolder>();
+            var dependenciesFolder = container.Resolve<IDependencyDescriptorManager>();
 
             var d1 = new DependencyDescriptor {
                 Name = "name1",
@@ -81,7 +81,7 @@ namespace Orchard.Tests.Environment.Compilation.Dependencies {
             var container = BuildContainer();
             var clock = (StubClock)container.Resolve<IClock>();
             var appDataFolder = (StubAppDataFolder)container.Resolve<IAppDataFolder>();
-            var dependenciesFolder = container.Resolve<IDependenciesFolder>();
+            var dependenciesFolder = container.Resolve<IDependencyDescriptorManager>();
 
             var d1 = new DependencyDescriptor {
                 Name = "name1",
@@ -111,7 +111,7 @@ namespace Orchard.Tests.Environment.Compilation.Dependencies {
             var container = BuildContainer();
             var clock = (StubClock)container.Resolve<IClock>();
             var appDataFolder = (StubAppDataFolder)container.Resolve<IAppDataFolder>();
-            var dependenciesFolder = container.Resolve<IDependenciesFolder>();
+            var dependenciesFolder = container.Resolve<IDependencyDescriptorManager>();
 
             var d1 = new DependencyDescriptor {
                 Name = "name1",
@@ -128,7 +128,7 @@ namespace Orchard.Tests.Environment.Compilation.Dependencies {
             dependenciesFolder.StoreDescriptors(new[] { d1, d2 });
 
             // Create a new instance over the same appDataFolder
-            var dependenciesFolder2 = container.Resolve<IDependenciesFolder>();
+            var dependenciesFolder2 = container.Resolve<IDependencyDescriptorManager>();
             Assert.That(dependenciesFolder2, Is.Not.SameAs(dependenciesFolder));
 
             // Ensure descriptors were persisted properly

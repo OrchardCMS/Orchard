@@ -12,9 +12,9 @@ namespace Orchard.Environment.Compilation.Loaders {
     /// Base class for extension loaders.
     /// </summary>
     public abstract class ExtensionLoaderBase : IExtensionLoader {
-        private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IDependencyDescriptorManager _dependenciesFolder;
 
-        protected ExtensionLoaderBase(IDependenciesFolder dependenciesFolder) {
+        protected ExtensionLoaderBase(IDependencyDescriptorManager dependenciesFolder) {
             _dependenciesFolder = dependenciesFolder;
         }
 

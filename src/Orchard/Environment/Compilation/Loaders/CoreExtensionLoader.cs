@@ -13,7 +13,7 @@ namespace Orchard.Environment.Compilation.Loaders {
         private const string CoreAssemblyName = "Orchard.Core";
         private readonly IAssemblyLoader _assemblyLoader;
 
-        public CoreExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyLoader assemblyLoader)
+        public CoreExtensionLoader(IDependencyDescriptorManager dependenciesFolder, IAssemblyLoader assemblyLoader)
             : base(dependenciesFolder) {
             _assemblyLoader = assemblyLoader;
 

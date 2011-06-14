@@ -14,7 +14,7 @@ using Orchard.Utility;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionLoaderCoordinator : IExtensionLoaderCoordinator {
-        private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IDependencyDescriptorManager _dependenciesFolder;
         private readonly IExtensionDependenciesManager _extensionDependenciesManager;
         private readonly IExtensionManager _extensionManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -24,7 +24,7 @@ namespace Orchard.Environment.Extensions {
         private readonly IBuildManager _buildManager;
 
         public ExtensionLoaderCoordinator(
-            IDependenciesFolder dependenciesFolder,
+            IDependencyDescriptorManager dependenciesFolder,
             IExtensionDependenciesManager extensionDependenciesManager,
             IExtensionManager extensionManager,
             IVirtualPathProvider virtualPathProvider,

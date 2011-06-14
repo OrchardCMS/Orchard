@@ -13,7 +13,7 @@ namespace Orchard.Environment.Compilation.Loaders {
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IBuildManager _buildManager;
 
-        public ReferencedExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider, IBuildManager buildManager)
+        public ReferencedExtensionLoader(IDependencyDescriptorManager dependenciesFolder, IVirtualPathProvider virtualPathProvider, IBuildManager buildManager)
             : base(dependenciesFolder) {
 
             _virtualPathProvider = virtualPathProvider;

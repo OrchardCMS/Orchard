@@ -252,7 +252,7 @@
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
     <Compile Include="Locking\LockManagerTests.cs" />
     <Compile Include="Environment\Compilation\Dependencies\AssemblyProbingFolderTests.cs" />
-    <Compile Include="Environment\Compilation\Dependencies\DependenciesFolderTests.cs" />
+    <Compile Include="Environment\Compilation\Dependencies\DependencyDescriptorManagerTests.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProviderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
     <Compile Include="Logging\OrchardFileAppenderTests.cs" />

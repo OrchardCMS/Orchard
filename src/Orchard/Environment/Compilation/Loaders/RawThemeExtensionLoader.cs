@@ -13,7 +13,7 @@ namespace Orchard.Environment.Compilation.Loaders {
     public class RawThemeExtensionLoader : ExtensionLoaderBase {
         private readonly IVirtualPathProvider _virtualPathProvider;
 
-        public RawThemeExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider)
+        public RawThemeExtensionLoader(IDependencyDescriptorManager dependenciesFolder, IVirtualPathProvider virtualPathProvider)
             : base(dependenciesFolder) {
             _virtualPathProvider = virtualPathProvider;
 

@@ -18,7 +18,7 @@ namespace Orchard.Tests.Environment.Compilation.Loaders {
     public class DynamicExtensionLoaderTests {
         private IContainer _container;
         private Mock<IProjectFileParser> _mockedStubProjectFileParser;
-        private Mock<IDependenciesFolder> _mockedDependenciesFolder;
+        private Mock<IDependencyDescriptorManager> _mockedDependenciesFolder;
 
         [SetUp]
         public void Init() {
@@ -39,8 +39,8 @@ namespace Orchard.Tests.Environment.Compilation.Loaders {
             builder.RegisterInstance(_mockedStubProjectFileParser.Object).As<IProjectFileParser>();
             builder.RegisterInstance(new StubFileSystem(new StubClock())).As<StubFileSystem>();
 
-            _mockedDependenciesFolder = new Mock<IDependenciesFolder>();
-            builder.RegisterInstance(_mockedDependenciesFolder.Object).As<IDependenciesFolder>();
+            _mockedDependenciesFolder = new Mock<IDependencyDescriptorManager>();
+            builder.RegisterInstance(_mockedDependenciesFolder.Object).As<IDependencyDescriptorManager>();
 
             _container = builder.Build();
         }
@@ -149,7 +149,7 @@ namespace Orchard.Tests.Environment.Compilation.Loaders {
                 IVirtualPathMonitor virtualPathMonitor,
                 IHostEnvironment hostEnvironment,
                 IAssemblyProbingFolder assemblyProbingFolder,
-                IDependenciesFolder dependenciesFolder,
+                IDependencyDescriptorManager dependenciesFolder,
                 IProjectFileParser projectFileParser)
                 : base(buildManager, virtualPathProvider, virtualPathMonitor, hostEnvironment, assemblyProbingFolder, dependenciesFolder, projectFileParser) {}
 

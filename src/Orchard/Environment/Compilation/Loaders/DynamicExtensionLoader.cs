@@ -23,7 +23,7 @@ namespace Orchard.Environment.Compilation.Loaders {
         private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IAssemblyProbingFolder _assemblyProbingFolder;
-        private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IDependencyDescriptorManager _dependenciesFolder;
         private readonly IProjectFileParser _projectFileParser;
         private readonly ReloadWorkaround _reloadWorkaround = new ReloadWorkaround();
 
@@ -33,7 +33,7 @@ namespace Orchard.Environment.Compilation.Loaders {
             IVirtualPathMonitor virtualPathMonitor,
             IHostEnvironment hostEnvironment,
             IAssemblyProbingFolder assemblyProbingFolder,
-            IDependenciesFolder dependenciesFolder,
+            IDependencyDescriptorManager dependenciesFolder,
             IProjectFileParser projectFileParser)
             : base(dependenciesFolder) {
 
