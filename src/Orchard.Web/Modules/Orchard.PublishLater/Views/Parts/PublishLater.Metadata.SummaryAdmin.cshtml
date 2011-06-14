@@ -26,9 +26,8 @@
     @if ((((DateTime?)Model.ScheduledPublishUtc).HasValue && ((DateTime?)Model.ScheduledPublishUtc).Value > DateTime.UtcNow) || (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue)) {
         <li>
         @if (publishLaterPart.IsPublished() && versionPublishedUtc.HasValue) {
-            @T("Published: {0}", Display.DateTimeRelative(dateTimeUtc: versionPublishedUtc.Value))
-        }
-        else {
+            @T("Published: {0}", Display.DateTimeRelative(DateTimeUtc: versionPublishedUtc.Value))
+        } else {
             <text></text>@Display.Image(Src: "~/Modules/Orchard.PublishLater/Content/Admin/images/scheduled.gif", Classes: "icon", Alt: T("Scheduled"), Title: T("The page is scheduled for publishing"))<text>  @T("Scheduled") </text>
             @Html.DateTime(((DateTime?)Model.ScheduledPublishUtc).Value.ToLocalTime(), T("M/d/yyyy h:mm tt"))
         }&nbsp;&#124;&nbsp;</li>

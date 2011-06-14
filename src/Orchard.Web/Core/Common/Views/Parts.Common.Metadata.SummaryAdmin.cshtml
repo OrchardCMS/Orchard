@@ -6,7 +6,7 @@
 }
 <ul class="pageStatus">
     <li>@if (modifiedUtc.HasValue) {
-        @T("Last modified: {0}", Display.DateTimeRelative(dateTimeUtc: modifiedUtc.Value))}&nbsp;&#124;&nbsp;
+        @T("Last modified: {0}", Display.DateTimeRelative(DateTimeUtc: modifiedUtc.Value))}&nbsp;&#124;&nbsp;
     </li>
     <li>@Display.CommonMetadataOwner(ContentPart: Model.ContentPart)</li>
     </ul>

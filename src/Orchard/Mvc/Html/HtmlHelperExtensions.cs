@@ -148,28 +148,6 @@ namespace Orchard.Mvc.Html {
 
         #endregion
 
-        #region Format Date/Time
-
-        public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime? value, LocalizedString defaultIfNull) {
-            return value.HasValue ? htmlHelper.DateTime(value.Value) : defaultIfNull;
-        }
-
-        public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime? value, LocalizedString defaultIfNull, LocalizedString customFormat) {
-            return value.HasValue ? htmlHelper.DateTime(value.Value, customFormat) : defaultIfNull;
-        }
-
-        public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime value) {
-            //TODO: (erikpo) This default format should come from a site setting
-            return htmlHelper.DateTime(value.ToLocalTime(), new LocalizedString("MMM d yyyy h:mm tt")); //todo: above comment and get rid of just wrapping this as a localized string
-        }
-
-        public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime value, LocalizedString customFormat) {
-            //TODO: (erikpo) In the future, convert this to "local" time before calling ToString
-            return new LocalizedString(value.ToString(customFormat.Text));
-        }
-
-        #endregion
-
         #region Image
 
         public static MvcHtmlString Image(this HtmlHelper htmlHelper, string src, string alt, object htmlAttributes) {

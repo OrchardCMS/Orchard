@@ -2,7 +2,7 @@
 using System.Web;
 
 namespace Orchard.Time {
-    public interface ITimeZoneProvider : IDependency {
+    public interface ITimeZoneProvider : ISingletonDependency {
         TimeZoneInfo GetTimeZone(HttpContextBase context);
     }
 }
