@@ -23,7 +23,6 @@ using Orchard.Recipes.Services;
 using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Setup.Services {
     public class SetupService : ISetupService {

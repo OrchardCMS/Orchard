@@ -1,6 +1,21 @@
 ﻿@model IEnumerable<Orchard.Comments.Models.CommentPart>
 @using Orchard.Comments.Models;
 @using Orchard.Utility.Extensions;
+@functions{
+    MvcHtmlString BreakNewLines(string potentiallyDangerousText) {
+        var encoded = Html.Encode(potentiallyDangerousText);
+        
+        if (encoded.Contains('\r') && !encoded.Contains('\n')) {
+            encoded = encoded.Replace("\r", "<br />");
+        }
+        else {
+            encoded = encoded.Replace("\r", "");
+            encoded = encoded.Replace("\n", "<br />");
+        }
+                    
+        return new MvcHtmlString(encoded);
+    }
+}
 <ul class="comments">
 @foreach (var comment in Model) {
     <li>
@@ -11,7 +26,7 @@
                     <span class="when">@Display.CommentMetadata(ContentPart: comment)</span>
                 </h4>
             </header>
-            <p class="text">@(new MvcHtmlString(Html.Encode(comment.Record.CommentText).ReplaceNewLinesWith("<br />$1")))</p>
+            <p class="text">@BreakNewLines(comment.Record.CommentText)</p>
         </article>
     </li>
 }
