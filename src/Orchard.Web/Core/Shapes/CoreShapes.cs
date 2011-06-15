@@ -349,6 +349,9 @@ namespace Orchard.Core.Shapes {
             dynamic Display,
             dynamic Shape,
             string Href,
+            string Action,
+            string Controller,
+            string Area,
             // parameter omitted to workaround an issue where a NullRef is thrown
             // when an anonymous object is bound to an object shape parameter
             /*object RouteValues,*/
@@ -357,8 +360,42 @@ namespace Orchard.Core.Shapes {
             // workaround: get it from the shape instead of parameter
             var RouteValues = (object)Shape.RouteValues;
 
+            if (Href == null && (Action ?? Controller ?? Area) != null) {
+                // Action, Controller, and Area may have been provided directly as
+                // a shortcut to providing a RouteValues object. Add them to the
+                // RouteValues if provided, or create one if not.
+                RouteValueDictionary rvd;
+                if (RouteValues == null) {
+                    rvd = new RouteValueDictionary();
+                }
+                else {
+                    rvd = RouteValues is RouteValueDictionary ? (RouteValueDictionary)RouteValues : new RouteValueDictionary(RouteValues);
+                }
+                if (Action != null) {
+                    rvd["Action"] = Action;
+                }
+                if (Controller != null) {
+                    rvd["Controller"] = Controller;
+                }
+                if (Area != null) {
+                    rvd["Area"] = Area;
+                }
+                RouteValues = rvd;
+            }
+
+            var href = Href;
+            if (href == null && RouteValues != null) {
+                // If RouteValues is an actual RouteValueDictionary, be sure and use the correct RouteUrl override, lest it be treated like an anonymous object would be.
+                if (RouteValues is RouteValueDictionary) {
+                    href = Url.Action(null, (RouteValueDictionary)RouteValues);
+                }
+                else {
+                    href = Url.Action(null, RouteValues);
+                }
+            }
+
             var tag = _tagBuilderFactory.Create((object)Shape, "a");
-            tag.MergeAttribute("href", Href ?? (RouteValues is RouteValueDictionary ? Url.RouteUrl((RouteValueDictionary)RouteValues) : Url.RouteUrl(RouteValues)));
+            tag.MergeAttribute("href", href);
             tag.InnerHtml = Html.Encode(Value is string ? (string)Value : Display(Value));
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }
