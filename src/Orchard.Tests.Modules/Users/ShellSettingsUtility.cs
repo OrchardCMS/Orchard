@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using Orchard.Environment.Configuration;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Tests.Modules.Users {
     public class ShellSettingsUtility {

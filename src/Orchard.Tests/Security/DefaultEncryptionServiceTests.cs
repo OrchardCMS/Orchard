@@ -6,7 +6,6 @@ using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.Security;
 using Orchard.Security.Providers;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Tests.Security {
     [TestFixture]

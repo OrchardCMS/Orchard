@@ -69,7 +69,7 @@ namespace Orchard.Tests.Utility.Extensions {
         }
         [Test]
         public void HtmlClassify_SimpleStringReturnsSimpleClassName() {
-            const string toClassify = "this is something";
+            const string toClassify = ".this is something";
             Assert.That(toClassify.HtmlClassify(), Is.StringMatching("this-is-something"));
         }
         [Test]
@@ -144,27 +144,6 @@ namespace Orchard.Tests.Utility.Extensions {
         public void RemoveTags_NullValueReturnsEmptyString() {
             const string fullOfTags = null;
             Assert.That(fullOfTags.RemoveTags(), Is.StringMatching(""));
-        }
-
-        [Test]
-        public void ReplaceNewLinesWith_ReplaceCRLFWithHtmlBR() {
-            const string lotsOfLineFeeds = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\r\nMaecenas sed purus quis purus orci aliquam.";
-            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith("<br />"), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />Maecenas sed purus quis purus orci aliquam."));
-        }
-        [Test]
-        public void ReplaceNewLinesWith_ReplaceCRLFWithHtmlPsAndCRLF() {
-            const string lotsOfLineFeeds = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\r\nMaecenas sed purus quis purus orci aliquam.";
-            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith(@"</p>$1<p>"), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\r\n<p>Maecenas sed purus quis purus orci aliquam."));
-        }
-        [Test]
-        public void ReplaceNewLinesWith_EmptyStringReturnsEmptyString() {
-            const string lotsOfLineFeeds = "";
-            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith("<br />"), Is.StringMatching(""));
-        }
-        [Test]
-        public void ReplaceNewLinesWith_NullValueReturnsEmptyString() {
-            const string lotsOfLineFeeds = null;
-            Assert.That(lotsOfLineFeeds.ReplaceNewLinesWith("<br />"), Is.StringMatching(""));
         }
     }
 }

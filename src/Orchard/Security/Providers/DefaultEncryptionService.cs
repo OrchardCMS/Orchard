@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Cryptography;
 using Orchard.Environment.Configuration;
-using Orchard.Utility.Extensions;
 using System;
 
 namespace Orchard.Security.Providers {
@@ -79,13 +78,13 @@ namespace Orchard.Security.Providers {
 
         private SymmetricAlgorithm CreateSymmetricAlgorithm() {
             var algorithm = SymmetricAlgorithm.Create(_shellSettings.EncryptionAlgorithm);
-            algorithm.Key = _shellSettings.EncryptionKey.ToByteArray();
+            algorithm.Key = _shellSettings.EncryptionKey.FromHexString();
             return algorithm;
         }
 
         private HMAC CreateHashAlgorithm() {
             var algorithm = HMAC.Create(_shellSettings.HashAlgorithm);
-            algorithm.Key = _shellSettings.HashKey.ToByteArray();
+            algorithm.Key = _shellSettings.HashKey.FromHexString();
             return algorithm;
         }
 
