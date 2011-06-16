@@ -53,7 +53,10 @@
                     <th scope="col">@T("Actions")</th>
                 </tr>
             </thead>
-            @{var commentIndex = 0;}
+            @{
+                var commentIndex = 0;
+                var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
+            }
             @foreach (var commentEntry in Model.Comments) {
                 var commentClass = "";
                 if (!HasText(commentEntry.Comment.UserName)) {
@@ -61,6 +64,8 @@
                 }
                 var metadata = commentEntry.CommentedOn.ContentManager.GetItemMetadata(commentEntry.CommentedOn);
                 var displayUrl = metadata.DisplayRouteValues == null ? null : Url.Action(Convert.ToString(metadata.DisplayRouteValues["action"]), metadata.DisplayRouteValues);
+
+                var Id = commentEntry.Comment.Id;
             <tr itemscope="itemscope" itemid="@Model.Comments[commentIndex].Comment.Id" itemtype="http://orchardproject.net/data/Comment" class="@commentClass">
                 <td>
                     <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.FieldNameFor(m => m.Comments[commentIndex].Comment.Id)"/>
@@ -79,7 +84,8 @@
                 </td>
                 <td>
                     @* would ideally have permalinks for individual comments *@
-                    <p><a href="@(displayUrl)#comments">@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</time></a></p>
+                    <p><a href="@(displayUrl)#comments">@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</a></p>
+                    @if (commentEntry.Comment.CommentText != null) {
                         var ellipsized = Html.Ellipsize(commentEntry.Comment.CommentText, 500);
                         var paragraphed = new HtmlString(ellipsized.ToHtmlString().Replace("\r\n", "</p><p>"));
                         <p>@paragraphed</p>
@@ -92,21 +98,21 @@
                 <td>
                     <div class="actions">
                         @if (commentEntry.Comment.Status != CommentStatus.Spam) {
-                            <a href="@Url.Action("MarkAsSpam", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Spam")</a>@T(" | ")
+                            @Display.UnsafeActionLink(Value: T("Spam"), Action: "MarkAsSpam", RouteValues: new { Id, returnUrl })@T(" | ")
                         }
                         @if (commentEntry.Comment.Status != CommentStatus.Approved) {
-                            <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>@T(" | ")
+                            @Display.UnsafeActionLink(Value: T("Approve"), Action: "Approve", RouteValues: new { Id, returnUrl })@T(" | ")
                         }
                         else {
-                            <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@("Unapprove")</a>@T(" | ")
+                            @Display.UnsafeActionLink(Value: T("Unapprove"), Action: "Unapprove", RouteValues: new { Id, returnUrl })@T(" | ")
                         }
-                        <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>@T(" | ")
-                        <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                        <a href="@Url.Action("Edit", new { Id })" title="@T("Edit")">@T("Edit")</a>@T(" | ")
+                        @Display.UnsafeActionLink(Value: T("Delete"), Action: "Delete", RouteValues: new { Id, returnUrl })
                     </div>
                 </td>
             </tr>
             commentIndex = commentIndex + 1;
-            } 
+            }
         </table>
         @Display(Model.Pager)
     </fieldset>

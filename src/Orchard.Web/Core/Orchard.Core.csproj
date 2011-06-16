@@ -303,6 +303,7 @@
     <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.cshtml" />
     <Content Include="Shapes\Module.txt" />
     <Content Include="Shapes\Scripts\base.js" />
+    <Content Include="Shapes\Scripts\unsafeaction.js" />
     <Content Include="Shapes\Scripts\html5.js" />
     <Content Include="Shapes\Scripts\jquery.switchable.js" />
     <Content Include="Shapes\Styles\Images\detail-view-on.gif" />

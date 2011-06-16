@@ -344,6 +344,23 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
+        public IHtmlString UnsafeActionLink(dynamic Display, dynamic Shape) {
+            _resourceManager.Value.Require("script", "UnsafeAction");
+
+            var attributes = (IDictionary<string, string>)Shape.Attributes;
+            if (attributes.ContainsKey("itemprop")) {
+                attributes["itemprop"] = attributes["itemprop"] + " RemoveUrl UnsafeUrl";
+            }
+            else {
+                attributes["itemprop"] = "RemoveUrl UnsafeUrl";
+            }
+
+            Shape.Metadata.Type = "ActionLink";
+            Shape.Metadata.Alternates.Clear();
+            return Display(Shape);
+        }
+
+        [Shape]
         public IHtmlString ActionLink(dynamic Display,
             dynamic Shape,
             string Action,
