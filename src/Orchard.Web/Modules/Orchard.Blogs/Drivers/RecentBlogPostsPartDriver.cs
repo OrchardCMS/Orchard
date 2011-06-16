@@ -43,7 +43,7 @@ namespace Orchard.Blogs.Drivers {
 
             var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, ContentItems: list);
 
-            return ContentShape(shapeHelper.Parts_Blogs_RecentBlogPosts(ContentItem: part.ContentItem, ContentItems: blogPostList));
+            return ContentShape(shapeHelper.Parts_Blogs_RecentBlogPosts(ContentItem: part.ContentItem, ContentItems: blogPostList, Blog: blog));
         }
 
         protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper) {

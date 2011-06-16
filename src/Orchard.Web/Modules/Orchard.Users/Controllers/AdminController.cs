@@ -4,13 +4,13 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Settings.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Notify;
+using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
@@ -24,6 +24,7 @@ namespace Orchard.Users.Controllers {
     public class AdminController : Controller, IUpdateModel {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
+        private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
         private readonly ISiteService _siteService;
 
         public AdminController(
@@ -31,10 +32,12 @@ namespace Orchard.Users.Controllers {
             IMembershipService membershipService,
             IUserService userService,
             IShapeFactory shapeFactory,
+            IEnumerable<IUserEventHandler> userEventHandlers,
             ISiteService siteService) {
             Services = services;
             _membershipService = membershipService;
             _userService = userService;
+            _userEventHandlers = userEventHandlers;
             _siteService = siteService;
 
             T = NullLocalizer.Instance;
@@ -311,6 +314,9 @@ namespace Orchard.Users.Controllers {
             if ( user != null ) {
                 user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
                 Services.Notifier.Information(T("User {0} approved", user.UserName));
+                foreach (var userEventHandler in _userEventHandlers) {
+                    userEventHandler.Approved(user);
+                }
             }
 
             return RedirectToAction("Index");

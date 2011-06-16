@@ -76,6 +76,9 @@ namespace Orchard.Users.Services {
 
             foreach ( var userEventHandler in _userEventHandlers ) {
                 userEventHandler.Created(userContext);
+                if (user.RegistrationStatus == UserStatus.Approved) {
+                    userEventHandler.Approved(user);
+                }
             }
 
             if ( registrationSettings != null  && registrationSettings.UsersAreModerated && registrationSettings.NotifyModeration && !createUserParams.IsApproved ) {
