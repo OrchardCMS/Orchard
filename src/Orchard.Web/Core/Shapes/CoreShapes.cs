@@ -344,23 +344,19 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public IHtmlString Link(HtmlHelper Html,
-            UrlHelper Url,
-            dynamic Display,
+        public IHtmlString ActionLink(dynamic Display,
             dynamic Shape,
-            string Href,
             string Action,
             string Controller,
-            string Area,
+            string Area
             // parameter omitted to workaround an issue where a NullRef is thrown
             // when an anonymous object is bound to an object shape parameter
-            /*object RouteValues,*/
-            object Value) {
+            /*, object RouteValues*/) {
 
-            // workaround: get it from the shape instead of parameter
-            var RouteValues = (object)Shape.RouteValues;
+            if ((Action ?? Controller ?? Area) != null) {
+                // workaround: get it from the shape instead of parameter
+                var RouteValues = (object)Shape.RouteValues;
 
-            if (Href == null && (Action ?? Controller ?? Area) != null) {
                 // Action, Controller, and Area may have been provided directly as
                 // a shortcut to providing a RouteValues object. Add them to the
                 // RouteValues if provided, or create one if not.
@@ -373,16 +369,37 @@ namespace Orchard.Core.Shapes {
                 }
                 if (Action != null) {
                     rvd["Action"] = Action;
+                    Shape.Action = null;
                 }
                 if (Controller != null) {
                     rvd["Controller"] = Controller;
+                    Shape.Controller = null;
                 }
                 if (Area != null) {
                     rvd["Area"] = Area;
+                    Shape.Area = null;
                 }
-                RouteValues = rvd;
+                Shape.RouteValues = rvd;
             }
 
+            Shape.Metadata.Type = "Link";
+            Shape.Metadata.Alternates.Clear();
+            return Display(Shape);
+        }
+
+        [Shape]
+        public IHtmlString Link(HtmlHelper Html,
+            UrlHelper Url,
+            dynamic Display,
+            dynamic Shape,
+            string Href,
+            // parameter omitted to workaround an issue where a NullRef is thrown
+            // when an anonymous object is bound to an object shape parameter
+            /*object RouteValues,*/
+            object Value) {
+
+            // workaround: get it from the shape instead of parameter
+            var RouteValues = (object)Shape.RouteValues;
             var href = Href;
             if (href == null && RouteValues != null) {
                 // If RouteValues is an actual RouteValueDictionary, be sure and use the correct RouteUrl override, lest it be treated like an anonymous object would be.

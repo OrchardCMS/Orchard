@@ -10,7 +10,7 @@
 
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Add a new user").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
+    <div class="manage">@Display.ActionLink(Value: T("Add a new user"), Action: "Create", Classes: new [] { "button", "primaryAction" })</div>
 
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
@@ -58,8 +58,8 @@
                 </td>
                 <td>
                     @{
-                        var approved = entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved;
-                        var title = approved ? T("User is approved") : ((entry.User.EmailStatus == UserStatus.Approved) ? T("User is moderated") : T("E-mail validation is pending"));
+                                                         var approved = entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved;
+                                                         var title = approved ? T("User is approved") : ((entry.User.EmailStatus == UserStatus.Approved) ? T("User is moderated") : T("E-mail validation is pending"));
                     }
                     @Display.Image(Src: "~/Modules/Orchard.Users/Content/Admin/images/" + (approved ? "online.gif" : "offline.gif"), Alt: T(approved ? "Approved" : "Moderated"), Title: title)
                     @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id }) 
