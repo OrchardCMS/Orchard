@@ -98,16 +98,16 @@
                 <td>
                     <div class="actions">
                         @if (commentEntry.Comment.Status != CommentStatus.Spam) {
-                            @Display.UnsafeActionLink(Value: T("Spam"), Action: "MarkAsSpam", RouteValues: new { Id, returnUrl })@T(" | ")
+                            @Display.UnsafeActionLink(Value: T("Spam"), UrlType: "RemoveUrl", Action: "MarkAsSpam", RouteValues: new { Id, returnUrl })@T(" | ")
                         }
                         @if (commentEntry.Comment.Status != CommentStatus.Approved) {
-                            @Display.UnsafeActionLink(Value: T("Approve"), Action: "Approve", RouteValues: new { Id, returnUrl })@T(" | ")
+                            @Display.UnsafeActionLink(Value: T("Approve"), UrlType: "ApproveUrl", Action: "Approve", RouteValues: new { Id, returnUrl })@T(" | ")
                         }
                         else {
-                            @Display.UnsafeActionLink(Value: T("Unapprove"), Action: "Unapprove", RouteValues: new { Id, returnUrl })@T(" | ")
+                            @Display.UnsafeActionLink(Value: T("Unapprove"), UrlType: "UnapproveUrl", Action: "Unapprove", RouteValues: new { Id, returnUrl })@T(" | ")
                         }
                         <a href="@Url.Action("Edit", new { Id })" title="@T("Edit")">@T("Edit")</a>@T(" | ")
-                        @Display.UnsafeActionLink(Value: T("Delete"), Action: "Delete", RouteValues: new { Id, returnUrl })
+                        @Display.UnsafeActionLink(Value: T("Delete"), UrlType: "RemoveUrl", Action: "Delete", RouteValues: new { Id, returnUrl })
                     </div>
                 </td>
             </tr>

@@ -344,15 +344,17 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public IHtmlString UnsafeActionLink(dynamic Display, dynamic Shape) {
+        public IHtmlString UnsafeActionLink(dynamic Display, dynamic Shape, string UrlType) {
+            if (string.IsNullOrEmpty(UrlType)) {
+                throw new ArgumentNullException("UrlType");
+            }
             _resourceManager.Value.Require("script", "UnsafeAction");
-
             var attributes = (IDictionary<string, string>)Shape.Attributes;
             if (attributes.ContainsKey("itemprop")) {
-                attributes["itemprop"] = attributes["itemprop"] + " RemoveUrl UnsafeUrl";
+                attributes["itemprop"] = attributes["itemprop"] + " " + UrlType + " UnsafeUrl";
             }
             else {
-                attributes["itemprop"] = "RemoveUrl UnsafeUrl";
+                attributes["itemprop"] = UrlType + " UnsafeUrl";
             }
 
             Shape.Metadata.Type = "ActionLink";

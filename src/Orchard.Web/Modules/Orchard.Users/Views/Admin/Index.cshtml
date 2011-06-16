@@ -69,7 +69,7 @@
                 </td>
                 <td>
                     @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
-                    @Display.UnsafeActionLink(Value: T("Delete"), Action: "Delete", RouteValues: new { entry.User.Id }) |
+                    @Display.UnsafeActionLink(Value: T("Delete"), Action: "Delete", UrlType: "RemoveUrl", RouteValues: new { entry.User.Id }) |
                     @if (entry.User.RegistrationStatus == UserStatus.Pending) {
                         @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id })
                     }

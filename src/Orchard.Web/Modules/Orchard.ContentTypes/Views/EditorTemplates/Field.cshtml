@@ -2,7 +2,7 @@
     <fieldset class="manage-field">
         <h3>@Model.Name <span>(@Model.FieldDefinition.Name)</span></h3>
         <div class="manage">
-            @Display.UnsafeActionLink(Value: T("Remove"), Action: "RemoveFieldFrom", Area: "Orchard.ContentTypes", RouteValues: new { id = Model.Part.Name, Model.Name })
+            @Display.UnsafeActionLink(Value: T("Remove"), UrlType: "RemoveUrl", Action: "RemoveFieldFrom", Area: "Orchard.ContentTypes", RouteValues: new { id = Model.Part.Name, Model.Name })
         </div>
         <div class="details">
             @{Html.RenderTemplates(Model.Templates);}

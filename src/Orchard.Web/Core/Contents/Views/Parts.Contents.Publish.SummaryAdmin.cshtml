@@ -13,12 +13,13 @@
 @Display.DisplayLink(Value: T("View"), ContentItem: Model.ContentPart.ContentItem)
 @T(" | ")
 if (contentPart.HasDraft()) {
-@Display.UnsafeActionLink(Value: T("Publish Draft"), RouteValues: GetRoute(contentPart, "Publish"))
+@Display.UnsafeActionLink(Value: T("Publish Draft"), UrlType: "PublishUrl", RouteValues: GetRoute(contentPart, "Publish"))
 @T(" | ")
-    }
-@Display.UnsafeActionLink(Value: T("Unpublish"), RouteValues: GetRoute(contentPart, "Unpublish"))
+}
+@Display.UnsafeActionLink(Value: T("Unpublish"), UrlType: "UnpublishUrl", RouteValues: GetRoute(contentPart, "Unpublish"))
 @T(" | ")
-} else {
-@Display.UnsafeActionLink(Value: T("Publish"), RouteValues: GetRoute(contentPart, "Publish"))
+}
+else {
+@Display.UnsafeActionLink(Value: T("Publish"), UrlType: "PublishUrl", RouteValues: GetRoute(contentPart, "Publish"))
 @T(" | ")
 }

@@ -44,7 +44,7 @@
                 </td>
                 <td>
                     @Html.ActionLink(T("Edit").ToString(), "Edit", new {id = tagEntry.Tag.Id}) @T(" | ")
-                    @Display.UnsafeActionLink(Value: T("Delete"), Action: "Remove", RouteValues: new { tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })
+                    @Display.UnsafeActionLink(Value: T("Delete"), UrlType: "RemoveUrl", Action: "Remove", RouteValues: new { tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })
                 </td>
             </tr>
             tagIndex = tagIndex + 1;

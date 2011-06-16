@@ -4,7 +4,7 @@
         <h3 itemprop="Name">@Model.PartDefinition.DisplayName</h3>
         <div class="manage">
             @if (Model.PartDefinition.Settings.GetModel<ContentPartSettings>().Attachable) {
-                @Display.UnsafeActionLink(Value: T("Remove"), Action: "RemovePartFrom", Area: "Orchard.ContentTypes", RouteValues: new { id = Model.Type.Name, Model.PartDefinition.Name })
+                @Display.UnsafeActionLink(Value: T("Remove"), UrlType: "RemoveUrl", Action: "RemovePartFrom", Area: "Orchard.ContentTypes", RouteValues: new { id = Model.Type.Name, Model.PartDefinition.Name })
             }
         </div>
         <div class="details">@Html.EditorFor(m => m.PartDefinition.Fields, "TypePartFields", "PartDefinition")
