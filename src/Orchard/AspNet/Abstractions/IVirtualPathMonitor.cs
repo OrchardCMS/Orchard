@@ -1,6 +1,6 @@
 ﻿using Orchard.Caching;
 
-namespace Orchard.FileSystems.VirtualPath {
+namespace Orchard.AspNet.Abstractions {
     /// <summary>
     /// Enable monitoring changes over virtual path
     /// </summary>

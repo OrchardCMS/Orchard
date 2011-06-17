@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
+using Orchard.AspNet.Abstractions;
 using Orchard.Caching;
-using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.FileSystems.WebSite {
     public class WebSiteFolder : IWebSiteFolder {
@@ -40,6 +41,10 @@ namespace Orchard.FileSystems.WebSite {
 
         public string ReadFile(string virtualPath) {
             return ReadFile(virtualPath, false);
+        }
+
+        public DateTime GetFileLastWriteTimeUtc(string virtualPath) {
+            return _virtualPathProvider.GetFileLastWriteTimeUtc(virtualPath);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]

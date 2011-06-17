@@ -51,5 +51,9 @@ namespace Orchard.Tests.Stubs {
         public class Token : IVolatileToken {
             public bool IsCurrent { get; set; }
         }
+
+        public DateTime GetFileLastWriteTimeUtc(string virtualPath) {
+            throw new NotImplementedException();
+        }
     }
 }

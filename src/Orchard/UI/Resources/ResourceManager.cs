@@ -8,8 +8,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Autofac.Features.Metadata;
+using Orchard.AspNet.Abstractions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.UI.Resources {
     public class ResourceManager : IResourceManager, IUnitOfWorkDependency {

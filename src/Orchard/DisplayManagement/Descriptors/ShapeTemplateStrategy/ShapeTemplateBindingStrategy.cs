@@ -6,12 +6,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using Orchard.AspNet.Abstractions;
 using Orchard.Caching;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {

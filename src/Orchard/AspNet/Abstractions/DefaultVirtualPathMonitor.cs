@@ -5,11 +5,9 @@ using System.Web.Caching;
 using System.Web.Hosting;
 using Orchard.Caching;
 using Orchard.Logging;
-using Orchard.Services;
 using Orchard.Time;
 
-namespace Orchard.FileSystems.VirtualPath {
-
+namespace Orchard.AspNet.Abstractions {
     public class DefaultVirtualPathMonitor : IVirtualPathMonitor {
         private readonly Thunk _thunk;
         private readonly string _prefix = Guid.NewGuid().ToString("n");

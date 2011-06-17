@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Routing;
 using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
-using Orchard.FileSystems.VirtualPath;
+using Orchard.FileSystems.WebSite;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.UI.Notify;
@@ -16,7 +17,7 @@ namespace Orchard.Themes.Services {
         private readonly IExtensionManager _extensionManager;
         private readonly IFeatureManager _featureManager;
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
-        private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IWebSiteFolder _websiteFolder;
         private readonly ICacheManager _cacheManager;
 
         public ThemeService(
@@ -24,7 +25,7 @@ namespace Orchard.Themes.Services {
             IExtensionManager extensionManager,
             IFeatureManager featureManager,
             IEnumerable<IThemeSelector> themeSelectors,
-            IVirtualPathProvider virtualPathProvider,
+            IWebSiteFolder websiteFolder,
             ICacheManager cacheManager) {
 
             Services = orchardServices;
@@ -32,7 +33,7 @@ namespace Orchard.Themes.Services {
             _extensionManager = extensionManager;
             _featureManager = featureManager;
             _themeSelectors = themeSelectors;
-            _virtualPathProvider = virtualPathProvider;
+            _websiteFolder = websiteFolder;
             _cacheManager = cacheManager;
 
             if (_featureManager.FeatureDependencyNotification == null) {
@@ -134,7 +135,7 @@ namespace Orchard.Themes.Services {
                 string projectFile = GetManifestPath(extensionDescriptor);
                 if (!string.IsNullOrEmpty(projectFile)) {
                     // If project file was modified less than 24 hours ago, the module was recently deployed
-                    return _virtualPathProvider.GetFileLastWriteTimeUtc(projectFile);
+                    return _websiteFolder.GetFileLastWriteTimeUtc(projectFile);
                 }
 
                 return DateTime.UtcNow;
@@ -144,10 +145,12 @@ namespace Orchard.Themes.Services {
         }
 
         private string GetManifestPath(ExtensionDescriptor descriptor) {
-            string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Id,
-                                                       "theme.txt");
+            string projectPath = Path.Combine(
+                descriptor.Location,
+                descriptor.Id,
+                "theme.txt");
 
-            if (!_virtualPathProvider.FileExists(projectPath)) {
+            if (!_websiteFolder.FileExists(projectPath)) {
                 return null;
             }
 

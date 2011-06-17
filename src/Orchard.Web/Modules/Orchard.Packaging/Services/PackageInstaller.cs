@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using NuGet;
+using Orchard.AspNet.Abstractions;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Packaging.Extensions;
 using Orchard.Packaging.Models;

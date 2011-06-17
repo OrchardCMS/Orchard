@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.AspNet.Abstractions;
 using Orchard.Caching;
 using Orchard.Environment.Compilation.Loaders;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions {

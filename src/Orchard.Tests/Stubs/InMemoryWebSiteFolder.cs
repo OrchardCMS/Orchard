@@ -53,5 +53,9 @@ namespace Orchard.Tests.Stubs {
         public IVolatileToken WhenPathChanges(string virtualPath) {
             throw new NotImplementedException();
         }
+
+        public DateTime GetFileLastWriteTimeUtc(string virtualPath) {
+            throw new NotImplementedException();
+        }
     }
 }

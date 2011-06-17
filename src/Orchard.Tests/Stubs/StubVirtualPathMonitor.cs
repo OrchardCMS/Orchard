@@ -1,5 +1,5 @@
-﻿using Orchard.Caching;
-using Orchard.FileSystems.VirtualPath;
+﻿using Orchard.AspNet.Abstractions;
+using Orchard.Caching;
 
 namespace Orchard.Tests.Stubs {
     public class StubVirtualPathMonitor : IVirtualPathMonitor {

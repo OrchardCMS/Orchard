@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Timers;
 using System.Web.Compilation;
-using Orchard.FileSystems.VirtualPath;
+using Orchard.AspNet.Abstractions;
 using Orchard.Logging;
 
 namespace Orchard.Environment {

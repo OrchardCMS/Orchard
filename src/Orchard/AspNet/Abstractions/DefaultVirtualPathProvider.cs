@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Hosting;
 using Orchard.Logging;
 
-namespace Orchard.FileSystems.VirtualPath {
+namespace Orchard.AspNet.Abstractions {
     public class DefaultVirtualPathProvider : IVirtualPathProvider {
         public DefaultVirtualPathProvider() {
             Logger = NullLogger.Instance;

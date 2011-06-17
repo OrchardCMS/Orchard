@@ -6,7 +6,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Contents.Controllers;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.VirtualPath;
+using Orchard.FileSystems.WebSite;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
@@ -26,19 +26,19 @@ namespace Orchard.Widgets.Controllers {
 
         private readonly IWidgetsService _widgetsService;
         private readonly ISiteThemeService _siteThemeService;
-        private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IWebSiteFolder _websiteFolder;
 
         public AdminController(
             IOrchardServices services,
             IWidgetsService widgetsService,
             IShapeFactory shapeFactory,
             ISiteThemeService siteThemeService,
-            IVirtualPathProvider virtualPathProvider) {
+            IWebSiteFolder websiteFolder) {
 
             Services = services;
             _widgetsService = widgetsService;
             _siteThemeService = siteThemeService;
-            _virtualPathProvider = virtualPathProvider;
+            _websiteFolder = websiteFolder;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -71,7 +71,7 @@ namespace Orchard.Widgets.Controllers {
             IEnumerable<string> currentThemesZones = _widgetsService.GetZones(currentTheme);
 
             string zonePreviewImagePath = string.Format("{0}/{1}/ThemeZonePreview.png", currentTheme.Location, currentTheme.Id);
-            string zonePreviewImage = _virtualPathProvider.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
+            string zonePreviewImage = _websiteFolder.FileExists(zonePreviewImagePath) ? zonePreviewImagePath : null;
 
             dynamic viewModel = Shape.ViewModel()
                 .CurrentTheme(currentTheme)
