@@ -36,13 +36,13 @@
     if(hasNextPage) {
         routeData["page"] = Model.Page + 1;
         <li class="page-next">
-        @Html.ActionLink((string)nextText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+        @Display.ActionLink(Value: nextText, Action: routeData["action"], Controller: routeData["controller"], RouteValues: routeData)
         </li>
     }
     if(Model.Page > 1) {
         routeData["page"] = Model.Page - 1;
         <li class="page-previous">
-        @Html.ActionLink((string)previousText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+        @Display.ActionLink(Value: previousText, Action: routeData["action"], Controller: routeData["controller"], RouteValues: routeData)
         </li>
     }
     @tag.EndElement

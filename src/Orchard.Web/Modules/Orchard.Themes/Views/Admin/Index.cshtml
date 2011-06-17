@@ -10,7 +10,7 @@
 @if (Model.CurrentTheme == null) {
     <p>
         @T("There is no current theme in the application. The built-in theme will be used.")<br />
-        @Html.ActionLink(T("Install a new Theme").ToString(), "Install")
+        @Display.ActionLink(Value: T("Install a new Theme"), Action: "Install")
     </p>
 } else {
     <h3 id="currentThemeTitle">@T("Current Theme")</h3>
@@ -21,8 +21,8 @@
 <div id="installedBar" class="group">
     <h3>@T("Available")</h3>
     @if (Model.InstallThemes) {
-    @Html.ActionLink(T("Install a theme from your computer").ToString(), "AddTheme", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)
-}
+    @Display.ActionLink(Value: T("Install a theme from your computer"), Action: "AddTheme", Controller: "PackagingServices", Area: "Orchard.Packaging", RouteValues: new { returnUrl = HttpContext.Current.Request.RawUrl })
+    }
 </div>
 
 @if (Model.Themes == null || Model.Themes.Count() <= 0) {

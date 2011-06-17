@@ -412,6 +412,7 @@ namespace Orchard.Core.Shapes {
             dynamic Display,
             dynamic Shape,
             string Href,
+            string Fragment,
             // parameter omitted to workaround an issue where a NullRef is thrown
             // when an anonymous object is bound to an object shape parameter
             /*object RouteValues,*/
@@ -428,6 +429,9 @@ namespace Orchard.Core.Shapes {
                 else {
                     href = Url.Action(null, RouteValues);
                 }
+            }
+            if (!string.IsNullOrEmpty(Fragment)) {
+                href += "#" + Fragment;
             }
 
             var tag = _tagBuilderFactory.Create((object)Shape, "a");

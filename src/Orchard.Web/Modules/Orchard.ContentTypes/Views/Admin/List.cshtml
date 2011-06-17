@@ -5,7 +5,7 @@
 }
 
 <div class="manage">
-    @Html.ActionLink(T("Create new type").ToString(), "Create", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" })
-    @Html.ActionLink(T("Content Parts").ToString(), "ListParts", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button" })
+    @Display.ActionLink(Value: T("Create new type"), Action: "Create", Controller: "Admin", Area: "Orchard.ContentTypes", Classes: new [] { "button", "primaryAction" })
+    @Display.ActionLink(Value: T("Content Parts"), Action: "ListParts", Controller: "Admin", Area: "Orchard.ContentTypes", Classes: "button")
 </div>
 @Display.List(Items: Model.Types.Select(t => Html.DisplayFor(m => t)), Classes: "contentItems")

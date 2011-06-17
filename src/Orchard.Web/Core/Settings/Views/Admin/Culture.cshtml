@@ -5,7 +5,7 @@
     var cultureLinks = Model.SiteCultures.OrderBy(s => s).Select(s => Html.DisplayFor(scvm => s, s == Model.CurrentCulture ? "CurrentCulture" : "RemovableCulture", ""));
 }
 
-<p class="breadcrumb">@Html.ActionLink(T("Manage Settings").Text, "index")@T(" &#62; ")@T("Supported Cultures")</p>
+<p class="breadcrumb">@Display.ActionLink(Value: T("Manage Settings"), Action: "index")@T(" &#62; ")@T("Supported Cultures")</p>
 <h3>@T("Available Cultures")</h3>
 @using (Html.BeginFormAntiForgeryPost("AddCulture")) {
 @Html.ValidationSummary()

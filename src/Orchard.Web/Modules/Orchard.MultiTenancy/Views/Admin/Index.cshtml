@@ -6,7 +6,7 @@
     Layout.Title = T("List of Site's Tenants").ToString();
 }
 
-<div class="manage">@Html.ActionLink(T("Add a Tenant").ToString(), "Add", new {area = "Orchard.MultiTenancy"}, new { @class = "button primaryAction" })</div>
+<div class="manage">@Display.ActionLink(Value: T("Add a Tenant"), Action: "Add", Area: "Orchard.MultiTenancy", Classes: new [] { "button", "primaryAction" })</div>
 <ul class="contentItems tenants">
     @foreach (var tenant in Model.TenantSettings) { 
     <li class="tenant @tenant.State.CurrentState">
@@ -21,7 +21,7 @@
                     var t = tenant;
                     @Html.DisplayFor(m => t, string.Format("ActionsFor{0}", tenant.State.CurrentState), "") @T(" | ")
                 }
-                @Html.ActionLink(T("Edit").ToString(), "Edit", new {name = tenant.Name, area = "Orchard.MultiTenancy"}) 
+                @Display.ActionLink(Value: T("Edit"), Action: "Edit", Area: "Orchard.MultiTenancy", RouteValues: new { name = tenant.Name })
             </div>
         </div>
     </li>

@@ -5,7 +5,7 @@
     Layout.Title = T("Edit Content Type").ToString();
 }
 
-<p class="breadcrumb">@Html.ActionLink(T("Content Types").Text, "index")@T(" &#62; ")@T("Edit Content Type")</p>
+<p class="breadcrumb">@Display.ActionLink(Value: T("Content Types"), Action: "index")@T(" &#62; ")@T("Edit Content Type")</p>
 @using (Html.BeginFormAntiForgeryPost()) {
     // todo: come up with real itemtype definitions and locations for said definitions
     <div itemscope="itemscope" itemid="@Model.Name" itemtype="http://orchardproject.net/data/ContentType">
@@ -24,12 +24,12 @@
         <div class="manage-type">
             <h2>@T("Fields")</h2>
             <div class="manage add-to-type">
-                @Html.ActionLink(T("Add Field").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
+                @Display.ActionLink(Value: T("Add Field"), Action: "AddFieldTo", Area: "Orchard.ContentTypes", RouteValues: new { id = Model.Name }, Classes: "button")
             </div>
                 @Html.EditorFor(m => m.Fields, "Fields", "")
             <h2>@T("Parts")</h2>
             <div class="manage add-to-type">
-                @Html.ActionLink(T("Add Parts").Text, "AddPartsTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })
+                @Display.ActionLink(Value: T("Add Parts"), Action: "AddPartsTo", Area: "Orchard.ContentTypes", RouteValues: new { id = Model.Name }, Classes: "button")
             </div>
             @Html.EditorFor(m => m.Parts, "TypeParts", "")
         </div>

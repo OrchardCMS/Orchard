@@ -74,7 +74,7 @@
                         </div>
 
                         <div class="related">
-                            @Html.ActionLink(T("Install").ToString(), "InstallGallery", "PackagingServices", new RouteValueDictionary { { "packageId", item.PackageId }, { "version", item.Version }, { "sourceId", item.Source.Id }, { "redirectUrl", HttpContext.Current.Request.RawUrl } }, null)@T(" | ")
+                            @Display.ActionLink(Value: T("Install"), Action: "InstallGallery", Controller: "PackagingServices", RouteValues: new { packageId = item.PackageId, version = item.Version, sourceId = item.Source.Id, redirectUrl = HttpContext.Current.Request.RawUrl })@T(" | ")
                             <a href="@item.PackageStreamUri">@T("Download")</a>
                         </div>
 

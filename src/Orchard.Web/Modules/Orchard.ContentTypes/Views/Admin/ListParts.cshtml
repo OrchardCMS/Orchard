@@ -2,8 +2,8 @@
 
 @{ Layout.Title = T("Content Parts").ToString(); }
 
-<p class="breadcrumb">@Html.ActionLink(T("Content Types").Text, "index")@T(" &#62; ")@T("Content Parts")</p>
+<p class="breadcrumb">@Display.ActionLink(Value: T("Content Types"), Action: "index")@T(" &#62; ")@T("Content Parts")</p>
 <div class="manage">
-    @Html.ActionLink(T("Create new part").ToString(), "CreatePart", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" })
+    @Display.ActionLink(Value: T("Create new part"), Action: "CreatePart", Controller: "Admin", Area: "Orchard.ContentTypes", Classes: new [] { "button", "primaryAction" })
 </div>
 @Display.List(Items: Model.Parts.Select(t => Html.DisplayFor(m => t)), Classes: "contentItems")

@@ -27,26 +27,23 @@ namespace Orchard.Comments {
                 }
                 else {
                     commentText +=
-                        Html.ActionLink(
-                            totalCommentText.ToString(),
-                            "Details",
-                            new {
-                                Area = "Orchard.Comments",
-                                Controller = "Admin",
+                        Display.ActionLink(Value: totalCommentText, Action: "Details",
+                            Controller: "Admin",
+                            Area: "Orchard.Comments",
+                            RouteValues: new {
                                 id = item.Id,
                                 returnUrl = Html.ViewContext.HttpContext.Request.ToUrlString()
-                            });
+                            }).ToString();
                 }
 
                 if (pendingCount > 0) {
-                    commentText += " " + Html.ActionLink(T("({0} pending)", pendingCount).ToString(),
-                                                   "Details",
-                                                   new {
-                                                       Area = "Orchard.Comments",
-                                                       Controller = "Admin",
+                    commentText += " " + Display.ActionLink(Value: T("({0} pending)", pendingCount), Action: "Details",
+                                                   Area: "Orchard.Comments",
+                                                   Controller: "Admin",
+                                                   RouteValues: new {
                                                        id = item.Id,
                                                        returnUrl = Html.ViewContext.HttpContext.Request.Url
-                                                   });
+                                                   }).ToString();
                 }
             }
 

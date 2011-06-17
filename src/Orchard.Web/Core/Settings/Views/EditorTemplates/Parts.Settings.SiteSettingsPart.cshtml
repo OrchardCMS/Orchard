@@ -24,7 +24,7 @@
         <label for="SiteCulture">@T("Default Site Culture")</label>
         @Html.DropDownList("SiteCulture", new SelectList(Model.SiteCultures, Model.SiteCulture))
         @Html.ValidationMessage("SiteCulture", "*")
-        <p>@Html.ActionLink(T("Add or remove supported cultures for the site.").ToString(), "Culture")</p>
+        <p>@Display.ActionLink(Value: T("Add or remove supported cultures for the site."), Action: "Culture")</p>
     </div>
     <div>
         <label for="TimeZone">@T("Default Time Zone")</label>

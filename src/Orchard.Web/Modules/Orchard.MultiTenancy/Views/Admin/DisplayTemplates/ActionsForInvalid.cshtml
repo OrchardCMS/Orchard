@@ -1,4 +1,4 @@
 ﻿@model Orchard.Environment.Configuration.ShellSettings
 @using Orchard.MultiTenancy.Extensions;
 
-@Html.ActionLink(T("Make Valid*").ToString(), "_setup", new {tenantName = Model.Name, area = "Orchard.MultiTenancy"})
+@Display.ActionLink(Value: T("Make Valid*"), Action: "_setup", Area: "Orchard.MultiTenancy", RouteValues: new { tenantName = Model.Name })

@@ -27,7 +27,7 @@
 }
 else if (WorkContext.CurrentUser == null && !AuthorizedFor(Permissions.AddComment)) {
 <h2 id="add-comment">@T("Add a Comment")</h2>
-<p class="info message">@T("You must {0} to comment.", Html.ActionLink(T("log on").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = string.Format("{0}#addacomment", Context.Request.RawUrl) }))</p>
+<p class="info message">@T("You must {0} to comment.", Display.ActionLink(Value: T("log on"), Action: "LogOn", Controller: "Account", Area: "Orchard.Users", RouteValues: new { ReturnUrl = string.Format("{0}#addacomment", Context.Request.RawUrl) }))</p>
 } else {
 using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment-form" })) { 
     @Html.ValidationSummary() 

@@ -13,7 +13,7 @@
         <button type="submit">@T("Apply")</button>
     </fieldset>
 
-    <div class="manage">@Html.ActionLink(T("Add a folder").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
+    <div class="manage">@Display.ActionLink(Value: T("Add a folder"), Action: "Create", Classes: new [] { "button" , "primaryAction" })</div>
 
     <fieldset>
         <table class="items" summary="@T("This is a table of the media folders currently available for use in your application.")">
@@ -41,7 +41,7 @@
                 @* todo: (heskew) this URL needs to be determined from current module location *@
                 <td>
                     @Display.Image(Src: "~/Modules/Orchard.Media/Content/Admin/images/folder.gif", Classes: "mediaTypeIcon", Alt: T("Folder"), Title: "", Attributes: new { width = "16", height = "16" })
-                    @Html.ActionLink(mediaFolder.Name, "Edit", new { name = mediaFolder.Name, mediaPath = mediaFolder.MediaPath })
+                    @Display.ActionLink(Value: mediaFolder.Name, Action: "Edit", RouteValues: new { name = mediaFolder.Name, mediaPath = mediaFolder.MediaPath })
                 </td>
                 <td>@mediaFolder.User</td>
                 <td>@mediaFolder.LastUpdated</td>

@@ -20,7 +20,7 @@
     </fieldset>
 
     if (Model.InstallModules) {
-    <span>@Html.ActionLink(T("Install a module from your computer").ToString(), "AddModule", "PackagingServices", new { area = "Orchard.Packaging", returnUrl = HttpContext.Current.Request.RawUrl }, null)</span>
+    <span>@Display.ActionLink(Value: T("Install a module from your computer"), Action: "AddModule", Controller: "PackagingServices", Area: "Orchard.Packaging", RouteValues: new { returnUrl = HttpContext.Current.Request.RawUrl })</span>
 }
 
     if (Model.Modules.Count() > 0) {
