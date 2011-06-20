@@ -267,6 +267,7 @@
     <Compile Include="UI\FlatPositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Navigation\PagerParameters.cs" />
+    <Compile Include="UI\Notify\INotifier.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
     <Compile Include="UI\Resources\ResourceManifestBuilder.cs" />
     <Compile Include="UI\Zones\LayoutWorkContext.cs" />
@@ -855,7 +856,6 @@
     <Compile Include="UI\Navigation\MenuItemComparer.cs" />
     <Compile Include="UI\Navigation\NavigationManager.cs" />
     <Compile Include="UI\Notify\Notifier.cs" />
-    <Compile Include="UI\Notify\NotifierExtensions.cs" />
     <Compile Include="UI\Notify\NotifyEntry.cs" />
     <Compile Include="UI\Notify\NotifyFilter.cs" />
     <Compile Include="Security\CreateUserParams.cs" />
