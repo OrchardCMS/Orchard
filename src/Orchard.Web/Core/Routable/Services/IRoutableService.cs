@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 
 namespace Orchard.Core.Routable.Services {
     public interface IRoutableService : IDependency {
-        void FillSlugFromTitle<TModel>(TModel model) where TModel : IRoutableAspect;
-        string GenerateUniqueSlug(IRoutableAspect part, IEnumerable<string> existingPaths);
+        void FillSlugFromTitle<TModel>(TModel model) where TModel : IRoutePart;
+        string GenerateUniqueSlug(IRoutePart part, IEnumerable<string> existingPaths);
 
         /// <summary>
         /// Returns any content item with similar path
         /// </summary>
-        IEnumerable<IRoutableAspect> GetSimilarPaths(string path);
+        IEnumerable<IRoutePart> GetSimilarPaths(string path);
 
         /// <summary>
         /// Validates the given slug
@@ -17,14 +17,14 @@ namespace Orchard.Core.Routable.Services {
         bool IsSlugValid(string slug);
 
         /// <summary>
-        /// Defines the slug of a RoutableAspect and validate its unicity
+        /// Defines the slug of a RoutePart and validate its unicity
         /// </summary>
         /// <returns>True if the slug has been created, False if a conflict occured</returns>
-        bool ProcessSlug(IRoutableAspect part);
+        bool ProcessSlug(IRoutePart part);
 
         /// <summary>
         /// Updated the paths of all contained items to reflect the current path of this item
         /// </summary>
-        void FixContainedPaths(IRoutableAspect part);
+        void FixContainedPaths(IRoutePart part);
     }
 }

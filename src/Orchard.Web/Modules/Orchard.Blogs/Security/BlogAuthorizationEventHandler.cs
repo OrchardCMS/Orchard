@@ -1,5 +1,5 @@
 ﻿using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 

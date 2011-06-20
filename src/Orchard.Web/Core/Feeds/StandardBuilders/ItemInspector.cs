@@ -1,7 +1,7 @@
 using System;
 using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
 
@@ -10,14 +10,14 @@ namespace Orchard.Core.Feeds.StandardBuilders {
         private readonly IContent _item;
         private readonly ContentItemMetadata _metadata;
         private readonly ICommonPart _common;
-        private readonly RoutePart _routable;
+        private readonly RoutePart _route;
         private readonly BodyPart _body;
 
         public ItemInspector(IContent item, ContentItemMetadata metadata) {
             _item = item;
             _metadata = metadata;
             _common = item.Get<ICommonPart>();
-            _routable = item.Get<RoutePart>();
+            _route = item.Get<RoutePart>();
             _body = item.Get<BodyPart>();
         }
 
@@ -25,8 +25,8 @@ namespace Orchard.Core.Feeds.StandardBuilders {
             get {
                 if (_metadata != null && !string.IsNullOrEmpty(_metadata.DisplayText))
                     return _metadata.DisplayText;
-                if (_routable != null && !string.IsNullOrEmpty(_routable.Title))
-                    return _routable.Title;
+                if (_route != null && !string.IsNullOrEmpty(_route.Title))
+                    return _route.Title;
                 return _item.ContentItem.ContentType + " #" + _item.ContentItem.Id;
             }
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;

@@ -1,8 +1,8 @@
 ﻿using System;
 using Orchard.ContentManagement.Utilities;
 
-namespace Orchard.ContentManagement.Aspects {
-    public interface IPublishingControlAspect {
+namespace Orchard.ContentManagement.Parts {
+    public interface IPublishLaterPart {
         LazyField<DateTime?> ScheduledPublishUtc { get; }
     }
 }

@@ -283,11 +283,11 @@
     <Compile Include="Commands\CommandHostEnvironment.cs" />
     <Compile Include="Commands\CommandHostVirtualPathMonitor.cs" />
     <Compile Include="Commands\OrchardCommandHostRetryException.cs" />
-    <Compile Include="ContentManagement\Aspects\ICommonPart.cs">
+    <Compile Include="ContentManagement\Parts\ICommonPart.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Aspects\IPublishingControlAspect.cs" />
-    <Compile Include="ContentManagement\Aspects\IRoutableAspect.cs" />
+    <Compile Include="ContentManagement\Parts\IPublishLaterPart.cs" />
+    <Compile Include="ContentManagement\Parts\IRoutePart.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs">
       <SubType>Code</SubType>
     </Compile>

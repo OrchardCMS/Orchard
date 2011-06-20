@@ -39,10 +39,10 @@ namespace Orchard.Core.Routable.Handlers {
             Filters.Add(StorageFilter.For(repository));
 
             Action<RoutePart> processSlug = (
-                routable => {
-                    if (!_routableService.ProcessSlug(routable))
+                route => {
+                    if (!_routableService.ProcessSlug(route))
                         _services.Notifier.Warning(T("Permalinks in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
-                                                     routable.Slug, routable.GetEffectiveSlug(), routable.ContentItem.ContentType));
+                                                     route.Slug, route.GetEffectiveSlug(), route.ContentItem.ContentType));
                 });
 
             OnGetDisplayShape<RoutePart>(SetModelProperties);
@@ -115,11 +115,11 @@ namespace Orchard.Core.Routable.Handlers {
                 _routablePathConstraint.AddPath(route.Path);
         }
 
-        private static void SetModelProperties(BuildShapeContext context, RoutePart routable) {
+        private static void SetModelProperties(BuildShapeContext context, RoutePart route) {
             var item = context.Shape;
-            item.Title = routable.Title;
-            item.Slug = routable.Slug;
-            item.Path = routable.Path;
+            item.Title = route.Title;
+            item.Slug = route.Slug;
+            item.Path = route.Path;
         }
 
         public Localizer T { get; set; }
@@ -135,19 +135,19 @@ namespace Orchard.Core.Routable.Handlers {
         }
 
         public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
-            var routable = context.ContentItem.As<RoutePart>();
+            var route = context.ContentItem.As<RoutePart>();
 
-            if (routable == null)
+            if (route == null)
                 return;
 
-            context.Metadata.DisplayText = routable.Title;
+            context.Metadata.DisplayText = route.Title;
 
             // set the display route values if it hasn't been set or only has been set by the Contents module. 
             // allows other modules to set their own display. probably not common enough to warrant some priority implemntation
             if (context.Metadata.DisplayRouteValues == null || context.Metadata.DisplayRouteValues["Area"] as string == "Contents") {
-                var itemPath = routable.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)
+                var itemPath = route.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)
                     ? ""
-                    : routable.Path;
+                    : route.Path;
 
                 context.Metadata.DisplayRouteValues = new RouteValueDictionary {
                     {"Area", "Routable"},

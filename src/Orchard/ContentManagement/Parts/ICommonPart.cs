@@ -1,7 +1,7 @@
 ﻿using System;
 using Orchard.Security;
 
-namespace Orchard.ContentManagement.Aspects {
+namespace Orchard.ContentManagement.Parts {
     public interface ICommonPart : IContent {
         IUser Owner { get; set; }
         IContent Container { get; set; }

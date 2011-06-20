@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 
 namespace Orchard.Widgets.Models {
     public class WidgetPart : ContentPart<WidgetPartRecord> {

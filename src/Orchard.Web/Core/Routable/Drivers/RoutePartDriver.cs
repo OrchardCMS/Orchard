@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Routable.Models;

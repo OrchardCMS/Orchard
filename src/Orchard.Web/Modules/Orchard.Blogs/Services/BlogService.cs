@@ -3,7 +3,7 @@ using System.Linq;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Services {
@@ -45,7 +45,7 @@ namespace Orchard.Blogs.Services {
 
         public void Delete(ContentItem blog) {
             _contentManager.Remove(blog);
-            _blogPathConstraint.RemovePath(blog.As<IRoutableAspect>().Path);
+            _blogPathConstraint.RemovePath(blog.As<IRoutePart>().Path);
         }
     }
 }

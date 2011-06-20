@@ -1,6 +1,6 @@
 using System;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Security;

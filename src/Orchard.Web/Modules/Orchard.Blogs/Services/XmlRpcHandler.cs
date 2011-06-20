@@ -5,7 +5,7 @@ using System.Web.Routing;
 using System.Xml.Linq;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;

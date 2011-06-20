@@ -4,7 +4,7 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
