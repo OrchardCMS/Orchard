@@ -7,7 +7,6 @@ using NHibernate;
 using NUnit.Framework;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -19,7 +18,6 @@ using Orchard.Tests.ContentManagement.Models;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement;
-using System.Collections.Generic;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.ContentManagement {
@@ -175,41 +173,6 @@ namespace Orchard.Tests.ContentManagement {
             var modelRecord = _container.Resolve<IRepository<ContentItemRecord>>().Get(beta.Id);
             Assert.That(modelRecord, Is.Not.Null);
             Assert.That(modelRecord.ContentType.Name, Is.EqualTo(DefaultBetaName));
-        }
-
-        /// <summary>
-        /// Tests that the GetContentTypeDefinitions returns only the registered types.
-        /// </summary>
-        [Test]
-        public void GetContentTypesShouldReturnAllTypes() {
-            // Register the types and obtain them
-            ContentTypeDefinition alphaType = new ContentTypeDefinitionBuilder()
-                .Named(DefaultAlphaName)
-                .Build();
-
-            ContentTypeDefinition betaType = new ContentTypeDefinitionBuilder()
-                .Named(DefaultBetaName)
-                .Build();
-
-            ContentTypeDefinition gammaType = new ContentTypeDefinitionBuilder()
-                .Named(DefaultGammaName)
-                .Build();
-
-            ContentTypeDefinition deltaType = new ContentTypeDefinitionBuilder()
-                .Named(DefaultDeltaName)
-                .Build();
-
-            _contentDefinitionManager.Setup(contentDefinitionManager => contentDefinitionManager.ListTypeDefinitions())
-                .Returns(new List<ContentTypeDefinition> { alphaType, betaType, gammaType, deltaType });
-            
-            var types = _manager.GetContentTypeDefinitions();
-
-            // Validate that the expected types were obtained
-            Assert.That(types.Count(), Is.EqualTo(4));
-            Assert.That(types, Has.Some.With.Property("Name").EqualTo(DefaultAlphaName));
-            Assert.That(types, Has.Some.With.Property("Name").EqualTo(DefaultBetaName));
-            Assert.That(types, Has.Some.With.Property("Name").EqualTo(DefaultGammaName));
-            Assert.That(types, Has.Some.With.Property("Name").EqualTo(DefaultDeltaName));
         }
 
         [Test]

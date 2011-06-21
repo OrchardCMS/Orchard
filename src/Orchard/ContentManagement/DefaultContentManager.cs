@@ -8,7 +8,6 @@ using Autofac;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Indexing;
@@ -54,10 +53,6 @@ namespace Orchard.ContentManagement {
                     _handlers = _context.Resolve<IEnumerable<IContentHandler>>();
                 return _handlers;
             }
-        }
-
-        public IEnumerable<ContentTypeDefinition> GetContentTypeDefinitions() {
-            return _contentDefinitionManager.ListTypeDefinitions();
         }
 
         public virtual ContentItem New(string contentType) {
