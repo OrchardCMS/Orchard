@@ -8,7 +8,7 @@ using Moq;
 using NUnit.Framework;
 using Orchard.AspNet.Abstractions;
 using Orchard.Caching;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Drivers.Coordinators;
 using Orchard.ContentManagement.MetaData;

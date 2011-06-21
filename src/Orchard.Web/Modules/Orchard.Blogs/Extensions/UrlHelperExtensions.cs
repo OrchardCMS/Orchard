@@ -1,7 +1,7 @@
 using System.Web.Mvc;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Routable.Services;
 using Orchard.Mvc.Extensions;
 
@@ -16,7 +16,7 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string Blog(this UrlHelper urlHelper, BlogPart blogPart) {
-            return urlHelper.Action("Item", "Blog", new { blogPath = blogPart.As<IRoutableAspect>().Path, area = "Orchard.Blogs" });
+            return urlHelper.Action("Item", "Blog", new { blogPath = blogPart.As<IRoutePart>().Path, area = "Orchard.Blogs" });
         }
 
         public static string BlogLiveWriterManifest(this UrlHelper urlHelper, BlogPart blogPart) {
@@ -24,19 +24,19 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogRsd(this UrlHelper urlHelper, BlogPart blogPart) {
-            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { blogPath = blogPart.As<IRoutableAspect>().Path, area = "Orchard.Blogs" }));
+            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { blogPath = blogPart.As<IRoutePart>().Path, area = "Orchard.Blogs" }));
         }
 
         public static string BlogArchiveYear(this UrlHelper urlHelper, BlogPart blogPart, int year) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = blogPart.As<IRoutableAspect>().Path, archiveData = year.ToString(), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = blogPart.As<IRoutePart>().Path, archiveData = year.ToString(), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveMonth(this UrlHelper urlHelper, BlogPart blogPart, int year, int month) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = blogPart.As<IRoutableAspect>().Path, archiveData = string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = blogPart.As<IRoutePart>().Path, archiveData = string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveDay(this UrlHelper urlHelper, BlogPart blogPart, int year, int month, int day) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = blogPart.As<IRoutableAspect>().Path, archiveData = string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = blogPart.As<IRoutePart>().Path, archiveData = string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs" });
         }
 
         public static string BlogForAdmin(this UrlHelper urlHelper, BlogPart blogPart) {
@@ -60,7 +60,7 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogPost(this UrlHelper urlHelper, BlogPostPart blogPostPart) {
-            return urlHelper.Action("Item", "BlogPost", new { blogPath = blogPostPart.BlogPart.As<IRoutableAspect>().Path, postSlug = blogPostPart.As<IRoutableAspect>().GetEffectiveSlug(), area = "Orchard.Blogs" });
+            return urlHelper.Action("Item", "BlogPost", new { blogPath = blogPostPart.BlogPart.As<IRoutePart>().Path, postSlug = blogPostPart.As<IRoutePart>().GetEffectiveSlug(), area = "Orchard.Blogs" });
         }
 
         public static string BlogPostEdit(this UrlHelper urlHelper, BlogPostPart blogPostPart) {

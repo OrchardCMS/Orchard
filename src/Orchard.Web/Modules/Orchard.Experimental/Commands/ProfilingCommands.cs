@@ -1,6 +1,6 @@
 ﻿using Orchard.Commands;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Routable.Models;
@@ -52,8 +52,8 @@ namespace Orchard.Experimental.Commands {
                 //    var post = _contentManager.New("BlogPost");
                 //    post.As<ICommonPart>().Owner = admin;
                 //    post.As<ICommonPart>().Container = blog;
-                //    post.As<RoutableAspect>().Slug = postName;
-                //    post.As<RoutableAspect>().Title = postName;
+                //    post.As<RoutePart>().Slug = postName;
+                //    post.As<RoutePart>().Title = postName;
                 //    post.As<BodyPart>().Text = postName;
                 //    _contentManager.Create(post);
                 //}

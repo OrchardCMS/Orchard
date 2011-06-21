@@ -1,5 +1,5 @@
 ﻿using Orchard.ContentManagement;
-using Orchard.ContentManagement.Utilities;
+using Orchard.Utility;
 using Orchard.Localization.Records;
 
 namespace Orchard.Localization.Models {

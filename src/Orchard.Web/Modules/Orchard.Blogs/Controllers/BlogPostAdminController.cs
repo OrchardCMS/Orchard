@@ -5,7 +5,7 @@ using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
@@ -49,7 +49,7 @@ namespace Orchard.Blogs.Controllers {
         [FormValueRequired("submit.Save")]
         public ActionResult CreatePOST(int blogId) {
             return CreatePOST(blogId, contentItem => {
-                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                if (!contentItem.Has<IPublishLaterPart>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
             });
         }
@@ -112,7 +112,7 @@ namespace Orchard.Blogs.Controllers {
         [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int blogId, int postId, string returnUrl) {
             return EditPOST(blogId, postId, returnUrl, contentItem => {
-                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                if (!contentItem.Has<IPublishLaterPart>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
             });
         }

@@ -144,7 +144,6 @@
     <Compile Include="Routable\Handlers\RoutePartHandler.cs" />
     <Compile Include="Routable\IRoutablePathConstraint.cs" />
     <Compile Include="Routable\Models\RoutePart.cs" />
-    <Compile Include="Common\Utilities\LazyField.cs" />
     <Compile Include="Common\Handlers\CommonPartHandler.cs" />
     <Compile Include="Common\Models\CommonPart.cs" />
     <Compile Include="Common\Handlers\BodyPartHandler.cs" />
