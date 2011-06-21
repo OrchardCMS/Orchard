@@ -1,5 +1,5 @@
 ﻿using System;
-using Orchard.ContentManagement.Utilities;
+using Orchard.Utility;
 
 namespace Orchard.ContentManagement.Parts {
     public interface IPublishLaterPart {

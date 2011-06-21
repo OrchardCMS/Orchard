@@ -176,7 +176,6 @@
     <Compile Include="ContentManagement\IContentBehavior.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
-    <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementInfo.cs" />
     <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
@@ -489,9 +488,6 @@
     <Compile Include="ContentManagement\Records\Utility.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Utilities\LazyField.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -525,6 +521,7 @@
     <Compile Include="Messaging\Services\IMessageManager.cs" />
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
+    <Compile Include="Utility\LazyField.cs" />
     <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="Wcf\OrchardDependencyInjectionServiceBehavior.cs" />
     <Compile Include="Wcf\OrchardInstanceContext.cs" />
