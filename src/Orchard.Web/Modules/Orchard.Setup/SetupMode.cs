@@ -6,7 +6,7 @@ using Orchard.Commands;
 using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.ContentManagement.Metadata.Builders;
 using Orchard.Core.Settings.Models;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;

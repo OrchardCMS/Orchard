@@ -175,7 +175,7 @@
     <Compile Include="ContentManagement\Handlers\ImportContentContext.cs" />
     <Compile Include="ContentManagement\IContentBehavior.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\ISettingsFormatter.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementInfo.cs" />
     <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
@@ -438,31 +438,31 @@
     <Compile Include="ContentManagement\IUpdateModel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\MetaData\Builders\ContentPartDefinitionBuilder.cs" />
-    <Compile Include="ContentManagement\MetaData\Builders\ContentPartFieldDefinitionBuilder.cs" />
-    <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilder.cs" />
-    <Compile Include="ContentManagement\MetaData\Builders\ContentTypePartDefinitionBuilder.cs" />
-    <Compile Include="ContentManagement\MetaData\ContentFieldInfo.cs" />
-    <Compile Include="ContentManagement\MetaData\ContentPartInfo.cs">
+    <Compile Include="ContentManagement\Metadata\Builders\ContentPartDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\Metadata\Builders\ContentPartFieldDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\Metadata\Builders\ContentTypeDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\Metadata\Builders\ContentTypePartDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\Metadata\ContentFieldInfo.cs" />
+    <Compile Include="ContentManagement\Metadata\ContentPartInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\MetaData\IContentDefinitionEditorEvents.cs" />
-    <Compile Include="ContentManagement\MetaData\Models\ContentPartFieldDefinition.cs" />
-    <Compile Include="ContentManagement\MetaData\Models\ContentTypePartDefinition.cs" />
-    <Compile Include="ContentManagement\MetaData\Models\SettingsDictionary.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriter.cs" />
-    <Compile Include="ContentManagement\MetaData\IContentDefinitionManager.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\IContentDefinitionReader.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\IContentDefinitionWriter.cs" />
-    <Compile Include="ContentManagement\MetaData\Models\ContentFieldDefinition.cs" />
-    <Compile Include="ContentManagement\MetaData\Models\ContentPartDefinition.cs">
+    <Compile Include="ContentManagement\Metadata\IContentDefinitionEditorEvents.cs" />
+    <Compile Include="ContentManagement\Metadata\Models\ContentPartFieldDefinition.cs" />
+    <Compile Include="ContentManagement\Metadata\Models\ContentTypePartDefinition.cs" />
+    <Compile Include="ContentManagement\Metadata\Models\SettingsDictionary.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\ContentDefinitionWriter.cs" />
+    <Compile Include="ContentManagement\Metadata\IContentDefinitionManager.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\IContentDefinitionReader.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\IContentDefinitionWriter.cs" />
+    <Compile Include="ContentManagement\Metadata\Models\ContentFieldDefinition.cs" />
+    <Compile Include="ContentManagement\Metadata\Models\ContentPartDefinition.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\MetaData\Models\ContentTypeDefinition.cs">
+    <Compile Include="ContentManagement\Metadata\Models\ContentTypeDefinition.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionReader.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\SettingsFormatter.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\ContentDefinitionReader.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\SettingsFormatter.cs" />
     <Compile Include="ContentManagement\Records\ContentItemAlteration.cs">
       <SubType>Code</SubType>
     </Compile>

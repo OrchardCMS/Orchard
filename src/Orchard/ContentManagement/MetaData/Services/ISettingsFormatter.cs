@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Metadata.Models;
 
-namespace Orchard.ContentManagement.MetaData.Services {
+namespace Orchard.ContentManagement.Metadata.Services {
     /// <summary>
     /// Abstraction to manage settings metadata on a content.
     /// </summary>

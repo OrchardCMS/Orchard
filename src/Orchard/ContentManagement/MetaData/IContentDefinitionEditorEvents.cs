@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Metadata.Builders;
+using Orchard.ContentManagement.Metadata.Models;
 using Orchard.ContentManagement.ViewModels;
 using Orchard.Events;
 
-namespace Orchard.ContentManagement.MetaData {
+namespace Orchard.ContentManagement.Metadata {
     public interface IContentDefinitionEditorEvents : IEventHandler {
         IEnumerable<TemplateViewModel> TypeEditor(ContentTypeDefinition definition);
         IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition);

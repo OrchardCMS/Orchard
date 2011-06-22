@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Metadata.Builders;
+using Orchard.ContentManagement.Metadata.Models;
 using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Core.Common.Settings {

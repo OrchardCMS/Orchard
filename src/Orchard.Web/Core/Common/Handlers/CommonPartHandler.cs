@@ -1,5 +1,5 @@
 using System.Linq;
-using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.Metadata;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.ContentManagement.Metadata.Builders;
 using Orchard.Security;
 
 namespace Orchard.Roles.Models {

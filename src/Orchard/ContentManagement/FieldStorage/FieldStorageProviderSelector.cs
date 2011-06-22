@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Metadata.Models;
 
 namespace Orchard.ContentManagement.FieldStorage {
     public class FieldStorageProviderSelector : IFieldStorageProviderSelector {
