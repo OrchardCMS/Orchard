@@ -180,9 +180,9 @@
     <Compile Include="ContentManagement\Handlers\EpsilonPartHandler.cs" />
     <Compile Include="ContentManagement\Handlers\GammaPartHandler.cs" />
     <Compile Include="ContentManagement\Handlers\ModelBuilderTests.cs" />
-    <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilderTests.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionReaderTests.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriterTests.cs" />
+    <Compile Include="ContentManagement\Metadata\Builders\ContentTypeDefinitionBuilderTests.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\ContentDefinitionReaderTests.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\ContentDefinitionWriterTests.cs" />
     <Compile Include="ContentManagement\Models\AlphaPart.cs" />
     <Compile Include="ContentManagement\Handlers\AlphaPartHandler.cs" />
     <Compile Include="ContentManagement\Models\BetaPart.cs" />

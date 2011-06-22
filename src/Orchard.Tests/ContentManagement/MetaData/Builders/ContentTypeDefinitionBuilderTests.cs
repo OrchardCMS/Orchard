@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Orchard.ContentManagement.Metadata.Builders;
 
-namespace Orchard.Tests.ContentManagement.MetaData.Builders {
+namespace Orchard.Tests.ContentManagement.Metadata.Builders {
     [TestFixture]
     public class ContentTypeDefinitionBuilderTests {
         [Test]
