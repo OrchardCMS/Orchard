@@ -1,50 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Mvc.Html;
-using System.Web.Routing;
-using ClaySharp;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
-using Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Mvc;
-using Orchard.Settings;
-using Orchard.UI;
 using Orchard.UI.Resources;
-using Orchard.UI.Zones;
-using Orchard.Utility.Extensions;
 
 // ReSharper disable InconsistentNaming
 
 namespace Orchard.Core.Shapes {
     public class EditorShapes : IShapeTableProvider {
-        private readonly Work<WorkContext> _workContext;
-        private readonly Work<IResourceManager> _resourceManager;
-        private readonly Work<IHttpContextAccessor> _httpContextAccessor;
-        private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly ITagBuilderFactory _tagBuilderFactory;
 
-        public EditorShapes(
-            ITagBuilderFactory tagBuilderFactory,
-            Work<WorkContext> workContext, 
-            Work<IResourceManager> resourceManager,
-            Work<IHttpContextAccessor> httpContextAccessor,
-            IVirtualPathProvider virtualPathProvider
-            ) {
+        public EditorShapes(ITagBuilderFactory tagBuilderFactory) {
             _tagBuilderFactory = tagBuilderFactory;
-            _workContext = workContext;
-            _resourceManager = resourceManager;
-            _httpContextAccessor = httpContextAccessor;
-            _virtualPathProvider = virtualPathProvider;
         }
 
         public void Discover(ShapeTableBuilder builder) {
