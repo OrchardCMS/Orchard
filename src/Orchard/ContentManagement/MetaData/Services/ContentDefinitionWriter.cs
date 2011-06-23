@@ -1,9 +1,9 @@
 ﻿using System.Xml;
 using System.Xml.Linq;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Metadata.Models;
 using Orchard.Validation;
 
-namespace Orchard.ContentManagement.MetaData.Services {
+namespace Orchard.ContentManagement.Metadata.Services {
     /// <summary>
     /// The content definition writer is used to export both content type and content part definitions to a XML format.
     /// </summary>

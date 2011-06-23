@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 using System.Xml.Linq;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Metadata.Models;
 
 namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
     public class InfosetStorageProvider : IFieldStorageProvider {

@@ -5,8 +5,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 using ClaySharp;
-using Orchard.ContentManagement.MetaData.Models;
-using Orchard.ContentManagement.Utilities;
+using Orchard.ContentManagement.Metadata.Models;
+using Orchard.Utility;
 using Orchard.UI;
 
 namespace Orchard.ContentManagement {

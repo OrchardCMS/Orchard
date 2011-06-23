@@ -1,10 +1,13 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Web.Compilation;
-using Orchard.FileSystems.VirtualPath;
+using Orchard.Environment;
 
-namespace Orchard.Environment {
+namespace Orchard.AspNet.Abstractions {
+    /// <summary>
+    /// Provides an abstraction over the builder manager.
+    /// </summary>
     public interface IBuildManager : IDependency {
         IEnumerable<Assembly> GetReferencedAssemblies();
         bool HasReferencedAssembly(string name);
@@ -12,6 +15,9 @@ namespace Orchard.Environment {
         Assembly GetCompiledAssembly(string virtualPath);
     }
 
+    /// <summary>
+    /// Default build manager implementation that relies on the ASP.NET build manager.
+    /// </summary>
     public class DefaultBuildManager : IBuildManager {
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IAssemblyLoader _assemblyLoader;

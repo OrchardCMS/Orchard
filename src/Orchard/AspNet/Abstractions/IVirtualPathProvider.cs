@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Orchard.FileSystems.VirtualPath {
+namespace Orchard.AspNet.Abstractions {
+    /// <summary>
+    /// Provides an abstraction for file / folder manipulation under a virtual path.
+    /// Should not be used directly by modules. Modules should instead use one of the implementations
+    /// under the Orchard.FileSystems namespace.
+    /// </summary>
     public interface IVirtualPathProvider : ISingletonDependency {
         string Combine(params string[] paths);
         string ToAppRelative(string virtualPath);

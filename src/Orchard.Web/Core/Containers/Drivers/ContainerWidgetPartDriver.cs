@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
@@ -67,7 +67,7 @@ namespace Orchard.Core.Containers.Drivers {
                         ? new[] {new SelectListItem {Text = T("(None - create container enabled items first)").Text, Value = "0"}}
                         : containers.Select(x => new SelectListItem {
                                 Value = Convert.ToString(x.Id),
-                                Text = x.ContentItem.TypeDefinition.DisplayName + ": " + x.As<IRoutableAspect>().Title,
+                                Text = x.ContentItem.TypeDefinition.DisplayName + ": " + x.As<IRoutePart>().Title,
                                 Selected = x.Id == model.Part.Record.ContainerId,
                             });
 

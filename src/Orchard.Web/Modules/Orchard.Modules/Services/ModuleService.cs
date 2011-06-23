@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
-using Orchard.FileSystems.VirtualPath;
+using Orchard.FileSystems.WebSite;
 using Orchard.Localization;
 using Orchard.Modules.Models;
 using Orchard.UI.Notify;
@@ -14,7 +15,7 @@ using Orchard.UI.Notify;
 namespace Orchard.Modules.Services {
     public class ModuleService : IModuleService {
         private readonly IFeatureManager _featureManager;
-        private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IWebSiteFolder _websiteFolder;
         private readonly IExtensionManager _extensionManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly ICacheManager _cacheManager;
@@ -22,7 +23,7 @@ namespace Orchard.Modules.Services {
         public ModuleService(
                 IFeatureManager featureManager,
                 IOrchardServices orchardServices,
-                IVirtualPathProvider virtualPathProvider,
+                IWebSiteFolder websiteFolder,
                 IExtensionManager extensionManager,
                 IShellDescriptorManager shellDescriptorManager,
                 ICacheManager cacheManager) {
@@ -30,7 +31,7 @@ namespace Orchard.Modules.Services {
             Services = orchardServices;
 
             _featureManager = featureManager;
-            _virtualPathProvider = virtualPathProvider;
+            _websiteFolder = websiteFolder;
             _extensionManager = extensionManager;
             _shellDescriptorManager = shellDescriptorManager;
             _cacheManager = cacheManager;
@@ -106,7 +107,7 @@ namespace Orchard.Modules.Services {
                 string projectFile = GetManifestPath(extensionDescriptor);
                 if (!string.IsNullOrEmpty(projectFile)) {
                     // If project file was modified less than 24 hours ago, the module was recently deployed
-                    return _virtualPathProvider.GetFileLastWriteTimeUtc(projectFile);
+                    return _websiteFolder.GetFileLastWriteTimeUtc(projectFile);
                 }
 
                 return DateTime.UtcNow;
@@ -121,9 +122,9 @@ namespace Orchard.Modules.Services {
         /// <param name="extensionDescriptor">The module's extension descriptor.</param>
         /// <returns>The full path to the module's manifest file.</returns>
         private string GetManifestPath(ExtensionDescriptor extensionDescriptor) {
-            string projectPath = _virtualPathProvider.Combine(extensionDescriptor.Location, extensionDescriptor.Id, "module.txt");
+            string projectPath = Path.Combine(extensionDescriptor.Location, extensionDescriptor.Id, "module.txt");
 
-            if (!_virtualPathProvider.FileExists(projectPath)) {
+            if (!_websiteFolder.FileExists(projectPath)) {
                 return null;
             }
 

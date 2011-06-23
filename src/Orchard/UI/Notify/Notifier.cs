@@ -3,11 +3,6 @@ using Orchard.Localization;
 using Orchard.Logging;
 
 namespace Orchard.UI.Notify {
-    public interface INotifier : IDependency {
-        void Add(NotifyType type, LocalizedString message);
-        IEnumerable<NotifyEntry> List();
-    }
-
     public class Notifier : INotifier {
         private readonly IList<NotifyEntry> _entries;
 
@@ -17,6 +12,18 @@ namespace Orchard.UI.Notify {
         }
 
         public ILogger Logger { get; set; }
+
+        public void Information(LocalizedString message) {
+            Add(NotifyType.Information, message);
+        }
+
+        public void Warning(LocalizedString message) {
+            Add(NotifyType.Warning, message);
+        }
+
+        public void Error(LocalizedString message) {
+            Add(NotifyType.Error, message);
+        }
 
         public void Add(NotifyType type, LocalizedString message) {
             Logger.Information("Notification {0} message: {1}", type, message);

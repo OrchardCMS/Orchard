@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.Metadata;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 

@@ -7,7 +7,7 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.Metadata;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;

@@ -1,6 +1,6 @@
 ﻿using System;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Utilities;
+using Orchard.Utility;
 
 namespace Orchard.ArchiveLater.Models {
     public class ArchiveLaterPart : ContentPart<ArchiveLaterPart> {

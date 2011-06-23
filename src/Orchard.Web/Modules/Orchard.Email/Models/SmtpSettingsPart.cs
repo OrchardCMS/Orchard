@@ -1,12 +1,12 @@
 ﻿using Orchard.ContentManagement;
 using System;
-using Orchard.ContentManagement.Utilities;
+using Orchard.Utility;
 
 namespace Orchard.Email.Models {
     public class SmtpSettingsPart : ContentPart<SmtpSettingsPartRecord> {
-        private readonly ComputedField<string> _password = new ComputedField<string>();
+        private readonly LazyField<string> _password = new LazyField<string>();
 
-        public ComputedField<string> PasswordField {
+        public LazyField<string> PasswordField {
             get { return _password; }
         }
 

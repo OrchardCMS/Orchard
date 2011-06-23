@@ -7,7 +7,7 @@ using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
-using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.Metadata;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Data.Migration;

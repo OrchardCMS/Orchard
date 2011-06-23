@@ -1,6 +1,6 @@
 ﻿using Moq;
 using NUnit.Framework;
-using Orchard.FileSystems.VirtualPath;
+using Orchard.AspNet.Abstractions;
 
 namespace Orchard.Tests.FileSystems.VirtualPath {
     [TestFixture]

@@ -1,12 +1,9 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Indexing;
 
 namespace Orchard.ContentManagement {
     public interface IContentManager : IDependency {
-        IEnumerable<ContentTypeDefinition> GetContentTypeDefinitions();
-
         ContentItem New(string contentType);
         
         void Create(ContentItem contentItem);

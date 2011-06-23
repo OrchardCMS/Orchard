@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Data;
@@ -86,7 +86,7 @@ namespace Orchard.Core.Routable.Controllers {
             _contentManager.Publish(contentItem);
             _transactionManager.Cancel();
 
-            return Json(contentItem.As<IRoutableAspect>().GetEffectiveSlug() ?? slug);
+            return Json(contentItem.As<IRoutePart>().GetEffectiveSlug() ?? slug);
         }
 
 

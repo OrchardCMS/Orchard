@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Utilities;
+using Orchard.Utility;
 
 namespace Orchard.Comments.Models {
     public class CommentsPart : ContentPart<CommentsPartRecord> {

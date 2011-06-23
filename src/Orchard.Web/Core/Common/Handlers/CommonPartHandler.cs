@@ -1,13 +1,11 @@
-using System;
 using System.Linq;
-using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.Metadata;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Security;
-using Orchard.Services;
 using Orchard.Time;
 
 namespace Orchard.Core.Common.Handlers {
@@ -123,8 +121,8 @@ namespace Orchard.Core.Common.Handlers {
 
         protected void LazyLoadHandlers(CommonPart part) {
             // add handlers that will load content for id's just-in-time
-            part.OwnerField.Loader(() => _contentManager.Get<IUser>(part.Record.OwnerId));
-            part.ContainerField.Loader(() => part.Record.Container == null ? null : _contentManager.Get(part.Record.Container.Id));            
+            part.OwnerField.Loader(value => _contentManager.Get<IUser>(part.Record.OwnerId));
+            part.ContainerField.Loader(value => part.Record.Container == null ? null : _contentManager.Get(part.Record.Container.Id));            
         }
 
         protected static void PropertySetHandlers(ActivatedContentContext context, CommonPart part) {

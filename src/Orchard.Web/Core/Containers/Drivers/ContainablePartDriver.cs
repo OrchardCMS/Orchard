@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;

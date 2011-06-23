@@ -21,7 +21,7 @@ namespace Orchard.Email.Handlers {
         }
 
         void LazyLoadHandlers(LoadContentContext context, SmtpSettingsPart part) {
-            part.PasswordField.Getter(() => String.IsNullOrWhiteSpace(part.Record.Password) ? String.Empty : Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(part.Record.Password))));
+            part.PasswordField.Loader(value => String.IsNullOrWhiteSpace(part.Record.Password) ? String.Empty : Encoding.UTF8.GetString(_encryptionService.Decode(Convert.FromBase64String(part.Record.Password))));
             part.PasswordField.Setter(value => part.Record.Password = String.IsNullOrWhiteSpace(value) ? String.Empty : Convert.ToBase64String(_encryptionService.Encode(Encoding.UTF8.GetBytes(value))));
         }
 

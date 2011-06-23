@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Metadata.Models;
 using Orchard.ContentTypes.ViewModels;
 
 namespace Orchard.ContentTypes.Services {

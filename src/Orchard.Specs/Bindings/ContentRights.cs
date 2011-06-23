@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Contents;
 using Orchard.Data;
 using Orchard.Roles.Models;

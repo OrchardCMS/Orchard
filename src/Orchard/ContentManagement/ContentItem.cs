@@ -4,7 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using ClaySharp;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Metadata.Models;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.ContentManagement {

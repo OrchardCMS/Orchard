@@ -175,8 +175,7 @@
     <Compile Include="ContentManagement\Handlers\ImportContentContext.cs" />
     <Compile Include="ContentManagement\IContentBehavior.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
-    <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\ISettingsFormatter.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementInfo.cs" />
     <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
@@ -268,6 +267,7 @@
     <Compile Include="UI\FlatPositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Navigation\PagerParameters.cs" />
+    <Compile Include="UI\Notify\INotifier.cs" />
     <Compile Include="UI\Resources\IResourceManifestProvider.cs" />
     <Compile Include="UI\Resources\ResourceManifestBuilder.cs" />
     <Compile Include="UI\Zones\LayoutWorkContext.cs" />
@@ -284,11 +284,11 @@
     <Compile Include="Commands\CommandHostEnvironment.cs" />
     <Compile Include="Commands\CommandHostVirtualPathMonitor.cs" />
     <Compile Include="Commands\OrchardCommandHostRetryException.cs" />
-    <Compile Include="ContentManagement\Aspects\ICommonPart.cs">
+    <Compile Include="ContentManagement\Parts\ICommonPart.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Aspects\IPublishingControlAspect.cs" />
-    <Compile Include="ContentManagement\Aspects\IRoutableAspect.cs" />
+    <Compile Include="ContentManagement\Parts\IPublishLaterPart.cs" />
+    <Compile Include="ContentManagement\Parts\IRoutePart.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -439,31 +439,31 @@
     <Compile Include="ContentManagement\IUpdateModel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\MetaData\Builders\ContentPartDefinitionBuilder.cs" />
-    <Compile Include="ContentManagement\MetaData\Builders\ContentPartFieldDefinitionBuilder.cs" />
-    <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilder.cs" />
-    <Compile Include="ContentManagement\MetaData\Builders\ContentTypePartDefinitionBuilder.cs" />
-    <Compile Include="ContentManagement\MetaData\ContentFieldInfo.cs" />
-    <Compile Include="ContentManagement\MetaData\ContentPartInfo.cs">
+    <Compile Include="ContentManagement\Metadata\Builders\ContentPartDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\Metadata\Builders\ContentPartFieldDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\Metadata\Builders\ContentTypeDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\Metadata\Builders\ContentTypePartDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\Metadata\ContentFieldInfo.cs" />
+    <Compile Include="ContentManagement\Metadata\ContentPartInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\MetaData\IContentDefinitionEditorEvents.cs" />
-    <Compile Include="ContentManagement\MetaData\Models\ContentPartFieldDefinition.cs" />
-    <Compile Include="ContentManagement\MetaData\Models\ContentTypePartDefinition.cs" />
-    <Compile Include="ContentManagement\MetaData\Models\SettingsDictionary.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriter.cs" />
-    <Compile Include="ContentManagement\MetaData\IContentDefinitionManager.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\IContentDefinitionReader.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\IContentDefinitionWriter.cs" />
-    <Compile Include="ContentManagement\MetaData\Models\ContentFieldDefinition.cs" />
-    <Compile Include="ContentManagement\MetaData\Models\ContentPartDefinition.cs">
+    <Compile Include="ContentManagement\Metadata\IContentDefinitionEditorEvents.cs" />
+    <Compile Include="ContentManagement\Metadata\Models\ContentPartFieldDefinition.cs" />
+    <Compile Include="ContentManagement\Metadata\Models\ContentTypePartDefinition.cs" />
+    <Compile Include="ContentManagement\Metadata\Models\SettingsDictionary.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\ContentDefinitionWriter.cs" />
+    <Compile Include="ContentManagement\Metadata\IContentDefinitionManager.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\IContentDefinitionReader.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\IContentDefinitionWriter.cs" />
+    <Compile Include="ContentManagement\Metadata\Models\ContentFieldDefinition.cs" />
+    <Compile Include="ContentManagement\Metadata\Models\ContentPartDefinition.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\MetaData\Models\ContentTypeDefinition.cs">
+    <Compile Include="ContentManagement\Metadata\Models\ContentTypeDefinition.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionReader.cs" />
-    <Compile Include="ContentManagement\MetaData\Services\SettingsFormatter.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\ContentDefinitionReader.cs" />
+    <Compile Include="ContentManagement\Metadata\Services\SettingsFormatter.cs" />
     <Compile Include="ContentManagement\Records\ContentItemAlteration.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -487,9 +487,6 @@
     </Compile>
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\Infoset.cs" />
     <Compile Include="ContentManagement\Records\Utility.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ContentManagement\Utilities\LazyField.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs">
@@ -525,6 +522,7 @@
     <Compile Include="Messaging\Services\IMessageManager.cs" />
     <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
+    <Compile Include="Utility\LazyField.cs" />
     <Compile Include="Validation\PathValidation.cs" />
     <Compile Include="Wcf\OrchardDependencyInjectionServiceBehavior.cs" />
     <Compile Include="Wcf\OrchardInstanceContext.cs" />
@@ -621,20 +619,20 @@
     <Compile Include="Environment\Compilation\Dependencies\DefaultAssemblyProbingFolder.cs" />
     <Compile Include="Environment\Compilation\Dependencies\DefaultDependencyDescriptorManager.cs" />
     <Compile Include="Environment\Compilation\Dependencies\IAssemblyProbingFolder.cs" />
-    <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathMonitor.cs" />
-    <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProvider.cs" />
-    <Compile Include="FileSystems\VirtualPath\ICustomVirtualPathProvider.cs" />
+    <Compile Include="AspNet\Abstractions\DefaultVirtualPathMonitor.cs" />
+    <Compile Include="AspNet\Abstractions\DefaultVirtualPathProvider.cs" />
+    <Compile Include="AspNet\Abstractions\ICustomVirtualPathProvider.cs" />
     <Compile Include="Environment\Compilation\Dependencies\WebFormsExtensionsVirtualPathProvider.cs" />
     <Compile Include="Environment\Compilation\Dependencies\WebFormsExtensionsVirtualFile.cs" />
     <Compile Include="Environment\IHostEnvironment.cs" />
-    <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs" />
+    <Compile Include="AspNet\Abstractions\IVirtualPathMonitor.cs" />
     <Compile Include="Environment\Compilation\Dependencies\IDependencyDescriptorManager.cs" />
     <Compile Include="Environment\Compilation\Compilers\IExtensionCompiler.cs" />
     <Compile Include="Environment\Compilation\Compilers\DefaultExtensionCompiler.cs" />
     <Compile Include="Environment\Compilation\Compilers\DefaultProjectFileParser.cs" />
     <Compile Include="Environment\IAssemblyBuilder.cs" />
-    <Compile Include="Environment\IBuildManager.cs" />
-    <Compile Include="FileSystems\VirtualPath\IVirtualPathProvider.cs" />
+    <Compile Include="AspNet\Abstractions\IBuildManager.cs" />
+    <Compile Include="AspNet\Abstractions\IVirtualPathProvider.cs" />
     <Compile Include="Environment\IOrchardShell.cs" />
     <Compile Include="Environment\OrchardStarter.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngine.cs" />
@@ -856,7 +854,6 @@
     <Compile Include="UI\Navigation\MenuItemComparer.cs" />
     <Compile Include="UI\Navigation\NavigationManager.cs" />
     <Compile Include="UI\Notify\Notifier.cs" />
-    <Compile Include="UI\Notify\NotifierExtensions.cs" />
     <Compile Include="UI\Notify\NotifyEntry.cs" />
     <Compile Include="UI\Notify\NotifyFilter.cs" />
     <Compile Include="Security\CreateUserParams.cs" />

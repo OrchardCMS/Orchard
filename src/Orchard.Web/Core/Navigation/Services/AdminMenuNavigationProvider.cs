@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.Metadata;
 using Orchard.Core.Navigation.Models;
 using Orchard.Localization;
 using Orchard.UI.Navigation;

@@ -1,5 +1,5 @@
 ﻿using Orchard.Comments.Models;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Services;

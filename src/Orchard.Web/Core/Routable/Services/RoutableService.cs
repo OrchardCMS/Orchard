@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Events;
 using Orchard.Core.Routable.Models;
@@ -20,11 +20,11 @@ namespace Orchard.Core.Routable.Services {
             _slugEventHandlers = slugEventHandlers;
         }
 
-        public void FixContainedPaths(IRoutableAspect part) {
+        public void FixContainedPaths(IRoutePart part) {
             var items = _contentManager.Query(VersionOptions.Published)
                 .Join<CommonPartRecord>().Where(cr => cr.Container.Id == part.Id)
                 .List()
-                .Select(item => item.As<IRoutableAspect>()).Where(item => item != null);
+                .Select(item => item.As<IRoutePart>()).Where(item => item != null);
 
             foreach (var itemRoute in items) {
                 itemRoute.ContentItem.VersionRecord.Published = false; // <- to force a republish
@@ -46,7 +46,7 @@ namespace Orchard.Core.Routable.Services {
             return (sb.ToString().Normalize(NormalizationForm.FormC));
         }
 
-        public void FillSlugFromTitle<TModel>(TModel model) where TModel : IRoutableAspect {
+        public void FillSlugFromTitle<TModel>(TModel model) where TModel : IRoutePart {
             if ((model.Slug != null && !string.IsNullOrEmpty(model.Slug.Trim())) || string.IsNullOrEmpty(model.Title))
                 return;
 
@@ -75,7 +75,7 @@ namespace Orchard.Core.Routable.Services {
             model.Slug = slugContext.Slug;
         }
 
-        public string GenerateUniqueSlug(IRoutableAspect part, IEnumerable<string> existingPaths) {
+        public string GenerateUniqueSlug(IRoutePart part, IEnumerable<string> existingPaths) {
             if (existingPaths == null || !existingPaths.Contains(part.Path))
                 return part.Slug;
 
@@ -98,12 +98,12 @@ namespace Orchard.Core.Routable.Services {
                        : null;
         }
 
-        public IEnumerable<IRoutableAspect> GetSimilarPaths(string path) {
+        public IEnumerable<IRoutePart> GetSimilarPaths(string path) {
             return
                 _contentManager.Query<RoutePart, RoutePartRecord>()
                     .List()
                     .Select(i => i.As<RoutePart>())
-                    .Where(routable => routable.Path != null && routable.Path.StartsWith(path, StringComparison.OrdinalIgnoreCase))
+                    .Where(route=> route.Path != null && route.Path.StartsWith(path, StringComparison.OrdinalIgnoreCase))
                     .ToArray();
         }
 
@@ -111,7 +111,7 @@ namespace Orchard.Core.Routable.Services {
             return String.IsNullOrWhiteSpace(slug) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s\""\<\>\\]+$") && !(slug.StartsWith(".") || slug.EndsWith("."));
         }
 
-        public bool ProcessSlug(IRoutableAspect part) {
+        public bool ProcessSlug(IRoutePart part) {
             FillSlugFromTitle(part);
 
             if (string.IsNullOrEmpty(part.Slug))
@@ -138,35 +138,35 @@ namespace Orchard.Core.Routable.Services {
         }
     }
 
-    public static class RoutableAspectExtensions {
-        public static string GetContainerPath(this IRoutableAspect routableAspect) {
-            var commonAspect = routableAspect.As<ICommonPart>();
+    public static class RoutePartExtensions {
+        public static string GetContainerPath(this IRoutePart routePart) {
+            var commonAspect = routePart.As<ICommonPart>();
             if (commonAspect != null && commonAspect.Container != null) {
-                var routable = commonAspect.Container.As<IRoutableAspect>();
-                if (routable != null)
-                    return routable.Path;
+                var route = commonAspect.Container.As<IRoutePart>();
+                if (route != null)
+                    return route.Path;
             }
             return null;
         }
 
-        public static string GetPathWithSlug(this IRoutableAspect routableAspect, string slug) {
-            var containerPath = routableAspect.GetContainerPath();
+        public static string GetPathWithSlug(this IRoutePart routePart, string slug) {
+            var containerPath = routePart.GetContainerPath();
             return !string.IsNullOrEmpty(containerPath)
                 ? string.Format("{0}/{1}", containerPath, slug)
                 : slug;
         }
 
-        public static string GetChildPath(this IRoutableAspect routableAspect, string slug) {
-            return string.Format("{0}/{1}", routableAspect.Path, slug);
+        public static string GetChildPath(this IRoutePart routePart, string slug) {
+            return string.Format("{0}/{1}", routePart.Path, slug);
         }
 
-        public static string GetEffectiveSlug(this IRoutableAspect routableAspect) {
-            var containerPath = routableAspect.GetContainerPath();
+        public static string GetEffectiveSlug(this IRoutePart routePart) {
+            var containerPath = routePart.GetContainerPath();
 
-            if (string.IsNullOrWhiteSpace(routableAspect.Path))
+            if (string.IsNullOrWhiteSpace(routePart.Path))
                 return "";
 
-            var slugParts = routableAspect.Path.Split(new []{string.Format("{0}/", containerPath)}, StringSplitOptions.RemoveEmptyEntries);
+            var slugParts = routePart.Path.Split(new[] { string.Format("{0}/", containerPath) }, StringSplitOptions.RemoveEmptyEntries);
             return slugParts.FirstOrDefault();
         }
     }

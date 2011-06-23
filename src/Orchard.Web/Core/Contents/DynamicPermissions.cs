@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Metadata.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;

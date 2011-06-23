@@ -1,13 +1,11 @@
 using System.Linq;
-using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Routable.Services;
+using Orchard.ContentManagement.Parts;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -81,7 +79,7 @@ namespace Orchard.Blogs.Controllers {
             }
 
             _contentManager.Publish(blog.ContentItem);
-            _blogPathConstraint.AddPath(blog.As<IRoutableAspect>().Path);
+            _blogPathConstraint.AddPath(blog.As<IRoutePart>().Path);
 
             return Redirect(Url.BlogForAdmin(blog));
         }
@@ -134,7 +132,7 @@ namespace Orchard.Blogs.Controllers {
             }
 
             _contentManager.Publish(blog);
-            _blogPathConstraint.AddPath(blog.As<IRoutableAspect>().Path);
+            _blogPathConstraint.AddPath(blog.As<IRoutePart>().Path);
             Services.Notifier.Information(T("Blog information updated"));
 
             return Redirect(Url.BlogsForAdmin());

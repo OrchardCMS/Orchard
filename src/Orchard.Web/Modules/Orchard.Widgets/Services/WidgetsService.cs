@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Parts;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
@@ -13,19 +14,22 @@ namespace Orchard.Widgets.Services {
         private readonly IFeatureManager _featureManager;
         private readonly IExtensionManager _extensionManager;
         private readonly IContentManager _contentManager;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public WidgetsService(
             IContentManager contentManager,
+            IContentDefinitionManager contentDefinitionManager,
             IFeatureManager featureManager,
             IExtensionManager extensionManager) {
 
             _contentManager = contentManager;
+            _contentDefinitionManager = contentDefinitionManager;
             _featureManager = featureManager;
             _extensionManager = extensionManager;
         }
 
         public IEnumerable<Tuple<string, string>> GetWidgetTypes() {
-            return _contentManager.GetContentTypeDefinitions()
+            return _contentDefinitionManager.ListTypeDefinitions()
                 .Where(contentTypeDefinition => contentTypeDefinition.Settings.ContainsKey("Stereotype") && contentTypeDefinition.Settings["Stereotype"] == "Widget")
                 .Select(contentTypeDefinition =>
                     Tuple.Create(

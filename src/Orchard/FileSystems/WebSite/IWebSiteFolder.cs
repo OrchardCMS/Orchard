@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Orchard.Caching;
 
@@ -17,5 +18,6 @@ namespace Orchard.FileSystems.WebSite {
         void CopyFileTo(string virtualPath, Stream destination, bool actualContent);
 
         IVolatileToken WhenPathChanges(string virtualPath);
+        DateTime GetFileLastWriteTimeUtc(string virtualPath);
     }
 }

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Routable.Models;
@@ -79,7 +79,7 @@ namespace Orchard.Localization.Controllers {
         [FormValueRequired("submit.Save")]
         public ActionResult TranslatePOST(int id) {
             return TranslatePOST(id, contentItem => {
-                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                if (!contentItem.Has<IPublishLaterPart>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     Services.ContentManager.Publish(contentItem);
             });
         }

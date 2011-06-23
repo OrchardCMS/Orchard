@@ -1,7 +1,7 @@
 using System;
 using System.IO;
+using Orchard.AspNet.Abstractions;
 using Orchard.Caching;
-using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Commands {
     /// <summary>

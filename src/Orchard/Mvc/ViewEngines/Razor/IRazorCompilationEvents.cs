@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Razor.Generator;
 using System.Web.WebPages.Razor;
+using Orchard.AspNet.Abstractions;
 using Orchard.Environment;
 using Orchard.Environment.Compilation.Dependencies;
 using Orchard.Environment.Compilation.Loaders;

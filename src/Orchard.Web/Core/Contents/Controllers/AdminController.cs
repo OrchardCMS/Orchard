@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
-using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Parts;
+using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Metadata.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents.Settings;
@@ -205,7 +205,7 @@ namespace Orchard.Core.Contents.Controllers {
         [FormValueRequired("submit.Save")]
         public ActionResult CreatePOST(string id, string returnUrl) {
             return CreatePOST(id, returnUrl, contentItem => {
-                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                if (!contentItem.Has<IPublishLaterPart>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _contentManager.Publish(contentItem);
             });
         }
@@ -264,7 +264,7 @@ namespace Orchard.Core.Contents.Controllers {
         [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int id, string returnUrl) {
             return EditPOST(id, returnUrl, contentItem => {
-                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
+                if (!contentItem.Has<IPublishLaterPart>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
                     _contentManager.Publish(contentItem);
             });
         }

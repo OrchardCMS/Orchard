@@ -1,8 +1,8 @@
 ﻿using System;
-using Orchard.Core.Common.Utilities;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.Security;
+using Orchard.Utility;
 
 namespace Orchard.Core.Common.Models {
     public class CommonPart : ContentPart<CommonPartRecord>, ICommonPart {

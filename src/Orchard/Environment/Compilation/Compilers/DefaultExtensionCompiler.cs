@@ -3,9 +3,9 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Orchard.AspNet.Abstractions;
 using Orchard.Environment.Compilation.Dependencies;
 using Orchard.Environment.Compilation.Loaders;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
 

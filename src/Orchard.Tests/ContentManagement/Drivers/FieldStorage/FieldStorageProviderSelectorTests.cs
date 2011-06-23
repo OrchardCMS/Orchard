@@ -5,8 +5,8 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
-using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.Metadata.Builders;
+using Orchard.ContentManagement.Metadata.Models;
 
 namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
     [TestFixture]

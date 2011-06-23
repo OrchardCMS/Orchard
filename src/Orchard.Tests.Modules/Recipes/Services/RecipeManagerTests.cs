@@ -12,7 +12,6 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.WebSite;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
-using Orchard.Services;
 using Orchard.Tests.Stubs;
 using Orchard.Time;
 
@@ -108,7 +107,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
         }
 
         [Test]
-        public void ParseRecipeLoadsRecipeMetaDataIntoModel() {
+        public void ParseRecipeLoadsRecipeMetadataIntoModel() {
             var recipes = (List<Recipe>) _recipeHarvester.HarvestRecipes("Sample1");
             Assert.That(recipes.Count, Is.EqualTo(1));
 

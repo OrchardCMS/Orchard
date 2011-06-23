@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Parts;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Settings;
@@ -105,20 +105,20 @@ namespace Orchard.Core.Common.Drivers {
                 if (common == null)
                     return this;
 
-                var routable = common.Container.As<RoutePart>();
-                if (routable == null)
+                var route = common.Container.As<RoutePart>();
+                if (route == null)
                     return this;
 
-                Add(routable.Slug);
+                Add(route.Slug);
                 return this;
             }
 
             public PathBuilder AddSlug() {
-                var routable = _content.As<RoutePart>();
-                if (routable == null)
+                var route = _content.As<RoutePart>();
+                if (route == null)
                     return this;
 
-                Add(routable.Slug);
+                Add(route.Slug);
                 return this;
             }
 

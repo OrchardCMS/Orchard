@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
+using Orchard.AspNet.Abstractions;
 using Orchard.Environment.Compilation.Loaders;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.Environment.Compilation.Dependencies {

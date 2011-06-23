@@ -1,8 +1,8 @@
 ﻿using System.IO;
+using Orchard.AspNet.Abstractions;
 using Orchard.Environment.Compilation.Dependencies;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.Environment.Compilation.Loaders {
