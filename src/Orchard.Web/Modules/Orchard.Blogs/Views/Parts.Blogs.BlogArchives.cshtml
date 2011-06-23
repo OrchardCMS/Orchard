@@ -5,6 +5,17 @@
     Script.Require("BlogsArchives");
     IEnumerable<KeyValuePair<ArchiveData, int>> archives = Model.Archives;
 }
+@functions {
+    string ArchiveText(KeyValuePair<ArchiveData, int> item, string format) {
+        return string.Format("{0:" + format + "} ({1})", item.Key.ToDateTime(), item.Value);
+    }
+    string ArchiveUrl(KeyValuePair<ArchiveData, int> item) {
+        return Url.BlogArchiveMonth((BlogPart)Model.Blog, item.Key.Year, item.Key.Month);
+    }
+    dynamic ArchiveLink(KeyValuePair<ArchiveData, int> item, string format) {
+        return New.Link(Value: ArchiveText(item, format), Href: ArchiveUrl(item));
+    }
+}
 <div class="archives">
     @if (archives.Count() > 20) {
     <ul class="years">
@@ -24,14 +35,14 @@
             if (year != lastYear) {
         <li class="previous">
             <h4>@year <span>(@yearMonths.Sum(ym => ym.Value))</span></h4>
-            @Html.UnorderedList(yearMonths, (t, i) => Html.Link(string.Format("{0:MMMM} ({1})", t.Key.ToDateTime(), t.Value), Url.BlogArchiveMonth((BlogPart)Model.Blog, t.Key.Year, t.Key.Month)), "archiveMonthList")
+            @Display.List(Items: yearMonths.Select(t => ArchiveLink(t, "MMMM")), Classes: "archiveMonthList")
         </li>
             }
         }
     </ul>
     } 
     else if (archives.Count() > 0) {
-        @Html.UnorderedList(archives, (t, i) => Html.Link(string.Format("{0:MMMM yyyy} ({1})", t.Key.ToDateTime(), t.Value), Url.BlogArchiveMonth((BlogPart)Model.Blog, t.Key.Year, t.Key.Month)), "archiveMonthList")
+        @Display.List(Items: archives.Select(t => ArchiveLink(t, "MMMM yyyy")), Classes: "archiveMonthList")
     }
     else {
     <div class="message info">@T("None found")</div>

@@ -12,7 +12,7 @@
 }
 
 <div class="manage">
-    @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
+    @Display.ActionLink(Value: createLinkText.Text, Action: "Create", Area: "Contents", RouteValues: new { Id = (string)Model.Options.SelectedFilter }, Classes: new [] { "button", "primaryAction" })
 </div>
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">

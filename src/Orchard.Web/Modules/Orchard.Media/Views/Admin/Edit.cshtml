@@ -8,14 +8,14 @@
 }
 
 <div class="breadCrumbs">
-<p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
+<p>@Display.ActionLink(Value: T("Media Folders"), Action: "Index") &#62; 
     @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {
-        @Html.ActionLink(navigation.FolderName, "Edit", new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) <text>&#62;</text>
+        @Display.ActionLink(Value: navigation.FolderName, Action: "Edit", RouteValues:new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) <text>&#62;</text>
     }
     @T("Manage Folder")</p>
 </div>
 <div class="folderProperties">
-<p>@Html.ActionLink(T("Folder Properties").ToString(), "EditProperties", new { folderName = Model.FolderName, mediaPath = Model.MediaPath })</p>
+<p>@Display.ActionLink(Value: T("Folder Properties"), Action: "EditProperties", RouteValues: new { folderName = Model.FolderName, mediaPath = Model.MediaPath })</p>
 </div> 
 
 <div class="clearBoth"></div>
@@ -30,8 +30,8 @@
     </fieldset>
 
     <div class="manage">
-        @Html.ActionLink(T("Add media").ToString(), "Add", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button primaryAction" })
-        @Html.ActionLink(T("Add a folder").ToString(), "Create", new { Model.MediaPath }, new { @class = "button" })
+        @Display.ActionLink(Value: T("Add media"), Action: "Add", RouteValues: new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, Classes: new [] { "button", "primaryAction" })
+        @Display.ActionLink(Value: T("Add a folder"), Action: "Create", RouteValues: new { Model.MediaPath }, Classes: "button")
     </div>
 
     <fieldset>
@@ -63,7 +63,7 @@
                         <input type="hidden" value="@Model.MediaPath" name="@mediaFile.Name" />
                     </td>
                     <td>
-                        @Html.ActionLink(mediaFile.Name, "EditMedia", new { name = mediaFile.Name, 
+                        @Display.ActionLink(Value: mediaFile.Name, Action: "EditMedia", RouteValues: new { name = mediaFile.Name, 
                                                                               lastUpdated = mediaFile.LastUpdated,
                                                                               size = mediaFile.Size, 
                                                                               folderName = mediaFile.FolderName,
@@ -84,7 +84,7 @@
                     </td>
                     <td>
                         @Display.Image(Src: "~/Modules/Orchard.Media/Content/Admin/images/folder.gif", Classes: "mediaTypeIcon", Alt: T("Folder"), Title: "", Attributes: new { width = "16", height = "16" })
-                        @Html.ActionLink(mediaFolder.Name, "Edit", new { name = mediaFolder.Name, mediaPath = mediaFolder.MediaPath})
+                        @Display.ActionLink(Value: mediaFolder.Name, Action: "Edit", RouteValues: new { name = mediaFolder.Name, mediaPath = mediaFolder.MediaPath})
                     </td>
                     <td>@mediaFolder.User</td>
                     <td>@mediaFolder.LastUpdated</td>

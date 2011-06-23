@@ -3,11 +3,10 @@
 @if (AuthorizedFor(Permissions.PublishContent)) {
 Style.Require("LocalizationAdmin");
 IEnumerable<LocalizationPart> localizations  = Model.Localizations;
-var localizationLinks = Html.UnorderedList(localizations, (c, i) => MvcHtmlString.Create(Display.EditorLink(ContentItem: c, Value: c.Culture.Culture).ToString()), "localizations");
 <div class="content-localization">
     @if (localizations.Count() > 0) {
-    <div class="content-localizations"><h4>@T("Translations:")</h4>@localizationLinks</div>
+    <div class="content-localizations"><h4>@T("Translations:")</h4>@Display.List(Items: localizations.Select(c => Display.EditorLink(ContentItem: c, Value: c.Culture.Culture)), Classes: "localizations")</div>
     }
-    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = Model.MasterId }, null)</div>
+    <div class="add-localization">@Display.ActionLink(Value: T("+ New translation"), Action: "Translate", Controller: "Admin", Area: "Orchard.Localization", RouteValues: new { id = Model.MasterId })</div>
 </div>
 }

@@ -15,14 +15,14 @@
         }
         <li@(classAttr)>
             <h2>@zone</h2>
-            <div class="widgets-actions">@Html.ActionLink(T("Add").Text, "ChooseWidget", new { layerId = Model.CurrentLayer.Id, zone, returnUrl }, new { @class = "button grey" })</div>
+            <div class="widgets-actions">@Display.ActionLink(Value: T("Add"), Action: "ChooseWidget", RouteValues: new { layerId = Model.CurrentLayer.Id, zone, returnUrl }, Classes: new [] { "button", "grey" })</div>
             <ul class="widgets-zone-widgets">
                 @if (count > 0) {
                     int i = 0;
                     foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
                         <li class="widgets-@(widget.LayerId == Model.CurrentLayer.Id ? "this" : "other")-layer widgets-layer-@widget.LayerId@(i == 0 ? " first" : (i == count ? " last" : ""))">
                             @using (Html.BeginFormAntiForgeryPost()) {
-                                <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3>
+                                <h3>@Display.ActionLink(Value: HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, Action: "EditWidget", RouteValues: new { @widget.Id, returnUrl })</h3>
                                 <div class="widgets-actions">
                                     @if (widget.LayerId != Model.CurrentLayer.Id) {
                                     <button name="moveHere" class="link" type="submit" value="1">@T("Move to current layer")</button>

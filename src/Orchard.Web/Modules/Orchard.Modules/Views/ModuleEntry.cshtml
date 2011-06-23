@@ -4,6 +4,13 @@
 @using Orchard.Environment.Extensions.Models;
 
 @{ string moduleClasses = Model.ContentPart.IsRecentlyInstalled ? "recentlyInstalledModule" : string.Empty; }
+@functions {
+    string FeatureLink(FeatureDescriptor f) {
+        var text = string.IsNullOrEmpty(f.Name) ? f.Id : f.Name;
+        var url = string.Format("{0}#{1}", Url.Action("features", new { area = "Orchard.Modules" }), f.Id.AsFeatureId(n => T(n)));
+        return Display.Link(Value: text, Href: url).ToString();
+    }
+}
 
 <div class="summary">
  @if (Model.ContentPart.Notifications != null && Model.ContentPart.Notifications.Count > 0) {
@@ -22,7 +29,7 @@
 
         <ul class="pageStatus" style="color:#666; margin:.6em 0 0 0;">
             @{ IEnumerable<FeatureDescriptor> features = Model.ContentPart.Descriptor.Features; }
-            <li>@T("Features: {0}", MvcHtmlString.Create(string.Join(", ", features.Select(f => Html.Link(string.IsNullOrEmpty(f.Name) ? f.Id : f.Name, string.Format("{0}#{1}", Url.Action("features", new { area = "Orchard.Modules" }), f.Id.AsFeatureId(n => T(n)))).ToString()).OrderBy(s => s).ToArray())))</li>
+            <li>@T("Features: {0}", MvcHtmlString.Create(string.Join(", ", features.Select(FeatureLink).OrderBy(s => s))))</li>
             <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(Model.ContentPart.Descriptor.Author) ? Model.ContentPart.Descriptor.Author : T("Unknown").ToString())</li>
             <li>&nbsp;&#124;&nbsp;@T("Website: ")
                 @if (!string.IsNullOrEmpty(Model.ContentPart.Descriptor.WebSite)) { <a href="@Model.ContentPart.Descriptor.WebSite">@Model.ContentPart.Descriptor.WebSite</a> }

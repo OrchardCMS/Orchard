@@ -4,7 +4,7 @@
 
 <h2>@T("Gallery")</h2>
 <div class="manage">
-    @Html.ActionLink(T("Add Feed").Text, "AddSource", new { }, new { @class = "button primaryAction" })
+    @Display.ActionLink(Value: T("Add Feed"), Action: "AddSource", Classes: new [] { "button" , "primaryAction" })
 </div>
 
 <fieldset>
@@ -24,8 +24,8 @@
         @foreach ( var item in Model.Sources ) {
         <tr>
             <td>@item.FeedTitle</td>
-            <td>@Html.Link(item.FeedUrl, item.FeedUrl)</td>
-            <td>@Html.ActionLink(T("Delete").ToString(), "Remove", new { id = item.Id })</td>
+            <td>@Display.Link(Value: item.FeedUrl, Href: item.FeedUrl)</td>
+            <td>@Display.ActionLink(Value: T("Delete"), Action: "Remove", RouteValues: new { id = item.Id })</td>
         </tr>
         }
     </table>

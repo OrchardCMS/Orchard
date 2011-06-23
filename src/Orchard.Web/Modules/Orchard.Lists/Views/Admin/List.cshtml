@@ -25,9 +25,9 @@
 <div>&nbsp;</div>
 @Display.Parts_Container_Manage(ContainerDisplayName: Model.ContainerDisplayName, ContainerContentType: Model.ContainerContentType, ContainerId: containerId)
 <div class="manage">
-    @Html.ActionLink(createLinkText, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter, ContainerId = containerId, ReturnUrl = Url.Action("List", "Admin", new { Area = "Orchard.Lists", ContainerId = containerId }) }, new { @class = "button primaryAction" })
+    @Display.ActionLink(Value: createLinkText, Action: "Create", Area: "Contents", RouteValues: new { Id = Model.Options.SelectedFilter, ContainerId = containerId, ReturnUrl = Url.Action("List", "Admin", new { Area = "Orchard.Lists", ContainerId = containerId }) }, Classes: new [] { "button", "primaryAction" })
 
-    @Html.ActionLink(T("Choose Items").ToString(), "Choose", new { TargetContainerId = (int)Model.ContainerId, Area = "Orchard.Lists" }, new { @class = "button primaryAction" })
+    @Display.ActionLink(Value: T("Choose Items"), Action: "Choose", Area: "Orchard.Lists", RouteValues:new { TargetContainerId = (int)Model.ContainerId }, Classes: new [] { "button", "primaryAction" })
 </div>
 
 @using (Html.BeginFormAntiForgeryPost()) {

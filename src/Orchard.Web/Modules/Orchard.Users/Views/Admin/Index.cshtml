@@ -10,7 +10,7 @@
 
 @using (Html.BeginFormAntiForgeryPost()) { 
     @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Add a new user").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
+    <div class="manage">@Display.ActionLink(Value: T("Add a new user"), Action: "Create", Classes: new [] { "button", "primaryAction" })</div>
 
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
@@ -58,26 +58,26 @@
                 </td>
                 <td>
                     @{
-                        var approved = entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved;
-                        var title = approved ? T("User is approved") : ((entry.User.EmailStatus == UserStatus.Approved) ? T("User is moderated") : T("E-mail validation is pending"));
+                                                         var approved = entry.User.RegistrationStatus == UserStatus.Approved && entry.User.EmailStatus == UserStatus.Approved;
+                                                         var title = approved ? T("User is approved") : ((entry.User.EmailStatus == UserStatus.Approved) ? T("User is moderated") : T("E-mail validation is pending"));
                     }
                     @Display.Image(Src: "~/Modules/Orchard.Users/Content/Admin/images/" + (approved ? "online.gif" : "offline.gif"), Alt: T(approved ? "Approved" : "Moderated"), Title: title)
-                    @Html.ActionLink(entry.User.UserName, "Edit", new { entry.User.Id }) 
+                    @Display.ActionLink(Value: entry.User.UserName, Action: "Edit", RouteValues: new { entry.User.Id }) 
                 </td>
                 <td>
                     @entry.User.Email 
                 </td>
                 <td>
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new { entry.User.Id }) |
-                    @Html.ActionLink(T("Delete").ToString(), "Delete", new { entry.User.Id }, new { itemprop = "RemoveUrl UnsafeUrl" }) |
+                    @Display.ActionLink(Value: T("Edit"), Action: "Edit", RouteValues: new { entry.User.Id }) |
+                    @Display.UnsafeActionLink(Value: T("Delete"), Action: "Delete", UrlType: "RemoveUrl", RouteValues: new { entry.User.Id }) |
                     @if (entry.User.RegistrationStatus == UserStatus.Pending) {
-                        @Html.ActionLink(T("Approve").ToString(), "Approve", new { entry.User.Id })
+                        @Display.ActionLink(Value: T("Approve"), Action: "Approve", RouteValues: new { entry.User.Id })
                     }
                     else {
-                        @Html.ActionLink(T("Disable").ToString(), "Moderate", new { entry.User.Id })
+                        @Display.ActionLink(Value: T("Disable"), Action: "Moderate", RouteValues: new { entry.User.Id })
                     }
                     @if (entry.User.EmailStatus == UserStatus.Pending) { <text>|</text>
-                        @Html.ActionLink(T("Send challenge E-mail").ToString(), "SendChallengeEmail", new { entry.User.Id })
+                        @Display.ActionLink(Value: T("Send challenge E-mail"), Action: "SendChallengeEmail", RouteValues: new { entry.User.Id })
                     } 
                 </td>
             </tr>

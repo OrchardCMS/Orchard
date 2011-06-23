@@ -7,10 +7,10 @@
 }
 
 <div class="breadCrumbs">
-<p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
+<p>@Display.ActionLink(Value: T("Media Folders"), Action: "Index") &#62; 
     @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {
-        @Html.ActionLink(navigation.FolderName, "Edit",
-                  new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) <text>&#62;</text>
+        @Display.ActionLink(Value: navigation.FolderName, Action: "Edit",
+                  RouteValues: new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) <text>&#62;</text>
     } 
     @T("Folder Properties")</p>
 </div>    

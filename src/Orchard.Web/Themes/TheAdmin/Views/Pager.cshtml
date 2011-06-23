@@ -55,7 +55,7 @@
                     @if ((int)Model.PageSize == 0) {
                         <li class="selected"><span>@T("All").ToString()</span></li>
                     } else {
-                        <li>@Html.ActionLink(T("All").ToString(), (string)routeData["action"], (string)routeData["controller"], routeData, null)</li>
+                        <li>@Display.ActionLink(Value: T("All"), Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)</li>
                     }
 
                     @foreach (int size in pageSizes.OrderBy(p => p)) {
@@ -64,7 +64,7 @@
                         if ((int)Model.PageSize == size) {
                             <li class="selected"><span>@size.ToString()</span></li>
                         } else {
-                            <li>@Html.ActionLink(size.ToString(), (string)routeData["action"], (string)routeData["controller"], routeData, null)</li>
+                            <li>@Display.ActionLink(Value: size, Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)</li>
                         }
                     }
 
@@ -85,7 +85,7 @@
                 }
 
                 <li class="page-first">
-                @Html.ActionLink(T("<<").Text, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                @Display.ActionLink(Value: T("<<"), Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)
                 </li>
             }
 
@@ -99,7 +99,7 @@
                 }
 
                 <li class="page-previous">
-                @Html.ActionLink((string)previousText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                @Display.ActionLink(Value: previousText, Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)
                 </li>
             }
 
@@ -116,7 +116,7 @@
                     else {
                         routeData["page"] = p;
                     }
-                    @Html.ActionLink(p.ToString(), (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                    @Display.ActionLink(Value: p, Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)
                 }
                 </li>
             }
@@ -126,7 +126,7 @@
                 routeData["page"] = Model.Page + 1;
 
                 <li class="page-next">
-                @Html.ActionLink((string)nextText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                @Display.ActionLink(Value: nextText, Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)
                 </li>
             }
 
@@ -135,7 +135,7 @@
                 routeData["page"] = totalPageCount;
 
                 <li class="page-last">
-                @Html.ActionLink(T(">>").Text, (string)routeData["action"], (string)routeData["controller"], routeData, null)
+                @Display.ActionLink(Value: T(">>"), Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)
                 </li>
             }
 

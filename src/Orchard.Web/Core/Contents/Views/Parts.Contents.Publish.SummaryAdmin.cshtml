@@ -4,16 +4,22 @@
     Script.Require("ShapesBase");
     ContentPart contentPart = Model.ContentPart;
 }
+@functions {
+    object GetRoute(ContentPart part, string action) {
+        return new { Action = action, Controller = "Admin", Area = "Contents", id = part.ContentItem.Id, returnUrl = Request.ToUrlString() };
+    }
+}
 @if (contentPart.HasPublished()) {
 @Display.DisplayLink(Value: T("View"), ContentItem: Model.ContentPart.ContentItem)
 @T(" | ")
-    if (contentPart.HasDraft()) {
-@Html.Link(T("Publish Draft").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "PublishUrl UnsafeUrl" })
+if (contentPart.HasDraft()) {
+@Display.UnsafeActionLink(Value: T("Publish Draft"), UrlType: "PublishUrl", RouteValues: GetRoute(contentPart, "Publish"))
 @T(" | ")
-    }
-@Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnpublishUrl UnsafeUrl" })
+}
+@Display.UnsafeActionLink(Value: T("Unpublish"), UrlType: "UnpublishUrl", RouteValues: GetRoute(contentPart, "Unpublish"))
 @T(" | ")
-} else {
-@Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "PublishUrl UnsafeUrl" })
+}
+else {
+@Display.UnsafeActionLink(Value: T("Publish"), UrlType: "PublishUrl", RouteValues: GetRoute(contentPart, "Publish"))
 @T(" | ")
 }

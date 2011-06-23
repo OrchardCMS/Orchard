@@ -69,64 +69,6 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
         }
 
-        #region UnorderedList
-
-        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, MvcHtmlString> generateContent, string cssClass) {
-            return htmlHelper.UnorderedList(items, generateContent, cssClass, null, null);
-        }
-
-        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, MvcHtmlString> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
-            return UnorderedList(items, (t, i) => generateContent(t, i) as IHtmlString, cssClass, t => itemCssClass, t => alternatingItemCssClass);
-        }
-
-        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass) {
-            return htmlHelper.UnorderedList(items, generateContent, cssClass, null, null);
-        }
-
-        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
-            return UnorderedList(items, generateContent, cssClass, t => itemCssClass, t => alternatingItemCssClass);
-        }
-
-        private static IHtmlString UnorderedList<T>(IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass, Func<T, string> generateItemCssClass, Func<T, string> generateAlternatingItemCssClass) {
-            if (items == null || !items.Any()) return new HtmlString(string.Empty);
-
-            var sb = new StringBuilder(250);
-            int counter = 0, count = items.Count() - 1;
-
-            sb.AppendFormat(
-                !string.IsNullOrEmpty(cssClass) ? "<ul class=\"{0}\">" : "<ul>",
-                cssClass
-                );
-
-            foreach (var item in items) {
-                var sbClass = new StringBuilder(50);
-
-                if (counter == 0)
-                    sbClass.Append("first ");
-                if (counter == count)
-                    sbClass.Append("last ");
-                if (generateItemCssClass != null)
-                    sbClass.AppendFormat("{0} ", generateItemCssClass(item));
-                if (counter % 2 != 0 && generateAlternatingItemCssClass != null)
-                    sbClass.AppendFormat("{0} ", generateAlternatingItemCssClass(item));
-
-                sb.AppendFormat(
-                    sbClass.Length > 0
-                        ? string.Format("<li class=\"{0}\">{{0}}</li>", sbClass.ToString().TrimEnd())
-                        : "<li>{0}</li>",
-                    generateContent(item, counter)
-                    );
-
-                counter++;
-            }
-
-            sb.Append("</ul>");
-
-            return new HtmlString(sb.ToString());
-        }
-
-        #endregion
-
         #region Ellipsize
 
         public static IHtmlString Ellipsize(this HtmlHelper htmlHelper, string text, int characterCount) {
@@ -144,87 +86,6 @@ namespace Orchard.Mvc.Html {
         public static MvcHtmlString Excerpt(this HtmlHelper html, string markup, int length) {
 
             return MvcHtmlString.Create(markup.RemoveTags().Ellipsize(length));
-        }
-
-        #endregion
-
-        #region Image
-
-        public static MvcHtmlString Image(this HtmlHelper htmlHelper, string src, string alt, object htmlAttributes) {
-            return htmlHelper.Image(src, alt, new RouteValueDictionary(htmlAttributes));
-        }
-
-        public static MvcHtmlString Image(this HtmlHelper htmlHelper, string src, string alt, IDictionary<string, object> htmlAttributes) {
-            UrlHelper url = new UrlHelper(htmlHelper.ViewContext.RequestContext);
-            string imageUrl = url.Content(src);
-            TagBuilder imageTag = new TagBuilder("img");
-
-            if (!string.IsNullOrEmpty(imageUrl))
-                imageTag.MergeAttribute("src", imageUrl);
-
-            if (!string.IsNullOrEmpty(alt))
-                imageTag.MergeAttribute("alt", alt);
-
-            imageTag.MergeAttributes(htmlAttributes, true);
-
-            if (imageTag.Attributes.ContainsKey("alt") && !imageTag.Attributes.ContainsKey("title"))
-                imageTag.MergeAttribute("title", imageTag.Attributes["alt"] ?? "");
-
-            return MvcHtmlString.Create(imageTag.ToString(TagRenderMode.SelfClosing));
-        }
-
-        #endregion
-
-        #region Link
-
-        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href)
-        {
-            return htmlHelper.Link(linkContents, href, null);
-        }
-
-        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
-        {
-            return htmlHelper.Link(linkContents, href, new RouteValueDictionary(htmlAttributes));
-        }
-
-        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
-        {
-            TagBuilder tagBuilder = new TagBuilder("a") 
-                { InnerHtml = htmlHelper.Encode(linkContents) };
-            tagBuilder.MergeAttributes(htmlAttributes);
-            tagBuilder.MergeAttribute("href", href);
-            return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
-        }
-
-        #endregion
-
-        #region LinkOrDefault
-
-        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href)
-        {
-            return htmlHelper.LinkOrDefault(linkContents, href, null);
-        }
-
-        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
-        {
-            return htmlHelper.LinkOrDefault(linkContents, href, new RouteValueDictionary(htmlAttributes));
-        }
-
-        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
-        {
-            string linkText = htmlHelper.Encode(linkContents);
-            
-            if (string.IsNullOrEmpty(href)) {
-                return new HtmlString(linkText);
-            }
-
-            TagBuilder tagBuilder = new TagBuilder("a")
-            {
-                InnerHtml = linkText
-            };
-            tagBuilder.MergeAttributes(htmlAttributes);
-            tagBuilder.MergeAttribute("href", href);
-            return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
         }
 
         #endregion
@@ -305,22 +166,6 @@ namespace Orchard.Mvc.Html {
 
         private static string Base64EncodeForCookieName(string s) {
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(s)).Replace('+', '.').Replace('/', '-').Replace('=', '_');
-        }
-
-        #endregion
-
-        #region AntiForgeryTokenValueOrchardLink
-
-        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href)  {
-            return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, (object)null);
-        }
-
-        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)  {
-            return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, new RouteValueDictionary(htmlAttributes));
-        }
-
-        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)  {
-            return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href).ToString(), htmlAttributes);
         }
 
         #endregion

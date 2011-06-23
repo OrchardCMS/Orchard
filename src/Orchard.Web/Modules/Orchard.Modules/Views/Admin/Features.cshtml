@@ -61,16 +61,12 @@
                         <p class="description">@feature.Descriptor.Description</p>@if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) {
                         <div class="dependencies">
                             <h4>@T("Depends on:")</h4>
-                            @Html.UnorderedList(dependencies,
-                            (s, i) => Html.Link(string.IsNullOrEmpty(s.Descriptor.Name) ? s.Descriptor.Id : s.Descriptor.Name, string.Format("#{0}", s.Descriptor.Id.AsFeatureId(n => T(n)))),
-                        "",
-                        "dependency",
-                        "")
+                            @Display.List(Items: dependencies.Select(d => New.Link(Value: string.IsNullOrEmpty(d.Descriptor.Name) ? d.Descriptor.Id : d.Descriptor.Name, Href: string.Format("#{0}", d.Descriptor.Id.AsFeatureId(n => T(n))))), ItemClasses: "dependency")
                         </div>}
                         @if (missingDependencies.Any()) {
                         <div class="missingdependencies">
                             <h4>@T("Missing:")</h4>
-                            @Html.UnorderedList(missingDependencies, (s, i) => MvcHtmlString.Create(s), "", "missingdependency", "")
+                            @Display.List(Items: missingDependencies.Select(s => MvcHtmlString.Create(s)), ItemClasses: "missingdependency")
                         </div>}
                     </div>
                     <div class="actions">

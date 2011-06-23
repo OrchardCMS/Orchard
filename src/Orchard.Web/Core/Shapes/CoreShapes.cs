@@ -144,13 +144,29 @@ namespace Orchard.Core.Shapes {
         }
 
 
-        static TagBuilder GetTagBuilder(string tagName, string id, IEnumerable<string> classes, IDictionary<string, string> attributes) {
+        private static TagBuilder GetTagBuilder(string tagName, string id, object classes, object additionalClasses, IDictionary<string, string> attributes) {
             var tagBuilder = new TagBuilder(tagName);
             tagBuilder.MergeAttributes(attributes, false);
-            foreach (var cssClass in classes ?? Enumerable.Empty<string>())
+            // classes
+            var enumerableClasses = classes as IEnumerable<string>;
+            if (enumerableClasses == null && classes is string) {
+                enumerableClasses = ((string)classes).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+            foreach (var cssClass in enumerableClasses ?? Enumerable.Empty<string>()) {
                 tagBuilder.AddCssClass(cssClass);
-            if (!string.IsNullOrWhiteSpace(id))
+            }
+            // additional classes
+            enumerableClasses = additionalClasses as IEnumerable<string>;
+            if (enumerableClasses == null && additionalClasses is string) {
+                enumerableClasses = ((string)additionalClasses).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+            foreach (var cssClass in enumerableClasses ?? Enumerable.Empty<string>()) {
+                tagBuilder.AddCssClass(cssClass);
+            }
+            // id
+            if (!string.IsNullOrWhiteSpace(id)) {
                 tagBuilder.GenerateId(id);
+            }
             return tagBuilder;
         }
 
@@ -159,7 +175,7 @@ namespace Orchard.Core.Shapes {
             string id = Shape.Id;
             IEnumerable<string> classes = Shape.Classes;
             IDictionary<string, string> attributes = Shape.Attributes;
-            var zoneWrapper = GetTagBuilder("div", id, classes, attributes);
+            var zoneWrapper = GetTagBuilder("div", id, classes, null, attributes);
             Output.Write(zoneWrapper.ToString(TagRenderMode.StartTag));
             foreach (var item in ordered_hack(Shape))
                 Output.Write(Display(item));
@@ -328,16 +344,99 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public IHtmlString Link(UrlHelper Url,
+        public IHtmlString UnsafeActionLink(dynamic Display, dynamic Shape, string UrlType) {
+            if (string.IsNullOrEmpty(UrlType)) {
+                throw new ArgumentNullException("UrlType");
+            }
+            _resourceManager.Value.Require("script", "UnsafeAction");
+            var attributes = (IDictionary<string, string>)Shape.Attributes;
+            if (attributes.ContainsKey("itemprop")) {
+                attributes["itemprop"] = attributes["itemprop"] + " " + UrlType + " UnsafeUrl";
+            }
+            else {
+                attributes["itemprop"] = UrlType + " UnsafeUrl";
+            }
+
+            Shape.Metadata.Type = "ActionLink";
+            Shape.Metadata.Alternates.Clear();
+            return Display(Shape);
+        }
+
+        [Shape]
+        public IHtmlString ActionLink(dynamic Display,
+            dynamic Shape,
+            string Action,
+            string Controller,
+            string Area
+            // parameter omitted to workaround an issue where a NullRef is thrown
+            // when an anonymous object is bound to an object shape parameter
+            /*, object RouteValues*/) {
+
+            if ((Action ?? Controller ?? Area) != null) {
+                // workaround: get it from the shape instead of parameter
+                var RouteValues = (object)Shape.RouteValues;
+
+                // Action, Controller, and Area may have been provided directly as
+                // a shortcut to providing a RouteValues object. Add them to the
+                // RouteValues if provided, or create one if not.
+                RouteValueDictionary rvd;
+                if (RouteValues == null) {
+                    rvd = new RouteValueDictionary();
+                }
+                else {
+                    rvd = RouteValues is RouteValueDictionary ? (RouteValueDictionary)RouteValues : new RouteValueDictionary(RouteValues);
+                }
+                if (Action != null) {
+                    rvd["Action"] = Action;
+                    Shape.Action = null;
+                }
+                if (Controller != null) {
+                    rvd["Controller"] = Controller;
+                    Shape.Controller = null;
+                }
+                if (Area != null) {
+                    rvd["Area"] = Area;
+                    Shape.Area = null;
+                }
+                Shape.RouteValues = rvd;
+            }
+
+            Shape.Metadata.Type = "Link";
+            Shape.Metadata.Alternates.Clear();
+            return Display(Shape);
+        }
+
+        [Shape]
+        public IHtmlString Link(HtmlHelper Html,
+            UrlHelper Url,
             dynamic Display,
             dynamic Shape,
             string Href,
-            RouteValueDictionary RouteValues,
+            string Fragment,
+            // parameter omitted to workaround an issue where a NullRef is thrown
+            // when an anonymous object is bound to an object shape parameter
+            /*object RouteValues,*/
             object Value) {
 
+            // workaround: get it from the shape instead of parameter
+            var RouteValues = (object)Shape.RouteValues;
+            var href = Href;
+            if (href == null && RouteValues != null) {
+                // If RouteValues is an actual RouteValueDictionary, be sure and use the correct RouteUrl override, lest it be treated like an anonymous object would be.
+                if (RouteValues is RouteValueDictionary) {
+                    href = Url.Action(null, (RouteValueDictionary)RouteValues);
+                }
+                else {
+                    href = Url.Action(null, RouteValues);
+                }
+            }
+            if (!string.IsNullOrEmpty(Fragment)) {
+                href += "#" + Fragment;
+            }
+
             var tag = _tagBuilderFactory.Create((object)Shape, "a");
-            tag.MergeAttribute("href", Href ?? Url.RouteUrl(RouteValues));
-            tag.InnerHtml = Value is string ? (string)Value : Display(Value).ToString();
+            tag.MergeAttribute("href", href);
+            tag.InnerHtml = Html.Encode(Value is string ? (string)Value : Display(Value));
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }
 
@@ -348,9 +447,10 @@ namespace Orchard.Core.Shapes {
             IEnumerable<dynamic> Items,
             string Tag,
             string Id,
-            IEnumerable<string> Classes,
+            object Classes,
             IDictionary<string, string> Attributes,
-            IEnumerable<string> ItemClasses,
+            object ItemClasses,
+            object AlternatingItemClasses,
             IDictionary<string, string> ItemAttributes) {
 
             if (Items == null)
@@ -363,12 +463,12 @@ namespace Orchard.Core.Shapes {
             var listTagName = string.IsNullOrEmpty(Tag) ? "ul" : Tag;
             const string itemTagName = "li";
 
-            var listTag = GetTagBuilder(listTagName, Id, Classes, Attributes);
+            var listTag = GetTagBuilder(listTagName, Id, Classes, null, Attributes);
             Output.Write(listTag.ToString(TagRenderMode.StartTag));
 
             var index = 0;
             foreach (var item in Items) {
-                var itemTag = GetTagBuilder(itemTagName, null, ItemClasses, ItemAttributes);
+                var itemTag = GetTagBuilder(itemTagName, null, ItemClasses, (index % 2 == 0) ? null : AlternatingItemClasses, ItemAttributes);
                 if (index == 0)
                     itemTag.AddCssClass("first");
                 if (index == count - 1)

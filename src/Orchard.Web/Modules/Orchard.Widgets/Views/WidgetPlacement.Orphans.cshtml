@@ -13,7 +13,7 @@
         @foreach (WidgetPart widget in widgets) {
             <li class="@(widget == widgets.First() ? "first" : (widget == widgets.Last() ? "last" : ""))">
                 @using (Html.BeginFormAntiForgeryPost()) {
-                    <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3>
+                    <h3>@Display.ActionLink(Value: HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, Action: "EditWidget", RouteValues: new { @widget.Id, returnUrl })</h3>
                     <div class="widgets-actions">
                         <button name="moveOut" class="link" type="submit" value="1">@T("Remove")</button>
                     </div>

@@ -1,12 +1,13 @@
 ﻿@model Orchard.Tags.ViewModels.TagsIndexViewModel
 
 <h1 class="page-title">@Html.TitleForPage(T("Tags").ToString())</h1>
-@Html.UnorderedList(
-    Model.Tags,
-    (t, i) => Html.ActionLink(
-        Html.Encode(t.TagName),
-        "Search",
-        new { tagName = t.TagName },
-        new { @class = "" /* todo: (heskew) classify according to tag use */ }
-        ),
-    "tagCloud")
+@{
+    var items = Model.Tags.Select(t => New.Link(
+        Value: Html.Encode(t.TagName),
+        RouteValues: new { Action = "Search", tagName = t.TagName },
+        Classes: "" /* todo: (heskew) classify according to tag use */
+        )).ToArray();
+}
+@Display.List(
+    Items: items,
+    Classes: "tagCloud")

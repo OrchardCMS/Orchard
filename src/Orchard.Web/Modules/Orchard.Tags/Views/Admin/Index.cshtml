@@ -40,11 +40,11 @@
                     <input type="checkbox" value="true" name="@Html.FieldNameFor(m => m.Tags[tagIndex].IsChecked)"/>
                 </td>
                 <td>
-                    @Html.ActionLink(tagEntry.Tag.TagName, "Edit", new {id = tagEntry.Tag.Id})
+                    @Display.ActionLink(Value: tagEntry.Tag.TagName, Action: "Edit", RouteValues: new {id = tagEntry.Tag.Id})
                 </td>
                 <td>
-                    @Html.ActionLink(T("Edit").ToString(), "Edit", new {id = tagEntry.Tag.Id}) @T(" | ")
-                    <a href="@Url.Action("Remove", new {tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>
+                    @Display.ActionLink(Value: T("Edit"), Action: "Edit", RouteValues: new {id = tagEntry.Tag.Id}) @T(" | ")
+                    @Display.UnsafeActionLink(Value: T("Delete"), UrlType: "RemoveUrl", Action: "Remove", RouteValues: new { tagEntry.Tag.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })
                 </td>
             </tr>
             tagIndex = tagIndex + 1;

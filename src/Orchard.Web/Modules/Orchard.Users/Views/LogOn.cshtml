@@ -8,8 +8,8 @@
 <h1 class="page-title">@Html.TitleForPage((string)Model.Title)</h1>
 <p>
     @T("Please enter your username and password.") 
-    @if(userCanRegister) { @Html.ActionLink(T("Register").Text, "Register") @T(" if you don't have an account.") }
-    @if(enableLostPassword) { @Html.ActionLink(T("Lost your Password?").Text, "RequestLostPassword") }
+    @if(userCanRegister) { @Display.ActionLink(Value: T("Register"), Action: "Register") @T(" if you don't have an account.") }
+    @if(enableLostPassword) { @Display.ActionLink(Value: T("Lost your Password?"), Action: "RequestLostPassword") }
 </p>
 @Html.ValidationSummary(T("Login was unsuccessful. Please correct the errors and try again.").ToString())
 

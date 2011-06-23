@@ -13,7 +13,7 @@ Style.Require("LocalizationAdmin");
     <dl class="content-localization">
         <dt>@T("Other translations:")</dt>
         <dd class="content-localizations">
-            @Html.UnorderedList(Model.ContentLocalizations.Localizations, (c, i) => MvcHtmlString.Create(Display.EditorLink(Value: c.Culture.Culture, ContentItem: c).ToString()), "localizations")
+            @Display.List(Items: Model.ContentLocalizations.Localizations.Select(c => Display.EditorLink(Value: c.Culture.Culture, ContentItem: c)), Classes: "localizations")
         </dd>
     </dl>
     }

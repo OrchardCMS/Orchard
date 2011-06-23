@@ -12,7 +12,7 @@
             string sectionHeaderText = firstLevelMenuItem.Text.Text;
 
             var sectionHeaderMarkup = firstLevelMenuItem.RouteValues != null || HasText(firstLevelMenuItem.Url)
-                ? Html.Link(sectionHeaderText, (string)firstLevelMenuItem.Href)
+                ? Display.Link(Value: sectionHeaderText, Href: firstLevelMenuItem.Href)
                 : new HtmlString(string.Format("<span>{0}</span>", Html.Encode(sectionHeaderText)));
 
             if (firstLevelMenuItem == firstLevelMenuItems.First()) {

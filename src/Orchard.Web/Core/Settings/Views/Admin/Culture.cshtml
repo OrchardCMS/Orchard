@@ -1,9 +1,11 @@
 ﻿@model SiteCulturesViewModel
 @using Orchard.Core.Settings.ViewModels;
+@{
+    Layout.Title = T("Cultures").ToString();
+    var cultureLinks = Model.SiteCultures.OrderBy(s => s).Select(s => Html.DisplayFor(scvm => s, s == Model.CurrentCulture ? "CurrentCulture" : "RemovableCulture", ""));
+}
 
-@{ Layout.Title = T("Cultures").ToString(); }
-
-<p class="breadcrumb">@Html.ActionLink(T("Manage Settings").Text, "index")@T(" &#62; ")@T("Supported Cultures")</p>
+<p class="breadcrumb">@Display.ActionLink(Value: T("Manage Settings"), Action: "index")@T(" &#62; ")@T("Supported Cultures")</p>
 <h3>@T("Available Cultures")</h3>
 @using (Html.BeginFormAntiForgeryPost("AddCulture")) {
 @Html.ValidationSummary()
@@ -15,7 +17,4 @@
 </fieldset>
 }
 <h3>@T("Cultures this site supports")</h3>
-@Html.UnorderedList(
-    Model.SiteCultures.OrderBy(s => s),
-    (s, i) => Html.DisplayFor(scvm => s, s == Model.CurrentCulture ? "CurrentCulture" : "RemovableCulture", ""),
-    "site-cultures", "culture", "odd")
+@Display.List(Items: cultureLinks, Classes: "site-cultures", ItemClasses: "culture", AlternatingItemClasses: "odd")

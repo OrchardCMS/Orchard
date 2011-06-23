@@ -16,7 +16,7 @@
         </select>
         <button type="submit">@T("Apply")</button>
     </fieldset>
-    <div class="manage">@Html.ActionLink(T("Add a role").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
+    <div class="manage">@Display.ActionLink(Value: T("Add a role"), Action: "Create", Classes: new [] { "button", "primaryAction" })</div>
     <fieldset>
         <table class="items" summary="@T("This is a table of the roles currently available for use in your application.")">
             <colgroup>
@@ -34,12 +34,12 @@
             @foreach (var row in Model.Rows) {
                 <tr>
                     <td><input type="checkbox" value="true" name="@("Checkbox." + row.Id)"/></td>
-                    <td>@Html.ActionLink(row.Name, "Edit", new { row.Id })</td>
+                    <td>@Display.ActionLink(Value: row.Name, Action: "Edit", RouteValues: new { row.Id })</td>
                     <td>
-                        @Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })
+                        @Display.ActionLink(Value: T("Edit"), Action: "Edit", RouteValues: new { row.Id })
                         @if (row.Name != "Administrator") {
                             @T(" | ")
-                            <a href="@Url.Action("Delete", new {row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>                       
+                            @Display.UnsafeActionLink(Value: T("Delete"), Action: "Delete", UrlType: "RemoveUrl", RouteValues: new { row.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString() })
                         }
                     </td>
                 </tr>
