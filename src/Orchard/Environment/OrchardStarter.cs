@@ -138,6 +138,10 @@ namespace Orchard.Environment {
             }
 
             ControllerBuilder.Current.SetControllerFactory(new OrchardControllerFactory());
+            // Sets the ModelMetaDataProviders.Current property to use the DataAnnotationsModelMetadataProvider.
+            // This causes ASP.NET MVC 3 to use a meta-data provider implementation that doesn’t have the more aggressive caching logic introduced late in the RC2 release
+            // which prevents IMetadataAware attributes from functioning correctly.
+            ModelMetadataProviders.Current = new DataAnnotationsModelMetadataProvider();
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new ThemeAwareViewEngineShim());
 

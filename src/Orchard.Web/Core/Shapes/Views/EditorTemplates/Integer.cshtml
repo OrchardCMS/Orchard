@@ -1,0 +1,7 @@
+@using Orchard.Core.Shapes
+@{
+    var editorString = New.EditorString();
+    ShapeTemplateHelper.ForwardTemplateContextToShape(Html, ViewContext, editorString, T("The value '{0}' is invalid.").Text);
+    editorString.Classes.Add("text-small");
+}
+@Display(editorString)

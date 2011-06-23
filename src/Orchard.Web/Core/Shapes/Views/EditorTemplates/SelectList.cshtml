@@ -1,0 +1,6 @@
+@using Orchard.Core.Shapes
+@{
+    var select = New.SelectList();
+    ShapeTemplateHelper.ForwardTemplateContextToSelect(Html, ViewContext, Display, select, T("The value '{0}' is invalid.").Text);
+}
+@Display(select)

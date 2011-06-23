@@ -237,6 +237,7 @@
     <Compile Include="Mvc\IOrchardViewPage.cs" />
     <Compile Include="Mvc\ShapeResult.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
+    <Compile Include="Mvc\UIOptionsAttribute.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\IRazorCompilationEvents.cs" />
     <Compile Include="OrchardConvert.cs" />
     <Compile Include="OrchardFatalException.cs" />

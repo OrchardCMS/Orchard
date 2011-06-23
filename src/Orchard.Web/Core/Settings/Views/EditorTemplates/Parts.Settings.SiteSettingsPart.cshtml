@@ -1,56 +1,20 @@
 ﻿@model Orchard.Core.Settings.ViewModels.SiteSettingsPartViewModel
 @using Orchard.Settings;
 @{
-    var resourceDebugMode = new SelectList(new object[] {
+    var resourceDebugMode = new object[] {
         new { Id = (int)ResourceDebugMode.FromAppSetting, Text = "Use web.config setting" },
         new { Id = (int)ResourceDebugMode.Enabled, Text = "Enabled" },
         new { Id = (int)ResourceDebugMode.Disabled, Text = "Disabled" },
-    }, "Id", "Text", (int)Model.ResourceDebugMode);
+    };
 }
 <fieldset>
     <legend>@T("General")</legend>
-    <div>
-        <label for="SiteName">@T("Site name")</label>
-        @Html.EditorFor(m => m.SiteName)
-        @Html.ValidationMessage("SiteName", "*")
-    </div>
-    <div>
-        <label for="@Html.FieldIdFor(m => m.BaseUrl)">@T("Base url ")</label>
-        @Html.TextBoxFor(m => m.BaseUrl, new { @class = "textMedium" })
-        <span class="hint">@T("Enter the fully qualified base url of your website.")</span>
-        <span class="hint">@T("e.g., http://localhost:30320/orchardlocal, http://www.yourdomain.com")</span>
-    </div>
-    <div>
-        <label for="SiteCulture">@T("Default Site Culture")</label>
-        @Html.DropDownList("SiteCulture", new SelectList(Model.SiteCultures, Model.SiteCulture))
-        @Html.ValidationMessage("SiteCulture", "*")
-        <p>@Display.ActionLink(Value: T("Add or remove supported cultures for the site."), Action: "Culture")</p>
-    </div>
-    <div>
-        <label for="TimeZone">@T("Default Time Zone")</label>
-        @Html.DropDownList("TimeZone", new SelectList(Model.TimeZones, "Id", "", Model.TimeZone))
-        @Html.ValidationMessage("TimeZone", "*")
-        <span class="hint">@T("Determines the default time zone which will should be used to display date and times.")</span>
-    </div>
-    <div>
-        <label for="PageTitleSeparator">@T("Page title separator")</label>
-        @Html.EditorFor(x => x.PageTitleSeparator)
-        @Html.ValidationMessage("PageTitleSeparator", "*")
-    </div>
-    <div>
-        <label for="SuperUser">@T("Super user")</label>
-        @Html.EditorFor(x=>x.SuperUser)
-        @Html.ValidationMessage("SuperUser", "*")
-        <span class="hint">@T("Enter an existing account name, or nothing if you don't want a Super user account")</span>
-    </div>
-    <div>
-        <label for="SiteDebugMode">@T("Resource Debug Mode")</label>
-        @Html.DropDownList("ResourceDebugMode", resourceDebugMode)
-        <span class="hint">@T("Determines whether scripts and stylesheets load in their debuggable or minified form.")</span>
-    </div>
-    <div>
-        <label for="DefaultPageSize">@T("Default number of items per page")</label>
-        @Html.TextBoxFor(m => m.PageSize, new { @class = "text-small" })
-        <span class="hint">@T("Determines the default number of items that are shown per page.")</span>
-    </div>
+    @Html.EditorFor(m => m.SiteName)
+    @Html.EditorFor(m => m.BaseUrl)
+    @Html.EditorFor(m => m.SiteCulture, new { Items = Model.SiteCultures })
+    @Html.EditorFor(m => m.TimeZone, new { Items = Model.TimeZones, DataValueField = "Id" })
+    @Html.EditorFor(m => m.PageTitleSeparator)
+    @Html.EditorFor(m => m.SuperUser)
+    @Html.EditorFor(m => m.ResourceDebugMode, new { Items = resourceDebugMode, DataValueField = "Id", DataTextField = "Text", Value = (int)Model.ResourceDebugMode })
+    @Html.EditorFor(m => m.PageSize)
 </fieldset>
