@@ -14,8 +14,13 @@ namespace Orchard.Time {
 
         public TimeZoneSelectorResult GetTimeZone(HttpContextBase context) {
             var siteTimeZoneId = _workContextAccessor.GetContext(context).CurrentSite.SiteTimeZone;
+            
+            if (String.IsNullOrEmpty(siteTimeZoneId)) {
+                return null;
+            }
+
             return new TimeZoneSelectorResult {
-                Priority = 0,
+                Priority = -5,
                 TimeZone = TimeZoneInfo.FindSystemTimeZoneById(siteTimeZoneId)
             };
         }
