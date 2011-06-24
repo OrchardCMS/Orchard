@@ -58,14 +58,12 @@ namespace Orchard.DisplayManagement.Shapes {
         }
 
         public class ShapeBehavior : ClayBehavior {
-            public dynamic _shape;
-            // This can't really be done without a hack until indexer methods offer a self parameter
-            public override object SetIndex(Func<object> proceed, IEnumerable<object> keys, object value) {
+            public override object SetIndex(Func<object> proceed, dynamic self, IEnumerable<object> keys, object value) {
                 if (keys.Count() == 1) {
                     var name = keys.Single().ToString();
                     if (name.Equals("Id")) {
                         // need to mutate the actual type
-                        var s = _shape as Shape;
+                        var s = self as Shape;
                         if (s != null) {
                             s.Id = System.Convert.ToString(value);
                         }
@@ -73,21 +71,21 @@ namespace Orchard.DisplayManagement.Shapes {
                     }
                     if (name.Equals("Classes")) {
                         var args = Arguments.From(new[] { value }, Enumerable.Empty<string>());
-                        MergeClasses(args, _shape.Classes);
+                        MergeClasses(args, self.Classes);
                         return value;
                     }
                     if (name.Equals("Attributes")) {
                         var args = Arguments.From(new[] { value }, Enumerable.Empty<string>());
-                        MergeAttributes(args, _shape.Attributes);
+                        MergeAttributes(args, self.Attributes);
                         return value;
                     }
                     if (name.Equals("Items")) {
                         var args = Arguments.From(new[] { value }, Enumerable.Empty<string>());
-                        MergeItems(args, _shape);
+                        MergeItems(args, self);
                         return value;
                     }
                 }
-                return base.SetIndex(proceed, keys, value);
+                return proceed();
             }
 
             public override object InvokeMember(Func<object> proceed, dynamic self, string name, INamedEnumerable<object> args) {
