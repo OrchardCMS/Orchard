@@ -23,7 +23,7 @@ namespace Orchard.DisplayManagement.Shapes {
         public virtual IDictionary<string, string> Attributes { get { return _attributes; } }
         public virtual IEnumerable<dynamic> Items { get { return _items; } }
 
-        public virtual Shape Add(object item, string position = DefaultPosition) {
+        public virtual Shape Add(object item, string position = null) {
             // pszmyd: Ignoring null shapes 
             if (item == null) {
                 return this;
@@ -35,7 +35,7 @@ namespace Orchard.DisplayManagement.Shapes {
                     item is String ) {
                     // need to implement positioned wrapper for non-shape objects
                 }
-                else {
+                else if (item is IShape) {
                     ((dynamic) item).Metadata.Position = position;
                 }
             }
@@ -83,7 +83,7 @@ namespace Orchard.DisplayManagement.Shapes {
                     }
                     if (name.Equals("Items")) {
                         var args = Arguments.From(new[] { value }, Enumerable.Empty<string>());
-                        MergeItems(args, _shape.Items);
+                        MergeItems(args, _shape);
                         return value;
                     }
                 }
