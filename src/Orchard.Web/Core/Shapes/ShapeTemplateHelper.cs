@@ -16,17 +16,13 @@ namespace Orchard.Core.Shapes {
             shape.Id = html.FieldIdFor("");  // empty string in a template is special meaning in MVC for 'this model'
             shape.Name = html.FieldNameFor("");
 
-            // forward all viewdata into the shape as shape properties
-            foreach (var pair in context.ViewData) {
-                shape[pair.Key] = pair.Value;
-            }
-            // forward all metadata additional values into the shape as shape properties
             var metadata = context.ViewData.ModelMetadata;
-            foreach (var pair in metadata.AdditionalValues) {
-                shape[pair.Key] = pair.Value;
-            }
-
             var localizer = LocalizationUtilities.Resolve(context, metadata.ModelType.FullName);
+
+            // forward all viewdata into the shape as shape properties
+            CopyProperties(html, context.ViewData, shape);
+            // forward all metadata additional values into the shape as shape properties
+            CopyProperties(html, metadata.AdditionalValues, shape);
 
             // add wrapper information that comes from natural metadata or needs to be localized
             var displayNameStr = metadata.DisplayName;
@@ -79,6 +75,32 @@ namespace Orchard.Core.Shapes {
                     }
                 }
             }
+        }
+
+        private static void CopyProperties(HtmlHelper html, IEnumerable<KeyValuePair<string, object>> items, dynamic shape) {
+            foreach (var pair in items) {
+                if ("EnabledBy".Equals(pair.Key, StringComparison.OrdinalIgnoreCase)) {
+                    var value = Convert.ToString(pair.Value);
+                    if (!string.IsNullOrEmpty(value)) {
+                        // In the UIOptions attribute, EnabledBy points to another property name on the model.
+                        // But the shape expects the HTML id of the controlling element.
+                        shape[pair.Key] = GetFieldIdFromParentModel(html, Convert.ToString(pair.Value));
+                    }
+                }
+                else {
+                    shape[pair.Key] = pair.Value;
+                }
+            }
+        }
+
+        private static string GetFieldIdFromParentModel(HtmlHelper html, string propertyName) {
+            var selfId = html.FieldIdFor("");
+            var separatorIndex = selfId.LastIndexOf('_');
+            if (separatorIndex == -1) {
+                return propertyName;
+            }
+            var otherId = selfId.Substring(0, separatorIndex) + "_" + propertyName;
+            return otherId;
         }
 
         private static object GetSelectProperty(object obj, string propertyName) {
