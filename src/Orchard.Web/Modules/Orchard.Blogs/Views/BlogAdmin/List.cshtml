@@ -5,7 +5,7 @@
 @{ Layout.Title = T("Manage Blogs").ToString(); }
 
 @if (Model.ContentItems.Items.Count > 0) { 
-<div class="actions"><a class="add button primaryAction" href="@Url.BlogCreate()">@T("New Blog")</a></div>
+<div class="actions">@Display.Link(Href: Url.BlogCreate(), Value: T("New Blog"), Classes: new[] { "add", "button", "primaryAction" })</div>
     using(Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
         <fieldset class="bulk-actions">
             <label for="publishActions">@T("Actions:")</label>

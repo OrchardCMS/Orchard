@@ -13,7 +13,7 @@ if (!HasText(Model.Text)) {
     }
     var tag = Tag(Model, "li");
     @tag.StartElement
-    <a href="@Model.Href">@Model.Text</a>
+    @Display.Link(Href: Model.Href, Value: Model.Text)
     if (items.Any()) {
         <ul>
         @DisplayChildren(Model)

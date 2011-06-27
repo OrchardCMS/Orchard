@@ -49,9 +49,7 @@
                 <div class="extensionDetails column">
                     <div class="extensionName">
                         @if (!string.IsNullOrWhiteSpace(theme.NewVersionToInstall.GalleryDetailsUrl)) {
-                            <a href="@theme.NewVersionToInstall.GalleryDetailsUrl">
-                                <h2>@theme.NewVersionToInstall.Title<span> - @T("Version: {0}", theme.NewVersionToInstall.Version)</span></h2>
-                            </a>
+                            @Display.Link(Href: theme.NewVersionToInstall.GalleryDetailsUrl, Value: "<h2>" + theme.NewVersionToInstall.Title + "<span> - " + T("Version: {0}", theme.NewVersionToInstall.Version) + "</span></h2>")
                         } else {
                             <h2>@theme.NewVersionToInstall.Title<span> - @T("Version: {0}", theme.NewVersionToInstall.Version)</span></h2>
                         }
@@ -59,7 +57,7 @@
 
                     <div class="related">
                         @Display.Link(Value: T("Install Latest"), RouteValues: InstallRoute(theme.NewVersionToInstall))@T(" | ")
-                        <a href="@theme.NewVersionToInstall.PackageStreamUri">@T("Download")</a>
+                        @Display.Link(Value: T("Download"), Href: theme.NewVersionToInstall.PackageStreamUri)
                     </div>
 
                     <div class="properties">
@@ -69,7 +67,7 @@
                             <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(theme.NewVersionToInstall.Authors) ? theme.NewVersionToInstall.Authors : T("Unknown").ToString())</li>
                             <li>&nbsp;&#124;&nbsp;@T("Downloads: {0}", theme.NewVersionToInstall.DownloadCount)</li>
                             <li>&nbsp;&#124;&nbsp;@T("Website: ")
-                                @if (!string.IsNullOrEmpty(theme.NewVersionToInstall.ProjectUrl)) { <a href="@theme.NewVersionToInstall.ProjectUrl">@theme.NewVersionToInstall.ProjectUrl</a> } else { @T("Unknown").ToString() }
+                                @if (!string.IsNullOrEmpty(theme.NewVersionToInstall.ProjectUrl)) { @Display.Link(Href: theme.NewVersionToInstall.ProjectUrl, Value: theme.NewVersionToInstall.ProjectUrl) } else { @T("Unknown").ToString() }
                             </li>
                             <li><div>&nbsp;&#124;&nbsp;@T("Rating: ")
                                     <div class="ratings" style="width:@(15 * 5)px" title="@T("Rating: {0} out of 5 ({1} total).", theme.NewVersionToInstall.Rating, theme.NewVersionToInstall.RatingsCount)">
