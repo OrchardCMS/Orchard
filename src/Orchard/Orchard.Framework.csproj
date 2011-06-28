@@ -264,7 +264,7 @@
     <Compile Include="Time\IClock.cs" />
     <Compile Include="Time\ITimeZoneSelector.cs" />
     <Compile Include="Time\TimeZoneSelectorResult.cs" />
-    <Compile Include="UI\FlatPositionComparer.cs" />
+    <Compile Include="UI\PositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Navigation\PagerParameters.cs" />
     <Compile Include="UI\Notify\INotifier.cs" />
@@ -869,7 +869,6 @@
     <Compile Include="FileSystems\Media\IStorageProvider.cs" />
     <Compile Include="Utility\Extensions\StringExtensions.cs" />
     <Compile Include="Utility\Extensions\HttpRequestExtensions.cs" />
-    <Compile Include="Utility\Position.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

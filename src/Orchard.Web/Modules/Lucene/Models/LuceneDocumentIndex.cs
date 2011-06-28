@@ -59,7 +59,7 @@ namespace Lucene.Models {
         }
 
         public IDocumentIndex Add(string name, bool value) {
-            return Add(name, value.ToString());
+            return Add(name, value ? 1 : 0);
         }
 
         public IDocumentIndex Add(string name, double value) {

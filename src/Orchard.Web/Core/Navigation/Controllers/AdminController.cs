@@ -42,7 +42,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 model = new NavigationManagementViewModel();
 
             if (model.MenuItemEntries == null || model.MenuItemEntries.Count() < 1)
-                model.MenuItemEntries = _menuService.Get().Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.Position, new FlatPositionComparer()).ToList();
+                model.MenuItemEntries = _menuService.Get().Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.Position, new PositionComparer()).ToList();
 
             // need action name as this action is referenced from another action
             return View("Index", model);
@@ -93,8 +93,10 @@ namespace Orchard.Core.Navigation.Controllers {
             menuPart.OnMainMenu = true;
             menuPart.MenuText = model.NewMenuItem.Text;
             menuPart.MenuPosition = model.NewMenuItem.Position;
-            if (string.IsNullOrEmpty(menuPart.MenuPosition))
-                menuPart.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
+            if (string.IsNullOrEmpty(menuPart.MenuPosition)){
+                var maxPosition = PositionComparer.Max(_navigationManager.BuildMenu("main").Select(x => x.Position));
+                menuPart.MenuPosition = PositionComparer.After(maxPosition);
+            }
 
             var menuItem = menuPart.As<MenuItemPart>();
             menuItem.Url = model.NewMenuItem.Url;

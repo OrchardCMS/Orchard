@@ -203,7 +203,7 @@ namespace Orchard.Core.Shapes {
 
             var i = 1;
             var progress = 1;
-            var flatPositionComparer = new FlatPositionComparer();
+            var flatPositionComparer = new PositionComparer();
             var ordering = unordered.Select(item => {
                 var position = (item == null || item.GetType().GetProperty("Metadata") == null || item.Metadata.GetType().GetProperty("Position") == null)
                                    ? null

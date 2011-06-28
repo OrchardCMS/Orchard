@@ -126,7 +126,6 @@
     <Compile Include="Navigation\Models\AdminMenuPartRecord.cs" />
     <Compile Include="Navigation\Services\AdminMenuNavigationProvider.cs" />
     <Compile Include="Navigation\Services\MainMenuNavigationProvider.cs" />
-    <Compile Include="Navigation\Settings\AdminMenuPartTypeSettings.cs" />
     <Compile Include="Routable\Events\ISlugEventHandler.cs" />
     <Compile Include="Routable\ResourceManifest.cs" />
     <Compile Include="Routable\Services\RoutableHomePageProvider.cs" />
@@ -435,9 +434,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.AdminMenu.Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Navigation\Views\DefinitionTemplates\AdminMenuPartTypeSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />

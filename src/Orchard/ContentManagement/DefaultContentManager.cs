@@ -363,14 +363,14 @@ namespace Orchard.ContentManagement {
             var metadata = GetItemMetadata(content);
             return metadata.EditorGroupInfo
                 .GroupBy(groupInfo => groupInfo.Id)
-                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new FlatPositionComparer()).FirstOrDefault());
+                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new PositionComparer()).FirstOrDefault());
         }
 
         public IEnumerable<GroupInfo> GetDisplayGroupInfos(IContent content) {
             var metadata = GetItemMetadata(content);
             return metadata.DisplayGroupInfo
                 .GroupBy(groupInfo => groupInfo.Id)
-                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new FlatPositionComparer()).FirstOrDefault());
+                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new PositionComparer()).FirstOrDefault());
         }
 
         public GroupInfo GetEditorGroupInfo(IContent content, string groupInfoId) {
