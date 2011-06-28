@@ -65,7 +65,7 @@
                     <div class="extensionDetails column">
                     <div class="extensionName @if (item.Installed) {<text>installed</text>}">
                             @if (!string.IsNullOrWhiteSpace(item.GalleryDetailsUrl)) {
-                                @Display.Link(Href: item.GalleryDetailsUrl, Value: "<h2>" + item.Title + "<span> - " + T("Version: {0}", item.Version) + "</span></h2>")
+                                @Display.Link(Href: item.GalleryDetailsUrl, Value: new HtmlString("<h2>" + item.Title + "<span> - " + T("Version: {0}", item.Version) + "</span></h2>"))
                             } else {
                                 <h2>@item.Title<span> - @T("Version: {0}", item.Version)</span></h2>
                             }

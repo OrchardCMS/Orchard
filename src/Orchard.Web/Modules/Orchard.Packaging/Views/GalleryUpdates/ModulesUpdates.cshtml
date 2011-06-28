@@ -44,7 +44,7 @@
                 <div class="extensionDetails column">
                     <div class="extensionName">
                         @if (!string.IsNullOrWhiteSpace(module.NewVersionToInstall.GalleryDetailsUrl)) {
-                            @Display.Link(Href: module.NewVersionToInstall.GalleryDetailsUrl, Value: "<h2>" + module.NewVersionToInstall.Title + "<span> - " + T("Version: {0}", module.NewVersionToInstall.Version) + "</span></h2>")
+                            @Display.Link(Href: module.NewVersionToInstall.GalleryDetailsUrl, Value: new HtmlString("<h2>" + module.NewVersionToInstall.Title + "<span> - " + T("Version: {0}", module.NewVersionToInstall.Version) + "</span></h2>"))
                         } else {
                             <h2>@module.NewVersionToInstall.Title<span> - @T("Version: {0}", module.NewVersionToInstall.Version)</span></h2>
                         }
