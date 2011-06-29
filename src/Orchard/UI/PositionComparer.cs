@@ -8,7 +8,7 @@ namespace Orchard.UI {
     /// </summary>
     public class PositionComparer : IComparer<string> {
         /// Segments are separated by dots and can be:
-        /// - an integer
+        /// - an integer (negative or positive)
         /// - "before" or "after"
         /// - any string value
         /// e.g., 1.2.3; after.1; 1.after; 1.foo
@@ -49,79 +49,86 @@ namespace Orchard.UI {
         }
 
         /// <summary>
+        /// Represents the different types of values a segment can have
+        /// </summary>
+        private enum SegmentTypes {
+            Before = 0,
+            NegativeNumber = 1,
+            Null = 2,
+            Empty = 3,
+            PositiveNumber = 4,
+            String = 5,
+            After = 6
+        }
+        
+        /// <summary>
+        /// Returns in which segment type a string is
+        /// </summary>
+        private static SegmentTypes GetSegmentType(string segment) {
+            if (String.Equals(segment, "before", StringComparison.OrdinalIgnoreCase)) {
+                return SegmentTypes.Before;
+            }
+
+            if (segment == null) {
+                return SegmentTypes.Null;
+            }
+
+            if (String.IsNullOrWhiteSpace(segment)) {
+                return SegmentTypes.Empty;
+            }
+
+            if (String.Equals(segment, "after", StringComparison.OrdinalIgnoreCase)) {
+                return SegmentTypes.After;
+            }
+
+            int result;
+            if(int.TryParse(segment, out result)) {
+                return result < 0 ? SegmentTypes.NegativeNumber : SegmentTypes.PositiveNumber;
+            }
+
+            return SegmentTypes.String;
+        }
+
+        /// <summary>
         /// Compares two specific segments from a position
         /// </summary>
         /// <returns>-1 if <paramref name="x"/> is greater than <paramref name="y"/>, 0 if they are equal, otherwise -1</returns>
         private static int CompareSegment(string x, string y) {
             // handle raw equality
-            // null, "", "after", "before", "foo", "42", "-42", "0"
+            // "before", "-42", null, "", "0", "42", "foo", "after"
             if (x == y || String.Equals(x, y, StringComparison.OrdinalIgnoreCase)) {
                 return 0;
             }
 
-            #region matching "after" and "before" constants
-            // handle "after" and "before"
-            if (String.Equals(x, "before", StringComparison.OrdinalIgnoreCase)) {
-                // it's always less
-                return -1;
+            var typeX = GetSegmentType(x);
+            var typeY = GetSegmentType(y);
+
+            // different types ? we can infer the result
+            if(typeX != typeY) {
+                return typeX.CompareTo(typeY);
             }
 
-            if (String.Equals(y, "before", StringComparison.OrdinalIgnoreCase)) {
-                // it's always greater
-                return 1;
-            }
-
-            if (String.Equals(x, "after", StringComparison.OrdinalIgnoreCase)) {
-                // it's always greater
-                return 1;
-            }
-
-            if (String.Equals(y, "after", StringComparison.OrdinalIgnoreCase)) {
-                // it's always lower
-                return -1;
-            }                
-            #endregion
-
-            double xVal, yVal;
-
-            var isNumericX = double.TryParse(x, out xVal);
-            var isNumericY = double.TryParse(y, out yVal);
-
-            // empty values are lower than 0, but null is lower than empty
-            if (x == null) {
-                isNumericX = true;
-                xVal = -0.2;
-            } 
-            else if (String.IsNullOrWhiteSpace(x)) {
-                isNumericX = true;
-                xVal = -0.1;
-            }
-
-            if (y == null) {
-                isNumericY = true;
-                yVal = -0.2;
-            } else if (String.IsNullOrWhiteSpace(y)) {
-                isNumericY = true;
-                yVal = -0.1;
-            }
-
-            if(isNumericX) {
-                if (isNumericY) {
-                    // x and y are integers
-                    return xVal.CompareTo(yVal);
-                } else {
-                    // y is a pure string, x a value
-                    return -1;
-                }
-            }
-            else {
-                if (isNumericY) {
-                    // x is a pure string, y a value
-                    return 1;
-                } else {
-                    // x and y are pure strings
+            // same types ? then compare raw values
+            switch (typeX) {
+                case SegmentTypes.After:
+                case SegmentTypes.Before:
+                case SegmentTypes.Null:
+                case SegmentTypes.Empty:
+                    return 0;
+                case SegmentTypes.String:
                     return String.Compare(x, y, StringComparison.OrdinalIgnoreCase);
-                } 
+                case SegmentTypes.NegativeNumber:
+                case SegmentTypes.PositiveNumber:
+                    int xVal, yVal;
+
+                    int.TryParse(x, out xVal);
+                    int.TryParse(y, out yVal);
+
+                    return xVal.CompareTo(yVal);
+
+                default:
+                    throw new ArgumentException("Unexpected segment type: " + typeX);
+                
             }
         }
 
@@ -253,7 +260,7 @@ namespace Orchard.UI {
         /// Returns the greater value of several positions
         /// </summary>
         public static string Max(params string[] positions) {
-            return Max(positions);
+            return Max((IEnumerable<string>)positions);
         }
 
         /// <summary>
@@ -281,7 +288,7 @@ namespace Orchard.UI {
         /// Returns the lower value of several positions
         /// </summary>
         public static string Min(params string[] positions) {
-            return Min(positions);
+            return Min((IEnumerable<string>)positions);
         }
 
         /// <summary>
