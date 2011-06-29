@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Orchard.Experimental.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.Admin;
@@ -38,6 +39,19 @@ namespace Orchard.Experimental.Controllers {
 
         public ActionResult Simple() {
             return View(new Simple { Title = "This is a simple text", Quantity = 5 });
+        }
+        
+        public ActionResult Forms() {
+            var form = Shape.Form();
+            form.Captcha = Shape.Fieldset(Title: T("Captcha"), Response: Shape.Textbox());
+            form.Actions = Shape.Fieldset(Ok: Shape.Button(T("OK")), Cancel: Shape.Button(T("Cancel")));
+
+            form.Add(form.Captcha);
+            form.Add(form.Actions);
+            form.Actions.Add(form.Actions.Ok);
+            form.Actions.Add(form.Actions.Cancel);
+
+            return new ShapeResult(this, form);
         }
 
         public ActionResult _RenderableAction() {

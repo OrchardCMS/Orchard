@@ -51,7 +51,6 @@ namespace Orchard.DisplayManagement.Implementation {
                 positional = positional.Skip(1);
             }
 
-            var shapeBehavior = new Shape.ShapeBehavior();
             if (creatingContext.BaseType == typeof(Array)) {
                 // array is a hint - not an intended base class
                 creatingContext.BaseType = typeof(Shape);
@@ -67,7 +66,7 @@ namespace Orchard.DisplayManagement.Implementation {
                     new ClaySharp.Behaviors.InterfaceProxyBehavior(),
                     new ClaySharp.Behaviors.PropBehavior(),
                     new ClaySharp.Behaviors.NilResultBehavior(),
-                    shapeBehavior,
+                    new Shape.ShapeBehavior(),
                 };
             }
             
@@ -92,7 +91,6 @@ namespace Orchard.DisplayManagement.Implementation {
                 ShapeType = creatingContext.ShapeType,
                 Shape = ClayActivator.CreateInstance(creatingContext.BaseType, creatingContext.Behaviors)
             };
-            shapeBehavior._shape = createdContext.Shape;
             var shapeMetadata = new ShapeMetadata { Type = shapeType };
             createdContext.Shape.Metadata = shapeMetadata;
 

@@ -81,6 +81,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
 
             if (parameter.Name == "Output" && parameter.ParameterType == typeof(TextWriter))
                 return output;
+            if (parameter.Name == "Output" && parameter.ParameterType == typeof(Action<object>))
+                return new Action<object>(output.Write);
 
             // meh--
             if (parameter.Name == "Html") {
@@ -95,7 +97,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             } 
 
             var getter = _getters.GetOrAdd(parameter.Name, n =>
-                CallSite<Func<CallSite, object, object>>.Create(
+                CallSite<Func<CallSite, object, dynamic>>.Create(
                 Microsoft.CSharp.RuntimeBinder.Binder.GetMember(
                 CSharpBinderFlags.None, n, null, new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) })));
 
@@ -110,13 +112,13 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
         }
 
 
-        static readonly ConcurrentDictionary<string, CallSite<Func<CallSite, object, object>>> _getters =
-            new ConcurrentDictionary<string, CallSite<Func<CallSite, object, object>>>();
+        static readonly ConcurrentDictionary<string, CallSite<Func<CallSite, object, dynamic>>> _getters =
+            new ConcurrentDictionary<string, CallSite<Func<CallSite, object, dynamic>>>();
 
-        static readonly ConcurrentDictionary<Type, Func<object, object>> _converters =
-            new ConcurrentDictionary<Type, Func<object, object>>();
+        static readonly ConcurrentDictionary<Type, Func<dynamic, object>> _converters =
+            new ConcurrentDictionary<Type, Func<dynamic, object>>();
 
-        static Func<object, object> CompileConverter(Type targetType) {
+        static Func<dynamic, object> CompileConverter(Type targetType) {
             var valueParameter = Expression.Parameter(typeof(object), "value");
 
             return Expression.Lambda<Func<object, object>>(

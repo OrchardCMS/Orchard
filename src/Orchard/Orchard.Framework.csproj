@@ -260,6 +260,7 @@
     <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="Time\CurrentTimeZoneWorkContext.cs" />
+    <Compile Include="Time\FallbackTimeZoneSelector.cs" />
     <Compile Include="Time\SiteTimeZoneSelector.cs" />
     <Compile Include="Time\IClock.cs" />
     <Compile Include="Time\ITimeZoneSelector.cs" />

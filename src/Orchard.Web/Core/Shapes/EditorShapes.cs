@@ -101,6 +101,31 @@ namespace Orchard.Core.Shapes {
             //object ActionLinkValue,
             //object Description,
             string EnabledBy) {
+
+            /* 
+             * #id #type #name #title #title_display #field_prefix #field_suffix #description #required
+             * #title_display=={before,after,invisible,attribute,none}
+             * 
+             *  {form_element}
+             *      <div attributes id="#id" class="form-type-#type form-item-#name">
+             *          {form_element_label}
+             *              <label class="option?#title_display==after element-invisible?#title_display==invisible" for="#id">
+             *                  #title 
+             *                  {form_required_marker}
+             *                      <span class='form-required'>This field is required.</span>
+             *                  {/form_required_marker}?#required
+             *              </label>
+             *          {/form_element_label}?#title
+             *          <span class="field-prefix">#field_prefix</span>?#field_prefix
+             *          #child_content
+             *          <span class="field-suffix">#field_suffix</span>?#field_suffix
+             *          {form_element_label/}?#title_display==after
+             *          <div class="description">#description</div>?
+             *      </div>
+             *  {/form_element}
+             */
+
+
             // Wraps an input with metadata as follows (most of it is optional and won't render if not present):
             /*
             <div data-controllerid="{EnabledByInputId}">
@@ -171,6 +196,33 @@ namespace Orchard.Core.Shapes {
             }
 
             Output.WriteLine(div.ToString(TagRenderMode.EndTag));
+        }
+
+        [Shape]
+        public void Form(Action<object> Output, dynamic Display, dynamic Shape) {
+            OrchardTagBuilder tag = _tagBuilderFactory.Create(Shape, "form");
+            Output(tag.ToString(TagRenderMode.StartTag));
+            foreach(var item in Shape) {
+                Output(Display(item));
+            }
+            Output(tag.ToString(TagRenderMode.EndTag));
+        }
+
+        [Shape]
+        public void Fieldset(Action<object> Output, dynamic Display, dynamic Shape) {
+            OrchardTagBuilder tag = _tagBuilderFactory.Create(Shape, "fieldset");
+            Output(tag.ToString(TagRenderMode.StartTag));
+            foreach(var item in Shape) {
+                Output(Display(item));
+            }
+            Output(tag.ToString(TagRenderMode.EndTag));
+        }
+
+        [Shape]
+        public IHtmlString Textbox(dynamic Display, dynamic Shape) {
+            Shape.Metadata.Type = "Input";
+            Shape.Type = "textbox";
+            return Display(Shape);
         }
 
         [Shape]
