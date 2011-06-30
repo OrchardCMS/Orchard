@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
@@ -26,7 +27,7 @@ namespace Orchard.Environment {
         public ILogger Logger { get; set; }
 
         public void Monitor(Action<IVolatileToken> monitor) {
-            if (!_appDataFolder.FileExists(fileName))
+            if (!File.Exists(_appDataFolder.MapPath(fileName)))
                 TouchFile();
 
             monitor(_appDataFolder.WhenPathChanges(fileName));
@@ -42,7 +43,7 @@ namespace Orchard.Environment {
 
         private void TouchFile() {
             try {
-                _appDataFolder.CreateFile(fileName, "Host Restart");
+                _appDataFolder.StoreFile(fileName, "Host Restart");
             }
             catch(Exception e) {
                 Logger.Warning(e, "Error updating file '{0}'", fileName);

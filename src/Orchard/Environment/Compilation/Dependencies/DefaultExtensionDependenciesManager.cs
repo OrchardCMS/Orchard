@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.Caching;
@@ -64,7 +65,7 @@ namespace Orchard.Environment.Compilation.Dependencies {
 
         public IEnumerable<ActivatedExtensionDescriptor> LoadDescriptors() {
             return _cacheManager.Get(PersistencePath, ctx => {
-                _appDataFolder.CreateDirectory(BasePath);
+                Directory.CreateDirectory(_appDataFolder.MapPath(BasePath));
                 ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
 
                 _writeThroughToken.IsCurrent = true;
@@ -107,8 +108,8 @@ namespace Orchard.Environment.Compilation.Dependencies {
         }
 
         private bool IsSupportedLoader(string loaderName) {
-            //Note: this is hard-coded for now, to avoid adding more responsibilities to the IExtensionLoader
-            //      implementations.
+            // Note: this is hard-coded for now, to avoid adding more responsibilities to the IExtensionLoader
+            // implementations.
             return
                 loaderName == "DynamicExtensionLoader" ||
                 loaderName == "PrecompiledExtensionLoader";
@@ -116,20 +117,16 @@ namespace Orchard.Environment.Compilation.Dependencies {
 
         private void WriteDocument(string persistancePath, XDocument document) {
             _writeThroughToken.IsCurrent = false;
-            using (var stream = _appDataFolder.CreateFile(persistancePath)) {
-                document.Save(stream, SaveOptions.None);
-                stream.Close();
-            }
+            _appDataFolder.StoreFile(persistancePath, document.ToString());
         }
 
         private XDocument ReadDocument(string persistancePath) {
-            if (!_appDataFolder.FileExists(persistancePath))
+            if (!File.Exists(_appDataFolder.MapPath(persistancePath))) {
                 return new XDocument();
+            }
 
             try {
-                using (var stream = _appDataFolder.OpenFile(persistancePath)) {
-                    return XDocument.Load(stream);
-                }
+                return XDocument.Parse(_appDataFolder.ReadFile(persistancePath));
             }
             catch (Exception e) {
                 Logger.Information(e, "Error reading file '{0}'. Assuming empty.", persistancePath);

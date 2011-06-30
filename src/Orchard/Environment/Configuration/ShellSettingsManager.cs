@@ -34,7 +34,7 @@ namespace Orchard.Environment.Configuration {
                 throw new ArgumentException(T("Settings \"Name\" is not set.").ToString());
 
             var filePath = Path.Combine(Path.Combine("Sites", settings.Name), "Settings.txt");
-            _appDataFolder.CreateFile(filePath, ComposeSettings(settings));
+            _appDataFolder.StoreFile(filePath, ComposeSettings(settings));
             _events.Saved(settings);
         }
 

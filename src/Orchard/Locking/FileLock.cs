@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
 
@@ -26,13 +27,13 @@ namespace Orchard.Locking {
             _synLock = synLock;
 
             // create the physical lock file
-            _appDataFolder.CreateFile(path, content);
+            _appDataFolder.StoreFile(path, content);
         }
 
         public void Dispose() {
             try {
                 lock (_synLock) {
-                    if (_released || !_appDataFolder.FileExists(_path)) {
+                    if (_released || !File.Exists(_appDataFolder.MapPath(_path))) {
                         // nothing to do, might happen if re-granted, and already released
                         return;
                     }

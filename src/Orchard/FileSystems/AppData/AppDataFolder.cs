@@ -37,6 +37,7 @@ namespace Orchard.FileSystems.AppData {
 
         private void MakeDestinationFileNameAvailable(string destinationFileName) {
             bool isDirectory = Directory.Exists(destinationFileName);
+
             // Try deleting the destination first
             try {
                 if (isDirectory)
@@ -52,6 +53,7 @@ namespace Orchard.FileSystems.AppData {
                 Logger.Warning("Could not delete recipe execution folder {0} under \"App_Data\" folder", destinationFileName);
                 return;
             }
+
             // If destination doesn't exist, we are good
             if (!File.Exists(destinationFileName))
                 return;
@@ -59,7 +61,7 @@ namespace Orchard.FileSystems.AppData {
             // Try renaming destination to a unique filename
             const string extension = "deleted";
             for (int i = 0; i < 100; i++) {
-                var newExtension = (i == 0 ? extension : string.Format("{0}{1}", extension, i));
+                var newExtension = i == 0 ? extension : string.Format("{0}{1}", extension, i);
                 var newFileName = Path.ChangeExtension(destinationFileName, newExtension);
                 try {
                     File.Delete(newFileName);
@@ -106,21 +108,18 @@ namespace Orchard.FileSystems.AppData {
             return Combine(AppDataPath, path);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        public void CreateFile(string path, string content) {
-            using (var stream = CreateFile(path)) {
+        public void StoreFile(string path, string content) {
+            var filePath = CombineToPhysicalPath(path);
+            var folderPath = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(folderPath)) {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            using (var stream = File.Create(filePath)) {
                 using (var tw = new StreamWriter(stream)) {
                     tw.Write(content);
                 }
             }
-        }
-
-        public Stream CreateFile(string path) {
-            var filePath = CombineToPhysicalPath(path);
-            var folderPath = Path.GetDirectoryName(filePath);
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
-            return File.Create(filePath);
         }
 
         public string ReadFile(string path) {
@@ -128,33 +127,12 @@ namespace Orchard.FileSystems.AppData {
             return File.Exists(physicalPath) ? File.ReadAllText(physicalPath) : null;
         }
 
-        public Stream OpenFile(string path) {
-            return File.OpenRead(CombineToPhysicalPath(path));
-        }
-
-        public void StoreFile(string sourceFileName, string destinationPath) {
-            Logger.Information("Storing file \"{0}\" as \"{1}\" in \"App_Data\" folder", sourceFileName, destinationPath);
-
-            var destinationFileName = CombineToPhysicalPath(destinationPath);
-            MakeDestinationFileNameAvailable(destinationFileName);
-            File.Copy(sourceFileName, destinationFileName);
-        }
-
         public void DeleteFile(string path) {
-            Logger.Information("Deleting file \"{0}\" from \"App_Data\" folder", path);
-            MakeDestinationFileNameAvailable(CombineToPhysicalPath(path));
-        }
-
-        public DateTime GetFileLastWriteTimeUtc(string path) {
-            return File.GetLastWriteTimeUtc(CombineToPhysicalPath(path));
-        }
-
-        public bool FileExists(string path) {
-            return File.Exists(CombineToPhysicalPath(path));
-        }
-
-        public bool DirectoryExists(string path) {
-            return Directory.Exists(CombineToPhysicalPath(path));
+            var mappedPath = CombineToPhysicalPath(path);
+            if (File.Exists(mappedPath)) {
+                Logger.Information("Deleting file \"{0}\" from \"App_Data\" folder", path);
+                MakeDestinationFileNameAvailable(mappedPath);
+            }
         }
 
         public IEnumerable<string> ListFiles(string path) {
@@ -181,10 +159,6 @@ namespace Orchard.FileSystems.AppData {
                 var fileName = Path.GetFileName(file);
                 return Combine(path, fileName);
             });
-        }
-
-        public void CreateDirectory(string path) {
-            Directory.CreateDirectory(CombineToPhysicalPath(path));
         }
 
         public string MapPath(string path) {

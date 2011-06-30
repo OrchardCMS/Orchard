@@ -88,7 +88,7 @@ namespace Orchard.Environment.Descriptor {
             }
 
             xmlDocument.Save(saveWriter);
-            _appDataFolder.CreateFile(DescriptorCacheFileName, saveWriter.ToString());
+            _appDataFolder.StoreFile(DescriptorCacheFileName, saveWriter.ToString());
         }
 
         #endregion
@@ -121,7 +121,7 @@ namespace Orchard.Environment.Descriptor {
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void VerifyCacheFile() {
-            if (!_appDataFolder.FileExists(DescriptorCacheFileName)) {
+            if (_appDataFolder.ReadFile(_appDataFolder.MapPath(DescriptorCacheFileName)) == null) {
                 var writer = new StringWriter();
                 using (XmlWriter xmlWriter = XmlWriter.Create(writer)) {
                     if (xmlWriter != null) {
@@ -131,7 +131,8 @@ namespace Orchard.Environment.Descriptor {
                         xmlWriter.WriteEndDocument();
                     }
                 }
-                _appDataFolder.CreateFile(DescriptorCacheFileName, writer.ToString());
+
+                _appDataFolder.StoreFile(DescriptorCacheFileName, writer.ToString());
             }
         }
     }

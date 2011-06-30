@@ -37,31 +37,28 @@ namespace Orchard.Tests.Stubs {
             return entry.Entries.Where(e => e is StubFileSystem.DirectoryEntry).Select(e => Combine(path, e.Name));
         }
 
-        public bool FileExists(string path) {
-            return _fileSystem.GetFileEntry(path) != null;
-        }
-
         public string Combine(params string[] paths) {
             return Path.Combine(paths).Replace(Path.DirectorySeparatorChar, '/');
         }
 
-        public void CreateFile(string path, string content) {
-            using (var stream = CreateFile(path)) {
+        public void StoreFile(string path, string content) {
+            using (var stream = _fileSystem.CreateFile(path)) {
                 using (var writer = new StreamWriter(stream)) {
                     writer.Write(content);
                 }
             }
         }
 
-        public Stream CreateFile(string path) {
-            return _fileSystem.CreateFile(path);
-        }
-
         public string ReadFile(string path) {
-            using (var stream = OpenFile(path)) {
-                using (var reader = new StreamReader(stream)) {
-                    return reader.ReadToEnd();
+            try {
+                using (var stream = OpenFile(path)) {
+                    using (var reader = new StreamReader(stream)) {
+                        return reader.ReadToEnd();
+                    }
                 }
+            }
+            catch (InvalidOperationException) {
+                return null;
             }
         }
 
@@ -69,37 +66,8 @@ namespace Orchard.Tests.Stubs {
             return _fileSystem.OpenFile(path);
         }
 
-        public void StoreFile(string sourceFileName, string destinationPath) {
-            using (var inputStream = File.OpenRead(sourceFileName)) {
-                using (var outputStream = _fileSystem.CreateFile(destinationPath)) {
-                    byte[] buffer = new byte[1024];
-                    for (; ; ) {
-                        var count = inputStream.Read(buffer, 0, buffer.Length);
-                        if (count == 0)
-                            break;
-                        outputStream.Write(buffer, 0, count);
-                    }
-                }
-            }
-        }
-
         public void DeleteFile(string path) {
             _fileSystem.DeleteFile(path);
-        }
-
-        public DateTime GetFileLastWriteTimeUtc(string path) {
-            var entry = _fileSystem.GetFileEntry(path);
-            if (entry == null)
-                throw new ArgumentException();
-            return entry.LastWriteTimeUtc;
-        }
-
-        public void CreateDirectory(string path) {
-            _fileSystem.CreateDirectoryEntry(path);
-        }
-
-        public bool DirectoryExists(string path) {
-            return _fileSystem.GetDirectoryEntry(path) != null;
         }
 
         public IVolatileToken WhenPathChanges(string path) {
@@ -107,7 +75,7 @@ namespace Orchard.Tests.Stubs {
         }
 
         public string MapPath(string path) {
-            throw new NotImplementedException();
+            return path;
         }
 
         public string GetVirtualPath(string path) {

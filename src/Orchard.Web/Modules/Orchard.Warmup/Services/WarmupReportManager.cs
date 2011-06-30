@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.Environment.Configuration;
@@ -21,11 +21,10 @@ namespace Orchard.Warmup.Services {
         }
 
         public IEnumerable<ReportEntry> Read() {
-            if(!_appDataFolder.FileExists(_warmupReportPath)) {
+            var warmupReportContent = _appDataFolder.ReadFile(_warmupReportPath);
+            if (warmupReportContent == null) {
                 yield break;
             }
-
-            var warmupReportContent = _appDataFolder.ReadFile(_warmupReportPath);
 
             var doc = XDocument.Parse(warmupReportContent);
             foreach (var entryNode in doc.Root.Descendants("ReportEntry")) {
@@ -33,9 +32,9 @@ namespace Orchard.Warmup.Services {
                     CreatedUtc = XmlConvert.ToDateTime(entryNode.Attribute("CreatedUtc").Value, XmlDateTimeSerializationMode.Utc),
                     Filename = entryNode.Attribute("Filename").Value,
                     RelativeUrl = entryNode.Attribute("RelativeUrl").Value,
-                    StatusCode = Int32.Parse(entryNode.Attribute("StatusCode").Value)
+                    StatusCode = int.Parse(entryNode.Attribute("StatusCode").Value)
                 };
-            }            
+            }
         }
 
         public void Create(IEnumerable<ReportEntry> reportEntries) {
@@ -43,16 +42,15 @@ namespace Orchard.Warmup.Services {
 
             foreach (var reportEntry in reportEntries) {
                 report.Root.Add(
-                    new XElement("ReportEntry",
+                    new XElement(
+                        "ReportEntry",
                         new XAttribute("RelativeUrl", reportEntry.RelativeUrl),
                         new XAttribute("Filename", reportEntry.Filename),
                         new XAttribute("StatusCode", reportEntry.StatusCode),
-                        new XAttribute("CreatedUtc", XmlConvert.ToString(reportEntry.CreatedUtc, XmlDateTimeSerializationMode.Utc))
-                    )
-                );
+                        new XAttribute("CreatedUtc", XmlConvert.ToString(reportEntry.CreatedUtc, XmlDateTimeSerializationMode.Utc))));
             }
 
-            _appDataFolder.CreateFile(_warmupReportPath, report.ToString());
+            _appDataFolder.StoreFile(_warmupReportPath, report.ToString());
         }
     }
 }

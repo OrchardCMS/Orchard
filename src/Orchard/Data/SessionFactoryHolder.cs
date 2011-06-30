@@ -1,4 +1,5 @@
-﻿using NHibernate;
+﻿using System.IO;
+using NHibernate;
 using NHibernate.Cfg;
 using Orchard.Data.Providers;
 using Orchard.Environment;
@@ -109,7 +110,7 @@ namespace Orchard.Data {
 
         public SessionFactoryParameters GetSessionFactoryParameters() {
             var shellPath = _appDataFolder.Combine("Sites", _shellSettings.Name);
-            _appDataFolder.CreateDirectory(shellPath);
+            Directory.CreateDirectory(_appDataFolder.MapPath(shellPath));
 
             var shellFolder = _appDataFolder.MapPath(shellPath);
 

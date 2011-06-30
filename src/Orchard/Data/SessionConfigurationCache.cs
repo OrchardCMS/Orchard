@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -70,7 +71,7 @@ namespace Orchard.Data {
 
             try {
                 var formatter = new BinaryFormatter();
-                using (var stream = _appDataFolder.CreateFile(pathName)) {
+                using (var stream = File.Create(_appDataFolder.MapPath(pathName))) {
                     formatter.Serialize(stream, cache.Hash);
                     formatter.Serialize(stream, cache.Configuration);
                 }
@@ -90,15 +91,14 @@ namespace Orchard.Data {
 
             var pathName = GetPathName(_shellSettings.Name);
 
-            if (!_appDataFolder.FileExists(pathName))
+            if (!File.Exists(_appDataFolder.MapPath(pathName)))
                 return null;
 
             try {
                 var formatter = new BinaryFormatter();
-                using (var stream = _appDataFolder.OpenFile(pathName)) {
-
+                using (var stream = File.OpenRead(_appDataFolder.MapPath(pathName))) {
                     // if the stream is empty, stop here
-                    if(stream.Length == 0) {
+                    if (stream.Length == 0) {
                         return null;
                     }
 
@@ -117,8 +117,10 @@ namespace Orchard.Data {
                 }
             }
             catch (Exception e) {
-                for (var scan = e; scan != null; scan = scan.InnerException)
+                for (var scan = e; scan != null; scan = scan.InnerException) {
                     Logger.Warning("Error reading the cached NHibernate configuration: {0}", scan.Message);
+                }
+
                 Logger.Information("A new one will be re-generated.");
                 return null;
             }

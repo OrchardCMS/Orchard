@@ -69,11 +69,11 @@ namespace Orchard.Tests.Environment.Compilation.Dependencies {
             };
 
             dependenciesFolder.StoreDescriptors(new[] { d1, d2 });
-            var dateTime1 = appDataFolder.GetLastWriteTimeUtc(Path.Combine("Dependencies", "Dependencies.xml"));
+            var dateTime1 = appDataFolder.GetLastWriteTimeUtc(appDataFolder.MapPath(Path.Combine("Dependencies", "Dependencies.xml")));
             clock.Advance(TimeSpan.FromMinutes(1));
 
             dependenciesFolder.StoreDescriptors(new[] { d2, d1 });
-            var dateTime2 = appDataFolder.GetLastWriteTimeUtc(Path.Combine("Dependencies", "Dependencies.xml"));
+            var dateTime2 = appDataFolder.GetLastWriteTimeUtc(appDataFolder.MapPath(Path.Combine("Dependencies", "Dependencies.xml")));
             Assert.That(dateTime1, Is.EqualTo(dateTime2));
         }
 
@@ -97,13 +97,13 @@ namespace Orchard.Tests.Environment.Compilation.Dependencies {
             };
 
             dependenciesFolder.StoreDescriptors(new[] { d1, d2 });
-            var dateTime1 = appDataFolder.GetLastWriteTimeUtc(Path.Combine("Dependencies", "Dependencies.xml"));
+            var dateTime1 = appDataFolder.GetLastWriteTimeUtc(appDataFolder.MapPath(Path.Combine("Dependencies", "Dependencies.xml")));
             clock.Advance(TimeSpan.FromMinutes(1));
 
             d1.LoaderName = "bar";
 
             dependenciesFolder.StoreDescriptors(new[] { d2, d1 });
-            var dateTime2 = appDataFolder.GetLastWriteTimeUtc(Path.Combine("Dependencies", "Dependencies.xml"));
+            var dateTime2 = appDataFolder.GetLastWriteTimeUtc(appDataFolder.MapPath(Path.Combine("Dependencies", "Dependencies.xml")));
             Assert.That(dateTime1 + TimeSpan.FromMinutes(1), Is.EqualTo(dateTime2));
         }
 

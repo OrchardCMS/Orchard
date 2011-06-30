@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
@@ -20,17 +21,22 @@ namespace Orchard.Environment.Compilation.Dependencies {
 
         public bool AssemblyExists(string moduleName) {
             var path = PrecompiledAssemblyPath(moduleName);
-            return _appDataFolder.FileExists(path);
+            return File.Exists(_appDataFolder.MapPath(path));
         }
 
         public DateTime GetAssemblyDateTimeUtc(string moduleName) {
             var path = PrecompiledAssemblyPath(moduleName);
-            return _appDataFolder.GetFileLastWriteTimeUtc(path);
+            string mappedPath = _appDataFolder.MapPath(path);
+            if (!File.Exists(mappedPath)) {
+                throw new FileNotFoundException();
+            }
+
+            return File.GetLastWriteTimeUtc(mappedPath);
         }
 
         public string GetAssemblyVirtualPath(string moduleName) {
             var path = PrecompiledAssemblyPath(moduleName);
-            if (!_appDataFolder.FileExists(path))
+            if (!File.Exists(_appDataFolder.MapPath(path)))
                 return null;
 
             return _appDataFolder.GetVirtualPath(path);
@@ -38,7 +44,7 @@ namespace Orchard.Environment.Compilation.Dependencies {
 
         public Assembly LoadAssembly(string moduleName) {
             var path = PrecompiledAssemblyPath(moduleName);
-            if (!_appDataFolder.FileExists(path))
+            if (!File.Exists(_appDataFolder.MapPath(path)))
                 return null;
 
             return _assemblyLoader.Load(moduleName);
@@ -47,9 +53,10 @@ namespace Orchard.Environment.Compilation.Dependencies {
         public void DeleteAssembly(string moduleName) {
             var path = PrecompiledAssemblyPath(moduleName);
 
-            if (_appDataFolder.FileExists(path)) {
+            string targetPath = _appDataFolder.MapPath(path);
+            if (File.Exists(targetPath)) {
                 Logger.Information("Deleting assembly for module \"{0}\" from probing directory", moduleName);
-                _appDataFolder.DeleteFile(path);
+                File.Delete(targetPath);
             }
         }
 
@@ -57,7 +64,12 @@ namespace Orchard.Environment.Compilation.Dependencies {
             var path = PrecompiledAssemblyPath(moduleName);
 
             Logger.Information("Storing assembly file \"{0}\" for module \"{1}\"", fileName, moduleName);
-            _appDataFolder.StoreFile(fileName, path);
+            string targetPath = _appDataFolder.MapPath(path);
+            if (File.Exists(targetPath)) {
+                File.Delete(targetPath);
+            }
+
+            File.Copy(fileName, targetPath);
         }
 
         private string PrecompiledAssemblyPath(string moduleName) {

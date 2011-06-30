@@ -19,7 +19,7 @@ namespace Orchard.Tests.Environment.Configuration {
         [Test]
         public void SingleSettingsFileShouldComeBackAsExpected() {
 
-            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
+            _appDataFolder.StoreFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
 
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var settings = loader.LoadSettings().Single();
@@ -33,8 +33,8 @@ namespace Orchard.Tests.Environment.Configuration {
         [Test]
         public void MultipleFilesCanBeDetected() {
 
-            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
-            _appDataFolder.CreateFile("Sites\\Another\\Settings.txt", "Name: Another\r\nDataProvider: SqlCe2\r\nDataConnectionString: something else2");
+            _appDataFolder.StoreFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
+            _appDataFolder.StoreFile("Sites\\Another\\Settings.txt", "Name: Another\r\nDataProvider: SqlCe2\r\nDataConnectionString: something else2");
 
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var settings = loader.LoadSettings();
@@ -53,7 +53,7 @@ namespace Orchard.Tests.Environment.Configuration {
 
         [Test]
         public void NewSettingsCanBeStored() {
-            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
+            _appDataFolder.StoreFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
 
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var foo = new ShellSettings {Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux"};

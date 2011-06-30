@@ -99,9 +99,11 @@ namespace Orchard.ImportExport.Services {
                     if (partsToExport.Contains(contentPartDefinition.PartDefinition.Name)) {
                         continue;
                     }
+
                     partsToExport.Add(contentPartDefinition.PartDefinition.Name);
                     partsElement.Add(_contentDefinitionWriter.Export(contentPartDefinition.PartDefinition));
                 }
+
                 typesElement.Add(_contentDefinitionWriter.Export(contentTypeDefinition));
             }
 
@@ -117,6 +119,7 @@ namespace Orchard.ImportExport.Services {
 
                 foreach (var property in sitePart.GetType().GetProperties()) {
                     var propertyType = property.PropertyType;
+
                     // Supported types (we also know they are not indexed properties).
                     if (propertyType == typeof(string) || propertyType == typeof(bool) || propertyType == typeof(int)) {
                         // Exclude read-only properties.
@@ -147,8 +150,9 @@ namespace Orchard.ImportExport.Services {
                 var items = contentItems.Where(i => i.ContentType == type);
                 foreach (var contentItem in items) {
                     var contentItemElement = ExportContentItem(contentItem);
-                    if (contentItemElement != null) 
+                    if (contentItemElement != null) {
                         data.Add(contentItemElement);
+                    }
                 }
             }
 
@@ -164,17 +168,14 @@ namespace Orchard.ImportExport.Services {
             if (versionHistoryOptions.HasFlag(VersionHistoryOptions.Draft)) {
                 return VersionOptions.Draft;
             }
+
             return VersionOptions.Published;
         }
 
         private string WriteExportFile(string exportDocument) {
             var exportFile = string.Format("Export-{0}-{1}.xml", _orchardServices.WorkContext.CurrentUser.UserName, DateTime.UtcNow.Ticks);
-            if (!_appDataFolder.DirectoryExists(ExportsDirectory)) {
-                _appDataFolder.CreateDirectory(ExportsDirectory);
-            }
-
             var path = _appDataFolder.Combine(ExportsDirectory, exportFile);
-            _appDataFolder.CreateFile(path, exportDocument);
+            _appDataFolder.StoreFile(path, exportDocument);
 
             return _appDataFolder.MapPath(path);
         }

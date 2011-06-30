@@ -23,11 +23,11 @@ namespace Orchard.Reports.Services {
 
         public IEnumerable<Report> Fetch() {
             lock ( _synLock ) {
-                if ( !_appDataFolder.FileExists(_reportsFileName) ) {
+                var text = _appDataFolder.ReadFile(_reportsFileName);
+                if (text == null) {
                     yield break;
                 }
 
-                var text = _appDataFolder.ReadFile(_reportsFileName);
                 var xmlDocument = XDocument.Parse(text);
                 var rootNode = xmlDocument.Root;
                 if (rootNode == null) {
@@ -59,7 +59,7 @@ namespace Orchard.Reports.Services {
 
                 var saveWriter = new StringWriter();
                 xmlDocument.Save(saveWriter);
-                _appDataFolder.CreateFile(_reportsFileName, saveWriter.ToString());
+                _appDataFolder.StoreFile(_reportsFileName, saveWriter.ToString());
             }
         }
     }
