@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Localization;
@@ -9,12 +10,55 @@ using Orchard.Mvc.Html;
 
 namespace Orchard.Core.Shapes {
     public static class ShapeTemplateHelper {
+        private static string IdentifierToFriendlyCasingAndSpacing(string name) {
+            if (string.IsNullOrEmpty(name)) {
+                return name;
+            }
+            var dotIndex = name.LastIndexOf('.');
+            if (dotIndex != -1) {
+                name = name.Substring(dotIndex + 1);
+            }
+            // This is a 'usually correct' way of converting a property name into a display name. In cases where
+            // it isn't right, the property should just define a name with [Display(Name = "")].
+            // It inserts a space between upper characters, except adjacent upper case characters,
+            // and it makes all but the first upper character lower case, unless part of adjacent uppers.
+            // e.g.
+            // FooBar => Foo bar
+            // FooBarBazBBQ => Foo bar baz BBQ
+            var needSpace = false;
+            var inSequence = false;
+            var sb = new StringBuilder(name.Length + 3);
+            for (var i = 0; i < name.Length; i++) {
+                var c = name[i];
+                if (char.IsUpper(c)) {
+                    inSequence = inSequence || ((i < name.Length - 1) && char.IsUpper(name[i + 1]));
+                    if (!inSequence && needSpace) {
+                        sb.Append(' ');
+                        sb.Append(c.ToString().ToLowerInvariant());
+                    }
+                    else {
+                        sb.Append(c);
+                    }
+                    needSpace = false;
+                }
+                else {
+                    sb.Append(c);
+                    inSequence = false;
+                    needSpace = true;
+                }
+            }
+            return sb.ToString();
+        }
+
+
         public static void ForwardTemplateContextToShape(HtmlHelper html, ViewContext context, dynamic shape, string defaultErrorMessage) {
             // Gather what information we can and forward/translate it onto the given Orchard Shape.
             var name = html.FieldNameFor("");
             shape.Value = context.ViewData.TemplateInfo.FormattedModelValue;
             shape.Id = html.FieldIdFor("");  // empty string in a template is special meaning in MVC for 'this model'
             shape.Name = html.FieldNameFor("");
+            // MVC templated inputs have to opt-into shape rendering so we don't break all EditorFor(), etc, uses.
+            shape.EnableWrapper = false;
 
             var metadata = context.ViewData.ModelMetadata;
             var localizer = LocalizationUtilities.Resolve(context, metadata.ModelType.FullName);
@@ -25,9 +69,9 @@ namespace Orchard.Core.Shapes {
             CopyProperties(html, metadata.AdditionalValues, shape);
 
             // add wrapper information that comes from natural metadata or needs to be localized
-            var displayNameStr = metadata.DisplayName;
+            var displayNameStr = metadata.DisplayName ?? IdentifierToFriendlyCasingAndSpacing((string)shape.Name);
             if (!string.IsNullOrEmpty(displayNameStr)) {
-                shape.DisplayName = localizer(displayNameStr);
+                shape.Title = localizer(displayNameStr);
             }
 
             var descriptionStr = metadata.Description;
@@ -79,7 +123,10 @@ namespace Orchard.Core.Shapes {
 
         private static void CopyProperties(HtmlHelper html, IEnumerable<KeyValuePair<string, object>> items, dynamic shape) {
             foreach (var pair in items) {
-                if ("EnabledBy".Equals(pair.Key, StringComparison.OrdinalIgnoreCase)) {
+                if ("DisplayName".Equals(pair.Key, StringComparison.OrdinalIgnoreCase)) {
+                    shape.Title = pair.Value;
+                }
+                else if ("EnabledBy".Equals(pair.Key, StringComparison.OrdinalIgnoreCase)) {
                     var value = Convert.ToString(pair.Value);
                     if (!string.IsNullOrEmpty(value)) {
                         // In the UIOptions attribute, EnabledBy points to another property name on the model.

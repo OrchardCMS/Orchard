@@ -83,68 +83,45 @@ namespace Orchard.Core.Shapes
             }
         }
 
-        private static string IdentifierToFriendlyCasingAndSpacing(string name)
+        [Shape]
+        public void InputLabel(HtmlHelper Html, TextWriter Output, dynamic Shape, string For, object Title)
         {
-            if (string.IsNullOrEmpty(name))
+            if (Title != null)
             {
-                return name;
+                var label = _tagBuilderFactory.Create(Shape, "label");
+                label.MergeAttribute("for", For);
+                label.InnerHtml = Html.Encode(Title);
+                Output.WriteLine(label.ToString());
             }
-            var dotIndex = name.LastIndexOf('.');
-            if (dotIndex != -1)
-            {
-                name = name.Substring(dotIndex + 1);
-            }
-            // This is a 'usually correct' way of converting a property name into a display name. In cases where
-            // it isn't right, the property should just define a name with [Display(Name = "")].
-            // It inserts a space between upper characters, except adjacent upper case characters,
-            // and it makes all but the first upper character lower case, unless part of adjacent uppers.
-            // e.g.
-            // FooBar => Foo bar
-            // FooBarBazBBQ => Foo bar baz BBQ
-            var needSpace = false;
-            var inSequence = false;
-            var sb = new StringBuilder(name.Length + 3);
-            for (var i = 0; i < name.Length; i++)
-            {
-                var c = name[i];
-                if (char.IsUpper(c))
-                {
-                    inSequence = inSequence || ((i < name.Length - 1) && char.IsUpper(name[i + 1]));
-                    if (!inSequence && needSpace)
-                    {
-                        sb.Append(' ');
-                        sb.Append(c.ToString().ToLowerInvariant());
-                    }
-                    else
-                    {
-                        sb.Append(c);
-                    }
-                    needSpace = false;
-                }
-                else
-                {
-                    sb.Append(c);
-                    inSequence = false;
-                    needSpace = true;
-                }
-            }
-            return sb.ToString();
         }
 
-        private static void WriteLabel(HtmlHelper Html, TextWriter Output, string Id, dynamic DisplayName, string Name, string cssClass)
-        {
-            // note that there's an odd behavior where the ?? operator doesn't work along with this dynamic
-            var displayName = DisplayName == null ? IdentifierToFriendlyCasingAndSpacing(Name) : DisplayName;
-            if (displayName != null)
-            {
-                var label = new TagBuilder("label");
-                label.MergeAttribute("for", Id);
-                if (cssClass != null)
-                {
-                    label.AddCssClass(cssClass);
+        [Shape]
+        public void InputHint(dynamic Display, dynamic Shape, HtmlHelper Html, TextWriter Output, object Description/*, object ActionLinkValue, object ActionLink*/) {
+            // <span class="hint">
+            if (Description != null) {
+                var span = _tagBuilderFactory.Create(Shape, "span");
+                span.AddCssClass("hint");
+                var html = Html.Encode(Description);
+                html = html.Replace("\n", "</span><span class=\"hint\">");
+                span.InnerHtml = html;
+                Output.WriteLine(span.ToString(TagRenderMode.Normal));
+            }
+            // action link
+            if (Shape.ActionLinkValue != null) {
+                if (Shape.ActionLink is string) {
+                    Shape.ActionLink = new { Action = Shape.ActionLink };
                 }
-                label.InnerHtml = Html.Encode(displayName);
-                Output.WriteLine(label.ToString());
+                Output.WriteLine("<p>" + Display.Link(RouteValues: Shape.ActionLink, Value: Shape.ActionLinkValue) + "</p>");
+            }
+        }
+
+        [Shape]
+        public void InputRequiredMarker(TextWriter Output, HtmlHelper Html, dynamic Shape, object ErrorMessage, bool? IsValid) {
+            if (!IsValid.GetValueOrDefault(true) && ErrorMessage != null) {
+                var span = _tagBuilderFactory.Create(Shape, "span");
+                span.AddCssClass(HtmlHelper.ValidationMessageCssClassName);
+                span.InnerHtml = Html.Encode(Shape.ErrorMessage);
+                Output.WriteLine(span.ToString());
             }
         }
 
@@ -157,17 +134,10 @@ namespace Orchard.Core.Shapes
             string Type,
             string Id,
             string Name,
-            // note: workaround for bug where having an object parameter fails, causing a nullreference exception during binding
-            // so we get these parameters off of Shape.foo instead.
-            //object ErrorMessage,
-            bool? IsValid, // whether the model is valid
-            //object DisplayName,
-            //object ActionLink,
-            //object ActionLinkValue,
-            //object Description,
             object Title,
             string TitleDisplay,
-            string EnabledBy)
+            string EnabledBy,
+            bool? EnableWrapper)
         {
 
             /* 
@@ -176,10 +146,10 @@ namespace Orchard.Core.Shapes
              * 
              *  {form_element} ==InputWrapper
              *      <div attributes id="#id" class="form-type-#type form-item-#name">
-             *          {form_element_label} ==InputLabel(todo)
+             *          {form_element_label} ==InputLabel
              *              <label class="option?#title_display==after element-invisible?#title_display==invisible" for="#id">
              *                  #title 
-             *                  {form_required_marker}  ==InputRequiredMarker(todo)
+             *                  {form_required_marker}  ==InputRequiredMarker
              *                      <span class='form-required'>This field is required.</span>
              *                  {/form_required_marker}?#required
              *              </label>
@@ -209,10 +179,10 @@ namespace Orchard.Core.Shapes
              * by the generic MVC template.
              */
 
-            //if (!EnableWrapper.GetValueOrDefault()) {
-            //    Output.WriteLine(Shape.Metadata.ChildContent);
-            //    return;
-            //}
+            if (!EnableWrapper.GetValueOrDefault(true)) {
+                Output.WriteLine(Shape.Metadata.ChildContent);
+                return;
+            }
 
             // surrounding div
             var div = new TagBuilder("div");
@@ -233,61 +203,26 @@ namespace Orchard.Core.Shapes
             }
             Output.WriteLine(div.ToString(TagRenderMode.StartTag));
 
-            if ("checkbox".Equals(Type, StringComparison.OrdinalIgnoreCase))
+            var isCheckbox = "checkbox".Equals(Type, StringComparison.OrdinalIgnoreCase);
+
+            IHtmlString labelHtml = null;
+            if (Title != null)
             {
-                // <input>
-                Output.WriteLine(Shape.Metadata.ChildContent);
-                // <label>
-                WriteLabel(Html, Output, Id, Shape.DisplayName, Name, "forcheckbox");
-            }
-            else
-            {
-                if (TitleDisplay == "before" || string.IsNullOrEmpty(TitleDisplay))
+                labelHtml = Display.InputLabel(For: Id, Title: Title, Input: Shape, Classes: isCheckbox ? new [] { "forcheckbox" } : null);
+
+                if (TitleDisplay == "before" || (string.IsNullOrEmpty(TitleDisplay) && !isCheckbox))
                 {
-                    if (Title != null)
-                    {
-                        WriteLabel(Html, Output, Id, Title, Name, null);
-                    }
-                }
-                Output.WriteLine(Shape.Metadata.ChildContent);
-                if (TitleDisplay == "after")
-                {
-                    if (Title != null)
-                    {
-                        WriteLabel(Html, Output, Id, Title, Name, null);
-                    }
+                    Output.Write(labelHtml);
                 }
             }
-
-            // validation message
-            if (!IsValid.GetValueOrDefault(true) && Shape.ErrorMessage != null)
+            Output.WriteLine(Shape.Metadata.ChildContent);
+            if (Title != null && (TitleDisplay == "after" || (string.IsNullOrEmpty(TitleDisplay) && isCheckbox)))
             {
-                var span = new TagBuilder("span");
-                span.AddCssClass(HtmlHelper.ValidationMessageCssClassName);
-                span.InnerHtml = Html.Encode(Shape.ErrorMessage);
-                Output.WriteLine(span.ToString());
+                Output.Write(labelHtml);
             }
 
-            // <span class="hint">
-            if (Shape.Description != null)
-            {
-                var span = new TagBuilder("span");
-                span.AddCssClass("hint");
-                var html = Html.Encode(Shape.Description);
-                html = html.Replace("\n", "</span><span class=\"hint\">");
-                span.InnerHtml = html;
-                Output.WriteLine(span.ToString());
-            }
-
-            // action link
-            if (Shape.ActionLinkValue != null)
-            {
-                if (Shape.ActionLink is string)
-                {
-                    Shape.ActionLink = new { Action = Shape.ActionLink };
-                }
-                Output.WriteLine("<p>" + (IHtmlString)Display.Link(RouteValues: Shape.ActionLink, Value: Shape.ActionLinkValue) + "</p>");
-            }
+            Output.WriteLine(Display.InputRequiredMarker(Input: Shape));
+            Output.WriteLine(Display.InputHint(Input: Shape, Description: Shape.Description, ActionLink: Shape.ActionLink, ActionLinkValue: Shape.ActionLinkValue));
 
             Output.WriteLine(div.ToString(TagRenderMode.EndTag));
         }
