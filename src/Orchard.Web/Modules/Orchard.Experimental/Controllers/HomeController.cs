@@ -2,29 +2,60 @@ using System;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
-using Orchard.Experimental.Models;
 using Orchard.DisplayManagement;
+using Orchard.Events;
+using Orchard.Experimental.Models;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Themes;
-using Orchard.UI.Notify;
 using Orchard.UI.Admin;
+using Orchard.UI.Notify;
 
 namespace Orchard.Experimental.Controllers {
+    public interface IFormEvents : IEventHandler {
+        void Alter(dynamic form);
+    }
+
+    public class CaptchaRegisterFormEvents : IFormEvents {
+        private readonly dynamic Shape;
+
+        public CaptchaRegisterFormEvents(IShapeFactory shapeFactory) {
+            Shape = shapeFactory;
+            T = NullLocalizer.Instance;
+        }
+
+        public Localizer T { get; set; }
+
+        public void Alter(dynamic form) {
+            if (form.Id == "Register") {
+                form._Captcha = Shape.Fieldset(
+                    Title: T("Captcha"),
+                    _Challenge: Shape.Image(
+                        Title: T("Captcha"),
+                        Src: "http://kjh-ptsa.org/drupal-7.2/sites/default/files/Logo.jpg"),
+                    _Response: Shape.Textbox(
+                        Id: "captcharesponse", Name: "captcharesponse",
+                        Title: T("Captcha Response"), TitleDisplay: "attribute",
+                        Description: T("Type what you see to prove you are a human")));
+            }
+        }
+    }
 
     [Themed, Admin]
     public class HomeController : Controller {
         private readonly INotifier _notifier;
         private readonly IContainerSpyOutput _containerSpyOutput;
+        private readonly IFormEvents _formEvents;
 
-        public HomeController(INotifier notifier, IShapeFactory shapeFactory, IContainerSpyOutput containerSpyOutput) {
+        public HomeController(INotifier notifier, IShapeFactory shapeFactory, IContainerSpyOutput containerSpyOutput, IFormEvents formEvents) {
             _notifier = notifier;
             _containerSpyOutput = containerSpyOutput;
+            _formEvents = formEvents;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
 
-        dynamic Shape { get; set; }
+        private dynamic Shape { get; set; }
 
         public Localizer T { get; set; }
 
@@ -38,18 +69,30 @@ namespace Orchard.Experimental.Controllers {
         }
 
         public ActionResult Simple() {
-            return View(new Simple { Title = "This is a simple text", Quantity = 5 });
+            return View(new Simple {Title = "This is a simple text", Quantity = 5});
         }
-        
-        public ActionResult Forms() {
-            var form = Shape.Form();
-            form.Captcha = Shape.Fieldset(Title: T("Captcha"), Response: Shape.Textbox());
-            form.Actions = Shape.Fieldset(Ok: Shape.Button(T("OK")), Cancel: Shape.Button(T("Cancel")));
 
-            form.Add(form.Captcha);
-            form.Add(form.Actions);
-            form.Actions.Add(form.Actions.Ok);
-            form.Actions.Add(form.Actions.Cancel);
+        public ActionResult TestingForms() {
+            var form = Shape.Form(
+                Id: "Register",
+                _Name: Shape.Textbox(
+                    Id: "name", Name: "name",
+                    Title: T("Username"),
+                    Description: T("Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.")),
+                _Mail: Shape.Textbox(
+                    Id: "name", Name: "mail",
+                    Title: T("E-mail address"),
+                    Description: T("A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.")),
+                _Actions: Shape.Fieldset(
+                    _Ok: Shape.Submit(
+                        Name: "op",
+                        Value: T("Register"))));
+
+            form._Actions.Metadata.Position = "10";
+
+            _formEvents.Alter(form);
+
+            form._Captcha._Response.Value = T("It's a pony!");
 
             return new ShapeResult(this, form);
         }
@@ -65,29 +108,29 @@ namespace Orchard.Experimental.Controllers {
 
         [Themed(false)]
         public ActionResult SimpleNoTheme() {
-            return View("Simple", new Simple { Title = "This is not themed", Quantity = 5 });
+            return View("Simple", new Simple {Title = "This is not themed", Quantity = 5});
         }
 
         public ActionResult FormShapes() {
             var model = Shape.Form()
-                .Fieldsets(Shape.Fieldsets(typeof(Array))
-                    .Add(Shape.Fieldset(typeof(Array)).Name("site")
-                        .Add(Shape.InputText().Name("SiteName").Text(T("Site Name")).Value(T("some default/pre-pop value...").Text))
-                    )
-                    .Add(Shape.Fieldset(typeof(Array)).Name("admin")
-                        .Add(Shape.InputText().Name("AdminUsername").Text(T("Admin Username")))
-                        .Add(Shape.InputPassword().Name("AdminPassword").Text(T("Admin Password")))
-                    )
-                    .Add(Shape.Fieldset(typeof(Array)).Name("actions")
-                        .Add(Shape.FormSubmit().Text(T("Finish Setup")))
-                    )
+                .Fieldsets(Shape.Fieldsets(typeof (Array))
+                               .Add(Shape.Fieldset(typeof (Array)).Name("site")
+                                        .Add(Shape.InputText().Name("SiteName").Text(T("Site Name")).Value(T("some default/pre-pop value...").Text))
+                               )
+                               .Add(Shape.Fieldset(typeof (Array)).Name("admin")
+                                        .Add(Shape.InputText().Name("AdminUsername").Text(T("Admin Username")))
+                                        .Add(Shape.InputPassword().Name("AdminPassword").Text(T("Admin Password")))
+                               )
+                               .Add(Shape.Fieldset(typeof (Array)).Name("actions")
+                                        .Add(Shape.FormSubmit().Text(T("Finish Setup")))
+                               )
                 );
 
             // get at the first input?
             model.Fieldsets[0][0].Attributes(new {autofocus = "autofocus"}); // <-- could be applied by some other behavior - need to be able to modify attributes instead of clobbering them like this
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return View((object) model);
         }
 
         [HttpPost, ActionName("FormShapes")]
@@ -98,7 +141,6 @@ namespace Orchard.Experimental.Controllers {
         }
 
         public ActionResult UsingShapes() {
-
             ViewBag.Page = Shape.Page()
                 .Main(Shape.Zone(typeof (Array), Name: "Main"))
                 .Messages(Shape.Zone(typeof (Array), Name: "Messages"))
@@ -110,7 +152,7 @@ namespace Orchard.Experimental.Controllers {
                 Shape.Message(Content: T("This is a test"), Severity: "Really bad!!!"));
 
             ViewBag.Page.Sidebar.Add(
-                Shape.Link(Url: "http://orchard.codeplex.com", Content: Shape.Image(Url: "http://orchardproject.net/Content/images/orchardLogo.jpg").Attributes(new { @class = "bigredborderfromabadclassname" })));
+                Shape.Link(Url: "http://orchard.codeplex.com", Content: Shape.Image(Url: "http://orchardproject.net/Content/images/orchardLogo.jpg").Attributes(new {@class = "bigredborderfromabadclassname"})));
 
             var model = Shape.Message(
                 Content: Shape.Explosion(Height: 100, Width: 200),
@@ -120,7 +162,7 @@ namespace Orchard.Experimental.Controllers {
             ViewBag.Page.Messages.Add("<hr/>encoded<hr/>");
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
-            return View((object)model);
+            return View((object) model);
         }
 
         public static string Break(dynamic view) {
@@ -133,5 +175,4 @@ namespace Orchard.Experimental.Controllers {
             return Content(root.ToString(), "text/xml");
         }
     }
-
 }

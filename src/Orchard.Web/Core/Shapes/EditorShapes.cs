@@ -1,39 +1,97 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using ClaySharp;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
 using Orchard.Mvc;
+using Orchard.UI;
 using Orchard.UI.Resources;
 
 // ReSharper disable InconsistentNaming
 
-namespace Orchard.Core.Shapes {
-    public class EditorShapes : IShapeTableProvider {
+namespace Orchard.Core.Shapes
+{
+    public class EditorShapes : IShapeTableProvider
+    {
         private readonly ITagBuilderFactory _tagBuilderFactory;
 
-        public EditorShapes(ITagBuilderFactory tagBuilderFactory) {
+        public EditorShapes(ITagBuilderFactory tagBuilderFactory)
+        {
             _tagBuilderFactory = tagBuilderFactory;
         }
 
-        public void Discover(ShapeTableBuilder builder) {
+        public void Discover(ShapeTableBuilder builder)
+        {
             // hack: This is important when using the Input shape directly, but it doesn't come into play
             // when using a 'master' shape yet.
             builder.Describe("Input").Configure(descriptor => descriptor.Wrappers.Add("InputWrapper"));
             builder.Describe("SelectList").Configure(descriptor => descriptor.Wrappers.Add("InputWrapper"));
+            builder.Describe("Form").OnCreating(ctx => ctx.Behaviors.Add(new PropertiesAreItems()));
+            builder.Describe("Fieldset").OnCreating(ctx => ctx.Behaviors.Add(new PropertiesAreItems()));
         }
 
-        private static string IdentifierToFriendlyCasingAndSpacing(string name) {
-            if (string.IsNullOrEmpty(name)) {
+        class PropertiesAreItems : ClayBehavior
+        {
+            public override object SetMember(Func<object> proceed, dynamic self, string name, object value)
+            {
+                Patch(self, name, value);
+                return proceed();
+            }
+
+            public override object SetIndex(Func<object> proceed, dynamic self, IEnumerable<object> keys, object value)
+            {
+                if (keys.Count() == 1 && keys.All(k => k is string))
+                    Patch(self, System.Convert.ToString(keys.Single()), value);
+                return proceed();
+            }
+
+            public override object InvokeMember(Func<object> proceed, dynamic self, string name, INamedEnumerable<object> args)
+            {
+                if (args.Count() == 1 && args.Named.Count() == 0)
+                    Patch(self, name, args.Single());
+                return proceed();
+            }
+
+            readonly IDictionary<string, object> _assigned = new Dictionary<string, object>();
+            private void Patch(dynamic self, string name, object value)
+            {
+                if (!name.StartsWith("_"))
+                    return;
+
+                object priorValue;
+                if (_assigned.TryGetValue(name, out priorValue) && priorValue != null)
+                {
+                    // it's a no-op to reassign same value to a prop
+                    if (priorValue == value)
+                        return;
+
+                    self.Items.Remove(priorValue);
+                }
+                if (value is IShape)
+                {
+                    self.Items.Add(value);
+                }
+                _assigned[name] = value;
+            }
+        }
+
+        private static string IdentifierToFriendlyCasingAndSpacing(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
                 return name;
             }
             var dotIndex = name.LastIndexOf('.');
-            if (dotIndex != -1) {
+            if (dotIndex != -1)
+            {
                 name = name.Substring(dotIndex + 1);
             }
             // This is a 'usually correct' way of converting a property name into a display name. In cases where
@@ -46,20 +104,25 @@ namespace Orchard.Core.Shapes {
             var needSpace = false;
             var inSequence = false;
             var sb = new StringBuilder(name.Length + 3);
-            for (var i = 0; i < name.Length; i++) {
+            for (var i = 0; i < name.Length; i++)
+            {
                 var c = name[i];
-                if (char.IsUpper(c)) {
+                if (char.IsUpper(c))
+                {
                     inSequence = inSequence || ((i < name.Length - 1) && char.IsUpper(name[i + 1]));
-                    if (!inSequence && needSpace) {
+                    if (!inSequence && needSpace)
+                    {
                         sb.Append(' ');
                         sb.Append(c.ToString().ToLowerInvariant());
                     }
-                    else {
+                    else
+                    {
                         sb.Append(c);
                     }
                     needSpace = false;
                 }
-                else {
+                else
+                {
                     sb.Append(c);
                     inSequence = false;
                     needSpace = true;
@@ -68,13 +131,16 @@ namespace Orchard.Core.Shapes {
             return sb.ToString();
         }
 
-        private static void WriteLabel(HtmlHelper Html, TextWriter Output, string Id, dynamic DisplayName, string Name, string cssClass) {
+        private static void WriteLabel(HtmlHelper Html, TextWriter Output, string Id, dynamic DisplayName, string Name, string cssClass)
+        {
             // note that there's an odd behavior where the ?? operator doesn't work along with this dynamic
             var displayName = DisplayName == null ? IdentifierToFriendlyCasingAndSpacing(Name) : DisplayName;
-            if (displayName != null) {
+            if (displayName != null)
+            {
                 var label = new TagBuilder("label");
                 label.MergeAttribute("for", Id);
-                if (cssClass != null) {
+                if (cssClass != null)
+                {
                     label.AddCssClass(cssClass);
                 }
                 label.InnerHtml = Html.Encode(displayName);
@@ -86,7 +152,6 @@ namespace Orchard.Core.Shapes {
         public void InputWrapper(
             HtmlHelper Html,
             TextWriter Output,
-            bool? EnableWrapper,
             dynamic Display,
             dynamic Shape,
             string Type,
@@ -100,18 +165,21 @@ namespace Orchard.Core.Shapes {
             //object ActionLink,
             //object ActionLinkValue,
             //object Description,
-            string EnabledBy) {
+            object Title,
+            string TitleDisplay,
+            string EnabledBy)
+        {
 
             /* 
              * #id #type #name #title #title_display #field_prefix #field_suffix #description #required
              * #title_display=={before,after,invisible,attribute,none}
              * 
-             *  {form_element}
+             *  {form_element} ==InputWrapper
              *      <div attributes id="#id" class="form-type-#type form-item-#name">
-             *          {form_element_label}
+             *          {form_element_label} ==InputLabel(todo)
              *              <label class="option?#title_display==after element-invisible?#title_display==invisible" for="#id">
              *                  #title 
-             *                  {form_required_marker}
+             *                  {form_required_marker}  ==InputRequiredMarker(todo)
              *                      <span class='form-required'>This field is required.</span>
              *                  {/form_required_marker}?#required
              *              </label>
@@ -141,14 +209,23 @@ namespace Orchard.Core.Shapes {
              * by the generic MVC template.
              */
 
-            if (!EnableWrapper.GetValueOrDefault()) {
-                Output.WriteLine(Shape.Metadata.ChildContent);
-                return;
-            }
+            //if (!EnableWrapper.GetValueOrDefault()) {
+            //    Output.WriteLine(Shape.Metadata.ChildContent);
+            //    return;
+            //}
 
             // surrounding div
             var div = new TagBuilder("div");
-            if (!string.IsNullOrEmpty(EnabledBy)) {
+            if (TitleDisplay == "attribute")
+            {
+                if (Title != null)
+                {
+                    div.MergeAttribute("title", Display(Title).ToString());
+                }
+            }
+
+            if (!string.IsNullOrEmpty(EnabledBy))
+            {
                 // note: the value should be the html ID of the input.
                 // When using this via html.editor() the id is automatically converted from the property name
                 // to the field id before it gets to the shape.
@@ -156,21 +233,35 @@ namespace Orchard.Core.Shapes {
             }
             Output.WriteLine(div.ToString(TagRenderMode.StartTag));
 
-            if ("checkbox".Equals(Type, StringComparison.OrdinalIgnoreCase)) {
+            if ("checkbox".Equals(Type, StringComparison.OrdinalIgnoreCase))
+            {
                 // <input>
                 Output.WriteLine(Shape.Metadata.ChildContent);
                 // <label>
                 WriteLabel(Html, Output, Id, Shape.DisplayName, Name, "forcheckbox");
             }
-            else {
-                // <label>
-                WriteLabel(Html, Output, Id, Shape.DisplayName, Name, null);
-                // <input>
+            else
+            {
+                if (TitleDisplay == "before" || string.IsNullOrEmpty(TitleDisplay))
+                {
+                    if (Title != null)
+                    {
+                        WriteLabel(Html, Output, Id, Title, Name, null);
+                    }
+                }
                 Output.WriteLine(Shape.Metadata.ChildContent);
+                if (TitleDisplay == "after")
+                {
+                    if (Title != null)
+                    {
+                        WriteLabel(Html, Output, Id, Title, Name, null);
+                    }
+                }
             }
 
             // validation message
-            if (!IsValid.GetValueOrDefault(true) && Shape.ErrorMessage != null) {
+            if (!IsValid.GetValueOrDefault(true) && Shape.ErrorMessage != null)
+            {
                 var span = new TagBuilder("span");
                 span.AddCssClass(HtmlHelper.ValidationMessageCssClassName);
                 span.InnerHtml = Html.Encode(Shape.ErrorMessage);
@@ -178,7 +269,8 @@ namespace Orchard.Core.Shapes {
             }
 
             // <span class="hint">
-            if (Shape.Description != null) {
+            if (Shape.Description != null)
+            {
                 var span = new TagBuilder("span");
                 span.AddCssClass("hint");
                 var html = Html.Encode(Shape.Description);
@@ -188,8 +280,10 @@ namespace Orchard.Core.Shapes {
             }
 
             // action link
-            if (Shape.ActionLinkValue != null) {
-                if (Shape.ActionLink is string) {
+            if (Shape.ActionLinkValue != null)
+            {
+                if (Shape.ActionLink is string)
+                {
                     Shape.ActionLink = new { Action = Shape.ActionLink };
                 }
                 Output.WriteLine("<p>" + (IHtmlString)Display.Link(RouteValues: Shape.ActionLink, Value: Shape.ActionLinkValue) + "</p>");
@@ -199,47 +293,81 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public void Form(Action<object> Output, dynamic Display, dynamic Shape) {
+        public void Form(Action<object> Output, dynamic Display, dynamic Shape)
+        {   
+            // (todo) design markup
             OrchardTagBuilder tag = _tagBuilderFactory.Create(Shape, "form");
             Output(tag.ToString(TagRenderMode.StartTag));
-            foreach(var item in Shape) {
+            foreach (var item in Ordered(Shape.Items))
+            {
                 Output(Display(item));
             }
             Output(tag.ToString(TagRenderMode.EndTag));
         }
 
+
         [Shape]
-        public void Fieldset(Action<object> Output, dynamic Display, dynamic Shape) {
+        public void Fieldset(Action<object> Output, dynamic Display, dynamic Shape, object Title)
+        {
+            // (todo) design markup
             OrchardTagBuilder tag = _tagBuilderFactory.Create(Shape, "fieldset");
             Output(tag.ToString(TagRenderMode.StartTag));
-            foreach(var item in Shape) {
+            if (Title != null)
+            {
+                Output("<legend>");
+                Output(Display(Title));
+                Output("</legend>");
+            }
+            foreach (var item in Ordered(Shape.Items))
+            {
                 Output(Display(item));
             }
             Output(tag.ToString(TagRenderMode.EndTag));
         }
 
-        [Shape]
-        public IHtmlString Textbox(dynamic Display, dynamic Shape) {
-            Shape.Metadata.Type = "Input";
-            Shape.Type = "textbox";
-            return Display(Shape);
+        private IEnumerable<dynamic> Ordered(IEnumerable<dynamic> items) {
+            return items.OfType<IShape>().OrderBy(item => item.Metadata.Position, new FlatPositionComparer());
         }
 
         [Shape]
-        public IHtmlString Input(HtmlHelper Html, dynamic Shape, dynamic Display, string Type, string Name, dynamic Value) {
+        public IHtmlString Textbox(dynamic Display, dynamic Shape)
+        {
+            return DisplayShapeAsInput(Display, Shape, "textbox");
+        }
+
+        [Shape]
+        public IHtmlString Submit(dynamic Display, dynamic Shape)
+        {
+            // (todo) this might not need full wrapper in hindsight?
+            return DisplayShapeAsInput(Display, Shape, "submit");
+        }
+
+        [Shape]
+        public IHtmlString Button(dynamic Display, dynamic Shape)
+        {
+            // (todo) this might not need full wrapper in hindsight?
+            return DisplayShapeAsInput(Display, Shape, "button");
+        }
+
+        [Shape]
+        public IHtmlString Input(HtmlHelper Html, dynamic Shape, dynamic Display, string Type, string Name, dynamic Value)
+        {
             var tag = (TagBuilder)_tagBuilderFactory.Create(Shape, "input");
             tag.MergeAttribute("type", Type, false);
-            if (Name != null) {
+            if (Name != null)
+            {
                 tag.MergeAttribute("name", Name, false);
             }
-            if (Value != null) {
+            if (Value != null)
+            {
                 Value = Value is string ? Value : Display(Value);
                 tag.MergeAttribute("value", Convert.ToString(Value), false);
             }
             return new HtmlString(tag.ToString(TagRenderMode.SelfClosing));
         }
 
-        private static IHtmlString DisplayShapeAsInput(dynamic Display, dynamic Shape, string inputType) {
+        private static IHtmlString DisplayShapeAsInput(dynamic Display, dynamic Shape, string inputType)
+        {
             Shape.Metadata.Alternates.Clear();
             Shape.Type = inputType;
             Shape.Metadata.Type = "Input";
@@ -257,25 +385,31 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public IHtmlString EditorString(dynamic Display, dynamic Shape) {
+        public IHtmlString EditorString(dynamic Display, dynamic Shape)
+        {
             return DisplayShapeAsInput(Display, Shape, "text");
         }
 
-        private static string ListItemToOption(SelectListItem item) {
+        private static string ListItemToOption(SelectListItem item)
+        {
             var option = new TagBuilder("option");
             option.InnerHtml = HttpUtility.HtmlEncode(item.Text);
 
-            if (item.Value != null) {
+            if (item.Value != null)
+            {
                 option.Attributes["value"] = item.Value;
             }
-            if (item.Selected) {
+            if (item.Selected)
+            {
                 option.Attributes["selected"] = "selected";
             }
             return option.ToString(TagRenderMode.Normal);
         }
 
-        private static object GetSelectProperty(object obj, string propertyName) {
-            if (string.IsNullOrEmpty(propertyName)) {
+        private static object GetSelectProperty(object obj, string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName))
+            {
                 return obj.ToString();
             }
             var pi = obj.GetType().GetProperty(propertyName);
@@ -290,22 +424,28 @@ namespace Orchard.Core.Shapes {
             IEnumerable<dynamic> Items,
             string DataTextField,
             string DataValueField
-            ) {
+            )
+        {
             var select = (TagBuilder)_tagBuilderFactory.Create(Shape, "select");
             Output.WriteLine(select.ToString(TagRenderMode.StartTag));
 
-            foreach (var item in Items) {
+            foreach (var item in Items)
+            {
                 var selectItem = item as SelectListItem;
-                if (selectItem == null) {
+                if (selectItem == null)
+                {
                     selectItem = new SelectListItem();
-                    if (item is string) {
+                    if (item is string)
+                    {
                         var itemStr = (string)item;
                         selectItem.Text = itemStr;
                         selectItem.Selected = (itemStr == Convert.ToString(Shape.Value));
                     }
-                    else {
+                    else
+                    {
                         selectItem.Text = Convert.ToString(GetSelectProperty(item, DataTextField));
-                        if (DataValueField != null) {
+                        if (DataValueField != null)
+                        {
                             var value = GetSelectProperty(item, DataValueField);
                             selectItem.Value = Convert.ToString(value);
                             selectItem.Selected = (value == Shape.Value);
@@ -319,7 +459,8 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public IHtmlString EditorBoolean(dynamic Display, dynamic Shape) {
+        public IHtmlString EditorBoolean(dynamic Display, dynamic Shape)
+        {
             return DisplayShapeAsInput(Display, Shape, "checkbox");
         }
 
