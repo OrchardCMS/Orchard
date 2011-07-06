@@ -10,7 +10,7 @@
         <h5>@T("By") @Model.ContentPart.Descriptor.Author<br />
         @T("Version:") @Model.ContentPart.Descriptor.Version<br />
         @if (Model.ContentPart.Descriptor.WebSite != null) {
-            <a href="@Model.ContentPart.Descriptor.WebSite">@Model.ContentPart.Descriptor.WebSite</a><br />
+            @Display.Link(Value: Model.ContentPart.Descriptor.WebSite, Href: Model.ContentPart.Descriptor.WebSite)<br />
         }</h5>
         
         <p class="themeInfo">@Model.ContentPart.Descriptor.Description</p>

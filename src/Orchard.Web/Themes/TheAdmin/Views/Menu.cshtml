@@ -84,10 +84,10 @@
                     var secondLevelTag = Tag(secondLevelMenuItem, "li");
                     @secondLevelTag.StartElement
                         if (HasText(secondLevelItemId)) {
-                            <a href="@secondLevelMenuItem.Href" class="@secondLevelItemClassName" id="@secondLevelItemId">@secondLevelMenuItem.Text</a>
+                            @Display.Link(Href: secondLevelMenuItem.Href, Classes: new [] { "secondLevelItemClassName" }, Id: secondLevelItemId, Value: secondLevelMenuItem.Text)
                         }
                         else {
-                            <a href="@secondLevelMenuItem.Href" class="@secondLevelItemClassName">@secondLevelMenuItem.Text</a>
+                            @Display.Link(Href: secondLevelMenuItem.Href, Classes: new[] { "secondLevelItemClassName" }, Value: secondLevelMenuItem.Text)
                         }
                     @secondLevelTag.EndElement
                 }
@@ -96,7 +96,7 @@
        @firstLevelTag.EndElement
     }
 @tag.EndElement
-@using(Script.Foot()) {
+@using (Script.Foot()) {
 <script type="text/javascript">
 //<![CDATA[
     (function ($) {

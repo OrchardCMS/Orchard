@@ -32,7 +32,7 @@
             <li>@T("Features: {0}", MvcHtmlString.Create(string.Join(", ", features.Select(FeatureLink).OrderBy(s => s))))</li>
             <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(Model.ContentPart.Descriptor.Author) ? Model.ContentPart.Descriptor.Author : T("Unknown").ToString())</li>
             <li>&nbsp;&#124;&nbsp;@T("Website: ")
-                @if (!string.IsNullOrEmpty(Model.ContentPart.Descriptor.WebSite)) { <a href="@Model.ContentPart.Descriptor.WebSite">@Model.ContentPart.Descriptor.WebSite</a> }
+                @if (!string.IsNullOrEmpty(Model.ContentPart.Descriptor.WebSite)) { @Display.Link(Value: Model.ContentPart.Descriptor.WebSite, Href: Model.ContentPart.Descriptor.WebSite) }
                 else { @T("Unknown").ToString() }
             </li>
         </ul>

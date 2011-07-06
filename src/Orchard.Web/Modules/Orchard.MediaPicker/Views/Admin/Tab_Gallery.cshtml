@@ -51,7 +51,7 @@
                         </td>
                         <td class="media-details">
                             <ul class="media-summary">
-                                <li><a class="media-filename" href="@src" target="_blank">@mediaFile.Name</a></li>
+                                <li>@Display.Link(Href: src, Value: mediaFile.Name, Classes: new [] { "media-filename" }, Attributes: new { target = "_blank" })</li>
                                 <li>@T("Added on"): @mediaFile.LastUpdated</li>
                                 <li>@T("Size"): @mediaFile.Size.ToFriendlySizeString()</li>
                             </ul>

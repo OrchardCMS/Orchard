@@ -87,7 +87,7 @@
                 <td>
                     <ul class="actions">
                         <li class="construct">
-                            <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit Comment")">@T("Edit")</a>
+                            @Display.ActionLink(Value: T("Edit"), Action: "Edit", RouteValues: new { commentEntry.Comment.Id }, Attributes: new { title = T("Edit Comment") })
                         </li>
                         <li class="destruct"></li>
                     </ul>
