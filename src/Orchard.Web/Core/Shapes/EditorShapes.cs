@@ -280,7 +280,7 @@ namespace Orchard.Core.Shapes
 
         private static IEnumerable<dynamic> Ordered(IEnumerable<dynamic> items)
         {
-            return items.Select(Positionify).OrderBy(p => p.Item1, new FlatPositionComparer()).Select(p => p.Item2);
+            return items.Select(Positionify).OrderBy(p => p.Item1, new PositionComparer()).Select(p => p.Item2);
         }
 
         [Shape]
