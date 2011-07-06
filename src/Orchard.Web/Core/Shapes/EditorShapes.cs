@@ -286,7 +286,7 @@ namespace Orchard.Core.Shapes
         [Shape]
         public IHtmlString Textbox(dynamic Display, dynamic Shape)
         {
-            return DisplayShapeAsInput(Display, Shape, "textbox");
+            return DisplayShapeAsInput(Display, Shape, "text");
         }
 
         [Shape]
@@ -336,12 +336,6 @@ namespace Orchard.Core.Shapes
             // todo: alternates, etc?
             Shape.Metadata.Wrappers.Clear();
             return display;
-        }
-
-        [Shape]
-        public IHtmlString EditorString(dynamic Display, dynamic Shape)
-        {
-            return DisplayShapeAsInput(Display, Shape, "text");
         }
 
         private static string ListItemToOption(SelectListItem item)
@@ -413,7 +407,7 @@ namespace Orchard.Core.Shapes
         }
 
         [Shape]
-        public IHtmlString EditorBoolean(dynamic Display, dynamic Shape)
+        public IHtmlString Checkbox(dynamic Display, dynamic Shape)
         {
             return DisplayShapeAsInput(Display, Shape, "checkbox");
         }
