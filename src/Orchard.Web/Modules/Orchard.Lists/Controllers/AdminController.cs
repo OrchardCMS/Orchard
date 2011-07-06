@@ -90,7 +90,7 @@ namespace Lists.Controllers {
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
             var list = Shape.List();
-            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, new DisplayOptions { DisplayType = "SummaryAdmin" })));
 
             var containerItemContentDisplayName = String.Empty;
             if (hasRestriction)
@@ -232,7 +232,7 @@ namespace Lists.Controllers {
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
             var list = Shape.List();
-            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, new DisplayOptions { DisplayType = "SummaryAdmin" })));
 
             dynamic viewModel = Shape.ViewModel()
                 .ContentItems(list)

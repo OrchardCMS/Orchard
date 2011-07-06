@@ -153,7 +153,7 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.New<IUser>("User");
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Create", Model: new UserCreateViewModel(), Prefix: null);
             editor.Metadata.Position = "2";
-            dynamic model = Services.ContentManager.BuildEditor(user);
+            dynamic model = Services.ContentManager.BuildEditor(user, new EditorOptions());
             model.Content.Add(editor);
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
@@ -189,7 +189,7 @@ namespace Orchard.Users.Controllers {
                                                   null, null, true));
             }
 
-            dynamic model = Services.ContentManager.UpdateEditor(user, this);
+            dynamic model = Services.ContentManager.UpdateEditor(user, new EditorOptions { Updater = this });
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -213,7 +213,7 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get<UserPart>(id);
             var editor = Shape.EditorTemplate(TemplateName: "Parts/User.Edit", Model: new UserEditViewModel {User = user}, Prefix: null);
             editor.Metadata.Position = "2";
-            dynamic model = Services.ContentManager.BuildEditor(user);
+            dynamic model = Services.ContentManager.BuildEditor(user, new EditorOptions());
             model.Content.Add(editor);
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
@@ -228,7 +228,7 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get<UserPart>(id);
             string previousName = user.UserName;
 
-            dynamic model = Services.ContentManager.UpdateEditor(user, this);
+            dynamic model = Services.ContentManager.UpdateEditor(user, new EditorOptions { Updater = this });
 
             var editModel = new UserEditViewModel {User = user};
             if (TryUpdateModel(editModel)) {

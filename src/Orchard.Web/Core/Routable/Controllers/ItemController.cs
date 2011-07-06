@@ -59,7 +59,7 @@ namespace Orchard.Core.Routable.Controllers {
                 throw new ApplicationException(T("Ambiguous content").Text);
             }
 
-            dynamic model = _contentManager.BuildDisplay(hits.Single());
+            dynamic model = _contentManager.BuildDisplay(hits.Single(), new DisplayOptions());
             return new ShapeResult(this, model);
         }
 
@@ -82,7 +82,7 @@ namespace Orchard.Core.Routable.Controllers {
                 }
             }
 
-            _contentManager.UpdateEditor(contentItem, this);
+            _contentManager.UpdateEditor(contentItem, new EditorOptions { Updater = this });
             _contentManager.Publish(contentItem);
             _transactionManager.Cancel();
 

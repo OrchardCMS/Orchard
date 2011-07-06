@@ -69,7 +69,7 @@ namespace Orchard.Search.Controllers {
                     continue;
                 }
 
-                list.Add(_contentManager.BuildDisplay(contentItem, "Summary"));
+                list.Add(_contentManager.BuildDisplay(contentItem, new DisplayOptions { DisplayType = "Summary" }));
             }
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(searchHits.TotalItemCount);

@@ -42,7 +42,7 @@ namespace Orchard.Core.Containers.Drivers {
                     var pageOfItems = query.Slice(0, part.Record.PageSize).ToList();
 
                     var list = shapeHelper.List();
-                    list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+                    list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, new DisplayOptions { DisplayType = "Summary" })));
 
                     return shapeHelper.Parts_ContainerWidget(ContentItems: list);
                 });

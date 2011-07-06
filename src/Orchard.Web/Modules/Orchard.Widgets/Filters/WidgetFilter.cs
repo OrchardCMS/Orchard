@@ -71,7 +71,7 @@ namespace Orchard.Widgets.Filters {
                     continue;
                 }
                 if (activeLayerIds.Contains(commonPart.Container.ContentItem.Id)) {
-                    var widgetShape = _contentManager.BuildDisplay(widgetPart);
+                    var widgetShape = _contentManager.BuildDisplay(widgetPart, new DisplayOptions());
                     zones[widgetPart.Record.Zone].Add(widgetShape, widgetPart.Record.Position);
                 }
             }

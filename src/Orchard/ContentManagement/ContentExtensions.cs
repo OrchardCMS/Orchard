@@ -168,14 +168,14 @@ namespace Orchard.ContentManagement {
             var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
-            return manager.BuildDisplay(content, displayType);
+            return manager.BuildDisplay(content, new DisplayOptions { DisplayType = displayType });
         }
 
         public static TContent BuildEditorShape<TContent>(this IContentManager manager, int id) where TContent : class, IContent {
             var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
-            return manager.BuildEditor(content);
+            return manager.BuildEditor(content, new EditorOptions());
 
         }
 
@@ -183,11 +183,8 @@ namespace Orchard.ContentManagement {
             var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
-            return manager.UpdateEditor(content, updater);
+            return manager.UpdateEditor(content, new EditorOptions { Updater = updater });
         }
-
-
-
 
         /* Aggregate item/part type casting extension methods */
 

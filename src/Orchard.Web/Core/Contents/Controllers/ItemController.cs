@@ -24,7 +24,7 @@ namespace Orchard.Core.Contents.Controllers {
         // /Contents/Item/Display/72
         public ActionResult Display(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Published);
-            dynamic model = _contentManager.BuildDisplay(contentItem);
+            dynamic model = _contentManager.BuildDisplay(contentItem, new DisplayOptions());
             return new ShapeResult(this, model);
         }
 
@@ -40,7 +40,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
 
-            dynamic model = _contentManager.BuildDisplay(contentItem);
+            dynamic model = _contentManager.BuildDisplay(contentItem, new DisplayOptions());
             return new ShapeResult(this, model);
         }
     }

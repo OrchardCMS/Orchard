@@ -156,7 +156,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
             var viewModel = new OwnerEditorViewModel { Owner = "User" };
             updateModel.Setup(x => x.TryUpdateModel(viewModel, "", null, null)).Returns(true);
-            contentManager.UpdateEditor(item.ContentItem, updateModel.Object);
+            contentManager.UpdateEditor(item.ContentItem, new EditorOptions { Updater = updateModel.Object });
         }
 
         class UpdatModelStub : IUpdateModel {
@@ -203,7 +203,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             var updater = new UpdatModelStub() { Owner = null };
 
-            contentManager.UpdateEditor(item.ContentItem, updater);
+            contentManager.UpdateEditor(item.ContentItem, new EditorOptions { Updater = updater });
         }
 
         [Test]
@@ -224,7 +224,7 @@ namespace Orchard.Core.Tests.Common.Providers {
                 b => b.Describe("Parts_Common_Owner_Edit").From(TestFeature())
                                .Placement(ShapePlacementParsingStrategy.BuildPredicate(c => true, new KeyValuePair<string, string>("Path", "~/yadda")), new PlacementInfo { Location = "Match" });
 
-            contentManager.UpdateEditor(item.ContentItem, updater);
+            contentManager.UpdateEditor(item.ContentItem, new EditorOptions { Updater = updater });
 
             Assert.That(updater.ModelErrors.ContainsKey("OwnerEditor.Owner"), Is.True);
         }
@@ -336,8 +336,8 @@ namespace Orchard.Core.Tests.Common.Providers {
             _clock.Advance(TimeSpan.FromMinutes(1));
             var editUtc = _clock.UtcNow;
 
-            var updater = new UpdatModelStub() { Owner = "" };
-            contentManager.UpdateEditor(item.ContentItem, updater);
+            var updater = new UpdatModelStub { Owner = "" };
+            contentManager.UpdateEditor(item.ContentItem, new EditorOptions { Updater = updater });
 
             Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
             Assert.That(item.ModifiedUtc, Is.EqualTo(editUtc));

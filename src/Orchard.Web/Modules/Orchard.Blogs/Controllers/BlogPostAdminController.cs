@@ -40,7 +40,7 @@ namespace Orchard.Blogs.Controllers {
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             blogPost.BlogPart = blog;
 
-            dynamic model = Services.ContentManager.BuildEditor(blogPost);
+            dynamic model = Services.ContentManager.BuildEditor(blogPost, new EditorOptions());
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
@@ -75,7 +75,7 @@ namespace Orchard.Blogs.Controllers {
             blogPost.BlogPart = blog;
 
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
-            var model = Services.ContentManager.UpdateEditor(blogPost, this);
+            var model = Services.ContentManager.UpdateEditor(blogPost, new EditorOptions { Updater = this });
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -103,7 +103,7 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, post, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
-            dynamic model = Services.ContentManager.BuildEditor(post);
+            dynamic model = Services.ContentManager.BuildEditor(post, new EditorOptions());
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
@@ -149,7 +149,7 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             // Validate form input
-            var model = Services.ContentManager.UpdateEditor(blogPost, this);
+            var model = Services.ContentManager.UpdateEditor(blogPost, new EditorOptions { Updater = this});
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.

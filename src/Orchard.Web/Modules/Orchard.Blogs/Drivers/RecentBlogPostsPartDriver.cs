@@ -39,7 +39,7 @@ namespace Orchard.Blogs.Drivers {
                 .Select(ci => ci.As<BlogPostPart>());
 
             var list = shapeHelper.List();
-            list.AddRange(blogPosts.Select(bp => _contentManager.BuildDisplay(bp, "Summary")));
+            list.AddRange(blogPosts.Select(bp => _contentManager.BuildDisplay(bp, new DisplayOptions { DisplayType = "Summary" })));
 
             var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, ContentItems: list);
 
