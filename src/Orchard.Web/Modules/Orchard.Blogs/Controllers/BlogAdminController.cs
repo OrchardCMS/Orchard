@@ -57,7 +57,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            dynamic model = Services.ContentManager.BuildEditor(blog);
+            dynamic model = Services.ContentManager.BuildEditor(blog, new EditorOptions());
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
@@ -70,7 +70,7 @@ namespace Orchard.Blogs.Controllers {
             var blog = Services.ContentManager.New<BlogPart>("Blog");
 
             _contentManager.Create(blog, VersionOptions.Draft);
-            dynamic model = _contentManager.UpdateEditor(blog, this);
+            dynamic model = _contentManager.UpdateEditor(blog, new EditorOptions { Updater = this });
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
@@ -92,7 +92,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            dynamic model = Services.ContentManager.BuildEditor(blog);
+            dynamic model = Services.ContentManager.BuildEditor(blog, new EditorOptions());
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
@@ -124,7 +124,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return HttpNotFound();
 
-            dynamic model = Services.ContentManager.UpdateEditor(blog, this);
+            dynamic model = Services.ContentManager.UpdateEditor(blog, new EditorOptions { Updater = this });
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
@@ -158,7 +158,7 @@ namespace Orchard.Blogs.Controllers {
             var list = Services.New.List();
             list.AddRange(_blogService.Get(VersionOptions.Latest)
                               .Select(b => {
-                                          var blog = Services.ContentManager.BuildDisplay(b, "SummaryAdmin");
+                                          var blog = Services.ContentManager.BuildDisplay(b, new DisplayOptions { DisplayType = "SummaryAdmin" });
                                           blog.TotalPostCount = _blogPostService.Get(b, VersionOptions.Latest).Count();
                                           return blog;
                                       }));
@@ -177,9 +177,9 @@ namespace Orchard.Blogs.Controllers {
                 return HttpNotFound();
 
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest)
-                .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin"));
+                .Select(bp => _contentManager.BuildDisplay(bp, new DisplayOptions { DisplayType = "SummaryAdmin" }));
 
-            dynamic blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
+            dynamic blog = Services.ContentManager.BuildDisplay(blogPart, new DisplayOptions { DisplayType = "DetailAdmin" });
 
             var list = Shape.List();
             list.AddRange(blogPosts);

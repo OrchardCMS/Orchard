@@ -5,5 +5,5 @@
 
 @Display(Model.Header)
 @Display(Model.Actions)
-<div class="manage"><a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" class="add button primaryAction">@T("New Post")</a></div>
+<div class="manage">@Display.Link(Href: Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart))), Value: T("New Post"), Classes: new [] { "add", "button", "primaryAction" })</div>
 @Display(Model.Content)

@@ -6,5 +6,5 @@
     ContentItem contentItem = Model.ContentItem;
     BlogPart blog = (BlogPart)contentItem.Get(typeof(BlogPart));
 }
-<a href="@Url.BlogForAdmin(blog)" title="@T("List Posts")">@T("List Posts")</a>@T(" | ")
-<a href="@Url.BlogPostCreate(blog)" title="@T("New Post")">@T("New Post")</a>@T(" | ")
+@Display.Link(Href: Url.BlogForAdmin(blog), Value: T("List Posts"), Attributes: new { title = T("List Posts") } )@T(" | ")
+@Display.Link(Href: Url.BlogPostCreate(blog), Value: T("New Post"), Attributes: new { title = T("New Post") })@T(" | ")

@@ -51,7 +51,7 @@ namespace Orchard.Blogs.Controllers {
             if (postPart == null)
                 return HttpNotFound();
 
-            dynamic model = _services.ContentManager.BuildDisplay(postPart);
+            dynamic model = _services.ContentManager.BuildDisplay(postPart, new DisplayOptions());
             return new ShapeResult(this, model);
         }
 
@@ -65,7 +65,7 @@ namespace Orchard.Blogs.Controllers {
             var archive = new ArchiveData(archiveData);
 
             var list = Shape.List();
-            list.AddRange(_blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplay(b, "Summary")));
+            list.AddRange(_blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplay(b, new DisplayOptions { DisplayType = "Summary" })));
 
             _feedManager.Register(blogPart);
 

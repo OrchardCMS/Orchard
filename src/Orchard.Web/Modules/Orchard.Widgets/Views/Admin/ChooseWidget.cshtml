@@ -12,12 +12,10 @@
         string name = widgetType.Item1;
         string description = widgetType.Item2;
     <li>
-        <a href="@Url.Action("AddWidget", "Admin", new { area = "Orchard.Widgets", layerId = Model.CurrentLayer.Id, widgetType = name, zone = Model.Zone, returnUrl = Model.ReturnUrl })">
-            <h2>@name.CamelFriendly()</h2>
-            @if (!string.IsNullOrWhiteSpace(description)) {
-            <p>@description</p>
-            }
-        </a>
+        @Display.ActionLink(
+            Action: "AddWidget", Controller: "Admin", Area: "Orchard.Widgets",
+            RouteValues: new { layerId = Model.CurrentLayer.Id, widgetType = name, zone = Model.Zone, returnUrl = Model.ReturnUrl },
+                 Value: new HtmlString("<h2>" + name.CamelFriendly() + "</h2>" + (!string.IsNullOrWhiteSpace(description) ? ("<p>" + description + "</p>") : "")))
     </li>
     }
 </ul>

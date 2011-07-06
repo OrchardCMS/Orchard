@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.Caching;
@@ -56,7 +57,7 @@ namespace Orchard.Environment.Compilation.Dependencies {
         public IEnumerable<DependencyDescriptor> LoadDescriptors() {
             return _cacheManager.Get(PersistencePath,
                                      ctx => {
-                                         _appDataFolder.CreateDirectory(BasePath);
+                                         Directory.CreateDirectory(_appDataFolder.MapPath(BasePath));
                                          ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
 
                                          _writeThroughToken.IsCurrent = true;
@@ -83,24 +84,26 @@ namespace Orchard.Environment.Compilation.Dependencies {
             Func<string, XName> ns = (name => XName.Get(name));
             Func<XElement, string, string> elem = (e, name) => e.Element(ns(name)).Value;
 
-            if (!_appDataFolder.FileExists(persistancePath))
+            var content = _appDataFolder.ReadFile(persistancePath);
+            if (content == null) {
                 return Enumerable.Empty<DependencyDescriptor>();
-
-            using (var stream = _appDataFolder.OpenFile(persistancePath)) {
-                XDocument document = XDocument.Load(stream);
-                return document
-                    .Elements(ns("Dependencies"))
-                    .Elements(ns("Dependency"))
-                    .Select(e => new DependencyDescriptor {
-                        Name = elem(e, "ModuleName"),
-                        VirtualPath = elem(e, "VirtualPath"),
-                        LoaderName = elem(e, "LoaderName"),
-                        References = e.Elements(ns("References")).Elements(ns("Reference")).Select(r => new DependencyReferenceDescriptor {
-                            Name = elem(r, "Name"),
-                            LoaderName = elem(r, "LoaderName"),
-                            VirtualPath = elem(r, "VirtualPath")
-                    })}).ToList();
             }
+
+            XDocument document = XDocument.Parse(content);
+
+            return document
+                .Elements(ns("Dependencies"))
+                .Elements(ns("Dependency"))
+                .Select(e => new DependencyDescriptor {
+                    Name = elem(e, "ModuleName"),
+                    VirtualPath = elem(e, "VirtualPath"),
+                    LoaderName = elem(e, "LoaderName"),
+                    References = e.Elements(ns("References")).Elements(ns("Reference")).Select(r => new DependencyReferenceDescriptor {
+                        Name = elem(r, "Name"),
+                        LoaderName = elem(r, "LoaderName"),
+                        VirtualPath = elem(r, "VirtualPath")
+                    })
+                }).ToList();
         }
 
         private void WriteDependencies(string persistancePath, IEnumerable<DependencyDescriptor> dependencies) {
@@ -120,9 +123,7 @@ namespace Orchard.Environment.Compilation.Dependencies {
 
             document.Root.Add(elements);
 
-            using (var stream = _appDataFolder.CreateFile(persistancePath)) {
-                document.Save(stream, SaveOptions.None);
-            }
+            _appDataFolder.StoreFile(persistancePath, document.ToString());
 
             // Ensure cache is invalidated right away, not waiting for file change notification to happen
             _writeThroughToken.IsCurrent = false;

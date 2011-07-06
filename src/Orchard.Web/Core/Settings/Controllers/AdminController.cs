@@ -37,7 +37,7 @@ namespace Orchard.Core.Settings.Controllers {
             dynamic model;
             var site = _siteService.GetSiteSettings();
             if (!string.IsNullOrWhiteSpace(groupInfoId)) {
-                model = Services.ContentManager.BuildEditor(site, groupInfoId);
+                model = Services.ContentManager.BuildEditor(site, new EditorOptions { GroupId = groupInfoId });
 
                 if (model == null)
                     return HttpNotFound();
@@ -49,7 +49,7 @@ namespace Orchard.Core.Settings.Controllers {
                 model.GroupInfo = groupInfo;
             }
             else {
-                model = Services.ContentManager.BuildEditor(site);
+                model = Services.ContentManager.BuildEditor(site, new EditorOptions());
             }
 
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
@@ -62,7 +62,7 @@ namespace Orchard.Core.Settings.Controllers {
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings();
-            dynamic model = Services.ContentManager.UpdateEditor(site, this, groupInfoId);
+            dynamic model = Services.ContentManager.UpdateEditor(site, new EditorOptions { Updater = this, GroupId = groupInfoId });
 
             GroupInfo groupInfo = null;
 

@@ -11,7 +11,7 @@ namespace Orchard.Mvc.Html {
             if (templates == null)
                 return;
 
-            foreach (var template in templates.OrderByDescending(t => t.Position, new FlatPositionComparer())) {
+            foreach (var template in templates.OrderByDescending(t => t.Position, new PositionComparer())) {
                 html.RenderTemplates(template);
             }
         }

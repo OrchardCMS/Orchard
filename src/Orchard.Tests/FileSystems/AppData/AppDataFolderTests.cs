@@ -82,14 +82,14 @@ namespace Orchard.Tests.FileSystems.AppData {
         [Test]
         public void CreateFileWillCauseDirectoryToBeCreated() {
             Assert.That(Directory.Exists(Path.Combine(_tempFolder, "alpha\\omega\\foo")), Is.False);
-            _appDataFolder.CreateFile("alpha\\omega\\foo\\bar.txt", "quux");
+            _appDataFolder.StoreFile("alpha\\omega\\foo\\bar.txt", "quux");
             Assert.That(Directory.Exists(Path.Combine(_tempFolder, "alpha\\omega\\foo")), Is.True);
         }
 
 
         [Test]
-        public void FilesCanBeReadBack() {            
-            _appDataFolder.CreateFile("alpha\\gamma\\foo\\bar.txt", @"
+        public void FilesCanBeReadBack() {
+            _appDataFolder.StoreFile("alpha\\gamma\\foo\\bar.txt", @"
 this is
 a
 test");
@@ -98,17 +98,6 @@ test");
 this is
 a
 test"));
-        }
-
-        [Test]
-        public void FileExistsReturnsFalseForNonExistingFile() {
-            Assert.That(_appDataFolder.FileExists("notexisting"), Is.False);
-        }
-
-        [Test]
-        public void FileExistsReturnsTrueForExistingFile() {
-            _appDataFolder.CreateFile("alpha\\foo\\bar.txt", "");
-            Assert.That(_appDataFolder.FileExists("alpha\\foo\\bar.txt"), Is.True);
         }
     }
 }

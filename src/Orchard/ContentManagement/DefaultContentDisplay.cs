@@ -40,27 +40,27 @@ namespace Orchard.ContentManagement {
 
         public ILogger Logger { get; set; }
 
-        public dynamic BuildDisplay(IContent content, string displayType, string groupId) {
+        public dynamic BuildDisplay(IContent content, DisplayOptions displayOptions) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
                 stereotype = "Content";
 
             var actualShapeType = stereotype;
-            var actualDisplayType = string.IsNullOrWhiteSpace(displayType) ? "Detail" : displayType;
+            var actualDisplayType = string.IsNullOrWhiteSpace(displayOptions.DisplayType) ? "Detail" : displayOptions.DisplayType;
 
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
             itemShape.Metadata.DisplayType = actualDisplayType;
 
-            var context = new BuildDisplayContext(itemShape, content, actualDisplayType, groupId, _shapeFactory);
+            var context = new BuildDisplayContext(itemShape, content, actualDisplayType, displayOptions.GroupId, _shapeFactory);
             BindPlacement(context, actualDisplayType, stereotype);
 
             _handlers.Value.Invoke(handler => handler.BuildDisplay(context), Logger);
             return context.Shape;
         }
 
-        public dynamic BuildEditor(IContent content, string groupId) {
+        public dynamic BuildEditor(IContent content, EditorOptions editorOptions) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -71,7 +71,7 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
-            var context = new BuildEditorContext(itemShape, content, groupId, _shapeFactory);
+            var context = new BuildEditorContext(itemShape, content, editorOptions.GroupId, _shapeFactory);
             BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.BuildEditor(context), Logger);
@@ -79,7 +79,7 @@ namespace Orchard.ContentManagement {
             return context.Shape;
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupInfoId) {
+        public dynamic UpdateEditor(IContent content, EditorOptions editorOptions) {
             var contentTypeDefinition = content.ContentItem.TypeDefinition;
             string stereotype;
             if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
@@ -90,7 +90,7 @@ namespace Orchard.ContentManagement {
             dynamic itemShape = CreateItemShape(actualShapeType);
             itemShape.ContentItem = content.ContentItem;
 
-            var context = new UpdateEditorContext(itemShape, content, updater, groupInfoId, _shapeFactory);
+            var context = new UpdateEditorContext(itemShape, content, editorOptions.Updater, editorOptions.GroupId, _shapeFactory);
             BindPlacement(context, null, stereotype);
 
             _handlers.Value.Invoke(handler => handler.UpdateEditor(context), Logger);

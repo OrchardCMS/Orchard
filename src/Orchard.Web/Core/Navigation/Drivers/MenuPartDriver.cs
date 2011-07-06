@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.UI;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 
@@ -34,8 +36,10 @@ namespace Orchard.Core.Navigation.Drivers {
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, _orchardServices.WorkContext.CurrentUser, part))
                 return null;
 
-            if (string.IsNullOrEmpty(part.MenuPosition))
-                part.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
+            if (string.IsNullOrEmpty(part.MenuPosition)) {
+                var maxPosition = PositionComparer.Max(_navigationManager.BuildMenu("main").Select(x => x.Position));
+                part.MenuPosition = PositionComparer.After(maxPosition);
+            }
 
             updater.TryUpdateModel(part, Prefix, null, null);
 

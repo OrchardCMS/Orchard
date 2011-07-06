@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
@@ -10,7 +11,6 @@ using Orchard.Indexing.Models;
 using Orchard.Indexing.Settings;
 using Orchard.Locking;
 using Orchard.Logging;
-using Orchard.Services;
 using Orchard.Time;
 
 namespace Orchard.Indexing.Services {
@@ -199,7 +199,7 @@ namespace Orchard.Indexing.Services {
 
             // save current state of the index
             indexSettings.LastIndexedUtc = _clock.UtcNow;
-            _appDataFolder.CreateFile(settingsFilename, indexSettings.ToXml());
+            _appDataFolder.StoreFile(settingsFilename, indexSettings.ToXml());
 
             if (deleteFromIndex.Count == 0 && addToIndex.Count == 0) {
                 // nothing more to do
@@ -239,9 +239,8 @@ namespace Orchard.Indexing.Services {
         {
             var indexSettings = new IndexSettings();
             var settingsFilename = GetSettingsFileName(indexName);
-            if (_appDataFolder.FileExists(settingsFilename))
-            {
-                var content = _appDataFolder.ReadFile(settingsFilename);
+            var content = _appDataFolder.ReadFile(settingsFilename);
+            if (content != null) {
                 indexSettings = IndexSettings.Parse(content);
             }
 
@@ -253,9 +252,7 @@ namespace Orchard.Indexing.Services {
         /// </summary>
         public void DeleteSettings(string indexName) {
             var settingsFilename = GetSettingsFileName(indexName);
-            if (_appDataFolder.FileExists(settingsFilename)) {
-                _appDataFolder.DeleteFile(settingsFilename);
-            }
+            _appDataFolder.DeleteFile(settingsFilename);
         }
 
         /// <summary>

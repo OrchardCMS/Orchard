@@ -30,15 +30,25 @@ namespace Orchard.ContentManagement {
         GroupInfo GetEditorGroupInfo(IContent contentItem, string groupInfoId);
         GroupInfo GetDisplayGroupInfo(IContent contentItem, string groupInfoId);
 
-        dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "");
-        dynamic BuildEditor(IContent content, string groupId = "");
-        dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "");
+        dynamic BuildDisplay(IContent content, DisplayOptions displayOptions);
+        dynamic BuildEditor(IContent content, EditorOptions editorOptions);
+        dynamic UpdateEditor(IContent content, EditorOptions editorOptions);
     }
 
     public interface IContentDisplay : IDependency {
-        dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "");
-        dynamic BuildEditor(IContent content, string groupId = "");
-        dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "");
+        dynamic BuildDisplay(IContent content, DisplayOptions displayOptions);
+        dynamic BuildEditor(IContent content, EditorOptions editorOptions);
+        dynamic UpdateEditor(IContent content, EditorOptions editorOptions);
+    }
+
+    public class DisplayOptions {
+        public string GroupId { get; set; }
+        public string DisplayType { get; set; }
+    }
+    
+    public class EditorOptions {
+        public string GroupId { get; set; }
+        public IUpdateModel Updater{ get; set; }
     }
 
     public class VersionOptions {

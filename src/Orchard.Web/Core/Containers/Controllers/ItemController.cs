@@ -71,11 +71,11 @@ namespace Orchard.Core.Containers.Controllers {
             var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
 
             var list = Shape.List();
-            list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+            list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, new DisplayOptions { DisplayType = "Summary" })));
             list.Classes.Add("content-items");
             list.Classes.Add("list-items");
 
-            var model = _contentManager.BuildDisplay(container, "Detail");
+            var model = _contentManager.BuildDisplay(container, new DisplayOptions { DisplayType = "Detail" });
             model.Content.Add(list, "7");
             if (container.As<ContainerPart>().Record.Paginated) {
                 model.Content.Add(pagerShape, "7.5");

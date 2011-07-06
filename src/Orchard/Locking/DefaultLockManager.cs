@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
@@ -64,9 +65,8 @@ namespace Orchard.Locking {
 
         private bool IsLocked(string filename) {
             var path = _appDataFolder.Combine(_tenantPrefix, filename);
-            if (_appDataFolder.FileExists(path)) {
-                var content = _appDataFolder.ReadFile(path);
-
+            var content = _appDataFolder.ReadFile(path);
+            if (content != null) {
                 DateTime creationUtc;
                 if (DateTime.TryParse(content, out creationUtc)) {
                     // if expired the file is not removed

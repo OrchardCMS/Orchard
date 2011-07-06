@@ -23,7 +23,7 @@
         @T("Version:") @Model.ContentPart.Descriptor.Version<br />
         @Model.ContentPart.Descriptor.Description<br />
         @if (Model.ContentPart.Descriptor.WebSite != null) {
-            <a href="@Model.ContentPart.Descriptor.WebSite">@Model.ContentPart.Descriptor.WebSite</a><br />
+            @Display.Link(Value: Model.ContentPart.Descriptor.WebSite, Href: Model.ContentPart.Descriptor.WebSite)<br />
         }
     </p>
 

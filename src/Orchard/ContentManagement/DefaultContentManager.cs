@@ -363,14 +363,14 @@ namespace Orchard.ContentManagement {
             var metadata = GetItemMetadata(content);
             return metadata.EditorGroupInfo
                 .GroupBy(groupInfo => groupInfo.Id)
-                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new FlatPositionComparer()).FirstOrDefault());
+                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new PositionComparer()).FirstOrDefault());
         }
 
         public IEnumerable<GroupInfo> GetDisplayGroupInfos(IContent content) {
             var metadata = GetItemMetadata(content);
             return metadata.DisplayGroupInfo
                 .GroupBy(groupInfo => groupInfo.Id)
-                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new FlatPositionComparer()).FirstOrDefault());
+                .Select(grouping => grouping.OrderBy(groupInfo => groupInfo.Position, new PositionComparer()).FirstOrDefault());
         }
 
         public GroupInfo GetEditorGroupInfo(IContent content, string groupInfoId) {
@@ -381,16 +381,16 @@ namespace Orchard.ContentManagement {
             return GetDisplayGroupInfos(content).FirstOrDefault(gi => string.Equals(gi.Id, groupInfoId, StringComparison.OrdinalIgnoreCase));
         }
 
-        public dynamic BuildDisplay(IContent content, string displayType = "", string groupId = "") {
-            return _contentDisplay.Value.BuildDisplay(content, displayType, groupId);
+        public dynamic BuildDisplay(IContent content, DisplayOptions displayOptions) {
+            return _contentDisplay.Value.BuildDisplay(content, displayOptions);
         }
 
-        public dynamic BuildEditor(IContent content, string groupId = "") {
-            return _contentDisplay.Value.BuildEditor(content, groupId);
+        public dynamic BuildEditor(IContent content, EditorOptions editorOptions) {
+            return _contentDisplay.Value.BuildEditor(content, editorOptions);
         }
 
-        public dynamic UpdateEditor(IContent content, IUpdateModel updater, string groupId = "") {
-            return _contentDisplay.Value.UpdateEditor(content, updater, groupId);
+        public dynamic UpdateEditor(IContent content, EditorOptions editorOptions) {
+            return _contentDisplay.Value.UpdateEditor(content, editorOptions);
         }
 
         public IContentQuery<ContentItem> Query() {

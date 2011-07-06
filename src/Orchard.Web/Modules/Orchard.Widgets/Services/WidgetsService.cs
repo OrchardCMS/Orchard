@@ -159,7 +159,7 @@ namespace Orchard.Widgets.Services {
 
             WidgetPart widgetBefore = GetWidgets()
                 .Where(widget => widget.Zone == widgetPart.Zone)
-                .OrderByDescending(widget => widget.Position, new UI.FlatPositionComparer())
+                .OrderByDescending(widget => widget.Position, new UI.PositionComparer())
                 .FirstOrDefault(widget => ParsePosition(widget) < currentPosition);
 
             if (widgetBefore != null) {
@@ -179,7 +179,7 @@ namespace Orchard.Widgets.Services {
 
             WidgetPart widgetAfter = GetWidgets()
                 .Where(widget => widget.Zone == widgetPart.Zone)
-                .OrderBy(widget => widget.Position, new UI.FlatPositionComparer())
+                .OrderBy(widget => widget.Position, new UI.PositionComparer())
                 .FirstOrDefault(widget => ParsePosition(widget) > currentPosition);
 
             if (widgetAfter != null) {
@@ -215,7 +215,7 @@ namespace Orchard.Widgets.Services {
 
             IEnumerable<WidgetPart> widgetsToMove = GetWidgets()
                 .Where(widget => widget.Zone == widgetPart.Zone && ParsePosition(widget) >= targetPosition && widget.Id != widgetPart.Id)
-                .OrderBy(widget => widget.Position, new UI.FlatPositionComparer()).ToList();
+                .OrderBy(widget => widget.Position, new UI.PositionComparer()).ToList();
 
             // no need to continue if there are no widgets that will conflict with this widget's position
             if (widgetsToMove.Count() == 0 || ParsePosition(widgetsToMove.First()) > targetPosition)

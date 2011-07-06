@@ -66,7 +66,7 @@ namespace Orchard.Localization.Controllers {
                 Id = id,
                 SelectedCulture = selectedCulture,
                 SiteCultures = siteCultures,
-                Content = _contentManager.BuildEditor(contentItem)
+                Content = _contentManager.BuildEditor(contentItem, new EditorOptions())
             };
 
             // Cancel transaction so that the routepart is not modified.
@@ -114,7 +114,7 @@ namespace Orchard.Localization.Controllers {
                 _contentManager.Create(contentItemTranslation, VersionOptions.Draft);
             }
 
-            model.Content = _contentManager.UpdateEditor(contentItemTranslation, this);
+            model.Content = _contentManager.UpdateEditor(contentItemTranslation, new EditorOptions { Updater = this });
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -123,7 +123,7 @@ namespace Orchard.Localization.Controllers {
                 if (culture != null) {
                     culture.Culture = null;
                 }
-                model.Content = _contentManager.BuildEditor(contentItem);
+                model.Content = _contentManager.BuildEditor(contentItem, new EditorOptions());
                 return View(model);
             }
 

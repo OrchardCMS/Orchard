@@ -150,7 +150,7 @@ namespace Orchard.Widgets.Controllers {
                 widgetPart.Position = widgetPosition.ToString();
                 widgetPart.Zone = zone;
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
-                dynamic model = Services.ContentManager.BuildEditor(widgetPart);
+                dynamic model = Services.ContentManager.BuildEditor(widgetPart, new EditorOptions());
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
@@ -170,7 +170,7 @@ namespace Orchard.Widgets.Controllers {
             if (widgetPart == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.UpdateEditor(widgetPart, this);
+            var model = Services.ContentManager.UpdateEditor(widgetPart, new EditorOptions { Updater = this });
             try {
                 // override the CommonPart's persisting of the current container
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
@@ -199,7 +199,7 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
-            dynamic model = Services.ContentManager.BuildEditor(layerPart);
+            dynamic model = Services.ContentManager.BuildEditor(layerPart, new EditorOptions());
 
             // only messing with the hints if they're given
             if (!string.IsNullOrWhiteSpace(name))
@@ -222,7 +222,7 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.UpdateEditor(layerPart, this);
+            var model = Services.ContentManager.UpdateEditor(layerPart, new EditorOptions { Updater = this });
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -242,7 +242,7 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
-            dynamic model = Services.ContentManager.BuildEditor(layerPart);
+            dynamic model = Services.ContentManager.BuildEditor(layerPart, new EditorOptions());
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
@@ -257,7 +257,7 @@ namespace Orchard.Widgets.Controllers {
             if (layerPart == null)
                 return HttpNotFound();
 
-            var model = Services.ContentManager.UpdateEditor(layerPart, this);
+            var model = Services.ContentManager.UpdateEditor(layerPart, new EditorOptions { Updater = this });
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -298,7 +298,7 @@ namespace Orchard.Widgets.Controllers {
                 return RedirectToAction("Index");
             }
             try {
-                dynamic model = Services.ContentManager.BuildEditor(widgetPart);
+                dynamic model = Services.ContentManager.BuildEditor(widgetPart, new EditorOptions());
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
                 return View((object)model);
             }
@@ -324,7 +324,7 @@ namespace Orchard.Widgets.Controllers {
             if (widgetPart == null)
                 return HttpNotFound();
             try {
-                var model = Services.ContentManager.UpdateEditor(widgetPart, this);
+                var model = Services.ContentManager.UpdateEditor(widgetPart, new EditorOptions { Updater = this });
                 // override the CommonPart's persisting of the current container
                 widgetPart.LayerPart = _widgetsService.GetLayer(layerId);
                 if (!ModelState.IsValid) {

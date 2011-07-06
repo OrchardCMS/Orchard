@@ -27,26 +27,28 @@ namespace Orchard.Recipes.Services {
             recipeStepElement.Add(new XElement("Name", step.Name));
             recipeStepElement.Add(step.Step);
 
-            if (_appDataFolder.DirectoryExists(Path.Combine(_recipeQueueFolder, executionId))) {
+            string path;
+            if (Directory.Exists(_appDataFolder.MapPath(Path.Combine(_recipeQueueFolder, executionId)))) {
                 int stepIndex = GetLastStepIndex(executionId) + 1;
-                _appDataFolder.CreateFile(Path.Combine(_recipeQueueFolder, executionId + Path.DirectorySeparatorChar + stepIndex),
-                                          recipeStepElement.ToString());
+                path = Path.Combine(_recipeQueueFolder, executionId + Path.DirectorySeparatorChar + stepIndex);
             }
             else {
-                _appDataFolder.CreateFile(
-                    Path.Combine(_recipeQueueFolder, executionId + Path.DirectorySeparatorChar + "0"),
-                    recipeStepElement.ToString());
+                path = Path.Combine(_recipeQueueFolder, executionId + Path.DirectorySeparatorChar + "0");
             }
+
+            _appDataFolder.StoreFile(path, recipeStepElement.ToString());
         }
 
         public RecipeStep Dequeue(string executionId) {
-            if (!_appDataFolder.DirectoryExists(Path.Combine(_recipeQueueFolder, executionId))) {
+            if (!Directory.Exists(_appDataFolder.MapPath(Path.Combine(_recipeQueueFolder, executionId)))) {
                 return null;
             }
+
             RecipeStep recipeStep = null;
             int stepIndex = GetFirstStepIndex(executionId);
             if (stepIndex >= 0) {
                 var stepPath = Path.Combine(_recipeQueueFolder, executionId + Path.DirectorySeparatorChar + stepIndex);
+                
                 // string to xelement
                 var stepElement = XElement.Parse(_appDataFolder.ReadFile(stepPath));
                 var stepName = stepElement.Element("Name").Value;
@@ -66,9 +68,11 @@ namespace Orchard.Recipes.Services {
 
         private int GetFirstStepIndex(string executionId) {
             var stepFiles = new List<string>(_appDataFolder.ListFiles(Path.Combine(_recipeQueueFolder, executionId)));
-            if (stepFiles.Count == 0)
+            if (stepFiles.Count == 0) {
                 return -1;
-            var currentSteps = stepFiles.Select(stepFile => Int32.Parse(stepFile.Substring(stepFile.LastIndexOf('/') + 1))).ToList();
+            }
+
+            var currentSteps = stepFiles.Select(stepFile => int.Parse(stepFile.Substring(stepFile.LastIndexOf('/') + 1))).ToList();
             currentSteps.Sort();
             return currentSteps[0];
         }
@@ -76,11 +80,13 @@ namespace Orchard.Recipes.Services {
         private int GetLastStepIndex(string executionId) {
             int lastIndex = -1;
             var stepFiles = _appDataFolder.ListFiles(Path.Combine(_recipeQueueFolder, executionId));
+
             // we always have only a handful of steps.
             foreach (var stepFile in stepFiles) {
-                int stepOrder = Int32.Parse(stepFile.Substring(stepFile.LastIndexOf('/') + 1));
-                if (stepOrder > lastIndex)
+                int stepOrder = int.Parse(stepFile.Substring(stepFile.LastIndexOf('/') + 1));
+                if (stepOrder > lastIndex) {
                     lastIndex = stepOrder;
+                }
             }
 
             return lastIndex;

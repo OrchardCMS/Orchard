@@ -92,7 +92,7 @@ namespace Orchard.Core.Contents.Controllers {
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
 
             var list = Shape.List();
-            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
+            list.AddRange(pageOfContentItems.Select(ci => _contentManager.BuildDisplay(ci, new DisplayOptions { DisplayType = "SummaryAdmin" })));
 
             dynamic viewModel = Shape.ViewModel()
                 .ContentItems(list)
@@ -196,7 +196,7 @@ namespace Orchard.Core.Contents.Controllers {
                 }
             }
 
-            dynamic model = _contentManager.BuildEditor(contentItem);
+            dynamic model = _contentManager.BuildEditor(contentItem, new EditorOptions());
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
@@ -227,7 +227,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             _contentManager.Create(contentItem, VersionOptions.Draft);
 
-            dynamic model = _contentManager.UpdateEditor(contentItem, this);
+            dynamic model = _contentManager.UpdateEditor(contentItem, new EditorOptions { Updater = this });
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
@@ -255,7 +255,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
 
-            dynamic model = _contentManager.BuildEditor(contentItem);
+            dynamic model = _contentManager.BuildEditor(contentItem, new EditorOptions());
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
@@ -306,7 +306,7 @@ namespace Orchard.Core.Contents.Controllers {
                 previousRoute = contentItem.As<RoutePart>().Path;
             }
 
-            dynamic model = _contentManager.UpdateEditor(contentItem, this);
+            dynamic model = _contentManager.UpdateEditor(contentItem, new EditorOptions { Updater = this });
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.

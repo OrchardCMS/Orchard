@@ -50,7 +50,7 @@ namespace Orchard.Tags.Controllers {
             }
 
             var taggedItems = _tagService.GetTaggedContentItems(tag.Id, pager.GetStartIndex(), pager.PageSize)
-                .Select(item => _contentManager.BuildDisplay(item, "Summary"));
+                .Select(item => _contentManager.BuildDisplay(item, new DisplayOptions { DisplayType = "Summary" }));
 
             var list = _shapeFactory.List();
             list.AddRange(taggedItems);

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
+using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Core.Routable.Services;
 using Orchard.DisplayManagement;
@@ -53,7 +54,7 @@ namespace Orchard.Blogs.Controllers {
         protected ILogger Logger { get; set; }
 
         public ActionResult List() {
-            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
+            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplay(b, new DisplayOptions { DisplayType = "Summary" }));
 
             var list = Shape.List();
             list.AddRange(blogs);
@@ -83,8 +84,8 @@ namespace Orchard.Blogs.Controllers {
 
             _feedManager.Register(blogPart);
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
-                .Select(b => _services.ContentManager.BuildDisplay(b, "Summary"));
-            dynamic blog = _services.ContentManager.BuildDisplay(blogPart);
+                .Select(b => _services.ContentManager.BuildDisplay(b, new DisplayOptions { DisplayType = "Summary" }));
+            dynamic blog = _services.ContentManager.BuildDisplay(blogPart, new DisplayOptions());
 
             var list = Shape.List();
             list.AddRange(blogPosts);

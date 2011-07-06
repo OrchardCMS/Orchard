@@ -69,9 +69,9 @@ namespace Orchard.Warmup.Services {
                 // check if we need to regenerate the pages by reading the last time it has been done
                 // 1- if the warmup file doesn't exists, generate the pages
                 // 2- otherwise, if the scheduled generation option is on, check if the delay is over
-                if (_appDataFolder.FileExists(_warmupPath)) {
+                var warmupContent = _appDataFolder.ReadFile(_warmupPath);
+                if (warmupContent != null) {
                     try {
-                        var warmupContent = _appDataFolder.ReadFile(_warmupPath);
                         var expired = XmlConvert.ToDateTimeOffset(warmupContent).AddMinutes(part.Delay);
                         if (expired > _clock.UtcNow) {
                             return;
@@ -133,7 +133,7 @@ namespace Orchard.Warmup.Services {
                                 if (download != null) {
                                     if (download.StatusCode == HttpStatusCode.OK) {
                                         // success
-                                        _appDataFolder.CreateFile(path, download.Content);
+                                        _appDataFolder.StoreFile(path, download.Content);
 
                                         reportEntries.Add(new ReportEntry {
                                             RelativeUrl = relativeUrl,
@@ -148,7 +148,7 @@ namespace Orchard.Warmup.Services {
                                             url = "http://" + url.Substring("http://www.".Length);
                                             filename = WarmupUtility.EncodeUrl(url.TrimEnd('/'));
                                             path = _appDataFolder.Combine(BaseFolder, filename);
-                                            _appDataFolder.CreateFile(path, download.Content);
+                                            _appDataFolder.StoreFile(path, download.Content);
                                         }
                                     }
                                     else {
@@ -180,7 +180,7 @@ namespace Orchard.Warmup.Services {
                 _reportManager.Create(reportEntries);
 
                 // finally write the time the generation has been executed
-                _appDataFolder.CreateFile(_warmupPath, XmlConvert.ToString(_clock.UtcNow, XmlDateTimeSerializationMode.Utc));
+                _appDataFolder.StoreFile(_warmupPath, XmlConvert.ToString(_clock.UtcNow, XmlDateTimeSerializationMode.Utc));
             }
         }
 
@@ -192,9 +192,7 @@ namespace Orchard.Warmup.Services {
             }
 
             using (@lock) {
-                if (_appDataFolder.FileExists(_warmupPath)) {
-                    _appDataFolder.DeleteFile(_warmupPath);
-                }
+                _appDataFolder.DeleteFile(_warmupPath);
             }
 
             EnsureGenerate();

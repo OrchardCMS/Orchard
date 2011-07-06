@@ -84,7 +84,7 @@
                 </td>
                 <td>
                     @* would ideally have permalinks for individual comments *@
-                    <p><a href="@(displayUrl)#comments">@Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</a></p>
+                    <p>@Display.Link(Href: displayUrl, Value: Display.DateTime(DateTimeUtc: commentEntry.Comment.CommentDateUtc.GetValueOrDefault()), Fragment: "comments")</p>
                     @if (commentEntry.Comment.CommentText != null) {
                         var ellipsized = Html.Ellipsize(commentEntry.Comment.CommentText, 500);
                         var paragraphed = new HtmlString(ellipsized.ToHtmlString().Replace("\r\n", "</p><p>"));
@@ -106,12 +106,12 @@
                         else {
                             @Display.UnsafeActionLink(Value: T("Unapprove"), UrlType: "UnapproveUrl", Action: "Unapprove", RouteValues: new { Id, returnUrl })@T(" | ")
                         }
-                        <a href="@Url.Action("Edit", new { Id })" title="@T("Edit")">@T("Edit")</a>@T(" | ")
+                        @Display.ActionLink(Value: T("Edit"), Action: "Edit", RouteValues: new { Id }, Attributes: new { title = T("Edit") })@T(" | ")
                         @Display.UnsafeActionLink(Value: T("Delete"), UrlType: "RemoveUrl", Action: "Delete", RouteValues: new { Id, returnUrl })
                     </div>
                 </td>
             </tr>
-            commentIndex = commentIndex + 1;
+                        commentIndex = commentIndex + 1;
             }
         </table>
         @Display(Model.Pager)

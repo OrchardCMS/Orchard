@@ -86,14 +86,14 @@ namespace Orchard.Tests.Modules.Warmup {
 
         [Test]
         public void StampFileShouldBeDeletedToForceAnUpdate() {
-            _appDataFolder.CreateFile(_warmupFilename, "");
+            _appDataFolder.StoreFile(_warmupFilename, "");
             _warmupUpdater.Generate();
             Assert.That(_appDataFolder.ListFiles(WarmupFolder).Count(), Is.EqualTo(0));
         }
 
         [Test]
         public void GenerateShouldNotRunIfLocked() {
-            _appDataFolder.CreateFile(_warmupFilename, "");
+            _appDataFolder.StoreFile(_warmupFilename, "");
             var @lock = _lockManager.TryLock(_lockFilename);
             
             using (@lock) {
@@ -326,7 +326,7 @@ namespace Orchard.Tests.Modules.Warmup {
                 .Returns(new DownloadResult { Content = "Bar", StatusCode = HttpStatusCode.OK });
 
             // Create a static file in the warmup folder
-            _appDataFolder.CreateFile(_appDataFolder.Combine(WarmupFolder, "foo.txt"), "Foo");
+            _appDataFolder.StoreFile(_appDataFolder.Combine(WarmupFolder, "foo.txt"), "Foo");
 
             _warmupUpdater.Generate();
             var files = _appDataFolder.ListFiles(WarmupFolder).ToList();
