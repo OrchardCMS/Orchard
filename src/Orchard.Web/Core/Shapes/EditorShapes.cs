@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -260,8 +261,26 @@ namespace Orchard.Core.Shapes
             Output(tag.ToString(TagRenderMode.EndTag));
         }
 
-        private IEnumerable<dynamic> Ordered(IEnumerable<dynamic> items) {
-            return items.OfType<IShape>().OrderBy(item => item.Metadata.Position, new FlatPositionComparer());
+        private static Tuple<string, object> Positionify(dynamic item, int naturalIndex)
+        {
+            if (item is IShape)
+            {
+                return new Tuple<string, object>(((IShape)item).Metadata.Position, item);
+            }
+            if (item is Tuple<string, object>)
+            {
+                return item;
+            }
+            else
+            {
+                // non-shape items are given a position equal to their index in the list, giving the shapes a way of mingling among them
+                return new Tuple<string, object>(naturalIndex.ToString(CultureInfo.InvariantCulture), item);
+            }
+        }
+
+        private static IEnumerable<dynamic> Ordered(IEnumerable<dynamic> items)
+        {
+            return items.Select(Positionify).OrderBy(p => p.Item1, new FlatPositionComparer()).Select(p => p.Item2);
         }
 
         [Shape]

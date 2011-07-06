@@ -2,10 +2,11 @@
 using System.Web.Mvc;
 
 namespace Orchard.Mvc {
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
 // ReSharper disable InconsistentNaming
     public class UIOptionsAttribute : Attribute, IMetadataAware {
 // ReSharper restore InconsistentNaming
+        public string Position { get; set; }
         public string DisplayName { get; set; }
         public string Description { get; set; }
         public string ErrorMessage { get; set; }
@@ -29,6 +30,7 @@ namespace Orchard.Mvc {
             if (Description != null) {
                 metadata.Description = Description;
             }
+            metadata.AdditionalValues["Position"] = Position;
             metadata.AdditionalValues["EnableWrapper"] = EnableWrapper;
             metadata.AdditionalValues["EnabledBy"] = EnabledBy;
             metadata.AdditionalValues["ActionLink"] = ActionLink;

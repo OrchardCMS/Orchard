@@ -50,7 +50,6 @@ namespace Orchard.Core.Shapes {
             return sb.ToString();
         }
 
-
         public static void ForwardTemplateContextToShape(HtmlHelper html, ViewContext context, dynamic shape, string defaultErrorMessage) {
             // Gather what information we can and forward/translate it onto the given Orchard Shape.
             var name = html.FieldNameFor("");
@@ -63,15 +62,15 @@ namespace Orchard.Core.Shapes {
             var metadata = context.ViewData.ModelMetadata;
             var localizer = LocalizationUtilities.Resolve(context, metadata.ModelType.FullName);
 
-            // forward all viewdata into the shape as shape properties
-            CopyProperties(html, context.ViewData, shape);
             // forward all metadata additional values into the shape as shape properties
             CopyProperties(html, metadata.AdditionalValues, shape);
+            // forward all additional viewdata into the shape as shape properties, these take priority if collision
+            CopyProperties(html, context.ViewData, shape);
 
             // add wrapper information that comes from natural metadata or needs to be localized
             var displayNameStr = metadata.DisplayName ?? IdentifierToFriendlyCasingAndSpacing((string)shape.Name);
             if (!string.IsNullOrEmpty(displayNameStr)) {
-                shape.Title = localizer(displayNameStr);
+                shape.Title = shape.Title == null ? localizer(displayNameStr) : shape.Title;
             }
 
             var descriptionStr = metadata.Description;
@@ -124,7 +123,7 @@ namespace Orchard.Core.Shapes {
         private static void CopyProperties(HtmlHelper html, IEnumerable<KeyValuePair<string, object>> items, dynamic shape) {
             foreach (var pair in items) {
                 if ("DisplayName".Equals(pair.Key, StringComparison.OrdinalIgnoreCase)) {
-                    shape.Title = pair.Value;
+                    shape.Title = shape.Title == null ? pair.Value : shape.Title;
                 }
                 else if ("EnabledBy".Equals(pair.Key, StringComparison.OrdinalIgnoreCase)) {
                     var value = Convert.ToString(pair.Value);
