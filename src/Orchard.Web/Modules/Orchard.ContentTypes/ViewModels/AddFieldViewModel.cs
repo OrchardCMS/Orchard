@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Definition;
 
 namespace Orchard.ContentTypes.ViewModels {
     public class AddFieldViewModel {

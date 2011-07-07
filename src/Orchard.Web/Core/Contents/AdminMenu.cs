@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Definition;
 using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.UI.Navigation;

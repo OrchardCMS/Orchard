@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Orchard.ContentManagement.Metadata.Models {
+namespace Orchard.ContentManagement.Definition.Models {
     public class ContentPartDefinition {
         public ContentPartDefinition(string name, IEnumerable<ContentPartFieldDefinition> fields, SettingsDictionary settings) {
             Name = name;

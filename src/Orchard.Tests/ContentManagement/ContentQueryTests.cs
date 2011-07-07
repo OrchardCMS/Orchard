@@ -3,7 +3,7 @@ using Autofac;
 using Moq;
 using NHibernate;
 using NUnit.Framework;
-using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Definition;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using Orchard.ContentManagement.Metadata.Builders;
+using Orchard.ContentManagement.Definition.Builders;
 
 namespace Orchard.Tests.ContentManagement.Metadata.Builders {
     [TestFixture]

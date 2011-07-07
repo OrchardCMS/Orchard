@@ -1,5 +1,5 @@
 ﻿using Orchard.ContentManagement.FieldStorage;
-using Orchard.ContentManagement.Metadata.Models;
+using Orchard.ContentManagement.Definition.Models;
 
 namespace Orchard.ContentManagement {
     public class ContentField {

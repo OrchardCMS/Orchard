@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Definition;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers.Coordinators {

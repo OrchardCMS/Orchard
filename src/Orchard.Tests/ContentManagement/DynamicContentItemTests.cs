@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Metadata.Models;
+using Orchard.ContentManagement.Definition.Models;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]

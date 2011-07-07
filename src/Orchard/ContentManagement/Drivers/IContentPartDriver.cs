@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Definition;
 
 namespace Orchard.ContentManagement.Drivers {
     public interface IContentPartDriver : IDependency {

@@ -9,7 +9,7 @@ using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.Metadata.Builders;
+using Orchard.ContentManagement.Definition.Builders;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Controllers;

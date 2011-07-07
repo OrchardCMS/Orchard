@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Metadata;
-using Orchard.ContentManagement.Metadata.Models;
+using Orchard.ContentManagement.Definition;
+using Orchard.ContentManagement.Definition.Models;
 using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Settings;

@@ -1,4 +1,4 @@
-﻿namespace Orchard.ContentManagement.Metadata.Models {
+﻿namespace Orchard.ContentManagement.Definition.Models {
     public class ContentFieldDefinition {
         public ContentFieldDefinition(string name) {
             Name = name;

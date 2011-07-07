@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Xml.Linq;
 using NUnit.Framework;
-using Orchard.ContentManagement.Metadata.Builders;
-using Orchard.ContentManagement.Metadata.Services;
+using Orchard.ContentManagement.Definition.Builders;
+using Orchard.ContentManagement.Definition.Services;
 
 namespace Orchard.Tests.ContentManagement.Metadata.Services {
     [TestFixture]

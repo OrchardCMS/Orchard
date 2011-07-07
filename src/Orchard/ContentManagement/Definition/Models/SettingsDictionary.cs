@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-namespace Orchard.ContentManagement.Metadata.Models {
+namespace Orchard.ContentManagement.Definition.Models {
     public class SettingsDictionary : Dictionary<string, string> {
         public SettingsDictionary() { }
         public SettingsDictionary(IDictionary<string, string> dictionary) : base(dictionary) { }

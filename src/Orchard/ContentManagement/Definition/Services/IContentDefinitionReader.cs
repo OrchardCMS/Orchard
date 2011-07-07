@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
-using Orchard.ContentManagement.Metadata.Builders;
+using Orchard.ContentManagement.Definition.Builders;
 
-namespace Orchard.ContentManagement.Metadata.Services {
+namespace Orchard.ContentManagement.Definition.Services {
     /// <summary>
     /// The content definition reader is used to import both content type and content part definitions from a XML format.
     /// </summary>
