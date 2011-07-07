@@ -14,6 +14,7 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ResourceBindingStrategy;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
+using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Settings;
 using Orchard.UI;
@@ -43,7 +44,10 @@ namespace Orchard.Core.Shapes {
             _resourceManager = resourceManager;
             _httpContextAccessor = httpContextAccessor;
             _virtualPathProvider = virtualPathProvider;
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public void Discover(ShapeTableBuilder builder) {
             // the root page shape named 'Layout' is wrapped with 'Document'
@@ -438,6 +442,156 @@ namespace Orchard.Core.Shapes {
             tag.MergeAttribute("href", href);
             tag.InnerHtml = Html.Encode(Value is string ? (string)Value : Display(Value));
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
+        }
+
+        [Shape]
+        public IHtmlString Pager_Links(dynamic Shape, dynamic Display,
+            int Page,
+            int PageSize,
+            double TotalItemCount,
+            int Quantity,
+            string FirstText,
+            string PreviousText,
+            string NextText,
+            string LastText,
+            string GapText
+            // parameter omitted to workaround an issue where a NullRef is thrown
+            // when an anonymous object is bound to an object shape parameter
+            /*object RouteValues*/) {
+
+            var currentPage = Page;
+            if (currentPage < 1)
+                currentPage = 1;
+
+            var pageSize = PageSize;
+            if (pageSize < 1)
+                pageSize = _workContext.Value.CurrentSite.PageSize;
+
+            var numberOfPagesToShow = Quantity;
+            if (numberOfPagesToShow < 0)
+                numberOfPagesToShow = 7;
+    
+            var totalPageCount = Math.Ceiling(TotalItemCount / pageSize);
+
+            var firstText = !string.IsNullOrWhiteSpace(FirstText) ? FirstText : T("<<").Text;
+            var previousText = !string.IsNullOrWhiteSpace(PreviousText) ? PreviousText : T("<").Text;
+            var nextText = !string.IsNullOrWhiteSpace(NextText) ? NextText : T(">").Text;
+            var lastText = !string.IsNullOrWhiteSpace(LastText) ? LastText : T(">>").Text;
+            var gapText = !string.IsNullOrWhiteSpace(GapText) ? GapText : T("...").Text;
+
+            // workaround: get it from the shape instead of parameter
+            var RouteValues = (object)Shape.RouteValues;
+            var RouteData = RouteValues is RouteValueDictionary ? (RouteValueDictionary) RouteValues : new RouteValueDictionary(RouteValues);
+            var queryString = _workContext.Value.HttpContext.Request.QueryString;
+            if (queryString != null) {
+                foreach (var key in from string key in queryString.Keys where key != null && !RouteData.ContainsKey(key) let value = queryString[key] select key) {
+                    RouteData[key] = queryString[key];
+                }
+            }
+    
+            if (Shape.RouteData != null) {
+                var shapeRouteData = Shape.RouteData is RouteValueDictionary ? (RouteValueDictionary) RouteValues : new RouteValueDictionary(RouteValues);
+                foreach (var rd in shapeRouteData) {
+                    shapeRouteData[rd.Key] = rd.Value;
+                }
+            }
+
+            if (RouteData.ContainsKey("id"))
+                RouteData.Remove("id");
+
+
+            var firstPage = Math.Max(1, Page - (numberOfPagesToShow / 2));
+            var lastPage = Math.Min(totalPageCount, Page + (numberOfPagesToShow / 2));
+    
+
+            Shape.Classes.Add("pager");
+            Shape.Metadata.Type = "List";
+
+            // first and previous pages
+            if (Page > 1) {
+                if (RouteData.ContainsKey("page")) {
+                    RouteData.Remove("page"); // to keep from having "page=1" in the query string
+                }
+                // first
+                Shape.Add(Display.Pager_First(Value: firstText, RouteValues: RouteData));
+                // previous
+                if (currentPage > 2) { // also to keep from having "page=1" in the query string
+                    RouteData["page"] = currentPage - 1;
+                }
+                Shape.Add(Display.Pager_Previous(Value: previousText, RouteValues: RouteData));
+            }
+
+            // gap at the beginning of the pager
+            if (firstPage > 1) {
+                Shape.Add(Display.Pager_Gap(Value: gapText));
+            }
+
+            // page numbers
+            if (numberOfPagesToShow > 0) {
+                for (var p = firstPage; p <= lastPage; p++) {
+                    if (p == currentPage) {
+                        Shape.Add(Display.Pager_CurrentPage(Value: p, RouteValues: RouteData));
+                    }
+                    else {
+                        if (p == 1)
+                            RouteData.Remove("page");
+                        else
+                            RouteData["page"] = p;
+                        Shape.Add(Display.Pager_Link(Value: p, RouteValues: RouteData));
+                    }
+                }
+            }
+
+            // gap at the end of the pager
+            if (lastPage < totalPageCount) {
+                Shape.Add(Display.Pager_Gap(Value: gapText));
+            }
+    
+            // next and last pages
+            if (Page < totalPageCount) {
+                // next
+                RouteData["page"] = Page + 1;
+                Shape.Add(Display.Pager_Next(Value: nextText, RouteValues: RouteData));
+                // last
+                RouteData["page"] = totalPageCount;
+                Shape.Add(Display.Pager_Last(Value: lastText, RouteValues: RouteData));
+            }
+
+            return Display(Shape);
+        }
+
+        [Shape]
+        public IHtmlString Pager_First(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Type = "Pager_Link";
+            return Display(Shape);
+        }
+        [Shape]
+        public IHtmlString Pager_Previous(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Type = "Pager_Link";
+            return Display(Shape);
+        }
+        [Shape]
+        public IHtmlString Pager_CurrentPage(HtmlHelper Html, dynamic Display, object Value) {
+            return MvcHtmlString.Create(Html.Encode(Value is string ? (string)Value : Display(Value)));
+        }
+        [Shape]
+        public IHtmlString Pager_Next(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Type = "Pager_Link";
+            return Display(Shape);
+        }
+        [Shape]
+        public IHtmlString Pager_Last(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Type = "Pager_Link";
+            return Display(Shape);
+        }
+        [Shape]
+        public IHtmlString Pager_Link(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Type = "ActionLink";
+            return Display(Shape);
+        }
+        [Shape]
+        public IHtmlString Pager_Gap(HtmlHelper Html, dynamic Display, object Value) {
+            return MvcHtmlString.Create(Html.Encode(Value is string ? (string)Value : Display(Value)));
         }
 
         [Shape]

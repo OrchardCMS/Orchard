@@ -1,8 +1,4 @@
 ﻿@{
-    var window = 7; // number of simultaneously displayed pages 
-    var nextText = HasText(Model.NextText) ? Model.NextText : T(">").Text;
-    var previousText = HasText(Model.PreviousText) ? Model.PreviousText : T("<").Text;
-
     var routeData = new RouteValueDictionary(ViewContext.RouteData.Values);
     var queryString = ViewContext.HttpContext.Request.QueryString;
     if (queryString != null) {
@@ -19,12 +15,10 @@
     }
 
     var totalPageCount = (int)Math.Ceiling((double)Model.TotalItemCount / Model.PageSize);
-    var firstPage = Math.Max(1, (int)Model.Page - (window / 2));
-    var lastPage = Math.Min(totalPageCount, (int)Model.Page + (window / 2));
 
-    Model.Classes.Add("pager");
     Model.Classes.Add("group");
-    var pageTag = Tag(Model, "ul");
+    Model.Metadata.Type = "Pager_Links";
+    IHtmlString pagerLinks = Display(Model);
 
     Model.Classes.Add("selector");
     var pageSizeTag = Tag(Model, "ul");
@@ -35,7 +29,7 @@
         }
     }
 
-    var pageSizes = new List<int?>() { 10, 50, 100 };
+    var pageSizes = new List<int?> { 10, 50, 100 };
     var defaultPageSize = WorkContext.CurrentSite.PageSize;
     if (!pageSizes.Contains(defaultPageSize)) {
         pageSizes.Add(defaultPageSize);
@@ -74,74 +68,7 @@
 
         <span class="page-results">@T("Showing items {0} - {1} of {2}", (Model.Page - 1) * (int)Model.PageSize + 1, Model.PageSize == 0 ? Model.TotalItemCount : Math.Min(Model.TotalItemCount, (Model.Page) * (int)Model.PageSize), Model.TotalItemCount)</span>
 
-        @if (totalPageCount > 1) {
-            routeData["pageSize"] = Model.PageSize;
-            @pageTag.StartElement
-
-            // first
-            if (firstPage > 1) {
-                if (routeData.ContainsKey("page")) {
-                    routeData.Remove("page");
-                }
-
-                <li class="page-first">
-                @Display.ActionLink(Value: T("<<"), Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)
-                </li>
-            }
-
-            // previous page
-            if (Model.Page > 1) {
-                if (Model.Page == 2 && routeData.ContainsKey("page")) {
-                    routeData.Remove("page");
-                }
-                else {
-                    routeData["page"] = Model.Page - 1;
-                }
-
-                <li class="page-previous">
-                @Display.ActionLink(Value: previousText, Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)
-                </li>
-            }
-
-            // page numbers
-            for (var p = firstPage; p <= lastPage; p++) {
-                <li class="page-@p">
-                @if (p == Model.Page) {
-                    <span>@p</span>
-                }
-                else {
-                    if (p == 1) {
-                        routeData.Remove("page");
-                    }
-                    else {
-                        routeData["page"] = p;
-                    }
-                    @Display.ActionLink(Value: p, Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)
-                }
-                </li>
-            }
-
-            // next page
-            if (Model.Page < totalPageCount) {
-                routeData["page"] = Model.Page + 1;
-
-                <li class="page-next">
-                @Display.ActionLink(Value: nextText, Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)
-                </li>
-            }
-
-            // last page
-            if (lastPage < totalPageCount) {
-                routeData["page"] = totalPageCount;
-
-                <li class="page-last">
-                @Display.ActionLink(Value: T(">>"), Action: (string)routeData["action"], Controller: (string)routeData["controller"], RouteValues: routeData)
-                </li>
-            }
-
-            @pageTag.EndElement
-        }
-
+        @pagerLinks
     </div>
 }
 @using (Script.Foot()) {
