@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
-using Castle.Services.Logging.Log4netIntegration;
 using Module = Autofac.Module;
 
 namespace Orchard.Logging {
