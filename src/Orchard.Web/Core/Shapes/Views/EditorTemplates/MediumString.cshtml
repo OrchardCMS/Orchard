@@ -1,0 +1,7 @@
+@using Orchard.Core.Shapes
+@{
+    var tb = New.Textbox();
+    ShapeTemplateHelper.ForwardTemplateContextToShape(Html, ViewContext, tb, T("The value '{0}' is invalid.").Text);
+    tb.Classes.Add("textMedium");
+}
+@Display(tb)

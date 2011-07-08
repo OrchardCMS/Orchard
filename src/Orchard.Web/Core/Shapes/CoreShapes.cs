@@ -489,20 +489,20 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public void Partial(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
-            RenderInternal(Html, Output, TemplateName, Model, Prefix);
+            RenderInternal(Html, Output, TemplateName, false, Model, Prefix);
         }
 
         [Shape]
         public void DisplayTemplate(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
-            RenderInternal(Html, Output, "DisplayTemplates/" + TemplateName, Model, Prefix);
+            RenderInternal(Html, Output, "DisplayTemplates/" + TemplateName, false, Model, Prefix);
         }
 
         [Shape]
         public void EditorTemplate(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
-            RenderInternal(Html, Output, "EditorTemplates/" + TemplateName, Model, Prefix);
+            RenderInternal(Html, Output, TemplateName == null ? null : ("EditorTemplates/" + TemplateName), true, Model, Prefix);
         }
 
-        static void RenderInternal(HtmlHelper Html, TextWriter Output, string TemplateName, object Model, string Prefix) {
+        static void RenderInternal(HtmlHelper Html, TextWriter Output, string TemplateName, bool isEditor, object Model, string Prefix) {
             var adjustedViewData = new ViewDataDictionary(Html.ViewDataContainer.ViewData) {
                 Model = DetermineModel(Html, Model),
                 TemplateInfo = new TemplateInfo {
@@ -511,7 +511,12 @@ namespace Orchard.Core.Shapes {
             };
             var adjustedViewContext = new ViewContext(Html.ViewContext, Html.ViewContext.View, adjustedViewData, Html.ViewContext.TempData, Output);
             var adjustedHtml = new HtmlHelper(adjustedViewContext, new ViewDataContainer(adjustedViewData));
-            adjustedHtml.RenderPartial(TemplateName);
+            if (isEditor) {
+                Output.Write(adjustedHtml.EditorForModel(TemplateName));
+            }
+            else {
+                adjustedHtml.RenderPartial(TemplateName);
+            }
         }
 
         static object DetermineModel(HtmlHelper Html, object Model) {
