@@ -449,12 +449,12 @@ namespace Orchard.Core.Shapes {
             int Page,
             int PageSize,
             double TotalItemCount,
-            int Quantity,
-            string FirstText,
-            string PreviousText,
-            string NextText,
-            string LastText,
-            string GapText
+            int? Quantity,
+            LocalizedString FirstText,
+            LocalizedString PreviousText,
+            LocalizedString NextText,
+            LocalizedString LastText,
+            LocalizedString GapText
             // parameter omitted to workaround an issue where a NullRef is thrown
             // when an anonymous object is bound to an object shape parameter
             /*object RouteValues*/) {
@@ -467,17 +467,17 @@ namespace Orchard.Core.Shapes {
             if (pageSize < 1)
                 pageSize = _workContext.Value.CurrentSite.PageSize;
 
-            var numberOfPagesToShow = Quantity;
-            if (numberOfPagesToShow < 0)
+            var numberOfPagesToShow = Quantity ?? 0;
+            if (Quantity == null || Quantity < 0)
                 numberOfPagesToShow = 7;
     
             var totalPageCount = Math.Ceiling(TotalItemCount / pageSize);
 
-            var firstText = !string.IsNullOrWhiteSpace(FirstText) ? FirstText : T("<<").Text;
-            var previousText = !string.IsNullOrWhiteSpace(PreviousText) ? PreviousText : T("<").Text;
-            var nextText = !string.IsNullOrWhiteSpace(NextText) ? NextText : T(">").Text;
-            var lastText = !string.IsNullOrWhiteSpace(LastText) ? LastText : T(">>").Text;
-            var gapText = !string.IsNullOrWhiteSpace(GapText) ? GapText : T("...").Text;
+            var firstText = FirstText ?? T("<<");
+            var previousText = PreviousText ?? T("<");
+            var nextText = NextText ?? T(">");
+            var lastText = LastText ?? T(">>");
+            var gapText = GapText ?? T("...");
 
             // workaround: get it from the shape instead of parameter
             var RouteValues = (object)Shape.RouteValues;
@@ -499,6 +499,13 @@ namespace Orchard.Core.Shapes {
             if (RouteData.ContainsKey("id"))
                 RouteData.Remove("id");
 
+            // HACK: MVC 3 is adding a specific value in System.Web.Mvc.Html.ChildActionExtensions.ActionHelper
+            // when a content item is set as home page, it is rendered by using Html.RenderAction, and the routeData is altered
+            // This code removes this extra route value
+            var removedKeys = RouteData.Keys.Where(key => RouteData[key] is DictionaryValueProvider<object>).ToList();
+            foreach (var key in removedKeys) {
+                RouteData.Remove(key);
+            }
 
             var firstPage = Math.Max(1, Page - (numberOfPagesToShow / 2));
             var lastPage = Math.Min(totalPageCount, Page + (numberOfPagesToShow / 2));
@@ -509,21 +516,21 @@ namespace Orchard.Core.Shapes {
 
             // first and previous pages
             if (Page > 1) {
+                // first
                 if (RouteData.ContainsKey("page")) {
                     RouteData.Remove("page"); // to keep from having "page=1" in the query string
                 }
-                // first
-                Shape.Add(Display.Pager_First(Value: firstText, RouteValues: RouteData));
+                Shape.Add(Display.Pager_First(Value: firstText.Text, RouteValues: RouteData));
                 // previous
                 if (currentPage > 2) { // also to keep from having "page=1" in the query string
                     RouteData["page"] = currentPage - 1;
                 }
-                Shape.Add(Display.Pager_Previous(Value: previousText, RouteValues: RouteData));
+                Shape.Add(Display.Pager_Previous(Value: previousText.Text, RouteValues: RouteData));
             }
 
             // gap at the beginning of the pager
-            if (firstPage > 1) {
-                Shape.Add(Display.Pager_Gap(Value: gapText));
+            if (firstPage > 1 && numberOfPagesToShow > 0) {
+                Shape.Add(Display.Pager_Gap(Value: gapText.Text));
             }
 
             // page numbers
@@ -543,20 +550,26 @@ namespace Orchard.Core.Shapes {
             }
 
             // gap at the end of the pager
-            if (lastPage < totalPageCount) {
-                Shape.Add(Display.Pager_Gap(Value: gapText));
+            if (lastPage < totalPageCount && numberOfPagesToShow > 0) {
+                Shape.Add(Display.Pager_Gap(Value: gapText.Text));
             }
     
             // next and last pages
             if (Page < totalPageCount) {
                 // next
                 RouteData["page"] = Page + 1;
-                Shape.Add(Display.Pager_Next(Value: nextText, RouteValues: RouteData));
+                Shape.Add(Display.Pager_Next(Value: nextText.Text, RouteValues: RouteData));
                 // last
                 RouteData["page"] = totalPageCount;
-                Shape.Add(Display.Pager_Last(Value: lastText, RouteValues: RouteData));
+                Shape.Add(Display.Pager_Last(Value: lastText.Text, RouteValues: RouteData));
             }
 
+            return Display(Shape);
+        }
+
+        [Shape]
+        public IHtmlString Pager(dynamic Shape, dynamic Display) {
+            Shape.Metadata.Type = "Pager_Links";
             return Display(Shape);
         }
 
@@ -610,7 +623,8 @@ namespace Orchard.Core.Shapes {
             if (Items == null)
                 return;
 
-            var count = Items.Count();
+            var itemDisplayOutputs = Items.Select(item => Display(item)).Where(output => !string.IsNullOrWhiteSpace(output.ToHtmlString())).ToList();
+            var count = itemDisplayOutputs.Count();
             if (count < 1)
                 return;
 
@@ -621,14 +635,14 @@ namespace Orchard.Core.Shapes {
             Output.Write(listTag.ToString(TagRenderMode.StartTag));
 
             var index = 0;
-            foreach (var item in Items) {
+            foreach (var itemDisplayOutput in itemDisplayOutputs) {
                 var itemTag = GetTagBuilder(itemTagName, null, ItemClasses, (index % 2 == 0) ? null : AlternatingItemClasses, ItemAttributes);
                 if (index == 0)
                     itemTag.AddCssClass("first");
                 if (index == count - 1)
                     itemTag.AddCssClass("last");
                 Output.Write(itemTag.ToString(TagRenderMode.StartTag));
-                Output.Write(Display(item));
+                Output.Write(itemDisplayOutput);
                 Output.Write(itemTag.ToString(TagRenderMode.EndTag));
                 ++index;
             }

@@ -378,7 +378,6 @@
     <Content Include="Routable\Views\Parts.RoutableTitle.cshtml" />
     <Content Include="Routable\Views\Routable.HomePage.cshtml" />
     <Content Include="Contents\Views\Content.Summary.cshtml" />
-    <Content Include="Shapes\Views\Pager.cshtml" />
     <Content Include="Contents\Views\Content.SaveButton.cshtml" />
     <Content Include="Contents\Views\Content.PublishButton.cshtml" />
     <Content Include="Shapes\Scripts\Web.config">
