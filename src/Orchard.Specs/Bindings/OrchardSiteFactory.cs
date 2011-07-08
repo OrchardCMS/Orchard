@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using Orchard.ContentManagement.Metadata;
-using Orchard.ContentManagement.Metadata.Models;
+using Orchard.ContentManagement.Definition;
+using Orchard.ContentManagement.Definition.Models;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;

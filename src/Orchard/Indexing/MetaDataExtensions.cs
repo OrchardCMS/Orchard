@@ -1,4 +1,4 @@
-﻿using Orchard.ContentManagement.Metadata.Builders;
+﻿using Orchard.ContentManagement.Definition.Builders;
 
 namespace Orchard.Indexing {
     public static class MetadataExtensions {

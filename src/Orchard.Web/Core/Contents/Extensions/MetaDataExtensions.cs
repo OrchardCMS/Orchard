@@ -1,4 +1,4 @@
-﻿using Orchard.ContentManagement.Metadata.Builders;
+﻿using Orchard.ContentManagement.Definition.Builders;
 
 namespace Orchard.Core.Contents.Extensions {
     public static class MetadataExtensions {

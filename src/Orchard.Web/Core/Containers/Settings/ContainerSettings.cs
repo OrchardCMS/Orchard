@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Metadata;
-using Orchard.ContentManagement.Metadata.Builders;
-using Orchard.ContentManagement.Metadata.Models;
+using Orchard.ContentManagement.Definition;
+using Orchard.ContentManagement.Definition.Builders;
+using Orchard.ContentManagement.Definition.Models;
 using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Core.Containers.Settings {

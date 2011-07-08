@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Orchard.ContentManagement.Metadata.Models;
+using Orchard.ContentManagement.Definition.Models;
 using Orchard.ContentManagement.ViewModels;
 using Orchard.Utility.Extensions;
 using Orchard.ContentTypes.Extensions;

@@ -11,7 +11,7 @@ using Orchard.Caching;
 using Orchard.ContentManagement.Parts;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Drivers.Coordinators;
-using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Definition;
 using Orchard.Core.Common.Drivers;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;

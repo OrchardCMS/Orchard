@@ -1,4 +1,4 @@
-﻿using Orchard.ContentManagement.Metadata.Models;
+﻿using Orchard.ContentManagement.Definition.Models;
 
 namespace Orchard.ContentTypes.ViewModels {
 

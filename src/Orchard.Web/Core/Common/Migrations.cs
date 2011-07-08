@@ -1,5 +1,5 @@
 ﻿using System;
-using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Definition;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 

@@ -9,7 +9,7 @@ using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Definition;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;

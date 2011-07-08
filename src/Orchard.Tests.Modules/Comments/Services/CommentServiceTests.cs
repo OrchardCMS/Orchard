@@ -9,7 +9,7 @@ using Orchard.Comments.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Definition;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;

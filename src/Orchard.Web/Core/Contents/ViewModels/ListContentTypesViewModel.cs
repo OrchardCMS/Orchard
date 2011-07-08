@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Orchard.ContentManagement.Metadata.Models;
+using Orchard.ContentManagement.Definition.Models;
 
 namespace Orchard.Core.Contents.ViewModels {
     public class ListContentTypesViewModel  {

@@ -1,4 +1,4 @@
-﻿using Orchard.ContentManagement.Metadata;
+﻿using Orchard.ContentManagement.Definition;
 using Orchard.Data.Migration;
 
 namespace Orchard.Blogs {

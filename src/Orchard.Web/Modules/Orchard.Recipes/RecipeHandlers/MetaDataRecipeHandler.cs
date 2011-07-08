@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
-using Orchard.ContentManagement.Metadata;
-using Orchard.ContentManagement.Metadata.Services;
+using Orchard.ContentManagement.Definition;
+using Orchard.ContentManagement.Definition.Services;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Recipes.Models;

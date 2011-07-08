@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.ContentManagement.Metadata.Models;
+using Orchard.ContentManagement.Definition.Models;
 
-namespace Orchard.ContentManagement.Metadata.Builders {
+namespace Orchard.ContentManagement.Definition.Builders {
     public class ContentTypeDefinitionBuilder {
         private string _name;
         private string _displayName;

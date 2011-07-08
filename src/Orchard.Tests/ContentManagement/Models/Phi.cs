@@ -1,5 +1,5 @@
 ﻿using Orchard.ContentManagement;
-using Orchard.ContentManagement.Metadata.Models;
+using Orchard.ContentManagement.Definition.Models;
 
 namespace Orchard.Tests.ContentManagement.Models {
     public class Phi : ContentField {

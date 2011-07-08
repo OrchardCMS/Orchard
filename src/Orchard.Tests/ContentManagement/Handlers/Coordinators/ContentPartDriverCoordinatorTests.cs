@@ -7,7 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Drivers.Coordinators;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.Metadata;
+using Orchard.ContentManagement.Definition;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Implementation;
 

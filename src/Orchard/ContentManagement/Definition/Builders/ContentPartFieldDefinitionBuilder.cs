@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using Orchard.ContentManagement.Metadata.Models;
+using Orchard.ContentManagement.Definition.Models;
 
-namespace Orchard.ContentManagement.Metadata.Builders {
+namespace Orchard.ContentManagement.Definition.Builders {
     public abstract class ContentPartFieldDefinitionBuilder {
         protected readonly SettingsDictionary _settings;
 
