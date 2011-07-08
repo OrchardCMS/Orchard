@@ -14,3 +14,8 @@ Features:
         Name: Url Alternates
         Category: Designer
         Description: Adds shape alternates for specific urls
+    WidgetAlternates:
+        Name: Widget Alternates
+        Category: Designer
+        Description: Adds shape alternates for content types stereotyped as widgets, allowing to customize shapes by widget and zone
+        Dependencies: Orchard.Widgets
