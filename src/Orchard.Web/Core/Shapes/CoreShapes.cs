@@ -511,7 +511,9 @@ namespace Orchard.Core.Shapes {
             };
             var adjustedViewContext = new ViewContext(Html.ViewContext, Html.ViewContext.View, adjustedViewData, Html.ViewContext.TempData, Output);
             var adjustedHtml = new HtmlHelper(adjustedViewContext, new ViewDataContainer(adjustedViewData));
-            if (isEditor) {
+            // hack: had to make this an explicit opt-in because currently a lot of 'editors' are actually using an MVC 'display' template.
+            // will be reworked with admin composition
+            if (isEditor && TemplateName == "EditorTemplates/Object") {
                 Output.Write(adjustedHtml.EditorForModel(TemplateName));
             }
             else {

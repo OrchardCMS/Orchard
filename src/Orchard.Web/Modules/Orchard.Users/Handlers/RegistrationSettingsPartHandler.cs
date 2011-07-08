@@ -10,7 +10,7 @@ namespace Orchard.Users.Handlers {
             T = NullLocalizer.Instance;
             Filters.Add(new ActivatingFilter<RegistrationSettingsPart>("Site"));
             Filters.Add(StorageFilter.For(repository));
-            Filters.Add(new TemplateFilterForRecord<RegistrationSettingsPartRecord>("RegistrationSettings", null, "users"));
+            Filters.Add(new TemplateFilterForRecord<RegistrationSettingsPartRecord>("RegistrationSettings", "Object", "users"));
         }
 
         public Localizer T { get; set; }
