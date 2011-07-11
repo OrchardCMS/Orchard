@@ -450,11 +450,11 @@ namespace Orchard.Core.Shapes {
             int PageSize,
             double TotalItemCount,
             int? Quantity,
-            LocalizedString FirstText,
-            LocalizedString PreviousText,
-            LocalizedString NextText,
-            LocalizedString LastText,
-            LocalizedString GapText
+            object FirstText,
+            object PreviousText,
+            object NextText,
+            object LastText,
+            object GapText
             // parameter omitted to workaround an issue where a NullRef is thrown
             // when an anonymous object is bound to an object shape parameter
             /*object RouteValues*/) {
@@ -520,48 +520,48 @@ namespace Orchard.Core.Shapes {
                 if (RouteData.ContainsKey("page")) {
                     RouteData.Remove("page"); // to keep from having "page=1" in the query string
                 }
-                Shape.Add(Display.Pager_First(Value: firstText.Text, RouteValues: RouteData));
+                Shape.Add(Display.Pager_First(Value: firstText, RouteValues: RouteData, Pager: Shape));
                 // previous
                 if (currentPage > 2) { // also to keep from having "page=1" in the query string
                     RouteData["page"] = currentPage - 1;
                 }
-                Shape.Add(Display.Pager_Previous(Value: previousText.Text, RouteValues: RouteData));
+                Shape.Add(Display.Pager_Previous(Value: previousText, RouteValues: RouteData, Pager: Shape));
             }
 
             // gap at the beginning of the pager
             if (firstPage > 1 && numberOfPagesToShow > 0) {
-                Shape.Add(Display.Pager_Gap(Value: gapText.Text));
+                Shape.Add(Display.Pager_Gap(Value: gapText, Pager: Shape));
             }
 
             // page numbers
             if (numberOfPagesToShow > 0) {
                 for (var p = firstPage; p <= lastPage; p++) {
                     if (p == currentPage) {
-                        Shape.Add(Display.Pager_CurrentPage(Value: p, RouteValues: RouteData));
+                        Shape.Add(Display.Pager_CurrentPage(Value: p, RouteValues: RouteData, Pager: Shape));
                     }
                     else {
                         if (p == 1)
                             RouteData.Remove("page");
                         else
                             RouteData["page"] = p;
-                        Shape.Add(Display.Pager_Link(Value: p, RouteValues: RouteData));
+                        Shape.Add(Display.Pager_Link(Value: p, RouteValues: RouteData, Pager: Shape));
                     }
                 }
             }
 
             // gap at the end of the pager
             if (lastPage < totalPageCount && numberOfPagesToShow > 0) {
-                Shape.Add(Display.Pager_Gap(Value: gapText.Text));
+                Shape.Add(Display.Pager_Gap(Value: gapText, Pager: Shape));
             }
     
             // next and last pages
             if (Page < totalPageCount) {
                 // next
                 RouteData["page"] = Page + 1;
-                Shape.Add(Display.Pager_Next(Value: nextText.Text, RouteValues: RouteData));
+                Shape.Add(Display.Pager_Next(Value: nextText, RouteValues: RouteData, Pager: Shape));
                 // last
                 RouteData["page"] = totalPageCount;
-                Shape.Add(Display.Pager_Last(Value: lastText.Text, RouteValues: RouteData));
+                Shape.Add(Display.Pager_Last(Value: lastText, RouteValues: RouteData, Pager: Shape));
             }
 
             return Display(Shape);
