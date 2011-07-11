@@ -1,0 +1,19 @@
+@using Orchard.Core.Shapes
+@functions {
+string Position(ModelMetadata metadata) {
+    return metadata.AdditionalValues.ContainsKey("Position") ? (string)metadata.AdditionalValues["Position"] : "";
+}
+}
+@{
+    var fieldset = New.Fieldset();
+    ShapeTemplateHelper.ForwardTemplateContextToShape(Html, ViewContext, fieldset, null);
+    var metadata = ViewContext.ViewData.ModelMetadata;
+    var enableWrapper = false;
+    if (metadata.AdditionalValues.ContainsKey("EnableWrapper")) {
+        enableWrapper = (bool) metadata.AdditionalValues["EnableWrapper"];
+    }
+    foreach (var item in metadata.Properties.Where(p => p.ShowForEdit && !p.IsReadOnly).Select(p => new Tuple<string, object>(Position(p), Html.Editor(p.PropertyName, new { EnableWrapper = enableWrapper })))) {
+        fieldset.Items.Add(item);
+    }
+}
+@Display(fieldset)
