@@ -299,21 +299,21 @@ nav ul
 .zone-header { padding: 30px 0 30px 12px; position: relative; }
 .zone-navigation { padding: 0; }
 .zone-featured {}
-.zone-beforemain {}
-.zone-asidefirst {}
+.zone-before-main {}
+.zone-aside-first {}
 .zone-messages {}
-.zone-beforecontent {}
+.zone-before-content {}
 .zone-content {}
-.zone-aftercontent {}
-.zone-asidesecond {}
-.zone-aftermain {}
-.zone-zone-tripelfirst {}
-.zone-zone-tripelsecond {}
-.zone-zone-tripelthird {}
-.zone-footerquadfirst {}
-.zone-footerquadsecond {}
-.zone-footerquadthird {}
-.zone-footerquadfourth {}
+.zone-after-content {}
+.zone-aside-second {}
+.zone-after-main {}
+.zone-tripel-first {}
+.zone-tripel-second {}
+.zone-tripel-third {}
+.zone-footer-quad-first {}
+.zone-footer-quad-second {}
+.zone-footer-quad-third {}
+.zone-footer-quad-fourth {}
 .zone-footer { color: #999999; }
 
 
