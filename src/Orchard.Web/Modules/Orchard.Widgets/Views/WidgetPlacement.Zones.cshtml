@@ -19,7 +19,7 @@
             <ul class="widgets-zone-widgets">
                 @if (count > 0) {
                     int i = 0;
-                    foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.FlatPositionComparer())) {
+                    foreach (WidgetPart widget in widgets.Where(w => w.Zone == zone).OrderBy(w => w.Position, new Orchard.UI.PositionComparer())) {
                         <li class="widgets-@(widget.LayerId == Model.CurrentLayer.Id ? "this" : "other")-layer widgets-layer-@widget.LayerId@(i == 0 ? " first" : (i == count ? " last" : ""))">
                             @using (Html.BeginFormAntiForgeryPost()) {
                                 <h3>@Display.ActionLink(Value: HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, Action: "EditWidget", RouteValues: new { @widget.Id, returnUrl })</h3>
