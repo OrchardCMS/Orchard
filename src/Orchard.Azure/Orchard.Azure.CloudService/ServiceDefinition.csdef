@@ -8,6 +8,9 @@
         </Bindings>
       </Site>
     </Sites>
+    <Imports>
+      <Import moduleName="Diagnostics" />
+    </Imports>
     <ConfigurationSettings>
       <Setting name="DataConnectionString" />
     </ConfigurationSettings>
