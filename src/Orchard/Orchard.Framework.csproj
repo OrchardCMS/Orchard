@@ -265,6 +265,15 @@
     <Compile Include="Time\IClock.cs" />
     <Compile Include="Time\ITimeZoneSelector.cs" />
     <Compile Include="Time\TimeZoneSelectorResult.cs" />
+    <Compile Include="Tokens\DefaultTokenizer.cs" />
+    <Compile Include="Tokens\DefaultTokenManager.cs" />
+    <Compile Include="Tokens\ITokenizer.cs" />
+    <Compile Include="Tokens\ITokenManager.cs" />
+    <Compile Include="Tokens\ITokenProvider.cs" />
+    <Compile Include="Tokens\TokenBuilder.cs" />
+    <Compile Include="Tokens\TokenContext.cs" />
+    <Compile Include="Tokens\TokenDescriptor.cs" />
+    <Compile Include="Tokens\TokenTable.cs" />
     <Compile Include="UI\PositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />
     <Compile Include="UI\Navigation\PagerParameters.cs" />
