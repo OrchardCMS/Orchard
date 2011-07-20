@@ -64,9 +64,6 @@ namespace Orchard.Tokens {
             var format = tokenAreas.Length == 2 ? tokenAreas[1] : null;
             // enumerate token parts (dotted syntax)
             var tokenParts = token.Split('.');
-            if (tokenParts.Length < 2) {
-                return tokenContext;
-            }
             var tokenType = tokenParts[0].Trim();
             var tokenTable = _tokenManager.GetTokenTable();
             var readingProperties = false;
@@ -79,6 +76,7 @@ namespace Orchard.Tokens {
                     tokenContext.Token = null;
                     return tokenContext;
                 }
+                tokenContext.Replacement = tokenValue;
             }
             foreach (var tokenPart in tokenParts.Skip(1)) {
                 var tokenName = tokenPart.Trim();

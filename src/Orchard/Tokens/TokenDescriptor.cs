@@ -11,7 +11,7 @@ namespace Orchard.Tokens {
         }
 
         public TokenDescriptor<T> WithValue(string valueType, Func<T, object> valueGetter) {
-            ValueType = ValueType;
+            ValueType = valueType;
             ValueGetter = o => valueGetter((T)o);
             return this;
         }

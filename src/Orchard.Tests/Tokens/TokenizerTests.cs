@@ -33,10 +33,11 @@ namespace Orchard.Tests.Tokens {
         [Test]
         public void TestContextTokens() {
             var testUser = new TestUser { UserName = "OrchardUser" };
+            Assert.That(_tokenizer.Replace("{Foo}{Bar}", new { Foo = "[Foo]", Bar = "[Bar]" }), Is.EqualTo("[Foo][Bar]"));
             Assert.That(_tokenizer.Replace("{User.FullName}", new { User = testUser }), Is.EqualTo("[OrchardUser]"));
             Assert.That(_tokenizer.Replace("{Site.CurrentUser.FullName}", null), Is.EqualTo("[CurrentUser]"));
             // context prefers the value of a parent token
-            Assert.That(_tokenizer.Replace("{Site.CurrentUser.FullName}", new { User = new TestUser { UserName = "UserFromContext" } }), Is.EqualTo("[CurrentUser]"));
+            Assert.That(_tokenizer.Replace("CurrentUser:{Site.CurrentUser.FullName}", new { User = new TestUser { UserName = "UserFromContext" } }), Is.EqualTo("CurrentUser:[CurrentUser]"));
         }
 
         [Test]
