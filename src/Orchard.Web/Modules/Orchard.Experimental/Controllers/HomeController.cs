@@ -7,9 +7,7 @@ using Orchard.Events;
 using Orchard.Experimental.Models;
 using Orchard.Localization;
 using Orchard.Mvc;
-using Orchard.Security;
 using Orchard.Themes;
-using Orchard.Tokens;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
@@ -48,17 +46,13 @@ namespace Orchard.Experimental.Controllers {
         private readonly INotifier _notifier;
         private readonly IContainerSpyOutput _containerSpyOutput;
         private readonly IFormEvents _formEvents;
-        private readonly ITokenManager _tokenManager;
-        private readonly ITokenizer _tokenizer;
         private readonly IOrchardServices _orchardServices;
 
-        public HomeController(INotifier notifier, IShapeFactory shapeFactory, IContainerSpyOutput containerSpyOutput, IFormEvents formEvents, ITokenManager tokenManager, ITokenizer tokenizer, IOrchardServices orchardServices) {
+        public HomeController(INotifier notifier, IShapeFactory shapeFactory, IContainerSpyOutput containerSpyOutput, IFormEvents formEvents, IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
             _notifier = notifier;
             _containerSpyOutput = containerSpyOutput;
             _formEvents = formEvents;
-            _tokenManager = tokenManager;
-            _tokenizer = tokenizer;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
         }
@@ -181,38 +175,6 @@ namespace Orchard.Experimental.Controllers {
             var root = new XElement("root");
             _containerSpyOutput.Write(root);
             return Content(root.ToString(), "text/xml");
-        }
-
-        public ActionResult UseTokens() {
-            var s = "";
-            var input = @"Hello {Site.GlobalToken1} Hello {Site.GlobalToken2}{User.Name}{{escaped brackets}}";
-            var replacement = _tokenizer.Replace(input, new { UserX = _orchardServices.WorkContext.CurrentUser });
-            foreach (var tokenContext in _tokenizer.ParseTokens(input, new { UserX = _orchardServices.WorkContext.CurrentUser })) {
-                s += string.Format("<li>Token '{0}' = [{1},{2}] {3}</li>", tokenContext.Token == null ? "n/a" : tokenContext.Token.Name, tokenContext.Offset, tokenContext.Length, tokenContext.Replacement);
-            }
-            return Content(input + "<hr/>" + replacement + "<hr/><ol>" + s + "</ol>");
-            //var globalTokens = _tokenManager.GetTokenSet(null);
-            //globalTokens.SetToken("GlobalToken3", "overridden");
-            //return Content(string.Format("GlobalToken1={0}, GlobalToken2={1}, DoesNotExist={2}, GlobalToken3={3}",
-            //    globalTokens.GetToken("GlobalToken1").Value,
-            //    globalTokens.GetToken("GlobalToken2").Value,
-            //    globalTokens.GetToken("DoesNotExist") == null ? null : globalTokens.GetToken("DoesNotExist").Value,
-            //    globalTokens.GetToken("GlobalToken3").Value));
-        }
-    }
-
-
-    public class ExperimentalTokenProvider : ITokenProvider {
-        public ExperimentalTokenProvider() {
-            T = NullLocalizer.Instance;
-        }
-
-        public Localizer T { get; set; }
-
-        public void BuildTokens(TokenBuilder builder) {
-            builder.Describe("Site", "GlobalToken1", c => "[global1]");
-            builder.Describe("Site", "GlobalToken2", c => "[global2]");
-            builder.Describe<IUser>("User", "Name", u => u.UserName);
         }
     }
 }
