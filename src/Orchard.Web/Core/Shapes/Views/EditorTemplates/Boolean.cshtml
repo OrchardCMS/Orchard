@@ -2,5 +2,10 @@
 @{
     var cb = New.Checkbox();
     ShapeTemplateHelper.ForwardTemplateContextToShape(Html, ViewContext, cb, T("The value '{0}' is invalid.").Text);
+    var value = cb.Value;
+    cb.Value = "true";
+    if (value is bool && (bool)value) {
+        cb.Checked = true;
+    }
 }
 @Display(cb)

@@ -304,7 +304,7 @@ namespace Orchard.Core.Shapes
         }
 
         [Shape]
-        public IHtmlString Input(HtmlHelper Html, dynamic Shape, dynamic Display, string Type, string Name, dynamic Value)
+        public IHtmlString Input(HtmlHelper Html, dynamic Shape, dynamic Display, string Type, string Name, dynamic Value, bool? Checked)
         {
             var tag = (TagBuilder)_tagBuilderFactory.Create(Shape, "input");
             tag.MergeAttribute("type", Type, false);
@@ -316,6 +316,10 @@ namespace Orchard.Core.Shapes
             {
                 Value = Value is string ? Value : Display(Value);
                 tag.MergeAttribute("value", Convert.ToString(Value), false);
+            }
+            if (Checked.GetValueOrDefault())
+            {
+                tag.MergeAttribute("checked", "checked");
             }
             return new HtmlString(tag.ToString(TagRenderMode.SelfClosing));
         }
