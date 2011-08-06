@@ -67,7 +67,7 @@ namespace Orchard.Core.Containers.Drivers {
                         ? new[] {new SelectListItem {Text = T("(None - create container enabled items first)").Text, Value = "0"}}
                         : containers.Select(x => new SelectListItem {
                                 Value = Convert.ToString(x.Id),
-                                Text = x.ContentItem.TypeDefinition.DisplayName + ": " + x.As<IRoutePart>().Title,
+                                Text = x.ContentItem.TypeDefinition.DisplayName + ": " + x.ContentItem.ContentManager.GetItemMetadata(x.ContentItem).DisplayText,
                                 Selected = x.Id == model.Part.Record.ContainerId,
                             });
 
