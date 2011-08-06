@@ -16,17 +16,14 @@ namespace Orchard.Core.Containers.Controllers {
 
     public class ItemController : Controller {
         private readonly IContentManager _contentManager;
-        private readonly IContainersPathConstraint _containersPathConstraint;
         private readonly ISiteService _siteService;
 
         public ItemController(
             IContentManager contentManager, 
-            IContainersPathConstraint containersPathConstraint, 
             IShapeFactory shapeFactory,
             ISiteService siteService) {
 
             _contentManager = contentManager;
-            _containersPathConstraint = containersPathConstraint;
             _siteService = siteService;
             Shape = shapeFactory;
         }
@@ -34,34 +31,21 @@ namespace Orchard.Core.Containers.Controllers {
         dynamic Shape { get; set; }
 
         [Themed]
-        public ActionResult Display(string path, PagerParameters pagerParameters) {
-            var matchedPath = _containersPathConstraint.FindPath(path);
-            if (string.IsNullOrEmpty(matchedPath)) {
-                throw new ApplicationException("404 - should not have passed path constraint");
+        public ActionResult Display(int id, PagerParameters pagerParameters)
+        {
+            var container = _contentManager.Get(id);
+            if (container == null)
+            {
+                return new HttpNotFoundResult();
             }
-
-            var hits = _contentManager
-                .Query<RoutePart, RoutePartRecord>(VersionOptions.Published)
-                .Where(r => r.Path == matchedPath)
-                .Slice(0, 2);
-
-            if (hits.Count() == 0) {
-                throw new ApplicationException("404 - should not have passed path constraint");
-            }
-
-            if (hits.Count() != 1) {
-                throw new ApplicationException("Ambiguous content");
-            }
-
-            var container = _contentManager.Get(hits.Single().Id);
             IContentQuery<ContentItem> query = _contentManager
                 .Query(VersionOptions.Published)
                 .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
 
-            var descendingOrder = container.As<ContainerPart>().Record.OrderByDirection == (int) OrderByDirection.Descending;
+            var descendingOrder = container.As<ContainerPart>().Record.OrderByDirection == (int)OrderByDirection.Descending;
             query = query.OrderBy(container.As<ContainerPart>().Record.OrderByProperty, descendingOrder);
 
-            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
+            var pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             pager.PageSize = pagerParameters.PageSize != null && container.As<ContainerPart>().Record.Paginated
                                ? pager.PageSize
                                : container.As<ContainerPart>().Record.PageSize;
@@ -77,7 +61,8 @@ namespace Orchard.Core.Containers.Controllers {
 
             var model = _contentManager.BuildDisplay(container, new DisplayOptions { DisplayType = "Detail" });
             model.Content.Add(list, "7");
-            if (container.As<ContainerPart>().Record.Paginated) {
+            if (container.As<ContainerPart>().Record.Paginated)
+            {
                 model.Content.Add(pagerShape, "7.5");
             }
 
