@@ -63,8 +63,7 @@ namespace Orchard.Indexing.Commands {
             Context.Output.WriteLine("├──────────────────────────────────────────────────────────────┼────────┤");
             foreach ( var searchHit in results ) {
                 var contentItem = _contentManager.Get(searchHit.ContentItemId);
-                var route = contentItem.As<IRoutePart>();
-                var title = route == null ? "- no title -" : route.Title;
+                var title = contentItem.ContentManager.GetItemMetadata(contentItem).DisplayText ?? "- no title -";
                 title = title.Substring(0, Math.Min(60, title.Length));
                 var score = Math.Round(searchHit.Score, 2).ToString();
                 Context.Output.WriteLine("│ {0} │ {1,6} │", title + new string(' ', 60 - title.Length), score);
