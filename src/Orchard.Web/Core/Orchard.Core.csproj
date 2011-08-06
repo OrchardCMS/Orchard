@@ -89,10 +89,10 @@
     <Compile Include="Common\Drivers\BodyPartDriver.cs" />
     <Compile Include="Common\Drivers\CommonPartDriver.cs" />
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
-    <Compile Include="Containers\ContainersPathConstraint.cs" />
     <Compile Include="Containers\Drivers\ContainerWidgetPartDriver.cs" />
     <Compile Include="Containers\Drivers\CustomPropertiesDriver.cs" />
     <Compile Include="Containers\Extensions\ContentQueryExtensions.cs" />
+    <Compile Include="Containers\Handlers\ContainerHandler.cs" />
     <Compile Include="Containers\Migrations.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
     <Compile Include="Containers\Models\ContainerPart.cs" />
@@ -101,8 +101,6 @@
     <Compile Include="Containers\Models\ContainerWidgetPart.cs" />
     <Compile Include="Containers\Models\CustomPropertiesPart.cs" />
     <Compile Include="Containers\Models\OrderByDirection.cs" />
-    <Compile Include="Containers\Routes.cs" />
-    <Compile Include="Containers\Services\ContainersPathConstraintUpdater.cs" />
     <Compile Include="Containers\Settings\ContainerSettings.cs" />
     <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
