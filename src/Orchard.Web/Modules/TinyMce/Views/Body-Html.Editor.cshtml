@@ -4,6 +4,6 @@
 @Html.TextArea("Text", (string)Model.Text, 25, 80,
 	 new Dictionary<string,object> {
 		{"class", "html tinymce"},
-		{"data-mediapicker-uploadpath",Model.AddMediaPath},
+		{"data-mediapicker-uploadpath", Model.BodyPart.ContentItem.ContentType},
 		{"data-mediapicker-title",T("Insert/Update Media")}
 	 })

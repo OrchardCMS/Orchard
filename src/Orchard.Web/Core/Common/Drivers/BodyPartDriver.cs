@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Parts;
 using Orchard.ContentManagement.Drivers;
@@ -70,8 +71,7 @@ namespace Orchard.Core.Common.Drivers {
         private static BodyEditorViewModel BuildEditorViewModel(BodyPart part) {
             return new BodyEditorViewModel {
                 BodyPart = part,
-                EditorFlavor = GetFlavor(part),
-                AddMediaPath = new PathBuilder(part).AddContentType().AddContainerSlug().AddSlug().ToString()
+                EditorFlavor = GetFlavor(part)
             };
         }
 
@@ -80,56 +80,6 @@ namespace Orchard.Core.Common.Drivers {
             return (typePartSettings != null && !string.IsNullOrWhiteSpace(typePartSettings.Flavor))
                        ? typePartSettings.Flavor
                        : part.PartDefinition.Settings.GetModel<BodyPartSettings>().FlavorDefault;
-        }
-
-        class PathBuilder {
-            private readonly IContent _content;
-            private string _path;
-
-            public PathBuilder(IContent content) {
-                _content = content;
-                _path = "";
-            }
-
-            public override string ToString() {
-                return _path;
-            }
-
-            public PathBuilder AddContentType() {
-                Add(_content.ContentItem.ContentType);
-                return this;
-            }
-
-            public PathBuilder AddContainerSlug() {
-                var common = _content.As<ICommonPart>();
-                if (common == null)
-                    return this;
-
-                var route = common.Container.As<RoutePart>();
-                if (route == null)
-                    return this;
-
-                Add(route.Slug);
-                return this;
-            }
-
-            public PathBuilder AddSlug() {
-                var route = _content.As<RoutePart>();
-                if (route == null)
-                    return this;
-
-                Add(route.Slug);
-                return this;
-            }
-
-            private void Add(string segment) {
-                if (string.IsNullOrEmpty(segment))
-                    return;
-                if (string.IsNullOrEmpty(_path))
-                    _path = segment;
-                else
-                    _path = _path + "/" + segment;
-            }
         }
     }
 }
