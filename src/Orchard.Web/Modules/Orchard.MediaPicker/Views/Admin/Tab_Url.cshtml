@@ -13,7 +13,7 @@
     }
 }
         <div id="image-preview">
-            @Display.Image(Src: "", Id: "lib-loader", Attributes: new { style = "display:none" })
+            @Display.Image(Src: "", Id: "img-loader", Attributes: new { style = "display:none" })
             <div class="media-largepreview">
                 @Display.Image(Id: "img-preview", Src: "~/modules/orchard.mediapicker/Styles/images/imagepreview.png", Alt: T("Preview of Image"), Attributes: new { onload = "jQuery.mediaPicker.scalePreview(this)" })
             </div>
