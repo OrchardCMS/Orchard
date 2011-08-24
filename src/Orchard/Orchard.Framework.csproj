@@ -175,6 +175,7 @@
     <Compile Include="ContentManagement\Handlers\ImportContentContext.cs" />
     <Compile Include="ContentManagement\IContentBehavior.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
+    <Compile Include="ContentManagement\QueryHints.cs" />
     <Compile Include="ContentManagement\Utilities\ComputedField.cs" />
     <Compile Include="DisplayManagement\Descriptors\PlacementInfo.cs" />
     <Compile Include="DisplayManagement\Descriptors\ResourceBindingStrategy\StylesheetBindingStrategy.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="DisplayManagement\Descriptors\ShapePlacementStrategy\ShapePlacementParsingStrategy.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTable.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTableBuilder.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeTableLocator.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ShapeDebugView.cs" />
@@ -252,6 +254,7 @@
     <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="Settings\ResourceDebugMode.cs" />
+    <Compile Include="Themes\CurrentThemeWorkContext.cs" />
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="UI\FlatPositionComparer.cs" />
     <Compile Include="UI\Navigation\Pager.cs" />

@@ -16,6 +16,9 @@ namespace Orchard.ContentManagement {
         ContentItem Get(int id, VersionOptions options);
         IEnumerable<ContentItem> GetAllVersions(int id);
 
+        IEnumerable<T> GetMany<T>(IEnumerable<int> ids, VersionOptions options, QueryHints hints) where T : class, IContent;
+        IEnumerable<T> GetManyByVersionId<T>(IEnumerable<int> versionRecordIds, QueryHints hints) where T : class, IContent;
+
         void Publish(ContentItem contentItem);
         void Unpublish(ContentItem contentItem);
         void Remove(ContentItem contentItem);
