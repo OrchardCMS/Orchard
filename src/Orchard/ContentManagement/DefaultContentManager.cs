@@ -7,8 +7,8 @@ using System.Xml.Linq;
 using Autofac;
 using NHibernate;
 using NHibernate.Criterion;
-using NHibernate.Metadata;
 using NHibernate.SqlCommand;
+using NHibernate.Transform;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -249,22 +249,35 @@ namespace Orchard.ContentManagement {
             var contentItemCriteria = contentItemVersionCriteria.CreateCriteria("ContentItemRecord");
             predicate(contentItemCriteria, contentItemVersionCriteria);
             
-            var hintDictionary = hints.Records.Distinct().ToDictionary(value => value);
             var contentItemMetadata = session.SessionFactory.GetClassMetadata(typeof (ContentItemRecord));
             var contentItemVersionMetadata = session.SessionFactory.GetClassMetadata(typeof (ContentItemVersionRecord));
 
-            ExpandHints(hintDictionary, contentItemMetadata, contentItemCriteria);
-            ExpandHints(hintDictionary, contentItemVersionMetadata, contentItemVersionCriteria);
+            // break apart and group hints by their first segment
+            var hintDictionary = hints.Records
+                .Select(hint=>new {Hint=hint, Segments=hint.Split('.')})
+                .GroupBy(item=>item.Segments.FirstOrDefault())
+                .ToDictionary(grouping=>grouping.Key, StringComparer.InvariantCultureIgnoreCase);
+
+            // locate hints that match properties in the ContentItemVersionRecord
+            foreach (var hit in contentItemVersionMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key=>hintDictionary[key])) {
+                contentItemVersionCriteria.SetFetchMode(hit.Hint, FetchMode.Eager);
+                hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemVersionCriteria, ExtendCriteria);
+            }
+
+            // locate hints that match properties in the ContentItemRecord
+            foreach (var hit in contentItemMetadata.PropertyNames.Where(hintDictionary.ContainsKey).SelectMany(key=>hintDictionary[key])) {
+                contentItemVersionCriteria.SetFetchMode("ContentItemRecord." + hit.Hint, FetchMode.Eager);
+                hit.Segments.Take(hit.Segments.Count() - 1).Aggregate(contentItemCriteria, ExtendCriteria);
+            }
+
+            if (hintDictionary.SelectMany(x=>x.Value).Any(x=>x.Segments.Count() > 1))
+                contentItemVersionCriteria.SetResultTransformer(new DistinctRootEntityResultTransformer());
 
             return contentItemVersionCriteria.List<ContentItemVersionRecord>();
         }
 
-        private static void ExpandHints(Dictionary<string, string> hintDictionary, IClassMetadata recordMetadata, ICriteria recordCriteria) {
-            foreach (var associationPath in recordMetadata.PropertyNames.Where(hintDictionary.ContainsKey)) {
-                if (recordCriteria.GetCriteriaByPath(associationPath) == null) {
-                    recordCriteria.CreateCriteria(associationPath, JoinType.LeftOuterJoin);
-                }
-            }
+        private static ICriteria ExtendCriteria(ICriteria criteria, string segment) {
+            return criteria.GetCriteriaByPath(segment) ?? criteria.CreateCriteria(segment, JoinType.LeftOuterJoin);
         }
 
         public virtual void Publish(ContentItem contentItem) {
