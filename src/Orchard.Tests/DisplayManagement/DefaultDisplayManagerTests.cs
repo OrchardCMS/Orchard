@@ -27,6 +27,7 @@ namespace Orchard.Tests.DisplayManagement {
 
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
             builder.RegisterType<TestShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<TestWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<TestDisplayEvents>().As<IShapeDisplayEvents>()
                 .As<TestDisplayEvents>()

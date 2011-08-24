@@ -15,7 +15,6 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
-using Orchard.Environment;
 using Orchard.Indexing;
 using Orchard.Logging;
 using Orchard.UI;
@@ -29,7 +28,7 @@ namespace Orchard.ContentManagement {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
-        private readonly Work<ISessionLocator> _sessionLocator; 
+        private readonly Lazy<ISessionLocator> _sessionLocator; 
         private const string Published = "Published";
         private const string Draft = "Draft";
 
@@ -41,7 +40,7 @@ namespace Orchard.ContentManagement {
             IContentDefinitionManager contentDefinitionManager,
             Func<IContentManagerSession> contentManagerSession,
             Lazy<IContentDisplay> contentDisplay,
-            Work<ISessionLocator> sessionLocator) {
+            Lazy<ISessionLocator> sessionLocator) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;

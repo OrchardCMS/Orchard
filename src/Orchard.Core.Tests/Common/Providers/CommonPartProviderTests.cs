@@ -66,6 +66,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             builder.RegisterInstance(new RequestContext(new StubHttpContext(), new RouteData()));
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 

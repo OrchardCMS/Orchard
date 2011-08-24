@@ -8,32 +8,32 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
-using Orchard.Themes;
 using Orchard.UI.Zones;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentDisplay : IContentDisplay {
         private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private readonly IShapeFactory _shapeFactory;
-        private readonly IShapeTableManager _shapeTableManager;
-        private readonly Lazy<IThemeManager> _themeService;
+        private readonly Lazy<IShapeTableLocator> _shapeTableLocator; 
+
         private readonly RequestContext _requestContext;
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         public DefaultContentDisplay(
             Lazy<IEnumerable<IContentHandler>> handlers,
             IShapeFactory shapeFactory,
-            IShapeTableManager shapeTableManager,
-            Lazy<IThemeManager> themeService,
+            Lazy<IShapeTableLocator> shapeTableLocator, 
             RequestContext requestContext,
-            IVirtualPathProvider virtualPathProvider) {
+            IVirtualPathProvider virtualPathProvider,
+            IWorkContextAccessor workContextAccessor) {
 
             _handlers = handlers;
             _shapeFactory = shapeFactory;
-            _shapeTableManager = shapeTableManager;
-            _themeService = themeService;
+            _shapeTableLocator = shapeTableLocator;
             _requestContext = requestContext;
             _virtualPathProvider = virtualPathProvider;
+            _workContextAccessor = workContextAccessor;
 
             Logger = NullLogger.Instance;
         }
@@ -106,8 +106,11 @@ namespace Orchard.ContentManagement {
         private void BindPlacement(BuildShapeContext context, string displayType, string stereotype) {
             context.FindPlacement = (partShapeType, differentiator, defaultLocation) => {
 
-                var theme = _themeService.Value.GetRequestTheme(_requestContext);
-                var shapeTable = _shapeTableManager.GetShapeTable(theme.Id);
+                var workContext = _workContextAccessor.GetContext(_requestContext.HttpContext);
+
+                var theme = workContext.CurrentTheme;
+                var shapeTable = _shapeTableLocator.Value.Lookup(theme.Id);
+
                 var request = _requestContext.HttpContext.Request;
 
                 ShapeDescriptor descriptor;

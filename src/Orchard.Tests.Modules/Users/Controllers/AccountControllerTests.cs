@@ -70,6 +70,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<TransactionManager>().As<ITransactionManager>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SiteSettingsPartHandler>().As<IContentHandler>();
             builder.RegisterType<RegistrationSettingsPartHandler>().As<IContentHandler>();

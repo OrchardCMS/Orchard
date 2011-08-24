@@ -56,6 +56,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<FlavoredPartHandler>().As<IContentHandler>();
             builder.RegisterType<StyledHandler>().As<IContentHandler>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
 
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));

@@ -84,6 +84,7 @@ namespace Orchard.Setup {
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
 
             builder.RegisterType<ThemeAwareViewEngine>().As<IThemeAwareViewEngine>();
             builder.RegisterType<LayoutAwareViewEngine>().As<ILayoutAwareViewEngine>();

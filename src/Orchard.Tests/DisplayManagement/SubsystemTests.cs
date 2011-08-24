@@ -43,6 +43,7 @@ namespace Orchard.Tests.DisplayManagement {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ShapeAttributeBindingModule());
             builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>();
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
