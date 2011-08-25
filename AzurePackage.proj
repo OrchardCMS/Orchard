@@ -17,14 +17,14 @@
   </PropertyGroup>
   
   <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Cloud Service\1.0\Visual Studio 10.0\Microsoft.CloudService.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\1.4\Microsoft.WindowsAzure.targets" />
   
 <!-- Coordinating Targets -->
 
   <Target Name ="Build">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
-    <CallTarget Targets="Test"/>
+    <!--<CallTarget Targets="Test"/>-->
     <CallTarget Targets="Package"/>
   </Target>
 
@@ -81,15 +81,24 @@
     
     <ItemGroup>
       <Excluded Include="$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;" />
+      <Web-Excluded Include="$(SrcFolder)\**\_bin_deployableAssemblies\**\*;$(SrcFolder)\**\Properties\**\*;$(SrcFolder)\**\*.csproj*;$(SrcFolder)\**\*.proj;$(SrcFolder)\**\Modules\**\*;$(SrcFolder)\**\Core\**\*;$(SrcFolder)\**\Themes\**\*;$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;" />
 
       <Stage-Themes Include="$(SrcFolder)\Orchard.Web\Themes\**\*" Exclude="@(Excluded)" />
       <Stage-Core Include="$(SrcFolder)\Orchard.Web\Core\**\*" Exclude="@(Excluded)" />
       <Stage-Modules Include="$(SrcFolder)\Orchard.Web\Modules\**\*" Exclude="@(Excluded)" />
+	  <Stage-Web Include="$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\**\*" Exclude="@(Web-Excluded)" />
+	  <Stage-Assemblies Include="$(SrcFolder)\**\bin\**\*" />
+	  <Stage-Bin-Assemblies Include="$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\_bin_deployableAssemblies\*" />
+	  <Stage-Entry-Assembly Include="$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\bin\Orchard.Azure.Web.dll" />
     </ItemGroup>
 
     <Copy SourceFiles="@(Stage-Themes)" DestinationFolder="$(CloudRootFolder)\Themes\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(CloudRootFolder)\Core\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(CloudRootFolder)\Modules\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Web)" DestinationFolder="$(CloudRootFolder)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Assemblies)" DestinationFolder="$(CloudRootFolder)\bin" />
+    <Copy SourceFiles="@(Stage-Bin-Assemblies)" DestinationFolder="$(CloudRootFolder)\bin" />
+    <Copy SourceFiles="@(Stage-Entry-Assembly)" DestinationFolder="$(CloudRootFolder)\" />
 
     <Delete Files="$(CloudRootFolder)\App_Data" />
 
