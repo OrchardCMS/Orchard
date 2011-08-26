@@ -67,7 +67,7 @@ namespace Orchard.UI.Zones {
                 }
                 return parentMember;
             }
-            public override object GetIndex(Func<object> proceed, System.Collections.Generic.IEnumerable<object> keys) {
+            public override object GetIndex(Func<object> proceed, object self, System.Collections.Generic.IEnumerable<object> keys) {
                 if (keys.Count() == 1) {
                     return GetMember(proceed, null, System.Convert.ToString(keys.Single()));
                 }
