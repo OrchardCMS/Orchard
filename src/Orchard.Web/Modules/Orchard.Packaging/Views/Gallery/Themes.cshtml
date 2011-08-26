@@ -73,7 +73,7 @@
 
                         <div class="related">
                             @Display.ActionLink(Value: T("Install"), Action: "InstallGallery", Controller: "PackagingServices", RouteValues: new { packageId = item.PackageId, version = item.Version, sourceId = item.Source.Id, redirectUrl = HttpContext.Current.Request.RawUrl })@T(" | ")
-                            @Display.Link(Href: item.PackageStreamUri, Value: T("Download"))</a>
+                            @Display.Link(Href: item.PackageStreamUri, Value: T("Download"))
                         </div>
 
                         <div class="properties">
