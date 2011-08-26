@@ -29,7 +29,7 @@ namespace Orchard.Recipes.Commands {
             }
 
             IEnumerable<Recipe> recipes = _recipeHarvester.HarvestRecipes(extensionId);
-            if (recipes == null) {
+            if (recipes.Count() == 0) {
                 Context.Output.WriteLine(T("No recipes found for extension {0}.", extensionId));
                 return;
             }
@@ -58,7 +58,7 @@ namespace Orchard.Recipes.Commands {
             }
 
             IEnumerable<Recipe> recipes = _recipeHarvester.HarvestRecipes(extensionId);
-            if (recipes == null) {
+            if (recipes.Count() == 0) {
                 Context.Output.WriteLine(T("No recipes found for extension {0}.", extensionId));
                 return;
             }
