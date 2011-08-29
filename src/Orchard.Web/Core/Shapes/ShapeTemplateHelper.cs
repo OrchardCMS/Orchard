@@ -52,10 +52,12 @@ namespace Orchard.Core.Shapes {
 
         public static void ForwardTemplateContextToShape(HtmlHelper html, ViewContext context, dynamic shape, string defaultErrorMessage) {
             // Gather what information we can and forward/translate it onto the given Orchard Shape.
-            var name = html.FieldNameFor("");
             shape.Value = context.ViewData.TemplateInfo.FormattedModelValue;
             shape.Id = html.FieldIdFor("");  // empty string in a template is special meaning in MVC for 'this model'
-            shape.Name = html.FieldNameFor("");
+
+            var name = html.FieldNameFor("");
+            shape.Attributes["Name"] = name;
+
             // MVC templated inputs have to opt-into shape rendering so we don't break all EditorFor(), etc, uses.
             shape.EnableWrapper = false;
 
