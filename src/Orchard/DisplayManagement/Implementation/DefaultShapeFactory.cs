@@ -58,14 +58,15 @@ namespace Orchard.DisplayManagement.Implementation {
                     new ClaySharp.Behaviors.InterfaceProxyBehavior(),
                     new ClaySharp.Behaviors.PropBehavior(),
                     new ClaySharp.Behaviors.ArrayBehavior(),
-                    new ClaySharp.Behaviors.NilResultBehavior()
+                    new ClaySharp.Behaviors.NilResultBehavior(),
                 };
             }
             else {
                 creatingContext.Behaviors = new List<IClayBehavior> {
                     new ClaySharp.Behaviors.InterfaceProxyBehavior(),
                     new ClaySharp.Behaviors.PropBehavior(),
-                    new ClaySharp.Behaviors.NilResultBehavior()
+                    new ClaySharp.Behaviors.NilResultBehavior(),
+                    new Shape.ShapeBehavior(),
                 };
             }
             
