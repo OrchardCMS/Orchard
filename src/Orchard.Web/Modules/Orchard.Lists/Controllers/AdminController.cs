@@ -17,6 +17,7 @@ using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
+using Orchard.UI.Notify;
 
 namespace Orchard.Lists.Controllers {
     public class AdminController : Controller {
