@@ -126,13 +126,13 @@ namespace Orchard.Packaging.Services {
 
         private string GetReferenceVirtualPath(string basePath, string referenceName, string hintPath) {
             // Check if hint path is valid
-            if (!string.IsNullOrEmpty(hintPath) && _webSiteFolder.FileExists(Path.Combine(basePath, hintPath))) {
+            if (!string.IsNullOrEmpty(hintPath) && _webSiteFolder.TryFileExists(Path.Combine(basePath, hintPath))) {
                 return hintPath;
             }
 
             // Fall back to bin directory
             string relativePath = Path.Combine("bin", referenceName + ".dll");
-            if (_webSiteFolder.FileExists(Path.Combine(basePath, relativePath))) {
+            if (_webSiteFolder.TryFileExists(Path.Combine(basePath, relativePath))) {
                 return relativePath;
             }
 

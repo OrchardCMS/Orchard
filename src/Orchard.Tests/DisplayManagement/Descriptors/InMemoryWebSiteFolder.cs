@@ -52,5 +52,9 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         public DateTime GetFileLastWriteTimeUtc(string virtualPath) {
             throw new NotImplementedException();
         }
+
+        public bool TryFileExists(string virtualPath) {
+            throw new NotImplementedException();
+        }
     }
 }

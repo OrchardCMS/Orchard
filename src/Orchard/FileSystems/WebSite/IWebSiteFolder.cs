@@ -12,6 +12,7 @@ namespace Orchard.FileSystems.WebSite {
         IEnumerable<string> ListFiles(string virtualPath, bool recursive);
 
         bool FileExists(string virtualPath);
+        bool TryFileExists(string virtualPath);
         string ReadFile(string virtualPath);
         string ReadFile(string virtualPath, bool actualContent);
         void CopyFileTo(string virtualPath, Stream destination);

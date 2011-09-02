@@ -39,6 +39,10 @@ namespace Orchard.FileSystems.WebSite {
             return _virtualPathProvider.FileExists(virtualPath);
         }
 
+        public bool TryFileExists(string virtualPath) {
+            return _virtualPathProvider.TryFileExists(virtualPath);
+        }
+
         public string ReadFile(string virtualPath) {
             return ReadFile(virtualPath, false);
         }

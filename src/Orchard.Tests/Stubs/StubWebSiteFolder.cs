@@ -55,5 +55,9 @@ namespace Orchard.Tests.Stubs {
         public DateTime GetFileLastWriteTimeUtc(string virtualPath) {
             throw new NotImplementedException();
         }
+
+        public bool TryFileExists(string virtualPath) {
+            throw new NotImplementedException();
+        }
     }
 }
