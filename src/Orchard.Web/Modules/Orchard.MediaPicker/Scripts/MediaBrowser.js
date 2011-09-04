@@ -45,15 +45,24 @@
     });
 
     $("#createFolder").live("click", function () {
+        if ($(this).hasClass("disabled")) return;
         $.post("MediaPicker/CreateFolder", { path: query("mediaPath") || "", folderName: $("#folderName").val(), __RequestVerificationToken: $("#__requesttoken").val() },
             function (response) {
-                if (typeof response === "string") {
-                    alert(response);
-                }
-                else {
+                if (response.Success == true) {
                     location.reload(true);
+                } else if (response.Success == false) {
+                    alert(response.Message);
+                } else {
+                    // Most likely a redirection due to expired authorisation
+                    alert($("#AccessDeniedMsg").val());
+                    var loginWindow = window.open($("#LoginUrl").val(), "AccessDenied", 'toolbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes');
                 }
             });
+    });
+
+    $("#folderName").live("propertychange keyup input paste", function () {
+        var empty = ($("#folderName").val() == "");
+        $("#createFolder").attr("disabled", empty).toggleClass("disabled", empty);
     });
 
     $(function () {
@@ -101,8 +110,15 @@
             });
         }
 
-        var data = window.opener.jQuery[query("callback")].data,
+        try {
+            var data = window.opener.jQuery[query("callback")].data,
             img = data ? data.img : null;
+        }
+        catch (ex) {
+            alert($("#LostCallbackMsg").val());
+            window.close();
+        }
+
         if (img) {
             for (var name in img) {
                 $("#img-" + name).val(img[name]);
@@ -140,7 +156,12 @@
                 height: $(prefix + "height").val()
             };
         img.html = getImageHtml(img);
-        window.opener.jQuery[query("callback")]({ img: img });
+        try {
+            window.opener.jQuery[query("callback")]({ img: img });
+        }
+        catch (ex) {
+            alert($("#LostCallbackMsg").val());
+        }
         window.close();
     }
 
@@ -273,6 +294,10 @@
             }
             else if (result && result.error) {
                 alert(result.error);
+            }
+            else if (frame.location.pathname.match("AccessDenied")) {
+                alert($("#AccessDeniedMsg").val());
+                window.open($("#LoginUrl").val(), "AccessDenied", 'toolbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes');
             }
             else {
                 var somethingPotentiallyHorrible = "";

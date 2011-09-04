@@ -29,6 +29,11 @@
 </head>
 <body id="orchardmediapicker">
 
+<form id="ErrorHandlingValues">
+ <input type="hidden" id="LostCallbackMsg" value="@T("Cannot perform requested operation")" /> 
+ <input type="hidden" id="AccessDeniedMsg" value="@T("Authentification timed-out: please log-on again")" />
+ <input type="hidden" id="LoginUrl" value="@Url.Action("LogIn", new { Controller = "Account", Area = "Orchard.Users" })" />
+</form>
 <div id="tabs" class="group">
     <ul>
         <li><a href="#tab-url" data-edittext="@T("Update/Upload Image")" data-edittext-content="true">@T("Insert/Upload Image")</a></li>

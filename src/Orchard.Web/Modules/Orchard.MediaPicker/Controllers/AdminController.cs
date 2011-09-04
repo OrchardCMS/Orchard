@@ -37,15 +37,15 @@ namespace Orchard.MediaPicker.Controllers {
         [HttpPost]
         public JsonResult CreateFolder(string path, string folderName) {
             if (!Services.Authorizer.Authorize(Permissions.ManageMedia)) {
-                return Json(T("Couldn't create media folder").ToString());
+                return Json(new { Success = false, Message = T("Couldn't create media folder").ToString() });
             }
 
             try {
                 _mediaService.CreateFolder(HttpUtility.UrlDecode(path), folderName);
-                return Json(true);
+                return Json(new { Success = true, Message = "" });
             }
             catch (Exception exception) {
-                return Json(T("Creating Folder failed: {0}", exception.Message).ToString());
+                return Json(new { Success = false, Message = T("Creating Folder failed: {0}", exception.Message).ToString()} );
             }
         }
     }
