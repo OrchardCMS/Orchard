@@ -1,1 +1,4 @@
 
+src/Orchard.Web/Modules/Orchard.Forms = src/Orchard.Web/Modules/Orchard.Forms
+src/Orchard.Web/Modules/Orchard.Rules = src/Orchard.Web/Modules/Orchard.Rules
+src/Orchard.Web/Modules/Orchard.Tokens = src/Orchard.Web/Modules/Orchard.Tokens
