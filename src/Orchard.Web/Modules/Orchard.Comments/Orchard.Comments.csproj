@@ -69,6 +69,8 @@
     <Compile Include="Drivers\CommentsPartDriver.cs" />
     <Compile Include="Annotations\CommentValidationAttributes.cs" />
     <Compile Include="ResourceManifest.cs" />
+    <Compile Include="Rules\CommentsActions.cs" />
+    <Compile Include="Rules\CommentsForms.cs" />
     <Compile Include="Shapes.cs" />
     <Compile Include="Models\CommentPart.cs" />
     <Compile Include="Handlers\CommentPartHandler.cs" />
@@ -114,6 +116,14 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
+      <Project>{642A49D7-8752-4177-80D6-BFBBCFAD3DE0}</Project>
+      <Name>Orchard.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Rules\Orchard.Rules.csproj">
+      <Project>{966EC390-3C7F-4D98-92A6-F0F30D02E9B1}</Project>
+      <Name>Orchard.Rules</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
