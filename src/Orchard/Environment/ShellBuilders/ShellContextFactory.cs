@@ -71,6 +71,7 @@ namespace Orchard.Environment.ShellBuilders {
 
                 _shellDescriptorCache.Store(settings.Name, currentDescriptor);
                 blueprint = _compositionStrategy.Compose(settings, currentDescriptor);
+                shellScope.Dispose();
                 shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
             }
 

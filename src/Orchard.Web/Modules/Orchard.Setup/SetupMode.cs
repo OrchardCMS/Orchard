@@ -65,6 +65,7 @@ namespace Orchard.Setup {
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().InstancePerMatchingLifetimeScope("shell");
 
             // setup mode specific implementations of needed service interfaces
             builder.RegisterType<SafeModeThemeService>().As<IThemeManager>().InstancePerLifetimeScope();
@@ -77,7 +78,7 @@ namespace Orchard.Setup {
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>().InstancePerLifetimeScope();
             builder.RegisterType<RecipeParser>().As<IRecipeParser>().InstancePerLifetimeScope();
 
-            builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
 
             // in progress - adding services for display/shape support in setup
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();

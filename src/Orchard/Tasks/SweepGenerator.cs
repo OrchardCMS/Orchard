@@ -5,7 +5,7 @@ using Orchard.Environment;
 using Orchard.Logging;
 
 namespace Orchard.Tasks {
-    public class SweepGenerator : IOrchardShellEvents {
+    public class SweepGenerator : IOrchardShellEvents, IDisposable {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Timer _timer;
 
@@ -74,5 +74,10 @@ namespace Orchard.Tasks {
             }
         }
 
+        public void Dispose()
+        {
+            _timer.Elapsed -= Elapsed;
+            _timer.Dispose();
+        }
     }
 }

@@ -167,6 +167,7 @@ namespace Orchard.Environment {
             if (_current != null) {
                 foreach (var shellContext in _current) {
                     shellContext.Shell.Terminate();
+                    shellContext.LifetimeScope.Dispose();
                 }
                 _current = null;
             }
