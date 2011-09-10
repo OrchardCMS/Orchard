@@ -5,5 +5,13 @@ Website: http://orchardproject.net
 Version: 1.2.0
 OrchardVersion: 1.2.0
 Description: The contents module enables the creation of custom content types. 
-FeatureDescription: Default custom content type definition, creation and management.
-Category: Core
+Features:
+    Orchard.Core.Contents
+        Name: Contents
+        Description: Default custom content type definition, creation and management.
+        Category: Core
+    Orchard.Core.Contents.Rules:
+        Name: Contents Rules
+        Description: Rules for the Contents modules
+        Category: Rules
+		Dependency: Rules
