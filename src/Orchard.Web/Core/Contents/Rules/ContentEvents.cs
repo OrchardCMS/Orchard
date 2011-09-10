@@ -12,7 +12,7 @@ namespace Orchard.Core.Contents.Rules
         void Describe(dynamic describe);
     }
 
-    [OrchardFeature("Orchard.Core.Contents.Rules")]
+    [OrchardFeature("Contents.Rules")]
     public class ContentEvents : IEventProvider
     {
         public Localizer T { get; set; }

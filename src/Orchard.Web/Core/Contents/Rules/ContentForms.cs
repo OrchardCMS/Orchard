@@ -13,7 +13,7 @@ namespace Orchard.Core.Contents.Rules
         void Describe(dynamic context);
     }
 
-    [OrchardFeature("Orchard.Core.Contents.Rules")]
+    [OrchardFeature("Contents.Rules")]
     public class ContentForms : IFormProvider
     {
         private readonly IContentDefinitionManager _contentDefinitionManager;
