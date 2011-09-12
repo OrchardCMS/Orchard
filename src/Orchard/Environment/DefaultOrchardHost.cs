@@ -155,7 +155,7 @@ namespace Orchard.Environment {
             _cacheManager.Get("OrchardHost_Extensions",
                               ctx => {
                                   _extensionMonitoringCoordinator.MonitorExtensions(ctx.Monitor);
-                                  _hostLocalRestart.Monitor(ctx.Monitor);
+                                  // _hostLocalRestart.Monitor(ctx.Monitor);
                                   DisposeShellContext();
                                   return "";
                               });
@@ -187,12 +187,44 @@ namespace Orchard.Environment {
             }
         }
 
-        void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
-            DisposeShellContext();
+        /// <summary>
+        /// Register and activate a new Shell when a tenant is created
+        /// </summary>
+        void IShellSettingsManagerEventHandler.Saved(ShellSettings settings)
+        {
+            // is it a new tenant ?
+            var shellContext = _current.FirstOrDefault(c => c.Settings.Name == settings.Name);
+
+            ShellContext context;
+
+            // if null, this is a new tenant, register and activate a new context
+            if(shellContext == null)
+            {
+                context = CreateShellContext(settings);
+                ActivateShell(context);
+                _current = _current.Union(new[] { context });
+                _runningShellTable.Add(settings);
+            }
+            else
+            { 
+                context = _shellContextFactory.CreateShellContext(settings);
+
+                // dispose previous context
+                shellContext.Shell.Terminate();
+                shellContext.LifetimeScope.Dispose();
+
+                // activate and register modified context
+                _current = _current.Where(shell => shell.Settings.Name != settings.Name).Union(new[] { shellContext });
+                
+                context.Shell.Activate();
+                _runningShellTable.Update(settings);
+            }
         }
 
+        /// <summary>
+        /// A feature is enabled/disabled
+        /// </summary>
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor) {
-            DisposeShellContext();
         }
     }
 }

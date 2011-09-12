@@ -170,6 +170,9 @@ namespace Orchard.Setup.Services {
                 }
             }
 
+            while (_processingEngine.AreTasksPending())
+                _processingEngine.ExecuteNextTask();
+
             _shellSettingsManager.SaveSettings(shellSettings);
 
             return executionId;
