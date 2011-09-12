@@ -29,8 +29,7 @@ namespace Lucene.Models {
         }
 
         public bool GetBoolean(string name) {
-            var field = _doc.GetField(name);
-            return field == null ? false : bool.Parse(field.StringValue());
+            return GetInt(name) > 0 ? true : false;
         }
 
         public string GetString(string name) {
