@@ -86,7 +86,7 @@ namespace Orchard.Core.Contents.Controllers {
             model.Options.SelectedFilter = model.TypeName;
             model.Options.FilterOptions = GetCreatableTypes(false)
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
-                .ToList().OrderBy(kvp => kvp.Key);
+                .ToList().OrderBy(kvp => kvp.Value);
 
             var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
             var pageOfContentItems = query.Slice(pager.GetStartIndex(), pager.PageSize).ToList();
