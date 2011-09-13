@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Lucene.Models;
 using Lucene.Net.Index;
@@ -89,22 +88,20 @@ namespace Lucene.Services {
             return this;
         }
 
-        public ISearchBuilder WithField(string field, float value) {
+        public ISearchBuilder WithField(string field, double value) {
             CreatePendingClause();
-            _query = NumericRangeQuery.NewFloatRange(field, value, value, true, true);
+            _query = NumericRangeQuery.NewDoubleRange(field, value, value, true, true);
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, float min, float max) {
+        public ISearchBuilder WithinRange(string field, double min, double max) {
             CreatePendingClause();
-            _query = NumericRangeQuery.NewFloatRange(field, min, max, true, true);
+            _query = NumericRangeQuery.NewDoubleRange(field, min, max, true, true);
             return this;
         }
 
         public ISearchBuilder WithField(string field, bool value) {
-            CreatePendingClause();
-            _query = new TermQuery(new Term(field, value.ToString().ToLower()));
-            return this;
+            return WithField(field, value ? 1 : 0);
         }
 
         public ISearchBuilder WithField(string field, DateTime value) {
@@ -203,15 +200,19 @@ namespace Lucene.Services {
             return this;
         }
 
+        public ISearchBuilder SortByBoolean(string name) {
+            return SortByInteger(name);
+        }
+
         public ISearchBuilder SortByString(string name) {
             _sort = name;
             _comparer = SortField.STRING;
             return this;
         }
 
-        public ISearchBuilder SortByFloat(string name) {
+        public ISearchBuilder SortByDouble(string name) {
             _sort = name;
-            _comparer = SortField.FLOAT;
+            _comparer = SortField.DOUBLE;
             return this;
         }
 

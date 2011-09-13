@@ -1,10 +1,16 @@
-﻿using Orchard.DisplayManagement;
+﻿using System;
+using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
-using Orchard.Forms.Services;
+using Orchard.Events;
 using Orchard.Localization;
 
 namespace Orchard.Comments.Rules
 {
+    public interface IFormProvider : IEventHandler
+    {
+        void Describe(dynamic context);
+    }
+
     [OrchardFeature("Orchard.Comments.Rules")]
     public class CommentsForms : IFormProvider
     {
@@ -16,17 +22,19 @@ namespace Orchard.Comments.Rules
             Shape = shapeFactory;
         }
 
-        public void Describe(DescribeContext context)
+        public void Describe(dynamic context)
         {
-            context.Form("ActionCloseComments",
+
+            Func<IShapeFactory, dynamic> form = 
                 shape => Shape.Form(
-                Id: "ActionCloseComments",
-                _Type: Shape.Textbox(
-                    Id: "ContentId", Name: "ContentId",
-                    Title: T("Content Item Id"),
-                    Description: T("Content Item Id."))
-                )
-            );
+                    Id: "ActionCloseComments",
+                    _Type: Shape.Textbox(
+                        Id: "ContentId", Name: "ContentId",
+                        Title: T("Content Item Id"),
+                        Description: T("Content Item Id."))
+                );
+
+            context.Form("ActionCloseComments", form);
         }
     }
 }

@@ -10,9 +10,9 @@ namespace Orchard.Indexing {
         ISearchBuilder WithField(string field, DateTime value);
         ISearchBuilder WithField(string field, string value);
         ISearchBuilder WithField(string field, int value);
-        ISearchBuilder WithField(string field, float value);
+        ISearchBuilder WithField(string field, double value);
         ISearchBuilder WithinRange(string field, int min, int max);
-        ISearchBuilder WithinRange(string field, float min, float max);
+        ISearchBuilder WithinRange(string field, double min, double max);
         ISearchBuilder WithinRange(string field, DateTime min, DateTime max);
         ISearchBuilder WithinRange(string field, string min, string max);
 
@@ -48,8 +48,9 @@ namespace Orchard.Indexing {
 
         ISearchBuilder SortBy(string name);
         ISearchBuilder SortByInteger(string name);
+        ISearchBuilder SortByBoolean(string name);
         ISearchBuilder SortByString(string name);
-        ISearchBuilder SortByFloat(string name);
+        ISearchBuilder SortByDouble(string name);
         ISearchBuilder SortByDateTime(string name);
         ISearchBuilder Ascending();
 

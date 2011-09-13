@@ -1,13 +1,17 @@
 ﻿using System;
 using Orchard.Comments.Models;
 using Orchard.Environment.Extensions;
-using Orchard.Rules.Models;
-using Orchard.Rules.Services;
+using Orchard.Events;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 
 namespace Orchard.Comments.Rules
 {
+    public interface IActionProvider : IEventHandler
+    {
+        void Describe(dynamic describe);
+    }
+
     [OrchardFeature("Orchard.Comments.Rules")]
     public class CommentsActions : IActionProvider
     {
@@ -20,13 +24,18 @@ namespace Orchard.Comments.Rules
 
         public Localizer T { get; set; }
 
-        public void Describe(DescribeActionContext context)
+        public void Describe(dynamic describe)
         {
-            context.For("Comments", T("Comments"), T("Comments"))
-                .Element("Close", T("Close Comments"), T("Closes comments on a content item."), Close, actionContext => T("Close comments"), "ActionCloseComments");
+            Func<dynamic, LocalizedString> display = context => T("Close comments");
+
+            describe.For("Comments", T("Comments"), T("Comments"))
+                .Element("Close", T("Close Comments"), T("Closes comments on a content item."), (Action<dynamic>) Close, display, "ActionCloseComments");
         }
 
-        private void Close(ActionContext context)
+        /// <summary>
+        /// Closes the comments on the content represented by "ContentId"
+        /// </summary>
+        private void Close(dynamic context)
         {
             var contentId = Convert.ToInt32(context.Properties["ContentId"]);
             var content = _contentManager.Get(contentId);

@@ -117,14 +117,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Forms\Orchard.Forms.csproj">
-      <Project>{642A49D7-8752-4177-80D6-BFBBCFAD3DE0}</Project>
-      <Name>Orchard.Forms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Rules\Orchard.Rules.csproj">
-      <Project>{966EC390-3C7F-4D98-92A6-F0F30D02E9B1}</Project>
-      <Name>Orchard.Rules</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Edit.cshtml" />

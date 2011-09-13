@@ -43,7 +43,6 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 /* Remember focus styles! */
 :focus { outline: 0; }
 
-body { line-height: 1; color: black; background: white; }
 ol, ul { list-style: none; }
 
 /* Tables still need 'cellspacing="0"' in the markup */
@@ -110,7 +109,8 @@ Pixels     EMs         Percent Points
 24px     1.846em     184.6%     18pt
 */
 
-body { 
+body  {
+  line-height: 1; 
   font-size: 81.3%;
   color: #434343; 
   background: #fff;
