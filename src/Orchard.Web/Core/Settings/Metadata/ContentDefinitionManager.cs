@@ -83,6 +83,39 @@ namespace Orchard.Core.Settings.Metadata {
             Apply(contentPartDefinition, Acquire(contentPartDefinition));
         }
 
+        public void DeleteTypeDefinition(string name) {
+            var record = _typeDefinitionRepository.Fetch(x => x.Name == name).SingleOrDefault();
+
+            // deletes the content type record associated
+            if (record != null) {
+                _typeDefinitionRepository.Delete(record);
+            }
+
+            // invalidates the cache
+            TriggerContentDefinitionSignal();
+        }
+
+        public void DeletePartDefinition(string name) {
+            // remove parts from current types
+            var typesWithPart = ListTypeDefinitions().Where(typeDefinition => typeDefinition.Parts.Any(part => part.PartDefinition.Name == name));
+
+            foreach (var typeDefinition in typesWithPart) {
+                this.AlterTypeDefinition(typeDefinition.Name, builder => builder.RemovePart(name));
+            }
+
+            // delete part
+            var record = _partDefinitionRepository.Fetch(x => x.Name == name).SingleOrDefault();
+
+            if (record != null) {
+                _partDefinitionRepository.Delete(record);
+            }
+
+            // invalidates the cache
+            TriggerContentDefinitionSignal();
+
+        }
+
+
         private void MonitorContentDefinitionSignal(AcquireContext<string> ctx) {
             ctx.Monitor(_signals.When(ContentDefinitionSignal));
         }

@@ -7,6 +7,7 @@ using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Caching;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
@@ -202,6 +203,43 @@ namespace Orchard.Core.Tests.Settings.Metadata {
             ResetSession();
             AssertThatTypeHasParts("alpha","foo","frap");
             Assert.That(manager.ListPartDefinitions().Count(), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void PartsCanBeDeleted() {
+            var manager = _container.Resolve<IContentDefinitionManager>();
+            manager.StoreTypeDefinition(
+                new ContentTypeDefinitionBuilder()
+                    .Named("alpha")
+                    .WithPart("foo", pb => { })
+                    .WithPart("bar", pb => { })
+                    .Build());
+
+            AssertThatTypeHasParts("alpha", "foo", "bar");
+            Assert.That(manager.ListPartDefinitions().Count(), Is.EqualTo(2));
+
+            manager.DeletePartDefinition("foo");
+            ResetSession();
+
+            AssertThatTypeHasParts("alpha", "bar");
+            Assert.That(manager.ListPartDefinitions().Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ContentTypesCanBeDeleted() {
+            var manager = _container.Resolve<IContentDefinitionManager>();
+            manager.StoreTypeDefinition(
+                new ContentTypeDefinitionBuilder()
+                    .Named("alpha")
+                    .WithPart("foo", pb => { })
+                    .WithPart("bar", pb => { })
+                    .Build());
+
+            Assert.That(manager.GetTypeDefinition("alpha"), Is.Not.Null);
+            manager.DeleteTypeDefinition("alpha");
+            ResetSession();
+
+            Assert.That(manager.GetTypeDefinition("alpha"), Is.Null);
         }
 
         private void AssertThatTypeHasParts(string typeName, params string[] partNames) {

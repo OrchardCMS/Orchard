@@ -5,7 +5,6 @@
     Layout.Title = T("Edit Part").ToString();
 }
 
-<p class="breadcrumb">@Html.ActionLink(T("Content Types").Text, "index")@T(" &#62; ")@Html.ActionLink(T("Content Parts").Text, "listparts")@T(" &#62; ")@T("Edit Part")</p>
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <fieldset>
@@ -23,7 +22,8 @@
         @Html.EditorFor(m => m.Fields, "Fields", "")
     </div>
     <fieldset class="action">
-        <button class="primaryAction" type="submit">@T("Save")</button>
+        <button class="primaryAction" type="submit" name="submit.Save" value="Save">@T("Save")</button>
+        <button class="primaryAction" type="submit" name="submit.Delete" value="Delete">@T("Delete")</button>
     </fieldset>
 }
 
