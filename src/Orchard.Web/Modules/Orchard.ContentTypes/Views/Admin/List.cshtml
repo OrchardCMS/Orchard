@@ -6,7 +6,6 @@
 
 <div class="manage">
     @Html.ActionLink(T("Create new type").ToString(), "Create", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" })
-    @Html.ActionLink(T("Content Parts").ToString(), "ListParts", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button" })
 </div>
 @Html.UnorderedList(
     Model.Types,
