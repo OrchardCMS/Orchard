@@ -1,65 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Contents;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Data;
-using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc;
-using Orchard.Services;
 using Orchard.Themes;
 
 namespace Orchard.Core.Routable.Controllers {
     [ValidateInput(false)]
     public class ItemController : Controller, IUpdateModel {
-        private readonly IContentManager _contentManager;
         private readonly ITransactionManager _transactionManager;
         private readonly IRoutablePathConstraint _routablePathConstraint;
-        private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IHomePageProvider _routableHomePageProvider;
 
         public ItemController(
-            IContentManager contentManager, 
             ITransactionManager transactionManager, 
             IRoutablePathConstraint routablePathConstraint,
-            IShapeFactory shapeFactory,
-            IWorkContextAccessor workContextAccessor,
-            IEnumerable<IHomePageProvider> homePageProviders) {
-            _contentManager = contentManager;
+            IOrchardServices services
+            ) {
             _transactionManager = transactionManager;
             _routablePathConstraint = routablePathConstraint;
-            _workContextAccessor = workContextAccessor;
-            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
-            Shape = shapeFactory;
+            Services = services;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
-        dynamic Shape { get; set; }
+        public IOrchardServices Services { get; private set; }
 
         [Themed]
         public ActionResult Display(string path) {
             var matchedPath = _routablePathConstraint.FindPath(path);
+            
             if (matchedPath == null) {
-                throw new ApplicationException(T("404 - should not have passed path constraint").Text);
+                return HttpNotFound(T("Should not have passed path constraint").Text);
             }
 
-            var hits = _contentManager
+            var hits = Services.ContentManager
                 .Query<RoutePart, RoutePartRecord>(VersionOptions.Published)
                 .Where(r => r.Path == matchedPath)
-                .Slice(0, 2);
+                .Slice(0, 2)
+                .ToList();
+
             if (hits.Count() == 0) {
-                throw new ApplicationException(T("404 - should not have passed path constraint").Text);
-            }
-            if (hits.Count() != 1) {
-                throw new ApplicationException(T("Ambiguous content").Text);
+                return HttpNotFound(T("Should not have passed path constraint").Text);
             }
 
-            dynamic model = _contentManager.BuildDisplay(hits.Single());
+            if (hits.Count() != 1) {
+                return HttpNotFound(T("Ambiguous content").Text);
+            }
+
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, hits.Single(), T("Cannot preview content")))
+                return new HttpUnauthorizedResult();
+
+            dynamic model = Services.ContentManager.BuildDisplay(hits.Single());
             return new ShapeResult(this, model);
         }
 
@@ -71,19 +67,19 @@ namespace Orchard.Core.Routable.Controllers {
                 return Json(slug);
 
             if (id != null)
-                contentItem = _contentManager.Get((int)id, VersionOptions.Latest);
+                contentItem = Services.ContentManager.Get((int)id, VersionOptions.Latest);
 
             if (contentItem == null) {
-                contentItem = _contentManager.Create(contentType, VersionOptions.Draft);
+                contentItem = Services.ContentManager.Create(contentType, VersionOptions.Draft);
 
                 if (containerId != null) {
-                    var containerItem = _contentManager.Get((int)containerId);
+                    var containerItem = Services.ContentManager.Get((int)containerId);
                     contentItem.As<ICommonPart>().Container = containerItem;
                 }
             }
 
-            _contentManager.UpdateEditor(contentItem, this);
-            _contentManager.Publish(contentItem);
+            Services.ContentManager.UpdateEditor(contentItem, this);
+            Services.ContentManager.Publish(contentItem);
             _transactionManager.Cancel();
 
             return Json(contentItem.As<IRoutableAspect>().GetEffectiveSlug() ?? slug);
