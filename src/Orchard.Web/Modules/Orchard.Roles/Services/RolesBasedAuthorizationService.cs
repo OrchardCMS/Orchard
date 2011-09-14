@@ -64,9 +64,16 @@ namespace Orchard.Roles.Services {
                         rolesToExamine = AnonymousRole;
                     }
                     else if (context.User.Has<IUserRoles>()) {
-                        rolesToExamine = context.User.As<IUserRoles>().Roles.Concat(AuthenticatedRole);
+                        // the current user is not null, so get his roles and add "Authenticated" to it
+                        rolesToExamine = context.User.As<IUserRoles>().Roles;
+
+                        // when it is a simulated anonymous user in the admin
+                        if (!rolesToExamine.Contains(AnonymousRole[0])) {
+                            rolesToExamine = rolesToExamine.Concat(AuthenticatedRole);   
+                        }
                     }
                     else {
+                        // the user is not null and has no specific role, then it's just "Authenticated"
                         rolesToExamine = AuthenticatedRole;
                     }
 
