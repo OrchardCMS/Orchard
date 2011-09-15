@@ -5,7 +5,7 @@ using Orchard.Environment;
 using Orchard.Logging;
 
 namespace Orchard.Tasks {
-    public class SweepGenerator : IOrchardShellEvents, IDisposable {
+    public class SweepGenerator : IOrchardShellEvents {
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Timer _timer;
 
@@ -55,29 +55,11 @@ namespace Orchard.Tasks {
         }
 
         public void DoWork() {
-            // makes an inner container, similar to the per-request container
             using (var scope = _workContextAccessor.CreateWorkContextScope()) {
-                var transactionManager = scope.Resolve<ITransactionManager>();
-
-                try {
-                    // resolve the manager and invoke it
-                    var manager = scope.Resolve<IBackgroundService>();
-                    manager.Sweep();
-                }
-                catch {
-                    // any database changes in this using scope are invalidated
-                    transactionManager.Cancel();
-
-                    // pass exception along to actual handler
-                    throw;
-                }
+                // resolve the manager and invoke it
+                var manager = scope.Resolve<IBackgroundService>();
+                manager.Sweep();
             }
-        }
-
-        public void Dispose()
-        {
-            _timer.Elapsed -= Elapsed;
-            _timer.Dispose();
         }
     }
 }
