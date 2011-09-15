@@ -14,11 +14,13 @@
     <CloudRootFolder>$(ServiceFolder)\roles\Orchard.Azure.Web\approot</CloudRootFolder>
     <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
     <StageFolder>$(BuildFolder)\Stage</StageFolder>
+    <MsDeployFolder>$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\obj\Release\Package\PackageTmp</MsDeployFolder>
+    
   </PropertyGroup>
   
   <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\1.4\Microsoft.WindowsAzure.targets" />
-  
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\1.5\Microsoft.WindowsAzure.targets" />
+
 <!-- Coordinating Targets -->
 
   <Target Name ="Build">
@@ -47,19 +49,23 @@
   <Target Name="Clean">
     <MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln" Targets="Clean" />
     <RemoveDir Directories="$(BuildFolder)" ContinueOnError="true" />
+    <RemoveDir Directories="$(MsDeployFolder)" ContinueOnError="true" />
   </Target>
 
   <Target Name ="Compile">
+
+    <!-- behaves like MsDeploy since Azure SDK 1.4, output is $(MsDeployFolder) -->
     <MSBuild
       Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64" 
-       />      
-
+      Properties="Configuration=Release;DeployOnBuild=true;DeployTarget=Package;PlatformTarget=x64" 
+     />
+    
     <MSBuild
       Projects="$(SrcFolder)\Orchard.Azure.Tests\Orchard.Azure.Tests.sln"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(CompileFolder);PlatformTarget=x64" />      
+      Properties="Configuration=Release;OutputPath=$(MsDeployFolder)\bin;PlatformTarget=x64" 
+    />
     
   </Target>
 
@@ -72,7 +78,7 @@
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
 
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" />
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(MsDeployFolder)\bin" />
   </Target>
 
 <!-- Packaging -->
@@ -80,48 +86,54 @@
   <Target Name="Package-ForCloud">
     
     <ItemGroup>
+      <!-- filter to exclude any binary from a folder -->
       <Excluded Include="$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;" />
+<!--
       <Web-Excluded Include="$(SrcFolder)\**\_bin_deployableAssemblies\**\*;$(SrcFolder)\**\Properties\**\*;$(SrcFolder)\**\*.csproj*;$(SrcFolder)\**\*.proj;$(SrcFolder)\**\Modules\**\*;$(SrcFolder)\**\Core\**\*;$(SrcFolder)\**\Themes\**\*;$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;" />
-
+-->
+      <!-- list of files from Themes, Core and Modules to export -->
       <Stage-Themes Include="$(SrcFolder)\Orchard.Web\Themes\**\*" Exclude="@(Excluded)" />
       <Stage-Core Include="$(SrcFolder)\Orchard.Web\Core\**\*" Exclude="@(Excluded)" />
       <Stage-Modules Include="$(SrcFolder)\Orchard.Web\Modules\**\*" Exclude="@(Excluded)" />
-	  <Stage-Web Include="$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\**\*" Exclude="@(Web-Excluded)" />
-	  <Stage-Assemblies Include="$(SrcFolder)\**\bin\**\*" />
-	  <Stage-Bin-Assemblies Include="$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\_bin_deployableAssemblies\*" />
-	  <Stage-Entry-Assembly Include="$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\bin\Orchard.Azure.Web.dll" />
+<!--
+      <Stage-Web Include="$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\**\*" Exclude="@(Web-Excluded)" />
+      <Stage-Assemblies Include="$(SrcFolder)\**\bin\**\*" />
+      <Stage-Bin-Assemblies Include="$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\_bin_deployableAssemblies\*" />
+      <Stage-Entry-Assembly Include="$(CompileFolder)\Orchard.Azure.Web.dll" />
+-->
     </ItemGroup>
 
-    <Copy SourceFiles="@(Stage-Themes)" DestinationFolder="$(CloudRootFolder)\Themes\%(RecursiveDir)" />
-    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(CloudRootFolder)\Core\%(RecursiveDir)" />
-    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(CloudRootFolder)\Modules\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Themes)" DestinationFolder="$(MsDeployFolder)\Themes\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(MsDeployFolder)\Core\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(MsDeployFolder)\Modules\%(RecursiveDir)" />
+<!--
     <Copy SourceFiles="@(Stage-Web)" DestinationFolder="$(CloudRootFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Assemblies)" DestinationFolder="$(CloudRootFolder)\bin" />
     <Copy SourceFiles="@(Stage-Bin-Assemblies)" DestinationFolder="$(CloudRootFolder)\bin" />
     <Copy SourceFiles="@(Stage-Entry-Assembly)" DestinationFolder="$(CloudRootFolder)\" />
-
-    <Delete Files="$(CloudRootFolder)\App_Data" />
+-->
+    <!--Delete Files="$(CloudRootFolder)\App_Data" /-->
 
     <ItemGroup>
-      <WebConfigs Include="$(CloudRootFolder)\Modules\*\web.config;$(CloudRootFolder)\Core\web.config" />
+      <WebConfigs Include="$(MsDeployFolder)\Modules\*\web.config;$(MsDeployFolder)\Core\web.config" />
     </ItemGroup>
 
     <Delete Files="@(WebConfigs)" />
 
     <!-- extra processing of the staged config files -->
-    <XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
+    <XmlUpdate XmlFileName="$(MsDeployFolder)\web.config"
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
 
-    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+    <XmlUpdate XmlFileName="$(MsDeployFolder)\Config\log4net.config"
       XPath="/log4net/appender/immediateFlush/@value"
       Value="false" />
 
-    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+    <XmlUpdate XmlFileName="$(MsDeployFolder)\Config\log4net.config"
       XPath="/log4net/logger/priority/@value"
       Value="ERROR" />
 
-    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\log4net.config"
+    <XmlUpdate XmlFileName="$(MsDeployFolder)\Config\log4net.config"
       XPath="/log4net/root/priority/@value"
       Value="ERROR" />
 
@@ -142,14 +154,14 @@
       <SqlCeBinariesx86 Include="$(LibFolder)\sqlce\x86\**\*" />
       <SqlCeBinariesx64 Include="$(LibFolder)\sqlce\amd64\**\*" />
     </ItemGroup>
-    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(CloudRootFolder)\bin\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(CloudRootFolder)\bin\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(MsDeployFolder)\bin\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(MsDeployFolder)\bin\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
   
   <Target Name="Package-Stage">
     <Exec
-        Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceDefinition.build.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /sites:Orchard.Azure.Web;Web;&quot;$(CloudRootFolder)&quot; /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;"
-        WorkingDirectory="$(CloudRootFolder)" 
+        Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceDefinition.build.csdef&quot; /role:Orchard.Azure.Web;&quot;$(MsDeployFolder)&quot;;Orchard.Azure.Web.dll /sites:Orchard.Azure.Web;Web;&quot;$(MsDeployFolder)&quot; /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;"
+        WorkingDirectory="$(MsDeployFolder)" 
       />
   </Target>
 
