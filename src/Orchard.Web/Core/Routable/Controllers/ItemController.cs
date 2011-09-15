@@ -52,9 +52,6 @@ namespace Orchard.Core.Routable.Controllers {
                 return HttpNotFound(T("Ambiguous content").Text);
             }
 
-            if (!Services.Authorizer.Authorize(Permissions.EditContent, hits.Single(), T("Cannot preview content")))
-                return new HttpUnauthorizedResult();
-
             dynamic model = Services.ContentManager.BuildDisplay(hits.Single());
             return new ShapeResult(this, model);
         }
