@@ -14,6 +14,10 @@
 @Html.Link(T("Unpublish").Text, Url.Action("Unpublish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "UnpublishUrl UnsafeUrl" })
 @T(" | ")
 } else {
+    if ( contentPart.HasDraft() ) {    
+        @Html.ActionLink(T("Preview").Text, "Preview", "Item", new { id = ((ContentItem)Model.ContentPart.ContentItem).Id }, new { })
+        @T(" | ")
+    }
 @Html.Link(T("Publish").Text, Url.Action("Publish", "Admin", new { area = "Contents", id = contentPart.ContentItem.Id, returnUrl = Request.ToUrlString() }), new { itemprop = "PublishUrl UnsafeUrl" })
 @T(" | ")
 }
