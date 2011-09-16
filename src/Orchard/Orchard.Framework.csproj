@@ -230,6 +230,11 @@
     <Compile Include="Logging\OrchardLog4netFactory.cs" />
     <Compile Include="Logging\OrchardLog4netLogger.cs" />
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
+    <Compile Include="Mvc\DataAnnotations\LocalizedReularExpressionAttribute.cs" />
+    <Compile Include="Mvc\DataAnnotations\LocalizedStringMaxLengthAttribute.cs" />
+    <Compile Include="Mvc\DataAnnotations\LocalizedRangeAttribute.cs" />
+    <Compile Include="Mvc\DataAnnotations\LocalizedModelValidatorProvider.cs" />
+    <Compile Include="Mvc\DataAnnotations\LocalizedRequiredAttribute.cs" />
     <Compile Include="Mvc\Extensions\RouteExtension.cs" />
     <Compile Include="Mvc\HttpContextWorkContext.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
