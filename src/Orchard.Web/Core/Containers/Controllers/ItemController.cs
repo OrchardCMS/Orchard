@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Extensions;
 using Orchard.Core.Containers.Models;
+using Orchard.Core.Feeds;
 using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
 using Orchard.Mvc;
@@ -18,16 +20,19 @@ namespace Orchard.Core.Containers.Controllers {
         private readonly IContentManager _contentManager;
         private readonly IContainersPathConstraint _containersPathConstraint;
         private readonly ISiteService _siteService;
+        private readonly IFeedManager _feedManager;
 
         public ItemController(
             IContentManager contentManager, 
             IContainersPathConstraint containersPathConstraint, 
             IShapeFactory shapeFactory,
-            ISiteService siteService) {
+            ISiteService siteService,
+            IFeedManager feedManager) {
 
             _contentManager = contentManager;
             _containersPathConstraint = containersPathConstraint;
             _siteService = siteService;
+            _feedManager = feedManager;
             Shape = shapeFactory;
         }
 
@@ -60,6 +65,8 @@ namespace Orchard.Core.Containers.Controllers {
 
             var descendingOrder = container.As<ContainerPart>().Record.OrderByDirection == (int) OrderByDirection.Descending;
             query = query.OrderBy(container.As<ContainerPart>().Record.OrderByProperty, descendingOrder);
+
+            _feedManager.Register(container.As<RoutePart>().Title, "rss", new RouteValueDictionary { { "containerid", container.Id } }); 
 
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
             pager.PageSize = pagerParameters.PageSize != null && container.As<ContainerPart>().Record.Paginated
