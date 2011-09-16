@@ -73,6 +73,10 @@ namespace Orchard.ContentTypes.Controllers {
             }
 
             var contentTypeDefinition = _contentDefinitionService.AddType(viewModel.Name, viewModel.DisplayName);
+            
+            // adds CommonPart by default
+            _contentDefinitionService.AddPartToType("CommonPart", viewModel.Name);
+
             var typeViewModel = new EditTypeViewModel(contentTypeDefinition);
 
 

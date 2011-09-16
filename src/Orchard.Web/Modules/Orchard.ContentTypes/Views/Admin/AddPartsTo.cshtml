@@ -3,7 +3,7 @@
     Style.Require("ContentTypesAdmin");
     Layout.Title = T("Add Parts To \"{0}\"", Model.Type.DisplayName).ToString();
 }
-@T("Choose the Parts to add to this Content Type.  The <b>Common</b> part should be included in most types. It gives the items an owner as well as a creation, publication and last modification date stamps. In addition to the Common part, adding the <b>Containable</b> part makes it possible to add content items of this type to a <b>List</b>.")
+@T("Choose the Parts to add to this Content Type. Adding the <b>Containable</b> part makes it possible to add content items of this type to a <b>List</b>.")
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <fieldset>
