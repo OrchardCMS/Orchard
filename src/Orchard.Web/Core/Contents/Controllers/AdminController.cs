@@ -191,7 +191,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             var contentItem = _contentManager.New(id);
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Cannot create content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
             if (containerId.HasValue && contentItem.Is<ContainablePart>()) {
@@ -218,7 +218,7 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(string id, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't create content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOwnContent, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
             return CreatePOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
@@ -227,7 +227,7 @@ namespace Orchard.Core.Contents.Controllers {
         private ActionResult CreatePOST(string id, string returnUrl, Action<ContentItem> conditionallyPublish) {
             var contentItem = _contentManager.New(id);
 
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't create content")))
+            if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
             _contentManager.Create(contentItem, VersionOptions.Draft);

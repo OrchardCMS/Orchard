@@ -47,7 +47,7 @@ namespace Orchard.Blogs {
                 cfg => cfg
                     .WithPart("BlogPostPart")
                     .WithPart("CommonPart", p => p
-                        .WithSetting("CommonTypePartSettings.ShowCreatedUtcEditor", "true"))
+                        .WithSetting("DateEditorSettings.ShowDateEditor", "true"))
                     .WithPart("PublishLaterPart")
                     .WithPart("RoutePart")
                     .WithPart("BodyPart")
@@ -69,7 +69,7 @@ namespace Orchard.Blogs {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 3;
+            return 4;
         }
 
         public int UpdateFrom1() {
@@ -80,6 +80,11 @@ namespace Orchard.Blogs {
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2")));
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "true")));
+            return 4;
         }
     }
 }
