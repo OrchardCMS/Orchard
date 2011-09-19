@@ -4,8 +4,8 @@
     RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});
     Script.Include("html5.js").AtHead();
 
-    string title = Model.Title;
-    string siteName = WorkContext.CurrentSite.SiteName;
+    string title = Convert.ToString(Model.Title);
+    string siteName = Convert.ToString(WorkContext.CurrentSite.SiteName);
 }
 <!DOCTYPE html> 
 <html lang="en" class="static @Html.ClassForPage()"> 
