@@ -34,7 +34,7 @@ namespace Orchard.Mvc.Html {
         public static MvcHtmlString Title(this HtmlHelper html, params string[] titleParts) {
             IPageTitleBuilder pageTitleBuilder = html.Resolve<IPageTitleBuilder>();
 
-            html.AppendTitleParts(titleParts);
+            html.AddTitleParts(titleParts);
 
             return MvcHtmlString.Create(html.Encode(pageTitleBuilder.GenerateTitle()));
         }
