@@ -164,7 +164,7 @@
     <Compile Include="Caching\DefaultParallelCacheContext.cs" />
     <Compile Include="Caching\ICacheContextAccessor.cs" />
     <Compile Include="Caching\IParallelCacheContext.cs" />
-    <Compile Include="ContentManagement\Aspects\ILocalizablePart.cs" />
+    <Compile Include="ContentManagement\Aspects\ILocalizableAspect.cs" />
     <Compile Include="ContentManagement\ContentIdentity.cs" />
     <Compile Include="ContentManagement\ContentItemBehavior.cs" />
     <Compile Include="ContentManagement\ContentPartBehavior.cs" />

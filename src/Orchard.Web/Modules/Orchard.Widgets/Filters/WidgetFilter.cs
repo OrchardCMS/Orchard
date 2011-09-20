@@ -72,7 +72,7 @@ namespace Orchard.Widgets.Filters {
                 }
 
                 // ignore widget for different cultures
-                var localizablePart = widgetPart.As<ILocalizablePart>();
+                var localizablePart = widgetPart.As<ILocalizableAspect>();
                 if (localizablePart == null || localizablePart.Culture != workContext.CurrentCulture) {
                     continue;
                 }

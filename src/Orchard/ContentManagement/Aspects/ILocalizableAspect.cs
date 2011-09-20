@@ -1,5 +1,5 @@
 ﻿namespace Orchard.ContentManagement.Aspects {
-    public interface ILocalizablePart : IContent {
+    public interface ILocalizableAspect : IContent {
         string Culture { get ; }
     }
 }
