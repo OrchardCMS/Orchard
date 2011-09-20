@@ -1,7 +1,7 @@
 ﻿@model Orchard.Localization.ViewModels.EditLocalizationViewModel
-@if (Model.ContentItem.ContentItem.Id > 0 && Model.SelectedCulture != null && Model.ContentLocalizations.Localizations.Count() > 0) {
-Style.Require("LocalizationAdmin");
 <fieldset class="localization culture-selection">
+@if (Model.ContentItem.ContentItem.Id > 0 && Model.SelectedCulture != null && Model.ContentLocalizations.Localizations.Count() > 0) {
+    Style.Require("LocalizationAdmin");
     <fieldset class="culture-selected">
         <label for="SelectedCulture">@T("Content Localization")</label>
         <div>@T("This is the <em>{0}</em> variation of {1}.",
@@ -9,7 +9,7 @@ Style.Require("LocalizationAdmin");
                             Html.ItemEditLink(Model.MasterContentItem ?? Model.ContentItem))</div>
            @Html.Hidden("SelectedCulture", Model.SelectedCulture)
     </fieldset>
-    @if (Model.ContentLocalizations.Localizations.Count() > 0) {
+    if (Model.ContentLocalizations.Localizations.Count() > 0) {
     <dl class="content-localization">
         <dt>@T("Other translations:")</dt>
         <dd class="content-localizations">
@@ -17,4 +17,6 @@ Style.Require("LocalizationAdmin");
         </dd>
     </dl>
     }
-</fieldset>}
+}    
+    <div class="add-localization">@Html.ActionLink(T("+ New translation").Text, "Translate", "Admin", new { area = "Orchard.Localization", id = Model.ContentItem.Id }, null)</div>
+</fieldset>
