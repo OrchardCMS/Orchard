@@ -78,6 +78,7 @@ namespace Orchard.Core.Routable.Handlers {
                     _routablePathConstraint.AddPath(route.Path);
                 }
             };
+
             OnPublished<RoutePart>(handler);
             OnUnpublished<RoutePart>(handler);
 
@@ -140,10 +141,8 @@ namespace Orchard.Core.Routable.Handlers {
             if (routable == null)
                 return;
 
-            context.Metadata.DisplayText = routable.Title;
-
             // set the display route values if it hasn't been set or only has been set by the Contents module. 
-            // allows other modules to set their own display. probably not common enough to warrant some priority implemntation
+            // allows other modules to set their own display. probably not common enough to warrant some priority implementation
             if (context.Metadata.DisplayRouteValues == null || context.Metadata.DisplayRouteValues["Area"] as string == "Contents") {
                 var itemPath = routable.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)
                     ? ""

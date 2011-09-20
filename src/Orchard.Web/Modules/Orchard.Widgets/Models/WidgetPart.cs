@@ -5,7 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Widgets.Models {
-    public class WidgetPart : ContentPart<WidgetPartRecord> {
+    public class WidgetPart : ContentPart<WidgetPartRecord>, ITitleAspect {
         
         /// <summary>
         /// The widget's title.
