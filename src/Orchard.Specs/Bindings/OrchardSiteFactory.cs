@@ -24,7 +24,7 @@ namespace Orchard.Specs.Bindings {
                 virtualDirectory,
                 TableData(
                 new { extension = "Module", names = "Orchard.Setup, Orchard.Pages, Orchard.Blogs, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Modules, Orchard.Packaging, Orchard.PublishLater, Orchard.Themes, Orchard.Scripting, Orchard.Widgets, Orchard.Users, Orchard.Lists, Orchard.ContentTypes, Orchard.Roles, Orchard.Comments, Orchard.jQuery, Orchard.Tags, TinyMce, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup" },
-                new { extension = "Core", names = "Common, Containers, Dashboard, Feeds, HomePage, Navigation, Contents, Routable, Scheduling, Settings, Shapes, XmlRpc" },
+                new { extension = "Core", names = "Common, Containers, Dashboard, Feeds, HomePage, Navigation, Contents, Routable, Scheduling, Settings, Shapes, XmlRpc, Title" },
                 new { extension = "Theme", names = "SafeMode, TheAdmin, TheThemeMachine" }));
 
             webApp.WhenIGoTo("Setup");

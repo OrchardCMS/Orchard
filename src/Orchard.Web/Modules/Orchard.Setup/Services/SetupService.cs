@@ -73,7 +73,7 @@ namespace Orchard.Setup.Services {
                     // Framework
                     "Orchard.Framework",
                     // Core
-                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "HomePage", "Navigation", "Reports", "Routable", "Scheduling", "Settings", "Shapes",
+                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "HomePage", "Navigation", "Reports", "Routable", "Scheduling", "Settings", "Shapes", "Title",
                     // Modules
                     "Orchard.Pages", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules", 
                     "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes",
