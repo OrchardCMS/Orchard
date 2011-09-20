@@ -81,7 +81,7 @@
 
         var preselect = query("select", location.hash);
         if (preselect) {
-            $("img[data-filename=" + preselect + "]").closest(".media-item").trigger("click");
+            $("img[data-filename='" + preselect + "']").closest(".media-item").trigger("click");
         }
 
         // edit mode has slightly different wording
