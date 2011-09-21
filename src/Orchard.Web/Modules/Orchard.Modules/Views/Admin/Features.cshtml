@@ -107,7 +107,7 @@
 <script type="text/javascript">
 //<![CDATA[
     $(function () {
-        var searchBox = $("<span class=\"hint\">Filter</span> <input id=\"search-box\" class=\"text-box\" type=\"text\" />");
+        var searchBox = $("<fieldset class=\"bulk-actions\"><label for=\"search-box\">@T("Filter:")</label> <input id=\"search-box\" class=\"text-box\" type=\"text\" /></fieldset>");
         var theSwitch = $(".switch-for-switchable");
         theSwitch.prepend(searchBox);
         $("#search-box").focus().keyup(function () {
