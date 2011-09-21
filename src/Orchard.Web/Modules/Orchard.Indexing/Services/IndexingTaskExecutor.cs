@@ -178,7 +178,7 @@ namespace Orchard.Indexing.Services {
                     .OrderBy(x => x.Id)
                     .Take(ContentItemsPerLoop)
                     .GroupBy(x => x.ContentItemRecord.Id)
-                    .Select(group => new {TaskId = group.Max(task => task.Id), Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Published)})
+                    .Select(group => new {TaskId = group.Max(task => task.Id), Delete = group.Last().Action == IndexingTaskRecord.Delete, Id = group.Key, ContentItem = _contentManager.Get(group.Key, VersionOptions.Published)})
                     .OrderBy(x => x.TaskId)
                     .ToArray();
 
@@ -187,7 +187,7 @@ namespace Orchard.Indexing.Services {
                         // item.ContentItem can be null if the content item has been deleted
                         IDocumentIndex documentIndex = ExtractDocumentIndex(item.ContentItem);
 
-                        if (documentIndex == null) {
+                        if (documentIndex == null || item.Delete) {
                             deleteFromIndex.Add(item.Id);
                         }
                         else if (documentIndex.IsDirty) {
