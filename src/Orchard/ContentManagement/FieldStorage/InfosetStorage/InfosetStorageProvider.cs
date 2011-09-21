@@ -1,9 +1,16 @@
-﻿using System.Xml;
+﻿using System.Collections.Generic;
+using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
     public class InfosetStorageProvider : IFieldStorageProvider {
+        private readonly IEnumerable<IFieldStorageEvents> _events;
+
+        public InfosetStorageProvider(IEnumerable<IFieldStorageEvents> events) {
+            _events = events;
+        }
+
         public string ProviderName {
             get { return FieldStorageProviderSelector.DefaultProviderName; }
         }
@@ -14,8 +21,24 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
             var infosetPart = contentPart.As<InfosetPart>();
 
             return new SimpleFieldStorage(
-                name => Get(infosetPart.Infoset.Element, partName, fieldName, name),
-                (name, value) => Set(infosetPart.Infoset.Element, partName, fieldName, name, value));
+                (name, valueType) => Get(infosetPart.Infoset.Element, partName, fieldName, name),
+                (name, valueType, value) => {
+                        Set(infosetPart.Infoset.Element, partName, fieldName, name, value);
+
+                        var context = new FieldStorageEventContext {
+                                        FieldName = partFieldDefinition.Name,
+                                        PartName = contentPart.PartDefinition.Name,
+                                        Value = value,
+                                        ValueName = name,
+                                        ValueType = valueType,
+                                        Content = infosetPart
+                                    };
+
+                        foreach(var fieldEvent in _events) {
+                            fieldEvent.SetCalled(context);
+                        }
+                    }
+                );
         }
 
         private static string Get(XElement element, string partName, string fieldName, string valueName) {
@@ -37,7 +60,7 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
             return valueAttribute.Value;
         }
 
-        private static void Set(XElement element, string partName, string fieldName, string valueName, string value) {
+        private void Set(XElement element, string partName, string fieldName, string valueName, string value) {
             var partElement = element.Element(partName);
             if (partElement == null) {
                 partElement = new XElement(partName);

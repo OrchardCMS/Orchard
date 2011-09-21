@@ -171,6 +171,7 @@
     <Compile Include="ContentManagement\ContentPartBehavior.cs" />
     <Compile Include="ContentManagement\DefaultContentDisplay.cs" />
     <Compile Include="ContentManagement\Drivers\ContentShapeResult.cs" />
+    <Compile Include="ContentManagement\FieldStorage\IFieldStorageEvents.cs" />
     <Compile Include="ContentManagement\GroupInfo.cs" />
     <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
     <Compile Include="ContentManagement\Handlers\ExportContentContext.cs" />
