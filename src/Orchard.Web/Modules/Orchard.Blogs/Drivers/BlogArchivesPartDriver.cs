@@ -6,27 +6,28 @@ using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Drivers {
     public class BlogArchivesPartDriver : ContentPartDriver<BlogArchivesPart> {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
+        private readonly IContentManager _contentManager;
         private readonly IBlogPathConstraint _blogPathConstraint;
 
         public BlogArchivesPartDriver(
             IBlogService blogService, 
             IBlogPostService blogPostService,
-            IBlogPathConstraint blogPathConstraint) {
+            IContentManager contentManager) {
             _blogService = blogService;
             _blogPostService = blogPostService;
-            _blogPathConstraint = blogPathConstraint;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(BlogArchivesPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_BlogArchives",
                                 () => {
-                                    var path = _blogPathConstraint.FindPath(part.ForBlog);
-                                    BlogPart blog = _blogService.Get(path);
+                                    BlogPart blog = GetBlogFromSlug(part.ForBlog);
 
                                     if (blog == null)
                                         return null;
@@ -37,7 +38,7 @@ namespace Orchard.Blogs.Drivers {
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
             var viewModel = new BlogArchivesViewModel {
-                Path = part.ForBlog,
+                Slug = part.ForBlog,
                 Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
                 };
 
@@ -48,7 +49,7 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Editor(BlogArchivesPart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new BlogArchivesViewModel();
             if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                part.ForBlog = viewModel.Path;
+                part.ForBlog = viewModel.Slug;
             }
 
             return Editor(part, shapeHelper);
@@ -63,6 +64,12 @@ namespace Orchard.Blogs.Drivers {
 
         protected override void Exporting(BlogArchivesPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
+        }
+
+        private BlogPart GetBlogFromSlug(string slug) {
+            return _contentManager.Query<BlogPart, BlogPartRecord>()
+                .Join<RoutePartRecord>().Where(rr => rr.Slug == slug)
+                .List().FirstOrDefault();            
         }
     }
 }

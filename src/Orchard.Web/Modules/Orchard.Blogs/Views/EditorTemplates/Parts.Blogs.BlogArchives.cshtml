@@ -6,8 +6,8 @@
 
 <fieldset>
     <div>
-        @Html.LabelFor(m => m.Path, T("For Blog"))
-        <select id="@Html.FieldIdFor(m => m.Path)" name="@Html.FieldNameFor(m => m.Path)">
+        @Html.LabelFor(m => m.Slug, T("For Blog"))
+        <select id="@Html.FieldIdFor(m => m.Slug)" name="@Html.FieldNameFor(m => m.Slug)">
 		@foreach(BlogPart blog in Model.Blogs) {
             @Html.SelectOption(Model.Path, blog.As<RoutePart>().Slug, blog.Name)
 		}
