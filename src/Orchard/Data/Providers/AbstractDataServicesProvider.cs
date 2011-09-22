@@ -9,6 +9,7 @@ using FluentNHibernate.Conventions.Helpers;
 using NHibernate.Cfg;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
+using Orchard.Data.Migration.Records;
 using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Data.Providers {
@@ -22,12 +23,15 @@ namespace Orchard.Data.Providers {
 
             return Fluently.Configure()
                 .Database(database)
-                .Mappings(m => m.AutoMappings.Add(persistenceModel))
+                .Mappings(m => {
+                              m.AutoMappings.Add(persistenceModel);
+                              m.FluentMappings.Add(typeof (DataMigrationRecordMap));
+                          })
                 .BuildConfiguration();
         }
 
         public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordBlueprint> recordDescriptors) {
-            return AutoMap.Source(new TypeSource(recordDescriptors))
+            return AutoMap.Source(new TypeSource(recordDescriptors.Where(x => x.Type != typeof(DataMigrationRecord))))
                 // Ensure that namespaces of types are never auto-imported, so that 
                 // identical type names from different namespaces can be mapped without ambiguity
                 .Conventions.Setup(x => x.Add(AutoImport.Never()))
