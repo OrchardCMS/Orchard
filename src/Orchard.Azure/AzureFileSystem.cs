@@ -345,11 +345,15 @@ namespace Orchard.Azure {
             }
 
             public string GetPath() {
-                return _blob.Uri.ToString().Substring(_rootPath.Length).Trim('/');
+                using (new HttpContextWeaver()) {
+                    return _blob.Uri.ToString().Substring(_rootPath.Length).Trim('/');
+                }
             }
 
             public long GetSize() {
-                return GetDirectorySize(_blob);
+                using (new HttpContextWeaver()) {
+                    return GetDirectorySize(_blob);
+                }
             }
 
             public DateTime GetLastUpdated() {
@@ -357,8 +361,10 @@ namespace Orchard.Azure {
             }
 
             public IStorageFolder GetParent() {
-                if ( _blob.Parent != null ) {
-                    return new AzureBlobFolderStorage(_blob.Parent, _rootPath);
+                using (new HttpContextWeaver()) {
+                    if (_blob.Parent != null) {
+                        return new AzureBlobFolderStorage(_blob.Parent, _rootPath);
+                    }
                 }
                 throw new ArgumentException("Directory " + _blob.Uri + " does not have a parent directory");
             }
