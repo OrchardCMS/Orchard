@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Orchard.Blogs.Models;
-using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
@@ -13,7 +12,6 @@ namespace Orchard.Blogs.Drivers {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
         private readonly IContentManager _contentManager;
-        private readonly IBlogPathConstraint _blogPathConstraint;
 
         public BlogArchivesPartDriver(
             IBlogService blogService, 
