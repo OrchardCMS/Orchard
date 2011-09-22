@@ -177,15 +177,14 @@ namespace Orchard.Tags.Services {
 
             var tags = tagNamesForContentItem.Select(CreateTag);
             var newTagsForContentItem = new List<TagRecord>(tags);
-            var currentTagsForContentItem = _contentTagRepository.Fetch(x => x.TagsPartRecord.Id == contentItem.Id);
+            var currentTagsForContentItem = contentItem.As<TagsPart>().Record.Tags;
 
             foreach (var tagContentItem in currentTagsForContentItem) {
                 if (!newTagsForContentItem.Contains(tagContentItem.TagRecord)) {
                     _contentTagRepository.Delete(tagContentItem);
                 }
-                else {
-                    newTagsForContentItem.Remove(tagContentItem.TagRecord);
-                }
+
+                newTagsForContentItem.Remove(tagContentItem.TagRecord);
             }
 
             foreach (var newTagForContentItem in newTagsForContentItem) {
