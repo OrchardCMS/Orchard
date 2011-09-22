@@ -9,6 +9,7 @@ namespace Orchard.DisplayManagement.Shapes {
         public ShapeMetadata() {
             Wrappers = new List<string>();
             Alternates = new List<string>();
+            BindingSources = new List<string>();
             Displaying = Enumerable.Empty<Action<ShapeDisplayingContext>>();
             Displayed = Enumerable.Empty<Action<ShapeDisplayedContext>>();
         }
@@ -26,6 +27,8 @@ namespace Orchard.DisplayManagement.Shapes {
 
         public IEnumerable<Action<ShapeDisplayingContext>> Displaying { get; private set; }
         public IEnumerable<Action<ShapeDisplayedContext>> Displayed { get; private set; }
+
+        public IList<string> BindingSources { get; set; }
 
         public void OnDisplaying(Action<ShapeDisplayingContext> action) {
             var existing = Displaying ?? Enumerable.Empty<Action<ShapeDisplayingContext>>();

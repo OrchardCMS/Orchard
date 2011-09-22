@@ -68,6 +68,9 @@ namespace Orchard.DisplayManagement.Implementation {
                 shapeBinding.ShapeDescriptor.Displaying.Invoke(action => action(displayingContext), Logger);
             }
 
+            // copy all binding sources (all templates for this shape) in order to use them as Localization scopes
+            shapeMetadata.BindingSources = shapeBinding.ShapeDescriptor.BindingSources;
+
             // invoking ShapeMetadata displaying events
             shapeMetadata.Displaying.Invoke(action => action(displayingContext), Logger);
 

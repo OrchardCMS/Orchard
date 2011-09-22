@@ -12,6 +12,7 @@ namespace Orchard.DisplayManagement.Descriptors {
             Displaying = Enumerable.Empty<Action<ShapeDisplayingContext>>();
             Displayed = Enumerable.Empty<Action<ShapeDisplayedContext>>();
             Wrappers = new List<string>();
+            BindingSources = new List<string>();
             Bindings = new Dictionary<string, ShapeBinding>(StringComparer.OrdinalIgnoreCase);
             Placement = ctx => new PlacementInfo {Location = DefaultPlacement};
         }
@@ -47,6 +48,7 @@ namespace Orchard.DisplayManagement.Descriptors {
         public string DefaultPlacement { get; set; }
 
         public IList<string> Wrappers { get; set; }
+        public IList<string> BindingSources { get; set; }
     }
 
     public class ShapeBinding {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
@@ -22,7 +23,40 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         private object _layout;
         private WorkContext _workContext;
 
-        public Localizer T { get { return _localizer; } }
+        public Localizer T { 
+            get {
+                // first time used, create it
+                if(_localizer == NullLocalizer.Instance) {
+                
+                    // if the Model is a shape, get localization scopes from binding sources
+                    // e.g., Logon.cshtml in a theme, overriging Users/Logon.cshtml, needs T to 
+                    // fallback to the one in Users
+                    var shape = Model as IShape;
+                    if(shape != null && shape.Metadata.BindingSources.Count > 1) {
+                        var localizers = shape.Metadata.BindingSources.Reverse().Select(scope => LocalizationUtilities.Resolve(ViewContext, scope)).ToList();
+                        _localizer = (text, args) => { 
+                            foreach(var localizer in localizers) {
+                                var hint = localizer(text, args);
+                                // if not localized using this scope, use next scope
+                                if(hint.Text != text) {
+                                    return hint;
+                                }
+                            }
+
+                            // no localization found, return default value
+                            return new LocalizedString(text, VirtualPath, text, args);
+                        };
+                    }
+                    else {
+                        // not a shape, use the VirtualPath as scope
+                        _localizer = LocalizationUtilities.Resolve(ViewContext, VirtualPath);
+                    }
+                }
+
+                return _localizer;
+            } 
+        }
+
         public dynamic Display { get { return _display; } }
         // review: (heskew) is it going to be a problem?
         public new dynamic Layout { get { return _layout; } }
@@ -82,8 +116,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
             _workContext = ViewContext.GetWorkContext();
             _workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);
-
-            _localizer = LocalizationUtilities.Resolve(ViewContext, VirtualPath);
+            
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
             _layout = _workContext.Layout;
         }
