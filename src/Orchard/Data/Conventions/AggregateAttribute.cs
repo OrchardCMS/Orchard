@@ -26,9 +26,9 @@ namespace Orchard.Data.Conventions
             criteria.Expect(x => x.Property != null && x.Property.IsDefined(typeof(AggregateAttribute), false));
         }
     
-        public void  Apply(IOneToManyCollectionInstance instance)
+        public void Apply(IOneToManyCollectionInstance instance)
         {
-            instance.Fetch.Join();
+            instance.Fetch.Select();
         }
 
         public void Accept(IAcceptanceCriteria<IOneToManyCollectionInspector> criteria)
