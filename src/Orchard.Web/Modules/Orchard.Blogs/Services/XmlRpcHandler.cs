@@ -18,6 +18,7 @@ using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Blogs.Extensions;
+using Orchard.Mvc.Html;
 
 namespace Orchard.Blogs.Services {
     [UsedImplicitly]
@@ -321,7 +322,12 @@ namespace Orchard.Blogs.Services {
             BlogPostPart blogPostPart,
             UrlHelper urlHelper) {
 
-            var url = urlHelper.AbsoluteAction(() => urlHelper.BlogPost(blogPostPart));
+            var url = urlHelper.AbsoluteAction(() => urlHelper.ItemDisplayUrl(blogPostPart));
+
+            if (blogPostPart.HasDraft()) {
+                url = urlHelper.AbsoluteAction("Preview", "Item", new { area = "Contents", id = blogPostPart.ContentItem.Id });
+            }
+
             var blogStruct = new XRpcStruct()
                 .Set("postid", blogPostPart.Id)
                 .Set("title", blogPostPart.Title)
