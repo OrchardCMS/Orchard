@@ -10,6 +10,11 @@ using Orchard.UI.Admin.Notification;
 using Orchard.UI.Notify;
 
 namespace Orchard.Modules.Data.Migration {
+    /// <summary>
+    /// This implementation overrides the Core notification provider. It has been replaced
+    /// because some links to the features had to be displayed, links that are pointing to 
+    /// this module. So in case the module is removed, the notifications would still be displayed.
+    /// </summary>
     [OrchardSuppressDependency("Orchard.Data.Migration.DataMigrationNotificationProvider")]
     public class DataMigrationNotificationProvider : INotificationProvider {
         private readonly IDataMigrationManager _dataMigrationManager;
