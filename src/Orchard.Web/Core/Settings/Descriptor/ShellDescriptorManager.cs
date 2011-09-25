@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 
 namespace Orchard.Core.Settings.Descriptor {
     public class ShellDescriptorManager : IShellDescriptorManager {
         private readonly IRepository<ShellDescriptorRecord> _shellDescriptorRepository;
         private readonly IShellDescriptorManagerEventHandler _events;
+        private readonly ShellSettings _shellSettings;
 
         public ShellDescriptorManager(
             IRepository<ShellDescriptorRecord> shellDescriptorRepository,
-            IShellDescriptorManagerEventHandler events) {
+            IShellDescriptorManagerEventHandler events,
+            ShellSettings shellSettings) {
             _shellDescriptorRepository = shellDescriptorRepository;
             _events = events;
+            _shellSettings = shellSettings;
             T = NullLocalizer.Instance;
         }
 
@@ -82,9 +87,7 @@ namespace Orchard.Core.Settings.Descriptor {
                 });
             }
 
-            _events.Changed(GetShellDescriptorFromRecord(shellDescriptorRecord));
+            _events.Changed(GetShellDescriptorFromRecord(shellDescriptorRecord), _shellSettings.Name);
         }
-
-
     }
 }

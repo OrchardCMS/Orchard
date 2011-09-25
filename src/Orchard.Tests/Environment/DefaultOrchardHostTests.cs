@@ -139,7 +139,7 @@ namespace Orchard.Tests.Environment {
         public void NormalDependenciesShouldBeUniquePerRequestContainer() {
             var host = _lifetime.Resolve<IOrchardHost>();
             var container1 = host.CreateShellContainer_Obsolete();
-            ((IShellDescriptorManagerEventHandler)host).Changed(null);
+            ((IShellDescriptorManagerEventHandler)host).Changed(null, String.Empty);
             var container2 = host.CreateShellContainer_Obsolete();
             var requestContainer1a = container1.BeginLifetimeScope();
             var requestContainer1b = container1.BeginLifetimeScope();
