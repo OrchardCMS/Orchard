@@ -318,8 +318,6 @@
     <Content Include="Shapes\Styles\Images\toolBarActiveButtonBackground.gif" />
     <Content Include="Shapes\Styles\Images\toolBarBackground.gif" />
     <Content Include="Shapes\Styles\Images\toolBarHoverButtonBackground.gif" />
-    <Content Include="Shapes\Styles\Images\widget-zones-on.gif" />
-    <Content Include="Shapes\Styles\Images\widget-zones.gif" />
     <Content Include="Shapes\Styles\jquery.switchable.css" />
     <Content Include="Shapes\Styles\special.css" />
     <Content Include="Shapes\Views\HeadPreload.cshtml" />
