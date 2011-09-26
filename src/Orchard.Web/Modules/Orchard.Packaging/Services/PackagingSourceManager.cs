@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Orchard.Data;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
@@ -43,7 +44,7 @@ namespace Orchard.Packaging.Services {
         /// <param name="feedUrl">The feed url.</param>
         /// <returns>The feed identifier.</returns>
         public int AddSource(string feedTitle, string feedUrl) {
-            PackagingSource packagingSource = new PackagingSource { FeedTitle = feedTitle, FeedUrl = feedUrl };
+            var packagingSource = new PackagingSource { FeedTitle = feedTitle, FeedUrl = feedUrl };
 
             _packagingSourceRecordRepository.Create(packagingSource);
 
@@ -70,20 +71,29 @@ namespace Orchard.Packaging.Services {
         /// <returns>The list of extensions.</returns>
         public IEnumerable<PackagingEntry> GetExtensionList(bool includeScreenshots, PackagingSource packagingSource = null, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query = null) {
             return (packagingSource == null ? GetSources() : new[] {packagingSource})
-                .SelectMany(
-                    source => {
-                        var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl)) { IgnoreMissingProperties = true };
-                        IQueryable<PublishedPackage> packages = includeScreenshots
-                            ? galleryFeedContext.Packages.Expand("Screenshots")
-                            : galleryFeedContext.Packages;
-                        
-                        if (query != null) {
-                            packages = query(packages);
-                        }
+                .SelectMany(source => GetExtensionListFromSource(includeScreenshots, packagingSource, query, source));
+        }
 
-                        return packages.ToList().Select(p => CreatePackageEntry(p, packagingSource, galleryFeedContext.GetReadStreamUri(p)));
-                    }
-                );
+        private static IEnumerable<PackagingEntry> GetExtensionListFromSource(bool includeScreenshots, PackagingSource packagingSource, Func<IQueryable<PublishedPackage>, IQueryable<PublishedPackage>> query, PackagingSource source) {
+            var galleryFeedContext = new GalleryFeedContext(new Uri(source.FeedUrl)) { IgnoreMissingProperties = true };
+
+            // Setup compression
+            galleryFeedContext.SendingRequest += (o, e) => {
+                if (e.Request is HttpWebRequest) {
+                    (e.Request as HttpWebRequest).AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+                }
+            };
+
+            // Include screenshots if needed
+            IQueryable<PublishedPackage> packages = includeScreenshots
+                ? galleryFeedContext.Packages.Expand("Screenshots")
+                : galleryFeedContext.Packages;
+                        
+            if (query != null) {
+                packages = query(packages);
+            }
+
+            return packages.ToList().Select(p => CreatePackageEntry(p, packagingSource, galleryFeedContext.GetReadStreamUri(p)));
         }
 
         /// <summary>
@@ -110,7 +120,7 @@ namespace Orchard.Packaging.Services {
         #endregion
 
         private static PackagingEntry CreatePackageEntry(PublishedPackage package, PackagingSource source, Uri downloadUri) {
-            Uri baseUri = new Uri(string.Format("{0}://{1}:{2}/",
+            var baseUri = new Uri(string.Format("{0}://{1}:{2}/",
                                                 downloadUri.Scheme,
                                                 downloadUri.Host,
                                                 downloadUri.Port));

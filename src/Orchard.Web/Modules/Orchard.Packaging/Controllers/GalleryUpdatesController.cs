@@ -67,7 +67,8 @@ namespace Orchard.Packaging.Controllers {
 
         public ActionResult ReloadUpdates(string returnUrl) {
             _packageUpdateService.TriggerRefresh();
-            
+            _backgroundPackageUpdateStatus.Value = null;
+
             Services.Notifier.Warning(T("The feed has been notified for update. It might take a few minutes before the updates are displayed."));
 
             return this.RedirectLocal(returnUrl);
@@ -97,8 +98,9 @@ namespace Orchard.Packaging.Controllers {
 
             IEnumerable<UpdatePackageEntry> updatedPackages = _backgroundPackageUpdateStatus.Value.Entries
                 .Where(updatePackageEntry =>
-                       updatePackageEntry.ExtensionsDescriptor.ExtensionType.Equals(extensionType) &&
-                       updatePackageEntry.NewVersionToInstall != null);
+                    updatePackageEntry.ExtensionsDescriptor.ExtensionType.Equals(extensionType) &&
+                    updatePackageEntry.NewVersionToInstall != null)
+                .ToList();
 
             int totalItemCount = updatedPackages.Count();
 
@@ -107,6 +109,7 @@ namespace Orchard.Packaging.Controllers {
             }
 
             return View(view, new PackagingListViewModel {
+                LastUpdateCheckUtc = _backgroundPackageUpdateStatus.Value.DateTimeUtc,
                 Entries = updatedPackages,
                 Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)
             });

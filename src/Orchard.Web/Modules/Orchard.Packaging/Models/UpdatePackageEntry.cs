@@ -5,6 +5,7 @@ using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Packaging.Models {
     public class PackagesStatusResult {
+        public DateTime DateTimeUtc { get; set; }
         public IEnumerable<UpdatePackageEntry> Entries { get; set; }
         public IEnumerable<Exception> Errors { get; set; }
     }
