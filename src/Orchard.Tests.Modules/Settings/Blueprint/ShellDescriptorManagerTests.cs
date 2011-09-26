@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Orchard.Core.Settings.State;
 using Orchard.Core.Settings.Descriptor;
 using Orchard.Core.Settings.Descriptor.Records;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.State;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
@@ -16,6 +17,8 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
     [TestFixture]
     public class ShellDescriptorManagerTests : DatabaseEnabledTestsBase {
         public override void Register(ContainerBuilder builder) {
+            builder.RegisterInstance(new ShellSettings { Name = "Default" });
+
             builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>().SingleInstance();
             builder.RegisterType<ShellStateManager>().As<IShellStateManager>().SingleInstance();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
