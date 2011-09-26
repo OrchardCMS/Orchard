@@ -7,16 +7,13 @@ using Orchard.Events;
 
 namespace Orchard.Core.Contents.Handlers {
 
-    public interface IRulesManager : IEventHandler
-    {
+    public interface IRulesManager : IEventHandler {
         void TriggerEvent(string category, string type, Func<Dictionary<string, object>> tokensContext);
     }
 
-    [OrchardFeature("Orchard.Core.Contents.Rules")]
-    public class RulePartHandler : ContentHandler
-    {
-        public RulePartHandler(IRulesManager rulesManager)
-        {
+    [OrchardFeature("Contents.Rules")]
+    public class RulePartHandler : ContentHandler {
+        public RulePartHandler(IRulesManager rulesManager) {
 
             OnPublished<ContentPart>(
                 (context, part) =>
@@ -26,7 +23,7 @@ namespace Orchard.Core.Contents.Handlers {
             OnPublished<ContentPart>(
                 (context, part) =>
                     rulesManager.TriggerEvent("Content", "Published",
-                    () => new Dictionary<string, object> { { "Content", context.ContentItem } } ));
+                    () => new Dictionary<string, object> { { "Content", context.ContentItem } }));
 
             OnRemoved<ContentPart>(
                 (context, part) =>
@@ -35,7 +32,7 @@ namespace Orchard.Core.Contents.Handlers {
 
             OnVersioned<ContentPart>(
                 (context, part1, part2) =>
-                    rulesManager.TriggerEvent("Content", "Versioned", 
+                    rulesManager.TriggerEvent("Content", "Versioned",
                     () => new Dictionary<string, object> { { "Content", part1.ContentItem } }));
 
             OnCreated<ContentPart>(

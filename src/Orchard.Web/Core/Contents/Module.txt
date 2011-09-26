@@ -14,4 +14,4 @@ Features:
         Name: Contents Rules
         Description: Rules for the Contents modules
         Category: Rules
-		Dependency: Rules
+		Dependency: Orchard.Rules, Contents
