@@ -48,15 +48,14 @@
         if ($(this).hasClass("disabled")) return;
         $.post("MediaPicker/CreateFolder", { path: query("mediaPath") || "", folderName: $("#folderName").val(), __RequestVerificationToken: $("#__requesttoken").val() },
             function (response) {
-                if (response.Success == true) {
+                if (response.Success) {
                     location.reload(true);
-                } else if (response.Success == false) {
+                } else if (response.Success === false) {
                     alert(response.Message);
-                } else {
-                    // Most likely a redirection due to expired authorisation
-                    alert($("#AccessDeniedMsg").val());
-                    var loginWindow = window.open($("#LoginUrl").val(), "AccessDenied", 'toolbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes');
-                }
+                } else if (response.indexOf($.mediaPicker.logonUrl) !== -1) {
+                    // A redirection due to expired authorization
+                    alert($.mediaPicker.accessDeniedMsg);
+                } else alert($.mediaPicker.cannotPerformMsg);
             });
     });
 
@@ -115,7 +114,7 @@
             img = data ? data.img : null;
         }
         catch (ex) {
-            alert($("#LostCallbackMsg").val());
+            alert($.mediaPicker.cannotPerformMsg);
             window.close();
         }
 
@@ -160,7 +159,7 @@
             window.opener.jQuery[query("callback")]({ img: img });
         }
         catch (ex) {
-            alert($("#LostCallbackMsg").val());
+            alert($.mediaPicker.cannotPerformMsg);
         }
         window.close();
     }
@@ -296,8 +295,7 @@
                 alert(result.error);
             }
             else if (frame.location.pathname.match("AccessDenied")) {
-                alert($("#AccessDeniedMsg").val());
-                window.open($("#LoginUrl").val(), "AccessDenied", 'toolbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=yes,copyhistory=no,resizable=yes');
+                alert($.mediaPicker.accessDeniedMsg);
             }
             else {
                 var somethingPotentiallyHorrible = "";
