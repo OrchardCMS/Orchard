@@ -15,4 +15,4 @@ Features:
         Name: Comments Rules
         Description: Rules for the Comments modules
         Category: Rules
-        Dependency: Orchard.Comments, Orchard.Rules
+        Dependencies: Orchard.Comments, Orchard.Rules
