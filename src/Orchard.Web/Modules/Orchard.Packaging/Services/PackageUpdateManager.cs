@@ -61,24 +61,28 @@ namespace Orchard.Packaging.Services {
         }
 
         private PackagesStatusResult GetPackages(PackagingSource packagingSource) {
-            return _cacheManager.Get(packagingSource.FeedUrl, ctx => {
-                // Refresh every minute or when signal was triggered
-                ctx.Monitor(_clock.When(TimeSpan.FromMinutes(5)));
-                ctx.Monitor(_signals.When("PackageUpdateService"));
+            // Refresh every time 5 minutes AND signal was triggered (not or, otherwise the request would go every 5 minutes, whatever)
+            // Signal is triggered when the Modules page is displayed
+            return _cacheManager.Get(packagingSource.FeedUrl, ctx1 => {
+                ctx1.Monitor(_clock.When(TimeSpan.FromMinutes(5)));
 
-                // We cache exception because we are calling on a network feed, and failure may
-                // take quite some time.
-                var result = new PackagesStatusResult {
-                    Entries = new List<UpdatePackageEntry>(),
-                    Errors = new List<Exception>()
-                };
-                try {
-                    result.Entries = GetPackagesWorker(packagingSource);
-                }
-                catch (Exception e) {
-                    result.Errors = new[] { e };
-                }
-                return result;
+                return _cacheManager.Get(packagingSource.FeedUrl, ctx2 => {
+                    ctx2.Monitor(_signals.When("PackageUpdateService"));
+
+                    // We cache exception because we are calling on a network feed, and failure may
+                    // take quite some time.
+                    var result = new PackagesStatusResult {
+                        Entries = new List<UpdatePackageEntry>(),
+                        Errors = new List<Exception>()
+                    };
+                    try {
+                        result.Entries = GetPackagesWorker(packagingSource);
+                    }
+                    catch (Exception e) {
+                        result.Errors = new[] { e };
+                    }
+                    return result;
+                });
             });
         }
 

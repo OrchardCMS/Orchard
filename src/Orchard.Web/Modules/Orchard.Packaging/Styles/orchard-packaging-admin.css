@@ -82,3 +82,9 @@
     height: auto;
     padding-top: 0;
 }
+.update-actions {
+    float: right;
+    display: inline;
+    height: auto;
+    padding-top: 0;
+}

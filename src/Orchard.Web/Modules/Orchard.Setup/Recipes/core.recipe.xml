@@ -10,7 +10,7 @@
   </Recipe>
 
   <Feature disable="Feeds, Containers" 
-           enable="Orchard.jQuery,Gallery.Updates" />
+           enable="Orchard.jQuery" />
   
   <Metadata>
     <Types>
