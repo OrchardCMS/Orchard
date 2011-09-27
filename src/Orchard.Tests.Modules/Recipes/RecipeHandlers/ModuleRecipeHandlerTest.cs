@@ -10,6 +10,7 @@ using Orchard.Core.Settings.Descriptor;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Core.Settings.State;
 using Orchard.Data.Migration;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
@@ -45,6 +46,8 @@ namespace Orchard.Tests.Modules.Recipes.RecipeHandlers {
         }
 
         public override void Register(ContainerBuilder builder) {
+            builder.RegisterInstance(new ShellSettings { Name = "Default" });
+
             _folders = new ExtensionManagerTests.StubFolders();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
