@@ -17,7 +17,7 @@ namespace Orchard.Mvc.DataAnnotations {
 
         public override string FormatErrorMessage(string name) {
             return String.IsNullOrEmpty(ErrorMessage)
-                ? T("The field {0} is required.", name).Text
+                ? T("The {0} field is required.", name).Text
                 : T(ErrorMessage, name).Text;
         }
     }
