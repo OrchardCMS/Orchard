@@ -8,6 +8,7 @@
     list-style: none;
     cursor: pointer;
 }
+
 .wmd-button > span {
     background-image: url(../Content/Admin/Images/wmd-buttons.png);
     background-repeat: no-repeat;
@@ -59,7 +60,7 @@
 	padding-left: 1em;
 }
 
-.wmd-preview pre {
+.wmd-preview pre, .wmd-preview code {
     margin: 1em 3em;
 	color: #999;
 	border-left: 2px solid #999;
