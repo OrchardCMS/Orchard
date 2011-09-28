@@ -29,8 +29,6 @@
             img: editImage,
             uploadMediaPath: wmd.data("mediapicker-uploadpath"),
             callback: function (data) {
-                wmd.focus();
-                alert(data);
                 callback(data.img.src);
             }
         });
