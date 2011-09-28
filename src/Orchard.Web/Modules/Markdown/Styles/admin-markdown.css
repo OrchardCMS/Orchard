@@ -44,12 +44,12 @@
 
 .wmd-preview ol {
     list-style: decimal;
-    text-align: match-parent;
+    margin-left: 15px;
 }
 
 .wmd-preview ul {
     list-style: disc;
-    text-align: match-parent;
+    margin-left: 15px;
 }
 
 .wmd-preview blockquote {

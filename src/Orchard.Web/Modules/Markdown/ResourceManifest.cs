@@ -9,7 +9,7 @@ namespace Markdown {
             manifest.DefineScript("Markdown_Editor").SetUrl("Markdown.Editor.js").SetDependencies("Markdown_Sanitizer");
             manifest.DefineScript("Resizer").SetUrl("jquery.textarearesizer.min.js");
 
-            manifest.DefineScript("OrchardMarkdown").SetUrl("orchard-markdown.js").SetDependencies("Resizer", "Markdown_Editor"); ;
+            manifest.DefineScript("OrchardMarkdown").SetUrl("orchard-markdown.js").SetDependencies("Resizer", "Markdown_Editor");
             manifest.DefineStyle("OrchardMarkdown").SetUrl("admin-markdown.css");
         }
     }
