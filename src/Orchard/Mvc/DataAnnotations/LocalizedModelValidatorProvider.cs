@@ -27,7 +27,7 @@ namespace Orchard.Mvc.DataAnnotations {
                 // overriden messages have their localization in the scope of the class they are applied to
                 var tContainer = LocalizationUtilities.Resolve(context, metadata.ContainerType.FullName);
 
-                // default translations use the attribute's scope, e.g., System.ComponentModel.DataAnnotations.RequiredAttribute
+                // default translations use the attribute's scope, e.g., Orchard.Mvc.DataAnnotations.LocalizedRequiredAttribute
                 var tProvider = LocalizationUtilities.Resolve(context, attribute.GetType().FullName);
 
                 var validationAttribute = attribute as ValidationAttribute;
