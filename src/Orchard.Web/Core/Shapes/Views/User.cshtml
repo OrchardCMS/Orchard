@@ -7,7 +7,7 @@
         </span>
         <span class="user-actions">
             @Html.ActionLink(T("Sign Out").ToString(), "LogOff", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl })
-            @Html.ActionLink("Dashboard", "Index", new { Area = "Dashboard", Controller = "Admin" })
+            @Html.ActionLink(T("Dashboard").ToString(), "Index", new { Area = "Dashboard", Controller = "Admin" })
         </span>
     } else {
         <span class="user-actions">@Html.ActionLink(T("Sign In").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = (Request.QueryString["ReturnUrl"] ?? Request.RawUrl) })</span>
