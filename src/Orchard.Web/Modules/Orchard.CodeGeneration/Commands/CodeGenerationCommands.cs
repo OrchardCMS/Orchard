@@ -23,7 +23,7 @@ namespace Orchard.CodeGeneration.Commands {
             "", "Content", "Styles", "Scripts", "Views", "Zones"
         };
         private static readonly string[] _moduleDirectories = new [] {
-            "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles", "CodeTemplates/AddController"
+            "", "Properties", "Controllers", "Views", "Models", "Scripts", "Styles"
         };
 
         private const string ModuleName = "CodeGeneration";

@@ -14,6 +14,7 @@
     <AssemblyName>Orchard.CodeGeneration</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -81,9 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeGenerationTemplates\Placement.info" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CodeGenerationTemplates\Controller.tt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
