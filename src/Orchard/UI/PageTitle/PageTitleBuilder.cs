@@ -7,12 +7,11 @@ namespace Orchard.UI.PageTitle {
     public class PageTitleBuilder : IPageTitleBuilder {
         private readonly ISiteService _siteService;
         private readonly List<string> _titleParts;
-        private readonly string _titleSeparator;
+        private string _titleSeparator;
 
         public PageTitleBuilder(ISiteService siteService) {
             _siteService = siteService;
             _titleParts = new List<string>(5);
-            _titleSeparator = _siteService.GetSiteSettings().PageTitleSeparator;
         }
 
         public void AddTitleParts(params string[] titleParts) {
@@ -30,6 +29,10 @@ namespace Orchard.UI.PageTitle {
         }
 
         public string GenerateTitle() {
+            if (_titleSeparator == null) {
+                _titleSeparator = _siteService.GetSiteSettings().PageTitleSeparator;
+            }
+
             return _titleParts.Count == 0 
                 ? String.Empty
                 : String.Join(_titleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
