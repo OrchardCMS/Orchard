@@ -23,7 +23,9 @@ Scenario: I can create a new blog and blog post
             | Routable.Title | My Post |
             | Body.Text | Hi there. |
         And I hit "Publish Now"
-        And I go to "my-blog"
+        And I am redirected
+    Then I should see "Your Blog Post has been created."
+    When I go to "my-blog"
     Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
         And I should see "<h1[^>]*>.*?My Post.*?</h1>"
     When I go to "my-blog/my-post"

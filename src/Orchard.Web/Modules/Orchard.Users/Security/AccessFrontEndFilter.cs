@@ -2,6 +2,7 @@ using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Mvc.Filters;
 using Orchard.Security;
+using Orchard.UI.Admin;
 
 namespace Orchard.Users.Security {
     public class FrontEndFilter : FilterProvider, IAuthorizationFilter {
@@ -22,7 +23,7 @@ namespace Orchard.Users.Security {
                               || filterContext.ActionDescriptor.ActionName == "Register")
                              && filterContext.ActionDescriptor.ControllerDescriptor.ControllerName == "Account";
 
-            if (!isAuthPage && !_authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Can't access this website"))) {
+            if (!AdminFilter.IsApplied(filterContext.RequestContext) && !isAuthPage && !_authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Can't access this website"))) {
                 filterContext.Result = new HttpUnauthorizedResult();
             }
         }

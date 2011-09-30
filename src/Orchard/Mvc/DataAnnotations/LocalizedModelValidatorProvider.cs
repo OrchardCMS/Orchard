@@ -21,20 +21,20 @@ namespace Orchard.Mvc.DataAnnotations {
         protected override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, ControllerContext context, IEnumerable<Attribute> attributes) {
             var localizedAttributes = new List<Attribute>();
 
-            foreach ( var attribute in attributes ) {
+            // overriden messages have their localization in the scope of the class they are applied to
+            var tContainer = new Lazy<Localizer>(() => LocalizationUtilities.Resolve(context, metadata.ContainerType.FullName));
+
+            foreach (var attribute in attributes) {
                 Func<ValidationAttribute, Localizer, ValidationAttribute> localizedAttribute;
 
-                // overriden messages have their localization in the scope of the class they are applied to
-                var tContainer = LocalizationUtilities.Resolve(context, metadata.ContainerType.FullName);
-
                 // default translations use the attribute's scope, e.g., Orchard.Mvc.DataAnnotations.LocalizedRequiredAttribute
-                var tProvider = LocalizationUtilities.Resolve(context, attribute.GetType().FullName);
+                var tProvider = new Lazy<Localizer>(() => LocalizationUtilities.Resolve(context, attribute.GetType().FullName));
 
                 var validationAttribute = attribute as ValidationAttribute;
 
                 // substitute the attribute to its localized version if available
                 if ( _validationAttributes.TryGetValue(attribute.GetType(), out localizedAttribute) ) {
-                    localizedAttributes.Add(localizedAttribute((ValidationAttribute)attribute, tProvider));
+                    localizedAttributes.Add(localizedAttribute((ValidationAttribute)attribute, tProvider.Value));
                 }
                 else {
 
@@ -43,12 +43,12 @@ namespace Orchard.Mvc.DataAnnotations {
                         
                         var propertyInfo = validationAttribute.GetType().GetProperty("T", typeof(Localizer));
                         if ( propertyInfo != null ) {
-                            propertyInfo.SetValue(attribute, tProvider, null);
+                            propertyInfo.SetValue(attribute, tProvider.Value, null);
                         }
                     }
                     
                     if ( attribute is DisplayNameAttribute ) {
-                        metadata.DisplayName = tContainer(metadata.DisplayName).Text;
+                        metadata.DisplayName = tContainer.Value(metadata.DisplayName).Text;
                     }
 
                     localizedAttributes.Add(attribute);
