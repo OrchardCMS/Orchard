@@ -46,8 +46,8 @@
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
-    <CallTarget Targets="Spec"/>
     <CallTarget Targets="Package"/>
+    <CallTarget Targets="Spec"/>
     <CallTarget Targets="Gallery"/>
   </Target>
 
