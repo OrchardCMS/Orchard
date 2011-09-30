@@ -150,7 +150,6 @@ namespace Orchard.Setup.Services {
                 }
             }
 
-            _shellSettingsManager.SaveSettings(shellSettings);
 
 
             // in effect "pump messages" see PostMessage circa 1980
@@ -173,10 +172,7 @@ namespace Orchard.Setup.Services {
                 }
             }
 
-            //// execute pending recipe steps
-            //while (_processingEngine.AreTasksPending())
-            //    _processingEngine.ExecuteNextTask();
-
+            _shellSettingsManager.SaveSettings(shellSettings);
  
             return executionId;
         }
