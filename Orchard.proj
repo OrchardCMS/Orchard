@@ -47,8 +47,8 @@
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
     <CallTarget Targets="Package"/>
+    <CallTarget Targets="Spec"/>
     <CallTarget Targets="Gallery"/>
-    <CallTarget Targets="Spec"/> <!-- Note: move to the end until SpecFlow test are more reliable -->
   </Target>
 
   <Target Name="FastPackage">

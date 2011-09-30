@@ -87,7 +87,7 @@ namespace Orchard.Blogs.Controllers {
                 if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, blog.ContentItem, T("Couldn't publish blog post")))
                     return new HttpUnauthorizedResult();
 
-                Services.ContentManager.Publish(blog.ContentItem);
+                Services.ContentManager.Publish(blogPost.ContentItem);
             }
 
             Services.Notifier.Information(T("Your {0} has been created.", blogPost.TypeDefinition.DisplayName));
