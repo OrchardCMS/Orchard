@@ -179,7 +179,7 @@ namespace Orchard.Environment {
             _cacheManager.Get("OrchardHost_Extensions",
                               ctx => {
                                   _extensionMonitoringCoordinator.MonitorExtensions(ctx.Monitor);
-                                  // _hostLocalRestart.Monitor(ctx.Monitor);
+                                  _hostLocalRestart.Monitor(ctx.Monitor);
                                   DisposeShellContext();
                                   return "";
                               });
