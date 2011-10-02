@@ -13,3 +13,8 @@ Features:
         Description: Custom lightweight and simple scripting language.
         Dependencies: Orchard.Scripting
         Category: Scripting
+    Orchard.Scripting.Rules:
+        Name: Scripting Rules
+        Description: Rules for the Scripting modules
+        Category: Rules
+        Dependencies: Orchard.Scripting, Orchard.Rules

@@ -20,11 +20,6 @@ namespace Orchard.Core.Contents.Handlers {
                     rulesManager.TriggerEvent("Content", "Published",
                     () => new Dictionary<string, object> { { "Content", context.ContentItem } }));
 
-            OnPublished<ContentPart>(
-                (context, part) =>
-                    rulesManager.TriggerEvent("Content", "Published",
-                    () => new Dictionary<string, object> { { "Content", context.ContentItem } }));
-
             OnRemoved<ContentPart>(
                 (context, part) =>
                     rulesManager.TriggerEvent("Content", "Removed",

@@ -5,6 +5,14 @@ Website: http://orchardproject.net
 Version: 1.2.0
 OrchardVersion: 1.2.0
 Description: The Email Messaging module adds Email sending functionalities.
-FeatureDescription: Email Messaging services.
-Category: Messaging
-Dependencies: Orchard.Messaging
+Features:
+    Orchard.Email:
+        Name: Email Messaging
+        FeatureDescription: Email Messaging services.
+        Category: Messaging
+        Dependencies: Orchard.Messaging
+    Orchard.Email.Rules:
+        Name: Email Rules
+        Description: Rules for the Email modules
+        Category: Rules
+        Dependencies: Orchard.Email, Orchard.Rules
