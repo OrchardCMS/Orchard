@@ -14,10 +14,12 @@ namespace Orchard.Core.Routable.Services {
     public class RoutableService : IRoutableService {
         private readonly IContentManager _contentManager;
         private readonly IEnumerable<ISlugEventHandler> _slugEventHandlers;
+        private readonly IRoutablePathConstraint _routablePathConstraint;
 
-        public RoutableService(IContentManager contentManager, IEnumerable<ISlugEventHandler> slugEventHandlers) {
+        public RoutableService(IContentManager contentManager, IEnumerable<ISlugEventHandler> slugEventHandlers, IRoutablePathConstraint routablePathConstraint) {
             _contentManager = contentManager;
             _slugEventHandlers = slugEventHandlers;
+            _routablePathConstraint = routablePathConstraint;
         }
 
         public void FixContainedPaths(IRoutableAspect part) {
@@ -27,8 +29,25 @@ namespace Orchard.Core.Routable.Services {
                 .Select(item => item.As<IRoutableAspect>()).Where(item => item != null);
 
             foreach (var itemRoute in items) {
-                itemRoute.ContentItem.VersionRecord.Published = false; // <- to force a republish
-                _contentManager.Publish(itemRoute.ContentItem);
+                var route = itemRoute.As<IRoutableAspect>();
+                
+                if(route == null) {
+                    continue;
+                }
+
+                var path = route.Path;
+                route.Path = route.GetPathWithSlug(route.Slug);
+
+                // if the path has changed by having the slug changed on the way in (e.g. user input) or to avoid conflict
+                // then update and publish all contained items
+                if (path != route.Path) {
+                    _routablePathConstraint.RemovePath(path);
+                    FixContainedPaths(route);
+                }
+
+                if (!string.IsNullOrWhiteSpace(route.Path))
+                    _routablePathConstraint.AddPath(route.Path);
+
             }
         }
 
