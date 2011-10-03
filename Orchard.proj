@@ -39,7 +39,7 @@
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
     <CallTarget Targets="Test"/>
-    <CallTarget Targets="Package"/>
+    <CallTarget Targets="Package"/> 
   </Target>
 
   <Target Name="FullBuild">
@@ -60,8 +60,8 @@
 
   <Target Name="Package">
     <CallTarget Targets="Package-Stage"/>
-    <CallTarget Targets="Package-MsDeploy"/>
-    <CallTarget Targets="Package-Zip"/>
+<!--    <CallTarget Targets="Package-MsDeploy"/>
+    <CallTarget Targets="Package-Zip"/>-->
   </Target>
 
   <Target Name="Profiling">
@@ -162,7 +162,7 @@
       <Stage-Themes Include="$(ThemesSrcFolder)\**\*" Exclude="@(Stage-Bin-Exclude);$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\bin\**;$(ThemesSrcFolder)\obj\**;$(ThemesSrcFolder)\*.*;$(ThemesSrcFolder)\Properties\**" />
       <Stage-Themes-Binaries Include="$(ThemesSrcFolder)\*\**\bin\*" />
 
-      <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);@(Stage-Themes);$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
+      <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);@(Stage-Themes);$(WebSitesFolder)\Themes\**\*;$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
 
       <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Bin-Exclude);@(Stage-Module-Exclude)" />
       <Stage-Modules-Binaries Include="$(WebSitesFolder)\**\bin\**\*"  Exclude="@(Stage-Module-Exclude)"/>
