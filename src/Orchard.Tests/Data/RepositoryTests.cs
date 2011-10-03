@@ -14,11 +14,11 @@ namespace Orchard.Tests.Data {
 
         [TestFixtureSetUp]
         public void InitFixture() {
-            _databaseFilePath = Path.GetTempFileName();
         }
 
         [SetUp]
         public void Init() {
+            _databaseFilePath = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(_databaseFilePath, typeof(FooRecord));
             _session = _sessionFactory.OpenSession();
             _fooRepos = new Repository<FooRecord>(new StubLocator(_session));

@@ -24,7 +24,6 @@ namespace Orchard.Tests {
 
         [TestFixtureSetUp]
         public void InitFixture() {
-            _databaseFilePath = Path.GetTempFileName();
         }
 
         [TestFixtureTearDown]
@@ -34,6 +33,7 @@ namespace Orchard.Tests {
 
         [SetUp]
         public virtual void Init() {
+            _databaseFilePath = Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(_databaseFilePath, DatabaseTypes.ToArray());
             _session = _sessionFactory.OpenSession();
             _clock = new StubClock();
