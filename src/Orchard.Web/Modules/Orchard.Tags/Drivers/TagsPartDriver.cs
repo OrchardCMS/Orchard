@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Security;
 using Orchard.Tags.Helpers;
 using Orchard.Tags.Models;
 using Orchard.Tags.Services;
@@ -15,15 +14,9 @@ namespace Orchard.Tags.Drivers {
     public class TagsPartDriver : ContentPartDriver<TagsPart> {
         private const string TemplateName = "Parts/Tags";
         private readonly ITagService _tagService;
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IOrchardServices _orchardServices;
 
-        public TagsPartDriver(ITagService tagService,
-                             IAuthorizationService authorizationService,
-                             IOrchardServices orchardServices) {
+        public TagsPartDriver(ITagService tagService) {
             _tagService = tagService;
-            _authorizationService = authorizationService;
-            _orchardServices = orchardServices;
         }
 
         protected override string Prefix {

@@ -44,7 +44,7 @@ namespace Orchard.Data.Migration {
             var outOfDateMigrations = _dataMigrations.Where(dataMigration => {
                 DataMigrationRecord record;
                 if (currentVersions.TryGetValue(dataMigration.GetType().FullName, out record))
-                    return CreateUpgradeLookupTable(dataMigration).ContainsKey(record.Version);
+                    return CreateUpgradeLookupTable(dataMigration).ContainsKey(record.Version.Value);
 
                 return (GetCreateMethod(dataMigration) != null);
             });
@@ -84,7 +84,7 @@ namespace Orchard.Data.Migration {
 
                 var current = 0;
                 if(dataMigrationRecord != null) {
-                    current = dataMigrationRecord.Version;
+                    current = dataMigrationRecord.Version.Value;
                 }
 
                 // do we need to call Create() ?

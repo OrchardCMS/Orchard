@@ -7,6 +7,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc.Extensions;
 using Orchard.Packaging.Models;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
@@ -44,6 +45,7 @@ namespace Orchard.Packaging.Controllers {
 
             Services = services;
             Shape = shapeFactory;
+            PackageUpdateService = packageUpdateService;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -53,6 +55,7 @@ namespace Orchard.Packaging.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
         public dynamic Shape { get; set; }
+        public IPackageUpdateService PackageUpdateService { get; set; }
 
         public ActionResult ThemesUpdates(int? reportId, PagerParameters pagerParameters) {
             return PackageUpdate("ThemesUpdates", DefaultExtensionTypes.Theme, reportId, pagerParameters);
@@ -60,6 +63,15 @@ namespace Orchard.Packaging.Controllers {
 
         public ActionResult ModulesUpdates(int? reportId, PagerParameters pagerParameters) {
             return PackageUpdate("ModulesUpdates", DefaultExtensionTypes.Module, reportId, pagerParameters);
+        }
+
+        public ActionResult ReloadUpdates(string returnUrl) {
+            _packageUpdateService.TriggerRefresh();
+            _backgroundPackageUpdateStatus.Value = null;
+
+            Services.Notifier.Warning(T("The feed has been notified for update. It might take a few minutes before the updates are displayed."));
+
+            return this.RedirectLocal(returnUrl);
         }
 
         private ActionResult PackageUpdate(string view, string extensionType, int? reportId, PagerParameters pagerParameters) {
@@ -86,8 +98,9 @@ namespace Orchard.Packaging.Controllers {
 
             IEnumerable<UpdatePackageEntry> updatedPackages = _backgroundPackageUpdateStatus.Value.Entries
                 .Where(updatePackageEntry =>
-                       updatePackageEntry.ExtensionsDescriptor.ExtensionType.Equals(extensionType) &&
-                       updatePackageEntry.NewVersionToInstall != null);
+                    updatePackageEntry.ExtensionsDescriptor.ExtensionType.Equals(extensionType) &&
+                    updatePackageEntry.NewVersionToInstall != null)
+                .ToList();
 
             int totalItemCount = updatedPackages.Count();
 
@@ -96,6 +109,7 @@ namespace Orchard.Packaging.Controllers {
             }
 
             return View(view, new PackagingListViewModel {
+                LastUpdateCheckUtc = _backgroundPackageUpdateStatus.Value.DateTimeUtc,
                 Entries = updatedPackages,
                 Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)
             });

@@ -16,7 +16,6 @@ namespace Orchard.Tags.Controllers {
         private readonly ITagService _tagService;
         private readonly IContentManager _contentManager;
         private readonly ISiteService _siteService;
-        private readonly dynamic _shapeFactory;
 
         public HomeController(
             ITagService tagService,
@@ -26,12 +25,13 @@ namespace Orchard.Tags.Controllers {
             _tagService = tagService;
             _contentManager = contentManager;
             _siteService = siteService;
-            _shapeFactory = shapeFactory;
+            Shape = shapeFactory;
             T = NullLocalizer.Instance;
         }
         
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        public dynamic Shape { get; set; }
 
         public ActionResult Index() {
             var tags = _tagService.GetTags();
@@ -48,17 +48,17 @@ namespace Orchard.Tags.Controllers {
                 return RedirectToAction("Index");
             }
 
-            var taggedItems = _tagService.GetTaggedContentItems(tag.Id, pager.GetStartIndex(), pager.PageSize)
-                .Select(item => _contentManager.BuildDisplay(item, "Summary"));
+            var taggedItems = _tagService.GetTaggedContentItems(tag.Id, pager.GetStartIndex(), pager.PageSize).ToList();
+            var tagShapes = taggedItems.Select(item => _contentManager.BuildDisplay(item, "Summary"));
 
-            var list = _shapeFactory.List();
-            list.AddRange(taggedItems);
+            var list = Shape.List();
+            list.AddRange(tagShapes);
 
             var totalItemCount = _tagService.GetTaggedContentItemCount(tag.Id);
             var viewModel = new TagsSearchViewModel {
                 TagName = tag.TagName,
                 List = list,
-                Pager = _shapeFactory.Pager(pager).TotalItemCount(totalItemCount)
+                Pager = Shape.Pager(pager).TotalItemCount(totalItemCount)
             };
 
             return View(viewModel);

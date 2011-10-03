@@ -33,12 +33,12 @@ namespace Orchard.Core.Common.Drivers {
             return Combined(
                 ContentShape("Parts_Common_Body",
                              () => {
-                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
+                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(part)));
                                  return shapeHelper.Parts_Common_Body(ContentPart: part, Html: new HtmlString(bodyText));
                              }),
                 ContentShape("Parts_Common_Body_Summary",
                              () => {
-                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
+                                 var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text, GetFlavor(part)));
                                  return shapeHelper.Parts_Common_Body_Summary(ContentPart: part, Html: new HtmlString(bodyText));
                              })
                 );

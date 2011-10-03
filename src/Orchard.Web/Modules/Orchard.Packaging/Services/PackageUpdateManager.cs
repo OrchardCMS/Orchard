@@ -49,6 +49,7 @@ namespace Orchard.Packaging.Services {
 
             foreach (var source in sources) {
                 var sourceResult = GetPackages(source);
+                result.DateTimeUtc = sourceResult.DateTimeUtc;
                 result.Entries = result.Entries.Concat(sourceResult.Entries);
                 result.Errors = result.Errors.Concat(sourceResult.Errors);
             }
@@ -61,14 +62,15 @@ namespace Orchard.Packaging.Services {
         }
 
         private PackagesStatusResult GetPackages(PackagingSource packagingSource) {
+            // Refresh every 23 hours or when signal was triggered
             return _cacheManager.Get(packagingSource.FeedUrl, ctx => {
-                // Refresh every minute or when signal was triggered
-                ctx.Monitor(_clock.When(TimeSpan.FromMinutes(5)));
+                ctx.Monitor(_clock.When(TimeSpan.FromMinutes(60 * 23)));
                 ctx.Monitor(_signals.When("PackageUpdateService"));
 
                 // We cache exception because we are calling on a network feed, and failure may
                 // take quite some time.
                 var result = new PackagesStatusResult {
+                    DateTimeUtc = _clock.UtcNow,
                     Entries = new List<UpdatePackageEntry>(),
                     Errors = new List<Exception>()
                 };

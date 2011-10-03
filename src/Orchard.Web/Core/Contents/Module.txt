@@ -2,8 +2,16 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.2.41
-OrchardVersion: 1.2.41
+Version: 1.3.0
+OrchardVersion: 1.3.0
 Description: The contents module enables the creation of custom content types. 
-FeatureDescription: Default custom content type definition, creation and management.
-Category: Core
+Features:
+    Contents
+        Name: Contents
+        Description: Default custom content type definition, creation and management.
+        Category: Core
+    Contents.Rules:
+        Name: Contents Rules
+        Description: Rules for the Contents modules
+        Category: Rules
+        Dependencies: Orchard.Rules, Contents

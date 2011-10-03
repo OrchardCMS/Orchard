@@ -7,13 +7,16 @@ using Orchard.Environment;
 
 namespace Orchard.Logging {
     public class OrchardLog4netFactory : AbstractLoggerFactory {
+        private static bool _isFileWatched = false;
+
         public OrchardLog4netFactory(IHostEnvironment hostEnvironment) 
             : this(ConfigurationManager.AppSettings["log4net.Config"], hostEnvironment) { }
 
         public OrchardLog4netFactory(string configFilename, IHostEnvironment hostEnvironment) {
-            if (!string.IsNullOrWhiteSpace(configFilename) && hostEnvironment.IsFullTrust) {
+            if (!_isFileWatched && !string.IsNullOrWhiteSpace(configFilename) && hostEnvironment.IsFullTrust) {
                 // Only monitor configuration file in full trust
                 XmlConfigurator.ConfigureAndWatch(GetConfigFile(configFilename));
+                _isFileWatched = true;
             }
         }
 

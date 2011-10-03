@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.2.41
-OrchardVersion: 1.2.41
+Version: 1.3.0
+OrchardVersion: 1.3.0
 Description: Contains designer tools to ease the Themes development process
 FeatureName: Shape Tracing
 Category: Designer
@@ -14,3 +14,8 @@ Features:
         Name: Url Alternates
         Category: Designer
         Description: Adds shape alternates for specific urls
+    WidgetAlternates:
+        Name: Widget Alternates
+        Category: Designer
+        Description: Adds shape alternates for content types stereotyped as widgets, allowing to customize shapes by widget and zone
+        Dependencies: Orchard.Widgets

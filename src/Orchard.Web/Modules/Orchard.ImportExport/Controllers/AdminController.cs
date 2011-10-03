@@ -53,7 +53,7 @@ namespace Orchard.ImportExport.Controllers {
 
         public ActionResult Export() {
             var viewModel = new ExportViewModel { ContentTypes = new List<ContentTypeEntry>() };
-            foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions()) {
+            foreach (var contentType in _contentDefinitionManager.ListTypeDefinitions().OrderBy(c => c.Name)) {
                 viewModel.ContentTypes.Add(new ContentTypeEntry { ContentTypeName = contentType.Name });
             }
             return View(viewModel);

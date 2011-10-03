@@ -38,9 +38,6 @@ namespace Orchard.Blogs.Controllers {
 
         //TODO: (erikpo) Should think about moving the slug parameters and get calls and null checks up into a model binder or action filter
         public ActionResult Item(string blogPath, string postSlug) {
-            if (!_services.Authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Couldn't view blog post")))
-                return new HttpUnauthorizedResult();
-
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             var blogPart = _blogService.Get(blogPath);
             if (blogPart == null)

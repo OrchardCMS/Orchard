@@ -28,7 +28,7 @@ namespace Orchard.Indexing {
             return this;
         }
 
-        public ISearchBuilder WithField(string field, float value) {
+        public ISearchBuilder WithField(string field, double value) {
             return this;
         }
 
@@ -36,7 +36,7 @@ namespace Orchard.Indexing {
             return this;
         }
 
-        public ISearchBuilder WithinRange(string field, float min, float max) {
+        public ISearchBuilder WithinRange(string field, double min, double max) {
             return this;
         }
 
@@ -96,11 +96,15 @@ namespace Orchard.Indexing {
             return this;
         }
 
+        public ISearchBuilder SortByBoolean(string name) {
+            return this;
+        }
+
         public ISearchBuilder SortByString(string name) {
             return this;
         }
 
-        public ISearchBuilder SortByFloat(string name) {
+        public ISearchBuilder SortByDouble(string name) {
             return this;
         }
 

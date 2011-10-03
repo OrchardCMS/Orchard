@@ -2,7 +2,6 @@
 
 @{ Layout.Title = T("Content Parts").ToString(); }
 
-<p class="breadcrumb">@Html.ActionLink(T("Content Types").Text, "index")@T(" &#62; ")@T("Content Parts")</p>
 <div class="manage">
     @Html.ActionLink(T("Create new part").ToString(), "CreatePart", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" })
 </div>

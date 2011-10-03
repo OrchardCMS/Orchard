@@ -54,6 +54,7 @@ namespace Orchard.Core.Tests.Routable.Services {
             builder.RegisterType<RoutableService>().As<IRoutableService>();
             builder.RegisterType<RoutablePathConstraint>().As<IRoutablePathConstraint>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
 
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();

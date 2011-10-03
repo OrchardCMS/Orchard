@@ -30,8 +30,6 @@ namespace Orchard.Blogs.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Create(int blogId) {
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
-                return new HttpUnauthorizedResult();
 
             var blog = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
             if (blog == null)
@@ -40,7 +38,11 @@ namespace Orchard.Blogs.Controllers {
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             blogPost.BlogPart = blog;
 
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blogPost, T("Not allowed to create blog post")))
+                return new HttpUnauthorizedResult();
+
             dynamic model = Services.ContentManager.BuildEditor(blogPost);
+            
             // Casting to avoid invalid (under medium trust) reflection over the protected View method and force a static invocation.
             return View((object)model);
         }
@@ -48,32 +50,30 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Save")]
         public ActionResult CreatePOST(int blogId) {
-            return CreatePOST(blogId, contentItem => {
-                if (!contentItem.Has<IPublishingControlAspect>() && !contentItem.TypeDefinition.Settings.GetModel<ContentTypeSettings>().Draftable)
-                    Services.ContentManager.Publish(contentItem);
-            });
+            return CreatePOST(blogId, false);
         }
 
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(int blogId) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishOwnBlogPost, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
-            return CreatePOST(blogId, contentItem => Services.ContentManager.Publish(contentItem));
+            return CreatePOST(blogId, true);
         }
 
-        private ActionResult CreatePOST(int blogId, Action<ContentItem> conditionallyPublish) {
-            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
-                return new HttpUnauthorizedResult();
-
+        private ActionResult CreatePOST(int blogId, bool publish = false) {
             var blog = _blogService.Get(blogId, VersionOptions.Latest).As<BlogPart>();
+
             if (blog == null)
                 return HttpNotFound();
 
             var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             blogPost.BlogPart = blog;
 
+            if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, blogPost, T("Couldn't create blog post")))
+                return new HttpUnauthorizedResult();
+            
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
             var model = Services.ContentManager.UpdateEditor(blogPost, this);
 
@@ -83,7 +83,12 @@ namespace Orchard.Blogs.Controllers {
                 return View((object)model);
             }
 
-            conditionallyPublish(blogPost.ContentItem);
+            if (publish) {
+                if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, blog.ContentItem, T("Couldn't publish blog post")))
+                    return new HttpUnauthorizedResult();
+
+                Services.ContentManager.Publish(blogPost.ContentItem);
+            }
 
             Services.Notifier.Information(T("Your {0} has been created.", blogPost.TypeDefinition.DisplayName));
             return Redirect(Url.BlogPostEdit(blogPost));

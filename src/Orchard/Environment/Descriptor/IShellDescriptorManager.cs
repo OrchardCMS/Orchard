@@ -28,6 +28,6 @@ namespace Orchard.Environment.Descriptor {
     }
 
     public interface IShellDescriptorManagerEventHandler : IEventHandler {
-        void Changed(ShellDescriptor descriptor);
+        void Changed(ShellDescriptor descriptor, string tenant);
     }
 }

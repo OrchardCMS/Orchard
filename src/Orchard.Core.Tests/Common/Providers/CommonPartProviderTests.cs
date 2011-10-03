@@ -33,6 +33,7 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Tasks.Scheduling;
+using Orchard.Tests.DisplayManagement;
 using Orchard.Tests.DisplayManagement.Descriptors;
 using Orchard.Tests.Modules;
 using System.Web.Mvc;
@@ -66,7 +67,14 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             builder.RegisterInstance(new RequestContext(new StubHttpContext(), new RouteData()));
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            
+            // IContentDisplay
+            var workContext = new DefaultDisplayManagerTests.TestWorkContext {
+                CurrentTheme = new ExtensionDescriptor { Id = "Hello" }
+            };
+            builder.RegisterInstance<DefaultDisplayManagerTests.TestWorkContextAccessor>(new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext)).As<IWorkContextAccessor>();
             builder.RegisterType<DefaultContentDisplay>().As<IContentDisplay>();
 
             DefaultShapeTableManagerTests.TestShapeProvider.FeatureShapes = new Dictionary<Feature, IEnumerable<string>> {

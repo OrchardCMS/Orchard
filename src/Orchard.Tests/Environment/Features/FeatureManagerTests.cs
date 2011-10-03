@@ -8,6 +8,7 @@ using Orchard.Caching;
 using Orchard.Core.Settings.Descriptor;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Core.Settings.State;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
@@ -45,6 +46,8 @@ namespace Orchard.Tests.Environment.Features {
             builder.RegisterType<ShellStateManager>().As<IShellStateManager>().SingleInstance();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterSource(new EventsRegistrationSource());
+
+            builder.RegisterInstance(new ShellSettings { Name = "Default" });
         }
 
         [Test]

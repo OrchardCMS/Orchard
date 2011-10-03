@@ -26,8 +26,7 @@
             categoryClassName += " last";
         }
 
-        //temporarily "disable" actions on core features
-        bool showActions;
+        bool showEnable, showDisable;
     <li class="@categoryClassName">
         <h2>@categoryName</h2>
         <ul>@{
@@ -53,7 +52,8 @@
                                     select (from f in Model.Features where f.Descriptor.Id == d select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);
                 var missingDependencies = feature.Descriptor.Dependencies
                     .Where(d => !Model.Features.Any(f => f.Descriptor.Id == d));
-                showActions = categoryName.ToString() != "Core" && missingDependencies.Count() == 0;
+                showDisable = categoryName.ToString() != "Core";
+                showEnable = missingDependencies.Count() == 0 && feature.Descriptor.Id != "Orchard.Setup";
             <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
                 <div class="summary">
                     <div class="properties">
@@ -74,31 +74,64 @@
                         </div>}
                     </div>
                     <div class="actions">
-                    @if (showActions) {
-                        if (feature.IsEnabled) {
+                        @if (showDisable && feature.IsEnabled) {
                             using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Disable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
                                 @Html.Hidden("id", feature.Descriptor.Id, new {id = ""})
                                 @Html.Hidden("force", true)
                                 <button type="submit">@T("Disable")</button> 
                             }
                         }
-                        else {
+
+                        @if(showEnable && !feature.IsEnabled) {
                             using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Enable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
                                 @Html.Hidden("id", feature.Descriptor.Id, new { id = "" })
                                 @Html.Hidden("force", true)
                                 <button type="submit">@T("Enable")</button> 
                             }
                         }
-                    }
-                    @if(feature.NeedsUpdate){
-                            using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Update", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
-                            @Html.Hidden("id", feature.Descriptor.Id, new { id = "" })
-                            <button type="submit" class="update">@T("Update")</button> 
+
+                        @if(feature.NeedsUpdate){
+                                using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Update", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) {
+                                @Html.Hidden("id", feature.Descriptor.Id, new { id = "" })
+                                <button type="submit" class="update">@T("Update")</button> 
+                            }
                         }
-                    }
                     </div>
                 </div>
             </li>}
         }</ul>
     </li>}
 }</ul>}
+      
+@using(Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    $(function () {
+        var searchBox = $("<fieldset class=\"bulk-actions\"><label for=\"search-box\">@T("Filter:")</label> <input id=\"search-box\" class=\"text-box\" type=\"text\" /></fieldset>");
+        var theSwitch = $(".switch-for-switchable");
+        theSwitch.prepend(searchBox);
+        $("#search-box").focus().keyup(function () {
+            var text = $(this).val();
+
+            if (text == '') {
+                $("li.category").show();
+                $("li.feature:hidden").show();
+                return;
+            }
+
+            $("li.feature").each(function () {
+                var elt = $(this);
+                var value = elt.find('h3:first').text();
+                if (value.toLowerCase().indexOf(text.toLowerCase()) >= 0)
+                    elt.show();
+                else
+                    elt.hide();
+            });
+
+            $("li.category:hidden").show();
+            var toHide = $("li.category:not(:has(li.feature:visible))").hide();
+        });
+    })
+//]]>
+</script>
+}

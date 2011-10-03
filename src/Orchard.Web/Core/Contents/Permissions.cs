@@ -6,11 +6,7 @@ namespace Orchard.Core.Contents {
     public class Permissions : IPermissionProvider {
 
         // Note - in code you should demand PublishContent, EditContent, or DeleteContent
-        // Do not demand the "Own" variation - those are applied automatically when you demand the main three
-        
-        // Also - the internal name EditContent is used instead of EditOthersContent
-        // because demanding "EditContent" is correct and looks right, 
-        // but demanding "EditOthersContent" looks wrong so wasn't used when it should have been
+        // Do not demand the "Own" variations - those are applied automatically when you demand the main ones
 
         public static readonly Permission PublishContent = new Permission { Description = "Publish or unpublish content for others", Name = "PublishContent" };
         public static readonly Permission PublishOwnContent = new Permission { Description = "Publish or unpublish own content", Name = "PublishOwnContent", ImpliedBy = new[] { PublishContent } };

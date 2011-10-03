@@ -67,7 +67,7 @@ namespace Orchard.UI.Zones {
                 }
                 return parentMember;
             }
-            public override object GetIndex(Func<object> proceed, System.Collections.Generic.IEnumerable<object> keys) {
+            public override object GetIndex(Func<object> proceed, object self, System.Collections.Generic.IEnumerable<object> keys) {
                 if (keys.Count() == 1) {
                     return GetMember(proceed, null, System.Convert.ToString(keys.Single()));
                 }
@@ -89,6 +89,10 @@ namespace Orchard.UI.Zones {
             public override object InvokeMember(Func<object> proceed, object self, string name, INamedEnumerable<object> args) {
                 var argsCount = args.Count();
                 if (name == "Add" && (argsCount == 1 || argsCount == 2)) {
+                    // pszmyd: Ignore null shapes
+                    if (args.First() == null)
+                        return _parent;
+
                     dynamic parent = _parent;
 
                     dynamic zone = _zoneFactory();

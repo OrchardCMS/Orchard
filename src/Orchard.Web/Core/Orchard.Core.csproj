@@ -103,6 +103,9 @@
     <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerViewModel.cs" />
+    <Compile Include="Contents\Handlers\RulesHandler.cs" />
+    <Compile Include="Contents\Rules\ContentEvents.cs" />
+    <Compile Include="Contents\Rules\ContentForms.cs" />
     <Compile Include="Contents\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
     <Compile Include="Common\Services\ICommonService.cs" />
@@ -239,6 +242,11 @@
     <Compile Include="Shapes\ResourceManifest.cs" />
     <Compile Include="Shapes\CoreShapes.cs" />
     <Compile Include="Shapes\DateTimeShapes.cs" />
+    <Compile Include="Title\Drivers\TitlePartDriver.cs" />
+    <Compile Include="Title\Handlers\TitlePartHandler.cs" />
+    <Compile Include="Title\Migrations.cs" />
+    <Compile Include="Title\Models\TitlePart.cs" />
+    <Compile Include="Title\Models\TitlePartRecord.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterController.cs" />
     <Compile Include="XmlRpc\IXmlRpcDriver.cs" />
@@ -315,6 +323,7 @@
     <Content Include="Shapes\Views\HeadPreload.cshtml" />
     <Content Include="Shapes\Views\Message.cshtml" />
     <Content Include="Shapes\Views\NotFound.cshtml" />
+    <Content Include="Title\Module.txt" />
     <Content Include="XmlRpc\Module.txt" />
     <Content Include="Settings\Views\EditorTemplates\Parts.Settings.SiteSettingsPart.cshtml" />
   </ItemGroup>
@@ -453,6 +462,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\DefinitionTemplates\OwnerEditorSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Placement.info" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Views\EditorTemplates\Parts.Title.TitlePart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Views\Parts.Title.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Views\Parts.Title_Summary.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Views\Parts.Title_SummaryAdmin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Title\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

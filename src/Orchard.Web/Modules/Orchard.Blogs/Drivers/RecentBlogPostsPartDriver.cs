@@ -8,25 +8,22 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Drivers {
     public class RecentBlogPostsPartDriver : ContentPartDriver<RecentBlogPostsPart> {
         private readonly IBlogService _blogService;
         private readonly IContentManager _contentManager;
-        private readonly IBlogPathConstraint _blogPathConstraint;
 
         public RecentBlogPostsPartDriver(
             IBlogService blogService, 
-            IContentManager contentManager,
-            IBlogPathConstraint blogPathConstraint) {
+            IContentManager contentManager) {
             _blogService = blogService;
             _contentManager = contentManager;
-            _blogPathConstraint = blogPathConstraint;
         }
 
         protected override DriverResult Display(RecentBlogPostsPart part, string displayType, dynamic shapeHelper) {
-            var path = _blogPathConstraint.FindPath(part.ForBlog);
-            BlogPart blog = _blogService.Get(path);
+            BlogPart blog = GetBlogFromSlug(part.ForBlog);
 
             if (blog == null) {
                 return null;
@@ -43,13 +40,13 @@ namespace Orchard.Blogs.Drivers {
 
             var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, ContentItems: list);
 
-            return ContentShape(shapeHelper.Parts_Blogs_RecentBlogPosts(ContentItem: part.ContentItem, ContentItems: blogPostList));
+            return ContentShape(shapeHelper.Parts_Blogs_RecentBlogPosts(ContentItem: part.ContentItem, ContentItems: blogPostList, Blog: blog));
         }
 
         protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper) {
             var viewModel = new RecentBlogPostsViewModel {
                 Count = part.Count,
-                Path = part.ForBlog,
+                Slug = part.ForBlog,
                 Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
             };
 
@@ -60,7 +57,7 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Editor(RecentBlogPostsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new RecentBlogPostsViewModel();
             if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                part.ForBlog = viewModel.Path;
+                part.ForBlog = viewModel.Slug;
                 part.Count = viewModel.Count;
             }
 
@@ -82,6 +79,12 @@ namespace Orchard.Blogs.Drivers {
         protected override void Exporting(RecentBlogPostsPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
+        }
+
+        private BlogPart GetBlogFromSlug(string slug) {
+            return _contentManager.Query<BlogPart, BlogPartRecord>()
+                .Join<RoutePartRecord>().Where(rr => rr.Slug == slug)
+                .List().FirstOrDefault();
         }
     }
 }

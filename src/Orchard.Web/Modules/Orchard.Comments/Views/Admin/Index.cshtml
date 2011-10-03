@@ -97,7 +97,7 @@
                             <a href="@Url.Action("Approve", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="ApproveUrl UnsafeUrl">@T("Approve")</a>@T(" | ")
                         }
                         else {
-                            <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@("Unapprove")</a>@T(" | ")
+                            <a href="@Url.Action("Unapprove", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="UnapproveUrl UnsafeUrl">@T("Unapprove")</a>@T(" | ")
                         }
                         <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>@T(" | ")
                         <a href="@Url.Action("Delete", new {commentEntry.Comment.Id, returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" itemprop="RemoveUrl UnsafeUrl">@T("Delete")</a>

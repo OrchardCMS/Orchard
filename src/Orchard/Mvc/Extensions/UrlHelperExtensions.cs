@@ -24,7 +24,7 @@ namespace Orchard.Mvc.Extensions {
             return urlHelper.MakeAbsolute(urlHelper.Action(actionName, controller, routeValues));
         }
 
-        private static string MakeAbsolute(this UrlHelper urlHelper, string url) {
+        public static string MakeAbsolute(this UrlHelper urlHelper, string url) {
             var siteUrl = urlHelper.RequestContext.HttpContext.Request.ToRootUrlString();
             return siteUrl + url;
         }

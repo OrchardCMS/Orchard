@@ -14,6 +14,7 @@
     <AssemblyName>Orchard.Scripting</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,6 +67,8 @@
     <Compile Include="Compiler\Token.cs" />
     <Compile Include="Compiler\Tokenizer.cs" />
     <Compile Include="Compiler\TokenKind.cs" />
+    <Compile Include="Rules\ConditionActions.cs" />
+    <Compile Include="Rules\ConditionForms.cs" />
     <Compile Include="ScriptExpressionEvaluator.cs" />
   </ItemGroup>
   <ItemGroup>

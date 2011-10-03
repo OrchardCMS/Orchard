@@ -13,7 +13,7 @@
                    Orchard.Lists,TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,Orchard.Widgets.PageLayerHinting,Orchard.ContentTypes,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
-                   PackagingServices,Orchard.Packaging,Gallery.Updates,Orchard.Warmup,
+                   PackagingServices,Orchard.Packaging,Orchard.Warmup,
                    TheThemeMachine" />
 
   <Metadata>

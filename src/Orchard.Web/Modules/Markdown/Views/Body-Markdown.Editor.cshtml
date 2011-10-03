@@ -1,0 +1,20 @@
+﻿@{ 
+    Script.Require("OrchardMarkdown");
+    Style.Require("OrchardMarkdown");
+}
+<fieldset>
+<div id="wmd-button-bar" class="wmd-button-bar"></div>
+
+@Html.TextArea("Text", (string)Model.Text, 25, 80,
+	 new Dictionary<string,object> {
+		{"id", "wmd-input"},
+		{"class", "wmd-input grippie"},
+		{"data-mediapicker-uploadpath", Model.AddMediaPath},
+		{"data-mediapicker-title", T("Insert/Update Media")}
+	 })
+</fieldset>
+
+<fieldset>
+    <label>@T("Preview")</label>
+    <div id="wmd-preview" class="wmd-panel wmd-preview"></div>
+</fieldset>

@@ -29,6 +29,12 @@
 </head>
 <body id="orchardmediapicker">
 
+<script type="text/javascript">
+ $.mediaPicker.cannotPerformMsg="@T("Cannot perform requested operation")";
+ $.mediaPicker.accessDeniedMsg="@T("Authentification timed-out: please log-on again")";
+ $.mediaPicker.logonUrl="@Url.Action("LogOn", new { Controller = "Account", Area = "Orchard.Users" })";
+</script>
+
 <div id="tabs" class="group">
     <ul>
         <li><a href="#tab-url" data-edittext="@T("Update/Upload Image")" data-edittext-content="true">@T("Insert/Upload Image")</a></li>

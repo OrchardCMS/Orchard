@@ -8,7 +8,7 @@ using System.Security;
 [assembly: AssemblyTitle("Orchard.Scripting")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("Orchard.Scripting")]
+[assembly: AssemblyProduct("Orchard")]
 [assembly: AssemblyCopyright("Copyright © Outercurve Foundation 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -30,6 +30,6 @@ using System.Security;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.2.41")]
-[assembly: AssemblyFileVersion("1.2.41")]
+[assembly: AssemblyVersion("1.3.0")]
+[assembly: AssemblyFileVersion("1.3.0")]
 [assembly: SecurityTransparent]

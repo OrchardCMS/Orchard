@@ -1,4 +1,5 @@
-﻿using NHibernate;
+﻿using System;
+using NHibernate;
 using NHibernate.Cfg;
 using Orchard.Data.Providers;
 using Orchard.Environment;
@@ -15,7 +16,8 @@ namespace Orchard.Data {
         SessionFactoryParameters GetSessionFactoryParameters();
     }
 
-    public class SessionFactoryHolder : ISessionFactoryHolder {
+    public class SessionFactoryHolder : ISessionFactoryHolder, IDisposable
+    {
         private readonly ShellSettings _shellSettings;
         private readonly ShellBlueprint _shellBlueprint;
         private readonly IHostEnvironment _hostEnvironment;
@@ -46,6 +48,13 @@ namespace Orchard.Data {
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+
+        public void Dispose() {
+            if (_sessionFactory != null) {
+                _sessionFactory.Dispose();
+                _sessionFactory = null;
+            }
+        }
 
         public ISessionFactory GetSessionFactory() {
             lock (this) {

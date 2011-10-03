@@ -3,6 +3,6 @@ Author: Bertrand Le Roy
 Description:
     This plug-in replaces
     'the' with 'le'
-Version: 1.2.41
+Version: 1.3.0
 Tags: plug-in, français, the, le
 homepage: http://weblogs.asp.net/bleroy

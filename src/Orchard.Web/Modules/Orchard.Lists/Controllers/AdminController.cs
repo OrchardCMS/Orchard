@@ -1,7 +1,6 @@
 using System;
-using System.Globalization;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
@@ -11,24 +10,19 @@ using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Contents.Settings;
-using Orchard.Core.Routable.Models;
-using Orchard.Data;
 using Orchard.DisplayManagement;
-using Orchard.DisplayManagement.Shapes;
 using Orchard.Lists.ViewModels;
 using Orchard.Localization;
-using Orchard;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 
-namespace Lists.Controllers {
+namespace Orchard.Lists.Controllers {
     public class AdminController : Controller {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
-        private readonly ITransactionManager _transactionManager;
         private readonly ISiteService _siteService;
 
         public IOrchardServices Services { get; set; }
@@ -37,13 +31,12 @@ namespace Lists.Controllers {
             IOrchardServices orchardServices,
             IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
-            ITransactionManager transactionManager,
             ISiteService siteService,
             IShapeFactory shapeFactory) {
+
             Services = orchardServices;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
-            _transactionManager = transactionManager;
             _siteService = siteService;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -118,8 +111,14 @@ namespace Lists.Controllers {
         }
 
         private IContentQuery<ContentItem> GetListContentItemQuery(int containerId, string contentType, ContentsOrder orderBy) {
-            var query = _contentManager.Query(VersionOptions.Latest, GetContainableTypes().Select(ctd => ctd.Name).ToArray());
+            List<string> containableTypes = GetContainableTypes().Select(ctd => ctd.Name).ToList();
+            if (containableTypes.Count == 0) {
+                // Force the name to be matched against empty and return no items in the query
+                containableTypes.Add(string.Empty);
+            }
 
+            var query = _contentManager.Query(VersionOptions.Latest, containableTypes.ToArray());
+            
             if (!string.IsNullOrEmpty(contentType)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
                 if (contentTypeDefinition == null) {
@@ -131,7 +130,6 @@ namespace Lists.Controllers {
             query = containerId == 0
                 ? query.Join<CommonPartRecord>().Where(cr => cr.Container == null)
                 : query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == containerId);
-
             switch (orderBy) {
                 case ContentsOrder.Modified:
                     query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
@@ -143,6 +141,7 @@ namespace Lists.Controllers {
                     query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
                     break;
             }
+
             return query;
         }
 

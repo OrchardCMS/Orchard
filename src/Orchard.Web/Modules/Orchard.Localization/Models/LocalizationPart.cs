@@ -1,9 +1,10 @@
 ﻿using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Utilities;
 using Orchard.Localization.Records;
 
 namespace Orchard.Localization.Models {
-    public sealed class LocalizationPart : ContentPart<LocalizationPartRecord> {
+    public sealed class LocalizationPart : ContentPart<LocalizationPartRecord>, ILocalizableAspect {
         private readonly LazyField<CultureRecord> _culture = new LazyField<CultureRecord>();
         private readonly LazyField<IContent> _masterContentItem = new LazyField<IContent>();
 
@@ -24,6 +25,10 @@ namespace Orchard.Localization.Models {
             get {
                 return Record.MasterContentItemId != 0;
             }
+        }
+
+        string ILocalizableAspect.Culture {
+            get { return Culture == null ? null : Culture.Culture; }
         }
     }
 }

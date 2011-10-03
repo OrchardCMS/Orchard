@@ -10,7 +10,7 @@ using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.DisplayManagement {
     [TestFixture]
-    public class DefaultShapeBuilderTests {
+    public class ShapeFactoryTests {
         private IContainer _container;
 
         [SetUp]
@@ -18,6 +18,7 @@ namespace Orchard.Tests.DisplayManagement {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
             builder.RegisterType<StubParallelCacheContext>().As<IParallelCacheContext>();

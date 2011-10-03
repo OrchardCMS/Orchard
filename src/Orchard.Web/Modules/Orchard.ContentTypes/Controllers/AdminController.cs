@@ -6,6 +6,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.ViewModels;
+using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.UI.Notify;
@@ -72,6 +73,10 @@ namespace Orchard.ContentTypes.Controllers {
             }
 
             var contentTypeDefinition = _contentDefinitionService.AddType(viewModel.Name, viewModel.DisplayName);
+            
+            // adds CommonPart by default
+            _contentDefinitionService.AddPartToType("CommonPart", viewModel.Name);
+
             var typeViewModel = new EditTypeViewModel(contentTypeDefinition);
 
 
@@ -97,6 +102,7 @@ namespace Orchard.ContentTypes.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(string id) {
             if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content type.")))
                 return new HttpUnauthorizedResult();
@@ -121,7 +127,6 @@ namespace Orchard.ContentTypes.Controllers {
             if (!ModelState.IsValid)
                 return View(typeViewModel);
 
-
             _contentDefinitionService.AlterType(typeViewModel, this);
 
             if (!ModelState.IsValid) {
@@ -131,7 +136,32 @@ namespace Orchard.ContentTypes.Controllers {
 
             Services.Notifier.Information(T("\"{0}\" settings have been saved.", typeViewModel.DisplayName));
 
-            return RedirectToAction("Index");
+            return RedirectToAction("List");
+        }
+
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("submit.Delete")]
+        public ActionResult Delete(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to delete a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var typeViewModel = _contentDefinitionService.GetType(id);
+
+            if (typeViewModel == null)
+                return HttpNotFound();
+
+            _contentDefinitionManager.DeleteTypeDefinition(id);
+
+            // delete all content items (but keep versions)
+            var contentItems = Services.ContentManager.Query(id).List();
+            foreach (var contentItem in contentItems) {
+                Services.ContentManager.Remove(contentItem);
+            }
+
+            Services.Notifier.Information(T("\"{0}\" has been removed.", typeViewModel.DisplayName));
+            
+            return RedirectToAction("List");
         }
 
         public ActionResult AddPartsTo(string id) {
@@ -273,6 +303,7 @@ namespace Orchard.ContentTypes.Controllers {
         }
 
         [HttpPost, ActionName("EditPart")]
+        [FormValueRequired("submit.Save")]
         public ActionResult EditPartPOST(string id) {
             if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
@@ -293,6 +324,24 @@ namespace Orchard.ContentTypes.Controllers {
             }
 
             Services.Notifier.Information(T("\"{0}\" settings have been saved.", partViewModel.Name));
+
+            return RedirectToAction("ListParts");
+        }
+
+        [HttpPost, ActionName("EditPart")]
+        [FormValueRequired("submit.Delete")]
+        public ActionResult DeletePart(string id)
+        {
+            if (!Services.Authorizer.Authorize(Permissions.EditContentTypes, T("Not allowed to delete a content part.")))
+                return new HttpUnauthorizedResult();
+
+            var partViewModel = _contentDefinitionService.GetPart(id);
+
+            if (partViewModel == null)
+                return HttpNotFound();
+
+            _contentDefinitionManager.DeletePartDefinition(id);
+            Services.Notifier.Information(T("\"{0}\" has been removed.", partViewModel.DisplayName));
 
             return RedirectToAction("ListParts");
         }

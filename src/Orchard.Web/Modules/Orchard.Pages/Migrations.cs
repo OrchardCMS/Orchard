@@ -8,13 +8,18 @@ namespace Orchard.Pages {
             ContentDefinitionManager.AlterTypeDefinition("Page", 
                 cfg => cfg
                 .WithPart("CommonPart", p => p
-                    .WithSetting("CommonTypePartSettings.ShowCreatedUtcEditor", "true"))
+                    .WithSetting("DateEditorSettings.ShowDateEditor", "true"))
                 .WithPart("PublishLaterPart")
                 .WithPart("RoutePart")
                 .WithPart("BodyPart")
                 .Creatable());
 
-            return 1;
+            return 2;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "true")));
+            return 2;
         }
     }
 }

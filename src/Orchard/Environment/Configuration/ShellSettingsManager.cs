@@ -54,8 +54,11 @@ namespace Orchard.Environment.Configuration {
             if (String.IsNullOrEmpty(text))
                 return shellSettings;
 
-            var settings = text.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var setting in settings) {
+            var settings = new StringReader(text);
+            string setting;
+            while ((setting = settings.ReadLine()) != null)
+            {
+                if (string.IsNullOrWhiteSpace(setting)) continue; ;
                 var separatorIndex = setting.IndexOf(Separator);
                 if (separatorIndex == -1)
                 {

@@ -1,0 +1,15 @@
+﻿<Placement>
+    <!-- available display shapes -->
+    <!--
+    Parts_Title
+    Parts_Title_Summary
+    Parts_Title_SummaryAdmin
+    -->
+    <Place Parts_Title_Edit="Content:before.5"/>
+    <Match DisplayType="Detail">
+        <Place Parts_Title="Header:5"/>
+    </Match>
+    <Match DisplayType="Summary">
+        <Place Parts_Title_Summary="Header:5"/>
+    </Match>
+</Placement>

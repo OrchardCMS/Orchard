@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.2.41
-OrchardVersion: 1.2.41
+Version: 1.3.0
+OrchardVersion: 1.3.0
 Description: The common module introduces content parts that are going to be used by most content types (common, body and routable).
 FeatureDescription: Core content parts.
 Dependencies: Settings

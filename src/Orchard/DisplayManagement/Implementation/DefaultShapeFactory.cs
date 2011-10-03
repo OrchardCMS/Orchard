@@ -9,13 +9,14 @@ namespace Orchard.DisplayManagement.Implementation {
 
     public class DefaultShapeFactory : Clay, IShapeFactory {
         private readonly IEnumerable<Lazy<IShapeFactoryEvents>> _events;
-        private readonly IShapeTableManager _shapeTableManager;
+        private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
 
         public DefaultShapeFactory(
             IEnumerable<Lazy<IShapeFactoryEvents>> events,
-            IShapeTableManager shapeTableManager) : base(new ShapeFactoryBehavior()) {
+            Lazy<IShapeTableLocator> shapeTableLocator) : base(new ShapeFactoryBehavior())
+        {
             _events = events;
-            _shapeTableManager = shapeTableManager;
+            _shapeTableLocator = shapeTableLocator;
         }
         
         class ShapeFactoryBehavior : ClayBehavior {
@@ -29,7 +30,7 @@ namespace Orchard.DisplayManagement.Implementation {
         }
 
         public IShape Create(string shapeType, INamedEnumerable<object> parameters, IEnumerable<IClayBehavior> behaviors) {
-            var defaultShapeTable = _shapeTableManager.GetShapeTable(null);
+            var defaultShapeTable = _shapeTableLocator.Value.Lookup(null);
             ShapeDescriptor shapeDescriptor;
             defaultShapeTable.Descriptors.TryGetValue(shapeType, out shapeDescriptor);
 
@@ -58,14 +59,15 @@ namespace Orchard.DisplayManagement.Implementation {
                     new ClaySharp.Behaviors.InterfaceProxyBehavior(),
                     new ClaySharp.Behaviors.PropBehavior(),
                     new ClaySharp.Behaviors.ArrayBehavior(),
-                    new ClaySharp.Behaviors.NilResultBehavior()
+                    new ClaySharp.Behaviors.NilResultBehavior(),
                 };
             }
             else {
                 creatingContext.Behaviors = new List<IClayBehavior> {
                     new ClaySharp.Behaviors.InterfaceProxyBehavior(),
                     new ClaySharp.Behaviors.PropBehavior(),
-                    new ClaySharp.Behaviors.NilResultBehavior()
+                    new ClaySharp.Behaviors.NilResultBehavior(),
+                    new Shape.ShapeBehavior(),
                 };
             }
             

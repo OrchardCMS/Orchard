@@ -73,7 +73,7 @@ namespace Orchard.Setup.Services {
                     // Framework
                     "Orchard.Framework",
                     // Core
-                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "HomePage", "Navigation", "Reports", "Routable", "Scheduling", "Settings", "Shapes",
+                    "Common", "Containers", "Contents", "Dashboard", "Feeds", "HomePage", "Navigation", "Reports", "Routable", "Scheduling", "Settings", "Shapes", "Title",
                     // Modules
                     "Orchard.Pages", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules", 
                     "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes",
@@ -109,40 +109,48 @@ namespace Orchard.Setup.Services {
             var shellBlueprint = _compositionStrategy.Compose(shellSettings, shellDescriptor);
 
             // initialize database explicitly, and store shell descriptor
-            var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellBlueprint);
+            using (var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellBlueprint))
+            {
 
-            using (var environment = bootstrapLifetimeScope.CreateWorkContextScope()) {
+                using (var environment = bootstrapLifetimeScope.CreateWorkContextScope())
+                {
 
-                // check if the database is already created (in case an exception occured in the second phase)
-                var shellDescriptorRepository = environment.Resolve<IRepository<ShellDescriptorRecord>>();
-                try {
-                    shellDescriptorRepository.Get(x => true);
-                }
-                catch {
-                    var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
-                    var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
-
-                    reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
-
-                    schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord",
-                                              table => table
-                                                           .Column<int>("Id", column => column.PrimaryKey().Identity())
-                                                           .Column<string>("DataMigrationClass")
-                                                           .Column<int>("Version"));
-
-                    var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
-                    dataMigrationManager.Update("Settings");
-
-                    foreach (var feature in context.EnabledFeatures) {
-                        dataMigrationManager.Update(feature);
+                    // check if the database is already created (in case an exception occured in the second phase)
+                    var shellDescriptorRepository = environment.Resolve<IRepository<ShellDescriptorRecord>>();
+                    try
+                    {
+                        shellDescriptorRepository.Get(x => true);
                     }
+                    catch
+                    {
+                        var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
+                        var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
 
-                    environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
-                        0,
-                        shellDescriptor.Features,
-                        shellDescriptor.Parameters);
+                        reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
+
+                        schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord",
+                                                  table => table
+                                                               .Column<int>("Id", column => column.PrimaryKey().Identity())
+                                                               .Column<string>("DataMigrationClass")
+                                                               .Column<int>("Version"));
+
+                        var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
+                        dataMigrationManager.Update("Settings");
+
+                        foreach (var feature in context.EnabledFeatures)
+                        {
+                            dataMigrationManager.Update(feature);
+                        }
+
+                        environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
+                            0,
+                            shellDescriptor.Features,
+                            shellDescriptor.Parameters);
+                    }
                 }
             }
+
+
 
             // in effect "pump messages" see PostMessage circa 1980
             while ( _processingEngine.AreTasksPending() )
@@ -165,7 +173,7 @@ namespace Orchard.Setup.Services {
             }
 
             _shellSettingsManager.SaveSettings(shellSettings);
-
+ 
             return executionId;
         }
 

@@ -1,0 +1,88 @@
+﻿.wmd-button {
+    width: 20px;
+    height: 20px;
+    padding-left: 2px;
+    padding-right: 3px;
+    position: absolute;
+    display: inline-block;
+    list-style: none;
+    cursor: pointer;
+}
+
+.wmd-button > span {
+    background-image: url(../Content/Admin/Images/wmd-buttons.png);
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.wmd-button-row 
+{
+    position: relative; 
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    padding: 0px;  
+    height: 20px;
+}
+
+.wmd-input {
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+    width: 660px;
+    padding: 3px;
+    height: 200px;
+    line-height: 1.2;
+}
+
+.wmd-preview  {
+    border: 2px dotted #CCC;
+    padding: 3px;
+    margin-top: 6px;
+}
+
+.wmd-preview ol {
+    list-style: decimal;
+    margin-left: 15px;
+}
+
+.wmd-preview ul {
+    list-style: disc;
+    margin-left: 15px;
+}
+
+.wmd-preview blockquote {
+    margin: 1em 3em;
+	color: #999;
+	border-left: 2px solid #999;
+	padding-left: 1em;
+}
+
+.wmd-preview pre, .wmd-preview code {
+    margin: 1em 3em;
+	color: #999;
+	border-left: 2px solid #999;
+	padding-left: 1em;
+    font-family: Courier New;
+}
+
+/* Grippie */
+
+div.grippie {
+    background:#EEEEEE url(../Content/Admin/Images/grippie.png) no-repeat scroll center 2px;
+    border-color:#DDDDDD;
+    border-style:solid;
+    border-width:0pt 1px 1px;
+    cursor:s-resize;
+    height:9px;
+    overflow:hidden;
+}
+
+.resizable-textarea textarea {
+    display:block;
+    margin-bottom:0pt;
+    width:95%;
+    height: 20%;
+}

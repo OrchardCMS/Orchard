@@ -70,6 +70,13 @@ namespace Orchard.Widgets.Filters {
                     Logger.Warning("The widget '{0}' is has no assigned layer or the layer does not exist.", widgetPart.Title);
                     continue;
                 }
+
+                // ignore widget for different cultures
+                var localizablePart = widgetPart.As<ILocalizableAspect>();
+                if (localizablePart != null && localizablePart.Culture != workContext.CurrentCulture) {
+                    continue;
+                }
+
                 if (activeLayerIds.Contains(commonPart.Container.ContentItem.Id)) {
                     var widgetShape = _contentManager.BuildDisplay(widgetPart);
                     zones[widgetPart.Record.Zone].Add(widgetShape, widgetPart.Record.Position);

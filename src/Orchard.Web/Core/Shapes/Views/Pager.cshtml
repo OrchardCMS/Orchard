@@ -40,7 +40,12 @@
         </li>
     }
     if(Model.Page > 1) {
-        routeData["page"] = Model.Page - 1;
+            routeData["page"] = Model.Page - 1;
+
+            // don't render the page parameter as default is 1
+            if (Model.Page - 1 == 1) {
+                routeData.Remove("page");
+            }
         <li class="page-previous">
         @Html.ActionLink((string)previousText, (string)routeData["action"], (string)routeData["controller"], routeData, null)
         </li>

@@ -45,15 +45,23 @@
     });
 
     $("#createFolder").live("click", function () {
+        if ($(this).hasClass("disabled")) return;
         $.post("MediaPicker/CreateFolder", { path: query("mediaPath") || "", folderName: $("#folderName").val(), __RequestVerificationToken: $("#__requesttoken").val() },
             function (response) {
-                if (typeof response === "string") {
-                    alert(response);
-                }
-                else {
+                if (response.Success) {
                     location.reload(true);
-                }
+                } else if (response.Success === false) {
+                    alert(response.Message);
+                } else if (response.indexOf($.mediaPicker.logonUrl) !== -1) {
+                    // A redirection due to expired authorization
+                    alert($.mediaPicker.accessDeniedMsg);
+                } else alert($.mediaPicker.cannotPerformMsg);
             });
+    });
+
+    $("#folderName").live("propertychange keyup input paste", function () {
+        var empty = ($("#folderName").val() == "");
+        $("#createFolder").attr("disabled", empty).toggleClass("disabled", empty);
     });
 
     $(function () {
@@ -81,7 +89,7 @@
 
         var preselect = query("select", location.hash);
         if (preselect) {
-            $("img[data-filename=" + preselect + "]").closest(".media-item").trigger("click");
+            $("img[data-filename='" + preselect + "']").closest(".media-item").trigger("click");
         }
 
         // edit mode has slightly different wording
@@ -101,8 +109,15 @@
             });
         }
 
-        var data = window.opener.jQuery[query("callback")].data,
+        try {
+            var data = window.opener.jQuery[query("callback")].data,
             img = data ? data.img : null;
+        }
+        catch (ex) {
+            alert($.mediaPicker.cannotPerformMsg);
+            window.close();
+        }
+
         if (img) {
             for (var name in img) {
                 $("#img-" + name).val(img[name]);
@@ -140,7 +155,12 @@
                 height: $(prefix + "height").val()
             };
         img.html = getImageHtml(img);
-        window.opener.jQuery[query("callback")]({ img: img });
+        try {
+            window.opener.jQuery[query("callback")]({ img: img });
+        }
+        catch (ex) {
+            alert($.mediaPicker.cannotPerformMsg);
+        }
         window.close();
     }
 
@@ -273,6 +293,9 @@
             }
             else if (result && result.error) {
                 alert(result.error);
+            }
+            else if (frame.location.pathname.match("AccessDenied")) {
+                alert($.mediaPicker.accessDeniedMsg);
             }
             else {
                 var somethingPotentiallyHorrible = "";

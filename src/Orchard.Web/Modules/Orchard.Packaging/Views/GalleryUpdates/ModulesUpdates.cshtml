@@ -25,6 +25,10 @@
     }
 }
 
+<fieldset class="update-actions">
+    <a class="button" href="@Url.Action("ReloadUpdates", new { returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString()})" title="@T("Most recent check for updates: {0}", Model.LastUpdateCheckUtc == null ? T("Unknown") : Display.DateTimeRelative(dateTimeUtc: Model.LastUpdateCheckUtc.Value))">@T("Check for Updates")</a>
+</fieldset>
+
 @if (Model.Entries.Count() <= 0) {
     <p>@T("No module updates available.").ToString()</p>
 } else {

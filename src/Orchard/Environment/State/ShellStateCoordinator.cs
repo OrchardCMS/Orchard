@@ -33,7 +33,7 @@ namespace Orchard.Environment.State {
 
         public ILogger Logger { get; set; }
 
-        void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor) {
+        void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor, string tenant) {
             // deduce and apply state changes involved
             var shellState = _stateManager.GetShellState();
             foreach (var feature in descriptor.Features) {

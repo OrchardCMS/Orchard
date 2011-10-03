@@ -51,8 +51,8 @@ namespace Orchard.Setup {
 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
-            builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().InstancePerLifetimeScope();
-            builder.RegisterType<RazorViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().InstancePerLifetimeScope();
+            builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().SingleInstance();
+            builder.RegisterType<RazorViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().SingleInstance();
             builder.RegisterType<ThemedViewResultFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<PageTitleBuilder>().As<IPageTitleBuilder>().InstancePerLifetimeScope();
@@ -65,6 +65,7 @@ namespace Orchard.Setup {
             builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().InstancePerMatchingLifetimeScope("shell");
 
             // setup mode specific implementations of needed service interfaces
             builder.RegisterType<SafeModeThemeService>().As<IThemeManager>().InstancePerLifetimeScope();
@@ -77,23 +78,24 @@ namespace Orchard.Setup {
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>().InstancePerLifetimeScope();
             builder.RegisterType<RecipeParser>().As<IRecipeParser>().InstancePerLifetimeScope();
 
-            builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
 
             // in progress - adding services for display/shape support in setup
-            builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
-            builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
-            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
-            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>().InstancePerLifetimeScope();
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>().InstancePerMatchingLifetimeScope("work");
 
-            builder.RegisterType<ThemeAwareViewEngine>().As<IThemeAwareViewEngine>();
-            builder.RegisterType<LayoutAwareViewEngine>().As<ILayoutAwareViewEngine>();
-            builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>();
-            builder.RegisterType<LayoutWorkContext>().As<IWorkContextStateProvider>();
-            builder.RegisterType<SafeModeSiteWorkContextProvider>().As<IWorkContextStateProvider>();
+            builder.RegisterType<ThemeAwareViewEngine>().As<IThemeAwareViewEngine>().InstancePerLifetimeScope();
+            builder.RegisterType<LayoutAwareViewEngine>().As<ILayoutAwareViewEngine>().InstancePerLifetimeScope();
+            builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>().SingleInstance();
+            builder.RegisterType<LayoutWorkContext>().As<IWorkContextStateProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<SafeModeSiteWorkContextProvider>().As<IWorkContextStateProvider>().InstancePerLifetimeScope();
 
-            builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
-            builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
-            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>();
+            builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>().InstancePerLifetimeScope();
+            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>().InstancePerLifetimeScope();
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 

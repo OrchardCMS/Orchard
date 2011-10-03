@@ -13,7 +13,7 @@ using Orchard.Logging;
 
 namespace Orchard.DisplayManagement.Implementation {
     public class DefaultDisplayManager : IDisplayManager {
-        private readonly IShapeTableManager _shapeTableManager;
+        private readonly Lazy<IShapeTableLocator> _shapeTableLocator;
         private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IEnumerable<IShapeDisplayEvents> _shapeDisplayEvents;
 
@@ -26,10 +26,10 @@ namespace Orchard.DisplayManagement.Implementation {
                     null/*typeof(DefaultDisplayManager)*/)));
 
         public DefaultDisplayManager(
-            IShapeTableManager shapeTableManager,
             IWorkContextAccessor workContextAccessor,
-            IEnumerable<IShapeDisplayEvents> shapeDisplayEvents) {
-            _shapeTableManager = shapeTableManager;
+            IEnumerable<IShapeDisplayEvents> shapeDisplayEvents,
+            Lazy<IShapeTableLocator> shapeTableLocator) {
+            _shapeTableLocator = shapeTableLocator;
             _workContextAccessor = workContextAccessor;
             _shapeDisplayEvents = shapeDisplayEvents;
             T = NullLocalizer.Instance;
@@ -53,7 +53,7 @@ namespace Orchard.DisplayManagement.Implementation {
                 return CoerceHtmlString(context.Value);
 
             var workContext = _workContextAccessor.GetContext(context.ViewContext);
-            var shapeTable = _shapeTableManager.GetShapeTable(workContext.CurrentTheme.Id);
+            var shapeTable = _shapeTableLocator.Value.Lookup(workContext.CurrentTheme.Id);
 
             var displayingContext = new ShapeDisplayingContext {
                 Shape = shape,
@@ -67,6 +67,9 @@ namespace Orchard.DisplayManagement.Implementation {
             if (TryGetDescriptorBinding(shapeMetadata.Type, Enumerable.Empty<string>(), shapeTable, out shapeBinding)) {
                 shapeBinding.ShapeDescriptor.Displaying.Invoke(action => action(displayingContext), Logger);
             }
+
+            // copy all binding sources (all templates for this shape) in order to use them as Localization scopes
+            shapeMetadata.BindingSources = shapeBinding.ShapeDescriptor.BindingSources;
 
             // invoking ShapeMetadata displaying events
             shapeMetadata.Displaying.Invoke(action => action(displayingContext), Logger);

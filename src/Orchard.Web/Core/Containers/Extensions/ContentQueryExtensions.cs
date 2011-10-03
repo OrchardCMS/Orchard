@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Routable.Models;
+using Orchard.Core.Title.Models;
 
 namespace Orchard.Core.Containers.Extensions
 {
@@ -11,6 +12,11 @@ namespace Orchard.Core.Containers.Extensions
         public static IContentQuery<T> OrderBy<T>(this IContentQuery<T> query, string partAndProperty, bool descendingOrder) where T : IContent {
             //todo: (heskew) order by custom part properties
             switch (partAndProperty) {
+                case "TitlePart.Title":
+                    query = descendingOrder
+                                ? query.OrderByDescending<TitlePartRecord, string>(record => record.Title)
+                                : query.OrderBy<TitlePartRecord, string>(record => record.Title);
+                    break;
                 case "RoutePart.Title":
                     query = descendingOrder
                                 ? query.OrderByDescending<RoutePartRecord, string>(record => record.Title)
@@ -61,6 +67,10 @@ namespace Orchard.Core.Containers.Extensions
 
         // convoluted: yes; quick and works for now: yes; technical debt: not much
         private static readonly Dictionary<string, Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>> _filters = new Dictionary<string, Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>> {
+            {"TitlePart.Title|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<TitlePartRecord>(r => true /* CompareTo is not implemented - r.Title.CompareTo(s) == -1*/))},
+            {"TitlePart.Title|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<TitlePartRecord>(r => true /* CompareTo is not implemented - r.Title.CompareTo(s) == 1*/))},
+            {"TitlePart.Title|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<TitlePartRecord>(r => r.Title.Equals(s, StringComparison.OrdinalIgnoreCase)))},
+            {"TitlePart.Title|^=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<TitlePartRecord>(r => r.Title.StartsWith(s, StringComparison.OrdinalIgnoreCase)))},
             {"RoutePart.Title|<", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => true /* CompareTo is not implemented - r.Title.CompareTo(s) == -1*/))},
             {"RoutePart.Title|>", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => true /* CompareTo is not implemented - r.Title.CompareTo(s) == 1*/))},
             {"RoutePart.Title|=", new Func<IContentQuery<ContentItem>, string, IContentQuery<ContentItem>>((q, s) => q.Where<RoutePartRecord>(r => r.Title.Equals(s, StringComparison.OrdinalIgnoreCase)))},

@@ -35,7 +35,8 @@ namespace Orchard.UI {
         public virtual string ZoneName { get; set; }
 
         public IZone Add(Action<HtmlHelper> action, string position) {
-            throw new NotImplementedException();
+            // pszmyd: Replaced the NotImplementedException with simply doing nothing
+            return this;
         }
     }
 }

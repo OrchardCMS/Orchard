@@ -63,5 +63,6 @@ namespace Orchard.Core.Containers.Drivers {
                     return shapeHelper.EditorTemplate(TemplateName: "Containable", Model: model, Prefix: "Containable");
                 });
         }
+
     }
 }

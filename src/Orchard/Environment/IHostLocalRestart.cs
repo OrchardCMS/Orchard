@@ -36,7 +36,7 @@ namespace Orchard.Environment {
             TouchFile();
         }
 
-        void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor) {
+        void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor, string tenant) {
             TouchFile();
         }
 

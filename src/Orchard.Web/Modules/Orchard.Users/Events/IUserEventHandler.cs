@@ -19,7 +19,7 @@ namespace Orchard.Users.Events {
         void LoggedIn(IUser user);
 
         /// <summary>
-        /// Called when a user explicitly logs out (as opposed to one whos session cookie simply expires)
+        /// Called when a user explicitly logs out (as opposed to one whose session cookie simply expires)
         /// </summary>
         void LoggedOut(IUser user);
 
@@ -42,6 +42,11 @@ namespace Orchard.Users.Events {
         /// Called after a user has confirmed their email address
         /// </summary>
         void ConfirmedEmail(IUser user);
+
+        /// <summary>
+        /// Called after a user has been approved
+        /// </summary>
+        void Approved(IUser user);
     }
 }
 

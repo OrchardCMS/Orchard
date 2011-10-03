@@ -55,24 +55,11 @@ namespace Orchard.Tasks {
         }
 
         public void DoWork() {
-            // makes an inner container, similar to the per-request container
             using (var scope = _workContextAccessor.CreateWorkContextScope()) {
-                var transactionManager = scope.Resolve<ITransactionManager>();
-
-                try {
-                    // resolve the manager and invoke it
-                    var manager = scope.Resolve<IBackgroundService>();
-                    manager.Sweep();
-                }
-                catch {
-                    // any database changes in this using scope are invalidated
-                    transactionManager.Cancel();
-
-                    // pass exception along to actual handler
-                    throw;
-                }
+                // resolve the manager and invoke it
+                var manager = scope.Resolve<IBackgroundService>();
+                manager.Sweep();
             }
         }
-
     }
 }

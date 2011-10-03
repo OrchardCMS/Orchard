@@ -23,6 +23,7 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Mvc;
+using Orchard.Mvc.DataAnnotations;
 using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
@@ -142,6 +143,10 @@ namespace Orchard.Environment {
             var hostContainer = new DefaultOrchardHostContainer(container);
             //MvcServiceLocator.SetCurrent(hostContainer);
             OrchardHostContainerRegistry.RegisterHostContainer(hostContainer);
+
+            // Register localized data annotations
+            ModelValidatorProviders.Providers.Clear();
+            ModelValidatorProviders.Providers.Add(new LocalizedModelValidatorProvider());
 
             return container;
         }
