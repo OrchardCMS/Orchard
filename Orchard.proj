@@ -60,8 +60,8 @@
 
   <Target Name="Package">
     <CallTarget Targets="Package-Stage"/>
-<!--    <CallTarget Targets="Package-MsDeploy"/>
-    <CallTarget Targets="Package-Zip"/>-->
+    <CallTarget Targets="Package-MsDeploy"/>
+    <CallTarget Targets="Package-Zip"/>
   </Target>
 
   <Target Name="Profiling">
