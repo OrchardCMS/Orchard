@@ -71,7 +71,8 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SiteSettingsPartHandler>().As<IContentHandler>();
             builder.RegisterType<RegistrationSettingsPartHandler>().As<IContentHandler>();
-            
+            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
+
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterInstance(new Mock<IContentDisplay>().Object);
             builder.RegisterType<StubCacheManager>().As<ICacheManager>();
