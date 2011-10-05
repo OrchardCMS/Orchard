@@ -71,14 +71,19 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         public ScriptRegister Script {
             get {
                 return _scriptRegister ??
-                    (_scriptRegister = new WebViewScriptRegister(this, Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
+                    (_scriptRegister = new WebViewScriptRegister(this, Html.ViewDataContainer, ResourceManager));
             }
+        }
+
+        private IResourceManager _resourceManager;
+        public IResourceManager ResourceManager {
+            get { return _resourceManager ?? (_resourceManager = _workContext.Resolve<IResourceManager>()); }
         }
 
         public ResourceRegister Style {
             get {
                 return _stylesheetRegister ??
-                    (_stylesheetRegister = new ResourceRegister(Html.ViewDataContainer, Html.Resolve<IResourceManager>(), "stylesheet"));
+                    (_stylesheetRegister = new ResourceRegister(Html.ViewDataContainer, ResourceManager, "stylesheet"));
             }
         }
 
@@ -92,7 +97,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public virtual void RegisterLink(LinkEntry link) {
-            Html.Resolve<IResourceManager>().RegisterLink(link);
+            ResourceManager.RegisterLink(link);
         }
 
         public void SetMeta(string name, string content) {
@@ -100,7 +105,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public virtual void SetMeta(MetaEntry meta) {
-            Html.Resolve<IResourceManager>().SetMeta(meta);
+            ResourceManager.SetMeta(meta);
         }
 
         public void AppendMeta(string name, string content, string contentSeparator) {
@@ -108,7 +113,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public virtual void AppendMeta(MetaEntry meta, string contentSeparator) {
-            Html.Resolve<IResourceManager>().AppendMeta(meta, contentSeparator);
+            ResourceManager.AppendMeta(meta, contentSeparator);
         }
 
         public override void InitHelpers() {
@@ -130,7 +135,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public OrchardTagBuilder Tag(dynamic shape, string tagName) {
-            return Html.Resolve<ITagBuilderFactory>().Create(shape, tagName);
+            return Html.GetWorkContext().Resolve<ITagBuilderFactory>().Create(shape, tagName);
         }
 
         public IHtmlString DisplayChildren(dynamic shape) {

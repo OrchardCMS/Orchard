@@ -29,6 +29,7 @@ namespace Orchard.ContentManagement {
         private readonly Func<IContentManagerSession> _contentManagerSession;
         private readonly Lazy<IContentDisplay> _contentDisplay;
         private readonly Lazy<ISessionLocator> _sessionLocator; 
+        private readonly Lazy<IEnumerable<IContentHandler>> _handlers;
         private const string Published = "Published";
         private const string Draft = "Draft";
 
@@ -40,13 +41,15 @@ namespace Orchard.ContentManagement {
             IContentDefinitionManager contentDefinitionManager,
             Func<IContentManagerSession> contentManagerSession,
             Lazy<IContentDisplay> contentDisplay,
-            Lazy<ISessionLocator> sessionLocator) {
+            Lazy<ISessionLocator> sessionLocator,
+            Lazy<IEnumerable<IContentHandler>> handlers) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;
             _contentItemVersionRepository = contentItemVersionRepository;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManagerSession = contentManagerSession;
+            _handlers = handlers;
             _contentDisplay = contentDisplay;
             _sessionLocator = sessionLocator;
             Logger = NullLogger.Instance;
@@ -54,15 +57,8 @@ namespace Orchard.ContentManagement {
 
         public ILogger Logger { get; set; }
 
-        private IEnumerable<IContentHandler> _handlers;
         public IEnumerable<IContentHandler> Handlers {
-            get {
-                if (_handlers == null) {
-                    _handlers = _context.Resolve<IEnumerable<IContentHandler>>();
-                }
-                    
-                return _handlers;
-            }
+              get { return _handlers.Value; }
         }
 
         public IEnumerable<ContentTypeDefinition> GetContentTypeDefinitions() {

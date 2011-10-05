@@ -35,19 +35,19 @@ namespace Orchard.Mvc {
         public ScriptRegister Script {
             get {
                 return _scriptRegister ??
-                    (_scriptRegister = new ViewPage.ViewPageScriptRegister(Writer, Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
+                    (_scriptRegister = new ViewPage.ViewPageScriptRegister(Writer, Html.ViewDataContainer, Html.GetWorkContext().Resolve<IResourceManager>()));
             }
         }
 
         public ResourceRegister Style {
             get {
                 return _stylesheetRegister ??
-                    (_stylesheetRegister = new ResourceRegister(Html.ViewDataContainer, Html.Resolve<IResourceManager>(), "stylesheet"));
+                    (_stylesheetRegister = new ResourceRegister(Html.ViewDataContainer, Html.GetWorkContext().Resolve<IResourceManager>(), "stylesheet"));
             }
         }
 
         public virtual void RegisterLink(LinkEntry link) {
-            Html.Resolve<IResourceManager>().RegisterLink(link);
+            Html.GetWorkContext().Resolve<IResourceManager>().RegisterLink(link);
         }
 
         public void SetMeta(string name, string content) {
@@ -55,7 +55,7 @@ namespace Orchard.Mvc {
         }
 
         public virtual void SetMeta(MetaEntry meta) {
-            Html.Resolve<IResourceManager>().SetMeta(meta);
+            Html.GetWorkContext().Resolve<IResourceManager>().SetMeta(meta);
         }
 
         public void AppendMeta(string name, string content, string contentSeparator) {
@@ -63,7 +63,7 @@ namespace Orchard.Mvc {
         }
 
         public virtual void AppendMeta(MetaEntry meta, string contentSeparator) {
-            Html.Resolve<IResourceManager>().AppendMeta(meta, contentSeparator);
+            Html.GetWorkContext().Resolve<IResourceManager>().AppendMeta(meta, contentSeparator);
         }
         
         public override void RenderView(ViewContext viewContext) {
@@ -90,7 +90,7 @@ namespace Orchard.Mvc {
         }
 
         public OrchardTagBuilder Tag(dynamic shape, string tagName) {
-            return Html.Resolve<ITagBuilderFactory>().Create(shape, tagName);
+            return Html.GetWorkContext().Resolve<ITagBuilderFactory>().Create(shape, tagName);
         }
 
         public IHtmlString DisplayChildren(dynamic shape) {

@@ -7,7 +7,6 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using Orchard.Localization;
-using Orchard.Settings;
 using Orchard.Utility;
 using Orchard.Utility.Extensions;
 using System.Web;
@@ -76,6 +75,15 @@ namespace Orchard.Mvc.Html {
             }
 
             return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
+        }
+
+        public static WorkContext GetWorkContext(this HtmlHelper html) {
+            var workContext = html.ViewContext.RequestContext.GetWorkContext();
+
+            if (workContext == null)
+                throw new ApplicationException("The WorkContext cannot be found for the request");
+
+            return workContext;
         }
 
         #region UnorderedList
@@ -302,7 +310,7 @@ namespace Orchard.Mvc.Html {
         #region AntiForgeryTokenOrchard
 
         public static MvcHtmlString AntiForgeryTokenOrchard(this HtmlHelper htmlHelper) {
-            var siteSalt = htmlHelper.Resolve<ISiteService>().GetSiteSettings().SiteSalt;
+            var siteSalt = htmlHelper.GetWorkContext().CurrentSite.SiteSalt;
 
             try {
                 return htmlHelper.AntiForgeryToken(siteSalt);

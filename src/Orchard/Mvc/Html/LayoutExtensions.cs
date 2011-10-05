@@ -24,15 +24,15 @@ namespace Orchard.Mvc.Html {
         }
 
         public static void AddTitleParts(this HtmlHelper html, params string[] titleParts) {
-            html.Resolve<IPageTitleBuilder>().AddTitleParts(titleParts);
+            html.GetWorkContext().Resolve<IPageTitleBuilder>().AddTitleParts(titleParts);
         }
 
         public static void AppendTitleParts(this HtmlHelper html, params string[] titleParts) {
-            html.Resolve<IPageTitleBuilder>().AppendTitleParts(titleParts);
+            html.GetWorkContext().Resolve<IPageTitleBuilder>().AppendTitleParts(titleParts);
         }
 
         public static MvcHtmlString Title(this HtmlHelper html, params string[] titleParts) {
-            IPageTitleBuilder pageTitleBuilder = html.Resolve<IPageTitleBuilder>();
+            var pageTitleBuilder = html.GetWorkContext().Resolve<IPageTitleBuilder>();
 
             html.AddTitleParts(titleParts);
 
@@ -58,11 +58,11 @@ namespace Orchard.Mvc.Html {
         }
 
         public static void AddPageClassNames(this HtmlHelper html, params object[] classNames) {
-            html.Resolve<IPageClassBuilder>().AddClassNames(classNames);
+            html.GetWorkContext().Resolve<IPageClassBuilder>().AddClassNames(classNames);
         }
 
         public static MvcHtmlString ClassForPage(this HtmlHelper html, params object[] classNames) {
-            IPageClassBuilder pageClassBuilder = html.Resolve<IPageClassBuilder>();
+            IPageClassBuilder pageClassBuilder = html.GetWorkContext().Resolve<IPageClassBuilder>();
 
             html.AddPageClassNames(classNames);
             //todo: (heskew) need ContentItem.ContentType

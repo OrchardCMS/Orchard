@@ -26,8 +26,7 @@
     // these are just hacked together to fire existing partials... can change
     Model.Header.Add(Display.Header());
 
-    var thisUser = Html.Resolve<IAuthenticationService>().GetAuthenticatedUser();
-    Model.Header.Add(Display.User(CurrentUser: thisUser));
+    Model.Header.Add(Display.User(CurrentUser: WorkContext.CurrentUser));
     Model.Footer.Add(Display.OrchardVersion());
 
     if (Model.Title != null) {

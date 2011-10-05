@@ -815,7 +815,6 @@
     <Compile Include="Logging\LoggingModule.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Logging\NullLoggerFactory.cs" />
-    <Compile Include="Mvc\Html\ContainerExtensions.cs" />
     <Compile Include="Mvc\Html\ContentItemExtensions.cs" />
     <Compile Include="Mvc\Html\LayoutExtensions.cs" />
     <Compile Include="Mvc\MvcModule.cs" />

@@ -3,7 +3,6 @@ using System.Xml;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Common.Services;
 using Orchard.Mvc;
 using Orchard.PublishLater.Models;
 using Orchard.PublishLater.Services;
@@ -14,14 +13,16 @@ using System.Globalization;
 namespace Orchard.PublishLater.Drivers {
     public class PublishLaterPartDriver : ContentPartDriver<PublishLaterPart> {
         private const string TemplateName = "Parts/PublishLater";
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPublishLaterService _publishLaterService;
         private const string DatePattern = "M/d/yyyy";
         private const string TimePattern = "h:mm tt";
 
         public PublishLaterPartDriver(
             IOrchardServices services,
-            ICommonService commonService,
+            IHttpContextAccessor httpContextAccessor,
             IPublishLaterService publishLaterService) {
+            _httpContextAccessor = httpContextAccessor;
             _publishLaterService = publishLaterService;
             T = NullLocalizer.Instance;
             Services = services;
@@ -61,7 +62,7 @@ namespace Orchard.PublishLater.Drivers {
 
             updater.TryUpdateModel(model, Prefix, null, null);
 
-            if (Services.WorkContext.Resolve<IHttpContextAccessor>().Current().Request.Form["submit.Save"] == "submit.PublishLater") {
+            if (_httpContextAccessor.Current().Request.Form["submit.Save"] == "submit.PublishLater") {
                 if (!string.IsNullOrWhiteSpace(model.ScheduledPublishDate) && !string.IsNullOrWhiteSpace(model.ScheduledPublishTime)) {
                     DateTime scheduled;
                     string parseDateTime = String.Concat(model.ScheduledPublishDate, " ", model.ScheduledPublishTime);
