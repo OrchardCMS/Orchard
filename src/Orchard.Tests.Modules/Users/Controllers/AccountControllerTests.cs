@@ -53,9 +53,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<AccountController>().SingleInstance();
             builder.RegisterType<SiteService>().As<ISiteService>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
-            builder.RegisterType(typeof(SettingsFormatter))
-                .As(typeof(IMapper<XElement, SettingsDictionary>))
-                .As(typeof(IMapper<SettingsDictionary, XElement>));
+            builder.RegisterType(typeof(SettingsFormatter)).As<ISettingsFormatter>();
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>().InstancePerDependency();
@@ -70,7 +68,6 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.RegisterType<TransactionManager>().As<ITransactionManager>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
-            builder.RegisterType<ShapeTableLocator>().As<IShapeTableLocator>();
             builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<SiteSettingsPartHandler>().As<IContentHandler>();
             builder.RegisterType<RegistrationSettingsPartHandler>().As<IContentHandler>();
