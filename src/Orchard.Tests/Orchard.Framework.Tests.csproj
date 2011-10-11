@@ -169,6 +169,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\ContentQueryTests.cs" />
+    <Compile Include="ContentManagement\DynamicContentQueryTests.cs" />
     <Compile Include="ContentManagement\DefaultContentManagerTests.cs">
       <SubType>Code</SubType>
     </Compile>

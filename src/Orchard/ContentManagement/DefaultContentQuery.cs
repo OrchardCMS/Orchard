@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -30,36 +31,35 @@ namespace Orchard.ContentManagement {
             return _session;
         }
 
-        ICriteria BindCriteriaByPath(ICriteria criteria, string path) {
+        internal ICriteria BindCriteriaByPath(ICriteria criteria, string path) {
             return criteria.GetCriteriaByPath(path) ?? criteria.CreateCriteria(path);
         }
 
-        ICriteria BindTypeCriteria() {
+        internal ICriteria BindTypeCriteria() {
             // ([ContentItemVersionRecord] >join> [ContentItemRecord]) >join> [ContentType]
 
             return BindCriteriaByPath(BindItemCriteria(), "ContentType");
         }
 
-        ICriteria BindItemCriteria() {
+        internal ICriteria BindItemCriteria() {
             // [ContentItemVersionRecord] >join> [ContentItemRecord]
 
             return BindCriteriaByPath(BindItemVersionCriteria(), "ContentItemRecord");
         }
 
-        ICriteria BindItemVersionCriteria() {
+        internal ICriteria BindItemVersionCriteria() {
             if (_itemVersionCriteria == null) {
                 _itemVersionCriteria = BindSession().CreateCriteria<ContentItemVersionRecord>();
             }
             return _itemVersionCriteria;
         }
 
-        ICriteria BindPartCriteria<TRecord>() where TRecord : ContentPartRecord {
+        internal ICriteria BindPartCriteria<TRecord>() where TRecord : ContentPartRecord {
             if (typeof(TRecord).IsSubclassOf(typeof(ContentPartVersionRecord))) {
                 return BindCriteriaByPath(BindItemVersionCriteria(), typeof(TRecord).Name);
             }
             return BindCriteriaByPath(BindItemCriteria(), typeof(TRecord).Name);
         }
-
 
         private void ForType(params string[] contentTypeNames) {
             if (contentTypeNames != null && contentTypeNames.Length != 0)
@@ -92,6 +92,15 @@ namespace Orchard.ContentManagement {
             }
         }
 
+        private void Where(Action<IExpressionFactory> expression) {
+            var expressionFactory = new DefaultExpressionFactory(this);
+
+            expression(expressionFactory);
+            if (expressionFactory.Criterion != null) {
+                expressionFactory.Criteria.Add(expressionFactory.Criterion);
+            }
+        }
+
         private void OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord {
             // build a linq to nhibernate expression
             var options = new QueryOptions();
@@ -105,6 +114,15 @@ namespace Orchard.ContentManagement {
             var recordCriteria = BindPartCriteria<TRecord>();
             foreach (var ordering in criteria.IterateOrderings()) {
                 recordCriteria.AddOrder(ordering.Order);
+            }
+        }
+
+        private void OrderBy(Action<ISortFactory> expression) {
+            var sortFactory = new DefaultSortFactory(this);
+
+            expression(sortFactory);
+            if (sortFactory.Order != null) {
+                sortFactory.Criteria.AddOrder(sortFactory.Order);
             }
         }
 
@@ -126,7 +144,7 @@ namespace Orchard.ContentManagement {
 
         private IEnumerable<ContentItem> Slice(int skip, int count) {
             var criteria = BindItemVersionCriteria();
-            
+
             criteria.ApplyVersionOptionsRestrictions(_versionOptions);
 
             // TODO: put 'removed false' filter in place
@@ -197,6 +215,11 @@ namespace Orchard.ContentManagement {
                 return new ContentQuery<T, TRecord>(_query);
             }
 
+            IContentQuery<T> IContentQuery<T>.Where(Action<IExpressionFactory> predicate) {
+                _query.Where(predicate);
+                return new ContentQuery<T>(_query);
+            }
+
             IContentQuery<T, TRecord> IContentQuery<T>.Where<TRecord>(Expression<Func<TRecord, bool>> predicate) {
                 _query.Where(predicate);
                 return new ContentQuery<T, TRecord>(_query);
@@ -211,8 +234,12 @@ namespace Orchard.ContentManagement {
                 _query.OrderByDescending(keySelector);
                 return new ContentQuery<T, TRecord>(_query);
             }
-        }
 
+            IContentQuery<T> IContentQuery<T>.OrderBy(Action<ISortFactory> order) {
+                _query.OrderBy(order);
+                return new ContentQuery<T>(_query);
+            }
+        }
 
         class ContentQuery<T, TR> : ContentQuery<T>, IContentQuery<T, TR>
             where T : IContent
@@ -242,6 +269,200 @@ namespace Orchard.ContentManagement {
             }
         }
 
+        public class DefaultExpressionFactory : IExpressionFactory {
+            private readonly DefaultContentQuery _query;
+            public ICriterion Criterion { get; private set; }
+            public ICriteria Criteria { get; private set; }
+
+            public DefaultExpressionFactory(DefaultContentQuery query) {
+                _query = query;
+            }
+
+            public IExpressionFactory WithRecord(string path) {
+                Criteria = _query.BindCriteriaByPath(_query.BindItemCriteria(), path);
+                return this;
+            }
+
+            public IExpressionFactory WithVersionRecord(string path) {
+                Criteria = _query.BindCriteriaByPath(_query.BindItemVersionCriteria(), path);
+                return this;
+            }
+
+            public void Eq(string propertyName, object value) {
+                Criterion = Restrictions.Eq(propertyName, value);
+            }
+
+            public void Like(string propertyName, object value) {
+                Criterion = Restrictions.Like(propertyName, value);
+            }
+
+            public void Like(string propertyName, string value, MatchMode matchMode, char? escapeChar) {
+                Criterion = Restrictions.Like(propertyName, value);
+            }
+
+            public void Like(string propertyName, string value, MatchMode matchMode) {
+                Criterion = Restrictions.Like(propertyName, value);
+            }
+
+            public void InsensitiveLike(string propertyName, string value, MatchMode matchMode) {
+                Criterion = Restrictions.InsensitiveLike(propertyName, value);
+            }
+
+            public void InsensitiveLike(string propertyName, object value) {
+                Criterion = Restrictions.InsensitiveLike(propertyName, value);
+            }
+
+            public void Gt(string propertyName, object value) {
+                Criterion = Restrictions.Gt(propertyName, value);
+            }
+
+            public void Lt(string propertyName, object value) {
+                Criterion = Restrictions.Lt(propertyName, value);
+            }
+
+            public void Le(string propertyName, object value) {
+                Criterion = Restrictions.Le(propertyName, value);
+            }
+
+            public void Ge(string propertyName, object value) {
+                Criterion = Restrictions.Ge(propertyName, value);
+            }
+
+            public void Between(string propertyName, object lo, object hi) {
+                Criterion = Restrictions.Between(propertyName, lo, hi);
+            }
+
+            public void In(string propertyName, object[] values) {
+                Criterion = Restrictions.In(propertyName, values);
+            }
+
+            public void In(string propertyName, ICollection values) {
+                Criterion = Restrictions.In(propertyName, values);
+            }
+
+            public void InG<T>(string propertyName, ICollection<T> values) {
+                Criterion = Restrictions.InG(propertyName, values);
+            }
+
+            public void IsNull(string propertyName) {
+                Criterion = Restrictions.IsNull(propertyName);
+            }
+
+            public void EqProperty(string propertyName, string otherPropertyName) {
+                Criterion = Restrictions.EqProperty(propertyName, otherPropertyName);
+            }
+
+            public void NotEqProperty(string propertyName, string otherPropertyName) {
+                Criterion = Restrictions.NotEqProperty(propertyName, otherPropertyName);
+            }
+
+            public void GtProperty(string propertyName, string otherPropertyName) {
+                Criterion = Restrictions.GtProperty(propertyName, otherPropertyName);
+            }
+
+            public void GeProperty(string propertyName, string otherPropertyName) {
+                Criterion = Restrictions.GeProperty(propertyName, otherPropertyName);
+            }
+
+            public void LtProperty(string propertyName, string otherPropertyName) {
+                Criterion = Restrictions.LtProperty(propertyName, otherPropertyName);
+            }
+
+            public void LeProperty(string propertyName, string otherPropertyName) {
+                Criterion = Restrictions.LeProperty(propertyName, otherPropertyName);
+            }
+
+            public void IsNotNull(string propertyName) {
+                Criterion = Restrictions.IsNotNull(propertyName);
+            }
+
+            public void IsNotEmpty(string propertyName) {
+                Criterion = Restrictions.IsNotEmpty(propertyName);
+            }
+
+            public void IsEmpty(string propertyName) {
+                Criterion = Restrictions.IsEmpty(propertyName);
+            }
+
+            public void And(Action<IExpressionFactory> lhs, Action<IExpressionFactory> rhs) {
+                lhs(this);
+                ICriterion a = Criterion;
+                rhs(this);
+                ICriterion b = Criterion;
+                Criterion = Restrictions.And(a, b);
+            }
+
+            public void Or(Action<IExpressionFactory> lhs, Action<IExpressionFactory> rhs) {
+                lhs(this);
+                ICriterion a = Criterion;
+                rhs(this);
+                ICriterion b = Criterion;
+                Criterion = Restrictions.Or(a, b);
+            }
+
+            public void Not(Action<IExpressionFactory> expression) {
+                expression(this);
+                ICriterion a = Criterion;
+                Criterion = Restrictions.Not(a);
+            }
+
+            public void Conjunction(Action<IExpressionFactory> expression, params Action<IExpressionFactory>[] otherExpressions) {
+                var junction = Restrictions.Conjunction();
+                foreach (var exp in Enumerable.Empty<Action<IExpressionFactory>>().Union(new[] { expression }).Union(otherExpressions)) {
+                    exp(this);
+                    junction.Add(Criterion);
+                }
+
+                Criterion = junction;
+            }
+
+            public void Disjunction(Action<IExpressionFactory> expression, params Action<IExpressionFactory>[] otherExpressions) {
+                var junction = Restrictions.Disjunction();
+                foreach (var exp in Enumerable.Empty<Action<IExpressionFactory>>().Union(new[] { expression }).Union(otherExpressions)) {
+                    exp(this);
+                    junction.Add(Criterion);
+                }
+
+                Criterion = junction;
+            }
+
+            public void AllEq(IDictionary propertyNameValues) {
+                Criterion = Restrictions.AllEq(propertyNameValues);
+            }
+
+            public void NaturalId() {
+                Criterion = Restrictions.NaturalId();
+            }
+
+        }
+
+        public class DefaultSortFactory : ISortFactory {
+            private readonly DefaultContentQuery _query;
+            public Order Order { get; private set; }
+            public ICriteria Criteria { get; private set; }
+
+            public DefaultSortFactory(DefaultContentQuery query) {
+                _query = query;
+            }
+
+            public ISortFactory WithRecord(string path) {
+                Criteria = _query.BindCriteriaByPath(_query.BindItemCriteria(), path);
+                return this;
+            }
+
+            public ISortFactory WithVersionRecord(string path) {
+                Criteria = _query.BindCriteriaByPath(_query.BindItemVersionCriteria(), path);
+                return this;
+            }
+
+            public void Asc(string propertyName) {
+                Order = Order.Asc(propertyName);
+            }
+
+            public void Desc(string propertyName) {
+                Order = Order.Desc(propertyName);
+            }
+        }
     }
 
     internal static class CriteriaExtensions {

@@ -169,6 +169,7 @@
     <Compile Include="ContentManagement\ContentIdentity.cs" />
     <Compile Include="ContentManagement\ContentItemBehavior.cs" />
     <Compile Include="ContentManagement\ContentPartBehavior.cs" />
+    <Compile Include="ContentManagement\ISortFactory.cs" />
     <Compile Include="ContentManagement\DefaultContentDisplay.cs" />
     <Compile Include="ContentManagement\Drivers\ContentShapeResult.cs" />
     <Compile Include="ContentManagement\FieldStorage\IFieldStorageEvents.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="ContentManagement\Handlers\ImportContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\TitleAspectHandler.cs" />
     <Compile Include="ContentManagement\IContentBehavior.cs" />
+    <Compile Include="ContentManagement\IExpressionFactory.cs" />
     <Compile Include="ContentManagement\ImportContentSession.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ISettingsFormatter.cs" />
     <Compile Include="ContentManagement\QueryHints.cs" />

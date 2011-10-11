@@ -5,7 +5,7 @@ using Orchard.ContentManagement.Records;
 
 namespace Orchard.ContentManagement {
 
-    public interface IContentQuery {
+    public interface IContentQuery{
         IContentManager ContentManager { get; }
         IContentQuery<TPart> ForPart<TPart>() where TPart : IContent;
     }
@@ -20,7 +20,10 @@ namespace Orchard.ContentManagement {
 
         IContentQuery<TPart, TRecord> Join<TRecord>() where TRecord : ContentPartRecord;
 
+        IContentQuery<TPart> Where(Action<IExpressionFactory> predicate);
         IContentQuery<TPart, TRecord> Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord;
+
+        IContentQuery<TPart> OrderBy(Action<ISortFactory> order);
         IContentQuery<TPart, TRecord> OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord;
         IContentQuery<TPart, TRecord> OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord;
     }
