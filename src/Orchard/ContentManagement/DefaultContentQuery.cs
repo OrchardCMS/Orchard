@@ -297,15 +297,15 @@ namespace Orchard.ContentManagement {
             }
 
             public void Like(string propertyName, string value, MatchMode matchMode, char? escapeChar) {
-                Criterion = Restrictions.Like(propertyName, value);
+                Criterion = Restrictions.Like(propertyName, value, ToMatchMode(matchMode), escapeChar);
             }
 
             public void Like(string propertyName, string value, MatchMode matchMode) {
-                Criterion = Restrictions.Like(propertyName, value);
+                Criterion = Restrictions.Like(propertyName, value, ToMatchMode(matchMode));
             }
 
             public void InsensitiveLike(string propertyName, string value, MatchMode matchMode) {
-                Criterion = Restrictions.InsensitiveLike(propertyName, value);
+                Criterion = Restrictions.InsensitiveLike(propertyName, value, ToMatchMode(matchMode));
             }
 
             public void InsensitiveLike(string propertyName, object value) {
@@ -386,23 +386,23 @@ namespace Orchard.ContentManagement {
 
             public void And(Action<IExpressionFactory> lhs, Action<IExpressionFactory> rhs) {
                 lhs(this);
-                ICriterion a = Criterion;
+                var a = Criterion;
                 rhs(this);
-                ICriterion b = Criterion;
+                var b = Criterion;
                 Criterion = Restrictions.And(a, b);
             }
 
             public void Or(Action<IExpressionFactory> lhs, Action<IExpressionFactory> rhs) {
                 lhs(this);
-                ICriterion a = Criterion;
+                var a = Criterion;
                 rhs(this);
-                ICriterion b = Criterion;
+                var b = Criterion;
                 Criterion = Restrictions.Or(a, b);
             }
 
             public void Not(Action<IExpressionFactory> expression) {
                 expression(this);
-                ICriterion a = Criterion;
+                var a = Criterion;
                 Criterion = Restrictions.Not(a);
             }
 
@@ -434,6 +434,20 @@ namespace Orchard.ContentManagement {
                 Criterion = Restrictions.NaturalId();
             }
 
+            private static NHibernate.Criterion.MatchMode ToMatchMode(MatchMode matchMode) {
+                switch(matchMode) {
+                    case MatchMode.Anywhere:
+                        return NHibernate.Criterion.MatchMode.Anywhere;
+                    case MatchMode.End:
+                        return NHibernate.Criterion.MatchMode.End;
+                    case MatchMode.Start:
+                        return NHibernate.Criterion.MatchMode.Start;
+                    case MatchMode.Exact:
+                        return NHibernate.Criterion.MatchMode.Exact;
+                }
+
+                return NHibernate.Criterion.MatchMode.Anywhere;
+            }
         }
 
         public class DefaultSortFactory : ISortFactory {
