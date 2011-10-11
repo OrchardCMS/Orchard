@@ -16,6 +16,7 @@ namespace Orchard.Comments.Rules {
 
         public CommentsActions(IContentManager contentManager) {
             _contentManager = contentManager;
+            T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }

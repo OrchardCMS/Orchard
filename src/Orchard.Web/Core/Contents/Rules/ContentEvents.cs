@@ -12,6 +12,10 @@ namespace Orchard.Core.Contents.Rules {
 
     [OrchardFeature("Contents.Rules")]
     public class ContentEvents : IEventProvider {
+        public ContentEvents() {
+            T = NullLocalizer.Instance;
+        }
+
         public Localizer T { get; set; }
 
         public void Describe(dynamic describe) {

@@ -16,6 +16,7 @@ namespace Orchard.Comments.Rules {
 
         public CommentsForms(IShapeFactory shapeFactory) {
             Shape = shapeFactory;
+            T = NullLocalizer.Instance;
         }
 
         public void Describe(dynamic context) {

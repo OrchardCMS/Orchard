@@ -16,6 +16,7 @@ namespace Orchard.Scripting.Rules {
 
         public ConditionForms(IShapeFactory shapeFactory) {
             Shape = shapeFactory;
+            T = NullLocalizer.Instance;
         }
 
         public void Describe(dynamic context) {

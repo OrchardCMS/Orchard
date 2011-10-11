@@ -16,6 +16,7 @@ namespace Orchard.Scripting.Rules {
 
         public ConditionActions(IEnumerable<IScriptExpressionEvaluator> evaluators) {
             _evaluators = evaluators;
+            T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }

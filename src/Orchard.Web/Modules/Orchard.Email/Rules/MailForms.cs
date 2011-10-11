@@ -17,6 +17,7 @@ namespace Orchard.Email.Rules {
 
         public MailForms(IShapeFactory shapeFactory) {
             Shape = shapeFactory;
+            T = NullLocalizer.Instance;
         }
 
         public void Describe(dynamic context) {

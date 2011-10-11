@@ -31,6 +31,7 @@ namespace Orchard.Email.Rules {
             _messageManager = messageManager;
             _orchardServices = orchardServices;
             _membershipService = membershipService;
+            T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
