@@ -10,7 +10,17 @@ namespace Orchard.DesignerTools.Services {
             context.ShapeMetadata.OnDisplaying(displayedContext => {
                 // We don't want the "Widget" content item itself, but the content item that consists of the Widget part (e.g. Parts.Blogs.RecentBlogPosts)
                 if (displayedContext.ShapeMetadata.Type != "Widget") {
+                    // look for ContentItem property
                     ContentItem contentItem = displayedContext.Shape.ContentItem;
+
+                    // if not, check for ContentPart 
+                    if (contentItem == null) {
+                        ContentPart contentPart = displayedContext.Shape.ContentPart;
+                        if (contentPart != null) {
+                            contentItem = contentPart.ContentItem;
+                        }
+                    } 
+                    
                     if (contentItem != null) {
                         // Is the contentItem a widget? (we could probably test for the stereotype setting, don't know if that is more efficient than selecting the WidgetPart)
                         var widgetPart = contentItem.As<WidgetPart>();
