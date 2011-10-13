@@ -31,8 +31,8 @@ namespace Orchard.DesignerTools.Services {
 
                             // Add 2 alternates for flexible widget shape naming:
                             // [ShapeName]-[ZoneName].cshtml: (e.g. "Parts.Blogs.RecentBlogPosts-myZoneName.cshtml")
-                            // [ContentTypeName]-[ZoneName].cshtml: (e.g. "RecentBlogPosts-myZoneName.cshtml")
-                            displayedContext.ShapeMetadata.Alternates.Add(contentTypeName + "__" + zoneName);
+                            // [ShapeName]-[ContentTypeName]-[ZoneName].cshtml: (e.g. "Parts.Common.Body-RecentBlogPosts-myZoneName.cshtml")
+                            displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + contentTypeName + "__" + zoneName);
                             displayedContext.ShapeMetadata.Alternates.Add(shapeName + "__" + zoneName);
                         }
                     }
