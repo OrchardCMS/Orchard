@@ -9,24 +9,21 @@
     <BuildFolder>$(MSBuildProjectDirectory)\buildazure</BuildFolder>
     <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts\Azure</ArtifactsFolder>
 
-    <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
-    <ServiceFolder>$(CompileFolder)\Orchard.Azure.CloudService.csx</ServiceFolder>
-    <CloudRootFolder>$(ServiceFolder)\roles\Orchard.Azure.Web\approot</CloudRootFolder>
-    <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
     <StageFolder>$(BuildFolder)\Stage</StageFolder>
-    <MsDeployFolder>$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\obj\Release\Package\PackageTmp</MsDeployFolder>
-    
+    <CloudRootFolder>$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\obj\Release</CloudRootFolder>
+    <MsDeployFolder>$(CloudRootFolder)\Package\PackageTmp</MsDeployFolder>
+
   </PropertyGroup>
   
   <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Windows Azure Tools\1.5\Microsoft.WindowsAzure.targets" />
 
-<!-- Coordinating Targets -->
+  <!-- Coordinating Targets -->
 
   <Target Name ="Build">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
-    <!--<CallTarget Targets="Test"/>-->
+    <CallTarget Targets="Test"/>
     <CallTarget Targets="Package"/>
   </Target>
 
@@ -43,8 +40,7 @@
     <CallTarget Targets="Package-Zip"/>
   </Target>
 
-
-<!-- Building -->
+  <!-- Building -->
 
   <Target Name="Clean">
     <MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln" Targets="Clean" />
@@ -58,61 +54,46 @@
     <MSBuild
       Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.sln"
       Targets="Build"
-      Properties="Configuration=Release;DeployOnBuild=true;DeployTarget=Package;PlatformTarget=x64" 
+      Properties="Configuration=Release;DeployOnBuild=true;DeployTarget=Package;Platform=Any CPU" 
      />
     
     <MSBuild
       Projects="$(SrcFolder)\Orchard.Azure.Tests\Orchard.Azure.Tests.sln"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(MsDeployFolder)\bin;PlatformTarget=x64" 
+      Properties="Configuration=Release;OutputPath=$(CloudRootFolder)\Tests;Platform=Any CPU" 
     />
     
   </Target>
 
 
-<!-- Testing - Azure only -->
+  <!-- Testing - Azure only -->
 
   <Target Name ="Test">
 
-    <CreateItem Include="$(CompileFolder)\*Azure.Tests.*dll">
+    <CreateItem Include="$(CloudRootFolder)\Tests\*Azure.Tests.*dll">
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
 
     <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(MsDeployFolder)\bin" />
   </Target>
 
-<!-- Packaging -->
+  <!-- Packaging -->
 
   <Target Name="Package-ForCloud">
     
     <ItemGroup>
       <!-- filter to exclude any binary from a folder -->
-      <Excluded Include="$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;" />
-<!--
-      <Web-Excluded Include="$(SrcFolder)\**\_bin_deployableAssemblies\**\*;$(SrcFolder)\**\Properties\**\*;$(SrcFolder)\**\*.csproj*;$(SrcFolder)\**\*.proj;$(SrcFolder)\**\Modules\**\*;$(SrcFolder)\**\Core\**\*;$(SrcFolder)\**\Themes\**\*;$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;" />
--->
+      <Excluded Include="$(SrcFolder)\**\bin\**\*;$(SrcFolder)\**\obj\**\*;$(SrcFolder)\**\*.user;" />
+   
       <!-- list of files from Themes, Core and Modules to export -->
       <Stage-Themes Include="$(SrcFolder)\Orchard.Web\Themes\**\*" Exclude="@(Excluded)" />
       <Stage-Core Include="$(SrcFolder)\Orchard.Web\Core\**\*" Exclude="@(Excluded)" />
       <Stage-Modules Include="$(SrcFolder)\Orchard.Web\Modules\**\*" Exclude="@(Excluded)" />
-<!--
-      <Stage-Web Include="$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\**\*" Exclude="@(Web-Excluded)" />
-      <Stage-Assemblies Include="$(SrcFolder)\**\bin\**\*" />
-      <Stage-Bin-Assemblies Include="$(SrcFolder)\Orchard.Azure\Orchard.Azure.Web\_bin_deployableAssemblies\*" />
-      <Stage-Entry-Assembly Include="$(CompileFolder)\Orchard.Azure.Web.dll" />
--->
     </ItemGroup>
 
     <Copy SourceFiles="@(Stage-Themes)" DestinationFolder="$(MsDeployFolder)\Themes\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(MsDeployFolder)\Core\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(MsDeployFolder)\Modules\%(RecursiveDir)" />
-<!--
-    <Copy SourceFiles="@(Stage-Web)" DestinationFolder="$(CloudRootFolder)\%(RecursiveDir)" />
-    <Copy SourceFiles="@(Stage-Assemblies)" DestinationFolder="$(CloudRootFolder)\bin" />
-    <Copy SourceFiles="@(Stage-Bin-Assemblies)" DestinationFolder="$(CloudRootFolder)\bin" />
-    <Copy SourceFiles="@(Stage-Entry-Assembly)" DestinationFolder="$(CloudRootFolder)\" />
--->
-    <!--Delete Files="$(CloudRootFolder)\App_Data" /-->
 
     <ItemGroup>
       <WebConfigs Include="$(MsDeployFolder)\Modules\*\web.config;$(MsDeployFolder)\Core\web.config" />
@@ -144,7 +125,7 @@
 
     <Copy 
         SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\Properties.txt" 
-        DestinationFolder="$(ServiceFolder)" 
+        DestinationFolder="$(CloudRootFolder)" 
       />
 
   </Target>
@@ -160,7 +141,7 @@
   
   <Target Name="Package-Stage">
     <Exec
-        Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceDefinition.build.csdef&quot; /role:Orchard.Azure.Web;&quot;$(MsDeployFolder)&quot;;Orchard.Azure.Web.dll /sites:Orchard.Azure.Web;Web;&quot;$(MsDeployFolder)&quot; /rolePropertiesFile:Orchard.Azure.Web;&quot;$(ServiceFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;"
+        Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceDefinition.build.csdef&quot; /role:Orchard.Azure.Web;&quot;$(MsDeployFolder)&quot;;Orchard.Azure.Web.dll /sites:Orchard.Azure.Web;Web;&quot;$(MsDeployFolder)&quot; /rolePropertiesFile:Orchard.Azure.Web;&quot;$(CloudRootFolder)\Properties.txt&quot; /out:&quot;$(StageFolder)\Orchard.Azure.Web.cspkg&quot;"
         WorkingDirectory="$(MsDeployFolder)" 
       />
   </Target>

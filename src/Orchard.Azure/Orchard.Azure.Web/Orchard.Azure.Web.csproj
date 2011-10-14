@@ -184,6 +184,10 @@
       <Name>Lucene</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Markdown\Markdown.csproj">
+      <Project>{3158C928-888C-4A84-8BC1-4A8257489538}</Project>
+      <Name>Markdown</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.ArchiveLater\Orchard.ArchiveLater.csproj">
       <Project>{1C981BB3-26F7-494C-9005-CC27A5144233}</Project>
       <Name>Orchard.ArchiveLater</Name>
@@ -223,6 +227,10 @@
       <Project>{AB3C207C-0126-4143-8D62-1119DF80D366}</Project>
       <Name>Orchard.Experimental</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Forms\Orchard.Forms.csproj">
+      <Project>{642A49D7-8752-4177-80D6-BFBBCFAD3DE0}</Project>
+      <Name>Orchard.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Indexing\Orchard.Indexing.csproj">
       <Project>{EA2B9121-EF54-40A6-A53E-6593C86EE696}</Project>
@@ -299,6 +307,10 @@
       <Name>Orchard.Roles</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Rules\Orchard.Rules.csproj">
+      <Project>{966EC390-3C7F-4D98-92A6-F0F30D02E9B1}</Project>
+      <Name>Orchard.Rules</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Scripting.Dlr\Orchard.Scripting.Dlr.csproj">
       <Project>{2AD6973D-C7BB-416E-89FE-EEE34664E05F}</Project>
       <Name>Orchard.Scripting.Dlr</Name>
@@ -324,10 +336,18 @@
       <Name>Orchard.Tags</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.TaskLease\Orchard.TaskLease.csproj">
+      <Project>{3F72A4E9-7B72-4260-B010-C16EC54F9BAF}</Project>
+      <Name>Orchard.TaskLease</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Themes\Orchard.Themes.csproj">
       <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
       <Name>Orchard.Themes</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6F759635-13D7-4E94-BCC9-80445D63F117}</Project>
+      <Name>Orchard.Tokens</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
