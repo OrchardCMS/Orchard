@@ -61,7 +61,7 @@ namespace Orchard.Mvc.Html {
 
         public static MvcHtmlString SelectOption(this HtmlHelper html, object optionValue, bool selected, string text, object htmlAttributes) {
             var builder = new TagBuilder("option");
-    
+
             if (optionValue != null)
                 builder.MergeAttribute("value", optionValue.ToString());
 
@@ -216,20 +216,16 @@ namespace Orchard.Mvc.Html {
 
         #region Link
 
-        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href)
-        {
+        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href) {
             return htmlHelper.Link(linkContents, href, null);
         }
 
-        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
-        {
+        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes) {
             return htmlHelper.Link(linkContents, href, new RouteValueDictionary(htmlAttributes));
         }
 
-        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
-        {
-            TagBuilder tagBuilder = new TagBuilder("a") 
-                { InnerHtml = htmlHelper.Encode(linkContents) };
+        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes) {
+            TagBuilder tagBuilder = new TagBuilder("a") { InnerHtml = htmlHelper.Encode(linkContents) };
             tagBuilder.MergeAttributes(htmlAttributes);
             tagBuilder.MergeAttribute("href", href);
             return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
@@ -239,26 +235,22 @@ namespace Orchard.Mvc.Html {
 
         #region LinkOrDefault
 
-        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href)
-        {
+        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href) {
             return htmlHelper.LinkOrDefault(linkContents, href, null);
         }
 
-        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
-        {
+        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes) {
             return htmlHelper.LinkOrDefault(linkContents, href, new RouteValueDictionary(htmlAttributes));
         }
 
-        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
-        {
+        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes) {
             string linkText = htmlHelper.Encode(linkContents);
-            
+
             if (string.IsNullOrEmpty(href)) {
                 return new HtmlString(linkText);
             }
 
-            TagBuilder tagBuilder = new TagBuilder("a")
-            {
+            TagBuilder tagBuilder = new TagBuilder("a") {
                 InnerHtml = linkText
             };
             tagBuilder.MergeAttributes(htmlAttributes);
@@ -277,7 +269,7 @@ namespace Orchard.Mvc.Html {
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction) {
             return htmlHelper.BeginFormAntiForgeryPost(formAction, FormMethod.Post, new RouteValueDictionary());
         }
-        
+
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod) {
             return htmlHelper.BeginFormAntiForgeryPost(formAction, formMethod, new RouteValueDictionary());
         }
@@ -315,7 +307,7 @@ namespace Orchard.Mvc.Html {
             try {
                 return htmlHelper.AntiForgeryToken(siteSalt);
             }
-            catch(HttpAntiForgeryException) {
+            catch (HttpAntiForgeryException) {
                 // Work-around an issue in MVC 2:  If the browser sends a cookie that is not
                 // coming from this server (this can happen if the user didn't close their browser
                 // while the application server configuration changed), clear it up
@@ -350,15 +342,15 @@ namespace Orchard.Mvc.Html {
 
         #region AntiForgeryTokenValueOrchardLink
 
-        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href)  {
+        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href) {
             return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, (object)null);
         }
 
-        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)  {
+        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes) {
             return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, new RouteValueDictionary(htmlAttributes));
         }
 
-        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)  {
+        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes) {
             return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href).ToString(), htmlAttributes);
         }
 
@@ -366,7 +358,7 @@ namespace Orchard.Mvc.Html {
 
         #region AntiForgeryTokenGetUrl
 
-        public static IHtmlString AntiForgeryTokenGetUrl(this HtmlHelper htmlHelper, string baseUrl)  {
+        public static IHtmlString AntiForgeryTokenGetUrl(this HtmlHelper htmlHelper, string baseUrl) {
             return new HtmlString(string.Format("{0}{1}__RequestVerificationToken={2}", baseUrl, baseUrl.IndexOf('?') > -1 ? "&" : "?", htmlHelper.ViewContext.HttpContext.Server.UrlEncode(htmlHelper.AntiForgeryTokenValueOrchard().ToString())));
         }
 
