@@ -23,7 +23,6 @@
     var lastPage = Math.Min(totalPageCount, (int)Model.Page + (window / 2));
 
     Model.Classes.Add("pager");
-    Model.Classes.Add("group");
     var pageTag = Tag(Model, "ul");
 
     Model.Classes.Add("selector");
@@ -45,7 +44,7 @@
 @if (Model.TotalItemCount > 1) {
     <div class="pager-footer">
         @if (totalPageCount > 1 || Model.PageSize == 0 || Model.PageSize > pageSizes.First()) {
-            <div class="page-size-options">
+            <div class="page-size-options group">
                 <div>@T("Show:")</div>
 
                 @pageSizeTag.StartElement
