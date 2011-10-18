@@ -6,6 +6,7 @@ namespace Orchard.ContentManagement {
     public interface IExpressionFactory {
         IExpressionFactory WithRecord(string recordName);
         IExpressionFactory WithVersionRecord(string recordName);
+        IExpressionFactory WithRelationship(string propertyName);
 
         void Eq(string propertyName, object value);
         void Like(string propertyName, object value);

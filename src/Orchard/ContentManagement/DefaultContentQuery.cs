@@ -283,6 +283,11 @@ namespace Orchard.ContentManagement {
                 return this;
             }
 
+            public IExpressionFactory WithRelationship(string path) {
+                Criteria = _query.BindCriteriaByPath(Criteria, path);
+                return this;
+            }
+
             public IExpressionFactory WithVersionRecord(string path) {
                 Criteria = _query.BindCriteriaByPath(_query.BindItemVersionCriteria(), path);
                 return this;
