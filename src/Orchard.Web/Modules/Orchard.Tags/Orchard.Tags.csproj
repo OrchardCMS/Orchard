@@ -57,7 +57,9 @@
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\ContentTagRecord.cs" />
     <Compile Include="Models\TagsPartRecord.cs" />
-    <Compile Include="Projections\TagsFilter.cs" />
+    <Compile Include="Projections\TagsFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ITagService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
