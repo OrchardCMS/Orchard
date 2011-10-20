@@ -6,6 +6,7 @@ using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.Localization;
+using Orchard.Tags.Models;
 using Orchard.Tags.Services;
 
 namespace Orchard.Tags.Projections {
@@ -38,7 +39,7 @@ namespace Orchard.Tags.Projections {
             if (!String.IsNullOrEmpty(tags)) {
                 var ids = tags.Split(new[] { ',' }).Select(Int32.Parse).ToArray();
                 var query = (IContentQuery<ContentItem>)context.Query;
-                context.Query = query.Where(x => x.WithRecord("TagsPartRecord").WithRelationship("Tags.TagRecord").In("Id", ids));
+                context.Query = query.Join<TagsPartRecord>().Where(x => x.Tags.Any(t => ids.Contains(t.TagRecord.Id)));
             }
         }
 

@@ -474,6 +474,11 @@ namespace Orchard.ContentManagement {
                 return this;
             }
 
+            public ISortFactory WithRelationship(string path) {
+                Criteria = _query.BindCriteriaByPath(Criteria, path);
+                return this;
+            }
+
             public void Asc(string propertyName) {
                 Order = Order.Asc(propertyName);
             }

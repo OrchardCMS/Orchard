@@ -3,14 +3,17 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Fields;
+using Orchard.Localization;
 
 namespace Orchard.Core.Common.Drivers {
     [UsedImplicitly]
     public class TextFieldDriver : ContentFieldDriver<TextField> {
         public TextFieldDriver(IOrchardServices services) {
             Services = services;
+            T = NullLocalizer.Instance;
         }
 
+        public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
         private static string GetPrefix(TextField field, ContentPart part) {
@@ -45,6 +48,11 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override void Exporting(ContentPart part, TextField field, ExportContentContext context) {
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
+        }
+
+        public override void Describe(DescribeMembersContext context) {
+            context
+                .Member(null, typeof(string), T("Value"), T("The text associated with the field."));
         }
     }
 }
