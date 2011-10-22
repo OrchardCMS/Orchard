@@ -190,7 +190,6 @@ namespace Orchard.Tests.Environment {
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "localhost")), Is.EqualTo(settings).Using(new ShellComparer()));
         }
 
-
         [Test]
         public void ShellNameUsedToDistinctThingsAsTheyAreAdded() {
             var table = (IRunningShellTable)new RunningShellTable();
@@ -204,6 +203,26 @@ namespace Orchard.Tests.Environment {
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "removed.example.com")), Is.EqualTo(settings).Using(new ShellComparer()));
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "added.example.com")), Is.EqualTo(settingsB).Using(new ShellComparer()));
             Assert.That(table.Match(new StubHttpContext("~/foo/bar", "localhost")), Is.EqualTo(settings).Using(new ShellComparer()));
+        }
+
+        [Test]
+        public void MultipleHostsOnShellAreAdded() {
+            var table = (IRunningShellTable)new RunningShellTable();
+            var settingsAlpha = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com,b.example.com" };
+            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "a.example.com" };
+            var settingsB = new ShellSettings { Name = "Alpha", RequestUrlHost = "b.example.com" };
+            var settingsBeta = new ShellSettings { Name = "Beta", RequestUrlHost = "c.example.com,d.example.com,e.example.com" };
+            var settingsC = new ShellSettings { Name = "Beta", RequestUrlHost = "c.example.com" };
+            var settingsD = new ShellSettings { Name = "Beta", RequestUrlHost = "d.example.com" };
+            var settingsE = new ShellSettings { Name = "Beta", RequestUrlHost = "e.example.com" };
+            table.Add(settingsAlpha);
+            table.Add(settingsBeta);
+
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "a.example.com")), Is.EqualTo(settingsA).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "b.example.com")), Is.EqualTo(settingsB).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "c.example.com")), Is.EqualTo(settingsC).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "d.example.com")), Is.EqualTo(settingsD).Using(new ShellComparer()));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "e.example.com")), Is.EqualTo(settingsE).Using(new ShellComparer()));
         }
 
         public class ShellComparer : IEqualityComparer<ShellSettings> {
@@ -220,7 +239,7 @@ namespace Orchard.Tests.Environment {
                     x.Name == y.Name &&
                     x.RequestUrlHost == y.RequestUrlHost &&
                     x.RequestUrlPrefix == y.RequestUrlPrefix &&
-                    x.State == y.State
+                    x.State.CurrentState == y.State.CurrentState
                     );
             }
 
