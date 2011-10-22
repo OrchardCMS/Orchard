@@ -22,7 +22,7 @@ namespace Orchard.Core.Contents {
             var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
 
             builder.AddImageSet("content")
-                .Add(T("Content"), "2", menu => menu
+                .Add(T("Content"), "1.4", menu => menu
                     .Add(T("Content Items"), "1", item => item.Action("List", "Admin", new { area = "Contents", id = "" }).LocalNav()));
 
             var contentTypes = contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable).OrderBy(ctd => ctd.DisplayName);
