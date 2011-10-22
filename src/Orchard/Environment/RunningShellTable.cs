@@ -55,7 +55,7 @@ namespace Orchard.Environment {
                 _shells.Where(x => string.IsNullOrEmpty(x.RequestUrlHost) && string.IsNullOrEmpty(x.RequestUrlPrefix));
 
             _shellsByHost = qualified
-                .SelectMany(s =>
+                .SelectMany(s => s.RequestUrlHost == null || s.RequestUrlHost.IndexOf(',') == -1 ? new[] {s} : 
                     s.RequestUrlHost.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
                      .Select(h => new ShellSettings(s) {RequestUrlHost = h}))
                 .GroupBy(s => s.RequestUrlHost ?? "")
