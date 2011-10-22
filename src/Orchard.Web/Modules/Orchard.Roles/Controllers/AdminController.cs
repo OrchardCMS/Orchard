@@ -40,7 +40,7 @@ namespace Orchard.Roles.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
-            var model = new RolesIndexViewModel { Rows = _roleService.GetRoles().ToList() };
+            var model = new RolesIndexViewModel { Rows = _roleService.GetRoles().OrderBy(r => r.Name).ToList() };
 
             return View(model);
         }
