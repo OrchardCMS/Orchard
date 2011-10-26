@@ -27,7 +27,7 @@ namespace Orchard.Utility.Extensions {
             if (characterCount < 0 || text.Length <= characterCount)
                 return text;
 
-            var trimmed = Regex.Replace(text.Substring(0, characterCount + 1), @"\s+\S*$", "") ;
+            var trimmed = Regex.Replace(text.Substring(0, characterCount), @"\s+\S*$", "") ;
 
             if(wordBoundary) {
                 trimmed = Regex.Replace(trimmed + ".", @"\W*\w*$", "");

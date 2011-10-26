@@ -32,10 +32,28 @@ namespace Orchard.Tests.Utility.Extensions {
         }
 
         [Test]
+        public void Ellipsize_ShouldTuncateToTheExactNumber() {
+            const string toEllipsize = "Lorem ipsum";
+            Assert.That(toEllipsize.Ellipsize(2, ""), Is.StringMatching("Lo"));
+            Assert.That(toEllipsize.Ellipsize(1, ""), Is.StringMatching("L"));
+            Assert.That(toEllipsize.Ellipsize(0, ""), Is.StringMatching(""));
+        }
+        
+        [Test]
+        public void Ellipsize_TruncatedToWordBoundary() {
+            const string toEllipsize = "Lorem ipsum";
+            Assert.That(toEllipsize.Ellipsize(8, ""), Is.StringMatching("Lorem"));
+            Assert.That(toEllipsize.Ellipsize(6, ""), Is.StringMatching("Lorem"));
+            Assert.That(toEllipsize.Ellipsize(5, ""), Is.StringMatching("Lorem"));
+            Assert.That(toEllipsize.Ellipsize(4, ""), Is.StringMatching(""));
+        }
+
+        [Test]
         public void Ellipsize_LongStringTruncatedToNearestWord() {
             const string toEllipsize = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed purus quis purus orci aliquam.";
             Assert.That(toEllipsize.Ellipsize(45), Is.StringMatching("Lorem ipsum dolor sit amet, consectetur&#160;&#8230;"));
         }
+
         [Test]
         public void Ellipsize_ShortStringReturnedAsSame() {
             const string toEllipsize = "Lorem ipsum";
