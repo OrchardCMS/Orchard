@@ -20,14 +20,20 @@ namespace Orchard.Utility.Extensions {
             return text.Ellipsize(characterCount, "&#160;&#8230;");
         }
 
-        public static string Ellipsize(this string text, int characterCount, string ellipsis) {
+        public static string Ellipsize(this string text, int characterCount, string ellipsis, bool wordBoundary = false) {
             if (string.IsNullOrWhiteSpace(text))
                 return "";
             
             if (characterCount < 0 || text.Length <= characterCount)
                 return text;
 
-            return Regex.Replace(text.Substring(0, characterCount + 1), @"\s+\S*$", "") + ellipsis;
+            var trimmed = Regex.Replace(text.Substring(0, characterCount + 1), @"\s+\S*$", "") ;
+
+            if(wordBoundary) {
+                trimmed = Regex.Replace(trimmed + ".", @"\W*\w*$", "");
+            }
+
+            return trimmed + ellipsis;
         }
 
         public static string HtmlClassify(this string text) {
