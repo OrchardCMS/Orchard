@@ -50,7 +50,7 @@ namespace Orchard.Core.Common.Drivers {
             context.Element(field.FieldDefinition.Name + "." + field.Name).SetAttributeValue("Text", field.Value);
         }
 
-        public override void Describe(DescribeMembersContext context) {
+        protected override void Describe(DescribeMembersContext context) {
             context
                 .Member(null, typeof(string), T("Value"), T("The text associated with the field."));
         }

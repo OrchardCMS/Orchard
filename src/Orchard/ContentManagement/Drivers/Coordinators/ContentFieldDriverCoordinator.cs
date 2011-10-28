@@ -10,12 +10,15 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
     public class ContentFieldDriverCoordinator : ContentHandlerBase {
         private readonly IEnumerable<IContentFieldDriver> _drivers;
         private readonly IFieldStorageProviderSelector _fieldStorageProviderSelector;
+        private readonly IEnumerable<IFieldStorageEvents> _fieldStorageEvents;
 
         public ContentFieldDriverCoordinator(
             IEnumerable<IContentFieldDriver> drivers,
-            IFieldStorageProviderSelector fieldStorageProviderSelector) {
+            IFieldStorageProviderSelector fieldStorageProviderSelector,
+            IEnumerable<IFieldStorageEvents> fieldStorageEvents) {
             _drivers = drivers;
             _fieldStorageProviderSelector = fieldStorageProviderSelector;
+            _fieldStorageEvents = fieldStorageEvents;
             Logger = NullLogger.Instance;
         }
 
@@ -32,6 +35,9 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                         var storage = _fieldStorageProviderSelector
                             .GetProvider(partFieldDefinition)
                             .BindStorage(contentPart, partFieldDefinition);
+
+                        storage = new FieldStorageEventStorage(storage, partFieldDefinition, contentPart, _fieldStorageEvents);
+
                         var field = fieldInfo.Factory(partFieldDefinition, storage);
                         contentPart.Weld(field);
                     }

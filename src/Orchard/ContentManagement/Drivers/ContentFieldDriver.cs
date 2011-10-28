@@ -43,6 +43,10 @@ namespace Orchard.ContentManagement.Drivers {
             Process(context.ContentItem, (part, field) => Exported(part, field, context));
         }
 
+        void IContentFieldDriver.Describe(DescribeMembersContext context) {
+            Describe(context);
+        }
+
         void Process(ContentItem item, Action<ContentPart, TField> effort) {
             var occurences = item.Parts.SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }));
             foreach (var occurence in occurences) {
@@ -81,8 +85,8 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual void Imported(ContentPart part, TField field, ImportContentContext context) { }
         protected virtual void Exporting(ContentPart part, TField field, ExportContentContext context) { }
         protected virtual void Exported(ContentPart part, TField field, ExportContentContext context) { }
-        
-        public virtual void Describe(DescribeMembersContext context) { }
+
+        protected virtual void Describe(DescribeMembersContext context) { }
 
         public ContentShapeResult ContentShape(string shapeType, Func<dynamic> factory) {
             return ContentShapeImplementation(shapeType, null, ctx => factory());
