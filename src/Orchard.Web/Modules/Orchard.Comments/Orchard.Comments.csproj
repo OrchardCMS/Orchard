@@ -67,6 +67,7 @@
     <Compile Include="Drivers\CommentsContainerPartDriver.cs" />
     <Compile Include="Drivers\CommentSettingsPartDriver.cs" />
     <Compile Include="Drivers\CommentsPartDriver.cs" />
+    <Compile Include="Projections\CommentsFilter.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Rules\CommentsActions.cs" />
     <Compile Include="Rules\CommentsForms.cs" />

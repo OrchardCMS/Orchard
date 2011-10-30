@@ -31,8 +31,8 @@ namespace Orchard.ContentManagement {
             return _session;
         }
 
-        internal ICriteria BindCriteriaByPath(ICriteria criteria, string path) {
-            return criteria.GetCriteriaByPath(path) ?? criteria.CreateCriteria(path);
+        internal ICriteria BindCriteriaByPath(ICriteria criteria, string path, string alias = null) {
+            return criteria.GetCriteriaByPath(path) ?? (alias == null ? criteria.CreateCriteria(path) : criteria.CreateCriteria(path, alias));
         }
 
         internal ICriteria BindTypeCriteria() {
@@ -44,12 +44,12 @@ namespace Orchard.ContentManagement {
         internal ICriteria BindItemCriteria() {
             // [ContentItemVersionRecord] >join> [ContentItemRecord]
 
-            return BindCriteriaByPath(BindItemVersionCriteria(), "ContentItemRecord");
+            return BindCriteriaByPath(BindItemVersionCriteria(), "ContentItemRecord", "ci");
         }
 
         internal ICriteria BindItemVersionCriteria() {
             if (_itemVersionCriteria == null) {
-                _itemVersionCriteria = BindSession().CreateCriteria<ContentItemVersionRecord>();
+                _itemVersionCriteria = BindSession().CreateCriteria<ContentItemVersionRecord>("civ");
             }
             return _itemVersionCriteria;
         }
