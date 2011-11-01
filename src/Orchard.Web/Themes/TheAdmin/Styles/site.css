@@ -965,14 +965,14 @@ table.items td .add
 /* Pager
 ***************************************************************/
 
-.pager-footer { width: 500px; }
+.pager-footer { }
 .page-size-options {
     float: left;
     padding-right: 40px;
     margin-left: auto;
 }
 html.dyn #submit-pager, html.dyn .apply-bulk-actions-auto { display:none; }
-.pager { list-style: none; padding: 0; margin: 2px 0 0 0;}
+.pager { list-style: none; padding: 0; margin: 2px 0 0 0; overflow: hidden; }
 .pager li {
     float: left;
     padding: 0 0 0 0;

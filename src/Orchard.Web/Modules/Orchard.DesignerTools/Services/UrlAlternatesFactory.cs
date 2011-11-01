@@ -14,6 +14,11 @@ namespace Orchard.DesignerTools.Services {
 
         public UrlAlternatesFactory(IHttpContextAccessor httpContextAccessor) {
             _httpContextAccessor = httpContextAccessor;
+            var httpContext = _httpContextAccessor.Current();
+
+            if(httpContext == null) {
+                return;
+            }
 
             var request = _httpContextAccessor.Current().Request;
 
@@ -32,7 +37,10 @@ namespace Orchard.DesignerTools.Services {
         }
 
         public override void Displaying(ShapeDisplayingContext context) {
-
+            if (_urlAlternates == null || !_urlAlternates.Any()) {
+                return;
+            }
+     
             context.ShapeMetadata.OnDisplaying(displayedContext => {
                 // appends Url alternates to current ones
                 displayedContext.ShapeMetadata.Alternates = displayedContext.ShapeMetadata.Alternates.SelectMany(

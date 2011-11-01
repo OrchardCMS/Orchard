@@ -8,6 +8,10 @@ namespace Orchard.Environment.Extensions.Compilers {
             OrchardHostContainerRegistry.RegisterShim(this);
 
             _codeCompilerType = GetDefaultCompilerTypeForLanguage("C#");
+
+            // define a precompilation flag so that module can adapt for older version
+            var orchardVersion = typeof (IDependency).Assembly.GetName().Version;
+            _codeCompilerType.CompilerParameters.CompilerOptions += string.Format("/define:ORCHARD_{0}_{1}", orchardVersion.Major, orchardVersion.Minor) ;
         }
 
         public IOrchardHostContainer HostContainer { get; set; }
