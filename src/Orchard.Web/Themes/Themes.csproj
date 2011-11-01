@@ -147,10 +147,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TheAdmin\Views\_Pager.CurrentPage.cshtml" />
-    <Content Include="TheAdmin\Views\_Pager.Gap.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TheThemeMachine\Views\Pager.cshtml" />
     <Content Include="TheThemeMachine\Views\Pager.First.cshtml" />
     <Content Include="TheThemeMachine\Views\Pager.Last.cshtml" />

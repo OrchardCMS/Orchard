@@ -49,16 +49,16 @@ namespace Lucene.Services {
             InitPendingClause();
         }
 
-        public ISearchBuilder Parse(string defaultField, string query, bool escape, bool mandatory) {
-            return Parse(new[] {defaultField}, query, escape, mandatory);
+        public ISearchBuilder Parse(string defaultField, string query, bool escape) {
+            return Parse(new[] { defaultField }, query, escape);
         }
-        
-        public ISearchBuilder Parse(string[] defaultFields, string query, bool escape, bool mandatory) {
-            if ( defaultFields.Length == 0 ) {
+
+        public ISearchBuilder Parse(string[] defaultFields, string query, bool escape) {
+            if (defaultFields.Length == 0) {
                 throw new ArgumentException("Default field can't be empty");
             }
 
-            if ( String.IsNullOrWhiteSpace(query) ) {
+            if (String.IsNullOrWhiteSpace(query)) {
                 throw new ArgumentException("Query can't be empty");
             }
 
@@ -67,11 +67,10 @@ namespace Lucene.Services {
             }
 
             var analyzer = LuceneIndexProvider.CreateAnalyzer();
-            foreach ( var defaultField in defaultFields ) {
-                var clause = new BooleanClause(new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query), mandatory ? BooleanClause.Occur.MUST : BooleanClause.Occur.SHOULD);
-                _clauses.Add(clause);
+            foreach (var defaultField in defaultFields) {
+                _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query);
             }
-            
+
             _query = null;
             return this;
         }
@@ -125,10 +124,10 @@ namespace Lucene.Services {
         public ISearchBuilder WithField(string field, string value) {
             CreatePendingClause();
 
-            if ( !String.IsNullOrWhiteSpace(value) ) {
+            if (!String.IsNullOrWhiteSpace(value)) {
                 _query = new TermQuery(new Term(field, QueryParser.Escape(value.ToLower())));
             }
-            
+
             return this;
         }
 
@@ -163,7 +162,7 @@ namespace Lucene.Services {
         }
 
         private void CreatePendingClause() {
-            if(_query == null) {
+            if (_query == null) {
                 return;
             }
 
@@ -171,24 +170,25 @@ namespace Lucene.Services {
                 _query.SetBoost(_boost);
             }
 
-            if(!_exactMatch) {
+            if (!_exactMatch) {
                 var termQuery = _query as TermQuery;
-                if(termQuery != null) {
+                if (termQuery != null) {
                     var term = termQuery.GetTerm();
                     // prefixed queries are case sensitive
                     _query = new PrefixQuery(term);
                 }
             }
-            if ( _asFilter ) {
+            if (_asFilter) {
                 _filters.Add(new BooleanClause(_query, _occur));
             }
             else {
                 _clauses.Add(new BooleanClause(_query, _occur));
             }
+
+            _query = null;
         }
 
-        public ISearchBuilder SortBy(string name)
-        {
+        public ISearchBuilder SortBy(string name) {
             _sort = name;
             _comparer = 0;
             return this;
@@ -216,15 +216,13 @@ namespace Lucene.Services {
             return this;
         }
 
-        public ISearchBuilder SortByDateTime(string name)
-        {
+        public ISearchBuilder SortByDateTime(string name) {
             _sort = name;
             _comparer = SortField.LONG;
             return this;
         }
 
-        public ISearchBuilder Ascending()
-        {
+        public ISearchBuilder Ascending() {
             _sortDescending = false;
             return this;
         }
@@ -235,17 +233,17 @@ namespace Lucene.Services {
         }
 
         public ISearchBuilder Slice(int skip, int count) {
-            if ( skip < 0 ) {
+            if (skip < 0) {
                 throw new ArgumentException("Skip must be greater or equal to zero");
             }
 
-            if ( count <= 0 ) {
+            if (count <= 0) {
                 throw new ArgumentException("Count must be greater than zero");
             }
 
             _skip = skip;
             _count = count;
-            
+
             return this;
         }
 
@@ -264,7 +262,7 @@ namespace Lucene.Services {
                     resultQuery = booleanQuery;
                 }
                 else { // search all documents, without filter or clause
-                    resultQuery = new MatchAllDocsQuery(null); 
+                    resultQuery = new MatchAllDocsQuery(null);
                 }
             }
             else {
@@ -287,7 +285,7 @@ namespace Lucene.Services {
 
         public IEnumerable<ISearchHit> Search() {
             var query = CreateQuery();
-            
+
             IndexSearcher searcher;
 
             try {
@@ -332,9 +330,9 @@ namespace Lucene.Services {
         public int Count() {
             var query = CreateQuery();
             IndexSearcher searcher;
-            
+
             try {
-                 searcher = new IndexSearcher(_directory, true);
+                searcher = new IndexSearcher(_directory, true);
             }
             catch {
                 // index might not exist if it has been rebuilt
@@ -346,12 +344,12 @@ namespace Lucene.Services {
                 var hits = searcher.Search(query, Int16.MaxValue);
                 Logger.Information("Search results: {0}", hits.scoreDocs.Length);
                 var length = hits.scoreDocs.Length;
-                return Math.Min(length - _skip, _count) ;
+                return Math.Min(length - _skip, _count);
             }
             finally {
                 searcher.Close();
             }
-            
+
         }
 
         public ISearchHit Get(int documentId) {
