@@ -1,6 +1,23 @@
 ﻿@model Orchard.Tags.ViewModels.EditTagsViewModel
 
+@{
+    Style.Require("jQueryUI_Orchard");
+    Script.Require("TagsAutocomplete");
+}
+
 <fieldset>
     @Html.LabelFor(m => m.Tags, T("Tags"))
     @Html.TextBoxFor(m => m.Tags, new { @class = "large text" })
 </fieldset>
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    $(function () {
+        $.tagsAutocomplete.autocomplete(
+            '@Html.FieldIdFor(m => m.Tags)',
+            '@Url.Action("FetchSimilarTags", new { Controller = "Home", Area = "Orchard.Tags" })', 1);
+    });
+//]]>
+</script>
+}

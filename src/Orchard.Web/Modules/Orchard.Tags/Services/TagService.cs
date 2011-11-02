@@ -41,6 +41,11 @@ namespace Orchard.Tags.Services {
             return _tagRepository.Table.ToList();
         }
 
+        public IEnumerable<TagRecord> GetTagsByNameSnippet(string snippet, int maxCount = 10) {
+            if (String.IsNullOrEmpty(snippet)) return null; // Otherwise would return the whole dataset
+            return _tagRepository.Fetch(tag => tag.TagName.StartsWith(snippet)).Take(maxCount);
+        }
+
         public TagRecord GetTag(int tagId) {
             return _tagRepository.Get(x => x.Id == tagId);
         }
