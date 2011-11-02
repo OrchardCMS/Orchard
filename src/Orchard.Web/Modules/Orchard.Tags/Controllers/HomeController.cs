@@ -63,12 +63,5 @@ namespace Orchard.Tags.Controllers {
 
             return View(viewModel);
         }
-
-        public JsonResult FetchSimilarTags(string snippet) {
-            return Json(
-                _tagService.GetTagsByNameSnippet(snippet).Select(tag => tag.TagName).ToList(), 
-                JsonRequestBehavior.AllowGet
-            );
-        }
     }
 }

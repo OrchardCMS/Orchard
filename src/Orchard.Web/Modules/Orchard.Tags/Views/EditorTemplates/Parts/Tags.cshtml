@@ -16,7 +16,7 @@
     $(function () {
         $.tagsAutocomplete.autocomplete(
             '@Html.FieldIdFor(m => m.Tags)',
-            '@Url.Action("FetchSimilarTags", new { Controller = "Home", Area = "Orchard.Tags" })', 1);
+            '@Url.Action("FetchSimilarTags", new { Controller = "Admin", Area = "Orchard.Tags" })', 1);
     });
 //]]>
 </script>
