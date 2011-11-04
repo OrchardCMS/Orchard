@@ -293,6 +293,12 @@ namespace Orchard.ContentManagement {
                 return this;
             }
 
+            public IExpressionFactory WithIds(ICollection<int> ids) {
+                Criteria = _query.BindItemCriteria();
+                Criterion = Restrictions.InG("Id", ids);
+                return this;
+            }
+
             public void Eq(string propertyName, object value) {
                 Criterion = Restrictions.Eq(propertyName, value);
             }
