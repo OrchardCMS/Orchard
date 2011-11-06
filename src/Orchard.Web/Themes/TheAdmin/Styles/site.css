@@ -566,6 +566,11 @@ input[type="checkbox"]:focus, input[type="radio"]:focus {
     outline:1px dotted #666d51;
 }
 
+input[readonly] {
+    background-color: #EBEBE4;
+    color: #545454;
+}
+
 legend span {
     font-weight:normal;
 }
