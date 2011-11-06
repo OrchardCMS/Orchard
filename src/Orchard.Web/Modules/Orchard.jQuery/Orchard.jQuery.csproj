@@ -49,6 +49,8 @@
   <ItemGroup>
     <Content Include="Scripts\jquery-1.7.js" />
     <Content Include="Scripts\jquery-1.7.min.js" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.effects.blind.js" />
     <Content Include="Scripts\jquery.effects.blind.min.js" />
     <Content Include="Scripts\jquery.effects.bounce.js" />
