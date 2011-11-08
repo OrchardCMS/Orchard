@@ -869,6 +869,10 @@ table.items thead, table.items th {
     text-align:left;
     white-space:nowrap;
 }
+table.items th.actions {
+    width:300px;
+    text-align:right;
+}
 /* todo: (heskew) hook back up */
 table.items tr.hover {
     background-color:#f0f3d6;
