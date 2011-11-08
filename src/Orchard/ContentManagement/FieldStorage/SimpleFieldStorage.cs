@@ -20,7 +20,7 @@ namespace Orchard.ContentManagement.FieldStorage {
             var t = typeof (T);
 
             // the T is nullable, convert using underlying type
-            if(t.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {
                 t = Nullable.GetUnderlyingType(t);
             }
 
