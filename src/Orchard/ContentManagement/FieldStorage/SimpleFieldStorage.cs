@@ -13,9 +13,18 @@ namespace Orchard.ContentManagement.FieldStorage {
 
         public T Get<T>(string name) {
             var value = Getter(name, typeof(T));
-            return string.IsNullOrEmpty(value)
-                       ? default(T)
-                       : (T)Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);
+            if(String.IsNullOrEmpty(value)) {
+                return default(T);
+            }
+
+            var t = typeof (T);
+
+            // the T is nullable, convert using underlying type
+            if(t.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+                t = Nullable.GetUnderlyingType(t);
+            }
+
+            return (T)Convert.ChangeType(value, t, CultureInfo.InvariantCulture);
         }
 
         public void Set<T>(string name, T value) {
