@@ -14,7 +14,6 @@ namespace Orchard.Tags.Projections {
         void Describe(dynamic describe);
     }
 
-    [OrchardFeature("Orchard.Tags.Projections")]
     public class TagsFilter : IFilterProvider {
         private readonly ITagService _tagService;
 
@@ -60,7 +59,6 @@ namespace Orchard.Tags.Projections {
         void Describe(dynamic context);
     }
 
-    [OrchardFeature("Orchard.Tags.Projections")]
     public class TagsFilterForms : IFormProvider {
         private readonly ITagService _tagService;
         protected dynamic Shape { get; set; }

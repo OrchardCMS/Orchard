@@ -10,8 +10,3 @@ Features:
         Description: The tags module is providing basic tagging for arbitrary content types. 
         Dependencies: Settings, Orchard.jQuery
         Category: Navigation
-    Orchard.Tags.Projections:
-        Name: Tags Projections
-        Description: Projections for the Tags module
-        Category: Projections
-        Dependencies: Orchard.Tags, Orchard.Projections
