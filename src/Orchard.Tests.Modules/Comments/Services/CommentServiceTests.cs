@@ -64,6 +64,7 @@ namespace Orchard.Tests.Modules.Comments.Services {
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
+                    typeof(CommentsPartRecord),
                     typeof(CommentPartRecord),
                     typeof(ContentItemRecord),
                     typeof(ContentItemVersionRecord),
