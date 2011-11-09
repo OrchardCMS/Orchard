@@ -374,12 +374,25 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(SearchBuilder.Parse(new[] {"body"}, "kitchen bertrand", false).Count(), Is.EqualTo(3));
             Assert.That(SearchBuilder.Parse(new[] {"body"}, "kitchen +bertrand", false).Count(), Is.EqualTo(1));
             Assert.That(SearchBuilder.Parse(new[] {"body"}, "+kitchen +bertrand", false).Count(), Is.EqualTo(0));
-            Assert.That(SearchBuilder.Parse(new[] {"body"}, "kit", false).Count(), Is.EqualTo(0));
             Assert.That(SearchBuilder.Parse(new[] {"body"}, "kit*", false).Count(), Is.EqualTo(2));
             Assert.That(SearchBuilder.Parse(new[] {"body", "title"}, "bradley love^3 soap", false).Count(), Is.EqualTo(3));
             Assert.That(SearchBuilder.Parse(new[] {"body", "title"}, "bradley love^3 soap", false).Search().First().ContentItemId, Is.EqualTo(2));
-
         }
+
+        [Test]
+        public void ParseQueriesArePrefixedByDefault() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "Bradley is in the kitchen.").Analyze().Add("title", "Beer and takos").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
+            _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Analyze().Add("title", "Soap opera").Analyze());
+
+            // a prefix is added to the clause
+            Assert.That(SearchBuilder.Parse(new[] { "body" }, "kit", false).Count(), Is.EqualTo(2));
+
+            // ExactMatch prevents a prefix to be added
+            Assert.That(SearchBuilder.Parse(new[] { "body" }, "kit", false).ExactMatch().Count(), Is.EqualTo(0));
+        }
+
         [Test]
         public void ShouldParseLuceneQueriesWithSpecificFields() {
             _provider.CreateIndex("default");

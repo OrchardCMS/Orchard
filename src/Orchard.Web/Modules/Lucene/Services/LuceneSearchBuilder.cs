@@ -68,10 +68,10 @@ namespace Lucene.Services {
 
             var analyzer = LuceneIndexProvider.CreateAnalyzer();
             foreach (var defaultField in defaultFields) {
+                CreatePendingClause();
                 _query = new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query);
             }
 
-            _query = null;
             return this;
         }
 
