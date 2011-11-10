@@ -9,21 +9,25 @@ using Orchard.PublishLater.Services;
 using Orchard.PublishLater.ViewModels;
 using Orchard.Localization;
 using System.Globalization;
+using Orchard.Services;
 
 namespace Orchard.PublishLater.Drivers {
     public class PublishLaterPartDriver : ContentPartDriver<PublishLaterPart> {
         private const string TemplateName = "Parts/PublishLater";
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPublishLaterService _publishLaterService;
+        private readonly IClock _clock;
         private const string DatePattern = "M/d/yyyy";
         private const string TimePattern = "h:mm tt";
 
         public PublishLaterPartDriver(
             IOrchardServices services,
             IHttpContextAccessor httpContextAccessor,
-            IPublishLaterService publishLaterService) {
+            IPublishLaterService publishLaterService,
+            IClock clock) {
             _httpContextAccessor = httpContextAccessor;
             _publishLaterService = publishLaterService;
+            _clock = clock;
             T = NullLocalizer.Instance;
             Services = services;
         }
@@ -70,7 +74,13 @@ namespace Orchard.PublishLater.Drivers {
                     // use an english culture as it is the one used by jQuery.datepicker by default
                     if (DateTime.TryParse(parseDateTime, CultureInfo.GetCultureInfo("en-US"), DateTimeStyles.AssumeLocal, out scheduled)) {
                         model.ScheduledPublishUtc = part.ScheduledPublishUtc.Value = scheduled.ToUniversalTime();
-                        _publishLaterService.Publish(model.ContentItem, model.ScheduledPublishUtc.Value);
+
+                        if (model.ScheduledPublishUtc < _clock.UtcNow) {
+                            updater.AddModelError("ScheduledPublishUtcDate", T("You cannot schedule a publishing date in the past"));
+                        }
+                        else {
+                            _publishLaterService.Publish(model.ContentItem, model.ScheduledPublishUtc.Value);
+                        }
                     }
                     else {
                         updater.AddModelError(Prefix, T("{0} is an invalid date and time", parseDateTime));
