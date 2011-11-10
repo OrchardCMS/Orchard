@@ -60,7 +60,6 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
         }
 
         [Test]
-        [ExpectedException(typeof(OrchardException))]
         public void CreateDataMigrationTestNonExistentFeature() {
             CodeGenerationCommands codeGenerationCommands = new CodeGenerationCommands(_extensionManager,
                 _schemaCommandGenerator);
@@ -68,6 +67,8 @@ namespace Orchard.Tests.Modules.CodeGeneration.Commands {
             TextWriter textWriterOutput = new StringWriter();
             codeGenerationCommands.Context = new CommandContext { Output = textWriterOutput };
             codeGenerationCommands.CreateDataMigration("feature");
+
+            Assert.That(textWriterOutput.ToString(), Is.StringContaining("Creating data migration failed"));
         }
     }
 }
