@@ -87,10 +87,11 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Edit(int blogId) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to edit blog")))
+            var blog = _blogService.Get(blogId, VersionOptions.Latest);
+
+            if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, blog, T("Not allowed to edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogId, VersionOptions.Latest);
             if (blog == null)
                 return HttpNotFound();
 
@@ -119,10 +120,11 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
         public ActionResult EditPOST(int blogId) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
+            var blog = _blogService.Get(blogId, VersionOptions.DraftRequired);
+
+            if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, blog, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
-            var blog = _blogService.Get(blogId, VersionOptions.DraftRequired);
             if (blog == null)
                 return HttpNotFound();
 
