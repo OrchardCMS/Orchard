@@ -55,6 +55,10 @@ namespace Orchard.ContentTypes.Controllers {
                 ModelState.AddModelError("DisplayName", T("The Display Name name can't be empty.").ToString());
             }
 
+            if (String.IsNullOrWhiteSpace(viewModel.Name)) {
+                ModelState.AddModelError("Name", T("The Content Type Id can't be empty.").ToString());
+            }
+
             if (_contentDefinitionService.GetTypes().Any(t => String.Equals(t.Name.Trim(), viewModel.Name.Trim(), StringComparison.OrdinalIgnoreCase))) {
                 ModelState.AddModelError("Name", T("A type with the same Id already exists.").ToString());
             }
@@ -64,7 +68,11 @@ namespace Orchard.ContentTypes.Controllers {
             }
 
             if (_contentDefinitionService.GetTypes().Any(t => String.Equals(t.DisplayName.Trim(), viewModel.DisplayName.Trim(), StringComparison.OrdinalIgnoreCase))) {
-                ModelState.AddModelError("DisplayName", T("A type with the same Name already exists.").ToString());
+                ModelState.AddModelError("DisplayName", T("A type with the same Display Name already exists.").ToString());
+            }
+
+            if (_contentDefinitionService.GetTypes().Any(t => String.Equals(t.Name, viewModel.Name, StringComparison.OrdinalIgnoreCase))) {
+                ModelState.AddModelError("Name", T("A type with the same Name already exists.").ToString());
             }
 
             if (!ModelState.IsValid) {
