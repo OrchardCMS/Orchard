@@ -60,6 +60,7 @@
     <Compile Include="Projections\TagsFilter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Projections\TagsFilterForms.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ITagService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
