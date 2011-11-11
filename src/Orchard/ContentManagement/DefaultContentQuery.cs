@@ -75,21 +75,36 @@ namespace Orchard.ContentManagement {
             BindPartCriteria<TRecord>();
         }
 
-        private void Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord {
-
-            // build a linq to nhibernate expression
-            var options = new QueryOptions();
-            var queryProvider = new NHibernateQueryProvider(BindSession(), options);
-            var queryable = new Query<TRecord>(queryProvider, options).Where(predicate);
-
-            // translate it into the nhibernate ICriteria implementation
-            var criteria = (CriteriaImpl)queryProvider.TranslateExpression(queryable.Expression);
+        private void Where<TRecord>(Expression<Func<TRecord, bool>> predicate, params Expression<Func<TRecord, bool>>[] orPredicates) where TRecord : ContentPartRecord {
 
             // attach the criterion from the predicate to this query's criteria for the record
             var recordCriteria = BindPartCriteria<TRecord>();
-            foreach (var expressionEntry in criteria.IterateExpressionEntries()) {
-                recordCriteria.Add(expressionEntry.Criterion);
+            var predicates = Enumerable
+                .Empty<Expression<Func<TRecord, bool>>>()
+                .Union(new []{predicate})
+                .Union(orPredicates);
+
+            var disjunction = Restrictions.Disjunction();
+
+            foreach (var p in predicates) {
+                // build a linq to nhibernate expression
+                var options = new QueryOptions();
+                var queryProvider = new NHibernateQueryProvider(BindSession(), options);
+
+                var queryable = new Query<TRecord>(queryProvider, options).Where(p);
+                var conjunction = Restrictions.Conjunction();
+
+                // translate it into the nhibernate ICriteria implementation
+                var criteria = (CriteriaImpl) queryProvider.TranslateExpression(queryable.Expression);
+
+                foreach (var expressionEntry in criteria.IterateExpressionEntries()) {
+                    conjunction.Add(expressionEntry.Criterion);
+                }
+
+                disjunction.Add(conjunction);
             }
+
+            recordCriteria.Add(disjunction);
         }
 
         private void Where(Action<IExpressionFactory> expression) {
@@ -220,8 +235,8 @@ namespace Orchard.ContentManagement {
                 return new ContentQuery<T>(_query);
             }
 
-            IContentQuery<T, TRecord> IContentQuery<T>.Where<TRecord>(Expression<Func<TRecord, bool>> predicate) {
-                _query.Where(predicate);
+            IContentQuery<T, TRecord> IContentQuery<T>.Where<TRecord>(Expression<Func<TRecord, bool>> predicate, params Expression<Func<TRecord, bool>>[] orPredicates) {
+                _query.Where(predicate, orPredicates);
                 return new ContentQuery<T, TRecord>(_query);
             }
 
@@ -253,8 +268,8 @@ namespace Orchard.ContentManagement {
                 return this;
             }
 
-            IContentQuery<T, TR> IContentQuery<T, TR>.Where(Expression<Func<TR, bool>> predicate) {
-                _query.Where(predicate);
+            IContentQuery<T, TR> IContentQuery<T, TR>.Where(Expression<Func<TR, bool>> predicate, params Expression<Func<TR, bool>>[] orPredicates) {
+                _query.Where(predicate, orPredicates);
                 return this;
             }
 

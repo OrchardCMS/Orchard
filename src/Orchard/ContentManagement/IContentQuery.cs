@@ -21,7 +21,7 @@ namespace Orchard.ContentManagement {
         IContentQuery<TPart, TRecord> Join<TRecord>() where TRecord : ContentPartRecord;
 
         IContentQuery<TPart> Where(Action<IExpressionFactory> predicate);
-        IContentQuery<TPart, TRecord> Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord;
+        IContentQuery<TPart, TRecord> Where<TRecord>(Expression<Func<TRecord, bool>> predicate, params Expression<Func<TRecord, bool>>[] orPredicates) where TRecord : ContentPartRecord;
 
         IContentQuery<TPart> OrderBy(Action<ISortFactory> order);
         IContentQuery<TPart, TRecord> OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord;
@@ -31,7 +31,7 @@ namespace Orchard.ContentManagement {
     public interface IContentQuery<TPart, TRecord> : IContentQuery<TPart> where TPart : IContent where TRecord : ContentPartRecord {
         new IContentQuery<TPart, TRecord> ForVersion(VersionOptions options);
 
-        IContentQuery<TPart, TRecord> Where(Expression<Func<TRecord, bool>> predicate);
+        IContentQuery<TPart, TRecord> Where(Expression<Func<TRecord, bool>> predicate, params Expression<Func<TRecord, bool>>[] orPredicates);
         IContentQuery<TPart, TRecord> OrderBy<TKey>(Expression<Func<TRecord, TKey>> keySelector);
         IContentQuery<TPart, TRecord> OrderByDescending<TKey>(Expression<Func<TRecord, TKey>> keySelector);
     }
