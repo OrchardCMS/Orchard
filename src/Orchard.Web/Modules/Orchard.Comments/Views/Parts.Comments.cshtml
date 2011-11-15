@@ -55,7 +55,7 @@ using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, Fo
         @Html.Hidden("Email", WorkContext.CurrentUser.Email ?? "")
     }
 
-    <h2 id="commenter">@if (WorkContext.CurrentUser != null) { @T("Hi, {0}!", Html.Encode(WorkContext.CurrentUser.UserName))}</h2>
+    <h2 id="commenter">@if (WorkContext.CurrentUser != null) { @T("Hi, {0}!", WorkContext.CurrentUser.UserName)}</h2>
     <fieldset class="what">
     <ol>
         <li>
