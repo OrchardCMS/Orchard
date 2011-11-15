@@ -89,6 +89,8 @@
     <Compile Include="Containers\Drivers\ContainerWidgetPartDriver.cs" />
     <Compile Include="Containers\Drivers\CustomPropertiesDriver.cs" />
     <Compile Include="Containers\Extensions\ContentQueryExtensions.cs" />
+    <Compile Include="Containers\Handlers\ContainablePartHandler.cs" />
+    <Compile Include="Containers\Handlers\ContainerPartHandler.cs" />
     <Compile Include="Containers\Migrations.cs" />
     <Compile Include="Containers\Models\ContainablePart.cs" />
     <Compile Include="Containers\Models\ContainerPart.cs" />

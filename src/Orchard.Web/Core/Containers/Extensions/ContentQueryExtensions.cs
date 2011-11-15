@@ -6,12 +6,16 @@ using Orchard.Core.Containers.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Title.Models;
 
-namespace Orchard.Core.Containers.Extensions
-{
+namespace Orchard.Core.Containers.Extensions {
     public static class ContentQueryExtensions {
         public static IContentQuery<T> OrderBy<T>(this IContentQuery<T> query, string partAndProperty, bool descendingOrder) where T : IContent {
             //todo: (heskew) order by custom part properties
             switch (partAndProperty) {
+                case "ContainablePart.Weight":
+                    query = descendingOrder
+                                ? query.OrderByDescending<ContainablePartRecord, int>(record => record.Weight)
+                                : query.OrderBy<ContainablePartRecord, int>(record => record.Weight);
+                    break;
                 case "TitlePart.Title":
                     query = descendingOrder
                                 ? query.OrderByDescending<TitlePartRecord, string>(record => record.Title)

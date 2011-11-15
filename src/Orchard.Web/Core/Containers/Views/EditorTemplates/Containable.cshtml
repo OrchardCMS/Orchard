@@ -1,5 +1,11 @@
 ﻿@model Orchard.Core.Containers.ViewModels.ContainableViewModel
 <fieldset>
-    @Html.LabelFor(m => m.ContainerId, T("Add to"))
-    @Html.DropDownListFor(m => m.ContainerId, Model.AvailableContainers)
+    <span>
+        @Html.LabelFor(m => m.ContainerId, T("Add to"))
+        @Html.DropDownListFor(m => m.ContainerId, Model.AvailableContainers)
+    </span>
+    <span>
+        @Html.LabelFor(m => m.Weight, T("Weight"))
+        @Html.TextBoxFor(m => m.Weight, new { @class = "text text-small" })
+    </span>
 </fieldset>

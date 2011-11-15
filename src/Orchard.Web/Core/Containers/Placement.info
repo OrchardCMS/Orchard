@@ -4,6 +4,9 @@
         Parts_Container_Contained
         Parts_Container_Contained_Summary
     -->
+    <Match DisplayType="Detail">
+      <Place Parts_Container_Contained="Content:7.5"/>
+    </Match>
     <Place Parts_Containable_Edit="Content:before.3"/>
     <Place Parts_Container_Edit="Content:5"/>
     <Place Parts_CustomProperties_Edit="Content:5"/>

@@ -59,34 +59,8 @@ namespace Orchard.Core.Containers.Controllers {
             }
 
             var container = _contentManager.Get(hits.Single().Id);
-            IContentQuery<ContentItem> query = _contentManager
-                .Query(VersionOptions.Published)
-                .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
-
-            var descendingOrder = container.As<ContainerPart>().Record.OrderByDirection == (int) OrderByDirection.Descending;
-            query = query.OrderBy(container.As<ContainerPart>().Record.OrderByProperty, descendingOrder);
-
-            _feedManager.Register(container.As<RoutePart>().Title, "rss", new RouteValueDictionary { { "containerid", container.Id } }); 
-
-            Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            pager.PageSize = pagerParameters.PageSize != null && container.As<ContainerPart>().Record.Paginated
-                               ? pager.PageSize
-                               : container.As<ContainerPart>().Record.PageSize;
-            var pagerShape = Shape.Pager(pager).TotalItemCount(query.Count());
-
-            var startIndex = container.As<ContainerPart>().Record.Paginated ? pager.GetStartIndex() : 0;
-            var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
-
-            var list = Shape.List();
-            list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
-            list.Classes.Add("content-items");
-            list.Classes.Add("list-items");
-
+            container.As<ContainerPart>().PagerParameters = pagerParameters;
             var model = _contentManager.BuildDisplay(container, "Detail");
-            model.Content.Add(list, "7");
-            if (container.As<ContainerPart>().Record.Paginated) {
-                model.Content.Add(pagerShape, "7.5");
-            }
 
             return new ShapeResult(this, model);
         }
