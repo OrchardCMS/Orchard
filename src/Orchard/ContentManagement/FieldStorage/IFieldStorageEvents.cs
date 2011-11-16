@@ -41,17 +41,19 @@ namespace Orchard.ContentManagement.FieldStorage {
         public void Set<T>(string name, T value) {
             _concreteStorage.Set(name, value);
 
-            var context = new FieldStorageEventContext {
-                FieldName = _contentPartFieldDefinition.Name,
-                PartName = _contentPart.PartDefinition.Name,
-                Value = value,
-                ValueName = name,
-                ValueType = typeof(T),
-                Content = _contentPart
-            };
+            if (_contentPart.ContentItem.IsPublished()) {
+                var context = new FieldStorageEventContext {
+                    FieldName = _contentPartFieldDefinition.Name,
+                    PartName = _contentPart.PartDefinition.Name,
+                    Value = value,
+                    ValueName = name,
+                    ValueType = typeof (T),
+                    Content = _contentPart
+                };
 
-            foreach (var fieldEvent in _events) {
-                fieldEvent.SetCalled(context);
+                foreach (var fieldEvent in _events) {
+                    fieldEvent.SetCalled(context);
+                }
             }
         }
     }

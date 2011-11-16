@@ -100,7 +100,7 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             storage.Set(null, "one");
             storage.Set("alpha", "two");
 
-            Assert.That(part.ContentItem.Record.Data, Is.EqualTo("<Data><Foo><Bar alpha=\"two\">one</Bar></Foo></Data>"));
+            Assert.That(part.ContentItem.VersionRecord.Data, Is.EqualTo("<Data><Foo><Bar alpha=\"two\">one</Bar></Foo></Data>"));
         }
 
         [Test]
@@ -111,8 +111,8 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             storage.Set(null, "one");
             storage.Set("alpha", "two");
 
-            Assert.That(part.ContentItem.Record.Data, Is.EqualTo("<Data><Foo><Bar alpha=\"two\">one</Bar></Foo></Data>"));
-            part.ContentItem.Record.Data = "<Data><Foo><Bar alpha=\"four\">three</Bar></Foo></Data>";
+            Assert.That(part.ContentItem.VersionRecord.Data, Is.EqualTo("<Data><Foo><Bar alpha=\"two\">one</Bar></Foo></Data>"));
+            part.ContentItem.VersionRecord.Data = "<Data><Foo><Bar alpha=\"four\">three</Bar></Foo></Data>";
 
             storage.Set(null, "three");
             storage.Set("alpha", "four");

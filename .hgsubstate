@@ -1,5 +1,5 @@
 1e6a2d32657e96db406ad54c318e09c1fe2ed889 src/Orchard.Web/Modules/Orchard.Forms
-4d999d9b380e32e74f5ef1339bf883c18586f395 src/Orchard.Web/Modules/Orchard.Projections
+465ac29c0285497155bf93c0322ddfc5577ac322 src/Orchard.Web/Modules/Orchard.Projections
 15cec8c8d8791c108e1f63f40b2357c6bc6605e7 src/Orchard.Web/Modules/Orchard.Rules
 65057c6a5cd71f7994ba9bcbeece50dbb737620e src/Orchard.Web/Modules/Orchard.TaskLease
 ebdcbf2c57f9f888dcdc2b577a1e9c6e8f9c1957 src/Orchard.Web/Modules/Orchard.Tokens
