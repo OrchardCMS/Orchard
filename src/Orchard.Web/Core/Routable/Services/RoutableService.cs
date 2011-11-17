@@ -53,12 +53,12 @@ namespace Orchard.Core.Routable.Services {
 
         public static string RemoveDiacritics(string slug) {
             string stFormD = slug.Normalize(NormalizationForm.FormD);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
-            for (int ich = 0; ich < stFormD.Length; ich++) {
-                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(stFormD[ich]);
+            foreach (char t in stFormD) {
+                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(t);
                 if (uc != UnicodeCategory.NonSpacingMark) {
-                    sb.Append(stFormD[ich]);
+                    sb.Append(t);
                 }
             }
 
@@ -69,7 +69,7 @@ namespace Orchard.Core.Routable.Services {
             if ((model.Slug != null && !string.IsNullOrEmpty(model.Slug.Trim())) || string.IsNullOrEmpty(model.Title))
                 return;
 
-            FillSlugContext slugContext = new FillSlugContext(model.Title);
+            var slugContext = new FillSlugContext(model.Title);
 
             foreach (ISlugEventHandler slugEventHandler in _slugEventHandlers) {
                 slugEventHandler.FillingSlugFromTitle(slugContext);
@@ -95,8 +95,17 @@ namespace Orchard.Core.Routable.Services {
         }
 
         public string GenerateUniqueSlug(IRoutableAspect part, IEnumerable<string> existingPaths) {
-            if (existingPaths == null || !existingPaths.Contains(part.Path))
+
+            if (existingPaths == null) {
                 return part.Slug;
+            } 
+
+            // materializing the enumeration
+            existingPaths = existingPaths.ToArray();
+            
+            if(!existingPaths.Contains(part.Path)) {
+                return part.Slug;
+            }
 
             int? version = existingPaths.Select(s => GetSlugVersion(part.Path, s)).OrderBy(i => i).LastOrDefault();
 
@@ -117,8 +126,7 @@ namespace Orchard.Core.Routable.Services {
                        : null;
         }
 
-        public IEnumerable<IRoutableAspect> GetSimilarPaths(string path)
-        {
+        public IEnumerable<IRoutableAspect> GetSimilarPaths(string path) {
           return
             _contentManager.Query<RoutePart, RoutePartRecord>()
                 .Where(routable => routable.Path != null && routable.Path.StartsWith(path, StringComparison.OrdinalIgnoreCase))
@@ -138,13 +146,13 @@ namespace Orchard.Core.Routable.Services {
                 return true;
 
             part.Path = part.GetPathWithSlug(part.Slug);
-            var pathsLikeThis = GetSimilarPaths(part.Path);
+            var pathsLikeThis = GetSimilarPaths(part.Path).ToArray();
 
             // Don't include *this* part in the list
             // of slugs to consider for conflict detection
-            pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id);
+            pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id).ToArray();
 
-            if (pathsLikeThis.Count() > 0) {
+            if (pathsLikeThis.Any()) {
                 var originalSlug = part.Slug;
                 var newSlug = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Path));
                 part.Path = part.GetPathWithSlug(newSlug);
