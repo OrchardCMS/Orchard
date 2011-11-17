@@ -117,13 +117,14 @@ namespace Orchard.Core.Routable.Services {
                        : null;
         }
 
-        public IEnumerable<IRoutableAspect> GetSimilarPaths(string path) {
-            return
-                _contentManager.Query<RoutePart, RoutePartRecord>()
-                    .List()
-                    .Select(i => i.As<RoutePart>())
-                    .Where(routable => routable.Path != null && routable.Path.StartsWith(path, StringComparison.OrdinalIgnoreCase))
-                    .ToArray();
+        public IEnumerable<IRoutableAspect> GetSimilarPaths(string path)
+        {
+          return
+            _contentManager.Query<RoutePart, RoutePartRecord>()
+                .Where(routable => routable.Path != null && routable.Path.StartsWith(path, StringComparison.OrdinalIgnoreCase))
+                .List()
+                .Select(i => i.As<RoutePart>())
+                .ToArray();
         }
 
         public bool IsSlugValid(string slug) {
