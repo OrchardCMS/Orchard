@@ -35,6 +35,7 @@ namespace Orchard.Core.Tests.Routable.Services {
         public override void Init() {
             base.Init();
             _routableService = _container.Resolve<IRoutableService>();
+            _contentManager = _container.Resolve<IContentManager>();
         }
 
         public override void Register(ContainerBuilder builder) {
@@ -66,12 +67,11 @@ namespace Orchard.Core.Tests.Routable.Services {
         }
 
         private IRoutableService _routableService;
+        private IContentManager _contentManager;
 
         [Test]
         public void InvalidCharactersShouldBeReplacedByADash() {
-            var contentManager = _container.Resolve<IContentManager>();
-
-            var thing = contentManager.Create<Thing>("thing", t => {
+            var thing = _contentManager.Create<Thing>("thing", t => {
                 t.As<RoutePart>().Record = new RoutePartRecord();
                 t.Title = "Please do not use any of the following characters in your permalink: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\", \"\"\", \"<\", \">\", \"\\\"";
             });
@@ -185,6 +185,8 @@ namespace Orchard.Core.Tests.Routable.Services {
         [Test]
         public void SlugInConflictWithAnExistingItemsPathIsVersioned() {
             CreateRoutePartFromScratch("bar", "bar", "foo");
+            _contentManager.Flush();
+
             var thing2 = CreateRoutePartFromScratch("fooslashbar", "foo/bar");
             Assert.That(thing2.Path, Is.EqualTo("foo/bar-2"));
         }
@@ -192,6 +194,7 @@ namespace Orchard.Core.Tests.Routable.Services {
         [Test]
         public void GeneratedSlugInConflictInSameContaierPathIsVersioned() {
             var thing1 = CreateRoutePartFromScratch("Foo", "", "bar");
+            _contentManager.Flush();
             var thing2 = CreateRoutePartWithExistingContainer("Foo", thing1.As<ICommonPart>().Container);
             Assert.That(thing2.Path, Is.EqualTo("bar/foo-2"));
             Assert.That(thing2.Slug, Is.EqualTo("foo-2"));
@@ -200,6 +203,7 @@ namespace Orchard.Core.Tests.Routable.Services {
         [Test]
         public void GivenSlugInConflictInSameContaierPathIsVersioned() {
             var thing1 = CreateRoutePartFromScratch("Hi", "foo", "bar");
+            _contentManager.Flush();
             var thing2 = CreateRoutePartWithExistingContainer("There", thing1.As<ICommonPart>().Container, "foo");
             Assert.That(thing2.Path, Is.EqualTo("bar/foo-2"));
             Assert.That(thing2.Slug, Is.EqualTo("foo-2"));
