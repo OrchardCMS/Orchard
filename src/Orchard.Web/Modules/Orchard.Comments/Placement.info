@@ -16,6 +16,6 @@
         <Place Parts_Comments_Count="Meta:5" />
     </Match>
     <Match DisplayType="SummaryAdmin">
-        <Place Parts_Comments_Count_SummaryAdmin="Sidebar" />
+        <Place Parts_Comments_Count_SummaryAdmin="Meta:4" />
     </Match>
 </Placement>

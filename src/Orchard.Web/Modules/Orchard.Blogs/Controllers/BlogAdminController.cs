@@ -180,13 +180,13 @@ namespace Orchard.Blogs.Controllers {
             if (blogPart == null)
                 return HttpNotFound();
 
-            var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest)
-                .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin"));
+            var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize, VersionOptions.Latest).ToArray();
+            var blogPostsShapes = blogPosts.Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin")).ToArray();
 
             dynamic blog = Services.ContentManager.BuildDisplay(blogPart, "DetailAdmin");
 
             var list = Shape.List();
-            list.AddRange(blogPosts);
+            list.AddRange(blogPostsShapes);
             blog.Content.Add(Shape.Parts_Blogs_BlogPost_ListAdmin(ContentItems: list), "5");
 
             var totalItemCount = _blogPostService.PostCount(blogPart, VersionOptions.Latest);

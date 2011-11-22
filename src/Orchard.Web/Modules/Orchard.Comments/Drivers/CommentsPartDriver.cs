@@ -18,14 +18,16 @@ namespace Orchard.Comments.Drivers {
             if (part.CommentsShown == false)
                 return null;
 
+            var commentsForCommentedContent = _commentService.GetCommentsForCommentedContent(part.ContentItem.Id);
+
             return Combined(
                 ContentShape("Parts_Comments",
                     () => shapeHelper.Parts_Comments(ContentPart: part)),
                 ContentShape("Parts_Comments_Count",
-                    () => shapeHelper.Parts_Comments_Count(ContentPart: part, CommentCount: _commentService.GetCommentsForCommentedContent(part.ContentItem.Id).Count(), PendingCount: part.PendingComments.Count)),
+                    () => shapeHelper.Parts_Comments_Count(ContentPart: part, CommentCount: commentsForCommentedContent.Count(), PendingCount: commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count())), 
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
-                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(ContentPart: part, CommentCount: _commentService.GetCommentsForCommentedContent(part.ContentItem.Id).Count(), PendingCount: part.PendingComments.Count))
-                );
+                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(ContentPart: part, CommentCount: commentsForCommentedContent.Count(), PendingCount: commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count()))
+            );
         }
 
         protected override DriverResult Editor(CommentsPart part, dynamic shapeHelper) {
