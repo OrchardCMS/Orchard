@@ -57,15 +57,15 @@ namespace Orchard.Email.Rules {
 
         public void Validating(dynamic context) {
             if (context.FormName == "ActionEmail") {
-                if (context.ValueProdiver.GetValue("Recipient").AttemptedValue == String.Empty) {
+                if (context.ValueProvider.GetValue("Recipient").AttemptedValue == String.Empty) {
                     context.ModelState.AddModelError("Recipient", T("You must select at least one recipient").Text);
                 }
 
-                if (context.ValueProdiver.GetValue("Subject").AttemptedValue == String.Empty) {
+                if (context.ValueProvider.GetValue("Subject").AttemptedValue == String.Empty) {
                     context.ModelState.AddModelError("Subject", T("You must provide a Subject").Text);
                 }
 
-                if (context.ValueProdiver.GetValue("Body").AttemptedValue == String.Empty) {
+                if (context.ValueProvider.GetValue("Body").AttemptedValue == String.Empty) {
                     context.ModelState.AddModelError("Body", T("You must provide a Body").Text);
                 }
             }
