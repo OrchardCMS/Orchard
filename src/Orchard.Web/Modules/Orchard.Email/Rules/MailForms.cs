@@ -48,11 +48,11 @@ namespace Orchard.Email.Rules {
         }
     }
 
-    public interface IFormHandler : IEventHandler {
+    public interface IFormEventHandler : IEventHandler {
         void Validating(dynamic context);
     }
 
-    public class MailFormsValitator : IFormHandler {
+    public class MailFormsValidator : IFormEventHandler {
         public Localizer T { get; set; }
 
         public void Validating(dynamic context) {
