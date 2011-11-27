@@ -12,15 +12,17 @@ namespace Orchard.Email.Services {
         }
 
         public void Sending(MessageContext context) {
-            var contentItem = _contentManager.Get(context.Recipient.Id);
-            if ( contentItem == null )
-                return;
+            if (context.Recipient != null) {
+                var contentItem = _contentManager.Get(context.Recipient.Id);
+                if (contentItem == null)
+                    return;
 
-            var recipient = contentItem.As<IUser>();
-            if ( recipient == null )
-                return;
+                var recipient = contentItem.As<IUser>();
+                if (recipient == null)
+                    return;
 
-            context.MailMessage.To.Add(recipient.Email);
+                context.MailMessage.To.Add(recipient.Email);
+            }
         }
 
         public void Sent(MessageContext context) {

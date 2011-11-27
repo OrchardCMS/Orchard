@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Events;
@@ -45,42 +44,35 @@ namespace Orchard.Email.Rules {
 
         private bool Send(dynamic context) {
             var recipient = context.Properties["Recipient"];
-            ContentItemRecord recipientRecord = null;
+            var properties = new Dictionary<string, string>(context.Properties);
 
             if (recipient == "owner") {
                 var content = context.Tokens["Content"] as IContent;
                 if (content.Has<CommonPart>()) {
-                    recipientRecord = content.As<CommonPart>().Owner.ContentItem.Record;
+                    var owner = content.As<CommonPart>().Owner.ContentItem;
+                    if (owner != null && owner.Record != null) {
+                        _messageManager.Send(owner.Record, MessageType, "email", properties);
+                    }
+                    _messageManager.Send(owner.As<IUser>().Email, MessageType, "email", properties);
                 }
             }
-
-            if (recipient == "author") {
+            else if (recipient == "author") {
                 var user = _orchardServices.WorkContext.CurrentUser;
 
                 // can be null if user is anonymous
                 if (user != null && String.IsNullOrWhiteSpace(user.Email)) {
-                    recipientRecord = user.ContentItem.Record;
+                    _messageManager.Send(user.ContentItem.Record, MessageType, "email", properties);
                 }
             }
-
-            if (recipient == "admin") {
+            else if (recipient == "admin") {
                 var username = _orchardServices.WorkContext.CurrentSite.SuperUser;
                 var user = _membershipService.GetUser(username);
 
                 // can be null if user is no super user is defined
                 if (user != null && !String.IsNullOrWhiteSpace(user.Email)) {
-                    recipientRecord = user.ContentItem.Record;
+                    _messageManager.Send(user.ContentItem.Record, MessageType, "email", properties);
                 }
             }
-
-            if (recipientRecord == null) {
-                return true;
-            }
-
-            var properties = new Dictionary<string, string>(context.Properties);
-
-            _messageManager.Send(recipientRecord, MessageType, "email", properties);
-
             return true;
         }
     }
@@ -99,13 +91,15 @@ namespace Orchard.Email.Rules {
             if (context.MessagePrepared)
                 return;
 
-            var contentItem = _contentManager.Get(context.Recipient.Id);
-            if (contentItem == null)
-                return;
+            if (context.Recipient != null) {
+                var contentItem = _contentManager.Get(context.Recipient.Id);
+                if (contentItem == null)
+                    return;
 
-            var recipient = contentItem.As<IUser>();
-            if (recipient == null)
-                return;
+                var recipient = contentItem.As<IUser>();
+                if (recipient == null)
+                    return;
+            }
 
             switch (context.Type) {
                 case MailActions.MessageType:

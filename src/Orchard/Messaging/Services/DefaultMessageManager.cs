@@ -27,35 +27,57 @@ namespace Orchard.Messaging.Services {
 
             Logger.Information("Sending message {0}", type);
             try {
-
                 var context = new MessageContext {
                     Recipient = recipient,
                     Type = type,
                     Service = service
                 };
 
-                try {
-
-                    if (properties != null) {
-                        foreach (var key in properties.Keys)
-                            context.Properties.Add(key, properties[key]);
-                    }
-
-                    _messageEventHandler.Sending(context);
-
-                    foreach (var channel in _channels) {
-                        channel.SendMessage(context);
-                    }
-
-                    _messageEventHandler.Sent(context);
-                }
-                finally {
-                    context.MailMessage.Dispose();
-                }
-
-                Logger.Information("Message {0} sent", type);
+                PrepareAndSend(type, properties, context);
             }
             catch ( Exception e ) {
+                Logger.Error(e, "An error occured while sending the message {0}", type);
+            }
+        }
+
+        private void PrepareAndSend(string type, Dictionary<string, string> properties, MessageContext context) {
+            try {
+                if (properties != null) {
+                    foreach (var key in properties.Keys)
+                        context.Properties.Add(key, properties[key]);
+                }
+
+                _messageEventHandler.Sending(context);
+
+                foreach (var channel in _channels) {
+                    channel.SendMessage(context);
+                }
+
+                _messageEventHandler.Sent(context);
+            }
+            finally {
+                context.MailMessage.Dispose();
+            }
+
+            Logger.Information("Message {0} sent", type);
+        }
+
+        public void Send(string recipientAddresses, string type, string service, Dictionary<string, string> properties = null) {
+            if (!HasChannels())
+                return;
+
+            Logger.Information("Sending message {0}", type);
+            try {
+
+                var context = new MessageContext {
+                    Type = type,
+                    Service = service
+                };
+                context.MailMessage.To.Add(recipientAddresses);
+
+                PrepareAndSend(type, properties, context);
+            }
+            catch (Exception e) {
                 Logger.Error(e, "An error occured while sending the message {0}", type);
             }
         }
