@@ -23,20 +23,17 @@ namespace Orchard.Core.Containers.Drivers {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
-        private readonly dynamic _shapeFactory;
         private readonly ISiteService _siteService;
         private readonly IFeedManager _feedManager;
 
         public ContainerPartDriver(
             IContentDefinitionManager contentDefinitionManager, 
             IOrchardServices orchardServices, 
-            IShapeFactory shapeFactory,
             ISiteService siteService,
             IFeedManager feedManager) {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _contentManager = orchardServices.ContentManager;
-            _shapeFactory = shapeFactory;
             _siteService = siteService;
             _feedManager = feedManager;
 
