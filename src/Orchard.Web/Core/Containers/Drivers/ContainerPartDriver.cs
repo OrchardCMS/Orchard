@@ -80,8 +80,6 @@ namespace Orchard.Core.Containers.Drivers {
                                         Pager: pagerShape
                                     );
                              }),
-                ContentShape("Parts_Container_Contained_Summary",
-                             () => shapeHelper.Parts_Container_Contained_Summary(ContentPart: part)),
                 ContentShape("Parts_Container_Contained_SummaryAdmin",
                              () => shapeHelper.Parts_Container_Contained_SummaryAdmin(ContentPart: part))
                 );
