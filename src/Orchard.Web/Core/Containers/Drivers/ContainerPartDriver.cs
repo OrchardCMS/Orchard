@@ -68,17 +68,20 @@ namespace Orchard.Core.Containers.Drivers {
                                                     ? pager.PageSize
                                                     : part.PageSize;
 
-                                 // var pagerShape = _shapeFactory.Pager(pager).TotalItemCount(query.Count());
+                                 var pagerShape = shapeHelper.Pager(pager).TotalItemCount(query.Count());
 
                                  var startIndex = part.Paginated ? pager.GetStartIndex() : 0;
                                  var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
 
-                                 var list = _shapeFactory.List();
-                                 list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
-                                 list.Classes.Add("content-items");
-                                 list.Classes.Add("list-items");
+                                 var listShape = shapeHelper.List();
+                                 listShape.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+                                 listShape.Classes.Add("content-items");
+                                 listShape.Classes.Add("list-items");
 
-                                 return list;
+                                 return shapeHelper.Parts_Container_Contained(
+                                        List: listShape,
+                                        Pager: pagerShape
+                                    );
                              }),
                 ContentShape("Parts_Container_Contained_Summary",
                              () => shapeHelper.Parts_Container_Contained_Summary(ContentPart: part)),
