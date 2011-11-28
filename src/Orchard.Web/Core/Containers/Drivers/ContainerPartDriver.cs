@@ -46,43 +46,39 @@ namespace Orchard.Core.Containers.Drivers {
             if (!part.ItemsShown)
                 return null;
 
-            return Combined(
-                ContentShape("Parts_Container_Contained",
-                             () => {
-                                 var container = part.ContentItem;
+        return ContentShape("Parts_Container_Contained",
+                            () => {
+                                var container = part.ContentItem;
 
-                                 IContentQuery<ContentItem> query = _contentManager
-                                    .Query(VersionOptions.Published)
-                                    .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
+                                IContentQuery<ContentItem> query = _contentManager
+                                .Query(VersionOptions.Published)
+                                .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
 
-                                 var descendingOrder = part.OrderByDirection == (int)OrderByDirection.Descending;
-                                 query = query.OrderBy(part.OrderByProperty, descendingOrder);
+                                var descendingOrder = part.OrderByDirection == (int)OrderByDirection.Descending;
+                                query = query.OrderBy(part.OrderByProperty, descendingOrder);
 
-                                 _feedManager.Register(container.As<RoutePart>().Title, "rss", new RouteValueDictionary { { "containerid", container.Id } });
+                                _feedManager.Register(container.As<RoutePart>().Title, "rss", new RouteValueDictionary { { "containerid", container.Id } });
 
-                                 var pager = new Pager(_siteService.GetSiteSettings(), part.PagerParameters);
-                                 pager.PageSize = part.PagerParameters.PageSize != null && part.Paginated
-                                                    ? pager.PageSize
-                                                    : part.PageSize;
+                                var pager = new Pager(_siteService.GetSiteSettings(), part.PagerParameters);
+                                pager.PageSize = part.PagerParameters.PageSize != null && part.Paginated
+                                                ? pager.PageSize
+                                                : part.PageSize;
 
-                                 var pagerShape = shapeHelper.Pager(pager).TotalItemCount(query.Count());
+                                var pagerShape = shapeHelper.Pager(pager).TotalItemCount(query.Count());
 
-                                 var startIndex = part.Paginated ? pager.GetStartIndex() : 0;
-                                 var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
+                                var startIndex = part.Paginated ? pager.GetStartIndex() : 0;
+                                var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
 
-                                 var listShape = shapeHelper.List();
-                                 listShape.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
-                                 listShape.Classes.Add("content-items");
-                                 listShape.Classes.Add("list-items");
+                                var listShape = shapeHelper.List();
+                                listShape.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+                                listShape.Classes.Add("content-items");
+                                listShape.Classes.Add("list-items");
 
-                                 return shapeHelper.Parts_Container_Contained(
-                                        List: listShape,
-                                        Pager: pagerShape
-                                    );
-                             }),
-                ContentShape("Parts_Container_Contained_SummaryAdmin",
-                             () => shapeHelper.Parts_Container_Contained_SummaryAdmin(ContentPart: part))
-                );
+                                return shapeHelper.Parts_Container_Contained(
+                                    List: listShape,
+                                    Pager: pagerShape
+                                );
+                            });
         }
 
         protected override DriverResult Editor(ContainerPart part, dynamic shapeHelper) {
