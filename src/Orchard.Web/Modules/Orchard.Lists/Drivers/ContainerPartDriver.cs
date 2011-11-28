@@ -7,16 +7,17 @@ using Orchard.Core.Containers.Models;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Settings;
 using Orchard.Core.Feeds;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.Lists.Drivers {
+    [OrchardSuppressDependency("Orchard.Core.Containers.Drivers.ContainerPartDriver")]
     public class ContainerPartDriver : Orchard.Core.Containers.Drivers.ContainerPartDriver {
         public ContainerPartDriver(
             IContentDefinitionManager contentDefinitionManager,
             IOrchardServices orchardServices,
             ISiteService siteService,
             IFeedManager feedManager)
-            : base(contentDefinitionManager, orchardServices, siteService, feedManager)
-        {
+            : base(contentDefinitionManager, orchardServices, siteService, feedManager) {
         }
 
         protected override DriverResult Display(ContainerPart part, string displayType, dynamic shapeHelper) {
