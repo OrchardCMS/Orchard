@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using Orchard.Collections;
 using Orchard.Indexing;
@@ -34,14 +35,12 @@ namespace Orchard.Search.Services {
             var searchBuilder = Search().Parse(searchFields, query);
 
             if (filterCulture) {
-                /* TODO: (sebros) Implementations details after Alpha
                 var culture = _cultureManager.GetSiteCulture();
 
                 // use LCID as the text representation gets analyzed by the query parser
                 searchBuilder
                     .WithField("culture", CultureInfo.GetCultureInfo(culture).LCID)
                     .AsFilter();
-                 */
             }
 
             var totalCount = searchBuilder.Count();
