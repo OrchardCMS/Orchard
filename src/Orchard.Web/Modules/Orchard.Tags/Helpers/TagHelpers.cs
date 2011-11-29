@@ -8,7 +8,7 @@ namespace Orchard.Tags.Helpers {
                 return new List<string>();
             }
             IEnumerable<string> tagNames = tags.Split(',');
-            List<string> sanitizedTagNames = new List<string>();
+            var sanitizedTagNames = new List<string>();
             foreach (var tagName in tagNames) {
                 string sanitizedTagName = tagName.Trim();
                 if (!String.IsNullOrEmpty(sanitizedTagName)) {

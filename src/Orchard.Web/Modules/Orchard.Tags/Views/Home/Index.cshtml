@@ -4,7 +4,7 @@
 @Html.UnorderedList(
     Model.Tags,
     (t, i) => Html.ActionLink(
-        Html.Encode(t.TagName),
+        t.TagName,
         "Search",
         new { tagName = t.TagName },
         new { @class = "" /* todo: (heskew) classify according to tag use */ }
