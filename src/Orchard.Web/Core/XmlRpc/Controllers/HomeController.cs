@@ -35,8 +35,21 @@ namespace Orchard.Core.XmlRpc.Controllers {
 
         private XRpcMethodResponse Dispatch(XRpcMethodCall request) {
             var context = new XmlRpcContext { ControllerContext = ControllerContext, HttpContext = HttpContext, Request = request };
-            foreach (var handler in _xmlRpcHandlers)
-                handler.Process(context);
+            try {
+                foreach (var handler in _xmlRpcHandlers) {
+                    handler.Process(context);
+                }
+            }
+            catch (OrchardCoreException e) {
+                // if a core exception is raised, report the error message, otherwise signal a 500
+                context.Response =  context.Response ?? new XRpcMethodResponse();
+
+                context.Response.Fault = new XRpcFault {
+                    Code = 0, 
+                    Message = e.LocalizedMessage.ToString()
+                };   
+            }
+
             return context.Response;
         }
     }

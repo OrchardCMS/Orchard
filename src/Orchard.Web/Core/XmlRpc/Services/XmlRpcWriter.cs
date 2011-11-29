@@ -41,10 +41,24 @@ namespace Orchard.Core.XmlRpc.Services {
         public XElement MapMethodResponse(XRpcMethodResponse rpcMethodResponse) {
             Argument.ThrowIfNull(rpcMethodResponse, "rpcMethodResponse");
 
-            return new XElement(
-                "methodResponse",
-                new XElement(
-                    "params",
+            // return a valid fault as per http://xmlrpc.scripting.com/spec.html
+            if(rpcMethodResponse.Fault != null) {
+                return new XElement("methodResponse",
+                    new XElement("fault",
+                        new XElement("value",
+                            new XElement("struct",
+                                new XElement("member",
+                                    new XElement("name", "faultCode"),
+                                    new XElement("value",
+                                        new XElement("int", rpcMethodResponse.Fault.Code))),
+                                new XElement("member",
+                                    new XElement("name", "faultString"),
+                                    new XElement("value",
+                                        new XElement("string", rpcMethodResponse.Fault.Message)))))));
+            }
+
+            return new XElement("methodResponse",
+                new XElement("params",
                     rpcMethodResponse.Params.Select(
                         p => new XElement("param", MapValue(p)))));
         }

@@ -257,8 +257,9 @@ namespace Orchard.Blogs.Services {
 
             IUser user = ValidateUser(userName, password);
             var blogPost = _blogPostService.Get(postId, VersionOptions.DraftRequired);
-            if (blogPost == null)
-                throw new ArgumentException();
+            if (blogPost == null) {
+                throw new OrchardCoreException(T("The specified Blog Post doesn't exist anymore. Please create a new Blog Post."));
+            }
 
             _authorizationService.CheckAccess(publish ? Permissions.PublishBlogPost : Permissions.EditBlogPost, user, blogPost);
 
