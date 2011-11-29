@@ -6,8 +6,8 @@ using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
+using Orchard.Localization;
 using Orchard.Mvc.Extensions;
-using Orchard.Utility.Extensions;
 using Orchard.Security;
 
 namespace Orchard.Media.Services {
@@ -27,7 +27,11 @@ namespace Orchard.Media.Services {
             _authorizationService = authorizationService;
             _mediaService = mediaService;
             _routeCollection = routeCollection;
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         public void SetCapabilities(XElement options) {
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
@@ -55,14 +59,22 @@ namespace Orchard.Media.Services {
 
             var user = _membershipService.ValidateUser(userName, password);
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMedia, user, null)) {
-                //TEMP: return appropriate access-denied response for user
-                throw new ApplicationException("Access denied");
+                throw new OrchardCoreException(T("Access denied"));
             }
 
             var name = file.Optional<string>("name");
             var bits = file.Optional<byte[]>("bits");
 
-            string publicUrl = _mediaService.UploadMediaFile(Path.GetDirectoryName(name), Path.GetFileName(name), bits, true);
+            try {
+                // delete the file if it already exists, e.g. and updated image in a blog post
+                // it's safe to delete the file as each content item gets a specific folder
+                _mediaService.DeleteFile(Path.GetDirectoryName(name), Path.GetFileName(name));
+            }
+            catch {
+                // current way to delete a file if it exists
+            }
+
+            string publicUrl = _mediaService.UploadMediaFile(Path.GetDirectoryName(name), Path.GetFileName(name), bits, false);
             return new XRpcStruct().Set("url", url.MakeAbsolute(publicUrl));
         }
     }
