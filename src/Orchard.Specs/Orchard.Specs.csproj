@@ -154,6 +154,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ContentTypes.feature</DependentUpon>
     </Compile>
+    <Compile Include="Tags.feature.cs">
+      <DependentUpon>Tags.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Hosting\ExtensionDeploymentOptions.cs" />
     <Compile Include="Hosting\MessageSink.cs" />
     <Compile Include="Hosting\HostingTraceListener.cs" />
@@ -265,6 +270,10 @@
     <None Include="ContentTypes.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ContentTypes.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Tags.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Tags.feature.cs</LastGenOutput>
     </None>
     <None Include="Lists.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

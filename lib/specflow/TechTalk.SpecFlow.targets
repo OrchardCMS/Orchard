@@ -25,7 +25,9 @@
 
   <PropertyGroup>
     <BuildDependsOn>
+      BeforeUpdateFeatureFilesInProject;
       UpdateFeatureFilesInProject;
+      AfterUpdateFeatureFilesInProject;
       $(BuildDependsOn)
     </BuildDependsOn>
     <RebuildDependsOn>
@@ -41,7 +43,7 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="UpdateFeatureFilesInProject">
+  <Target Name="UpdateFeatureFilesInProject" DependsOnTargets="BeforeUpdateFeatureFilesInProject">
     <GenerateAll
       ShowTrace="$(ShowTrace)"
 
@@ -50,9 +52,14 @@
       
       ProjectPath="$(MSBuildProjectFullPath)"
       ForceGeneration="$(ForceGeneration)"
-      VerboseOutput="$(VerboseOutput)"
-      />
-    
+      VerboseOutput="$(VerboseOutput)">
+      <Output TaskParameter="GeneratedFiles" ItemName="SpecFlowGeneratedFiles" />
+    </GenerateAll>
   </Target>
 
+  <Target Name="BeforeUpdateFeatureFilesInProject">
+  </Target>
+  
+  <Target Name="AfterUpdateFeatureFilesInProject" DependsOnTargets="UpdateFeatureFilesInProject">
+  </Target>
 </Project>
