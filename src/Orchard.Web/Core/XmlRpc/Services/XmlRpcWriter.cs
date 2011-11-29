@@ -43,18 +43,16 @@ namespace Orchard.Core.XmlRpc.Services {
 
             // return a valid fault as per http://xmlrpc.scripting.com/spec.html
             if(rpcMethodResponse.Fault != null) {
+                var members = new XRpcStruct();
+                members.Set("faultCode", rpcMethodResponse.Fault.Code);
+                members.Set("faultString", rpcMethodResponse.Fault.Message);
+
                 return new XElement("methodResponse",
                     new XElement("fault",
-                        new XElement("value",
-                            new XElement("struct",
-                                new XElement("member",
-                                    new XElement("name", "faultCode"),
-                                    new XElement("value",
-                                        new XElement("int", rpcMethodResponse.Fault.Code))),
-                                new XElement("member",
-                                    new XElement("name", "faultString"),
-                                    new XElement("value",
-                                        new XElement("string", rpcMethodResponse.Fault.Message)))))));
+                        new XElement("value", MapStruct(members))
+                    )
+                );
+                            
             }
 
             return new XElement("methodResponse",

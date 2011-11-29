@@ -41,6 +41,11 @@ namespace Orchard.Core.XmlRpc.Models {
     }
 
     public class XRpcFault {
+        public XRpcFault(int code, string message) {
+            Code = code;
+            Message = message;
+        }
+
         public string Message { get; set; }
         public int Code { get; set; }
     }

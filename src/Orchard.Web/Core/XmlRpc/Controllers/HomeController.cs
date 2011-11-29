@@ -43,11 +43,7 @@ namespace Orchard.Core.XmlRpc.Controllers {
             catch (OrchardCoreException e) {
                 // if a core exception is raised, report the error message, otherwise signal a 500
                 context.Response =  context.Response ?? new XRpcMethodResponse();
-
-                context.Response.Fault = new XRpcFault {
-                    Code = 0, 
-                    Message = e.LocalizedMessage.ToString()
-                };   
+                context.Response.Fault = new XRpcFault(0, e.LocalizedMessage.ToString());
             }
 
             return context.Response;

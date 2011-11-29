@@ -41,6 +41,25 @@ namespace Orchard.Tests.Modules.XmlRpc.Services {
 ")));
         }
 
+        [Test]
+        public void FaultShouldBeCorrectlyFormatted() {
+            var mapper = new XmlRpcWriter();
+            var response = new XRpcMethodResponse {
+                Fault = new XRpcFault(10, "foo")
+            };
+
+            var element = mapper.MapMethodResponse(response);
+
+            Assert.That(NoSpace(element.ToString()), Is.EqualTo(NoSpace(@"
+<methodResponse><fault>
+<value><struct>
+<member><name>faultCode</name><value><int>10</int></value></member>
+<member><name>faultString</name><value><string>foo</string></value></member>
+</struct></value>
+</fault></methodResponse>
+")));
+        }
+
         private static string NoSpace(string text) {
             return text.Replace(" ", "").Replace("\r", "").Replace("\n", "").Replace("\t", "");
         }
