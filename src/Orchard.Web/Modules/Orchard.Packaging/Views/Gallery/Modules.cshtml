@@ -36,7 +36,7 @@
         <button type="submit">@T("Search")</button>
     </fieldset>
 
-    if (Model.Extensions.Count() > 0) {
+    if (Model.Extensions.Any()) {
         <ul class="contentItems">
         @foreach (var item in Model.Extensions) {
             <li>
@@ -75,7 +75,7 @@
                         </div>
 
                         <div class="properties">
-                            <p>@(item.Description == null ? T("(No description").Text : item.Description)</p>
+                            <p>@(item.Description ?? T("(No description").Text)</p>
                             <ul class="pageStatus group">
                                 <li>@T("Last Updated: {0}", item.LastUpdated)</li>
                                 <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(item.Authors) ? item.Authors : T("Unknown").ToString())</li>

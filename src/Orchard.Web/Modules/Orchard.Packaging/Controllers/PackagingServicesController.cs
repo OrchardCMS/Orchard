@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using NuGet;
@@ -12,6 +11,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Modules.Services;
 using Orchard.Mvc.Extensions;
+using Orchard.Packaging.Extensions;
 using Orchard.Packaging.Services;
 using Orchard.Packaging.ViewModels;
 using Orchard.Recipes.Models;
@@ -20,7 +20,6 @@ using Orchard.Security;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 using IPackageManager = Orchard.Packaging.Services.IPackageManager;
 using PackageBuilder = Orchard.Packaging.Services.PackageBuilder;
 
@@ -32,7 +31,6 @@ namespace Orchard.Packaging.Controllers {
         private readonly IPackageManager _packageManager;
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IAppDataFolderRoot _appDataFolderRoot;
-        private readonly INotifier _notifier;
         private readonly IModuleService _moduleService;
         private readonly IRecipeHarvester _recipeHarvester;
         private readonly IRecipeManager _recipeManager;
@@ -41,18 +39,16 @@ namespace Orchard.Packaging.Controllers {
             ShellSettings shellSettings,
             IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
-            INotifier notifier,
             IAppDataFolderRoot appDataFolderRoot,
             IOrchardServices services,
             IModuleService moduleService)
-            : this(shellSettings, packageManager, packagingSourceManager, notifier, appDataFolderRoot, services, moduleService, null, null) {
+            : this(shellSettings, packageManager, packagingSourceManager, appDataFolderRoot, services, moduleService, null, null) {
         }
 
         public PackagingServicesController(
             ShellSettings shellSettings,
             IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
-            INotifier notifier,
             IAppDataFolderRoot appDataFolderRoot,
             IOrchardServices services,
             IModuleService moduleService,
@@ -61,7 +57,6 @@ namespace Orchard.Packaging.Controllers {
 
             _shellSettings = shellSettings;
             _packageManager = packageManager;
-            _notifier = notifier;
             _appDataFolderRoot = appDataFolderRoot;
             _moduleService = moduleService;
             _recipeHarvester = recipeHarvester;
@@ -103,7 +98,7 @@ namespace Orchard.Packaging.Controllers {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to add sources")))
                 return new HttpUnauthorizedResult();
 
-            var source = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
+            var source = _packagingSourceManager.GetSources().FirstOrDefault(s => s.Id == sourceId);
             if (source == null) {
                 return HttpNotFound();
             }
@@ -119,47 +114,58 @@ namespace Orchard.Packaging.Controllers {
 
                     IPackageRepository packageRepository = PackageRepositoryFactory.Default.CreateRepository(new PackageSource(source.FeedUrl, "Default"));
                     IPackage package = packageRepository.FindPackage(packageId);
-                    ExtensionDescriptor extensionDescriptor = _packageManager.GetExtensionDescriptor(package, packageInfo.ExtensionType);
+                    ExtensionDescriptor extensionDescriptor = package.GetExtensionDescriptor(packageInfo.ExtensionType);
 
                     return InstallPackageDetails(extensionDescriptor, redirectUrl);
                 }
             }
-            catch (Exception) {
-                Services.Notifier.Error(T("Package installation failed."));
-            }
+           catch (OrchardException e) {
+               Services.Notifier.Error(T("Package installation failed: {0}", e.Message));
+               return View("InstallPackageFailed");
+           }
+           catch (Exception) {
+               Services.Notifier.Error(T("Package installation failed."));
+               return View("InstallPackageFailed");
+           }   
 
-            return Redirect(redirectUrl);
+           return Redirect(redirectUrl);
         }
 
         public ActionResult InstallLocally(string redirectUrl) {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to install packages")))
                 return new HttpUnauthorizedResult();
 
-            if (Request.Files == null ||
-                Request.Files.Count == 0 ||
-                string.IsNullOrWhiteSpace(Request.Files.Get(0).FileName)) {
+            var httpPostedFileBase = Request.Files.Get(0);
+            if (httpPostedFileBase == null 
+                || Request.Files.Count == 0 
+                || string.IsNullOrWhiteSpace(httpPostedFileBase.FileName)) {
 
                 throw new OrchardException(T("Select a file to upload."));
             }
             try {
-                HttpPostedFileBase file = Request.Files.Get(0);
-                string fullFileName = Path.Combine(_appDataFolderRoot.RootFolder, Path.GetFileName(file.FileName)).Replace(Path.DirectorySeparatorChar, '/');
-                file.SaveAs(fullFileName);
-                ZipPackage package = new ZipPackage(fullFileName);
+                string fullFileName = Path.Combine(_appDataFolderRoot.RootFolder, Path.GetFileName(httpPostedFileBase.FileName)).Replace(Path.DirectorySeparatorChar, '/');
+                httpPostedFileBase.SaveAs(fullFileName);
+                var package = new ZipPackage(fullFileName);
                 PackageInfo packageInfo = _packageManager.Install(package, _appDataFolderRoot.RootFolder, HostingEnvironment.MapPath("~/"));
-                ExtensionDescriptor extensionDescriptor = _packageManager.GetExtensionDescriptor(package, packageInfo.ExtensionType);
+                ExtensionDescriptor extensionDescriptor = package.GetExtensionDescriptor(packageInfo.ExtensionType);
                 System.IO.File.Delete(fullFileName);
 
                 if (DefaultExtensionTypes.IsTheme(extensionDescriptor.ExtensionType)) {
                     Services.Notifier.Information(T("The theme has been successfully installed. It can be enabled in the \"Themes\" page accessible from the menu."));
-                } else if (DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType)) {
+                }
+                else if (DefaultExtensionTypes.IsModule(extensionDescriptor.ExtensionType)) {
                     Services.Notifier.Information(T("The module has been successfully installed."));
 
                     return InstallPackageDetails(extensionDescriptor, redirectUrl);
                 }
             }
+            catch (OrchardException e) {
+                Services.Notifier.Error(T("Package uploading and installation failed: ", e.Message));
+                return View("InstallPackageFailed");
+            }
             catch (Exception) {
                 Services.Notifier.Error(T("Package uploading and installation failed."));
+                return View("InstallPackageFailed");
             }
 
             return Redirect(redirectUrl);

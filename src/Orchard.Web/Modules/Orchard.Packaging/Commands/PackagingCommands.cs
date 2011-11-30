@@ -64,6 +64,9 @@ namespace Orchard.Packaging.Commands {
             try {
                 _packageManager.Install(packageId, Version, Path.GetFullPath(location), ApplicationPath);
             }
+            catch (OrchardException e) {
+                Context.Output.WriteLine(T("Could not install the package: {0}", e.Message));
+            }
             catch(Exception e) {
                 // Exceptions area thrown by NuGet as error messages
                 Context.Output.WriteLine(HttpUtility.HtmlDecode(T("Could not install the package: {0}", e.Message).Text));

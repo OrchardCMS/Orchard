@@ -1,4 +1,8 @@
-﻿using NuGet;
+﻿using System;
+using System.IO;
+using System.Linq;
+using NuGet;
+using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Packaging.Models;
 
@@ -40,6 +44,28 @@ namespace Orchard.Packaging.Extensions {
             return isTheme ?
                 packageId.Substring(Services.PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Theme).Length) :
                 packageId.Substring(Services.PackagingSourceManager.GetExtensionPrefix(DefaultExtensionTypes.Module).Length);
+        }
+
+
+        public static ExtensionDescriptor GetExtensionDescriptor(this IPackage package, string extensionType) {
+            IPackageFile packageFile = package.GetFiles().FirstOrDefault(file => {
+                var fileName = Path.GetFileName(file.Path);
+                return fileName != null && fileName.Equals(
+                    DefaultExtensionTypes.IsModule(extensionType) ? "module.txt" : "theme.txt",
+                    StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (packageFile != null) {
+                var directoryName = Path.GetDirectoryName(packageFile.Path);
+                if (directoryName != null) {
+                    string extensionId = Path.GetFileName(directoryName.TrimEnd('/', '\\'));
+                    using (var streamReader = new StreamReader(packageFile.GetStream())) {
+                        return ExtensionHarvester.GetDescriptorForExtension("", extensionId, extensionType, streamReader.ReadToEnd());
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
