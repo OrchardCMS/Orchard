@@ -941,6 +941,10 @@ table.items td .add
 .contentItems .properties {
     float:left;
 }
+.contentItems .properties .contentType {
+    display: inline;
+    color: #333;
+}
 .contentItems h3 {
     padding-top:0;
 }
