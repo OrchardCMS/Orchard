@@ -308,7 +308,9 @@
     <Content Include="Settings\Views\Admin\Index.cshtml" />
     <Content Include="Settings\Views\Admin\Culture.cshtml" />
     <Content Include="Contents\Views\Content.Edit.cshtml" />
-    <Content Include="Routable\Placement.info" />
+    <Content Include="Routable\Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Settings\Placement.info" />
     <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.cshtml" />
     <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.cshtml" />
