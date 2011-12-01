@@ -33,7 +33,7 @@ namespace Orchard.Comments.Rules {
         /// </summary>
         private bool Close(dynamic context) {
             var contentId = Convert.ToInt32(context.Properties["ContentId"]);
-            var content = _contentManager.Get(contentId);
+            ContentItem content = _contentManager.Get(contentId);
 
             if (content != null) {
                 var comments = content.As<CommentsPart>();
