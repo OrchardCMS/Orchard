@@ -216,9 +216,23 @@ namespace Orchard.Blogs.Services {
 
             _contentManager.Create(blogPost, VersionOptions.Draft);
 
-            var publishedUtc = content.Optional<DateTime?>("dateCreated");
+            // try to get the UTC timezone by default
+            var publishedUtc = content.Optional<DateTime?>("date_created_gmt");
+            if (publishedUtc == null) {
+                // take the local one
+                publishedUtc = content.Optional<DateTime?>("dateCreated");
+            }
+            else {
+                // ensure it's read as a UTC time
+                publishedUtc = new DateTime(publishedUtc.Value.Ticks, DateTimeKind.Utc);
+            }
+
             if (publish && (publishedUtc == null || publishedUtc <= DateTime.UtcNow))
                 _blogPostService.Publish(blogPost);
+
+            if (publishedUtc != null) {
+                blogPost.As<CommonPart>().CreatedUtc = publishedUtc;
+            }
 
             foreach (var driver in drivers)
                 driver.Process(blogPost.Id);
@@ -281,9 +295,23 @@ namespace Orchard.Blogs.Services {
                 blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathWithSlug(blogPost.As<RoutePart>().Slug);
             }
 
-            var publishedUtc = content.Optional<DateTime?>("dateCreated");
+            // try to get the UTC timezone by default
+            var publishedUtc = content.Optional<DateTime?>("date_created_gmt");
+            if (publishedUtc == null) {
+                // take the local one
+                publishedUtc = content.Optional<DateTime?>("dateCreated");
+            }
+            else {
+                // ensure it's read as a UTC time
+                publishedUtc = new DateTime(publishedUtc.Value.Ticks, DateTimeKind.Utc);
+            }
+
             if (publish && (publishedUtc == null || publishedUtc <= DateTime.UtcNow))
                 _blogPostService.Publish(blogPost);
+
+            if (publishedUtc != null) {
+                blogPost.As<CommonPart>().CreatedUtc = publishedUtc;
+            }
 
             foreach (var driver in drivers)
                 driver.Process(blogPost.Id);

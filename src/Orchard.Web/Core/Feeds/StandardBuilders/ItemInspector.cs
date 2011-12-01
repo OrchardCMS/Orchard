@@ -51,8 +51,8 @@ namespace Orchard.Core.Feeds.StandardBuilders {
 
         public DateTime? PublishedUtc {
             get {
-                if (_common != null && _common.PublishedUtc != null)
-                    return _common.PublishedUtc;
+                if (_common != null && _common.CreatedUtc != null)
+                    return _common.CreatedUtc;
                 return null;
             }
         }

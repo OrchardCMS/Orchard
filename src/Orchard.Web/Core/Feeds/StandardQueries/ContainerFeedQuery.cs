@@ -62,7 +62,7 @@ namespace Orchard.Core.Feeds.StandardQueries {
 
             var items = _contentManager.Query()
                 .Where<CommonPartRecord>(x => x.Container == container.Record)
-                .OrderByDescending(x => x.PublishedUtc)
+                .OrderByDescending(x => x.CreatedUtc)
                 .Slice(0, limit);
 
             foreach (var item in items) {
