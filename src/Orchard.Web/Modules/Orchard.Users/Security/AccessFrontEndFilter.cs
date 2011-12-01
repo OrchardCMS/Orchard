@@ -20,7 +20,8 @@ namespace Orchard.Users.Security {
             var isAuthPage = (filterContext.ActionDescriptor.ActionName == "LogOn"
                               || filterContext.ActionDescriptor.ActionName == "ChangePassword"
                               || filterContext.ActionDescriptor.ActionName == "AccessDenied"
-                              || filterContext.ActionDescriptor.ActionName == "Register")
+                              || filterContext.ActionDescriptor.ActionName == "Register"
+                              || filterContext.ActionDescriptor.ActionName == "RequestLostPassword")
                              && filterContext.ActionDescriptor.ControllerDescriptor.ControllerName == "Account";
 
             if (!AdminFilter.IsApplied(filterContext.RequestContext) && !isAuthPage && !_authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Can't access this website"))) {
