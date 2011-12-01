@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -6,6 +7,7 @@ using System.Xml.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds.Models;
+using Orchard.Services;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Feeds.StandardBuilders {
@@ -13,10 +15,15 @@ namespace Orchard.Core.Feeds.StandardBuilders {
     public class CorePartsFeedItemBuilder : IFeedItemBuilder {
         private readonly IContentManager _contentManager;
         private readonly RouteCollection _routes;
+        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
-        public CorePartsFeedItemBuilder(IContentManager contentManager, RouteCollection routes) {
+        public CorePartsFeedItemBuilder(
+            IContentManager contentManager, 
+            RouteCollection routes,
+            IEnumerable<IHtmlFilter> htmlFilters) {
             _contentManager = contentManager;
             _routes = routes;
+            _htmlFilters = htmlFilters;
         }
 
         public void Populate(FeedContext context) {
@@ -24,7 +31,8 @@ namespace Orchard.Core.Feeds.StandardBuilders {
 
                 var inspector = new ItemInspector(
                     feedItem.Item,
-                    _contentManager.GetItemMetadata(feedItem.Item));
+                    _contentManager.GetItemMetadata(feedItem.Item), 
+                    _htmlFilters);
 
 
                 // TODO: author
