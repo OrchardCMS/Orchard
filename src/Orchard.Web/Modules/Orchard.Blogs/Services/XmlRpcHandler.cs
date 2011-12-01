@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
@@ -207,7 +208,7 @@ namespace Orchard.Blogs.Services {
 
             //RoutePart
             if (blogPost.Is<RoutePart>()) {
-                blogPost.As<RoutePart>().Title = title;
+                blogPost.As<RoutePart>().Title = HttpUtility.HtmlDecode(title);
                 blogPost.As<RoutePart>().Slug = slug;
                 _routableService.FillSlugFromTitle(blogPost.As<RoutePart>());
                 blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathWithSlug(blogPost.As<RoutePart>().Slug);
@@ -274,7 +275,7 @@ namespace Orchard.Blogs.Services {
 
             //RoutePart
             if (blogPost.Is<RoutePart>()) {
-                blogPost.As<RoutePart>().Title = title;
+                blogPost.As<RoutePart>().Title = HttpUtility.HtmlDecode(title);
                 blogPost.As<RoutePart>().Slug = slug;
                 _routableService.FillSlugFromTitle(blogPost.As<RoutePart>());
                 blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathWithSlug(blogPost.As<RoutePart>().Slug);
@@ -331,7 +332,7 @@ namespace Orchard.Blogs.Services {
 
             var blogStruct = new XRpcStruct()
                 .Set("postid", blogPostPart.Id)
-                .Set("title", blogPostPart.Title)
+                .Set("title", HttpUtility.HtmlEncode(blogPostPart.Title))
                 .Set("wp_slug", blogPostPart.Slug)
                 .Set("description", blogPostPart.Text)
                 .Set("link", url)
