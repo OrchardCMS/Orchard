@@ -71,7 +71,7 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
 
-            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
+            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().As<ICriticalErrorProvider>().SingleInstance();
             {
                 builder.RegisterType<ShellSettingsManager>().As<IShellSettingsManager>().SingleInstance();
 

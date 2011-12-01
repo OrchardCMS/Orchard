@@ -16,7 +16,10 @@ namespace Orchard.Environment {
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IAssemblyLoader _assemblyLoader;
 
-        public DefaultBuildManager(IVirtualPathProvider virtualPathProvider, IAssemblyLoader assemblyLoader) {
+        public DefaultBuildManager(
+            IVirtualPathProvider virtualPathProvider, 
+            IAssemblyLoader assemblyLoader) {
+
             _virtualPathProvider = virtualPathProvider;
             _assemblyLoader = assemblyLoader;
         }
@@ -39,7 +42,13 @@ namespace Orchard.Environment {
 
 
         public Assembly GetCompiledAssembly(string virtualPath) {
-            return BuildManager.GetCompiledAssembly(virtualPath);
+            try {
+                return BuildManager.GetCompiledAssembly(virtualPath);    
+            }
+            catch {
+                return null;
+            }
+
         }
     }
 }

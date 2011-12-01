@@ -218,6 +218,7 @@
     <Compile Include="Environment\Features\FeatureManager.cs" />
     <Compile Include="Environment\IAssemblyLoader.cs" />
     <Compile Include="Environment\HostComponentsConfigModule.cs" />
+    <Compile Include="Environment\Extensions\ICriticalErrorProvider.cs" />
     <Compile Include="Environment\IOrchardFrameworkAssemblies.cs" />
     <Compile Include="Environment\ViewsBackgroundCompilation.cs" />
     <Compile Include="Environment\Warmup\WarmupUtility.cs" />

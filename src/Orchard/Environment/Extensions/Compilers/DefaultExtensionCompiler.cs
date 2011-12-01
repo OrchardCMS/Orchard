@@ -19,19 +19,22 @@ namespace Orchard.Environment.Extensions.Compilers {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IAssemblyLoader _assemblyLoader;
+        private readonly IOrchardHost _orchardHost;
 
         public DefaultExtensionCompiler(
             IVirtualPathProvider virtualPathProvider,
             IProjectFileParser projectFileParser,
             IDependenciesFolder dependenciesFolder,
             IEnumerable<IExtensionLoader> loaders,
-            IAssemblyLoader assemblyLoader) {
+            IAssemblyLoader assemblyLoader,
+            IOrchardHost orchardHost) {
 
             _virtualPathProvider = virtualPathProvider;
             _projectFileParser = projectFileParser;
             _dependenciesFolder = dependenciesFolder;
             _loaders = loaders;
             _assemblyLoader = assemblyLoader;
+            _orchardHost = orchardHost;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -88,14 +91,16 @@ namespace Orchard.Environment.Extensions.Compilers {
                         }
                         else {
                             Logger.Error("Assembly reference '{0}' for project '{1}' cannot be loaded", assemblyReference.FullName, context.VirtualPath);
-                            throw new OrchardCoreException(T(
+                            _orchardHost.RegisterErrorMessage(T(
                                 "The assembly reference '{0}' could not be loaded.\r\n\r\n" +
                                 "There are generally a few ways to solve this issue:\r\n" +
-                                "1. Remove the assembly reference from the project file if it's not needed.\r\n" +
-                                "2. Ensure the assembly reference is present in the 'bin' directory of the module.\r\n" +
-                                "3. Ensure the assembly reference is present in the 'bin' directory of the application.\r\n" +
-                                "4. Specify the strong name of the assembly (name, version, culture, publickey) if the assembly is present in the GAC.",
+                                "1. Install any dependent module.\r\n" +
+                                "2. Remove the assembly reference from the project file if it's not needed.\r\n" +
+                                "3. Ensure the assembly reference is present in the 'bin' directory of the module.\r\n" +
+                                "4. Ensure the assembly reference is present in the 'bin' directory of the application.\r\n" +
+                                "5. Specify the strong name of the assembly (name, version, culture, publickey) if the assembly is present in the GAC.",
                                 assemblyReference.FullName));
+                            throw new OrchardCoreException(T("Assembly reference '{0}' for project '{1}' cannot be loaded", assemblyReference.FullName, context.VirtualPath));
                         }
                     }
                 }

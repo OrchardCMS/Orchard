@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
+using Orchard.Localization;
 
 namespace Orchard.Environment {
     public interface IOrchardHost {
@@ -24,6 +24,11 @@ namespace Orchard.Environment {
         /// Called each time a request ends to deterministically commit and dispose outstanding activity
         /// </summary>
         void EndRequest();
+
+        /// <summary>
+        /// Called by any to notice the system of a critical issue at the system level, e.g. incorrect extensions
+        /// </summary>
+        void RegisterErrorMessage(LocalizedString message);
 
         ShellContext GetShellContext(ShellSettings shellSettings);
 

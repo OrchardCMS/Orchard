@@ -1,6 +1,7 @@
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Collections.Generic;
-using System.Transactions;
+
 using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -13,7 +14,7 @@ using Orchard.Logging;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
-    public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
+    public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler, ICriticalErrorProvider {
         private readonly IHostLocalRestart _hostLocalRestart;
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContextFactory _shellContextFactory;
@@ -22,6 +23,7 @@ namespace Orchard.Environment {
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
         private readonly IExtensionMonitoringCoordinator _extensionMonitoringCoordinator;
         private readonly ICacheManager _cacheManager;
+        private readonly ConcurrentBag<LocalizedString> _errorMessages;   
         private readonly object _syncLock = new object();
 
         private IEnumerable<ShellContext> _shellContexts;
@@ -45,6 +47,7 @@ namespace Orchard.Environment {
             _cacheManager = cacheManager;
             _hostLocalRestart = hostLocalRestart;
             _tenantsToRestart = Enumerable.Empty<ShellSettings>();
+            _errorMessages = new ConcurrentBag<LocalizedString>();
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -55,6 +58,12 @@ namespace Orchard.Environment {
 
         public IList<ShellContext> Current {
             get { return BuildCurrent().ToReadOnlyCollection(); }
+        }
+
+        public void RegisterErrorMessage(LocalizedString message) {
+            if (_errorMessages != null && _errorMessages.All(m => m.TextHint != message.TextHint)) {
+                _errorMessages.Add(message);
+            }
         }
 
         public ShellContext GetShellContext(ShellSettings shellSettings) {
@@ -124,7 +133,7 @@ namespace Orchard.Environment {
             Logger.Information("Start creation of shells");
 
             // is there any tenant right now ?
-            var allSettings = _shellSettingsManager.LoadSettings();
+            var allSettings = _shellSettingsManager.LoadSettings().ToArray();
 
             // load all tenants, and activate their shell
             if (allSettings.Any()) {
@@ -261,12 +270,12 @@ namespace Orchard.Environment {
         /// </summary>
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor, string tenant) {
             lock (_syncLock) {
-                var context = _shellContexts.Where(x => x.Settings.Name == tenant).FirstOrDefault();
+                var context = _shellContexts.FirstOrDefault(x => x.Settings.Name == tenant);
                 
                 // some shells might need to be started, e.g. created by command line
                 if(context == null) {
                     StartUpdatedShells();
-                    context = _shellContexts.Where(x => x.Settings.Name == tenant).First();
+                    context = _shellContexts.First(x => x.Settings.Name == tenant);
                 }
 
                 // don't update the settings themselves here
@@ -276,6 +285,10 @@ namespace Orchard.Environment {
 
                 _tenantsToRestart = _tenantsToRestart.Union(new[] { context.Settings });
             }
+        }
+
+        public IEnumerable<LocalizedString> GetErrors() {
+            return _errorMessages;
         }
     }
 }
