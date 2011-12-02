@@ -18,6 +18,8 @@ namespace Orchard.Core.Feeds.StandardBuilders {
         private readonly RoutePart _routable;
         private readonly BodyPart _body;
 
+        public ItemInspector(IContent item, ContentItemMetadata metadata) : this(item, metadata, Enumerable.Empty<IHtmlFilter>()) {}
+
         public ItemInspector(IContent item, ContentItemMetadata metadata, IEnumerable<IHtmlFilter> htmlFilters) {
             _item = item;
             _metadata = metadata;

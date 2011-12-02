@@ -30,8 +30,8 @@ namespace Orchard.Comments.Feeds {
                 var commentedOn = _contentManager.Get(feedItem.Item.Record.CommentedOn);
                 var commentedOnInspector = new ItemInspector(
                     commentedOn,
-                    _contentManager.GetItemMetadata(commentedOn),
-                    Enumerable.Empty<IHtmlFilter>());
+                    _contentManager.GetItemMetadata(commentedOn)
+                );
 
                 var title = T("Comment on {0} by {1}", commentedOnInspector.Title, comment.Record.Author);
 
