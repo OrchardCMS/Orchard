@@ -241,10 +241,8 @@ namespace Orchard.ContentTypes.Services {
             name = name.Trim();
 
             // don't allow non A-Z chars as first letter, as they are not allowed in prefixes
-            if(name.Length > 0) {
-                if (!IsLetter(name[0])) {
-                    name = name.Substring(1);
-                }
+            while(name.Length > 0 && !IsLetter(name[0])) {
+                name = name.Substring(1);
             }
 
             if (name.Length > 128)
