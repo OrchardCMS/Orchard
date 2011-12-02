@@ -144,7 +144,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Orchard.Startup\Orchard.WarmupStarter.csproj">
+    <ProjectReference Include="..\Orchard.WarmupStarter\Orchard.WarmupStarter.csproj">
       <Project>{5C0D5249-AEF5-4BB6-8F5F-057B91AC2D7A}</Project>
       <Name>Orchard.WarmupStarter</Name>
     </ProjectReference>

@@ -112,7 +112,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ImportExport", "Orc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Warmup", "Orchard.Web\Modules\Orchard.WarmUp\Orchard.Warmup.csproj", "{9CD5C81F-5828-4384-8474-2E2BE71D5EDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.WarmupStarter", "Orchard.Startup\Orchard.WarmupStarter.csproj", "{5C0D5249-AEF5-4BB6-8F5F-057B91AC2D7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.WarmupStarter", "Orchard.WarmupStarter\Orchard.WarmupStarter.csproj", "{5C0D5249-AEF5-4BB6-8F5F-057B91AC2D7A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tokens", "Orchard.Web\Modules\Orchard.Tokens\Orchard.Tokens.csproj", "{6F759635-13D7-4E94-BCC9-80445D63F117}"
 EndProject
