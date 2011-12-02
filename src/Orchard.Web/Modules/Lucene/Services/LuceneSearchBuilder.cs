@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Lucene.Models;
 using Lucene.Net.Index;
@@ -166,7 +167,9 @@ namespace Lucene.Services {
                 return;
             }
 
-            if (_boost != 0) {
+            // comparing floating-point numbers using an epsilon value
+            const double epsilon = 0.001;
+            if (Math.Abs(_boost - 0) > epsilon) {
                 _query.SetBoost(_boost);
             }
 
@@ -312,7 +315,7 @@ namespace Lucene.Services {
                 Logger.Debug("Searching: {0}", query.ToString());
                 searcher.Search(query, collector);
 
-                var results = collector.TopDocs().scoreDocs
+                var results = collector.TopDocs().ScoreDocs
                     .Skip(_skip)
                     .Select(scoreDoc => new LuceneSearchHit(searcher.Doc(scoreDoc.doc), scoreDoc.score))
                     .ToList();
@@ -342,8 +345,8 @@ namespace Lucene.Services {
 
             try {
                 var hits = searcher.Search(query, Int16.MaxValue);
-                Logger.Information("Search results: {0}", hits.scoreDocs.Length);
-                var length = hits.scoreDocs.Length;
+                Logger.Information("Search results: {0}", hits.ScoreDocs.Length);
+                var length = hits.ScoreDocs.Length;
                 return Math.Min(length - _skip, _count);
             }
             finally {
@@ -353,13 +356,13 @@ namespace Lucene.Services {
         }
 
         public ISearchHit Get(int documentId) {
-            var query = new TermQuery(new Term("id", documentId.ToString()));
+            var query = new TermQuery(new Term("id", documentId.ToString(CultureInfo.InvariantCulture)));
 
             var searcher = new IndexSearcher(_directory, true);
             try {
                 var hits = searcher.Search(query, 1);
-                Logger.Information("Search results: {0}", hits.scoreDocs.Length);
-                return hits.scoreDocs.Length > 0 ? new LuceneSearchHit(searcher.Doc(hits.scoreDocs[0].doc), hits.scoreDocs[0].score) : null;
+                Logger.Information("Search results: {0}", hits.ScoreDocs.Length);
+                return hits.ScoreDocs.Length > 0 ? new LuceneSearchHit(searcher.Doc(hits.ScoreDocs[0].doc), hits.ScoreDocs[0].score) : null;
             }
             finally {
                 searcher.Close();
