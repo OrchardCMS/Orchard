@@ -13,11 +13,11 @@
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersCanRegister)">@T("Users can create new accounts on the site")</label>
     </div>
     <div>
-        <input type="checkbox" class="check-box" id="@Html.FieldIdFor(m => m.EnableLostPassword)" name="@Html.FieldNameFor(m => m.EnableLostPassword)" @(emailEnabled ? "" : "disabled=\"disabled\"")/>
+        <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnableLostPassword)" name="@Html.FieldNameFor(m => m.EnableLostPassword)" @(Model.EnableLostPassword ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.EnableLostPassword)">@T("Display a link to enable users to reset their password")</label>
     </div>
     <div>
-        <input type="checkbox" class="check-box" id="@Html.FieldIdFor(m => m.UsersMustValidateEmail)" name="@Html.FieldNameFor(m => m.UsersMustValidateEmail)" @(emailEnabled ? "" : "disabled=\"disabled\"")/>  
+        <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.UsersMustValidateEmail)" name="@Html.FieldNameFor(m => m.UsersMustValidateEmail)" @(Model.UsersMustValidateEmail ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>  
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersMustValidateEmail)">@T("Users must verify their email address")</label>
     </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.UsersMustValidateEmail)">
