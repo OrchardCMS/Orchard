@@ -108,14 +108,13 @@ namespace Orchard.Azure {
             if ( !prefix.EndsWith("/") )
                 prefix += "/";
 
-            using ( new HttpContextWeaver() ) {
-                foreach (var blobItem in BlobClient.ListBlobsWithPrefix(prefix).OfType<CloudBlockBlob>()) {
-                    // ignore directory entries
-                    if(blobItem.Uri.AbsoluteUri.EndsWith(FolderEntry))
-                        continue;
-
-                    yield return new AzureBlobFileStorage(blobItem, _absoluteRoot);
-                }
+            using (new HttpContextWeaver()) {
+                return BlobClient
+                        .ListBlobsWithPrefix(prefix)
+                        .OfType<CloudBlockBlob>()
+                        .Where(blobItem => !blobItem.Uri.AbsoluteUri.EndsWith(FolderEntry))
+                        .Select(blobItem => new AzureBlobFileStorage(blobItem, _absoluteRoot))
+                        .ToArray();
             }
         }
 

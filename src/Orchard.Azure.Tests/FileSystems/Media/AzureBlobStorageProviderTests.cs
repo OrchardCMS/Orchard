@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Web;
 using NUnit.Framework;
 using Orchard.Azure.FileSystems.Media;
 using Microsoft.WindowsAzure;
@@ -242,6 +243,19 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
             }
             
             Assert.That(content, Is.EqualTo("fo"));
+        }
+
+        [Test]
+        public void HttpContextWeaverShouldBeDisposed()
+        {
+            _azureBlobStorageProvider.CreateFile("foo1.txt");
+            _azureBlobStorageProvider.CreateFile("foo2.txt");
+            _azureBlobStorageProvider.CreateFile("foo3.txt");
+
+            foreach(var f in _azureBlobStorageProvider.ListFiles(""))
+            {
+                Assert.That(HttpContext.Current, Is.Null);
+            };
         }
     }
 }
