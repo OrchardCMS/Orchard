@@ -15,7 +15,7 @@ using Orchard.Validation;
 
 namespace Orchard.Media.Services {
     /// <summary>
-    /// The MediaService class provides the services o manipulate media entities (files / folders).
+    /// The MediaService class provides the services to manipulate media entities (files / folders).
     /// Among other things it provides filtering functionalities on file types.
     /// The actual manipulation of the files is, however, delegated to the IStorageProvider.
     /// </summary>
@@ -251,8 +251,16 @@ namespace Orchard.Media.Services {
 
                 // must be in the whitelist
                 MediaSettingsPart mediaSettings = currentSite.As<MediaSettingsPart>();
-                if (mediaSettings == null ||
-                    !mediaSettings.UploadAllowedFileTypeWhitelist.ToUpperInvariant().Split(' ').Contains(extension.ToUpperInvariant())) {
+                
+                if (mediaSettings == null) {
+                    return false;
+                } 
+                
+                if(String.IsNullOrWhiteSpace(mediaSettings.UploadAllowedFileTypeWhitelist)) {
+                    return true;
+                } 
+
+                if(!mediaSettings.UploadAllowedFileTypeWhitelist.ToUpperInvariant().Split(' ').Contains(extension.ToUpperInvariant())) {
                     return false;
                 }
             }

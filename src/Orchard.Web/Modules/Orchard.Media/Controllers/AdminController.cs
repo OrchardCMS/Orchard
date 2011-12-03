@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
+using Orchard.ContentManagement;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -172,7 +173,21 @@ namespace Orchard.Media.Controllers {
         }
 
         public ActionResult Add(string folderName, string mediaPath) {
-            var model = new MediaItemAddViewModel { FolderName = folderName, MediaPath = mediaPath };
+            if (!Services.Authorizer.Authorize(Permissions.ManageMedia, T("Couldn't upload media file")))
+                return new HttpUnauthorizedResult();
+            
+            var currentSite = Services.WorkContext.CurrentSite;
+
+            var model = new MediaItemAddViewModel {
+                FolderName = folderName, 
+                MediaPath = mediaPath,
+                AllowedExtensions = currentSite.As<MediaSettingsPart>().UploadAllowedFileTypeWhitelist
+            };
+
+            if(currentSite.SuperUser.Equals(Services.WorkContext.CurrentUser.UserName, StringComparison.Ordinal)) {
+                model.AllowedExtensions = String.Empty;
+            }
+
             return View(model);
         }
 
@@ -196,8 +211,8 @@ namespace Orchard.Media.Controllers {
                 try {
                     _mediaService.UploadMediaFile(viewModel.MediaPath, Request.Files[fileName], viewModel.ExtractZip);
                 }
-                catch (ArgumentException) {
-                    Services.Notifier.Error(T("Uploading media file failed:"));
+                catch (ArgumentException e) {
+                    Services.Notifier.Error(T("Uploading media file failed: {0}", e.Message));
                     return View(viewModel);   
                 }
             }
