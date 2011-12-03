@@ -67,9 +67,9 @@ namespace Orchard.Comments {
         }
 
         public int UpdateFrom2() {
-            //SchemaBuilder.AlterTable("CommentPartRecord", table => table
-            //    .AddColumn<int>("CommentsPartRecord_id")
-            //    );
+            SchemaBuilder.AlterTable("CommentPartRecord", table => table
+                .AddColumn<int>("CommentsPartRecord_id")
+                );
 
             // populate the CommentsPartRecord.Comments property
             foreach(var comment in _commentService.GetComments().List()) {
