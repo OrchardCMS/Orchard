@@ -255,7 +255,24 @@ namespace Orchard.Azure.Tests.FileSystems.Media {
             foreach(var f in _azureBlobStorageProvider.ListFiles(""))
             {
                 Assert.That(HttpContext.Current, Is.Null);
-            };
+            }
         }
+
+        [Test]
+        public void MimeTypeShouldBeSet() {
+            _azureBlobStorageProvider.CreateFile("foo1.txt");
+            var file = _azureBlobStorageProvider.Container.GetBlockBlobReference("default/foo1.txt");
+            file.FetchAttributes();
+            Assert.That(file.Properties.ContentType, Is.EqualTo("text/plain"));
+        }
+
+        [Test]
+        public void UnknownMimeTypeShouldBeAssigned() {
+            _azureBlobStorageProvider.CreateFile("foo1.xyz");
+            var file = _azureBlobStorageProvider.Container.GetBlockBlobReference("default/foo1.xyz");
+            file.FetchAttributes();
+            Assert.That(file.Properties.ContentType, Is.EqualTo("application/unknown"));
+        }
+
     }
 }

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
+using System.Xml.XPath;
+using Microsoft.Win32;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.StorageClient;
@@ -268,7 +271,12 @@ namespace Orchard.Azure {
             }
 
             var blob = Container.GetBlockBlobReference(String.Concat(_root, path));
-            blob.OpenWrite().Dispose(); // force file creation
+            var contentType = GetContentType(path);
+            if (!String.IsNullOrWhiteSpace(contentType)) {
+                blob.Properties.ContentType = contentType;
+            }
+
+            blob.UploadByteArray(new byte[0]);
             return new AzureBlobFileStorage(blob, _absoluteRoot);
         }
 
@@ -279,6 +287,39 @@ namespace Orchard.Azure {
                 Container.EnsureBlobExists(String.Concat(_root, path));
                 return Container.GetBlockBlobReference(String.Concat(_root, path)).Uri.ToString();
             }
+        }
+
+        /// <summary>
+        /// Returns the mime-type of the specified file path, looking into IIS configuration and the Registry
+        /// </summary>
+        private string GetContentType(string path) {
+            string extension = Path.GetExtension(path);
+            if (String.IsNullOrWhiteSpace(extension)) {
+                return "application/unknown";
+            }
+
+            string applicationHost = System.Environment.ExpandEnvironmentVariables(@"%windir%\system32\inetsrv\config\applicationHost.config");
+            if (File.Exists(applicationHost)) {
+                var xdoc = XDocument.Load(applicationHost);
+                var mimeMap = xdoc.XPathSelectElements("//staticContent/mimeMap[@fileExtension='" + extension + "']").FirstOrDefault();
+                if(mimeMap != null) {
+                    var mimeType = mimeMap.Attribute("mimeType");
+                    if(mimeType != null) {
+                        return mimeType.Value;
+                    }
+                }
+            }         
+
+            // search into the registry
+            RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(extension.ToLower());
+            if (regKey != null) {
+                var contentType = regKey.GetValue("Content Type");
+                if (contentType != null) {
+                    return contentType.ToString();
+                }
+            }
+
+            return "application/unknown";
         }
 
         private class AzureBlobFileStorage : IStorageFile {
