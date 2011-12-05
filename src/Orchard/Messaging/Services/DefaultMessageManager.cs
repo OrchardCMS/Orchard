@@ -22,13 +22,17 @@ namespace Orchard.Messaging.Services {
         }
 
         public void Send(ContentItemRecord recipient, string type, string service, Dictionary<string, string> properties = null) {
+            Send(new [] { recipient }, service, type, properties);    
+        }
+
+        public void Send(IEnumerable<ContentItemRecord> recipients, string type, string service, Dictionary<string, string> properties = null) {
             if ( !HasChannels() )
                 return;
 
             Logger.Information("Sending message {0}", type);
             try {
                 var context = new MessageContext {
-                    Recipient = recipient,
+                    Recipients = recipients,
                     Type = type,
                     Service = service
                 };
@@ -38,6 +42,34 @@ namespace Orchard.Messaging.Services {
             catch ( Exception e ) {
                 Logger.Error(e, "An error occured while sending the message {0}", type);
             }
+        }
+
+        public void Send(IEnumerable<string> recipientAddresses, string type, string service, Dictionary<string, string> properties = null) {
+            if (!HasChannels())
+                return;
+
+            Logger.Information("Sending message {0}", type);
+            try {
+
+                var context = new MessageContext {
+                    Type = type,
+                    Service = service,
+                    Addresses = recipientAddresses
+                };
+
+                PrepareAndSend(type, properties, context);
+            }
+            catch (Exception e) {
+                Logger.Error(e, "An error occured while sending the message {0}", type);
+            }
+        }
+
+        public bool HasChannels() {
+            return _channels.Any();
+        }
+
+        public IEnumerable<string> GetAvailableChannelServices() {
+            return _channels.SelectMany(c => c.GetAvailableServices());
         }
 
         private void PrepareAndSend(string type, Dictionary<string, string> properties, MessageContext context) {
@@ -60,34 +92,6 @@ namespace Orchard.Messaging.Services {
             }
 
             Logger.Information("Message {0} sent", type);
-        }
-
-        public void Send(string recipientAddresses, string type, string service, Dictionary<string, string> properties = null) {
-            if (!HasChannels())
-                return;
-
-            Logger.Information("Sending message {0}", type);
-            try {
-
-                var context = new MessageContext {
-                    Type = type,
-                    Service = service
-                };
-                context.MailMessage.To.Add(recipientAddresses);
-
-                PrepareAndSend(type, properties, context);
-            }
-            catch (Exception e) {
-                Logger.Error(e, "An error occured while sending the message {0}", type);
-            }
-        }
-
-        public bool HasChannels() {
-            return _channels.Any();
-        }
-
-        public IEnumerable<string> GetAvailableChannelServices() {
-            return _channels.SelectMany(c => c.GetAvailableServices());
         }
     }
 }

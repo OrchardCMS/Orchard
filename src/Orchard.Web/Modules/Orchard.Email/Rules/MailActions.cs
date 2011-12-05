@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Events;
@@ -53,7 +55,6 @@ namespace Orchard.Email.Rules {
                     if (owner != null && owner.Record != null) {
                         _messageManager.Send(owner.Record, MessageType, "email", properties);
                     }
-                    _messageManager.Send(owner.As<IUser>().Email, MessageType, "email", properties);
                 }
             }
             else if (recipient == "author") {
@@ -91,14 +92,8 @@ namespace Orchard.Email.Rules {
             if (context.MessagePrepared)
                 return;
 
-            if (context.Recipient != null) {
-                var contentItem = _contentManager.Get(context.Recipient.Id);
-                if (contentItem == null)
-                    return;
-
-                var recipient = contentItem.As<IUser>();
-                if (recipient == null)
-                    return;
+            if (!context.Recipients.Any()) {
+                return;
             }
 
             switch (context.Type) {

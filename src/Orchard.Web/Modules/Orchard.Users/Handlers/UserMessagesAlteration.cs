@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Orchard.Localization;
 using Orchard.Messaging.Events;
 using Orchard.Messaging.Models;
@@ -23,7 +24,8 @@ namespace Orchard.Users.Handlers {
             if (context.MessagePrepared)
                 return;
 
-            var contentItem = _contentManager.Get(context.Recipient.Id);
+            // we expect a single account to be created
+            var contentItem = _contentManager.Get(context.Recipients.Single().Id);
             if ( contentItem == null )
                 return;
 

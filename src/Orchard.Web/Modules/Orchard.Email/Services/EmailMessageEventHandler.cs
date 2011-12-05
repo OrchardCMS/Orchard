@@ -12,8 +12,8 @@ namespace Orchard.Email.Services {
         }
 
         public void Sending(MessageContext context) {
-            if (context.Recipient != null) {
-                var contentItem = _contentManager.Get(context.Recipient.Id);
+            foreach(var rec in context.Recipients) {
+                var contentItem = _contentManager.Get(rec.Id);
                 if (contentItem == null)
                     return;
 
@@ -22,6 +22,10 @@ namespace Orchard.Email.Services {
                     return;
 
                 context.MailMessage.To.Add(recipient.Email);
+            }
+
+            foreach(var address in context.Addresses) {
+                context.MailMessage.To.Add(address);
             }
         }
 
