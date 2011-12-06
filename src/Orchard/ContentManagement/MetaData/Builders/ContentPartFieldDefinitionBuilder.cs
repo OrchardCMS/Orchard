@@ -14,6 +14,11 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             return this;
         }
 
+        public ContentPartFieldDefinitionBuilder WithDisplayName(string displayName) {
+            _settings[ContentPartFieldDefinition.DisplayNameKey] = displayName;
+            return this;
+        }
+
         public abstract string Name { get; }
         public abstract string FieldType { get; }
 

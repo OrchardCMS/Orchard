@@ -1,8 +1,7 @@
-﻿@using Orchard.Utility.Extensions;
-@{
-    string name = Model.Name;
+﻿@{
+    string name = Model.Field.DisplayName;
     string value = Model.Value;
 }
 @if (HasText(name) && HasText(value)) {
-<p class="text-field"><span class="name">@name.CamelFriendly():</span> <span class="value">@value</span></p>
+<p class="text-field"><span class="name">@name:</span> <span class="value">@value</span></p>
 }

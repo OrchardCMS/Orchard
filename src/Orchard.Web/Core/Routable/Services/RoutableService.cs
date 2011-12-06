@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Events;
 using Orchard.Core.Routable.Models;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Routable.Services {
     public class RoutableService : IRoutableService {
@@ -51,20 +50,6 @@ namespace Orchard.Core.Routable.Services {
             }
         }
 
-        public static string RemoveDiacritics(string slug) {
-            string stFormD = slug.Normalize(NormalizationForm.FormD);
-            var sb = new StringBuilder();
-
-            foreach (char t in stFormD) {
-                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(t);
-                if (uc != UnicodeCategory.NonSpacingMark) {
-                    sb.Append(t);
-                }
-            }
-
-            return (sb.ToString().Normalize(NormalizationForm.FormC));
-        }
-
         public void FillSlugFromTitle<TModel>(TModel model) where TModel : IRoutableAspect {
             if ((model.Slug != null && !string.IsNullOrEmpty(model.Slug.Trim())) || string.IsNullOrEmpty(model.Title))
                 return;
@@ -84,7 +69,7 @@ namespace Orchard.Core.Routable.Services {
                     slugContext.Slug = slugContext.Slug.Substring(0, 1000);
 
                 // dots are not allowed at the begin and the end of routes
-                slugContext.Slug = RemoveDiacritics(slugContext.Slug.Trim('.').ToLower());
+                slugContext.Slug = StringExtensions.RemoveDiacritics(slugContext.Slug.Trim('.').ToLower());
             }
 
             foreach (ISlugEventHandler slugEventHandler in _slugEventHandlers) {
