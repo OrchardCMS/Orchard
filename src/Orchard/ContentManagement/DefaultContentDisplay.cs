@@ -123,6 +123,9 @@ namespace Orchard.ContentManagement {
                         Path = VirtualPathUtility.AppendTrailingSlash(_virtualPathProvider.ToAppRelative(request.Path)) // get the current app-relative path, i.e. ~/my-blog/foo
                     };
 
+                    // define which location should be used if none placement is hit
+                    descriptor.DefaultPlacement = defaultLocation;
+
                     var placement = descriptor.Placement(placementContext);
                     if (placement != null) {
                         placement.Source = placementContext.Source;
