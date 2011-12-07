@@ -18,7 +18,6 @@ namespace Orchard.Core.Routable.Handlers {
         private readonly IRoutableService _routableService;
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IHomePageProvider _routableHomePageProvider;
 
         public RoutePartHandler(
             IOrchardServices services,
@@ -26,14 +25,12 @@ namespace Orchard.Core.Routable.Handlers {
             IRoutablePathConstraint routablePathConstraint,
             IRoutableService routableService,
             IContentManager contentManager,
-            IWorkContextAccessor workContextAccessor,
-            IEnumerable<IHomePageProvider> homePageProviders) {
+            IWorkContextAccessor workContextAccessor) {
             _services = services;
             _routablePathConstraint = routablePathConstraint;
             _routableService = routableService;
             _contentManager = contentManager;
             _workContextAccessor = workContextAccessor;
-            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             T = NullLocalizer.Instance;
 
             Filters.Add(StorageFilter.For(repository));
@@ -51,32 +48,6 @@ namespace Orchard.Core.Routable.Handlers {
 
             Action<PublishContentContext, RoutePart> handler = (context, route) => {
                 FinalizePath(route, context, processSlug);
-
-                if (_routableHomePageProvider == null)
-                    return;
-
-                var homePageSetting = _workContextAccessor.GetContext().CurrentSite.HomePage;
-                var currentHomePageId = !string.IsNullOrWhiteSpace(homePageSetting)
-                                            ? _routableHomePageProvider.GetHomePageId(homePageSetting)
-                                            : 0;
-
-                if (route.Id != 0 && (route.Id == currentHomePageId || route.PromoteToHomePage)) {
-
-                    if (currentHomePageId != route.Id) {
-                        // reset the path on the current home page
-                        var currentHomePage = _contentManager.Get(currentHomePageId);
-                        if (currentHomePage != null)
-                            FinalizePath(currentHomePage.As<RoutePart>(), context, processSlug);
-                        // set the new home page
-                        _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(route.ContentItem.Id);
-                    }
-
-                    // readjust the constraints of the current current home page
-                    _routablePathConstraint.RemovePath(route.Path);
-                    route.Path = "";
-                    _routableService.FixContainedPaths(route);
-                    _routablePathConstraint.AddPath(route.Path);
-                }
             };
 
             OnPublished<RoutePart>(handler);
@@ -128,11 +99,9 @@ namespace Orchard.Core.Routable.Handlers {
 
     public class RoutePartHandlerBase : ContentHandlerBase {
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IHomePageProvider _routableHomePageProvider;
 
-        public RoutePartHandlerBase(IWorkContextAccessor workContextAccessor, IEnumerable<IHomePageProvider> homePageProviders) {
+        public RoutePartHandlerBase(IWorkContextAccessor workContextAccessor) {
             _workContextAccessor = workContextAccessor;
-            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
         }
 
         public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
@@ -144,9 +113,7 @@ namespace Orchard.Core.Routable.Handlers {
             // set the display route values if it hasn't been set or only has been set by the Contents module. 
             // allows other modules to set their own display. probably not common enough to warrant some priority implementation
             if (context.Metadata.DisplayRouteValues == null || context.Metadata.DisplayRouteValues["Area"] as string == "Contents") {
-                var itemPath = routable.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)
-                    ? ""
-                    : routable.Path;
+                var itemPath = routable.Path;
 
                 context.Metadata.DisplayRouteValues = new RouteValueDictionary {
                     {"Area", "Routable"},

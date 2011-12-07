@@ -18,16 +18,13 @@ namespace Orchard.Core.Routable.Drivers {
         private readonly IOrchardServices _services;
         private readonly IRoutableService _routableService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IHomePageProvider _routableHomePageProvider;
 
         public RoutePartDriver(IOrchardServices services,
             IRoutableService routableService,
-            IEnumerable<IHomePageProvider> homePageProviders,
             IHttpContextAccessor httpContextAccessor) {
             _services = services;
             _routableService = routableService;
             _httpContextAccessor = httpContextAccessor;
-            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             T = NullLocalizer.Instance;
         }
 
@@ -71,7 +68,6 @@ namespace Orchard.Core.Routable.Drivers {
             var containerUrl = new UriBuilder(request.ToRootUrlString()) { Path = (request.ApplicationPath ?? "").TrimEnd('/') + "/" + (part.GetContainerPath() ?? "") };
             model.ContainerAbsoluteUrl = containerUrl.Uri.ToString().TrimEnd('/');
 
-            model.PromoteToHomePage = model.Id != 0 && _routableHomePageProvider != null && _services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
             return ContentShape("Parts_Routable_Edit",
                 () => shapeHelper.EditorTemplate(TemplateName: TemplateName, Model: model, Prefix: Prefix));
         }
@@ -111,22 +107,12 @@ namespace Orchard.Core.Routable.Drivers {
                 part.Path = path;
             }
 
-            var promoteToHomePage = context.Attribute(part.PartDefinition.Name, "PromoteToHomePage");
-            if (promoteToHomePage != null) {
-                part.PromoteToHomePage = Convert.ToBoolean(promoteToHomePage);
-                if (part.PromoteToHomePage && _routableHomePageProvider != null) {
-                    _services.WorkContext.CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
-                }
-            }
         }
 
         protected override void Exporting(RoutePart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Slug", part.Slug);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Path", part.Path);
-            if (_services.WorkContext.CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(part.ContentItem.Id)) {
-                context.Element(part.PartDefinition.Name).SetAttributeValue("PromoteToHomePage", "true");   
-            }
         }
     }
 }
