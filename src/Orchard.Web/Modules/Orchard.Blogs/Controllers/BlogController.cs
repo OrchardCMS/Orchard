@@ -26,7 +26,6 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly IFeedManager _feedManager;
         private readonly IWorkContextAccessor _workContextAccessor;
-        private readonly IHomePageProvider _routableHomePageProvider;
         private readonly ISiteService _siteService;
 
         public BlogController(
@@ -37,7 +36,6 @@ namespace Orchard.Blogs.Controllers {
             IFeedManager feedManager, 
             IShapeFactory shapeFactory,
             IWorkContextAccessor workContextAccessor,
-            IEnumerable<IHomePageProvider> homePageProviders,
             ISiteService siteService) {
             _services = services;
             _blogService = blogService;
@@ -46,7 +44,6 @@ namespace Orchard.Blogs.Controllers {
             _feedManager = feedManager;
             _workContextAccessor = workContextAccessor;
             _siteService = siteService;
-            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             Logger = NullLogger.Instance;
             Shape = shapeFactory;
         }

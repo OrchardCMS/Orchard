@@ -41,7 +41,7 @@ namespace Orchard.Blogs.Commands {
         public string FeedUrl { get; set; }
 
         [OrchardSwitch]
-        public string Slug { get; set; }
+        public int Id { get; set; }
 
         [OrchardSwitch]
         public string Owner { get; set; }
@@ -72,11 +72,6 @@ namespace Orchard.Blogs.Commands {
                 return;
             }
 
-            if(!IsSlugValid(Slug)) {
-                Context.Output.WriteLine(T("Invalid Slug {0} provided. Blog creation failed.", Slug));
-                return;
-            }
-
             var blog = _contentManager.New("Blog");
             blog.As<ICommonPart>().Owner = owner;
             blog.As<TitlePart>().Title = Title;
@@ -94,8 +89,8 @@ namespace Orchard.Blogs.Commands {
         }
 
         [CommandName("blog import")]
-        [CommandHelp("blog import /Slug:<slug> /FeedUrl:<feed url> /Owner:<username>\r\n\t" + "Import all items from <feed url> into the blog at the specified <slug>")]
-        [OrchardSwitches("FeedUrl,Slug,Owner")]
+        [CommandHelp("blog import /BlogId:<id> /FeedUrl:<feed url> /Owner:<username>\r\n\t" + "Import all items from <feed url> into the blog specified by <id>")]
+        [OrchardSwitches("FeedUrl,Id,Owner")]
         public void Import() {
             var owner = _membershipService.GetUser(Owner);
 
@@ -115,10 +110,10 @@ namespace Orchard.Blogs.Commands {
                 throw new OrchardException(T("An error occured while loading the feed at {0}.", FeedUrl), ex);
             }
 
-            var blog = _blogService.Get(Slug);
+            var blog = _blogService.Get(Id,VersionOptions.Latest);
 
             if ( blog == null ) {
-                Context.Output.WriteLine(T("Blog not found at specified slug: {0}", Slug));
+                Context.Output.WriteLine(T("Blog not found with specified Id: {0}", Id));
                 return;
             }
 
@@ -130,10 +125,7 @@ namespace Orchard.Blogs.Commands {
                     var post = _contentManager.New("BlogPost");
                     post.As<ICommonPart>().Owner = owner;
                     post.As<ICommonPart>().Container = blog;
-                    var slug = Slugify(postName);
-                    post.As<RoutePart>().Slug = slug;
-                    post.As<RoutePart>().Path = post.As<RoutePart>().GetPathWithSlug(slug);
-                    post.As<RoutePart>().Title = postName;
+                    post.As<TitlePart>().Title = postName;
                     post.As<BodyPart>().Text = item.Element("description").Value;
                     _contentManager.Create(post);
                 }
@@ -142,21 +134,5 @@ namespace Orchard.Blogs.Commands {
             Context.Output.WriteLine(T("Import feed completed."));
         }
 
-        private static string Slugify(string slug) {
-            var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s]+");
-
-            slug = dissallowed.Replace(slug, "-");
-            slug = slug.Trim('-');
-
-            if ( slug.Length > 1000 )
-                slug = slug.Substring(0, 1000);
-
-            return slug.ToLowerInvariant();
-        }
-
-        private static bool IsSlugValid(string slug) {
-            // see http://tools.ietf.org/html/rfc3987 for prohibited chars
-            return slug == null || String.IsNullOrEmpty(slug.Trim()) || Regex.IsMatch(slug, @"^[^/:?#\[\]@!$&'()*+,;=\s]+$");
-        }
     }
 }
