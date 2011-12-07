@@ -17,6 +17,7 @@ using System.Web.Routing;
 using Orchard.Settings;
 using Orchard.Core.Feeds;
 using Orchard.UI.Navigation;
+using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Core.Containers.Drivers {
     public class ContainerPartDriver : ContentPartDriver<ContainerPart> {
@@ -60,8 +61,9 @@ namespace Orchard.Core.Containers.Drivers {
 
                                  var descendingOrder = part.OrderByDirection == (int)OrderByDirection.Descending;
                                  query = query.OrderBy(part.OrderByProperty, descendingOrder);
-
-                                 _feedManager.Register(container.As<RoutePart>().Title, "rss", new RouteValueDictionary { { "containerid", container.Id } });
+                                 var metadata = container.ContentManager.GetItemMetadata(container);
+                                 if (metadata!=null)
+                                    _feedManager.Register(metadata.DisplayText, "rss", new RouteValueDictionary { { "containerid", container.Id } });
 
                                  var pager = new Pager(_siteService.GetSiteSettings(), part.PagerParameters);
                                  pager.PageSize = part.PagerParameters.PageSize != null && part.Paginated
