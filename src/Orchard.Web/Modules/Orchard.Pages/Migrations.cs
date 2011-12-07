@@ -10,16 +10,26 @@ namespace Orchard.Pages {
                 .WithPart("CommonPart", p => p
                     .WithSetting("DateEditorSettings.ShowDateEditor", "true"))
                 .WithPart("PublishLaterPart")
-                .WithPart("RoutePart")
+                .WithPart("TitlePart")
+                .WithPart("AutoroutePart")
                 .WithPart("BodyPart")
                 .Creatable());
 
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "true")));
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            // TODO: (PH:Autoroute) Copy routes/titles
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
+                .RemovePart("RoutePart")
+                .WithPart("TitlePart")
+                .WithPart("AutoroutePart"));
+            return 3;
         }
     }
 }
