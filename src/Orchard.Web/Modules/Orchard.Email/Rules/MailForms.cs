@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Events;
@@ -21,16 +20,46 @@ namespace Orchard.Email.Rules {
         }
 
         public void Describe(dynamic context) {
-            Func<IShapeFactory, dynamic> form = 
+            Func<IShapeFactory, dynamic> form =
                 shape => Shape.Form(
                 Id: "ActionEmail",
-                _Type: Shape.SelectList(
-                    Id: "Recipient", Name: "Recipient",
+                _Type: Shape.FieldSet(
                     Title: T("Send to"),
-                    Description: T("Select who should be the recipient of this e-mail."))
-                    .Add(new SelectListItem { Value = "owner", Text = T("Owner").Text })
-                    .Add(new SelectListItem { Value = "author", Text = T("Author").Text })
-                    .Add(new SelectListItem { Value = "admin", Text = T("Site Admin").Text }),
+                    _RecipientOwner: Shape.Radio(
+                        Id: "recipient-owner",
+                        Name: "Recipient",
+                        Value: "owner",
+                        Title: T("Owner"),
+                        Description: T("The owner of the content item in context, such as a blog post's author.")
+                    ),
+                    _RecipientAuthor: Shape.Radio(
+                        Id: "recipient-author",
+                        Name: "Recipient",
+                        Value: "author",
+                        Title: T("Author"),
+                        Description: T("The current user when this action executes.")
+                    ),
+                    _RecipientAdmin: Shape.Radio(
+                        Id: "recipient-admin",
+                        Name: "Recipient",
+                        Value: "admin",
+                        Title: T("Site Admin"),
+                        Description: T("The site administrator.")
+                    ),
+                    _RecipientOther: Shape.Radio(
+                        Id: "recipient-other",
+                        Name: "Recipient",
+                        Value: "other",
+                        Title: T("Other:")
+                    ),
+                    _OtherEmails: Shape.Textbox(
+                        Id: "recipient-other-email",
+                        Name: "RecipientOther",
+                        Title: T("E-mail"),
+                        Description: T("Specify a comma-separated list of e-mail recipients."),
+                        Classes: new[] { "large", "text", "tokenized" }
+                    )
+                ),
                 _Subject: Shape.Textbox(
                     Id: "Subject", Name: "Subject",
                     Title: T("Subject"),
@@ -67,6 +96,11 @@ namespace Orchard.Email.Rules {
 
                 if (context.ValueProvider.GetValue("Body").AttemptedValue == String.Empty) {
                     context.ModelState.AddModelError("Body", T("You must provide a Body").Text);
+                }
+
+                if (context.ValueProvider.GetValue("RecipientOther").AttemptedValue == String.Empty &&
+                    context.ValueProvider.GetValue("Recipient").AttemptedValue == "other") {
+                    context.ModelState.AddModelError("Recipient", T("You must provide an e-mail address").Text);
                 }
             }
         }
