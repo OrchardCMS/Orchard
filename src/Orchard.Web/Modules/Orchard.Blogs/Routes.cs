@@ -223,41 +223,6 @@ namespace Orchard.Blogs {
                                                                                       {"area", "Orchard.Blogs"}
                                                                                   },
                                                          new MvcRouteHandler())
-                                                 },
-                             new RouteDescriptor {
-                                                     Priority = 11,
-                                                     Route = new Route(
-                                                         "{blogPath}/{postSlug}",
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "BlogPost"},
-                                                                                      {"action", "Item"}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"blogPath", _blogPathConstraint}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"}
-                                                                                  },
-                                                         new MvcRouteHandler())
-                                                 },
-                             new RouteDescriptor {
-                                                    Priority = 11,
-                                                    Route = new Route(
-                                                         "{blogPath}",
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "Blog"},
-                                                                                      {"action", "Item"},
-                                                                                      {"blogPath", ""}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"blogPath", _blogPathConstraint}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"}
-                                                                                  },
-                                                         new MvcRouteHandler())
                                                  }
                          };
         }

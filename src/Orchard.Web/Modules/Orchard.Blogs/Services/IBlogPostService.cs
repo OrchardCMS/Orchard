@@ -22,5 +22,6 @@ namespace Orchard.Blogs.Services {
         void Publish(BlogPostPart blogPostPart, DateTime scheduledPublishUtc);
         void Unpublish(BlogPostPart blogPostPart);
         DateTime? GetScheduledPublishUtc(BlogPostPart blogPostPart);
+
     }
 }
