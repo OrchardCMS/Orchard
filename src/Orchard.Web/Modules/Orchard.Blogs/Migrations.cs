@@ -38,7 +38,8 @@ namespace Orchard.Blogs {
                 cfg => cfg
                     .WithPart("BlogPart")
                     .WithPart("CommonPart")
-                    .WithPart("RoutePart")
+                    .WithPart("TitlePart")
+                    .WithPart("AutoroutePart")
                     .WithPart("MenuPart")
                     .WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2"))
                 );
@@ -49,7 +50,8 @@ namespace Orchard.Blogs {
                     .WithPart("CommonPart", p => p
                         .WithSetting("DateEditorSettings.ShowDateEditor", "true"))
                     .WithPart("PublishLaterPart")
-                    .WithPart("RoutePart")
+                    .WithPart("TitlePart")
+                    .WithPart("AutoroutePart")
                     .WithPart("BodyPart")
                 );
             
@@ -69,7 +71,7 @@ namespace Orchard.Blogs {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 4;
+            return 5;
         }
 
         public int UpdateFrom1() {
@@ -85,6 +87,28 @@ namespace Orchard.Blogs {
         public int UpdateFrom3() {
             ContentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "true")));
             return 4;
+        }
+
+        public int UpdateFrom4() {
+
+            // TODO: (PH:Autoroute) SQL copy routes and titles and generate aliases for existing items
+
+            ContentDefinitionManager.AlterTypeDefinition("Blog",
+                cfg => cfg
+                    .RemovePart("RoutePart")
+                    .WithPart("TitlePart")
+                    .WithPart("AutoroutePart")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("BlogPost",
+                cfg => cfg
+                    .RemovePart("RoutePart")
+                    .WithPart("TitlePart")
+                    .WithPart("AutoroutePart")
+                );
+            return 5;
+
+
         }
     }
 }

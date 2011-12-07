@@ -14,6 +14,7 @@ using Orchard.Security;
 using Orchard.Blogs.Services;
 using Orchard.Core.Navigation.Services;
 using Orchard.Settings;
+using Orchard.Core.Title.Models;
 
 namespace Orchard.Blogs.Commands {
     public class BlogCommands : DefaultOrchardCommandHandler {
@@ -58,8 +59,8 @@ namespace Orchard.Blogs.Commands {
         public bool Homepage { get; set; }
 
         [CommandName("blog create")]
-        [CommandHelp("blog create /Slug:<slug> /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
-        [OrchardSwitches("Slug,Title,Owner,Description,MenuText,Homepage")]
+        [CommandHelp("blog create /Title:<title> [/Owner:<username>] [/Description:<description>] [/MenuText:<menu text>] [/Homepage:true|false]\r\n\t" + "Creates a new Blog")]
+        [OrchardSwitches("Title,Owner,Description,MenuText,Homepage")]
         public void Create() {
             if (String.IsNullOrEmpty(Owner)) {
                 Owner = _siteService.GetSiteSettings().SuperUser;
@@ -78,10 +79,7 @@ namespace Orchard.Blogs.Commands {
 
             var blog = _contentManager.New("Blog");
             blog.As<ICommonPart>().Owner = owner;
-            blog.As<RoutePart>().Slug = Slug;
-            blog.As<RoutePart>().Path = Slug;
-            blog.As<RoutePart>().Title = Title;
-            blog.As<RoutePart>().PromoteToHomePage = Homepage;
+            blog.As<TitlePart>().Title = Title;
             if (!String.IsNullOrEmpty(Description)) {
                 blog.As<BlogPart>().Description = Description;
             }

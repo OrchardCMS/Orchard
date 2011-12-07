@@ -24,7 +24,6 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogPostService _blogPostService;
         private readonly IContentManager _contentManager;
         private readonly ITransactionManager _transactionManager;
-        private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly ISiteService _siteService;
 
         public BlogAdminController(
@@ -33,7 +32,6 @@ namespace Orchard.Blogs.Controllers {
             IBlogPostService blogPostService,
             IContentManager contentManager,
             ITransactionManager transactionManager,
-            IBlogPathConstraint blogPathConstraint,
             ISiteService siteService,
             IShapeFactory shapeFactory) {
             Services = services;
@@ -41,7 +39,6 @@ namespace Orchard.Blogs.Controllers {
             _blogPostService = blogPostService;
             _contentManager = contentManager;
             _transactionManager = transactionManager;
-            _blogPathConstraint = blogPathConstraint;
             _siteService = siteService;
             T = NullLocalizer.Instance;
             Shape = shapeFactory;
@@ -81,8 +78,6 @@ namespace Orchard.Blogs.Controllers {
             }
 
             _contentManager.Publish(blog.ContentItem);
-            _blogPathConstraint.AddPath(blog.As<IRoutableAspect>().Path);
-
             return Redirect(Url.BlogForAdmin(blog));
         }
 
@@ -136,7 +131,6 @@ namespace Orchard.Blogs.Controllers {
             }
 
             _contentManager.Publish(blog);
-            _blogPathConstraint.AddPath(blog.As<IRoutableAspect>().Path);
             Services.Notifier.Information(T("Blog information updated"));
 
             return Redirect(Url.BlogsForAdmin());

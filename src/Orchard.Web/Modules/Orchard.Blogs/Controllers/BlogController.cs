@@ -13,6 +13,8 @@ using Orchard.Services;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
 using Orchard.Settings;
+using Orchard.ContentManagement;
+using Orchard.Blogs.Models;
 
 namespace Orchard.Blogs.Controllers {
 
@@ -65,21 +67,12 @@ namespace Orchard.Blogs.Controllers {
             return View((object)viewModel);
         }
 
-        public ActionResult Item(string blogPath, PagerParameters pagerParameters) {
+        public ActionResult Item(int blogId, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var correctedPath = _blogPathConstraint.FindPath(blogPath);
-            if (correctedPath == null)
-                return HttpNotFound();
 
-            var blogPart = _blogService.Get(correctedPath);
+            var blogPart = _blogService.Get(blogId, VersionOptions.Published).As<BlogPart>();
             if (blogPart == null)
                 return HttpNotFound();
-
-            // primary action run for a home paged item shall not pass
-            if (!RouteData.DataTokens.ContainsKey("ParentActionViewContext")
-                && blogPart.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)) {
-                return HttpNotFound();
-            }
 
             _feedManager.Register(blogPart);
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)
