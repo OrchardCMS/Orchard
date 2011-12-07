@@ -13,7 +13,7 @@ namespace Orchard.Core.HomePage {
         public IEnumerable<RouteDescriptor> GetRoutes() {
             return new[] {
                              new RouteDescriptor {
-                                                     Priority = 20,
+                                                     Priority = -100,
                                                      Route = new Route(
                                                          "",
                                                          new RouteValueDictionary {

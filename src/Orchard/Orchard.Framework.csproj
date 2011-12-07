@@ -774,7 +774,6 @@
     <Compile Include="Security\MembershipSettings.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
     <Compile Include="Security\OrchardSecurityException.cs" />
-    <Compile Include="Services\IHomePageProvider.cs" />
     <Compile Include="Tasks\Scheduling\IPublishingTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTask.cs" />
     <Compile Include="Localization\Text.cs" />
