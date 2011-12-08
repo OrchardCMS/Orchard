@@ -14,8 +14,8 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
             var infosetPart = contentPart.As<InfosetPart>();
 
             return new SimpleFieldStorage(
-                (name, valueType) => Get(infosetPart.ContentItem.IsPublished() ? infosetPart.Infoset.Element : infosetPart.VersionInfoset.Element, partName, fieldName, name),
-                (name, valueType, value) => Set(infosetPart.ContentItem.IsPublished() ? infosetPart.Infoset.Element : infosetPart.VersionInfoset.Element, partName, fieldName, name, value));
+                (name, valueType) => Get(infosetPart.ContentItem.VersionRecord == null ? infosetPart.Infoset.Element : infosetPart.VersionInfoset.Element, partName, fieldName, name),
+                (name, valueType, value) => Set(infosetPart.ContentItem.VersionRecord == null ? infosetPart.Infoset.Element : infosetPart.VersionInfoset.Element, partName, fieldName, name, value));
         }
 
         private static string Get(XElement element, string partName, string fieldName, string valueName) {
