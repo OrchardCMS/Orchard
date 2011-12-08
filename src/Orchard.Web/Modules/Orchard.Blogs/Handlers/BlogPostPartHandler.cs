@@ -58,6 +58,8 @@ namespace Orchard.Blogs.Handlers {
             if (blogPost == null)
                 return;
 
+            // Note: DisplayRouteValues are simply inherited from CommonPart
+
             context.Metadata.CreateRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogPostAdmin"},
@@ -76,7 +78,7 @@ namespace Orchard.Blogs.Handlers {
                 {"Controller", "BlogPostAdmin"},
                 {"Action", "Delete"},
                 {"postId", context.ContentItem.Id},
-                {"blogPath", blogPost.BlogPart.As<RoutePart>().Path}
+                {"blogId", blogPost.BlogPart.Id}
             };
         }
     }

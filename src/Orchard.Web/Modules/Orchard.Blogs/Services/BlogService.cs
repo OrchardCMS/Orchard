@@ -47,7 +47,6 @@ namespace Orchard.Blogs.Services {
 
         public void Delete(ContentItem blog) {
             _contentManager.Remove(blog);
-            _blogPathConstraint.RemovePath(blog.As<IRoutableAspect>().Path);
         }
     }
 }
