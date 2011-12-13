@@ -232,6 +232,8 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(results.First().Record, Has.Property("Quad").EqualTo("3"));
             Assert.That(results.Last().Record, Has.Property("Quad").EqualTo("2"));
         }
+
+
     }
 }
 

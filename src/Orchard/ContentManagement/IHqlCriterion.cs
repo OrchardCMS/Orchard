@@ -7,7 +7,6 @@ using System.Text;
 
 namespace Orchard.ContentManagement {
     public interface IHqlCriterion {
-
         string ToHql(IAlias alias);
     }
 
@@ -17,7 +16,7 @@ namespace Orchard.ContentManagement {
 
     public class BinaryExpression : HqlCriterion {
         public BinaryExpression(string op, string propertyName, string value, Func<string, string> processPropertyName = null) {
-            if(value == null) {
+            if (value == null) {
                 throw new ArgumentNullException("value");
             }
 
@@ -26,7 +25,7 @@ namespace Orchard.ContentManagement {
             Value = value;
             ProcessPropertyName = processPropertyName;
         }
-        
+
         public string Op { get; set; }
         public string PropertyName { get; set; }
         public string Value { get; set; }
@@ -34,10 +33,51 @@ namespace Orchard.ContentManagement {
 
         public override string ToHql(IAlias alias) {
             var processed = String.Concat(alias.Name, ".", PropertyName);
-            if(ProcessPropertyName != null) {
+            if (ProcessPropertyName != null) {
                 processed = ProcessPropertyName(processed);
             }
             return String.Concat(processed, " ", Op, " ", Value);
+        }
+    }
+
+    public class NotExpression : HqlCriterion {
+        public IHqlCriterion Criterion { get; set; }
+
+        public NotExpression(IHqlCriterion criterion) {
+            Criterion = criterion;
+        }
+
+        public override string ToHql(IAlias alias) {
+            return String.Concat("not ", Criterion.ToHql(alias));
+        }
+    }
+
+    public class ComplexExpression : HqlCriterion {
+        public ComplexExpression(string op1, string op2, string propertyName, string value1, string value2) {
+            if(value1 == null) {
+                throw new ArgumentNullException("value1");
+            }
+
+            if(value2 == null) {
+                throw new ArgumentNullException("value2");
+            }
+
+            Op1 = op1;
+            Op2 = op2;
+            PropertyName = propertyName;
+            Value1 = value1;
+            Value2 = value2;
+        }
+        
+        public string Op1 { get; set; }
+        public string Op2 { get; set; }
+        public string PropertyName { get; set; }
+        public string Value1 { get; set; }
+        public string Value2 { get; set; }
+
+        public override string ToHql(IAlias alias) {
+            var processed = String.Concat(alias.Name, ".", PropertyName);
+            return String.Concat(processed, " ", Op1, " ", Value1, " ", Op2, " ", Value2);
         }
     }
 
@@ -88,6 +128,10 @@ namespace Orchard.ContentManagement {
                     }
                     
                     return Convert.ToString(value, CultureInfo.InvariantCulture);
+                case TypeCode.DateTime:
+                    // convert the date time to a valid string representation for Hql
+                    var sortableDateTime = ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                    return quoteStrings ? String.Concat("'", sortableDateTime, "'") : sortableDateTime;
             }
 
             return Convert.ToString(value, CultureInfo.InvariantCulture);
@@ -110,7 +154,7 @@ namespace Orchard.ContentManagement {
         }
 
         public static IHqlCriterion Between(string propertyName, object lo, object hi) {
-            return null;
+            return new ComplexExpression("between", "and", propertyName, FormatValue(lo), FormatValue(hi));
         }
 
         public static CompositeHqlCriterion Conjunction() {
@@ -126,7 +170,7 @@ namespace Orchard.ContentManagement {
         }
 
         public static IHqlCriterion EqProperty(string propertyName, string otherPropertyName) {
-            return null;
+            return new BinaryExpression("=", propertyName, otherPropertyName);
         }
 
         public static IHqlCriterion Ge(string propertyName, object value) {
@@ -134,7 +178,7 @@ namespace Orchard.ContentManagement {
         }
 
         public static IHqlCriterion GeProperty(string propertyName, string otherPropertyName) {
-            return null;
+            return new BinaryExpression(">=", propertyName, otherPropertyName);
         }
 
         public static IHqlCriterion Gt(string propertyName, object value) {
@@ -142,7 +186,7 @@ namespace Orchard.ContentManagement {
         }
 
         public static IHqlCriterion GtProperty(string propertyName, string otherPropertyName) {
-            return null;
+            return new BinaryExpression(">", propertyName, otherPropertyName);
         }
 
         public static IHqlCriterion IdEq(object value) {
@@ -178,19 +222,19 @@ namespace Orchard.ContentManagement {
         }
 
         public static IHqlCriterion IsEmpty(string propertyName) {
-            return null;
+            return new BinaryExpression("is", propertyName, "empty");
         }
 
         public static IHqlCriterion IsNotEmpty(string propertyName) {
-            return null;
+            return new BinaryExpression("is", propertyName, "not empty");
         }
 
         public static IHqlCriterion IsNotNull(string propertyName) {
-            return null;
+            return new BinaryExpression("is", propertyName, "not null");
         }
 
         public static IHqlCriterion IsNull(string propertyName) {
-            return null;
+            return new BinaryExpression("is", propertyName, "null");
         }
 
         public static IHqlCriterion Le(string propertyName, object value) {
@@ -198,7 +242,7 @@ namespace Orchard.ContentManagement {
         }
 
         public static IHqlCriterion LeProperty(string propertyName, string otherPropertyName) {
-            return null;
+            return new BinaryExpression("<=", propertyName, otherPropertyName);
         }
 
         public static BinaryExpression Like(string propertyName, string value, HqlMatchMode matchMode) {
@@ -207,6 +251,7 @@ namespace Orchard.ContentManagement {
                     value = "'" + value + "%'";
                     break;
                 case HqlMatchMode.Exact:
+                    value = "'" + value + "'";
                     break;
                 case HqlMatchMode.Anywhere:
                     value = "'%" + value + "%'";
@@ -224,7 +269,7 @@ namespace Orchard.ContentManagement {
         }
 
         public static IHqlCriterion LtProperty(string propertyName, string otherPropertyName) {
-            return null;
+            return new BinaryExpression("<", propertyName, otherPropertyName);
         }
 
         public static IHqlCriterion NaturalId() {
@@ -232,11 +277,11 @@ namespace Orchard.ContentManagement {
         }
 
         public static IHqlCriterion Not(IHqlCriterion expression) {
-            return null;
+            return new NotExpression(expression);
         }
 
         public static IHqlCriterion NotEqProperty(string propertyName, string otherPropertyName) {
-            return null;
+            return new BinaryExpression("!=", propertyName, otherPropertyName);
         }
 
         public static IHqlCriterion Or(IHqlCriterion lhs, IHqlCriterion rhs) {
