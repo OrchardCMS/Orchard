@@ -93,7 +93,7 @@ namespace Orchard.Tests.ContentManagement {
         public void SpecificTypeIsReturnedWhenSpecified() {
             AddSampleData();
 
-            var alphaBeta = _manager.Query().Where(x => x.WithRecord("ContentType").In("Name", new [] {"alpha", "beta"})).List();
+            var alphaBeta = _manager.HqlQuery().ForType("alpha", "beta").List();
 
             Assert.That(alphaBeta.Count(), Is.EqualTo(2));
             Assert.That(alphaBeta.Count(x => x.Has<AlphaPart>()), Is.EqualTo(1));
@@ -101,7 +101,7 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(alphaBeta.Count(x => x.Has<GammaPart>()), Is.EqualTo(0));
             Assert.That(alphaBeta.Count(x => x.Has<DeltaPart>()), Is.EqualTo(0));
 
-            var gammaDelta = _manager.Query().Where(x => x.WithRecord("ContentType").In("Name", new[] { "gamma", "delta" })).List();
+            var gammaDelta = _manager.HqlQuery().ForType("gamma", "delta").List();
 
             Assert.That(gammaDelta.Count(), Is.EqualTo(2));
             Assert.That(gammaDelta.Count(x => x.Has<AlphaPart>()), Is.EqualTo(0));
@@ -119,8 +119,11 @@ namespace Orchard.Tests.ContentManagement {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
             _session.Flush();
 
-            var twoOrFour = _manager.Query<GammaPart, GammaRecord>()
-                .Where(x => x.WithRecord("GammaRecord").Or(a => a.Eq("Frap", "one"), b => b.Eq("Frap", "four")))
+            var twoOrFour = _manager
+                .HqlQuery()
+                .Where(
+                    alias => alias.ContentPartRecord<GammaRecord>(), 
+                    x => x.Or(a => a.Eq("Frap", "one"), b => b.Eq("Frap", "four")))
                 .List();
 
             Assert.That(twoOrFour.Count(), Is.EqualTo(2));
@@ -133,8 +136,8 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void EmptyWherePredicateRequiresRecord() {
             AddSampleData();
-            var gammas = _manager.Query().Where(x => x.WithRecord("GammaRecord")).List(); // simulates an inner join
-            var deltas = _manager.Query().Where(x => x.WithRecord("DeltaRecord")).List();
+            var gammas = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<GammaRecord>()).List();
+            var deltas = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<DeltaRecord>()).List();
 
             Assert.That(gammas.Count(), Is.EqualTo(1));
             Assert.That(deltas.Count(), Is.EqualTo(1));
@@ -152,9 +155,10 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
             _session.Clear();
 
-            var ascending = _manager.Query("gamma")
-                .OrderBy(x => x.WithRecord("GammaRecord").Asc("Frap"))
-                .List<GammaPart>().ToList();
+            var ascending = _manager.HqlQuery<GammaPart>()
+                .ForType("gamma")
+                .OrderBy(alias => alias.ContentPartRecord<GammaRecord>(), x => x.Asc("Frap"))
+                .List().ToList();
 
             Assert.That(ascending.Count(), Is.EqualTo(5));
             Assert.That(ascending.First().Record.Frap, Is.EqualTo("four"));
@@ -162,8 +166,9 @@ namespace Orchard.Tests.ContentManagement {
 
             _session.Clear();
 
-            var descending = _manager.Query<GammaPart, GammaRecord>()
-                .OrderBy(x => x.WithRecord("GammaRecord").Desc("Frap"))
+            var descending = _manager.HqlQuery<GammaPart>()
+                .ForType("gamma")
+                .OrderBy(alias => alias.ContentPartRecord<GammaRecord>(), x => x.Desc("Frap"))
                 .List().ToList();
 
             Assert.That(descending.Count(), Is.EqualTo(5));
@@ -180,12 +185,12 @@ namespace Orchard.Tests.ContentManagement {
             _manager.Create<GammaPart>("gamma", init => { init.Record.Frap = "four"; });
             _session.Flush();
 
-            var reverseById = _manager.Query()
-                .OrderBy(x => x.WithRecord("GammaRecord").Desc("Id"))
+            var reverseById = _manager.HqlQuery()
+                .OrderBy(alias => alias.ContentPartRecord<GammaRecord>(), x => x.Desc("Id"))
                 .List();
 
-            var subset = _manager.Query()
-                .OrderBy(x => x.WithRecord("GammaRecord").Desc("Id"))
+            var subset = _manager.HqlQuery()
+                .OrderBy(alias => alias.ContentPartRecord<GammaRecord>(), x => x.Desc("Id"))
                 .Slice(2, 3);
 
             Assert.That(subset.Count(), Is.EqualTo(3));
@@ -217,10 +222,11 @@ namespace Orchard.Tests.ContentManagement {
             _session.Flush();
             _session.Clear();
 
-            var results = _manager.Query("gamma")
-                .Where(x => x.WithVersionRecord("EpsilonRecord").Or(a => a.Eq("Quad", "2"), b => b.Eq("Quad", "3")))
-                .OrderBy(x => x.WithVersionRecord("EpsilonRecord").Desc("Quad"))
-                .List<EpsilonPart>();
+            var results = _manager.HqlQuery<EpsilonPart>()
+                .Where(alias => alias.ContentPartRecord<EpsilonRecord>(), x => x.Or(a => a.Eq("Quad", "2"), b => b.Eq("Quad", "3")))
+                .OrderBy(alias => alias.ContentPartRecord<EpsilonRecord>(), x => x.Desc("Quad"))
+                .ForType("gamma")
+                .List();
 
             Assert.That(results.Count(), Is.EqualTo(2));
             Assert.That(results.First().Record, Has.Property("Quad").EqualTo("3"));

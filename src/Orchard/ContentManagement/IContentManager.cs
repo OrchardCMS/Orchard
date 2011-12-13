@@ -29,6 +29,7 @@ namespace Orchard.ContentManagement {
 
         void Flush();
         IContentQuery<ContentItem> Query();
+        IHqlQuery HqlQuery();
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
         IEnumerable<GroupInfo> GetEditorGroupInfos(IContent contentItem);

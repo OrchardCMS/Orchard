@@ -74,10 +74,16 @@ namespace Orchard.ContentManagement {
             where TPart : ContentPart {
             return manager.Query().ForPart<TPart>();
         }
+
         public static IContentQuery<TPart, TRecord> Query<TPart, TRecord>(this IContentManager manager)
             where TPart : ContentPart<TRecord>
             where TRecord : ContentPartRecord {
             return manager.Query().ForPart<TPart>().Join<TRecord>();
+        }
+
+        public static IHqlQuery<TPart> HqlQuery<TPart>(this IContentManager manager)
+            where TPart : ContentPart {
+            return manager.HqlQuery().ForPart<TPart>();
         }
 
         /* Query(VersionOptions options) */

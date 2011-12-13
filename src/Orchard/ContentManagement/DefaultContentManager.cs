@@ -487,6 +487,10 @@ namespace Orchard.ContentManagement {
             return query.ForPart<ContentItem>();
         }
 
+        public IHqlQuery HqlQuery() {
+            return new DefaultHqlQuery(this, _sessionLocator.Value.For(typeof(ContentItemVersionRecord)));
+        }
+
         // Insert or Update imported data into the content manager.
         // Call content item handlers.
         public void Import(XElement element, ImportContentSession importContentSession) {

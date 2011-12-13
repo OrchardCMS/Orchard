@@ -169,7 +169,11 @@
     <Compile Include="ContentManagement\ContentIdentity.cs" />
     <Compile Include="ContentManagement\ContentItemBehavior.cs" />
     <Compile Include="ContentManagement\ContentPartBehavior.cs" />
+    <Compile Include="ContentManagement\DefaultHqlQuery.cs" />
+    <Compile Include="ContentManagement\IHqlExpression.cs" />
+    <Compile Include="ContentManagement\IHqlQuery.cs" />
     <Compile Include="ContentManagement\Handlers\DescribeMembersContext.cs" />
+    <Compile Include="ContentManagement\IHqlCriterion.cs" />
     <Compile Include="ContentManagement\ISortFactory.cs" />
     <Compile Include="ContentManagement\DefaultContentDisplay.cs" />
     <Compile Include="ContentManagement\Drivers\ContentShapeResult.cs" />
