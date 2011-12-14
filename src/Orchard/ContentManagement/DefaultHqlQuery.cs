@@ -228,7 +228,7 @@ namespace Orchard.ContentManagement {
                 sort.Item2(sortFactory);
 
                 if (sortFactory.Randomize) {
-                    sb.Append(" rand(" + sortFactory.Seed + ")");
+                    sb.Append(" newid()");
                 }
                 else {
                     sb.Append(sort.Item1.Name).Append(".").Append(sortFactory.PropertyName);
@@ -349,7 +349,6 @@ namespace Orchard.ContentManagement {
         public bool Ascending { get; set; }
         public string PropertyName { get; set; }
         public bool Randomize { get; set; }
-        public int Seed { get; set; }
 
         public void Asc(string propertyName) {
             PropertyName = propertyName;
@@ -361,8 +360,7 @@ namespace Orchard.ContentManagement {
             Ascending = false;
         }
 
-        public void Random(int seed) {
-            Seed = seed;
+        public void Random() {
             Randomize = true;
         }
     }

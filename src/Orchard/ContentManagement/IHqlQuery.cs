@@ -176,7 +176,7 @@ namespace Orchard.ContentManagement {
         /// <summary>
         /// Sorts randomly
         /// </summary>
-        void Random(int seed);
+        void Random();
     }
 }
 

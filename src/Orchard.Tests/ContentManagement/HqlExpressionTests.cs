@@ -941,14 +941,12 @@ namespace Orchard.Tests.ContentManagement {
 
             var firstResults = new List<int>();
 
-            var rand = new Randomizer(123);
-
             for (int i = 0; i < 10; i++) {
-                result = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.Named("civ"), order => order.Random(rand.Next(1000))).List();
+                result = _manager.HqlQuery().Join(alias => alias.ContentPartRecord<LambdaRecord>()).OrderBy(x => x.Named("civ"), order => order.Random()).List();
                 firstResults.Add(result.First().As<LambdaPart>().Record.IntegerStuff);
             }
 
-            Assert.That(result.Distinct().Count(), Is.GreaterThan(1));
+            Assert.That(firstResults.Distinct().Count(), Is.GreaterThan(1));
         }
 
         [Test]
