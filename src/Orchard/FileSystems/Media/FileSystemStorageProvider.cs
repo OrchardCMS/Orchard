@@ -65,6 +65,15 @@ namespace Orchard.FileSystems.Media {
         #region Implementation of IStorageProvider
 
         /// <summary>
+        /// Checks if the given file exists within the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path within the storage provider.</param>
+        /// <returns>True if the file exists; False otherwise.</returns>
+        public bool FileExists(string path) {
+            return new FileInfo(MapStorage(path)).Exists;
+        }
+
+        /// <summary>
         /// Retrieves the public URL for a given file within the storage provider.
         /// </summary>
         /// <param name="path">The relative path within the storage provider.</param>
@@ -104,6 +113,15 @@ namespace Orchard.FileSystems.Media {
                 .Where(fi => !IsHidden(fi))
                 .Select<FileInfo, IStorageFile>(fi => new FileSystemStorageFile(Path.Combine(Fix(path), fi.Name), fi))
                 .ToList();
+        }
+
+        /// <summary>
+        /// Checks if the given folder exists within the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path within the storage provider.</param>
+        /// <returns>True if the folder exists; False otherwise.</returns>
+        public bool FolderExists(string path) {
+            return new DirectoryInfo(MapStorage(path)).Exists;
         }
 
         /// <summary>
