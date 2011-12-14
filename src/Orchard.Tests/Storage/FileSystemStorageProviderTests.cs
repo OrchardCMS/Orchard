@@ -58,6 +58,16 @@ namespace Orchard.Tests.Storage {
         private IStorageProvider _storageProvider;
 
         [Test]
+        public void ExistsShouldBeTrueForExtistingFile() {
+            Assert.That(_storageProvider.FileExists("testfile.txt"), Is.True);
+        }
+
+        [Test]
+        public void ExistsShouldBeFalseForNonExtistingFile() {
+            Assert.That(_storageProvider.FileExists("notexisting"), Is.False);
+        }
+
+        [Test]
         [ExpectedException(typeof(ArgumentException))]
         public void GetFileThatDoesNotExistShouldThrow() {
             _storageProvider.GetFile("notexisting");
@@ -97,6 +107,16 @@ namespace Orchard.Tests.Storage {
             var file2 = _storageProvider.GetFile(@"Subfolder1\one.txt");
             Assert.That(file1.GetPath(), Is.EqualTo("Subfolder1" + Path.DirectorySeparatorChar + "one.txt"));
             Assert.That(file2.GetPath(), Is.EqualTo("Subfolder1" + Path.DirectorySeparatorChar + "one.txt"));
+        }
+
+        [Test]
+        public void ExistsShouldBeTrueForExtistingFolder() {
+            Assert.That(_storageProvider.FolderExists("Subfolder1"), Is.True);
+        }
+
+        [Test]
+        public void ExistsShouldBeFalseForNonExtistingFolder() {
+            Assert.That(_storageProvider.FolderExists("notexisting"), Is.False);
         }
 
         [Test]

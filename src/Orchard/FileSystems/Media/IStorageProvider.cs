@@ -5,6 +5,13 @@ using System.IO;
 namespace Orchard.FileSystems.Media {
     public interface IStorageProvider : IDependency {
         /// <summary>
+        /// Checks if the given file exists within the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path within the storage provider.</param>
+        /// <returns>True if the file exists; False otherwise.</returns>
+        bool FileExists(string path);
+
+        /// <summary>
         /// Retrieves the public URL for a given file within the storage provider.
         /// </summary>
         /// <param name="path">The relative path within the storage provider.</param>
@@ -25,6 +32,13 @@ namespace Orchard.FileSystems.Media {
         /// <param name="path">The relative path to the folder which files to list.</param>
         /// <returns>The list of files in the folder.</returns>
         IEnumerable<IStorageFile> ListFiles(string path);
+
+        /// <summary>
+        /// Checks if the given folder exists within the storage provider.
+        /// </summary>
+        /// <param name="path">The relative path within the storage provider.</param>
+        /// <returns>True if the folder exists; False otherwise.</returns>
+        bool FolderExists(string path);
 
         /// <summary>
         /// Lists the folders within a storage provider's path.
