@@ -1,14 +1,14 @@
 ﻿@using Orchard.ContentManagement;
 @using Orchard.Widgets.Models;
 @{
-    var title = ((IContent)Model.ContentItem).As<WidgetPart>().Title;
+    var widgetPart = ((IContent)Model.ContentItem).As<WidgetPart>();
     var tag = Tag(Model, "article");
 }
 @tag.StartElement
-    @if (HasText(title) || Model.Header != null) {
+    @if ( (widgetPart.RenderTitle && HasText(widgetPart.Title)) || Model.Header != null) {
     <header>
-        @if (HasText(title)) {
-        <h1>@title</h1>
+        @if ((widgetPart.RenderTitle && HasText(widgetPart.Title))) {
+        <h1>@widgetPart.Title</h1>
         }
         @Display(Model.Header)
     </header>

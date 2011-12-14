@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.Utility.Extensions;
 using Orchard.Widgets.Models;
@@ -22,15 +23,25 @@ namespace Orchard.Widgets {
 
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
+                        var widgetPart = contentItem.As<WidgetPart>();
                         widget.Classes.Add("widget-" + contentItem.ContentType.HtmlClassify());
-
-                        var zoneName = contentItem.As<WidgetPart>().Zone;
+                        
+                        var zoneName = widgetPart.Zone;
 
                         // Widget__[ZoneName] e.g. Widget-SideBar
                         displaying.ShapeMetadata.Alternates.Add("Widget__" + zoneName);
 
                         // Widget__[ContentType] e.g. Widget-BlogArchive
                         displaying.ShapeMetadata.Alternates.Add("Widget__" + contentItem.ContentType);
+
+                        // using the technical name to add a CSS class and an alternate
+                        if (!String.IsNullOrWhiteSpace(widgetPart.Name)) {
+                            widget.Classes.Add("widget-" + widgetPart.Name);
+
+                            // Widget__Name_[Name]
+                            displaying.ShapeMetadata.Alternates.Add("Widget__Name_" + widgetPart.Name);
+                        }
+
                     }
                 });
         }
