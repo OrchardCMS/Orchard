@@ -22,7 +22,7 @@ namespace Orchard.Specs.Bindings {
             webApp.Host.Execute(() => {
                 using ( var environment = MvcApplication.CreateStandaloneEnvironment("Default") ) {
                     var memberShipService = environment.Resolve<IMembershipService>();
-                    var athorizationService = environment.Resolve<IAuthorizationService>();
+                    var authorizationService = environment.Resolve<IAuthorizationService>();
                     var contentManager = environment.Resolve<IContentManager>();
 
                     var contentItem = contentManager.Create(contentType);
@@ -30,7 +30,7 @@ namespace Orchard.Specs.Bindings {
                     var otherUser = memberShipService.GetUser(otherName);
                     contentItem.As<ICommonPart>().Owner = otherUser;
 
-                    Assert.That(athorizationService.TryCheckAccess(GetPermissionForAction(action), user, contentItem), Is.True);
+                    Assert.That(authorizationService.TryCheckAccess(GetPermissionForAction(action), user, contentItem), Is.True);
                 }
             });
         }
