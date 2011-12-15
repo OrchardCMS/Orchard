@@ -22,7 +22,7 @@ namespace Orchard.Messaging.Services {
         }
 
         public void Send(ContentItemRecord recipient, string type, string service, Dictionary<string, string> properties = null) {
-            Send(new [] { recipient }, service, type, properties);    
+            Send(new [] { recipient }, type, service, properties);    
         }
 
         public void Send(IEnumerable<ContentItemRecord> recipients, string type, string service, Dictionary<string, string> properties = null) {
