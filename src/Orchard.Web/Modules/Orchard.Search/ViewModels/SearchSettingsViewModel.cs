@@ -3,6 +3,7 @@
 namespace Orchard.Search.ViewModels {
     public class SearchSettingsViewModel {
         public IList<SearchSettingsEntry> Entries { get; set; }
+        public bool FilterCulture { get; set; }
     }
 
     public class SearchSettingsEntry {
