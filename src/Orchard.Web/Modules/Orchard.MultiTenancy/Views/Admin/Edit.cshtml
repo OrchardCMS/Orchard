@@ -11,7 +11,7 @@
         </div>
         <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
-            @Html.TextBoxFor(m => m.RequestUrlHost, new {@class = "textMedium"})
+            @Html.TextBoxFor(m => m.RequestUrlHost, new { @class = "textMedium" })
             <span class="hint">@T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"")</span>
         </div>
     </fieldset>
@@ -19,7 +19,8 @@
         <legend>@T("Database Setup")</legend>
         @if (Model.State.CurrentState != TenantState.State.Uninitialized) { 
             <div class="warning message">@T("Warning: If you don't know what you're doing you *will* (likely) send this tenant into a downward spiral of irrecoverable disrepair. Have a nice day.")</div>
-        } else { 
+        }
+        else { 
              <div>
                 @Html.RadioButtonFor(svm => svm.DataProvider, "", new { id = "tenantDatabaseOption" })
                 <label for="tenantDatabaseOption" class="forcheckbox">@T("Allow the tenant to set up the database")</label>
@@ -34,7 +35,7 @@
             <label for="sqlDatabaseOption" class="forcheckbox">@T("Use an existing SQL Server (or SQL Express) database")</label>
             <span data-controllerid="sqlDatabaseOption">
             <label for="DatabaseConnectionString">@T("Connection string")</label>
-            @Html.TextBoxFor(svm => svm.DatabaseConnectionString, new {@class = "large text"})
+            @Html.TextBoxFor(svm => svm.DatabaseConnectionString, new { @class = "large text" })
             <span class="hint">@T("Example:")<br />@T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password")</span>
             </span>
             <span data-controllerid="sqlDatabaseOption">
@@ -43,6 +44,23 @@
             </span>
         </div>
     </fieldset>
+    
+    <fieldset>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.Themes)">@T("Available Themes")</label>
+            
+            @for (var i = 0; i < Model.Themes.Count; i++) {
+                var theme = Model.Themes[i];
+                @Html.CheckBox(Html.FieldNameFor(m => m.Themes[i].Checked), Model.Themes[i].Checked, new { id = Html.FieldIdFor(x => x.Themes[i]) })
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Themes[i])">@Model.Themes[i].ThemeName</label>
+                @Html.HiddenFor(m => m.Themes[i].ThemeId)
+                @Html.HiddenFor(m => m.Themes[i].ThemeName)
+            }
+
+            <span class="hint">@T("Select the Themes which should be available for this tenant. If none is selected, they will all be available.")</span>
+        </div>  
+    </fieldset>  
+    
     <fieldset>
         <button class="primaryAction" type="submit">@T("Save")</button>
     </fieldset>

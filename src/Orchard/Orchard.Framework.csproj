@@ -205,6 +205,7 @@
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
     <Compile Include="Environment\CollectionOrderModule.cs" />
     <Compile Include="Caching\DefaultAsyncTokenProvider.cs" />
+    <Compile Include="Environment\Configuration\ShellSettingsSerializer.cs" />
     <Compile Include="Environment\Extensions\ExtensionMonitoringCoordinator.cs" />
     <Compile Include="Caching\IAsyncTokenProvider.cs" />
     <Compile Include="Environment\Extensions\Folders\CoreModuleFolders.cs" />

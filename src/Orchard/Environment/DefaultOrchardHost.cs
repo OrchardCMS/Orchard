@@ -232,7 +232,10 @@ namespace Orchard.Environment {
         /// </summary>
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
             lock (_syncLock) {
-                _tenantsToRestart = _tenantsToRestart.Where(x => x.Name != settings.Name).Union(new[] { settings });
+                // if a tenant has been altered, and is not uninitialized, reload it
+                if (settings.State.CurrentState != TenantState.State.Uninitialized) {
+                    _tenantsToRestart = _tenantsToRestart.Where(x => x.Name != settings.Name).Union(new[] { settings });
+                }
             }
         }
 
