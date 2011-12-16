@@ -213,7 +213,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             builder.AppendFormat("create index {1} on {0} ({2}) ",
                 _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(command.IndexName),
+                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)),
                 String.Join(", ", command.ColumnNames));
 
             _sqlStatements.Add(builder.ToString());
@@ -226,7 +226,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             builder.AppendFormat("drop index {0}.{1}",
                 _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(command.IndexName));
+                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)));
             _sqlStatements.Add(builder.ToString());
         }
 
@@ -253,7 +253,7 @@ namespace Orchard.Data.Migration.Interpreters {
             builder.Append("alter table ")
                 .Append(_dialect.QuoteForTableName(PrefixTableName(command.SrcTable)));
 
-            builder.Append(_dialect.GetAddForeignKeyConstraintString(command.Name,
+            builder.Append(_dialect.GetAddForeignKeyConstraintString(PrefixTableName(command.Name),
                 command.SrcColumns,
                 _dialect.QuoteForTableName(PrefixTableName(command.DestTable)),
                 command.DestColumns,
@@ -271,7 +271,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.AppendFormat("alter table {0} drop constraint {1}", _dialect.QuoteForTableName(PrefixTableName(command.SrcTable)), command.Name);
+            builder.AppendFormat("alter table {0} drop constraint {1}", _dialect.QuoteForTableName(PrefixTableName(command.SrcTable)), PrefixTableName(command.Name));
             _sqlStatements.Add(builder.ToString());
 
             RunPendingStatements();
