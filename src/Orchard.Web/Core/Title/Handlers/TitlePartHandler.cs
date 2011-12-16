@@ -7,8 +7,6 @@ namespace Orchard.Core.Title.Handlers {
 
         public TitlePartHandler(IRepository<TitlePartRecord> repository) {
             Filters.Add(StorageFilter.For(repository));
-
-            OnIndexing<TitlePart>((context, part) => context.DocumentIndex.Add("title", part.Record.Title).RemoveTags().Analyze());
         }
     }
 }
