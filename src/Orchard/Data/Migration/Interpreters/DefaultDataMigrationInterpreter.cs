@@ -278,6 +278,17 @@ namespace Orchard.Data.Migration.Interpreters {
         }
 
         private string GetTypeName(DbType dbType, int? length, byte precision, byte scale) {
+
+            // NHibernate has a bug in MsSqlCeDialect, as it's declaring the decimal type as this:
+            // NUMERIC(19, $1), where $1 is the Length parameter, and it's wrong. It should be 
+            // NUMERIC(19, $s) in order to use the Scale parameter, as it's done for SQL Server dialects
+            // https://nhibernate.jira.com/browse/NH-2979
+            if (_dialect is NHibernate.Dialect.MsSqlCeDialect
+                && dbType == DbType.Decimal
+                && scale != 0) {
+                return _dialect.GetTypeName(new SqlType(dbType), scale, precision, scale);
+            }
+
             return precision > 0
                        ? _dialect.GetTypeName(new SqlType(dbType, precision, scale))
                        : length.HasValue

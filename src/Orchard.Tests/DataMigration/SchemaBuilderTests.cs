@@ -224,5 +224,22 @@ namespace Orchard.Tests.DataMigration {
                     .AlterColumn("Data", column => column.WithLength(2048)));
 
         }
+
+        [Test]
+        public void PrecisionAndScaleAreApplied() {
+
+            _schemaBuilder
+                .CreateTable("Product", table => table
+                    .Column("Price", DbType.Decimal, column => column.WithPrecision(6).WithScale(9))
+                    );
+
+            _schemaBuilder
+                .ExecuteSql(String.Format("INSERT INTO TEST_Product (Price) VALUES ({0})", "123456.123456789"));
+
+            var command = _session.Connection.CreateCommand();
+            command.CommandText = "SELECT MAX(Price) FROM TEST_Product";
+            Assert.That(command.ExecuteScalar(), Is.EqualTo(123456.123456789m));
+
+        }
     }
 }
