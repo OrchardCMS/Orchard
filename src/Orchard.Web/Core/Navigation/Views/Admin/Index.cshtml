@@ -29,7 +29,7 @@
                 <td><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Text)" value="@menuPartEntry.Text" /></td>
                 <td><input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Position)" value="@menuPartEntry.Position" /></td>
                 <td>@if (!menuPartEntry.IsMenuItem) {<input type="text" class="text-box disabled" disabled="disabled" value="@menuPartEntry.Url" /> } else {<input type="text" class="text-box" name="@Html.NameOf(m => m.MenuItemEntries[i].Url)" value="@menuPartEntry.Url" />}</td>
-                <td><input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" /><a href="@Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = menuPartEntry.MenuItemId}))" class="remove">@T("Delete")</a></td>
+                <td><input type="hidden" name="@Html.NameOf(m => m.MenuItemEntries[i].MenuItemId)" value="@menuPartEntry.MenuItemId" />@Html.ActionLink(T("Delete").Text, "Delete", new { id = menuPartEntry.MenuItemId }, new { @class="remove", itemprop="RemoveUrl UnsafeUrl" })</td>
             </tr>
             ++menuPartEntryIndex;
         }

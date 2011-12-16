@@ -93,3 +93,11 @@
     @Zone(Model.Footer)
 </div>
 }
+
+@using (Script.Foot()) {
+<script type="text/javascript">
+//<![CDATA[
+    var confirmRemoveMessage = '@T("Are you sure you want to remove this element ?")';
+//]]>
+</script>
+}
