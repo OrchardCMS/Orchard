@@ -15,3 +15,8 @@ Features:
         Description: Rules for the Contents modules
         Category: Rules
         Dependencies: Orchard.Rules, Contents
+    Contents.ControlWrapper:
+        Name: Content Control Wrapper
+        Description: Add an Edit button on the front-end for authenticated users
+        Category: Content
+        Dependencies: Contents

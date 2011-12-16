@@ -11,7 +11,6 @@ namespace Orchard.Widgets {
                 .Configure(descriptor => {
                     // todo: have "alternates" for chrome
                     descriptor.Wrappers.Add("Widget_Wrapper");
-                    descriptor.Wrappers.Add("Widget_ControlWrapper");
                 })
                 .OnCreated(created => {
                     var widget = created.Shape;
@@ -24,9 +23,10 @@ namespace Orchard.Widgets {
                     ContentItem contentItem = displaying.Shape.ContentItem;
                     if (contentItem != null) {
                         var widgetPart = contentItem.As<WidgetPart>();
-                        widget.Classes.Add("widget-" + contentItem.ContentType.HtmlClassify());
-                        
                         var zoneName = widgetPart.Zone;
+
+                        widget.Classes.Add("widget-" + contentItem.ContentType.HtmlClassify());
+                        widget.Classes.Add("widget-" + zoneName.HtmlClassify());
 
                         // Widget__[ZoneName] e.g. Widget-SideBar
                         displaying.ShapeMetadata.Alternates.Add("Widget__" + zoneName);

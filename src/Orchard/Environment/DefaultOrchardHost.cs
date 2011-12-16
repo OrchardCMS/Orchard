@@ -273,7 +273,12 @@ namespace Orchard.Environment {
         /// </summary>
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor, string tenant) {
             lock (_syncLock) {
-                var context = _shellContexts.FirstOrDefault(x => x.Settings.Name == tenant);
+                
+                if (_shellContexts == null) {
+                    return;
+                }
+
+                var context =_shellContexts.FirstOrDefault(x => x.Settings.Name == tenant);
                 
                 // some shells might need to be started, e.g. created by command line
                 if(context == null) {

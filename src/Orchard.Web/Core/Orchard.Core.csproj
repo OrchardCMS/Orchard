@@ -105,6 +105,7 @@
     <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerViewModel.cs" />
+    <Compile Include="Contents\ControlWrapper.cs" />
     <Compile Include="Contents\Handlers\RulesHandler.cs" />
     <Compile Include="Contents\Rules\ContentEvents.cs" />
     <Compile Include="Contents\Rules\ContentForms.cs" />
