@@ -17,7 +17,12 @@ namespace Orchard.Tests.Storage {
             _filePath = _folderPath + "\\testfile.txt";
 
             if (Directory.Exists(_folderPath)) {
-                Directory.Delete(_folderPath, true);
+                try {
+                    Directory.Delete(_folderPath, true);
+                }
+                catch {
+                    // happens sometimes
+                }
             }
 
             Directory.CreateDirectory(_folderPath);
