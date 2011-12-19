@@ -1,0 +1,63 @@
+scenario
+{
+  name    = "Fiddler WCAT Script ";
+  warmup      = 10;
+  duration    = 30;
+  cooldown    = 1;
+
+  default
+  {
+    version = HTTP11;
+    setheader
+    {
+      name    = "Connection";
+      value   = "keep-alive";
+    }
+    close = ka;
+  }
+
+  transaction                        
+  {                                  
+    id = "1";     
+    weight = 1;
+    request
+    {
+      url     = "/";
+      setheader
+      {
+        name="Host";
+        value="localhost";
+      }
+      setheader
+      {
+        name="Connection";
+        value="keep-alive";
+      }
+      setheader
+      {
+        name="User-Agent";
+        value="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7";
+      }
+      setheader
+      {
+        name="Accept";
+        value="text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+      }
+      setheader
+      {
+        name="Accept-Encoding";
+        value="gzip,deflate,sdch";
+      }
+      setheader
+      {
+        name="Accept-Language";
+        value="en-US,en;q=0.8";
+      }
+      setheader
+      {
+        name="Accept-Charset";
+        value="ISO-8859-1,utf-8;q=0.7,*;q=0.3";
+      }
+    }
+  }
+}
