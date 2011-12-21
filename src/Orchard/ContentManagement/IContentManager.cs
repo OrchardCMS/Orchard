@@ -49,6 +49,14 @@ namespace Orchard.ContentManagement {
         ContentItem Get(int id, VersionOptions options);
 
         /// <summary>
+        /// Gets the content item with the specified id, version and query hints
+        /// </summary>
+        /// <param name="id">Numeric id of the content item</param>
+        /// <param name="options">The version option</param>
+        /// <param name="hints">The query hints</param>
+        ContentItem Get(int id, VersionOptions options, QueryHints hints);
+
+        /// <summary>
         /// Gets all versions of the content item specified with its id
         /// </summary>
         /// <param name="id">Numeric id of the content item</param>

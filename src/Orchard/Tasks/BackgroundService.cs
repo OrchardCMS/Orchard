@@ -25,6 +25,7 @@ namespace Orchard.Tasks {
         public ILogger Logger { get; set; }
 
         public void Sweep() {
+            return;
             foreach(var task in _tasks.OfType<IBackgroundTask>()) {
                 using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew)) {
                     try {

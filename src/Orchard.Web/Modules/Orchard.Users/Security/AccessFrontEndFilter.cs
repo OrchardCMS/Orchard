@@ -24,7 +24,7 @@ namespace Orchard.Users.Security {
                               || filterContext.ActionDescriptor.ActionName == "RequestLostPassword")
                              && filterContext.ActionDescriptor.ControllerDescriptor.ControllerName == "Account";
 
-            if (!AdminFilter.IsApplied(filterContext.RequestContext) && !isAuthPage && !_authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Can't access this website"))) {
+            if (!AdminFilter.IsApplied(filterContext.RequestContext) && !isAuthPage && !_authorizer.Authorize(StandardPermissions.AccessFrontEnd)) {
                 filterContext.Result = new HttpUnauthorizedResult();
             }
         }

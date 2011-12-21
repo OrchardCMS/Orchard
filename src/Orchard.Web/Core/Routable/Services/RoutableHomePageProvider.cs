@@ -42,7 +42,7 @@ namespace Orchard.Core.Routable.Services {
         }
 
         public ActionResult GetHomePage(int id) {
-            var contentItem = _contentManager.Get(id, VersionOptions.Published);
+            var contentItem = _contentManager.Get(id, VersionOptions.Published, new QueryHints().ExpandRecords<RoutePartRecord>());
             if (contentItem == null || !contentItem.Is<RoutePart>())
                 return new HttpNotFoundResult();
 

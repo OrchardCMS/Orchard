@@ -156,6 +156,10 @@ namespace Orchard.ContentManagement {
             var contentItem = manager.Get(id, options);
             return contentItem == null ? null : contentItem.Get<T>();
         }
+        public static T Get<T>(this IContentManager manager, int id, VersionOptions options, QueryHints hints) where T : class, IContent {
+            var contentItem = manager.Get(id, options, hints);
+            return contentItem == null ? null : contentItem.Get<T>();
+        }
         public static T GetLatest<T>(this IContentManager manager, int id) where T : class, IContent {
             return Get<T>(manager, id, VersionOptions.Latest);
         }
