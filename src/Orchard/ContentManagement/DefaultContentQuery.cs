@@ -11,6 +11,8 @@ using Orchard.Data;
 using Orchard.Utility.Extensions;
 using NHibernate.Transform;
 using NHibernate.SqlCommand;
+using System.Reflection;
+using Orchard.Data.Conventions;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
@@ -286,8 +288,31 @@ namespace Orchard.ContentManagement {
                 return criteria.GetCriteriaByPath(segment) ?? criteria.CreateCriteria(segment, JoinType.LeftOuterJoin);
             }
 
-        }
+            public IContentQuery<T, TR> WithQueryHintsFor(string contentType) {
+                var contentItem = _query.ContentManager.New(contentType);
+                var contentPartRecords = new List<string>();
+                foreach (var part in contentItem.Parts) {
+                    var partType = part.GetType().BaseType;
+                    if (partType.IsGenericType && partType.GetGenericTypeDefinition() == typeof(ContentPart<>)) {
+                        var recordType = partType.GetGenericArguments().Single();
+                        contentPartRecords.Add(recordType.Name);
 
+                        // iterate over every property seeking for [AggregateAttribute]
+                        var aggregatedMembers = recordType.GetMembers(BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance)
+                            .Where(x => x.GetCustomAttributes(typeof(AggregateAttribute), false).Any())
+                            .ToList();
+
+                        if (aggregatedMembers.Any()) {
+                            foreach (var aggregatedMember in aggregatedMembers) {
+                                contentPartRecords.Add(recordType.Name + "." + aggregatedMember.Name);
+                            }
+                        }
+                    }
+                }
+
+                return WithQueryHints(new QueryHints().ExpandRecords(contentPartRecords));
+            }
+        }
     }
 
     internal static class CriteriaExtensions {

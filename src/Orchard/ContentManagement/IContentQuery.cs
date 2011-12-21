@@ -33,8 +33,6 @@ namespace Orchard.ContentManagement {
         IContentQuery<TPart, TRecord> OrderByDescending<TKey>(Expression<Func<TRecord, TKey>> keySelector);
 
         IContentQuery<TPart, TRecord> WithQueryHints(QueryHints hints);
-        
+        IContentQuery<TPart, TRecord> WithQueryHintsFor(string contentType);
     }
-
 }
-

@@ -1,6 +1,6 @@
 ﻿<ul class="pageStatus">
 <li>
-    @Display.CommentSummaryLinks(item: Model.ContentPart.ContentItem, count: Model.CommentCount, pendingCount: Model.PendingCount)
+    @Display.CommentSummaryLinks(item: Model.ContentPart.ContentItem, count: Model.CommentCount, pendingCount: ((Func<int>)Model.PendingCount)()))
     @T(" | ")&nbsp;
 </li>
 </ul>

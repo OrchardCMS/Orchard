@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using JetBrains.Annotations;
 using Orchard.Blogs.Models;
-using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Data;
+using Orchard.Data.Conventions;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Blogs.Services {
@@ -18,7 +21,11 @@ namespace Orchard.Blogs.Services {
         private readonly IRepository<BlogPartArchiveRecord> _blogArchiveRepository;
         private readonly IPublishingTaskManager _publishingTaskManager;
 
-        public BlogPostService(IContentManager contentManager, IRepository<BlogPartArchiveRecord> blogArchiveRepository, IPublishingTaskManager publishingTaskManager) {
+        public BlogPostService(
+            IContentManager contentManager, 
+            IRepository<BlogPartArchiveRecord> blogArchiveRepository, 
+            IPublishingTaskManager publishingTaskManager,
+            IContentDefinitionManager contentDefinitionManager) {
             _contentManager = contentManager;
             _blogArchiveRepository = blogArchiveRepository;
             _publishingTaskManager = publishingTaskManager;
@@ -57,7 +64,10 @@ namespace Orchard.Blogs.Services {
         }
 
         public IEnumerable<BlogPostPart> Get(BlogPart blogPart, int skip, int count, VersionOptions versionOptions) {
-            return GetBlogQuery(blogPart, versionOptions).Slice(skip, count).ToList().Select(ci => ci.As<BlogPostPart>());
+            return GetBlogQuery(blogPart, versionOptions)
+                    .Slice(skip, count)
+                    .ToList()
+                    .Select(ci => ci.As<BlogPostPart>());
         }
 
         public int PostCount(BlogPart blogPart) {
@@ -130,8 +140,11 @@ namespace Orchard.Blogs.Services {
 
         private IContentQuery<ContentItem, CommonPartRecord> GetBlogQuery(ContentPart<BlogPartRecord> blog, VersionOptions versionOptions) {
             return
-                _contentManager.Query(versionOptions, "BlogPost").Join<CommonPartRecord>().Where(
-                    cr => cr.Container == blog.Record.ContentItemRecord).OrderByDescending(cr => cr.CreatedUtc);
+                _contentManager.Query(versionOptions, "BlogPost")
+                .Join<CommonPartRecord>().Where(
+                    cr => cr.Container == blog.Record.ContentItemRecord).OrderByDescending(cr => cr.CreatedUtc)
+                .WithQueryHintsFor("BlogPost")
+                    ;
         }
     }
 }
