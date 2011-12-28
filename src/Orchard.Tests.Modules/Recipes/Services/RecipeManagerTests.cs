@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Autofac;
+using Moq;
 using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.Environment.Extensions;
@@ -62,7 +63,7 @@ namespace Orchard.Tests.Modules.Recipes.Services {
             }
 
             var builder = new ContainerBuilder();
-            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder());
+            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder(), new Mock<ICriticalErrorProvider>().Object);
             _folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             builder.RegisterType<RecipeManager>().As<IRecipeManager>();
             builder.RegisterType<RecipeHarvester>().As<IRecipeHarvester>();
