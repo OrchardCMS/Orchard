@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Tests.Stubs;
 
@@ -49,7 +51,7 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void IdsFromFoldersWithModuleTxtShouldBeListed() {
-            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder());
+            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder(), new Mock<ICriticalErrorProvider>().Object);
             IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var ids = folders.AvailableExtensions().Select(d => d.Id);
             Assert.That(ids.Count(), Is.EqualTo(5));
@@ -62,7 +64,7 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void ModuleTxtShouldBeParsedAndReturnedAsYamlDocument() {
-            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder());
+            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder(), new Mock<ICriticalErrorProvider>().Object);
             IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var sample1 = folders.AvailableExtensions().Single(d => d.Id == "Sample1");
             Assert.That(sample1.Id, Is.Not.Empty);
@@ -71,7 +73,7 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void NamesFromFoldersWithModuleTxtShouldFallBackToIdIfNotGiven() {
-            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder());
+            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder(), new Mock<ICriticalErrorProvider>().Object);
             IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var names = folders.AvailableExtensions().Select(d => d.Name);
             Assert.That(names.Count(), Is.EqualTo(5));
@@ -84,7 +86,7 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void PathsFromFoldersWithModuleTxtShouldFallBackAppropriatelyIfNotGiven() {
-            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder());
+            var harvester = new ExtensionHarvester(new StubCacheManager(), new StubWebSiteFolder(), new Mock<ICriticalErrorProvider>().Object);
             IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, harvester);
             var paths = folders.AvailableExtensions().Select(d => d.Path);
             Assert.That(paths.Count(), Is.EqualTo(5));
