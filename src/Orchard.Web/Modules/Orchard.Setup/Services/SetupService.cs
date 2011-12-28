@@ -67,9 +67,9 @@ namespace Orchard.Setup.Services {
 
         public string Setup(SetupContext context) {
             string executionId = null;
+
             // The vanilla Orchard distibution has the following features enabled.
-            if (context.EnabledFeatures == null || context.EnabledFeatures.Count() == 0) {
-                string[] hardcoded = {
+            string[] hardcoded = {
                     // Framework
                     "Orchard.Framework",
                     // Core
@@ -79,7 +79,8 @@ namespace Orchard.Setup.Services {
                     "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes",
                 };
 
-                context.EnabledFeatures = hardcoded;
+            if (context.EnabledFeatures != null) {
+                context.EnabledFeatures = hardcoded.Union(context.EnabledFeatures).Distinct();
             }
 
             var shellSettings = new ShellSettings(_shellSettings);
