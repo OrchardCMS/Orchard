@@ -246,7 +246,7 @@ namespace Orchard.Environment.Extensions.Folders {
 
                             string[] featureDeclaration = line.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
                             string featureDescriptorId = featureDeclaration[0].Trim();
-                            if (featureDescriptorId == extensionDescriptor.Id) {
+                            if (String.Equals(featureDescriptorId, extensionDescriptor.Id, StringComparison.OrdinalIgnoreCase)) {
                                 featureDescriptor = defaultFeature;
                                 featureDescriptor.Name = extensionDescriptor.Name;
                             }
