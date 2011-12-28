@@ -79,9 +79,7 @@ namespace Orchard.Setup.Services {
                     "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes",
                 };
 
-            if (context.EnabledFeatures != null) {
-                context.EnabledFeatures = hardcoded.Union(context.EnabledFeatures).Distinct();
-            }
+            context.EnabledFeatures = hardcoded.Union(context.EnabledFeatures ?? Enumerable.Empty<string>()).Distinct();
 
             var shellSettings = new ShellSettings(_shellSettings);
 
