@@ -19,7 +19,7 @@ namespace Orchard.Environment.Extensions.Compilers {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IAssemblyLoader _assemblyLoader;
-        private readonly IOrchardHost _orchardHost;
+        private readonly ICriticalErrorProvider _criticalErrorProvider;
 
         public DefaultExtensionCompiler(
             IVirtualPathProvider virtualPathProvider,
@@ -27,14 +27,14 @@ namespace Orchard.Environment.Extensions.Compilers {
             IDependenciesFolder dependenciesFolder,
             IEnumerable<IExtensionLoader> loaders,
             IAssemblyLoader assemblyLoader,
-            IOrchardHost orchardHost) {
+            ICriticalErrorProvider criticalErrorProvider) {
 
             _virtualPathProvider = virtualPathProvider;
             _projectFileParser = projectFileParser;
             _dependenciesFolder = dependenciesFolder;
             _loaders = loaders;
             _assemblyLoader = assemblyLoader;
-            _orchardHost = orchardHost;
+            _criticalErrorProvider = criticalErrorProvider;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -91,7 +91,7 @@ namespace Orchard.Environment.Extensions.Compilers {
                         }
                         else {
                             Logger.Error("Assembly reference '{0}' for project '{1}' cannot be loaded", assemblyReference.FullName, context.VirtualPath);
-                            _orchardHost.RegisterErrorMessage(T(
+                            _criticalErrorProvider.RegisterErrorMessage(T(
                                 "The assembly reference '{0}' could not be loaded.\r\n\r\n" +
                                 "There are generally a few ways to solve this issue:\r\n" +
                                 "1. Install any dependent module.\r\n" +
