@@ -1,9 +1,0 @@
-﻿Name: HomePage
-AntiForgery: enabled
-Author: The Orchard Team
-Website: http://orchardproject.net
-Version: 1.3.0
-OrchardVersion: 1.3.0
-Description: The HomePage module provides a default home page if no home route is defined.
-FeatureDescription: A fallback home page if you have none defined.
-Category: Core

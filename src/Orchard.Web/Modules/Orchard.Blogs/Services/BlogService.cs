@@ -11,11 +11,9 @@ namespace Orchard.Blogs.Services {
     [UsedImplicitly]
     public class BlogService : IBlogService {
         private readonly IContentManager _contentManager;
-        private readonly IBlogPathConstraint _blogPathConstraint;
 
-        public BlogService(IContentManager contentManager, IBlogPathConstraint blogPathConstraint) {
+        public BlogService(IContentManager contentManager) {
             _contentManager = contentManager;
-            _blogPathConstraint = blogPathConstraint;
         }
         public BlogPart Get(int id) {
             return _contentManager.Get<BlogPart>(id);

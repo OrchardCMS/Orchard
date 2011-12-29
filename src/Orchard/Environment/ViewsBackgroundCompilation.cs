@@ -58,8 +58,7 @@ namespace Orchard.Environment {
                     "~/Modules/Orchard.Setup/Views",
                     "~/Themes/SafeMode/Views",
 
-                    // Homepage
-                    "~/Core/Routable/Views",
+                    // Common
                     "~/Core/Contents/Views",
                     "~/Core/Common/Views",
                     "~/Core/Settings/Views",

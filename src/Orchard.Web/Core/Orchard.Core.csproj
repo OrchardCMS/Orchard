@@ -171,8 +171,6 @@
     <Compile Include="Feeds\Models\FeedResponse.cs" />
     <Compile Include="Feeds\Rss\RssFeedBuilder.cs" />
     <Compile Include="Feeds\Rss\RssResult.cs" />
-    <Compile Include="HomePage\Controllers\HomeController.cs" />
-    <Compile Include="HomePage\Routes.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItemPart.cs" />
@@ -333,7 +331,6 @@
   <ItemGroup>
     <Content Include="Dashboard\Module.txt" />
     <Content Include="Dashboard\Views\Admin\Index.cshtml" />
-    <Content Include="HomePage\Module.txt" />
     <Content Include="Navigation\Views\Admin\Index.cshtml" />
     <Content Include="Navigation\Views\EditorTemplates\Parts.Navigation.Menu.Edit.cshtml" />
     <Content Include="Navigation\Views\Web.config" />

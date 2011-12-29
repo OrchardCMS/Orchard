@@ -6,10 +6,7 @@ using Orchard.Mvc.Routes;
 
 namespace Orchard.Blogs {
     public class Routes : IRouteProvider {
-        private readonly IBlogPathConstraint _blogPathConstraint;
-
-        public Routes(IBlogPathConstraint blogPathConstraint) {
-            _blogPathConstraint = blogPathConstraint;
+        public Routes() {
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
@@ -189,7 +186,8 @@ namespace Orchard.Blogs {
                                                                                       {"area", "Orchard.Blogs"}
                                                                                   },
                                                          new MvcRouteHandler())
-                                                 },
+                                                 }/*,
+                                                 TODO: (PH:Autoroute) Needs reimplementing
                              new RouteDescriptor {
                                                      Route = new Route(
                                                          "{blogPath}/Archive/{*archiveData}",
@@ -223,7 +221,7 @@ namespace Orchard.Blogs {
                                                                                       {"area", "Orchard.Blogs"}
                                                                                   },
                                                          new MvcRouteHandler())
-                                                 }
+                                                 }*/
                          };
         }
     }

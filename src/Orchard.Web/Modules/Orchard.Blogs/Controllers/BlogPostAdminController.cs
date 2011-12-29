@@ -14,6 +14,11 @@ using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
+
+    /// <summary>
+    /// TODO: (PH:Autoroute) This replicates a whole lot of Core.Contents functionality. All we actually need to do is take the BlogId from the query string in the BlogPostPartDriver, and remove
+    /// helper extensions from UrlHelperExtensions.
+    /// </summary>
     [ValidateInput(false), Admin]
     public class BlogPostAdminController : Controller, IUpdateModel {
         private readonly IBlogService _blogService;

@@ -15,7 +15,7 @@ namespace Orchard.Blogs.Handlers {
     public class BlogPartHandler : ContentHandler {
         private readonly IWorkContextAccessor _workContextAccessor;
 
-        public BlogPartHandler(IRepository<BlogPartRecord> repository, IWorkContextAccessor workContextAccessor, IBlogPathConstraint blogPathConstraint) {
+        public BlogPartHandler(IRepository<BlogPartRecord> repository, IWorkContextAccessor workContextAccessor) {
             _workContextAccessor = workContextAccessor;
             Filters.Add(StorageFilter.For(repository));
 

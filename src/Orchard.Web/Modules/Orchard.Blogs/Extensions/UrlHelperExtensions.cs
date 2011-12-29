@@ -6,6 +6,9 @@ using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
 
 namespace Orchard.Blogs.Extensions {
+    /// <summary>
+    /// TODO: (PH:Autoroute) Most of these
+    /// </summary>
     public static class UrlHelperExtensions {
         public static string Blogs(this UrlHelper urlHelper) {
             return urlHelper.Action("List", "Blog", new {area = "Orchard.Blogs"});
@@ -24,19 +27,19 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogRsd(this UrlHelper urlHelper, BlogPart blogPart) {
-            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { blogPath = urlHelper.ItemDisplayUrl(blogPart), area = "Orchard.Blogs" }));
+            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { blogId = blogPart.ContentItem.Id, area = "Orchard.Blogs" }));
         }
 
         public static string BlogArchiveYear(this UrlHelper urlHelper, BlogPart blogPart, int year) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = urlHelper.ItemDisplayUrl(blogPart), archiveData = year.ToString(), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogId = blogPart.ContentItem.Id, archiveData = year.ToString(), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveMonth(this UrlHelper urlHelper, BlogPart blogPart, int year, int month) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = urlHelper.ItemDisplayUrl(blogPart), archiveData = string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogId = blogPart.ContentItem.Id, archiveData = string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveDay(this UrlHelper urlHelper, BlogPart blogPart, int year, int month, int day) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = urlHelper.ItemDisplayUrl(blogPart), archiveData = string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogId = blogPart.ContentItem.Id, archiveData = string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs" });
         }
 
         public static string BlogForAdmin(this UrlHelper urlHelper, BlogPart blogPart) {
@@ -58,11 +61,7 @@ namespace Orchard.Blogs.Extensions {
         public static string BlogPostCreate(this UrlHelper urlHelper, BlogPart blogPart) {
             return urlHelper.Action("Create", "BlogPostAdmin", new { blogId = blogPart.Id, area = "Orchard.Blogs" });
         }
-
-        public static string BlogPost(this UrlHelper urlHelper, BlogPostPart blogPostPart) {
-            return urlHelper.Action("Item", "BlogPost", new { blogPath = urlHelper.ItemDisplayUrl(blogPostPart.As<ICommonPart>().Container), postSlug = blogPostPart.As<IRoutableAspect>(), area = "Orchard.Blogs" });
-        }
-
+        
         public static string BlogPostEdit(this UrlHelper urlHelper, BlogPostPart blogPostPart) {
             return urlHelper.Action("Edit", "BlogPostAdmin", new { blogId = blogPostPart.BlogPart.Id, postId = blogPostPart.Id, area = "Orchard.Blogs" });
         }
