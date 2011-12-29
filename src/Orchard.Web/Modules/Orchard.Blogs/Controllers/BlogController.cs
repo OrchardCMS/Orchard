@@ -5,7 +5,6 @@ using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Core.Feeds;
-using Orchard.Core.Routable.Services;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
 using Orchard.Mvc;

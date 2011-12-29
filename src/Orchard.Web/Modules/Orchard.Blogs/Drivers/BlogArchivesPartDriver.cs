@@ -5,7 +5,7 @@ using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Routable.Models;
+using System;
 
 namespace Orchard.Blogs.Drivers {
     public class BlogArchivesPartDriver : ContentPartDriver<BlogArchivesPart> {
@@ -25,7 +25,7 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Display(BlogArchivesPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_BlogArchives",
                                 () => {
-                                    BlogPart blog = GetBlogFromSlug(part.ForBlog);
+                                    BlogPart blog = _blogService.Get(part.ForBlog);
 
                                     if (blog == null)
                                         return null;
@@ -36,7 +36,7 @@ namespace Orchard.Blogs.Drivers {
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
             var viewModel = new BlogArchivesViewModel {
-                Slug = part.ForBlog,
+                BlogId = part.ForBlog,
                 Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
                 };
 
@@ -47,27 +47,22 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Editor(BlogArchivesPart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new BlogArchivesViewModel();
             if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                part.ForBlog = viewModel.Slug;
+                part.ForBlog = viewModel.BlogId;
             }
 
             return Editor(part, shapeHelper);
         }
 
         protected override void Importing(BlogArchivesPart part, ImportContentContext context) {
-            var blogSlug = context.Attribute(part.PartDefinition.Name, "BlogSlug");
-            if (blogSlug != null) {
-                part.ForBlog = blogSlug;
+            var blogId = context.Attribute(part.PartDefinition.Name, "BlogId");
+            if (blogId != null) {
+                part.ForBlog = Convert.ToInt32(blogId);
             }
         }
 
         protected override void Exporting(BlogArchivesPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("BlogId", part.ForBlog);
         }
 
-        private BlogPart GetBlogFromSlug(string slug) {
-            return _contentManager.Query<BlogPart, BlogPartRecord>()
-                .Join<RoutePartRecord>().Where(rr => rr.Slug == slug)
-                .List().FirstOrDefault();            
-        }
     }
 }

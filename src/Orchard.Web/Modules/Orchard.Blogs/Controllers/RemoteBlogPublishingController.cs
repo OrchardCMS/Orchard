@@ -21,10 +21,10 @@ namespace Orchard.Blogs.Controllers {
 
         protected ILogger Logger { get; set; }
 
-        public ActionResult Rsd(string blogPath) {
+        public ActionResult Rsd(int blogId) {
             Logger.Debug("RSD requested");
 
-            BlogPart blogPart = _blogService.Get(blogPath);
+            BlogPart blogPart = _blogService.Get(blogId);
 
             if (blogPart == null)
                 return HttpNotFound();

@@ -5,7 +5,7 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Routable.Models;
+using Orchard.Core.Title.Models;
 
 namespace Orchard.Blogs.Services {
     [UsedImplicitly]
@@ -17,11 +17,8 @@ namespace Orchard.Blogs.Services {
             _contentManager = contentManager;
             _blogPathConstraint = blogPathConstraint;
         }
-
-        public BlogPart Get(string path) {
-            return _contentManager.Query<BlogPart, BlogPartRecord>()
-                .Join<RoutePartRecord>().Where(rr => rr.Path == path)
-                .List().FirstOrDefault();
+        public BlogPart Get(int id) {
+            return _contentManager.Get<BlogPart>(id);
         }
 
         public ContentItem Get(int id, VersionOptions versionOptions) {
@@ -34,15 +31,9 @@ namespace Orchard.Blogs.Services {
 
         public IEnumerable<BlogPart> Get(VersionOptions versionOptions) {
             return _contentManager.Query<BlogPart, BlogPartRecord>(versionOptions)
-                .Join<RoutePartRecord>()
+                .Join<TitlePartRecord>()
                 .OrderBy(br => br.Title)
                 .List();
-        }
-
-        public BlogPart GetFromSlug(string slug) {
-            return _contentManager.Query<BlogPart, BlogPartRecord>()
-                .Join<RoutePartRecord>().Where(rr => rr.Slug == slug)
-                .List().FirstOrDefault();
         }
 
         public void Delete(ContentItem blog) {

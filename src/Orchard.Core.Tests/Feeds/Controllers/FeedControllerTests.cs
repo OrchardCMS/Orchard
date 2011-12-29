@@ -16,7 +16,6 @@ using Orchard.Core.Feeds.Controllers;
 using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.Rss;
 using Orchard.Core.Feeds.StandardBuilders;
-using Orchard.Core.Routable.Models;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 using Orchard.Core.Title.Models;

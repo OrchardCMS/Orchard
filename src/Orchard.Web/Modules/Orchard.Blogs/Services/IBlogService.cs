@@ -4,7 +4,7 @@ using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Services {
     public interface IBlogService : IDependency {
-        BlogPart Get(string path);
+        BlogPart Get(int id);
         ContentItem Get(int id, VersionOptions versionOptions);
         IEnumerable<BlogPart> Get();
         IEnumerable<BlogPart> Get(VersionOptions versionOptions);

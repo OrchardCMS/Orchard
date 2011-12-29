@@ -5,7 +5,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Contents.Controllers;
 using Orchard.Core.Contents.Settings;
-using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization.Models;
 using Orchard.Localization.Services;
@@ -54,11 +53,12 @@ namespace Orchard.Localization.Controllers {
                 ?? _cultureManager.GetCurrentCulture(HttpContext); // could be null but the person doing the translating might be translating into their current culture
 
             //todo: need a better solution for modifying some parts when translating - or go with a completely different experience
+            /*
             if (contentItem.Has<RoutePart>()) {
                 RoutePart routePart = contentItem.As<RoutePart>();
                 routePart.Slug = string.Format("{0}{2}{1}", routePart.Slug, siteCultures.Any(s => string.Equals(s, selectedCulture, StringComparison.OrdinalIgnoreCase)) ? selectedCulture : "", !string.IsNullOrWhiteSpace(routePart.Slug) ? "-" : "");
                 routePart.Path = null;
-            }
+            }*/
 
             if (contentItem.As<LocalizationPart>().Culture != null)
                 contentItem.As<LocalizationPart>().Culture.Culture = null;

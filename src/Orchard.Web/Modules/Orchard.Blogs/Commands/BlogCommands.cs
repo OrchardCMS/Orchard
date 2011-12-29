@@ -8,8 +8,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
-using Orchard.Core.Routable.Models;
-using Orchard.Core.Routable.Services;
 using Orchard.Security;
 using Orchard.Blogs.Services;
 using Orchard.Core.Navigation.Services;

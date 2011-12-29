@@ -7,8 +7,6 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Routable.Models;
-using Orchard.Core.Routable.Services;
 using Orchard.Data;
 using Orchard.Services;
 

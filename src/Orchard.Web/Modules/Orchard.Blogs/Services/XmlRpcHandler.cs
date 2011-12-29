@@ -29,18 +29,16 @@ namespace Orchard.Blogs.Services {
         private readonly IContentManager _contentManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
-        private readonly IRoutableService _routableService;
         private readonly RouteCollection _routeCollection;
 
         public XmlRpcHandler(IBlogService blogService, IBlogPostService blogPostService, IContentManager contentManager,
-            IAuthorizationService authorizationService, IMembershipService membershipService, IRoutableService routableService,
+            IAuthorizationService authorizationService, IMembershipService membershipService, 
             RouteCollection routeCollection) {
             _blogService = blogService;
             _blogPostService = blogPostService;
             _contentManager = contentManager;
             _authorizationService = authorizationService;
             _membershipService = membershipService;
-            _routableService = routableService;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -205,12 +203,15 @@ namespace Orchard.Blogs.Services {
                 blogPost.As<ICommonPart>().Container = blog;
             }
 
-            //RoutePart
-            if (blogPost.Is<RoutePart>()) {
-                blogPost.As<RoutePart>().Title = HttpUtility.HtmlDecode(title);
-                blogPost.As<RoutePart>().Slug = slug;
-                _routableService.FillSlugFromTitle(blogPost.As<RoutePart>());
-                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathWithSlug(blogPost.As<RoutePart>().Slug);
+            //TitlePart
+            if (blogPost.Is<TitlePart>()) {
+                blogPost.As<TitlePart>().Title = HttpUtility.HtmlDecode(title);
+            }
+            
+            //AutoroutePart
+            dynamic dBlogPost = blogPost;
+            if (dBlogPost.AutoroutePart!=null){
+                dBlogPost.AutoroutePart.Alias = slug;
             }
 
             _contentManager.Create(blogPost, VersionOptions.Draft);
@@ -286,12 +287,14 @@ namespace Orchard.Blogs.Services {
                 blogPost.As<BodyPart>().Text = description;
             }
 
-            //RoutePart
+            //TitlePart
             if (blogPost.Is<TitlePart>()) {
                 blogPost.As<TitlePart>().Title = HttpUtility.HtmlDecode(title);
-                blogPost.As<RoutePart>().Slug = slug;
-                _routableService.FillSlugFromTitle(blogPost.As<RoutePart>());
-                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathWithSlug(blogPost.As<RoutePart>().Slug);
+            }
+            //AutoroutePart
+            dynamic dBlogPost = blogPost;
+            if (dBlogPost.AutoroutePart != null) {
+                dBlogPost.AutoroutePart.Alias = slug;
             }
 
             // try to get the UTC timezone by default
@@ -360,10 +363,14 @@ namespace Orchard.Blogs.Services {
             var blogStruct = new XRpcStruct()
                 .Set("postid", blogPostPart.Id)
                 .Set("title", HttpUtility.HtmlEncode(blogPostPart.Title))
-                .Set("wp_slug", blogPostPart.Slug)
+                
                 .Set("description", blogPostPart.Text)
                 .Set("link", url)
                 .Set("permaLink", url);
+            dynamic dBlogPost = blogPostPart;
+            if (dBlogPost.AutoroutePart != null) {
+                blogStruct.Set("wp_slug", dBlogPost.AutoroutePart.Alias);
+            }
 
             if (blogPostPart.PublishedUtc != null) {
                 blogStruct.Set("dateCreated", blogPostPart.PublishedUtc);
