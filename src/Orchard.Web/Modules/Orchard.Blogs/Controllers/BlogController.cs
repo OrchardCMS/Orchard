@@ -61,6 +61,7 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Item(int blogId, PagerParameters pagerParameters) {
+            // TODO: (PH:Autoroute) Should use Containers so we can lose this action and rely on ContainerPartDriver instead
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
             var blogPart = _blogService.Get(blogId, VersionOptions.Published).As<BlogPart>();

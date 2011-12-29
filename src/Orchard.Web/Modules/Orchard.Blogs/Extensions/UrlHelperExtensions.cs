@@ -7,7 +7,7 @@ using Orchard.Mvc.Html;
 
 namespace Orchard.Blogs.Extensions {
     /// <summary>
-    /// TODO: (PH:Autoroute) Most of these
+    /// TODO: (PH:Autoroute) Many of these are or could be redundant (see controllers)
     /// </summary>
     public static class UrlHelperExtensions {
         public static string Blogs(this UrlHelper urlHelper) {
@@ -35,11 +35,11 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogArchiveMonth(this UrlHelper urlHelper, BlogPart blogPart, int year, int month) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogId = blogPart.ContentItem.Id, archiveData = string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogId = blogPart.ContentItem.Id, archiveData = string.Format("{0:0000}/{1:00}", year, month), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveDay(this UrlHelper urlHelper, BlogPart blogPart, int year, int month, int day) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogId = blogPart.ContentItem.Id, archiveData = string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogId = blogPart.ContentItem.Id, archiveData = string.Format("{0:0000}/{1:00}/{2:00}", year, month, day), area = "Orchard.Blogs" });
         }
 
         public static string BlogForAdmin(this UrlHelper urlHelper, BlogPart blogPart) {
