@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Events;
@@ -41,7 +40,9 @@ namespace Orchard.Email.Rules {
             Func<dynamic, LocalizedString> display = context => T("Send an e-mail");
 
             describe.For("Messaging", T("Messaging"), T("Messages"))
-                .Element("SendEmail", T("Send e-mail"), T("Sends an e-mail to a specific user."), (Func<dynamic, bool>)Send, display, "ActionEmail");
+                .Element(
+                    "SendEmail", T("Send e-mail"), T("Sends an e-mail to a specific user."), (Func<dynamic, bool>)Send,
+                    display, "ActionEmail");
         }
 
         private bool Send(dynamic context) {
@@ -55,6 +56,8 @@ namespace Orchard.Email.Rules {
                     if (owner != null && owner.Record != null) {
                         _messageManager.Send(owner.Record, MessageType, "email", properties);
                     }
+                    _messageManager.Send(
+                        SplitEmail(owner.As<IUser>().Email), MessageType, "email", properties);
                 }
             }
             else if (recipient == "author") {
@@ -74,15 +77,20 @@ namespace Orchard.Email.Rules {
                     _messageManager.Send(user.ContentItem.Record, MessageType, "email", properties);
                 }
             }
+            else if (recipient == "other") {
+                var email = properties["RecipientOther"];
+                _messageManager.Send(SplitEmail(email), MessageType, "email", properties);
+            }
             return true;
+        }
+
+        private static IEnumerable<string> SplitEmail(string commaSeparated) {
+            return commaSeparated.Split(new[] { ',', ';' });
         }
     }
 
     public class MailActionsHandler : IMessageEventHandler {
-        private readonly IContentManager _contentManager;
-
-        public MailActionsHandler(IContentManager contentManager) {
-            _contentManager = contentManager;
+        public MailActionsHandler() {
             T = NullLocalizer.Instance;
         }
 
@@ -92,7 +100,8 @@ namespace Orchard.Email.Rules {
             if (context.MessagePrepared)
                 return;
 
-            if (!context.Recipients.Any()) {
+            if ((context.Recipients == null || !context.Recipients.Any()) &&
+                (context.Addresses == null || !context.Addresses.Any())) {
                 return;
             }
 
@@ -107,12 +116,10 @@ namespace Orchard.Email.Rules {
         }
 
         private static void FormatEmailBody(MessageContext context) {
-            context.MailMessage.Body = "<p style=\"font-family:Arial, Helvetica; font-size:10pt;\">" + context.MailMessage.Body;
-            context.MailMessage.Body += "</p>";
+            context.MailMessage.Body = "<p style=\"font-family:Arial, Helvetica; font-size:10pt;\">" + context.MailMessage.Body + "</p>";
         }
 
         public void Sent(MessageContext context) {
         }
     }
-
 }

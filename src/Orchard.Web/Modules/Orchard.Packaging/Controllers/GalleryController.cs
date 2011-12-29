@@ -63,6 +63,7 @@ namespace Orchard.Packaging.Controllers {
             });
         }
 
+        [HttpPost]
         public ActionResult Remove(int id) {
             if (_shellSettings.Name != ShellSettings.DefaultName || !Services.Authorizer.Authorize(StandardPermissions.SiteOwner, T("Not authorized to remove sources")))
                 return new HttpUnauthorizedResult();

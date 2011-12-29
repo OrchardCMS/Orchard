@@ -69,7 +69,10 @@ namespace Orchard.DisplayManagement.Implementation {
             }
 
             // copy all binding sources (all templates for this shape) in order to use them as Localization scopes
-            shapeMetadata.BindingSources = shapeBinding.ShapeDescriptor.BindingSources;
+            shapeMetadata.BindingSources = shapeBinding.ShapeDescriptor.BindingSources.Where(x => x != null).ToList();
+            if (!shapeMetadata.BindingSources.Any()) {
+                shapeMetadata.BindingSources.Add(shapeBinding.ShapeDescriptor.BindingSource);
+            }
 
             // invoking ShapeMetadata displaying events
             shapeMetadata.Displaying.Invoke(action => action(displayingContext), Logger);

@@ -24,15 +24,6 @@ namespace Orchard.Users.Handlers {
             if (context.MessagePrepared)
                 return;
 
-            // we expect a single account to be created
-            var contentItem = _contentManager.Get(context.Recipients.Single().Id);
-            if ( contentItem == null )
-                return;
-
-            var recipient = contentItem.As<UserPart>();
-            if ( recipient == null )
-                return;
-
             switch (context.Type) {
                 case MessageTypes.Moderation:
                     context.MailMessage.Subject = T("New account").Text;
@@ -61,6 +52,7 @@ namespace Orchard.Users.Handlers {
                     break;
 
                 case MessageTypes.LostPassword:
+                    var recipient = GetRecipient(context);
                     context.MailMessage.Subject = T("Lost password").Text;
                     context.MailMessage.Body =
                         T("Dear {0}, please <a href=\"{1}\">click here</a> to change your password.", recipient.UserName,
@@ -69,6 +61,15 @@ namespace Orchard.Users.Handlers {
                     context.MessagePrepared = true;
                     break;
             }
+        }
+
+        private UserPart GetRecipient(MessageContext context) {
+            // we expect a single account to be created
+            var contentItem = _contentManager.Get(context.Recipients.Single().Id);
+            if (contentItem == null) {
+                return null;
+            }
+            return contentItem.As<UserPart>();
         }
 
         private static void FormatEmailBody(MessageContext context) {

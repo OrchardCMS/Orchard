@@ -213,7 +213,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             builder.AppendFormat("create index {1} on {0} ({2}) ",
                 _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(command.IndexName),
+                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)),
                 String.Join(", ", command.ColumnNames));
 
             _sqlStatements.Add(builder.ToString());
@@ -226,7 +226,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             builder.AppendFormat("drop index {0}.{1}",
                 _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(command.IndexName));
+                _dialect.QuoteForColumnName(PrefixTableName(command.IndexName)));
             _sqlStatements.Add(builder.ToString());
         }
 
@@ -253,7 +253,7 @@ namespace Orchard.Data.Migration.Interpreters {
             builder.Append("alter table ")
                 .Append(_dialect.QuoteForTableName(PrefixTableName(command.SrcTable)));
 
-            builder.Append(_dialect.GetAddForeignKeyConstraintString(command.Name,
+            builder.Append(_dialect.GetAddForeignKeyConstraintString(PrefixTableName(command.Name),
                 command.SrcColumns,
                 _dialect.QuoteForTableName(PrefixTableName(command.DestTable)),
                 command.DestColumns,
@@ -271,13 +271,24 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.AppendFormat("alter table {0} drop constraint {1}", _dialect.QuoteForTableName(PrefixTableName(command.SrcTable)), command.Name);
+            builder.AppendFormat("alter table {0} drop constraint {1}", _dialect.QuoteForTableName(PrefixTableName(command.SrcTable)), PrefixTableName(command.Name));
             _sqlStatements.Add(builder.ToString());
 
             RunPendingStatements();
         }
 
         private string GetTypeName(DbType dbType, int? length, byte precision, byte scale) {
+
+            // NHibernate has a bug in MsSqlCeDialect, as it's declaring the decimal type as this:
+            // NUMERIC(19, $1), where $1 is the Length parameter, and it's wrong. It should be 
+            // NUMERIC(19, $s) in order to use the Scale parameter, as it's done for SQL Server dialects
+            // https://nhibernate.jira.com/browse/NH-2979
+            if (_dialect is NHibernate.Dialect.MsSqlCeDialect
+                && dbType == DbType.Decimal
+                && scale != 0) {
+                return _dialect.GetTypeName(new SqlType(dbType), scale, precision, scale);
+            }
+
             return precision > 0
                        ? _dialect.GetTypeName(new SqlType(dbType, precision, scale))
                        : length.HasValue

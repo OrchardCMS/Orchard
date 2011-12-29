@@ -17,7 +17,7 @@ namespace Orchard.Core.Navigation.Services {
         public string MenuName { get { return "main"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            var menuParts = _contentManager.Query<MenuPart, MenuPartRecord>().Where(x => x.OnMainMenu).List();
+            var menuParts = _contentManager.Query<MenuPart, MenuPartRecord>().Where(x => x.OnMainMenu).WithQueryHints(new QueryHints().ExpandRecords<MenuItemPartRecord>()).List();
             foreach (var menuPart in menuParts) {
                 if (menuPart != null) {
                     var part = menuPart;

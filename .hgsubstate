@@ -3,6 +3,6 @@ bdbb631a4a7ba0ffcd59269b79a5084065c0a9f7 src/Orchard.Web/Modules/Orchard.Alias
 ec573e5476f7e8a5a61593d6393e9985e9484fcc src/Orchard.Web/Modules/Orchard.Forms
 7c88e691cc47dbb6e628f6b288ce9b9d4cd8a5c7 src/Orchard.Web/Modules/Orchard.Projections
 bf1f2857f36786c66013e0dee3c37e94cd26465e src/Orchard.Web/Modules/Orchard.Routable
-01b83c05050bb731d9f69256bbe8884d458ea1c9 src/Orchard.Web/Modules/Orchard.Rules
+3153ea8e0e869664ce841016b020dd5e67667bdf src/Orchard.Web/Modules/Orchard.Rules
 65057c6a5cd71f7994ba9bcbeece50dbb737620e src/Orchard.Web/Modules/Orchard.TaskLease
 ff19551decac9829f4f6cd94b61e69b22a796653 src/Orchard.Web/Modules/Orchard.Tokens

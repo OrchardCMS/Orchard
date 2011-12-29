@@ -8,6 +8,7 @@
         <div>
             <label for="@Html.FieldIdFor(m => m.Name)">@T("Name")</label>
             @Html.TextBoxFor(m => m.Name, new { @class = "text" })
+            <span class="hint">@T("The name of the tenant as it will be displayed in the admin.")</span>
         </div>        
         <div>
             <label for="@Html.FieldIdFor(m => m.RequestUrlHost)">@T("Host")</label>
@@ -41,6 +42,23 @@
             </div>
         </div>
     </fieldset>
+    
+    <fieldset>
+        <div>
+            <label for="@Html.FieldIdFor(m => m.Themes)">@T("Available Themes")</label>
+            
+            @for (var i=0 ;i<Model.Themes.Count; i++) {
+                var theme = Model.Themes[i];
+                @Html.CheckBox(Html.FieldNameFor(m => m.Themes[i].Checked), Model.Themes[i].Checked, new { id = Html.FieldIdFor(x => x.Themes[i]) })
+                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Themes[i])">@Model.Themes[i].ThemeName</label>
+                @Html.HiddenFor(m => m.Themes[i].ThemeId)
+                @Html.HiddenFor(m => m.Themes[i].ThemeName)
+            }
+
+            <span class="hint">@T("Select the Themes which should be available for this tenant. If none is selected, they will all be available.")</span>
+        </div>  
+    </fieldset>    
+    
     <fieldset>
         <button class="primaryAction" type="submit">@T("Save")</button>
     </fieldset>

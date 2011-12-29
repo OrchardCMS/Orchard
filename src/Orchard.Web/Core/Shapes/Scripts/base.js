@@ -208,7 +208,14 @@
             }
             form.css({ "position": "absolute", "left": "-9999em" });
             $("body").append(form);
-            _this.click(function () { form.submit(); return false; });
+            _this.click(function () {
+                if (_this.filter("[itemprop~='RemoveUrl']").length == 1) {
+                    if (!confirm(confirmRemoveMessage)) {
+                        return false;
+                    }
+                }
+                form.submit(); 
+            });
         });
     });
 })(jQuery);

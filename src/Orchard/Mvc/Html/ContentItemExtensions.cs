@@ -13,6 +13,9 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(html.Encode(metadata.DisplayText));
         }
 
+        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent content) {
+            return ItemDisplayLink(html, null, content);
+        }
 
         public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, IContent content) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
@@ -25,8 +28,39 @@ namespace Orchard.Mvc.Html {
                 metadata.DisplayRouteValues);
         }
 
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent content) {
-            return ItemDisplayLink(html, null, content);
+        public static string ItemDisplayUrl(this UrlHelper urlHelper, IContent content) {
+            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
+            if (metadata.DisplayRouteValues == null)
+                return null;
+
+            return urlHelper.Action(
+                Convert.ToString(metadata.DisplayRouteValues["action"]),
+                metadata.DisplayRouteValues);
+        }
+
+        public static MvcHtmlString ItemRemoveLink(this HtmlHelper html, IContent content) {
+            return ItemRemoveLink(html, null, content, null);
+        }
+
+        public static MvcHtmlString ItemRemoveLink(this HtmlHelper html, string linkText, IContent content, object additionalRouteValues) {
+            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
+            if (metadata.RemoveRouteValues == null)
+                return null;
+
+            return html.ActionLink(
+                NonNullOrEmpty(linkText, metadata.DisplayText, "remove"),
+                Convert.ToString(metadata.RemoveRouteValues["action"]),
+                metadata.RemoveRouteValues.Merge(additionalRouteValues));
+        }
+
+        public static string ItemRemoveUrl(this UrlHelper urlHelper, IContent content, object additionalRouteValues) {
+            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
+            if (metadata.RemoveRouteValues == null)
+                return null;
+
+            return urlHelper.Action(
+                Convert.ToString(metadata.RemoveRouteValues["action"]),
+                metadata.RemoveRouteValues.Merge(additionalRouteValues));
         }
 
         public static MvcHtmlString ItemEditLinkWithReturnUrl(this HtmlHelper html, string linkText, IContent content) {
@@ -65,16 +99,6 @@ namespace Orchard.Mvc.Html {
                 NonNullOrEmpty(linkText, metadata.DisplayText, content.ContentItem.TypeDefinition.DisplayName),
                 Convert.ToString(metadata.AdminRouteValues["action"]),
                 metadata.AdminRouteValues.Merge(additionalRouteValues));
-        }
-
-        public static string ItemDisplayUrl(this UrlHelper urlHelper, IContent content) {
-            var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
-            if (metadata.DisplayRouteValues == null)
-                return null;
-
-            return urlHelper.Action(
-                Convert.ToString(metadata.DisplayRouteValues["action"]),
-                metadata.DisplayRouteValues);
         }
 
         public static string ItemEditUrl(this UrlHelper urlHelper, IContent content) {

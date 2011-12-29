@@ -24,14 +24,25 @@ namespace Orchard.UI.Resources {
             get { return _attributes != null && _attributes.Any(a => a.Value != null); }
         }
 
+        /// <summary>
+        /// The resource will be displayed in the head of the page
+        /// </summary>
         public RequireSettings AtHead() {
             return AtLocation(ResourceLocation.Head);
         }
 
+        /// <summary>
+        /// The resource will be displayed at the foot of the page
+        /// </summary>
+        /// <returns></returns>
         public RequireSettings AtFoot() {
             return AtLocation(ResourceLocation.Foot);
         }
 
+        /// <summary>
+        /// The resource will be displayed at the specified location
+        /// </summary>
+        /// <param name="location">The location where the resource should be displayed</param>
         public RequireSettings AtLocation(ResourceLocation location) {
             // if head is specified it takes precedence since it's safer than foot
             Location = (ResourceLocation)Math.Max((int)Location, (int)location);

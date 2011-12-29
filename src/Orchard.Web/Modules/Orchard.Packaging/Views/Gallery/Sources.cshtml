@@ -6,7 +6,7 @@
 <div class="manage">
     @Html.ActionLink(T("Add Feed").Text, "AddSource", new { }, new { @class = "button primaryAction" })
 </div>
-
+@using (Html.BeginFormAntiForgeryPost()) {
 <fieldset>
     <table class="items" summary="@T("This is a table of the gallery feeds in your application")">
         <colgroup>
@@ -21,12 +21,13 @@
                 <th scope="col"></th>
             </tr>
         </thead>
-        @foreach ( var item in Model.Sources ) {
+        @foreach (var item in Model.Sources) {
         <tr>
             <td>@item.FeedTitle</td>
             <td>@Html.Link(item.FeedUrl, item.FeedUrl)</td>
-            <td>@Html.ActionLink(T("Delete").ToString(), "Remove", new { id = item.Id })</td>
+            <td>@Html.ActionLink(T("Delete").ToString(), "Remove", new { id = item.Id }, new { itemprop = "RemoveUrl UnsafeUrl" })</td>
         </tr>
         }
     </table>
 </fieldset>
+}

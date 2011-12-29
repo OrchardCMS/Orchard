@@ -23,20 +23,17 @@ namespace Orchard.Core.Containers.Drivers {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly IContentManager _contentManager;
-        private readonly dynamic _shapeFactory;
         private readonly ISiteService _siteService;
         private readonly IFeedManager _feedManager;
 
         public ContainerPartDriver(
             IContentDefinitionManager contentDefinitionManager, 
             IOrchardServices orchardServices, 
-            IShapeFactory shapeFactory,
             ISiteService siteService,
             IFeedManager feedManager) {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _contentManager = orchardServices.ContentManager;
-            _shapeFactory = shapeFactory;
             _siteService = siteService;
             _feedManager = feedManager;
 
@@ -49,43 +46,40 @@ namespace Orchard.Core.Containers.Drivers {
             if (!part.ItemsShown)
                 return null;
 
-            return Combined(
-                ContentShape("Parts_Container_Contained",
-                             () => {
-                                 var container = part.ContentItem;
+        return ContentShape("Parts_Container_Contained",
+                            () => {
+                                var container = part.ContentItem;
 
-                                 IContentQuery<ContentItem> query = _contentManager
-                                    .Query(VersionOptions.Published)
-                                    .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
+                                IContentQuery<ContentItem> query = _contentManager
+                                .Query(VersionOptions.Published)
+                                .Join<CommonPartRecord>().Where(cr => cr.Container.Id == container.Id);
 
-                                 var descendingOrder = part.OrderByDirection == (int)OrderByDirection.Descending;
-                                 query = query.OrderBy(part.OrderByProperty, descendingOrder);
+                                var descendingOrder = part.OrderByDirection == (int)OrderByDirection.Descending;
+                                query = query.OrderBy(part.OrderByProperty, descendingOrder);
                                  var metadata = container.ContentManager.GetItemMetadata(container);
                                  if (metadata!=null)
                                     _feedManager.Register(metadata.DisplayText, "rss", new RouteValueDictionary { { "containerid", container.Id } });
 
-                                 var pager = new Pager(_siteService.GetSiteSettings(), part.PagerParameters);
-                                 pager.PageSize = part.PagerParameters.PageSize != null && part.Paginated
-                                                    ? pager.PageSize
-                                                    : part.PageSize;
+                                var pager = new Pager(_siteService.GetSiteSettings(), part.PagerParameters);
+                                pager.PageSize = part.PagerParameters.PageSize != null && part.Paginated
+                                                ? pager.PageSize
+                                                : part.PageSize;
 
-                                 // var pagerShape = _shapeFactory.Pager(pager).TotalItemCount(query.Count());
+                                var pagerShape = shapeHelper.Pager(pager).TotalItemCount(query.Count());
 
-                                 var startIndex = part.Paginated ? pager.GetStartIndex() : 0;
-                                 var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
+                                var startIndex = part.Paginated ? pager.GetStartIndex() : 0;
+                                var pageOfItems = query.Slice(startIndex, pager.PageSize).ToList();
 
-                                 var list = _shapeFactory.List();
-                                 list.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
-                                 list.Classes.Add("content-items");
-                                 list.Classes.Add("list-items");
+                                var listShape = shapeHelper.List();
+                                listShape.AddRange(pageOfItems.Select(item => _contentManager.BuildDisplay(item, "Summary")));
+                                listShape.Classes.Add("content-items");
+                                listShape.Classes.Add("list-items");
 
-                                 return list;
-                             }),
-                ContentShape("Parts_Container_Contained_Summary",
-                             () => shapeHelper.Parts_Container_Contained_Summary(ContentPart: part)),
-                ContentShape("Parts_Container_Contained_SummaryAdmin",
-                             () => shapeHelper.Parts_Container_Contained_SummaryAdmin(ContentPart: part))
-                );
+                                return shapeHelper.Parts_Container_Contained(
+                                    List: listShape,
+                                    Pager: pagerShape
+                                );
+                            });
         }
 
         protected override DriverResult Editor(ContainerPart part, dynamic shapeHelper) {

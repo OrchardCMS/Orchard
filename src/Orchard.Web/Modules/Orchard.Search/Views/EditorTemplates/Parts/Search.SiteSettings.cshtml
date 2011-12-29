@@ -4,20 +4,15 @@
 <fieldset>
     <legend>@T("Search")</legend>
     <div>
+        <label>@T("Searched fields")</label>
+        <span class="hint">@T("Check any property which should be used for search queries.")</span>
         @{var entryIndex = 0;}
 
         @if (Model.Entries != null && Model.Entries.Any()) {
         <ul>
             @foreach(var modelEntry in Model.Entries) {
             <li>
-               @if(Model.Entries[entryIndex].Selected) {
-               
-                <input type="checkbox" value="true" checked="checked" name="@Html.FieldNameFor(m => m.Entries[entryIndex].Selected)" id="@Html.FieldIdFor(m => m.Entries[entryIndex].Selected)"/>
-              
-               }
-               else {
-                 <input type="checkbox" value="true" name="@Html.FieldNameFor(m => m.Entries[entryIndex].Selected)" id="@Html.FieldIdFor(m => m.Entries[entryIndex].Selected)"/> 
-               }
+               @Html.EditorFor(m => m.Entries[entryIndex].Selected)
                @Html.HiddenFor(m => m.Entries[entryIndex].Field)
                <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Entries[entryIndex].Selected)">@Model.Entries[entryIndex].Field</label>
             </li>
@@ -30,4 +25,11 @@
             <span class="hint">@T("There are currently no fields to search from. Please update you index, and check some indexable content exists.")</span>
         }
     </div>
+    <div>
+        <label>@T("Localization")</label>
+        @Html.EditorFor(m => m.FilterCulture)
+        <label class="forcheckbox" for="@Html.FieldIdFor(m => m.FilterCulture)">@T("Narrow search to current culture only")</label>
+        <span class="hint">@T("Is checked, search results will only include content items localized in the current culture of the request.")</span>
+    </div>
+
 </fieldset>

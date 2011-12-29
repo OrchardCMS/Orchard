@@ -60,6 +60,7 @@ namespace Orchard.Environment {
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
             builder.RegisterType<ViewsBackgroundCompilation>().As<IViewsBackgroundCompilation>().SingleInstance();
             builder.RegisterType<DefaultExceptionPolicy>().As<IExceptionPolicy>().SingleInstance();
+            builder.RegisterType<DefaultCriticalErrorProvider>().As<ICriticalErrorProvider>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
@@ -70,8 +71,9 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<DefaultAssemblyProbingFolder, IAssemblyProbingFolder>(builder);
             RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
+            
 
-            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().As<ICriticalErrorProvider>().SingleInstance();
+            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
             {
                 builder.RegisterType<ShellSettingsManager>().As<IShellSettingsManager>().SingleInstance();
 

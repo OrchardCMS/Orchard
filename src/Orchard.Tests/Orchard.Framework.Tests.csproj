@@ -168,6 +168,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\ContentQueryTests.cs" />
+    <Compile Include="ContentManagement\Handlers\LambdaPartHandler.cs" />
+    <Compile Include="ContentManagement\HqlExpressionTests.cs" />
     <Compile Include="ContentManagement\DynamicContentQueryTests.cs" />
     <Compile Include="ContentManagement\DefaultContentManagerTests.cs">
       <SubType>Code</SubType>
@@ -187,6 +189,7 @@
     <Compile Include="ContentManagement\Handlers\AlphaPartHandler.cs" />
     <Compile Include="ContentManagement\Models\BetaPart.cs" />
     <Compile Include="ContentManagement\Handlers\BetaPartHandler.cs" />
+    <Compile Include="ContentManagement\Models\LambdaPart.cs" />
     <Compile Include="ContentManagement\Models\DeltaPart.cs" />
     <Compile Include="ContentManagement\Models\EpsilonPart.cs" />
     <Compile Include="ContentManagement\Models\FlavoredPart.cs" />
@@ -198,6 +201,7 @@
     <Compile Include="ContentManagement\Handlers\Coordinators\ContentPartDriverCoordinatorTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Records\LambdaRecord.cs" />
     <Compile Include="ContentManagement\Records\MegaRecord.cs" />
     <Compile Include="ContentManagement\Records\DeltaRecord.cs">
       <SubType>Code</SubType>

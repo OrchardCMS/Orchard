@@ -102,6 +102,7 @@
     <Compile Include="Containers\ViewModels\ContainableViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerWidgetViewModel.cs" />
     <Compile Include="Containers\ViewModels\ContainerViewModel.cs" />
+    <Compile Include="Contents\ControlWrapper.cs" />
     <Compile Include="Contents\Handlers\RulesHandler.cs" />
     <Compile Include="Contents\Rules\ContentEvents.cs" />
     <Compile Include="Contents\Rules\ContentForms.cs" />
@@ -458,7 +459,7 @@
     <Content Include="Shapes\Views\ErrorPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HomePage\Views\Home\Index.cshtml" />
+    <Content Include="Containers\Views\Parts.Container.Contained.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

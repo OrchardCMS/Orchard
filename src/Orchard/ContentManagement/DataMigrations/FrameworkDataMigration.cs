@@ -18,7 +18,7 @@ namespace Orchard.ContentManagement.DataMigrations {
                     .Column<bool>("Published")
                     .Column<bool>("Latest")
                     .Column<string>("Data", c => c.Unlimited())
-                    .Column<int>("ContentItemRecord_id")
+                    .Column<int>("ContentItemRecord_id", c => c.NotNull())
                 );
 
             SchemaBuilder.CreateTable("ContentTypeRecord", 

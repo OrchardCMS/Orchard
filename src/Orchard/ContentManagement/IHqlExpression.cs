@@ -3,18 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Orchard.ContentManagement {
-    public interface IExpressionFactory {
-        IExpressionFactory WithRecord(string recordName);
-        IExpressionFactory WithVersionRecord(string recordName);
-        IExpressionFactory WithRelationship(string propertyName);
-        IExpressionFactory WithIds(ICollection<int> ids);
+
+    public interface IHqlExpressionFactory {
 
         void Eq(string propertyName, object value);
-        void Like(string propertyName, object value);
-        void Like(string propertyName, string value, MatchMode matchMode, char? escapeChar);
-        void Like(string propertyName, string value, MatchMode matchMode);
-        void InsensitiveLike(string propertyName, string value, MatchMode matchMode);
-        void InsensitiveLike(string propertyName, object value);
+        void Like(string propertyName, string value, HqlMatchMode matchMode);
+        void InsensitiveLike(string propertyName, string value, HqlMatchMode matchMode);
         void Gt(string propertyName, object value);
         void Lt(string propertyName, object value);
         void Le(string propertyName, object value);
@@ -33,19 +27,13 @@ namespace Orchard.ContentManagement {
         void IsNotNull(string propertyName);
         void IsNotEmpty(string propertyName);
         void IsEmpty(string propertyName);
-        void And(Action<IExpressionFactory> lhs, Action<IExpressionFactory> rhs);
-        void Or(Action<IExpressionFactory> lhs, Action<IExpressionFactory> rhs);
-        void Not(Action<IExpressionFactory> expression);
-        void Conjunction(Action<IExpressionFactory> expression, params Action<IExpressionFactory>[] otherExpressions);
-        void Disjunction(Action<IExpressionFactory> expression, params Action<IExpressionFactory>[] otherExpressions);
+        void And(Action<IHqlExpressionFactory> lhs, Action<IHqlExpressionFactory> rhs);
+        void Or(Action<IHqlExpressionFactory> lhs, Action<IHqlExpressionFactory> rhs);
+        void Not(Action<IHqlExpressionFactory> expression);
+        void Conjunction(Action<IHqlExpressionFactory> expression, params Action<IHqlExpressionFactory>[] otherExpressions);
+        void Disjunction(Action<IHqlExpressionFactory> expression, params Action<IHqlExpressionFactory>[] otherExpressions);
         void AllEq(IDictionary propertyNameValues);
-        void NaturalId();        
+        void NaturalId();
     }
 
-    public enum MatchMode {
-        Exact,
-        Start,
-        End,
-        Anywhere
-    }
 }

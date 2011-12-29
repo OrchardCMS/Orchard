@@ -8,6 +8,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Features;
 using Orchard.Widgets.Models;
+using Orchard.Core.Common.Models;
 
 namespace Orchard.Widgets.Services {
 
@@ -49,6 +50,7 @@ namespace Orchard.Widgets.Services {
         private IEnumerable<WidgetPart> GetAllWidgets() {
             return _contentManager
                 .Query<WidgetPart, WidgetPartRecord>()
+                .WithQueryHints(new QueryHints().ExpandRecords<CommonPartRecord>())
                 .List();
         }
 

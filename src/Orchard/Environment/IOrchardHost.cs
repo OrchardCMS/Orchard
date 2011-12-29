@@ -25,11 +25,6 @@ namespace Orchard.Environment {
         /// </summary>
         void EndRequest();
 
-        /// <summary>
-        /// Called by any to notice the system of a critical issue at the system level, e.g. incorrect extensions
-        /// </summary>
-        void RegisterErrorMessage(LocalizedString message);
-
         ShellContext GetShellContext(ShellSettings shellSettings);
 
         /// <summary>

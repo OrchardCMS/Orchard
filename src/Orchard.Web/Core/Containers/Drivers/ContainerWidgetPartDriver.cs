@@ -63,7 +63,7 @@ namespace Orchard.Core.Containers.Drivers {
                     }
 
                     var containers = _contentManager.Query<ContainerPart, ContainerPartRecord>(VersionOptions.Latest).List();
-                    var listItems = containers.Count() < 1
+                    var listItems = !containers.Any()
                         ? new[] {new SelectListItem {Text = T("(None - create container enabled items first)").Text, Value = "0"}}
                         : containers.Select(x => new SelectListItem {
                                 Value = Convert.ToString(x.Id),

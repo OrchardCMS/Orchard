@@ -62,7 +62,7 @@ namespace Orchard.Setup {
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
-            builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
+            //builder.RegisterType<WorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().InstancePerMatchingLifetimeScope("shell");

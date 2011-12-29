@@ -14,3 +14,8 @@ Features:
         Description: Adds a notification after creating a new Page with a direct link to create a Widget Layer for that specific page by URL.
         Dependencies: Orchard.Widgets, Routable
         Category: Widget
+    Orchard.Widgets.ControlWrapper:
+        Name: Widget Control Wrapper
+        Description: Add an Edit button on the front-end for authenticated users
+        Category: Widget
+        Dependencies: Orchard.Widgets

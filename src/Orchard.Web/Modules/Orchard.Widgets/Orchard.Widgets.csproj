@@ -51,6 +51,7 @@
     <Compile Include="Commands\LayerCommands.cs" />
     <Compile Include="Commands\WidgetCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="ControlWrapper.cs" />
     <Compile Include="Drivers\LayerPartDriver.cs" />
     <Compile Include="Handlers\LayerHintHandler.cs" />
     <Compile Include="Drivers\WidgetPartDriver.cs" />

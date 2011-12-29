@@ -43,6 +43,8 @@ namespace Orchard.Widgets {
                     .Column<string>("Title")
                     .Column<string>("Position")
                     .Column<string>("Zone")
+                    .Column<bool>("RenderTitle", c => c.WithDefault(true))
+                    .Column<string>("Name")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("Layer",
@@ -60,13 +62,21 @@ namespace Orchard.Widgets {
                     .WithSetting("Stereotype", "Widget")
                 );
 
-            return 2;
+            return 3;
         }
         
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterTypeDefinition("HtmlWidget", cfg => cfg.WithPart("IdentityPart"));
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            SchemaBuilder
+                .AlterTable("WidgetPartRecord", table => table.AddColumn<bool>("RenderTitle", c => c.WithDefault(true)))
+                .AlterTable("WidgetPartRecord", table => table.AddColumn<string>("Name"));
+
+            return 3;
         }
     }
 }

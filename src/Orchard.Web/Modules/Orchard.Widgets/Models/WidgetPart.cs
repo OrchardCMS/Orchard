@@ -25,6 +25,14 @@ namespace Orchard.Widgets.Models {
         }
 
         /// <summary>
+        /// Whether or not the Title should be rendered on the front-end
+        /// </summary>
+        public bool RenderTitle {
+            get { return Record.RenderTitle; }
+            set { Record.RenderTitle = value; }
+        }
+
+        /// <summary>
         /// The widget's position within the zone.
         /// </summary>
         [Required]
@@ -32,6 +40,14 @@ namespace Orchard.Widgets.Models {
         {
             get { return Record.Position; }
             set { Record.Position = value; }
+        }
+
+        /// <summary>
+        /// The technical name of the widget.
+        /// </summary>
+        public string Name {
+            get { return Record.Name; }
+            set { Record.Name = value; }
         }
 
         /// <summary>

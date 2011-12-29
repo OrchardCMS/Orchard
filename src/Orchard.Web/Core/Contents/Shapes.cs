@@ -29,9 +29,6 @@ namespace Orchard.Core.Contents {
 
                         // Content_[DisplayType]__[Id] e.g. Content-42.Summary
                         displaying.ShapeMetadata.Alternates.Add("Content_" +  displaying.ShapeMetadata.DisplayType + "__" + contentItem.Id);
-
-                        if ( !displaying.ShapeMetadata.DisplayType.Contains("Admin") )
-                            displaying.ShapeMetadata.Wrappers.Add("Content_ControlWrapper");
                     }
                 });
         }
