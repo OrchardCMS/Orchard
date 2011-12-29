@@ -107,8 +107,26 @@ namespace Orchard.Blogs {
                     .WithPart("AutoroutePart")
                 );
             return 5;
+        }
+        public int UpdateFrom5() {
+            SchemaBuilder.AlterTable("RecentBlogPostsPartRecord",
+                table => table.AddColumn<int>("BlogId")
+            );
 
+            SchemaBuilder.AlterTable("BlogArchivesPartRecord",
+                table => table.AddColumn<int>("BlogId")
+            );
 
+            // TODO: (PH:Autoroute) Convert BlogSlug to BlogId
+            SchemaBuilder.AlterTable("RecentBlogPostsPartRecord",
+                table => table.DropColumn("BlogSlug")
+            );
+
+            SchemaBuilder.AlterTable("BlogArchivesPartRecord",
+                table => table.DropColumn("BlogSlug")
+            );
+
+            return 6;
         }
     }
 }

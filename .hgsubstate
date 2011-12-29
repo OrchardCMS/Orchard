@@ -1,5 +1,5 @@
 72d4e648204d19d918c5eddec55c7be73d05a00d src/Orchard.Web/Modules/Orchard.Alias
-d78707da9c4ba311afb092f24bb463531bdc62e8 src/Orchard.Web/Modules/Orchard.Autoroute
+2324a4ee85573614dad9df657d383cf541d34d54 src/Orchard.Web/Modules/Orchard.Autoroute
 ec573e5476f7e8a5a61593d6393e9985e9484fcc src/Orchard.Web/Modules/Orchard.Forms
 0d1100754d594a2977eaab40630f1c46a9e8cf2c src/Orchard.Web/Modules/Orchard.Projections
 bf1f2857f36786c66013e0dee3c37e94cd26465e src/Orchard.Web/Modules/Orchard.Routable

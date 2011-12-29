@@ -5,8 +5,7 @@ namespace Orchard.Blogs.Models {
         public RecentBlogPostsPartRecord() {
             Count = 5;
         }
-
-        public virtual string BlogSlug { get; set; }
+        public virtual int BlogId { get; set; }
         public virtual int Count { get; set; }
-    }
+    }   
 }

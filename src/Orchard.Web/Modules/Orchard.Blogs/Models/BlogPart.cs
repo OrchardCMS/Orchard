@@ -1,5 +1,4 @@
 using Orchard.ContentManagement;
-using Orchard.Core.Routable.Models;
 using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Blogs.Models {
@@ -7,7 +6,6 @@ namespace Orchard.Blogs.Models {
 
         // TODO: (PH) This isn't referenced in many places but should use ContentItemMetadata instead?
         public string Name {
-            
             get { return this.As<ITitleAspect>().Title; }
         }
 

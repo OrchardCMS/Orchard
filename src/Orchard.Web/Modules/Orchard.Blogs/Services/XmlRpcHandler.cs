@@ -9,8 +9,6 @@ using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Routable.Models;
-using Orchard.Core.Routable.Services;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Environment.Extensions;
@@ -20,6 +18,7 @@ using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Blogs.Extensions;
 using Orchard.Mvc.Html;
+using Orchard.Core.Title.Models;
 
 namespace Orchard.Blogs.Services {
     [UsedImplicitly]
@@ -288,8 +287,8 @@ namespace Orchard.Blogs.Services {
             }
 
             //RoutePart
-            if (blogPost.Is<RoutePart>()) {
-                blogPost.As<RoutePart>().Title = HttpUtility.HtmlDecode(title);
+            if (blogPost.Is<TitlePart>()) {
+                blogPost.As<TitlePart>().Title = HttpUtility.HtmlDecode(title);
                 blogPost.As<RoutePart>().Slug = slug;
                 _routableService.FillSlugFromTitle(blogPost.As<RoutePart>());
                 blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathWithSlug(blogPost.As<RoutePart>().Slug);

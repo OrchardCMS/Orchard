@@ -6,8 +6,6 @@ using Orchard.Blogs.Models;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
-using Orchard.Core.Routable.Models;
-using Orchard.Core.Routable.Services;
 using Orchard.Data;
 using Orchard.Tasks.Scheduling;
 
@@ -22,18 +20,6 @@ namespace Orchard.Blogs.Services {
             _contentManager = contentManager;
             _blogArchiveRepository = blogArchiveRepository;
             _publishingTaskManager = publishingTaskManager;
-        }
-
-        public BlogPostPart Get(BlogPart blogPart, string slug) {
-            return Get(blogPart, slug, VersionOptions.Published);
-        }
-
-        public BlogPostPart Get(BlogPart blogPart, string slug, VersionOptions versionOptions) {
-            var postPath = blogPart.As<IRoutableAspect>().GetChildPath(slug);
-            return
-                _contentManager.Query(versionOptions, "BlogPost").Join<RoutePartRecord>().Where(rr => rr.Path == postPath).
-                    Join<CommonPartRecord>().Where(cr => cr.Container == blogPart.Record.ContentItemRecord).List().
-                    SingleOrDefault().As<BlogPostPart>();
         }
 
         public BlogPostPart Get(int id) {
