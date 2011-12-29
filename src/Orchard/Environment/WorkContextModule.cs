@@ -7,12 +7,13 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Autofac.Features.Metadata;
+using Orchard.Mvc;
 using Module = Autofac.Module;
 
 namespace Orchard.Environment {
     public class WorkContextModule : Module {
         protected override void Load(ContainerBuilder builder) {
-            builder.RegisterType<WorkContextAccessor>()
+            builder.Register(ctx => new WorkContextAccessor(ctx.Resolve<IHttpContextAccessor>(), ctx.Resolve<ILifetimeScope>()))
                 .As<IWorkContextAccessor>()
                 .InstancePerMatchingLifetimeScope("shell");
 
