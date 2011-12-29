@@ -16,7 +16,7 @@ namespace Orchard.Environment {
                 .As<IWorkContextAccessor>()
                 .InstancePerMatchingLifetimeScope("shell");
 
-            builder.Register(ctx => new WorkContextImplementation(ctx))
+            builder.Register(ctx => new WorkContextImplementation(ctx.Resolve<IComponentContext>()))
                 .As<WorkContext>()
                 .InstancePerMatchingLifetimeScope("work");
 
@@ -104,7 +104,7 @@ namespace Orchard.Environment {
 
                         T value;
                         if (!workValues.Values.TryGetValue(w, out value)) {
-                            value = (T)workValues.ComponentContext.Resolve(valueRegistration, p);
+                            value = (T)workValues.ComponentContext.ResolveComponent(valueRegistration, p);
                             workValues.Values[w] = value;
                         }
                         return value;

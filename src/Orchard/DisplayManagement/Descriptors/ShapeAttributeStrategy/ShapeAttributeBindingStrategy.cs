@@ -49,7 +49,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             ShapeAttributeOccurrence attributeOccurrence,
             ShapeDescriptor descriptor) {
             return context => {
-                var serviceInstance = _componentContext.Resolve(attributeOccurrence.Registration, Enumerable.Empty<Parameter>());
+                var serviceInstance = _componentContext.ResolveComponent(attributeOccurrence.Registration, Enumerable.Empty<Parameter>());
 
                 // oversimplification for the sake of evolving
                 return PerformInvoke(context, attributeOccurrence.MethodInfo, serviceInstance);

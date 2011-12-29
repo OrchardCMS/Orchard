@@ -28,7 +28,7 @@ namespace Orchard.Core.Tests.Scheduling {
         public override void Init() {
             base.Init();
             _repository = _container.Resolve<IRepository<ScheduledTaskRecord>>();
-            _executor = _container.Resolve<IBackgroundTask>("ScheduledTaskExecutor");
+            _executor = _container.ResolveNamed<IBackgroundTask>("ScheduledTaskExecutor");
         }
         public override void Register(ContainerBuilder builder) {
             _handler = new StubTaskHandler();

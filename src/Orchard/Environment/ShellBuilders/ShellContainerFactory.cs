@@ -102,7 +102,7 @@ namespace Orchard.Environment.ShellBuilders {
                             .OnActivating(e => {
                                               var controller = e.Instance as Controller;
                                               if (controller != null)
-                                                  controller.ActionInvoker = (IActionInvoker)e.Context.Resolve(new TypedService(typeof(IActionInvoker)));
+                                                  controller.ActionInvoker = (IActionInvoker)e.Context.ResolveService(new TypedService(typeof(IActionInvoker)));
                                           });
                     }
 

@@ -46,7 +46,7 @@ namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
                 object value;
                 if (e.Component.Metadata.TryGetValue(InterceptorServicesKey, out value)) {
                     var interceptorServices = (IEnumerable<Service>)value;
-                    var interceptors = interceptorServices.Select(service => e.Context.Resolve(service)).Cast<IInterceptor>().ToArray();
+                    var interceptors = interceptorServices.Select(service => e.Context.ResolveService(service)).Cast<IInterceptor>().ToArray();
                     var parameter = new PositionalParameter(0, interceptors);
                     e.Parameters = new[] { parameter }.Concat(e.Parameters).ToArray();
                 }
