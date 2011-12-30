@@ -13,10 +13,10 @@ namespace Orchard.Email.Services
         private readonly IOrchardServices _orchardServices;
         private readonly WorkContext _workContext;
 
-        public MissingSettingsBanner(IOrchardServices orchardServices, WorkContext workContext)
+        public MissingSettingsBanner(IOrchardServices orchardServices, IWorkContextAccessor workContextAccessor)
         {
             _orchardServices = orchardServices;
-            _workContext = workContext;
+            _workContext = workContextAccessor.GetContext();
             T = NullLocalizer.Instance;
         }
 
