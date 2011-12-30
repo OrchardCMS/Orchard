@@ -35,10 +35,26 @@ namespace Orchard.Mvc {
         public dynamic Layout { get { return _layout; } }
         public WorkContext WorkContext { get { return _workContext; } }
 
-        public IDisplayHelperFactory DisplayHelperFactory { get; set; }
+        private IDisplayHelperFactory _displayHelperFactory;
+        public IDisplayHelperFactory DisplayHelperFactory {
+            get {
+                return _displayHelperFactory ?? (_displayHelperFactory = _workContext.Resolve<IDisplayHelperFactory>());
+            }
+        }
 
-        public IAuthorizer Authorizer { get; set; }
-        
+        private IShapeFactory _shapeFactory;
+        public IShapeFactory ShapeFactory {
+            get {
+                return _shapeFactory ?? (_shapeFactory = _workContext.Resolve<IShapeFactory>());
+            }
+        }
+
+        private IAuthorizer _authorizer;
+        public IAuthorizer Authorizer {
+            get {
+                return _authorizer ?? (_authorizer = _workContext.Resolve<IAuthorizer>());
+            }
+        }     
 
         public ResourceRegister Style {
             get {
@@ -51,7 +67,6 @@ namespace Orchard.Mvc {
             base.InitHelpers();
 
             _workContext = ViewContext.GetWorkContext();
-            _workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);
 
             _localizer = LocalizationUtilities.Resolve(ViewContext, AppRelativeVirtualPath);
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
