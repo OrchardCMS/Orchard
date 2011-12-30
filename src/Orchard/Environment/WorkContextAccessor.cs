@@ -20,7 +20,7 @@ namespace Orchard.Environment {
             IHttpContextAccessor httpContextAccessor,
             ILifetimeScope lifetimeScope) {
             _httpContextAccessor = httpContextAccessor;
-            _lifetimeScope = lifetimeScope;
+            _lifetimeScope = lifetimeScope.Resolve<ILifetimeScope>();
         }
 
         public WorkContext GetContext(HttpContextBase httpContext) {
