@@ -16,15 +16,27 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context) {
-            return Process(context.ContentItem, (part, field) => Display(part, field, context.DisplayType, context.New));
+            return Process(context.ContentItem, (part, field) => {
+                context.ContentPart = part;
+                context.ContentField = field;
+                return Display(part, field, context.DisplayType, context.New);
+            });
         }
 
         DriverResult IContentFieldDriver.BuildEditorShape(BuildEditorContext context) {
-            return Process(context.ContentItem, (part, field) => Editor(part, field, context.New));
+            return Process(context.ContentItem, (part, field) => {
+                context.ContentPart = part;
+                context.ContentField = field;
+                return Editor(part, field, context.New);
+            });
         }
 
         DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
-            return Process(context.ContentItem, (part, field) => Editor(part, field, context.Updater, context.New));
+            return Process(context.ContentItem, (part, field) => {
+                context.ContentPart = part;
+                context.ContentField = field;
+                return Editor(part, field, context.Updater, context.New);
+            });
         }
 
         void IContentFieldDriver.Importing(ImportContentContext context) {
@@ -75,7 +87,7 @@ namespace Orchard.ContentManagement.Drivers {
             return contentFieldInfo;
         }
 
-        protected virtual void GetContentItemMetadata(ContentPart part, TField field, ContentItemMetadata metadata) { return; }
+        protected virtual void GetContentItemMetadata(ContentPart part, TField field, ContentItemMetadata metadata) { }
 
         protected virtual DriverResult Display(ContentPart part, TField field, string displayType, dynamic shapeHelper) { return null; }
         protected virtual DriverResult Editor(ContentPart part, TField field, dynamic shapeHelper) { return null; }
@@ -105,19 +117,34 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         private ContentShapeResult ContentShapeImplementation(string shapeType, string differentiator, Func<BuildShapeContext, object> shapeBuilder) {
-            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), differentiator)).Differentiator(differentiator);
+            return new ContentShapeResult(shapeType, Prefix, ctx => AddAlternates(shapeBuilder(ctx), ctx, differentiator)).Differentiator(differentiator);
         }
 
-        private static object AddAlternates(dynamic shape, string differentiator) {
+        private static object AddAlternates(dynamic shape, BuildShapeContext ctx, string differentiator) {
             // automatically add shape alternates for shapes added by fields
             // for fields on dynamic parts the part name is the same as the content type name
 
             ShapeMetadata metadata = shape.Metadata;
-            ContentPart part = shape.ContentPart;
+
+            // if no ContentField property has been set, assign it
+            if (shape.ContentPart == null) {
+                shape.ContentPart = ctx.ContentField;
+            }
+
+            // if no ContentPart property has been set, assign it
+            if (shape.ContentPart == null) {
+                shape.ContentPart = ctx.ContentPart;
+            }
+
+            // if no ContentItem property has been set, assign it
+            if (shape.ContentItem == null) {
+                shape.ContentItem = ctx.ContentItem;
+            }
+
             var shapeType = metadata.Type;
             var fieldName = differentiator ?? String.Empty;
-            var partName = part != null ? part.PartDefinition.Name : String.Empty;
-            var contentType = part != null ? part.ContentItem.ContentType : String.Empty;
+            var partName = shape.ContentPart.PartDefinition.Name;
+            var contentType = shape.ContentItem.ContentType;
             var dynamicType = string.Equals(partName, contentType, StringComparison.Ordinal);
 
             // [ShapeType__FieldName] e.g. Fields/Common.Text-Teaser

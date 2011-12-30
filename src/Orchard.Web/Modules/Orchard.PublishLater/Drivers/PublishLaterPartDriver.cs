@@ -42,11 +42,11 @@ namespace Orchard.PublishLater.Drivers {
         protected override DriverResult Display(PublishLaterPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_PublishLater_Metadata",
-                             () => shapeHelper.Parts_PublishLater_Metadata(ContentPart: part, ScheduledPublishUtc: part.ScheduledPublishUtc.Value)),
+                             () => shapeHelper.Parts_PublishLater_Metadata(ScheduledPublishUtc: part.ScheduledPublishUtc.Value)),
                 ContentShape("Parts_PublishLater_Metadata_Summary",
-                             () => shapeHelper.Parts_PublishLater_Metadata_Summary(ContentPart: part, ScheduledPublishUtc: part.ScheduledPublishUtc.Value)),
+                             () => shapeHelper.Parts_PublishLater_Metadata_Summary(ScheduledPublishUtc: part.ScheduledPublishUtc.Value)),
                 ContentShape("Parts_PublishLater_Metadata_SummaryAdmin",
-                             () => shapeHelper.Parts_PublishLater_Metadata_SummaryAdmin(ContentPart: part, ScheduledPublishUtc: part.ScheduledPublishUtc.Value))
+                             () => shapeHelper.Parts_PublishLater_Metadata_SummaryAdmin(ScheduledPublishUtc: part.ScheduledPublishUtc.Value))
                 );
         }
 

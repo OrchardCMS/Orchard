@@ -50,11 +50,11 @@ namespace Orchard.Core.Routable.Drivers {
         protected override DriverResult Display(RoutePart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_RoutableTitle",
-                    () => shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title, Path: part.Path)),
+                    () => shapeHelper.Parts_RoutableTitle(Title: part.Title, Path: part.Path)),
                 ContentShape("Parts_RoutableTitle_Summary",
-                    () => shapeHelper.Parts_RoutableTitle_Summary(ContentPart: part, Title: part.Title, Path: part.Path)),
+                    () => shapeHelper.Parts_RoutableTitle_Summary(Title: part.Title, Path: part.Path)),
                 ContentShape("Parts_RoutableTitle_SummaryAdmin",
-                    () => shapeHelper.Parts_RoutableTitle_SummaryAdmin(ContentPart: part, Title: part.Title, Path: part.Path))
+                    () => shapeHelper.Parts_RoutableTitle_SummaryAdmin(Title: part.Title, Path: part.Path))
                 );
         }
 

@@ -18,11 +18,11 @@ namespace Orchard.Core.Title.Drivers {
         protected override DriverResult Display(TitlePart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_Title",
-                    () => shapeHelper.Parts_Title(ContentPart: part, Title: part.Title)),
+                    () => shapeHelper.Parts_Title(Title: part.Title)),
                 ContentShape("Parts_Title_Summary",
-                    () => shapeHelper.Parts_Title_Summary(ContentPart: part, Title: part.Title)),
+                    () => shapeHelper.Parts_Title_Summary(Title: part.Title)),
                 ContentShape("Parts_Title_SummaryAdmin",
-                    () => shapeHelper.Parts_Title_SummaryAdmin(ContentPart: part, Title: part.Title))
+                    () => shapeHelper.Parts_Title_SummaryAdmin(Title: part.Title))
                 );
         }
 

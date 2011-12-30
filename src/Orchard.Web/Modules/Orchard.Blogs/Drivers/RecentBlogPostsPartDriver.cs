@@ -23,24 +23,26 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Display(RecentBlogPostsPart part, string displayType, dynamic shapeHelper) {
-            BlogPart blog = GetBlogFromSlug(part.ForBlog);
+            return ContentShape("Parts_Blogs_RecentBlogPosts", () => {
+                BlogPart blog = GetBlogFromSlug(part.ForBlog);
 
-            if (blog == null) {
-                return null;
-            }
+                if (blog == null) {
+                    return null;
+                }
 
-            var blogPosts =_contentManager.Query(VersionOptions.Published, "BlogPost")
-                .Join<CommonPartRecord>().Where(cr => cr.Container == blog.Record.ContentItemRecord)
-                .OrderByDescending(cr => cr.CreatedUtc)
-                .Slice(0, part.Count)
-                .Select(ci => ci.As<BlogPostPart>());
+                var blogPosts = _contentManager.Query(VersionOptions.Published, "BlogPost")
+                    .Join<CommonPartRecord>().Where(cr => cr.Container == blog.Record.ContentItemRecord)
+                    .OrderByDescending(cr => cr.CreatedUtc)
+                    .Slice(0, part.Count)
+                    .Select(ci => ci.As<BlogPostPart>());
 
-            var list = shapeHelper.List();
-            list.AddRange(blogPosts.Select(bp => _contentManager.BuildDisplay(bp, "Summary")));
+                var list = shapeHelper.List();
+                list.AddRange(blogPosts.Select(bp => _contentManager.BuildDisplay(bp, "Summary")));
 
-            var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, ContentItems: list);
+                var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentItems: list);
 
-            return ContentShape(shapeHelper.Parts_Blogs_RecentBlogPosts(ContentItem: part.ContentItem, ContentItems: blogPostList, Blog: blog));
+                return shapeHelper.Parts_Blogs_RecentBlogPosts(ContentItems: blogPostList, Blog: blog);
+            });
         }
 
         protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper) {

@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers.Coordinators {
-    [UsedImplicitly]
+    /// <summary>
+    /// This component coordinates how parts are taking part in the rendering when some content needs to be rendered.
+    /// It will dispatch BuildDisplay/BuildEditor to all <see cref="IContentPartDriver"/> implementations.
+    /// </summary>
     public class ContentPartDriverCoordinator : ContentHandlerBase {
         private readonly IEnumerable<IContentPartDriver> _drivers;
         private readonly IContentDefinitionManager _contentDefinitionManager;

@@ -30,7 +30,7 @@ namespace Orchard.Blogs.Drivers {
                                     if (blog == null)
                                         return null;
 
-                                    return shapeHelper.Parts_Blogs_BlogArchives(ContentItem: part.ContentItem, Blog: blog, Archives: _blogPostService.GetArchives(blog));
+                                    return shapeHelper.Parts_Blogs_BlogArchives(Blog: blog, Archives: _blogPostService.GetArchives(blog));
                                 });
         }
 
