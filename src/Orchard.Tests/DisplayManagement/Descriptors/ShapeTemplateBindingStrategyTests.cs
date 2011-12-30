@@ -89,11 +89,19 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
                 throw new NotImplementedException();
             }
 
+            public void DeleteFile(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
             public bool DirectoryExists(string virtualPath) {
                 throw new NotImplementedException();
             }
 
             public void CreateDirectory(string virtualPath) {
+                throw new NotImplementedException();
+            }
+
+            public virtual void DeleteDirectory(string virtualPath) {
                 throw new NotImplementedException();
             }
 

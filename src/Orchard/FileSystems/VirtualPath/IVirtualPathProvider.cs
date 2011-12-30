@@ -17,10 +17,12 @@ namespace Orchard.FileSystems.VirtualPath {
         DateTime GetFileLastWriteTimeUtc(string virtualPath);
         string GetFileHash(string virtualPath);
         string GetFileHash(string virtualPath, IEnumerable<string> dependencies);
+        void DeleteFile(string virtualPath);
 
         bool DirectoryExists(string virtualPath);
         void CreateDirectory(string virtualPath);
         string GetDirectoryName(string virtualPath);
+        void DeleteDirectory(string virtualPath);
 
         IEnumerable<string> ListFiles(string path);
         IEnumerable<string> ListDirectories(string path);
