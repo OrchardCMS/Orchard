@@ -11,13 +11,13 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_Blogs_Blog_Manage",
-                    () => shapeHelper.Parts_Blogs_Blog_Manage(ContentPart: part)),
+                    () => shapeHelper.Parts_Blogs_Blog_Manage()),
                 ContentShape("Parts_Blogs_Blog_Description",
-                    () => shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part, Description: part.Description)),
+                    () => shapeHelper.Parts_Blogs_Blog_Description(Description: part.Description)),
                 ContentShape("Parts_Blogs_Blog_SummaryAdmin",
-                    () => shapeHelper.Parts_Blogs_Blog_SummaryAdmin(ContentPart: part, ContentItem: part.ContentItem)),
+                    () => shapeHelper.Parts_Blogs_Blog_SummaryAdmin()),
                 ContentShape("Parts_Blogs_Blog_BlogPostCount",
-                    () => shapeHelper.Parts_Blogs_Blog_BlogPostCount(ContentPart: part, PostCount: part.PostCount))
+                    () => shapeHelper.Parts_Blogs_Blog_BlogPostCount(PostCount: part.PostCount))
                 );
         }
 

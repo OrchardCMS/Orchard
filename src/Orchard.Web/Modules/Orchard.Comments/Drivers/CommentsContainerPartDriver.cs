@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Comments.Services;
@@ -13,14 +14,16 @@ namespace Orchard.Comments.Drivers {
         }
 
         protected override DriverResult Display(CommentsContainerPart part, string displayType, dynamic shapeHelper) {
+
             var commentsForCommentedContent = _commentService.GetCommentsForCommentedContent(part.ContentItem.Id);
+            Func<int> pendingCount = () => commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count();
             
             return Combined(
 
                 ContentShape("Parts_Comments_Count",
-                    () => shapeHelper.Parts_Comments_Count(ContentPart: part, CommentCount: commentsForCommentedContent.Count(), PendingCount: commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count())),
+                    () => shapeHelper.Parts_Comments_Count(CommentCount: commentsForCommentedContent.Count(), PendingCount: pendingCount)),
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
-                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(ContentPart: part, CommentCount: commentsForCommentedContent.Count(), PendingCount: commentsForCommentedContent.Where(x => x.Status == CommentStatus.Pending).Count()))
+                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: commentsForCommentedContent.Count(), PendingCount: pendingCount))
                 );
         }
     }

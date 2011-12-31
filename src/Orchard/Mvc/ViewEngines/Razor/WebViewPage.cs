@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
-using Autofac;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
@@ -63,10 +62,27 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         public WorkContext WorkContext { get { return _workContext; } }
 
         public dynamic New { get { return ShapeFactory; } }
-        public IDisplayHelperFactory DisplayHelperFactory { get; set; }
-        public IShapeFactory ShapeFactory { get; set; }
 
-        public IAuthorizer Authorizer { get; set; }
+        private IDisplayHelperFactory _displayHelperFactory;
+        public IDisplayHelperFactory DisplayHelperFactory {
+            get {
+                return _displayHelperFactory ?? (_displayHelperFactory = _workContext.Resolve<IDisplayHelperFactory>());
+            }
+        }
+
+        private IShapeFactory _shapeFactory;
+        public IShapeFactory ShapeFactory {
+            get {
+                return _shapeFactory ?? (_shapeFactory = _workContext.Resolve<IShapeFactory>());
+            }
+        }
+
+        private IAuthorizer _authorizer;
+        public IAuthorizer Authorizer { 
+            get {
+                return _authorizer ?? (_authorizer = _workContext.Resolve<IAuthorizer>());
+            }
+        }
 
         public ScriptRegister Script {
             get {
@@ -120,7 +136,6 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             base.InitHelpers();
 
             _workContext = ViewContext.GetWorkContext();
-            _workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);
             
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
             _layout = _workContext.Layout;

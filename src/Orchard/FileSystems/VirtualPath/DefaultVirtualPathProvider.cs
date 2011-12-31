@@ -73,7 +73,7 @@ namespace Orchard.FileSystems.VirtualPath {
         /// Note: This method doesn't detect all cases of malformed paths, it merely checks
         ///       for *some* cases of malformed paths, so this is not a replacement for full virtual path
         ///       verification through VirtualPathUtilty methods.
-        ///       In other wors, !IsMalformed does *not* imply "IsWellformed".
+        ///       In other words, !IsMalformed does *not* imply "IsWellformed".
         /// </summary>
         public bool IsMalformedVirtualPath(string virtualPath) {
             if (string.IsNullOrEmpty(virtualPath))
@@ -137,6 +137,10 @@ namespace Orchard.FileSystems.VirtualPath {
             return HostingEnvironment.VirtualPathProvider.GetFileHash(virtualPath, dependencies);
         }
 
+        public virtual void DeleteFile(string virtualPath) {
+            File.Delete(MapPath(virtualPath));
+        }
+
         public virtual string MapPath(string virtualPath) {
             return HostingEnvironment.MapPath(virtualPath);
         }
@@ -164,6 +168,10 @@ namespace Orchard.FileSystems.VirtualPath {
 
         public virtual void CreateDirectory(string virtualPath) {
             Directory.CreateDirectory(MapPath(virtualPath));
+        }
+
+        public virtual void DeleteDirectory(string virtualPath) {
+            Directory.Delete(MapPath(virtualPath));
         }
     }
 }

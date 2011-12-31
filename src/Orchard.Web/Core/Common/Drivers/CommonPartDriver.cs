@@ -38,11 +38,11 @@ namespace Orchard.Core.Common.Drivers {
         protected override DriverResult Display(CommonPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_Common_Metadata",
-                             () => shapeHelper.Parts_Common_Metadata(ContentPart: part)),
+                             () => shapeHelper.Parts_Common_Metadata()),
                 ContentShape("Parts_Common_Metadata_Summary",
-                             () => shapeHelper.Parts_Common_Metadata_Summary(ContentPart: part)),
+                             () => shapeHelper.Parts_Common_Metadata_Summary()),
                 ContentShape("Parts_Common_Metadata_SummaryAdmin",
-                             () => shapeHelper.Parts_Common_Metadata_SummaryAdmin(ContentPart: part))
+                             () => shapeHelper.Parts_Common_Metadata_SummaryAdmin())
                 );
         }
 

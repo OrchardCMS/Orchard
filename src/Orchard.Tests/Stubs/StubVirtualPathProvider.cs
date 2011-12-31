@@ -78,12 +78,20 @@ namespace Orchard.Tests.Stubs {
             throw new NotImplementedException();
         }
 
+        public  void DeleteFile(string virtualPath) {
+            _fileSystem.DeleteFile(ToFileSystemPath(virtualPath));
+        }
+
         public bool DirectoryExists(string virtualPath) {
             return _fileSystem.GetDirectoryEntry(ToFileSystemPath(virtualPath)) != null;
         }
 
         public void CreateDirectory(string virtualPath) {
             _fileSystem.CreateDirectoryEntry(ToFileSystemPath(virtualPath));
+        }
+
+        public void DeleteDirectory(string virtualPath) {
+            throw new NotImplementedException();
         }
 
         public string GetDirectoryName(string virtualPath) {

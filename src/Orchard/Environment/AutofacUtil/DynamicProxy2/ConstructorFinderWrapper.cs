@@ -13,7 +13,7 @@ namespace Orchard.Environment.AutofacUtil.DynamicProxy2 {
             _dynamicProxyContext = dynamicProxyContext;
         }
 
-        public IEnumerable<ConstructorInfo> FindConstructors(Type targetType) {
+        public ConstructorInfo[] FindConstructors(Type targetType) {
             Type proxyType;
             if (_dynamicProxyContext.TryGetProxy(targetType, out proxyType)) {
                 return _constructorFinder.FindConstructors(proxyType);

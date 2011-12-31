@@ -23,11 +23,11 @@ namespace Orchard.Comments.Drivers {
 
             return Combined(
                 ContentShape("Parts_Comments",
-                    () => shapeHelper.Parts_Comments(ContentPart: part)),
+                    () => shapeHelper.Parts_Comments()),
                 ContentShape("Parts_Comments_Count",
-                    () => shapeHelper.Parts_Comments_Count(ContentPart: part, CommentCount: commentsForCommentedContent.Count(), PendingCount: pendingCount)), 
+                    () => shapeHelper.Parts_Comments_Count(CommentCount: commentsForCommentedContent.Count(), PendingCount: pendingCount)), 
                 ContentShape("Parts_Comments_Count_SummaryAdmin",
-                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(ContentPart: part, CommentCount: commentsForCommentedContent.Count(), PendingCount: pendingCount))
+                    () => shapeHelper.Parts_Comments_Count_SummaryAdmin(CommentCount: commentsForCommentedContent.Count(), PendingCount: pendingCount))
             );
         }
 

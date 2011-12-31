@@ -9,9 +9,9 @@ namespace Orchard.Warmup.Services {
         private readonly IOrchardServices _orchardServices;
         private readonly WorkContext _workContext;
 
-        public SettingsBanner(IOrchardServices orchardServices, WorkContext workContext) {
+        public SettingsBanner(IOrchardServices orchardServices, IWorkContextAccessor workContextAccessor) {
             _orchardServices = orchardServices;
-            _workContext = workContext;
+            _workContext = workContextAccessor.GetContext();
             T = NullLocalizer.Instance;
         }
 

@@ -26,6 +26,13 @@
             <param name="service">The service that was requested.</param>
             <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
             <returns>Registrations providing the service.</returns>
+            <remarks>
+            If the source is queried for service s, and it returns a component that implements both s and s', then it
+            will not be queried again for either s or s'. This means that if the source can return other implementations
+            of s', it should return these, plus the transitive closure of other components implementing their 
+            additional services, along with the implementation of s. It is not an error to return components
+            that do not implement <paramref name="service"/>.
+            </remarks>
         </member>
         <member name="P:Autofac.Core.IRegistrationSource.IsAdapterForIndividualComponents">
             <summary>
@@ -72,6 +79,46 @@
             types automatically whenever type T is registered with the container.
             Metadata values come from the component registration's metadata.
             </summary>
+        </member>
+        <member name="T:Autofac.Features.GeneratedFactories.FactoryGenerator">
+            <summary>
+            Generates context-bound closures that represent factories from
+            a set of heuristics based on delegate type signatures.
+            </summary>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.#ctor(System.Type,Autofac.Core.Service,Autofac.Features.GeneratedFactories.ParameterMapping)">
+            <summary>
+            Create a factory generator.
+            </summary>
+            <param name="service">The service that will be activated in
+            order to create the products of the factory.</param>
+            <param name="delegateType">The delegate to provide as a factory.</param>
+            <param name="parameterMapping">The parameter mapping mode to use.</param>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.#ctor(System.Type,Autofac.Core.IComponentRegistration,Autofac.Features.GeneratedFactories.ParameterMapping)">
+            <summary>
+            Create a factory generator.
+            </summary>
+            <param name="productRegistration">The component that will be activated in
+            order to create the products of the factory.</param>
+            <param name="delegateType">The delegate to provide as a factory.</param>
+            <param name="parameterMapping">The parameter mapping mode to use.</param>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.GenerateFactory(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Generates a factory delegate that closes over the provided context.
+            </summary>
+            <param name="context">The context in which the factory will be used.</param>
+            <param name="parameters">Parameters provided to the resolve call for the factory itself.</param>
+            <returns>A factory delegate that will work within the context.</returns>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.GenerateFactory``1(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Generates a factory delegate that closes over the provided context.
+            </summary>
+            <param name="context">The context in which the factory will be used.</param>
+            <param name="parameters">Parameters provided to the resolve call for the factory itself.</param>
+            <returns>A factory delegate that will work within the context.</returns>
         </member>
         <member name="T:Autofac.Builder.ConcreteReflectionActivatorData">
             <summary>
@@ -133,6 +180,33 @@
         <member name="P:Autofac.Builder.ConcreteReflectionActivatorData.Activator">
             <summary>
             The instance activator based on the provided data.
+            </summary>
+        </member>
+        <member name="T:Autofac.Builder.ContainerBuildOptions">
+            <summary>
+            Parameterises the construction of a container by a <see cref="T:Autofac.ContainerBuilder"/>.
+            </summary>
+        </member>
+        <member name="F:Autofac.Builder.ContainerBuildOptions.None">
+            <summary>
+            No options.
+            </summary>
+        </member>
+        <member name="F:Autofac.Builder.ContainerBuildOptions.Default">
+            <summary>
+            Standard container construction.
+            </summary>
+        </member>
+        <member name="F:Autofac.Builder.ContainerBuildOptions.ExcludeDefaultModules">
+            <summary>
+            Prevents inclusion of standard modules like support for
+            relationship types including <see cref="T:System.Collections.Generic.IEnumerable`1"/> etc.
+            </summary>
+        </member>
+        <member name="F:Autofac.Builder.ContainerBuildOptions.IgnoreStartableComponents">
+            <summary>
+            Does not call <see cref="M:Autofac.IStartable.Start"/> on components implementing
+            this interface (useful for module testing.)
             </summary>
         </member>
         <member name="T:Autofac.Builder.IRegistrationBuilder`3">
@@ -285,21 +359,12 @@
             <param name="handler">The event handler.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
-        <member name="M:Autofac.Builder.IRegistrationBuilder`3.PropertiesAutowired">
+        <member name="M:Autofac.Builder.IRegistrationBuilder`3.PropertiesAutowired(Autofac.PropertyWiringFlags)">
             <summary>
             Configure the component so that any properties whose types are registered in the
             container will be wired to instances of the appropriate service.
             </summary>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Builder.IRegistrationBuilder`3.PropertiesAutowired(System.Boolean)">
-            <summary>
-            Configure the component so that any properties whose types are registered in the
-            container will be wired to instances of the appropriate service.
-            </summary>
-            <param name="allowCircularDependencies">If set to true, the properties won't be wired until
-            after the component has been activated. This allows property-property and constructor-property
-            circularities in the dependency graph.</param>
+            <param name="wiringFlags">Set wiring options such as circular dependency wiring support.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
         <member name="M:Autofac.Builder.IRegistrationBuilder`3.WithMetadata(System.String,System.Object)">
@@ -356,6 +421,165 @@
             <typeparam name="TProperty">The type of the property.</typeparam>
             <param name="propertyAccessor">An expression that accesses the property to set.</param>
             <param name="value">The property value to set.</param>
+        </member>
+        <member name="T:Autofac.Core.Registration.CopyOnWriteRegistry">
+            <summary>
+            Delegates registration lookups to a specified registry. When write operations are applied,
+            initialises a new 'writeable' registry.
+            </summary>
+            <remarks>
+            Safe for concurrent access by multiple readers. Write operations are single-threaded.
+            </remarks>
+        </member>
+        <member name="T:Autofac.Core.IComponentRegistry">
+            <summary>
+            Provides component registrations according to the services they provide.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.IComponentRegistry.TryGetRegistration(Autofac.Core.Service,Autofac.Core.IComponentRegistration@)">
+            <summary>
+            Attempts to find a default registration for the specified service.
+            </summary>
+            <param name="service">The service to look up.</param>
+            <param name="registration">The default registration for the service.</param>
+            <returns>True if a registration exists.</returns>
+        </member>
+        <member name="M:Autofac.Core.IComponentRegistry.IsRegistered(Autofac.Core.Service)">
+            <summary>
+            Determines whether the specified service is registered.
+            </summary>
+            <param name="service">The service to test.</param>
+            <returns>True if the service is registered.</returns>
+        </member>
+        <member name="M:Autofac.Core.IComponentRegistry.Register(Autofac.Core.IComponentRegistration)">
+            <summary>
+            Register a component.
+            </summary>
+            <param name="registration">The component registration.</param>
+        </member>
+        <member name="M:Autofac.Core.IComponentRegistry.Register(Autofac.Core.IComponentRegistration,System.Boolean)">
+            <summary>
+            Register a component.
+            </summary>
+            <param name="registration">The component registration.</param>
+            <param name="preserveDefaults">If true, existing defaults for the services provided by the
+            component will not be changed.</param>
+        </member>
+        <member name="M:Autofac.Core.IComponentRegistry.RegistrationsFor(Autofac.Core.Service)">
+            <summary>
+            Selects from the available registrations after ensuring that any
+            dynamic registration sources that may provide <paramref name="service"/>
+            have been invoked.
+            </summary>
+            <param name="service">The service for which registrations are sought.</param>
+            <returns>Registrations supporting <paramref name="service"/>.</returns>
+        </member>
+        <member name="M:Autofac.Core.IComponentRegistry.AddRegistrationSource(Autofac.Core.IRegistrationSource)">
+            <summary>
+            Add a registration source that will provide registrations on-the-fly.
+            </summary>
+            <param name="source">The source to register.</param>
+        </member>
+        <member name="P:Autofac.Core.IComponentRegistry.Registrations">
+            <summary>
+            Enumerate the registered components.
+            </summary>
+        </member>
+        <member name="E:Autofac.Core.IComponentRegistry.Registered">
+            <summary>
+            Fired whenever a component is registered - either explicitly or via a
+            <see cref="T:Autofac.Core.IRegistrationSource"/>.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.IComponentRegistry.Sources">
+            <summary>
+            Gets the registration sources that are used by the registry.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.IComponentRegistry.HasLocalComponents">
+            <summary>
+            True if the registry contains its own components; false if it is forwarding
+            registrations from another external registry.
+            </summary>
+            <remarks>This property is used when walking up the scope tree looking for
+            registrations for a new customised scope. (See issue 336.)</remarks>
+        </member>
+        <member name="E:Autofac.Core.IComponentRegistry.RegistrationSourceAdded">
+            <summary>
+            Fired when an <see cref="T:Autofac.Core.IRegistrationSource"/> is added to the registry.
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.Variance.ContravariantRegistrationSource">
+            <summary>
+            Enables contravariant <code>Resolve()</code> for interfaces that have a single contravariant ('in') parameter.
+            </summary>
+            <example>
+            interface IHandler&lt;in TCommand&gt;
+            {
+                void Handle(TCommand command);
+            }
+            
+            class Command { }
+            
+            class DerivedCommand : Command { }
+            
+            class CommandHandler : IHandler&lt;Command&gt; { ... }
+            
+            var builder = new ContainerBuilder();
+            builder.RegisterSource(new ContravariantRegistrationSource());
+            builder.RegisterType&lt;CommandHandler&gt;();
+            var container = builder.Build();
+            // Source enables this line, even though IHandler&lt;Command&gt; is the
+            // actual registered type.
+            var handler = container.Resolve&lt;IHandler&lt;DerivedCommand&gt;&gt;();
+            handler.Handle(new DerivedCommand());
+            </example>
+        </member>
+        <member name="M:Autofac.Features.Variance.ContravariantRegistrationSource.RegistrationsFor(Autofac.Core.Service,System.Func{Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.IComponentRegistration}})">
+            <summary>
+            Retrieve registrations for an unregistered service, to be used
+            by the container.
+            </summary>
+            <param name="service">The service that was requested.</param>
+            <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
+            <returns>Registrations providing the service.</returns>
+            <remarks>
+            If the source is queried for service s, and it returns a component that implements both s and s', then it
+            will not be queried again for either s or s'. This means that if the source can return other implementations
+            of s', it should return these, plus the transitive closure of other components implementing their 
+            additional services, along with the implementation of s. It is not an error to return components
+            that do not implement <paramref name="service"/>.
+            </remarks>
+        </member>
+        <member name="P:Autofac.Features.Variance.ContravariantRegistrationSource.IsAdapterForIndividualComponents">
+            <summary>
+            Gets whether the registrations provided by this source are 1:1 adapters on top
+            of other components (I.e. like Meta, Func or Owned.)
+            </summary>
+        </member>
+        <member name="T:Autofac.PropertyWiringFlags">
+            <summary>
+            Options that can be applied when autowiring properties on a component. (Multiple options can
+            be specified using bitwise 'or' - e.g. AllowCircularDependencies | PreserveSetValues.
+            </summary>
+        </member>
+        <member name="F:Autofac.PropertyWiringFlags.Default">
+            <summary>
+            Default behavior. Circular dependencies are not allowed; existing non-default
+            property values are overwritten.
+            </summary>
+        </member>
+        <member name="F:Autofac.PropertyWiringFlags.AllowCircularDependencies">
+            <summary>
+            Allows property-property and property-constructor circular dependency wiring.
+            This flag moves property wiring from the Activating to the Activated event.
+            </summary>
+        </member>
+        <member name="F:Autofac.PropertyWiringFlags.PreserveSetValues">
+            <summary>
+            If specified, properties that already have a non-default value will be left
+            unchanged in the wiring operation.
+            </summary>
         </member>
         <member name="T:Autofac.Builder.RegistrationBuilder">
             <summary>
@@ -598,6 +822,27 @@
             <param name="collectionName">The collection name, as passed to RegisterCollection.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
+        <member name="T:Autofac.ContainerBuilderResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.ContainerBuilderResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.ContainerBuilderResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.ContainerBuilderResources.BuildCanOnlyBeCalledOnce">
+            <summary>
+              Looks up a localized string similar to Build() or Update() can only be called once on a ContainerBuilder..
+            </summary>
+        </member>
         <member name="T:Autofac.Core.Activators.Delegate.DelegateActivatorResources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -617,6 +862,27 @@
         <member name="P:Autofac.Core.Activators.Delegate.DelegateActivatorResources.NullFromActivationDelegateFor">
             <summary>
               Looks up a localized string similar to A delegate registered to create instances of &apos;{0}&apos; returned null..
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Activators.Reflection.BindingFlagsConstructorFinderResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Activators.Reflection.BindingFlagsConstructorFinderResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Activators.Reflection.BindingFlagsConstructorFinderResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Activators.Reflection.BindingFlagsConstructorFinderResources.HasBindingFlags">
+            <summary>
+              Looks up a localized string similar to {0} binding flags.
             </summary>
         </member>
         <member name="T:Autofac.Core.Activators.Reflection.ConstructorParameterBindingResources">
@@ -640,9 +906,19 @@
               Looks up a localized string similar to Bound constructor &apos;{0}&apos;..
             </summary>
         </member>
+        <member name="P:Autofac.Core.Activators.Reflection.ConstructorParameterBindingResources.CannotInstantitate">
+            <summary>
+              Looks up a localized string similar to The binding cannot be instantiated..
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Activators.Reflection.ConstructorParameterBindingResources.ExceptionDuringInstantiation">
+            <summary>
+              Looks up a localized string similar to An exception was thrown while invoking the constructor &apos;{0}&apos; on type &apos;{1}&apos;..
+            </summary>
+        </member>
         <member name="P:Autofac.Core.Activators.Reflection.ConstructorParameterBindingResources.NonBindableConstructor">
             <summary>
-              Looks up a localized string similar to Constructor &apos;{0}&apos; parameter resolution failed at parameter &apos;{1}&apos;..
+              Looks up a localized string similar to Cannot resolve parameter &apos;{1}&apos; of constructor &apos;{0}&apos;..
             </summary>
         </member>
         <member name="T:Autofac.Core.Activators.Reflection.DefaultValueParameter">
@@ -681,6 +957,38 @@
             be set to a function that will lazily retrieve the parameter value. If the result is false,
             will be set to null.</param>
             <returns>True if a value can be supplied; otherwise, false.</returns>
+        </member>
+        <member name="T:Autofac.Core.ContainerResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.ContainerResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.ContainerResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.ContainerResources.SelfRegistrationCannotBeActivated">
+            <summary>
+              Looks up a localized string similar to The container&apos;s self-registration of context interfaces should never be activated as it is hard-wired into the LifetimeScope class..
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Diagnostics.IContainerAwareComponent">
+            <summary>
+            Marks a module as container-aware (for the purposes of attaching to diagnostic events.)
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Diagnostics.IContainerAwareComponent.SetContainer(Autofac.IContainer)">
+            <summary>
+            Initialise the module with the container into which it is being registered.
+            </summary>
+            <param name="container">The container.</param>
         </member>
         <member name="T:Autofac.Core.IActivatedEventArgs`1">
             <summary>
@@ -867,6 +1175,200 @@
             </summary>
             <value>The description.</value>
         </member>
+        <member name="T:Autofac.Core.Lifetime.LifetimeScopeBeginningEventArgs">
+            <summary>
+            Describes when a lifetime scope is beginning.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Lifetime.LifetimeScopeBeginningEventArgs.#ctor(Autofac.ILifetimeScope)">
+            <summary>
+            Create an instance of the <see cref="T:Autofac.Core.Lifetime.LifetimeScopeBeginningEventArgs"/> class.
+            </summary>
+            <param name="lifetimeScope">The lifetime scope that is beginning.</param>
+        </member>
+        <member name="P:Autofac.Core.Lifetime.LifetimeScopeBeginningEventArgs.LifetimeScope">
+            <summary>
+            The lifetime scope that is beginning.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Lifetime.LifetimeScopeEndingEventArgs">
+            <summary>
+            Describes when a lifetime scope is ending.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Lifetime.LifetimeScopeEndingEventArgs.#ctor(Autofac.ILifetimeScope)">
+            <summary>
+            Create an instance of the <see cref="T:Autofac.Core.Lifetime.LifetimeScopeEndingEventArgs"/> class.
+            </summary>
+            <param name="lifetimeScope">The lifetime scope that is ending.</param>
+        </member>
+        <member name="P:Autofac.Core.Lifetime.LifetimeScopeEndingEventArgs.LifetimeScope">
+            <summary>
+            The lifetime scope that is ending.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Lifetime.LifetimeScopeResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Lifetime.LifetimeScopeResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Lifetime.LifetimeScopeResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Lifetime.LifetimeScopeResources.ScopeIsDisposed">
+            <summary>
+              Looks up a localized string similar to Instances cannot be resolved and nested lifetimes cannot be created from this LifetimeScope as it has already been disposed..
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.RegistrationSourceAddedEventArgs">
+            <summary>
+            Fired when an <see cref="T:Autofac.Core.IRegistrationSource"/> is added to the registry.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.RegistrationSourceAddedEventArgs.#ctor(Autofac.Core.IComponentRegistry,Autofac.Core.IRegistrationSource)">
+            <summary>
+            Construct an instance of the <see cref="T:Autofac.Core.RegistrationSourceAddedEventArgs"/> class.
+            </summary>
+            <param name="componentRegistry">The registry to which the source was added.</param>
+            <param name="registrationSource">The source that was added.</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="P:Autofac.Core.RegistrationSourceAddedEventArgs.RegistrationSource">
+            <summary>
+            The registry to which the source was added.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.RegistrationSourceAddedEventArgs.ComponentRegistry">
+            <summary>
+            The source that was added.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Resolving.IInstanceLookup">
+            <summary>
+            Represents the process of finding a component during a resolve operation.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Resolving.IInstanceLookup.ComponentRegistration">
+            <summary>
+            The component for which an instance is to be looked up.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Resolving.IInstanceLookup.ActivationScope">
+            <summary>
+            The scope in which the instance will be looked up.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Resolving.IInstanceLookup.Parameters">
+            <summary>
+            The parameters provided for new instance creation.
+            </summary>
+        </member>
+        <member name="E:Autofac.Core.Resolving.IInstanceLookup.InstanceLookupEnding">
+            <summary>
+            Raised when the lookup phase of the operation is ending.
+            </summary>
+        </member>
+        <member name="E:Autofac.Core.Resolving.IInstanceLookup.CompletionBeginning">
+            <summary>
+            Raised when the completion phase of an instance lookup operation begins.
+            </summary>
+        </member>
+        <member name="E:Autofac.Core.Resolving.IInstanceLookup.CompletionEnding">
+            <summary>
+            Raised when the completion phase of an instance lookup operation ends.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Resolving.InstanceLookupCompletionBeginningEventArgs">
+            <summary>
+            Raised when the completion phase of an instance lookup operation begins.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Resolving.InstanceLookupCompletionBeginningEventArgs.#ctor(Autofac.Core.Resolving.IInstanceLookup)">
+            <summary>
+            Create an instance of the <see cref="T:Autofac.Core.Resolving.InstanceLookupCompletionBeginningEventArgs"/> class.
+            </summary>
+            <param name="instanceLookup">The instance lookup that is beginning the completion phase.</param>
+        </member>
+        <member name="P:Autofac.Core.Resolving.InstanceLookupCompletionBeginningEventArgs.InstanceLookup">
+            <summary>
+            The instance lookup operation that is beginning the completion phase.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Resolving.InstanceLookupCompletionEndingEventArgs">
+            <summary>
+            Raised when the completion phase of an instance lookup operation ends.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Resolving.InstanceLookupCompletionEndingEventArgs.#ctor(Autofac.Core.Resolving.IInstanceLookup)">
+            <summary>
+            Create an instance of the <see cref="T:Autofac.Core.Resolving.InstanceLookupCompletionEndingEventArgs"/> class.
+            </summary>
+            <param name="instanceLookup">The instance lookup that is ending the completion phase.</param>
+        </member>
+        <member name="P:Autofac.Core.Resolving.InstanceLookupCompletionEndingEventArgs.InstanceLookup">
+            <summary>
+            The instance lookup operation that is ending the completion phase.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Resolving.InstanceLookupEndingEventArgs">
+            <summary>
+            Fired when an instance is looked up.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Resolving.InstanceLookupEndingEventArgs.#ctor(Autofac.Core.Resolving.IInstanceLookup,System.Boolean)">
+            <summary>
+            Create an instance of the <see cref="T:Autofac.Core.Resolving.InstanceLookupBeginningEventArgs"/> class.
+            </summary>
+            <param name="instanceLookup">The instance lookup that is ending.</param>
+            <param name="newInstanceActivated">True if a new instance was created as part of the operation.</param>
+        </member>
+        <member name="P:Autofac.Core.Resolving.InstanceLookupEndingEventArgs.NewInstanceActivated">
+            <summary>
+            True if a new instance was created as part of the operation.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Resolving.InstanceLookupEndingEventArgs.InstanceLookup">
+            <summary>
+            The instance lookup operation that is ending.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Resolving.InstanceLookupBeginningEventArgs">
+            <summary>
+            Fired when instance lookup is complete.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Resolving.InstanceLookupBeginningEventArgs.#ctor(Autofac.Core.Resolving.IInstanceLookup)">
+            <param name="instanceLookup">The instance lookup that is ending.</param>
+        </member>
+        <member name="P:Autofac.Core.Resolving.InstanceLookupBeginningEventArgs.InstanceLookup">
+            <summary>
+            The instance lookup operation that is beginning.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Resolving.ResolveOperationBeginningEventArgs">
+            <summary>
+            Describes the commencement of a new resolve operation.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Resolving.ResolveOperationBeginningEventArgs.#ctor(Autofac.Core.Resolving.IResolveOperation)">
+            <summary>
+            Create an instance of the <see cref="T:Autofac.Core.Resolving.ResolveOperationBeginningEventArgs"/> class.
+            </summary>
+            <param name="resolveOperation">The resolve operation that is beginning.</param>
+        </member>
+        <member name="P:Autofac.Core.Resolving.ResolveOperationBeginningEventArgs.ResolveOperation">
+            <summary>
+            The resolve operation that is beginning.
+            </summary>
+        </member>
         <member name="T:Autofac.Core.Registration.ComponentRegistrationLifetimeDecorator">
             <summary>
             Wraps a component registration, switching its lifetime.
@@ -887,6 +1389,11 @@
             Releases unmanaged and - optionally - managed resources
             </summary>
             <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        </member>
+        <member name="P:Autofac.Util.Disposable.IsDisposed">
+            <summary>
+            Returns true if the current instance has been disposed; otherwise false;
+            </summary>
         </member>
         <member name="T:Autofac.Core.IComponentRegistration">
             <summary>
@@ -1045,71 +1552,6 @@
             directly by application code.
             </remarks>
         </member>
-        <member name="T:Autofac.Core.IComponentRegistry">
-            <summary>
-            Provides component registrations according to the services they provide.
-            </summary>
-        </member>
-        <member name="M:Autofac.Core.IComponentRegistry.TryGetRegistration(Autofac.Core.Service,Autofac.Core.IComponentRegistration@)">
-            <summary>
-            Attempts to find a default registration for the specified service.
-            </summary>
-            <param name="service">The service to look up.</param>
-            <param name="registration">The default registration for the service.</param>
-            <returns>True if a registration exists.</returns>
-        </member>
-        <member name="M:Autofac.Core.IComponentRegistry.IsRegistered(Autofac.Core.Service)">
-            <summary>
-            Determines whether the specified service is registered.
-            </summary>
-            <param name="service">The service to test.</param>
-            <returns>True if the service is registered.</returns>
-        </member>
-        <member name="M:Autofac.Core.IComponentRegistry.Register(Autofac.Core.IComponentRegistration)">
-            <summary>
-            Register a component.
-            </summary>
-            <param name="registration">The component registration.</param>
-        </member>
-        <member name="M:Autofac.Core.IComponentRegistry.Register(Autofac.Core.IComponentRegistration,System.Boolean)">
-            <summary>
-            Register a component.
-            </summary>
-            <param name="registration">The component registration.</param>
-            <param name="preserveDefaults">If true, existing defaults for the services provided by the
-            component will not be changed.</param>
-        </member>
-        <member name="M:Autofac.Core.IComponentRegistry.RegistrationsFor(Autofac.Core.Service)">
-            <summary>
-            Selects from the available registrations after ensuring that any
-            dynamic registration sources that may provide <paramref name="service"/>
-            have been invoked.
-            </summary>
-            <param name="service">The service for which registrations are sought.</param>
-            <returns>Registrations supporting <paramref name="service"/>.</returns>
-        </member>
-        <member name="M:Autofac.Core.IComponentRegistry.AddRegistrationSource(Autofac.Core.IRegistrationSource)">
-            <summary>
-            Add a registration source that will provide registrations on-the-fly.
-            </summary>
-            <param name="source">The source to register.</param>
-        </member>
-        <member name="P:Autofac.Core.IComponentRegistry.Registrations">
-            <summary>
-            Enumerate the registered components.
-            </summary>
-        </member>
-        <member name="E:Autofac.Core.IComponentRegistry.Registered">
-            <summary>
-            Fired whenever a component is registered - either explicitly or via a
-            <see cref="T:Autofac.Core.IRegistrationSource"/>.
-            </summary>
-        </member>
-        <member name="P:Autofac.Core.IComponentRegistry.Sources">
-            <summary>
-            Gets the registration sources that are used by the registry.
-            </summary>
-        </member>
         <member name="F:Autofac.Core.Registration.ComponentRegistry._synchRoot">
             <summary>
             Protects instance variables from concurrent access.
@@ -1196,6 +1638,19 @@
             Gets the registration sources that are used by the registry.
             </summary>
         </member>
+        <member name="P:Autofac.Core.Registration.ComponentRegistry.HasLocalComponents">
+            <summary>
+            True if the registry contains its own components; false if it is forwarding
+            registrations from another external registry.
+            </summary>
+            <remarks>This property is used when walking up the scope tree looking for
+            registrations for a new customised scope. (See issue 336.)</remarks>
+        </member>
+        <member name="E:Autofac.Core.Registration.ComponentRegistry.RegistrationSourceAdded">
+            <summary>
+            Fired when an <see cref="T:Autofac.Core.IRegistrationSource"/> is added to the registry.
+            </summary>
+        </member>
         <member name="T:Autofac.Core.Registration.ServiceRegistrationInfo">
             <summary>
             Tracks the services known to the registry.
@@ -1227,6 +1682,148 @@
         <member name="P:Autofac.Core.Registration.ServiceRegistrationInfo.IsRegistered">
             <summary>
             True if any implementations are known.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Registration.ServiceRegistrationInfoResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Registration.ServiceRegistrationInfoResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Registration.ServiceRegistrationInfoResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Registration.ServiceRegistrationInfoResources.NotDuringInitialisation">
+            <summary>
+              Looks up a localized string similar to The operation is only valid during intialisation..
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Registration.ServiceRegistrationInfoResources.NotInitialised">
+            <summary>
+              Looks up a localized string similar to The operation is not valid until the object is initalised..
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Resolving.ComponentActivationResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Resolving.ComponentActivationResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Resolving.ComponentActivationResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Resolving.ComponentActivationResources.ActivationAlreadyExecuted">
+            <summary>
+              Looks up a localized string similar to The activation has already been executed..
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Resolving.ResolveOperationEndingEventArgs">
+            <summary>
+            Describes the commencement of a new resolve operation.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Resolving.ResolveOperationEndingEventArgs.#ctor(Autofac.Core.Resolving.IResolveOperation,System.Exception)">
+            <summary>
+            Create an instance of the <see cref="T:Autofac.Core.Resolving.ResolveOperationBeginningEventArgs"/> class.
+            </summary>
+            <param name="resolveOperation">The resolve operation that is ending.</param>
+            <param name="exception">If included, the exception causing the operation to end; otherwise, null.</param>
+        </member>
+        <member name="P:Autofac.Core.Resolving.ResolveOperationEndingEventArgs.Exception">
+            <summary>
+            The exception causing the operation to end, or null.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Resolving.ResolveOperationEndingEventArgs.ResolveOperation">
+            <summary>
+            The resolve operation that is ending.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.ServiceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.ServiceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.ServiceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.ServiceResources.MustOverrideEquals">
+            <summary>
+              Looks up a localized string similar to Subclasses of Autofac.Service must override Object.Equals().
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.ServiceResources.MustOverrideGetHashCode">
+            <summary>
+              Looks up a localized string similar to Subclasses of Autofac.Service must override Object.GetHashCode().
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.Collections.CollectionRegistrationSourceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.Collections.CollectionRegistrationSourceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.Collections.CollectionRegistrationSourceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.Collections.CollectionRegistrationSourceResources.CollectionRegistrationSourceDescription">
+            <summary>
+              Looks up a localized string similar to Collection Support (Arrays and Generic Collection Interfaces).
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.LazyDependencies.LazyRegistrationSourceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.LazyDependencies.LazyRegistrationSourceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.LazyDependencies.LazyRegistrationSourceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.LazyDependencies.LazyRegistrationSourceResources.LazyRegistrationSourceDescription">
+            <summary>
+              Looks up a localized string similar to Lazy&lt;T&gt; Support.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.LazyDependencies.LazyRegistrationSourceResources.LazyWithMetadataRegistrationSourceDescription">
+            <summary>
+              Looks up a localized string similar to Lazy&lt;T, TMetadata&gt; Support.
             </summary>
         </member>
         <member name="T:Autofac.Features.LightweightAdapters.LightweightAdapterActivatorData">
@@ -1265,6 +1862,11 @@
             <summary>
               Overrides the current thread's CurrentUICulture property for all
               resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.LightweightAdapters.LightweightAdapterRegistrationSourceResources.AdapterFromToDescription">
+            <summary>
+              Looks up a localized string similar to Lightweight Adapter from {0} to {1}.
             </summary>
         </member>
         <member name="P:Autofac.Features.LightweightAdapters.LightweightAdapterRegistrationSourceResources.FromAndToMustDiffer">
@@ -1403,6 +2005,15 @@
             <param name="key">The value to retrieve.</param>
             <returns>The associated value.</returns>
         </member>
+        <member name="M:Autofac.Features.Indexed.KeyedServiceIndex`2.#ctor(Autofac.IComponentContext)">
+            <summary></summary>
+        </member>
+        <member name="M:Autofac.Features.Indexed.KeyedServiceIndex`2.TryGetValue(`0,`1@)">
+            <summary></summary>
+        </member>
+        <member name="P:Autofac.Features.Indexed.KeyedServiceIndex`2.Item(`0)">
+            <summary></summary>
+        </member>
         <member name="T:Autofac.Features.Metadata.MetaRegistrationSource">
             <summary>
             Support the <see cref="T:Autofac.Features.Metadata.Meta`1"/>
@@ -1433,6 +2044,117 @@
             Metadata describing the value.
             </summary>
         </member>
+        <member name="T:Autofac.Features.Metadata.MetaRegistrationSourceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.Metadata.MetaRegistrationSourceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.Metadata.MetaRegistrationSourceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.Metadata.MetaRegistrationSourceResources.MetaRegistrationSourceDescription">
+            <summary>
+              Looks up a localized string similar to Meta&lt;T&gt; Support.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.Metadata.MetaRegistrationSourceResources.StronglyTypedMetaRegistrationSourceDescription">
+            <summary>
+              Looks up a localized string similar to Meta&lt;T, TMetadata&gt; Support.
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.OpenGenerics.OpenGenericDecoratorActivatorDataResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericDecoratorActivatorDataResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericDecoratorActivatorDataResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericDecoratorActivatorDataResources.DecoratedServiceIsNotOpenGeneric">
+            <summary>
+              Looks up a localized string similar to The service &apos;{0}&apos; is not an open generic type..
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.OpenGenerics.OpenGenericRegistrationSourceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericRegistrationSourceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericRegistrationSourceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericRegistrationSourceResources.OpenGenericRegistrationSourceDescription">
+            <summary>
+              Looks up a localized string similar to {0} providing {1}.
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.OpenGenerics.OpenGenericDecoratorActivatorData">
+            <summary>
+            Describes the activator for an open generic decorator.
+            </summary>
+        </member>
+        <member name="M:Autofac.Features.OpenGenerics.OpenGenericDecoratorActivatorData.#ctor(System.Type,Autofac.Core.IServiceWithType)">
+            <summary>
+            Construct an <see cref="T:Autofac.Features.OpenGenerics.OpenGenericDecoratorActivatorData"/>.
+            </summary>
+            <param name="implementor">The decorator type.</param>
+            <param name="fromService">The open generic service type to decorate.</param>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericDecoratorActivatorData.FromService">
+            <summary>
+            The open generic service type to decorate.
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.OpenGenerics.OpenGenericDecoratorRegistrationSourceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericDecoratorRegistrationSourceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericDecoratorRegistrationSourceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericDecoratorRegistrationSourceResources.FromAndToMustDiffer">
+            <summary>
+              Looks up a localized string similar to The service {0} cannot be both the adapter&apos;s from and to parameters - these must differ..
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericDecoratorRegistrationSourceResources.OpenGenericDecoratorRegistrationSourceImplFromTo">
+            <summary>
+              Looks up a localized string similar to Open Generic Decorator {0} from {1} to {2}.
+            </summary>
+        </member>
         <member name="T:Autofac.Features.OpenGenerics.OpenGenericRegistrationExtensionsResources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -1452,6 +2174,63 @@
         <member name="P:Autofac.Features.OpenGenerics.OpenGenericRegistrationExtensionsResources.ImplementorMustBeOpenGenericType">
             <summary>
               Looks up a localized string similar to The type {0} is not an open generic type definition..
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.OpenGenerics.OpenGenericServiceBinderResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericServiceBinderResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericServiceBinderResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericServiceBinderResources.ImplementorMustBeOpenGenericTypeDefinition">
+            <summary>
+              Looks up a localized string similar to The implementation type &apos;{0}&apos; is not an open generic type definition..
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericServiceBinderResources.InterfaceIsNotImplemented">
+            <summary>
+              Looks up a localized string similar to The implementation type &apos;{0}&apos; does not support the interface &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericServiceBinderResources.ServiceTypeMustBeOpenGenericTypeDefinition">
+            <summary>
+              Looks up a localized string similar to The service &apos;{0}&apos; is not an open generic type definition..
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericServiceBinderResources.TypesAreNotConvertible">
+            <summary>
+              Looks up a localized string similar to The service &apos;{1}&apos; is not assignable from implementation type &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.OwnedInstances.OwnedInstanceRegistrationSourceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OwnedInstances.OwnedInstanceRegistrationSourceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OwnedInstances.OwnedInstanceRegistrationSourceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.OwnedInstances.OwnedInstanceRegistrationSourceResources.OwnedInstanceRegistrationSourceDescription">
+            <summary>
+              Looks up a localized string similar to Owned&lt;T&gt; Support.
             </summary>
         </member>
         <member name="T:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource">
@@ -1480,10 +2259,40 @@
             <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
             <returns>Registrations providing the service.</returns>
         </member>
+        <member name="M:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
         <member name="P:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource.IsAdapterForIndividualComponents">
             <summary>
             Gets whether the registrations provided by this source are 1:1 adapters on top
             of other components (I.e. like Meta, Func or Owned.)
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSourceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSourceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSourceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSourceResources.AnyConcreteTypeNotAlreadyRegisteredSourceDescription">
+            <summary>
+              Looks up a localized string similar to &quot;Resolve Anything&quot; Support.
             </summary>
         </member>
         <member name="T:Autofac.Features.Scanning.ScanningActivatorData">
@@ -1761,6 +2570,15 @@
             <param name="targetType">Type to search for constructors.</param>
             <returns>Suitable constructors.</returns>
         </member>
+        <member name="M:Autofac.Core.Activators.Reflection.BindingFlagsConstructorFinder.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
         <member name="T:Autofac.Core.Activators.Reflection.ConstructorParameterBinding">
             <summary>
             Binds a constructor to the parameters that will be used when it is invoked.
@@ -1805,7 +2623,7 @@
             Selects the best constructor from a set of available constructors.
             </summary>
         </member>
-        <member name="M:Autofac.Core.Activators.Reflection.IConstructorSelector.SelectConstructorBinding(System.Collections.Generic.IEnumerable{Autofac.Core.Activators.Reflection.ConstructorParameterBinding})">
+        <member name="M:Autofac.Core.Activators.Reflection.IConstructorSelector.SelectConstructorBinding(Autofac.Core.Activators.Reflection.ConstructorParameterBinding[])">
             <summary>
             Selects the best constructor from the available constructors.
             </summary>
@@ -1823,7 +2641,7 @@
             </summary>
             <param name="signature">Signature to match.</param>
         </member>
-        <member name="M:Autofac.Core.Activators.Reflection.MatchingSignatureConstructorSelector.SelectConstructorBinding(System.Collections.Generic.IEnumerable{Autofac.Core.Activators.Reflection.ConstructorParameterBinding})">
+        <member name="M:Autofac.Core.Activators.Reflection.MatchingSignatureConstructorSelector.SelectConstructorBinding(Autofac.Core.Activators.Reflection.ConstructorParameterBinding[])">
             <summary>
             Selects the best constructor from the available constructors.
             </summary>
@@ -1846,14 +2664,19 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:Autofac.Core.Activators.Reflection.MatchingSignatureConstructorSelectorResources.AtLeastOneBindingRequired">
+            <summary>
+              Looks up a localized string similar to At least one binding must be provided in order to select a constructor..
+            </summary>
+        </member>
         <member name="P:Autofac.Core.Activators.Reflection.MatchingSignatureConstructorSelectorResources.RequiredConstructorNotAvailable">
             <summary>
-              Looks up a localized string similar to The required constructor is unavailable..
+              Looks up a localized string similar to The required constructor on type &apos;{0}&apos;  with signature &apos;{1}&apos; is unavailable..
             </summary>
         </member>
         <member name="P:Autofac.Core.Activators.Reflection.MatchingSignatureConstructorSelectorResources.TooManyConstructorsMatch">
             <summary>
-              Looks up a localized string similar to More than one constructor matches the selection policy..
+              Looks up a localized string similar to More than one constructor matches the signature &apos;{0}&apos;..
             </summary>
         </member>
         <member name="T:Autofac.Core.Activators.Reflection.MostParametersConstructorSelector">
@@ -1861,12 +2684,13 @@
             Selects the constructor with the most parameters.
             </summary>
         </member>
-        <member name="M:Autofac.Core.Activators.Reflection.MostParametersConstructorSelector.SelectConstructorBinding(System.Collections.Generic.IEnumerable{Autofac.Core.Activators.Reflection.ConstructorParameterBinding})">
+        <member name="M:Autofac.Core.Activators.Reflection.MostParametersConstructorSelector.SelectConstructorBinding(Autofac.Core.Activators.Reflection.ConstructorParameterBinding[])">
             <summary>
             Selects the best constructor from the available constructors.
             </summary>
             <param name="constructorBindings">Available constructors.</param>
             <returns>The best constructor.</returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException">A single unambiguous match could not be chosen.</exception>
         </member>
         <member name="T:Autofac.Core.Activators.Reflection.ReflectionActivator">
             <summary>
@@ -1923,12 +2747,12 @@
         </member>
         <member name="P:Autofac.Core.Activators.Reflection.ReflectionActivatorResources.NoConstructorsAvailable">
             <summary>
-              Looks up a localized string similar to No constructors matching the constructor-finding policy can be found on the target type..
+              Looks up a localized string similar to No constructors on type &apos;{0}&apos; can be found with &apos;{1}&apos;..
             </summary>
         </member>
         <member name="P:Autofac.Core.Activators.Reflection.ReflectionActivatorResources.NoConstructorsBindable">
             <summary>
-              Looks up a localized string similar to None of the constructors found with policy &apos;{0}&apos; on type &apos;{1}&apos; can be invoked with the available services and parameters:{2}.
+              Looks up a localized string similar to None of the constructors found with &apos;{0}&apos; on type &apos;{1}&apos; can be invoked with the available services and parameters:{2}.
             </summary>
         </member>
         <member name="T:Autofac.Core.ConstantParameter">
@@ -2037,7 +2861,7 @@
             components.
             </summary>
         </member>
-        <member name="M:Autofac.IComponentContext.Resolve(Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.IComponentContext.ResolveComponent(Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Resolve an instance of the provided registration within the context.
             </summary>
@@ -2116,9 +2940,19 @@
             In most applications, tags are not necessary.</remarks>
             <seealso cref="M:Autofac.Builder.IRegistrationBuilder`3.InstancePerMatchingLifetimeScope(System.Object)"/>
         </member>
-        <member name="F:Autofac.Core.Container.Empty">
+        <member name="E:Autofac.ILifetimeScope.ChildLifetimeScopeBeginning">
             <summary>
-            An empty container.
+            Fired when a new scope based on the current scope is beginning.
+            </summary>
+        </member>
+        <member name="E:Autofac.ILifetimeScope.CurrentScopeEnding">
+            <summary>
+            Fired when this scope is ending.
+            </summary>
+        </member>
+        <member name="E:Autofac.ILifetimeScope.ResolveOperationBeginning">
+            <summary>
+            Fired when a resolve operation is beginning in this scope.
             </summary>
         </member>
         <member name="M:Autofac.Core.Container.#ctor">
@@ -2162,7 +2996,7 @@
             that adds component registations visible only in the new scope.</param>
             <returns>A new lifetime scope.</returns>
         </member>
-        <member name="M:Autofac.Core.Container.Resolve(Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.Core.Container.ResolveComponent(Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Resolve an instance of the provided registration within the context.
             </summary>
@@ -2191,6 +3025,11 @@
             no service object of type <paramref name="serviceType"/>.
             </returns>
         </member>
+        <member name="P:Autofac.Core.Container.Empty">
+            <summary>
+            An empty container.
+            </summary>
+        </member>
         <member name="P:Autofac.Core.Container.Disposer">
             <summary>
             The disposer associated with this container. Instances can be associated
@@ -2204,6 +3043,21 @@
             <remarks>The tag applied to this scope and the contexts generated when
             it resolves component dependencies.</remarks>
         </member>
+        <member name="E:Autofac.Core.Container.ChildLifetimeScopeBeginning">
+            <summary>
+            Fired when a new scope based on the current scope is beginning.
+            </summary>
+        </member>
+        <member name="E:Autofac.Core.Container.CurrentScopeEnding">
+            <summary>
+            Fired when this scope is ending.
+            </summary>
+        </member>
+        <member name="E:Autofac.Core.Container.ResolveOperationBeginning">
+            <summary>
+            Fired when a resolve operation is beginning in this scope.
+            </summary>
+        </member>
         <member name="P:Autofac.Core.Container.ComponentRegistry">
             <summary>
             Associates services with the components that provide them.
@@ -2211,12 +3065,10 @@
         </member>
         <member name="T:Autofac.Core.DependencyResolutionException">
             <summary>
-            Problem resolving dependencies, e.g. circular references, no callable constructor etc.
-            </summary>
-        </member>
-        <member name="M:Autofac.Core.DependencyResolutionException.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Autofac.Core.DependencyResolutionException"/> class.
+            Base exception type thrown whenever the dependency resolution process fails. This is a fatal
+            exception, as Autofac is unable to 'roll back' changes to components that may have already
+            been made during the operation. For example, 'on activated' handlers may have already been
+            fired, or 'single instance' components partially constructed.
             </summary>
         </member>
         <member name="M:Autofac.Core.DependencyResolutionException.#ctor(System.String)">
@@ -2240,27 +3092,6 @@
             <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
             <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
             <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
-        </member>
-        <member name="T:Autofac.Core.DependencyResolutionExceptionResources">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:Autofac.Core.DependencyResolutionExceptionResources.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:Autofac.Core.DependencyResolutionExceptionResources.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:Autofac.Core.DependencyResolutionExceptionResources.DefaultMessage">
-            <summary>
-              Looks up a localized string similar to A required component could not be created..
-            </summary>
         </member>
         <member name="T:Autofac.Core.Disposer">
             <summary>
@@ -2398,7 +3229,7 @@
         </member>
         <member name="F:Autofac.Core.Lifetime.LifetimeScope._synchRoot">
             <summary>
-            Protects instance variables from concurrent access.
+            Protects shared instances from concurrent access. Other members and the base class are threadsafe.
             </summary>
         </member>
         <member name="F:Autofac.Core.Lifetime.LifetimeScope.RootTag">
@@ -2481,7 +3312,7 @@
             }
             </example>
         </member>
-        <member name="M:Autofac.Core.Lifetime.LifetimeScope.Resolve(Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.Core.Lifetime.LifetimeScope.ResolveComponent(Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Resolve an instance of the provided registration within the context.
             </summary>
@@ -2547,6 +3378,21 @@
             Associates services with the components that provide them.
             </summary>
         </member>
+        <member name="E:Autofac.Core.Lifetime.LifetimeScope.ChildLifetimeScopeBeginning">
+            <summary>
+            Fired when a new scope based on the current scope is beginning.
+            </summary>
+        </member>
+        <member name="E:Autofac.Core.Lifetime.LifetimeScope.CurrentScopeEnding">
+            <summary>
+            Fired when this scope is ending.
+            </summary>
+        </member>
+        <member name="E:Autofac.Core.Lifetime.LifetimeScope.ResolveOperationBeginning">
+            <summary>
+            Fired when a resolve operation is beginning in this scope.
+            </summary>
+        </member>
         <member name="T:Autofac.Core.Lifetime.MatchingScopeLifetime">
             <summary>
             Attaches the component's lifetime to scopes matching a supplied expression.
@@ -2557,6 +3403,12 @@
             Match scopes based on the provided expression.
             </summary>
             <param name="matchExpression">Expression describing scopes that will match.</param>
+        </member>
+        <member name="M:Autofac.Core.Lifetime.MatchingScopeLifetime.#ctor(System.Object)">
+            <summary>
+            Match scopes by comparing tags for equality.
+            </summary>
+            <param name="lifetimeScopeTagToMatch">The tag applied to matching scopes.</param>
         </member>
         <member name="M:Autofac.Core.Lifetime.MatchingScopeLifetime.FindScope(Autofac.Core.ISharingLifetimeScope)">
             <summary>
@@ -2584,7 +3436,7 @@
         </member>
         <member name="P:Autofac.Core.Lifetime.MatchingScopeLifetimeResources.MatchingScopeNotFound">
             <summary>
-              Looks up a localized string similar to No scope matching the expression &apos;{0}&apos; is visible from the scope in which the instance was requested..
+              Looks up a localized string similar to No scope with a Tag matching &apos;{0}&apos; is visible from the scope in which the instance was requested. This generally indicates that a component registered as per-HTTP request is being reqested by a SingleInstance() component (or a similar scenario.) Under the web integration always request dependencies from the DependencyResolver.Current or ILifetimeScopeProvider.RequestLifetime, never from the container itself..
             </summary>
         </member>
         <member name="T:Autofac.Core.Lifetime.RootScopeLifetime">
@@ -2618,62 +3470,6 @@
             The name of the property.
             </summary>
         </member>
-        <member name="T:Autofac.Core.NamedService">
-            <summary>
-            Identifies a service using a textual name in addition to its type.
-            </summary>
-        </member>
-        <member name="M:Autofac.Core.NamedService.#ctor(System.String,System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Autofac.Core.NamedService"/> class.
-            </summary>
-            <param name="serviceName">Name of the service.</param>
-            <param name="serviceType">Type of the service.</param>
-        </member>
-        <member name="M:Autofac.Core.NamedService.Equals(System.Object)">
-            <summary>
-            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
-            </summary>
-            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
-            <returns>
-            true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
-            </returns>
-            <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
-        </member>
-        <member name="M:Autofac.Core.NamedService.GetHashCode">
-            <summary>
-            Serves as a hash function for a particular type.
-            </summary>
-            <returns>
-            A hash code for the current <see cref="T:System.Object"/>.
-            </returns>
-        </member>
-        <member name="M:Autofac.Core.NamedService.ChangeType(System.Type)">
-            <summary>
-            Return a new service of the same kind, but carrying
-            <paramref name="newType"/> as the <see cref="P:Autofac.Core.NamedService.ServiceType"/>.
-            </summary>
-            <param name="newType">The new service type.</param>
-            <returns>A new service with the service type.</returns>
-        </member>
-        <member name="P:Autofac.Core.NamedService.ServiceName">
-            <summary>
-            Gets or sets the name of the service.
-            </summary>
-            <value>The name of the service.</value>
-        </member>
-        <member name="P:Autofac.Core.NamedService.ServiceType">
-            <summary>
-            Gets the type of the service.
-            </summary>
-            <value>The type of the service.</value>
-        </member>
-        <member name="P:Autofac.Core.NamedService.Description">
-            <summary>
-            Gets a human-readable description of the service.
-            </summary>
-            <value>The description.</value>
-        </member>
         <member name="T:Autofac.Core.PreparingEventArgs">
             <summary>
             Fired before the activation process to allow parameters to be changed or an alternative
@@ -2705,14 +3501,11 @@
         </member>
         <member name="T:Autofac.Core.Registration.ComponentNotRegisteredException">
             <summary>
-            A service was requested that cannot be provided
-            by the container.
+            A service was requested that cannot be provided by the container. To avoid this exception, either register a component
+            to provide the required service, check for service registration using IsRegistered(), or use the ResolveOptional()
+            method to resolve an optional dependency.
             </summary>
-        </member>
-        <member name="M:Autofac.Core.Registration.ComponentNotRegisteredException.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/> class.
-            </summary>
+            <remarks>This exception is fatal. See <see cref="T:Autofac.Core.DependencyResolutionException"/> for more information.</remarks>
         </member>
         <member name="M:Autofac.Core.Registration.ComponentNotRegisteredException.#ctor(Autofac.Core.Service)">
             <summary>
@@ -2754,7 +3547,7 @@
         </member>
         <member name="P:Autofac.Core.Registration.ComponentNotRegisteredExceptionResources.Message">
             <summary>
-              Looks up a localized string similar to The requested service &apos;{0}&apos; has not been registered..
+              Looks up a localized string similar to The requested service &apos;{0}&apos; has not been registered. To avoid this exception, either register a component to provide the service, check for service registration using IsRegistered(), or use the ResolveOptional() method to resolve an optional dependency..
             </summary>
         </member>
         <member name="T:Autofac.Core.ComponentRegisteredEventArgs">
@@ -2939,6 +3732,77 @@
               Looks up a localized string similar to Probable circular dependency between factory-scoped components. Chain includes &apos;{0}&apos;.
             </summary>
         </member>
+        <member name="T:Autofac.Core.Resolving.IResolveOperation">
+            <summary>
+            An <see cref="T:Autofac.Core.Resolving.IResolveOperation"/> is a component context that sequences and monitors the multiple
+            activations that go into producing a single requested object graph.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Resolving.IResolveOperation.GetOrCreateInstance(Autofac.Core.ISharingLifetimeScope,Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Get or create and share an instance of <paramref name="registration"/> in the <paramref name="currentOperationScope"/>.
+            </summary>
+            <param name="currentOperationScope">The scope in the hierarchy in which the operation will begin.</param>
+            <param name="registration">The component to resolve.</param>
+            <param name="parameters">Parameters for the component.</param>
+            <returns>The component instance.</returns>
+        </member>
+        <member name="E:Autofac.Core.Resolving.IResolveOperation.CurrentOperationEnding">
+            <summary>
+            Raised when the entire operation is complete.
+            </summary>
+        </member>
+        <member name="E:Autofac.Core.Resolving.IResolveOperation.InstanceLookupBeginning">
+            <summary>
+            Raised when an instance is looked up within the operation.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.Resolving.ResolveOperation">
+            <summary>
+            A <see cref="T:Autofac.Core.Resolving.ResolveOperation"/> is a component context that sequences and monitors the multiple
+            activations that go into producing a single requested object graph.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Resolving.ResolveOperation.#ctor(Autofac.Core.ISharingLifetimeScope)">
+            <summary>
+            Create an instance of <see cref="T:Autofac.Core.Resolving.ResolveOperation"/> in the provided scope.
+            </summary>
+            <param name="mostNestedLifetimeScope">The most nested scope in which to begin the operation. The operation
+            can move upward to less nested scopes as components with wider sharing scopes are activated</param>
+        </member>
+        <member name="M:Autofac.Core.Resolving.ResolveOperation.ResolveComponent(Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Resolve an instance of the provided registration within the context.
+            </summary>
+            <param name="registration">The registration.</param>
+            <param name="parameters">Parameters for the instance.</param>
+            <returns>
+            The component instance.
+            </returns>
+            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.Core.Resolving.ResolveOperation.Execute(Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Execute the complete resolve operation.
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.Resolving.ResolveOperation.GetOrCreateInstance(Autofac.Core.ISharingLifetimeScope,Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Continue building the object graph by instantiating <paramref name="registration"/> in the
+            current <paramref name="currentOperationScope"/>.
+            </summary>
+            <param name="currentOperationScope">The current scope of the operation.</param>
+            <param name="registration">The component to activate.</param>
+            <param name="parameters">The parameters for the component.</param>
+            <returns>The resolved instance.</returns>
+            <exception cref="T:System.ArgumentNullException"/>
+        </member>
+        <member name="P:Autofac.Core.Resolving.ResolveOperation.ComponentRegistry">
+            <summary>
+            Associates services with the components that provide them.
+            </summary>
+        </member>
         <member name="T:Autofac.Core.Resolving.ResolveOperationResources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -2955,9 +3819,19 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:Autofac.Core.Resolving.ResolveOperationResources.ExceptionDuringResolve">
+            <summary>
+              Looks up a localized string similar to An exception was thrown while executing a resolve operation. See the InnerException for details..
+            </summary>
+        </member>
         <member name="P:Autofac.Core.Resolving.ResolveOperationResources.MaxDepthExceeded">
             <summary>
               Looks up a localized string similar to Probable circular dependency between factory-scoped components. Chain includes &apos;{0}&apos;.
+            </summary>
+        </member>
+        <member name="P:Autofac.Core.Resolving.ResolveOperationResources.TemporaryContextDisposed">
+            <summary>
+              Looks up a localized string similar to This resolve operation has already ended. When registering components using lambdas, the IComponentContext &apos;c&apos; parameter to the lambda cannot be stored. Instead, either resolve IComponentContext again from &apos;c&apos;, or resolve a Func&lt;&gt; based factory to create subsequent components from..
             </summary>
         </member>
         <member name="T:Autofac.Core.TypedService">
@@ -3058,55 +3932,6 @@
             <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
             <returns>Registrations providing the service.</returns>
         </member>
-        <member name="M:Autofac.Features.GeneratedFactories.GeneratedFactoryRegistrationSource.RegistrationsFor(Autofac.Core.Service,System.Func{Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.IComponentRegistration}})">
-            <summary>
-            Retrieve registrations for an unregistered service, to be used
-            by the container.
-            </summary>
-            <param name="service">The service that was requested.</param>
-            <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
-            <returns>Registrations providing the service.</returns>
-        </member>
-        <member name="T:Autofac.Features.GeneratedFactories.FactoryGenerator">
-            <summary>
-            Generates context-bound closures that represent factories from
-            a set of heuristics based on delegate type signatures.
-            </summary>
-        </member>
-        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.#ctor(System.Type,Autofac.Core.Service,Autofac.Features.GeneratedFactories.ParameterMapping)">
-            <summary>
-            Create a factory generator.
-            </summary>
-            <param name="service">The service that will be activated in
-            order to create the products of the factory.</param>
-            <param name="delegateType">The delegate to provide as a factory.</param>
-            <param name="parameterMapping">The parameter mapping mode to use.</param>
-        </member>
-        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.#ctor(System.Type,Autofac.Core.IComponentRegistration,Autofac.Features.GeneratedFactories.ParameterMapping)">
-            <summary>
-            Create a factory generator.
-            </summary>
-            <param name="productRegistration">The component that will be activated in
-            order to create the products of the factory.</param>
-            <param name="delegateType">The delegate to provide as a factory.</param>
-            <param name="parameterMapping">The parameter mapping mode to use.</param>
-        </member>
-        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.GenerateFactory(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
-            <summary>
-            Generates a factory delegate that closes over the provided context.
-            </summary>
-            <param name="context">The context in which the factory will be used.</param>
-            <param name="parameters">Parameters provided to the resolve call for the factory itself.</param>
-            <returns>A factory delegate that will work within the context.</returns>
-        </member>
-        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.GenerateFactory``1(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
-            <summary>
-            Generates a factory delegate that closes over the provided context.
-            </summary>
-            <param name="context">The context in which the factory will be used.</param>
-            <param name="parameters">Parameters provided to the resolve call for the factory itself.</param>
-            <returns>A factory delegate that will work within the context.</returns>
-        </member>
         <member name="T:Autofac.Features.OpenGenerics.OpenGenericRegistrationSource">
             <summary>
             Generates activators for open generic types.
@@ -3202,47 +4027,23 @@
             <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
             <returns>Registrations providing the service.</returns>
         </member>
-        <member name="M:Autofac.Features.Scanning.ScanningRegistrationExtensions.IsAssignableToClosed(System.Type,System.Type)">
-            <summary>Determines whether the candidate type supports any base or interface that closes the
-            provided generic service type.</summary>
-            <param name="candidateType">The type that is being checked for the interface.</param>
-            <param name="openGenericServiceType">The open generic type to locate.</param>
-            <returns>True if an interface was found; otherwise false.</returns>
-        </member>
-        <member name="M:Autofac.Features.Scanning.ScanningRegistrationExtensions.GetServicesThatClose(System.Type,System.Type)">
-            <summary>Returns the first concrete interface supported by the candidate type that
-            closes the provided open generic service type.</summary>
-            <param name="candidateType">The type that is being checked for the interface.</param>
-            <param name="openGenericServiceType">The open generic type to locate.</param>
-            <returns>The type of the interface.</returns>
-        </member>
-        <member name="M:Autofac.Features.Scanning.ScanningRegistrationExtensions.FindAssignableTypesThatClose(System.Type,System.Type)">
+        <member name="T:Autofac.IStartable">
             <summary>
-            Looks for an interface on the candidate type that closes the provided open generic interface type.
+            When implemented by a component, an instance of the component will be resolved
+            and started as soon as the container is built. Autofac will not call the Start()
+            method when subsequent instances are resolved. If this behaviour is required, use
+            an <code>OnActivated()</code> event handler instead.
             </summary>
-            <param name="candidateType">The type that is being checked for the interface.</param>
-            <param name="openGenericServiceType">The open generic service type to locate.</param>
-            <returns>True if a closed implementation was found; otherwise false.</returns>
+            <remarks>
+            For equivalent "Stop" functionality, implement <see cref="T:System.IDisposable"/>. Autofac
+            will always dispose a component before any of its dependencies (except in the presence
+            of circular dependencies, in which case the components in the cycle are disposed in
+            reverse-construction order.)
+            </remarks>
         </member>
-        <member name="T:Autofac.Features.Scanning.ScanningRegistrationExtensionsResources">
+        <member name="M:Autofac.IStartable.Start">
             <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:Autofac.Features.Scanning.ScanningRegistrationExtensionsResources.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:Autofac.Features.Scanning.ScanningRegistrationExtensionsResources.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:Autofac.Features.Scanning.ScanningRegistrationExtensionsResources.NotOpenGenericType">
-            <summary>
-              Looks up a localized string similar to The type &apos;{0}&apos; is not an open generic class or interface type..
+            Perform once-off startup processing.
             </summary>
         </member>
         <member name="T:Autofac.Module">
@@ -3308,6 +4109,22 @@
             registrations - ordering is not important.</remarks>
             <param name="componentRegistry">The component registry.</param>
             <param name="registration">The registration to attach functionality to.</param>
+        </member>
+        <member name="M:Autofac.Module.AttachToRegistrationSource(Autofac.Core.IComponentRegistry,Autofac.Core.IRegistrationSource)">
+            <summary>
+            Override to perform module-specific processing on a registration source.
+            </summary>
+            <remarks>This method will be called for all existing <i>and future</i> sources
+            - ordering is not important.</remarks>
+            <param name="componentRegistry">The component registry into which the source was added.</param>
+            <param name="registrationSource">The registration source.</param>
+        </member>
+        <member name="P:Autofac.Module.ThisAssembly">
+            <summary>
+            The assembly in which the concrete module type is located. To avoid bugs whereby deriving from a module will
+            change the target assembly, this property can only be used by modules that inherit directly from
+            <see cref="T:Autofac.Module"/>.
+            </summary>
         </member>
         <member name="M:Autofac.Builder.RegistrationBuilder`3.ExternallyOwned">
             <summary>
@@ -3450,21 +4267,12 @@
             <param name="handler">The event handler.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
-        <member name="M:Autofac.Builder.RegistrationBuilder`3.PropertiesAutowired">
+        <member name="M:Autofac.Builder.RegistrationBuilder`3.PropertiesAutowired(Autofac.PropertyWiringFlags)">
             <summary>
             Configure the component so that any properties whose types are registered in the
             container will be wired to instances of the appropriate service.
             </summary>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Builder.RegistrationBuilder`3.PropertiesAutowired(System.Boolean)">
-            <summary>
-            Configure the component so that any properties whose types are registered in the
-            container will be wired to instances of the appropriate service.
-            </summary>
-            <param name="allowCircularDependencies">If set to true, the properties won't be wired until
-            after the component has been activated. This allows property-property and constructor-property
-            circularities in the dependency graph.</param>
+            <param name="wiringFlags">Set wiring options such as circular dependency wiring support.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
         <member name="M:Autofac.Builder.RegistrationBuilder`3.WithMetadata(System.String,System.Object)">
@@ -3683,6 +4491,16 @@
             <param name="registration">Registration to set service mapping on.</param>
             <returns>Registration builder allowing the registration to be configured.</returns>
         </member>
+        <member name="M:Autofac.RegistrationExtensions.PreserveExistingDefaults``2(Autofac.Builder.IRegistrationBuilder{``0,Autofac.Features.Scanning.ScanningActivatorData,``1})">
+            <summary>
+            Specifies that the components being registered should only be made the default for services
+            that have not already been registered.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TRegistrationStyle">Registration style.</typeparam>
+            <param name="registration">Registration to set service mapping on.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
         <member name="M:Autofac.RegistrationExtensions.RegisterAssemblyTypes(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
             <summary>
             Register the types in an assembly.
@@ -3735,13 +4553,39 @@
             <param name="serviceMapping">Function mapping types to services.</param>
             <returns>Registration builder allowing the registration to be configured.</returns>
         </member>
-        <member name="M:Autofac.RegistrationExtensions.AsSelf``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+        <member name="M:Autofac.RegistrationExtensions.As``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Func{System.Type,System.Collections.Generic.IEnumerable{System.Type}})">
             <summary>
-            Specifies that a type from a scanned assembly provides its own concrete type as a service.
+            Specifies how a type from a scanned assembly is mapped to a service.
             </summary>
             <typeparam name="TLimit">Registration limit type.</typeparam>
             <typeparam name="TRegistrationStyle">Registration style.</typeparam>
             <typeparam name="TScanningActivatorData">Activator data type.</typeparam>
+            <param name="registration">Registration to set service mapping on.</param>
+            <param name="serviceMapping">Function mapping types to services.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.AsSelf``1(Autofac.Builder.IRegistrationBuilder{``0,Autofac.Features.Scanning.ScanningActivatorData,Autofac.Builder.DynamicRegistrationStyle})">
+            <summary>
+            Specifies that a type from a scanned assembly provides its own concrete type as a service.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <param name="registration">Registration to set service mapping on.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.AsSelf``2(Autofac.Builder.IRegistrationBuilder{``0,``1,Autofac.Builder.SingleRegistrationStyle})">
+            <summary>
+            Specifies that a type provides its own concrete type as a service.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TConcreteActivatorData">Activator data type.</typeparam>
+            <param name="registration">Registration to set service mapping on.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.AsSelf``1(Autofac.Builder.IRegistrationBuilder{``0,Autofac.Builder.ReflectionActivatorData,Autofac.Builder.DynamicRegistrationStyle})">
+            <summary>
+            Specifies that a type provides its own concrete type as a service.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
             <param name="registration">Registration to set service mapping on.</param>
             <returns>Registration builder allowing the registration to be configured.</returns>
         </member>
@@ -3752,8 +4596,19 @@
             <typeparam name="TLimit">Registration limit type.</typeparam>
             <typeparam name="TRegistrationStyle">Registration style.</typeparam>
             <typeparam name="TScanningActivatorData">Activator data type.</typeparam>
-            <param name="registration">Registration to set service mapping on.</param>
+            <param name="registration">Registration to set metadata on.</param>
             <param name="metadataMapping">A function mapping the type to a list of metadata items.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.WithMetadataFrom``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Features.Scanning.ScanningActivatorData,Autofac.Builder.DynamicRegistrationStyle})">
+            <summary>
+            Use the properties of an attribute (or interface implemented by an attribute) on the scanned type
+            to provide metadata values.
+            </summary>
+            <remarks>Inherited attributes are supported; however, there must be at most one matching attribute
+            in the inheritance chain.</remarks>
+            <typeparam name="TAttribute">The attribute applied to the scanned type.</typeparam>
+            <param name="registration">Registration to set metadata on.</param>
             <returns>Registration builder allowing the registration to be configured.</returns>
         </member>
         <member name="M:Autofac.RegistrationExtensions.WithMetadata``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.String,System.Func{System.Type,System.Object})">
@@ -3768,9 +4623,18 @@
             <param name="metadataValueMapping">A function retrieving the value of the item from the component type.</param>
             <returns>Registration builder allowing the registration to be configured.</returns>
         </member>
+        <member name="M:Autofac.RegistrationExtensions.Named``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Features.Scanning.ScanningActivatorData,Autofac.Builder.DynamicRegistrationStyle},System.Func{System.Type,System.String})">
+            <summary>
+            Specifies how a type from a scanned assembly is mapped to a named service.
+            </summary>
+            <param name="registration">Registration to set service mapping on.</param>
+            <typeparam name="TService">Service type provided by the component.</typeparam>
+            <param name="serviceNameMapping">Function mapping types to service names.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
         <member name="M:Autofac.RegistrationExtensions.Named``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Func{System.Type,System.String},System.Type)">
             <summary>
-            Specifies how a type from a scanned assembly is mapped to a service.
+            Specifies how a type from a scanned assembly is mapped to a named service.
             </summary>
             <typeparam name="TLimit">Registration limit type.</typeparam>
             <typeparam name="TRegistrationStyle">Registration style.</typeparam>
@@ -3780,14 +4644,50 @@
             <param name="serviceNameMapping">Function mapping types to service names.</param>
             <returns>Registration builder allowing the registration to be configured.</returns>
         </member>
-        <member name="M:Autofac.RegistrationExtensions.AsImplementedInterfaces``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+        <member name="M:Autofac.RegistrationExtensions.Keyed``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Features.Scanning.ScanningActivatorData,Autofac.Builder.DynamicRegistrationStyle},System.Func{System.Type,System.Object})">
+            <summary>
+            Specifies how a type from a scanned assembly is mapped to a keyed service.
+            </summary>
+            <param name="registration">Registration to set service mapping on.</param>
+            <typeparam name="TService">Service type provided by the component.</typeparam>
+            <param name="serviceKeyMapping">Function mapping types to service keys.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.Keyed``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Func{System.Type,System.Object},System.Type)">
+            <summary>
+            Specifies how a type from a scanned assembly is mapped to a keyed service.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TRegistrationStyle">Registration style.</typeparam>
+            <typeparam name="TScanningActivatorData">Activator data type.</typeparam>
+            <param name="registration">Registration to set service mapping on.</param>
+            <param name="serviceType">Service type provided by the component.</param>
+            <param name="serviceKeyMapping">Function mapping types to service keys.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.AsImplementedInterfaces``1(Autofac.Builder.IRegistrationBuilder{``0,Autofac.Features.Scanning.ScanningActivatorData,Autofac.Builder.DynamicRegistrationStyle})">
             <summary>
             Specifies that a type from a scanned assembly is registered as providing all of its
             implemented interfaces.
             </summary>
             <typeparam name="TLimit">Registration limit type.</typeparam>
-            <typeparam name="TRegistrationStyle">Registration style.</typeparam>
-            <typeparam name="TScanningActivatorData">Activator data type.</typeparam>
+            <param name="registration">Registration to set service mapping on.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.AsImplementedInterfaces``2(Autofac.Builder.IRegistrationBuilder{``0,``1,Autofac.Builder.SingleRegistrationStyle})">
+            <summary>
+            Specifies that a type is registered as providing all of its implemented interfaces.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TConcreteActivatorData">Activator data type.</typeparam>
+            <param name="registration">Registration to set service mapping on.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.AsImplementedInterfaces``1(Autofac.Builder.IRegistrationBuilder{``0,Autofac.Builder.ReflectionActivatorData,Autofac.Builder.DynamicRegistrationStyle})">
+            <summary>
+            Specifies that a type is registered as providing all of its implemented interfaces.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
             <param name="registration">Registration to set service mapping on.</param>
             <returns>Registration builder allowing the registration to be configured.</returns>
         </member>
@@ -3856,6 +4756,18 @@
             <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
             <param name="registration">Registration to set parameter on.</param>
             <param name="parameter">The parameter to supply to the constructor.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.WithParameter``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Func{System.Reflection.ParameterInfo,Autofac.IComponentContext,System.Boolean},System.Func{System.Reflection.ParameterInfo,Autofac.IComponentContext,System.Object})">
+            <summary>
+            Configure an explicit value for a constructor parameter.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TStyle">Registration style.</typeparam>
+            <typeparam name="TReflectionActivatorData">Activator data type.</typeparam>
+            <param name="registration">Registration to set parameter on.</param>
+            <param name="parameterSelector">A predicate selecting the parameter to set.</param>
+            <param name="valueProvider"></param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
         <member name="M:Autofac.RegistrationExtensions.WithParameters``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
@@ -4048,6 +4960,70 @@
             <param name="adapter">Function adapting <typeparamref name="TFrom"/> to
             service <typeparamref name="TTo"/>.</param>
         </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterGenericDecorator(Autofac.ContainerBuilder,System.Type,System.Type,System.Object,System.Object)">
+            <summary>
+            Decorate all components implementing open generic service <paramref name="decoratedServiceType"/>.
+            The <paramref name="fromKey"/> and <paramref name="toKey"/> parameters must be different values.
+            </summary>
+            <param name="builder">Container builder.</param>
+            <param name="decoratedServiceType">Service type being decorated. Must be an open generic type.</param>
+            <param name="fromKey">Service key or name associated with the components being decorated.</param>
+            <param name="toKey">Service key or name given to the decorated components.</param>
+            <param name="decoratorType">The type of the decorator. Must be an open generic type, and accept a parameter
+            of type <paramref name="decoratedServiceType"/>, which will be set to the instance being decorated.</param>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterDecorator``1(Autofac.ContainerBuilder,System.Func{Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter},``0,``0},System.Object,System.Object)">
+            <summary>
+            Decorate all components implementing service <typeparamref name="TService"/>
+            using the provided <paramref name="decorator"/> function.
+            The <paramref name="fromKey"/> and <paramref name="toKey"/> parameters must be different values.
+            </summary>
+            <typeparam name="TService">Service type being decorated.</typeparam>
+            <param name="builder">Container builder.</param>
+            <param name="decorator">Function decorating a component instance that provides
+            <typeparamref name="TService"/>, given the context and parameters.</param>
+            <param name="fromKey">Service key or name associated with the components being decorated.</param>
+            <param name="toKey">Service key or name given to the decorated components.</param>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterDecorator``1(Autofac.ContainerBuilder,System.Func{Autofac.IComponentContext,``0,``0},System.Object,System.Object)">
+            <summary>
+            Decorate all components implementing service <typeparamref name="TService"/>
+            using the provided <paramref name="decorator"/> function.
+            The <paramref name="fromKey"/> and <paramref name="toKey"/> parameters must be different values.
+            </summary>
+            <typeparam name="TService">Service type being decorated.</typeparam>
+            <param name="builder">Container builder.</param>
+            <param name="decorator">Function decorating a component instance that provides
+            <typeparamref name="TService"/>, given the context.</param>
+            <param name="fromKey">Service key or name associated with the components being decorated.</param>
+            <param name="toKey">Service key or name given to the decorated components.</param>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterDecorator``1(Autofac.ContainerBuilder,System.Func{``0,``0},System.Object,System.Object)">
+            <summary>
+            Decorate all components implementing service <typeparamref name="TService"/>
+            using the provided <paramref name="decorator"/> function.
+            The <paramref name="fromKey"/> and <paramref name="toKey"/> parameters must be different values.
+            </summary>
+            <typeparam name="TService">Service type being decorated.</typeparam>
+            <param name="builder">Container builder.</param>
+            <param name="decorator">Function decorating a component instance that provides
+            <typeparamref name="TService"/>.</param>
+            <param name="fromKey">Service key or name associated with the components being decorated.</param>
+            <param name="toKey">Service key or name given to the decorated components.</param>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.OnRelease``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Action{``0})">
+            <summary>
+            Run a supplied action instead of disposing instances when they're no
+            longer required.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <typeparam name="TRegistrationStyle">Registration style.</typeparam>
+            <param name="registration">Registration to set release action for.</param>
+            <param name="releaseAction">An action to perform instead of disposing the instance.</param>
+            <returns>Registration builder allowing the registration to be configured.</returns>
+            <remarks>Only one release action can be configured per registration.</remarks>
+        </member>
         <member name="T:Autofac.RegistrationExtensionsResources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -4146,10 +5122,11 @@
             <remarks>This is primarily for extending the builder syntax.</remarks>
             <param name="configurationCallback">Callback to execute.</param>
         </member>
-        <member name="M:Autofac.ContainerBuilder.Build">
+        <member name="M:Autofac.ContainerBuilder.Build(Autofac.Builder.ContainerBuildOptions)">
             <summary>
             Create a new container with the component registrations that have been made.
             </summary>
+            <param name="options">Options that influence the way the container is initialised.</param>
             <remarks>
             Build can only be called once per <see cref="T:Autofac.ContainerBuilder"/>
             - this prevents ownership issues for provided instances.
@@ -4333,48 +5310,7 @@
             <param name="instance">The instance to inject properties into.</param>
             <returns><paramref name="instance"/>.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext,System.Guid)">
-            <summary>
-            Retrieve a service from the context.
-            </summary>
-            <typeparam name="TService">The type to which the result will be cast.</typeparam>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="registrationId">Identity of the registration providing the service.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext,System.Guid,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
-            <summary>
-            Retrieve a service from the context.
-            </summary>
-            <typeparam name="TService">The type to which the result will be cast.</typeparam>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="registrationId">Identity of the registration providing the service.</param>
-            <param name="parameters">The parameters.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext,System.Guid,Autofac.Core.Parameter[])">
-            <summary>
-            Retrieve a service from the context.
-            </summary>
-            <typeparam name="TService">The type to which the result will be cast.</typeparam>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="registrationId">Identity of the registration providing the service.</param>
-            <param name="parameters">The parameters.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext,System.String)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed``1(Autofac.IComponentContext,System.String)">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4387,7 +5323,7 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext,System.String,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed``1(Autofac.IComponentContext,System.String,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4401,7 +5337,7 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext,System.String,Autofac.Core.Parameter[])">
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed``1(Autofac.IComponentContext,System.String,Autofac.Core.Parameter[])">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4415,7 +5351,7 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext,System.Object)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed``1(Autofac.IComponentContext,System.Object)">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4428,7 +5364,7 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext,System.Object,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed``1(Autofac.IComponentContext,System.Object,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4442,7 +5378,7 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve``1(Autofac.IComponentContext,System.Object,Autofac.Core.Parameter[])">
+        <member name="M:Autofac.ResolutionExtensions.ResolveKeyed``1(Autofac.IComponentContext,System.Object,Autofac.Core.Parameter[])">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4530,7 +5466,7 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve(Autofac.IComponentContext,System.String,System.Type)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed(Autofac.IComponentContext,System.String,System.Type)">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4543,21 +5479,7 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve(Autofac.IComponentContext,System.String,System.Type,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
-            <summary>
-            Retrieve a service from the context.
-            </summary>
-            <param name="context">The context from which to resolve the service.</param>
-            <param name="parameters">Parameters for the service.</param>
-            <param name="serviceName">The service name.</param>
-            <param name="serviceType">Type of the service.</param>
-            <returns>
-            The component instance that provides the service.
-            </returns>
-            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
-            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
-        </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve(Autofac.IComponentContext,System.String,System.Type,Autofac.Core.Parameter[])">
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed(Autofac.IComponentContext,System.String,System.Type,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4571,7 +5493,21 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve(Autofac.IComponentContext,Autofac.Core.Service)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveNamed(Autofac.IComponentContext,System.String,System.Type,Autofac.Core.Parameter[])">
+            <summary>
+            Retrieve a service from the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="parameters">Parameters for the service.</param>
+            <param name="serviceName">The service name.</param>
+            <param name="serviceType">Type of the service.</param>
+            <returns>
+            The component instance that provides the service.
+            </returns>
+            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service)">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4583,7 +5519,7 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4596,7 +5532,7 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.Resolve(Autofac.IComponentContext,Autofac.Core.Service,Autofac.Core.Parameter[])">
+        <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service,Autofac.Core.Parameter[])">
             <summary>
             Retrieve a service from the context.
             </summary>
@@ -4647,7 +5583,7 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptional``1(Autofac.IComponentContext,System.String)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalNamed``1(Autofac.IComponentContext,System.String)">
             <summary>
             Retrieve a service from the context, or null if the service is not
             registered.
@@ -4660,7 +5596,7 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptional``1(Autofac.IComponentContext,System.String,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalNamed``1(Autofac.IComponentContext,System.String,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Retrieve a service from the context, or null if the service is not
             registered.
@@ -4674,7 +5610,7 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptional``1(Autofac.IComponentContext,System.String,Autofac.Core.Parameter[])">
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalNamed``1(Autofac.IComponentContext,System.String,Autofac.Core.Parameter[])">
             <summary>
             Retrieve a service from the context, or null if the service is not
             registered.
@@ -4682,6 +5618,47 @@
             <param name="context">The context from which to resolve the service.</param>
             <param name="parameters">Parameters for the service.</param>
             <param name="serviceName">The name of the service.</param>
+            <typeparam name="TService">The service to resolve.</typeparam>
+            <returns>
+            The component instance that provides the service, or null.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalKeyed``1(Autofac.IComponentContext,System.Object)">
+            <summary>
+            Retrieve a service from the context, or null if the service is not
+            registered.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceKey">The name of the service.</param>
+            <typeparam name="TService">The service to resolve.</typeparam>
+            <returns>
+            The component instance that provides the service, or null.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalKeyed``1(Autofac.IComponentContext,System.Object,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Retrieve a service from the context, or null if the service is not
+            registered.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="parameters">Parameters for the service.</param>
+            <param name="serviceKey">The name of the service.</param>
+            <typeparam name="TService">The service to resolve.</typeparam>
+            <returns>
+            The component instance that provides the service, or null.
+            </returns>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalKeyed``1(Autofac.IComponentContext,System.Object,Autofac.Core.Parameter[])">
+            <summary>
+            Retrieve a service from the context, or null if the service is not
+            registered.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="parameters">Parameters for the service.</param>
+            <param name="serviceKey">The key of the service.</param>
             <typeparam name="TService">The service to resolve.</typeparam>
             <returns>
             The component instance that provides the service, or null.
@@ -4726,7 +5703,7 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptional(Autofac.IComponentContext,Autofac.Core.Service)">
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalService(Autofac.IComponentContext,Autofac.Core.Service)">
             <summary>
             Retrieve a service from the context, or null if the service is not
             registered.
@@ -4738,7 +5715,7 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptional(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalService(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Retrieve a service from the context, or null if the service is not
             registered.
@@ -4751,7 +5728,7 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.ResolveOptional(Autofac.IComponentContext,Autofac.Core.Service,Autofac.Core.Parameter[])">
+        <member name="M:Autofac.ResolutionExtensions.ResolveOptionalService(Autofac.IComponentContext,Autofac.Core.Service,Autofac.Core.Parameter[])">
             <summary>
             Retrieve a service from the context, or null if the service is not
             registered.
@@ -4780,7 +5757,7 @@
             <param name="serviceType">The service to test for the registration of.</param>
             <returns>True if the service is registered.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.IsRegistered(Autofac.IComponentContext,System.String,System.Type)">
+        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithName(Autofac.IComponentContext,System.String,System.Type)">
             <summary>
             Determine whether the specified service is available in the context.
             </summary>
@@ -4789,7 +5766,7 @@
             <param name="serviceType">Type type of the service to test for the registration of.</param>
             <returns>True if the service is registered.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.IsRegistered``1(Autofac.IComponentContext,System.String)">
+        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithName``1(Autofac.IComponentContext,System.String)">
             <summary>
             Determine whether the specified service is available in the context.
             </summary>
@@ -4798,7 +5775,25 @@
             <typeparam name="TService">Type type of the service to test for the registration of.</typeparam>
             <returns>True if the service is registered.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.IsRegistered(Autofac.IComponentContext,Autofac.Core.Service)">
+        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithKey(Autofac.IComponentContext,System.Object,System.Type)">
+            <summary>
+            Determine whether the specified service is available in the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceKey">The key of the service to test for the registration of.</param>
+            <param name="serviceType">Type type of the service to test for the registration of.</param>
+            <returns>True if the service is registered.</returns>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.IsRegisteredWithKey``1(Autofac.IComponentContext,System.Object)">
+            <summary>
+            Determine whether the specified service is available in the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="serviceKey">The key of the service to test for the registration of.</param>
+            <typeparam name="TService">Type type of the service to test for the registration of.</typeparam>
+            <returns>True if the service is registered.</returns>
+        </member>
+        <member name="M:Autofac.ResolutionExtensions.IsRegisteredService(Autofac.IComponentContext,Autofac.Core.Service)">
             <summary>
             Determine whether the specified service is available in the context.
             </summary>
@@ -4806,7 +5801,7 @@
             <param name="service">The service to test for the registration of.</param>
             <returns>True if the service is registered.</returns>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.TryResolve(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter},System.Object@)">
+        <member name="M:Autofac.ResolutionExtensions.TryResolveService(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter},System.Object@)">
             <summary>
             Try to retrieve a service from the context.
             </summary>
@@ -4819,7 +5814,7 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.TryResolve(Autofac.IComponentContext,Autofac.Core.Service,System.Object@)">
+        <member name="M:Autofac.ResolutionExtensions.TryResolveService(Autofac.IComponentContext,Autofac.Core.Service,System.Object@)">
             <summary>
             Try to retrieve a service from the context.
             </summary>
@@ -4855,7 +5850,7 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.TryResolve(Autofac.IComponentContext,System.String,System.Type,System.Object@)">
+        <member name="M:Autofac.ResolutionExtensions.TryResolveNamed(Autofac.IComponentContext,System.String,System.Type,System.Object@)">
             <summary>
             Try to retrieve a service from the context.
             </summary>
@@ -4868,7 +5863,7 @@
             </returns>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
-        <member name="M:Autofac.ResolutionExtensions.TryResolve(Autofac.IComponentContext,System.Object,System.Type,System.Object@)">
+        <member name="M:Autofac.ResolutionExtensions.TryResolveKeyed(Autofac.IComponentContext,System.Object,System.Type,System.Object@)">
             <summary>
             Try to retrieve a service from the context.
             </summary>
@@ -4904,6 +5899,28 @@
             be set to a function that will lazily retrieve the parameter value. If the result is false,
             will be set to null.</param>
             <returns>True if a value can be supplied; otherwise, false.</returns>
+        </member>
+        <member name="M:Autofac.Core.ResolvedParameter.ForNamed``1(System.String)">
+            <summary>
+            Construct a <see cref="T:Autofac.Core.ResolvedParameter"/> that will match parameters of type
+            <typeparamref name="TService"/> and resolve for those parameters an implementation
+            registered with the name <paramref name="serviceName"/>.
+            </summary>
+            <typeparam name="TService">The type of the parameter to match.</typeparam>
+            <param name="serviceName">The name of the matching service to resolve.</param>
+            <returns>A configured <see cref="T:Autofac.Core.ResolvedParameter"/> instance.</returns>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="M:Autofac.Core.ResolvedParameter.ForKeyed``1(System.Object)">
+            <summary>
+            Construct a <see cref="T:Autofac.Core.ResolvedParameter"/> that will match parameters of type
+            <typeparamref name="TService"/> and resolve for those parameters an implementation
+            registered with the key <paramref name="serviceKey"/>.
+            </summary>
+            <typeparam name="TService">The type of the parameter to match.</typeparam>
+            <param name="serviceKey">The key of the matching service to resolve.</param>
+            <returns>A configured <see cref="T:Autofac.Core.ResolvedParameter"/> instance.</returns>
         </member>
         <member name="T:Autofac.TypedParameter">
             <summary>
@@ -4950,6 +5967,67 @@
         <member name="P:Autofac.TypedParameter.Type">
             <summary>
             The type against which targets are matched.
+            </summary>
+        </member>
+        <member name="T:Autofac.TypeExtensions">
+            <summary>
+            Extends <see cref="T:System.Type"/> with methods that are useful in
+            building scanning rules for <see cref="M:Autofac.RegistrationExtensions.RegisterAssemblyTypes(Autofac.ContainerBuilder,System.Reflection.Assembly[])"/>.
+            </summary>
+        </member>
+        <member name="M:Autofac.TypeExtensions.IsInNamespace(System.Type,System.String)">
+            <summary>
+            Returns true if this type is in the <paramref name="namespace"/> namespace
+            or one of its sub-namespaces.
+            </summary>
+            <param name="this">The type to test.</param>
+            <param name="namespace">The namespace to test.</param>
+            <returns>True if this type is in the <paramref name="namespace"/> namespace
+            or one of its sub-namespaces; otherwise, false.</returns>
+        </member>
+        <member name="M:Autofac.TypeExtensions.IsInNamespaceOf``1(System.Type)">
+            <summary>
+            Returns true if this type is in the same namespace as <typeparamref name="T"/>
+            or one of its sub-namespaces.
+            </summary>
+            <param name="this">The type to test.</param>
+            <returns>True if this type is in the same namespace as <typeparamref name="T"/>
+            or one of its sub-namespaces; otherwise, false.</returns>
+        </member>
+        <member name="M:Autofac.TypeExtensions.IsClosedTypeOf(System.Type,System.Type)">
+            <summary>Determines whether the candidate type supports any base or 
+            interface that closes the provided generic type.</summary>
+            <param name="this"></param>
+            <param name="openGeneric"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Autofac.TypeExtensions.IsAssignableTo``1(System.Type)">
+            <summary>
+            Determines whether this type is assignable to <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type to test assignability to.</typeparam>
+            <returns>True if this type is assignable to references of type
+            <typeparamref name="T"/>; otherwise, False.</returns>
+        </member>
+        <member name="T:Autofac.TypeExtensionsResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.TypeExtensionsResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.TypeExtensionsResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.TypeExtensionsResources.NotOpenGenericType">
+            <summary>
+              Looks up a localized string similar to The type &apos;{0}&apos; is not an open generic class or interface type..
             </summary>
         </member>
         <member name="T:Autofac.Util.Enforce">
@@ -5068,6 +6146,15 @@
             declaring type to the property value.</param>
             <returns>Property info.</returns>
         </member>
+        <member name="M:Autofac.Util.ReflectionExtensions.GetMethod``1(System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Get the MethodInfo for a method called in the
+            expression.
+            </summary>
+            <typeparam name="TDeclaring">Type on which the method is called.</typeparam>
+            <param name="methodCallExpression">Expression demonstrating how the method appears.</param>
+            <returns>The method info for the called method.</returns>
+        </member>
         <member name="T:Autofac.Util.ReflectionExtensionsResources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -5084,9 +6171,19 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:Autofac.Util.ReflectionExtensionsResources.ExpressionNotMethodCall">
+            <summary>
+              Looks up a localized string similar to The provided expression must be of the form x =&gt;x.M(), but the provided expression was {0}..
+            </summary>
+        </member>
         <member name="P:Autofac.Util.ReflectionExtensionsResources.ExpressionNotPropertyAccessor">
             <summary>
               Looks up a localized string similar to The provided expression must be of the form x =&gt;x.P, but the provided expression was {0}..
+            </summary>
+        </member>
+        <member name="T:Autofac.Util.ReleaseAction">
+            <summary>
+            Adapts an action to the <see cref="T:System.IDisposable"/> interface.
             </summary>
         </member>
         <member name="M:Autofac.Util.SequenceExtensions.JoinWith(System.Collections.Generic.IEnumerable{System.String},System.String)">
@@ -5115,6 +6212,79 @@
             <param name="sequence">The sequence.</param>
             <param name="leadingItem">The leading item.</param>
             <returns></returns>
+        </member>
+        <member name="M:Autofac.Util.TypeExtensions.GetTypesThatClose(System.Type,System.Type)">
+            <summary>Returns the first concrete interface supported by the candidate type that
+            closes the provided open generic service type.</summary>
+            <param name="this">The type that is being checked for the interface.</param>
+            <param name="openGeneric">The open generic type to locate.</param>
+            <returns>The type of the interface.</returns>
+        </member>
+        <member name="M:Autofac.Util.TypeExtensions.FindAssignableTypesThatClose(System.Type,System.Type)">
+            <summary>
+            Looks for an interface on the candidate type that closes the provided open generic interface type.
+            </summary>
+            <param name="candidateType">The type that is being checked for the interface.</param>
+            <param name="openGenericServiceType">The open generic service type to locate.</param>
+            <returns>True if a closed implementation was found; otherwise false.</returns>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.GeneratedFactoryRegistrationSource.RegistrationsFor(Autofac.Core.Service,System.Func{Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.IComponentRegistration}})">
+            <summary>
+            Retrieve registrations for an unregistered service, to be used
+            by the container.
+            </summary>
+            <param name="service">The service that was requested.</param>
+            <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
+            <returns>Registrations providing the service.</returns>
+        </member>
+        <member name="T:Autofac.Features.GeneratedFactories.GeneratedFactoryRegistrationSourceResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.GeneratedFactories.GeneratedFactoryRegistrationSourceResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.GeneratedFactories.GeneratedFactoryRegistrationSourceResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.GeneratedFactories.GeneratedFactoryRegistrationSourceResources.GeneratedFactoryRegistrationSourceDescription">
+            <summary>
+              Looks up a localized string similar to Delegate Support (Func&lt;T&gt;and Custom Delegates).
+            </summary>
+        </member>
+        <member name="T:Autofac.Util.WindowsPhone.Wp7FactoryGenerator">
+            <summary>
+            Generates context-bound closures that represent factories from
+            a set of heuristics based on delegate type signatures.
+            </summary>
+        </member>
+        <member name="M:Autofac.Util.WindowsPhone.Wp7FactoryGenerator.#ctor(System.Type,Autofac.Core.Service,Autofac.Features.GeneratedFactories.ParameterMapping)">
+            <summary />
+        </member>
+        <member name="M:Autofac.Util.WindowsPhone.Wp7FactoryGenerator.#ctor(System.Type,Autofac.Core.IComponentRegistration,Autofac.Features.GeneratedFactories.ParameterMapping)">
+            <summary />
+        </member>
+        <member name="M:Autofac.Util.WindowsPhone.Wp7FactoryGenerator.GenerateFactory(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Generates a factory delegate that closes over the provided context.
+            </summary>
+            <param name="context">The context in which the factory will be used.</param>
+            <param name="parameters">Parameters provided to the resolve call for the factory itself.</param>
+            <returns>A factory delegate that will work within the context.</returns>
+        </member>
+        <member name="M:Autofac.Util.WindowsPhone.Wp7FactoryGenerator.GenerateFactory``1(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Generates a factory delegate that closes over the provided context.
+            </summary>
+            <param name="context">The context in which the factory will be used.</param>
+            <param name="parameters">Parameters provided to the resolve call for the factory itself.</param>
+            <returns>A factory delegate that will work within the context.</returns>
         </member>
     </members>
 </doc>

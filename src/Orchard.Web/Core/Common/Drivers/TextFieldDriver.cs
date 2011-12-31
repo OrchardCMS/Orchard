@@ -26,7 +26,7 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override DriverResult Display(ContentPart part, TextField field, string displayType, dynamic shapeHelper) {
             return ContentShape("Fields_Common_Text", GetDifferentiator(field, part), 
-                () => shapeHelper.Fields_Common_Text(ContentPart: part, ContentField: field, Name: field.Name, Value: field.Value));
+                () => shapeHelper.Fields_Common_Text(Name: field.Name, Value: field.Value));
         }
 
         protected override DriverResult Editor(ContentPart part, TextField field, dynamic shapeHelper) {

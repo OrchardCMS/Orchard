@@ -1,4 +1,6 @@
-﻿using Orchard.Data.Migration;
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Data.Migration;
+using Orchard.Core.Contents.Extensions;
 
 namespace Orchard.Users {
     public class UsersDataMigration : DataMigrationImpl {
@@ -33,6 +35,12 @@ namespace Orchard.Users {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("User", cfg => cfg.Creatable(false));
+
+            return 2;
         }
     }
 }

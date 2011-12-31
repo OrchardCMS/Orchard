@@ -24,13 +24,13 @@ namespace Orchard.DesignerTools.Services {
         private int _shapeId;
 
         public ShapeTracingFactory(
-            WorkContext workContext, 
+            IWorkContextAccessor workContextAccessor, 
             IShapeTableManager shapeTableManager, 
             IThemeManager themeManager, 
             IWebSiteFolder webSiteFolder,
             IAuthorizer authorizer
             ) {
-            _workContext = workContext;
+            _workContext = workContextAccessor.GetContext();
             _shapeTableManager = shapeTableManager;
             _themeManager = themeManager;
             _webSiteFolder = webSiteFolder;

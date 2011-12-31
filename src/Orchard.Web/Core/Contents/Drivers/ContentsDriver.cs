@@ -8,11 +8,11 @@ namespace Orchard.Core.Contents.Drivers {
         protected override DriverResult Display(ContentPart part, string displayType, dynamic shapeHelper) {
             return Combined(
                 ContentShape("Parts_Contents_Publish",
-                             () => shapeHelper.Parts_Contents_Publish(ContentPart: part)),
+                             () => shapeHelper.Parts_Contents_Publish()),
                 ContentShape("Parts_Contents_Publish_Summary",
-                             () => shapeHelper.Parts_Contents_Publish_Summary(ContentPart: part)),
+                             () => shapeHelper.Parts_Contents_Publish_Summary()),
                 ContentShape("Parts_Contents_Publish_SummaryAdmin",
-                             () => shapeHelper.Parts_Contents_Publish_SummaryAdmin(ContentPart: part))
+                             () => shapeHelper.Parts_Contents_Publish_SummaryAdmin())
                 );
         }
 
