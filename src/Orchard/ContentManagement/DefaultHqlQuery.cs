@@ -174,7 +174,7 @@ namespace Orchard.ContentManagement {
 
         public int Count() {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
-            return _session.CreateQuery(ToHql(true)).UniqueResult<int>();
+            return Convert.ToInt32(_session.CreateQuery(ToHql(true)).UniqueResult());
         }
 
         public string ToHql(bool count) {

@@ -1,5 +1,5 @@
 ﻿@using Orchard.Experimental.Models;
 
 <div class="debug message">
-    Experimental: displaying @Html.ActionLink(T("{0} #{1} v{2}", Model.ContentItem.ContentType, Model.ContentItem.Id, Model.ContentItem.Version).ToString(), "details", "content", new { area = "Orchard.Experimental", Model.ContentItem.Id, Model.ContentItem.Version }, new { }))
+    Experimental: displaying @Html.ActionLink(T("{0} #{1} v{2}", Model.ContentItem.ContentType, Model.ContentItem.Id, Model.ContentItem.Version).ToString(), "details", "content", new { area = "Orchard.Experimental", (int)Model.ContentItem.Id, (int)Model.ContentItem.Version }, new { }))
 </div>
