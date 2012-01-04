@@ -255,7 +255,6 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Admin.feature.cs</LastGenOutput>
     </None>
-    <None Include="App.Config" />
     <None Include="Blogs.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Blogs.feature.cs</LastGenOutput>
