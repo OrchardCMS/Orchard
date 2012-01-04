@@ -201,6 +201,11 @@ namespace Orchard.Localization.Services {
                     continue;
                 }
 
+                if (poLine.StartsWith("msgctxt")) {
+                    scope = ParseContext(poLine);
+                    continue;
+                }
+
                 if (poLine.StartsWith("msgid")) {
                     id = ParseId(poLine);
                     continue;
@@ -236,6 +241,10 @@ namespace Orchard.Localization.Services {
 
         private static string ParseScope(string poLine) {
             return Unescape(poLine.Substring(2).Trim().Trim('"'));
+        }
+
+        private static string ParseContext(string poLine) {
+            return Unescape(poLine.Substring(7).Trim().Trim('"'));
         }
 
         class CultureDictionary {
