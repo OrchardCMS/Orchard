@@ -17,7 +17,6 @@ namespace Orchard.Mvc.Extensions {
         public static ActionResult RedirectLocal(this Controller controller, string redirectUrl, string defaultUrl) {
             if (!string.IsNullOrWhiteSpace(redirectUrl) 
                 && controller.Url.IsLocalUrl(redirectUrl)
-                && redirectUrl.StartsWith("/")
                 && !redirectUrl.StartsWith("//")
                 && !redirectUrl.StartsWith("/\\")) {
                 
