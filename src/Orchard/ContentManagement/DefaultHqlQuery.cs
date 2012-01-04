@@ -403,7 +403,8 @@ namespace Orchard.ContentManagement {
         }
 
         public IAliasFactory ContentItemVersion() {
-            return Named("civ");
+            Current = _query.BindItemVersionCriteria();
+            return this;
         }
 
         public IAliasFactory ContentType() {
