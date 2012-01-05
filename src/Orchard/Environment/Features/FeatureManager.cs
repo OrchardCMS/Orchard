@@ -109,13 +109,13 @@ namespace Orchard.Environment.Features {
 
             IDictionary<FeatureDescriptor, bool> availableFeatures = GetAvailableFeatures()
                 .ToDictionary(featureDescriptor => featureDescriptor,
-                                featureDescriptor => enabledFeatures.FirstOrDefault(shellFeature => shellFeature.Name == featureDescriptor.Id) != null);
+                                featureDescriptor => enabledFeatures.FirstOrDefault(shellFeature => shellFeature.Name.Equals(featureDescriptor.Id)) != null);
 
             IEnumerable<string> featuresToDisable = featureIds
                 .Select(featureId => DisableFeature(featureId, availableFeatures, force)).ToList()
                 .SelectMany(ies => ies.Select(s => s));
 
-            if (featuresToDisable.Count() > 0) {
+            if (featuresToDisable.Any()) {
                 foreach (string featureId in featuresToDisable) {
                     string id = featureId;
 
@@ -141,11 +141,11 @@ namespace Orchard.Environment.Features {
             var getDisabledDependencies =
                 new Func<string, IDictionary<FeatureDescriptor, bool>, IDictionary<FeatureDescriptor, bool>>(
                     (currentFeatureId, featuresState) => {
-                        KeyValuePair<FeatureDescriptor, bool> feature = featuresState.Single(featureState => featureState.Key.Id == currentFeatureId);
+                        KeyValuePair<FeatureDescriptor, bool> feature = featuresState.Single(featureState => featureState.Key.Id.Equals(currentFeatureId, StringComparison.OrdinalIgnoreCase));
 
                         // Retrieve disabled dependencies for the current feature
                         return feature.Key.Dependencies
-                            .Select(fId => featuresState.Single(featureState => featureState.Key.Id == fId))
+                            .Select(fId => featuresState.Single(featureState => featureState.Key.Id.Equals(fId, StringComparison.OrdinalIgnoreCase)))
                             .Where(featureState => !featureState.Value)
                             .ToDictionary(f => f.Key, f => f.Value);
                     });
@@ -173,7 +173,7 @@ namespace Orchard.Environment.Features {
         private IEnumerable<string> DisableFeature(string featureId, IDictionary<FeatureDescriptor, bool> availableFeatures, bool force) {
             var getEnabledDependants =
                 new Func<string, IDictionary<FeatureDescriptor, bool>, IDictionary<FeatureDescriptor, bool>>(
-                    (currentFeatureId, fs) => fs.Where(f => f.Value && f.Key.Dependencies != null && f.Key.Dependencies.Contains(currentFeatureId))
+                    (currentFeatureId, fs) => fs.Where(f => f.Value && f.Key.Dependencies != null && f.Key.Dependencies.Select(s => s.ToLowerInvariant()).Contains(currentFeatureId.ToLowerInvariant()))
                     .ToDictionary(f => f.Key, f => f.Value));
 
             IEnumerable<string> featuresToDisable = GetAffectedFeatures(featureId, availableFeatures, getEnabledDependants);
