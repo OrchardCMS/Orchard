@@ -2,20 +2,6 @@
 using Orchard.Caching;
 
 namespace Orchard.Services {
-    public interface IClock : IVolatileProvider {
-        DateTime UtcNow { get; }
-
-        /// <summary>
-        /// Each retrieved value is cached during the specified amount of time.
-        /// </summary>
-        IVolatileToken When(TimeSpan duration);
-
-        /// <summary>
-        /// The cache is active until the specified time. Each subsequent access won't be cached.
-        /// </summary>
-        IVolatileToken WhenUtc(DateTime absoluteUtc);
-    }
-
     public class Clock : IClock {
         public DateTime UtcNow {
             get { return DateTime.UtcNow; }

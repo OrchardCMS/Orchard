@@ -27,6 +27,12 @@
         <p>@Html.ActionLink(T("Add or remove supported cultures for the site.").ToString(), "Culture")</p>
     </div>
     <div>
+        <label for="TimeZone">@T("Default Time Zone")</label>
+        @Html.DropDownList("TimeZone", new[] { new SelectListItem { Text = T("Local to server").Text, Value = "" } }.Union(new SelectList(Model.TimeZones, "Id", "", Model.TimeZone)))
+        @Html.ValidationMessage("TimeZone", "*")
+        <span class="hint">@T("Determines the default time zone which will should be used to display date and times.")</span>
+    </div>
+    <div>
         <label for="PageTitleSeparator">@T("Page title separator")</label>
         @Html.EditorFor(x => x.PageTitleSeparator)
         @Html.ValidationMessage("PageTitleSeparator", "*")

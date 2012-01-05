@@ -30,7 +30,7 @@
         }
         else {
             <img class="icon" src="@Href("~/Modules/Orchard.PublishLater/Content/Admin/images/scheduled.gif")" alt="@T("Scheduled")" title="@T("The page is scheduled for publishing")" /><text>  @T("Scheduled") </text>
-            @Html.DateTime(((DateTime?)Model.ScheduledPublishUtc).Value.ToLocalTime(), T("M/d/yyyy h:mm tt"))
+            @Display.DateTime(((DateTime?)Model.ScheduledPublishUtc).Value.ToLocalTime(), T("M/d/yyyy h:mm tt"))
         }&nbsp;&#124;&nbsp;</li>
     }
 </ul>

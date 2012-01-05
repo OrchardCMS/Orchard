@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -44,7 +45,8 @@ namespace Orchard.Core.Settings.Drivers {
 
             var model = new SiteSettingsPartViewModel {
                 Site = site,
-                SiteCultures = _cultureManager.ListCultures()
+                SiteCultures = _cultureManager.ListCultures(),
+                TimeZones = TimeZoneInfo.GetSystemTimeZones()
             };
 
             return ContentShape("Parts_Settings_SiteSettingsPart",
@@ -55,7 +57,8 @@ namespace Orchard.Core.Settings.Drivers {
             var site = _siteService.GetSiteSettings().As<SiteSettingsPart>();
             var model = new SiteSettingsPartViewModel { 
                 Site = site,
-                SiteCultures = _cultureManager.ListCultures()
+                SiteCultures = _cultureManager.ListCultures(),
+                TimeZones = TimeZoneInfo.GetSystemTimeZones()
             };
 
             var previousBaseUrl = model.Site.BaseUrl;
