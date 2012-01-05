@@ -192,7 +192,7 @@ namespace Orchard.UI.Resources {
             if (!String.IsNullOrEmpty(settings.Culture)) {
                 string nearestCulture = FindNearestCulture(settings.Culture);
                 if (!String.IsNullOrEmpty(nearestCulture)) {
-                    url = Path.ChangeExtension(url, nearestCulture + "." + Path.GetExtension(url));
+                    url = Path.ChangeExtension(url, nearestCulture + Path.GetExtension(url));
                 }
             }
             if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !VirtualPathUtility.IsAbsolute(url) && !VirtualPathUtility.IsAppRelative(url) && !String.IsNullOrEmpty(BasePath)) {
