@@ -36,7 +36,7 @@
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersAreModerated)">@T("Users must be approved before they can log in")</label>
     </div>    
     <div data-controllerid="@Html.FieldIdFor(m => m.UsersAreModerated)">
-        <input type="checkbox" class="check-box" id="@Html.FieldIdFor(m => m.NotifyModeration)" name="@Html.FieldNameFor(m => m.NotifyModeration)" @(emailEnabled ? "" : "disabled=\"disabled\"")/>  
+        <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.NotifyModeration)" name="@Html.FieldNameFor(m => m.NotifyModeration)" @(Model.NotifyModeration ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.NotifyModeration)">@T("Send a notification when a user needs moderation")</label>
     </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.NotifyModeration)">
