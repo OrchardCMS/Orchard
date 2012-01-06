@@ -188,6 +188,10 @@ namespace Orchard.Setup {
             public string BaseUrl {
                 get { return ""; }
             }
+
+            public string SiteTimeZone {
+                get { return TimeZoneInfo.Local.Id; }
+             }        
         }
     }
 }

@@ -48,8 +48,17 @@ namespace Orchard.Environment.AutofacUtil {
             get { return _lifetimeScope.Tag; }
         }
 
-        public event EventHandler<LifetimeScopeBeginningEventArgs> ChildLifetimeScopeBeginning;
-        public event EventHandler<LifetimeScopeEndingEventArgs> CurrentScopeEnding;
-        public event EventHandler<ResolveOperationBeginningEventArgs> ResolveOperationBeginning;
+        event EventHandler<LifetimeScopeBeginningEventArgs> ILifetimeScope.ChildLifetimeScopeBeginning {
+            add { _lifetimeScope.ChildLifetimeScopeBeginning += value; }
+            remove { _lifetimeScope.ChildLifetimeScopeBeginning -= value; }
+        }
+        event EventHandler<LifetimeScopeEndingEventArgs> ILifetimeScope.CurrentScopeEnding {
+            add { _lifetimeScope.CurrentScopeEnding += value; }
+            remove { _lifetimeScope.CurrentScopeEnding -= value; }
+        }
+        event EventHandler<ResolveOperationBeginningEventArgs> ILifetimeScope.ResolveOperationBeginning {
+            add { _lifetimeScope.ResolveOperationBeginning += value; }
+            remove { _lifetimeScope.ResolveOperationBeginning -= value; }
+        }
     }
 }

@@ -80,6 +80,8 @@ namespace Orchard.Environment.Extensions.Compilers {
                         context.AssemblyBuilder.AddAssemblyReference(assembly);
                     }
 
+                    _criticalErrorProvider.Clear();
+
                     // Load references specified in project file (only the ones not yet loaded)
                     foreach (var assemblyReference in projectFileDescriptor.References) {
                         if (addedReferences.Contains(assemblyReference.SimpleName))

@@ -48,7 +48,7 @@ namespace Orchard.MultiTenancy.Services {
 
                 ExtensionDescriptor theme = descriptor;
 
-                if (!theme.Tags.Contains("hidden")) {
+                if (theme.Tags == null || !theme.Tags.Contains("hidden")) {
                     themes.Add(theme);
                 }
             }

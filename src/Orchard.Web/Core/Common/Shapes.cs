@@ -23,12 +23,12 @@ namespace Orchard.Core.Common {
         }
 
         [Shape]
-        public IHtmlString PublishedState(HtmlHelper html, DateTime createdDateTimeUtc, DateTime? publisheddateTimeUtc) {
+        public IHtmlString PublishedState(dynamic Display, DateTime createdDateTimeUtc, DateTime? publisheddateTimeUtc) {
             if (!publisheddateTimeUtc.HasValue) {
                 return T("Draft");
             }
 
-            return html.DateTime(createdDateTimeUtc);
+            return Display.DateTime(DateTimeUtc: createdDateTimeUtc);
         }
 
         [Shape]

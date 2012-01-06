@@ -91,9 +91,16 @@ namespace Orchard.Core.Settings {
                     .Column<string>("SiteCulture")
                     .Column<string>("ResourceDebugMode", c => c.WithDefault("FromAppSetting"))
                     .Column<int>("PageSize")
+                    .Column<string>("SiteTimeZone")
                 );
 
-            return 1;
+            SchemaBuilder.CreateTable("SiteSettings2PartRecord",
+                table => table
+                    .ContentPartRecord()
+                    .Column<string>("BaseUrl", c => c.Unlimited())
+                );
+
+            return 3;
         }
 
         public int UpdateFrom1() {
@@ -104,6 +111,15 @@ namespace Orchard.Core.Settings {
                 );
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            SchemaBuilder.AlterTable("SiteSettingsPartRecord",
+                table => table
+                    .AddColumn<string>("SiteTimeZone")
+                );
+
+            return 3;
         }
     }
 }

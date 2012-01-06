@@ -9,5 +9,11 @@ namespace Orchard.Environment.Extensions {
         /// Called by any to notice the system of a critical issue at the system level, e.g. incorrect extensions
         /// </summary>
         void RegisterErrorMessage(LocalizedString message);
+
+        /// <summary>
+        /// Removes all error message
+        /// </summary>
+        void Clear();
+
     }
 }

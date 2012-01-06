@@ -63,10 +63,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Integration.Web.Mvc, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\autofac\Autofac.Integration.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="Castle.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
@@ -278,6 +274,7 @@
     <Compile Include="Stubs\StubVirtualPathMonitor.cs" />
     <Compile Include="Stubs\StubCacheManager.cs" />
     <Compile Include="Stubs\StubWebSiteFolder.cs" />
+    <Compile Include="Time\TimeZoneSelectorTests.cs" />
     <Compile Include="UI\Resources\ResourceManagerTests.cs" />
     <Compile Include="UI\ShapeTests.cs" />
     <Compile Include="Utility\ContainerExtensions.cs" />

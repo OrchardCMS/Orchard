@@ -5,7 +5,8 @@ using Orchard.Localization;
 
 namespace Orchard.Environment.Extensions {
     public class DefaultCriticalErrorProvider : ICriticalErrorProvider {
-        private readonly ConcurrentBag<LocalizedString> _errorMessages;   
+        private ConcurrentBag<LocalizedString> _errorMessages;
+        private readonly object _synLock = new object();
 
         public DefaultCriticalErrorProvider() {
             _errorMessages = new ConcurrentBag<LocalizedString>();
@@ -22,5 +23,11 @@ namespace Orchard.Environment.Extensions {
             }
         }
 
+        public void Clear() {
+            lock (_synLock) {
+                _errorMessages = new ConcurrentBag<LocalizedString>();
+            }
+
+        }
     }
 }
