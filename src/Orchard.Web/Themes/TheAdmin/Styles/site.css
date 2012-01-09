@@ -873,6 +873,10 @@ table.items th.actions {
     width:300px;
     text-align:right;
 }
+table.items th.checkbox {
+    width:50px;
+}
+
 /* todo: (heskew) hook back up */
 table.items tr.hover {
     background-color:#f0f3d6;
