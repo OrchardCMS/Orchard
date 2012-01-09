@@ -1,4 +1,5 @@
-﻿@model Orchard.ImportExport.ViewModels.ExportViewModel
+﻿@using Orchard.Utility.Extensions
+@model Orchard.ImportExport.ViewModels.ExportViewModel
 
 @{ Layout.Title = T("Export").ToString(); }
 
@@ -12,7 +13,7 @@
                 <li>
                     <input type="hidden" value="@Model.ContentTypes[contentTypeIndex].ContentTypeName" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].ContentTypeName)"/>
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)" id="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)" />
-                    <label class="forcheckbox" for="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)">@Model.ContentTypes[contentTypeIndex].ContentTypeName</label>
+                    <label class="forcheckbox" for="@Html.NameOf(m => m.ContentTypes[contentTypeIndex].IsChecked)">@Model.ContentTypes[contentTypeIndex].ContentTypeName.CamelFriendly()</label>
                 </li>
 			    contentTypeIndex = contentTypeIndex + 1;
 		    }
