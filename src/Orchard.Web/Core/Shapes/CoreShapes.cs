@@ -313,8 +313,9 @@ namespace Orchard.Core.Shapes {
         }
 
         [Shape]
-        public void Style(TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
-            ResourceManager.WriteResource(Output, Resource, Url, Condition, TagAttributes);
+        public void Style(dynamic Display, HtmlHelper Html, TextWriter Output, ResourceDefinition Resource, string Url, string Condition, Dictionary<string, string> TagAttributes) {
+            // do not write to Output directly as Styles are rendered in Zones
+            ResourceManager.WriteResource(Html.ViewContext.Writer, Resource, Url, Condition, TagAttributes);
         }
 
         [Shape]
