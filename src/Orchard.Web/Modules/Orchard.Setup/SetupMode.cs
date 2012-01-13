@@ -96,10 +96,7 @@ namespace Orchard.Setup {
 
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>().InstancePerLifetimeScope();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>().InstancePerLifetimeScope();
-            builder.Register(context => new ShapeAttributeBindingStrategy(
-                context.Resolve<IEnumerable<ShapeAttributeOccurrence>>(), 
-                context.Resolve<IComponentContext>(),
-                context.Resolve<RouteCollection>())).As<IShapeTableProvider>().SingleInstance();
+            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>().InstancePerMatchingLifetimeScope("shell");
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 
