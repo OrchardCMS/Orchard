@@ -20,16 +20,17 @@ namespace Orchard.Time {
                 if (String.IsNullOrEmpty(siteTimeZoneId)) {
                     return null;
                 }
+
+                return new TimeZoneSelectorResult {
+                    Priority = -5,
+                    TimeZone = TimeZoneInfo.FindSystemTimeZoneById(siteTimeZoneId)
+                };
+
             }
             catch {
                 // if the database could not be updated in time, ignore this provider
                 return null;
             }
-            
-            return new TimeZoneSelectorResult {
-                Priority = -5,
-                TimeZone = TimeZoneInfo.FindSystemTimeZoneById(siteTimeZoneId)
-            };
         }
     }
 }
