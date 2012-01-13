@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using Orchard.Logging;
 
 namespace Orchard.Time {
     /// <summary>
@@ -10,7 +11,11 @@ namespace Orchard.Time {
 
         public SiteTimeZoneSelector(IWorkContextAccessor workContextAccessor) {
             _workContextAccessor = workContextAccessor;
+
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public TimeZoneSelectorResult GetTimeZone(HttpContextBase context) {
             
@@ -25,9 +30,10 @@ namespace Orchard.Time {
                     Priority = -5,
                     TimeZone = TimeZoneInfo.FindSystemTimeZoneById(siteTimeZoneId)
                 };
-
             }
-            catch {
+            catch(Exception e) {
+                Logger.Error(e, "TimeZone could not be loaded");
+
                 // if the database could not be updated in time, ignore this provider
                 return null;
             }
