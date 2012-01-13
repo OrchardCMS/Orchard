@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Routing;
 using Autofac;
 using JetBrains.Annotations;
@@ -95,7 +96,10 @@ namespace Orchard.Setup {
 
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>().InstancePerLifetimeScope();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>().InstancePerLifetimeScope();
-            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>().SingleInstance();
+            builder.Register(context => new ShapeAttributeBindingStrategy(
+                context.Resolve<IEnumerable<ShapeAttributeOccurrence>>(), 
+                context.Resolve<IComponentContext>(),
+                context.Resolve<RouteCollection>())).As<IShapeTableProvider>().SingleInstance();
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 
