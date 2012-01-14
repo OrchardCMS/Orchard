@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions; 
 using System.Diagnostics.CodeAnalysis;
+using System.Web;
+using Orchard.Core.Settings.Models;
 using Orchard.Localization;
 using System.Security.Principal;
 using System.Web.Mvc;
@@ -16,6 +18,7 @@ using Orchard.Users.Models;
 using Orchard.UI.Notify;
 using Orchard.Users.Events;
 using System.Collections.Generic;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Users.Controllers {
     [HandleError, Themed]
@@ -137,7 +140,12 @@ namespace Orchard.Users.Controllers {
 
                 if (user != null) {
                     if ( user.As<UserPart>().EmailStatus == UserStatus.Pending ) {
-                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
+                        var siteUrl = _orchardServices.WorkContext.CurrentSite.As<SiteSettings2Part>().BaseUrl;
+                        if(String.IsNullOrWhiteSpace(siteUrl)) {
+                            siteUrl = HttpContext.Request.ToRootUrlString();
+                        }
+
+                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => VirtualPathUtility.Combine(siteUrl, Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
 
                         foreach (var userEventHandler in _userEventHandlers) {
                             userEventHandler.SentChallengeEmail(user);
