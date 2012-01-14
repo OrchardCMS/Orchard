@@ -132,6 +132,12 @@
   </Target>
 
   <Target Name ="Spec">
+    <!-- TeamCity support -->
+    <ItemGroup>
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
+
     <CreateItem Include="$(CompileFolder)\*.Specs.dll">
       <Output TaskParameter="Include" ItemName="SpecAssemblies" />
     </CreateItem>
