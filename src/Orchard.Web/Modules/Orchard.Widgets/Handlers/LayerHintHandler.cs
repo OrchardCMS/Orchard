@@ -30,8 +30,8 @@ namespace Orchard.Widgets.Handlers {
         public void Routed(IContent content, string path, ICollection<Tuple<string, RouteValueDictionary>> aliases) {
             // Only going to help in creating a layer if the content is a page
             // TODO: (PH) Any reason not to enable the hint for *all* routed content?
-            // TODO: (PH:Autoroute) Previously this only ran when the item was first published. Now ideally we want to run this any time the route
-            // has *changed*.
+            // TODO: (PH:Autoroute) Previously this only ran when the item was first published. Now it's running any time item is published. We want to catch
+            // that and edit the existing layer rule rather than create a new one.
             if (!(content.ContentItem.ContentType == "Page"))
                 return;
 
