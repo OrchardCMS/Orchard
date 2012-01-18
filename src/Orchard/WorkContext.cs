@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security;
 using Orchard.Settings;
@@ -74,6 +75,14 @@ namespace Orchard {
         public string CurrentCulture {
             get { return GetState<string>("CurrentCulture"); }
             set { SetState("CurrentCulture", value); }
+        }
+
+        /// <summary>
+        /// Time zone of the work context
+        /// </summary>
+        public TimeZoneInfo CurrentTimeZone {
+            get { return GetState<TimeZoneInfo>("CurrentTimeZone"); }
+            set { SetState("CurrentTimeZone", value); }
         }
     }
 }

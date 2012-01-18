@@ -49,16 +49,17 @@
                 }
 
                 var dependencies = (from d in feature.Descriptor.Dependencies
-                                    select (from f in Model.Features where f.Descriptor.Id == d select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);
+                                    select (from f in Model.Features where f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase) select f).SingleOrDefault()).Where(f => f != null).OrderBy(f => f.Descriptor.Name);
                 var missingDependencies = feature.Descriptor.Dependencies
-                    .Where(d => !Model.Features.Any(f => f.Descriptor.Id == d));
+                    .Where(d => !Model.Features.Any(f => f.Descriptor.Id.Equals(d, StringComparison.OrdinalIgnoreCase)));
                 showDisable = categoryName.ToString() != "Core";
-                showEnable = missingDependencies.Count() == 0 && feature.Descriptor.Id != "Orchard.Setup";
+                showEnable = !missingDependencies.Any() && feature.Descriptor.Id != "Orchard.Setup";
             <li class="@featureClassName" id="@featureId" title="@T("{0} is {1}", Html.AttributeEncode(featureName), featureState)">
                 <div class="summary">
                     <div class="properties">
                         <h3>@featureName</h3>
-                        <p class="description">@feature.Descriptor.Description</p>@if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) {
+                        <p class="description">@feature.Descriptor.Description</p>
+                        @if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) {
                         <div class="dependencies">
                             <h4>@T("Depends on:")</h4>
                             @Html.UnorderedList(dependencies,

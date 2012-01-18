@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -129,8 +130,13 @@ namespace Orchard.Environment {
             // load all tenants, and activate their shell
             if (allSettings.Any()) {
                 foreach (var settings in allSettings) {
-                    var context = CreateShellContext(settings);
-                    ActivateShell(context);
+                    try {
+                        var context = CreateShellContext(settings);
+                        ActivateShell(context);
+                    }
+                    catch(Exception e) {
+                        Logger.Error(e, "A tenant could not be started: " + settings.Name);
+                    }
                 }
             }
             // no settings, run the Setup

@@ -73,12 +73,20 @@ namespace Orchard.Roles.Controllers {
                 return new HttpUnauthorizedResult();
 
             var viewModel = new RoleCreateViewModel();
-            UpdateModel(viewModel);
+            TryUpdateModel(viewModel);
 
-            //check if the role name already exists
-            if (!_roleService.VerifyRoleUnicity(viewModel.Name)) {
-                Services.Notifier.Error(T("Creating Role {0} failed: Role with same name already exists", viewModel.Name));
-                return RedirectToAction("Create");
+            if(String.IsNullOrEmpty(viewModel.Name)) {
+                ModelState.AddModelError("Name", T("Role name can't be empty"));
+            }
+
+            var role = _roleService.GetRoleByName(viewModel.Name);
+            if (role != null) {
+                ModelState.AddModelError("Name", T("Role with same name already exists"));
+            }
+
+            if (!ModelState.IsValid) {
+                viewModel.FeaturePermissions = _roleService.GetInstalledPermissions();
+                return View(viewModel);
             }
 
             _roleService.CreateRole(viewModel.Name);
@@ -123,7 +131,21 @@ namespace Orchard.Roles.Controllers {
                 return new HttpUnauthorizedResult();
 
             var viewModel = new RoleEditViewModel();
-            UpdateModel(viewModel);
+            TryUpdateModel(viewModel);
+
+            if (String.IsNullOrEmpty(viewModel.Name)) {
+                ModelState.AddModelError("Name", T("Role name can't be empty"));
+            }
+
+            var role = _roleService.GetRoleByName(viewModel.Name);
+            if (role != null && role.Id != id) {
+                ModelState.AddModelError("Name", T("Role with same name already exists"));
+            }
+
+            if (!ModelState.IsValid) {
+                return Edit(id);
+            }
+
             // Save
             List<string> rolePermissions = new List<string>();
             foreach (string key in Request.Form.Keys) {

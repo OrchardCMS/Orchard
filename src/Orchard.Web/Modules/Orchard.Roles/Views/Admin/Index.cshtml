@@ -8,7 +8,7 @@
 }
 
 @using(Html.BeginFormAntiForgeryPost()) {
-    Html.ValidationSummary();
+    @Html.ValidationSummary();
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
         <select id="Select1" name="roleActions">

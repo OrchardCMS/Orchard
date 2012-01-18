@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Routing;
 using Autofac;
 using JetBrains.Annotations;
@@ -95,7 +96,7 @@ namespace Orchard.Setup {
 
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>().InstancePerLifetimeScope();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>().InstancePerLifetimeScope();
-            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>().InstancePerMatchingLifetimeScope("shell");
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 
@@ -188,6 +189,10 @@ namespace Orchard.Setup {
             public string BaseUrl {
                 get { return ""; }
             }
+
+            public string SiteTimeZone {
+                get { return TimeZoneInfo.Local.Id; }
+             }        
         }
     }
 }

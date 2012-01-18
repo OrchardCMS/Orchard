@@ -162,9 +162,19 @@ namespace Orchard.ContentManagement {
                 versionRecord = contentItemVersionRecords.FirstOrDefault();
             }
 
-            // no record means content item doesn't exist
+            // no record means content item is not in db
             if (versionRecord == null) {
-                return null;
+                // check in memory
+                var record = _contentItemRepository.Get(id);
+                if (record == null) {
+                    return null;
+                }
+
+                versionRecord = GetVersionRecord(options, record);
+
+                if (versionRecord == null) {
+                    return null;
+                }
             }
 
             // return item if obtained earlier in session

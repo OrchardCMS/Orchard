@@ -174,7 +174,7 @@ namespace Orchard.ContentManagement {
 
         public int Count() {
             ApplyHqlVersionOptionsRestrictions(_versionOptions);
-            return _session.CreateQuery(ToHql(true)).UniqueResult<int>();
+            return Convert.ToInt32(_session.CreateQuery(ToHql(true)).UniqueResult());
         }
 
         public string ToHql(bool count) {
@@ -193,27 +193,22 @@ namespace Orchard.ContentManagement {
                 sb.Append(join.Item2.Type).Append(" ").Append(join.Item1.Name + "." + join.Item2.TableName).Append(" as ").Append(join.Item2.Name).AppendLine();
             }
 
-            #region Where
+            // generating where clause
+            if (_wheres.Any()) {
+                sb.Append("where ");
 
-            bool first = true;
-            foreach (var where in _wheres) {
-                if (!first) {
-                    sb.Append("and ");
-                }
-                else {
-                    sb.Append("where ");
-                    first = false;
+                var expressions = new List<string>();
+
+                foreach (var where in _wheres) {
+                    var expressionFactory = new DefaultHqlExpressionFactory();
+                    where.Item2(expressionFactory);
+                    expressions.Add(expressionFactory.Criterion.ToHql(where.Item1));
                 }
 
-                var expressionFactory = new DefaultHqlExpressionFactory();
-                where.Item2(expressionFactory);
-                sb.Append(expressionFactory.Criterion.ToHql(where.Item1)).AppendLine();
+                sb.Append("(").Append(String.Join(") AND (", expressions.ToArray())).Append(")").AppendLine();
             }
 
-            #endregion
-
-            #region Order by
-
+            // generating order by clause
             bool firstSort = true;
             foreach (var sort in _sortings) {
                 if (!firstSort) {
@@ -237,8 +232,6 @@ namespace Orchard.ContentManagement {
                     }
                 }
             }
-
-            #endregion
 
             return sb.ToString();
         }
@@ -403,7 +396,8 @@ namespace Orchard.ContentManagement {
         }
 
         public IAliasFactory ContentItemVersion() {
-            return Named("civ");
+            Current = _query.BindItemVersionCriteria();
+            return this;
         }
 
         public IAliasFactory ContentType() {

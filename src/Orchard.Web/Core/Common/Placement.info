@@ -31,6 +31,7 @@
     </Match>
     <Match DisplayType="SummaryAdmin">
         <Place Parts_Common_Body_Summary="-"
-               Parts_Common_Metadata_SummaryAdmin="Meta:5"/>
+               Parts_Common_Metadata_SummaryAdmin="Meta:5"
+               Fields_Common_Text="-"/>
     </Match>
 </Placement>

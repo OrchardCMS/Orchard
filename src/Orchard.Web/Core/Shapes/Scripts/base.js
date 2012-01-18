@@ -214,7 +214,9 @@
                         return false;
                     }
                 }
-                form.submit(); 
+                
+                form.submit();
+                return false;
             });
         });
     });

@@ -127,8 +127,8 @@ namespace Orchard.ContentManagement.Drivers {
             ShapeMetadata metadata = shape.Metadata;
 
             // if no ContentField property has been set, assign it
-            if (shape.ContentPart == null) {
-                shape.ContentPart = ctx.ContentField;
+            if (shape.ContentField == null) {
+                shape.ContentField = ctx.ContentField;
             }
 
             // if no ContentPart property has been set, assign it
@@ -143,8 +143,10 @@ namespace Orchard.ContentManagement.Drivers {
 
             var shapeType = metadata.Type;
             var fieldName = differentiator ?? String.Empty;
-            var partName = shape.ContentPart.PartDefinition.Name;
-            var contentType = shape.ContentItem.ContentType;
+            string partName = shape.ContentPart.PartDefinition.Name;
+            string contentType = shape.ContentItem.ContentType;
+
+            // whether the content type has been created dynamically or not
             var dynamicType = string.Equals(partName, contentType, StringComparison.Ordinal);
 
             // [ShapeType__FieldName] e.g. Fields/Common.Text-Teaser

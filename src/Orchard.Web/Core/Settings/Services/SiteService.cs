@@ -36,6 +36,7 @@ namespace Orchard.Core.Settings.Services {
                         item.Record.SiteSalt = Guid.NewGuid().ToString("N");
                         item.Record.SiteName = "My Orchard Project Application";
                         item.Record.PageTitleSeparator = " - ";
+                        item.Record.SiteTimeZone = TimeZoneInfo.Local.Id;
                     }).ContentItem;
                 }
 

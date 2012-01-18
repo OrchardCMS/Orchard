@@ -15,7 +15,7 @@
                 @using (Html.BeginFormAntiForgeryPost()) {
                     <h3>@Html.ActionLink(HasText(widget.Title) ? widget.Title : widget.TypeDefinition.DisplayName, "EditWidget", new { @widget.Id, returnUrl })</h3>
                     <div class="widgets-actions">
-                        <button name="moveOut" class="link" type="submit" value="1">@T("Remove")</button>
+                        <button name="moveOut" class="link" type="submit" value="1" itemprop="RemoveUrl">@T("Remove")</button>
                     </div>
                     @Html.Hidden("widgetId", widget.Id)
                     @Html.Hidden("returnUrl", returnUrl)

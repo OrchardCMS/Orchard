@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using NuGet;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions.Models;
@@ -227,8 +228,17 @@ namespace Orchard.Packaging.Controllers {
                         .Where(feature => feature.Enable)
                         .Select(feature => feature.FeatureDescriptor.Id);
 
-                    // Enable the features and its dependencies
-                    _moduleService.EnableFeatures(featureIds, true);
+                    // Enable the features and its dependencies using recipes, so that they are run after the module's recipes
+
+                    var recipe = new Recipe {
+                        RecipeSteps = featureIds.Select(
+                            x => new RecipeStep {
+                                Name = "Feature",
+                                Step = new XElement("Feature", new XAttribute("enable", x))
+                            })
+                    };
+
+                    _recipeManager.Execute(recipe);
                 }
             } catch (Exception exception) {
                 Services.Notifier.Error(T("Post installation steps failed with error: {0}", exception.Message));
