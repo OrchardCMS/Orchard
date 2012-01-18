@@ -78,6 +78,10 @@
     <Compile Include="Common\ResourceManifest.cs" />
     <Compile Include="Common\Services\XmlRpcHandler.cs" />
     <Compile Include="Common\DateEditor\DateEditorViewModel.cs" />
+    <Compile Include="Common\Settings\TextFieldSettingsEvents.cs" />
+    <Compile Include="Common\Settings\TextFieldSettings.cs" />
+    <Compile Include="Common\ViewModels\TextFieldDriverViewModel.cs" />
+    <Compile Include="Common\ViewModels\TextFieldSettingsEventsViewModel.cs" />
     <Compile Include="Containers\Controllers\ItemController.cs" />
     <Compile Include="Containers\Drivers\ContainablePartDriver.cs" />
     <Compile Include="Containers\Drivers\ContainerPartDriver.cs" />
@@ -493,6 +497,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Containers\Views\Parts.Container.Contained.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\Views\DefinitionTemplates\TextFieldSettingsEventsViewModel.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
