@@ -57,10 +57,12 @@ namespace Orchard.Pages.Commands {
 
             // (PH:Autoroute) Hackish way to leave Slug and Homepage switches intact without requiring a dependency on Autoroute. This may throw an Exception with
             // no AutoroutePart. But it means that normal setup recipes will still be able to give you a homepage without issue.
-            dynamic dpage = page;
-            if (dpage.AutoroutePart != null && (Homepage || !String.IsNullOrWhiteSpace(Slug))) {
-                dpage.AutoroutePart.UseCustomPattern = true;
-                dpage.AutoroutePart.CustomPattern = Slug;
+            if (Homepage || !String.IsNullOrWhiteSpace(Slug)) {
+                dynamic dpage = page;
+                if (dpage.AutoroutePart != null) {
+                    dpage.AutoroutePart.UseCustomPattern = true;
+                    dpage.AutoroutePart.CustomPattern = Homepage?"":Slug;
+                }
             }
 
             var text = String.Empty;

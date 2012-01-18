@@ -81,6 +81,16 @@ namespace Orchard.Blogs.Commands {
                 blog.As<MenuPart>().MenuPosition = _menuService.Get().Select(menuPart => menuPart.MenuPosition).Max() + 1 + ".0";
                 blog.As<MenuPart>().MenuText = MenuText;
             }
+
+            if (Homepage) {
+                dynamic dblog = blog;
+                if (dblog.AutoroutePart != null) {
+                    dblog.AutoroutePart.UseCustomPattern = true;
+                    dblog.AutoroutePart.CustomPattern = "";
+                }
+            }
+
+
             _contentManager.Create(blog);
 
             Context.Output.WriteLine(T("Blog created successfully"));
