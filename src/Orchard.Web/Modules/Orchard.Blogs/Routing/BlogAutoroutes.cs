@@ -9,10 +9,10 @@ using Orchard.Blogs.Models;
 using Orchard.Core.Common.Models;
 
 namespace Orchard.Blogs.Routing {
-    public interface IAutorouteEventHandler : IEventHandler {
+    public interface IRoutePatternProvider : IEventHandler {
         void Routed(IContent content, String path, ICollection<Tuple<string, RouteValueDictionary>> aliases);
     }
-    public class BlogAutoroutes : IAutorouteEventHandler {
+    public class BlogAutoroutes : IRoutePatternProvider {
 
         public void Routed(IContent content, string path, ICollection<Tuple<string, RouteValueDictionary>> aliases) {
 

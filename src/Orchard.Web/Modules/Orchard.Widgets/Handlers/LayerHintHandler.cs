@@ -12,12 +12,12 @@ using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Widgets.Handlers {
 
-    public interface IAutorouteEventHandler : IEventHandler {
+    public interface IRoutePatternProvider : IEventHandler {
         void Routed(IContent content, String path, ICollection<Tuple<string, RouteValueDictionary>> aliases);
     }
 
     [OrchardFeature("Orchard.Widgets.PageLayerHinting")]
-    public class LayerHintHandler : IAutorouteEventHandler {
+    public class LayerHintHandler : IRoutePatternProvider {
         public LayerHintHandler(IOrchardServices services, RequestContext requestContext) {
             T = NullLocalizer.Instance;
             _requestContext = requestContext;
