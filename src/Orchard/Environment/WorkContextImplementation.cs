@@ -8,6 +8,7 @@ namespace Orchard.Environment {
     class WorkContextImplementation : WorkContext {
         readonly IComponentContext _componentContext;
         readonly ConcurrentDictionary<string, Func<object>> _stateResolvers = new ConcurrentDictionary<string, Func<object>>();
+        readonly ConcurrentDictionary<string, object> _states = new ConcurrentDictionary<string, object>();
         readonly IEnumerable<IWorkContextStateProvider> _workContextStateProviders;
 
         public WorkContextImplementation(IComponentContext componentContext) {
@@ -24,8 +25,10 @@ namespace Orchard.Environment {
         }
 
         public override T GetState<T>(string name) {
-            var resolver = _stateResolvers.GetOrAdd(name, FindResolverForState<T>);
-            return (T)resolver();
+            return (T)_states.GetOrAdd(name, (x) => {
+                var resolver = _stateResolvers.GetOrAdd(x, FindResolverForState<T>);
+                return resolver();
+            });
         }
 
         Func<object> FindResolverForState<T>(string name) {
@@ -39,7 +42,7 @@ namespace Orchard.Environment {
 
 
         public override void SetState<T>(string name, T value) {
-            _stateResolvers[name] = () => value;
+            _stateResolvers[name] = () => _states[name] = value;
         }
     }
 }
