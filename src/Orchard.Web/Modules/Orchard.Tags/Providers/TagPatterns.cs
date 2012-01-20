@@ -28,7 +28,7 @@ namespace Orchard.Tags.Providers {
         public Localizer T { get; set; }
         
         public void Describe(dynamic describe) {
-            describe.For<TagRecord>("Tags", T("Tags"), T("Tags url patterns"), (Func<TagRecord, string>)GetId, (Func<string, TagRecord>)GetTag)
+            describe.For<TagRecord>("Tags", T("Tags"), T("Tags url patterns"), (Func<TagRecord, string>)GetId, (Func<string, TagRecord>)GetTag, (Func<TagRecord, IDictionary<string, object>>)GetContext)
                 .Pattern("Tags", T("View all tags"), T("A list of all tags are displayed on this page"), (Func<TagRecord, RouteValueDictionary>)GetTagsRouteValues)
                 .Pattern("View", T("View tagged content"), T("Tagged content will be listed on this Url for each tag"), (Func<TagRecord, RouteValueDictionary>)GetRouteValues);
         }
@@ -48,6 +48,10 @@ namespace Orchard.Tags.Providers {
                 controller = "Home",
                 action = "Index"
             });
+        }
+
+        public IDictionary<string,object> GetContext(TagRecord tag) {
+            return new Dictionary<string, object> { { "Tag", tag } };
         }
 
         public string GetId(TagRecord tag) {

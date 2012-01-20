@@ -7,9 +7,9 @@ using Orchard.Localization;
 using Orchard.Tags.Models;
 
 namespace Orchard.Tags.Providers {
-    public class TagTokenProvider : ITokenProvider {
+    public class TagTokens : ITokenProvider {
 
-        public TagTokenProvider() {
+        public TagTokens() {
 
             T = NullLocalizer.Instance;
 
@@ -24,6 +24,7 @@ namespace Orchard.Tags.Providers {
 
         public void Evaluate(EvaluateContext context) {
             context.For<TagRecord>("Tag")
+                .Token("", t => t.TagName)
                 .Token("Name", t => t.TagName)
                 // By chaining the name to text it can be slugified in Autoroute
                 .Chain("Name", "Text", t => t.TagName);

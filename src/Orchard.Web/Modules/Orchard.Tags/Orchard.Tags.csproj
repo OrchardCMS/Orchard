@@ -62,7 +62,7 @@
     </Compile>
     <Compile Include="Projections\TagsFilterForms.cs" />
     <Compile Include="Providers\TagPatterns.cs" />
-    <Compile Include="Providers\TagTokenProvider.cs" />
+    <Compile Include="Providers\TagTokens.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ITagService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
