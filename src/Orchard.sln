@@ -132,6 +132,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Projections.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Fields", "Orchard.Web\Modules\Orchard.Fields\Orchard.Fields.csproj", "{3787DDE5-E5C8-4841-BDA7-DCB325388064}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Fields.Specs", "Orchard.Web\Modules\Orchard.Fields\Specs\Orchard.Fields.Specs.csproj", "{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -712,6 +714,16 @@ Global
 		{3787DDE5-E5C8-4841-BDA7-DCB325388064}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{3787DDE5-E5C8-4841-BDA7-DCB325388064}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3787DDE5-E5C8-4841-BDA7-DCB325388064}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -770,6 +782,7 @@ Global
 		{0DFA2E10-96C8-4E05-BC10-B710B97ECCDE} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{94E694A2-D140-468D-A277-C5FCE1D13E9B} = {3E10BF6D-ADA5-417D-B36C-EBB0660B475E}
 		{7354DF37-934B-46CF-A13C-455D5F5F5413} = {3E10BF6D-ADA5-417D-B36C-EBB0660B475E}
+		{34BE9011-A5A9-49DD-9E53-C3D5CA7D7CE3} = {3E10BF6D-ADA5-417D-B36C-EBB0660B475E}
 		{CB70A642-8CEC-4DDE-8C9F-AD08900EC98D} = {74492CBC-7201-417E-BC29-28B4C25A58B0}
 	EndGlobalSection
 EndGlobal
