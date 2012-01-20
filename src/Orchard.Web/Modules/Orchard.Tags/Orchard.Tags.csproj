@@ -61,6 +61,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Projections\TagsFilterForms.cs" />
+    <Compile Include="Providers\TagPatterns.cs" />
+    <Compile Include="Providers\TagTokenProvider.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ITagService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
@@ -104,6 +106,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
+      <Project>{6F759635-13D7-4E94-BCC9-80445D63F117}</Project>
+      <Name>Orchard.Tokens</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
@@ -122,6 +128,7 @@
   <ItemGroup>
     <Content Include="Scripts\Web.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
