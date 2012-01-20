@@ -6,9 +6,15 @@ using Orchard.Tags.Services;
 using Orchard.Localization;
 using Orchard.Tags.Models;
 using System.Web.Routing;
+using Orchard.Events;
 
 namespace Orchard.Tags.Providers {
-    public class TagPatterns {
+
+    public interface IRoutePatternProvider : IEventHandler {
+        void Describe(dynamic describe);
+        void Suggest(dynamic suggest);
+    }
+    public class TagPatterns : IRoutePatternProvider {
 
         private readonly ITagService _tagService;
 
@@ -27,7 +33,7 @@ namespace Orchard.Tags.Providers {
                 .Pattern("View", T("View tagged content"), T("Tagged content will be listed on this Url for each tag"), (Func<TagRecord, RouteValueDictionary>)GetRouteValues);
         }
 
-        protected RouteValueDictionary GetRouteValues(TagRecord tag) {
+        public RouteValueDictionary GetRouteValues(TagRecord tag) {
             return new RouteValueDictionary(new{
                 area = "Orchard.Tags",
                 controller = "Home",
@@ -36,7 +42,7 @@ namespace Orchard.Tags.Providers {
             });
         }
 
-        protected RouteValueDictionary GetTagsRouteValues(TagRecord tag) {
+        public RouteValueDictionary GetTagsRouteValues(TagRecord tag) {
             return new RouteValueDictionary(new {
                 area = "Orchard.Tags",
                 controller = "Home",
@@ -44,11 +50,11 @@ namespace Orchard.Tags.Providers {
             });
         }
 
-        protected string GetId(TagRecord tag) {
+        public string GetId(TagRecord tag) {
             return tag.Id.ToString();
         }
 
-        protected TagRecord GetTag(string id) {
+        public TagRecord GetTag(string id) {
             return _tagService.GetTag(Convert.ToInt32(id));
         }
 
