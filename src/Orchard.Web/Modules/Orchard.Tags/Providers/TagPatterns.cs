@@ -54,7 +54,7 @@ namespace Orchard.Tags.Providers {
 
         public void Suggest(dynamic suggest) {
             suggest.For("Tags")
-                .Suggest("View", "tags/tag-name", "{Tag.Slug}", T("Slugified tag name"))
+                .Suggest("View", "tags/tag-name", "{Tag.Name.Slug}", T("Slugified tag name"))
                 .Suggest("Tags", "tags", "tags", T("Plain /tags url"));
         }
 
