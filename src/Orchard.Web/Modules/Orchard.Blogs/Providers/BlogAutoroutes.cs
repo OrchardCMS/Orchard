@@ -10,7 +10,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Autoroute.Services;
 using Orchard.Localization;
 
-namespace Orchard.Blogs.Routing {
+namespace Orchard.Blogs.Providers {
     public class BlogAutoroutes : IRoutePatternProvider {
 
         public BlogAutoroutes() {
@@ -30,16 +30,16 @@ namespace Orchard.Blogs.Routing {
         public void Describe(DescribePatternContext describe) {
             // TODO: (PH) Could implement RSD for non-blog content much more easily now the routing can be applied to any content item... (maybe need a RemotePublishingPart?)
             // TODO: Must restrict these to appropriate parts/types...
-            describe.For("Content")
-                //                .Where<IContent>(c => c.Is<BlogPart>())
+            describe.For<IContent>("Content")
+                .Match(c => c.Is<BlogPart>())
                 .Pattern("Rsd", T("Remote Blog Publishing"), T("Remote Blog Publishing destination Url"),
-                    new RouteValueDictionary {
+                    c => new RouteValueDictionary {
                             {"area", "Orchard.Blogs"},
                             {"controller", "RemoteBlogPublishing"},
                             {"action", "Rsd"},
                             {"blogId", idToken}})
                 .Pattern("Archive", T("Blog Archives"), T("Displays a list of all blog archives"),
-                    new RouteValueDictionary {
+                    c => new RouteValueDictionary {
                         {"area", "Orchard.Blogs"},
                         {"controller", "BlogPost"},
                         {"action", "ListByArchive"},
@@ -47,26 +47,26 @@ namespace Orchard.Blogs.Routing {
                         {"archiveData", ""}
                     })
                     ;
-            describe.For("Content")
-   //             .Where<IContent>(c => c.Is<BlogPostPart>())
-                .Pattern("ArchiveYear", T("Blog Archives by Year"), T("Displays a list of all blog archives for a particular year"),
-                        new RouteValueDictionary {
+            describe.For<IContent>("Content")
+                .Match(c => c.Is<BlogPostPart>())
+                .Pattern("Archive.Year", T("Blog Archives by Year"), T("Displays a list of all blog archives for a particular year"),
+                      c=>  new RouteValueDictionary {
                         {"area", "Orchard.Blogs"},
                         {"controller", "BlogPost"},
                         {"action", "ListByArchive"},
                         {"blogId", idParentToken},
                         {"archiveData", String.Format("{0}",yearToken)}
                     })
-                .Pattern("ArchiveMonth", T("Blog Archives by Month"), T("Displays a list of all blog archives for a particular year and month"),
-                        new RouteValueDictionary {
+                .Pattern("Archive.Month", T("Blog Archives by Month"), T("Displays a list of all blog archives for a particular year and month"),
+                      c => new RouteValueDictionary {
                         {"area", "Orchard.Blogs"},
                         {"controller", "BlogPost"},
                         {"action", "ListByArchive"},
                         {"blogId", idParentToken},
                         {"archiveData", String.Format("{0}/{1}",yearToken,monthToken)}
                     })
-                .Pattern("ArchiveDay", T("Blog Archives by Day"), T("Displays a list of all blog archives for a particular date"),
-                        new RouteValueDictionary {
+                .Pattern("Archive.Day", T("Blog Archives by Day"), T("Displays a list of all blog archives for a particular date"),
+                       c => new RouteValueDictionary {
                         {"area", "Orchard.Blogs"},
                         {"controller", "BlogPost"},
                         {"action", "ListByArchive"},
@@ -81,10 +81,12 @@ namespace Orchard.Blogs.Routing {
                 .Suggest("Archives", "blog-title/archives", blogToken + "/archives", T("Archives is a sub-path of the blog post"))
                 .Suggest("View", "blog-title", blogToken, T("Blog title"))
                 .Suggest("View", "blog-title/post-title", blogPostToken, T("Nested blog/post path"))
-                .Suggest("ArchivesYear", "blog-title/post-title/archives/yy", String.Format("{0}/archives/{1}",blogPostToken,yearToken), T("Archives year"))
-                .Suggest("ArchivesMonth", "blog-title/post-title/archives/yy/mm", String.Format("{0}/archives/{1}/{2}",blogPostToken,yearToken,monthToken), T("Archives year/month"))
-                .Suggest("ArchivesDay", "blog-title/post-title/archives/yy/mm/dd", String.Format("{0}/archives/{1}/{2}/{3}", blogPostToken, yearToken,monthToken,dayToken), T("Archives year/month/day"));
+                .Suggest("Archive.Year", "blog-title/post-title/archives/yy", String.Format("{0}/archives/{1}",blogPostToken,yearToken), T("Archives year"))
+                .Suggest("Archive.Month", "blog-title/post-title/archives/yy/mm", String.Format("{0}/archives/{1}/{2}",blogPostToken,yearToken,monthToken), T("Archives year/month"))
+                .Suggest("Archive.Day", "blog-title/post-title/archives/yy/mm/dd", String.Format("{0}/archives/{1}/{2}/{3}", blogPostToken, yearToken,monthToken,dayToken), T("Archives year/month/day"));
         }
 
+        public void Match(MatchPatternContext context) {
+        }
     }
 }
