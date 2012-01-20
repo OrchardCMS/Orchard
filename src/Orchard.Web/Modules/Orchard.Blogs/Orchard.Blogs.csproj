@@ -134,10 +134,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Autoroute\Orchard.Autoroute.csproj">
-      <Project>{66FCCD76-2761-47E3-8D11-B45D0001DDAA}</Project>
-      <Name>Orchard.Autoroute</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Placement.info">
