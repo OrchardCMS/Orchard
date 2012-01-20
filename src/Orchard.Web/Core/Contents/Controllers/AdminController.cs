@@ -213,7 +213,7 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(string id, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishOwnContent, T("Couldn't create content")))
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
             return CreatePOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));
@@ -326,6 +326,7 @@ namespace Orchard.Core.Contents.Controllers {
             return this.RedirectLocal(returnUrl, () => RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } }));
         }
 
+        [HttpPost]
         public ActionResult Remove(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
