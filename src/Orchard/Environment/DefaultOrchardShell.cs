@@ -42,8 +42,13 @@ namespace Orchard.Environment {
         }
 
         public void Terminate() {
-             using (var events = _eventsFactory()) {
-                events.Value.Terminating();
+            try {
+                using (var events = _eventsFactory()) {
+                    events.Value.Terminating();
+                }
+            }
+            catch {
+                // ignore exceptions while terminating the application
             }
         }
     }

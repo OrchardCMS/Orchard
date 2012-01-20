@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -36,7 +37,13 @@ namespace Orchard.Specs.Hosting {
             catch { }
             // Trying the two known relative paths to the Orchard.Web directory.
             // The second one is for the target "spec" in orchard.proj.
-            _orchardWebPath = baseDir.Up(3).Combine("Orchard.Web");
+            if (ConfigurationManager.AppSettings["orchardHosting"] != null) {
+                _orchardWebPath = baseDir.Combine(ConfigurationManager.AppSettings["orchardHosting"]).Combine("Orchard.Web");
+            }
+            else {
+                _orchardWebPath = baseDir.Up(3).Combine("Orchard.Web");
+            }
+
             if (!_orchardWebPath.Exists) {
                 _orchardWebPath = baseDir.Parent.Combine("stage");
             }
