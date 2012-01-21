@@ -165,6 +165,7 @@
     <Compile Include="ContentManagement\ContentItemBehavior.cs" />
     <Compile Include="ContentManagement\ContentPartBehavior.cs" />
     <Compile Include="ContentManagement\DefaultHqlQuery.cs" />
+    <Compile Include="ContentManagement\FuncDictionary.cs" />
     <Compile Include="ContentManagement\IHqlExpression.cs" />
     <Compile Include="ContentManagement\IHqlQuery.cs" />
     <Compile Include="ContentManagement\Handlers\DescribeMembersContext.cs" />
