@@ -1,9 +1,9 @@
 668ae298714aa3b95f13d23676d286f201e0df04 src/Orchard.Web/Modules/Orchard.Alias
-96cea7ddb94b54656cbc5730c620f14cc00c3193 src/Orchard.Web/Modules/Orchard.Autoroute
+7e329fc9f3c2d2223417ad5ae655016e8b9ebbcb src/Orchard.Web/Modules/Orchard.Autoroute
 67bf9897ee9dd9483369aece729ad7c6f042941c src/Orchard.Web/Modules/Orchard.Forms
 6033664adc404a22f311029b69fbf1e34dc4ff2a src/Orchard.Web/Modules/Orchard.Projections
 a1ef39ba4e2d0cd78b3c91d6150e841793acb34b src/Orchard.Web/Modules/Orchard.Routable
 f2a3984789ebe5caf2822ccb9e1d2c953add9c35 src/Orchard.Web/Modules/Orchard.Rules
 ce578373f907c0a55fd91229a344f0755f290174 src/Orchard.Web/Modules/Orchard.TaskLease
-42d34730d8bb22052585ca94e3e945111aea3b9d src/Orchard.Web/Modules/Orchard.Tokens
+b606316e088ab8f157a394a7268cc630dfb6e9ab src/Orchard.Web/Modules/Orchard.Tokens
 7fa9f5cc93bd4e9f88caef9f4060f4f65b3902b9 src/orchard.web/modules/Orchard.Fields
