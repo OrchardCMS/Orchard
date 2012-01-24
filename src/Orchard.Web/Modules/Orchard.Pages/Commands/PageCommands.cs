@@ -61,7 +61,7 @@ namespace Orchard.Pages.Commands {
                 dynamic dpage = page;
                 if (dpage.AutoroutePart != null) {
                     dpage.AutoroutePart.UseCustomPattern = true;
-                    dpage.AutoroutePart.CustomPattern = Homepage?"":Slug;
+                    dpage.AutoroutePart.CustomPattern = Homepage ? String.Empty : Slug;
                 }
             }
 
