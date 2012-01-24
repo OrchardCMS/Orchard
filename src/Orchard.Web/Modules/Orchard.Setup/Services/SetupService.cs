@@ -66,7 +66,7 @@ namespace Orchard.Setup.Services {
         }
 
         public string Setup(SetupContext context) {
-            string executionId = null;
+            string executionId;
 
             // The vanilla Orchard distibution has the following features enabled.
             string[] hardcoded = {
@@ -76,10 +76,10 @@ namespace Orchard.Setup.Services {
                     "Common", "Containers", "Contents", "Dashboard", "Feeds", "Navigation", "Reports", "Scheduling", "Settings", "Shapes", "Title",
                     // Modules
                     "Orchard.Pages", "Orchard.Themes", "Orchard.Users", "Orchard.Roles", "Orchard.Modules", 
-                    "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes",
+                    "PackagingServices", "Orchard.Packaging", "Gallery", "Orchard.Recipes"
                 };
 
-            context.EnabledFeatures = hardcoded.Union(context.EnabledFeatures ?? Enumerable.Empty<string>()).Distinct();
+            context.EnabledFeatures = hardcoded.Union(context.EnabledFeatures ?? Enumerable.Empty<string>()).Distinct().ToList();
 
             var shellSettings = new ShellSettings(_shellSettings);
 
@@ -177,8 +177,6 @@ namespace Orchard.Setup.Services {
         }
 
         private string CreateTenantData(SetupContext context, IWorkContextScope environment) {
-            string executionId = null;
-
             // create superuser
             var membershipService = environment.Resolve<IMembershipService>();
             var user =
@@ -203,7 +201,7 @@ namespace Orchard.Setup.Services {
             cultureManager.AddCulture("en-US");
 
             var recipeManager = environment.Resolve<IRecipeManager>();
-            executionId = recipeManager.Execute(Recipes().Where(r => r.Name.Equals(context.Recipe, StringComparison.OrdinalIgnoreCase)).FirstOrDefault());
+            string executionId = recipeManager.Execute(Recipes().FirstOrDefault(r => r.Name.Equals(context.Recipe, StringComparison.OrdinalIgnoreCase)));
 
             // null check: temporary fix for running setup in command line
             if (HttpContext.Current != null) {
