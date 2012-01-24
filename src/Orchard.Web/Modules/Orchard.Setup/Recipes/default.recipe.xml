@@ -51,7 +51,7 @@
     site setting set baseurl
     autoroute create "Page" "Title" "{Content.Slug}" "http://website.com/about-us" true
     autoroute create "Blog" "Title" "{Content.Slug}" "http://website.com/my-blog" true
-    autoroute create "BlogPost" "Blog and Title" "{Content.Container.Slug}" "http://website.com/my-blog/a-blog-post" true
+    autoroute create "BlogPost" "Blog and Title" "{Content.Container.Slug}/{Content.Slug}" "http://website.com/my-blog/a-blog-post" true
     page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /UseWelcomeText:true
     menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
     theme activate "The Theme Machine"

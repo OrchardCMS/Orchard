@@ -54,6 +54,9 @@
     widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget3" /UseLoremIpsumText:true
     site setting set baseurl
     theme activate "The Theme Machine"
+    autoroute create "Page" "Title" "{Content.Slug}" "http://website.com/about-us" true
+    autoroute create "Blog" "Title" "{Content.Slug}" "http://website.com/my-blog" true
+    autoroute create "BlogPost" "Blog and Title" "{Content.Container.Slug}/{Content.Slug}" "http://website.com/my-blog/a-blog-post" true
     blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
     menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
   </Command>
