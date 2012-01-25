@@ -24,6 +24,7 @@ namespace Orchard.ContentTypes.Services {
 
         IEnumerable<ContentFieldInfo> GetFields();
         void AddFieldToPart(string fieldName, string fieldTypeName, string partName);
+        void AddFieldToPart(string fieldName, string displayName, string fieldTypeName, string partName);
         void RemoveFieldFromPart(string fieldName, string partName);
     }
 }

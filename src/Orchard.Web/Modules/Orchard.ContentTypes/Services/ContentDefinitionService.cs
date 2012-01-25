@@ -219,12 +219,16 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public void AddFieldToPart(string fieldName, string fieldTypeName, string partName) {
+            AddFieldToPart(fieldName, fieldName, fieldTypeName, partName);
+        }
+
+        public void AddFieldToPart(string fieldName, string displayName, string fieldTypeName, string partName) {
             fieldName = fieldName.ToSafeName();
             if (string.IsNullOrEmpty(fieldName)) {
                 throw new OrchardException(T("Fields must have a name containing no spaces or symbols."));
             }
             _contentDefinitionManager.AlterPartDefinition(partName,
-                partBuilder => partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName)));
+                partBuilder => partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName).WithDisplayName(displayName)));
         }
 
         public void RemoveFieldFromPart(string fieldName, string partName) {

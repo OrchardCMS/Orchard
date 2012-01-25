@@ -434,7 +434,7 @@ namespace Orchard.ContentTypes.Controllers {
             }
 
             try {
-                _contentDefinitionService.AddFieldToPart(viewModel.Name, viewModel.FieldTypeName, partViewModel.Name);
+                _contentDefinitionService.AddFieldToPart(viewModel.Name, viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
             }
             catch (Exception ex) {
                 Services.Notifier.Information(T("The \"{0}\" field was not added. {1}", viewModel.Name, ex.Message));
