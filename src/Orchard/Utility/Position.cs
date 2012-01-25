@@ -10,14 +10,18 @@ namespace Orchard.Utility {
         public static string GetNext(IEnumerable<MenuItem> menuItems) {
 
             var maxMenuItem = menuItems.Where(mi => PositionHasMajorNumber(mi)).OrderByDescending(mi => mi.Position, new FlatPositionComparer()).FirstOrDefault();
-            var positionParts = maxMenuItem.Position.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim().Length > 0);
-            if (positionParts.Count() > 0) {
-                int result;
-                if (int.TryParse(positionParts.ElementAt(0), out result)) {
-                    return (result + 1).ToString();
+
+            // are there any menu item ?
+            if (maxMenuItem != null) {
+
+                var positionParts = maxMenuItem.Position.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim().Length > 0).ToList();
+                if (positionParts.Any()) {
+                    int result;
+                    if (int.TryParse(positionParts.ElementAt(0), out result)) {
+                        return (result + 1).ToString(CultureInfo.InvariantCulture);
+                    }
                 }
             }
-
 
             return "1";
         }
@@ -30,7 +34,7 @@ namespace Orchard.Utility {
                 // first one in this major position number
                 return majorStr;
             }
-            var positionParts = maxMenuItem.Position.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim().Length > 0);
+            var positionParts = maxMenuItem.Position.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim().Length > 0).ToList();
             if (positionParts.Count() > 1) {
                 int result;
                 if (int.TryParse(positionParts.ElementAt(1), out result)) {
