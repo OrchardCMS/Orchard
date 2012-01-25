@@ -6,6 +6,7 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.Blogs.Controllers {
     [OrchardFeature("Orchard.Blogs.RemotePublishing")]
@@ -32,7 +33,7 @@ namespace Orchard.Blogs.Controllers {
             const string manifestUri = "http://archipelago.phrasewise.com/rsd";
 
             var urlHelper = new UrlHelper(ControllerContext.RequestContext, _routeCollection);
-            var url = urlHelper.Action("", "", new { Area = "XmlRpc" });
+            var url = urlHelper.AbsoluteAction("", "", new { Area = "XmlRpc" });
 
             var options = new XElement(
                 XName.Get("service", manifestUri),
