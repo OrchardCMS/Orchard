@@ -37,6 +37,14 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnLoaded = handler });
         }
 
+        protected void OnUpdating<TPart>(Action<UpdateContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnUpdating = handler });
+        }
+
+        protected void OnUpdated<TPart>(Action<UpdateContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnUpdated = handler });
+        }
+
         protected void OnVersioning<TPart>(Action<VersionContentContext, TPart, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnVersioning = handler });
         }
@@ -99,6 +107,8 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<CreateContentContext, TPart> OnCreated { get; set; }
             public Action<LoadContentContext, TPart> OnLoading { get; set; }
             public Action<LoadContentContext, TPart> OnLoaded { get; set; }
+            public Action<UpdateContentContext, TPart> OnUpdating { get; set; }
+            public Action<UpdateContentContext, TPart> OnUpdated { get; set; }
             public Action<VersionContentContext, TPart, TPart> OnVersioning { get; set; }
             public Action<VersionContentContext, TPart, TPart> OnVersioned { get; set; }
             public Action<PublishContentContext, TPart> OnPublishing { get; set; }
@@ -126,6 +136,12 @@ namespace Orchard.ContentManagement.Handlers {
             }
             protected override void Loaded(LoadContentContext context, TPart instance) {
                 if (OnLoaded != null) OnLoaded(context, instance);
+            }
+            protected override void Updating(UpdateContentContext context, TPart instance) {
+                if (OnUpdating != null) OnUpdating(context, instance);
+            }
+            protected override void Updated(UpdateContentContext context, TPart instance) {
+                if (OnUpdated != null) OnUpdated(context, instance);
             }
             protected override void Versioning(VersionContentContext context, TPart existing, TPart building) {
                 if (OnVersioning != null) OnVersioning(context, existing, building);
@@ -221,6 +237,18 @@ namespace Orchard.ContentManagement.Handlers {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Loaded(context);
             Loaded(context);
+        }
+
+        void IContentHandler.Updating(UpdateContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Updating(context);
+            Updating(context);
+        }
+
+        void IContentHandler.Updated(UpdateContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Updated(context);
+            Updated(context);
         }
 
         void IContentHandler.Versioning(VersionContentContext context) {
@@ -330,6 +358,9 @@ namespace Orchard.ContentManagement.Handlers {
 
         protected virtual void Loading(LoadContentContext context) { }
         protected virtual void Loaded(LoadContentContext context) { }
+
+        protected virtual void Updating(UpdateContentContext context) { }
+        protected virtual void Updated(UpdateContentContext context) { }
 
         protected virtual void Versioning(VersionContentContext context) { }
         protected virtual void Versioned(VersionContentContext context) { }
