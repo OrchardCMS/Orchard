@@ -432,12 +432,12 @@ namespace Orchard.ContentTypes.Controllers {
                 _contentDefinitionService.AddFieldToPart(viewModel.Name, viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
             }
             catch (Exception ex) {
-                Services.Notifier.Information(T("The \"{0}\" field was not added. {1}", viewModel.Name, ex.Message));
+                Services.Notifier.Information(T("The \"{0}\" field was not added. {1}", viewModel.DisplayName, ex.Message));
                 Services.TransactionManager.Cancel();
                 return AddFieldTo(id);
             }
 
-            Services.Notifier.Information(T("The \"{0}\" field has been added.", viewModel.Name));
+            Services.Notifier.Information(T("The \"{0}\" field has been added.", viewModel.DisplayName));
 
             if (typeViewModel != null) {
                 return RedirectToAction("Edit", new {id});
