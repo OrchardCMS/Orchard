@@ -145,8 +145,30 @@ namespace Orchard.ContentTypes.Services {
             });
         }
 
-        public void RemoveType(string name) {
-            throw new NotImplementedException();
+        public void RemoveType(string name, bool deleteContent) {
+
+            // first remove all attached parts
+            var typeDefinition = _contentDefinitionManager.GetTypeDefinition(name);
+            var partDefinitions = typeDefinition.Parts.ToArray();
+            foreach (var partDefinition in partDefinitions) {
+                RemovePartFromType(partDefinition.PartDefinition.Name, name);
+
+                // delete the part if it's its own part
+                if(partDefinition.PartDefinition.Name == name) {
+                    RemovePart(name);
+                }
+            }
+
+            _contentDefinitionManager.DeleteTypeDefinition(name);
+
+            // delete all content items (but keep versions)
+            if (deleteContent) {
+                var contentItems = Services.ContentManager.Query(name).List();
+                foreach (var contentItem in contentItems) {
+                    Services.ContentManager.Remove(contentItem);
+                }
+            }
+
         }
 
         public void AddPartToType(string partName, string typeName) {
@@ -211,7 +233,13 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public void RemovePart(string name) {
-            throw new NotImplementedException();
+            var partDefinition = _contentDefinitionManager.GetPartDefinition(name);
+            var fieldDefinitions = partDefinition.Fields.ToArray();
+            foreach(var fieldDefinition in fieldDefinitions) {
+                RemoveFieldFromPart(fieldDefinition.Name, name);
+            }
+            
+            _contentDefinitionManager.DeletePartDefinition(name);
         }
 
         public IEnumerable<ContentFieldInfo> GetFields() {

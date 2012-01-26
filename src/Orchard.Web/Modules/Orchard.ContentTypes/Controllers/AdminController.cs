@@ -159,13 +159,7 @@ namespace Orchard.ContentTypes.Controllers {
             if (typeViewModel == null)
                 return HttpNotFound();
 
-            _contentDefinitionManager.DeleteTypeDefinition(id);
-
-            // delete all content items (but keep versions)
-            var contentItems = Services.ContentManager.Query(id).List();
-            foreach (var contentItem in contentItems) {
-                Services.ContentManager.Remove(contentItem);
-            }
+            _contentDefinitionService.RemoveType(id, true);
 
             Services.Notifier.Information(T("\"{0}\" has been removed.", typeViewModel.DisplayName));
             
@@ -348,7 +342,8 @@ namespace Orchard.ContentTypes.Controllers {
             if (partViewModel == null)
                 return HttpNotFound();
 
-            _contentDefinitionManager.DeletePartDefinition(id);
+            _contentDefinitionService.RemovePart(id);
+            
             Services.Notifier.Information(T("\"{0}\" has been removed.", partViewModel.DisplayName));
 
             return RedirectToAction("ListParts");
