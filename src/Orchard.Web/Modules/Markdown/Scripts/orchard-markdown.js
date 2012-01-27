@@ -1,7 +1,9 @@
 (function () {
     var marker = '<!-- markdown -->';
     var converter = Markdown.getSanitizingConverter();
-    var editor = new Markdown.Editor(converter, "", function () { alert("Do you need help?"); });
+    var editor = new Markdown.Editor(converter, "", {
+        handler: function () { window.open("http://daringfireball.net/projects/markdown/syntax"); }
+    });
 
     editor.hooks.set("insertImageDialog", function (callback) {
         // see if there's an image selected that they intend on editing

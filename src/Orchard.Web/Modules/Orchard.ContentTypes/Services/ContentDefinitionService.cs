@@ -145,8 +145,30 @@ namespace Orchard.ContentTypes.Services {
             });
         }
 
-        public void RemoveType(string name) {
-            throw new NotImplementedException();
+        public void RemoveType(string name, bool deleteContent) {
+
+            // first remove all attached parts
+            var typeDefinition = _contentDefinitionManager.GetTypeDefinition(name);
+            var partDefinitions = typeDefinition.Parts.ToArray();
+            foreach (var partDefinition in partDefinitions) {
+                RemovePartFromType(partDefinition.PartDefinition.Name, name);
+
+                // delete the part if it's its own part
+                if(partDefinition.PartDefinition.Name == name) {
+                    RemovePart(name);
+                }
+            }
+
+            _contentDefinitionManager.DeleteTypeDefinition(name);
+
+            // delete all content items (but keep versions)
+            if (deleteContent) {
+                var contentItems = Services.ContentManager.Query(name).List();
+                foreach (var contentItem in contentItems) {
+                    Services.ContentManager.Remove(contentItem);
+                }
+            }
+
         }
 
         public void AddPartToType(string partName, string typeName) {
@@ -211,7 +233,13 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public void RemovePart(string name) {
-            throw new NotImplementedException();
+            var partDefinition = _contentDefinitionManager.GetPartDefinition(name);
+            var fieldDefinitions = partDefinition.Fields.ToArray();
+            foreach(var fieldDefinition in fieldDefinitions) {
+                RemoveFieldFromPart(fieldDefinition.Name, name);
+            }
+            
+            _contentDefinitionManager.DeletePartDefinition(name);
         }
 
         public IEnumerable<ContentFieldInfo> GetFields() {
@@ -219,12 +247,16 @@ namespace Orchard.ContentTypes.Services {
         }
 
         public void AddFieldToPart(string fieldName, string fieldTypeName, string partName) {
+            AddFieldToPart(fieldName, fieldName, fieldTypeName, partName);
+        }
+
+        public void AddFieldToPart(string fieldName, string displayName, string fieldTypeName, string partName) {
             fieldName = fieldName.ToSafeName();
             if (string.IsNullOrEmpty(fieldName)) {
                 throw new OrchardException(T("Fields must have a name containing no spaces or symbols."));
             }
             _contentDefinitionManager.AlterPartDefinition(partName,
-                partBuilder => partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName)));
+                partBuilder => partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName).WithDisplayName(displayName)));
         }
 
         public void RemoveFieldFromPart(string fieldName, string partName) {
