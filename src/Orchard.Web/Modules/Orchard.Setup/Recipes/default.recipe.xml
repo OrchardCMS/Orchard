@@ -49,9 +49,9 @@
     widget create HtmlWidget /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget2" /UseLoremIpsumText:true
     widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget3" /UseLoremIpsumText:true
     site setting set baseurl
-    autoroute create "Page" "Title" "{Content.Slug}" "/about-us" true
-    autoroute create "Blog" "Title" "{Content.Slug}" "/my-blog" true
-    autoroute create "BlogPost" "Blog and Title" "{Content.Container.Path}/{Content.Slug}" "/my-blog/a-blog-post" true
+    autoroute create "Page" "Title" "{Content.Slug}" "about-us" true
+    autoroute create "Blog" "Title" "{Content.Slug}" "my-blog" true
+    autoroute create "BlogPost" "Blog and Title" "{Content.Container.Path}/{Content.Slug}" "my-blog/a-blog-post" true
     page create /Slug:"welcome-to-orchard" /Title:"Welcome to Orchard!" /Path:"welcome-to-orchard" /Homepage:true /Publish:true /UseWelcomeText:true
     menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
     theme activate "The Theme Machine"
