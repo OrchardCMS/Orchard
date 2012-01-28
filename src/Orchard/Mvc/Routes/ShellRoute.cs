@@ -17,7 +17,7 @@ namespace Orchard.Mvc.Routes {
         private readonly IRunningShellTable _runningShellTable;
         private readonly UrlPrefix _urlPrefix;
 
-        public ShellRoute(RouteBase route, ShellSettings shellSettings, WorkContextAccessor workContextAccessor, IRunningShellTable runningShellTable) {
+        public ShellRoute(RouteBase route, ShellSettings shellSettings, IWorkContextAccessor workContextAccessor, IRunningShellTable runningShellTable) {
             _route = route;
             _shellSettings = shellSettings;
             _runningShellTable = runningShellTable;

@@ -9,13 +9,13 @@ namespace Orchard.Mvc.Routes {
     public class RoutePublisher : IRoutePublisher {
         private readonly RouteCollection _routeCollection;
         private readonly ShellSettings _shellSettings;
-        private readonly WorkContextAccessor _workContextAccessor;
+        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IRunningShellTable _runningShellTable;
 
         public RoutePublisher(
             RouteCollection routeCollection,
             ShellSettings shellSettings,
-            WorkContextAccessor workContextAccessor,
+            IWorkContextAccessor workContextAccessor,
             IRunningShellTable runningShellTable) {
             _routeCollection = routeCollection;
             _shellSettings = shellSettings;
