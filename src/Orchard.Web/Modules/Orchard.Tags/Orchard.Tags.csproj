@@ -61,8 +61,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Projections\TagsFilterForms.cs" />
-    <Compile Include="Providers\TagPatterns.cs" />
-    <Compile Include="Providers\TagTokens.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Services\ITagService.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
@@ -105,10 +103,6 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Tokens\Orchard.Tokens.csproj">
-      <Project>{6F759635-13D7-4E94-BCC9-80445D63F117}</Project>
-      <Name>Orchard.Tokens</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
