@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
+using Orchard.Environment;
 using Orchard.Events;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -11,14 +12,14 @@ using Orchard.UI.Notify;
 namespace Orchard.Exceptions {
     public class DefaultExceptionPolicy : IExceptionPolicy {
         private readonly INotifier _notifier;
-        private readonly Lazy<IAuthorizer> _authorizer;
+        private readonly Work<IAuthorizer> _authorizer;
 
         public DefaultExceptionPolicy() {
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
-        public DefaultExceptionPolicy(INotifier notifier, Lazy<IAuthorizer> authorizer) {
+        public DefaultExceptionPolicy(INotifier notifier, Work<IAuthorizer> authorizer) {
             _notifier = notifier;
             _authorizer = authorizer;
             Logger = NullLogger.Instance;
