@@ -1,9 +1,9 @@
 using System.Web.Mvc;
+using Orchard.Autoroute.Models;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Mvc.Extensions;
-using Orchard.Mvc.Html;
 
 namespace Orchard.Blogs.Extensions {
     /// <summary>
@@ -27,19 +27,19 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogRsd(this UrlHelper urlHelper, BlogPart blogPart) {
-            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { blogId = blogPart.ContentItem.Id, area = "Orchard.Blogs" }));
+            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { blogPath = blogPart.As<IRoutableAspect>().Path, area = "Orchard.Blogs" }));
         }
 
         public static string BlogArchiveYear(this UrlHelper urlHelper, BlogPart blogPart, int year) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogId = blogPart.ContentItem.Id, archiveData = year.ToString(), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = blogPart.As<AutoroutePart>().DisplayAlias, archiveData = year.ToString(), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveMonth(this UrlHelper urlHelper, BlogPart blogPart, int year, int month) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogId = blogPart.ContentItem.Id, archiveData = string.Format("{0:0000}/{1:00}", year, month), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = blogPart.As<AutoroutePart>().DisplayAlias, archiveData = string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveDay(this UrlHelper urlHelper, BlogPart blogPart, int year, int month, int day) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { blogId = blogPart.ContentItem.Id, archiveData = string.Format("{0:0000}/{1:00}/{2:00}", year, month, day), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogPath = blogPart.As<AutoroutePart>().DisplayAlias, archiveData = string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs" });
         }
 
         public static string BlogForAdmin(this UrlHelper urlHelper, BlogPart blogPart) {

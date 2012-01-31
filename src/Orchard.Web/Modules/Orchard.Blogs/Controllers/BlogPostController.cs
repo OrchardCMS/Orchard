@@ -36,9 +36,9 @@ namespace Orchard.Blogs.Controllers {
         dynamic Shape { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult ListByArchive(int blogId, string archiveData) {
+        public ActionResult ListByArchive(string blogPath, string archiveData) {
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
-            BlogPart blogPart = _blogService.Get(blogId,VersionOptions.Published).As<BlogPart>();
+            BlogPart blogPart = _blogService.Get(blogPath);
 
             if (blogPart == null)
                 return HttpNotFound();

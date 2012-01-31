@@ -1,27 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Routing;
 using JetBrains.Annotations;
+using Orchard.Autoroute.Models;
 using Orchard.Blogs.Models;
+using Orchard.Blogs.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
-using Orchard.Services;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPartHandler : ContentHandler {
-        private readonly IWorkContextAccessor _workContextAccessor;
+        private readonly IBlogPathConstraint _blogPathConstraint;
 
-        public BlogPartHandler(IRepository<BlogPartRecord> repository, IWorkContextAccessor workContextAccessor) {
-            _workContextAccessor = workContextAccessor;
+        public BlogPartHandler(IRepository<BlogPartRecord> repository, IBlogPathConstraint blogPathConstraint) {
+            _blogPathConstraint = blogPathConstraint;
             Filters.Add(StorageFilter.For(repository));
 
             OnGetDisplayShape<BlogPart>((context, blog) => {
                 context.Shape.Description = blog.Description;
                 context.Shape.PostCount = blog.PostCount;
             });
+
+            OnPublished<BlogPart>((context, blog) => _blogPathConstraint.AddPath(blog.As<AutoroutePart>().DisplayAlias));
+            OnUnpublished<BlogPart>((context, blog) => _blogPathConstraint.RemovePath(blog.As<AutoroutePart>().DisplayAlias));
         }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
