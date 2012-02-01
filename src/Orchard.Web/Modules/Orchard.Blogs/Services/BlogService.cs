@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using Orchard.Autoroute.Models;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.ContentManagement;
@@ -20,9 +19,7 @@ namespace Orchard.Blogs.Services {
         }
 
         public BlogPart Get(string path) {
-            return _contentManager.Query<BlogPart, BlogPartRecord>()
-                .Join<AutoroutePartRecord>().Where(rr => rr.DisplayAlias == path)
-                .Slice(0, 1).FirstOrDefault();
+            return _contentManager.Query<BlogPart>().List().FirstOrDefault(rr => rr.As<IAliasAspect>().Path == path);
         }
 
         public ContentItem Get(int id, VersionOptions versionOptions) {
@@ -42,7 +39,7 @@ namespace Orchard.Blogs.Services {
 
         public void Delete(ContentItem blog) {
             _contentManager.Remove(blog);
-            _blogPathConstraint.RemovePath(blog.As<AutoroutePart>().DisplayAlias);
+            _blogPathConstraint.RemovePath(blog.As<IAliasAspect>().Path);
         }
     }
 }

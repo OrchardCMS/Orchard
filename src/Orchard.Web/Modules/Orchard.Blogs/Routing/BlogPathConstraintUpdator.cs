@@ -1,8 +1,8 @@
 using System.Linq;
 using JetBrains.Annotations;
-using Orchard.Autoroute.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Environment;
 using Orchard.Tasks;
 
@@ -29,7 +29,7 @@ namespace Orchard.Blogs.Routing {
         }
 
         private void Refresh() {
-            _blogPathConstraint.SetPaths(_blogService.Get().Select(b => b.As<AutoroutePart>().DisplayAlias).ToList());
+            _blogPathConstraint.SetPaths(_blogService.Get().Select(b => b.As<IAliasAspect>().Path).ToList());
         }
     }
 }

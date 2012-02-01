@@ -10,7 +10,7 @@ using Orchard.Logging;
 namespace Orchard.Blogs.Routing {
     [UsedImplicitly]
     public class BlogPathConstraint : IBlogPathConstraint {
-        private ConcurrentDictionary<string, string> _paths = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, string> _paths = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         public BlogPathConstraint() {
             Logger = NullLogger.Instance;

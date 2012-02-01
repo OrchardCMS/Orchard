@@ -1,9 +1,9 @@
 using System.Web.Routing;
 using JetBrains.Annotations;
-using Orchard.Autoroute.Models;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 
@@ -21,8 +21,8 @@ namespace Orchard.Blogs.Handlers {
                 context.Shape.PostCount = blog.PostCount;
             });
 
-            OnPublished<BlogPart>((context, blog) => _blogPathConstraint.AddPath(blog.As<AutoroutePart>().DisplayAlias));
-            OnUnpublished<BlogPart>((context, blog) => _blogPathConstraint.RemovePath(blog.As<AutoroutePart>().DisplayAlias));
+            OnPublished<BlogPart>((context, blog) => _blogPathConstraint.AddPath(blog.As<IAliasAspect>().Path));
+            OnUnpublished<BlogPart>((context, blog) => _blogPathConstraint.RemovePath(blog.As<IAliasAspect>().Path));
         }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
