@@ -66,12 +66,12 @@ namespace Orchard.DisplayManagement.Implementation {
             ShapeBinding shapeBinding;
             if (TryGetDescriptorBinding(shapeMetadata.Type, Enumerable.Empty<string>(), shapeTable, out shapeBinding)) {
                 shapeBinding.ShapeDescriptor.Displaying.Invoke(action => action(displayingContext), Logger);
-            }
 
-            // copy all binding sources (all templates for this shape) in order to use them as Localization scopes
-            shapeMetadata.BindingSources = shapeBinding.ShapeDescriptor.BindingSources.Where(x => x != null).ToList();
-            if (!shapeMetadata.BindingSources.Any()) {
-                shapeMetadata.BindingSources.Add(shapeBinding.ShapeDescriptor.BindingSource);
+                // copy all binding sources (all templates for this shape) in order to use them as Localization scopes
+                shapeMetadata.BindingSources = shapeBinding.ShapeDescriptor.BindingSources.Where(x => x != null).ToList();
+                if (!shapeMetadata.BindingSources.Any()) {
+                    shapeMetadata.BindingSources.Add(shapeBinding.ShapeDescriptor.BindingSource);
+                }
             }
 
             // invoking ShapeMetadata displaying events
