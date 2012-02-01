@@ -20,20 +20,17 @@ namespace Orchard.Tags.Services {
         private readonly INotifier _notifier;
         private readonly IAuthorizationService _authorizationService;
         private readonly IOrchardServices _orchardServices;
-        private readonly IRoutePatternManager _routePatternManager;
 
         public TagService(IRepository<TagRecord> tagRepository,
                           IRepository<ContentTagRecord> contentTagRepository,
                           INotifier notifier,
                           IAuthorizationService authorizationService,
-                          IOrchardServices orchardServices,
-                          IRoutePatternManager routePatternManager) {
+                          IOrchardServices orchardServices) {
             _tagRepository = tagRepository;
             _contentTagRepository = contentTagRepository;
             _notifier = notifier;
             _authorizationService = authorizationService;
             _orchardServices = orchardServices;
-            _routePatternManager = routePatternManager;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -64,7 +61,6 @@ namespace Orchard.Tags.Services {
                 result = new TagRecord { TagName = tagName };
                 _tagRepository.Create(result);
             }
-            _routePatternManager.Generate(result, "Tags");
             return result;
         }
 
@@ -120,7 +116,6 @@ namespace Orchard.Tags.Services {
             // Create new tag
             tagRecord = _tagRepository.Get(tagId);
             tagRecord.TagName = tagName;
-            _routePatternManager.Generate(tagRecord, "Tags");
         }
 
         public IEnumerable<IContent> GetTaggedContentItems(int tagId) {
@@ -201,10 +196,6 @@ namespace Orchard.Tags.Services {
                 _contentTagRepository.Create(new ContentTagRecord { TagsPartRecord = contentItem.As<TagsPart>().Record, TagRecord = newTagForContentItem });
             }
         }
-    }
-
-    public interface IRoutePatternManager : IEventHandler {
-        void Generate(TagRecord item, string scope);
     }
 
 }
