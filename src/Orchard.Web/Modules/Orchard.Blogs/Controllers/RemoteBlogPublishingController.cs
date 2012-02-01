@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
 using Orchard.Blogs.Models;
+using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Environment.Extensions;
 using Orchard.Logging;
@@ -11,18 +12,29 @@ namespace Orchard.Blogs.Controllers {
     [OrchardFeature("Orchard.Blogs.RemotePublishing")]
     public class RemoteBlogPublishingController : Controller {
         private readonly IBlogService _blogService;
+        private readonly IRsdConstraint _rsdConstraint;
         private readonly RouteCollection _routeCollection;
 
-        public RemoteBlogPublishingController(IOrchardServices services, IBlogService blogService, RouteCollection routeCollection) {
+        public RemoteBlogPublishingController(
+            IOrchardServices services, 
+            IBlogService blogService, 
+            IRsdConstraint rsdConstraint,
+            RouteCollection routeCollection) {
             _blogService = blogService;
+            _rsdConstraint = rsdConstraint;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
         }
 
         protected ILogger Logger { get; set; }
 
-        public ActionResult Rsd(string blogPath) {
+        public ActionResult Rsd(string path) {
             Logger.Debug("RSD requested");
+
+            var blogPath = _rsdConstraint.FindPath(path);
+            
+            if (blogPath == null)
+                return HttpNotFound();
 
             BlogPart blogPart = _blogService.Get(blogPath);
 

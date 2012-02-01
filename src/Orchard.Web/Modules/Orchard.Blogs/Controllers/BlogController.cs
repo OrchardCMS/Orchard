@@ -58,14 +58,10 @@ namespace Orchard.Blogs.Controllers {
             return View((object)viewModel);
         }
 
-        public ActionResult Item(string blogPath, PagerParameters pagerParameters) {
-            // TODO: (PH:Autoroute) Should use Containers so we can lose this action and rely on ContainerPartDriver instead
+        public ActionResult Item(int blogId, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
-            var correctedPath = _blogPathConstraint.FindPath(blogPath);
-            if (correctedPath == null)
-                return HttpNotFound();
 
-            var blogPart = _blogService.Get(correctedPath);
+            var blogPart = _blogService.Get(blogId, VersionOptions.Published).As<BlogPart>();
             if (blogPart == null)
                 return HttpNotFound();
 
