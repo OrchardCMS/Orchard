@@ -15,7 +15,7 @@ namespace Orchard.Environment {
         private readonly ConcurrentDictionary<string, Assembly> _loadedAssemblies = new ConcurrentDictionary<string, Assembly>(StringComparer.OrdinalIgnoreCase);
 
         public DefaultAssemblyLoader(IEnumerable<IAssemblyNameResolver> assemblyNameResolvers) {
-            _assemblyNameResolvers = assemblyNameResolvers.OrderBy(l => l.Order);
+            _assemblyNameResolvers = assemblyNameResolvers.OrderBy(l => l.Order).ToList();
             Logger = NullLogger.Instance;
         }
 
@@ -47,7 +47,7 @@ namespace Orchard.Environment {
                 return result;
 
             // Try resolving the short name to a full name
-            var resolvedName = _assemblyNameResolvers.Select(r => r.Resolve(shortName)).Where(f => f != null).FirstOrDefault();
+            var resolvedName = _assemblyNameResolvers.Select(r => r.Resolve(shortName)).FirstOrDefault(f => f != null);
             if (resolvedName != null) {
                 return Assembly.Load(resolvedName);
             }
