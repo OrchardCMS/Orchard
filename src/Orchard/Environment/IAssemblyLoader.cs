@@ -15,7 +15,7 @@ namespace Orchard.Environment {
         private readonly ConcurrentDictionary<string, Assembly> _loadedAssemblies = new ConcurrentDictionary<string, Assembly>(StringComparer.OrdinalIgnoreCase);
 
         public DefaultAssemblyLoader(IEnumerable<IAssemblyNameResolver> assemblyNameResolvers) {
-            _assemblyNameResolvers = assemblyNameResolvers.OrderBy(l => l.Order).ToList();
+            _assemblyNameResolvers = assemblyNameResolvers.OrderBy(l => l.Order);
             Logger = NullLogger.Instance;
         }
 
