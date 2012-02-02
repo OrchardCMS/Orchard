@@ -21,5 +21,10 @@ namespace Orchard.ContentManagement {
         public bool RecallContentRecordId(int id, out ContentItem item) {
             return _publishedItemsByContentRecordId.TryGetValue(id, out item);
         }
+
+        public void Clear() {
+            _itemByVersionRecordId.Clear();
+            _publishedItemsByContentRecordId.Clear();
+        }
     }
 }

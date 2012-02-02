@@ -77,6 +77,11 @@ namespace Orchard.ContentManagement {
         /// Flushes all pending content items to the persistance layer
         /// </summary>
         void Flush();
+        
+        /// <summary>
+        /// Clears the current referenced content items
+        /// </summary>
+        void Clear();
 
         /// <summary>
         /// Query for arbitrary content items
