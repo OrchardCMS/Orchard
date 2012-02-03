@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using Orchard.Logging;
 using Orchard.Mvc;
@@ -55,6 +57,25 @@ namespace Orchard.Exceptions.Filters {
                         filterContext.RequestContext.HttpContext.Response.StatusCode = 500;
                     }
                 }
+            }
+
+            if (filterContext.Result is HttpNotFoundResult) {
+                var model = _orchardServices.New.NotFound();
+                var request = filterContext.RequestContext.HttpContext.Request;
+                var url = request.RawUrl;
+
+                // If the url is relative then replace with Requested path
+                model.RequestedUrl = request.Url.OriginalString.Contains(url) & request.Url.OriginalString != url ?
+                    request.Url.OriginalString : url;
+
+                // Dont get the user stuck in a 'retry loop' by
+                // allowing the Referrer to be the same as the Request
+                model.ReferrerUrl = request.UrlReferrer != null &&
+                    request.UrlReferrer.OriginalString != model.RequestedUrl ?
+                    request.UrlReferrer.OriginalString : null;
+
+                filterContext.Result = new ShapeResult(filterContext.Controller, model);
+                filterContext.RequestContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
             }
         }
     }

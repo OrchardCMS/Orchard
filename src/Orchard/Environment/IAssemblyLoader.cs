@@ -47,7 +47,7 @@ namespace Orchard.Environment {
                 return result;
 
             // Try resolving the short name to a full name
-            var resolvedName = _assemblyNameResolvers.Select(r => r.Resolve(shortName)).Where(f => f != null).FirstOrDefault();
+            var resolvedName = _assemblyNameResolvers.Select(r => r.Resolve(shortName)).FirstOrDefault(f => f != null);
             if (resolvedName != null) {
                 return Assembly.Load(resolvedName);
             }
