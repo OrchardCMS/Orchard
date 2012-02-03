@@ -6,5 +6,5 @@ src/Orchard.Web/Modules/Orchard.TaskLease = https://hg01.codeplex.com/orchardtas
 src/orchard.web/modules/Orchard.Fields = https://hg01.codeplex.com/orchardfields
 src/Orchard.Web/Modules/Orchard.Routable = https://hg01.codeplex.com/forks/randompete/routablealias
 src/Orchard.Web/Modules/Orchard.Autoroute = https://hg01.codeplex.com/orchardautoroute
-src/orchard.web/modules/Orchard.Alias = https://hg01.codeplex.com/orchard.alias
-src/orchard.web/modules/orchard.Projections = https://hg01.codeplex.com/orchard.projections
+src/orchard.web/modules/Orchard.Alias = https://hg01.codeplex.com/orchardalias
+src/orchard.web/modules/orchard.Projections = https://hg01.codeplex.com/orchardprojections
