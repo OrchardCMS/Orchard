@@ -22,14 +22,5 @@ namespace Orchard.Pages {
             ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "true")));
             return 2;
         }
-
-        public int UpdateFrom2() {
-            // TODO: (PH:Autoroute) Copy routes/titles
-            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
-                .RemovePart("RoutePart")
-                .WithPart("TitlePart")
-                .WithPart("AutoroutePart"));
-            return 3;
-        }
     }
 }

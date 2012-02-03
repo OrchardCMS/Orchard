@@ -1,38 +1,33 @@
 ﻿using System.Transactions;
-using Orchard.Alias;
 using Orchard.Autoroute.Models;
 using Orchard.Autoroute.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Data.Migration;
-using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Configuration;
 
 namespace UpgrateTo14 {
     public class UpdateTo14DataMigration : DataMigrationImpl {
         private readonly IContentManager _contentManager;
         private readonly IAutorouteService _autorouteService;
-        private readonly IAliasService _aliasService;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly ShellSettings _shellSettings;
 
         public UpdateTo14DataMigration(
             IContentManager contentManager, 
-            IAutorouteService autorouteService, 
-            IAliasService aliasService,
+            IAutorouteService autorouteService,
             ISessionFactoryHolder sessionFactoryHolder,
             ShellSettings shellSettings) {
             _contentManager = contentManager;
             _autorouteService = autorouteService;
-            _aliasService = aliasService;
             _sessionFactoryHolder = sessionFactoryHolder;
             _shellSettings = shellSettings;
         }
 
         public int Create() {
+            return 1;
 
             var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
             var session = sessionFactory.OpenSession();
