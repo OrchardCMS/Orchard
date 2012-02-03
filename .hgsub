@@ -1,7 +1,7 @@
 
 src/Orchard.Web/Modules/Orchard.Forms = https://hg01.codeplex.com/orchardforms
 src/Orchard.Web/Modules/Orchard.Rules = https://hg01.codeplex.com/orchardrules
-src/Orchard.Web/Modules/Orchard.Tokens = https://hg01.codeplex.com/forks/randompete/autoroutetokens
+src/Orchard.Web/Modules/Orchard.Tokens = https://hg01.codeplex.com/orchardtokens
 src/Orchard.Web/Modules/Orchard.TaskLease = https://hg01.codeplex.com/orchardtasklease
 src/orchard.web/modules/Orchard.Fields = https://hg01.codeplex.com/orchardfields
 src/Orchard.Web/Modules/Orchard.Routable = https://hg01.codeplex.com/forks/randompete/routablealias
