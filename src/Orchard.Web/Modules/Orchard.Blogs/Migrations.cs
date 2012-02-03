@@ -88,26 +88,5 @@ namespace Orchard.Blogs {
             ContentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "true")));
             return 4;
         }
-
-        public int UpdateFrom4() {
-
-            // TODO: (PH:Autoroute) SQL copy routes and titles and generate aliases for existing items
-
-            ContentDefinitionManager.AlterTypeDefinition("Blog",
-                cfg => cfg
-                    .RemovePart("RoutePart")
-                    .WithPart("TitlePart")
-                    .WithPart("AutoroutePart")
-                );
-
-            ContentDefinitionManager.AlterTypeDefinition("BlogPost",
-                cfg => cfg
-                    .RemovePart("RoutePart")
-                    .WithPart("TitlePart")
-                    .WithPart("AutoroutePart")
-                );
-
-            return 5;
-        }
     }
 }

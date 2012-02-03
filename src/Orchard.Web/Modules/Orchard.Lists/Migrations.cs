@@ -27,19 +27,5 @@ namespace Orchard.Lists {
             ContentDefinitionManager.AlterTypeDefinition("List", cfg => cfg.WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2")));
             return 3;
         }
-
-        public int UpdateFrom3() {
-
-            // TODO: (PH:Autoroute) Copy paths, routes, etc.
-
-            ContentDefinitionManager.AlterTypeDefinition("List",
-                cfg => cfg
-                    .RemovePart("RoutePart")
-                    .WithPart("TitlePart")
-                    .WithPart("AutoroutePart"));
-
-            return 4;
-        }
-
     }
 }
