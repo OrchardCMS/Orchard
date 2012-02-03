@@ -16,9 +16,9 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Notify;
-using UpgrateTo14.ViewModels;
+using UpgradeTo14.ViewModels;
 
-namespace UpgrateTo14.Controllers {
+namespace UpgradeTo14.Controllers {
     public class AdminController : Controller {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;

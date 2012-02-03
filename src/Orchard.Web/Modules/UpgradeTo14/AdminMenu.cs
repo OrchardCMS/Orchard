@@ -2,7 +2,7 @@
 using Orchard.Security;
 using Orchard.UI.Navigation;
 
-namespace UpgrateTo14 {
+namespace UpgradeTo14 {
     public class AdminMenu : INavigationProvider {
         public Localizer T { get; set; }
 
@@ -11,7 +11,7 @@ namespace UpgrateTo14 {
         }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Migrate Routes"), "0", item => item.Action("Index", "Admin", new { area = "UpgrateTo14" }).Permission(StandardPermissions.SiteOwner));
+            builder.Add(T("Migrate Routes"), "0", item => item.Action("Index", "Admin", new { area = "UpgradeTo14" }).Permission(StandardPermissions.SiteOwner));
         }
     }
 }

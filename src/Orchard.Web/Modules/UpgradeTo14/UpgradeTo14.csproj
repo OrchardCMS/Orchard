@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UpgrateTo14</RootNamespace>
-    <AssemblyName>UpgrateTo14</AssemblyName>
+    <RootNamespace>UpgradeTo14</RootNamespace>
+    <AssemblyName>UpgradeTo14</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>

@@ -8,7 +8,7 @@ using Orchard.Data;
 using Orchard.Data.Migration;
 using Orchard.Environment.Configuration;
 
-namespace UpgrateTo14 {
+namespace UpgradeTo14 {
     public class UpdateTo14DataMigration : DataMigrationImpl {
         private readonly IContentManager _contentManager;
         private readonly IAutorouteService _autorouteService;
