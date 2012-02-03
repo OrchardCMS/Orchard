@@ -71,7 +71,7 @@ namespace Orchard.Specs.Bindings {
 
                     var contentTypeDefinition = new ContentTypeDefinition(name, name);
                     cdm.StoreTypeDefinition(contentTypeDefinition);
-                    cdm.AlterTypeDefinition(name, cfg => cfg.WithPart("CommonPart").WithPart("BodyPart").WithPart("RoutePart").WithPart("ContainablePart").Creatable().Draftable());
+                    cdm.AlterTypeDefinition(name, cfg => cfg.WithPart("CommonPart").WithPart("BodyPart").WithPart("AutoroutePart").WithPart("ContainablePart").Creatable().Draftable());
                 }
             });
         }

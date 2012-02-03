@@ -367,10 +367,9 @@ namespace Orchard.Blogs.Services {
                 .Set("description", blogPostPart.Text)
                 .Set("link", url)
                 .Set("permaLink", url);
-            dynamic dBlogPost = blogPostPart;
-            if (dBlogPost.AutoroutePart != null) {
-                blogStruct.Set("wp_slug", dBlogPost.AutoroutePart.Alias);
-            }
+            
+            blogStruct.Set("wp_slug", blogPostPart.As<IAliasAspect>().Path);
+            
 
             if (blogPostPart.PublishedUtc != null) {
                 blogStruct.Set("dateCreated", blogPostPart.PublishedUtc);

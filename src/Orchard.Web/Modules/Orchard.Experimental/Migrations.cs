@@ -10,7 +10,7 @@ namespace Orchard.Experimental {
             ContentDefinitionManager.AlterTypeDefinition("ListItem",
                 cfg => cfg
                     .WithPart("CommonPart")
-                    .WithPart("RoutePart")
+                    .WithPart("AutoroutePart")
                     .WithPart("BodyPart")
                     .WithPart("ContainablePart")
                     .Creatable()
