@@ -7,9 +7,9 @@ namespace Orchard.Blogs.Models {
     /// </summary>
     public class BlogArchivesPart : ContentPart<BlogArchivesPartRecord> {
         [Required]
-        public int ForBlog {
-            get { return Record.BlogId; }
-            set { Record.BlogId = value; }
+        public string ForBlog {
+            get { return Record.BlogSlug; }
+            set { Record.BlogSlug = value; }
         }
     }
 }

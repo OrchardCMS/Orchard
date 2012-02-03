@@ -5,9 +5,9 @@ namespace Orchard.Blogs.Models {
     public class RecentBlogPostsPart : ContentPart<RecentBlogPostsPartRecord> {
 
         [Required]
-        public int ForBlog {
-            get { return Record.BlogId; }
-            set { Record.BlogId = value; }
+        public string ForBlog {
+            get { return Record.BlogSlug; }
+            set { Record.BlogSlug = value; }
         }
 
         [Required]

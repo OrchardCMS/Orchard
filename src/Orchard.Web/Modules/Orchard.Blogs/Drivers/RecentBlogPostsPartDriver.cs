@@ -46,7 +46,7 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper) {
             var viewModel = new RecentBlogPostsViewModel {
                 Count = part.Count,
-                BlogId = part.ForBlog,
+                Slug = part.ForBlog,
                 Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
             };
 
@@ -57,7 +57,7 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Editor(RecentBlogPostsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new RecentBlogPostsViewModel();
             if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                part.ForBlog = viewModel.BlogId;
+                part.ForBlog = viewModel.Slug;
                 part.Count = viewModel.Count;
             }
 
@@ -65,9 +65,9 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override void Importing(RecentBlogPostsPart part, ImportContentContext context) {
-            var blogId = context.Attribute(part.PartDefinition.Name, "BlogId");
-            if (blogId != null) {
-                part.ForBlog = Convert.ToInt32(blogId);
+            var blogSlug = context.Attribute(part.PartDefinition.Name, "BlogSlug");
+            if (blogSlug != null) {
+                part.ForBlog = blogSlug;
             }
 
             var count = context.Attribute(part.PartDefinition.Name, "Count");
@@ -77,9 +77,8 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override void Exporting(RecentBlogPostsPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("BlogId", part.ForBlog);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
         }
-
     }
 }

@@ -12,5 +12,5 @@ Features:
     Orchard.Blogs.RemotePublishing:
         Name: Remote Blog Publishing
         Description: Blog easier using a dedicated MetaWeblogAPI-compatible publishing tool.
-        Dependencies: XmlRpc, Orchard.Blogs
+        Dependencies: XmlRpc, Orchard.Blogs, Orchard.Autoroute
         Category: Content Publishing

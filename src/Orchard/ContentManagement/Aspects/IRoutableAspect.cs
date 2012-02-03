@@ -1,6 +1,5 @@
 ﻿namespace Orchard.ContentManagement.Aspects {
-    public interface IRoutableAspect : ITitleAspect {
+    public interface IRoutableAspect : ITitleAspect, IAliasAspect {
         string Slug { get; set; }
-        string Path { get; set; }
     }
 }

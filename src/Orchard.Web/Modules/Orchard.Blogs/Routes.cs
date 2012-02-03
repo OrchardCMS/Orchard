@@ -1,11 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.Blogs.Routing;
 using Orchard.Mvc.Routes;
 
 namespace Orchard.Blogs {
     public class Routes : IRouteProvider {
-        public Routes() {
+        private readonly IArchiveConstraint _archiveConstraint;
+        private readonly IRsdConstraint _rsdConstraint;
+
+        public Routes(
+            IArchiveConstraint archiveConstraint,
+            IRsdConstraint rsdConstraint) {
+            _archiveConstraint = archiveConstraint;
+            _rsdConstraint = rsdConstraint;
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
@@ -164,6 +172,39 @@ namespace Orchard.Blogs {
                                                                                       {"action", "List"}
                                                                                   },
                                                          new RouteValueDictionary(),
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "{*path}",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "BlogPost"},
+                                                                                      {"action", "ListByArchive"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"path", _archiveConstraint},
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Priority = 11,
+                                                     Route = new Route(
+                                                         "{*path}",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "RemoteBlogPublishing"},
+                                                                                      {"action", "Rsd"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"path", _rsdConstraint}
+                                                                                  },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
                                                                                   },

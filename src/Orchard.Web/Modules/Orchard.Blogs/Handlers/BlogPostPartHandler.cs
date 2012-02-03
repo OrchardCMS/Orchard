@@ -57,8 +57,6 @@ namespace Orchard.Blogs.Handlers {
             if (blogPost == null)
                 return;
 
-            // Note: DisplayRouteValues are still inherited from CommonPart. We shouldn't even need these overrides for admin routes. -PH
-
             context.Metadata.CreateRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "BlogPostAdmin"},
