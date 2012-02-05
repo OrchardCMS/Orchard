@@ -7,6 +7,7 @@ using System.Text;
 using NHibernate;
 using NHibernate.Dialect;
 using NHibernate.SqlTypes;
+using Orchard.ContentManagement.Records;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
@@ -16,8 +17,8 @@ using Orchard.Reports.Services;
 namespace Orchard.Data.Migration.Interpreters {
     public class DefaultDataMigrationInterpreter : AbstractDataMigrationInterpreter, IDataMigrationInterpreter {
         private readonly ShellSettings _shellSettings;
+        private readonly ISessionLocator _sessionLocator;
         private readonly IEnumerable<ICommandInterpreter> _commandInterpreters;
-        private readonly ISession _session;
         private readonly Dialect _dialect;
         private readonly List<string> _sqlStatements;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
@@ -32,8 +33,8 @@ namespace Orchard.Data.Migration.Interpreters {
             ISessionFactoryHolder sessionFactoryHolder,
             IReportsCoordinator reportsCoordinator) {
             _shellSettings = shellSettings;
+            _sessionLocator = sessionLocator;
             _commandInterpreters = commandInterpreters;
-            _session = sessionLocator.For(typeof(DefaultDataMigrationInterpreter));
             _sqlStatements = new List<string>();
             _sessionFactoryHolder = sessionFactoryHolder;
             _reportsCoordinator = reportsCoordinator;
@@ -335,7 +336,8 @@ namespace Orchard.Data.Migration.Interpreters {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "Nothing comes from user input.")]
         private void RunPendingStatements() {
 
-            var connection = _session.Connection;
+            var session = _sessionLocator.For(typeof(ContentItemRecord));
+            var connection = session.Connection;
 
             foreach (var sqlStatement in _sqlStatements) {
                 Logger.Debug(sqlStatement);
