@@ -395,7 +395,10 @@
     <CallTarget Targets="CompileMsBuildTasks"/>
 
     <ItemGroup>
-      <Validate-ProjectFiles Include="$(ModulesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.csproj;$(OrchardCoreSrcFolder)\Orchard.Core.csproj"/>
+      <Validate-ProjectFiles 
+        Include="$(ModulesSrcFolder)\**\*.csproj;$(ThemesSrcFolder)\**\*.csproj;$(OrchardCoreSrcFolder)\Orchard.Core.csproj"
+        Exclude="$(ModulesSrcFolder)\**\*.Specs.csproj"
+        />
     </ItemGroup>
 
     <ValidateExtensionProjectFiles Files="@(Validate-ProjectFiles)"/>
