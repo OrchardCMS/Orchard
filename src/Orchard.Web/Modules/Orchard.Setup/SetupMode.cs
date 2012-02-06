@@ -30,6 +30,7 @@ using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Mvc.ViewEngines.WebForms;
 using Orchard.Recipes.Services;
 using Orchard.Settings;
+using Orchard.Tasks;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
@@ -67,6 +68,7 @@ namespace Orchard.Setup {
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().InstancePerMatchingLifetimeScope("shell");
+            builder.RegisterType<SweepGenerator>().As<ISweepGenerator>().SingleInstance();
 
             // setup mode specific implementations of needed service interfaces
             builder.RegisterType<SafeModeThemeService>().As<IThemeManager>().InstancePerLifetimeScope();
