@@ -33,9 +33,9 @@ namespace Orchard.Tests.Tasks {
             _container.Resolve<Mock<IBackgroundService>>()
                 .Verify(x => x.Sweep(), Times.Never());
 
-            heartbeatSource.Activated();
+            heartbeatSource.Activate();
             System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(80));
-            heartbeatSource.Terminating();
+            heartbeatSource.Terminate();
 
             _container.Resolve<Mock<IBackgroundService>>()
                 .Verify(x => x.Sweep(), Times.AtLeastOnce());

@@ -38,7 +38,7 @@ namespace Orchard.Specs.Hosting {
             // Trying the two known relative paths to the Orchard.Web directory.
             // The second one is for the target "spec" in orchard.proj.
             if (ConfigurationManager.AppSettings["orchardHosting"] != null) {
-                _orchardWebPath = baseDir.Combine(ConfigurationManager.AppSettings["orchardHosting"]).Combine("Orchard.Web");
+                _orchardWebPath = baseDir.Combine(ConfigurationManager.AppSettings["orchardHosting"]);
             }
             else {
                 _orchardWebPath = baseDir.Up(3).Combine("Orchard.Web");
