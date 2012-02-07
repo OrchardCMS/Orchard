@@ -81,7 +81,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table1.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "Super Duper"});
             table1.AddRow(new string[] {
                         "Body.Text",
@@ -121,7 +121,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table2.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "Super Duper"});
             table2.AddRow(new string[] {
                         "Body.Text",

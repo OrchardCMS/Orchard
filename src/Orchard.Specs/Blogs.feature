@@ -67,7 +67,7 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I fill in
             | name | value |
             | Title.Title | My Post |
-            | Routable.Slug | my-post |
+            | Autoroute.CurrentUrl | my-post |
             | Body.Text | Are you still there? |
         And I hit "Publish Now"
         And I go to "my-blog/my-post-3"
@@ -99,7 +99,7 @@ Scenario: I can create a new blog and blog post and when I change the slug of th
         And I follow "Blog Properties"
         And I fill in
             | name | value |
-            | Routable.Slug | my-other-blog |
+            | Autoroute.CurrentUrl | my-other-blog |
         And I hit "Save"
         And I go to "my-other-blog"
     Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
@@ -175,7 +175,7 @@ Scenario: I set my blog to be the content for the home page and the posts for th
         And I fill in
             | name | value |
             | Title.Title | My Blog |
-            | Routable.PromoteToHomePage | true |
+            | Autoroute.PromoteToHomePage | true |
         And I hit "Save"
         And I go to "admin/blogs"
         And I follow "My Blog"

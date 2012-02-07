@@ -98,7 +98,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table1.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Blog"});
 #line 14
         testRunner.And("I fill in", ((string)(null)), table1);
@@ -115,7 +115,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table2.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Post"});
             table2.AddRow(new string[] {
                         "Body.Text",
@@ -162,7 +162,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table3.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Blog"});
 #line 38
         testRunner.And("I fill in", ((string)(null)), table3);
@@ -179,7 +179,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Post"});
             table4.AddRow(new string[] {
                         "Body.Text",
@@ -205,7 +205,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Post"});
             table5.AddRow(new string[] {
                         "Body.Text",
@@ -231,10 +231,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table6.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Post"});
             table6.AddRow(new string[] {
-                        "Routable.Slug",
+                        "Autoroute.CurrentUrl",
                         "my-post"});
             table6.AddRow(new string[] {
                         "Body.Text",
@@ -255,11 +255,11 @@ this.ScenarioSetup(scenarioInfo);
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("I can create a new blog and blog post and when I change the slug of the blog the " +
-            "path of the plog post is updated")]
-        public virtual void ICanCreateANewBlogAndBlogPostAndWhenIChangeTheSlugOfTheBlogThePathOfThePlogPostIsUpdated()
+            "path of the blog post is updated")]
+        public virtual void ICanCreateANewBlogAndBlogPostAndWhenIChangeTheSlugOfTheBlogThePathOfTheBlogPostIsUpdated()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can create a new blog and blog post and when I change the slug of the blog the " +
-                    "path of the plog post is updated", ((string[])(null)));
+                    "path of the blog post is updated", ((string[])(null)));
 #line 77
 this.ScenarioSetup(scenarioInfo);
 #line 78
@@ -271,7 +271,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table7.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Blog"});
 #line 80
         testRunner.And("I fill in", ((string)(null)), table7);
@@ -292,7 +292,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table8.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Post"});
             table8.AddRow(new string[] {
                         "Body.Text",
@@ -318,7 +318,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table9.AddRow(new string[] {
-                        "Routable.Slug",
+                        "Autoroute.CurrentUrl",
                         "my-other-blog"});
 #line 100
         testRunner.And("I fill in", ((string)(null)), table9);
@@ -354,7 +354,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table10.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Blog"});
 #line 113
         testRunner.And("I fill in", ((string)(null)), table10);
@@ -371,7 +371,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table11.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Post"});
             table11.AddRow(new string[] {
                         "Body.Text",
@@ -413,7 +413,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table12.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Blog"});
 #line 135
         testRunner.And("I fill in", ((string)(null)), table12);
@@ -457,7 +457,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table13.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Blog"});
 #line 150
     testRunner.When("I fill in", ((string)(null)), table13);
@@ -495,7 +495,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table14.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Blog"});
 #line 163
     testRunner.When("I fill in", ((string)(null)), table14);
@@ -531,10 +531,10 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table15.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Blog"});
             table15.AddRow(new string[] {
-                        "Routable.PromoteToHomePage",
+                        "Autoroute.PromoteToHomePage",
                         "true"});
 #line 175
         testRunner.And("I fill in", ((string)(null)), table15);
@@ -551,7 +551,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table16.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "My Post"});
             table16.AddRow(new string[] {
                         "Body.Text",

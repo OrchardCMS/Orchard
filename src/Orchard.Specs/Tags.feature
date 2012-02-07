@@ -8,7 +8,7 @@ Scenario: I can add a tag to a new Page
     When I go to "admin/contents/create/page"
         And I fill in
             | name | value |
-            | Routable.Title | Super Duper |
+            | Title.Title | Super Duper |
             | Body.Text | This is super. |
             | Tags.Tags | Foo, Bar |
         And I hit "Publish Now"
@@ -22,7 +22,7 @@ Scenario: I can't add a tag with disallowed chars to a new Page
     When I go to "admin/contents/create/page"
         And I fill in
             | name | value |
-            | Routable.Title | Super Duper |
+            | Title.Title | Super Duper |
             | Body.Text | This is super. |
             | Tags.Tags | Foo, I <3 Orchard |
         And I hit "Publish Now"
