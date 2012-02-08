@@ -71,11 +71,20 @@ namespace UpgradeTo14.Controllers {
                 var session = sessionFactory.OpenSession();
 
                 foreach (var contentType in contentTypesToMigrate) {
-                    // migrating pages
+                
+                    if (_orchardServices.ContentManager.HqlQuery().ForType(contentType).Count() > 0 &&
+                        _orchardServices.ContentManager.HqlQuery().ForType(contentType).Slice(0, 1).FirstOrDefault() == null) {
+                        // can't load a content item, ignore the type
+                        _orchardServices.Notifier.Information(T("Could not process {0}. Some parts might not be compatible with Orchard 1.4, please update your modules.", contentType));
+
+                        continue;
+                    }
+
+                    // migrating parts
                     _contentDefinitionManager.AlterTypeDefinition(contentType,
-                                                                  builder => builder
-                                                                                 .WithPart("AutoroutePart")
-                                                                                 .WithPart("TitlePart"));
+                        builder => builder
+                                        .WithPart("AutoroutePart")
+                                        .WithPart("TitlePart"));
 
                     var count = 0;
                     var isContainable = false;
