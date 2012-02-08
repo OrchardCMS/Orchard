@@ -71,7 +71,17 @@ namespace Orchard.Specs.Bindings {
 
                     var contentTypeDefinition = new ContentTypeDefinition(name, name);
                     cdm.StoreTypeDefinition(contentTypeDefinition);
-                    cdm.AlterTypeDefinition(name, cfg => cfg.WithPart("CommonPart").WithPart("BodyPart").WithPart("AutoroutePart").WithPart("ContainablePart").Creatable().Draftable());
+                    cdm.AlterTypeDefinition(name, cfg => cfg.WithPart("CommonPart").WithPart("BodyPart").WithPart("TitlePart").WithPart("ContainablePart").Creatable().Draftable());
+
+                    cdm.AlterTypeDefinition(name,
+                        cfg => cfg.WithPart("AutoroutePart",
+                            builder => builder
+                                .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                                .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                                .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-list'}]")
+                                .WithSetting("AutorouteSettings.DefaultPatternIndex", "0")
+                        ));
+
                 }
             });
         }

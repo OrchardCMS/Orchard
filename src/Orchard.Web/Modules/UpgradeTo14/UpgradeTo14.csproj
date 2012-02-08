@@ -90,7 +90,6 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Migrations.cs" />
     <Compile Include="ViewModels\MigrateViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
