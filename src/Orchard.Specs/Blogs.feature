@@ -74,39 +74,6 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
     Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
         And I should see "Are you still there?"
 
-Scenario: I can create a new blog and blog post and when I change the slug of the blog the path of the blog post is updated
-    Given I have installed Orchard
-    When I go to "admin/blogs/create"
-        And I fill in
-            | name | value |
-            | Title.Title | My Blog |
-        And I hit "Save"
-        And I go to "my-blog"
-    Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
-    When I go to "admin/blogs"
-        And I follow "My Blog"
-        And I follow "New Post" where class name has "primaryAction"
-        And I fill in
-            | name | value |
-            | Title.Title | My Post |
-            | Body.Text | Hi there. |
-        And I hit "Publish Now"
-        And I go to "my-blog/my-post"
-    Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
-        And I should see "Hi there."
-    When I go to "admin/blogs"
-        And I follow "My Blog"
-        And I follow "Blog Properties"
-        And I fill in
-            | name | value |
-            | Autoroute.CurrentUrl | my-other-blog |
-        And I hit "Save"
-        And I go to "my-other-blog"
-    Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
-    When I go to "my-other-blog/my-post"
-    Then I should see "<h1[^>]*>.*?My Post.*?</h1>"
-        And I should see "Hi there."
-
 Scenario: When viewing a blog the user agent is given an RSS feed of the blog's posts
     Given I have installed Orchard
     When I go to "admin/blogs/create"
@@ -125,7 +92,6 @@ Scenario: When viewing a blog the user agent is given an RSS feed of the blog's 
         And I am redirected
         And I go to "my-blog/my-post"
     Then I should see "<link rel="alternate" type="application/rss\+xml" title="My Blog" href="/rss\?containerid=\d+" />"
-
     
 Scenario: Enabling remote blog publishing inserts the appropriate metaweblogapi markup into the blog's page
     Given I have installed Orchard
