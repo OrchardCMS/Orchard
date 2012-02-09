@@ -71,20 +71,16 @@ namespace UpgradeTo14.Controllers {
                 var session = sessionFactory.OpenSession();
 
                 foreach (var contentType in contentTypesToMigrate) {
-                
-                    if (_orchardServices.ContentManager.HqlQuery().ForType(contentType).Count() > 0 &&
-                        _orchardServices.ContentManager.HqlQuery().ForType(contentType).Slice(0, 1).FirstOrDefault() == null) {
-                        // can't load a content item, ignore the type
-                        _orchardServices.Notifier.Information(T("Could not process {0}. Some parts might not be compatible with Orchard 1.4, please update your modules.", contentType));
-
-                        continue;
-                    }
 
                     // migrating parts
                     _contentDefinitionManager.AlterTypeDefinition(contentType,
                         builder => builder
                                         .WithPart("AutoroutePart")
                                         .WithPart("TitlePart"));
+
+                    // force the first object to be reloaded in order to get a valid AutoroutePart
+                    _orchardServices.ContentManager.Flush();
+                    _orchardServices.ContentManager.Clear();
 
                     var count = 0;
                     var isContainable = false;
@@ -94,7 +90,7 @@ namespace UpgradeTo14.Controllers {
                         contents = _orchardServices.ContentManager.HqlQuery().ForType(contentType).Slice(count, 100);
 
                         foreach (dynamic content in contents) {
-                            var autoroutePart = ((ContentItem) content).As<AutoroutePart>();
+                            var autoroutePart = ((ContentItem)content).As<AutoroutePart>();
                             var titlePart = ((ContentItem) content).As<TitlePart>();
                             var commonPart = ((ContentItem) content).As<CommonPart>();
                             
@@ -102,7 +98,7 @@ namespace UpgradeTo14.Controllers {
                                 isContainable = true;
                             }
 
-                            using (new TransactionScope(TransactionScopeOption.Suppress)) {
+                            using (new TransactionScope(TransactionScopeOption.RequiresNew)) {
                                 var command = session.Connection.CreateCommand();
                                 command.CommandText = string.Format("SELECT Title, Path FROM {0} WHERE ContentItemRecord_Id = {1}", GetPrefixedTableName("Routable_RoutePartRecord"), autoroutePart.ContentItem.Id);
                                 var reader = command.ExecuteReader();
@@ -120,7 +116,7 @@ namespace UpgradeTo14.Controllers {
                         }
 
                         _orchardServices.ContentManager.Flush();
-                        // todo: _orchardServices.ContentManager.Clear();
+                        _orchardServices.ContentManager.Clear();
 
                     } while (contents.Any());
  
