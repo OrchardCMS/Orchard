@@ -65,8 +65,13 @@ namespace Orchard.Media.Services {
             var name = file.Optional<string>("name");
             var bits = file.Optional<byte[]>("bits");
 
+            string directoryName = Path.GetDirectoryName(name);
+            if (string.IsNullOrWhiteSpace(directoryName)) { // Some clients only pass in a name path that does not contain a directory component.
+                directoryName = "media";
+            }
+
             try {
-                // delete the file if it already exists, e.g. and updated image in a blog post
+                // delete the file if it already exists, e.g. an updated image in a blog post
                 // it's safe to delete the file as each content item gets a specific folder
                 _mediaService.DeleteFile(Path.GetDirectoryName(name), Path.GetFileName(name));
             }
@@ -74,8 +79,11 @@ namespace Orchard.Media.Services {
                 // current way to delete a file if it exists
             }
 
-            string publicUrl = _mediaService.UploadMediaFile(Path.GetDirectoryName(name), Path.GetFileName(name), bits, false);
-            return new XRpcStruct().Set("url", url.MakeAbsolute(publicUrl));
+            string publicUrl = _mediaService.UploadMediaFile(directoryName, Path.GetFileName(name), bits, true);
+            return new XRpcStruct() // Some clients require all optional attributes to be declared Wordpress responds in this way as well.
+                .Set("file", publicUrl)
+                .Set("url", url.MakeAbsolute(publicUrl))
+                .Set("type", file.Optional<string>("type"));
         }
     }
 }

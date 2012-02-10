@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.Core.XmlRpc.Models;
@@ -29,8 +31,10 @@ namespace Orchard.Core.XmlRpc.Controllers {
             if (methodResponse == null)
                 throw new HttpException(500, "TODO: xmlrpc fault");
 
-            var content = _writer.MapMethodResponse(methodResponse).ToString();
-            return Content(content, "text/xml");
+            var content = new StringBuilder();
+            _writer.MapMethodResponse(methodResponse).Save(new StringWriter(content));
+
+            return Content(content.ToString(), "text/xml");
         }
 
         private XRpcMethodResponse Dispatch(XRpcMethodCall request) {

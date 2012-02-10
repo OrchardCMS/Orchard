@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -76,12 +77,24 @@ namespace Orchard.Widgets.Drivers {
             if (zone != null) {
                 part.Zone = zone;
             }
+
+            var renderTitle = context.Attribute(part.PartDefinition.Name, "RenderTitle");
+            if (!string.IsNullOrWhiteSpace(renderTitle)) {
+                part.RenderTitle = Convert.ToBoolean(renderTitle);
+            }
+
+            var name = context.Attribute(part.PartDefinition.Name, "Name");
+            if (name != null) {
+                part.Name = name;
+            }
         }
 
         protected override void Exporting(WidgetPart part, ContentManagement.Handlers.ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("Title", part.Title);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Position", part.Position);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Zone", part.Zone);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("RenderTitle", part.RenderTitle);
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Name", part.Name);
         }
     }
 }

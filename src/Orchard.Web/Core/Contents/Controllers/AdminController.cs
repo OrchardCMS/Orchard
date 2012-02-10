@@ -212,7 +212,11 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Create")]
         [FormValueRequired("submit.Publish")]
         public ActionResult CreateAndPublishPOST(string id, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't create content")))
+            
+            // pass a dummy content to the authorization check to check for "own" variations
+            var dummyContent = _contentManager.New(id);
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, dummyContent, T("Couldn't create content")))
                 return new HttpUnauthorizedResult();
 
             return CreatePOST(id, returnUrl, contentItem => _contentManager.Publish(contentItem));

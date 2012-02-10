@@ -83,6 +83,7 @@
     <Compile Include="Models\CommentsPartRecord.cs" />
     <Compile Include="Services\CreateCommentContext.cs" />
     <Compile Include="Services\ICommentService.cs" />
+    <Compile Include="Tokens\CommentTokens.cs" />
     <Compile Include="ViewModels\CommentCountViewModel.cs" />
     <Compile Include="Models\CommentSettingsPart.cs" />
     <Compile Include="Handlers\CommentSettingsPartHandler.cs" />
