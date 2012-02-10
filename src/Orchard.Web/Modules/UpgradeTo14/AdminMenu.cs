@@ -11,7 +11,8 @@ namespace UpgradeTo14 {
         }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Migrate Routes"), "0", item => item.Action("Index", "Admin", new { area = "UpgradeTo14" }).Permission(StandardPermissions.SiteOwner));
+            builder.Add(T("Migrate Routes"), "0", item => item.Action("Index", "Route", new { area = "UpgradeTo14" }).Permission(StandardPermissions.SiteOwner));
+            builder.Add(T("Migrate Fields"), "0", item => item.Action("Index", "Field", new { area = "UpgradeTo14" }).Permission(StandardPermissions.SiteOwner));
         }
     }
 }

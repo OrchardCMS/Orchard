@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Transactions;
 using System.Web.Mvc;
 using Orchard;
@@ -15,18 +13,20 @@ using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 using UpgradeTo14.ViewModels;
 
 namespace UpgradeTo14.Controllers {
-    public class AdminController : Controller {
+    [Admin]
+    public class RouteController : Controller {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly ShellSettings _shellSettings;
         private readonly IAutorouteService _autorouteService;
 
-        public AdminController(
+        public RouteController(
             IContentDefinitionManager contentDefinitionManager,
             IOrchardServices orchardServices,
             ISessionFactoryHolder sessionFactoryHolder,
