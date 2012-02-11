@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,7 @@ namespace Orchard.Events {
     public class DefaultOrchardEventBus : IEventBus {
         private readonly Func<IEnumerable<IEventHandler>> _eventHandlers;
         private readonly IExceptionPolicy _exceptionPolicy;
+        private static readonly ConcurrentDictionary<string, MethodInfo> _interfaceMethodsCache = new ConcurrentDictionary<string, MethodInfo>();  
 
         public DefaultOrchardEventBus(Func<IEnumerable<IEventHandler>> eventHandlers, IExceptionPolicy exceptionPolicy) {
             _eventHandlers = eventHandlers;
@@ -71,7 +73,8 @@ namespace Orchard.Events {
         }
 
         private static bool TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
-            MethodInfo method = GetMatchingMethod(eventHandler, interfaceType, methodName, arguments);
+            MethodInfo method = _interfaceMethodsCache.GetOrAdd(String.Concat(interfaceType.Name, "_", methodName, "_", String.Join("_", arguments.Keys)), GetMatchingMethod(eventHandler, interfaceType, methodName, arguments));
+
             if (method != null) {
                 var parameters = new List<object>();
                 foreach (var methodParameter in method.GetParameters()) {

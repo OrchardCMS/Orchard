@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,6 +9,7 @@ using Castle.Core.Interceptor;
 namespace Orchard.Events {
     public class EventsInterceptor : IInterceptor {
         private readonly IEventBus _eventBus;
+        private static readonly ConcurrentDictionary<Type,MethodInfo> _enumerableOfTypeTDictionary = new ConcurrentDictionary<Type, MethodInfo>(); 
 
         public EventsInterceptor(IEventBus eventBus) {
             _eventBus = eventBus;
@@ -36,7 +38,7 @@ namespace Orchard.Events {
             // acquire method:
             // static IEnumerable<T> IEnumerable.OfType<T>(this IEnumerable source)
             // where T is from returnType's IEnumerable<T>
-            var enumerableOfTypeT = typeof(Enumerable).GetGenericMethod("OfType", returnType.GetGenericArguments(), new[] { typeof(IEnumerable) }, typeof(IEnumerable<>));
+            var enumerableOfTypeT = _enumerableOfTypeTDictionary.GetOrAdd( returnType, type => typeof(Enumerable).GetGenericMethod("OfType", type.GetGenericArguments(), new[] { typeof(IEnumerable) }, typeof(IEnumerable<>)));
             return enumerableOfTypeT.Invoke(null, new[] { results });
         }
     }
@@ -52,5 +54,4 @@ namespace Orchard.Events {
 
         }
     }
-
 }
