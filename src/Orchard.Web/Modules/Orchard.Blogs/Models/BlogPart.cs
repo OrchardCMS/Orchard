@@ -1,11 +1,12 @@
 using Orchard.ContentManagement;
-using Orchard.Core.Routable.Models;
+using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Blogs.Models {
     public class BlogPart : ContentPart<BlogPartRecord> {
+
+        // TODO: (PH) This isn't referenced in many places but should use ContentItemMetadata instead?
         public string Name {
-            get { return this.As<RoutePart>().Title; }
-            set { this.As<RoutePart>().Title = value; }
+            get { return this.As<ITitleAspect>().Title; }
         }
 
         public string Description {

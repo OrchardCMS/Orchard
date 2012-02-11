@@ -9,7 +9,7 @@
     <Version>1.0</Version>
   </Recipe>
 
-  <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,
+  <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,Orchard.Alias,Orchard.Autoroute,
                    XmlRpc,Orchard.Blogs.RemotePublishing,
                    TinyMce,Orchard.Media,Orchard.MediaPicker,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,Orchard.Widgets.PageLayerHinting,
@@ -22,11 +22,13 @@
       <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
         <TagsPart />
         <LocalizationPart />
+        <AutoroutePart />
       </Page>
       <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
         <CommentsPart />
         <TagsPart />
         <LocalizationPart />
+        <AutoroutePart />
       </BlogPost>
     </Types>
     <Parts>
@@ -47,12 +49,15 @@
     layer create Anonymous /LayerRule:"not authenticated"
     layer create Disabled /LayerRule:"false"
     layer create TheHomepage /LayerRule:"url '~/'"
-    blog create /Slug:"blog" /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
     widget create HtmlWidget /Title:"First Leader Aside" /Zone:"TripelFirst" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget1" /UseLoremIpsumText:true
     widget create HtmlWidget /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget2" /UseLoremIpsumText:true
     widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget3" /UseLoremIpsumText:true
-    menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
     site setting set baseurl
     theme activate "The Theme Machine"
+    autoroute create "Page" "Title" "{Content.Slug}" "about-us" true
+    autoroute create "Blog" "Title" "{Content.Slug}" "my-blog" true
+    autoroute create "BlogPost" "Blog and Title" "{Content.Container.Path}/{Content.Slug}" "my-blog/a-blog-post" true
+    blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
+    menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
   </Command>
 </Orchard>

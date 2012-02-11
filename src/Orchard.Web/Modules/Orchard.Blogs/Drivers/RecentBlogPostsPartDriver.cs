@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Linq;
 using Orchard.Blogs.Models;
-using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Drivers {
     public class RecentBlogPostsPartDriver : ContentPartDriver<RecentBlogPostsPart> {
@@ -24,7 +22,7 @@ namespace Orchard.Blogs.Drivers {
 
         protected override DriverResult Display(RecentBlogPostsPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_RecentBlogPosts", () => {
-                BlogPart blog = GetBlogFromSlug(part.ForBlog);
+            BlogPart blog = _blogService.Get(part.ForBlog);
 
                 if (blog == null) {
                     return null;
@@ -81,12 +79,6 @@ namespace Orchard.Blogs.Drivers {
         protected override void Exporting(RecentBlogPostsPart part, ExportContentContext context) {
             context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
             context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
-        }
-
-        private BlogPart GetBlogFromSlug(string slug) {
-            return _contentManager.Query<BlogPart, BlogPartRecord>()
-                .Join<RoutePartRecord>().Where(rr => rr.Slug == slug)
-                .List().FirstOrDefault();
         }
     }
 }

@@ -6,7 +6,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Settings;
-using Orchard.Core.Routable.Models;
 using Orchard.Services;
 
 namespace Orchard.Core.Feeds.StandardBuilders {
@@ -15,7 +14,7 @@ namespace Orchard.Core.Feeds.StandardBuilders {
         private readonly ContentItemMetadata _metadata;
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
         private readonly ICommonPart _common;
-        private readonly RoutePart _routable;
+        private readonly ITitleAspect _titleAspect;
         private readonly BodyPart _body;
 
         public ItemInspector(IContent item, ContentItemMetadata metadata) : this(item, metadata, Enumerable.Empty<IHtmlFilter>()) {}
@@ -25,7 +24,7 @@ namespace Orchard.Core.Feeds.StandardBuilders {
             _metadata = metadata;
             _htmlFilters = htmlFilters;
             _common = item.Get<ICommonPart>();
-            _routable = item.Get<RoutePart>();
+            _titleAspect = item.Get<ITitleAspect>();
             _body = item.Get<BodyPart>();
         }
 
@@ -33,8 +32,8 @@ namespace Orchard.Core.Feeds.StandardBuilders {
             get {
                 if (_metadata != null && !string.IsNullOrEmpty(_metadata.DisplayText))
                     return _metadata.DisplayText;
-                if (_routable != null && !string.IsNullOrEmpty(_routable.Title))
-                    return _routable.Title;
+                if (_titleAspect != null && !string.IsNullOrEmpty(_titleAspect.Title))
+                    return _titleAspect.Title;
                 return _item.ContentItem.ContentType + " #" + _item.ContentItem.Id;
             }
         }

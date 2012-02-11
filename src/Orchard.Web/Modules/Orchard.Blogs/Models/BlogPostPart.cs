@@ -2,19 +2,14 @@ using System;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Routable.Models;
 using Orchard.Security;
+using Orchard.Core.Title.Models;
 
 namespace Orchard.Blogs.Models {
     public class BlogPostPart : ContentPart {
         public string Title {
-            get { return this.As<RoutePart>().Title; }
-            set { this.As<RoutePart>().Title = value; }
-        }
-
-        public string Slug {
-            get { return this.As<RoutePart>().Slug; }
-            set { this.As<RoutePart>().Slug = value; }
+            get { return this.As<TitlePart>().Title; }
+            set { this.As<TitlePart>().Title = value; }
         }
 
         public string Text {

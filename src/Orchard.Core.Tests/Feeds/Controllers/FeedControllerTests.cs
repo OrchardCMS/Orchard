@@ -16,9 +16,9 @@ using Orchard.Core.Feeds.Controllers;
 using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.Rss;
 using Orchard.Core.Feeds.StandardBuilders;
-using Orchard.Core.Routable.Models;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
+using Orchard.Core.Title.Models;
 
 namespace Orchard.Core.Tests.Feeds.Controllers {
     [TestFixture]
@@ -148,16 +148,16 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             var clock = new StubClock();
             var hello = new ContentItemBuilder(new ContentTypeDefinitionBuilder().Named("hello").Build())
                 .Weld<CommonPart>()
-                .Weld<RoutePart>()
+                .Weld<TitlePart>()
                 .Weld<BodyPart>()
                 .Build();
             hello.As<CommonPart>().Record = new CommonPartRecord();
-            hello.As<RoutePart>().Record = new RoutePartRecord();
+            hello.As<TitlePart>().Record = new TitlePartRecord();
             hello.As<BodyPart>().Record = new BodyPartRecord();
 
             hello.As<CommonPart>().PublishedUtc = clock.UtcNow;
-            hello.As<RoutePart>().Title = "alpha";
-            hello.As<RoutePart>().Slug = "beta";
+            hello.As<TitlePart>().Title = "alpha";
+            // hello.As<RoutePart>().Slug = "beta";
             hello.As<BodyPart>().Text = "gamma";
 
             var query = new StubQuery(new[] {

@@ -8,7 +8,7 @@ Scenario: I can create a new list
     When I go to "Admin/Contents/Create/List"
         And I fill in
             | name | value |
-            | Routable.Title | MyList |
+            | Title.Title | MyList |
         And I hit "Save"
         And I go to "Admin/Contents/List/List"
     Then I should see "MyList"
@@ -19,7 +19,7 @@ Scenario: I can add content items to a list
     When I go to "Admin/Contents/Create/List"
         And I fill in
             | name | value |
-            | Routable.Title | MyList |
+            | Title.Title | MyList |
         And I hit "Save"
         And I go to "Admin/Contents/List/List"
     Then I should see "MyList"
@@ -30,7 +30,7 @@ Scenario: I can add content items to a list
     When I follow "MyType" where href has "ReturnUrl"
         And I fill in
             | name | value |
-            | Routable.Title | MyContentItem |
+            | Title.Title | MyContentItem |
         And I hit "Save"
         And I am redirected
     Then I should see "Manage MyList"

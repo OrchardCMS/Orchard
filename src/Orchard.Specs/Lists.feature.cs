@@ -81,7 +81,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table1.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "MyList"});
 #line 9
         testRunner.And("I fill in", ((string)(null)), table1);
@@ -113,7 +113,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table2.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "MyList"});
 #line 20
         testRunner.And("I fill in", ((string)(null)), table2);
@@ -138,7 +138,7 @@ this.ScenarioSetup(scenarioInfo);
                         "name",
                         "value"});
             table3.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "MyContentItem"});
 #line 31
         testRunner.And("I fill in", ((string)(null)), table3);

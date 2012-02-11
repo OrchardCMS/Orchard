@@ -5,27 +5,23 @@ using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Drivers {
     public class BlogArchivesPartDriver : ContentPartDriver<BlogArchivesPart> {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
-        private readonly IContentManager _contentManager;
 
         public BlogArchivesPartDriver(
             IBlogService blogService, 
-            IBlogPostService blogPostService,
-            IContentManager contentManager) {
+            IBlogPostService blogPostService) {
             _blogService = blogService;
             _blogPostService = blogPostService;
-            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(BlogArchivesPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_BlogArchives",
                                 () => {
-                                    BlogPart blog = GetBlogFromSlug(part.ForBlog);
+                                    BlogPart blog = _blogService.Get(part.ForBlog);
 
                                     if (blog == null)
                                         return null;
@@ -64,10 +60,5 @@ namespace Orchard.Blogs.Drivers {
             context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
         }
 
-        private BlogPart GetBlogFromSlug(string slug) {
-            return _contentManager.Query<BlogPart, BlogPartRecord>()
-                .Join<RoutePartRecord>().Where(rr => rr.Slug == slug)
-                .List().FirstOrDefault();            
-        }
     }
 }

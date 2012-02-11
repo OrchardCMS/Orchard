@@ -75,8 +75,10 @@ this.ScenarioSetup(scenarioInfo);
 #line 7
     testRunner.Given("I have installed Orchard");
 #line 8
-    testRunner.When("I go to \"admin\"");
+  testRunner.And("I have installed \"Orchard.jQuery\"");
 #line 9
+    testRunner.When("I go to \"admin\"");
+#line 10
     testRunner.Then("I should see \"<a href=\"/Admin/Contents/Create/Page\"[^>]*>Page</a>\"");
 #line hidden
             this.ScenarioCleanup();
@@ -87,31 +89,31 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void ICanCreateAndPublishANewPage()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can create and publish a new Page", ((string[])(null)));
-#line 11
-this.ScenarioSetup(scenarioInfo);
 #line 12
-    testRunner.Given("I have installed Orchard");
+this.ScenarioSetup(scenarioInfo);
 #line 13
+    testRunner.Given("I have installed Orchard");
+#line 14
     testRunner.When("I go to \"admin/contents/create/page\"");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table1.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "Super Duper"});
             table1.AddRow(new string[] {
                         "Body.Text",
                         "This is super."});
-#line 14
+#line 15
         testRunner.And("I fill in", ((string)(null)), table1);
-#line 18
-        testRunner.And("I hit \"Publish Now\"");
 #line 19
-        testRunner.And("I go to \"super-duper\"");
+        testRunner.And("I hit \"Publish Now\"");
 #line 20
-    testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"");
+        testRunner.And("I go to \"super-duper\"");
 #line 21
+    testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"");
+#line 22
         testRunner.And("I should see \"This is super.\"");
 #line hidden
             this.ScenarioCleanup();
@@ -124,53 +126,53 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("If I create a page which gets a conflicting path generated its path is made to be" +
                     " unique", ((string[])(null)));
-#line 23
-this.ScenarioSetup(scenarioInfo);
 #line 24
-    testRunner.Given("I have installed Orchard");
+this.ScenarioSetup(scenarioInfo);
 #line 25
+    testRunner.Given("I have installed Orchard");
+#line 26
     testRunner.When("I go to \"admin/contents/create/page\"");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table2.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "Super Duper"});
             table2.AddRow(new string[] {
                         "Body.Text",
                         "This is super."});
-#line 26
+#line 27
         testRunner.And("I fill in", ((string)(null)), table2);
-#line 30
-        testRunner.And("I hit \"Publish Now\"");
 #line 31
-        testRunner.And("I go to \"super-duper\"");
+        testRunner.And("I hit \"Publish Now\"");
 #line 32
-    testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"");
+        testRunner.And("I go to \"super-duper\"");
 #line 33
-        testRunner.And("I should see \"This is super.\"");
+    testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"");
 #line 34
+        testRunner.And("I should see \"This is super.\"");
+#line 35
     testRunner.When("I go to \"admin/contents/create/page\"");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table3.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "Super Duper"});
             table3.AddRow(new string[] {
                         "Body.Text",
                         "This is super number two."});
-#line 35
+#line 36
         testRunner.And("I fill in", ((string)(null)), table3);
-#line 39
-        testRunner.And("I hit \"Publish Now\"");
 #line 40
-        testRunner.And("I go to \"super-duper-2\"");
+        testRunner.And("I hit \"Publish Now\"");
 #line 41
-    testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"");
+        testRunner.And("I go to \"super-duper-2\"");
 #line 42
+    testRunner.Then("I should see \"<h1[^>]*>.*?Super Duper.*?</h1>\"");
+#line 43
         testRunner.And("I should see \"This is super number two.\"");
 #line hidden
             this.ScenarioCleanup();
@@ -183,36 +185,36 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A new page marked to be the home page and publish does take over the home page an" +
                     "d is not accessible from its own standard path", ((string[])(null)));
-#line 44
-this.ScenarioSetup(scenarioInfo);
 #line 45
-    testRunner.Given("I have installed Orchard");
+this.ScenarioSetup(scenarioInfo);
 #line 46
+    testRunner.Given("I have installed Orchard");
+#line 47
     testRunner.When("I go to \"admin/contents/create/page\"");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table4.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "Super Duper"});
             table4.AddRow(new string[] {
                         "Body.Text",
                         "This is a draft of the new home page."});
             table4.AddRow(new string[] {
-                        "Routable.PromoteToHomePage",
+                        "Autoroute.PromoteToHomePage",
                         "true"});
-#line 47
+#line 48
         testRunner.And("I fill in", ((string)(null)), table4);
-#line 52
-        testRunner.And("I hit \"Publish Now\"");
 #line 53
-        testRunner.And("I go to \"/\"");
+        testRunner.And("I hit \"Publish Now\"");
 #line 54
-    testRunner.Then("I should see \"<h1>Super Duper</h1>\"");
+        testRunner.And("I go to \"/\"");
 #line 55
-    testRunner.When("I go to \"super-duper\"");
+    testRunner.Then("I should see \"<h1>Super Duper</h1>\"");
 #line 56
+    testRunner.When("I go to \"super-duper\"");
+#line 57
     testRunner.Then("the status should be 404 \"Not Found\"");
 #line hidden
             this.ScenarioCleanup();
@@ -225,32 +227,32 @@ this.ScenarioSetup(scenarioInfo);
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A new page marked to be the home page but only saved as draft does not take over " +
                     "the home page", ((string[])(null)));
-#line 58
-this.ScenarioSetup(scenarioInfo);
 #line 59
-    testRunner.Given("I have installed Orchard");
+this.ScenarioSetup(scenarioInfo);
 #line 60
+    testRunner.Given("I have installed Orchard");
+#line 61
     testRunner.When("I go to \"admin/contents/create/page\"");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table5.AddRow(new string[] {
-                        "Routable.Title",
+                        "Title.Title",
                         "Drafty"});
             table5.AddRow(new string[] {
                         "Body.Text",
                         "This is a draft of the new home page."});
             table5.AddRow(new string[] {
-                        "Routable.PromoteToHomePage",
+                        "Autoroute.PromoteToHomePage",
                         "true"});
-#line 61
+#line 62
         testRunner.And("I fill in", ((string)(null)), table5);
-#line 66
-        testRunner.And("I hit \"Save\"");
 #line 67
-        testRunner.And("I go to \"/\"");
+        testRunner.And("I hit \"Save\"");
 #line 68
+        testRunner.And("I go to \"/\"");
+#line 69
     testRunner.Then("I should see \"<h1>Welcome to Orchard!</h1>\"");
 #line hidden
             this.ScenarioCleanup();

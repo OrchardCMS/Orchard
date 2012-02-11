@@ -1,47 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Routable.Models;
-using Orchard.Core.Routable.Services;
 using Orchard.Data;
-using Orchard.Services;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPartHandler : ContentHandler {
-        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly IBlogPathConstraint _blogPathConstraint;
-        private readonly IHomePageProvider _routableHomePageProvider;
 
-        public BlogPartHandler(IRepository<BlogPartRecord> repository, IWorkContextAccessor workContextAccessor, IEnumerable<IHomePageProvider> homePageProviders, IBlogPathConstraint blogPathConstraint) {
-            _workContextAccessor = workContextAccessor;
+        public BlogPartHandler(IRepository<BlogPartRecord> repository, IBlogPathConstraint blogPathConstraint) {
             _blogPathConstraint = blogPathConstraint;
-            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name);
             Filters.Add(StorageFilter.For(repository));
-
-            Action<PublishContentContext, RoutePart> publishedHandler = (context, route) => {
-                if (route.Is<BlogPart>()) {
-                    if (route.ContentItem.Id != 0 && route.PromoteToHomePage)
-                        _blogPathConstraint.AddPath("");
-                }
-                else if (route.ContentItem.Id != 0 && route.PromoteToHomePage) {
-                    _blogPathConstraint.RemovePath("");
-                }
-            };
-
-            OnPublished<RoutePart>(publishedHandler);
-            OnUnpublished<RoutePart>(publishedHandler);
 
             OnGetDisplayShape<BlogPart>((context, blog) => {
                 context.Shape.Description = blog.Description;
                 context.Shape.PostCount = blog.PostCount;
             });
+
+            OnPublished<BlogPart>((context, blog) => _blogPathConstraint.AddPath(blog.As<IAliasAspect>().Path));
+            OnUnpublished<BlogPart>((context, blog) => _blogPathConstraint.RemovePath(blog.As<IAliasAspect>().Path));
         }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
@@ -50,15 +31,11 @@ namespace Orchard.Blogs.Handlers {
             if (blog == null)
                 return;
 
-            var blogPath = blog.Id == _routableHomePageProvider.GetHomePageId(_workContextAccessor.GetContext().CurrentSite.HomePage)
-                ? ""
-                : blog.As<RoutePart>().Path;
-
             context.Metadata.DisplayRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "Blog"},
                 {"Action", "Item"},
-                {"blogPath", blogPath}
+                {"blogId", context.ContentItem.Id}
             };
             context.Metadata.CreateRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},

@@ -5,7 +5,7 @@
     -->
   <Match ContentType="List" DisplayType="Detail">
     <!-- don't show the List title or Common Metadata -->
-    <Place Parts_RoutableTitle="-" />
+    <Place Parts_Title="-" />
     <Place Parts_Common_Metadata="-" />
   </Match>
   <Match DisplayType="SummaryAdmin">

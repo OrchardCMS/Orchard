@@ -10,11 +10,12 @@ namespace Orchard.Pages {
                 .WithPart("CommonPart", p => p
                     .WithSetting("DateEditorSettings.ShowDateEditor", "true"))
                 .WithPart("PublishLaterPart")
-                .WithPart("RoutePart")
+                .WithPart("TitlePart")
+                .WithPart("AutoroutePart")
                 .WithPart("BodyPart")
                 .Creatable());
 
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1() {

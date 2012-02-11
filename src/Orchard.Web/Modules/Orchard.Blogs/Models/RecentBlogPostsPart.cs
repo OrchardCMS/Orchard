@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 namespace Orchard.Blogs.Models {
     public class RecentBlogPostsPart : ContentPart<RecentBlogPostsPartRecord> {
 
+        [Required]
         public string ForBlog {
             get { return Record.BlogSlug; }
             set { Record.BlogSlug = value; }

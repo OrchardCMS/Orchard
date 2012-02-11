@@ -688,7 +688,7 @@ button, .button, a.button {
     cursor: pointer;
     display: inline-block;
     font: 12px Arial,Helvetica,sans-serif;
-    padding: 4px 14px 4px 14px;
+    padding: 5px 14px 5px 14px;
     
     /*position: relative;*/
     text-align: center;

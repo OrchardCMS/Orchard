@@ -6,10 +6,14 @@ using Orchard.Mvc.Routes;
 
 namespace Orchard.Blogs {
     public class Routes : IRouteProvider {
-        private readonly IBlogPathConstraint _blogPathConstraint;
+        private readonly IArchiveConstraint _archiveConstraint;
+        private readonly IRsdConstraint _rsdConstraint;
 
-        public Routes(IBlogPathConstraint blogPathConstraint) {
-            _blogPathConstraint = blogPathConstraint;
+        public Routes(
+            IArchiveConstraint archiveConstraint,
+            IRsdConstraint rsdConstraint) {
+            _archiveConstraint = archiveConstraint;
+            _rsdConstraint = rsdConstraint;
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
@@ -175,32 +179,14 @@ namespace Orchard.Blogs {
                                                  },
                              new RouteDescriptor {
                                                      Route = new Route(
-                                                         "Archive/{*archiveData}",
-                                                         new RouteValueDictionary {
-                                                                                      {"blogPath", ""},
-                                                                                      {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "BlogPost"},
-                                                                                      {"action", "ListByArchive"}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"archiveData", new IsArchiveConstraint()}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"}
-                                                                                  },
-                                                         new MvcRouteHandler())
-                                                 },
-                             new RouteDescriptor {
-                                                     Route = new Route(
-                                                         "{blogPath}/Archive/{*archiveData}",
+                                                         "{*path}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "BlogPost"},
                                                                                       {"action", "ListByArchive"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogPath", _blogPathConstraint},
-                                                                                      {"archiveData", new IsArchiveConstraint()}
+                                                                                      {"path", _archiveConstraint},
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -210,49 +196,14 @@ namespace Orchard.Blogs {
                              new RouteDescriptor {
                                                      Priority = 11,
                                                      Route = new Route(
-                                                         "{blogPath}/rsd",
+                                                         "{*path}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "RemoteBlogPublishing"},
                                                                                       {"action", "Rsd"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogPath", _blogPathConstraint}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"}
-                                                                                  },
-                                                         new MvcRouteHandler())
-                                                 },
-                             new RouteDescriptor {
-                                                     Priority = 11,
-                                                     Route = new Route(
-                                                         "{blogPath}/{postSlug}",
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "BlogPost"},
-                                                                                      {"action", "Item"}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"blogPath", _blogPathConstraint}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"}
-                                                                                  },
-                                                         new MvcRouteHandler())
-                                                 },
-                             new RouteDescriptor {
-                                                    Priority = 11,
-                                                    Route = new Route(
-                                                         "{blogPath}",
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "Blog"},
-                                                                                      {"action", "Item"},
-                                                                                      {"blogPath", ""}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"blogPath", _blogPathConstraint}
+                                                                                      {"path", _rsdConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}

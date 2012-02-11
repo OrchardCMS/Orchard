@@ -6,7 +6,6 @@ using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
@@ -76,7 +75,7 @@ namespace Orchard.Blogs.Handlers {
                 {"Controller", "BlogPostAdmin"},
                 {"Action", "Delete"},
                 {"postId", context.ContentItem.Id},
-                {"blogPath", blogPost.BlogPart.As<RoutePart>().Path}
+                {"blogId", blogPost.BlogPart.Id}
             };
         }
     }

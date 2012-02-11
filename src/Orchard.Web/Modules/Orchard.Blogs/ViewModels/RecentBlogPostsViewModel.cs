@@ -6,5 +6,6 @@ namespace Orchard.Blogs.ViewModels {
         public int Count { get; set; }
         public string Slug { get; set; }
         public IEnumerable<BlogPart> Blogs { get; set; }
+
     }
 }

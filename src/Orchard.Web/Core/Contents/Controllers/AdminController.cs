@@ -12,7 +12,6 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Containers.Models;
 using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
-using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -296,15 +295,14 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
-            // store the previous route in case a back redirection is requested
             string previousRoute = null;
-            if(contentItem.Has<RoutePart>() 
+            if(contentItem.Has<IAliasAspect>() 
                 &&!string.IsNullOrWhiteSpace(returnUrl) 
                 && Url.IsLocalUrl(returnUrl)
                 // only if the original returnUrl is the content itself
                 && String.Equals(returnUrl, Url.ItemDisplayUrl(contentItem), StringComparison.OrdinalIgnoreCase) 
                 ) {
-                previousRoute = contentItem.As<RoutePart>().Path;
+                previousRoute = contentItem.As<IAliasAspect>().Path;
             }
 
             dynamic model = _contentManager.UpdateEditor(contentItem, this);
@@ -316,13 +314,12 @@ namespace Orchard.Core.Contents.Controllers {
 
             conditionallyPublish(contentItem);
 
-            // did the route change ?
             if (!string.IsNullOrWhiteSpace(returnUrl) 
                 && previousRoute != null 
-                && !String.Equals(contentItem.As<RoutePart>().Path, previousRoute, StringComparison.OrdinalIgnoreCase)) {
+                && !String.Equals(contentItem.As<IAliasAspect>().Path, previousRoute, StringComparison.OrdinalIgnoreCase)) {
                 returnUrl = Url.ItemDisplayUrl(contentItem);
             }
-
+            
             Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been saved.")
                 : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));

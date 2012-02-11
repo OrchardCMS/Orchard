@@ -10,6 +10,7 @@ using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Tags.Models;
 using Orchard.UI.Notify;
+using Orchard.Events;
 
 namespace Orchard.Tags.Services {
     [UsedImplicitly]
@@ -60,7 +61,6 @@ namespace Orchard.Tags.Services {
                 result = new TagRecord { TagName = tagName };
                 _tagRepository.Create(result);
             }
-
             return result;
         }
 
@@ -197,4 +197,5 @@ namespace Orchard.Tags.Services {
             }
         }
     }
+
 }

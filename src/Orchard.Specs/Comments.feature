@@ -8,14 +8,14 @@ Scenario: HTML markup in any given comment is encoded
     When I go to "admin/blogs/create"
         And I fill in
             | name | value |
-            | Routable.Title | My Blog |
+            | Title.Title | My Blog |
         And I hit "Save"
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
         And I fill in
             | name | value |
-            | Routable.Title | My Post |
+            | Title.Title | My Post |
             | Body.Text | Hi there. |
         And I hit "Publish Now"
         And I go to "my-blog/my-post"

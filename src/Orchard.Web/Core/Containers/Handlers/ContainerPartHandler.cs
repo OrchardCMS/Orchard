@@ -9,6 +9,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Core.Containers.Extensions;
 using Orchard.ContentManagement;
+using System.Web.Routing;
 
 namespace Orchard.Core.Containers.Handlers {
     public class ContainerPartHandler : ContentHandler {
@@ -25,6 +26,13 @@ namespace Orchard.Core.Containers.Handlers {
                 part.Record.OrderByProperty = part.Is<CommonPart>() ? "CommonPart.CreatedUtc" : string.Empty;
                 part.Record.OrderByDirection = (int)OrderByDirection.Descending;
             });
+            OnGetContentItemMetadata<ContainerPart>((context, part) => {
+                context.Metadata.DisplayRouteValues = new RouteValueDictionary {
+                {"Area", "Containers"},
+                {"Controller", "Item"},
+                {"Action", "Display"},
+                {"id", context.ContentItem.Id}
+            };});
         }
     }
 }
