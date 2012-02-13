@@ -38,7 +38,7 @@
   <Target Name ="Build">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
-    <CallTarget Targets="Test"/>
+    <!--<CallTarget Targets="Test"/>-->
     <CallTarget Targets="Package"/> 
   </Target>
 
