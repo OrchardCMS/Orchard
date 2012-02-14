@@ -211,7 +211,7 @@ namespace Orchard.Blogs.Services {
             //AutoroutePart
             dynamic dBlogPost = blogPost;
             if (dBlogPost.AutoroutePart!=null){
-                dBlogPost.AutoroutePart.Alias = slug;
+                dBlogPost.AutoroutePart.DisplayAlias = slug;
             }
 
             _contentManager.Create(blogPost, VersionOptions.Draft);
@@ -294,7 +294,7 @@ namespace Orchard.Blogs.Services {
             //AutoroutePart
             dynamic dBlogPost = blogPost;
             if (dBlogPost.AutoroutePart != null) {
-                dBlogPost.AutoroutePart.Alias = slug;
+                dBlogPost.AutoroutePart.DisplayAlias = slug;
             }
 
             // try to get the UTC timezone by default
