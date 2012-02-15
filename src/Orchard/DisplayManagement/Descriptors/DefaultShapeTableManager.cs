@@ -7,6 +7,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 using Orchard.Utility;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.DisplayManagement.Descriptors {
 
@@ -41,7 +42,7 @@ namespace Orchard.DisplayManagement.Descriptors {
 
                     var builder = new ShapeTableBuilder(strategyDefaultFeature);
                     bindingStrategy.Value.Discover(builder);
-                    return builder.BuildAlterations().ToList();
+                    return builder.BuildAlterations().ToReadOnlyCollection();
                 });
 
                 var alterations = alterationSets

@@ -147,7 +147,7 @@ namespace Orchard.Roles.Services {
         public IEnumerable<string> GetPermissionsForRoleByName(string name) {
             return _cacheManager.Get(name, ctx => {
                 MonitorSignal(ctx);
-                return GetPermissionsForRoleByNameInner(name);
+                return GetPermissionsForRoleByNameInner(name).ToList();
             });
         }
 

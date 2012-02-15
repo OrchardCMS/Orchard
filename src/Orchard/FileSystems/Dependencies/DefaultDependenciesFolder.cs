@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.FileSystems.Dependencies {
     public class DefaultDependenciesFolder : IDependenciesFolder {
@@ -40,7 +41,7 @@ namespace Orchard.FileSystems.Dependencies {
                                          _writeThroughToken.IsCurrent = true;
                                          ctx.Monitor(_writeThroughToken);
 
-                                         return ReadDependencies(ctx.Key).ToList();
+                                         return ReadDependencies(ctx.Key).ToReadOnlyCollection();
                                      });
         }
 

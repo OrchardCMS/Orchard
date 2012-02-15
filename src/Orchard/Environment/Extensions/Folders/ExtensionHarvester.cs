@@ -55,7 +55,7 @@ namespace Orchard.Environment.Extensions.Folders {
 
             return _cacheManager.Get(key, ctx => {
                 ctx.Monitor(_webSiteFolder.WhenPathChanges(path));
-                return AvailableExtensionsInFolder(path, extensionType, manifestName, manifestIsOptional);
+                return AvailableExtensionsInFolder(path, extensionType, manifestName, manifestIsOptional).ToReadOnlyCollection();
             });
         }
 
