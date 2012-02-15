@@ -39,7 +39,11 @@ namespace Orchard.Blogs {
                     .WithPart("BlogPart")
                     .WithPart("CommonPart")
                     .WithPart("TitlePart")
-                    .WithPart("AutoroutePart")
+                    .WithPart("AutoroutePart", builder => builder
+                        .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-blog'}]")
+                        .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
                     .WithPart("MenuPart")
                     .WithPart("AdminMenuPart", p => p.WithSetting("AdminMenuPartTypeSettings.DefaultPosition", "2"))
                 );
@@ -51,7 +55,11 @@ namespace Orchard.Blogs {
                         .WithSetting("DateEditorSettings.ShowDateEditor", "true"))
                     .WithPart("PublishLaterPart")
                     .WithPart("TitlePart")
-                    .WithPart("AutoroutePart")
+                    .WithPart("AutoroutePart", builder => builder
+                        .WithSetting("AutorouteSettings.AllowCustomPattern", "true")
+                        .WithSetting("AutorouteSettings.AutomaticAdjustmentOnEdit", "false")
+                        .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Blog and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-blog/my-post'}]")
+                        .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
                     .WithPart("BodyPart")
                 );
             
