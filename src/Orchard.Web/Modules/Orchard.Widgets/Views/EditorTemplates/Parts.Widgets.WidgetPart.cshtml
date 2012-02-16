@@ -23,6 +23,6 @@
 </fieldset>
 <fieldset>
     @Html.LabelFor(widget => widget.Name, T("Name"))
-    @Html.TextBoxFor(widget => widget.Name)
+    @Html.TextBoxFor(widget => widget.Name, new { @class = "text-box" })
     <span class="hint">@T("The technical name of the Widget, used for css class and alternates.")</span>
 </fieldset>
