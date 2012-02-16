@@ -24,6 +24,8 @@ namespace Orchard.UI.Resources {
         private List<String> _footScripts;
         private IEnumerable<IResourceManifest> _manifests;
 
+        private const string NotIE = "!IE";
+
         private static string ToAppRelativePath(string resourcePath) {
             if (!String.IsNullOrEmpty(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
                 resourcePath = VirtualPathUtility.ToAppRelative(resourcePath);
@@ -58,16 +60,30 @@ namespace Orchard.UI.Resources {
 
         public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition, Dictionary<string, string> attributes) {
             if (!string.IsNullOrEmpty(condition)) {
-                writer.WriteLine("<!--[if " + condition + "]>");
+                if (condition == NotIE) {
+                    writer.WriteLine("<!--[if " + condition + "]>");
+                }
+                else {
+                    writer.WriteLine("<!--[if " + condition + "]>-->");
+                }
             }
+
             var tagBuilder = GetTagBuilder(resource, url);
+            
             if (attributes != null) {
                 // todo: try null value
                 tagBuilder.MergeAttributes(attributes, true);
             }
+
             writer.WriteLine(tagBuilder.ToString(resource.TagRenderMode));
+            
             if (!string.IsNullOrEmpty(condition)) {
-                writer.WriteLine("<![endif]-->");
+                if (condition == NotIE) {
+                    writer.WriteLine("<!--<![endif]-->");
+                }
+                else {
+                    writer.WriteLine("<![endif]-->");
+                }
             }
         }
 
