@@ -30,11 +30,16 @@ namespace Orchard.Blogs.Routing {
         }
 
         public string FindPath(string path) {
-            if (!path.EndsWith("/rsd", StringComparison.OrdinalIgnoreCase)) {
-                return null;
+            if (path.EndsWith("/rsd", StringComparison.OrdinalIgnoreCase)) {
+                return path.Substring(0, path.Length - "/rsd".Length);
             }
 
-            return path.Substring(0, path.Length - "/rsd".Length);
+            // blog is on homepage
+            if(path.Equals("rsd", StringComparison.OrdinalIgnoreCase)) {
+                return String.Empty;
+            }
+
+            return null;
         }
     }
 }

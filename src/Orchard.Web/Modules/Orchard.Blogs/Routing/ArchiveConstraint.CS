@@ -37,6 +37,12 @@ namespace Orchard.Blogs.Routing {
             var archiveIndex = path.IndexOf("/archive/", StringComparison.OrdinalIgnoreCase);
 
             if (archiveIndex == -1) {
+                
+                // archive for blog as homepage ?
+                if(path.StartsWith("archive/", StringComparison.OrdinalIgnoreCase)) {
+                    return String.Empty;
+                }
+
                 return null;
             }
 
@@ -47,6 +53,12 @@ namespace Orchard.Blogs.Routing {
             var archiveIndex = path.IndexOf("/archive/", StringComparison.OrdinalIgnoreCase);
 
             if (archiveIndex == -1) {
+                
+                // archive for blog as homepage ?
+                if (path.StartsWith("archive/", StringComparison.OrdinalIgnoreCase)) {
+                    return new ArchiveData(path.Substring("archive/".Length));
+                }
+
                 return null;
             }
 
