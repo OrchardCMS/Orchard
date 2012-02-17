@@ -51,14 +51,15 @@ namespace Orchard.Environment {
             var qualified =
                 _shells.Where(x => !string.IsNullOrEmpty(x.RequestUrlHost) || !string.IsNullOrEmpty(x.RequestUrlPrefix));
 
-            var unqualified =
-                _shells.Where(x => string.IsNullOrEmpty(x.RequestUrlHost) && string.IsNullOrEmpty(x.RequestUrlPrefix));
+            var unqualified = _shells
+                .Where(x => string.IsNullOrEmpty(x.RequestUrlHost) && string.IsNullOrEmpty(x.RequestUrlPrefix))
+                .ToList();
 
             _shellsByHost = qualified
                 .SelectMany(s => s.RequestUrlHost == null || s.RequestUrlHost.IndexOf(',') == -1 ? new[] {s} : 
                     s.RequestUrlHost.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
                      .Select(h => new ShellSettings(s) {RequestUrlHost = h}))
-                .GroupBy(s => s.RequestUrlHost ?? "")
+                .GroupBy(s => s.RequestUrlHost ?? string.Empty)
                 .OrderByDescending(g => g.Key.Length);
 
             if (unqualified.Count() == 1) {
@@ -79,11 +80,11 @@ namespace Orchard.Environment {
         }
 
         public ShellSettings Match(HttpContextBase httpContext) {
-            return Match(httpContext.Request.Headers["Host"], httpContext.Request.AppRelativeCurrentExecutionFilePath);
+            // use Host header to prevent proxy alteration of the orignal request
+            return Match(httpContext.Request.Headers["Host"] ?? string.Empty, httpContext.Request.AppRelativeCurrentExecutionFilePath);
         }
 
         public ShellSettings Match(string host, string appRelativePath) {
-            // use Host header to prevent proxy alteration of the orignal request
             var hostLength = host.IndexOf(':');
             if (hostLength != -1)
                 host = host.Substring(0, hostLength);
@@ -91,9 +92,8 @@ namespace Orchard.Environment {
             var mostQualifiedMatch = _shellsByHost
                 .Where(group => host.EndsWith(group.Key, StringComparison.OrdinalIgnoreCase))
                 .SelectMany(group => group
-                    .OrderByDescending(settings => (settings.RequestUrlPrefix ?? "").Length))
-                    .Where(settings => settings.State.CurrentState != TenantState.State.Disabled && appRelativePath.StartsWith(settings.RequestUrlPrefix ?? "", StringComparison.OrdinalIgnoreCase))
-                    .FirstOrDefault();
+                    .OrderByDescending(settings => (settings.RequestUrlPrefix ?? string.Empty).Length))
+                    .FirstOrDefault(settings => settings.State.CurrentState != TenantState.State.Disabled && appRelativePath.StartsWith(settings.RequestUrlPrefix ?? string.Empty, StringComparison.OrdinalIgnoreCase));
 
             return mostQualifiedMatch ?? _fallback;
         }
