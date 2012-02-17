@@ -31,13 +31,13 @@ namespace Orchard.ContentManagement {
         public IContentManager ContentManager { get; set; }
 
         public bool Has(Type partType) {
-            return partType == typeof(ContentItem) || _parts.Any(part => partType.IsAssignableFrom(part.GetType()));
+            return partType == typeof(ContentItem) || _parts.Any(partType.IsInstanceOfType);
         }
 
         public IContent Get(Type partType) {
             if (partType == typeof(ContentItem))
                 return this;
-            return _parts.FirstOrDefault(part => partType.IsAssignableFrom(part.GetType()));
+            return _parts.FirstOrDefault(partType.IsInstanceOfType);
         }
 
         public void Weld(ContentPart part) {

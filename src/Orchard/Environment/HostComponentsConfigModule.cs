@@ -119,7 +119,7 @@ namespace Orchard.Environment {
                 return false;
             }
 
-            if (destinationType.IsAssignableFrom(value.GetType())) {
+            if (destinationType.IsInstanceOfType(value)) {
                 result = value;
                 return true;
             }

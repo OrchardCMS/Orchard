@@ -54,11 +54,11 @@ namespace Orchard.ContentManagement {
 
 
         public bool Has(Type fieldType, string fieldName) {
-            return _fields.Any(field => fieldType.IsAssignableFrom(field.GetType()) && field.Name == fieldName);
+            return _fields.Any(field => fieldType.IsInstanceOfType(field) && field.Name == fieldName);
         }
 
         public ContentField Get(Type fieldType, string fieldName) {
-            return _fields.FirstOrDefault(field => fieldType.IsAssignableFrom(field.GetType()) && field.Name == fieldName);
+            return _fields.FirstOrDefault(field => fieldType.IsInstanceOfType(field) && field.Name == fieldName);
         }
 
         public void Weld(ContentField field) {
