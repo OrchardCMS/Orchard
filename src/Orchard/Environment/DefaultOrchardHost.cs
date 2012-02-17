@@ -229,8 +229,8 @@ namespace Orchard.Environment {
         /// </summary>
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
             lock (_syncLock) {
-                // if a tenant has been altered, and is not uninitialized, reload it
-                if (settings.State.CurrentState != TenantState.State.Uninitialized) {
+                // if a tenant has been altered, and is not disabled or invalid, reload it
+                if (settings.State.CurrentState != TenantState.State.Disabled && settings.State.CurrentState != TenantState.State.Invalid) {
                     _tenantsToRestart = _tenantsToRestart.Where(x => x.Name != settings.Name).Union(new[] { settings });
                 }
             }
