@@ -61,10 +61,10 @@ namespace Orchard.UI.Resources {
         public static void WriteResource(TextWriter writer, ResourceDefinition resource, string url, string condition, Dictionary<string, string> attributes) {
             if (!string.IsNullOrEmpty(condition)) {
                 if (condition == NotIE) {
-                    writer.WriteLine("<!--[if " + condition + "]>");
+                    writer.WriteLine("<!--[if " + condition + "]>-->");
                 }
                 else {
-                    writer.WriteLine("<!--[if " + condition + "]>-->");
+                    writer.WriteLine("<!--[if " + condition + "]>");
                 }
             }
 
