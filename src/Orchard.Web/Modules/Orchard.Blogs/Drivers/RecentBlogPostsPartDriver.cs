@@ -22,7 +22,7 @@ namespace Orchard.Blogs.Drivers {
 
         protected override DriverResult Display(RecentBlogPostsPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_RecentBlogPosts", () => {
-            BlogPart blog = _blogService.Get(part.ForBlog);
+            var blog = _contentManager.Get<BlogPart>(part.BlogId);
 
                 if (blog == null) {
                     return null;
@@ -46,7 +46,7 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Editor(RecentBlogPostsPart part, dynamic shapeHelper) {
             var viewModel = new RecentBlogPostsViewModel {
                 Count = part.Count,
-                Slug = part.ForBlog,
+                BlogId = part.BlogId,
                 Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
             };
 
@@ -56,8 +56,9 @@ namespace Orchard.Blogs.Drivers {
 
         protected override DriverResult Editor(RecentBlogPostsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new RecentBlogPostsViewModel();
+
             if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                part.ForBlog = viewModel.Slug;
+                part.BlogId = viewModel.BlogId;
                 part.Count = viewModel.Count;
             }
 
@@ -65,9 +66,9 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override void Importing(RecentBlogPostsPart part, ImportContentContext context) {
-            var blogSlug = context.Attribute(part.PartDefinition.Name, "BlogSlug");
-            if (blogSlug != null) {
-                part.ForBlog = blogSlug;
+            var blog = context.Attribute(part.PartDefinition.Name, "Blog");
+            if (blog != null) {
+                part.BlogId = context.GetItemFromSession(blog).Id;
             }
 
             var count = context.Attribute(part.PartDefinition.Name, "Count");
@@ -77,7 +78,10 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override void Exporting(RecentBlogPostsPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
+            var blog = _contentManager.Get(part.BlogId);
+            var blogIdentity = _contentManager.GetItemMetadata(blog).Identity;
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Blog", blogIdentity);
+
             context.Element(part.PartDefinition.Name).SetAttributeValue("Count", part.Count);
         }
     }

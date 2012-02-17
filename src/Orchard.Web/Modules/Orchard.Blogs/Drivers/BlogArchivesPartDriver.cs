@@ -10,18 +10,21 @@ namespace Orchard.Blogs.Drivers {
     public class BlogArchivesPartDriver : ContentPartDriver<BlogArchivesPart> {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
+        private readonly IContentManager _contentManager;
 
         public BlogArchivesPartDriver(
             IBlogService blogService, 
-            IBlogPostService blogPostService) {
+            IBlogPostService blogPostService,
+            IContentManager contentManager) {
             _blogService = blogService;
             _blogPostService = blogPostService;
+            _contentManager = contentManager;
         }
 
         protected override DriverResult Display(BlogArchivesPart part, string displayType, dynamic shapeHelper) {
             return ContentShape("Parts_Blogs_BlogArchives",
                                 () => {
-                                    BlogPart blog = _blogService.Get(part.ForBlog);
+                                    var blog = _blogService.Get(part.BlogId, VersionOptions.Published).As<BlogPart>();
 
                                     if (blog == null)
                                         return null;
@@ -32,7 +35,7 @@ namespace Orchard.Blogs.Drivers {
 
         protected override DriverResult Editor(BlogArchivesPart part, dynamic shapeHelper) {
             var viewModel = new BlogArchivesViewModel {
-                Slug = part.ForBlog,
+                BlogId = part.BlogId,
                 Blogs = _blogService.Get().ToList().OrderBy(b => b.Name)
                 };
 
@@ -43,21 +46,23 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Editor(BlogArchivesPart part, IUpdateModel updater, dynamic shapeHelper) {
             var viewModel = new BlogArchivesViewModel();
             if (updater.TryUpdateModel(viewModel, Prefix, null, null)) {
-                part.ForBlog = viewModel.Slug;
+                part.BlogId = viewModel.BlogId;
             }
 
             return Editor(part, shapeHelper);
         }
 
         protected override void Importing(BlogArchivesPart part, ImportContentContext context) {
-            var blogSlug = context.Attribute(part.PartDefinition.Name, "BlogSlug");
-            if (blogSlug != null) {
-                part.ForBlog = blogSlug;
+            var blog = context.Attribute(part.PartDefinition.Name, "Blog");
+            if (blog != null) {
+                part.BlogId = context.GetItemFromSession(blog).Id;
             }
         }
 
         protected override void Exporting(BlogArchivesPart part, ExportContentContext context) {
-            context.Element(part.PartDefinition.Name).SetAttributeValue("BlogSlug", part.ForBlog);
+            var blog = _contentManager.Get(part.BlogId);
+            var blogIdentity = _contentManager.GetItemMetadata(blog).Identity;
+            context.Element(part.PartDefinition.Name).SetAttributeValue("Blog", blogIdentity);
         }
 
     }

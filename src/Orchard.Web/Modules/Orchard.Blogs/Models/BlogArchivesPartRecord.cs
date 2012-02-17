@@ -5,6 +5,6 @@ namespace Orchard.Blogs.Models {
     /// The content part used by the BlogArchives widget
     /// </summary>
     public class BlogArchivesPartRecord : ContentPartRecord {
-        public virtual string BlogSlug { get; set; }
+        public virtual int BlogId { get; set; }
     }
 }

@@ -24,14 +24,14 @@ namespace Orchard.Blogs {
             SchemaBuilder.CreateTable("RecentBlogPostsPartRecord",
                 table => table
                     .ContentPartRecord()
-                    .Column<string>("BlogSlug")
+                    .Column<int>("BlogId")
                     .Column<int>("Count")
                 );
 
             SchemaBuilder.CreateTable("BlogArchivesPartRecord",
                 table => table
                     .ContentPartRecord()
-                    .Column<string>("BlogSlug", c => c.WithLength(255))
+                    .Column<int>("BlogId")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("Blog",
@@ -95,6 +95,20 @@ namespace Orchard.Blogs {
         public int UpdateFrom3() {
             ContentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.WithPart("CommonPart", p => p.WithSetting("DateEditorSettings.ShowDateEditor", "true")));
             return 4;
+        }
+
+        public int UpdateFrom4() {
+            // adding the new fields required as Routable was removed
+            // the user still needs to execute the corresponding migration
+            // steps from the migration module
+
+            SchemaBuilder.AlterTable("RecentBlogPostsPartRecord", table => table
+                   .AddColumn<int>("BlogId"));
+
+            SchemaBuilder.AlterTable("BlogArchivesPartRecord", table => table
+                    .AddColumn<int>("BlogId"));
+            
+            return 5;
         }
     }
 }
