@@ -81,7 +81,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 10
     testRunner.Then("I should see \"List of Site&#39;s Tenants\"");
 #line 11
-        testRunner.And("I should see \"<h3>Default</h3>\"");
+        testRunner.And("I should see \"<h3>Default\\s*</h3>\"");
 #line 12
         testRunner.And("the status should be 200 \"OK\"");
 #line hidden
@@ -136,7 +136,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 29
         testRunner.And("I am redirected");
 #line 30
-    testRunner.Then("I should see \"<h3>Scott</h3>\"");
+    testRunner.Then("I should see \"<h3>Scott\\s*</h3>\"");
 #line 31
         testRunner.And("the status should be 200 \"OK\"");
 #line hidden
