@@ -7,7 +7,7 @@ Scenario: Root request shows setup form
     Given I have a clean site with
             | extension | names |
             | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
-            | Core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc, Title |
+            | Core | Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, XmlRpc, Title |
             | Theme | SafeMode |
     When I go to "/"
     Then I should see "Welcome to Orchard"
@@ -18,7 +18,7 @@ Scenario: Setup folder also shows setup form
     Given I have a clean site with
             | extension | names |
             | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
-            | Core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc, Title |
+            | Core | Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, XmlRpc, Title |
             | Theme | SafeMode |
     When I go to "/Setup"
     Then I should see "Welcome to Orchard"
@@ -29,7 +29,7 @@ Scenario: Some of the initial form values are required
     Given I have a clean site with
             | extension | names |
             | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Messaging, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce |
-            | Core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc, Title |
+            | Core | Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, XmlRpc, Title |
             | Theme | SafeMode |
     When I go to "/Setup"
         And I hit "Finish Setup"
@@ -39,8 +39,8 @@ Scenario: Some of the initial form values are required
 Scenario: Calling setup on a brand new install
     Given I have a clean site with
             | extension | names |
-            | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Lists, Orchard.ContentTypes, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce, Orchard.Blogs, Orchard.Tags, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup |
-            | Core | Common, Containers, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, Settings, Shapes, XmlRpc, Title |
+            | Module | Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Lists, Orchard.ContentTypes, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce, Orchard.Blogs, Orchard.Tags, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup, Orchard.Autoroute, Orchard.Tokens, Orchard.Alias |
+            | Core | Common, Containers, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, XmlRpc, Title |
             | Theme | SafeMode, TheThemeMachine |
         And I am on "/Setup"
     When I fill in 

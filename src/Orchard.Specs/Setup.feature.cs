@@ -82,8 +82,8 @@ this.ScenarioSetup(scenarioInfo);
                             "chard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce"});
             table1.AddRow(new string[] {
                         "Core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, S" +
-                            "ettings, Shapes, XmlRpc, Title"});
+                        "Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, Xml" +
+                            "Rpc, Title"});
             table1.AddRow(new string[] {
                         "Theme",
                         "SafeMode"});
@@ -118,8 +118,8 @@ this.ScenarioSetup(scenarioInfo);
                             "chard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce"});
             table2.AddRow(new string[] {
                         "Core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, S" +
-                            "ettings, Shapes, XmlRpc, Title"});
+                        "Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, Xml" +
+                            "Rpc, Title"});
             table2.AddRow(new string[] {
                         "Theme",
                         "SafeMode"});
@@ -154,8 +154,8 @@ this.ScenarioSetup(scenarioInfo);
                             "chard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.jQuery, TinyMce"});
             table3.AddRow(new string[] {
                         "Core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, Scheduling, S" +
-                            "ettings, Shapes, XmlRpc, Title"});
+                        "Common, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings, Shapes, Xml" +
+                            "Rpc, Title"});
             table3.AddRow(new string[] {
                         "Theme",
                         "SafeMode"});
@@ -188,11 +188,11 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table4.AddRow(new string[] {
                         "Module",
-                        @"Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Lists, Orchard.ContentTypes, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce, Orchard.Blogs, Orchard.Tags, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup"});
+                        @"Orchard.Setup, Orchard.Pages, Orchard.Users, Orchard.Roles, Orchard.Lists, Orchard.ContentTypes, Orchard.Messaging, Orchard.Media, Orchard.MediaPicker, Orchard.Scripting, Orchard.Comments, Orchard.PublishLater, Orchard.Themes, Orchard.Modules, Orchard.Widgets, Orchard.jQuery, TinyMce, Orchard.Blogs, Orchard.Tags, Orchard.Packaging, Orchard.Recipes, Orchard.Warmup, Orchard.Autoroute, Orchard.Tokens, Orchard.Alias"});
             table4.AddRow(new string[] {
                         "Core",
-                        "Common, Containers, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, S" +
-                            "cheduling, Settings, Shapes, XmlRpc, Title"});
+                        "Common, Containers, Contents, Dashboard, Feeds, Navigation, Scheduling, Settings," +
+                            " Shapes, XmlRpc, Title"});
             table4.AddRow(new string[] {
                         "Theme",
                         "SafeMode, TheThemeMachine"});
