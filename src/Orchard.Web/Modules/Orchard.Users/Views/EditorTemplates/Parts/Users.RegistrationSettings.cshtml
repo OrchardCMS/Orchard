@@ -14,6 +14,7 @@
     </div>
     <div>
         <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.EnableLostPassword)" name="@Html.FieldNameFor(m => m.EnableLostPassword)" @(Model.EnableLostPassword ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>
+        <input name="@Html.FieldNameFor(m => m.EnableLostPassword)" type="hidden" value="false">
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.EnableLostPassword)">@T("Display a link to enable users to reset their password")</label>
         
         @if(!emailEnabled) {
@@ -22,6 +23,7 @@
     </div>
     <div>
         <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.UsersMustValidateEmail)" name="@Html.FieldNameFor(m => m.UsersMustValidateEmail)" @(Model.UsersMustValidateEmail ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>  
+        <input name="@Html.FieldNameFor(m => m.UsersMustValidateEmail)" type="hidden" value="false">
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.UsersMustValidateEmail)">@T("Users must verify their email address")</label>
 
         @if(!emailEnabled) {
@@ -45,6 +47,7 @@
     </div>    
     <div data-controllerid="@Html.FieldIdFor(m => m.UsersAreModerated)">
         <input type="checkbox" value="true" class="check-box" id="@Html.FieldIdFor(m => m.NotifyModeration)" name="@Html.FieldNameFor(m => m.NotifyModeration)" @(Model.NotifyModeration ? "checked=\"checked\"" : "") @(emailEnabled ? "" : "disabled=\"disabled\"")/>
+        <input name="@Html.FieldNameFor(m => m.NotifyModeration)" type="hidden" value="false">
         <label class="forcheckbox" for="@Html.FieldIdFor( m => m.NotifyModeration)">@T("Send a notification when a user needs moderation")</label>
     </div>
     <div data-controllerid="@Html.FieldIdFor(m => m.NotifyModeration)">
