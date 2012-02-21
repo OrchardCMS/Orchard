@@ -235,7 +235,7 @@ this.ScenarioSetup(scenarioInfo);
                         "My Post"});
             table6.AddRow(new string[] {
                         "Autoroute.CurrentUrl",
-                        "my-post"});
+                        "my-blog/my-post"});
             table6.AddRow(new string[] {
                         "Body.Text",
                         "Are you still there?"});
@@ -385,7 +385,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 122
         testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
 #line 123
-    testRunner.Then("I should see \"<span>http\\://localhost/OrchardLocal/my-blog/</span>\"");
+    testRunner.Then("I should see \"<span>http\\://localhost/OrchardLocal/</span>\"");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -423,7 +423,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 135
         testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
 #line 136
-    testRunner.Then("I should see \"<span>http\\://localhost/my-blog/</span>\"");
+    testRunner.Then("I should see \"<span>http\\://localhost/</span>\"");
 #line hidden
             this.ScenarioCleanup();
         }

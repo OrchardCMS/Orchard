@@ -67,7 +67,7 @@ Scenario: I can create a new blog with multiple blog posts each with the same ti
         And I fill in
             | name | value |
             | Title.Title | My Post |
-            | Autoroute.CurrentUrl | my-post |
+            | Autoroute.CurrentUrl | my-blog/my-post |
             | Body.Text | Are you still there? |
         And I hit "Publish Now"
         And I go to "my-blog/my-post-3"
@@ -120,7 +120,7 @@ Scenario: The virtual path of my installation when not at the root is reflected 
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
-    Then I should see "<span>http\://localhost/OrchardLocal/my-blog/</span>"
+    Then I should see "<span>http\://localhost/OrchardLocal/</span>"
 
 Scenario: The virtual path of my installation when at the root is reflected in the URL example for the slug field when creating a blog or blog post
     Given I have installed Orchard at "/"
@@ -133,7 +133,7 @@ Scenario: The virtual path of my installation when at the root is reflected in t
         And I go to "admin/blogs"
         And I follow "My Blog"
         And I follow "New Post" where class name has "primaryAction"
-    Then I should see "<span>http\://localhost/my-blog/</span>"
+    Then I should see "<span>http\://localhost/</span>"
 
 Scenario: I set my blog to be the content for the home page and the posts for the blog be rooted to the app
     Given I have installed Orchard
