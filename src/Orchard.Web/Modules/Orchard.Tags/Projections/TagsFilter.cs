@@ -34,8 +34,8 @@ namespace Orchard.Tags.Projections {
             string tags = Convert.ToString(context.State.TagIds);
             if (!String.IsNullOrEmpty(tags)) {
                 var ids = tags.Split(new[] { ',' }).Select(Int32.Parse).ToArray();
-                var query = (IContentQuery<ContentItem>)context.Query;
-                context.Query = query.Join<TagsPartRecord>().Where(x => x.Tags.Any(t => ids.Contains(t.TagRecord.Id)));
+                var query = (IHqlQuery)context.Query;
+                context.Query = query.Where(x => x.ContentPartRecord<TagsPartRecord>().Property("Tags", "tags"), x => x.In("TagRecord.Id", ids));
             }
         }
 

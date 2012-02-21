@@ -28,8 +28,8 @@ namespace Orchard.Comments.Projections {
         }
 
         public void ApplyFilter(dynamic context) {
-            var query = (IContentQuery<ContentItem>)context.Query;
-            context.Query = query.Where<CommentsPartRecord>(x => x.CommentPartRecords.Any());
+            var query = (IHqlQuery)context.Query;
+            context.Query = query.Where(x => x.ContentPartRecord<CommentsPartRecord>(), x => x.IsNotEmpty("CommentPartRecords"));
         }
 
         public LocalizedString DisplayFilter(dynamic context) {
