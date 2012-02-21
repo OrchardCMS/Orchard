@@ -150,6 +150,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ContentTypes.feature</DependentUpon>
     </Compile>
+    <Compile Include="Autoroute.feature.cs">
+      <DependentUpon>Autoroute.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Tags.feature.cs">
       <DependentUpon>Tags.feature</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -266,6 +271,10 @@
     <None Include="ContentTypes.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ContentTypes.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Autoroute.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Autoroute.feature.cs</LastGenOutput>
     </None>
     <None Include="Tags.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
