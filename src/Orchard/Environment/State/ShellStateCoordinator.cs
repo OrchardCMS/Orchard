@@ -172,8 +172,7 @@ namespace Orchard.Environment.State {
             }
 
             // raise install and enabled states in order
-            foreach (var entry in allEntries.Reverse().Where(entry => IsRising(entry.FeatureState)))
-            {
+            foreach (var entry in allEntries.Where(entry => IsRising(entry.FeatureState))) {
                 if (entry.FeatureState.InstallState == ShellFeatureState.State.Rising) {
                     Logger.Information("Installing feature '{0}'", entry.Feature.Descriptor.Id);
                     _featureEvents.Installing(entry.Feature);
