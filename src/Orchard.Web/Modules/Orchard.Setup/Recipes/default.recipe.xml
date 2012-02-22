@@ -21,12 +21,14 @@
       <Page ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
         <TagsPart />
         <LocalizationPart />
+        <TitlePart/>
         <AutoroutePart />
       </Page>
       <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Included="true">
         <CommentsPart />
         <TagsPart />
         <LocalizationPart />
+        <TitlePart/>
         <AutoroutePart />
       </BlogPost>
     </Types>

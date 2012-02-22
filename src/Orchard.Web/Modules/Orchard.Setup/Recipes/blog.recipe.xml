@@ -28,6 +28,7 @@
         <CommentsPart />
         <TagsPart />
         <LocalizationPart />
+        <TitlePart/>
         <AutoroutePart />
       </BlogPost>
     </Types>
