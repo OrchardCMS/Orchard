@@ -5,7 +5,7 @@ using Orchard.Logging;
 using Orchard.Recipes.Models;
 using Orchard.Recipes.Services;
 
-namespace Orchard.ImportExport.RecipeHandlers {
+namespace Orchard.Recipes.RecipeHandlers {
     public class DataRecipeHandler : IRecipeHandler {
         private readonly IOrchardServices _orchardServices;
 

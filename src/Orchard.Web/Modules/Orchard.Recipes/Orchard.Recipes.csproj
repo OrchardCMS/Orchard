@@ -55,6 +55,7 @@
     <Compile Include="Commands\RecipesCommands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecipeHandlers\CommandRecipeHandler.cs" />
+    <Compile Include="RecipeHandlers\DataRecipeHandler.cs" />
     <Compile Include="RecipeHandlers\FeatureRecipeHandler.cs" />
     <Compile Include="RecipeHandlers\MetadataRecipeHandler.cs" />
     <Compile Include="RecipeHandlers\MigrationRecipeHandler.cs" />
