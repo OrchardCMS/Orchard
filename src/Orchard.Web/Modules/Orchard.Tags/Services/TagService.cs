@@ -177,9 +177,6 @@ namespace Orchard.Tags.Services {
         }
 
         public void UpdateTagsForContentItem(ContentItem contentItem, IEnumerable<string> tagNamesForContentItem) {
-            if (contentItem.Id == 0)
-                throw new OrchardException(T("Error adding tag to content item: the content item has not been created yet."));
-
             var tags = tagNamesForContentItem.Select(CreateTag);
             var newTagsForContentItem = new List<TagRecord>(tags);
             var currentTagsForContentItem = contentItem.As<TagsPart>().Record.Tags;
