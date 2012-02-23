@@ -70,7 +70,10 @@ namespace Orchard.ContentManagement {
                 _contentItemIds.Remove(item.Id);
             }
             _identities.Add(contentIdentity, item);
-            _contentItemIds.Add(item.Id, contentIdentity);
+
+            if (!_contentItemIds.ContainsKey(item.Id)) {
+                _contentItemIds.Add(item.Id, contentIdentity);
+            }
         }
 
     }

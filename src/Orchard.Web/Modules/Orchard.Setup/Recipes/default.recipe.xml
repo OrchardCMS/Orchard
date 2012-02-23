@@ -55,4 +55,23 @@
     menuitem create /MenuPosition:"1" /MenuText:"Home" /Url:"" /OnMainMenu:true
     theme activate "The Theme Machine"
   </Command>
+
+  <Data>
+    <Page Id="/alias=about-us" Status="Published">
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2012-02-14T19:22:13Z" PublishedUtc="2012-02-14T19:22:13Z" ModifiedUtc="2012-02-14T19:22:13Z" />
+      <BodyPart Text="&lt;p&gt;This is the about page.&lt;/p&gt;" />
+      <AutoroutePart UseCustomPattern="false" Alias="about-us" />
+      <MenuPart MenuText="About Us" MenuPosition="2" OnMainMenu="true" />
+      <TagsPart Tags="" />
+      <TitlePart Title="About Us" />
+    </Page>
+    <Page Status="Published" Id="/alias=contact-us">
+      <CommonPart ModifiedUtc="2012-02-22T19:20:20Z" PublishedUtc="2012-02-22T19:20:20Z" CreatedUtc="2012-02-22T19:20:20Z" Owner="/User.UserName=admin"/>
+      <BodyPart Text="&lt;p&gt;This is the Contact Us page.&lt;/p&gt;"/>
+      <AutoroutePart UseCustomPattern="false" Alias="contact-us"/>
+      <MenuPart OnMainMenu="true" MenuText="Contact Us" MenuPosition="3"/>
+      <TagsPart Tags=""/>
+      <TitlePart Title="Contact Us"/>
+    </Page>
+  </Data>  
 </Orchard>

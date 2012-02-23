@@ -38,12 +38,6 @@ namespace Orchard.Recipes.RecipeHandlers {
                 var item = importContentSession.Get(identity);
                 if (item == null) {
                     item = _orchardServices.ContentManager.New(element.Name.LocalName);
-                    if (status != null && status.Value == "Draft") {
-                        _orchardServices.ContentManager.Create(item, VersionOptions.Draft);
-                    }
-                    else {
-                        _orchardServices.ContentManager.Create(item);
-                    }
                 }
                 else {
                     item = _orchardServices.ContentManager.Get(item.Id, VersionOptions.DraftRequired);

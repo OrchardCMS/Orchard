@@ -572,17 +572,28 @@ namespace Orchard.ContentManagement {
                     Create(item);
                 }
             }
-            else {
-                item = Get(item.Id, VersionOptions.DraftRequired);
-            }
+
             importContentSession.Store(identity, item);
 
             var context = new ImportContentContext(item, element, importContentSession);
             foreach (var contentHandler in Handlers) {
                 contentHandler.Importing(context);
             }
+
             foreach (var contentHandler in Handlers) {
                 contentHandler.Imported(context);
+            }
+
+            var savedItem = Get(item.Id, VersionOptions.DraftRequired);
+
+            // the item has been pre-created in the first pass of the import, create it in db
+            if(savedItem == null) {
+                if (status != null && status.Value == "Draft") {
+                    Create(item, VersionOptions.Draft);
+                }
+                else {
+                    Create(item);
+                }
             }
 
             if (status == null || status.Value == Published) {
