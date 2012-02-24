@@ -35,7 +35,7 @@ namespace Orchard.Blogs.Handlers {
                 {"Area", "Orchard.Blogs"},
                 {"Controller", "Blog"},
                 {"Action", "Item"},
-                {"blogPath", context.ContentItem.As<IAliasAspect>().Path}
+                {"blogId", context.ContentItem.Id}
             };
             context.Metadata.CreateRouteValues = new RouteValueDictionary {
                 {"Area", "Orchard.Blogs"},
