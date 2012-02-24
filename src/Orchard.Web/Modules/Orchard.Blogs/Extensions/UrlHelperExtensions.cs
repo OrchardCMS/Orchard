@@ -1,3 +1,4 @@
+using System.Web;
 using System.Web.Mvc;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
@@ -26,19 +27,19 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogRsd(this UrlHelper urlHelper, BlogPart blogPart) {
-            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { path = blogPart.As<IAliasAspect>().Path + "/rsd", area = "Orchard.Blogs" }));
+            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { path = VirtualPathUtility.Combine((blogPart.As<IAliasAspect>().Path ?? string.Empty) + "/", "rsd"), area = "Orchard.Blogs" }));
         }
 
         public static string BlogArchiveYear(this UrlHelper urlHelper, BlogPart blogPart, int year) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { path = blogPart.As<IAliasAspect>().Path + "/archive/" + year.ToString(), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { path = VirtualPathUtility.Combine((blogPart.As<IAliasAspect>().Path ?? string.Empty) + "/", "archive/") + year.ToString(), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveMonth(this UrlHelper urlHelper, BlogPart blogPart, int year, int month) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { path = blogPart.As<IAliasAspect>().Path + "/archive/" + string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { path = VirtualPathUtility.Combine((blogPart.As<IAliasAspect>().Path ?? string.Empty) + "/", "archive/") + string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveDay(this UrlHelper urlHelper, BlogPart blogPart, int year, int month, int day) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { path = blogPart.As<IAliasAspect>().Path + "/archive/" + string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs" });
+            return urlHelper.Action("ListByArchive", "BlogPost", new { path = VirtualPathUtility.Combine((blogPart.As<IAliasAspect>().Path ?? string.Empty) + "/", "archive/") + string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs" });
         }
 
         public static string BlogForAdmin(this UrlHelper urlHelper, BlogPart blogPart) {
