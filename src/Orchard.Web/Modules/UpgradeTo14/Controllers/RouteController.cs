@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 using System.Web.Mvc;
@@ -12,6 +13,7 @@ using Orchard.Core.Title.Models;
 using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
+using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
@@ -25,18 +27,21 @@ namespace UpgradeTo14.Controllers {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly ShellSettings _shellSettings;
         private readonly IAutorouteService _autorouteService;
+        private readonly IReportsCoordinator _reportsCoordinator;
 
         public RouteController(
             IContentDefinitionManager contentDefinitionManager,
             IOrchardServices orchardServices,
             ISessionFactoryHolder sessionFactoryHolder,
             ShellSettings shellSettings,
-            IAutorouteService autorouteService) {
+            IAutorouteService autorouteService,
+            IReportsCoordinator reportsCoordinator) {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
             _sessionFactoryHolder = sessionFactoryHolder;
             _shellSettings = shellSettings;
             _autorouteService = autorouteService;
+            _reportsCoordinator = reportsCoordinator;
         }
 
         public Localizer T { get; set; }
@@ -65,12 +70,18 @@ namespace UpgradeTo14.Controllers {
             var viewModel = new MigrateViewModel { ContentTypes = new List<ContentTypeEntry>() };
 
             if(TryUpdateModel(viewModel)) {
+
+                // creating report
+                _reportsCoordinator.Register("Migration", "UpgradeTo14", "Migrating " + string.Join(" ,", viewModel.ContentTypes.Where(x => x.IsChecked).Select(x => x.ContentTypeName).ToArray()));
+            
                 var contentTypesToMigrate = viewModel.ContentTypes.Where(c => c.IsChecked).Select(c => c.ContentTypeName);
 
                 var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
                 var session = sessionFactory.OpenSession();
 
                 foreach (var contentType in contentTypesToMigrate) {
+
+                    _reportsCoordinator.Information("Migration", "Adding parts to " + contentType);
 
                     // migrating parts
                     _contentDefinitionManager.AlterTypeDefinition(contentType,
@@ -85,9 +96,10 @@ namespace UpgradeTo14.Controllers {
                     var count = 0;
                     var isContainable = false;
                     IEnumerable<ContentItem> contents;
+                    bool errors = false;
 
                     do {
-                        contents = _orchardServices.ContentManager.HqlQuery().ForType(contentType).Slice(count, 100);
+                        contents = _orchardServices.ContentManager.HqlQuery().ForType(contentType).Slice(count, 100).ToList();
 
                         foreach (dynamic content in contents) {
                             var autoroutePart = ((ContentItem)content).As<AutoroutePart>();
@@ -100,18 +112,34 @@ namespace UpgradeTo14.Controllers {
 
                             using (new TransactionScope(TransactionScopeOption.RequiresNew)) {
                                 var command = session.Connection.CreateCommand();
-                                command.CommandText = string.Format("SELECT Title, Path FROM {0} WHERE ContentItemRecord_Id = {1}", GetPrefixedTableName("Routable_RoutePartRecord"), autoroutePart.ContentItem.Id);
+                                command.CommandText = string.Format(@"
+                                    SELECT Title, Path FROM {0} 
+                                    INNER JOIN {1} ON {0}.Id = {1}.Id
+                                    WHERE Latest = 1 AND {0}.ContentItemRecord_Id = {2}", GetPrefixedTableName("Routable_RoutePartRecord"), GetPrefixedTableName("Orchard_Framework_ContentItemVersionRecord"), autoroutePart.ContentItem.Id);
                                 var reader = command.ExecuteReader();
                                 reader.Read();
-                                var title = reader.GetString(0);
-                                var path = reader.GetString(1);
-                                reader.Close();
 
-                                autoroutePart.DisplayAlias = path;
-                                titlePart.Title = title;
+                                try {
+                                    var title = reader.GetString(0);
+                                    var path = reader.GetString(1);
+
+                                    reader.Close();
+
+                                    autoroutePart.DisplayAlias = path ?? String.Empty;
+                                    titlePart.Title = title;
+
+                                    _autorouteService.PublishAlias(autoroutePart);
+                                }
+                                catch(Exception e) {
+                                    if (!reader.IsClosed) {
+                                        reader.Close();
+                                    }
+                                    
+                                    _reportsCoordinator.Error("Migration", "Migrating content item " + autoroutePart.ContentItem.Id + " failed with: " + e.Message);
+                                    errors = true;
+                                }
                             }
 
-                            _autorouteService.PublishAlias(autoroutePart);
                             count++;
                         }
 
@@ -130,7 +158,12 @@ namespace UpgradeTo14.Controllers {
                         _autorouteService.CreatePattern(contentType, "Title", "{Content.Slug}", "my-sample-title", true);    
                     }
 
-                    _orchardServices.Notifier.Information(T("{0} was migrated successfully", contentType));
+                    if (errors) {
+                        _orchardServices.Notifier.Warning(T("Some content items could not be imported. Please refer to the corresponding Report."));
+                    }
+                    else {
+                        _orchardServices.Notifier.Information(T("{0} was migrated successfully", contentType));
+                    }
                 }
             }
 
