@@ -492,6 +492,282 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("I can create browse blog posts on several pages")]
+        public virtual void ICanCreateBrowseBlogPostsOnSeveralPages()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("I can create browse blog posts on several pages", ((string[])(null)));
+#line 162
+this.ScenarioSetup(scenarioInfo);
+#line 163
+    testRunner.Given("I have installed Orchard");
+#line 164
+    testRunner.When("I go to \"admin/blogs/create\"");
+#line hidden
+            TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table14.AddRow(new string[] {
+                        "Title.Title",
+                        "My Blog"});
+#line 165
+        testRunner.And("I fill in", ((string)(null)), table14);
+#line 168
+        testRunner.And("I hit \"Save\"");
+#line 169
+        testRunner.And("I go to \"admin/blogs\"");
+#line 170
+        testRunner.And("I follow \"My Blog\"");
+#line 171
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table15.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 1"});
+#line 172
+        testRunner.And("I fill in", ((string)(null)), table15);
+#line 175
+        testRunner.And("I hit \"Publish Now\"");
+#line 176
+        testRunner.And("I am redirected");
+#line 177
+        testRunner.And("I go to \"admin/blogs\"");
+#line 178
+        testRunner.And("I follow \"My Blog\"");
+#line 179
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table16.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 2"});
+#line 180
+        testRunner.And("I fill in", ((string)(null)), table16);
+#line 183
+        testRunner.And("I hit \"Publish Now\"");
+#line 184
+        testRunner.And("I am redirected");
+#line 185
+        testRunner.And("I go to \"admin/blogs\"");
+#line 186
+        testRunner.And("I follow \"My Blog\"");
+#line 187
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table17.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 3"});
+#line 188
+        testRunner.And("I fill in", ((string)(null)), table17);
+#line 191
+        testRunner.And("I hit \"Publish Now\"");
+#line 192
+        testRunner.And("I am redirected");
+#line 193
+        testRunner.And("I go to \"admin/blogs\"");
+#line 194
+        testRunner.And("I follow \"My Blog\"");
+#line 195
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table18.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 4"});
+#line 196
+        testRunner.And("I fill in", ((string)(null)), table18);
+#line 199
+        testRunner.And("I hit \"Publish Now\"");
+#line 200
+        testRunner.And("I am redirected");
+#line 201
+        testRunner.And("I go to \"admin/blogs\"");
+#line 202
+        testRunner.And("I follow \"My Blog\"");
+#line 203
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table19 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table19.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 5"});
+#line 204
+        testRunner.And("I fill in", ((string)(null)), table19);
+#line 207
+        testRunner.And("I hit \"Publish Now\"");
+#line 208
+        testRunner.And("I am redirected");
+#line 209
+        testRunner.And("I go to \"admin/blogs\"");
+#line 210
+        testRunner.And("I follow \"My Blog\"");
+#line 211
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table20 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table20.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 6"});
+#line 212
+        testRunner.And("I fill in", ((string)(null)), table20);
+#line 215
+        testRunner.And("I hit \"Publish Now\"");
+#line 216
+        testRunner.And("I am redirected");
+#line 217
+        testRunner.And("I go to \"admin/blogs\"");
+#line 218
+        testRunner.And("I follow \"My Blog\"");
+#line 219
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table21 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table21.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 7"});
+#line 220
+        testRunner.And("I fill in", ((string)(null)), table21);
+#line 223
+        testRunner.And("I hit \"Publish Now\"");
+#line 224
+        testRunner.And("I am redirected");
+#line 225
+        testRunner.And("I go to \"admin/blogs\"");
+#line 226
+        testRunner.And("I follow \"My Blog\"");
+#line 227
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table22 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table22.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 8"});
+#line 228
+        testRunner.And("I fill in", ((string)(null)), table22);
+#line 231
+        testRunner.And("I hit \"Publish Now\"");
+#line 232
+        testRunner.And("I am redirected");
+#line 233
+        testRunner.And("I go to \"admin/blogs\"");
+#line 234
+        testRunner.And("I follow \"My Blog\"");
+#line 235
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table23 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table23.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 9"});
+#line 236
+        testRunner.And("I fill in", ((string)(null)), table23);
+#line 239
+        testRunner.And("I hit \"Publish Now\"");
+#line 240
+        testRunner.And("I am redirected");
+#line 241
+        testRunner.And("I go to \"admin/blogs\"");
+#line 242
+        testRunner.And("I follow \"My Blog\"");
+#line 243
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table24 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table24.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 10"});
+#line 244
+        testRunner.And("I fill in", ((string)(null)), table24);
+#line 247
+        testRunner.And("I hit \"Publish Now\"");
+#line 248
+        testRunner.And("I am redirected");
+#line 249
+        testRunner.And("I go to \"admin/blogs\"");
+#line 250
+        testRunner.And("I follow \"My Blog\"");
+#line 251
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table25 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table25.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 11"});
+#line 252
+        testRunner.And("I fill in", ((string)(null)), table25);
+#line 255
+        testRunner.And("I hit \"Publish Now\"");
+#line 256
+        testRunner.And("I am redirected");
+#line 257
+        testRunner.And("I go to \"admin/blogs\"");
+#line 258
+        testRunner.And("I follow \"My Blog\"");
+#line 259
+        testRunner.And("I follow \"New Post\" where class name has \"primaryAction\"");
+#line hidden
+            TechTalk.SpecFlow.Table table26 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table26.AddRow(new string[] {
+                        "Title.Title",
+                        "My Post 12"});
+#line 260
+        testRunner.And("I fill in", ((string)(null)), table26);
+#line 263
+        testRunner.And("I hit \"Publish Now\"");
+#line 264
+        testRunner.And("I am redirected");
+#line 265
+    testRunner.Then("I should see \"Your Blog Post has been created.\"");
+#line 266
+    testRunner.When("I go to \"my-blog\"");
+#line 267
+    testRunner.Then("I should see \"<h1[^>]*>.*?My Blog.*?</h1>\"");
+#line 268
+        testRunner.And("I should see \"<h1[^>]*>.*?My Post 12.*?</h1>\"");
+#line 269
+        testRunner.And("I should see \"<h1[^>]*>.*?My Post 11.*?</h1>\"");
+#line 270
+        testRunner.And("I should not see \"<h1[^>]*>.*?My Post 10.*?</h1>\"");
+#line 271
+    testRunner.When("I go to \"my-blog?page=2\"");
+#line 272
+    testRunner.Then("I should see \"<h1[^>]*>.*?My Blog.*?</h1>\"");
+#line 273
+        testRunner.And("I should see \"<h1[^>]*>.*?My Post 1.*?</h1>\"");
+#line 274
+        testRunner.And("I should see \"<h1[^>]*>.*?My Post 2.*?</h1>\"");
+#line 275
+        testRunner.And("I should not see \"<h1[^>]*>.*?My Post 3.*?</h1>\"");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

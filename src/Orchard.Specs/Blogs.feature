@@ -158,3 +158,118 @@ Scenario: I set my blog to be the content for the home page and the posts for th
     Then the status should be 404 "Not Found"
     When I go to "/my-post"
     Then I should see "<h1>My Post</h1>"
+
+Scenario: I can create browse blog posts on several pages
+    Given I have installed Orchard
+    When I go to "admin/blogs/create"
+        And I fill in
+            | name | value |
+            | Title.Title | My Blog |
+        And I hit "Save"
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 1 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 2 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 3 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 4 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 5 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 6 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 7 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 8 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 9 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 10 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 11 |
+        And I hit "Publish Now"
+        And I am redirected
+        And I go to "admin/blogs"
+        And I follow "My Blog"
+        And I follow "New Post" where class name has "primaryAction"
+        And I fill in
+            | name | value |
+            | Title.Title | My Post 12 |
+        And I hit "Publish Now"
+        And I am redirected
+    Then I should see "Your Blog Post has been created."
+    When I go to "my-blog"
+    Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
+        And I should see "<h1[^>]*>.*?My Post 12.*?</h1>"
+        And I should see "<h1[^>]*>.*?My Post 11.*?</h1>"
+        And I should not see "<h1[^>]*>.*?My Post 10.*?</h1>"
+    When I go to "my-blog?page=2"
+    Then I should see "<h1[^>]*>.*?My Blog.*?</h1>"
+        And I should see "<h1[^>]*>.*?My Post 1.*?</h1>"
+        And I should see "<h1[^>]*>.*?My Post 2.*?</h1>"
+        And I should not see "<h1[^>]*>.*?My Post 3.*?</h1>"
