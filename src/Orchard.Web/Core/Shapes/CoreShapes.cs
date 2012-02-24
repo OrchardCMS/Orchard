@@ -373,6 +373,7 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public IHtmlString Pager_Links(dynamic Shape, dynamic Display,
+            HtmlHelper Html,
             int Page,
             int PageSize,
             double TotalItemCount,
@@ -409,11 +410,12 @@ namespace Orchard.Core.Shapes {
 
             // workaround: get it from the shape instead of parameter
             var RouteValues = (object)Shape.RouteValues;
-            var RouteData = RouteValues is RouteValueDictionary ? (RouteValueDictionary) RouteValues : new RouteValueDictionary(RouteValues);
+
+            var routeData = new RouteValueDictionary(Html.ViewContext.RouteData.Values);
             var queryString = _workContext.Value.HttpContext.Request.QueryString;
             if (queryString != null) {
-                foreach (var key in from string key in queryString.Keys where key != null && !RouteData.ContainsKey(key) let value = queryString[key] select key) {
-                    RouteData[key] = queryString[key];
+                foreach (var key in from string key in queryString.Keys where key != null && !routeData.ContainsKey(key) let value = queryString[key] select key) {
+                    routeData[key] = queryString[key];
                 }
             }
     
@@ -424,15 +426,15 @@ namespace Orchard.Core.Shapes {
                 }
             }
 
-            if (RouteData.ContainsKey("id"))
-                RouteData.Remove("id");
+            //if (routeData.ContainsKey("id"))
+            //    routeData.Remove("id");
 
             // HACK: MVC 3 is adding a specific value in System.Web.Mvc.Html.ChildActionExtensions.ActionHelper
             // when a content item is set as home page, it is rendered by using Html.RenderAction, and the routeData is altered
             // This code removes this extra route value
-            var removedKeys = RouteData.Keys.Where(key => RouteData[key] is DictionaryValueProvider<object>).ToList();
+            var removedKeys = routeData.Keys.Where(key => routeData[key] is DictionaryValueProvider<object>).ToList();
             foreach (var key in removedKeys) {
-                RouteData.Remove(key);
+                routeData.Remove(key);
             }
 
             var firstPage = Math.Max(1, Page - (numberOfPagesToShow / 2));
@@ -446,17 +448,17 @@ namespace Orchard.Core.Shapes {
 
             // first and previous pages
             if (Page > 1) {
-                if (RouteData.ContainsKey(pageKey)) {
-                    RouteData.Remove(pageKey); // to keep from having "page=1" in the query string
+                if (routeData.ContainsKey(pageKey)) {
+                    routeData.Remove(pageKey); // to keep from having "page=1" in the query string
                 }
                 // first
-                Shape.Add(Display.Pager_First(Value: firstText, RouteValues: RouteData, Pager: Shape));
+                Shape.Add(Display.Pager_First(Value: firstText, RouteValues: routeData, Pager: Shape));
 
                 // previous
                 if (currentPage > 2) { // also to keep from having "page=1" in the query string
-                    RouteData[pageKey] = currentPage - 1;
+                    routeData[pageKey] = currentPage - 1;
                 }
-                Shape.Add(Display.Pager_Previous(Value: previousText, RouteValues: RouteData, Pager: Shape));
+                Shape.Add(Display.Pager_Previous(Value: previousText, RouteValues: routeData, Pager: Shape));
             }
 
             // gap at the beginning of the pager
@@ -468,14 +470,14 @@ namespace Orchard.Core.Shapes {
             if (numberOfPagesToShow > 0) {
                 for (var p = firstPage; p <= lastPage; p++) {
                     if (p == currentPage) {
-                        Shape.Add(Display.Pager_CurrentPage(Value: p, RouteValues: RouteData, Pager: Shape));
+                        Shape.Add(Display.Pager_CurrentPage(Value: p, RouteValues: routeData, Pager: Shape));
                     }
                     else {
                         if (p == 1)
-                            RouteData.Remove(pageKey);
+                            routeData.Remove(pageKey);
                         else
-                            RouteData[pageKey] = p;
-                        Shape.Add(Display.Pager_Link(Value: p, RouteValues: RouteData, Pager: Shape));
+                            routeData[pageKey] = p;
+                        Shape.Add(Display.Pager_Link(Value: p, RouteValues: routeData, Pager: Shape));
                     }
                 }
             }
@@ -488,11 +490,11 @@ namespace Orchard.Core.Shapes {
             // next and last pages
             if (Page < totalPageCount) {
                 // next
-                RouteData[pageKey] = Page + 1;
-                Shape.Add(Display.Pager_Next(Value: nextText, RouteValues: RouteData, Pager: Shape));
+                routeData[pageKey] = Page + 1;
+                Shape.Add(Display.Pager_Next(Value: nextText, RouteValues: routeData, Pager: Shape));
                 // last
-                RouteData[pageKey] = totalPageCount;
-                Shape.Add(Display.Pager_Last(Value: lastText, RouteValues: RouteData, Pager: Shape));
+                routeData[pageKey] = totalPageCount;
+                Shape.Add(Display.Pager_Last(Value: lastText, RouteValues: routeData, Pager: Shape));
             }
 
             return Display(Shape);
@@ -558,7 +560,7 @@ namespace Orchard.Core.Shapes {
             else {
                 rvd = RouteValues is RouteValueDictionary ? (RouteValueDictionary)RouteValues : new RouteValueDictionary(RouteValues);
             }
-
+            
             string value = Html.Encode(Value is string ? (string)Value : Display(Value));
             return @Html.ActionLink(value, (string)rvd["action"], (string)rvd["controller"], rvd, null);
         }
