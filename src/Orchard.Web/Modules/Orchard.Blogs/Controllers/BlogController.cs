@@ -58,12 +58,18 @@ namespace Orchard.Blogs.Controllers {
             return View((object)viewModel);
         }
 
-        public ActionResult Item(int blogId, PagerParameters pagerParameters) {
+        public ActionResult Item(string blogPath, PagerParameters pagerParameters) {
             Pager pager = new Pager(_siteService.GetSiteSettings(), pagerParameters);
 
-            var blogPart = _blogService.Get(blogId, VersionOptions.Published).As<BlogPart>();
-            if (blogPart == null)
+            var correctedPath = _blogPathConstraint.FindPath(blogPath);
+            if (correctedPath == null)
                 return HttpNotFound();
+
+            var blogPart = _blogService.Get(correctedPath);
+
+            //var blogPart = _blogService.Get(blogId, VersionOptions.Published).As<BlogPart>();
+            //if (blogPart == null)
+            //    return HttpNotFound();
 
             _feedManager.Register(blogPart);
             var blogPosts = _blogPostService.Get(blogPart, pager.GetStartIndex(), pager.PageSize)

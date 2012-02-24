@@ -6,12 +6,15 @@ using Orchard.Mvc.Routes;
 
 namespace Orchard.Blogs {
     public class Routes : IRouteProvider {
+        private readonly IBlogPathConstraint _blogPathConstraint;
         private readonly IArchiveConstraint _archiveConstraint;
         private readonly IRsdConstraint _rsdConstraint;
 
         public Routes(
+            IBlogPathConstraint blogPathConstraint,
             IArchiveConstraint archiveConstraint,
             IRsdConstraint rsdConstraint) {
+            _blogPathConstraint = blogPathConstraint;
             _archiveConstraint = archiveConstraint;
             _rsdConstraint = rsdConstraint;
         }
@@ -177,7 +180,24 @@ namespace Orchard.Blogs {
                                                                                   },
                                                          new MvcRouteHandler())
                                                  },
-                             new RouteDescriptor {
+                            new RouteDescriptor {
+                                                    Priority = 11,
+                                                    Route = new Route(
+                                                         "{*blogPath}",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "Blog"},
+                                                                                      {"action", "Item"},
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogPath", _blogPathConstraint}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                  },
+                            new RouteDescriptor {
                                                      Route = new Route(
                                                          "{*path}",
                                                          new RouteValueDictionary {
