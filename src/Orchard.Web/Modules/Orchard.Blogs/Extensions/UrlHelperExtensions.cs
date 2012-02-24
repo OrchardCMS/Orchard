@@ -27,7 +27,7 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogRsd(this UrlHelper urlHelper, BlogPart blogPart) {
-            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { path = VirtualPathUtility.Combine((blogPart.As<IAliasAspect>().Path ?? string.Empty) + "/", "rsd"), area = "Orchard.Blogs" }));
+            return urlHelper.AbsoluteAction(() => urlHelper.Action("Rsd", "RemoteBlogPublishing", new { path = blogPart.As<IAliasAspect>().Path + "/rsd", area = "Orchard.Blogs" }));
         }
 
         public static string BlogArchiveYear(this UrlHelper urlHelper, BlogPart blogPart, int year) {
