@@ -55,6 +55,9 @@ namespace Orchard.Exceptions.Filters {
                     else {
                         filterContext.Result = new ShapeResult(filterContext.Controller, shape);
                         filterContext.RequestContext.HttpContext.Response.StatusCode = 500;
+
+                        // prevent IIS 7.0 classic mode from handling the 404/500 itself
+                        filterContext.RequestContext.HttpContext.Response.TrySkipIisCustomErrors = true;
                     }
                 }
             }
@@ -76,6 +79,9 @@ namespace Orchard.Exceptions.Filters {
 
                 filterContext.Result = new ShapeResult(filterContext.Controller, model);
                 filterContext.RequestContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+
+                // prevent IIS 7.0 classic mode from handling the 404/500 itself
+                filterContext.RequestContext.HttpContext.Response.TrySkipIisCustomErrors = true;
             }
         }
     }
