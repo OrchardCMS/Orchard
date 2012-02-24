@@ -44,12 +44,17 @@ namespace Orchard.ContentManagement {
                         _lastIndex++;
 
                         // ignore content item if it has already been imported
-                        if(_contentItemIds.ContainsKey(item.Id)) {
+                        if (_contentItemIds.ContainsKey(item.Id)) {
                             continue;
                         }
 
                         var identity = _contentManager.GetItemMetadata(item).Identity;
-                        
+
+                        // ignore content item if the same identity is already present
+                        if (_identities.ContainsKey(identity)) {
+                            continue;
+                        }
+
                         _identities.Add(identity, item);
                         _contentItemIds.Add(item.Id, identity);
                         
