@@ -18,7 +18,8 @@
             if (year == lastYear) {
         <li>
             <h4>@year</h4>
-        </li>
+             @Html.UnorderedList(yearMonths, (t, i) => Html.Link(string.Format("{0:MMMM} ({1})", t.Key.ToDateTime(), t.Value), Url.BlogArchiveMonth((BlogPart)Model.Blog, t.Key.Year, t.Key.Month)), "archiveMonthList")
+       </li>
             } 
             
             if (year != lastYear) {

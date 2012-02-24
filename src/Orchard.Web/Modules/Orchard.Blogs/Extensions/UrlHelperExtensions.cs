@@ -31,15 +31,18 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogArchiveYear(this UrlHelper urlHelper, BlogPart blogPart, int year) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { path = VirtualPathUtility.Combine((blogPart.As<IAliasAspect>().Path ?? string.Empty) + "/", "archive/") + year.ToString(), area = "Orchard.Blogs" });
+            var blogPath = blogPart.As<IAliasAspect>().Path;
+            return urlHelper.Action("ListByArchive", "BlogPost", new { path = (string.IsNullOrWhiteSpace(blogPath) ? "archive/" : blogPath + "/archive/") + year.ToString(), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveMonth(this UrlHelper urlHelper, BlogPart blogPart, int year, int month) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { path = VirtualPathUtility.Combine((blogPart.As<IAliasAspect>().Path ?? string.Empty) + "/", "archive/") + string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
+            var blogPath = blogPart.As<IAliasAspect>().Path;
+            return urlHelper.Action("ListByArchive", "BlogPost", new { path = (string.IsNullOrWhiteSpace(blogPath) ? "archive/" : blogPath + "/archive/") + string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
         }
 
         public static string BlogArchiveDay(this UrlHelper urlHelper, BlogPart blogPart, int year, int month, int day) {
-            return urlHelper.Action("ListByArchive", "BlogPost", new { path = VirtualPathUtility.Combine((blogPart.As<IAliasAspect>().Path ?? string.Empty) + "/", "archive/") + string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs" });
+            var blogPath = blogPart.As<IAliasAspect>().Path;
+            return urlHelper.Action("ListByArchive", "BlogPost", new { path = (string.IsNullOrWhiteSpace(blogPath) ? "archive/" : blogPath + "/archive/") + string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs" });
         }
 
         public static string BlogForAdmin(this UrlHelper urlHelper, BlogPart blogPart) {
