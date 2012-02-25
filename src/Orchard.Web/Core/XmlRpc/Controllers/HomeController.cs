@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Core.XmlRpc.Services;
 using Orchard.Logging;
+using Orchard.Security;
 
 namespace Orchard.Core.XmlRpc.Controllers {
     public class HomeController : Controller {
@@ -24,6 +25,7 @@ namespace Orchard.Core.XmlRpc.Controllers {
         public ILogger Logger { get; set; }
 
         [HttpPost, ActionName("Index")]
+        [AlwaysAccessible]
         public ActionResult ServiceEndpoint(XRpcMethodCall methodCall) {
             Logger.Debug("XmlRpc methodName {0}", methodCall.MethodName);
             var methodResponse = Dispatch(methodCall);

@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Orchard.Logging;
+using Orchard.Security;
 
 namespace Orchard.Core.XmlRpc.Controllers {
     public class LiveWriterController : Controller {
@@ -18,6 +19,7 @@ namespace Orchard.Core.XmlRpc.Controllers {
         protected ILogger Logger { get; set; }
         
         [NoCache]
+        [AlwaysAccessible]
         public ActionResult Manifest() {
             Logger.Debug("Manifest requested");
 

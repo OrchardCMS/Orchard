@@ -253,6 +253,7 @@
     <Compile Include="Recipes\Services\IRecipeScheduler.cs" />
     <Compile Include="Recipes\Services\IRecipeStepExecutor.cs" />
     <Compile Include="Recipes\Services\IRecipeStepQueue.cs" />
+    <Compile Include="Security\AlwaysAccessibleAttribute.cs" />
     <Compile Include="Security\IEncryptionService.cs" />
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Security\Providers\DefaultEncryptionService.cs" />
