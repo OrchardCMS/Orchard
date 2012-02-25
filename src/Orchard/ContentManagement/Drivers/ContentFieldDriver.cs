@@ -17,25 +17,28 @@ namespace Orchard.ContentManagement.Drivers {
 
         DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context) {
             return Process(context.ContentItem, (part, field) => {
-                context.ContentPart = part;
-                context.ContentField = field;
-                return Display(part, field, context.DisplayType, context.New);
+                DriverResult result = Display(part, field, context.DisplayType, context.New);
+                result.ContentPart = part;
+                result.ContentField = field;
+                return result;
             });
         }
 
         DriverResult IContentFieldDriver.BuildEditorShape(BuildEditorContext context) {
             return Process(context.ContentItem, (part, field) => {
-                context.ContentPart = part;
-                context.ContentField = field;
-                return Editor(part, field, context.New);
+                DriverResult result =  Editor(part, field, context.New);
+                result.ContentPart = part;
+                result.ContentField = field;
+                return result;
             });
         }
 
         DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
             return Process(context.ContentItem, (part, field) => {
-                context.ContentPart = part;
-                context.ContentField = field;
-                return Editor(part, field, context.Updater, context.New);
+                DriverResult result = Editor(part, field, context.Updater, context.New);
+                result.ContentPart = part;
+                result.ContentField = field;
+                return result;
             });
         }
 
@@ -125,16 +128,6 @@ namespace Orchard.ContentManagement.Drivers {
             // for fields on dynamic parts the part name is the same as the content type name
 
             ShapeMetadata metadata = shape.Metadata;
-
-            // if no ContentField property has been set, assign it
-            if (shape.ContentField == null) {
-                shape.ContentField = ctx.ContentField;
-            }
-
-            // if no ContentPart property has been set, assign it
-            if (shape.ContentPart == null) {
-                shape.ContentPart = ctx.ContentPart;
-            }
 
             // if no ContentItem property has been set, assign it
             if (shape.ContentItem == null) {

@@ -23,9 +23,9 @@ namespace Orchard.ContentManagement.Drivers {
                 return null;
             }
 
-            context.ContentPart = part;
-
-            return Display(part, context.DisplayType, context.New);
+            DriverResult result = Display(part, context.DisplayType, context.New);
+            result.ContentPart = part;
+            return result;
         }
 
         DriverResult IContentPartDriver.BuildEditor(BuildEditorContext context) {
@@ -35,9 +35,9 @@ namespace Orchard.ContentManagement.Drivers {
                 return null;
             }
 
-            context.ContentPart = part;
-
-            return Editor(part, context.New);
+            DriverResult result = Editor(part, context.New);
+            result.ContentPart = part;
+            return result;
         }
 
         DriverResult IContentPartDriver.UpdateEditor(UpdateEditorContext context) {
@@ -47,9 +47,9 @@ namespace Orchard.ContentManagement.Drivers {
                 return null;
             }
 
-            context.ContentPart = part;
-
-            return Editor(part, context.Updater, context.New);
+            DriverResult result = Editor(part, context.Updater, context.New);
+            result.ContentPart = part;
+            return result;
         }
 
         void IContentPartDriver.Importing(ImportContentContext context) {
@@ -106,11 +106,6 @@ namespace Orchard.ContentManagement.Drivers {
 
         private static dynamic AddAlternates(dynamic shape, BuildShapeContext ctx) {
             ShapeMetadata metadata = shape.Metadata;
-
-            // if no ContentPart property has been set, assign it
-            if (shape.ContentPart == null) {
-                shape.ContentPart = ctx.ContentPart;
-            }
 
             // if no ContentItem property has been set, assign it
             if (shape.ContentItem == null) {

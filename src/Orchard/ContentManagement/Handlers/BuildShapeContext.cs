@@ -16,8 +16,6 @@ namespace Orchard.ContentManagement.Handlers {
         public dynamic Shape { get; private set; }
         public IContent Content { get; private set; }
         public ContentItem ContentItem { get; private set; }
-        public ContentPart ContentPart { get; set; }
-        public ContentField ContentField { get; set; }
         public dynamic New { get; private set; }
         public string GroupId { get; private set; }
 
