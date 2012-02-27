@@ -62,6 +62,7 @@ html.dyn #themepreview button.preview { display:none; }
             <span>@T("You are previewing: ")</span>
             @Html.DropDownList("ThemeName", themes, new {onChange = "this.form.submit();"})
             @Html.Hidden("ReturnUrl", Context.Request.RawUrl)
+            @Html.Hidden("ThemeId", themes.FirstOrDefault(x => x.Selected).Value)
             <button type="submit" class="preview" title="@T("Preview")" name="submit.Preview" value="@T("Preview")">@T("Preview")</button>
             <button type="submit" title="@T("Apply")" name="submit.Apply" value="@T("Apply")">@T("Apply this theme")</button>
             <button type="submit" class="cancel" title="@T("Cancel")" name="submit.Cancel" value="@T("Cancel")">@T("Cancel")</button>
