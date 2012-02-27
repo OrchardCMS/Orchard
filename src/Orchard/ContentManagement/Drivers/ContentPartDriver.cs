@@ -24,7 +24,11 @@ namespace Orchard.ContentManagement.Drivers {
             }
 
             DriverResult result = Display(part, context.DisplayType, context.New);
-            result.ContentPart = part;
+            
+            if(result != null ) {
+                result.ContentPart = part;
+            }
+
             return result;
         }
 
@@ -36,7 +40,11 @@ namespace Orchard.ContentManagement.Drivers {
             }
 
             DriverResult result = Editor(part, context.New);
-            result.ContentPart = part;
+            
+            if (result != null) {
+                result.ContentPart = part;
+            }
+
             return result;
         }
 
@@ -48,7 +56,11 @@ namespace Orchard.ContentManagement.Drivers {
             }
 
             DriverResult result = Editor(part, context.Updater, context.New);
-            result.ContentPart = part;
+
+            if (result != null) {
+                result.ContentPart = part;
+            }
+
             return result;
         }
 

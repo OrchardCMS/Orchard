@@ -18,8 +18,12 @@ namespace Orchard.ContentManagement.Drivers {
         DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayContext context) {
             return Process(context.ContentItem, (part, field) => {
                 DriverResult result = Display(part, field, context.DisplayType, context.New);
-                result.ContentPart = part;
-                result.ContentField = field;
+                
+                if (result != null) {
+                    result.ContentPart = part;
+                    result.ContentField = field;
+                }
+                
                 return result;
             });
         }
@@ -27,8 +31,12 @@ namespace Orchard.ContentManagement.Drivers {
         DriverResult IContentFieldDriver.BuildEditorShape(BuildEditorContext context) {
             return Process(context.ContentItem, (part, field) => {
                 DriverResult result =  Editor(part, field, context.New);
-                result.ContentPart = part;
-                result.ContentField = field;
+                
+                if (result != null) {
+                    result.ContentPart = part;
+                    result.ContentField = field;
+                }
+                
                 return result;
             });
         }
@@ -36,8 +44,12 @@ namespace Orchard.ContentManagement.Drivers {
         DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorContext context) {
             return Process(context.ContentItem, (part, field) => {
                 DriverResult result = Editor(part, field, context.Updater, context.New);
-                result.ContentPart = part;
-                result.ContentField = field;
+                
+                if (result != null) {
+                    result.ContentPart = part;
+                    result.ContentField = field;
+                }
+                
                 return result;
             });
         }
