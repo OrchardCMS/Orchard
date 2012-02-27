@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Orchard.ContentManagement;
-using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.Localization;
 
@@ -10,7 +9,6 @@ namespace Orchard.Core.Contents.Rules {
         void Describe(dynamic describe);
     }
 
-    [OrchardFeature("Contents.Rules")]
     public class ContentEvents : IEventProvider {
         public ContentEvents() {
             T = NullLocalizer.Instance;

@@ -11,8 +11,3 @@ Features:
         Description: Standard content item comments.
         Dependencies: Settings
         Category: Social
-    Orchard.Comments.Rules:
-        Name: Comments Rules
-        Description: Rules for the Comments modules
-        Category: Rules
-        Dependencies: Orchard.Comments, Orchard.Rules

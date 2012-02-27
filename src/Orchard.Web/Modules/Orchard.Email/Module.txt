@@ -11,8 +11,3 @@ Features:
         FeatureDescription: Email Messaging services.
         Category: Messaging
         Dependencies: Orchard.Messaging
-    Orchard.Email.Rules:
-        Name: Email Rules
-        Description: Rules for the Email modules
-        Category: Rules
-        Dependencies: Orchard.Email, Orchard.Rules

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Core.Common.Models;
-using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.Messaging.Events;
 using Orchard.Messaging.Models;
@@ -17,7 +16,6 @@ namespace Orchard.Email.Rules {
         void Describe(dynamic describe);
     }
 
-    [OrchardFeature("Orchard.Email.Rules")]
     public class MailActions : IActionProvider {
         private readonly IMessageManager _messageManager;
         private readonly IOrchardServices _orchardServices;

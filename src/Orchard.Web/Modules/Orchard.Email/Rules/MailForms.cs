@@ -1,6 +1,5 @@
 ﻿using System;
 using Orchard.DisplayManagement;
-using Orchard.Environment.Extensions;
 using Orchard.Events;
 using Orchard.Localization;
 
@@ -9,7 +8,6 @@ namespace Orchard.Email.Rules {
         void Describe(dynamic context);
     }
 
-    [OrchardFeature("Orchard.Email.Rules")]
     public class MailForms : IFormProvider {
         protected dynamic Shape { get; set; }
         public Localizer T { get; set; }
