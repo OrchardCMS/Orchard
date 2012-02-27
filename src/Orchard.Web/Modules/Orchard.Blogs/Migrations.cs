@@ -1,4 +1,5 @@
 ﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
 namespace Orchard.Blogs {
@@ -61,6 +62,7 @@ namespace Orchard.Blogs {
                         .WithSetting("AutorouteSettings.PatternDefinitions", "[{Name:'Blog and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-blog/my-post'}]")
                         .WithSetting("AutorouteSettings.DefaultPatternIndex", "0"))
                     .WithPart("BodyPart")
+                    .Draftable()
                 );
             
             ContentDefinitionManager.AlterTypeDefinition("RecentBlogPosts",
