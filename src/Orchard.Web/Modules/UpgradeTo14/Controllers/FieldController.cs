@@ -5,6 +5,7 @@ using Orchard;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Data;
+using Orchard.Environment.Features;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Admin;
@@ -16,15 +17,15 @@ namespace UpgradeTo14.Controllers {
     public class FieldController : Controller {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IOrchardServices _orchardServices;
-        private readonly ISessionFactoryHolder _sessionFactoryHolder;
+        private readonly IFeatureManager _featureManager;
 
         public FieldController(
             IContentDefinitionManager contentDefinitionManager,
             IOrchardServices orchardServices,
-            ISessionFactoryHolder sessionFactoryHolder) {
+            IFeatureManager featureManager) {
             _contentDefinitionManager = contentDefinitionManager;
             _orchardServices = orchardServices;
-            _sessionFactoryHolder = sessionFactoryHolder;
+            _featureManager = featureManager;
         }
 
         public Localizer T { get; set; }
@@ -40,6 +41,10 @@ namespace UpgradeTo14.Controllers {
 
             if(!viewModel.ContentTypes.Any()) {
                 _orchardServices.Notifier.Warning(T("There are no content types with custom fields"));
+            }
+
+            if(!_featureManager.GetEnabledFeatures().Any(x => x.Id == "Orchard.Fields")) {
+                _orchardServices.Notifier.Warning(T("You need to enable Orchard.Fields in order to migrate current fields. Then you can safely remove Contrib.DateTimeField and Contrib.MediaPickerField."));
             }
 
             return View(viewModel);
