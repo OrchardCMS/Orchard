@@ -6,6 +6,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
+using Orchard.Logging;
 using Orchard.Packaging.Extensions;
 using Orchard.Packaging.Models;
 using Orchard.UI;
@@ -35,9 +36,11 @@ namespace Orchard.Packaging.Services {
             _folderUpdater = folderUpdater;
 
             T = NullLocalizer.Instance;
+            Logger = Logging.NullLogger.Instance;
         }
 
         public Localizer T { get; set; }
+        public Logging.ILogger Logger { get; set;  }
 
         public PackageInfo Install(string packageId, string version, string location, string applicationPath) {
             // instantiates the appropriate package repository
@@ -95,6 +98,8 @@ namespace Orchard.Packaging.Services {
                         // just uninstall the new package
                         Uninstall(package.Id, _virtualPathProvider.MapPath("~\\"));
                     }
+
+                    Logger.Error(String.Format("The package is compatible with version {0} and above. Please update Orchard or install another version of this package.", descriptor.OrchardVersion));
                     throw new OrchardException(T("The package is compatible with version {0} and above. Please update Orchard or install another version of this package.", descriptor.OrchardVersion));
                 }    
             }
