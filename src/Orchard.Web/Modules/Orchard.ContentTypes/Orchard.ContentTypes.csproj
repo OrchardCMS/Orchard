@@ -51,6 +51,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Settings\EditorEvents.cs" />
     <Compile Include="ViewModels\AddPartsViewModel.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Permissions.cs" />
@@ -119,6 +120,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\EditField.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\ContentTypeSettings.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
