@@ -1,3 +1,4 @@
+using System;
 using System.Xml.Linq;
 
 namespace Orchard.ContentManagement.Handlers {
@@ -19,6 +20,25 @@ namespace Orchard.ContentManagement.Handlers {
                     return attribute.Value;
             }
             return null;
+        }
+
+        public void ImportAttribute(string elementName, string attributeName, Action<string> value) {
+            ImportAttribute(elementName, attributeName, value, () => { });
+        }
+
+        public void ImportAttribute(string elementName, string attributeName, Action<string> value, Action empty) {
+            var importedText = Attribute(elementName, attributeName);
+            if (importedText != null) {
+                try {
+                    value(importedText);
+                }
+                catch {
+                    empty();
+                }
+            }
+            else {
+                empty();
+            }
         }
 
         public ContentItem GetItemFromSession(string id) {
