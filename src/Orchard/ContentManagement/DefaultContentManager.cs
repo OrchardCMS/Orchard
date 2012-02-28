@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml;
 using System.Xml.Linq;
 using Autofac;
 using NHibernate;
@@ -564,7 +565,7 @@ namespace Orchard.ContentManagement {
 
             var item = importContentSession.Get(identity);
             if (item == null) {
-                item = New(element.Name.LocalName);
+                item = New(XmlConvert.DecodeName(element.Name.LocalName));
                 if (status != null && status.Value == "Draft") {
                     Create(item, VersionOptions.Draft);
                 }
@@ -602,7 +603,7 @@ namespace Orchard.ContentManagement {
         }
 
         public XElement Export(ContentItem contentItem) {
-            var context = new ExportContentContext(contentItem, new XElement(contentItem.ContentType));
+            var context = new ExportContentContext(contentItem, new XElement(XmlConvert.EncodeLocalName(contentItem.ContentType)));
 
             foreach (var contentHandler in Handlers) {
                 contentHandler.Exporting(context);
