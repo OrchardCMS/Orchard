@@ -50,7 +50,7 @@ namespace Orchard.Widgets {
             ContentDefinitionManager.AlterTypeDefinition("Layer",
                cfg => cfg
                    .WithPart("LayerPart")
-                   .WithPart("CommonPart")
+                   .WithPart("CommonPart", p => p.WithSetting("OwnerEditorSettings.ShowOwnerEditor", "false"))
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("HtmlWidget",
