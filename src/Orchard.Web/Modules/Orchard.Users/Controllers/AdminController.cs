@@ -18,6 +18,7 @@ using Orchard.Mvc.Extensions;
 using System;
 using Orchard.Settings;
 using Orchard.UI.Navigation;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Users.Controllers {
     [ValidateInput(false)]
@@ -297,7 +298,12 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get<IUser>(id);
 
             if ( user != null ) {
-                _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", nonce = nonce})));
+                var siteUrl = Services.WorkContext.CurrentSite.As<SiteSettings2Part>().BaseUrl;
+                if (String.IsNullOrWhiteSpace(siteUrl)) {
+                    siteUrl = HttpContext.Request.ToRootUrlString();
+                }
+
+                _userService.SendChallengeEmail(user.As<UserPart>(), nonce => Url.MakeAbsolute(Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce }), siteUrl));
                 Services.Notifier.Information(T("Challenge email sent to {0}", user.UserName));
             }
 

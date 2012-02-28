@@ -24,9 +24,27 @@ namespace Orchard.Mvc.Extensions {
             return urlHelper.MakeAbsolute(urlHelper.Action(actionName, controller, routeValues));
         }
 
-        public static string MakeAbsolute(this UrlHelper urlHelper, string url) {
-            var siteUrl = urlHelper.RequestContext.HttpContext.Request.ToRootUrlString();
-            return siteUrl + url;
+        public static string MakeAbsolute(this UrlHelper urlHelper, string url, string baseUrl = null) {
+            if(String.IsNullOrEmpty(baseUrl)) {
+                baseUrl = urlHelper.RequestContext.HttpContext.Request.ToRootUrlString();
+            }
+
+            // remove any application path from the base url
+            var applicationPath = urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
+            
+            // orchardlocal/foo/bar => /orchardlocal/foo/bar
+            if(!url.StartsWith("/")) {
+                url = "/" + url;
+            }
+            // /orchardlocal/foo/bar => foo/bar
+            if (url.StartsWith(applicationPath)) {
+                url = url.Substring(applicationPath.Length);
+            }
+
+            baseUrl = baseUrl.TrimEnd('/');
+            url = url.TrimStart('/');
+            
+            return baseUrl + "/" + url;
         }
     }
 }
