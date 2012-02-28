@@ -90,12 +90,18 @@ namespace Orchard.ContentTypes.Controllers {
             return RedirectToAction("AddPartsTo", new { id = typeViewModel.Name });
         }
 
-        public ActionResult ContentTypeName(string displayName) {
-            return Json(_contentDefinitionService.GenerateContentTypeNameFromDisplayName(displayName));
+        public ActionResult ContentTypeName(string displayName, int version) {
+            return Json(new {
+                result = _contentDefinitionService.GenerateContentTypeNameFromDisplayName(displayName),
+                version = version
+            });
         }
 
-        public ActionResult FieldName(string partName, string displayName) {
-            return Json(_contentDefinitionService.GenerateFieldNameFromDisplayName(partName, displayName));
+        public ActionResult FieldName(string partName, string displayName, int version) {
+            return Json(new {
+                result = _contentDefinitionService.GenerateFieldNameFromDisplayName(partName, displayName),
+                version = version
+            });
         }
 
         public ActionResult Edit(string id) {

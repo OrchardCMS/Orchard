@@ -49,10 +49,13 @@
             $.post(jsonUrl, {
                     partName: partName,
                     displayName: $displayName.val(),
+                    version: ++version,
                     __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
                 },
                 function(data) {
-                    $name.val(data);
+                    if(version == data.version) {
+                        $name.val(data.result);
+                    }
                 },
                 "json"
             );
