@@ -150,7 +150,9 @@ namespace Orchard.Users.Controllers {
                             siteUrl = HttpContext.Request.ToRootUrlString();
                         }
 
-                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => VirtualPathUtility.Combine(siteUrl, Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", nonce = nonce })));
+                        siteUrl = siteUrl.TrimEnd('/');
+                        
+                        _userService.SendChallengeEmail(user.As<UserPart>(), nonce => siteUrl + "/" + Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", nonce = nonce}).TrimStart('/') );
 
                         foreach (var userEventHandler in _userEventHandlers) {
                             userEventHandler.SentChallengeEmail(user);
