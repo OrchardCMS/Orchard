@@ -29,6 +29,10 @@ namespace Orchard.Mvc.Extensions {
                 baseUrl = urlHelper.RequestContext.HttpContext.Request.ToRootUrlString();
             }
 
+            if(String.IsNullOrEmpty(url)) {
+                return baseUrl;
+            }
+
             // remove any application path from the base url
             var applicationPath = urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
             

@@ -121,6 +121,9 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             _controller = _container.Resolve<AccountController>();
 
             var mockHttpContext = new Mock<HttpContextBase>();
+            mockHttpContext.SetupGet(x => x.Request.Url).Returns(new Uri("http://www.orchardproject.net"));
+            mockHttpContext.SetupGet(x => x.Request).Returns(new HttpRequestStub());
+
             _controller.ControllerContext = new ControllerContext(
                 mockHttpContext.Object,
                 new RouteData(
@@ -351,6 +354,12 @@ namespace Orchard.Tests.Modules.Users.Controllers {
                     var nv = new NameValueCollection();
                     nv["Host"] = "orchardproject.net";
                     return nv;
+                }
+            }
+
+            public override string ApplicationPath {
+                get {
+                    return "/";
                 }
             }
         }
