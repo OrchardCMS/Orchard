@@ -327,7 +327,7 @@ nav ul
 .content-items li { padding: 0; margin: 0; }
 .content-items .content-item { border-top: 1px solid #dbdbdb; padding: 6px 0 6px 0; }
 .content-items .content-item header {}
-.content-items .content-item header h1 { font-size: 1.308em; color:#ff0000; }
+.content-items .content-item header h1 { font-size: 1.308em; color:#434343; }
 .content-items .content-item header h1 a { color: #434343; }
 .content-items .content-item header h1 a:hover {}
 
