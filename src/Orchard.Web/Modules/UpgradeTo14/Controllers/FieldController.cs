@@ -73,12 +73,16 @@ namespace UpgradeTo14.Controllers {
 
                         foreach (ContentItem content in contents) {
 
-                            // copy data to current version record
-                            content.VersionRecord.Data = content.Record.Data;
-                            var draft = _orchardServices.ContentManager.Get(content.Id, VersionOptions.Draft);
+                            if((content.Record.Data ?? "").Length > (content.VersionRecord.Data ?? "").Length) {
+                             
+                                var draft = _orchardServices.ContentManager.Get(content.Id, VersionOptions.Draft);
 
-                            if(draft != null) {
-                                draft.VersionRecord.Data = content.Record.Data;
+                                if(draft != null) {
+                                    draft.VersionRecord.Data = content.Record.Data;
+                                }
+                                else {
+                                    content.VersionRecord.Data = content.Record.Data;
+                                }
                             }
 
                             count++;
