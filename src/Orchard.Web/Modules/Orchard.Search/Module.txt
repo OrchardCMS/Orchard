@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.3.0
-OrchardVersion: 1.3.0
+Version: 1.4.0
+OrchardVersion: 1.4.0
 Description: The search module enables the management of the search index and provides the front-end searching user interface.
 FeatureDescription: Standard interface to Orchard's built-in search.
 Category: Search
