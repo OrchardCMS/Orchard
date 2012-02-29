@@ -10,7 +10,7 @@ namespace Orchard.ContentManagement {
 
             // is it the Published version ?
             if (item.VersionRecord.Latest && item.VersionRecord.Published) {
-                _publishedItemsByContentRecordId.Add(item.Id, item);
+                _publishedItemsByContentRecordId[item.Id] = item;
             }
         }
 
