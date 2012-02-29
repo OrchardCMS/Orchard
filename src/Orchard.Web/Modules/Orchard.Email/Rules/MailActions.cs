@@ -50,9 +50,9 @@ namespace Orchard.Email.Rules {
             if (recipient == "owner") {
                 var content = context.Tokens["Content"] as IContent;
                 if (content.Has<CommonPart>()) {
-                    var owner = content.As<CommonPart>().Owner.ContentItem;
-                    if (owner != null && owner.Record != null) {
-                        _messageManager.Send(owner.Record, MessageType, "email", properties);
+                    var owner = content.As<CommonPart>().Owner;
+                    if (owner != null && owner.ContentItem != null && owner.ContentItem.Record != null) {
+                        _messageManager.Send(owner.ContentItem.Record, MessageType, "email", properties);
                     }
                     _messageManager.Send(
                         SplitEmail(owner.As<IUser>().Email), MessageType, "email", properties);
