@@ -34,7 +34,8 @@
         var partName = "@Model.Part.Name";
         
         var jsonUrl = "@Url.Action("FieldName", "Admin", new RouteValueDictionary { {"Area","Orchard.ContentTypes"} } )";
-
+        var version = 0;
+        
         var nameAltered;
         $name.keypress(function() {
             nameAltered = true;
