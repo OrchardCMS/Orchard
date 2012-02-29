@@ -279,10 +279,12 @@
         $(StageFolder)\**\Modules\Orchard.Experimental\**;
         $(StageFolder)\**\Modules\Orchard.ImportExport\**;
         $(StageFolder)\**\Modules\Orchard.Indexing\**;
+        $(StageFolder)\**\Modules\Orchard.Lists\**;
         $(StageFolder)\**\Modules\Orchard.Migrations\**;
         $(StageFolder)\**\Modules\Orchard.MultiTenancy\**;
         $(StageFolder)\**\Modules\Orchard.Scripting.Dlr\**;
         $(StageFolder)\**\Modules\Orchard.Search\**;
+        $(StageFolder)\**\Modules\Orchard.TaskLease\**;
         " />
 
       <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.xml;@(MsDeploy-Exclude-Modules)" />
@@ -380,13 +382,11 @@
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Experimental &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.ImportExport &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Indexing &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
+    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Lists &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Migrations &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.MultiTenancy &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Scripting.Dlr &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Search &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
-    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Forms &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
-    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Tokens &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
-    <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.Rules &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
     <Exec Command="&quot;$(GalleryFolder)\bin\Orchard.exe&quot; package create Orchard.TaskLease &quot;$(GalleryArtifactFolder)&quot;" WorkingDirectory="$(GalleryFolder)"/>
   </Target>
 
